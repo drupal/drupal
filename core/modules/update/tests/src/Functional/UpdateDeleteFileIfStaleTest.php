@@ -38,7 +38,7 @@ class UpdateDeleteFileIfStaleTest extends UpdateTestBase {
       ->set('temporary_maximum_age', -100000)
       ->save();
 
-    $file_path = drupal_realpath($file_name);
+    $file_path = \Drupal::service('file_system')->realpath($file_name);
     update_delete_file_if_stale($file_path);
 
     $this->assertFalse(is_file($file_path));

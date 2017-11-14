@@ -377,7 +377,7 @@ function locale_cron_fill_queue() {
 function _locale_translation_file_is_remote($uri) {
   $scheme = file_uri_scheme($uri);
   if ($scheme) {
-    return !drupal_realpath($scheme . '://');
+    return !\Drupal::service('file_system')->realpath($scheme . '://');
   }
   return FALSE;
 }

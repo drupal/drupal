@@ -487,7 +487,7 @@ class ThemeSettingsForm extends ConfigFormBase {
    */
   protected function validatePath($path) {
     // Absolute local file paths are invalid.
-    if (drupal_realpath($path) == $path) {
+    if (\Drupal::service('file_system')->realpath($path) == $path) {
       return FALSE;
     }
     // A path relative to the Drupal root or a fully qualified URI is valid.

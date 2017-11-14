@@ -136,7 +136,7 @@ class UserPictureTest extends WebTestBase {
    * Edits the user picture for the test user.
    */
   public function saveUserPicture($image) {
-    $edit = ['files[user_picture_0]' => drupal_realpath($image->uri)];
+    $edit = ['files[user_picture_0]' => \Drupal::service('file_system')->realpath($image->uri)];
     $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $edit, t('Save'));
 
     // Load actual user data from database.

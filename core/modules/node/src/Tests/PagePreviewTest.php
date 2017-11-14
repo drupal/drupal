@@ -171,7 +171,7 @@ class PagePreviewTest extends NodeTestBase {
 
     // Upload an image.
     $test_image = current($this->drupalGetTestFiles('image', 39325));
-    $edit['files[field_image_0][]'] = drupal_realpath($test_image->uri);
+    $edit['files[field_image_0][]'] = \Drupal::service('file_system')->realpath($test_image->uri);
     $this->drupalPostForm('node/add/page', $edit, t('Upload'));
 
     // Add an alt tag and preview the node.
@@ -316,11 +316,13 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertUrl($node->toUrl());
     $this->assertResponse(200);
 
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
     // Assert multiple items can be added and are not lost when previewing.
     $test_image_1 = current($this->drupalGetTestFiles('image', 39325));
-    $edit_image_1['files[field_image_0][]'] = drupal_realpath($test_image_1->uri);
+    $edit_image_1['files[field_image_0][]'] = $file_system->realpath($test_image_1->uri);
     $test_image_2 = current($this->drupalGetTestFiles('image', 39325));
-    $edit_image_2['files[field_image_1][]'] = drupal_realpath($test_image_2->uri);
+    $edit_image_2['files[field_image_1][]'] = $file_system->realpath($test_image_2->uri);
     $edit['field_image[0][alt]'] = 'Alt 1';
 
     $this->drupalPostForm('node/add/page', $edit_image_1, t('Upload'));

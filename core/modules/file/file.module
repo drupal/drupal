@@ -140,7 +140,7 @@ function file_load($fid, $reset = FALSE) {
  */
 function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
-    if (($realpath = drupal_realpath($source->getFileUri())) !== FALSE) {
+    if (($realpath = \Drupal::service('file_system')->realpath($source->getFileUri())) !== FALSE) {
       \Drupal::logger('file')->notice('File %file (%realpath) could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', ['%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination]);
     }
     else {
@@ -215,7 +215,7 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
  */
 function file_move(FileInterface $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
-    if (($realpath = drupal_realpath($source->getFileUri())) !== FALSE) {
+    if (($realpath = \Drupal::service('file_system')->realpath($source->getFileUri())) !== FALSE) {
       \Drupal::logger('file')->notice('File %file (%realpath) could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', ['%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination]);
     }
     else {

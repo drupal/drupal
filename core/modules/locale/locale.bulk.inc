@@ -200,7 +200,7 @@ function locale_translate_batch_import($file, array $options, &$context) {
     try {
       if (empty($context['sandbox'])) {
         $context['sandbox']['parse_state'] = [
-          'filesize' => filesize(drupal_realpath($file->uri)),
+          'filesize' => filesize(\Drupal::service('file_system')->realpath($file->uri)),
           'chunk_size' => 200,
           'seek' => 0,
         ];

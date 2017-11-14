@@ -138,7 +138,7 @@ EOF;
       'status' => FILE_STATUS_PERMANENT,
     ]);
     file_put_contents($file->getFileUri(), $po_header . $text);
-    touch(drupal_realpath($file->getFileUri()), $timestamp);
+    touch(\Drupal::service('file_system')->realpath($file->getFileUri()), $timestamp);
     $file->save();
   }
 

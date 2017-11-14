@@ -96,7 +96,7 @@ class FileListingTest extends FileFieldTestBase {
       $file = $this->getTestFile('image');
 
       $edit = [
-        'files[file_0]' => drupal_realpath($file->getFileUri()),
+        'files[file_0]' => \Drupal::service('file_system')->realpath($file->getFileUri()),
       ];
       $this->drupalPostForm(NULL, $edit, t('Save'));
       $node = Node::load($node->id());

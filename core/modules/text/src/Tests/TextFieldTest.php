@@ -113,7 +113,7 @@ class TextFieldTest extends StringFieldTest {
       ->save();
 
     $test_file = current($this->drupalGetTestFiles('text'));
-    $edit['files[file_field_0]'] = drupal_realpath($test_file->uri);
+    $edit['files[file_field_0]'] = \Drupal::service('file_system')->realpath($test_file->uri);
     $this->drupalPostForm('entity_test/add', $edit, 'Upload');
     $this->assertResponse(200);
     $edit = [

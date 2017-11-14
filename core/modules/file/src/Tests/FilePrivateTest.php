@@ -38,6 +38,8 @@ class FilePrivateTest extends FileFieldTestBase {
    */
   public function testPrivateFile() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
     $this->createFileField($field_name, 'node', $type_name, ['uri_scheme' => 'private']);
@@ -128,7 +130,7 @@ class FilePrivateTest extends FileFieldTestBase {
     );
     $test_file = $this->getTestFile('text');
     $this->drupalGet('node/add/' . $type_name);
-    $edit = ['files[' . $field_name . '_0]' => drupal_realpath($test_file->getFileUri())];
+    $edit = ['files[' . $field_name . '_0]' => $file_system->realpath($test_file->getFileUri())];
     $this->drupalPostForm(NULL, $edit, t('Upload'));
     /** @var \Drupal\file\FileStorageInterface $file_storage */
     $file_storage = $this->container->get('entity.manager')->getStorage('file');
@@ -155,7 +157,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalGet('node/add/' . $type_name);
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $edit['files[' . $field_name . '_0]'] = drupal_realpath($test_file->getFileUri());
+    $edit['files[' . $field_name . '_0]'] = $file_system->realpath($test_file->getFileUri());
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $file_id = $new_node->{$field_name}->target_id;
@@ -184,7 +186,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalGet('node/add/' . $type_name);
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $edit['files[' . $field_name . '_0]'] = drupal_realpath($test_file->getFileUri());
+    $edit['files[' . $field_name . '_0]'] = $file_system->realpath($test_file->getFileUri());
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $file = File::load($new_node->{$field_name}->target_id);
@@ -209,7 +211,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalGet('node/add/' . $type_name);
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $edit['files[' . $field_name . '_0]'] = drupal_realpath($test_file->getFileUri());
+    $edit['files[' . $field_name . '_0]'] = $file_system->realpath($test_file->getFileUri());
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $new_node->setPublished(FALSE);

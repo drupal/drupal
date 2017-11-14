@@ -312,7 +312,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // @see FileWidget::formMultipleElements().
     $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage', ['cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED], t('Save field settings'));
     $edit = [
-      'files[' . $field_name . '_1][]' => drupal_realpath($test_image->uri),
+      'files[' . $field_name . '_1][]' => \Drupal::service('file_system')->realpath($test_image->uri),
     ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     // Add the required alt text.
@@ -322,7 +322,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Assert ImageWidget::process() calls FieldWidget::process().
     $this->drupalGet('node/' . $node->id() . '/edit');
     $edit = [
-      'files[' . $field_name . '_2][]' => drupal_realpath($test_image->uri),
+      'files[' . $field_name . '_2][]' => \Drupal::service('file_system')->realpath($test_image->uri),
     ];
     $this->drupalPostAjaxForm(NULL, $edit, $field_name . '_2_upload_button');
     $this->assertNoRaw('<input multiple type="file" id="edit-' . strtr($field_name, '_', '-') . '-2-upload" name="files[' . $field_name . '_2][]" size="22" class="js-form-file form-file">');
@@ -357,7 +357,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $title = $this->randomString(1024);
     $edit = [
       // Get the path of the 'image-test.png' file.
-      'files[settings_default_image_uuid]' => drupal_realpath($images[0]->uri),
+      'files[settings_default_image_uuid]' => \Drupal::service('file_system')->realpath($images[0]->uri),
       'settings[default_image][alt]' => $alt,
       'settings[default_image][title]' => $title,
     ];
@@ -426,7 +426,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Add a default image to the new field.
     $edit = [
       // Get the path of the 'image-test.gif' file.
-      'files[settings_default_image_uuid]' => drupal_realpath($images[2]->uri),
+      'files[settings_default_image_uuid]' => \Drupal::service('file_system')->realpath($images[2]->uri),
       'settings[default_image][alt]' => $alt,
       'settings[default_image][title]' => $title,
     ];

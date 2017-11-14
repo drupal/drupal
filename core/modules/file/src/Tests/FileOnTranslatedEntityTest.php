@@ -91,7 +91,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     // Edit the node to upload a file.
     $edit = [];
     $name = 'files[' . $this->fieldName . '_0]';
-    $edit[$name] = drupal_realpath($this->drupalGetTestFiles('text')[0]->uri);
+    $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[0]->uri);
     $this->drupalPostForm('node/' . $default_language_node->id() . '/edit', $edit, t('Save'));
     $first_fid = $this->getLastFileId();
 
@@ -102,7 +102,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $edit = [];
     $edit['title[0][value]'] = 'Bill Murray';
     $name = 'files[' . $this->fieldName . '_0]';
-    $edit[$name] = drupal_realpath($this->drupalGetTestFiles('text')[1]->uri);
+    $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[1]->uri);
     $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
     // This inspects the HTML after the post of the translation, the file
     // should be displayed on the original node.
@@ -128,7 +128,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $edit = [];
     $edit['title[0][value]'] = 'Scarlett Johansson';
     $name = 'files[' . $this->fieldName . '_0]';
-    $edit[$name] = drupal_realpath($this->drupalGetTestFiles('text')[2]->uri);
+    $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[2]->uri);
     $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
     $third_fid = $this->getLastFileId();
 
@@ -156,7 +156,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $edit = [];
     $edit['title[0][value]'] = 'David Bowie';
     $name = 'files[' . $this->fieldName . '_0]';
-    $edit[$name] = drupal_realpath($this->drupalGetTestFiles('text')[3]->uri);
+    $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[3]->uri);
     $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
     $replaced_second_fid = $this->getLastFileId();
 

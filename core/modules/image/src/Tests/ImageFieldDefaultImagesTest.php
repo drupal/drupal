@@ -305,7 +305,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     $non_image = $this->drupalGetTestFiles('text');
-    $this->drupalPostForm(NULL, ['files[settings_default_image_uuid]' => drupal_realpath($non_image[0]->uri)], t("Upload"));
+    $this->drupalPostForm(NULL, ['files[settings_default_image_uuid]' => \Drupal::service('file_system')->realpath($non_image[0]->uri)], t("Upload"));
     $this->assertText('The specified file text-0.txt could not be uploaded.');
     $this->assertText('Only files with the following extensions are allowed: png gif jpg jpeg.');
 

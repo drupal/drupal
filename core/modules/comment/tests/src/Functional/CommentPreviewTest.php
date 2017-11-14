@@ -60,7 +60,7 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Add a user picture.
     $image = current($this->drupalGetTestFiles('image'));
-    $user_edit['files[user_picture_0]'] = drupal_realpath($image->uri);
+    $user_edit['files[user_picture_0]'] = \Drupal::service('file_system')->realpath($image->uri);
     $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $user_edit, t('Save'));
 
     // As the web user, fill in the comment form and preview the comment.

@@ -469,19 +469,20 @@ function system_requirements($phase) {
     // Try to write the .htaccess files first, to prevent false alarms in case
     // (for example) the /tmp directory was wiped.
     file_ensure_htaccess();
+    $file_system = \Drupal::service('file_system');
     $htaccess_files['public://.htaccess'] = [
       'title' => t('Public files directory'),
-      'directory' => drupal_realpath('public://'),
+      'directory' => $file_system->realpath('public://'),
     ];
     if (PrivateStream::basePath()) {
       $htaccess_files['private://.htaccess'] = [
         'title' => t('Private files directory'),
-        'directory' => drupal_realpath('private://'),
+        'directory' => $file_system->realpath('private://'),
       ];
     }
     $htaccess_files['temporary://.htaccess'] = [
       'title' => t('Temporary files directory'),
-      'directory' => drupal_realpath('temporary://'),
+      'directory' => $file_system->realpath('temporary://'),
     ];
     foreach ($htaccess_files as $htaccess_file => $info) {
       // Check for the string which was added to the recommended .htaccess file

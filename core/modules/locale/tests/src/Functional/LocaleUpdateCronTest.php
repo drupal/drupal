@@ -47,7 +47,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     // Prepare for test: Simulate new translations being available.
     // Change the last updated timestamp of a translation file.
     $contrib_module_two_uri = 'public://local/contrib_module_two-8.x-2.0-beta4.de._po';
-    touch(drupal_realpath($contrib_module_two_uri), REQUEST_TIME);
+    touch(\Drupal::service('file_system')->realpath($contrib_module_two_uri), REQUEST_TIME);
 
     // Prepare for test: Simulate that the file has not been checked for a long
     // time. Set the last_check timestamp to zero.

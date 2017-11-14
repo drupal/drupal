@@ -635,7 +635,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
   foreach ($info['slices'] as $file => $coord) {
     list($x, $y, $width, $height) = $coord;
     $base = drupal_basename($file);
-    $image = drupal_realpath($paths['target'] . $base);
+    $image = \Drupal::service('file_system')->realpath($paths['target'] . $base);
 
     // Cut out slice.
     if ($file == 'screenshot.png') {

@@ -97,7 +97,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     // Test that fields appear as expected after during the preview.
     // Add a second file.
     $name = 'files[' . $field_name . '_1][]';
-    $edit[$name] = drupal_realpath($test_file->getFileUri());
+    $edit[$name] = \Drupal::service('file_system')->realpath($test_file->getFileUri());
 
     // Uncheck the display checkboxes and go to the preview.
     $edit[$field_name . '[0][display]'] = FALSE;
@@ -166,7 +166,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $title = $this->randomString();
     $edit = [
       'title[0][value]' => $title,
-      'files[field_' . $field_name . '_0]' => drupal_realpath($file->uri),
+      'files[field_' . $field_name . '_0]' => \Drupal::service('file_system')->realpath($file->uri),
     ];
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($title);

@@ -345,7 +345,7 @@ class ImageItem extends FileItem {
       $tmp_file = drupal_tempnam('temporary://', 'generateImage_');
       $destination = $tmp_file . '.' . $extension;
       file_unmanaged_move($tmp_file, $destination, FILE_CREATE_DIRECTORY);
-      if ($path = $random->image(drupal_realpath($destination), $min_resolution, $max_resolution)) {
+      if ($path = $random->image(\Drupal::service('file_system')->realpath($destination), $min_resolution, $max_resolution)) {
         $image = File::create();
         $image->setFileUri($path);
         $image->setOwnerId(\Drupal::currentUser()->id());

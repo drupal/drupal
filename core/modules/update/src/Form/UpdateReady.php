@@ -138,7 +138,7 @@ class UpdateReady extends FormBase {
       foreach ($projects as $project => $url) {
         $project_location = $directory . '/' . $project;
         $updater = Updater::factory($project_location, $this->root);
-        $project_real_location = drupal_realpath($project_location);
+        $project_real_location = \Drupal::service('file_system')->realpath($project_location);
         $updates[] = [
           'project' => $project,
           'updater_name' => get_class($updater),

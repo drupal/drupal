@@ -1379,7 +1379,7 @@ function install_download_translation(&$install_state) {
  */
 function install_retrieve_file($uri, $destination) {
   $parsed_url = parse_url($uri);
-  if (is_dir(drupal_realpath($destination))) {
+  if (is_dir(\Drupal::service('file_system')->realpath($destination))) {
     // Prevent URIs with triple slashes when gluing parts together.
     $path = str_replace('///', '//', "$destination/") . drupal_basename($parsed_url['path']);
   }

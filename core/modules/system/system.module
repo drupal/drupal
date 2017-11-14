@@ -1446,7 +1446,7 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
     $path = file_build_uri(drupal_basename($parsed_url['path']));
   }
   else {
-    if (is_dir(drupal_realpath($destination))) {
+    if (is_dir(\Drupal::service('file_system')->realpath($destination))) {
       // Prevent URIs with triple slashes when glueing parts together.
       $path = str_replace('///', '//', "$destination/") . drupal_basename($parsed_url['path']);
     }

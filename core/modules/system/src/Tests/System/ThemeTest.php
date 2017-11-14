@@ -152,7 +152,7 @@ class ThemeTest extends WebTestBase {
       // Semi-absolute path to arbitrary non-existing file.
       '/core/misc/whatever.png',
       // Absolute paths to any local file (even if it exists).
-      drupal_realpath($file->uri),
+      \Drupal::service('file_system')->realpath($file->uri),
     ];
     $this->drupalGet('admin/appearance/settings');
     foreach ($unsupported_paths as $path) {
@@ -168,7 +168,7 @@ class ThemeTest extends WebTestBase {
     $edit = [
       'default_logo' => FALSE,
       'logo_path' => '',
-      'files[logo_upload]' => drupal_realpath($file->uri),
+      'files[logo_upload]' => \Drupal::service('file_system')->realpath($file->uri),
     ];
     $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
 

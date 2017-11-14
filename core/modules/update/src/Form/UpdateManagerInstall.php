@@ -214,7 +214,7 @@ class UpdateManagerInstall extends FormBase {
       return;
     }
 
-    $project_real_location = drupal_realpath($project_location);
+    $project_real_location = \Drupal::service('file_system')->realpath($project_location);
     $arguments = [
       'project' => $project,
       'updater_name' => get_class($updater),

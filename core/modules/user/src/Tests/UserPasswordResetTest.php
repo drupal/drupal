@@ -118,7 +118,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // invalidate the reset token.
     $image = current($this->drupalGetTestFiles('image'));
     $edit = [
-      'files[user_picture_0]' => drupal_realpath($image->uri),
+      'files[user_picture_0]' => \Drupal::service('file_system')->realpath($image->uri),
     ];
     $this->drupalPostAjaxForm(NULL, $edit, 'user_picture_0_upload_button');
 

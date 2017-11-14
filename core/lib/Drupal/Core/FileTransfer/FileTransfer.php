@@ -207,7 +207,8 @@ abstract class FileTransfer {
    */
   final protected function checkPath($path) {
     $full_jail = $this->chroot . $this->jail;
-    $full_path = drupal_realpath(substr($this->chroot . $path, 0, strlen($full_jail)));
+    $full_path = \Drupal::service('file_system')
+      ->realpath(substr($this->chroot . $path, 0, strlen($full_jail)));
     $full_path = $this->fixRemotePath($full_path, FALSE);
     if ($full_jail !== $full_path) {
       throw new FileTransferException('@directory is outside of the @jail', NULL, ['@directory' => $path, '@jail' => $this->jail]);

@@ -45,7 +45,7 @@ class DirectoryTest extends FileTestBase {
     $this->assertDirectoryPermissions($directory, $old_mode);
 
     // Check creating a directory using an absolute path.
-    $absolute_path = drupal_realpath($directory) . DIRECTORY_SEPARATOR . $this->randomMachineName() . DIRECTORY_SEPARATOR . $this->randomMachineName();
+    $absolute_path = \Drupal::service('file_system')->realpath($directory) . DIRECTORY_SEPARATOR . $this->randomMachineName() . DIRECTORY_SEPARATOR . $this->randomMachineName();
     $this->assertTrue(drupal_mkdir($absolute_path, 0775, TRUE), 'No error reported when creating new absolute directories.', 'File');
     $this->assertDirectoryPermissions($absolute_path, 0775);
   }

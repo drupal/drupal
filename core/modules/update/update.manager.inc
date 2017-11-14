@@ -208,7 +208,7 @@ function update_manager_file_get($url) {
   $remote_schemes = ['http', 'https', 'ftp', 'ftps', 'smb', 'nfs'];
   if (!isset($parsed_url['scheme']) || !in_array($parsed_url['scheme'], $remote_schemes)) {
     // This is a local file, just return the path.
-    return drupal_realpath($url);
+    return \Drupal::service('file_system')->realpath($url);
   }
 
   // Check the cache and download the file if needed.

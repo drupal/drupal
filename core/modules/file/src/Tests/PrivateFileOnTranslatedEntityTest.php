@@ -80,7 +80,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     // Edit the node to upload a file.
     $edit = [];
     $name = 'files[' . $this->fieldName . '_0]';
-    $edit[$name] = drupal_realpath($this->drupalGetTestFiles('text')[0]->uri);
+    $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[0]->uri);
     $this->drupalPostForm('node/' . $default_language_node->id() . '/edit', $edit, t('Save'));
     $last_fid_prior = $this->getLastFileId();
 
@@ -105,7 +105,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $name = 'files[' . $this->fieldName . '_0]';
-    $edit[$name] = drupal_realpath($this->drupalGetTestFiles('text')[1]->uri);
+    $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[1]->uri);
     $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
     $last_fid = $this->getLastFileId();
 
