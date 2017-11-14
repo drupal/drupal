@@ -415,16 +415,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
           $update_manager->uninstallEntityType($entity_type);
         }
         elseif ($entity_type->entityClassImplements(FieldableEntityInterface::CLASS)) {
-          // The module being installed may be adding new fields to existing
-          // entity types. Field definitions for any entity type defined by
-          // the module are handled in the if branch.
-          $entity_type_id = $entity_type->id();
-          /** @var \Drupal\Core\Entity\FieldableEntityStorageInterface $storage */
-          $storage = $entity_manager->getStorage($entity_type_id);
-          foreach ($entity_manager->getFieldStorageDefinitions($entity_type_id) as $storage_definition) {
-            // @todo We need to trigger field purging here.
-            //   See https://www.drupal.org/node/2282119.
-            if ($storage_definition->getProvider() == $module && !$storage->countFieldData($storage_definition, TRUE)) {
+          // The module being uninstalled might have added new fields to
+          // existing entity types. This will add them to the deleted fields
+          // repository so their data will be purged on cron.
+          foreach ($entity_manager->getFieldStorageDefinitions($entity_type->id()) as $storage_definition) {
+            if ($storage_definition->getProvider() == $module) {
               $update_manager->uninstallFieldStorageDefinition($storage_definition);
             }
           }

@@ -183,8 +183,8 @@ function content_translation_entity_base_field_info(EntityTypeInterface $entity_
     // when translation is disabled.
     // @todo Re-evaluate this approach and consider removing field storage
     //   definitions and the related field data if the entity type has no bundle
-    //   enabled for translation, once base field purging is supported.
-    //   See https://www.drupal.org/node/2282119.
+    //   enabled for translation.
+    // @see https://www.drupal.org/node/2907777
     if ($manager->isEnabled($entity_type_id) || array_intersect_key($definitions, $installed_storage_definitions)) {
       return $definitions;
     }

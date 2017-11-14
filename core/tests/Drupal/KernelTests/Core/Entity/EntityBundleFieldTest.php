@@ -93,7 +93,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
     $entity->save();
     entity_test_delete_bundle('custom');
 
-    $table = $table_mapping->getDedicatedDataTableName($entity->getFieldDefinition('custom_bundle_field'));
+    $table = $table_mapping->getDedicatedDataTableName($entity->getFieldDefinition('custom_bundle_field'), TRUE);
     $result = $this->database->select($table, 'f')
       ->condition('f.entity_id', $entity->id())
       ->condition('deleted', 1)
@@ -105,9 +105,10 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
     $field_map = \Drupal::entityManager()->getFieldMap();
     $this->assertFalse(isset($field_map['entity_test']['custom_bundle_field']));
 
-    // @todo Test field purge and table deletion once supported. See
-    //   https://www.drupal.org/node/2282119.
-    // $this->assertFalse($this->database->schema()->tableExists($table), 'Custom field table was deleted');
+    // Purge field data, and check that the storage definition has been
+    // completely removed once the data is purged.
+    field_purge_batch(10);
+    $this->assertFalse($this->database->schema()->tableExists($table), 'Custom field table was deleted');
   }
 
 }

@@ -35,14 +35,6 @@ interface FieldStorageConfigInterface extends ConfigEntityInterface, FieldStorag
   public function getBundles();
 
   /**
-   * Returns whether the field is deleted or not.
-   *
-   * @return bool
-   *   TRUE if the field is deleted.
-   */
-  public function isDeleted();
-
-  /**
    * Checks if the field storage can be deleted.
    *
    * @return bool

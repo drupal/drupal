@@ -19,7 +19,6 @@ use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -1468,9 +1467,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityType->id())
     );
 
-    // @todo Remove the FieldStorageConfigInterface check when non-configurable
-    //   fields support purging: https://www.drupal.org/node/2282119.
-    if ($storage_definition instanceof FieldStorageConfigInterface && $table_mapping->requiresDedicatedTableStorage($storage_definition)) {
+    if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
       // Mark all data associated with the field for deletion.
       $table = $table_mapping->getDedicatedDataTableName($storage_definition);
       $revision_table = $table_mapping->getDedicatedRevisionTableName($storage_definition);
@@ -1554,9 +1551,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // Check whether the whole field storage definition is gone, or just some
     // bundle fields.
     $storage_definition = $field_definition->getFieldStorageDefinition();
-    $is_deleted = $this->storageDefinitionIsDeleted($storage_definition);
     $table_mapping = $this->getTableMapping();
-    $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $is_deleted);
+    $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $storage_definition->isDeleted());
 
     // Get the entities which we want to purge first.
     $entity_query = $this->database->select($table_name, 't', ['fetch' => \PDO::FETCH_ASSOC]);
@@ -1614,7 +1610,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   protected function purgeFieldItems(ContentEntityInterface $entity, FieldDefinitionInterface $field_definition) {
     $storage_definition = $field_definition->getFieldStorageDefinition();
-    $is_deleted = $this->storageDefinitionIsDeleted($storage_definition);
+    $is_deleted = $storage_definition->isDeleted();
     $table_mapping = $this->getTableMapping();
     $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $is_deleted);
     $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition, $is_deleted);
@@ -1651,7 +1647,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $table_mapping = $this->getTableMapping($storage_definitions);
 
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
-      $is_deleted = $this->storageDefinitionIsDeleted($storage_definition);
+      $is_deleted = $storage_definition->isDeleted();
       if ($this->entityType->isRevisionable()) {
         $table_name = $table_mapping->getDedicatedRevisionTableName($storage_definition, $is_deleted);
       }
@@ -1724,15 +1720,14 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *
    * @return bool
    *   Whether the field has been already deleted.
+   *
+   * @deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Use
+   *   \Drupal\Core\Field\FieldStorageDefinitionInterface::isDeleted() instead.
+   *
+   * @see https://www.drupal.org/node/2907785
    */
   protected function storageDefinitionIsDeleted(FieldStorageDefinitionInterface $storage_definition) {
-    // Configurable fields are marked for deletion.
-    if ($storage_definition instanceof FieldStorageConfigInterface) {
-      return $storage_definition->isDeleted();
-    }
-    // For non configurable fields check whether they are still in the last
-    // installed schema repository.
-    return !array_key_exists($storage_definition->getName(), $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityTypeId));
+    return $storage_definition->isDeleted();
   }
 
 }

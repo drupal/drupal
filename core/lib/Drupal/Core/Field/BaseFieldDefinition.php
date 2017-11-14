@@ -804,6 +804,39 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   /**
    * {@inheritdoc}
    */
+  public function getUniqueIdentifier() {
+    // If we have a specified target bundle, we're dealing with a bundle base
+    // field definition, so we need to include it in the unique identifier.
+    if ($this->getTargetBundle()) {
+      return $this->getTargetEntityTypeId() . '-' . $this->getTargetBundle() . '-' . $this->getName();
+    }
+
+    return $this->getUniqueStorageIdentifier();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isDeleted() {
+    return !empty($this->definition['deleted']);
+  }
+
+  /**
+   * Sets whether the field storage is deleted.
+   *
+   * @param bool $deleted
+   *   Whether the field storage is deleted.
+   *
+   * @return $this
+   */
+  public function setDeleted($deleted) {
+    $this->definition['deleted'] = $deleted;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getConfig($bundle) {
     $override = BaseFieldOverride::loadByName($this->getTargetEntityTypeId(), $bundle, $this->getName());
     if ($override) {

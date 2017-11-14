@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Entity\Update;
 
-use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Update\DbUpdatesTrait;
@@ -165,30 +164,12 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
     $this->assertNoRaw('Out of date');
     $this->assertRaw('Mismatched entity and/or field definitions');
 
-    // Check that en exception would be triggered when trying to apply them with
-    // existing data.
-    $message = 'Entity updates cannot run if entity data exists.';
-    try {
-      $this->updatesManager->applyUpdates();
-      $this->fail($message);
-    }
-    catch (FieldStorageDefinitionUpdateForbiddenException $e) {
-      $this->pass($message);
-    }
-
-    // Check the status report is the same after trying to apply updates.
+    // Apply the entity updates and check that the entity update status report
+    // item is no longer displayed.
+    $this->updatesManager->applyUpdates();
     $this->drupalGet('admin/reports/status');
     $this->assertNoRaw('Out of date');
-    $this->assertRaw('Mismatched entity and/or field definitions');
-
-    // Delete entity data, enable a new update, run updates again and check that
-    // entity updates were not applied even when no data exists.
-    $entity->delete();
-    $this->enableUpdates('entity_test', 'status_report', 8002);
-    $this->applyUpdates();
-    $this->drupalGet('admin/reports/status');
-    $this->assertNoRaw('Out of date');
-    $this->assertRaw('Mismatched entity and/or field definitions');
+    $this->assertNoRaw('Mismatched entity and/or field definitions');
   }
 
   /**

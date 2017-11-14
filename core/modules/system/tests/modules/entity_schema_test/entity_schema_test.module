@@ -94,5 +94,6 @@ function entity_schema_test_entity_bundle_delete($entity_type_id, $bundle) {
       ->setTargetBundle($bundle);
     // Notify the entity storage that our field is gone.
     \Drupal::entityManager()->onFieldDefinitionDelete($field_definitions['custom_bundle_field']);
+    \Drupal::entityManager()->onFieldStorageDefinitionDelete($field_definitions['custom_bundle_field']);
   }
 }

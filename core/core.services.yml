@@ -510,12 +510,6 @@ services:
       - { name: module_install.uninstall_validator }
     arguments: ['@entity.manager', '@string_translation']
     lazy: true
-  field_uninstall_validator:
-    class: Drupal\Core\Field\FieldModuleUninstallValidator
-    tags:
-      - { name: module_install.uninstall_validator }
-    arguments: ['@entity.manager', '@string_translation']
-    lazy: true
   required_module_uninstall_validator:
     class: Drupal\Core\Extension\RequiredModuleUninstallValidator
     tags:
@@ -576,9 +570,12 @@ services:
   entity.last_installed_schema.repository:
     class: Drupal\Core\Entity\EntityLastInstalledSchemaRepository
     arguments: ['@keyvalue']
+  entity_field.deleted_fields_repository:
+    class: Drupal\Core\Field\DeletedFieldsRepository
+    arguments: ['@state']
   field_storage_definition.listener:
     class: Drupal\Core\Field\FieldStorageDefinitionListener
-    arguments: ['@entity_type.manager', '@event_dispatcher', '@entity.last_installed_schema.repository', '@entity_field.manager']
+    arguments: ['@entity_type.manager', '@event_dispatcher', '@entity.last_installed_schema.repository', '@entity_field.manager', '@entity_field.deleted_fields_repository']
   field_definition.listener:
     class: Drupal\Core\Field\FieldDefinitionListener
     arguments: ['@entity_type.manager', '@entity_field.manager', '@keyvalue', '@cache.discovery']

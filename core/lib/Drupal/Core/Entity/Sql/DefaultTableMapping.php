@@ -272,7 +272,7 @@ class DefaultTableMapping implements TableMappingInterface {
    *   TRUE if the field can be stored in a dedicated table, FALSE otherwise.
    */
   public function allowsSharedTableStorage(FieldStorageDefinitionInterface $storage_definition) {
-    return !$storage_definition->hasCustomStorage() && $storage_definition->isBaseField() && !$storage_definition->isMultiple();
+    return !$storage_definition->hasCustomStorage() && $storage_definition->isBaseField() && !$storage_definition->isMultiple() && !$storage_definition->isDeleted();
   }
 
   /**
@@ -331,8 +331,8 @@ class DefaultTableMapping implements TableMappingInterface {
   public function getDedicatedDataTableName(FieldStorageDefinitionInterface $storage_definition, $is_deleted = FALSE) {
     if ($is_deleted) {
       // When a field is a deleted, the table is renamed to
-      // {field_deleted_data_FIELD_UUID}. To make sure we don't end up with
-      // table names longer than 64 characters, we hash the unique storage
+      // {field_deleted_data_UNIQUE_STORAGE_ID}. To make sure we don't end up
+      // with table names longer than 64 characters, we hash the unique storage
       // identifier and return the first 10 characters so we end up with a short
       // unique ID.
       return "field_deleted_data_" . substr(hash('sha256', $storage_definition->getUniqueStorageIdentifier()), 0, 10);
@@ -357,10 +357,10 @@ class DefaultTableMapping implements TableMappingInterface {
   public function getDedicatedRevisionTableName(FieldStorageDefinitionInterface $storage_definition, $is_deleted = FALSE) {
     if ($is_deleted) {
       // When a field is a deleted, the table is renamed to
-      // {field_deleted_revision_FIELD_UUID}. To make sure we don't end up with
-      // table names longer than 64 characters, we hash the unique storage
-      // identifier and return the first 10 characters so we end up with a short
-      // unique ID.
+      // {field_deleted_revision_UNIQUE_STORAGE_ID}. To make sure we don't end
+      // up with table names longer than 64 characters, we hash the unique
+      // storage identifier and return the first 10 characters so we end up with
+      // a short unique ID.
       return "field_deleted_revision_" . substr(hash('sha256', $storage_definition->getUniqueStorageIdentifier()), 0, 10);
     }
     else {
@@ -389,7 +389,7 @@ class DefaultTableMapping implements TableMappingInterface {
     // prefixes.
     if (strlen($table_name) > 48) {
       // Use a shorter separator, a truncated entity_type, and a hash of the
-      // field UUID.
+      // field storage unique identifier.
       $separator = $revision ? '_r__' : '__';
       // Truncate to the same length for the current and revision tables.
       $entity_type = substr($storage_definition->getTargetEntityTypeId(), 0, 34);
