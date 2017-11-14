@@ -2,6 +2,7 @@
 
 namespace Drupal\content_moderation\Form;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Form\FormBase;
@@ -24,6 +25,13 @@ class EntityModerationForm extends FormBase {
   protected $moderationInfo;
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\Time
+   */
+  protected $time;
+
+  /**
    * The moderation state transition validation service.
    *
    * @var \Drupal\content_moderation\StateTransitionValidation
@@ -37,9 +45,12 @@ class EntityModerationForm extends FormBase {
    *   The moderation information service.
    * @param \Drupal\content_moderation\StateTransitionValidation $validation
    *   The moderation state transition validation service.
+   * @param \Drupal\Component\Datetime\Time $time
+   *   The time service.
    */
-  public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidation $validation) {
+  public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidation $validation, Time $time) {
     $this->moderationInfo = $moderation_info;
+    $this->time = $time;
     $this->validation = $validation;
   }
 
@@ -49,7 +60,8 @@ class EntityModerationForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('content_moderation.moderation_information'),
-      $container->get('content_moderation.state_transition_validation')
+      $container->get('content_moderation.state_transition_validation'),
+      $container->get('datetime.time')
     );
   }
 
@@ -130,6 +142,7 @@ class EntityModerationForm extends FormBase {
     $entity->set('moderation_state', $new_state);
 
     if ($entity instanceof RevisionLogInterface) {
+      $entity->setRevisionCreationTime($this->time->getRequestTime());
       $entity->setRevisionLogMessage($form_state->getValue('revision_log'));
       $entity->setRevisionUserId($this->currentUser()->id());
     }
