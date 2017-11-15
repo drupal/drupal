@@ -8,7 +8,7 @@ use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
-use Drupal\content_moderation\StateTransitionValidation;
+use Drupal\content_moderation\StateTransitionValidationInterface;
 use Drupal\workflows\Transition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -36,7 +36,7 @@ class EntityModerationForm extends FormBase {
   /**
    * The moderation state transition validation service.
    *
-   * @var \Drupal\content_moderation\StateTransitionValidation
+   * @var \Drupal\content_moderation\StateTransitionValidationInterface
    */
   protected $validation;
 
@@ -45,15 +45,15 @@ class EntityModerationForm extends FormBase {
    *
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_info
    *   The moderation information service.
-   * @param \Drupal\content_moderation\StateTransitionValidation $validation
+   * @param \Drupal\content_moderation\StateTransitionValidationInterface $validation
    *   The moderation state transition validation service.
    * @param \Drupal\Component\Datetime\Time $time
    *   The time service.
    */
-  public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidation $validation, Time $time) {
+  public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidationInterface $validation, Time $time) {
     $this->moderationInfo = $moderation_info;
-    $this->time = $time;
     $this->validation = $validation;
+    $this->time = $time;
   }
 
   /**

@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\content_moderation\ModerationInformation;
-use Drupal\content_moderation\StateTransitionValidation;
+use Drupal\content_moderation\StateTransitionValidationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -51,7 +51,7 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
   /**
    * Moderation state transition validation service.
    *
-   * @var \Drupal\content_moderation\StateTransitionValidation
+   * @var \Drupal\content_moderation\StateTransitionValidationInterface
    */
   protected $validator;
 
@@ -74,10 +74,10 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
    *   Entity type manager.
    * @param \Drupal\content_moderation\ModerationInformation $moderation_information
    *   Moderation information service.
-   * @param \Drupal\content_moderation\StateTransitionValidation $validator
+   * @param \Drupal\content_moderation\StateTransitionValidationInterface $validator
    *   Moderation state transition validation service.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, ModerationInformation $moderation_information, StateTransitionValidation $validator) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, ModerationInformation $moderation_information, StateTransitionValidationInterface $validator) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
