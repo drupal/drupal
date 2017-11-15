@@ -631,6 +631,15 @@ EOD;
   /**
    * {@inheritdoc}
    */
+  public function fieldExists($table, $column) {
+    $prefixInfo = $this->getPrefixInfo($table);
+
+    return (bool) $this->connection->query("SELECT 1 FROM pg_attribute WHERE attrelid = :key::regclass AND attname = :column AND NOT attisdropped AND attnum > 0", array(':key' => $prefixInfo['schema'] . '.' . $prefixInfo['table'], ':column' => $column))->fetchField();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function indexExists($table, $name) {
     // Details http://www.postgresql.org/docs/9.1/interactive/view-pg-indexes.html
     $index_name = $this->ensureIdentifiersLength($table, $name, 'idx');
