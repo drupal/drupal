@@ -83,7 +83,7 @@ function update_system_schema_requirements() {
     $requirements['minimum schema'] += [
       'value' => 'The installed schema version does not meet the minimum.',
       'severity' => REQUIREMENT_ERROR,
-      'description' => 'Your system schema version is ' . $system_schema . '. Updating directly from a schema version prior to 8000 is not supported. You must <a href="https://www.drupal.org/node/2179269">migrate your site to Drupal 8</a> first.',
+      'description' => 'Your system schema version is ' . $system_schema . '. Updating directly from a schema version prior to 8000 is not supported. You must upgrade your site to Drupal 8 first, see https://www.drupal.org/docs/8/upgrade.',
     ];
   }
 
