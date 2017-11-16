@@ -617,9 +617,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $select->addExpression(':delta', 'delta', [':delta' => 0]);
 
     // Add all the dynamic field columns.
+    $or = $select->orConditionGroup();
     foreach ($shared_table_field_columns as $field_column_name => $schema_column_name) {
       $select->addField('entity_table', $schema_column_name, $dedicated_table_field_columns[$field_column_name]);
+      $or->isNotNull($schema_column_name);
     }
+    $select->condition($or);
 
     // Lock the table rows.
     $select->forUpdate(TRUE);

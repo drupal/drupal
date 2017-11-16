@@ -395,6 +395,11 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $storage = $this->entityManager->getStorage('entity_test_update');
     $schema_handler = $this->database->schema();
 
+    // Create an entity without the base field, to ensure NULL values are not
+    // added to the dedicated table storage to be purged.
+    $entity = $storage->create();
+    $entity->save();
+
     // Add the base field and run the update.
     $this->addBaseField();
     $this->entityDefinitionUpdateManager->applyUpdates();
