@@ -16,8 +16,16 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: file_default
+    weight: 1
+    region: content
+  name:
+    label: hidden
+    type: string
     weight: 0
     region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
 hidden:
   created: true
   thumbnail: true

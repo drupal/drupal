@@ -20,4 +20,15 @@ class MediaTest extends MediaKernelTestBase {
     $this->assertSame($media, $media->setOwnerId($this->user->id()), 'setOwnerId() method returns its own entity.');
   }
 
+  /**
+   * Ensure media name is configurable on manage display.
+   */
+  public function testNameIsConfigurable() {
+    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $field_definitions */
+    $field_definitions = $this->container->get('entity_field.manager')
+      ->getBaseFieldDefinitions('media');
+
+    $this->assertTrue($field_definitions['name']->isDisplayConfigurable('view'));
+  }
+
 }
