@@ -1,0 +1,129 @@
+layout_builder.choose_section:
+  path: '/layout_builder/choose/section/{entity_type_id}/{entity}/{delta}'
+  defaults:
+   _controller: '\Drupal\layout_builder\Controller\ChooseSectionController::build'
+  requirements:
+    _permission: 'configure any layout'
+  options:
+    _admin_route: TRUE
+    parameters:
+      entity:
+        type: entity:{entity_type_id}
+        layout_builder_tempstore: TRUE
+
+layout_builder.add_section:
+  path: '/layout_builder/add/section/{entity_type_id}/{entity}/{delta}/{plugin_id}'
+  defaults:
+    _controller: '\Drupal\layout_builder\Controller\AddSectionController::build'
+  requirements:
+    _permission: 'configure any layout'
+  options:
+    _admin_route: TRUE
+    parameters:
+      entity:
+        type: entity:{entity_type_id}
+        layout_builder_tempstore: TRUE
+
+layout_builder.configure_section:
+  path: '/layout_builder/configure/section/{entity_type_id}/{entity}/{delta}/{plugin_id}'
+  defaults:
+    _title: 'Configure section'
+    _form: '\Drupal\layout_builder\Form\ConfigureSectionForm'
+    # Adding a new section requires a plugin_id, while configuring an existing
+    # section does not.
+    plugin_id: null
+  requirements:
+    _permission: 'configure any layout'
+  options:
+    _admin_route: TRUE
+    parameters:
+      entity:
+        type: entity:{entity_type_id}
+        layout_builder_tempstore: TRUE
+
+layout_builder.remove_section:
+  path: '/layout_builder/remove/section/{entity_type_id}/{entity}/{delta}'
+  defaults:
+    _form: '\Drupal\layout_builder\Form\RemoveSectionForm'
+  requirements:
+    _permission: 'configure any layout'
+  options:
+    _admin_route: TRUE
+    parameters:
+      entity:
+        type: entity:{entity_type_id}
+        layout_builder_tempstore: TRUE
+
+layout_builder.choose_block:
+  path: '/layout_builder/choose/block/{entity_type_id}/{entity}/{delta}/{region}'
+  defaults:
+    _controller: '\Drupal\layout_builder\Controller\ChooseBlockController::build'
+  requirements:
+    _permission: 'configure any layout'
+  options:
+    _admin_route: TRUE
+    parameters:
+      entity:
+        type: entity:{entity_type_id}
+        layout_builder_tempstore: TRUE
+
+layout_builder.add_block:
+  path: '/layout_builder/add/block/{entity_type_id}/{entity}/{delta}/{region}/{plugin_id}'
+  defaults:
+    _form: '\Drupal\layout_builder\Form\AddBlockForm'
+  requirements:
+    _permission: 'configure any layout'
+  options:
+    _admin_route: TRUE
+    parameters:
+      entity:
+        type: entity:{entity_type_id}
+        layout_builder_tempstore: TRUE
+
+layout_builder.update_block:
+  path: '/layout_builder/update/block/{entity_type_id}/{entity}/{delta}/{region}/{uuid}'
+  defaults:
+    _form: '\Drupal\layout_builder\Form\UpdateBlockForm'
+  requirements:
+    _permission: 'configure any layout'
+  options:
+    _admin_route: TRUE
+    parameters:
+      entity:
+        type: entity:{entity_type_id}
+        layout_builder_tempstore: TRUE
+
+layout_builder.remove_block:
+  path: '/layout_builder/remove/block/{entity_type_id}/{entity}/{delta}/{region}/{uuid}'
+  defaults:
+    _form: '\Drupal\layout_builder\Form\RemoveBlockForm'
+  requirements:
+    _permission: 'configure any layout'
+  options:
+    _admin_route: TRUE
+    parameters:
+      entity:
+        type: entity:{entity_type_id}
+        layout_builder_tempstore: TRUE
+
+layout_builder.move_block:
+  path: '/layout_builder/move/block/{entity_type_id}/{entity}/{delta_from}/{delta_to}/{region_from}/{region_to}/{block_uuid}/{preceding_block_uuid}'
+  defaults:
+    _controller: '\Drupal\layout_builder\Controller\MoveBlockController::build'
+    delta_from: null
+    delta_to: null
+    region_from: null
+    region_to: null
+    block_uuid: null
+    preceding_block_uuid: null
+  requirements:
+    _permission: 'configure any layout'
+  options:
+    _admin_route: TRUE
+    parameters:
+      entity:
+        type: entity:{entity_type_id}
+        layout_builder_tempstore: TRUE
+
+route_callbacks:
+  - 'layout_builder.routes:getRoutes'

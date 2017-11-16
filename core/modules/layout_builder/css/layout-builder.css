@@ -1,0 +1,51 @@
+.add-section {
+  width: 100%;
+  outline: 2px dashed #979797;
+  padding: 1.5em 0;
+  text-align: center;
+  margin-bottom: 1.5em;
+  transition: visually-hidden 2s ease-out, height 2s ease-in;
+}
+
+.layout-section {
+  margin-bottom: 1.5em;
+}
+
+.layout-section .layout-builder--layout__region {
+  outline: 2px dashed #2f91da;
+  padding: 1.5em 0;
+}
+
+.layout-section .layout-builder--layout__region .add-block {
+  text-align: center;
+}
+
+.layout-section .remove-section {
+  position: relative;
+  background: url(../../../misc/icons/bebebe/ex.svg) #ffffff center center / 16px 16px no-repeat;
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  font-size: 1rem;
+  padding: 0;
+  height: 26px;
+  width: 26px;
+  white-space: nowrap;
+  text-indent: -9999px;
+  display: inline-block;
+  border-radius: 26px;
+  margin-left: -10px;
+}
+
+.layout-section .remove-section:hover {
+  background-image: url(../../../misc/icons/787878/ex.svg);
+}
+
+#drupal-off-canvas .layout-selection li {
+  display: block;
+  padding-bottom: 1em;
+}
+
+#drupal-off-canvas .layout-selection li a {
+  display: block;
+  padding-top: 0.55em;
+}

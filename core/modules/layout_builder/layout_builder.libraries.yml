@@ -1,0 +1,10 @@
+drupal.layout_builder:
+  version: VERSION
+  css:
+    theme:
+      css/layout-builder.css: {}
+  js:
+    js/layout-builder.js: {}
+  dependencies:
+    - core/jquery.ui.sortable
+    - core/drupal.dialog.off_canvas
