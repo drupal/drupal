@@ -119,7 +119,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *   The new title of the dialog.
    */
   public function setDialogTitle($title) {
-    $this->setDialogOptions('title', $title);
+    $this->setDialogOption('title', $title);
   }
 
   /**
