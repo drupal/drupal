@@ -62,7 +62,7 @@ class DialogRenderer implements MainContentRendererInterface {
    *
    * @param array &$options
    *   The 'target' option, if set, is used, and then removed from $options.
-   * @param RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   When no 'target' option is set in $options, $route_match is used instead
    *   to determine the target.
    *

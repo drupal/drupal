@@ -292,7 +292,7 @@ abstract class CachePluginBase extends PluginBase {
   /**
    * Returns the row cache tags.
    *
-   * @param ResultRow $row
+   * @param \Drupal\views\ResultRow $row
    *   A result row.
    *
    * @return string[]

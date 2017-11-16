@@ -38,7 +38,7 @@ interface AccessManagerInterface {
   /**
    * Execute access checks against the incoming request.
    *
-   * @param Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   (optional) Run access checks for this account. Defaults to the current

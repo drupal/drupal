@@ -121,7 +121,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   /**
    * Adds Moderation configuration to appropriate entity types.
    *
-   * @param EntityTypeInterface[] $entity_types
+   * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
    *   The master entity type list to alter.
    *
    * @see hook_entity_type_alter()

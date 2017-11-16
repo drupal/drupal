@@ -81,7 +81,7 @@ class ConfigSubscriber implements EventSubscriberInterface {
    * then this event must be changed to work with both the old and new schema
    * definition so this event is update safe.
    *
-   * @param ConfigCrudEvent $event
+   * @param \Drupal\Core\Config\ConfigCrudEvent $event
    *   The configuration event.
    */
   public function onConfigSave(ConfigCrudEvent $event) {

@@ -82,7 +82,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase implem
    *   The view mode.
    * @param array $third_party_settings
    *   Any third party settings settings.
-   * @param LoggerChannelFactoryInterface $logger_factory
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.

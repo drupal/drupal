@@ -41,9 +41,9 @@ class EntityComment extends EntityContentBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param MigrationInterface $migration
+   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration.
-   * @param EntityStorageInterface $storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The storage for this entity type.
    * @param array $bundles
    *   The list of bundles this entity type has.

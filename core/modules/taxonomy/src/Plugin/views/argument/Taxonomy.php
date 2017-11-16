@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterface {
 
   /**
-   * @var EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $termStorage;
 

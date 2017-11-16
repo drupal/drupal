@@ -77,7 +77,7 @@ class SharedTempStore {
   /**
    * Constructs a new object for accessing data from a key/value store.
    *
-   * @param KeyValueStoreExpirableInterface $storage
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $storage
    *   The key/value storage object used for this data. Each storage object
    *   represents a particular collection of data and will contain any number
    *   of key/value pairs.

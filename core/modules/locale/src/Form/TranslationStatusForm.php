@@ -40,7 +40,7 @@ class TranslationStatusForm extends FormBase {
   /**
    * Constructs a TranslationStatusForm object.
    *
-   * @param ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   A module handler.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.

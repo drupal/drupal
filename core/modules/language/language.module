@@ -193,7 +193,7 @@ function language_configuration_element_submit(&$form, FormStateInterface $form_
       $bundle = $values['bundle'];
       $form_object = $form_state->getFormObject();
       if ($form_object instanceof EntityFormInterface) {
-        /** @var EntityFormInterface $form_object */
+        /** @var \Drupal\Core\Entity\EntityFormInterface $form_object */
         $entity = $form_object->getEntity();
         if ($entity->getEntityType()->getBundleOf()) {
           $bundle = $entity->id();

@@ -676,13 +676,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @param \Exception $e
    *   An exception
-   * @param Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   A Request instance
    * @param int $type
    *   The type of the request (one of HttpKernelInterface::MASTER_REQUEST or
    *   HttpKernelInterface::SUB_REQUEST)
    *
-   * @return Response
+   * @return \Symfony\Component\HttpFoundation\Response
    *   A Response instance
    *
    * @throws \Exception
@@ -1187,10 +1187,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Attach synthetic values on to kernel.
    *
-   * @param ContainerInterface $container
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   Container object
    *
-   * @return ContainerInterface
+   * @return \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected function attachSynthetic(ContainerInterface $container) {
     $persist = [];
@@ -1213,7 +1213,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Compiles a new service container.
    *
-   * @return ContainerBuilder The compiled service container
+   * @return \Drupal\Core\DependencyInjection\ContainerBuilder The compiled service container
    */
   protected function compileContainer() {
     // We are forcing a container build so it is reasonable to assume that the
@@ -1334,7 +1334,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Gets a new ContainerBuilder instance used to build the service container.
    *
-   * @return ContainerBuilder
+   * @return \Drupal\Core\DependencyInjection\ContainerBuilder
    */
   protected function getContainerBuilder() {
     return new ContainerBuilder(new ParameterBag($this->getKernelParameters()));

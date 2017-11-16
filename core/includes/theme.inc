@@ -461,7 +461,7 @@ function theme_render_and_autoescape($arg) {
  *
  * @param array $theme_settings
  *   An array of theme settings from system setting form or a Drupal 7 variable.
- * @param Config $config
+ * @param \Drupal\Core\Config\Config $config
  *   The configuration object to update.
  *
  * @return

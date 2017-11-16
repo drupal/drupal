@@ -44,7 +44,7 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
   /**
    * Check whether given user has access to this handler.
    *
-   * @param AccountInterface $account
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account to check.
    *
    * @return bool

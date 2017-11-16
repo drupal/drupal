@@ -164,11 +164,11 @@ class RegistryTest extends KernelTestBase {
    */
   public function testThemeSuggestions() {
     // Mock the current page as the front page.
-    /** @var PathMatcherInterface $path_matcher */
+    /** @var \Drupal\Core\Path\PathMatcherInterface $path_matcher */
     $path_matcher = $this->prophesize(PathMatcherInterface::class);
     $path_matcher->isFrontPage()->willReturn(TRUE);
     $this->container->set('path.matcher', $path_matcher->reveal());
-    /** @var CurrentPathStack $path_matcher */
+    /** @var \Drupal\Core\Path\CurrentPathStack $path_matcher */
     $path_current = $this->prophesize(CurrentPathStack::class);
     $path_current->getPath()->willReturn('/node/1');
     $this->container->set('path.current', $path_current->reveal());
