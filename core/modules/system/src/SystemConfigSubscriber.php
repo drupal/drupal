@@ -68,7 +68,7 @@ class SystemConfigSubscriber implements EventSubscriberInterface {
    * This event listener checks that the system.site:uuid's in the source and
    * target match.
    *
-   * @param ConfigImporterEvent $event
+   * @param \Drupal\Core\Config\ConfigImporterEvent $event
    *   The config import event.
    */
   public function onConfigImporterValidateSiteUUID(ConfigImporterEvent $event) {

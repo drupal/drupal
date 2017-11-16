@@ -69,7 +69,7 @@ class MigrateRollbackTest extends MigrateTestBase {
     $vocabulary_executable = new MigrateExecutable($vocabulary_migration, $this);
     $vocabulary_executable->import();
     foreach ($vocabulary_data_rows as $row) {
-      /** @var Vocabulary $vocabulary */
+      /** @var \Drupal\taxonomy\Entity\Vocabulary $vocabulary */
       $vocabulary = Vocabulary::load($row['id']);
       $this->assertTrue($vocabulary);
       $map_row = $vocabulary_id_map->getRowBySource(['id' => $row['id']]);
@@ -122,7 +122,7 @@ class MigrateRollbackTest extends MigrateTestBase {
       $map_row['source_row_status'], MigrateIdMapInterface::ROLLBACK_PRESERVE);
 
     foreach ($term_data_rows as $row) {
-      /** @var Term $term */
+      /** @var \Drupal\taxonomy\Entity\Term $term */
       $term = Term::load($row['id']);
       $this->assertTrue($term);
       $map_row = $term_id_map->getRowBySource(['id' => $row['id']]);

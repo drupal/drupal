@@ -219,7 +219,7 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
   /**
    * Updates configuration entity in the key store.
    *
-   * @param ConfigCrudEvent $event
+   * @param \Drupal\Core\Config\ConfigCrudEvent $event
    *   The configuration event.
    */
   public function onConfigSave(ConfigCrudEvent $event) {

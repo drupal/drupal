@@ -67,11 +67,11 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
   /**
    * Creates a UserSearch object.
    *
-   * @param Connection $database
+   * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.

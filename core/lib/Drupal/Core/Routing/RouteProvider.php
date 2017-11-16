@@ -135,7 +135,7 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
    * very large route sets to be filtered down to likely candidates, which
    * may then be filtered in memory more completely.
    *
-   * @param Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request against which to match.
    *
    * @return \Symfony\Component\Routing\RouteCollection

@@ -439,7 +439,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * Determines if a field has options for a given display.
    *
-   * @param FieldDefinitionInterface $definition
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
    *   A field definition.
    * @return array|null
    */

@@ -84,7 +84,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
     }
 
     foreach ($expected_results as $tid => $values) {
-      /** @var Term $term */
+      /** @var \Drupal\taxonomy\Entity\Term $term */
       $term = $terms[$tid];
       $language = isset($values['language']) ? $values['language'] . ' - ' : '';
       $this->assertSame("{$language}term {$tid} of vocabulary {$values['source_vid']}", $term->name->value);

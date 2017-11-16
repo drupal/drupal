@@ -41,7 +41,7 @@ class UpdateTestController extends ControllerBase {
    * @param string $version
    *   The version of Drupal core.
    *
-   * @return BinaryFileResponse|Response
+   * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|Response
    *   A BinaryFileResponse object containing the content of the XML release file
    *   for the specified project if one is available; a Response object with no
    *   content otherwise.

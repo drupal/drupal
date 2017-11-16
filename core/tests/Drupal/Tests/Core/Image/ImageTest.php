@@ -72,7 +72,7 @@ class ImageTest extends UnitTestCase {
    *
    * @param string $class_name
    *   The name of the GD toolkit operation class to be mocked.
-   * @param ImageToolkitInterface $toolkit
+   * @param \Drupal\Core\Image\ImageToolkitInterface $toolkit
    *   The image toolkit object.
    *
    * @return \PHPUnit_Framework_MockObject_MockObject

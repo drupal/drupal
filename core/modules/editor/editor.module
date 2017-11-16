@@ -434,7 +434,7 @@ function editor_entity_revision_delete(EntityInterface $entity) {
  *
  * @param array $uuids
  *   An array of file entity UUIDs.
- * @param EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   An entity whose fields to inspect for file references.
  */
 function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
@@ -454,7 +454,7 @@ function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
  *
  * @param array $uuids
  *   An array of file entity UUIDs.
- * @param EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   An entity whose fields to inspect for file references.
  * @param $count
  *   The number of references to delete. Should be 1 when deleting a single
@@ -545,7 +545,7 @@ function editor_file_download($uri) {
 /**
  * Finds all files referenced (data-entity-uuid) by formatted text fields.
  *
- * @param EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   An entity whose fields to analyze.
  *
  * @return array

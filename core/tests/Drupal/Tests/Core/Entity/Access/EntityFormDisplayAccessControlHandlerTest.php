@@ -73,7 +73,7 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
   /**
    * Returns a mock Entity Type Manager.
    *
-   * @return EntityTypeManagerInterface
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
    *   The mocked entity type manager.
    */
   protected function getEntityTypeManager() {

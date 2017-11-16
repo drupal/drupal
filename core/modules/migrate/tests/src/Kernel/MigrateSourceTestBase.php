@@ -20,7 +20,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
   /**
    * The mocked migration.
    *
-   * @var MigrationInterface|\Prophecy\Prophecy\ObjectProphecy
+   * @var \Drupal\migrate\Plugin\MigrationInterface|\Prophecy\Prophecy\ObjectProphecy
    */
   protected $migration;
 

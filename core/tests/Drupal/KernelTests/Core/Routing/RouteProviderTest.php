@@ -41,7 +41,7 @@ class RouteProviderTest extends KernelTestBase {
   /**
    * A collection of shared fixture data for tests.
    *
-   * @var RoutingFixtures
+   * @var \Drupal\Tests\Core\Routing\RoutingFixtures
    */
   protected $fixtures;
 

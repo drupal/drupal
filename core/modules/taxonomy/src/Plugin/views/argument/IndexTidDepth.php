@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * @var EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $termStorage;
 

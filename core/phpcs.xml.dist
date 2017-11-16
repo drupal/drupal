@@ -28,6 +28,7 @@
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/ClassCommentSniff.php">
     <exclude name="Drupal.Commenting.ClassComment.Missing"/>
   </rule>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/DataTypeNamespaceSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/DocCommentSniff.php">
     <!-- Sniff for these errors: SpacingAfterTagGroup, WrongEnd, SpacingBetween,
       ContentAfterOpen, SpacingBeforeShort, TagValueIndent, ShortStartSpace,

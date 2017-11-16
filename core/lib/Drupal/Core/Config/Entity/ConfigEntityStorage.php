@@ -445,7 +445,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * @param bool $is_syncing
    *   Is the configuration entity being created as part of a config sync.
    *
-   * @return ConfigEntityInterface
+   * @return \Drupal\Core\Config\ConfigEntityInterface
    *   The configuration entity.
    *
    * @see \Drupal\Core\Config\Entity\ConfigEntityStorageInterface::createFromStorageRecord()

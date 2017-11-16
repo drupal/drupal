@@ -136,7 +136,7 @@ class EntityModerationForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    /** @var ContentEntityInterface $entity */
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $form_state->get('entity');
 
     $new_state = $form_state->getValue('new_state');

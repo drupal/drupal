@@ -88,11 +88,11 @@ class ModerationStateAccessTest extends BrowserTestBase {
    * @param string $machine_name
    *   The machine name of the type to create.
    *
-   * @return NodeType
+   * @return \Drupal\node\Entity\NodeType
    *   The node type just created.
    */
   protected function createNodeType($label, $machine_name) {
-    /** @var NodeType $node_type */
+    /** @var \Drupal\node\Entity\NodeType $node_type */
     $node_type = NodeType::create([
       'type' => $machine_name,
       'label' => $label,

@@ -14,7 +14,7 @@ class ConfigSubscriber extends ConfigImportValidateEventSubscriberBase {
   /**
    * Checks that the Configuration module is not being uninstalled.
    *
-   * @param ConfigImporterEvent $event
+   * @param \Drupal\Core\Config\ConfigImporterEvent $event
    *   The config import event.
    */
   public function onConfigImporterValidate(ConfigImporterEvent $event) {

@@ -32,7 +32,7 @@ use Drupal\Core\Utility\LinkGeneratorInterface;
 class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFactoryPluginInterface {
 
   /**
-   * @var EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $responsiveImageStyleStorage;
 
