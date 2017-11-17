@@ -1,5 +1,0 @@
-# @todo Expand permissions to be more granular in
-#   https://www.drupal.org/node/2914486.
-configure any layout:
-  title: 'Configure any layout'
-  restrict access: true
