@@ -226,6 +226,16 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::setStateWeight
+   */
+  public function testSetStateWeightNonNumericException() {
+    $this->setExpectedException(\InvalidArgumentException::class, "The weight 'foo' must be numeric for state 'Published'.");
+    $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
+    $workflow->getTypePlugin()->addState('published', 'Published');
+    $workflow->getTypePlugin()->setStateWeight('published', 'foo');
+  }
+
+  /**
    * @covers ::deleteState
    */
   public function testDeleteState() {
@@ -554,6 +564,17 @@ class WorkflowTest extends UnitTestCase {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->getTypePlugin()->addState('published', 'Published');
     $workflow->getTypePlugin()->setTransitionWeight('draft-published', 10);
+  }
+
+  /**
+   * @covers ::setTransitionWeight
+   */
+  public function testSetTransitionWeightNonNumericException() {
+    $this->setExpectedException(\InvalidArgumentException::class, "The weight 'foo' must be numeric for transition 'Publish'.");
+    $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
+    $workflow->getTypePlugin()->addState('published', 'Published');
+    $workflow->getTypePlugin()->addTransition('publish', 'Publish', [], 'published');
+    $workflow->getTypePlugin()->setTransitionWeight('publish', 'foo');
   }
 
   /**
