@@ -571,6 +571,12 @@ function file_theme() {
     'file_managed_file' => [
       'render element' => 'element',
     ],
+    'file_audio' => [
+      'variables' => ['files' => [], 'attributes' => NULL],
+    ],
+    'file_video' => [
+      'variables' => ['files' => [], 'attributes' => NULL],
+    ],
 
     // From file.field.inc.
     'file_widget_multiple' => [

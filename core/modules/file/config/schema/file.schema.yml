@@ -70,6 +70,41 @@ field.field_settings.file:
       type: boolean
       label: 'Enable Description field'
 
+file.formatter.media:
+  type: mapping
+  label: 'Media display format settings'
+  mapping:
+    controls:
+      type: boolean
+      label: 'Show playback controls'
+    autoplay:
+      type: boolean
+      label: 'Autoplay'
+    loop:
+      type: boolean
+      label: 'Loop'
+    multiple_file_display_type:
+      type: string
+      label: 'Display of multiple files'
+
+field.formatter.settings.file_audio:
+  type: file.formatter.media
+  label: 'Audio file display format settings'
+
+field.formatter.settings.file_video:
+  type: file.formatter.media
+  label: 'Video file display format settings'
+  mapping:
+    muted:
+      type: boolean
+      label: 'Muted'
+    width:
+      type: integer
+      label: 'Width'
+    height:
+      type: integer
+      label: 'Height'
+
 field.formatter.settings.file_default:
   type: mapping
   label: 'Generic file format settings'
