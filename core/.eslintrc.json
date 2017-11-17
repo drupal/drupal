@@ -22,7 +22,7 @@
     "consistent-return": [0],
     "no-underscore-dangle": [0],
     "max-nested-callbacks": [1, 3],
-    "no-mutable-exports": [1],
+    "import/no-mutable-exports": [1],
     "no-plusplus": [1, {
       "allowForLoopAfterthoughts": true
     }],
