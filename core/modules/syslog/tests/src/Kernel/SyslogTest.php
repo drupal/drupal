@@ -4,7 +4,6 @@ namespace Drupal\Tests\syslog\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Test syslog logger functionality.
@@ -52,6 +51,28 @@ class SyslogTest extends KernelTestBase {
     $this->assertEquals('42', $log[6]);
     $this->assertEquals('/my-link', $log[7]);
     $this->assertEquals('My warning message.', $log[8]);
+  }
+
+  /**
+   * Test severity level logging.
+   *
+   * @covers ::log
+   */
+  public function testSyslogSeverity() {
+    /* @var \Drupal\Core\Config\Config $config */
+    $config = $this->container->get('config.factory')->getEditable('syslog.settings');
+    $config->set('format', '!type|!message|!severity');
+    $config->save();
+
+    \Drupal::logger('my_module')->warning('My warning message.');
+
+    $log_filename = $this->container->get('file_system')->realpath('public://syslog.log');
+    $logs = explode(PHP_EOL, file_get_contents($log_filename));
+    $log = explode('|', $logs[0]);
+
+    $this->assertEquals('my_module', $log[0]);
+    $this->assertEquals('My warning message.', $log[1]);
+    $this->assertEquals('4', $log[2]);
   }
 
 }

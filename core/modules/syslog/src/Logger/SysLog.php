@@ -77,6 +77,7 @@ class SysLog implements LoggerInterface {
       '!ip' => $context['ip'],
       '!request_uri' => $context['request_uri'],
       '!referer' => $context['referer'],
+      '!severity' => $level,
       '!uid' => $context['uid'],
       '!link' => strip_tags($context['link']),
       '!message' => strip_tags($message),
