@@ -50,8 +50,7 @@ interface ImageEffectInterface extends PluginInspectionInterface, ConfigurablePl
   public function transformDimensions(array &$dimensions, $uri);
 
   /**
-   * Returns the extension the derivative would have have after applying this
-   * image effect.
+   * Returns the extension of the derivative after applying this image effect.
    *
    * @param string $extension
    *   The file extension the derivative has before applying.
