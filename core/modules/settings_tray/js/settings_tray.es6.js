@@ -175,9 +175,9 @@
      */
     Drupal.attachBehaviors(data.$el[0]);
     /**
-     * Bind a listener to all 'Quick edit' links for blocks. Click "Edit" button
-     * in toolbar to force Contextual Edit which starts Settings Tray edit
-     * mode also.
+     * Bind a listener to all 'Quick edit' links for blocks. Click "Edit"
+     * button in toolbar to force Contextual Edit which starts Settings Tray
+     * edit mode also.
      */
     data.$el.find(blockConfigureSelector)
       .on('click.settingstray', () => {
@@ -202,7 +202,8 @@
   });
 
   /**
-   * Toggle the js-settings-tray-edit-mode class on items that we want to disable while in edit mode.
+   * Toggle the js-settings-tray-edit-mode class on items that we want to
+   * disable while in edit mode.
    *
    * @type {Drupal~behavior}
    *
