@@ -53,6 +53,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Contains the operator which is used on the query.
+   *
+   * @var string
    */
   public $operator = '=';
 

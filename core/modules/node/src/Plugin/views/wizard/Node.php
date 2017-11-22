@@ -22,6 +22,8 @@ class Node extends WizardPluginBase {
 
   /**
    * Set the created column.
+   *
+   * @var string
    */
   protected $createdColumn = 'node_field_data-created';
 

@@ -39,6 +39,8 @@ class BreadcrumbTest extends BrowserTestBase {
 
   /**
    * Test paths in the Standard profile.
+   *
+   * @var string
    */
   protected $profile = 'standard';
 

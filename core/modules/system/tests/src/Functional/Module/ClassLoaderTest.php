@@ -13,6 +13,8 @@ class ClassLoaderTest extends BrowserTestBase {
 
   /**
    * The expected result from calling the module-provided class' method.
+   *
+   * @var string
    */
   protected $expected = 'Drupal\\module_autoload_test\\SomeClass::testMethod() was invoked.';
 

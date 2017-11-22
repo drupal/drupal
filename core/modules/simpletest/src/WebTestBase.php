@@ -168,6 +168,8 @@ abstract class WebTestBase extends TestBase {
 
   /**
    * The maximum number of redirects to follow when handling responses.
+   *
+   * @var int
    */
   protected $maximumRedirects = 5;
 

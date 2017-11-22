@@ -30,6 +30,8 @@ class SelectExtender implements SelectInterface {
 
   /**
    * The placeholder counter.
+   *
+   * @var int
    */
   protected $placeholder = 0;
 

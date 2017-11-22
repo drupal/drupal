@@ -28,6 +28,8 @@ class OtherInstallationProfileTestsTest extends BrowserTestBase {
    * The Standard profile contains \Drupal\standard\Tests\StandardTest, which
    * should be found.
    *
+   * @var string
+   *
    * @see \Drupal\simpletest\Tests\InstallationProfileModuleTestsTest
    * @see \Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest
    */

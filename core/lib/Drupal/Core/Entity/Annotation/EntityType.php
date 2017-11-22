@@ -33,6 +33,8 @@ class EntityType extends Plugin {
 
   /**
    * The group machine name.
+   *
+   * @var string
    */
   public $group = 'default';
 

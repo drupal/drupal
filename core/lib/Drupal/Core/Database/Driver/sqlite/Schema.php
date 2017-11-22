@@ -19,6 +19,8 @@ class Schema extends DatabaseSchema {
 
   /**
    * Override DatabaseSchema::$defaultSchema
+   *
+   * @var string
    */
   protected $defaultSchema = 'main';
 
