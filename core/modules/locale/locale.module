@@ -99,7 +99,7 @@ const LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL = 'remote_and_local';
  *
  * @see locale_translation_default_translation_server().
  */
-const LOCALE_TRANSLATION_DEFAULT_SERVER_PATTERN = 'http://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po';
+const LOCALE_TRANSLATION_DEFAULT_SERVER_PATTERN = 'https://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po';
 
 /**
  * The number of seconds that the translations status entry should be considered.

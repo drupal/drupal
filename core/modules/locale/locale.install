@@ -304,3 +304,15 @@ function locale_update_8300() {
   // the new key value collection.
   \Drupal::state()->delete('locale.translation_status');
 }
+
+/**
+ * Update default server pattern value to use https.
+ */
+function locale_update_8500() {
+  $update_url = \Drupal::config('locale.settings')->get('translation.default_server_pattern');
+  if ($update_url == 'http://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po') {
+    \Drupal::configFactory()->getEditable('locale.settings')
+      ->set('translation.default_server_pattern', 'https://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po')
+      ->save();
+  }
+}
