@@ -48,30 +48,26 @@ class UserData implements UserDataInterface {
       }
       return NULL;
     }
+    $return = [];
     // If $module and $uid were passed, return data keyed by name.
-    elseif (isset($uid)) {
-      $return = [];
+    if (isset($uid)) {
       foreach ($result as $record) {
         $return[$record->name] = ($record->serialized ? unserialize($record->value) : $record->value);
       }
       return $return;
     }
     // If $module and $name were passed, return data keyed by uid.
-    elseif (isset($name)) {
-      $return = [];
+    if (isset($name)) {
       foreach ($result as $record) {
         $return[$record->uid] = ($record->serialized ? unserialize($record->value) : $record->value);
       }
       return $return;
     }
     // If only $module was passed, return data keyed by uid and name.
-    else {
-      $return = [];
-      foreach ($result as $record) {
-        $return[$record->uid][$record->name] = ($record->serialized ? unserialize($record->value) : $record->value);
-      }
-      return $return;
+    foreach ($result as $record) {
+      $return[$record->uid][$record->name] = ($record->serialized ? unserialize($record->value) : $record->value);
     }
+    return $return;
   }
 
   /**
