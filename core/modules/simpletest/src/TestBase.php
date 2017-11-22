@@ -45,6 +45,8 @@ abstract class TestBase {
 
   /**
    * Time limit for the test.
+   *
+   * @var int
    */
   protected $timeLimit = 500;
 

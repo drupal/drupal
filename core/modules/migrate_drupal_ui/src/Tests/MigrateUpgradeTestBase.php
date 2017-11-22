@@ -20,6 +20,8 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
 
   /**
    * Use the Standard profile to test help implementations of many core modules.
+   *
+   * @var string
    */
   protected $profile = 'standard';
 

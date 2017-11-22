@@ -28,6 +28,8 @@ class PhpassHashedPassword implements PasswordInterface {
 
   /**
    * Returns a string for mapping an int to the corresponding base 64 character.
+   *
+   * @var string
    */
   public static $ITOA64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 

@@ -16,6 +16,8 @@ abstract class BlockContentTestBase extends WebTestBase {
 
   /**
    * Profile to use.
+   *
+   * @var string
    */
   protected $profile = 'testing';
 

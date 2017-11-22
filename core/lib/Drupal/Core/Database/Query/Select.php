@@ -113,6 +113,8 @@ class Select extends Query implements SelectInterface {
 
   /**
    * The FOR UPDATE status
+   *
+   * @var bool
    */
   protected $forUpdate = FALSE;
 

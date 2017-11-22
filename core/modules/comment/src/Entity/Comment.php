@@ -73,6 +73,8 @@ class Comment extends ContentEntityBase implements CommentInterface {
 
   /**
    * The thread for which a lock was acquired.
+   *
+   * @var string
    */
   protected $threadLock = '';
 
