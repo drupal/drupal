@@ -587,10 +587,17 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       $languages = $entity->getTranslationLanguages();
       foreach ($languages as $langcode => $language) {
         $translation = $entity->getTranslation($langcode);
-        // Avoid populating the value if it was already manually set.
-        $affected = $translation->isRevisionTranslationAffected();
-        if (!isset($affected) && $translation->hasTranslationChanges()) {
-          $translation->setRevisionTranslationAffected(TRUE);
+        $current_affected = $translation->isRevisionTranslationAffected();
+        if (!isset($current_affected) || ($entity->isNewRevision() && !$translation->isRevisionTranslationAffectedEnforced())) {
+          // When setting the revision translation affected flag we have to
+          // explicitly set it to not be enforced. By default it will be
+          // enforced automatically when being set, which allows us to determine
+          // if the flag has been already set outside the storage in which case
+          // we should not recompute it.
+          // @see \Drupal\Core\Entity\ContentEntityBase::setRevisionTranslationAffected().
+          $new_affected = $translation->hasTranslationChanges() ? TRUE : NULL;
+          $translation->setRevisionTranslationAffected($new_affected);
+          $translation->setRevisionTranslationAffectedEnforced(FALSE);
         }
       }
     }

@@ -157,4 +157,33 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $this->assertFalse($translation->isDefaultRevision());
   }
 
+  /**
+   * @covers \Drupal\Core\Entity\RevisionableInterface::setNewRevision
+   */
+  public function testSetNewRevision() {
+    $user = $this->createUser();
+
+    // All revisionable entity variations have to have the same results.
+    foreach (entity_test_entity_types(ENTITY_TEST_TYPES_REVISABLE) as $entity_type) {
+      $this->installEntitySchema($entity_type);
+
+      $entity = entity_create($entity_type, [
+        'name' => 'foo',
+        'user_id' => $user->id(),
+      ]);
+
+      $entity->save();
+      $entity_id = $entity->id();
+      $entity_rev_id = $entity->getRevisionId();
+      $entity = entity_load($entity_type, $entity_id, TRUE);
+
+      $entity->setNewRevision(TRUE);
+      $entity->setNewRevision(FALSE);
+      $entity->save();
+      $entity = entity_load($entity_type, $entity_id, TRUE);
+
+      $this->assertEquals($entity_rev_id, $entity->getRevisionId(), 'A new entity revision was not created.');
+    }
+  }
+
 }
