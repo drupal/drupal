@@ -50,7 +50,7 @@ class ViewsRow extends ViewsPluginAnnotationBase {
   /**
    * The theme function used to render the row output.
    *
-   * @return string
+   * @var string
    */
   public $theme;
 

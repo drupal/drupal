@@ -97,7 +97,7 @@ abstract class WebTestBase extends TestBase {
   /**
    * The headers of the page currently loaded in the internal browser.
    *
-   * @var Array
+   * @var array
    */
   protected $headers;
 

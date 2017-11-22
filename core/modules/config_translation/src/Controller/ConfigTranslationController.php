@@ -62,7 +62,7 @@ class ConfigTranslationController extends ControllerBase {
   /**
    * The language manager.
    *
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 

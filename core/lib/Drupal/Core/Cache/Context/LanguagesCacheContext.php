@@ -13,7 +13,7 @@ class LanguagesCacheContext implements CalculatedCacheContextInterface {
   /**
    * The language manager.
    *
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
