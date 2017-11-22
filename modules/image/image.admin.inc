@@ -736,6 +736,7 @@ function theme_image_style_effects($variables) {
     if (!isset($form[$key]['#access']) || $form[$key]['#access']) {
       $rows[] = array(
         'data' => $row,
+        // Use a strict (===) comparison since $key can be 0.
         'class' => !empty($form[$key]['weight']['#access']) || $key === 'new' ? array('draggable') : array(),
       );
     }
