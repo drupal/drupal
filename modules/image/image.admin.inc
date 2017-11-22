@@ -736,7 +736,7 @@ function theme_image_style_effects($variables) {
     if (!isset($form[$key]['#access']) || $form[$key]['#access']) {
       $rows[] = array(
         'data' => $row,
-        'class' => !empty($form[$key]['weight']['#access']) || $key == 'new' ? array('draggable') : array(),
+        'class' => !empty($form[$key]['weight']['#access']) || $key === 'new' ? array('draggable') : array(),
       );
     }
   }
