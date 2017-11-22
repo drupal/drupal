@@ -13,7 +13,7 @@ class PoItem {
   /**
    * The language code this translation is in.
    *
-   * @car string
+   * @var string
    */
   private $_langcode;
 

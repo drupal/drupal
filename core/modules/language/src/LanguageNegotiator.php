@@ -38,7 +38,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
   /**
    * The settings instance.
    *
-   * @return \Drupal\Core\Site\Settings
+   * @var \Drupal\Core\Site\Settings
    */
   protected $settings;
 
@@ -52,7 +52,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
   /**
    * The current active user.
    *
-   * @return \Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
 

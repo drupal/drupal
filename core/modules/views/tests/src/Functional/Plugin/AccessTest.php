@@ -25,7 +25,7 @@ class AccessTest extends ViewTestBase {
   /**
    * Modules to enable.
    *
-   * @return array
+   * @var array
    */
   public static $modules = ['node'];
 

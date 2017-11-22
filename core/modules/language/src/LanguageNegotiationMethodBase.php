@@ -28,7 +28,7 @@ abstract class LanguageNegotiationMethodBase implements LanguageNegotiationMetho
   /**
    * The current active user.
    *
-   * @return \Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
 

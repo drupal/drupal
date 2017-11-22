@@ -46,7 +46,7 @@ class CounterTest extends UnitTestCase {
   /**
    * The handler definition of the counter field.
    *
-   * @return array
+   * @var array
    */
   protected $definition;
 

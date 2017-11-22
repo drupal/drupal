@@ -72,7 +72,7 @@ class EntityFilteringThemeTest extends WebTestBase {
   /**
    * A string containing markup and JS.
    *
-   * @string
+   * @var string
    */
   protected $xssLabel = "string with <em>HTML</em> and <script>alert('JS');</script>";
 
