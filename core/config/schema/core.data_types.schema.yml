@@ -284,6 +284,9 @@ config_entity:
     _core:
       type: _core_config_info
 
+block.settings.*:
+  type: block_settings
+
 block_settings:
   type: mapping
   label: 'Block settings'

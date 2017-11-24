@@ -30,6 +30,3 @@ block.block.*:
       sequence:
         type: condition.plugin.[id]
         label: 'Visibility Condition'
-
-block.settings.*:
-  type: block_settings
