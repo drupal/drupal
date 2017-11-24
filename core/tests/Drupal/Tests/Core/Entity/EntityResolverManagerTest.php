@@ -445,21 +445,151 @@ class EntityResolverManagerTest extends UnitTestCase {
     $definition->expects($this->any())
       ->method('getClass')
       ->will($this->returnValue('Drupal\Tests\Core\Entity\SimpleTestEntity'));
+    $definition->expects($this->any())
+      ->method('isRevisionable')
+      ->willReturn(FALSE);
+    $revisionable_definition = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $revisionable_definition->expects($this->any())
+      ->method('getClass')
+      ->will($this->returnValue('Drupal\Tests\Core\Entity\SimpleTestEntity'));
+    $revisionable_definition->expects($this->any())
+      ->method('isRevisionable')
+      ->willReturn(TRUE);
     $this->entityManager->expects($this->any())
       ->method('getDefinitions')
       ->will($this->returnValue([
         'entity_test' => $definition,
+        'entity_test_rev' => $revisionable_definition,
       ]));
     $this->entityManager->expects($this->any())
       ->method('getDefinition')
-      ->will($this->returnCallback(function ($entity_type) use ($definition) {
+      ->will($this->returnCallback(function ($entity_type) use ($definition, $revisionable_definition) {
         if ($entity_type == 'entity_test') {
           return $definition;
+        }
+        elseif ($entity_type === 'entity_test_rev') {
+          return $revisionable_definition;
         }
         else {
           return NULL;
         }
       }));
+  }
+
+  /**
+   * @covers ::setLatestRevisionFlag
+   *
+   * @dataProvider setLatestRevisionFlagTestCases
+   */
+  public function testSetLatestRevisionFlag($defaults, $parameters, $expected_parameters = FALSE) {
+    $route = new Route('/foo/{entity_test}', $defaults, [], [
+      'parameters' => $parameters,
+    ]);
+    $this->setupEntityTypes();
+    $this->entityResolverManager->setRouteOptions($route);
+    // If expected parameters have not been provided, assert they are unchanged.
+    $this->assertEquals($expected_parameters ?: $parameters, $route->getOption('parameters'));
+  }
+
+  /**
+   * Data provider for ::testSetLatestRevisionFlag.
+   */
+  public function setLatestRevisionFlagTestCases() {
+    return [
+      'Entity parameter not on an entity form' => [
+        [],
+        [
+          'entity_test' => [
+            'type' => 'entity:entity_test_rev',
+          ],
+        ],
+      ],
+      'Entity parameter on an entity form' => [
+        [
+          '_entity_form' => 'entity_test_rev.edit'
+        ],
+        [
+          'entity_test_rev' => [
+            'type' => 'entity:entity_test_rev',
+          ],
+        ],
+        [
+          'entity_test_rev' => [
+            'type' => 'entity:entity_test_rev',
+            'load_latest_revision' => TRUE,
+          ],
+        ],
+      ],
+      'Multiple entity parameters on an entity form' => [
+        [
+          '_entity_form' => 'entity_test_rev.edit'
+        ],
+        [
+          'entity_test_rev' => [
+            'type' => 'entity:entity_test_rev',
+          ],
+          'node' => [
+            'type' => 'entity:node',
+          ],
+        ],
+        [
+          'entity_test_rev' => [
+            'type' => 'entity:entity_test_rev',
+            'load_latest_revision' => TRUE,
+          ],
+          'node' => [
+            'type' => 'entity:node',
+          ],
+        ],
+      ],
+      'Overriden load_latest_revision flag does not change' => [
+        [
+          '_entity_form' => 'entity_test_rev.edit'
+        ],
+        [
+          'entity_test_rev' => [
+            'type' => 'entity:entity_test_rev',
+            'load_latest_revision' => FALSE,
+          ],
+        ],
+      ],
+      'Non-revisionable entity type will not change' => [
+        [
+          '_entity_form' => 'entity_test.edit'
+        ],
+        [
+          'entity_test' => [
+            'type' => 'entity:entity_test',
+          ],
+        ],
+        FALSE,
+        FALSE,
+      ],
+      'Overriden load_latest_revision flag does not change with multiple parameters' => [
+        [
+          '_entity_form' => 'entity_test_rev.edit'
+        ],
+        [
+          'entity_test_rev' => [
+            'type' => 'entity:entity_test_rev',
+          ],
+          'node' => [
+            'type' => 'entity:node',
+            'load_latest_revision' => FALSE,
+          ],
+        ],
+        [
+          'entity_test_rev' => [
+            'type' => 'entity:entity_test_rev',
+            'load_latest_revision' => TRUE,
+          ],
+          'node' => [
+            'type' => 'entity:node',
+            'load_latest_revision' => FALSE,
+          ],
+        ],
+      ],
+    ];
   }
 
 }

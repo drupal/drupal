@@ -2,8 +2,11 @@
 
 namespace Drupal\Core\ParamConverter;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Symfony\Component\Routing\Route;
 
@@ -60,15 +63,54 @@ class EntityConverter implements ParamConverterInterface {
    */
   public function convert($value, $definition, $name, array $defaults) {
     $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
-    if ($storage = $this->entityManager->getStorage($entity_type_id)) {
-      $entity = $storage->load($value);
-      // If the entity type is translatable, ensure we return the proper
-      // translation object for the current context.
-      if ($entity instanceof EntityInterface && $entity instanceof TranslatableInterface) {
-        $entity = $this->entityManager->getTranslationFromContext($entity, NULL, ['operation' => 'entity_upcast']);
+    $storage = $this->entityManager->getStorage($entity_type_id);
+    $entity_definition = $this->entityManager->getDefinition($entity_type_id);
+
+    $entity = $storage->load($value);
+
+    // If the entity type is revisionable and the parameter has the
+    // "load_latest_revision" flag, load the latest revision.
+    if ($entity instanceof ContentEntityInterface && !empty($definition['load_latest_revision']) && $entity_definition->isRevisionable()) {
+      $latest_revision_id = $this->getLatestRevisionId($storage, $entity_definition, $value);
+      if ($entity->getLoadedRevisionId() !== $latest_revision_id) {
+        $entity = $storage->loadRevision($latest_revision_id);
       }
-      return $entity;
     }
+
+    // If the entity type is translatable, ensure we return the proper
+    // translation object for the current context.
+    if ($entity instanceof EntityInterface && $entity instanceof TranslatableInterface) {
+      $entity = $this->entityManager->getTranslationFromContext($entity, NULL, ['operation' => 'entity_upcast']);
+    }
+
+    return $entity;
+  }
+
+  /**
+   * Get the latest revision ID.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_definition
+   *   The entity definition.
+   * @param mixed $value
+   *   The raw value.
+   *
+   * @return int
+   *   The latest revision ID for a given entity.
+   */
+  protected function getLatestRevisionId(EntityStorageInterface $storage, EntityTypeInterface $entity_definition, $value) {
+    // @todo, replace this query with a standardized way of getting the
+    //   latest revision in https://www.drupal.org/node/2784201.
+    $result = $storage
+      ->getQuery()
+      ->latestRevision()
+      ->condition($entity_definition->getKey('id'), $value)
+      // The entity converter is not concerned with access checking, skip the
+      // access check when looking up the latest revision.
+      ->accessCheck(FALSE)
+      ->execute();
+    return key($result);
   }
 
   /**

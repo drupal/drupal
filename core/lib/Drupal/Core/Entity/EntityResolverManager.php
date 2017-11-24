@@ -197,6 +197,30 @@ class EntityResolverManager {
   }
 
   /**
+   * Ensure revisionable entities load the latest revision on entity forms.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route object.
+   */
+  protected function setLatestRevisionFlag(Route $route) {
+    if (!$entity_form = $route->getDefault('_entity_form')) {
+      return;
+    }
+    // Only set the flag on entity types which are revisionable.
+    list($entity_type) = explode('.', $entity_form, 2);
+    if (!isset($this->getEntityTypes()[$entity_type]) || !$this->getEntityTypes()[$entity_type]->isRevisionable()) {
+      return;
+    }
+    $parameters = $route->getOption('parameters') ?: [];
+    foreach ($parameters as &$parameter) {
+      if ($parameter['type'] === 'entity:' . $entity_type && !isset($parameter['load_latest_revision'])) {
+        $parameter['load_latest_revision'] = TRUE;
+      }
+    }
+    $route->setOption('parameters', $parameters);
+  }
+
+  /**
    * Set the upcasting route objects.
    *
    * @param \Symfony\Component\Routing\Route $route
@@ -212,6 +236,7 @@ class EntityResolverManager {
 
     // Try to use _entity_* information on the route.
     $this->setParametersFromEntityInformation($route);
+    $this->setLatestRevisionFlag($route);
   }
 
   /**
