@@ -441,7 +441,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       'delta' => '0',
       'new_base_field_value' => $entity->new_base_field->value,
     ];
-    $this->assertSame($expected, (array) $result[0]);
+    // Use assertEquals and not assertSame here to prevent that a different
+    // sequence of the columns in the table will affect the check.
+    $this->assertEquals($expected, (array) $result[0]);
 
     // Check that the field storage definition is marked for purging.
     $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
@@ -508,7 +510,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       'delta' => '0',
       'new_bundle_field_value' => $entity->new_bundle_field->value,
     ];
-    $this->assertSame($expected, (array) $result[0]);
+    // Use assertEquals and not assertSame here to prevent that a different
+    // sequence of the columns in the table will affect the check.
+    $this->assertEquals($expected, (array) $result[0]);
 
     // Check that the field definition is marked for purging.
     $deleted_field_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldDefinitions();
