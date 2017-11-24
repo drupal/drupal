@@ -61,7 +61,7 @@ trait CookieResourceTestTrait {
       'pass' => $this->account->passRaw,
     ];
 
-    $request_options[RequestOptions::BODY] = $this->serializer->encode($request_body, 'json');
+    $request_options[RequestOptions::BODY] = $this->serializer->encode($request_body, static::$format);
     $request_options[RequestOptions::HEADERS] = [
       'Content-Type' => static::$mimeType,
     ];

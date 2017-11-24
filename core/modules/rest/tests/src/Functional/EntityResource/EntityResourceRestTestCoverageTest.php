@@ -8,10 +8,8 @@ use Drupal\Tests\BrowserTestBase;
  * Checks that all core content/config entity types have REST test coverage.
  *
  * Every entity type must have test coverage for:
- * - every format in core (json + hal_json)
+ * - every format in core (json + xml + hal_json)
  * - every authentication provider in core (anon, cookie, basic_auth)
- *
- * @todo Also require XML after https://www.drupal.org/node/2800873 lands.
  *
  * @group rest
  */
@@ -72,6 +70,9 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
           'JsonAnonTest',
           'JsonBasicAuthTest',
           'JsonCookieTest',
+          'XmlAnonTest',
+          'XmlBasicAuthTest',
+          'XmlCookieTest',
         ],
       ],
       // Test coverage for formats provided by the 'hal' module.
@@ -102,16 +103,22 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
 
       foreach ($tests as $module => $info) {
         $possible_paths = $info['possible paths'];
+        $missing_tests = [];
         foreach ($info['class suffix'] as $postfix) {
-          do {
-            $path = array_shift($possible_paths);
+          foreach ($possible_paths as $path) {
             $class = str_replace('CLASS', $class_name, $path . $postfix);
             if (class_exists($class)) {
-              continue 3;
+              continue 2;
             }
-          } while (!empty($possible_paths));
-          $problems[] = "$entity_type_id: $class_name ($class_name_full)";
-          break 2;
+          }
+          $missing_tests[] = $postfix;
+        }
+        if (!empty($missing_tests)) {
+          $missing_tests_list = implode(', ', array_map(function ($missing_test) use ($class_name) {
+            return $class_name . $missing_test;
+          }, $missing_tests));
+          $which_normalization = $module === 'serialization' ? 'default' : $module;
+          $problems[] = "$entity_type_id: $class_name ($class_name_full), $which_normalization normalization (expected tests: $missing_tests_list)";
         }
       }
     }
@@ -120,7 +127,7 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
     // @todo Remove this in https://www.drupal.org/node/2843139. Having this
     // work-around in here until then means we can ensure we don't add more
     // entity types without adding REST test coverage.
-    if ($problems === ['file: File (Drupal\file\Entity\File)']) {
+    if ($problems === ['file: File (Drupal\file\Entity\File), default normalization (expected tests: FileJsonAnonTest, FileJsonBasicAuthTest, FileJsonCookieTest, FileXmlAnonTest, FileXmlBasicAuthTest, FileXmlCookieTest)', 'file: File (Drupal\file\Entity\File), hal normalization (expected tests: FileHalJsonAnonTest, FileHalJsonBasicAuthTest, FileHalJsonCookieTest)']) {
       $problems = [];
     }
     elseif ($problems === []) {

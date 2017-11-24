@@ -176,14 +176,32 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         ->setTranslatable(FALSE)
         ->save();
 
+      // Add multi-value field.
+      FieldStorageConfig::create([
+        'entity_type' => static::$entityTypeId,
+        'field_name' => 'field_rest_test_multivalue',
+        'type' => 'string',
+      ])
+        ->setCardinality(2)
+        ->save();
+      FieldConfig::create([
+        'entity_type' => static::$entityTypeId,
+        'field_name' => 'field_rest_test_multivalue',
+        'bundle' => $this->entity->bundle(),
+      ])
+        ->setLabel('Test field: multi-value')
+        ->setTranslatable(FALSE)
+        ->save();
+
       // Reload entity so that it has the new field.
       $reloaded_entity = $this->entityStorage->loadUnchanged($this->entity->id());
       // Some entity types are not stored, hence they cannot be reloaded.
       if ($reloaded_entity !== NULL) {
         $this->entity = $reloaded_entity;
 
-        // Set a default value on the field.
+        // Set a default value on the fields.
         $this->entity->set('field_rest_test', ['value' => 'All the faith he had had had had no effect on the outcome of his life.']);
+        $this->entity->set('field_rest_test_multivalue', [['value' => 'One'], ['value' => 'Two']]);
         $this->entity->save();
       }
     }
@@ -437,6 +455,18 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // for the keys with the array order the same (it needs to match with
     // identical comparison).
     $expected = $this->getExpectedNormalizedEntity();
+    if ($this->entity instanceof FieldableEntityInterface) {
+      $expected += [
+        'field_rest_test_multivalue' => [
+          0 => [
+            'value' => 'One',
+          ],
+          1 => [
+            'value' => 'Two',
+          ],
+        ]
+      ];
+    }
     static::recursiveKSort($expected);
     $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
     static::recursiveKSort($actual);
@@ -444,8 +474,12 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // Not only assert the normalization, also assert deserialization of the
     // response results in the expected object.
-    $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
-    $this->assertSame($unserialized->uuid(), $this->entity->uuid());
+    // Note: deserialization of the XML format is not supported, so only test
+    // this for other formats.
+    if (static::$format !== 'xml') {
+      $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
+      $this->assertSame($unserialized->uuid(), $this->entity->uuid());
+    }
     // Finally, assert that the expected 'Link' headers are present.
     if ($this->entity->getEntityType()->getLinkTemplates()) {
       $this->assertArrayHasKey('Link', $response->getHeaders());
@@ -468,11 +502,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $get_headers = $response->getHeaders();
 
     // Verify that the GET and HEAD responses are the same. The only difference
-    // is that there's no body. For this reason the 'Transfer-Encoding' header
-    // is also added to the list of headers to ignore, as this could be added to
-    // GET requests - depending on web server configuration. This would usually
-    // be 'Transfer-Encoding: chunked'.
-    $ignored_headers = ['Date', 'Content-Length', 'X-Drupal-Cache', 'X-Drupal-Dynamic-Cache', 'Transfer-Encoding'];
+    // is that there's no body. For this reason the 'Transfer-Encoding' and
+    // 'Vary' headers are also added to the list of headers to ignore, as they
+    // may be added to GET requests, depending on web server configuration. They
+    // are usually 'Transfer-Encoding: chunked' and 'Vary: Accept-Encoding'.
+    $ignored_headers = ['Date', 'Content-Length', 'X-Drupal-Cache', 'X-Drupal-Dynamic-Cache', 'Transfer-Encoding', 'Vary'];
     $header_cleaner = function ($headers) use ($ignored_headers) {
       foreach ($headers as $header => $value) {
         if (strpos($header, 'X-Drupal-Assertion-') === 0 || in_array($header, $ignored_headers)) {
@@ -503,6 +537,18 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // normalized entity's values to strings. This ensures the BC layer for
       // bc_primitives_as_strings works as expected.
       $expected = $this->getExpectedNormalizedEntity();
+      if ($this->entity instanceof FieldableEntityInterface) {
+        $expected += [
+          'field_rest_test_multivalue' => [
+            0 => [
+              'value' => 'One',
+            ],
+            1 => [
+              'value' => 'Two',
+            ],
+          ]
+        ];
+      }
       // Config entities are not affected.
       // @see \Drupal\serialization\Normalizer\ConfigEntityNormalizer::normalize()
       $expected = static::castToString($expected);
@@ -536,6 +582,18 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // ::formatExpectedTimestampValue() to generate the timestamp value. This
       // will take into account the above config setting.
       $expected = $this->getExpectedNormalizedEntity();
+      if ($this->entity instanceof FieldableEntityInterface) {
+        $expected += [
+          'field_rest_test_multivalue' => [
+            0 => [
+              'value' => 'One',
+            ],
+            1 => [
+              'value' => 'Two',
+            ],
+          ]
+        ];
+      }
       // Config entities are not affected.
       // @see \Drupal\serialization\Normalizer\ConfigEntityNormalizer::normalize()
       static::recursiveKSort($expected);
