@@ -88,7 +88,6 @@ trait ViewResultAssertionTrait {
         if (property_exists($value, $view_column)) {
           $row[$expected_column] = (string) $value->$view_column;
         }
-        // The comparison will be done on the string representation of the value.
         // For entity fields we don't have the raw value. Let's try to fetch it
         // using the entity itself.
         elseif (empty($value->$view_column) && isset($view->field[$expected_column]) && ($field = $view->field[$expected_column]) && $field instanceof EntityField) {
@@ -96,7 +95,10 @@ trait ViewResultAssertionTrait {
           if (count(explode(':', $view_column)) == 2) {
             $column = explode(':', $view_column)[1];
           }
-          $row[$expected_column] = $field->getValue($value, $column);
+          // The comparison will be done on the string representation of the
+          // value.
+          $field_value = $field->getValue($value, $column);
+          $row[$expected_column] = is_array($field_value) ? array_map('strval', $field_value) : (string) $field_value;
         }
       }
       $result[$key] = $row;

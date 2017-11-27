@@ -45,3 +45,20 @@ function views_entity_test_entity_field_access($operation, FieldDefinitionInterf
   // No opinion.
   return AccessResult::neutral();
 }
+
+/**
+ * Implements hook_entity_load().
+ *
+ * @see \Drupal\Tests\views\Kernel\Handler\FieldFieldTest::testSimpleExecute()
+ */
+function views_entity_test_entity_load(array $entities, $entity_type_id) {
+  if ($entity_type_id === 'entity_test') {
+    // Cast the value of an entity field to be something else than a string so
+    // we can check that
+    // \Drupal\views\Tests\ViewResultAssertionTrait::assertIdenticalResultsetHelper()
+    // takes care of converting all field values to strings.
+    foreach ($entities as $entity) {
+      $entity->user_id->target_id = (int) $entity->user_id->target_id;
+    }
+  }
+}
