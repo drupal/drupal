@@ -151,10 +151,9 @@ class LinkWidget extends WidgetBase {
    */
   public static function validateTitleElement(&$element, FormStateInterface $form_state, $form) {
     if ($element['uri']['#value'] !== '' && $element['title']['#value'] === '') {
-      $element['title']['#required'] = TRUE;
       // We expect the field name placeholder value to be wrapped in t() here,
       // so it won't be escaped again as it's already marked safe.
-      $form_state->setError($element['title'], t('@name field is required.', ['@name' => $element['title']['#title']]));
+      $form_state->setError($element['title'], t('@title field is required if there is @uri input.', ['@title' => $element['title']['#title'], '@uri' => $element['uri']['#title']]));
     }
   }
 
@@ -218,12 +217,29 @@ class LinkWidget extends WidgetBase {
       '#default_value' => isset($items[$delta]->title) ? $items[$delta]->title : NULL,
       '#maxlength' => 255,
       '#access' => $this->getFieldSetting('title') != DRUPAL_DISABLED,
+      '#required' => $this->getFieldSetting('title') === DRUPAL_REQUIRED && $element['#required'],
     ];
     // Post-process the title field to make it conditionally required if URL is
     // non-empty. Omit the validation on the field edit form, since the field
     // settings cannot be saved otherwise.
-    if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') == DRUPAL_REQUIRED) {
+    if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') === DRUPAL_REQUIRED) {
       $element['#element_validate'][] = [get_called_class(), 'validateTitleElement'];
+
+      if (!$element['title']['#required']) {
+        // Make title required on the front-end when URI filled-in.
+        $field_name = $this->fieldDefinition->get('field_name');
+
+        $parents = $element['#field_parents'];
+        $parents[] = $field_name;
+        $selector = $root = array_shift($parents);
+        if ($parents) {
+          $selector = $root . '[' . implode('][', $parents) . ']';
+        }
+
+        $element['title']['#states']['required'] = [
+          ':input[name="' . $selector . '[' . $delta . '][uri]"]' => ['filled' => TRUE]
+        ];
+      }
     }
 
     // Exposing the attributes array in the widget is left for alternate and more

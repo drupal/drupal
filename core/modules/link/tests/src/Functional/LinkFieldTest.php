@@ -282,7 +282,7 @@ class LinkFieldTest extends BrowserTestBase {
             "{$field_name}[0][uri]" => 'http://www.example.com',
           ];
           $this->drupalPostForm(NULL, $edit, t('Save'));
-          $this->assertText(t('@name field is required.', ['@name' => t('Link text')]));
+          $this->assertText(t('@title field is required if there is @uri input.', ['@title' => t('Link text'), '@uri' => t('URL')]));
 
           // Verify that the link text is not required, if the URL is empty.
           $edit = [
