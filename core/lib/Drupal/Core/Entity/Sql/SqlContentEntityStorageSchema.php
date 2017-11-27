@@ -228,8 +228,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     $current_schema = $this->getSchemaFromStorageDefinition($storage_definition);
     $this->processFieldStorageSchema($current_schema);
+    $installed_schema = $this->loadFieldSchemaData($original);
+    $this->processFieldStorageSchema($installed_schema);
 
-    return $current_schema != $this->loadFieldSchemaData($original);
+    return $current_schema != $installed_schema;
   }
 
   /**
