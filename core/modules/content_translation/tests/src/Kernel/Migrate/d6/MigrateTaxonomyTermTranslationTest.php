@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Kernel\Migrate\d6;
+namespace Drupal\Tests\content_translation\Kernel\Migrate\d6;
 
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -17,6 +17,7 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
    * {@inheritdoc}
    */
   public static $modules = [
+    'content_translation',
     'language',
     'menu_ui',
     'node',
