@@ -182,7 +182,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         'field_name' => 'field_rest_test_multivalue',
         'type' => 'string',
       ])
-        ->setCardinality(2)
+        ->setCardinality(3)
         ->save();
       FieldConfig::create([
         'entity_type' => static::$entityTypeId,
@@ -1076,6 +1076,25 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // is not sent in the PATCH request.
     $this->assertSame('All the faith he had had had had no effect on the outcome of his life.', $updated_entity->get('field_rest_test')->value);
 
+    // Multi-value field: remove item 0. Then item 1 becomes item 0.
+    $normalization_multi_value_tests = $this->getNormalizedPatchEntity();
+    $normalization_multi_value_tests['field_rest_test_multivalue'] = $updated_entity_normalization['field_rest_test_multivalue'];
+    $normalization_remove_item = $normalization_multi_value_tests;
+    unset($normalization_remove_item['field_rest_test_multivalue'][0]);
+    $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization_remove_item, static::$format);
+    $response = $this->request('PATCH', $url, $request_options);
+    $this->assertResourceResponse(200, FALSE, $response);
+    $this->assertSame([0 => ['value' => 'Two']], $this->serializer->decode((string) $response->getBody(), static::$format)['field_rest_test_multivalue']);
+
+    // Multi-value field: add one item before the existing one, and one after.
+    $normalization_add_items = $normalization_multi_value_tests;
+    $normalization_add_items['field_rest_test_multivalue'][2] = ['value' => 'Three'];
+    $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization_add_items, static::$format);
+    $response = $this->request('PATCH', $url, $request_options);
+    $this->assertResourceResponse(200, FALSE, $response);
+    $this->assertSame([0 => ['value' => 'One'], 1 => ['value' => 'Two'], 2 => ['value' => 'Three']], $this->serializer->decode((string) $response->getBody(), static::$format)['field_rest_test_multivalue']);
+
+    // BC: rest_update_8203().
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
     $this->refreshTestStateAfterRestConfigChange();
     $request_options[RequestOptions::BODY] = $parseable_valid_request_body_2;
