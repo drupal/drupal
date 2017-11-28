@@ -32,7 +32,7 @@ use Drupal\Core\Form\FormStateInterface;
  * should then actually change the content: transform URLs into hyperlinks,
  * convert smileys into images, etc.
  *
- * @see filter_process_text()
+ * @see \Drupal\filter\Plugin\FilterInterface::process()
  * @see check_markup()
  *
  * Typically, only text processing is applied, but in more advanced use cases,
