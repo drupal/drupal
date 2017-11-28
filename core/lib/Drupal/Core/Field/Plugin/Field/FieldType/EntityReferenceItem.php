@@ -503,19 +503,6 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
               }
 
               $bundles_changed = TRUE;
-
-              // In case we deleted the only target bundle allowed by the field
-              // we have to log a critical message because the field will not
-              // function correctly anymore.
-              if ($handler_settings['target_bundles'] === []) {
-                \Drupal::logger('entity_reference')->critical('The %target_bundle bundle (entity type: %target_entity_type) was deleted. As a result, the %field_name entity reference field (entity_type: %entity_type, bundle: %bundle) no longer has any valid bundle it can reference. The field is not working correctly anymore and has to be adjusted.', [
-                  '%target_bundle' => $bundle->label(),
-                  '%target_entity_type' => $bundle->getEntityType()->getBundleOf(),
-                  '%field_name' => $field_definition->getName(),
-                  '%entity_type' => $field_definition->getTargetEntityTypeId(),
-                  '%bundle' => $field_definition->getTargetBundle()
-                ]);
-              }
             }
           }
         }
