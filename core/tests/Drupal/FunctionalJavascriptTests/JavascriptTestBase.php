@@ -64,6 +64,13 @@ abstract class JavascriptTestBase extends BrowserTestBase {
   }
 
   /**
+    * {@inheritdoc}
+    */
+  protected function getMinkDriverArgs() {
+    return getenv('MINK_DRIVER_ARGS_PHANTOMJS') ?: parent::getMinkDriverArgs();
+  }
+
+  /**
    * Asserts that the element with the given CSS selector is visible.
    *
    * @param string $css_selector

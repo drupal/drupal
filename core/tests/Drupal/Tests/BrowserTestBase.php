@@ -344,12 +344,12 @@ abstract class BrowserTestBase extends TestCase {
    *   When provided default Mink driver class can't be instantiated.
    */
   protected function getDefaultDriverInstance() {
-    // Get default driver params from environment if availables.
-    if ($arg_json = getenv('MINK_DRIVER_ARGS')) {
+    // Get default driver params from environment if available.
+    if ($arg_json = $this->getMinkDriverArgs()) {
       $this->minkDefaultDriverArgs = json_decode($arg_json, TRUE);
     }
 
-    // Get and check default driver class from environment if availables.
+    // Get and check default driver class from environment if available.
     if ($minkDriverClass = getenv('MINK_DRIVER_CLASS')) {
       if (class_exists($minkDriverClass)) {
         $this->minkDefaultDriverClass = $minkDriverClass;
@@ -392,6 +392,18 @@ abstract class BrowserTestBase extends TestCase {
         $this->htmlOutputCounter = max(1, (int) file_get_contents($this->htmlOutputCounterStorage)) + 1;
       }
     }
+  }
+
+  /**
+   * Get the Mink driver args from an environment variable, if it is set. Can
+   * be overridden in a derived class so it is possible to use a different
+   * value for a subset of tests, e.g. the JavaScript tests.
+   *
+   *  @return string|false
+   *   The JSON-encoded argument string. False if it is not set.
+   */
+  protected function getMinkDriverArgs() {
+    return getenv('MINK_DRIVER_ARGS');
   }
 
   /**
