@@ -10,11 +10,7 @@
 
   Drupal.behaviors.copyFieldValue = {
     attach: function attach(context) {
-      for (var sourceId in drupalSettings.copyFieldValue) {
-        if (drupalSettings.copyFieldValue.hasOwnProperty(sourceId)) {
-          ids.push(sourceId);
-        }
-      }
+      Object.keys(drupalSettings.copyFieldValue).forEach(ids.push);
       if (ids.length) {
         $('body').once('copy-field-values').on('value:copy', this.valueTargetCopyHandler);
 

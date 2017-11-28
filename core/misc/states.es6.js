@@ -38,15 +38,13 @@
       const il = $states.length;
       for (let i = 0; i < il; i++) {
         config = JSON.parse($states[i].getAttribute('data-drupal-states'));
-        for (state in config) {
-          if (config.hasOwnProperty(state)) {
-            new states.Dependent({
-              element: $($states[i]),
-              state: states.State.sanitize(state),
-              constraints: config[state],
-            });
-          }
-        }
+        Object.keys(config).forEach((state) => {
+          new states.Dependent({
+            element: $($states[i]),
+            state: states.State.sanitize(state),
+            constraints: config[state],
+          });
+        });
       }
 
       // Execute all postponed functions now.
@@ -76,11 +74,9 @@
     $.extend(this, { values: {}, oldValue: null }, args);
 
     this.dependees = this.getDependees();
-    for (const selector in this.dependees) {
-      if (this.dependees.hasOwnProperty(selector)) {
-        this.initializeDependee(selector, this.dependees[selector]);
-      }
-    }
+    Object.keys(this.dependees).forEach((selector) => {
+      this.initializeDependee(selector, this.dependees[selector]);
+    });
   };
 
   /**
@@ -136,6 +132,7 @@
       // Cache for the states of this dependee.
       this.values[selector] = {};
 
+      // eslint-disable-next-line no-restricted-syntax
       for (const i in dependeeStates) {
         if (dependeeStates.hasOwnProperty(i)) {
           state = dependeeStates[i];
@@ -267,6 +264,7 @@
       // bogus, we don't want to end up with an infinite loop.
       else if ($.isPlainObject(constraints)) {
         // This constraint is an object (AND).
+        // eslint-disable-next-line no-restricted-syntax
         for (const n in constraints) {
           if (constraints.hasOwnProperty(n)) {
             result = ternary(result, this.checkConstraints(constraints[n], selector, n));
@@ -391,11 +389,9 @@
         trigger.call(window, this.element);
       }
       else {
-        for (const event in trigger) {
-          if (trigger.hasOwnProperty(event)) {
-            this.defaultTrigger(event, trigger[event]);
-          }
-        }
+        Object.keys(trigger).forEach((event) => {
+          this.defaultTrigger(event, trigger[event]);
+        });
       }
 
       // Mark this trigger as initialized for this element.

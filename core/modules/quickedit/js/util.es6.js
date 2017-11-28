@@ -181,11 +181,11 @@
          *   The HTTP status code.
          */
         success(response, status) {
-          for (const i in response) {
-            if (response.hasOwnProperty(i) && response[i].command && this.commands[response[i].command]) {
+          Object.keys(response).forEach((i) => {
+            if (response[i].command && this.commands[response[i].command]) {
               this.commands[response[i].command](this, response[i], status);
             }
-          }
+          });
         },
         base: $submit.attr('id'),
         element: $submit[0],

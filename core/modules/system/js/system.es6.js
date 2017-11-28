@@ -23,11 +23,7 @@
     attach(context) {
       // List of fields IDs on which to bind the event listener.
       // Create an array of IDs to use with jQuery.
-      for (const sourceId in drupalSettings.copyFieldValue) {
-        if (drupalSettings.copyFieldValue.hasOwnProperty(sourceId)) {
-          ids.push(sourceId);
-        }
-      }
+      Object.keys(drupalSettings.copyFieldValue).forEach(ids.push);
       if (ids.length) {
         // Listen to value:copy events on all dependent fields.
         // We have to use body and not document because of the way jQuery events
