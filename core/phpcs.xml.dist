@@ -297,6 +297,7 @@
     </properties>
   </rule>
   <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing" />
+  <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
   <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
 
   <!-- Zend sniffs -->
