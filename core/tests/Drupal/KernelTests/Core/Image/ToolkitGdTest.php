@@ -214,7 +214,9 @@ class ToolkitGdTest extends KernelTestBase {
     ];
 
     // Systems using non-bundled GD2 don't have imagerotate. Test if available.
-    if (function_exists('imagerotate')) {
+    // @todo Remove the version check once
+    //   https://www.drupal.org/project/drupal/issues/2670966 is resolved.
+    if (function_exists('imagerotate') && (version_compare(phpversion(), '7.0.26') < 0)) {
       $operations += [
         'rotate_5' => [
           'function' => 'rotate',
