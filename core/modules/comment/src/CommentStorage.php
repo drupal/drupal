@@ -324,7 +324,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
    * {@inheritdoc}
    */
   public function getUnapprovedCount() {
-    return  $this->database->select('comment_field_data', 'c')
+    return $this->database->select('comment_field_data', 'c')
       ->condition('status', CommentInterface::NOT_PUBLISHED, '=')
       ->condition('default_langcode', 1)
       ->countQuery()

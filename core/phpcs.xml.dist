@@ -296,6 +296,7 @@
       <property name="ignoreNewlines" value="true"/>
     </properties>
   </rule>
+  <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing" />
   <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
 
   <!-- Zend sniffs -->

@@ -39,7 +39,7 @@ class EntityTestHalJsonAnonTest extends EntityTestResourceTestBase {
     $normalization = $this->applyHalFieldNormalization($default_normalization);
 
     $author = User::load(0);
-    return  $normalization + [
+    return $normalization + [
       '_links' => [
         'self' => [
           'href' => $this->baseUrl . '/entity_test/1?_format=hal_json',
