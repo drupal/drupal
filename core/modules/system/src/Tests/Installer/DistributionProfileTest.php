@@ -46,6 +46,8 @@ class DistributionProfileTest extends InstallerTestBase {
   protected function setUpLanguage() {
     // Verify that the distribution name appears.
     $this->assertRaw($this->info['distribution']['name']);
+    // Verify that the distribution name is used in the site title.
+    $this->assertTitle('Choose language | ' . $this->info['distribution']['name']);
     // Verify that the requested theme is used.
     $this->assertRaw($this->info['distribution']['install']['theme']);
     // Verify that the "Choose profile" step does not appear.
