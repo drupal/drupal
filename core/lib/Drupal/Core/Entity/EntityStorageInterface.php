@@ -83,6 +83,18 @@ interface EntityStorageInterface {
   public function loadRevision($revision_id);
 
   /**
+   * Loads multiple entity revisions.
+   *
+   * @param array $revision_ids
+   *   An array of revision IDs to load.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface[]
+   *   An array of entity revisions keyed by their revision ID, or an empty
+   *   array if none found.
+   */
+  public function loadMultipleRevisions(array $revision_ids);
+
+  /**
    * Delete a specific entity revision.
    *
    * A revision can only be deleted if it's not the currently active one.

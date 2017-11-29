@@ -3,6 +3,8 @@
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\entity_test\Entity\EntityTestMulRev;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -60,20 +62,42 @@ class EntityRevisionsTest extends BrowserTestBase {
    *   The entity type to run the tests with.
    */
   protected function runRevisionsTests($entity_type) {
+    // Create a translatable test field.
+    $field_storage = FieldStorageConfig::create([
+      'entity_type' => $entity_type,
+      'field_name' => 'translatable_test_field',
+      'type' => 'text',
+      'cardinality' => 2,
+    ]);
+    $field_storage->save();
+
+    $field = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'label' => $this->randomMachineName(),
+      'bundle' => $entity_type,
+      'translatable' => TRUE,
+    ]);
+    $field->save();
+
+    entity_get_form_display($entity_type, $entity_type, 'default')
+      ->setComponent('translatable_test_field')
+      ->save();
+
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage($entity_type);
 
     // Create initial entity.
-    $entity = $this->container->get('entity_type.manager')
-      ->getStorage($entity_type)
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $storage
       ->create([
         'name' => 'foo',
         'user_id' => $this->webUser->id(),
       ]);
-    $entity->field_test_text->value = 'bar';
+    $entity->translatable_test_field->value = 'bar';
+    $entity->addTranslation('de', ['name' => 'foo - de']);
     $entity->save();
 
-    $names = [];
-    $texts = [];
-    $created = [];
+    $values = [];
     $revision_ids = [];
 
     // Create three revisions.
@@ -81,45 +105,74 @@ class EntityRevisionsTest extends BrowserTestBase {
     for ($i = 0; $i < $revision_count; $i++) {
       $legacy_revision_id = $entity->revision_id->value;
       $legacy_name = $entity->name->value;
-      $legacy_text = $entity->field_test_text->value;
+      $legacy_text = $entity->translatable_test_field->value;
 
-      $entity = $this->container->get('entity_type.manager')
-        ->getStorage($entity_type)->load($entity->id->value);
+      $entity = $storage->load($entity->id->value);
       $entity->setNewRevision(TRUE);
-      $names[] = $entity->name->value = $this->randomMachineName(32);
-      $texts[] = $entity->field_test_text->value = $this->randomMachineName(32);
-      $created[] = $entity->created->value = time() + $i + 1;
+      $values['en'][$i] = [
+        'name' => $this->randomMachineName(32),
+        'translatable_test_field' => [
+          $this->randomMachineName(32),
+          $this->randomMachineName(32),
+        ],
+        'created' => time() + $i + 1,
+      ];
+      $entity->set('name', $values['en'][$i]['name']);
+      $entity->set('translatable_test_field', $values['en'][$i]['translatable_test_field']);
+      $entity->set('created', $values['en'][$i]['created']);
       $entity->save();
       $revision_ids[] = $entity->revision_id->value;
+
+      // Add some values for a translation of this revision.
+      if ($entity->getEntityType()->isTranslatable()) {
+        $values['de'][$i] = [
+          'name' => $this->randomMachineName(32),
+          'translatable_test_field' => [
+            $this->randomMachineName(32),
+            $this->randomMachineName(32),
+          ],
+        ];
+        $translation = $entity->getTranslation('de');
+        $translation->set('name', $values['de'][$i]['name']);
+        $translation->set('translatable_test_field', $values['de'][$i]['translatable_test_field']);
+        $translation->save();
+      }
 
       // Check that the fields and properties contain new content.
       $this->assertTrue($entity->revision_id->value > $legacy_revision_id, format_string('%entity_type: Revision ID changed.', ['%entity_type' => $entity_type]));
       $this->assertNotEqual($entity->name->value, $legacy_name, format_string('%entity_type: Name changed.', ['%entity_type' => $entity_type]));
-      $this->assertNotEqual($entity->field_test_text->value, $legacy_text, format_string('%entity_type: Text changed.', ['%entity_type' => $entity_type]));
+      $this->assertNotEqual($entity->translatable_test_field->value, $legacy_text, format_string('%entity_type: Text changed.', ['%entity_type' => $entity_type]));
     }
 
-    $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
+    $revisions = $storage->loadMultipleRevisions($revision_ids);
     for ($i = 0; $i < $revision_count; $i++) {
       // Load specific revision.
-      $entity_revision = $storage->loadRevision($revision_ids[$i]);
+      $entity_revision = $revisions[$revision_ids[$i]];
 
       // Check if properties and fields contain the revision specific content.
       $this->assertEqual($entity_revision->revision_id->value, $revision_ids[$i], format_string('%entity_type: Revision ID matches.', ['%entity_type' => $entity_type]));
-      $this->assertEqual($entity_revision->name->value, $names[$i], format_string('%entity_type: Name matches.', ['%entity_type' => $entity_type]));
-      $this->assertEqual($entity_revision->field_test_text->value, $texts[$i], format_string('%entity_type: Text matches.', ['%entity_type' => $entity_type]));
+      $this->assertEqual($entity_revision->name->value, $values['en'][$i]['name'], format_string('%entity_type: Name matches.', ['%entity_type' => $entity_type]));
+      $this->assertEqual($entity_revision->translatable_test_field[0]->value, $values['en'][$i]['translatable_test_field'][0], format_string('%entity_type: Text matches.', ['%entity_type' => $entity_type]));
+      $this->assertEqual($entity_revision->translatable_test_field[1]->value, $values['en'][$i]['translatable_test_field'][1], format_string('%entity_type: Text matches.', ['%entity_type' => $entity_type]));
+
+      // Check the translated values.
+      if ($entity->getEntityType()->isTranslatable()) {
+        $revision_translation = $entity_revision->getTranslation('de');
+        $this->assertEqual($revision_translation->name->value, $values['de'][$i]['name'], format_string('%entity_type: Name matches.', ['%entity_type' => $entity_type]));
+        $this->assertEqual($revision_translation->translatable_test_field[0]->value, $values['de'][$i]['translatable_test_field'][0], format_string('%entity_type: Text matches.', ['%entity_type' => $entity_type]));
+        $this->assertEqual($revision_translation->translatable_test_field[1]->value, $values['de'][$i]['translatable_test_field'][1], format_string('%entity_type: Text matches.', ['%entity_type' => $entity_type]));
+      }
 
       // Check non-revisioned values are loaded.
       $this->assertTrue(isset($entity_revision->created->value), format_string('%entity_type: Non-revisioned field is loaded.', ['%entity_type' => $entity_type]));
-      $this->assertEqual($entity_revision->created->value, $created[2], format_string('%entity_type: Non-revisioned field value is the same between revisions.', ['%entity_type' => $entity_type]));
+      $this->assertEqual($entity_revision->created->value, $values['en'][2]['created'], format_string('%entity_type: Non-revisioned field value is the same between revisions.', ['%entity_type' => $entity_type]));
     }
 
     // Confirm the correct revision text appears in the edit form.
-    $entity = $this->container->get('entity_type.manager')
-      ->getStorage($entity_type)
-      ->load($entity->id->value);
+    $entity = $storage->load($entity->id->value);
     $this->drupalGet($entity_type . '/manage/' . $entity->id->value . '/edit');
     $this->assertFieldById('edit-name-0-value', $entity->name->value, format_string('%entity_type: Name matches in UI.', ['%entity_type' => $entity_type]));
-    $this->assertFieldById('edit-field-test-text-0-value', $entity->field_test_text->value, format_string('%entity_type: Text matches in UI.', ['%entity_type' => $entity_type]));
+    $this->assertFieldById('edit-translatable-test-field-0-value', $entity->translatable_test_field->value, format_string('%entity_type: Text matches in UI.', ['%entity_type' => $entity_type]));
   }
 
   /**

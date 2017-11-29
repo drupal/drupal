@@ -244,15 +244,37 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * {@inheritdoc}
    */
   public function loadRevision($revision_id) {
-    $revision = $this->doLoadRevisionFieldItems($revision_id);
+    $revisions = $this->loadMultipleRevisions([$revision_id]);
 
-    if ($revision) {
-      $entities = [$revision->id() => $revision];
+    return isset($revisions[$revision_id]) ? $revisions[$revision_id] : NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadMultipleRevisions(array $revision_ids) {
+    $revisions = $this->doLoadMultipleRevisionsFieldItems($revision_ids);
+
+    // The hooks are executed with an array of entities keyed by the entity ID.
+    // As we could load multiple revisions for the same entity ID at once we
+    // have to build groups of entities where the same entity ID is present only
+    // once.
+    $entity_groups = [];
+    $entity_group_mapping = [];
+    foreach ($revisions as $revision) {
+      $entity_id = $revision->id();
+      $entity_group_key = isset($entity_group_mapping[$entity_id]) ? $entity_group_mapping[$entity_id] + 1 : 0;
+      $entity_group_mapping[$entity_id] = $entity_group_key;
+      $entity_groups[$entity_group_key][$entity_id] = $revision;
+    }
+
+    // Invoke the entity hooks for each group.
+    foreach ($entity_groups as $entities) {
       $this->invokeStorageLoadHook($entities);
       $this->postLoad($entities);
     }
 
-    return $revision;
+    return $revisions;
   }
 
   /**
@@ -263,8 +285,32 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   The specified entity revision or NULL if not found.
+   *
+   * @deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.0.
+   *   \Drupal\Core\Entity\ContentEntityStorageBase::doLoadMultipleRevisionsFieldItems()
+   *   should be implemented instead.
+   *
+   * @see https://www.drupal.org/node/2924915
    */
   abstract protected function doLoadRevisionFieldItems($revision_id);
+
+  /**
+   * Actually loads revision field item values from the storage.
+   *
+   * @param array $revision_ids
+   *   An array of revision identifiers.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface[]
+   *   The specified entity revisions or an empty array if none are found.
+   */
+  protected function doLoadMultipleRevisionsFieldItems($revision_ids) {
+    $revisions = [];
+    foreach ($revision_ids as $revision_id) {
+      $revisions[] = $this->doLoadRevisionFieldItems($revision_id);
+    }
+
+    return $revisions;
+  }
 
   /**
    * {@inheritdoc}
@@ -604,22 +650,24 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   }
 
   /**
-   * Ensures integer entity IDs are valid.
+   * Ensures integer entity key values are valid.
    *
    * The identifier sanitization provided by this method has been introduced
    * as Drupal used to rely on the database to facilitate this, which worked
    * correctly with MySQL but led to errors with other DBMS such as PostgreSQL.
    *
    * @param array $ids
-   *   The entity IDs to verify.
+   *   The entity key values to verify.
+   * @param string $entity_key
+   *   (optional) The entity key to sanitise values for. Defaults to 'id'.
    *
    * @return array
-   *   The sanitized list of entity IDs.
+   *   The sanitized list of entity key values.
    */
-  protected function cleanIds(array $ids) {
+  protected function cleanIds(array $ids, $entity_key = 'id') {
     $definitions = $this->entityManager->getBaseFieldDefinitions($this->entityTypeId);
-    $id_definition = $definitions[$this->entityType->getKey('id')];
-    if ($id_definition->getType() == 'integer') {
+    $field_name = $this->entityType->getKey($entity_key);
+    if ($field_name && $definitions[$field_name]->getType() == 'integer') {
       $ids = array_filter($ids, function ($id) {
         return is_numeric($id) && $id == (int) $id;
       });

@@ -133,6 +133,13 @@ class KeyValueEntityStorage extends EntityStorageBase {
   /**
    * {@inheritdoc}
    */
+  public function loadMultipleRevisions(array $revision_ids) {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function deleteRevision($revision_id) {
     return NULL;
   }
