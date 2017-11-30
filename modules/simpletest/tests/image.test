@@ -335,7 +335,9 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
     );
 
     // Systems using non-bundled GD2 don't have imagerotate. Test if available.
-    if (function_exists('imagerotate')) {
+    // @todo Remove the version check once https://www.drupal.org/node/2918570
+    //   is resolved.
+    if (function_exists('imagerotate') && (version_compare(PHP_VERSION, '7.0.26', '<') || (version_compare(PHP_VERSION, '7.1', '>=') && version_compare(PHP_VERSION, '7.1.12', '<')))) {
       $operations += array(
         'rotate_90' => array(
           'function' => 'rotate',
@@ -357,8 +359,8 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
       // See https://bugs.php.net/bug.php?id=65148.
       // For the 40x20 test images, the dimensions resulting from rotation will
       // be 1 pixel smaller in both width and height in PHP 5.5 and above.
-      // @todo: If and when the PHP bug gets solved, add an upper limit
-      //   version check.
+      // @todo: The PHP bug was fixed in PHP 7.0.26 and 7.1.12. Change the code
+      //   below to reflect that in https://www.drupal.org/node/2918570.
       if (version_compare(PHP_VERSION, '5.5', '>=')) {
         $operations += array(
           'rotate_5' => array(
