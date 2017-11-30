@@ -241,29 +241,6 @@ class LinkWidget extends WidgetBase {
       // title of the 'uri' element.
       if ($this->getFieldSetting('title') == DRUPAL_DISABLED) {
         $element['uri']['#title'] = $element['#title'];
-        // By default the field description is added to the title field. Since
-        // the title field is disabled, we add the description, if given, to the
-        // uri element instead.
-        if (!empty($element['#description'])) {
-          if (empty($element['uri']['#description'])) {
-            $element['uri']['#description'] = $element['#description'];
-          }
-          else {
-            // If we have the description of the type of field together with
-            // the user provided description, we want to make a distinction
-            // between "core help text" and "user entered help text". To make
-            // this distinction more clear, we put them in an unordered list.
-            $element['uri']['#description'] = [
-              '#theme' => 'item_list',
-              '#items' => [
-                // Assume the user-specified description has the most relevance,
-                // so place it first.
-                $element['#description'],
-                $element['uri']['#description'],
-              ],
-            ];
-          }
-        }
       }
       // Otherwise wrap everything in a details element.
       else {
