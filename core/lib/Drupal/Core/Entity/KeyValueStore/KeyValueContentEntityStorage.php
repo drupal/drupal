@@ -23,4 +23,11 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
    */
   public function createWithSampleValues($bundle = FALSE, array $values = []) {}
 
+  /**
+   * {@inheritdoc}
+   */
+  public function loadMultipleRevisions(array $revision_ids) {
+    return [];
+  }
+
 }
