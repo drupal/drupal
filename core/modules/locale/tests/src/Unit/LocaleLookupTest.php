@@ -3,6 +3,7 @@
 namespace Drupal\Tests\locale\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\locale\LocaleLookup;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -264,6 +265,68 @@ class LocaleLookupTest extends UnitTestCase {
       ->method('persist');
 
     $this->assertTrue($locale_lookup->get('test'));
+  }
+
+  /**
+   * Tests locale lookups with old plural style of translations.
+   *
+   * @param array $translations
+   *   The source with translations.
+   * @param string $langcode
+   *   The language code of translation string.
+   * @param string $string
+   *   The string for translation.
+   * @param bool $is_fix
+   *   The flag about expected fix translation.
+   *
+   * @covers ::resolveCacheMiss
+   * @dataProvider providerFixOldPluralTranslationProvider
+   */
+  public function testFixOldPluralStyleTranslations($translations, $langcode, $string, $is_fix) {
+    $this->storage->expects($this->any())
+      ->method('findTranslation')
+      ->will($this->returnCallback(function ($argument) use ($translations) {
+        if (isset($translations[$argument['language']][$argument['source']])) {
+          return (object) ['translation' => $translations[$argument['language']][$argument['source']]];
+        }
+        return TRUE;
+      }));
+    $this->languageManager->expects($this->any())
+      ->method('getFallbackCandidates')
+      ->will($this->returnCallback(function (array $context = []) {
+        switch ($context['langcode']) {
+          case 'by':
+            return ['ru'];
+        }
+      }));
+    $this->cache->expects($this->once())
+      ->method('get')
+      ->with('locale:' . $langcode . '::anonymous', FALSE);
+
+    $locale_lookup = new LocaleLookup($langcode, '', $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack);
+    $this->assertSame($is_fix, strpos($locale_lookup->get($string), '@count[2]') === FALSE);
+  }
+
+  /**
+   * Provides test data for testResolveCacheMissWithFallback().
+   */
+  public function providerFixOldPluralTranslationProvider() {
+    $translations = [
+      'by' => [
+        'word1' => '@count[2] word-by',
+        'word2' => implode(PluralTranslatableMarkup::DELIMITER, ['word-by', '@count[2] word-by']),
+      ],
+      'ru' => [
+        'word3' => '@count[2] word-ru',
+        'word4' => implode(PluralTranslatableMarkup::DELIMITER, ['word-ru', '@count[2] word-ru']),
+      ],
+    ];
+    return [
+      'no-plural' => [$translations, 'by', 'word1', FALSE],
+      'no-plural from other language' => [$translations, 'by', 'word3', FALSE],
+      'plural' => [$translations, 'by', 'word2', TRUE],
+      'plural from other language' => [$translations, 'by', 'word4', TRUE],
+    ];
   }
 
 }
