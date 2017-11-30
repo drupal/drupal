@@ -357,4 +357,13 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     $this->assertTrue($unserialized->getStatus());
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessCacheability() {
+    // @see \Drupal\comment\CommentAccessControlHandler::checkAccess()
+    return parent::getExpectedUnauthorizedAccessCacheability()
+      ->addCacheTags(['comment:1']);
+  }
+
 }

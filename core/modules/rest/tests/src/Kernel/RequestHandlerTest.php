@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\rest\Kernel;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\KernelTests\KernelTestBase;
@@ -40,7 +42,10 @@ class RequestHandlerTest extends KernelTestBase {
   public function setUp() {
     parent::setUp();
     $this->entityStorage = $this->prophesize(EntityStorageInterface::class);
-    $this->requestHandler = new RequestHandler($this->entityStorage->reveal());
+    $config_factory = $this->prophesize(ConfigFactoryInterface::class);
+    $config_factory->get('rest.settings')
+      ->willReturn($this->prophesize(ImmutableConfig::class)->reveal());
+    $this->requestHandler = new RequestHandler($this->entityStorage->reveal(), $config_factory->reveal());
     $this->requestHandler->setContainer($this->container);
   }
 

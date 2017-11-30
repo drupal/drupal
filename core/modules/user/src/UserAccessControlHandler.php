@@ -58,7 +58,7 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
           return AccessResult::allowed()->cachePerUser();
         }
         else {
-          return AccessResultNeutral::neutral("The 'access user profiles' permission is required and the user must be active.");
+          return AccessResultNeutral::neutral("The 'access user profiles' permission is required and the user must be active.")->cachePerPermissions()->addCacheableDependency($entity);
         }
         break;
 

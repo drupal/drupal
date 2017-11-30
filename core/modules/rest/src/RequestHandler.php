@@ -4,6 +4,7 @@ namespace Drupal\rest;
 
 use Drupal\Component\Utility\ArgumentsResolver;
 use Drupal\Core\Cache\CacheableResponseInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -34,20 +35,33 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
   protected $resourceStorage;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * Creates a new RequestHandler instance.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
    *   The resource configuration storage.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
-  public function __construct(EntityStorageInterface $entity_storage) {
+  public function __construct(EntityStorageInterface $entity_storage, ConfigFactoryInterface $config_factory) {
     $this->resourceStorage = $entity_storage;
+    $this->configFactory = $config_factory;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('entity_type.manager')->getStorage('rest_resource_config'));
+    return new static(
+      $container->get('entity_type.manager')->getStorage('rest_resource_config'),
+      $container->get('config.factory')
+    );
   }
 
   /**
@@ -133,8 +147,12 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
     $response = call_user_func_array([$resource, $method], $arguments);
 
     if ($response instanceof CacheableResponseInterface) {
-      // Add rest config's cache tags.
       $response->addCacheableDependency($resource_config);
+      // Add global rest settings config's cache tag, for BC flags.
+      // @see \Drupal\rest\Plugin\rest\resource\EntityResource::permissions()
+      // @see \Drupal\rest\EventSubscriber\RestConfigSubscriber
+      // @todo Remove in https://www.drupal.org/node/2893804
+      $response->addCacheableDependency($this->configFactory->get('rest.settings'));
     }
 
     return $response;

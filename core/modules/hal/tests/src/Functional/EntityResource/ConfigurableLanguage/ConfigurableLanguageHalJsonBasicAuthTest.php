@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\hal\Functional\EntityResource\ConfigurableLanguage;
 
-use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use Drupal\Tests\rest\Functional\BasicAuthResourceWithInterfaceTranslationTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigurableLanguage\ConfigurableLanguageResourceTestBase;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\Tests\rest\Functional\EntityResource\ConfigurableLanguage\Configurabl
  */
 class ConfigurableLanguageHalJsonBasicAuthTest extends ConfigurableLanguageResourceTestBase {
 
-  use BasicAuthResourceTestTrait;
+  use BasicAuthResourceWithInterfaceTranslationTestTrait;
 
   /**
    * {@inheritdoc}

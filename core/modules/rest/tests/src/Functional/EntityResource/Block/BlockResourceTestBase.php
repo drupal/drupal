@@ -141,4 +141,19 @@ abstract class BlockResourceTestBase extends EntityResourceTestBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessCacheability() {
+    // @see \Drupal\block\BlockAccessControlHandler::checkAccess()
+    return parent::getExpectedUnauthorizedAccessCacheability()
+      ->setCacheTags([
+        '4xx-response',
+        'config:block.block.llama',
+        'http_response',
+        static::$auth ? 'user:2' : 'user:0',
+      ])
+      ->setCacheContexts(['user.roles']);
+  }
+
 }

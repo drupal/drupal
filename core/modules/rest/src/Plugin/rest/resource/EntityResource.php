@@ -12,6 +12,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Http\Exception\CacheableAccessDeniedHttpException;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -122,7 +123,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
   public function get(EntityInterface $entity) {
     $entity_access = $entity->access('view', NULL, TRUE);
     if (!$entity_access->isAllowed()) {
-      throw new AccessDeniedHttpException($entity_access->getReason() ?: $this->generateFallbackAccessDeniedMessage($entity, 'view'));
+      throw new CacheableAccessDeniedHttpException($entity_access, $entity_access->getReason() ?: $this->generateFallbackAccessDeniedMessage($entity, 'view'));
     }
 
     $response = new ResourceResponse($entity, 200);

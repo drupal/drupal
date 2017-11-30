@@ -5,6 +5,7 @@ namespace Drupal\Tests\rest\Functional\EntityResource;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableResponseInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityNullStorage;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -278,6 +279,17 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessCacheability() {
+    return (new CacheableMetadata())
+      ->setCacheTags(static::$auth
+        ? ['4xx-response', 'http_response']
+        : ['4xx-response', 'config:user.role.anonymous', 'http_response'])
+      ->setCacheContexts(['user.permissions']);
+  }
+
+  /**
    * The expected cache tags for the GET/HEAD response of the test entity.
    *
    * @see ::testGet
@@ -287,6 +299,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected function getExpectedCacheTags() {
     $expected_cache_tags = [
       'config:rest.resource.entity.' . static::$entityTypeId,
+      // Necessary for 'bc_entity_resource_permissions'.
+      // @see \Drupal\rest\Plugin\rest\resource\EntityResource::permissions()
+      'config:rest.settings',
     ];
     if (!static::$auth) {
       $expected_cache_tags[] = 'config:user.role.anonymous';
@@ -362,7 +377,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // response.
     if (static::$auth) {
       $response = $this->request('GET', $url, $request_options);
-      $this->assertResponseWhenMissingAuthentication($response);
+      $this->assertResponseWhenMissingAuthentication('GET', $response);
     }
 
     $request_options[RequestOptions::HEADERS]['REST-test-auth'] = '1';
@@ -383,74 +398,55 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response);
+    $expected_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability();
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
     $this->assertArrayNotHasKey('Link', $response->getHeaders());
 
     $this->setUpAuthorization('GET');
 
     // 200 for well-formed HEAD request.
     $response = $this->request('HEAD', $url, $request_options);
-    $this->assertResourceResponse(200, '', $response);
-    $this->assertTrue($response->hasHeader('X-Drupal-Dynamic-Cache'));
-    $this->assertSame(['MISS'], $response->getHeader('X-Drupal-Dynamic-Cache'));
-    if (!$this->account) {
-      $this->assertSame(['MISS'], $response->getHeader('X-Drupal-Cache'));
-    }
-    else {
-      $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
-    }
+    $this->assertResourceResponse(200, '', $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
     $head_headers = $response->getHeaders();
 
     // 200 for well-formed GET request. Page Cache hit because of HEAD request.
     // Same for Dynamic Page Cache hit.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response);
-    $this->assertTrue($response->hasHeader('X-Drupal-Dynamic-Cache'));
-    if (!static::$auth) {
-      $this->assertSame(['HIT'], $response->getHeader('X-Drupal-Cache'));
-      $this->assertSame(['MISS'], $response->getHeader('X-Drupal-Dynamic-Cache'));
-    }
-    else {
-      $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
-      $this->assertSame(['HIT'], $response->getHeader('X-Drupal-Dynamic-Cache'));
-      // Assert that Dynamic Page Cache did not store a ResourceResponse object,
-      // which needs serialization after every cache hit. Instead, it should
-      // contain a flattened response. Otherwise performance suffers.
-      // @see \Drupal\rest\EventSubscriber\ResourceResponseSubscriber::flattenResponse()
-      $cache_items = $this->container->get('database')
-        ->query("SELECT cid, data FROM {cache_dynamic_page_cache} WHERE cid LIKE :pattern", [
-          ':pattern' => '%[route]=rest.%',
-        ])
-        ->fetchAllAssoc('cid');
-      $this->assertTrue(count($cache_items) >= 2);
-      $found_cache_redirect = FALSE;
-      $found_cached_200_response = FALSE;
-      $other_cached_responses_are_4xx = TRUE;
-      foreach ($cache_items as $cid => $cache_item) {
-        $cached_data = unserialize($cache_item->data);
-        if (!isset($cached_data['#cache_redirect'])) {
-          $cached_response = $cached_data['#response'];
-          if ($cached_response->getStatusCode() === 200) {
-            $found_cached_200_response = TRUE;
-          }
-          elseif (!$cached_response->isClientError()) {
-            $other_cached_responses_are_4xx = FALSE;
-          }
-          $this->assertNotInstanceOf(ResourceResponseInterface::class, $cached_response);
-          $this->assertInstanceOf(CacheableResponseInterface::class, $cached_response);
+    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'HIT', static::$auth ? 'HIT' : 'MISS');
+    // Assert that Dynamic Page Cache did not store a ResourceResponse object,
+    // which needs serialization after every cache hit. Instead, it should
+    // contain a flattened response. Otherwise performance suffers.
+    // @see \Drupal\rest\EventSubscriber\ResourceResponseSubscriber::flattenResponse()
+    $cache_items = $this->container->get('database')
+      ->query("SELECT cid, data FROM {cache_dynamic_page_cache} WHERE cid LIKE :pattern", [
+        ':pattern' => '%[route]=rest.%',
+      ])
+      ->fetchAllAssoc('cid');
+    $this->assertTrue(count($cache_items) >= 2);
+    $found_cache_redirect = FALSE;
+    $found_cached_200_response = FALSE;
+    $other_cached_responses_are_4xx = TRUE;
+    foreach ($cache_items as $cid => $cache_item) {
+      $cached_data = unserialize($cache_item->data);
+      if (!isset($cached_data['#cache_redirect'])) {
+        $cached_response = $cached_data['#response'];
+        if ($cached_response->getStatusCode() === 200) {
+          $found_cached_200_response = TRUE;
         }
-        else {
-          $found_cache_redirect = TRUE;
+        elseif (!$cached_response->isClientError()) {
+          $other_cached_responses_are_4xx = FALSE;
         }
+        $this->assertNotInstanceOf(ResourceResponseInterface::class, $cached_response);
+        $this->assertInstanceOf(CacheableResponseInterface::class, $cached_response);
       }
-      $this->assertTrue($found_cache_redirect);
-      $this->assertTrue($found_cached_200_response);
-      $this->assertTrue($other_cached_responses_are_4xx);
+      else {
+        $found_cache_redirect = TRUE;
+      }
     }
-    $cache_tags_header_value = $response->getHeader('X-Drupal-Cache-Tags')[0];
-    $this->assertEquals($this->getExpectedCacheTags(), empty($cache_tags_header_value) ? [] : explode(' ', $cache_tags_header_value));
-    $cache_contexts_header_value = $response->getHeader('X-Drupal-Cache-Contexts')[0];
-    $this->assertEquals($this->getExpectedCacheContexts(), empty($cache_contexts_header_value) ? [] : explode(' ', $cache_contexts_header_value));
+    $this->assertTrue($found_cache_redirect);
+    $this->assertTrue($found_cached_200_response);
+    $this->assertTrue($other_cached_responses_are_4xx);
+
     // Sort the serialization data first so we can do an identical comparison
     // for the keys with the array order the same (it needs to match with
     // identical comparison).
@@ -531,7 +527,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->rebuildAll();
 
       $response = $this->request('GET', $url, $request_options);
-      $this->assertResourceResponse(200, FALSE, $response);
+      $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
 
       // Again do an identical comparison, but this time transform the expected
       // normalized entity's values to strings. This ensures the BC layer for
@@ -575,7 +571,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->rebuildAll();
 
       $response = $this->request('GET', $url, $request_options);
-      $this->assertResourceResponse(200, FALSE, $response);
+      $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
 
       // This ensures the BC layer for bc_timestamp_normalizer_unix works as
       // expected. This method should be using
@@ -618,7 +614,21 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // 200 for well-formed request.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response);
+    $expected_cache_tags = $this->getExpectedCacheTags();
+    $expected_cache_contexts = $this->getExpectedCacheContexts();
+    // @todo Fix BlockAccessControlHandler::mergeCacheabilityFromConditions() in
+    //   https://www.drupal.org/node/2867881
+    if (static::$entityTypeId === 'block') {
+      $expected_cache_contexts = Cache::mergeContexts($expected_cache_contexts, ['user.permissions']);
+    }
+    // \Drupal\Core\EventSubscriber\AnonymousUserResponseSubscriber applies to
+    // cacheable anonymous responses: it updates their cacheability. Therefore
+    // we must update our cacheability expectations for anonymous responses
+    // accordingly.
+    if (!static::$auth && in_array('user.permissions', $expected_cache_contexts, TRUE)) {
+      $expected_cache_tags = Cache::mergeTags($expected_cache_tags, ['config:user.role.anonymous']);
+    }
+    $this->assertResourceResponse(200, FALSE, $response, $expected_cache_tags, $expected_cache_contexts, static::$auth ? FALSE : 'MISS', 'MISS');
 
     $this->resourceConfigStorage->load(static::$resourceConfigId)->disable()->save();
     $this->refreshTestStateAfterRestConfigChange();
@@ -631,7 +641,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: upon re-enabling a resource, immediate 200.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response);
+    $this->assertResourceResponse(200, FALSE, $response, $expected_cache_tags, $expected_cache_contexts, static::$auth ? FALSE : 'MISS', 'MISS');
 
     $this->resourceConfigStorage->load(static::$resourceConfigId)->delete();
     $this->refreshTestStateAfterRestConfigChange();
@@ -787,7 +797,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // DX: forgetting authentication: authentication provider-specific error
       // response.
       $response = $this->request('POST', $url, $request_options);
-      $this->assertResponseWhenMissingAuthentication($response);
+      $this->assertResponseWhenMissingAuthentication('POST', $response);
     }
 
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('POST'));
@@ -995,7 +1005,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // DX: forgetting authentication: authentication provider-specific error
       // response.
       $response = $this->request('PATCH', $url, $request_options);
-      $this->assertResponseWhenMissingAuthentication($response);
+      $this->assertResponseWhenMissingAuthentication('PATCH', $response);
     }
 
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('PATCH'));
@@ -1164,7 +1174,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // DX: forgetting authentication: authentication provider-specific error
       // response.
       $response = $this->request('DELETE', $url, $request_options);
-      $this->assertResponseWhenMissingAuthentication($response);
+      $this->assertResponseWhenMissingAuthentication('DELETE', $response);
     }
 
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('PATCH'));
@@ -1181,14 +1191,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // 204 for well-formed request.
     $response = $this->request('DELETE', $url, $request_options);
-    $this->assertSame(204, $response->getStatusCode());
-    // DELETE responses should not include a Content-Type header. But Apache
-    // sets it to 'text/html' by default. We also cannot detect the presence of
-    // Apache either here in the CLI. For now having this documented here is all
-    // we can do.
-    // $this->assertSame(FALSE, $response->hasHeader('Content-Type'));
-    $this->assertSame('', (string) $response->getBody());
-    $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+    $this->assertResourceResponse(204, '', $response);
 
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
     $this->refreshTestStateAfterRestConfigChange();
@@ -1203,11 +1206,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // 204 for well-formed request.
     $response = $this->request('DELETE', $url, $request_options);
-    $this->assertSame(204, $response->getStatusCode());
-    // @todo Uncomment the following line when https://www.drupal.org/node/2821711 is fixed.
-    // $this->assertSame(FALSE, $response->hasHeader('Content-Type'));
-    $this->assertSame('', (string) $response->getBody());
-    $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+    $this->assertResourceResponse(204, '', $response);
   }
 
   /**

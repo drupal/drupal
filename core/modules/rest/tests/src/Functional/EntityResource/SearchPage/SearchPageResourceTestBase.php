@@ -99,4 +99,13 @@ abstract class SearchPageResourceTestBase extends EntityResourceTestBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessCacheability() {
+    // @see \Drupal\search\SearchPageAccessControlHandler::checkAccess()
+    return parent::getExpectedUnauthorizedAccessCacheability()
+      ->addCacheTags(['config:search.page.hinode_search']);
+  }
+
 }

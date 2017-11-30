@@ -261,4 +261,13 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
     $this->markTestSkipped('POSTing File Media items is not supported until https://www.drupal.org/node/1927648 is solved.');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessCacheability() {
+    // @see \Drupal\media\MediaAccessControlHandler::checkAccess()
+    return parent::getExpectedUnauthorizedAccessCacheability()
+      ->addCacheTags(['media:1']);
+  }
+
 }

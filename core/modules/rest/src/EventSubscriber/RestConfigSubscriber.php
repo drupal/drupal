@@ -37,6 +37,7 @@ class RestConfigSubscriber implements EventSubscriberInterface {
    */
   public function onSave(ConfigCrudEvent $event) {
     $saved_config = $event->getConfig();
+    // @see \Drupal\rest\Plugin\rest\resource\EntityResource::permissions()
     if ($saved_config->getName() === 'rest.settings' && $event->isChanged('bc_entity_resource_permissions')) {
       $this->routerBuilder->setRebuildNeeded();
     }

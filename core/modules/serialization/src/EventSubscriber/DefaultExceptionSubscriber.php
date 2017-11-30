@@ -2,6 +2,8 @@
 
 namespace Drupal\serialization\EventSubscriber;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\EventSubscriber\HttpExceptionSubscriberBase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -51,8 +53,12 @@ class DefaultExceptionSubscriber extends HttpExceptionSubscriberBase {
    */
   protected static function getPriority() {
     // This will fire after the most common HTML handler, since HTML requests
-    // are still more common than HTTP requests.
-    return -75;
+    // are still more common than HTTP requests. But it has a lower priority
+    // than \Drupal\Core\EventSubscriber\ExceptionJsonSubscriber::on4xx(), so
+    // that this also handles the 'json' format. Then all serialization formats
+    // (::getHandledFormats()) are handled by this exception subscriber, which
+    // results in better consistency.
+    return -70;
   }
 
   /**
@@ -67,14 +73,22 @@ class DefaultExceptionSubscriber extends HttpExceptionSubscriberBase {
     $request = $event->getRequest();
 
     $format = $request->getRequestFormat();
-    $content = ['message' => $event->getException()->getMessage()];
+    $content = ['message' => $exception->getMessage()];
     $encoded_content = $this->serializer->serialize($content, $format);
     $headers = $exception->getHeaders();
 
     // Add the MIME type from the request to send back in the header.
     $headers['Content-Type'] = $request->getMimeType($format);
 
-    $response = new Response($encoded_content, $exception->getStatusCode(), $headers);
+    // If the exception is cacheable, generate a cacheable response.
+    if ($exception instanceof CacheableDependencyInterface) {
+      $response = new CacheableResponse($encoded_content, $exception->getStatusCode(), $headers);
+      $response->addCacheableDependency($exception);
+    }
+    else {
+      $response = new Response($encoded_content, $exception->getStatusCode(), $headers);
+    }
+
     $event->setResponse($response);
   }
 

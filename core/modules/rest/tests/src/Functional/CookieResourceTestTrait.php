@@ -91,11 +91,31 @@ trait CookieResourceTestTrait {
   /**
    * {@inheritdoc}
    */
-  protected function assertResponseWhenMissingAuthentication(ResponseInterface $response) {
+  protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response) {
     // Requests needing cookie authentication but missing it results in a 403
     // response. The cookie authentication mechanism sets no response message.
+    // Hence, effectively, this is just the 403 response that one gets as the
+    // anonymous user trying to access a certain REST resource.
+    // @see \Drupal\user\Authentication\Provider\Cookie
     // @todo https://www.drupal.org/node/2847623
-    $this->assertResourceErrorResponse(403, FALSE, $response);
+    if ($method === 'GET') {
+      $expected_cookie_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability();
+      // - \Drupal\Core\EventSubscriber\AnonymousUserResponseSubscriber applies
+      //   to cacheable anonymous responses: it updates their cacheability.
+      // - A 403 response to a GET request is cacheable.
+      // Therefore we must update our cacheability expectations accordingly.
+      if (in_array('user.permissions', $expected_cookie_403_cacheability->getCacheContexts(), TRUE)) {
+        $expected_cookie_403_cacheability->addCacheTags(['config:user.role.anonymous']);
+      }
+      // @todo Fix \Drupal\block\BlockAccessControlHandler::mergeCacheabilityFromConditions() in https://www.drupal.org/node/2867881
+      if (static::$entityTypeId === 'block') {
+        $expected_cookie_403_cacheability->setCacheTags(str_replace('user:2', 'user:0', $expected_cookie_403_cacheability->getCacheTags()));
+      }
+      $this->assertResourceErrorResponse(403, FALSE, $response, $expected_cookie_403_cacheability->getCacheTags(), $expected_cookie_403_cacheability->getCacheContexts(), 'MISS', 'MISS');
+    }
+    else {
+      $this->assertResourceErrorResponse(403, FALSE, $response);
+    }
   }
 
   /**

@@ -24,7 +24,7 @@ trait AnonResourceTestTrait {
   /**
    * {@inheritdoc}
    */
-  protected function assertResponseWhenMissingAuthentication(ResponseInterface $response) {
+  protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response) {
     throw new \LogicException('When testing for anonymous users, authentication cannot be missing.');
   }
 

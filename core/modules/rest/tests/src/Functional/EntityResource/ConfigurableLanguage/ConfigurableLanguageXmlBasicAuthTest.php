@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\ConfigurableLanguage;
 
-use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use Drupal\Tests\rest\Functional\BasicAuthResourceWithInterfaceTranslationTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrai
  */
 class ConfigurableLanguageXmlBasicAuthTest extends ConfigurableLanguageResourceTestBase {
 
-  use BasicAuthResourceTestTrait;
+  use BasicAuthResourceWithInterfaceTranslationTestTrait;
   use XmlEntityNormalizationQuirksTrait;
 
   /**
