@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\user\Tests\Views;
+namespace Drupal\Tests\user\Functional\Views;
 
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -27,8 +27,8 @@ class FilterPermissionUiTest extends ViewTestBase {
    */
   public static $modules = ['user', 'user_test_views', 'views_ui'];
 
-  protected function setUp() {
-    parent::setUp(TRUE);
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     ViewTestData::createTestViews(get_class($this), ['user_test_views']);
     $this->enableViewsTestModule();

@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
@@ -11,7 +11,7 @@ use Drupal\user\RoleInterface;
  *
  * @group user
  */
-class UserRoleAdminTest extends WebTestBase {
+class UserRoleAdminTest extends BrowserTestBase {
 
   /**
    * User with admin privileges.
@@ -46,7 +46,7 @@ class UserRoleAdminTest extends WebTestBase {
     $this->drupalGet('admin/people/permissions');
     $tabs = $this->xpath('//ul[@class=:classes and //a[contains(., :text)]]', [
       ':classes' => 'tabs primary',
-      ':text' => t('Roles'),
+      ':text' => 'Roles',
     ]);
     $this->assertEqual(count($tabs), 1, 'Found roles tab');
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Datetime\Entity\DateFormat;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Set a user time zone and verify that dates are displayed in local time.
  *
  * @group user
  */
-class UserTimeZoneTest extends WebTestBase {
+class UserTimeZoneTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

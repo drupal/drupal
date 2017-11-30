@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Test\AssertMailTrait;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 
 /**
@@ -10,7 +11,11 @@ use Drupal\user\RoleInterface;
  *
  * @group user
  */
-class UserAdminTest extends WebTestBase {
+class UserAdminTest extends BrowserTestBase {
+
+  use AssertMailTrait {
+    getMails as drupalGetMails;
+  }
 
   /**
    * Modules to enable.
@@ -66,12 +71,12 @@ class UserAdminTest extends WebTestBase {
     $this->drupalGet('admin/people', ['query' => ['user' => $user_a->getUsername()]]);
     $result = $this->xpath('//table/tbody/tr');
     $this->assertEqual(1, count($result), 'Filter by username returned the right amount.');
-    $this->assertEqual($user_a->getUsername(), (string) $result[0]->td[1]->span, 'Filter by username returned the right user.');
+    $this->assertEqual($user_a->getUsername(), $result[0]->find('xpath', '/td[2]/span')->getText(), 'Filter by username returned the right user.');
 
     $this->drupalGet('admin/people', ['query' => ['user' => $user_a->getEmail()]]);
     $result = $this->xpath('//table/tbody/tr');
     $this->assertEqual(1, count($result), 'Filter by username returned the right amount.');
-    $this->assertEqual($user_a->getUsername(), (string) $result[0]->td[1]->span, 'Filter by username returned the right user.');
+    $this->assertEqual($user_a->getUsername(), $result[0]->find('xpath', '/td[2]/span')->getText(), 'Filter by username returned the right user.');
 
     // Filter the users by permission 'administer taxonomy'.
     $this->drupalGet('admin/people', ['query' => ['permission' => 'administer taxonomy']]);

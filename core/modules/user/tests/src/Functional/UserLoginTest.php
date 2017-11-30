@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\user\Entity\User;
  *
  * @group user
  */
-class UserLoginTest extends WebTestBase {
+class UserLoginTest extends BrowserTestBase {
 
   /**
    * Tests login with destination.
@@ -23,7 +23,7 @@ class UserLoginTest extends WebTestBase {
 
     $user = $this->drupalCreateUser([]);
     $this->drupalGet('user/login', ['query' => ['destination' => 'foo']]);
-    $edit = ['name' => $user->getUserName(), 'pass' => $user->pass_raw];
+    $edit = ['name' => $user->getUserName(), 'pass' => $user->passRaw];
     $this->drupalPostForm(NULL, $edit, t('Log in'));
     $this->assertUrl('foo', [], 'Redirected to the correct URL');
   }
@@ -40,7 +40,7 @@ class UserLoginTest extends WebTestBase {
 
     $user1 = $this->drupalCreateUser([]);
     $incorrect_user1 = clone $user1;
-    $incorrect_user1->pass_raw .= 'incorrect';
+    $incorrect_user1->passRaw .= 'incorrect';
 
     // Try 2 failed logins.
     for ($i = 0; $i < 2; $i++) {
@@ -77,7 +77,7 @@ class UserLoginTest extends WebTestBase {
 
     $user1 = $this->drupalCreateUser([]);
     $incorrect_user1 = clone $user1;
-    $incorrect_user1->pass_raw .= 'incorrect';
+    $incorrect_user1->passRaw .= 'incorrect';
 
     $user2 = $this->drupalCreateUser([]);
 
@@ -117,7 +117,7 @@ class UserLoginTest extends WebTestBase {
 
     // Create a new user and authenticate.
     $account = $this->drupalCreateUser([]);
-    $password = $account->pass_raw;
+    $password = $account->passRaw;
     $this->drupalLogin($account);
     $this->drupalLogout();
     // Load the stored user. The password hash should reflect $default_count_log2.
@@ -132,7 +132,7 @@ class UserLoginTest extends WebTestBase {
     \Drupal::service('module_installer')->install(['user_custom_phpass_params_test']);
     $this->resetAll();
 
-    $account->pass_raw = $password;
+    $account->passRaw = $password;
     $this->drupalLogin($account);
     // Load the stored user, which should have a different password hash now.
     $user_storage->resetCache([$account->id()]);
@@ -145,7 +145,7 @@ class UserLoginTest extends WebTestBase {
    * Make an unsuccessful login attempt.
    *
    * @param \Drupal\user\Entity\User $account
-   *   A user object with name and pass_raw attributes for the login attempt.
+   *   A user object with name and passRaw attributes for the login attempt.
    * @param mixed $flood_trigger
    *   (optional) Whether or not to expect that the flood control mechanism
    *    will be triggered. Defaults to NULL.
@@ -157,7 +157,7 @@ class UserLoginTest extends WebTestBase {
   public function assertFailedLogin($account, $flood_trigger = NULL) {
     $edit = [
       'name' => $account->getUsername(),
-      'pass' => $account->pass_raw,
+      'pass' => $account->passRaw,
     ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
     $this->assertNoFieldByXPath("//input[@name='pass' and @value!='']", NULL, 'Password value attribute is blank.');

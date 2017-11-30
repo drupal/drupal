@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\user\Tests\Views;
+namespace Drupal\Tests\user\Functional\Views;
 
 use Drupal\Core\Form\FormState;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
@@ -27,8 +27,8 @@ class ArgumentValidateTest extends UserTestBase {
    */
   protected $account;
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     $this->account = $this->drupalCreateUser();
   }

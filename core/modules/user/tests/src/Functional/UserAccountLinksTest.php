@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests user-account links.
  *
  * @group user
  */
-class UserAccountLinksTest extends WebTestBase {
+class UserAccountLinksTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -89,7 +89,7 @@ class UserAccountLinksTest extends WebTestBase {
     // the consistent label text.
     $this->drupalGet('admin/structure/menu/manage/account');
     $label = $this->xpath('//label[contains(.,:text)]/@for', [':text' => 'Enable My account menu link']);
-    $this->assertFieldChecked((string) $label[0], "The 'My account' link is enabled by default.");
+    $this->assertFieldChecked($label[0]->getText(), "The 'My account' link is enabled by default.");
 
     // Disable the 'My account' link.
     $edit['links[menu_plugin_id:user.page][enabled]'] = FALSE;

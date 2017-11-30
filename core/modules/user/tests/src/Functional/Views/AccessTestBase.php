@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\user\Tests\Views;
+namespace Drupal\Tests\user\Functional\Views;
 
 /**
  * A common test base class for the user access plugin tests.
@@ -45,8 +45,8 @@ abstract class AccessTestBase extends UserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
     $this->drupalPlaceBlock('system_breadcrumb_block');
 
     $this->enableViewsTestModule();

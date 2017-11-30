@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\user\Tests\Views;
+namespace Drupal\Tests\user\Functional\Views;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\user\Entity\User;

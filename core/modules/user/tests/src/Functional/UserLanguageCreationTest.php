@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests whether proper language is stored for new users and access to language
@@ -11,7 +11,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group user
  */
-class UserLanguageCreationTest extends WebTestBase {
+class UserLanguageCreationTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -86,11 +86,11 @@ class UserLanguageCreationTest extends WebTestBase {
     $this->drupalGet($user_edit);
     $this->assertOptionSelected("edit-preferred-langcode", $langcode, 'Language selector is accessible and correct language is selected.');
 
-    // Set pass_raw so we can log in the new user.
-    $user->pass_raw = $this->randomMachineName(10);
+    // Set passRaw so we can log in the new user.
+    $user->passRaw = $this->randomMachineName(10);
     $edit = [
-      'pass[pass1]' => $user->pass_raw,
-      'pass[pass2]' => $user->pass_raw,
+      'pass[pass1]' => $user->passRaw,
+      'pass[pass2]' => $user->passRaw,
     ];
 
     $this->drupalPostForm($user_edit, $edit, t('Save'));

@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\user\Tests\Views;
+namespace Drupal\Tests\user\Functional\Views;
 
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -51,8 +51,8 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     'uid' => 'uid',
   ];
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     ViewTestData::createTestViews(get_class($this), ['user_test_views']);
 

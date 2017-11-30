@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
-use Drupal\content_translation\Tests\ContentTranslationUITestBase;
+use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 
 /**
  * Tests the User Translation UI.

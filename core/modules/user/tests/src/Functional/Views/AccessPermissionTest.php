@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\user\Tests\Views;
+namespace Drupal\Tests\user\Functional\Views;
 
 use Drupal\user\Plugin\views\access\Permission;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;

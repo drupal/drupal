@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\user\Tests\Views;
+namespace Drupal\Tests\user\Functional\Views;
 
 use Drupal\Core\Render\RenderContext;
 use Drupal\views\Views;

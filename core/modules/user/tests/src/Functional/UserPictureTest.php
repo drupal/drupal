@@ -1,17 +1,22 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
 use Drupal\image\Entity\ImageStyle;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\file\Entity\File;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests user picture functionality.
  *
  * @group user
  */
-class UserPictureTest extends WebTestBase {
+class UserPictureTest extends BrowserTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
 
   /**
    * The profile to install as a basis for testing.

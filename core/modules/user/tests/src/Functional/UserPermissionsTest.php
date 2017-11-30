@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\user\Entity\Role;
 
@@ -12,7 +12,7 @@ use Drupal\user\Entity\Role;
  *
  * @group user
  */
-class UserPermissionsTest extends WebTestBase {
+class UserPermissionsTest extends BrowserTestBase {
 
   /**
    * User with admin privileges.
@@ -85,7 +85,8 @@ class UserPermissionsTest extends WebTestBase {
     // Ensure that the admin role doesn't have any checkboxes.
     $this->drupalGet('admin/people/permissions');
     foreach (array_keys($this->container->get('user.permissions')->getPermissions()) as $permission) {
-      $this->assertNoFieldByName('administrator[' . $permission . ']');
+      $this->assertSession()->checkboxChecked('administrator[' . $permission . ']');
+      $this->assertSession()->fieldDisabled('administrator[' . $permission . ']');
     }
   }
 
@@ -174,14 +175,14 @@ class UserPermissionsTest extends WebTestBase {
     // to 'access site reports'.
     $this->drupalGet('admin/people/permissions');
     $next_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
-    $this->assertEqual('edit-permissions-access-site-reports', $next_row[0]->attributes()['data-drupal-selector']);
+    $this->assertEqual('edit-permissions-access-site-reports', $next_row[0]->getAttribute('data-drupal-selector'));
 
     // When Node is installed the 'access content' permission is listed next to
     // to 'view own unpublished content'.
     \Drupal::service('module_installer')->install(['node']);
     $this->drupalGet('admin/people/permissions');
     $next_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
-    $this->assertEqual('edit-permissions-view-own-unpublished-content', $next_row[0]->attributes()['data-drupal-selector']);
+    $this->assertEqual('edit-permissions-view-own-unpublished-content', $next_row[0]->getAttribute('data-drupal-selector'));
   }
 
 }

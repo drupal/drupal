@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests user edit page.
  *
  * @group user
  */
-class UserEditTest extends WebTestBase {
+class UserEditTest extends BrowserTestBase {
 
   /**
    * Test user edit page.
@@ -51,7 +51,7 @@ class UserEditTest extends WebTestBase {
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
     $this->assertRaw(t("Your current password is missing or incorrect; it's required to change the %name.", ['%name' => t('Email')]));
 
-    $edit['current_pass'] = $user1->pass_raw;
+    $edit['current_pass'] = $user1->passRaw;
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
     $this->assertRaw(t("The changes have been saved."));
 
@@ -63,7 +63,7 @@ class UserEditTest extends WebTestBase {
     $this->assertRaw(t("Your current password is missing or incorrect; it's required to change the %name.", ['%name' => t('Password')]));
 
     // Try again with the current password.
-    $edit['current_pass'] = $user1->pass_raw;
+    $edit['current_pass'] = $user1->passRaw;
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
     $this->assertRaw(t("The changes have been saved."));
 
@@ -72,7 +72,7 @@ class UserEditTest extends WebTestBase {
 
     // Make sure the user can log in with their new password.
     $this->drupalLogout();
-    $user1->pass_raw = $new_pass;
+    $user1->passRaw = $new_pass;
     $this->drupalLogin($user1);
     $this->drupalLogout();
 

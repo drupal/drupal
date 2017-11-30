@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\user\Tests\Views;
+namespace Drupal\Tests\user\Functional\Views;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\Plugin\views\access\Role;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
@@ -14,6 +15,8 @@ use Drupal\views\Views;
  * @see \Drupal\user\Plugin\views\access\Role
  */
 class AccessRoleTest extends AccessTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Views used by this test.

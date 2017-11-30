@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -11,7 +11,7 @@ use Drupal\user\Entity\User;
  * @group user
  * @see user_admin_account()
  */
-class UserAdminListingTest extends WebTestBase {
+class UserAdminListingTest extends BrowserTestBase {
 
   /**
    * Tests the listing.
@@ -63,19 +63,22 @@ class UserAdminListingTest extends WebTestBase {
     $result = $this->xpath('//table[contains(@class, "responsive-enabled")]/tbody/tr');
     $result_accounts = [];
     foreach ($result as $account) {
-      $name = (string) $account->td[0]->span;
+      $account_columns = $account->findAll('css', 'td');
+      $name = $account_columns[0]->getText();
       $roles = [];
-      if (isset($account->td[2]->div->ul)) {
-        foreach ($account->td[2]->div->ul->li as $element) {
-          $roles[] = (string) $element;
+      $account_roles = $account_columns[2]->findAll('css', 'td div ul li');
+      if (!empty($account_roles)) {
+        foreach ($account_roles as $element) {
+          $roles[] = $element->getText();
         }
       }
+
       $result_accounts[$name] = [
         'name' => $name,
-        'status' => (string) $account->td[1],
+        'status' => $account_columns[1]->getText(),
         'roles' => $roles,
-        'member_for' => (string) $account->td[3],
-        'last_access' => (string) $account->td[4],
+        'member_for' => $account_columns[3]->getText(),
+        'last_access' => $account_columns[4]->getText(),
       ];
     }
 
