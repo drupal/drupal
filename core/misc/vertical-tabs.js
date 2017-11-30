@@ -26,42 +26,42 @@
       $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs').each(function () {
         var $this = $(this).addClass('vertical-tabs__panes');
         var focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
-        var tab_focus = void 0;
+        var tabFocus = void 0;
 
         var $details = $this.find('> details');
         if ($details.length === 0) {
           return;
         }
 
-        var tab_list = $('<ul class="vertical-tabs__menu"></ul>');
-        $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tab_list);
+        var tabList = $('<ul class="vertical-tabs__menu"></ul>');
+        $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tabList);
 
         $details.each(function () {
           var $that = $(this);
-          var vertical_tab = new Drupal.verticalTab({
+          var verticalTab = new Drupal.verticalTab({
             title: $that.find('> summary').text(),
             details: $that
           });
-          tab_list.append(vertical_tab.item);
-          $that.removeClass('collapsed').attr('open', true).addClass('vertical-tabs__pane').data('verticalTab', vertical_tab);
+          tabList.append(verticalTab.item);
+          $that.removeClass('collapsed').attr('open', true).addClass('vertical-tabs__pane').data('verticalTab', verticalTab);
           if (this.id === focusID) {
-            tab_focus = $that;
+            tabFocus = $that;
           }
         });
 
-        $(tab_list).find('> li').eq(0).addClass('first');
-        $(tab_list).find('> li').eq(-1).addClass('last');
+        $(tabList).find('> li').eq(0).addClass('first');
+        $(tabList).find('> li').eq(-1).addClass('last');
 
-        if (!tab_focus) {
+        if (!tabFocus) {
           var $locationHash = $this.find(window.location.hash);
           if (window.location.hash && $locationHash.length) {
-            tab_focus = $locationHash.closest('.vertical-tabs__pane');
+            tabFocus = $locationHash.closest('.vertical-tabs__pane');
           } else {
-            tab_focus = $this.find('> .vertical-tabs__pane').eq(0);
+            tabFocus = $this.find('> .vertical-tabs__pane').eq(0);
           }
         }
-        if (tab_focus.length) {
-          tab_focus.data('verticalTab').focus();
+        if (tabFocus.length) {
+          tabFocus.data('verticalTab').focus();
         }
       });
     }

@@ -17,10 +17,11 @@
       const $context = $(context);
       const options = drupalSettings.contentTranslationDependentOptions;
       let $fields;
+      let dependentColumns;
 
-      function fieldsChangeHandler($fields, dependent_columns) {
+      function fieldsChangeHandler($fields, dependentColumns) {
         return function (e) {
-          Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependent_columns, $(e.target));
+          Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependentColumns, $(e.target));
         };
       }
 
@@ -30,14 +31,14 @@
       if (options && options.dependent_selectors) {
         Object.keys(options.dependent_selectors).forEach((field) => {
           $fields = $context.find(`input[name^="${field}"]`);
-          const dependent_columns = options.dependent_selectors[field];
+          dependentColumns = options.dependent_selectors[field];
 
-          $fields.on('change', fieldsChangeHandler($fields, dependent_columns));
-          Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependent_columns);
+          $fields.on('change', fieldsChangeHandler($fields, dependentColumns));
+          Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependentColumns);
         });
       }
     },
-    check($fields, dependent_columns, $changed) {
+    check($fields, dependentColumns, $changed) {
       let $element = $changed;
       let column;
 
@@ -47,8 +48,8 @@
 
       // A field that has many different translatable parts can also define one
       // or more columns that require all columns to be translatable.
-      Object.keys(dependent_columns).forEach((index) => {
-        column = dependent_columns[index];
+      Object.keys(dependentColumns).forEach((index) => {
+        column = dependentColumns[index];
 
         if (!$changed) {
           $element = $fields.filter(filterFieldsList);

@@ -32,10 +32,10 @@
 
       $colorPreview.find('.color-preview-footer-wrapper').css('background-color', $colorPalette.find('input[name="palette[footer]"]').val());
 
-      var gradient_start = $colorPalette.find('input[name="palette[top]"]').val();
-      var gradient_end = $colorPalette.find('input[name="palette[bottom]"]').val();
+      var gradientStart = $colorPalette.find('input[name="palette[top]"]').val();
+      var gradientEnd = $colorPalette.find('input[name="palette[bottom]"]').val();
 
-      $colorPreview.find('.color-preview-header').attr('style', 'background-color: ' + gradient_start + '; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(' + gradient_start + '), to(' + gradient_end + ')); background-image: -moz-linear-gradient(-90deg, ' + gradient_start + ', ' + gradient_end + ');');
+      $colorPreview.find('.color-preview-header').attr('style', 'background-color: ' + gradientStart + '; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(' + gradientStart + '), to(' + gradientEnd + ')); background-image: -moz-linear-gradient(-90deg, ' + gradientStart + ', ' + gradientEnd + ');');
 
       $colorPreview.find('.color-preview-site-name').css('color', $colorPalette.find('input[name="palette[titleslogan]"]').val());
     }
