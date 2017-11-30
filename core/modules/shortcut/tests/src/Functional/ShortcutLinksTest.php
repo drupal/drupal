@@ -65,6 +65,11 @@ class ShortcutLinksTest extends ShortcutTestBase {
       '/admin/config/system/site-information',
     ];
 
+    // Test the add shortcut form UI. Test that the base field description is
+    // there.
+    $this->drupalGet('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link');
+    $this->assertRaw('The location this shortcut points to.');
+
     // Check that each new shortcut links where it should.
     foreach ($test_cases as $test_path) {
       $title = $this->randomMachineName();
