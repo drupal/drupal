@@ -283,6 +283,8 @@ function taxonomy_menu() {
     'title' => 'Taxonomy term',
     'title callback' => 'taxonomy_term_title',
     'title arguments' => array(2),
+    // The page callback also invokes drupal_set_title() in case
+    // the menu router's title is overridden by a menu link.
     'page callback' => 'taxonomy_term_page',
     'page arguments' => array(2),
     'access arguments' => array('access content'),
@@ -1714,13 +1716,15 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
 }
 
 /**
- * Title callback for term pages.
+ * Title callback: Returns the title of the taxonomy term.
  *
  * @param $term
  *   A term object.
  *
  * @return
- *   The term name to be used as the page title.
+ *   An unsanitized string that is the title of the taxonomy term.
+ *
+ * @see taxonomy_menu()
  */
 function taxonomy_term_title($term) {
   return $term->name;
