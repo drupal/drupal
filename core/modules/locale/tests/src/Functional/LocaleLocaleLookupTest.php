@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -53,6 +54,47 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
     $context = \Drupal::state()->get('locale.test_language_fallback_candidates_locale_lookup_alter_context');
     $this->assertEqual($context['langcode'], 'fr');
     $this->assertEqual($context['operation'], 'locale_lookup');
+  }
+
+  /**
+   * Test old plural style @count[number] fix.
+   *
+   * @dataProvider providerTestFixOldPluralStyle
+   */
+  public function testFixOldPluralStyle($translation_value, $expected) {
+    $string_storage = \Drupal::service('locale.storage');
+    $string = $string_storage->findString(['source' => 'Member for', 'context' => '']);
+    $lid = $string->getId();
+    $string_storage->createTranslation([
+      'lid' => $lid,
+      'language' => 'fr',
+      'translation' => $translation_value,
+    ])->save();
+    _locale_refresh_translations(['fr'], [$lid]);
+
+    // Check that 'count[2]' was fixed for render value.
+    $this->drupalGet('');
+    $this->assertSession()->pageTextContains($expected);
+
+    // Check that 'count[2]' was saved for source value.
+    $translation = $string_storage->findTranslation(['language' => 'fr', 'lid' => $lid])->translation;
+    $this->assertSame($translation_value, $translation, 'Source value not changed');
+    $this->assertNotFalse(strpos($translation, '@count[2]'), 'Source value contains @count[2]');
+  }
+
+  /**
+   * Provides data for testFixOldPluralStyle().
+   *
+   * @return array
+   *   An array of test data:
+   *     - translation value
+   *     - expected result
+   */
+  public function providerTestFixOldPluralStyle() {
+    return [
+      'non-plural translation' => ['@count[2] non-plural test', '@count[2] non-plural test'],
+      'plural translation' => ['@count[2] plural test' . PluralTranslatableMarkup::DELIMITER, '@count plural test'],
+    ];
   }
 
 }
