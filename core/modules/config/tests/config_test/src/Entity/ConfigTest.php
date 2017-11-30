@@ -117,12 +117,9 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
    * {@inheritdoc}
    */
   public function onDependencyRemoval(array $dependencies) {
-    // Record which entities have this method called on and what dependencies
-    // are passed.
+    // Record which entities have this method called on.
     $called = \Drupal::state()->get('config_test.on_dependency_removal_called', []);
-    $called[$this->id()] = $dependencies;
-    $called[$this->id()]['config'] = array_keys($called[$this->id()]['config']);
-    $called[$this->id()]['content'] = array_keys($called[$this->id()]['content']);
+    $called[] = $this->id();
     \Drupal::state()->set('config_test.on_dependency_removal_called', $called);
 
     $changed = parent::onDependencyRemoval($dependencies);
