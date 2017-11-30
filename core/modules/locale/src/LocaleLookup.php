@@ -7,7 +7,6 @@ use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -171,12 +170,6 @@ class LocaleLookup extends CacheCollector {
           }
         }
       }
-    }
-
-    if (is_string($value) && strpos($value, PluralTranslatableMarkup::DELIMITER) !== FALSE) {
-      // Community translations imported from localize.drupal.org as well as
-      // migrated translations may contain @count[number].
-      $value = preg_replace('!@count\[\d+\]!', '@count', $value);
     }
 
     $this->storage[$offset] = $value;
