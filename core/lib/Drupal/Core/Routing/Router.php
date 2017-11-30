@@ -98,12 +98,34 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   }
 
   /**
+   * Adds a deprecated route filter.
+   *
+   * @param \Drupal\Core\Routing\FilterInterface $route_filter
+   *   The route filter.
+   */
+  public function addDeprecatedRouteFilter(FilterInterface $route_filter) {
+    @trigger_error('non_lazy_route_filter is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Instead, should use route_filter, see https://www.drupal.org/node/2894934', E_USER_DEPRECATED);
+    $this->filters[] = $route_filter;
+  }
+
+  /**
    * Adds a route enhancer.
    *
    * @param \Drupal\Core\Routing\EnhancerInterface $route_enhancer
    *   The route enhancer.
    */
   public function addRouteEnhancer(EnhancerInterface $route_enhancer) {
+    $this->enhancers[] = $route_enhancer;
+  }
+
+  /**
+   * Adds a deprecated route enhancer.
+   *
+   * @param \Drupal\Core\Routing\EnhancerInterface $route_enhancer
+   *   The route enhancer.
+   */
+  public function addDeprecatedRouteEnhancer(EnhancerInterface $route_enhancer) {
+    @trigger_error('non_lazy_route_enhancer is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Instead, should use route_enhancer, see https://www.drupal.org/node/2894934', E_USER_DEPRECATED);
     $this->enhancers[] = $route_enhancer;
   }
 
