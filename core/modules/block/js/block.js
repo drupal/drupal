@@ -119,12 +119,12 @@
         var select = $(this);
 
         tableDrag.rowObject = new tableDrag.row(row[0]);
-        var regionMessage = table.find('.region-' + select[0].value + '-message');
-        var regionItems = regionMessage.nextUntil('.region-message, .region-title');
-        if (regionItems.length) {
-          regionItems.last().after(row);
+        var region_message = table.find('.region-' + select[0].value + '-message');
+        var region_items = region_message.nextUntil('.region-message, .region-title');
+        if (region_items.length) {
+          region_items.last().after(row);
         } else {
-            regionMessage.after(row);
+            region_message.after(row);
           }
         updateBlockWeights(table, select[0].value);
 

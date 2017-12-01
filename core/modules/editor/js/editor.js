@@ -7,9 +7,9 @@
 
 (function ($, Drupal, drupalSettings) {
   function findFieldForFormatSelector($formatSelector) {
-    var fieldId = $formatSelector.attr('data-editor-for');
+    var field_id = $formatSelector.attr('data-editor-for');
 
-    return $('#' + fieldId).get(0);
+    return $('#' + field_id).get(0);
   }
 
   function changeTextEditor(field, newFormatID) {

@@ -11,25 +11,24 @@
       var $context = $(context);
       var options = drupalSettings.contentTranslationDependentOptions;
       var $fields = void 0;
-      var dependentColumns = void 0;
 
-      function fieldsChangeHandler($fields, dependentColumns) {
+      function fieldsChangeHandler($fields, dependent_columns) {
         return function (e) {
-          Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependentColumns, $(e.target));
+          Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependent_columns, $(e.target));
         };
       }
 
       if (options && options.dependent_selectors) {
         Object.keys(options.dependent_selectors).forEach(function (field) {
           $fields = $context.find('input[name^="' + field + '"]');
-          dependentColumns = options.dependent_selectors[field];
+          var dependent_columns = options.dependent_selectors[field];
 
-          $fields.on('change', fieldsChangeHandler($fields, dependentColumns));
-          Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependentColumns);
+          $fields.on('change', fieldsChangeHandler($fields, dependent_columns));
+          Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependent_columns);
         });
       }
     },
-    check: function check($fields, dependentColumns, $changed) {
+    check: function check($fields, dependent_columns, $changed) {
       var $element = $changed;
       var column = void 0;
 
@@ -37,8 +36,8 @@
         return $(field).val() === column;
       }
 
-      Object.keys(dependentColumns).forEach(function (index) {
-        column = dependentColumns[index];
+      Object.keys(dependent_columns).forEach(function (index) {
+        column = dependent_columns[index];
 
         if (!$changed) {
           $element = $fields.filter(filterFieldsList);

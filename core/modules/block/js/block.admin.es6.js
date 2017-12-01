@@ -24,7 +24,7 @@
     attach(context, settings) {
       const $input = $('input.block-filter-text').once('block-filter-text');
       const $table = $($input.attr('data-element'));
-      let $filterRows;
+      let $filter_rows;
 
       /**
        * Filters the block list.
@@ -52,7 +52,7 @@
 
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
-          $filterRows.each(toggleBlockEntry);
+          $filter_rows.each(toggleBlockEntry);
           Drupal.announce(
             Drupal.formatPlural(
               $table.find('tr:visible').length - 1,
@@ -62,14 +62,14 @@
           );
         }
         else {
-          $filterRows.each(function (index) {
+          $filter_rows.each(function (index) {
             $(this).parent().parent().show();
           });
         }
       }
 
       if ($table.length) {
-        $filterRows = $table.find('div.block-filter-text-source');
+        $filter_rows = $table.find('div.block-filter-text-source');
         $input.on('keyup', debounce(filterBlockList, 200));
       }
     },
