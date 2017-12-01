@@ -16,8 +16,8 @@ class Thread extends SortPluginBase {
   public function query() {
     $this->ensureMyTable();
 
-    // Read comment_render() in comment.module for an explanation of the
-    // thinking behind this sort.
+    // See \Drupal\comment\CommentStorage::loadThread() for an explanation of
+    // the thinking behind this sort.
     if ($this->options['order'] == 'DESC') {
       $this->query->addOrderBy($this->tableAlias, $this->realField, $this->options['order']);
     }
