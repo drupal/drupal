@@ -45,17 +45,17 @@
       }
 
       // Set up gradients if there are some.
-      let colorStart;
-      let colorEnd;
+      let color_start;
+      let color_end;
       Object.keys(settings.gradients).forEach((i) => {
-        colorStart = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[0]}]"]`).val());
-        colorEnd = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[1]}]"]`).val());
-        if (colorStart && colorEnd) {
+        color_start = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[0]}]"]`).val());
+        color_end = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[1]}]"]`).val());
+        if (color_start && color_end) {
           delta = [];
-          Object.keys(colorStart).forEach((colorStartKey) => {
-            delta[colorStartKey] = (colorEnd[colorStartKey] - colorStart[colorStartKey]) / (settings.gradients[i].vertical ? height[i] : width[i]);
+          Object.keys(color_start).forEach((colorStartKey) => {
+            delta[colorStartKey] = (color_end[colorStartKey] - color_start[colorStartKey]) / (settings.gradients[i].vertical ? height[i] : width[i]);
           });
-          accum = colorStart;
+          accum = color_start;
           // Render gradient lines.
           form.find(`#gradient-${i} > div`).each(gradientLineColor);
         }
