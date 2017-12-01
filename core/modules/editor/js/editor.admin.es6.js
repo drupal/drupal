@@ -567,7 +567,6 @@
       // If any filter's current status forbids the editor feature, return
       // false.
       Drupal.filterConfiguration.update();
-      // eslint-disable-next-line no-restricted-syntax
       for (const filterID in Drupal.filterConfiguration.statuses) {
         if (Drupal.filterConfiguration.statuses.hasOwnProperty(filterID)) {
           const filterStatus = Drupal.filterConfiguration.statuses[filterID];
@@ -880,15 +879,17 @@
      * up-to-date.
      */
     update() {
-      Object.keys(Drupal.filterConfiguration.statuses).forEach((filterID) => {
-        // Update status.
-        Drupal.filterConfiguration.statuses[filterID].active = $(`[name="filters[${filterID}][status]"]`).is(':checked');
+      for (const filterID in Drupal.filterConfiguration.statuses) {
+        if (Drupal.filterConfiguration.statuses.hasOwnProperty(filterID)) {
+          // Update status.
+          Drupal.filterConfiguration.statuses[filterID].active = $(`[name="filters[${filterID}][status]"]`).is(':checked');
 
-        // Update current rules.
-        if (Drupal.filterConfiguration.liveSettingParsers[filterID]) {
-          Drupal.filterConfiguration.statuses[filterID].rules = Drupal.filterConfiguration.liveSettingParsers[filterID].getRules();
+          // Update current rules.
+          if (Drupal.filterConfiguration.liveSettingParsers[filterID]) {
+            Drupal.filterConfiguration.statuses[filterID].rules = Drupal.filterConfiguration.liveSettingParsers[filterID].getRules();
+          }
         }
-      });
+      }
     },
 
   };

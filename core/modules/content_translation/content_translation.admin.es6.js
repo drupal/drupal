@@ -17,6 +17,7 @@
       const $context = $(context);
       const options = drupalSettings.contentTranslationDependentOptions;
       let $fields;
+      let dependent_columns;
 
       function fieldsChangeHandler($fields, dependent_columns) {
         return function (e) {
@@ -28,13 +29,15 @@
       // that name and copy over the input values that require all columns to be
       // translatable.
       if (options && options.dependent_selectors) {
-        Object.keys(options.dependent_selectors).forEach((field) => {
-          $fields = $context.find(`input[name^="${field}"]`);
-          const dependent_columns = options.dependent_selectors[field];
+        for (const field in options.dependent_selectors) {
+          if (options.dependent_selectors.hasOwnProperty(field)) {
+            $fields = $context.find(`input[name^="${field}"]`);
+            dependent_columns = options.dependent_selectors[field];
 
-          $fields.on('change', fieldsChangeHandler($fields, dependent_columns));
-          Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependent_columns);
-        });
+            $fields.on('change', fieldsChangeHandler($fields, dependent_columns));
+            Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependent_columns);
+          }
+        }
       }
     },
     check($fields, dependent_columns, $changed) {
@@ -47,21 +50,23 @@
 
       // A field that has many different translatable parts can also define one
       // or more columns that require all columns to be translatable.
-      Object.keys(dependent_columns).forEach((index) => {
-        column = dependent_columns[index];
+      for (const index in dependent_columns) {
+        if (dependent_columns.hasOwnProperty(index)) {
+          column = dependent_columns[index];
 
-        if (!$changed) {
-          $element = $fields.filter(filterFieldsList);
-        }
+          if (!$changed) {
+            $element = $fields.filter(filterFieldsList);
+          }
 
-        if ($element.is(`input[value="${column}"]:checked`)) {
-          $fields.prop('checked', true)
-            .not($element).prop('disabled', true);
+          if ($element.is(`input[value="${column}"]:checked`)) {
+            $fields.prop('checked', true)
+              .not($element).prop('disabled', true);
+          }
+          else {
+            $fields.prop('disabled', false);
+          }
         }
-        else {
-          $fields.prop('disabled', false);
-        }
-      });
+      }
     },
   };
 

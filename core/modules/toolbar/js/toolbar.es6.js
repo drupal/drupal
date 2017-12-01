@@ -56,17 +56,19 @@
 
         // Attach a listener to the configured media query breakpoints.
         // Executes it before Drupal.toolbar.views to avoid extra rendering.
-        Object.keys(options.breakpoints).forEach((label) => {
-          const mq = options.breakpoints[label];
-          const mql = window.matchMedia(mq);
-          Drupal.toolbar.mql[label] = mql;
-          // Curry the model and the label of the media query breakpoint to
-          // the mediaQueryChangeHandler function.
-          mql.addListener(Drupal.toolbar.mediaQueryChangeHandler.bind(null, model, label));
-          // Fire the mediaQueryChangeHandler for each configured breakpoint
-          // so that they process once.
-          Drupal.toolbar.mediaQueryChangeHandler.call(null, model, label, mql);
-        });
+        for (const label in options.breakpoints) {
+          if (options.breakpoints.hasOwnProperty(label)) {
+            const mq = options.breakpoints[label];
+            const mql = window.matchMedia(mq);
+            Drupal.toolbar.mql[label] = mql;
+            // Curry the model and the label of the media query breakpoint to
+            // the mediaQueryChangeHandler function.
+            mql.addListener(Drupal.toolbar.mediaQueryChangeHandler.bind(null, model, label));
+            // Fire the mediaQueryChangeHandler for each configured breakpoint
+            // so that they process once.
+            Drupal.toolbar.mediaQueryChangeHandler.call(null, model, label, mql);
+          }
+        }
 
         Drupal.toolbar.views.toolbarVisualView = new Drupal.toolbar.ToolbarVisualView({
           el: this,

@@ -74,36 +74,39 @@
         }
     },
     _calculateAutoAllowedTags: function _calculateAutoAllowedTags(userAllowedTags, newFeatures) {
+      var featureName = void 0;
+      var feature = void 0;
+      var featureRule = void 0;
+      var filterRule = void 0;
+      var tag = void 0;
       var editorRequiredTags = {};
 
-      Object.keys(newFeatures).forEach(function (featureName) {
-        var feature = newFeatures[featureName];
-        var featureRule = void 0;
-        var filterRule = void 0;
-        var tag = void 0;
+      for (featureName in newFeatures) {
+        if (newFeatures.hasOwnProperty(featureName)) {
+          feature = newFeatures[featureName];
+          for (var f = 0; f < feature.length; f++) {
+            featureRule = feature[f];
+            for (var t = 0; t < featureRule.required.tags.length; t++) {
+              tag = featureRule.required.tags[t];
+              if (!_.has(editorRequiredTags, tag)) {
+                filterRule = new Drupal.FilterHTMLRule();
+                filterRule.restrictedTags.tags = [tag];
 
-        for (var f = 0; f < feature.length; f++) {
-          featureRule = feature[f];
-          for (var t = 0; t < featureRule.required.tags.length; t++) {
-            tag = featureRule.required.tags[t];
-            if (!_.has(editorRequiredTags, tag)) {
-              filterRule = new Drupal.FilterHTMLRule();
-              filterRule.restrictedTags.tags = [tag];
-
-              filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(0);
-              filterRule.restrictedTags.allowed.classes = featureRule.required.classes.slice(0);
-              editorRequiredTags[tag] = filterRule;
-            } else {
-                filterRule = editorRequiredTags[tag];
-                filterRule.restrictedTags.allowed.attributes = _.union(filterRule.restrictedTags.allowed.attributes, featureRule.required.attributes);
-                filterRule.restrictedTags.allowed.classes = _.union(filterRule.restrictedTags.allowed.classes, featureRule.required.classes);
-              }
+                filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(0);
+                filterRule.restrictedTags.allowed.classes = featureRule.required.classes.slice(0);
+                editorRequiredTags[tag] = filterRule;
+              } else {
+                  filterRule = editorRequiredTags[tag];
+                  filterRule.restrictedTags.allowed.attributes = _.union(filterRule.restrictedTags.allowed.attributes, featureRule.required.attributes);
+                  filterRule.restrictedTags.allowed.classes = _.union(filterRule.restrictedTags.allowed.classes, featureRule.required.classes);
+                }
+            }
           }
         }
-      });
+      }
 
       var autoAllowedTags = {};
-      Object.keys(editorRequiredTags).forEach(function (tag) {
+      for (tag in editorRequiredTags) {
         if (!_.has(userAllowedTags, tag)) {
           autoAllowedTags[tag] = editorRequiredTags[tag];
         } else {
@@ -123,7 +126,7 @@
               autoAllowedTags[tag].restrictedTags.allowed.classes = _.union(allowedClasses, requiredClasses);
             }
           }
-      });
+      }
 
       return autoAllowedTags;
     },

@@ -19,15 +19,15 @@ window.Drupal = { behaviors: {}, locale: {} };
     settings = settings || drupalSettings;
     var behaviors = Drupal.behaviors;
 
-    Object.keys(behaviors).forEach(function (i) {
-      if (typeof behaviors[i].attach === 'function') {
+    for (var i in behaviors) {
+      if (behaviors.hasOwnProperty(i) && typeof behaviors[i].attach === 'function') {
         try {
           behaviors[i].attach(context, settings);
         } catch (e) {
           Drupal.throwError(e);
         }
       }
-    });
+    }
   };
 
   Drupal.detachBehaviors = function (context, settings, trigger) {
@@ -36,15 +36,15 @@ window.Drupal = { behaviors: {}, locale: {} };
     trigger = trigger || 'unload';
     var behaviors = Drupal.behaviors;
 
-    Object.keys(behaviors).forEach(function (i) {
-      if (typeof behaviors[i].detach === 'function') {
+    for (var i in behaviors) {
+      if (behaviors.hasOwnProperty(i) && typeof behaviors[i].detach === 'function') {
         try {
           behaviors[i].detach(context, settings, trigger);
         } catch (e) {
           Drupal.throwError(e);
         }
       }
-    });
+    }
   };
 
   Drupal.checkPlain = function (str) {
@@ -55,21 +55,23 @@ window.Drupal = { behaviors: {}, locale: {} };
   Drupal.formatString = function (str, args) {
     var processedArgs = {};
 
-    Object.keys(args).forEach(function (key) {
-      switch (key.charAt(0)) {
-        case '@':
-          processedArgs[key] = Drupal.checkPlain(args[key]);
-          break;
+    for (var key in args) {
+      if (args.hasOwnProperty(key)) {
+        switch (key.charAt(0)) {
+          case '@':
+            processedArgs[key] = Drupal.checkPlain(args[key]);
+            break;
 
-        case '!':
-          processedArgs[key] = args[key];
-          break;
+          case '!':
+            processedArgs[key] = args[key];
+            break;
 
-        default:
-          processedArgs[key] = Drupal.theme('placeholder', args[key]);
-          break;
+          default:
+            processedArgs[key] = Drupal.theme('placeholder', args[key]);
+            break;
+        }
       }
-    });
+    }
 
     return Drupal.stringReplace(str, processedArgs, null);
   };
@@ -81,9 +83,11 @@ window.Drupal = { behaviors: {}, locale: {} };
 
     if (!Array.isArray(keys)) {
       keys = [];
-      Object.keys(args).forEach(function (key) {
-        return keys.push(key);
-      });
+      for (var k in args) {
+        if (args.hasOwnProperty(k)) {
+          keys.push(k);
+        }
+      }
 
       keys.sort(function (a, b) {
         return a.length - b.length;

@@ -18,20 +18,17 @@
       var config = void 0;
       var state = void 0;
       var il = $states.length;
-
-      var _loop = function _loop(i) {
-        config = JSON.parse($states[i].getAttribute('data-drupal-states'));
-        Object.keys(config).forEach(function (state) {
-          new states.Dependent({
-            element: $($states[i]),
-            state: states.State.sanitize(state),
-            constraints: config[state]
-          });
-        });
-      };
-
       for (var i = 0; i < il; i++) {
-        _loop(i);
+        config = JSON.parse($states[i].getAttribute('data-drupal-states'));
+        for (state in config) {
+          if (config.hasOwnProperty(state)) {
+            new states.Dependent({
+              element: $($states[i]),
+              state: states.State.sanitize(state),
+              constraints: config[state]
+            });
+          }
+        }
       }
 
       while (states.postponed.length) {
@@ -41,14 +38,14 @@
   };
 
   states.Dependent = function (args) {
-    var _this = this;
-
     $.extend(this, { values: {}, oldValue: null }, args);
 
     this.dependees = this.getDependees();
-    Object.keys(this.dependees).forEach(function (selector) {
-      _this.initializeDependee(selector, _this.dependees[selector]);
-    });
+    for (var selector in this.dependees) {
+      if (this.dependees.hasOwnProperty(selector)) {
+        this.initializeDependee(selector, this.dependees[selector]);
+      }
+    }
   };
 
   states.Dependent.comparisons = {
@@ -190,16 +187,16 @@
 
   states.Trigger.prototype = {
     initialize: function initialize() {
-      var _this2 = this;
-
       var trigger = states.Trigger.states[this.state];
 
       if (typeof trigger === 'function') {
         trigger.call(window, this.element);
       } else {
-        Object.keys(trigger).forEach(function (event) {
-          _this2.defaultTrigger(event, trigger[event]);
-        });
+        for (var event in trigger) {
+          if (trigger.hasOwnProperty(event)) {
+            this.defaultTrigger(event, trigger[event]);
+          }
+        }
       }
 
       this.element.data('trigger:' + this.state, true);

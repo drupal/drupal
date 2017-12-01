@@ -150,9 +150,11 @@
       const hiddenEditorConfig = this.model.get('hiddenEditorConfig');
       if (hiddenEditorConfig.drupalExternalPlugins) {
         const externalPlugins = hiddenEditorConfig.drupalExternalPlugins;
-        Object.keys(externalPlugins).forEach((pluginName) => {
-          CKEDITOR.plugins.addExternal(pluginName, externalPlugins[pluginName], '');
-        });
+        for (const pluginName in externalPlugins) {
+          if (externalPlugins.hasOwnProperty(pluginName)) {
+            CKEDITOR.plugins.addExternal(pluginName, externalPlugins[pluginName], '');
+          }
+        }
       }
       CKEDITOR.inline($(`#${hiddenCKEditorID}`).get(0), CKEditorConfig);
 
@@ -179,15 +181,17 @@
           // @see getFeatureForButton()
           const features = {};
           const buttonsToFeatures = {};
-          Object.keys(CKEFeatureRulesMap).forEach((featureName) => {
-            const feature = new Drupal.EditorFeature(featureName);
-            convertCKERulesToEditorFeature(feature, CKEFeatureRulesMap[featureName]);
-            features[featureName] = feature;
-            const command = e.editor.getCommand(featureName);
-            if (command) {
-              buttonsToFeatures[command.uiItems[0].name] = featureName;
+          for (const featureName in CKEFeatureRulesMap) {
+            if (CKEFeatureRulesMap.hasOwnProperty(featureName)) {
+              const feature = new Drupal.EditorFeature(featureName);
+              convertCKERulesToEditorFeature(feature, CKEFeatureRulesMap[featureName]);
+              features[featureName] = feature;
+              const command = e.editor.getCommand(featureName);
+              if (command) {
+                buttonsToFeatures[command.uiItems[0].name] = featureName;
+              }
             }
-          });
+          }
 
           callback(features, buttonsToFeatures);
         }
@@ -322,21 +326,25 @@
         // changed, rebuild the CKEditor features metadata.
         .on('CKEditorPluginSettingsChanged.ckeditorAdmin', (event, settingsChanges) => {
           // Update hidden CKEditor configuration.
-          Object.keys(settingsChanges).forEach((key) => {
-            hiddenEditorConfig[key] = settingsChanges[key];
-          });
+          for (const key in settingsChanges) {
+            if (settingsChanges.hasOwnProperty(key)) {
+              hiddenEditorConfig[key] = settingsChanges[key];
+            }
+          }
 
           // Retrieve features for the updated hidden CKEditor configuration.
           getCKEditorFeatures(hiddenEditorConfig, (features) => {
             // Trigger a standardized text editor configuration event for each
             // feature that was modified by the configuration changes.
             const featuresMetadata = view.model.get('featuresMetadata');
-            Object.keys(features).forEach((name) => {
-              const feature = features[name];
-              if (featuresMetadata.hasOwnProperty(name) && !_.isEqual(featuresMetadata[name], feature)) {
-                Drupal.editorConfiguration.modifiedFeature(feature);
+            for (const name in features) {
+              if (features.hasOwnProperty(name)) {
+                const feature = features[name];
+                if (featuresMetadata.hasOwnProperty(name) && !_.isEqual(featuresMetadata[name], feature)) {
+                  Drupal.editorConfiguration.modifiedFeature(feature);
+                }
               }
-            });
+            }
             // Update the CKEditor features metadata.
             view.model.set('featuresMetadata', features);
           });

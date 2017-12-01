@@ -25,34 +25,40 @@
       var farb = $.farbtastic('.color-placeholder');
 
       var reference = settings.color.reference;
-      Object.keys(reference).forEach(function (color) {
-        reference[color] = farb.RGBToHSL(farb.unpack(reference[color]));
-      });
+      for (i in reference) {
+        if (reference.hasOwnProperty(i)) {
+          reference[i] = farb.RGBToHSL(farb.unpack(reference[i]));
+        }
+      }
 
       var height = [];
       var width = [];
 
-      Object.keys(settings.gradients).forEach(function (i) {
-        $('.color-preview').once('color').append('<div id="gradient-' + i + '"></div>');
-        var gradient = $('.color-preview #gradient-' + i);
+      for (i in settings.gradients) {
+        if (settings.gradients.hasOwnProperty(i)) {
+          $('.color-preview').once('color').append('<div id="gradient-' + i + '"></div>');
+          var gradient = $('.color-preview #gradient-' + i);
 
-        height.push(parseInt(gradient.css('height'), 10) / 10);
+          height.push(parseInt(gradient.css('height'), 10) / 10);
 
-        width.push(parseInt(gradient.css('width'), 10) / 10);
+          width.push(parseInt(gradient.css('width'), 10) / 10);
 
-        for (j = 0; j < (settings.gradients[i].direction === 'vertical' ? height[i] : width[i]); ++j) {
-          gradient.append('<div class="gradient-line"></div>');
+          for (j = 0; j < (settings.gradients[i].direction === 'vertical' ? height[i] : width[i]); ++j) {
+            gradient.append('<div class="gradient-line"></div>');
+          }
         }
-      });
+      }
 
       form.find('#edit-scheme').on('change', function () {
         var schemes = settings.color.schemes;
         var colorScheme = this.options[this.selectedIndex].value;
         if (colorScheme !== '' && schemes[colorScheme]) {
           colors = schemes[colorScheme];
-          Object.keys(colors).forEach(function (fieldName) {
-            callback($('#edit-palette-' + fieldName), colors[fieldName], false, true);
-          });
+          for (var fieldName in colors) {
+            if (colors.hasOwnProperty(fieldName)) {
+              callback($('#edit-palette-' + fieldName), colors[fieldName], false, true);
+            }
+          }
           preview();
         }
       });

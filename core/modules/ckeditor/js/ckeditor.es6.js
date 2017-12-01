@@ -182,9 +182,11 @@
       const externalPlugins = format.editorSettings.drupalExternalPlugins;
       // Register and load additional CKEditor plugins as necessary.
       if (externalPlugins) {
-        Object.keys(externalPlugins).forEach((pluginName) => {
-          CKEDITOR.plugins.addExternal(pluginName, externalPlugins[pluginName], '');
-        });
+        for (const pluginName in externalPlugins) {
+          if (externalPlugins.hasOwnProperty(pluginName)) {
+            CKEDITOR.plugins.addExternal(pluginName, externalPlugins[pluginName], '');
+          }
+        }
         delete format.editorSettings.drupalExternalPlugins;
       }
     },

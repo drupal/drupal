@@ -152,8 +152,8 @@ window.Drupal = { behaviors: {}, locale: {} };
     settings = settings || drupalSettings;
     const behaviors = Drupal.behaviors;
     // Execute all of them.
-    Object.keys(behaviors).forEach((i) => {
-      if (typeof behaviors[i].attach === 'function') {
+    for (const i in behaviors) {
+      if (behaviors.hasOwnProperty(i) && typeof behaviors[i].attach === 'function') {
         // Don't stop the execution of behaviors in case of an error.
         try {
           behaviors[i].attach(context, settings);
@@ -162,7 +162,7 @@ window.Drupal = { behaviors: {}, locale: {} };
           Drupal.throwError(e);
         }
       }
-    });
+    }
   };
 
   /**
@@ -212,8 +212,8 @@ window.Drupal = { behaviors: {}, locale: {} };
     trigger = trigger || 'unload';
     const behaviors = Drupal.behaviors;
     // Execute all of them.
-    Object.keys(behaviors).forEach((i) => {
-      if (typeof behaviors[i].detach === 'function') {
+    for (const i in behaviors) {
+      if (behaviors.hasOwnProperty(i) && typeof behaviors[i].detach === 'function') {
         // Don't stop the execution of behaviors in case of an error.
         try {
           behaviors[i].detach(context, settings, trigger);
@@ -222,7 +222,7 @@ window.Drupal = { behaviors: {}, locale: {} };
           Drupal.throwError(e);
         }
       }
-    });
+    }
   };
 
   /**
@@ -269,24 +269,26 @@ window.Drupal = { behaviors: {}, locale: {} };
     // Keep args intact.
     const processedArgs = {};
     // Transform arguments before inserting them.
-    Object.keys(args).forEach((key) => {
-      switch (key.charAt(0)) {
-        // Escaped only.
-        case '@':
-          processedArgs[key] = Drupal.checkPlain(args[key]);
-          break;
+    for (const key in args) {
+      if (args.hasOwnProperty(key)) {
+        switch (key.charAt(0)) {
+          // Escaped only.
+          case '@':
+            processedArgs[key] = Drupal.checkPlain(args[key]);
+            break;
 
-        // Pass-through.
-        case '!':
-          processedArgs[key] = args[key];
-          break;
+          // Pass-through.
+          case '!':
+            processedArgs[key] = args[key];
+            break;
 
-        // Escaped and placeholder.
-        default:
-          processedArgs[key] = Drupal.theme('placeholder', args[key]);
-          break;
+          // Escaped and placeholder.
+          default:
+            processedArgs[key] = Drupal.theme('placeholder', args[key]);
+            break;
+        }
       }
-    });
+    }
 
     return Drupal.stringReplace(str, processedArgs, null);
   };
@@ -315,7 +317,11 @@ window.Drupal = { behaviors: {}, locale: {} };
     // If the array of keys is not passed then collect the keys from the args.
     if (!Array.isArray(keys)) {
       keys = [];
-      Object.keys(args).forEach(key => keys.push(key));
+      for (const k in args) {
+        if (args.hasOwnProperty(k)) {
+          keys.push(k);
+        }
+      }
 
       // Order the keys by the character length. The shortest one is the first.
       keys.sort((a, b) => a.length - b.length);

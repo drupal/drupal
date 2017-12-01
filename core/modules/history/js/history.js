@@ -29,9 +29,11 @@
         data: { 'node_ids[]': nodeIDs },
         dataType: 'json',
         success: function success(results) {
-          Object.keys(results).forEach(function (nodeID) {
-            storage.setItem('Drupal.history.' + currentUserID + '.' + nodeID, results[nodeID]);
-          });
+          for (var nodeID in results) {
+            if (results.hasOwnProperty(nodeID)) {
+              storage.setItem('Drupal.history.' + currentUserID + '.' + nodeID, results[nodeID]);
+            }
+          }
           callback();
         }
       });

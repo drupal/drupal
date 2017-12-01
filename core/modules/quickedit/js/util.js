@@ -85,13 +85,11 @@
         },
 
         success: function success(response, status) {
-          var _this = this;
-
-          Object.keys(response).forEach(function (i) {
-            if (response[i].command && _this.commands[response[i].command]) {
-              _this.commands[response[i].command](_this, response[i], status);
+          for (var i in response) {
+            if (response.hasOwnProperty(i) && response[i].command && this.commands[response[i].command]) {
+              this.commands[response[i].command](this, response[i], status);
             }
-          });
+          }
         },
 
         base: $submit.attr('id'),

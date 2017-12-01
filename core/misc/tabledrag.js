@@ -16,15 +16,15 @@
         }
       }
 
-      Object.keys(settings.tableDrag).forEach(function (base) {
-        initTableDrag($(context).find('#' + base).once('tabledrag'), base);
-      });
+      for (var base in settings.tableDrag) {
+        if (settings.tableDrag.hasOwnProperty(base)) {
+          initTableDrag($(context).find('#' + base).once('tabledrag'), base);
+        }
+      }
     }
   };
 
   Drupal.tableDrag = function (table, tableSettings) {
-    var _this = this;
-
     var self = this;
     var $table = $(table);
 
@@ -59,16 +59,20 @@
     this.windowHeight = 0;
 
     this.indentEnabled = false;
-    Object.keys(tableSettings).forEach(function (group) {
-      Object.keys(tableSettings[group]).forEach(function (n) {
-        if (tableSettings[group][n].relationship === 'parent') {
-          _this.indentEnabled = true;
+    for (var group in tableSettings) {
+      if (tableSettings.hasOwnProperty(group)) {
+        for (var n in tableSettings[group]) {
+          if (tableSettings[group].hasOwnProperty(n)) {
+            if (tableSettings[group][n].relationship === 'parent') {
+              this.indentEnabled = true;
+            }
+            if (tableSettings[group][n].limit > 0) {
+              this.maxDepth = tableSettings[group][n].limit;
+            }
+          }
         }
-        if (tableSettings[group][n].limit > 0) {
-          _this.maxDepth = tableSettings[group][n].limit;
-        }
-      });
-    });
+      }
+    }
     if (this.indentEnabled) {
       this.indentCount = 1;
 
@@ -114,29 +118,29 @@
   };
 
   Drupal.tableDrag.prototype.initColumns = function () {
-    var _this2 = this;
-
     var $table = this.$table;
     var hidden = void 0;
     var cell = void 0;
     var columnIndex = void 0;
-    Object.keys(this.tableSettings).forEach(function (group) {
-      for (var d in _this2.tableSettings[group]) {
-        if (_this2.tableSettings[group].hasOwnProperty(d)) {
-          var field = $table.find('.' + _this2.tableSettings[group][d].target).eq(0);
-          if (field.length && _this2.tableSettings[group][d].hidden) {
-            hidden = _this2.tableSettings[group][d].hidden;
-            cell = field.closest('td');
-            break;
+    for (var group in this.tableSettings) {
+      if (this.tableSettings.hasOwnProperty(group)) {
+        for (var d in this.tableSettings[group]) {
+          if (this.tableSettings[group].hasOwnProperty(d)) {
+            var field = $table.find('.' + this.tableSettings[group][d].target).eq(0);
+            if (field.length && this.tableSettings[group][d].hidden) {
+              hidden = this.tableSettings[group][d].hidden;
+              cell = field.closest('td');
+              break;
+            }
           }
         }
-      }
 
-      if (hidden && cell[0]) {
-        columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
-        $table.find('> thead > tr, > tbody > tr, > tr').each(_this2.addColspanClass(columnIndex));
+        if (hidden && cell[0]) {
+          columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
+          $table.find('> thead > tr, > tbody > tr, > tr').each(this.addColspanClass(columnIndex));
+        }
       }
-    });
+    }
     this.displayColumns(showWeight);
   };
 
@@ -213,13 +217,11 @@
   Drupal.tableDrag.prototype.rowSettings = function (group, row) {
     var field = $(row).find('.' + group);
     var tableSettingsGroup = this.tableSettings[group];
-
     for (var delta in tableSettingsGroup) {
       if (tableSettingsGroup.hasOwnProperty(delta)) {
         var targetClass = tableSettingsGroup[delta].target;
         if (field.is('.' + targetClass)) {
           var rowSettings = {};
-
           for (var n in tableSettingsGroup[delta]) {
             if (tableSettingsGroup[delta].hasOwnProperty(n)) {
               rowSettings[n] = tableSettingsGroup[delta][n];
@@ -480,14 +482,18 @@
       if (self.rowObject.changed === true) {
         self.updateFields(droppedRow);
 
-        Object.keys(self.tableSettings).forEach(function (group) {
-          var rowSettings = self.rowSettings(group, droppedRow);
-          if (rowSettings.relationship === 'group') {
-            Object.keys(self.rowObject.children).forEach(function (n) {
-              self.updateField(self.rowObject.children[n], group);
-            });
+        for (var group in self.tableSettings) {
+          if (self.tableSettings.hasOwnProperty(group)) {
+            var rowSettings = self.rowSettings(group, droppedRow);
+            if (rowSettings.relationship === 'group') {
+              for (var n in self.rowObject.children) {
+                if (self.rowObject.children.hasOwnProperty(n)) {
+                  self.updateField(self.rowObject.children[n], group);
+                }
+              }
+            }
           }
-        });
+        }
 
         self.rowObject.markChanged();
         if (self.changed === false) {
@@ -571,11 +577,11 @@
   };
 
   Drupal.tableDrag.prototype.updateFields = function (changedRow) {
-    var _this3 = this;
-
-    Object.keys(this.tableSettings).forEach(function (group) {
-      _this3.updateField(changedRow, group);
-    });
+    for (var group in this.tableSettings) {
+      if (this.tableSettings.hasOwnProperty(group)) {
+        this.updateField(changedRow, group);
+      }
+    }
   };
 
   Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
@@ -926,11 +932,11 @@
   };
 
   Drupal.tableDrag.prototype.row.prototype.removeIndentClasses = function () {
-    var _this4 = this;
-
-    Object.keys(this.children).forEach(function (n) {
-      $(_this4.children[n]).find('.js-indentation').removeClass('tree-child').removeClass('tree-child-first').removeClass('tree-child-last').removeClass('tree-child-horizontal');
-    });
+    for (var n in this.children) {
+      if (this.children.hasOwnProperty(n)) {
+        $(this.children[n]).find('.js-indentation').removeClass('tree-child').removeClass('tree-child-first').removeClass('tree-child-last').removeClass('tree-child-horizontal');
+      }
+    }
   };
 
   Drupal.tableDrag.prototype.row.prototype.markChanged = function () {

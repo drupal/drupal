@@ -256,7 +256,6 @@
       }
 
       Drupal.filterConfiguration.update();
-
       for (var filterID in Drupal.filterConfiguration.statuses) {
         if (Drupal.filterConfiguration.statuses.hasOwnProperty(filterID)) {
           var filterStatus = Drupal.filterConfiguration.statuses[filterID];
@@ -332,13 +331,15 @@
     liveSettingParsers: {},
 
     update: function update() {
-      Object.keys(Drupal.filterConfiguration.statuses).forEach(function (filterID) {
-        Drupal.filterConfiguration.statuses[filterID].active = $('[name="filters[' + filterID + '][status]"]').is(':checked');
+      for (var filterID in Drupal.filterConfiguration.statuses) {
+        if (Drupal.filterConfiguration.statuses.hasOwnProperty(filterID)) {
+          Drupal.filterConfiguration.statuses[filterID].active = $('[name="filters[' + filterID + '][status]"]').is(':checked');
 
-        if (Drupal.filterConfiguration.liveSettingParsers[filterID]) {
-          Drupal.filterConfiguration.statuses[filterID].rules = Drupal.filterConfiguration.liveSettingParsers[filterID].getRules();
+          if (Drupal.filterConfiguration.liveSettingParsers[filterID]) {
+            Drupal.filterConfiguration.statuses[filterID].rules = Drupal.filterConfiguration.liveSettingParsers[filterID].getRules();
+          }
         }
-      });
+      }
     }
   };
 

@@ -38,28 +38,34 @@
       form.find('#text a, #text h2').css('color', form.find('.color-palette input[name="palette[link]"]').val());
 
       function gradientLineColor(i, element) {
-        Object.keys(accum).forEach((k) => {
-          accum[k] += delta[k];
-        });
+        for (const k in accum) {
+          if (accum.hasOwnProperty(k)) {
+            accum[k] += delta[k];
+          }
+        }
         element.style.backgroundColor = farb.pack(accum);
       }
 
       // Set up gradients if there are some.
       let color_start;
       let color_end;
-      Object.keys(settings.gradients).forEach((i) => {
-        color_start = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[0]}]"]`).val());
-        color_end = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[1]}]"]`).val());
-        if (color_start && color_end) {
-          delta = [];
-          Object.keys(color_start).forEach((colorStartKey) => {
-            delta[colorStartKey] = (color_end[colorStartKey] - color_start[colorStartKey]) / (settings.gradients[i].vertical ? height[i] : width[i]);
-          });
-          accum = color_start;
-          // Render gradient lines.
-          form.find(`#gradient-${i} > div`).each(gradientLineColor);
+      for (const i in settings.gradients) {
+        if (settings.gradients.hasOwnProperty(i)) {
+          color_start = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[0]}]"]`).val());
+          color_end = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[1]}]"]`).val());
+          if (color_start && color_end) {
+            delta = [];
+            for (const j in color_start) {
+              if (color_start.hasOwnProperty(j)) {
+                delta[j] = (color_end[j] - color_start[j]) / (settings.gradients[i].vertical ? height[i] : width[i]);
+              }
+            }
+            accum = color_start;
+            // Render gradient lines.
+            form.find(`#gradient-${i} > div`).each(gradientLineColor);
+          }
         }
-      });
+      }
     },
   };
 }(jQuery, Drupal));

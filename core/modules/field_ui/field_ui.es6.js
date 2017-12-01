@@ -212,10 +212,13 @@
       // Separate keys and values.
       const rowNames = [];
       const ajaxElements = [];
-      Object.keys(rows).forEach((rowName) => {
-        rowNames.push(rowName);
-        ajaxElements.push(rows[rowName]);
-      });
+      let rowName;
+      for (rowName in rows) {
+        if (rows.hasOwnProperty(rowName)) {
+          rowNames.push(rowName);
+          ajaxElements.push(rows[rowName]);
+        }
+      }
 
       if (rowNames.length) {
         // Add a throbber next each of the ajaxElements.

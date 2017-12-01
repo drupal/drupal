@@ -41,9 +41,11 @@
         }
       }
 
-      Object.keys(settings.tableDrag).forEach((base) => {
-        initTableDrag($(context).find(`#${base}`).once('tabledrag'), base);
-      });
+      for (const base in settings.tableDrag) {
+        if (settings.tableDrag.hasOwnProperty(base)) {
+          initTableDrag($(context).find(`#${base}`).once('tabledrag'), base);
+        }
+      }
     },
   };
 
@@ -170,16 +172,20 @@
      * @type {bool}
      */
     this.indentEnabled = false;
-    Object.keys(tableSettings).forEach((group) => {
-      Object.keys(tableSettings[group]).forEach((n) => {
-        if (tableSettings[group][n].relationship === 'parent') {
-          this.indentEnabled = true;
+    for (const group in tableSettings) {
+      if (tableSettings.hasOwnProperty(group)) {
+        for (const n in tableSettings[group]) {
+          if (tableSettings[group].hasOwnProperty(n)) {
+            if (tableSettings[group][n].relationship === 'parent') {
+              this.indentEnabled = true;
+            }
+            if (tableSettings[group][n].limit > 0) {
+              this.maxDepth = tableSettings[group][n].limit;
+            }
+          }
         }
-        if (tableSettings[group][n].limit > 0) {
-          this.maxDepth = tableSettings[group][n].limit;
-        }
-      });
-    });
+      }
+    }
     if (this.indentEnabled) {
       /**
        * Total width of indents, set in makeDraggable.
@@ -258,29 +264,30 @@
     let hidden;
     let cell;
     let columnIndex;
-    Object.keys(this.tableSettings).forEach((group) => {
-      // Find the first field in this group.
-      // eslint-disable-next-line no-restricted-syntax
-      for (const d in this.tableSettings[group]) {
-        if (this.tableSettings[group].hasOwnProperty(d)) {
-          const field = $table.find(`.${this.tableSettings[group][d].target}`).eq(0);
-          if (field.length && this.tableSettings[group][d].hidden) {
-            hidden = this.tableSettings[group][d].hidden;
-            cell = field.closest('td');
-            break;
+    for (const group in this.tableSettings) {
+      if (this.tableSettings.hasOwnProperty(group)) {
+        // Find the first field in this group.
+        for (const d in this.tableSettings[group]) {
+          if (this.tableSettings[group].hasOwnProperty(d)) {
+            const field = $table.find(`.${this.tableSettings[group][d].target}`).eq(0);
+            if (field.length && this.tableSettings[group][d].hidden) {
+              hidden = this.tableSettings[group][d].hidden;
+              cell = field.closest('td');
+              break;
+            }
           }
         }
-      }
 
-      // Mark the column containing this field so it can be hidden.
-      if (hidden && cell[0]) {
-        // Add 1 to our indexes. The nth-child selector is 1 based, not 0
-        // based. Match immediate children of the parent element to allow
-        // nesting.
-        columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
-        $table.find('> thead > tr, > tbody > tr, > tr').each(this.addColspanClass(columnIndex));
+        // Mark the column containing this field so it can be hidden.
+        if (hidden && cell[0]) {
+          // Add 1 to our indexes. The nth-child selector is 1 based, not 0
+          // based. Match immediate children of the parent element to allow
+          // nesting.
+          columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
+          $table.find('> thead > tr, > tbody > tr, > tr').each(this.addColspanClass(columnIndex));
+        }
       }
-    });
+    }
     this.displayColumns(showWeight);
   };
 
@@ -412,14 +419,12 @@
   Drupal.tableDrag.prototype.rowSettings = function (group, row) {
     const field = $(row).find(`.${group}`);
     const tableSettingsGroup = this.tableSettings[group];
-    // eslint-disable-next-line no-restricted-syntax
     for (const delta in tableSettingsGroup) {
       if (tableSettingsGroup.hasOwnProperty(delta)) {
         const targetClass = tableSettingsGroup[delta].target;
         if (field.is(`.${targetClass}`)) {
           // Return a copy of the row settings.
           const rowSettings = {};
-          // eslint-disable-next-line no-restricted-syntax
           for (const n in tableSettingsGroup[delta]) {
             if (tableSettingsGroup[delta].hasOwnProperty(n)) {
               rowSettings[n] = tableSettingsGroup[delta][n];
@@ -769,14 +774,18 @@
 
         // If a setting exists for affecting the entire group, update all the
         // fields in the entire dragged group.
-        Object.keys(self.tableSettings).forEach((group) => {
-          const rowSettings = self.rowSettings(group, droppedRow);
-          if (rowSettings.relationship === 'group') {
-            Object.keys(self.rowObject.children).forEach((n) => {
-              self.updateField(self.rowObject.children[n], group);
-            });
+        for (const group in self.tableSettings) {
+          if (self.tableSettings.hasOwnProperty(group)) {
+            const rowSettings = self.rowSettings(group, droppedRow);
+            if (rowSettings.relationship === 'group') {
+              for (const n in self.rowObject.children) {
+                if (self.rowObject.children.hasOwnProperty(n)) {
+                  self.updateField(self.rowObject.children[n], group);
+                }
+              }
+            }
           }
-        });
+        }
 
         self.rowObject.markChanged();
         if (self.changed === false) {
@@ -879,7 +888,6 @@
       if ((y > (rowY - rowHeight)) && (y < (rowY + rowHeight))) {
         if (this.indentEnabled) {
           // Check that this row is not a child of the row being dragged.
-          // eslint-disable-next-line no-restricted-syntax
           for (n in this.rowObject.group) {
             if (this.rowObject.group[n] === row) {
               return null;
@@ -916,11 +924,13 @@
    *   DOM object for the row that was just dropped.
    */
   Drupal.tableDrag.prototype.updateFields = function (changedRow) {
-    Object.keys(this.tableSettings).forEach((group) => {
-      // Each group may have a different setting for relationship, so we find
-      // the source rows for each separately.
-      this.updateField(changedRow, group);
-    });
+    for (const group in this.tableSettings) {
+      if (this.tableSettings.hasOwnProperty(group)) {
+        // Each group may have a different setting for relationship, so we find
+        // the source rows for each separately.
+        this.updateField(changedRow, group);
+      }
+    }
   };
 
   /**
@@ -1476,13 +1486,15 @@
    * Remove indentation helper classes from the current row group.
    */
   Drupal.tableDrag.prototype.row.prototype.removeIndentClasses = function () {
-    Object.keys(this.children).forEach((n) => {
-      $(this.children[n]).find('.js-indentation')
-        .removeClass('tree-child')
-        .removeClass('tree-child-first')
-        .removeClass('tree-child-last')
-        .removeClass('tree-child-horizontal');
-    });
+    for (const n in this.children) {
+      if (this.children.hasOwnProperty(n)) {
+        $(this.children[n]).find('.js-indentation')
+          .removeClass('tree-child')
+          .removeClass('tree-child-first')
+          .removeClass('tree-child-last')
+          .removeClass('tree-child-horizontal');
+      }
+    }
   };
 
   /**

@@ -32,16 +32,20 @@
 
   function getAttributes(editor, data) {
     var set = {};
-    Object.keys(data).forEach(function (attributeName) {
-      set[attributeName] = data[attributeName];
-    });
+    for (var attributeName in data) {
+      if (data.hasOwnProperty(attributeName)) {
+        set[attributeName] = data[attributeName];
+      }
+    }
 
     set['data-cke-saved-href'] = set.href;
 
     var removed = {};
-    Object.keys(set).forEach(function (s) {
-      delete removed[s];
-    });
+    for (var s in set) {
+      if (set.hasOwnProperty(s)) {
+        delete removed[s];
+      }
+    }
 
     return {
       set: set,
@@ -109,15 +113,17 @@
 
               linkElement = getSelectedLink(editor);
             } else if (linkElement) {
-                Object.keys(returnValues.attributes).forEach(function (attrName) {
-                  if (returnValues.attributes[attrName].length > 0) {
-                    var value = returnValues.attributes[attrName];
-                    linkElement.data('cke-saved-' + attrName, value);
-                    linkElement.setAttribute(attrName, value);
-                  } else {
-                      linkElement.removeAttribute(attrName);
-                    }
-                });
+                for (var attrName in returnValues.attributes) {
+                  if (returnValues.attributes.hasOwnProperty(attrName)) {
+                    if (returnValues.attributes[attrName].length > 0) {
+                      var value = returnValues.attributes[attrName];
+                      linkElement.data('cke-saved-' + attrName, value);
+                      linkElement.setAttribute(attrName, value);
+                    } else {
+                        linkElement.removeAttribute(attrName);
+                      }
+                  }
+                }
               }
 
             editor.fire('saveSnapshot');

@@ -149,15 +149,15 @@
      *   Data about new comment links indexed by nodeID.
      */
     function render(results) {
-      Object.keys(results).forEach((nodeID) => {
-        if ($placeholdersToUpdate.hasOwnProperty(nodeID)) {
+      for (const nodeID in results) {
+        if (results.hasOwnProperty(nodeID) && $placeholdersToUpdate.hasOwnProperty(nodeID)) {
           $placeholdersToUpdate[nodeID]
             .attr('href', results[nodeID].first_new_comment_link)
             .text(Drupal.formatPlural(results[nodeID].new_comment_count, '1 new comment', '@count new comments'))
             .removeClass('hidden');
           show($placeholdersToUpdate[nodeID]);
         }
-      });
+      }
     }
 
     if (drupalSettings.comment && drupalSettings.comment.newCommentsLinks) {

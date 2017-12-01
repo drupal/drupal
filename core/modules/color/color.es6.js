@@ -33,30 +33,34 @@
 
       // Decode reference colors to HSL.
       const reference = settings.color.reference;
-      Object.keys(reference).forEach((color) => {
-        reference[color] = farb.RGBToHSL(farb.unpack(reference[color]));
-      });
+      for (i in reference) {
+        if (reference.hasOwnProperty(i)) {
+          reference[i] = farb.RGBToHSL(farb.unpack(reference[i]));
+        }
+      }
 
       // Build a preview.
       const height = [];
       const width = [];
       // Loop through all defined gradients.
-      Object.keys(settings.gradients).forEach((i) => {
-        // Add element to display the gradient.
-        $('.color-preview').once('color').append(`<div id="gradient-${i}"></div>`);
-        const gradient = $(`.color-preview #gradient-${i}`);
-        // Add height of current gradient to the list (divided by 10).
-        height.push(parseInt(gradient.css('height'), 10) / 10);
-        // Add width of current gradient to the list (divided by 10).
-        width.push(parseInt(gradient.css('width'), 10) / 10);
-        // Add rows (or columns for horizontal gradients).
-        // Each gradient line should have a height (or width for horizontal
-        // gradients) of 10px (because we divided the height/width by 10
-        // above).
-        for (j = 0; j < (settings.gradients[i].direction === 'vertical' ? height[i] : width[i]); ++j) {
-          gradient.append('<div class="gradient-line"></div>');
+      for (i in settings.gradients) {
+        if (settings.gradients.hasOwnProperty(i)) {
+          // Add element to display the gradient.
+          $('.color-preview').once('color').append(`<div id="gradient-${i}"></div>`);
+          const gradient = $(`.color-preview #gradient-${i}`);
+          // Add height of current gradient to the list (divided by 10).
+          height.push(parseInt(gradient.css('height'), 10) / 10);
+          // Add width of current gradient to the list (divided by 10).
+          width.push(parseInt(gradient.css('width'), 10) / 10);
+          // Add rows (or columns for horizontal gradients).
+          // Each gradient line should have a height (or width for horizontal
+          // gradients) of 10px (because we divided the height/width by 10
+          // above).
+          for (j = 0; j < (settings.gradients[i].direction === 'vertical' ? height[i] : width[i]); ++j) {
+            gradient.append('<div class="gradient-line"></div>');
+          }
         }
-      });
+      }
 
       // Set up colorScheme selector.
       form.find('#edit-scheme').on('change', function () {
@@ -65,9 +69,11 @@
         if (colorScheme !== '' && schemes[colorScheme]) {
           // Get colors of active scheme.
           colors = schemes[colorScheme];
-          Object.keys(colors).forEach((fieldName) => {
-            callback($(`#edit-palette-${fieldName}`), colors[fieldName], false, true);
-          });
+          for (const fieldName in colors) {
+            if (colors.hasOwnProperty(fieldName)) {
+              callback($(`#edit-palette-${fieldName}`), colors[fieldName], false, true);
+            }
+          }
           preview();
         }
       });

@@ -144,9 +144,11 @@
       // Attributes.
       const attributes = [];
       const attrMap = settings.buttons[i].attributes || {};
-      Object.keys(attrMap).forEach((attr) => {
-        attributes.push(attr + ((attrMap[attr]) ? `="${attrMap[attr]}"` : ''));
-      });
+      for (const attr in attrMap) {
+        if (attrMap.hasOwnProperty(attr)) {
+          attributes.push(attr + ((attrMap[attr]) ? `="${attrMap[attr]}"` : ''));
+        }
+      }
       html += `<button type="${button.type}" class="${button.classes}" ${attributes.join(' ')}>${button.label}</button>`;
     }
     return html;
