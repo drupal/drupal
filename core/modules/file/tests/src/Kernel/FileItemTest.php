@@ -10,6 +10,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests using entity fields of the file field type.
@@ -41,6 +42,14 @@ class FileItemTest extends FieldKernelTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('user');
+    $this->installConfig(['user']);
+    // Give anonymous users permission to access content, so they can view and
+    // download public files.
+    $anonymous_role = Role::load(Role::ANONYMOUS_ID);
+    $anonymous_role->grantPermission('access content');
+    $anonymous_role->save();
 
     $this->installEntitySchema('file');
     $this->installSchema('file', ['file_usage']);

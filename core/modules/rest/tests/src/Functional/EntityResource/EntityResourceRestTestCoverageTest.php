@@ -124,15 +124,6 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
     }
     $all = count($this->definitions);
     $good = $all - count($problems);
-    // @todo Remove this in https://www.drupal.org/node/2843139. Having this
-    // work-around in here until then means we can ensure we don't add more
-    // entity types without adding REST test coverage.
-    if ($problems === ['file: File (Drupal\file\Entity\File), default normalization (expected tests: FileJsonAnonTest, FileJsonBasicAuthTest, FileJsonCookieTest, FileXmlAnonTest, FileXmlBasicAuthTest, FileXmlCookieTest)', 'file: File (Drupal\file\Entity\File), hal normalization (expected tests: FileHalJsonAnonTest, FileHalJsonBasicAuthTest, FileHalJsonCookieTest)']) {
-      $problems = [];
-    }
-    elseif ($problems === []) {
-      $this->fail('Drupal\file\Entity\File now supports REST test coverage. The work-around for it to pass until that test coverage was added should now be removed.');
-    }
     $this->assertSame([], $problems, $this->getLlamaMessage($good, $all));
   }
 
