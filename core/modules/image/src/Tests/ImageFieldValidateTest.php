@@ -62,6 +62,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       }
       if ($image_file->getWidth() < $min_resolution['width']) {
         $image_that_is_too_small = $image;
+        $image_that_is_too_small_file = $image_file;
       }
       if ($image_that_is_too_small && $image_that_is_too_big) {
         break;
@@ -69,7 +70,11 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     }
     $this->uploadNodeImage($image_that_is_too_small, $field_names[0], 'article');
     $this->assertRaw(t('The specified file %name could not be uploaded.', ['%name' => $image_that_is_too_small->filename]));
-    $this->assertRaw(t('The image is too small; the minimum dimensions are %dimensions pixels.', ['%dimensions' => '50x50']));
+    $this->assertRaw(t('The image is too small. The minimum dimensions are %dimensions pixels and the image size is %widthx%height pixels.', [
+      '%dimensions' => '50x50',
+      '%width' => $image_that_is_too_small_file->getWidth(),
+      '%height' => $image_that_is_too_small_file->getHeight(),
+      ]));
     $this->uploadNodeImage($image_that_is_too_big, $field_names[0], 'article');
     $this->assertText(t('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.'));
     $this->uploadNodeImage($image_that_is_too_small, $field_names[1], 'article');
