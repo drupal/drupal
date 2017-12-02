@@ -24,7 +24,7 @@ class ConfigEntityNormalizeTest extends KernelTestBase {
   }
 
   public function testNormalize() {
-    $config_entity = entity_create('config_test', ['id' => 'system', 'label' => 'foobar', 'weight' => 1]);
+    $config_entity = \Drupal::entityTypeManager()->getStorage('config_test')->create(['id' => 'system', 'label' => 'foobar', 'weight' => 1]);
     $config_entity->save();
 
     // Modify stored config entity, this is comparable with a schema change.
