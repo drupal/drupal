@@ -118,16 +118,6 @@ class DownloadTest extends FileManagedTestBase {
       $this->checkUrl('private', '', $basename, $base_path . '/' . $script_path . 'system/files/' . $basename_encoded);
     }
     $this->assertEqual(file_create_url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', t('Generated URL matches expected URL.'));
-    // Test public files with a different host name from settings.
-    $test_base_url = 'http://www.example.com/cdn';
-    $this->settingsSet('file_public_base_url', $test_base_url);
-    $filepath = file_create_filename('test.txt', '');
-    $directory_uri = 'public://' . dirname($filepath);
-    file_prepare_directory($directory_uri, FILE_CREATE_DIRECTORY);
-    $file = $this->createFile($filepath, NULL, 'public');
-    $url = file_create_url($file->getFileUri());
-    $expected_url = $test_base_url . '/' . basename($filepath);
-    $this->assertEqual($url, $expected_url);
   }
 
   /**
