@@ -197,9 +197,10 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
    *   An array of entity objects.
    */
   protected function getTestEntities() {
-    $config_entity_1 = entity_create('config_test', ['id' => $this->randomMachineName(), 'label' => $this->randomMachineName()]);
+    $storage = \Drupal::entityTypeManager()->getStorage('config_test');
+    $config_entity_1 = $storage->create(['id' => $this->randomMachineName(), 'label' => $this->randomMachineName()]);
     $config_entity_1->save();
-    $config_entity_2 = entity_create('config_test', ['id' => $this->randomMachineName(), 'label' => $this->randomMachineName()]);
+    $config_entity_2 = $storage->create(['id' => $this->randomMachineName(), 'label' => $this->randomMachineName()]);
     $config_entity_2->save();
 
     $content_entity_1 = EntityTest::create(['name' => $this->randomMachineName()]);
