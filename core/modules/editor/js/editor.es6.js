@@ -14,10 +14,10 @@
    *   The text area DOM element, if it was found.
    */
   function findFieldForFormatSelector($formatSelector) {
-    const field_id = $formatSelector.attr('data-editor-for');
+    const fieldId = $formatSelector.attr('data-editor-for');
     // This selector will only find text areas in the top-level document. We do
     // not support attaching editors on text areas within iframes.
-    return $(`#${field_id}`).get(0);
+    return $(`#${fieldId}`).get(0);
   }
 
   /**

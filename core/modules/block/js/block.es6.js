@@ -195,14 +195,14 @@
           // Find the correct region and insert the row as the last in the
           // region.
           tableDrag.rowObject = new tableDrag.row(row[0]);
-          const region_message = table.find(`.region-${select[0].value}-message`);
-          const region_items = region_message.nextUntil('.region-message, .region-title');
-          if (region_items.length) {
-            region_items.last().after(row);
+          const regionMessage = table.find(`.region-${select[0].value}-message`);
+          const regionItems = regionMessage.nextUntil('.region-message, .region-title');
+          if (regionItems.length) {
+            regionItems.last().after(row);
           }
-          // We found that region_message is the last row.
+          // We found that regionMessage is the last row.
           else {
-            region_message.after(row);
+            regionMessage.after(row);
           }
           updateBlockWeights(table, select[0].value);
           // Modify empty regions with added or removed fields.
