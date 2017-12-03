@@ -49,12 +49,12 @@
     this.$view = $(selector);
 
     // Retrieve the path to use for views' ajax.
-    let ajax_path = drupalSettings.views.ajax_path;
+    let ajaxPath = drupalSettings.views.ajax_path;
 
     // If there are multiple views this might've ended up showing up multiple
     // times.
-    if (ajax_path.constructor.toString().indexOf('Array') !== -1) {
-      ajax_path = ajax_path[0];
+    if (ajaxPath.constructor.toString().indexOf('Array') !== -1) {
+      ajaxPath = ajaxPath[0];
     }
 
     // Check if there are any GET parameters to send to views.
@@ -63,14 +63,14 @@
       // Remove the question mark and Drupal path component if any.
       queryString = queryString.slice(1).replace(/q=[^&]+&?|&?render=[^&]+/, '');
       if (queryString !== '') {
-        // If there is a '?' in ajax_path, clean url are on and & should be
+        // If there is a '?' in ajaxPath, clean url are on and & should be
         // used to add parameters.
-        queryString = ((/\?/.test(ajax_path)) ? '&' : '?') + queryString;
+        queryString = ((/\?/.test(ajaxPath)) ? '&' : '?') + queryString;
       }
     }
 
     this.element_settings = {
-      url: ajax_path + queryString,
+      url: ajaxPath + queryString,
       submit: settings,
       setClick: true,
       event: 'click',
@@ -97,12 +97,12 @@
     // @code
     // $('.view-name').trigger('RefreshView');
     // @endcode
-    const self_settings = $.extend({}, this.element_settings, {
+    const selfSettings = $.extend({}, this.element_settings, {
       event: 'RefreshView',
       base: this.selector,
       element: this.$view.get(0),
     });
-    this.refreshViewAjax = Drupal.ajax(self_settings);
+    this.refreshViewAjax = Drupal.ajax(selfSettings);
   };
 
   /**
@@ -114,11 +114,11 @@
     // Exclude the reset buttons so no AJAX behaviours are bound. Many things
     // break during the form reset phase if using AJAX.
     $('input[type=submit], input[type=image]', this.$exposed_form).not('[data-drupal-selector=edit-reset]').each(function (index) {
-      const self_settings = $.extend({}, that.element_settings, {
+      const selfSettings = $.extend({}, that.element_settings, {
         base: $(this).attr('id'),
         element: this,
       });
-      that.exposedFormAjax[index] = Drupal.ajax(self_settings);
+      that.exposedFormAjax[index] = Drupal.ajax(selfSettings);
     });
   };
 
@@ -162,12 +162,12 @@
       Drupal.Views.parseViewArgs(href, this.settings.view_base_path),
     );
 
-    const self_settings = $.extend({}, this.element_settings, {
+    const selfSettings = $.extend({}, this.element_settings, {
       submit: viewData,
       base: false,
       element: link,
     });
-    this.pagerAjax = Drupal.ajax(self_settings);
+    this.pagerAjax = Drupal.ajax(selfSettings);
   };
 
   /**

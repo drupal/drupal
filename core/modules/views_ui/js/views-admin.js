@@ -586,10 +586,10 @@
       $(context).find('[data-drupal-selector="edit-override-dropdown"]').once('views-ui-override-button-text').each(function () {
         var $context = $(context);
         var $submit = $context.find('[id^=edit-submit]');
-        var old_value = $submit.val();
+        var oldValue = $submit.val();
 
         $submit.once('views-ui-override-button-text').on('mouseup', function () {
-          $(this).val(old_value);
+          $(this).val(oldValue);
           return true;
         });
 

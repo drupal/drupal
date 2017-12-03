@@ -36,19 +36,19 @@
     // Identify the button that was clicked so that .ajaxSubmit() can use it.
     // We need to do this for both .click() and .mousedown() since JavaScript
     // code might trigger either behavior.
-    const $submit_buttons = $form.find('input[type=submit].js-form-submit, button.js-form-submit').once('views-ajax-submit');
-    $submit_buttons.on('click mousedown', function () {
+    const $submitButtons = $form.find('input[type=submit].js-form-submit, button.js-form-submit').once('views-ajax-submit');
+    $submitButtons.on('click mousedown', function () {
       this.form.clk = this;
     });
     $form.once('views-ajax-submit').each(function () {
       const $form = $(this);
-      const element_settings = {
+      const elementSettings = {
         url: response.url,
         event: 'submit',
         base: $form.attr('id'),
         element: this,
       };
-      const ajaxForm = Drupal.ajax(element_settings);
+      const ajaxForm = Drupal.ajax(elementSettings);
       ajaxForm.$form = $form;
     });
   };
@@ -159,9 +159,9 @@
       $('#views-tabset a').once('views-ajax').on('click', function () {
         const href = $(this).attr('href');
         // Cut of #views-tabset.
-        const display_id = href.substr(11);
+        const displayId = href.substr(11);
         // Set the form element.
-        $('#views-live-preview #preview-display-id').val(display_id);
+        $('#views-live-preview #preview-display-id').val(displayId);
       });
     },
   };
@@ -177,20 +177,20 @@
   Drupal.behaviors.viewsAjax = {
     collapseReplaced: false,
     attach(context, settings) {
-      const base_element_settings = {
+      const baseElementSettings = {
         event: 'click',
         progress: { type: 'fullscreen' },
       };
       // Bind AJAX behaviors to all items showing the class.
       $('a.views-ajax-link', context).once('views-ajax').each(function () {
-        const element_settings = base_element_settings;
-        element_settings.base = $(this).attr('id');
-        element_settings.element = this;
+        const elementSettings = baseElementSettings;
+        elementSettings.base = $(this).attr('id');
+        elementSettings.element = this;
         // Set the URL to go to the anchor.
         if ($(this).attr('href')) {
-          element_settings.url = $(this).attr('href');
+          elementSettings.url = $(this).attr('href');
         }
-        Drupal.ajax(element_settings);
+        Drupal.ajax(elementSettings);
       });
 
       $('div#views-live-preview a')
@@ -200,18 +200,18 @@
             return true;
           }
 
-          const element_settings = base_element_settings;
+          const elementSettings = baseElementSettings;
           // Set the URL to go to the anchor.
-          element_settings.url = $(this).attr('href');
-          if (Drupal.Views.getPath(element_settings.url).substring(0, 21) !== 'admin/structure/views') {
+          elementSettings.url = $(this).attr('href');
+          if (Drupal.Views.getPath(elementSettings.url).substring(0, 21) !== 'admin/structure/views') {
             return true;
           }
 
-          element_settings.wrapper = 'views-preview-wrapper';
-          element_settings.method = 'replaceWith';
-          element_settings.base = $(this).attr('id');
-          element_settings.element = this;
-          Drupal.ajax(element_settings);
+          elementSettings.wrapper = 'views-preview-wrapper';
+          elementSettings.method = 'replaceWith';
+          elementSettings.base = $(this).attr('id');
+          elementSettings.element = this;
+          Drupal.ajax(elementSettings);
         });
 
       // Within a live preview, make exposed widget form buttons re-trigger the
@@ -224,20 +224,20 @@
             this.form.clk = this;
             return true;
           });
-          const element_settings = base_element_settings;
+          const elementSettings = baseElementSettings;
           // Set the URL to go to the anchor.
-          element_settings.url = $(this.form).attr('action');
-          if (Drupal.Views.getPath(element_settings.url).substring(0, 21) !== 'admin/structure/views') {
+          elementSettings.url = $(this.form).attr('action');
+          if (Drupal.Views.getPath(elementSettings.url).substring(0, 21) !== 'admin/structure/views') {
             return true;
           }
 
-          element_settings.wrapper = 'views-preview-wrapper';
-          element_settings.method = 'replaceWith';
-          element_settings.event = 'click';
-          element_settings.base = $(this).attr('id');
-          element_settings.element = this;
+          elementSettings.wrapper = 'views-preview-wrapper';
+          elementSettings.method = 'replaceWith';
+          elementSettings.event = 'click';
+          elementSettings.base = $(this).attr('id');
+          elementSettings.element = this;
 
-          Drupal.ajax(element_settings);
+          Drupal.ajax(elementSettings);
         });
     },
   };
