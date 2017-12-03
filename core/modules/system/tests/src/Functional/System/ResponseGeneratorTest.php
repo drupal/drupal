@@ -1,15 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
-use Drupal\rest\Tests\RESTTestBase;
+use Drupal\rest\Entity\RestResourceConfig;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests to see if generator header is added.
  *
  * @group system
  */
-class ResponseGeneratorTest extends RESTTestBase {
+class ResponseGeneratorTest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -25,8 +26,7 @@ class ResponseGeneratorTest extends RESTTestBase {
     parent::setUp();
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
-    $permissions = $this->entityPermissions('node', 'view');
-    $account = $this->drupalCreateUser($permissions);
+    $account = $this->drupalCreateUser(['access content']);
     $this->drupalLogin($account);
   }
 
@@ -54,14 +54,14 @@ class ResponseGeneratorTest extends RESTTestBase {
 
     // Enable cookie-based authentication for the entity:node REST resource.
     /** @var \Drupal\rest\RestResourceConfigInterface $resource_config */
-    $resource_config = $this->resourceConfigStorage->load('entity.node');
+    $resource_config = RestResourceConfig::load('entity.node');
     $configuration = $resource_config->get('configuration');
     $configuration['authentication'][] = 'cookie';
     $resource_config->set('configuration', $configuration)->save();
-    $this->rebuildCache();
+    $this->rebuildAll();
 
     // Tests to see if this also works for a non-html request
-    $this->httpRequest($node->urlInfo()->setOption('query', ['_format' => 'hal_json']), 'GET');
+    $this->drupalGet($node->toUrl()->setOption('query', ['_format' => 'hal_json']));
     $this->assertResponse(200);
     $this->assertEqual('application/hal+json', $this->drupalGetHeader('Content-Type'));
     $this->assertEqual($expectedGeneratorHeader, $this->drupalGetHeader('X-Generator'));
