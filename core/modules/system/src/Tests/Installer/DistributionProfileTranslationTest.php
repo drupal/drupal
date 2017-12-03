@@ -59,23 +59,6 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
     file_put_contents(\Drupal::root() . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', $this->getPo('de'));
 
     parent::visitInstaller();
-
-    // The language should have been automatically detected, all following
-    // screens should be translated already.
-    $elements = $this->xpath('//input[@type="submit"]/@value');
-    $this->assertEqual((string) current($elements), 'Save and continue de');
-    $this->translations['Save and continue'] = 'Save and continue de';
-
-    // Check the language direction.
-    $direction = (string) current($this->xpath('/html/@dir'));
-    $this->assertEqual($direction, 'ltr');
-
-    // Verify that the distribution name appears.
-    $this->assertRaw($this->info['distribution']['name']);
-    // Verify that the requested theme is used.
-    $this->assertRaw($this->info['distribution']['install']['theme']);
-    // Verify that the "Choose profile" step does not appear.
-    $this->assertNoText('profile');
   }
 
   /**
@@ -92,6 +75,31 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
   protected function setUpProfile() {
     // This step is skipped, because there is a distribution profile.
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpSettings() {
+    // The language should have been automatically detected, all following
+    // screens should be translated already.
+    $elements = $this->xpath('//input[@type="submit"]/@value');
+    $this->assertEqual((string) current($elements), 'Save and continue de');
+    $this->translations['Save and continue'] = 'Save and continue de';
+
+    // Check the language direction.
+    $direction = (string) current($this->xpath('/html/@dir'));
+    $this->assertEqual($direction, 'ltr');
+
+    // Verify that the distribution name appears.
+    $this->assertRaw($this->info['distribution']['name']);
+    // Verify that the requested theme is used.
+    $this->assertRaw($this->info['distribution']['install']['theme']);
+    // Verify that the "Choose profile" step does not appear.
+    $this->assertNoText('profile');
+
+    parent::setUpSettings();
+  }
+
 
   /**
    * Confirms that the installation succeeded.

@@ -32,6 +32,7 @@ class InstallerExistingInstallationTest extends InstallerTestBase {
     $this->visitInstaller();
     $this->setUpLanguage();
     $this->setUpProfile();
+    $this->setUpRequirementsProblem();
     $this->setUpSettings();
     $this->assertRaw('Drupal already installed');
   }
