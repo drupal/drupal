@@ -257,10 +257,12 @@ class FormValidator implements FormValidatorInterface {
         // length if it's a string, and the item count if it's an array.
         // An unchecked checkbox has a #value of integer 0, different than
         // string '0', which could be a valid value.
-        $is_empty_multiple = (!count($elements['#value']));
+        $is_countable = is_array($elements['#value']) || $elements['#value'] instanceof \Countable;
+        $is_empty_multiple = $is_countable && count($elements['#value']) == 0;
         $is_empty_string = (is_string($elements['#value']) && Unicode::strlen(trim($elements['#value'])) == 0);
         $is_empty_value = ($elements['#value'] === 0);
-        if ($is_empty_multiple || $is_empty_string || $is_empty_value) {
+        $is_empty_null = is_null($elements['#value']);
+        if ($is_empty_multiple || $is_empty_string || $is_empty_value || $is_empty_null) {
           // Flag this element as #required_but_empty to allow #element_validate
           // handlers to set a custom required error message, but without having
           // to re-implement the complex logic to figure out whether the field
@@ -286,7 +288,7 @@ class FormValidator implements FormValidatorInterface {
       // #element_validate handlers changed any properties. If $is_empty_value
       // is defined, then above #required validation code ran, so the other
       // variables are also known to be defined and we can test them again.
-      if (isset($is_empty_value) && ($is_empty_multiple || $is_empty_string || $is_empty_value)) {
+      if (isset($is_empty_value) && ($is_empty_multiple || $is_empty_string || $is_empty_value || $is_empty_null)) {
         if (isset($elements['#required_error'])) {
           $form_state->setError($elements, $elements['#required_error']);
         }
