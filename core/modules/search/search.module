@@ -107,6 +107,13 @@ function search_theme() {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function search_theme_suggestions_search_result(array $variables) {
+  return ['search_result__' . $variables['plugin_id']];
+}
+
+/**
  * Implements hook_preprocess_HOOK() for block templates.
  */
 function search_preprocess_block(&$variables) {

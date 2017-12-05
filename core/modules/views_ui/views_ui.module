@@ -157,6 +157,13 @@ function views_ui_preprocess_views_view(&$variables) {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function views_ui_theme_suggestions_views_ui_view_preview_section(array $variables) {
+  return ['views_ui_view_preview_section__' . $variables['section']];
+}
+
+/**
  * Returns contextual links for each handler of a certain section.
  *
  * @TODO

@@ -613,6 +613,10 @@ function hook_preprocess_HOOK(&$variables) {
  * hook called (in this case 'node__article') is available in
  * $variables['theme_hook_original'].
  *
+ * Implementations of this hook must be placed in *.module or *.theme files, or
+ * must otherwise make sure that the hook implementation is available at
+ * any given time.
+ *
  * @todo Add @code sample.
  *
  * @param array $variables
@@ -693,6 +697,10 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  * will be invoked, not node_theme_suggestions_node__article(). The specific
  * hook called (in this case 'node__article') is available in
  * $variables['theme_hook_original'].
+ *
+ * Implementations of this hook must be placed in *.module or *.theme files, or
+ * must otherwise make sure that the hook implementation is available at
+ * any given time.
  *
  * @todo Add @code sample.
  *
