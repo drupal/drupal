@@ -66,4 +66,18 @@ abstract class VocabularyResourceTestBase extends EntityResourceTestBase {
     // @todo Update in https://www.drupal.org/node/2300677.
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessMessage($method) {
+    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
+      return parent::getExpectedUnauthorizedAccessMessage($method);
+    }
+
+    if ($method === 'GET') {
+      return "The following permissions are required: 'access taxonomy overview' OR 'administer taxonomy'.";
+    }
+    return parent::getExpectedUnauthorizedAccessMessage($method);
+  }
+
 }
