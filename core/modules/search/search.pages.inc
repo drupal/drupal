@@ -9,13 +9,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Implements hook_theme_suggestions_HOOK().
- */
-function search_theme_suggestions_search_result(array $variables) {
-  return ['search_result__' . $variables['plugin_id']];
-}
-
-/**
  * Prepares variables for individual search result templates.
  *
  * Default template: search-result.html.twig
