@@ -547,3 +547,10 @@ function template_preprocess_views_ui_view_preview_section(&$variables) {
     $variables['links'] = $build;
   }
 }
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function views_ui_theme_suggestions_views_ui_view_preview_section(array $variables) {
+  return ['views_ui_view_preview_section__' . $variables['section']];
+}
