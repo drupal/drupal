@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\SchemaObjectExistsException;
@@ -222,7 +223,7 @@ class DatabaseBackend implements CacheBackendInterface {
         'tags' => [],
       ];
 
-      assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($item[\'tags\'])', 'Cache Tags must be strings.');
+      assert(Inspector::assertAllStrings($item['tags']), 'Cache Tags must be strings.');
       $item['tags'] = array_unique($item['tags']);
       // Sort the cache tags so that they are stored consistently in the DB.
       sort($item['tags']);

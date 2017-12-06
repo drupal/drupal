@@ -129,11 +129,11 @@ class LibraryDiscoveryParser {
         //   properly resolve dependencies for all (css) libraries per category,
         //   and only once prior to rendering out an HTML page.
         if ($type == 'css' && !empty($library[$type])) {
-          assert('\Drupal\Core\Asset\LibraryDiscoveryParser::validateCssLibrary($library[$type]) < 2', 'CSS files should be specified as key/value pairs, where the values are configuration options. See https://www.drupal.org/node/2274843.');
-          assert('\Drupal\Core\Asset\LibraryDiscoveryParser::validateCssLibrary($library[$type]) === 0', 'CSS must be nested under a category. See https://www.drupal.org/node/2274843.');
+          assert(static::validateCssLibrary($library[$type]) < 2, 'CSS files should be specified as key/value pairs, where the values are configuration options. See https://www.drupal.org/node/2274843.');
+          assert(static::validateCssLibrary($library[$type]) === 0, 'CSS must be nested under a category. See https://www.drupal.org/node/2274843.');
           foreach ($library[$type] as $category => $files) {
             $category_weight = 'CSS_' . strtoupper($category);
-            assert('defined($category_weight)', 'Invalid CSS category: ' . $category . '. See https://www.drupal.org/node/2274843.');
+            assert(defined($category_weight), 'Invalid CSS category: ' . $category . '. See https://www.drupal.org/node/2274843.');
             foreach ($files as $source => $options) {
               if (!isset($options['weight'])) {
                 $options['weight'] = 0;

@@ -109,7 +109,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $user_role->revokePermission($permission);
     }
     $user_role->save();
-    assert('[] === $user_role->getPermissions()', 'The anonymous user role has no permissions at all.');
+    assert([] === $user_role->getPermissions(), 'The anonymous user role has no permissions at all.');
 
     if (static::$auth !== FALSE) {
       // Ensure the authenticated user role has no permissions at all.
@@ -118,7 +118,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
         $user_role->revokePermission($permission);
       }
       $user_role->save();
-      assert('[] === $user_role->getPermissions()', 'The authenticated user role has no permissions at all.');
+      assert([] === $user_role->getPermissions(), 'The authenticated user role has no permissions at all.');
 
       // Create an account.
       $this->account = $this->createUser();

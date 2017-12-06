@@ -39,7 +39,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   isNeutral() will be TRUE.
    */
   public static function neutral($reason = NULL) {
-    assert('is_string($reason) || is_null($reason)');
+    assert(is_string($reason) || is_null($reason));
     return new AccessResultNeutral($reason);
   }
 
@@ -64,7 +64,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   isForbidden() will be TRUE.
    */
   public static function forbidden($reason = NULL) {
-    assert('is_string($reason) || is_null($reason)');
+    assert(is_string($reason) || is_null($reason));
     return new AccessResultForbidden($reason);
   }
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Database\Query\SelectInterface;
 
 /**
@@ -29,7 +30,7 @@ class Cache {
    */
   public static function mergeContexts(array $a = [], array $b = []) {
     $cache_contexts = array_unique(array_merge($a, $b));
-    assert('\Drupal::service(\'cache_contexts_manager\')->assertValidTokens($cache_contexts)');
+    assert(\Drupal::service('cache_contexts_manager')->assertValidTokens($cache_contexts));
     sort($cache_contexts);
     return $cache_contexts;
   }
@@ -54,7 +55,7 @@ class Cache {
    *   The merged array of cache tags.
    */
   public static function mergeTags(array $a = [], array $b = []) {
-    assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($a) && \Drupal\Component\Assertion\Inspector::assertAllStrings($b)', 'Cache tags must be valid strings');
+    assert(Inspector::assertAllStrings($a) && Inspector::assertAllStrings($b), 'Cache tags must be valid strings');
 
     $cache_tags = array_unique(array_merge($a, $b));
     sort($cache_tags);
@@ -96,7 +97,7 @@ class Cache {
    *   An array of cache tags.
    *
    * @deprecated
-   *   Use assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($tags)');
+   *   Use assert(Inspector::assertAllStrings($tags));
    *
    * @throws \LogicException
    */

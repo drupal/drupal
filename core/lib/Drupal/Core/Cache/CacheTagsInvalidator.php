@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Component\Assertion\Inspector;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
@@ -22,7 +23,7 @@ class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
    * {@inheritdoc}
    */
   public function invalidateTags(array $tags) {
-    assert('Drupal\Component\Assertion\Inspector::assertAllStrings($tags)', 'Cache tags must be strings.');
+    assert(Inspector::assertAllStrings($tags), 'Cache tags must be strings.');
 
     // Notify all added cache tags invalidators.
     foreach ($this->invalidators as $invalidator) {

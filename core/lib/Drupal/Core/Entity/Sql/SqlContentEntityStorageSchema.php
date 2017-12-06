@@ -245,7 +245,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   The schema data.
    */
   protected function getSchemaFromStorageDefinition(FieldStorageDefinitionInterface $storage_definition) {
-    assert('!$storage_definition->hasCustomStorage();');
+    assert(!$storage_definition->hasCustomStorage());
     $table_mapping = $this->storage->getTableMapping();
     $schema = [];
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {

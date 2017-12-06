@@ -100,7 +100,7 @@ class CacheContextsManager {
    *   cacheability metadata.
    */
   public function convertTokensToKeys(array $context_tokens) {
-    assert('$this->assertValidTokens($context_tokens)');
+    assert($this->assertValidTokens($context_tokens));
     $cacheable_metadata = new CacheableMetadata();
     $optimized_tokens = $this->optimizeTokens($context_tokens);
     // Iterate over cache contexts that have been optimized away and get their

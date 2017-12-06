@@ -368,17 +368,17 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
         // We need to validate tokens are valid Twig variables. Twig uses the
         // same variable naming rules as PHP.
         // @see http://php.net/manual/language.variables.basics.php
-        assert('preg_match(\'/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/\', $token) === 1', 'Tokens need to be valid Twig variables.');
+        assert(preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $token) === 1, 'Tokens need to be valid Twig variables.');
         $twig_tokens[$token] = $replacement;
       }
       else {
         $parts = explode('.', $token);
         $top = array_shift($parts);
-        assert('preg_match(\'/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/\', $top) === 1', 'Tokens need to be valid Twig variables.');
+        assert(preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $top) === 1, 'Tokens need to be valid Twig variables.');
         $token_array = [array_pop($parts) => $replacement];
         foreach (array_reverse($parts) as $key) {
           // The key could also be numeric (array index) so allow that.
-          assert('is_numeric($key) || (preg_match(\'/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/\', $key) === 1)', 'Tokens need to be valid Twig variables.');
+          assert(is_numeric($key) || preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $key) === 1, 'Tokens need to be valid Twig variables.');
           $token_array = [$key => $token_array];
         }
         if (!isset($twig_tokens[$top])) {

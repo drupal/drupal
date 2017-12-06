@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -111,7 +112,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    *   (optional) The tags to specify for the cache item.
    */
   public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, array $tags = []) {
-    assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($tags)', 'Cache tags must be strings.');
+    assert(Inspector::assertAllStrings($tags), 'Cache tags must be strings.');
     $this->cid = $cid;
     $this->cache = $cache;
     $this->tags = $tags;

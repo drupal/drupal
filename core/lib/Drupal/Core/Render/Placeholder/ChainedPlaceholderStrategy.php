@@ -35,7 +35,7 @@ class ChainedPlaceholderStrategy implements PlaceholderStrategyInterface {
     }
 
     // Assert that there is at least one strategy.
-    assert('!empty($this->placeholderStrategies)', 'At least one placeholder strategy must be present; by default the fallback strategy \Drupal\Core\Render\Placeholder\SingleFlushStrategy is always present.');
+    assert(!empty($this->placeholderStrategies), 'At least one placeholder strategy must be present; by default the fallback strategy \Drupal\Core\Render\Placeholder\SingleFlushStrategy is always present.');
 
     $new_placeholders = [];
 
@@ -44,7 +44,7 @@ class ChainedPlaceholderStrategy implements PlaceholderStrategyInterface {
     // and this uses a variation of the "chain of responsibility" design pattern.
     foreach ($this->placeholderStrategies as $strategy) {
       $processed_placeholders = $strategy->processPlaceholders($placeholders);
-      assert('array_intersect_key($processed_placeholders, $placeholders) === $processed_placeholders', 'Processed placeholders must be a subset of all placeholders.');
+      assert(array_intersect_key($processed_placeholders, $placeholders) === $processed_placeholders, 'Processed placeholders must be a subset of all placeholders.');
       $placeholders = array_diff_key($placeholders, $processed_placeholders);
       $new_placeholders += $processed_placeholders;
 

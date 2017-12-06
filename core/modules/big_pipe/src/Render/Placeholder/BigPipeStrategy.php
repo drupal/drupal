@@ -180,7 +180,7 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
    *   a placeholder for a HTML attribute value or a subset of it).
    */
   protected static function placeholderIsAttributeSafe($placeholder) {
-    assert('is_string($placeholder)');
+    assert(is_string($placeholder));
     return $placeholder[0] !== '<' || $placeholder !== Html::normalize($placeholder);
   }
 
