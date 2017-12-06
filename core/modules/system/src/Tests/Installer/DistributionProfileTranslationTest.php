@@ -59,27 +59,7 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
     file_put_contents(\Drupal::root() . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', $this->getPo('de'));
 
     parent::visitInstaller();
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpLanguage() {
-    // This step is skipped, because the distribution profile uses a fixed
-    // language.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpProfile() {
-    // This step is skipped, because there is a distribution profile.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpSettings() {
     // The language should have been automatically detected, all following
     // screens should be translated already.
     $elements = $this->xpath('//input[@type="submit"]/@value');
@@ -96,10 +76,22 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
     $this->assertRaw($this->info['distribution']['install']['theme']);
     // Verify that the "Choose profile" step does not appear.
     $this->assertNoText('profile');
-
-    parent::setUpSettings();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpLanguage() {
+    // This step is skipped, because the distribution profile uses a fixed
+    // language.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpProfile() {
+    // This step is skipped, because there is a distribution profile.
+  }
 
   /**
    * Confirms that the installation succeeded.

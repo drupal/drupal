@@ -157,11 +157,7 @@ function system_requirements($phase) {
     }
   }
 
-  // Verify the user is running a supported PHP version.
-  // If the site is running a recommended version of PHP, just display it
-  // as an informational message on the status report. This will be overridden
-  // with an error or warning if the site is running older PHP versions for
-  // which Drupal has already or will soon drop support.
+  // Test PHP version and show link to phpinfo() if it's available
   $phpversion = $phpversion_label = phpversion();
   if (function_exists('phpinfo')) {
     if ($phase === 'runtime') {
@@ -173,8 +169,6 @@ function system_requirements($phase) {
     ];
   }
   else {
-    // @todo Revisit whether this description makes sense in
-    //   https://www.drupal.org/project/drupal/issues/2927318.
     $requirements['php'] = [
       'title' => t('PHP'),
       'value' => $phpversion_label,
@@ -189,18 +183,11 @@ function system_requirements($phase) {
     // If PHP is old, it's not safe to continue with the requirements check.
     return $requirements;
   }
-  // @todo Warn about specific end dates for our PHP 5.5, 5.6, and 7.0 support
-  //   once each is set.
-  // @see https://www.drupal.org/project/drupal/issues/2927344
-  if ((version_compare($phpversion, DRUPAL_RECOMMENDED_PHP) < 0) && ($phase === 'install' || $phase === 'runtime')) {
-    $requirements['php']['description'] = t('Your PHP installation is running version %version. Support for this version will be dropped in a future Drupal release. Upgrade to PHP version %recommended or higher to ensure your site continues to receive Drupal updates and remains secure. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal 8 PHP requirements handbook page</a> for more information.', ['%version' => $phpversion, '%recommended' => DRUPAL_RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/8/system-requirements/php']);
-    $requirements['php']['severity'] = REQUIREMENT_WARNING;
-  }
 
   // Suggest to update to at least 5.5.21 or 5.6.5 for disabling multiple
   // statements.
   if (($phase === 'install' || \Drupal::database()->driver() === 'mysql') && !SystemRequirements::phpVersionWithPdoDisallowMultipleStatements($phpversion)) {
-    $requirements['php_multiple_statement'] = [
+    $requirements['php'] = [
       'title' => t('PHP (multiple statement disabling)'),
       'value' => $phpversion_label,
       'description' => t('PHP versions higher than 5.6.5 or 5.5.21 provide built-in SQL injection protection for mysql databases. It is recommended to update.'),
