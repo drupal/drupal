@@ -38,8 +38,6 @@ class TermSelection extends DefaultSelection {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
-    $form['target_bundles']['#title'] = $this->t('Available Vocabularies');
-
     // Sorting is not possible for taxonomy terms because we use
     // \Drupal\taxonomy\TermStorageInterface::loadTree() to retrieve matches.
     $form['sort']['#access'] = FALSE;

@@ -91,7 +91,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
 
       $form['target_bundles'] = [
         '#type' => 'checkboxes',
-        '#title' => $this->t('Bundles'),
+        '#title' => $entity_type->getBundleLabel(),
         '#options' => $bundle_options,
         '#default_value' => (array) $configuration['target_bundles'],
         '#required' => TRUE,

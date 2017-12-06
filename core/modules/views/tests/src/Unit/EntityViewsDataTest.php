@@ -110,6 +110,7 @@ class EntityViewsDataTest extends UnitTestCase {
     ]);
 
     $this->translationManager = $this->getStringTranslationStub();
+    $this->baseEntityType->setStringTranslation($this->translationManager);
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $this->viewsData = new TestEntityViewsData($this->baseEntityType, $this->entityStorage, $this->entityManager, $this->moduleHandler, $this->translationManager);

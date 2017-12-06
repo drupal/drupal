@@ -393,6 +393,28 @@ class EntityTypeTest extends UnitTestCase {
   }
 
   /**
+   * Tests the ::getBundleLabel() method.
+   *
+   * @covers ::getBundleLabel
+   * @dataProvider providerTestGetBundleLabel
+   */
+  public function testGetBundleLabel($definition, $expected) {
+    $entity_type = $this->setUpEntityType($definition);
+    $entity_type->setStringTranslation($this->getStringTranslationStub());
+    $this->assertEquals($expected, $entity_type->getBundleLabel());
+  }
+
+  /**
+   * Provides test data for ::testGetBundleLabel().
+   */
+  public function providerTestGetBundleLabel() {
+    return [
+      [['label' => 'Entity Label Foo'], 'Entity Label Foo bundle'],
+      [['bundle_label' => 'Bundle Label Bar'], 'Bundle Label Bar'],
+    ];
+  }
+
+  /**
    * Gets a mock controller class name.
    *
    * @return string
