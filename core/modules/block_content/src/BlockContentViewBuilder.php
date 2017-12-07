@@ -2,7 +2,6 @@
 
 namespace Drupal\block_content;
 
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 
@@ -39,20 +38,6 @@ class BlockContentViewBuilder extends EntityViewBuilder {
     // and thus has no entity template itself.
     unset($build['#theme']);
     return $build;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-    parent::alterBuild($build, $entity, $display, $view_mode);
-    // Add contextual links for this custom block.
-    if (!$entity->isNew()) {
-      $build['#contextual_links']['block_content'] = [
-        'route_parameters' => ['block_content' => $entity->id()],
-        'metadata' => ['changed' => $entity->getChangedTime()],
-      ];
-    }
   }
 
 }

@@ -19,7 +19,7 @@ use Drupal\taxonomy\TermInterface;
  *   handlers = {
  *     "storage" = "Drupal\taxonomy\TermStorage",
  *     "storage_schema" = "Drupal\taxonomy\TermStorageSchema",
- *     "view_builder" = "Drupal\taxonomy\TermViewBuilder",
+ *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
  *     "access" = "Drupal\taxonomy\TermAccessControlHandler",
  *     "views_data" = "Drupal\taxonomy\TermViewsData",

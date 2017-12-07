@@ -2,24 +2,17 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\EntityInterface;
+@trigger_error(__NAMESPACE__ . '\TermViewBuilder is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityViewBuilder instead. See https://www.drupal.org/node/2924233.', E_USER_DEPRECATED);
+
 use Drupal\Core\Entity\EntityViewBuilder;
 
 /**
  * View builder handler for taxonomy terms.
+ *
+ * @deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\Entity\EntityViewBuilder instead.
+ *
+ * @see \Drupal\Core\Entity\EntityViewBuilder
+ * @see https://www.drupal.org/node/2924233
  */
-class TermViewBuilder extends EntityViewBuilder {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-    parent::alterBuild($build, $entity, $display, $view_mode);
-    $build['#contextual_links']['taxonomy_term'] = [
-      'route_parameters' => ['taxonomy_term' => $entity->id()],
-      'metadata' => ['changed' => $entity->getChangedTime()],
-    ];
-  }
-
-}
+class TermViewBuilder extends EntityViewBuilder {}

@@ -2,7 +2,6 @@
 
 namespace Drupal\node;
 
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\node\Entity\Node;
@@ -139,31 +138,6 @@ class NodeViewBuilder extends EntityViewBuilder {
       '#links' => $links,
       '#attributes' => ['class' => ['links', 'inline']],
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-    /** @var \Drupal\node\NodeInterface $entity */
-    parent::alterBuild($build, $entity, $display, $view_mode);
-    if ($entity->id()) {
-      if ($entity->isDefaultRevision()) {
-        $build['#contextual_links']['node'] = [
-          'route_parameters' => ['node' => $entity->id()],
-          'metadata' => ['changed' => $entity->getChangedTime()],
-        ];
-      }
-      else {
-        $build['#contextual_links']['node_revision'] = [
-          'route_parameters' => [
-            'node' => $entity->id(),
-            'node_revision' => $entity->getRevisionId(),
-          ],
-          'metadata' => ['changed' => $entity->getChangedTime()],
-        ];
-      }
-    }
   }
 
 }

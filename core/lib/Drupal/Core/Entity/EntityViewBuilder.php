@@ -269,6 +269,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
         $this->moduleHandler()->invokeAll($view_hook, [&$build_list[$key], $entity, $display, $view_mode]);
         $this->moduleHandler()->invokeAll('entity_view', [&$build_list[$key], $entity, $display, $view_mode]);
 
+        $this->addContextualLinks($build_list[$key], $entity);
         $this->alterBuild($build_list[$key], $entity, $display, $view_mode);
 
         // Assign the weights configured in the display.
@@ -320,6 +321,36 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       $display_build = $displays[$bundle]->buildMultiple($bundle_entities);
       foreach ($bundle_entities as $id => $entity) {
         $build[$id] += $display_build[$id];
+      }
+    }
+  }
+
+  /**
+   * Add contextual links.
+   *
+   * @param array $build
+   *   The render array that is being created.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to be prepared.
+   */
+  protected function addContextualLinks(array &$build, EntityInterface $entity) {
+    if ($entity->isNew()) {
+      return;
+    }
+    $key = $entity->getEntityTypeId();
+    $rel = 'canonical';
+    if ($entity instanceof ContentEntityInterface && !$entity->isDefaultRevision()) {
+      $rel = 'revision';
+      $key .= '_revision';
+    }
+    if ($entity->hasLinkTemplate($rel)) {
+      $build['#contextual_links'][$key] = [
+        'route_parameters' => $entity->toUrl($rel)->getRouteParameters(),
+      ];
+      if ($entity instanceof EntityChangedInterface) {
+        $build['#contextual_links'][$key]['metadata'] = [
+          'changed' => $entity->getChangedTime(),
+        ];
       }
     }
   }
