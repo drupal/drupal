@@ -547,8 +547,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   /**
    * Gets the label for the bundle.
    *
-   * @return string
-   *   The bundle label.
+   * @return string|null
+   *   The bundle label, or NULL if none exists.
    */
   public function getBundleLabel();
 
