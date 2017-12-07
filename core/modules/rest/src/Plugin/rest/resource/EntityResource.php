@@ -11,9 +11,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Http\Exception\CacheableAccessDeniedHttpException;
-use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Psr\Log\LoggerInterface;
@@ -203,41 +201,6 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
   }
 
   /**
-   * Gets the values from the field item list casted to the correct type.
-   *
-   * Values are casted to the correct type so we can determine whether or not
-   * something has changed. REST formats such as JSON support typed data but
-   * Drupal's database API will return values as strings. Currently, only
-   * primitive data types know how to cast their values to the correct type.
-   *
-   * @param \Drupal\Core\Field\FieldItemListInterface $field_item_list
-   *   The field item list to retrieve its data from.
-   *
-   * @return mixed[][]
-   *   The values from the field item list casted to the correct type. The array
-   *   of values returned is a multidimensional array keyed by delta and the
-   *   property name.
-   */
-  protected function getCastedValueFromFieldItemList(FieldItemListInterface $field_item_list) {
-    $value = $field_item_list->getValue();
-
-    foreach ($value as $delta => $field_item_value) {
-      /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
-      $field_item = $field_item_list->get($delta);
-      $properties = $field_item->getProperties(TRUE);
-      // Foreach field value we check whether we know the underlying property.
-      // If we exists we try to cast the value.
-      foreach ($field_item_value as $property_name => $property_value) {
-        if (isset($properties[$property_name]) && ($property = $field_item->get($property_name)) && $property instanceof PrimitiveInterface) {
-          $value[$delta][$property_name] = $property->getCastedValue();
-        }
-      }
-    }
-
-    return $value;
-  }
-
-  /**
    * Responds to entity PATCH requests.
    *
    * @param \Drupal\Core\Entity\EntityInterface $original_entity
@@ -281,7 +244,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
         }
 
         // Unchanged values for entity keys don't need access checking.
-        if ($this->getCastedValueFromFieldItemList($original_entity->get($field_name)) === $this->getCastedValueFromFieldItemList($entity->get($field_name))) {
+        if ($original_entity->get($field_name)->equals($field)) {
           continue;
         }
         // It is not possible to set the language to NULL as it is automatically
