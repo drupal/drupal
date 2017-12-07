@@ -603,11 +603,13 @@ EOD;
    *
    * @param string $string
    *   The header to encode.
+   * @param bool $shorten
+   *   If TRUE, only return the first chunk of a multi-chunk encoded string.
    *
    * @return string
    *   The mime-encoded header.
    */
-  public static function mimeHeaderEncode($string) {
+  public static function mimeHeaderEncode($string, $shorten = FALSE) {
     if (preg_match('/[^\x20-\x7E]/', $string)) {
       // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
       $chunk_size = 47;
@@ -616,6 +618,9 @@ EOD;
       while ($len > 0) {
         $chunk = static::truncateBytes($string, $chunk_size);
         $output .= ' =?UTF-8?B?' . base64_encode($chunk) . "?=\n";
+        if ($shorten) {
+          break;
+        }
         $c = strlen($chunk);
         $string = substr($string, $c);
         $len -= $c;
