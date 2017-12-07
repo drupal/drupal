@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Mail;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Mail\Plugin\Mail\TestMailCollector;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\system_mail_failure_test\Plugin\Mail\TestPhpMailFailure;
@@ -90,11 +91,15 @@ class MailTest extends BrowserTestBase {
     $this->assertEqual($reply_email, $sent_message['headers']['Reply-to'], 'Message reply-to headers are set.');
     $this->assertFalse(isset($sent_message['headers']['Errors-To']), 'Errors-to header must not be set, it is deprecated.');
 
+    // Test that long site names containing characters that need MIME encoding
+    // works as expected.
+    $this->config('system.site')->set('name', 'Drépal this is a very long test sentence to test what happens with very long site names')->save();
     // Send an email and check that the From-header contains the site name.
     \Drupal::service('plugin.manager.mail')->mail('simpletest', 'from_test', 'from_test@example.com', $language);
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);
-    $this->assertEqual($from_email, $sent_message['headers']['From'], 'Message is sent from the site email account.');
+    $this->assertEquals('=?UTF-8?B?RHLDqXBhbCB0aGlzIGlzIGEgdmVyeSBsb25nIHRlc3Qgc2VudGVuY2UgdG8gdGU=?= <simpletest@example.com>', $sent_message['headers']['From'], 'From header is correctly encoded.');
+    $this->assertEquals('Drépal this is a very long test sentence to te <simpletest@example.com>', Unicode::mimeHeaderDecode($sent_message['headers']['From']), 'From header is correctly encoded.');
     $this->assertFalse(isset($sent_message['headers']['Reply-to']), 'Message reply-to is not set if not specified.');
     $this->assertFalse(isset($sent_message['headers']['Errors-To']), 'Errors-to header must not be set, it is deprecated.');
   }

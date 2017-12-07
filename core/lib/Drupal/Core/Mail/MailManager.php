@@ -3,6 +3,7 @@
 namespace Drupal\Core\Mail;
 
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -248,7 +249,12 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
     // Return-Path headers should have a domain authorized to use the
     // originating SMTP server.
     $headers['Sender'] = $headers['Return-Path'] = $site_mail;
-    $headers['From'] = $site_config->get('name') . ' <' . $site_mail . '>';
+    // Headers are usually encoded in the mail plugin that implements
+    // \Drupal\Core\Mail\MailInterface::mail(), for example,
+    // \Drupal\Core\Mail\Plugin\Mail\PhpMail::mail(). The site name must be
+    // encoded here to prevent mail plugins from encoding the email address,
+    // which would break the header.
+    $headers['From'] = Unicode::mimeHeaderEncode($site_config->get('name'), TRUE) . ' <' . $site_mail . '>';
     if ($reply) {
       $headers['Reply-to'] = $reply;
     }
