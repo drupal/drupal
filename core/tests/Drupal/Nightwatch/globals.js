@@ -1,25 +1,26 @@
 const chromedriver = require('chromedriver');
+
 const testingMode = process.env.TESTING_MODE || 'local';
 
 if (testingMode === 'local') {
   module.exports = {
-    before: function(done) {
+    before: (done) => {
       chromedriver.start();
       done();
     },
-    after: function(done) {
+    after: (done) => {
       chromedriver.stop();
       done();
-    }
+    },
   };
 }
 else {
   module.exports = {
-    before: function (done) {
+    before: (done) => {
       done();
     },
-    after: function (done) {
+    after: (done) => {
       done();
-    }
-  }
+    },
+  };
 }
