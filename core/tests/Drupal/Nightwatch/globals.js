@@ -1,4 +1,4 @@
-import 'chromedriver' from chromedriver;
+import chromedriver from 'chromedriver';
 
 module.exports = {
   before: (done) => {

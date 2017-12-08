@@ -47,7 +47,7 @@
       [
         "env",
         {
-          "modules": false,
+          "modules": "commonjs",
           "targets": {
             "browsers": [
               "ie >= 9",
