@@ -16,7 +16,7 @@ module.exports = {
     start_process: false,
   },
   test_settings: {
-    defaul: {
+    default: {
       selenium_port: 9515,
       selenium_host: 'localhost',
       default_path_prefix: '',
@@ -32,16 +32,7 @@ module.exports = {
         enabled: true,
         on_failure: true,
         on_error: true,
-        path: 'core/reports/nightwatch/screenshots',
-      },
-    },
-    testbot: {
-      desiredCapabilities: {
-        browserName: 'chrome',
-        chromeOptions: {
-          args: [...chromeArgs, '--no-sandbox'],
-        },
-        acceptSslCerts: true,
+        path: `${outputFolder}/screenshots`,
       },
     },
   },

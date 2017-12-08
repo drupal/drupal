@@ -18,9 +18,7 @@
     "lint:css": "stylelint \"**/*.css\" || exit 0",
     "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js || exit 0",
     "nightwatch": "node $NODE_DEBUG_OPTION -r babel-register ./node_modules/.bin/nightwatch",
-    "test": "if [ \"$NODE_ENV\" = \"testbot\" ] ; then yarn test:testbot; else yarn test:default; fi",
-    "test:default": "yarn nightwatch",
-    "test:testbot": "yarn nightwatch --env testbot"
+    "test": "yarn nightwatch"
   },
   "devDependencies": {
     "babel-core": "6.24.1",
@@ -63,6 +61,5 @@
         }
       ]
     ]
-  },
-  "dependencies": {}
+  }
 }

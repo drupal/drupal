@@ -60,5 +60,5 @@ Some settings can be overridden with environment variables:
 |------------|---------------|-------------|
 | `HEADLESS_CHROME_DISABLED` |  `false` | If set to `true`, this will remove the `--headless` option passed to Chrome, allowing you to see tests running in realtime in the browser |
 | `NIGHTWATCH_OUTPUT` | `reports/nightwatch` | This will output the test results into `core/reports/nightwatch`. Passing a value here is relative to the `core` directory |
-| `NODE_ENV` | none | Setting this to `testbot` will cause Nightwatch to run with the settings specified in the `testbot` environment in `core/nightwatch.conf.js` |
+| `NODE_ENV` | none | Setting this to `testbot` will cause Nightwatch to run with settings specific to the Drupal.org testbot |
 
