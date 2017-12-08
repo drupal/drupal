@@ -9,3 +9,6 @@ phpunit.xml
 # Ignore package-lock.json that is automatically created when adding
 # dependencies by users of NPMv5.
 package-lock.json
+
+# Ignore test reports
+reports
