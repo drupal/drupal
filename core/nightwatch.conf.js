@@ -4,6 +4,7 @@ if (!process.env.HEADLESS_CHROME_DISABLED) {
 }
 
 const outputFolder = process.env.NIGHTWATCH_OUTPUT ? process.env.NIGHTWATCH_OUTPUT : 'reports/nightwatch';
+const hostname = process.env.NIGHTWATCH_HOSTNAME ? process.env.NIGHTWATCH_HOSTNAME : 'localhost';
 
 module.exports = {
   src_folders: ['tests/Drupal/Nightwatch/Tests'],
@@ -18,7 +19,7 @@ module.exports = {
   test_settings: {
     default: {
       selenium_port: 9515,
-      selenium_host: 'localhost',
+      selenium_host: hostname,
       default_path_prefix: '',
       desiredCapabilities: {
         browserName: 'chrome',
