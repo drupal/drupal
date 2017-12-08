@@ -58,7 +58,7 @@ abstract class CommentHalJsonTestBase extends CommentResourceTestBase {
     // User entity without a UUID, we cannot use it.
     $author = User::load($this->entity->getOwnerId());
     $commented_entity = EntityTest::load(1);
-    return  $normalization + [
+    return $normalization + [
       '_links' => [
         'self' => [
           'href' => $this->baseUrl . '/comment/1?_format=hal_json',

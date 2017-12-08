@@ -52,7 +52,7 @@ class NodeHalJsonAnonTest extends NodeResourceTestBase {
     $normalization = $this->applyHalFieldNormalization($default_normalization);
 
     $author = User::load($this->entity->getOwnerId());
-    return  $normalization + [
+    return $normalization + [
       '_links' => [
         'self' => [
           'href' => $this->baseUrl . '/llama?_format=hal_json',
