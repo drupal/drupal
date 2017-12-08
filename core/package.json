@@ -13,8 +13,8 @@
     "lint:core-js-stats": "node ./node_modules/eslint/bin/eslint.js --format=./scripts/js/eslint-stats-by-type.js --ext=.es6.js . || exit 0",
     "lint:css": "stylelint \"**/*.css\" || exit 0",
     "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js || exit 0",
-    "test:js:ci": "./node_modules/.bin/nightwatch -o $NIGHTWATCH_OUTPUT -r junit",
-    "test:js": "./node_modules/.bin/nightwatch"
+    "test:js:ci": "TESTING_MODE=ci ./node_modules/.bin/nightwatch -r junit",
+    "test:js": "TESTING_MODE=local ./node_modules/.bin/nightwatch"
   },
   "devDependencies": {
     "babel-core": "6.24.1",
