@@ -47,7 +47,7 @@
       [
         "env",
         {
-          "modules": false,
+          "modules": "commonjs",
           "targets": {
             "browsers": [
               "ie >= 9",
@@ -56,7 +56,8 @@
               "opera >= 12",
               "safari >= 5",
               "chrome >= 56"
-            ]
+            ],
+            "node": "current"
           }
         }
       ]
