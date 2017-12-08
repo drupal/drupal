@@ -111,12 +111,19 @@ trait EntityDefinitionTestTrait {
    *
    * @param string $type
    *   (optional) The field type for the new field. Defaults to 'string'.
+   * @param string $entity_type_id
+   *   (optional) The entity type ID the base field should be attached to.
+   *   Defaults to 'entity_test_update'.
+   * @param bool $is_revisionable
+   *   (optional) If the base field should be revisionable or not. Defaults to
+   *   FALSE.
    */
-  protected function addBaseField($type = 'string') {
+  protected function addBaseField($type = 'string', $entity_type_id = 'entity_test_update', $is_revisionable = FALSE) {
     $definitions['new_base_field'] = BaseFieldDefinition::create($type)
       ->setName('new_base_field')
+      ->setRevisionable($is_revisionable)
       ->setLabel(t('A new base field'));
-    $this->state->set('entity_test_update.additional_base_field_definitions', $definitions);
+    $this->state->set($entity_type_id . '.additional_base_field_definitions', $definitions);
   }
 
   /**
@@ -167,9 +174,12 @@ trait EntityDefinitionTestTrait {
 
   /**
    * Removes the new base field from the 'entity_test_update' entity type.
+   *
+   * @param string $entity_type_id
+   *   (optional) The entity type ID the base field should be attached to.
    */
-  protected function removeBaseField() {
-    $this->state->delete('entity_test_update.additional_base_field_definitions');
+  protected function removeBaseField($entity_type_id = 'entity_test_update') {
+    $this->state->delete($entity_type_id . '.additional_base_field_definitions');
   }
 
   /**

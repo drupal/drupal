@@ -389,10 +389,12 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
 
   /**
    * Tests deleting a base field when it has existing data.
+   *
+   * @dataProvider baseFieldDeleteWithExistingDataTestCases
    */
-  public function testBaseFieldDeleteWithExistingData() {
+  public function testBaseFieldDeleteWithExistingData($entity_type_id, $create_entity_revision, $base_field_revisionable) {
     /** @var \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $storage */
-    $storage = $this->entityManager->getStorage('entity_test_update');
+    $storage = $this->entityManager->getStorage($entity_type_id);
     $schema_handler = $this->database->schema();
 
     // Create an entity without the base field, to ensure NULL values are not
@@ -401,23 +403,29 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $entity->save();
 
     // Add the base field and run the update.
-    $this->addBaseField();
+    $this->addBaseField('string', $entity_type_id, $base_field_revisionable);
     $this->entityDefinitionUpdateManager->applyUpdates();
 
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $storage->getTableMapping();
-    $storage_definition = $this->entityManager->getLastInstalledFieldStorageDefinitions('entity_test_update')['new_base_field'];
+    $storage_definition = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id)['new_base_field'];
 
     // Save an entity with the base field populated.
     $entity = $storage->create(['new_base_field' => 'foo']);
     $entity->save();
 
+    if ($create_entity_revision) {
+      $entity->setNewRevision(TRUE);
+      $entity->new_base_field = 'bar';
+      $entity->save();
+    }
+
     // Remove the base field and apply updates.
-    $this->removeBaseField();
+    $this->removeBaseField($entity_type_id);
     $this->entityDefinitionUpdateManager->applyUpdates();
 
     // Check that the base field's column is deleted.
-    $this->assertFalse($schema_handler->fieldExists('entity_test_update', 'new_base_field'), 'Column deleted from shared table for new_base_field.');
+    $this->assertFalse($schema_handler->fieldExists($entity_type_id, 'new_base_field'), 'Column deleted from shared table for new_base_field.');
 
     // Check that a dedicated 'deleted' table was created for the deleted base
     // field.
@@ -436,7 +444,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       'bundle' => $entity->bundle(),
       'deleted' => '1',
       'entity_id' => $entity->id(),
-      'revision_id' => $entity->id(),
+      'revision_id' => $create_entity_revision ? $entity->getRevisionId() : $entity->id(),
       'langcode' => $entity->language()->getId(),
       'delta' => '0',
       'new_base_field_value' => $entity->new_base_field->value,
@@ -444,6 +452,42 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // Use assertEquals and not assertSame here to prevent that a different
     // sequence of the columns in the table will affect the check.
     $this->assertEquals($expected, (array) $result[0]);
+
+    if ($create_entity_revision) {
+      $dedicated_deleted_revision_table_name = $table_mapping->getDedicatedRevisionTableName($storage_definition, TRUE);
+      $this->assertTrue($schema_handler->tableExists($dedicated_deleted_revision_table_name), 'A dedicated revision table was created for the deleted new_base_field.');
+
+      $result = $this->database->select($dedicated_deleted_revision_table_name, 't')
+        ->fields('t')
+        ->orderBy('revision_id', 'DESC')
+        ->execute()
+        ->fetchAll();
+      // Only one row will be created for non-revisionable base fields.
+      $this->assertCount($base_field_revisionable ? 2 : 1, $result);
+
+      $this->assertSame([
+        'bundle' => $entity->bundle(),
+        'deleted' => '1',
+        'entity_id' => $entity->id(),
+        'revision_id' => '3',
+        'langcode' => $entity->language()->getId(),
+        'delta' => '0',
+        'new_base_field_value' => 'bar',
+      ], (array) $result[0]);
+
+      // Two rows only exist if the base field is revisionable.
+      if ($base_field_revisionable) {
+        $this->assertSame([
+          'bundle' => $entity->bundle(),
+          'deleted' => '1',
+          'entity_id' => $entity->id(),
+          'revision_id' => '2',
+          'langcode' => $entity->language()->getId(),
+          'delta' => '0',
+          'new_base_field_value' => 'foo',
+        ], (array) $result[1]);
+      }
+    }
 
     // Check that the field storage definition is marked for purging.
     $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
@@ -454,7 +498,59 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     field_purge_batch(10);
     $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
     $this->assertEmpty($deleted_storage_definitions, 'The base field has been deleted.');
-    $this->assertFalse($schema_handler->tableExists($dedicated_deleted_table_name), 'A dedicated table was created for the deleted new_base_field.');
+    $this->assertFalse($schema_handler->tableExists($dedicated_deleted_table_name), 'A dedicated field table was deleted after new_base_field was purged.');
+
+    if (isset($dedicated_deleted_revision_table_name)) {
+      $this->assertFalse($schema_handler->tableExists($dedicated_deleted_revision_table_name), 'A dedicated field revision table was deleted after new_base_field was purged.');
+    }
+  }
+
+  /**
+   * Test cases for ::testBaseFieldDeleteWithExistingData.
+   */
+  public function baseFieldDeleteWithExistingDataTestCases() {
+    return [
+      'Non-revisionable entity type' => [
+        'entity_test_update',
+        FALSE,
+        FALSE,
+      ],
+      'Non-revisionable custom data table' => [
+        'entity_test_mul',
+        FALSE,
+        FALSE,
+      ],
+      'Non-revisionable entity type, revisionable base field' => [
+        'entity_test_update',
+        FALSE,
+        TRUE,
+      ],
+      'Non-revisionable custom data table, revisionable base field' => [
+        'entity_test_mul',
+        FALSE,
+        TRUE,
+      ],
+      'Revisionable entity type, non revisionable base field' => [
+        'entity_test_mulrev',
+        TRUE,
+        FALSE,
+      ],
+      'Revisionable entity type, revisionable base field' => [
+        'entity_test_mulrev',
+        TRUE,
+        TRUE,
+      ],
+      'Non-translatable revisionable entity type, revisionable base field' => [
+        'entity_test_rev',
+        TRUE,
+        TRUE,
+      ],
+      'Non-translatable revisionable entity type, non-revisionable base field' => [
+        'entity_test_rev',
+        TRUE,
+        FALSE,
+      ],
+    ];
   }
 
   /**

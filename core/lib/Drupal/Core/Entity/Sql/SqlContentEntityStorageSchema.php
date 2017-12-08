@@ -469,6 +469,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     // Retrieve a table mapping which contains the deleted field still.
     $storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityType->id());
     $table_mapping = $this->storage->getTableMapping($storage_definitions);
+    $field_table_name = $table_mapping->getFieldTableName($storage_definition->getName());
 
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
       // Move the table to a unique name while the table contents are being
@@ -519,17 +520,20 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
       try {
         // Copy the data from the base table.
-        $is_translatable = $this->entityType->isTranslatable() && $storage_definition->isTranslatable();
-        $base_table = $is_translatable ? $this->storage->getDataTable() : $this->storage->getBaseTable();
         $this->database->insert($dedicated_table_name)
-          ->from($this->getSelectQueryForFieldStorageDeletion($base_table, $shared_table_field_columns, $dedicated_table_field_columns))
+          ->from($this->getSelectQueryForFieldStorageDeletion($field_table_name, $shared_table_field_columns, $dedicated_table_field_columns))
           ->execute();
 
         // Copy the data from the revision table.
         if (isset($dedicated_revision_table_name)) {
-          $revision_table = $is_translatable ? $this->storage->getRevisionDataTable() : $this->storage->getRevisionTable();
+          if ($this->entityType->isTranslatable()) {
+            $revision_table = $storage_definition->isRevisionable() ? $this->storage->getRevisionDataTable() : $this->storage->getDataTable();
+          }
+          else {
+            $revision_table = $storage_definition->isRevisionable() ? $this->storage->getRevisionTable() : $this->storage->getBaseTable();
+          }
           $this->database->insert($dedicated_revision_table_name)
-            ->from($this->getSelectQueryForFieldStorageDeletion($revision_table, $shared_table_field_columns, $dedicated_table_field_columns, $base_table))
+            ->from($this->getSelectQueryForFieldStorageDeletion($revision_table, $shared_table_field_columns, $dedicated_table_field_columns, $field_table_name))
             ->execute();
         }
       }
@@ -622,7 +626,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $or = $select->orConditionGroup();
     foreach ($shared_table_field_columns as $field_column_name => $schema_column_name) {
       $select->addField('entity_table', $schema_column_name, $dedicated_table_field_columns[$field_column_name]);
-      $or->isNotNull($schema_column_name);
+      $or->isNotNull('entity_table.' . $schema_column_name);
     }
     $select->condition($or);
 

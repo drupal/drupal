@@ -18,6 +18,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\LanguageItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\UriItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\UuidItem;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\text\Plugin\Field\FieldType\TextLongItem;
 use Drupal\entity_test\Entity\EntityTest;
@@ -25,6 +26,7 @@ use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\EntityViewsData;
+use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -125,10 +127,14 @@ class EntityViewsDataTest extends UnitTestCase {
       ->method('getDefaultFieldSettings')
       ->willReturn([]);
 
+    $state = $this->prophesize(StateInterface::class);
+    $state->get(Argument::any(), [])->willReturn([]);
+
     $container = new ContainerBuilder();
     $container->set('plugin.manager.field.field_type', $field_type_manager);
     $container->set('entity.manager', $this->entityManager);
     $container->set('typed_data_manager', $typed_data_manager);
+    $container->set('state', $state->reveal());
     \Drupal::setContainer($container);
   }
 

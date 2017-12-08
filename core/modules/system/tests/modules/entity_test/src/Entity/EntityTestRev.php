@@ -65,7 +65,7 @@ class EntityTestRev extends EntityTest {
       ->setCardinality(1)
       ->setReadOnly(TRUE);
 
-    return $fields;
+    return $fields + \Drupal::state()->get($entity_type->id() . '.additional_base_field_definitions', []);
   }
 
 }
