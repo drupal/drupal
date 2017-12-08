@@ -56,7 +56,8 @@
               "opera >= 12",
               "safari >= 5",
               "chrome >= 56"
-            ]
+            ],
+            "node": "current"
           }
         }
       ]
