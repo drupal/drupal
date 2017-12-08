@@ -32,7 +32,7 @@ module.exports = {
         enabled: true,
         on_failure: true,
         on_error: true,
-        path: `${outputFolder}/core/reports/nightwatch/screenshots`,
+        path: `${outputFolder}/screenshots`,
       },
     },
   },
