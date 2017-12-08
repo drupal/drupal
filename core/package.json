@@ -8,9 +8,9 @@
     "node": "8.x"
   },
   "scripts": {
-    "build:js": "BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
+    "build:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
     "build:js-dev": "cross-env NODE_ENV=development node BABEL_ENV=legacy ./scripts/js/babel-es6-build.js",
-    "watch:js": "BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
+    "watch:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "watch:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "lint:core-js": "node ./node_modules/eslint/bin/eslint.js --ext=.es6.js . || exit 0",
     "lint:core-js-passing": "node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json --ext=.es6.js . || exit 0",
@@ -63,7 +63,7 @@
           [
             "env",
             {
-              "modules": "commonjs",
+              "modules": false,
               "targets": {
                 "browsers": [
                   "ie >= 9",
