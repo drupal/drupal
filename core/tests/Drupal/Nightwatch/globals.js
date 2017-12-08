@@ -1,26 +1,16 @@
-const chromedriver = require('chromedriver');
+import 'chromedriver' from chromedriver;
 
-const testingMode = process.env.TESTING_MODE || 'local';
-
-if (testingMode === 'local') {
-  module.exports = {
-    before: (done) => {
+module.exports = {
+  before: (done) => {
+    if (process.env.NODE_ENV !== 'testbot') {
       chromedriver.start();
-      done();
-    },
-    after: (done) => {
+    }
+    done();
+  },
+  after: (done) => {
+    if (process.env.NODE_ENV !== 'testbot') {
       chromedriver.stop();
-      done();
-    },
-  };
-}
-else {
-  module.exports = {
-    before: (done) => {
-      done();
-    },
-    after: (done) => {
-      done();
-    },
-  };
-}
+    }
+    done();
+  },
+};
