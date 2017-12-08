@@ -12,7 +12,8 @@
     "lint:core-js-passing": "node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json --ext=.es6.js . || exit 0",
     "lint:core-js-stats": "node ./node_modules/eslint/bin/eslint.js --format=./scripts/js/eslint-stats-by-type.js --ext=.es6.js . || exit 0",
     "lint:css": "stylelint \"**/*.css\" || exit 0",
-    "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js || exit 0"
+    "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js || exit 0",
+    "test:js": "./node_modules/.bin/nightwatch"
   },
   "devDependencies": {
     "babel-core": "6.24.1",
@@ -52,5 +53,8 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "nightwatch": "^0.9.19"
   }
 }
