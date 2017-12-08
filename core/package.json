@@ -8,10 +8,10 @@
     "node": "8.x"
   },
   "scripts": {
-    "build:js": "node ./scripts/js/babel-es6-build.js",
-    "build:js-dev": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-build.js",
-    "watch:js": "node ./scripts/js/babel-es6-watch.js",
-    "watch:js-dev": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-watch.js",
+    "build:js": "BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
+    "build:js-dev": "cross-env NODE_ENV=development node BABEL_ENV=legacy ./scripts/js/babel-es6-build.js",
+    "watch:js": "BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
+    "watch:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "lint:core-js": "node ./node_modules/eslint/bin/eslint.js --ext=.es6.js . || exit 0",
     "lint:core-js-passing": "node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json --ext=.es6.js . || exit 0",
     "lint:core-js-stats": "node ./node_modules/eslint/bin/eslint.js --format=./scripts/js/eslint-stats-by-type.js --ext=.es6.js . || exit 0",
@@ -42,25 +42,42 @@
     "stylelint-config-standard": "^16.0.0",
     "stylelint-no-browser-hacks": "^1.0.2"
   },
+  "//": "'development is the default environment, and legacy is for transpiling the old jQuery codebase",
   "babel": {
-    "presets": [
-      [
-        "env",
-        {
-          "modules": "commonjs",
-          "targets": {
-            "browsers": [
-              "ie >= 9",
-              "edge >= 13",
-              "firefox >= 5",
-              "opera >= 12",
-              "safari >= 5",
-              "chrome >= 56"
-            ],
-            "node": "current"
-          }
-        }
-      ]
-    ]
+    "env": {
+      "development": {
+        "presets": [
+          [
+            "env",
+            {
+              "modules": "commonjs",
+              "targets": {
+                "node": "current"
+              }
+            }
+          ]
+        ]
+      },
+      "legacy": {
+        "presets": [
+          [
+            "env",
+            {
+              "modules": "commonjs",
+              "targets": {
+                "browsers": [
+                  "ie >= 9",
+                  "edge >= 13",
+                  "firefox >= 5",
+                  "opera >= 12",
+                  "safari >= 5",
+                  "chrome >= 56"
+                ]
+              }
+            }
+          ]
+        ]
+      }
+    }
   }
 }
