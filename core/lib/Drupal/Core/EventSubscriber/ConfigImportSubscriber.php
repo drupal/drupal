@@ -136,7 +136,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
 
     // Ensure the profile is not changing.
     if ($install_profile !== $core_extension['profile']) {
-      $config_importer->logError($this->t('Cannot change the install profile from %new_profile to %profile once Drupal is installed.', ['%profile' => $install_profile, '%new_profile' => $core_extension['profile']]));
+      $config_importer->logError($this->t('Cannot change the install profile from %profile to %new_profile once Drupal is installed.', ['%profile' => $install_profile, '%new_profile' => $core_extension['profile']]));
     }
   }
 

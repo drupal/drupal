@@ -692,7 +692,7 @@ class ConfigImporterTest extends KernelTestBase {
       // does not use an install profile. This situation should be impossible
       // to get in but site's can removed the install profile setting from
       // settings.php so the test is valid.
-      $this->assertEqual(['Cannot change the install profile from <em class="placeholder">this_will_not_work</em> to <em class="placeholder"></em> once Drupal is installed.'], $error_log);
+      $this->assertEqual(['Cannot change the install profile from <em class="placeholder"></em> to <em class="placeholder">this_will_not_work</em> once Drupal is installed.'], $error_log);
     }
   }
 
