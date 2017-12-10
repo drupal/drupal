@@ -19,6 +19,13 @@ use Drupal\views\Views;
 class CommentLinksTest extends CommentViewsKernelTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = ['entity_test'];
+
+  /**
    * Views used by this test.
    *
    * @var array
@@ -26,14 +33,26 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
   public static $testViews = ['test_comment'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
+
+    $this->installEntitySchema('entity_test');
+  }
+
+  /**
    * Test the comment approve link.
    */
   public function testLinkApprove() {
+    $host = EntityTest::create(['name' => $this->randomString()]);
+    $host->save();
 
     // Create an unapproved comment.
     $comment = $this->commentStorage->create([
       'uid' => $this->adminUser->id(),
       'entity_type' => 'entity_test',
+      'entity_id' => $host->id(),
       'comment_type' => 'entity_test',
       'status' => 0,
     ]);
@@ -91,8 +110,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
    * Test the comment reply link.
    */
   public function testLinkReply() {
-    $this->enableModules(['field', 'entity_test']);
-    $this->installEntitySchema('entity_test');
+    $this->enableModules(['field']);
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installConfig(['field']);
 

@@ -62,9 +62,9 @@ class MenuLinkTreeTest extends KernelTestBase {
     \Drupal::entityManager()->getStorage('menu')->create(['id' => 'menu1'])->save();
     \Drupal::entityManager()->getStorage('menu')->create(['id' => 'menu2'])->save();
 
-    \Drupal::entityManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu1', 'bundle' => 'menu_link_content'])->save();
-    \Drupal::entityManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu1', 'bundle' => 'menu_link_content'])->save();
-    \Drupal::entityManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu2', 'bundle' => 'menu_link_content'])->save();
+    \Drupal::entityManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu1', 'bundle' => 'menu_link_content', 'title' => 'Link test'])->save();
+    \Drupal::entityManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu1', 'bundle' => 'menu_link_content', 'title' => 'Link test'])->save();
+    \Drupal::entityManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu2', 'bundle' => 'menu_link_content', 'title' => 'Link test'])->save();
 
     $output = $this->linkTree->load('menu1', new MenuTreeParameters());
     $this->assertEqual(count($output), 2);

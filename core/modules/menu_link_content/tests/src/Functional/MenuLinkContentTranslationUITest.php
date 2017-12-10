@@ -70,7 +70,11 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
     $this->drupalGet('admin/structure/menu/manage/tools');
     $this->assertNoLink(t('Translate'));
 
-    $menu_link_content = MenuLinkContent::create(['menu_name' => 'tools', 'link' => ['uri' => 'internal:/admin/structure/menu']]);
+    $menu_link_content = MenuLinkContent::create([
+      'menu_name' => 'tools',
+      'link' => ['uri' => 'internal:/admin/structure/menu'],
+      'title' => 'Link test',
+    ]);
     $menu_link_content->save();
     $this->drupalGet('admin/structure/menu/manage/tools');
     $this->assertLink(t('Translate'));
