@@ -3,6 +3,7 @@
 namespace Drupal\Tests\comment\Kernel\Views;
 
 use Drupal\comment\Entity\Comment;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\user\Entity\User;
 use Drupal\Tests\views\Kernel\Handler\FieldFieldAccessTestBase;
 
@@ -25,6 +26,7 @@ class CommentViewsFieldAccessTest extends FieldFieldAccessTestBase {
     parent::setUp($import_test_views);
 
     $this->installEntitySchema('comment');
+    $this->installEntitySchema('entity_test');
   }
 
   /**
@@ -36,10 +38,14 @@ class CommentViewsFieldAccessTest extends FieldFieldAccessTestBase {
     ]);
     $user->save();
 
+    $host = EntityTest::create(['name' => $this->randomString()]);
+    $host->save();
+
     $comment = Comment::create([
       'subject' => 'My comment title',
       'uid' => $user->id(),
       'entity_type' => 'entity_test',
+      'entity_id' => $host->id(),
       'comment_type' => 'entity_test',
     ]);
     $comment->save();
@@ -51,6 +57,7 @@ class CommentViewsFieldAccessTest extends FieldFieldAccessTestBase {
       'mail' => 'test@example.com',
       'homepage' => 'https://example.com',
       'entity_type' => 'entity_test',
+      'entity_id' => $host->id(),
       'comment_type' => 'entity_test',
       'created' => 123456,
       'status' => 1,

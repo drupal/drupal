@@ -127,6 +127,7 @@ class LinksTest extends BrowserTestBase {
       'menu_name' => 'menu_test',
       'bundle' => 'menu_link_content',
       'link' => [['uri' => 'internal:/']],
+      'title' => 'Link test',
     ];
     $link = MenuLinkContent::create($options);
     $link->save();
@@ -148,7 +149,12 @@ class LinksTest extends BrowserTestBase {
   public function testMenuLinkOnEntityDelete() {
     $user = User::create(['name' => 'username']);
     $user->save();
-    $menu_link_content = MenuLinkContent::create(['menu_name' => 'menu_test', 'link' => [['uri' => 'entity:user/' . $user->id()]], 'bundle' => 'menu_test']);
+    $menu_link_content = MenuLinkContent::create([
+      'title' => 'username profile',
+      'menu_name' => 'menu_test',
+      'link' => [['uri' => 'entity:user/' . $user->id()]],
+      'bundle' => 'menu_test',
+    ]);
     $menu_link_content->save();
     $menu_tree_condition = (new MenuTreeParameters())->addCondition('route_name', 'entity.user.canonical');
     $this->assertCount(1, \Drupal::menuTree()->load('menu_test', $menu_tree_condition));
