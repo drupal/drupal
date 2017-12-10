@@ -40,3 +40,13 @@ function aggregator_update_8200() {
   $field_definition->setRequired(TRUE);
   $definition_update_manager->updateFieldStorageDefinition($field_definition);
 }
+
+/**
+ * Add a default value for the 'Refresh' field for aggregator feed entities.
+ */
+function aggregator_update_8501() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $field_definition = $definition_update_manager->getFieldStorageDefinition('refresh', 'aggregator_feed');
+  $field_definition->setDefaultValue(3600);
+  $definition_update_manager->updateFieldStorageDefinition($field_definition);
+}

@@ -47,10 +47,7 @@ class AggregatorController extends ControllerBase {
    *   A form array as expected by drupal_render().
    */
   public function feedAdd() {
-    $feed = $this->entityManager()->getStorage('aggregator_feed')
-      ->create([
-        'refresh' => 3600,
-      ]);
+    $feed = $this->entityManager()->getStorage('aggregator_feed')->create();
     return $this->entityFormBuilder()->getForm($feed);
   }
 
