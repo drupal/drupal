@@ -168,6 +168,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
     $fields['refresh'] = BaseFieldDefinition::create('list_integer')
       ->setLabel(t('Update interval'))
       ->setDescription(t('The length of time between feed updates. Requires a correctly configured cron maintenance task.'))
+      ->setDefaultValue(3600)
       ->setSetting('unsigned', TRUE)
       ->setRequired(TRUE)
       ->setSetting('allowed_values', $period)
