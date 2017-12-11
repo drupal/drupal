@@ -30,7 +30,7 @@ class TaxonomyTermReference extends CckFieldPluginBase {
    */
   public function processCckFieldValues(MigrationInterface $migration, $field_name, $data) {
     $process = [
-      'plugin' => 'iterator',
+      'plugin' => 'sub_process',
       'source' => $field_name,
       'process' => [
         'target_id' => 'tid',
