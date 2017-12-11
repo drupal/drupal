@@ -1,9 +1,9 @@
 module.exports = {
   'Demo Drupal.org': (browser) => {
     browser
-      .relativeURL('/community')
+      .relativeURL('/user/login')
       .waitForElementVisible('body', 1000)
-      .assert.containsText('body', 'Where is the Drupal Community?')
+      .assert.containsText('body', 'Powered by Drupal')
       .end();
   },
 };
