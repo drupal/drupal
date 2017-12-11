@@ -388,7 +388,7 @@
     this.element = element;
 
     /**
-     * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+     * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0.
      * Use elementSettings.
      *
      * @type {Drupal.Ajax~elementSettings}
