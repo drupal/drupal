@@ -1,8 +1,3 @@
-const chromeArgs = ['--disable-notifications'];
-if (!process.env.HEADLESS_CHROME_DISABLED) {
-  chromeArgs.push('--headless');
-}
-
 const outputFolder = process.env.NIGHTWATCH_OUTPUT ? process.env.NIGHTWATCH_OUTPUT : 'reports/nightwatch';
 const hostname = process.env.NIGHTWATCH_HOSTNAME ? process.env.NIGHTWATCH_HOSTNAME : 'localhost';
 
@@ -24,10 +19,13 @@ module.exports = {
       desiredCapabilities: {
         browserName: 'chrome',
         acceptSslCerts: true,
-        arg: [
-          '--headless',
-          '--disable-notifications',
-        ],
+        chromeOptions: {
+          args: [
+            '--headless',
+            '--disable-gpu',
+            '--disable-notifications',
+          ],
+        },
       },
       screenshots: {
         enabled: true,
