@@ -9,7 +9,7 @@ const hostname = process.env.NIGHTWATCH_HOSTNAME ? process.env.NIGHTWATCH_HOSTNA
 module.exports = {
   src_folders: ['tests/Drupal/Nightwatch/Tests'],
   output_folder: outputFolder,
-  custom_commands_path: '',
+  custom_commands_path: ['tests/Drupal/Nightwatch/Commands'],
   custom_assertions_path: '',
   page_objects_path: '',
   globals_path: 'tests/Drupal/Nightwatch/globals.js',

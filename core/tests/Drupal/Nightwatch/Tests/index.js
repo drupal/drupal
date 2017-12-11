@@ -1,9 +1,9 @@
 module.exports = {
   'Demo Drupal.org': (browser) => {
     browser
-      .url('https://www.drupal.org/')
+      .drupalURL('/community')
       .waitForElementVisible('body', 1000)
-      .assert.containsText('body', 'Launch, manage, and scale ambitious digital experiences—with the flexibility to build great websites or push beyond the browser. Proudly open source.')
+      .assert.containsText('body', 'Where is the Drupal Community?')
       .end();
   },
 };
