@@ -621,7 +621,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
         if ($plugin_configuration['plugin'] == 'migration') {
           $return = array_merge($return, (array) $plugin_configuration['migration']);
         }
-        if ($plugin_configuration['plugin'] == 'iterator') {
+        if ($plugin_configuration['plugin'] == 'sub_process') {
           $return = array_merge($return, $this->findMigrationDependencies($plugin_configuration['process']));
         }
       }

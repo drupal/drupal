@@ -90,7 +90,7 @@ class TextField extends FieldPluginBase {
     }
 
     $process = [
-      'plugin' => 'iterator',
+      'plugin' => 'sub_process',
       'source' => $field_name,
       'process' => $process,
     ];

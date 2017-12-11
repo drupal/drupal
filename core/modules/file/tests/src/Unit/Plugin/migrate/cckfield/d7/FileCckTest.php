@@ -51,7 +51,7 @@ class FileCckTest extends UnitTestCase {
     $this->plugin->processCckFieldValues($this->migration, 'somefieldname', []);
 
     $expected = [
-      'plugin' => 'iterator',
+      'plugin' => 'sub_process',
       'source' => 'somefieldname',
       'process' => [
         'target_id' => 'fid',

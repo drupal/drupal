@@ -42,7 +42,7 @@ class Email extends FieldPluginBase {
    */
   public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
     $process = [
-      'plugin' => 'iterator',
+      'plugin' => 'sub_process',
       'source' => $field_name,
       'process' => [
         'value' => 'email',

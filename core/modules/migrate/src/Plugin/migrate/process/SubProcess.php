@@ -94,7 +94,7 @@ use Drupal\migrate\Row;
  *
  * process:
  *   filters:
- *     plugin: iterator
+ *     plugin: sub_process
  *     source: filters
  *     key: "@id"
  *     process:

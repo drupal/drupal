@@ -98,7 +98,7 @@ class TextField extends CckFieldPluginBase {
     }
 
     $process = [
-      'plugin' => 'iterator',
+      'plugin' => 'sub_process',
       'source' => $field_name,
       'process' => $process,
     ];

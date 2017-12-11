@@ -55,7 +55,7 @@ class TextCckTest extends UnitTestCase {
     $this->plugin->processCckFieldValues($this->migration, 'body', $field_info);
 
     $process = $this->migration->getProcess();
-    $this->assertSame('iterator', $process['plugin']);
+    $this->assertSame('sub_process', $process['plugin']);
     $this->assertSame('body', $process['source']);
     $this->assertSame('value', $process['process']['value']);
 

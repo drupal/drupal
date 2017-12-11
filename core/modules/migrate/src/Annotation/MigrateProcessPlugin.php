@@ -36,7 +36,7 @@ class MigrateProcessPlugin extends Plugin {
    * Whether the plugin handles multiples itself.
    *
    * Typically these plugins will expect an array as input and iterate over it
-   * themselves, changing the whole array. For example the 'iterator' and the
+   * themselves, changing the whole array. For example the 'sub_process' and the
    * 'flatten' plugins. If the plugin only need to change a single value it
    * can skip setting this attribute and let
    * \Drupal\migrate\MigrateExecutable::processRow() handle the iteration.
