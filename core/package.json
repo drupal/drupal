@@ -3,16 +3,21 @@
   "description": "Drupal is an open source content management platform powering millions of websites and applications.",
   "license": "GPL-2.0",
   "private": true,
+  "engines": {
+    "yarn": "1.x",
+    "node": "8.x"
+  },
   "scripts": {
-    "build:js": "node ./scripts/js/babel-es6-build.js",
-    "build:js-dev": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-build.js",
-    "watch:js": "node ./scripts/js/babel-es6-watch.js",
-    "watch:js-dev": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-watch.js",
+    "build:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
+    "build:js-dev": "cross-env NODE_ENV=development node BABEL_ENV=legacy ./scripts/js/babel-es6-build.js",
+    "watch:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
+    "watch:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "lint:core-js": "node ./node_modules/eslint/bin/eslint.js --ext=.es6.js . || exit 0",
     "lint:core-js-passing": "node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json --ext=.es6.js . || exit 0",
     "lint:core-js-stats": "node ./node_modules/eslint/bin/eslint.js --format=./scripts/js/eslint-stats-by-type.js --ext=.es6.js . || exit 0",
     "lint:css": "stylelint \"**/*.css\" || exit 0",
-    "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js || exit 0"
+    "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js || exit 0",
+    "test:js": "./node_modules/.bin/nightwatch"
   },
   "devDependencies": {
     "babel-core": "6.24.1",
@@ -20,6 +25,7 @@
     "babel-preset-env": "1.4.0",
     "chalk": "^1.1.3",
     "chokidar": "1.6.1",
+    "chromedriver": "^2.33.2",
     "cross-env": "^4.0.0",
     "eslint": "3.19.0",
     "eslint-config-airbnb": "14.1.0",
@@ -28,29 +34,48 @@
     "eslint-plugin-react": "6.10.3",
     "glob": "7.1.1",
     "minimist": "^1.2.0",
+    "nightwatch": "^0.9.19",
     "stylelint": "^7.10.1",
     "stylelint-checkstyle-formatter": "^0.1.0",
     "stylelint-config-standard": "^16.0.0",
     "stylelint-no-browser-hacks": "^1.0.2"
   },
+  "//": "'development is the default environment, and legacy is for transpiling the old jQuery codebase",
   "babel": {
-    "presets": [
-      [
-        "env",
-        {
-          "modules": false,
-          "targets": {
-            "browsers": [
-              "ie >= 9",
-              "edge >= 13",
-              "firefox >= 5",
-              "opera >= 12",
-              "safari >= 5",
-              "chrome >= 56"
-            ]
-          }
-        }
-      ]
-    ]
+    "env": {
+      "development": {
+        "presets": [
+          [
+            "env",
+            {
+              "modules": "false",
+              "targets": {
+                "node": "current"
+              }
+            }
+          ]
+        ]
+      },
+      "legacy": {
+        "presets": [
+          [
+            "env",
+            {
+              "modules": false,
+              "targets": {
+                "browsers": [
+                  "ie >= 9",
+                  "edge >= 13",
+                  "firefox >= 5",
+                  "opera >= 12",
+                  "safari >= 5",
+                  "chrome >= 56"
+                ]
+              }
+            }
+          ]
+        ]
+      }
+    }
   }
 }
