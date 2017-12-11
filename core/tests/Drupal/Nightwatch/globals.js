@@ -1,4 +1,4 @@
-import chromedriver from 'chromedriver';
+const chromedriver = require('chromedriver');
 
 module.exports = {
   before: (done) => {
