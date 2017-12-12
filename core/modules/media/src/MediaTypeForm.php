@@ -118,14 +118,23 @@ class MediaTypeForm extends EntityForm {
       '#attributes' => ['id' => 'source-dependent'],
     ];
 
+    if ($source) {
+      $source_description = $this->t('<em>The media source cannot be changed after the media type is created.</em>');
+    }
+    else {
+      $source_description = $this->t('Media source that is responsible for additional logic related to this media type.');
+    }
     $form['source_dependent']['source'] = [
       '#type' => 'select',
       '#title' => $this->t('Media source'),
       '#default_value' => $source ? $source->getPluginId() : NULL,
       '#options' => $options,
-      '#description' => $this->t('Media source that is responsible for additional logic related to this media type.'),
+      '#description' => $source_description,
       '#ajax' => ['callback' => '::ajaxHandlerData'],
       '#required' => TRUE,
+      // Once the media type is created, its source plugin cannot be changed
+      // anymore.
+      '#disabled' => !empty($source),
     ];
 
     if (!$source) {

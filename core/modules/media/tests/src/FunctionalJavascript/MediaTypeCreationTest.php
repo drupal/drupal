@@ -49,6 +49,10 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     $this->drupalGet("admin/structure/media/manage/{$mediaTypeMachineName}");
 
     $assert_session->pageTextContains('Test source field is used to store the essential information about the media item.');
+
+    // Check that the plugin cannot be changed after it is set on type creation.
+    $assert_session->fieldDisabled('Media source');
+    $assert_session->pageTextContains('The media source cannot be changed after the media type is created.');
   }
 
   /**
