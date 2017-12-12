@@ -49,15 +49,10 @@
     </testsuite>
   </testsuites>
   <listeners>
-    <listener class="\Drupal\Tests\Listeners\DeprecationListener">
+    <listener class="\Drupal\Tests\Listeners\DrupalListener">
     </listener>
-    <!-- The Symfony deprecation listener has to come after the Drupal
-    deprecation listener -->
+    <!-- The Symfony deprecation listener has to come after the Drupal listener -->
     <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
-    </listener>
-    <listener class="\Drupal\Tests\Listeners\DrupalStandardsListener">
-    </listener>
-    <listener class="\Drupal\Tests\Listeners\DrupalComponentTestListener">
     </listener>
   </listeners>
   <!-- Filter for coverage reports. -->

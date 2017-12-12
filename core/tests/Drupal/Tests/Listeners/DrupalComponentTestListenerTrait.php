@@ -5,20 +5,28 @@ namespace Drupal\Tests\Listeners;
 use Drupal\KernelTests\KernelTestBase;;
 use Drupal\Tests\BrowserTestBase;;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\BaseTestListener;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Ensures that no component tests are extending a core test base class.
+ *
+ * @internal
  */
-class DrupalComponentTestListener extends BaseTestListener {
+trait DrupalComponentTestListenerTrait {
 
   /**
-   * {@inheritdoc}
+   * Reacts to the end of a test.
+   *
+   * @param \PHPUnit\Framework\Test|\PHPUnit_Framework_Test $test
+   *   The test object that has ended its test run.
+   * @param float $time
+   *   The time the test took.
    */
-  public function endTest(\PHPUnit_Framework_Test $test, $time) {
+  protected function componentEndTest($test, $time) {
+    /** @var \PHPUnit\Framework\Test $test */
     if (substr($test->toString(), 0, 22) == 'Drupal\Tests\Component') {
       if ($test instanceof BrowserTestBase || $test instanceof KernelTestBase || $test instanceof UnitTestCase) {
-        $error = new \PHPUnit_Framework_AssertionFailedError('Component tests should not extend a core test base class.');
+        $error = new AssertionFailedError('Component tests should not extend a core test base class.');
         $test->getTestResultObject()->addFailure($test, $error, $time);
       }
     }

@@ -3,11 +3,12 @@
 namespace Drupal\Tests\TestSuites;
 
 use Drupal\simpletest\TestDiscovery;
+use PHPUnit\Framework\TestSuite;
 
 /**
  * Base class for Drupal test suites.
  */
-abstract class TestSuiteBase extends \PHPUnit_Framework_TestSuite {
+abstract class TestSuiteBase extends TestSuite {
 
   /**
    * Finds extensions in a Drupal installation.
@@ -40,7 +41,12 @@ abstract class TestSuiteBase extends \PHPUnit_Framework_TestSuite {
     // always inside of core/tests/Drupal/${suite_namespace}Tests. The exception
     // to this is Unit tests for historical reasons.
     if ($suite_namespace == 'Unit') {
-      $this->addTestFiles(TestDiscovery::scanDirectory("Drupal\\Tests\\", "$root/core/tests/Drupal/Tests"));
+      $tests = TestDiscovery::scanDirectory("Drupal\\Tests\\", "$root/core/tests/Drupal/Tests");
+      $tests = array_filter($tests, function ($test) use ($root) {
+        // The Listeners directory does not contain tests.
+        return !preg_match("@^$root/core/tests/Drupal/Tests/Listeners(/|$)@", dirname($test));
+      });
+      $this->addTestFiles($tests);
     }
     else {
       $this->addTestFiles(TestDiscovery::scanDirectory("Drupal\\${suite_namespace}Tests\\", "$root/core/tests/Drupal/${suite_namespace}Tests"));

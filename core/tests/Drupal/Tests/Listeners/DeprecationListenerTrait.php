@@ -9,12 +9,18 @@ namespace Drupal\Tests\Listeners;
  *   This class will be removed once all the deprecation notices have been
  *   fixed.
  */
-class DeprecationListener extends \PHPUnit_Framework_BaseTestListener {
+trait DeprecationListenerTrait {
 
   /**
-   * {@inheritdoc}
+   * Reacts to the end of a test.
+   *
+   * @param \PHPUnit\Framework\Test|\PHPUnit_Framework_Test $test
+   *   The test object that has ended its test run.
+   * @param float $time
+   *   The time the test took.
    */
-  public function endTest(\PHPUnit_Framework_Test $test, $time) {
+  protected function deprecationEndTest($test, $time) {
+    /** @var \PHPUnit\Framework\Test $test */
     // Need to edit the file of deprecations.
     if ($file = getenv('SYMFONY_DEPRECATIONS_SERIALIZE')) {
       $deprecations = file_get_contents($file);

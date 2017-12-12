@@ -18,7 +18,7 @@ use Drupal\Core\Url;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\EntityViewTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait as BaseBlockCreationTrait;
-use Drupal\Tests\Listeners\DeprecationListener;
+use Drupal\Tests\Listeners\DeprecationListenerTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\Traits\Core\CronRunTrait;
@@ -698,7 +698,7 @@ abstract class WebTestBase extends TestBase {
       if ($parameters[1] === 'User deprecated function') {
         if (getenv('SYMFONY_DEPRECATIONS_HELPER') !== 'disabled') {
           $message = (string) $parameters[0];
-          if (!in_array($message, DeprecationListener::getSkippedDeprecations())) {
+          if (!in_array($message, DeprecationListenerTrait::getSkippedDeprecations())) {
             call_user_func_array([&$this, 'error'], $parameters);
           }
         }

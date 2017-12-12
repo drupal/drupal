@@ -34,6 +34,13 @@ class TestSuiteBaseTest extends TestCase {
             ],
             'Tests' => [
               'CoreUnitTest.php' => '<?php',
+              // Ensure that the following files are not found as tests.
+              'Listeners' => [
+                'Listener.php' => '<?php',
+                'Legacy' => [
+                  'Listener.php' => '<?php',
+                ]
+              ]
             ],
           ],
         ],
@@ -91,8 +98,7 @@ class TestSuiteBaseTest extends TestCase {
     $ref_add_tests->invokeArgs($stub, [vfsStream::url('root'), $suite_namespace]);
 
     // Determine if we loaded the expected test files.
-    $this->assertNotEmpty($stub->testFiles);
-    $this->assertEmpty(array_diff_assoc($expected_tests, $stub->testFiles));
+    $this->assertEquals($expected_tests, $stub->testFiles);
   }
 
   /**

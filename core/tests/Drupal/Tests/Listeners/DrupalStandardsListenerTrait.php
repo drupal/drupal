@@ -2,15 +2,18 @@
 
 namespace Drupal\Tests\Listeners;
 
-use PHPUnit\Framework\BaseTestListener;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestSuite;
 
 /**
  * Listens for PHPUnit tests and fails those with invalid coverage annotations.
  *
  * Enforces various coding standards within test runs.
+ *
+ * @internal
  */
-class DrupalStandardsListener extends BaseTestListener {
+trait DrupalStandardsListenerTrait {
 
   /**
    * Signals a coding standards failure to the user.
@@ -21,10 +24,10 @@ class DrupalStandardsListener extends BaseTestListener {
    *   The message to add to the failure notice. The test class name and test
    *   name will be appended to this message automatically.
    */
-  protected function fail(TestCase $test, $message) {
+  private function fail(TestCase $test, $message) {
     // Add the report to the test's results.
     $message .= ': ' . get_class($test) . '::' . $test->getName();
-    $fail = new \PHPUnit_Framework_AssertionFailedError($message);
+    $fail = new AssertionFailedError($message);
     $result = $test->getTestResultObject();
     $result->addFailure($test, $fail, 0);
   }
@@ -38,7 +41,7 @@ class DrupalStandardsListener extends BaseTestListener {
    * @return bool
    *   TRUE if the class exists, FALSE otherwise.
    */
-  protected function classExists($class) {
+  private function classExists($class) {
     return class_exists($class, TRUE) || trait_exists($class, TRUE) || interface_exists($class, TRUE);
   }
 
@@ -50,7 +53,7 @@ class DrupalStandardsListener extends BaseTestListener {
    * @param \PHPUnit\Framework\TestCase $test
    *   The test to examine.
    */
-  public function checkValidCoversForTest(TestCase $test) {
+  private function checkValidCoversForTest(TestCase $test) {
     // If we're generating a coverage report already, don't do anything here.
     if ($test->getTestResultObject() && $test->getTestResultObject()->getCollectCodeCoverageInformation()) {
       return;
@@ -141,7 +144,7 @@ class DrupalStandardsListener extends BaseTestListener {
   }
 
   /**
-   * {@inheritdoc}
+   * Reacts to the end of a test.
    *
    * We must mark this method as belonging to the special legacy group because
    * it might trigger an E_USER_DEPRECATED error during coverage annotation
@@ -151,22 +154,58 @@ class DrupalStandardsListener extends BaseTestListener {
    *
    * @group legacy
    *
+   * @param \PHPUnit\Framework\Test|\PHPUnit_Framework_Test $test
+   *   The test object that has ended its test run.
+   * @param float $time
+   *   The time the test took.
+   *
    * @see http://symfony.com/doc/current/components/phpunit_bridge.html#mark-tests-as-legacy
    */
-  public function endTest(\PHPUnit_Framework_Test $test, $time) {
+  private function doEndTest($test, $time) {
     // \PHPUnit_Framework_Test does not have any useful methods of its own for
     // our purpose, so we have to distinguish between the different known
     // subclasses.
     if ($test instanceof TestCase) {
       $this->checkValidCoversForTest($test);
     }
-    elseif ($test instanceof \PHPUnit_Framework_TestSuite) {
+    elseif ($this->isTestSuite($test)) {
       foreach ($test->getGroupDetails() as $tests) {
         foreach ($tests as $test) {
-          $this->endTest($test, $time);
+          $this->doEndTest($test, $time);
         }
       }
     }
+  }
+
+  /**
+   * Determine if a test object is a test suite regardless of PHPUnit version.
+   *
+   * @param \PHPUnit\Framework\Test|\PHPUnit_Framework_Test $test
+   *   The test object to test if it is a test suite.
+   *
+   * @return bool
+   *   TRUE if it is a test suite, FALSE if not.
+   */
+  private function isTestSuite($test) {
+    if (class_exists('\PHPUnit_Framework_TestSuite') && $test instanceof \PHPUnit_Framework_TestSuite) {
+      return TRUE;
+    }
+    if (class_exists('PHPUnit\Framework\TestSuite') && $test instanceof TestSuite) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Reacts to the end of a test.
+   *
+   * @param \PHPUnit\Framework\Test|\PHPUnit_Framework_Test $test
+   *   The test object that has ended its test run.
+   * @param float $time
+   *   The time the test took.
+   */
+  protected function standardsEndTest($test, $time) {
+    $this->doEndTest($test, $time);
   }
 
 }

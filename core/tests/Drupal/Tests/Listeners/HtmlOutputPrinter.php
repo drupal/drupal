@@ -2,70 +2,41 @@
 
 namespace Drupal\Tests\Listeners;
 
-/**
- * Defines a class for providing html output results for functional tests.
- */
-class HtmlOutputPrinter extends \PHPUnit_TextUI_ResultPrinter {
+use PHPUnit\Framework\TestResult;
+use PHPUnit\TextUI\ResultPrinter;
 
+if (class_exists('PHPUnit_Runner_Version') && version_compare(\PHPUnit_Runner_Version::id(), '6.0.0', '<')) {
+  class_alias('Drupal\Tests\Listeners\Legacy\HtmlOutputPrinter', 'Drupal\Tests\Listeners\HtmlOutputPrinter');
+  // Using an early return instead of a else does not work when using the
+  // PHPUnit phar due to some weird PHP behavior (the class gets defined without
+  // executing the code before it and so the definition is not properly
+  // conditional).
+}
+else {
   /**
-   * File to write html links to.
+   * Defines a class for providing html output results for functional tests.
    *
-   * @var string
+   * @internal
    */
-  protected $browserOutputFile;
+  class HtmlOutputPrinter extends ResultPrinter {
+    use HtmlOutputPrinterTrait;
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct($out = NULL, $verbose = FALSE, $colors = self::COLOR_DEFAULT, $debug = FALSE, $numberOfColumns = 80, $reverse = FALSE) {
+      parent::__construct($out, $verbose, $colors, $debug, $numberOfColumns, $reverse);
 
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct($out, $verbose, $colors, $debug, $numberOfColumns) {
-    parent::__construct($out, $verbose, $colors, $debug, $numberOfColumns);
-    if ($html_output_directory = getenv('BROWSERTEST_OUTPUT_DIRECTORY')) {
-      // Initialize html output debugging.
-      $html_output_directory = rtrim($html_output_directory, '/');
-
-      // Check if directory exists.
-      if (!is_dir($html_output_directory) || !is_writable($html_output_directory)) {
-        $this->writeWithColor('bg-red, fg-black', "HTML output directory $html_output_directory is not a writable directory.");
-      }
-      else {
-        // Convert to a canonicalized absolute pathname just in case the current
-        // working directory is changed.
-        $html_output_directory = realpath($html_output_directory);
-        $this->browserOutputFile = tempnam($html_output_directory, 'browser_output_');
-        if ($this->browserOutputFile) {
-          touch($this->browserOutputFile);
-        }
-        else {
-          $this->writeWithColor('bg-red, fg-black', "Unable to create a temporary file in $html_output_directory.");
-        }
-      }
+      $this->setUpHtmlOutput();
     }
 
-    if ($this->browserOutputFile) {
-      putenv('BROWSERTEST_OUTPUT_FILE=' . $this->browserOutputFile);
+    /**
+     * {@inheritdoc}
+     */
+    public function printResult(TestResult $result) {
+      parent::printResult($result);
+
+      $this->printHtmlOutput();
     }
-    else {
-      // Remove any environment variable.
-      putenv('BROWSERTEST_OUTPUT_FILE');
-    }
+
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function printResult(\PHPUnit_Framework_TestResult $result) {
-    parent::printResult($result);
-
-    if ($this->browserOutputFile) {
-      $contents = file_get_contents($this->browserOutputFile);
-      if ($contents) {
-        $this->writeNewLine();
-        $this->writeWithColor('bg-yellow, fg-black', 'HTML output was generated');
-        $this->write($contents);
-      }
-      // No need to keep the file around any more.
-      unlink($this->browserOutputFile);
-    }
-  }
-
 }
