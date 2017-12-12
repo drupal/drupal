@@ -66,6 +66,7 @@ abstract class BrowserTestBase extends TestCase {
     createUser as drupalCreateUser;
   }
   use XdebugRequestTrait;
+  use PhpunitCompatibilityTrait;
 
   /**
    * The database prefix of this test run.

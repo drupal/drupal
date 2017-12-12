@@ -20,6 +20,7 @@ use Drupal\Core\Test\TestDatabase;
 use Drupal\simpletest\AssertContentTrait;
 use Drupal\Tests\AssertHelperTrait;
 use Drupal\Tests\ConfigTestTrait;
+use Drupal\Tests\PhpunitCompatibilityTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\TestRequirementsTrait;
 use Drupal\simpletest\TestServiceProvider;
@@ -76,6 +77,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use RandomGeneratorTrait;
   use ConfigTestTrait;
   use TestRequirementsTrait;
+  use PhpunitCompatibilityTrait;
 
   /**
    * {@inheritdoc}

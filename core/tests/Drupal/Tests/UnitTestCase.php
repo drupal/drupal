@@ -17,6 +17,8 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class UnitTestCase extends TestCase {
 
+  use PhpunitCompatibilityTrait;
+
   /**
    * The random generator.
    *
@@ -135,7 +137,7 @@ abstract class UnitTestCase extends TestCase {
     }
     // Construct a config factory with the array of configuration object stubs
     // as its return map.
-    $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
+    $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->any())
       ->method('get')
       ->will($this->returnValueMap($config_get_map));
@@ -157,7 +159,7 @@ abstract class UnitTestCase extends TestCase {
    *   A mocked config storage.
    */
   public function getConfigStorageStub(array $configs) {
-    $config_storage = $this->getMock('Drupal\Core\Config\NullStorage');
+    $config_storage = $this->createMock('Drupal\Core\Config\NullStorage');
     $config_storage->expects($this->any())
       ->method('listAll')
       ->will($this->returnValue(array_keys($configs)));
@@ -204,7 +206,7 @@ abstract class UnitTestCase extends TestCase {
    *   A mock translation object.
    */
   public function getStringTranslationStub() {
-    $translation = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
+    $translation = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
     $translation->expects($this->any())
       ->method('translate')
       ->willReturnCallback(function ($string, array $args = [], array $options = []) use ($translation) {
@@ -234,7 +236,7 @@ abstract class UnitTestCase extends TestCase {
    *   The container with the cache tags invalidator service.
    */
   protected function getContainerWithCacheTagsInvalidator(CacheTagsInvalidatorInterface $cache_tags_validator) {
-    $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+    $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');
     $container->expects($this->any())
       ->method('get')
       ->with('cache_tags.invalidator')
@@ -251,7 +253,7 @@ abstract class UnitTestCase extends TestCase {
    *   The class resolver stub.
    */
   protected function getClassResolverStub() {
-    $class_resolver = $this->getMock('Drupal\Core\DependencyInjection\ClassResolverInterface');
+    $class_resolver = $this->createMock('Drupal\Core\DependencyInjection\ClassResolverInterface');
     $class_resolver->expects($this->any())
       ->method('getInstanceFromDefinition')
       ->will($this->returnCallback(function ($class) {
