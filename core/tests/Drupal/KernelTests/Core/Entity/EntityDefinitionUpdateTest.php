@@ -465,7 +465,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       // Only one row will be created for non-revisionable base fields.
       $this->assertCount($base_field_revisionable ? 2 : 1, $result);
 
-      $this->assertSame([
+      // Use assertEquals and not assertSame here to prevent that a different
+      // sequence of the columns in the table will affect the check.
+      $this->assertEquals([
         'bundle' => $entity->bundle(),
         'deleted' => '1',
         'entity_id' => $entity->id(),
@@ -477,7 +479,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
 
       // Two rows only exist if the base field is revisionable.
       if ($base_field_revisionable) {
-        $this->assertSame([
+        // Use assertEquals and not assertSame here to prevent that a different
+        // sequence of the columns in the table will affect the check.
+        $this->assertEquals([
           'bundle' => $entity->bundle(),
           'deleted' => '1',
           'entity_id' => $entity->id(),
