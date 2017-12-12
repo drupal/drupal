@@ -442,4 +442,79 @@ class MediaSourceTest extends MediaKernelTestBase {
     $this->assertEquals($expected, $source->getConfiguration(), 'Submitted values were saved correctly.');
   }
 
+  /**
+   * Tests different display options for the source field.
+   */
+  public function testDifferentSourceFieldDisplays() {
+    $id = 'test_different_displays';
+    $field_name = 'field_media_different_display';
+
+    $this->createMediaTypeViaForm($id, $field_name);
+
+    // Source field not in displays.
+    $display = entity_get_display('media', $id, 'default');
+    $components = $display->getComponents();
+    $this->assertArrayHasKey($field_name, $components);
+    $this->assertSame('entity_reference_entity_id', $components[$field_name]['type']);
+
+    $display = entity_get_form_display('media', $id, 'default');
+    $components = $display->getComponents();
+    $this->assertArrayHasKey($field_name, $components);
+    $this->assertSame('entity_reference_autocomplete_tags', $components[$field_name]['type']);
+  }
+
+  /**
+   * Tests hidden source field in media type.
+   */
+  public function testHiddenSourceField() {
+    $id = 'test_hidden_source_field';
+    $field_name = 'field_media_hidden';
+
+    $this->createMediaTypeViaForm($id, $field_name);
+
+    // Source field not in displays.
+    $display = entity_get_display('media', $id, 'default');
+    $this->assertArrayNotHasKey($field_name, $display->getComponents());
+
+    $display = entity_get_form_display('media', $id, 'default');
+    $this->assertArrayNotHasKey($field_name, $display->getComponents());
+  }
+
+  /**
+   * Creates a media type via form submit.
+   *
+   * @param string $source_plugin_id
+   *   Source plugin ID.
+   * @param string $field_name
+   *   Source field name.
+   */
+  protected function createMediaTypeViaForm($source_plugin_id, $field_name) {
+    /** @var \Drupal\media\MediaTypeInterface $type */
+    $type = MediaType::create(['source' => $source_plugin_id]);
+
+    $form = $this->container->get('entity_type.manager')
+      ->getFormObject('media_type', 'add')
+      ->setEntity($type);
+
+    $form_state = new FormState();
+    $form_state->setValues([
+      'label' => 'Test type',
+      'id' => $source_plugin_id,
+      'op' => t('Save'),
+    ]);
+
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
+    $field_manager = \Drupal::service('entity_field.manager');
+
+    // Source field not created yet.
+    $fields = $field_manager->getFieldDefinitions('media', $source_plugin_id);
+    $this->assertArrayNotHasKey($field_name, $fields);
+
+    \Drupal::formBuilder()->submitForm($form, $form_state);
+
+    // Source field exists now.
+    $fields = $field_manager->getFieldDefinitions('media', $source_plugin_id);
+    $this->assertArrayHasKey($field_name, $fields);
+  }
+
 }

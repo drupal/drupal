@@ -13,3 +13,11 @@ media.source.test_translation:
 media.source.test_constraints:
   type: media.source.test
   label: 'Test media source with constraints configuration'
+
+media.source.test_hidden_source_field:
+  type: media.source.test
+  label: 'Test media source with hidden source field'
+
+media.source.test_different_displays:
+  type: media.source.test
+  label: 'Test media source with different source field displays'

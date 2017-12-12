@@ -327,30 +327,19 @@ class MediaTypeForm extends EntityForm {
 
       // Add the new field to the default form and view displays for this
       // media type.
-      $field_name = $source_field->getName();
-      $field_type = $source_field->getType();
-
       if ($source_field->isDisplayConfigurable('form')) {
-        // Use the default widget and settings.
-        $component = \Drupal::service('plugin.manager.field.widget')
-          ->prepareConfiguration($field_type, []);
-
         // @todo Replace entity_get_form_display() when #2367933 is done.
         // https://www.drupal.org/node/2872159.
-        entity_get_form_display('media', $media_type->id(), 'default')
-          ->setComponent($field_name, $component)
-          ->save();
+        $display = entity_get_form_display('media', $media_type->id(), 'default');
+        $source->prepareFormDisplay($media_type, $display);
+        $display->save();
       }
       if ($source_field->isDisplayConfigurable('view')) {
-        // Use the default formatter and settings.
-        $component = \Drupal::service('plugin.manager.field.formatter')
-          ->prepareConfiguration($field_type, []);
-
         // @todo Replace entity_get_display() when #2367933 is done.
         // https://www.drupal.org/node/2872159.
-        entity_get_display('media', $media_type->id(), 'default')
-          ->setComponent($field_name, $component)
-          ->save();
+        $display = entity_get_display('media', $media_type->id(), 'default');
+        $source->prepareViewDisplay($media_type, $display);
+        $display->save();
       }
     }
 
