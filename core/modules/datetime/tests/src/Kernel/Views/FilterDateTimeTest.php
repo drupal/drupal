@@ -40,6 +40,9 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
 
     // Set the timezone.
     date_default_timezone_set(static::$timezone);
+    $this->config('system.date')
+      ->set('timezone.default', static::$timezone)
+      ->save();
 
     // Add some basic test nodes.
     $dates = [

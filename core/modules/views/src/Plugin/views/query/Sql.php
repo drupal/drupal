@@ -124,6 +124,13 @@ class Sql extends QueryPluginBase {
   protected $entityTypeManager;
 
   /**
+   * The database-specific date handler.
+   *
+   * @var \Drupal\views\Plugin\views\query\DateSqlInterface
+   */
+  protected $dateSql;
+
+  /**
    * Constructs a Sql object.
    *
    * @param array $configuration
@@ -134,11 +141,14 @@ class Sql extends QueryPluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\views\Plugin\views\query\DateSqlInterface $date_sql
+   *   The database-specific date handler.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, DateSqlInterface $date_sql) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
+    $this->dateSql = $date_sql;
   }
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -146,7 +156,8 @@ class Sql extends QueryPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('views.date_sql')
     );
   }
 
@@ -1762,175 +1773,40 @@ class Sql extends QueryPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getDateField($field) {
-    $db_type = Database::getConnection()->databaseType();
-    $offset = $this->setupTimezone();
-    if (isset($offset) && !is_numeric($offset)) {
-      $dtz = new \DateTimeZone($offset);
-      $dt = new \DateTime('now', $dtz);
-      $offset_seconds = $dtz->getOffset($dt);
+  public function getDateField($field, $string_date = FALSE, $calculate_offset = TRUE) {
+    $field = $this->dateSql->getDateField($field, $string_date);
+    if ($calculate_offset && $offset = $this->getTimezoneOffset()) {
+      $this->setFieldTimezoneOffset($field, $offset);
     }
-
-    switch ($db_type) {
-      case 'mysql':
-        $field = "DATE_ADD('19700101', INTERVAL $field SECOND)";
-        if (!empty($offset)) {
-          $field = "($field + INTERVAL $offset_seconds SECOND)";
-        }
-        break;
-      case 'pgsql':
-        $field = "TO_TIMESTAMP($field)";
-        if (!empty($offset)) {
-          $field = "($field + INTERVAL '$offset_seconds SECONDS')";
-        }
-        break;
-      case 'sqlite':
-        if (!empty($offset)) {
-          $field = "($field + $offset_seconds)";
-        }
-        break;
-    }
-
     return $field;
   }
 
   /**
    * {@inheritdoc}
    */
+  public function setFieldTimezoneOffset(&$field, $offset) {
+    $this->dateSql->setFieldTimezoneOffset($field, $offset);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setupTimezone() {
-    $timezone = drupal_get_user_timezone();
-
-    // set up the database timezone
-    $db_type = Database::getConnection()->databaseType();
-    if (in_array($db_type, ['mysql', 'pgsql'])) {
-      $offset = '+00:00';
-      static $already_set = FALSE;
-      if (!$already_set) {
-        if ($db_type == 'pgsql') {
-          Database::getConnection()->query("SET TIME ZONE INTERVAL '$offset' HOUR TO MINUTE");
-        }
-        elseif ($db_type == 'mysql') {
-          Database::getConnection()->query("SET @@session.time_zone = '$offset'");
-        }
-
-        $already_set = TRUE;
-      }
+    // Set the database timezone offset.
+    static $already_set = FALSE;
+    if (!$already_set) {
+      $this->dateSql->setTimezoneOffset('+00:00');
+      $already_set = TRUE;
     }
 
-    return $timezone;
+    return parent::setupTimezone();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDateFormat($field, $format, $string_date = FALSE) {
-    $db_type = Database::getConnection()->databaseType();
-    switch ($db_type) {
-      case 'mysql':
-        $replace = [
-          'Y' => '%Y',
-          'y' => '%y',
-          'M' => '%b',
-          'm' => '%m',
-          'n' => '%c',
-          'F' => '%M',
-          'D' => '%a',
-          'd' => '%d',
-          'l' => '%W',
-          'j' => '%e',
-          'W' => '%v',
-          'H' => '%H',
-          'h' => '%h',
-          'i' => '%i',
-          's' => '%s',
-          'A' => '%p',
-        ];
-        $format = strtr($format, $replace);
-        return "DATE_FORMAT($field, '$format')";
-      case 'pgsql':
-        $replace = [
-          'Y' => 'YYYY',
-          'y' => 'YY',
-          'M' => 'Mon',
-          'm' => 'MM',
-          // No format for Numeric representation of a month, without leading
-          // zeros.
-          'n' => 'MM',
-          'F' => 'Month',
-          'D' => 'Dy',
-          'd' => 'DD',
-          'l' => 'Day',
-          // No format for Day of the month without leading zeros.
-          'j' => 'DD',
-          'W' => 'IW',
-          'H' => 'HH24',
-          'h' => 'HH12',
-          'i' => 'MI',
-          's' => 'SS',
-          'A' => 'AM',
-        ];
-        $format = strtr($format, $replace);
-        if (!$string_date) {
-          return "TO_CHAR($field, '$format')";
-        }
-        // In order to allow for partials (eg, only the year), transform to a
-        // date, back to a string again.
-        return "TO_CHAR(TO_TIMESTAMP($field, 'YYYY-MM-DD HH24:MI:SS'), '$format')";
-      case 'sqlite':
-        $replace = [
-          'Y' => '%Y',
-          // No format for 2 digit year number.
-          'y' => '%Y',
-          // No format for 3 letter month name.
-          'M' => '%m',
-          'm' => '%m',
-          // No format for month number without leading zeros.
-          'n' => '%m',
-          // No format for full month name.
-          'F' => '%m',
-          // No format for 3 letter day name.
-          'D' => '%d',
-          'd' => '%d',
-          // No format for full day name.
-          'l' => '%d',
-          // no format for day of month number without leading zeros.
-          'j' => '%d',
-          'W' => '%W',
-          'H' => '%H',
-          // No format for 12 hour hour with leading zeros.
-          'h' => '%H',
-          'i' => '%M',
-          's' => '%S',
-          // No format for AM/PM.
-          'A' => '',
-        ];
-        $format = strtr($format, $replace);
-
-        // Don't use the 'unixepoch' flag for string date comparisons.
-        $unixepoch = $string_date ? '' : ", 'unixepoch'";
-
-        // SQLite does not have a ISO week substitution string, so it needs
-        // special handling.
-        // @see http://wikipedia.org/wiki/ISO_week_date#Calculation
-        // @see http://stackoverflow.com/a/15511864/1499564
-        if ($format === '%W') {
-          $expression = "((strftime('%j', date(strftime('%Y-%m-%d', $field" . $unixepoch . "), '-3 days', 'weekday 4')) - 1) / 7 + 1)";
-        }
-        else {
-          $expression = "strftime('$format', $field" . $unixepoch . ")";
-        }
-        // The expression yields a string, but the comparison value is an
-        // integer in case the comparison value is a float, integer, or numeric.
-        // All of the above SQLite format tokens only produce integers. However,
-        // the given $format may contain 'Y-m-d', which results in a string.
-        // @see \Drupal\Core\Database\Driver\sqlite\Connection::expandArguments()
-        // @see http://www.sqlite.org/lang_datefunc.html
-        // @see http://www.sqlite.org/lang_expr.html#castexpr
-        if (preg_match('/^(?:%\w)+$/', $format)) {
-          $expression = "CAST($expression AS NUMERIC)";
-        }
-        return $expression;
-    }
+    return $this->dateSql->getDateFormat($field, $format);
   }
 
 }

@@ -39,6 +39,8 @@ function datetime_field_views_data(FieldStorageConfigInterface $field_storage) {
         'argument' => [
           'field' => $field_storage->getName() . '_value',
           'id' => 'datetime_' . $argument_type,
+          'entity_type' => $field_storage->getTargetEntityTypeId(),
+          'field_name' => $field_storage->getName(),
         ],
         'group' => $group,
       ];

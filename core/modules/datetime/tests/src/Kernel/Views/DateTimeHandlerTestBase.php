@@ -41,6 +41,7 @@ abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 
+    $this->installSchema('node', 'node_access');
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
 
@@ -74,6 +75,20 @@ abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
 
     // Load test views.
     ViewTestData::createTestViews(get_class($this), ['datetime_test']);
+  }
+
+  /**
+   * Sets the site timezone to a given timezone.
+   *
+   * @param string $timezone
+   *   The timezone identifier to set.
+   */
+  protected function setSiteTimezone($timezone) {
+    // Set an explicit site timezone, and disallow per-user timezones.
+    $this->config('system.date')
+      ->set('timezone.user.configurable', 0)
+      ->set('timezone.default', $timezone)
+      ->save();
   }
 
 }

@@ -80,3 +80,16 @@ services:
     arguments: ['@entity.manager']
     tags:
       - { name: 'event_subscriber' }
+  views.date_sql:
+    class: Drupal\views\Plugin\views\query\MysqlDateSql
+    arguments: ['@database']
+    tags:
+       - { name: backend_overridable }
+  pgsql.views.date_sql:
+    class: Drupal\views\Plugin\views\query\PostgresqlDateSql
+    arguments: ['@database']
+    public: false
+  sqlite.views.date_sql:
+    class: Drupal\views\Plugin\views\query\SqliteDateSql
+    arguments: ['@database']
+    public: false

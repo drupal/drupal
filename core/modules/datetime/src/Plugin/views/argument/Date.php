@@ -2,6 +2,9 @@
 
 namespace Drupal\datetime\Plugin\views\argument;
 
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Plugin\views\argument\Date as NumericDate;
 
 /**
@@ -22,12 +25,36 @@ use Drupal\views\Plugin\views\argument\Date as NumericDate;
  */
 class Date extends NumericDate {
 
+  use FieldAPIHandlerTrait;
+
+  /**
+   * Determines if the timezone offset is calculated.
+   *
+   * @var bool
+   */
+  protected $calculateOffset = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_match);
+
+    $definition = $this->getFieldStorageDefinition();
+    if ($definition->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
+      // Timezone offset calculation is not applicable to dates that are stored
+      // as date-only.
+      $this->calculateOffset = FALSE;
+    }
+  }
+
   /**
    * {@inheritdoc}
    */
   public function getDateField() {
-    // Return the real field, since it is already in string format.
-    return "$this->tableAlias.$this->realField";
+    // Use string date storage/formatting since datetime fields are stored as
+    // strings rather than UNIX timestamps.
+    return $this->query->getDateField("$this->tableAlias.$this->realField", TRUE, $this->calculateOffset);
   }
 
   /**
