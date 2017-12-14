@@ -159,4 +159,50 @@ class EntityRevisionsTest extends BrowserTestBase {
     $this->assertNoText('pending revision - en');
   }
 
+  /**
+   * Tests manual revert of the revision ID value.
+   *
+   * @covers \Drupal\Core\Entity\ContentEntityBase::getRevisionId
+   * @covers \Drupal\Core\Entity\ContentEntityBase::getLoadedRevisionId
+   * @covers \Drupal\Core\Entity\ContentEntityBase::setNewRevision
+   * @covers \Drupal\Core\Entity\ContentEntityBase::isNewRevision
+   */
+  public function testNewRevisionRevert() {
+    $entity = EntityTestMulRev::create(['name' => 'EntityLoadedRevisionTest']);
+    $entity->save();
+
+    // Check that revision ID field is reset while the loaded revision ID is
+    // preserved when flagging a new revision.
+    $revision_id = $entity->getRevisionId();
+    $entity->setNewRevision();
+    $this->assertNull($entity->getRevisionId());
+    $this->assertEquals($revision_id, $entity->getLoadedRevisionId());
+    $this->assertTrue($entity->isNewRevision());
+
+    // Check that after manually restoring the original revision ID, the entity
+    // is stored without creating a new revision.
+    $key = $entity->getEntityType()->getKey('revision');
+    $entity->set($key, $revision_id);
+    $entity->save();
+    $this->assertEquals($revision_id, $entity->getRevisionId());
+    $this->assertEquals($revision_id, $entity->getLoadedRevisionId());
+
+    // Check that manually restoring the original revision ID causes the "new
+    // revision" state to be reverted.
+    $entity->setNewRevision();
+    $this->assertNull($entity->getRevisionId());
+    $this->assertEquals($revision_id, $entity->getLoadedRevisionId());
+    $this->assertTrue($entity->isNewRevision());
+    $entity->set($key, $revision_id);
+    $this->assertFalse($entity->isNewRevision());
+    $this->assertEquals($revision_id, $entity->getRevisionId());
+    $this->assertEquals($revision_id, $entity->getLoadedRevisionId());
+
+    // Check that flagging a new revision again works correctly.
+    $entity->setNewRevision();
+    $this->assertNull($entity->getRevisionId());
+    $this->assertEquals($revision_id, $entity->getLoadedRevisionId());
+    $this->assertTrue($entity->isNewRevision());
+  }
+
 }
