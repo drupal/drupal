@@ -204,11 +204,6 @@ class ConfigInstallWebTest extends BrowserTestBase {
     file_unmanaged_delete_recursive($directory);
     $this->drupalGet('/admin/reports/status');
     $this->assertRaw(t('The directory %directory does not exist.', ['%directory' => $directory]));
-
-    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-    \Drupal::service('file_system')->chmod($directory, 0555);
-    $this->drupalGet('/admin/reports/status');
-    $this->assertRaw(t('The directory %directory is not writable.', ['%directory' => $directory]));
   }
 
 }
