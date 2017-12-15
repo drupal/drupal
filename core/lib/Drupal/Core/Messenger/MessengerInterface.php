@@ -6,8 +6,6 @@ namespace Drupal\Core\Messenger;
  * Stores runtime messages sent out to individual users on the page.
  *
  * An example for these messages is for example: "Content X got saved".
- *
- * @internal
  */
 interface MessengerInterface {
 
@@ -109,11 +107,15 @@ interface MessengerInterface {
    *   or self::TYPE_ERROR.
    *
    * @return string[]|\Drupal\Component\Render\MarkupInterface[]
+   *   The messages of given type.
    */
   public function messagesByType($type);
 
   /**
    * Deletes all messages.
+   *
+   * @return string[]|\Drupal\Component\Render\MarkupInterface[]
+   *   The deleted messages.
    */
   public function deleteAll();
 
@@ -123,6 +125,9 @@ interface MessengerInterface {
    * @param string $type
    *   The messages' type. Either self::TYPE_STATUS, self::TYPE_WARNING, or
    *   self::TYPE_ERROR.
+   *
+   * @return string[]|\Drupal\Component\Render\MarkupInterface[]
+   *   The deleted messages of given type.
    */
   public function deleteByType($type);
 

@@ -5,6 +5,7 @@ namespace Drupal\system_test\Controller;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
@@ -49,6 +50,13 @@ class SystemTestController extends ControllerBase {
   protected $renderer;
 
   /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs the SystemTestController.
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
@@ -59,12 +67,15 @@ class SystemTestController extends ControllerBase {
    *   The current user.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
    */
-  public function __construct(LockBackendInterface $lock, LockBackendInterface $persistent_lock, AccountInterface $current_user, RendererInterface $renderer) {
+  public function __construct(LockBackendInterface $lock, LockBackendInterface $persistent_lock, AccountInterface $current_user, RendererInterface $renderer, MessengerInterface $messenger) {
     $this->lock = $lock;
     $this->persistentLock = $persistent_lock;
     $this->currentUser = $current_user;
     $this->renderer = $renderer;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -75,7 +86,8 @@ class SystemTestController extends ControllerBase {
       $container->get('lock'),
       $container->get('lock.persistent'),
       $container->get('current_user'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('messenger')
     );
   }
 
@@ -99,9 +111,13 @@ class SystemTestController extends ControllerBase {
     // Set two messages.
     drupal_set_message('First message (removed).');
     drupal_set_message(t('Second message with <em>markup!</em> (not removed).'));
-
+    $messages = $this->messenger->deleteByType('status');
     // Remove the first.
-    unset($_SESSION['messages']['status'][0]);
+    unset($messages[0]);
+
+    foreach ($messages as $message) {
+      $this->messenger->addStatus($message);
+    }
 
     // Duplicate message check.
     drupal_set_message('Non Duplicated message', 'status', FALSE);

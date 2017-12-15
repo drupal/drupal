@@ -6,8 +6,9 @@
  */
 
 use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Messenger\LegacyMessenger;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Static Service Container wrapper.
@@ -99,6 +100,22 @@ class Drupal {
    * @var \Symfony\Component\DependencyInjection\ContainerInterface|null
    */
   protected static $container;
+
+  /**
+   * The LegacyMessenger instance.
+   *
+   * Note: this is merely used to ensure that the instance survives when
+   * \Drupal::messenger() is invoked. It is required to ensure that messages
+   * are properly transferred to the Messenger service once the container has
+   * been initialized. Do not store the Messenger service here.
+   *
+   * @todo Remove once LegacyMessenger has been removed before 9.0.0.
+   *
+   * @see https://www.drupal.org/node/2928994
+   *
+   * @var \Drupal\Core\Messenger\LegacyMessenger|null
+   */
+  protected static $legacyMessenger;
 
   /**
    * Sets a new global container.
@@ -755,6 +772,21 @@ class Drupal {
    */
   public static function time() {
     return static::getContainer()->get('datetime.time');
+  }
+
+  /**
+   * Returns the messenger.
+   *
+   * @return \Drupal\Core\Messenger\MessengerInterface
+   *   The messenger.
+   */
+  public static function messenger() {
+    // @todo Replace with service once LegacyMessenger is removed in 9.0.0.
+    // @see https://www.drupal.org/node/2928994
+    if (!isset(static::$legacyMessenger)) {
+      static::$legacyMessenger = new LegacyMessenger();
+    }
+    return static::$legacyMessenger;
   }
 
 }

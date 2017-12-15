@@ -466,11 +466,17 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  *
  * @see drupal_get_messages()
  * @see status-messages.html.twig
+ * @see https://www.drupal.org/node/2774931
+ *
+ * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\Messenger\MessengerInterface::addMessage() instead.
  */
 function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) {
-  /* @var \Drupal\Core\Messenger\MessengerInterface $messenger */
-  $messenger = \Drupal::service('messenger');
-  $messenger->addMessage($message, $type, $repeat);
+  @trigger_error('drupal_set_message() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Messenger\MessengerInterface::addMessage() instead. See https://www.drupal.org/node/2774931', E_USER_DEPRECATED);
+  $messenger = \Drupal::messenger();
+  if (isset($message)) {
+    $messenger->addMessage($message, $type, $repeat);
+  }
   return $messenger->all();
 }
 
@@ -498,11 +504,16 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
  *
  * @see drupal_set_message()
  * @see status-messages.html.twig
+ * @see https://www.drupal.org/node/2774931
+ *
+ * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\Messenger\MessengerInterface::all() or
+ *   \Drupal\Core\Messenger\MessengerInterface::messagesByType() instead.
  */
 function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
-  /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
-  $messenger = \Drupal::hasService('messenger') ? \Drupal::service('messenger') : NULL;
-  if ($messenger && ($messages = $messenger->all())) {
+  @trigger_error('drupal_get_message() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Messenger\MessengerInterface::all() or \Drupal\Core\Messenger\MessengerInterface::messagesByType() instead. See https://www.drupal.org/node/2774931', E_USER_DEPRECATED);
+  $messenger = \Drupal::messenger();
+  if ($messages = $messenger->all()) {
     if ($type) {
       if ($clear_queue) {
         $messenger->deleteByType($type);

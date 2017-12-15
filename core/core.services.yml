@@ -1646,5 +1646,5 @@ services:
     tags:
       - { name: event_subscriber }
   messenger:
-    class: Drupal\Core\Messenger\LegacyMessenger
-    arguments: ['@page_cache_kill_switch']
+    class: Drupal\Core\Messenger\Messenger
+    arguments: ['@session.flash_bag', '@page_cache_kill_switch']
