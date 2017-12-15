@@ -1,5 +1,6 @@
 id: d6_aggregator_item
 label: Aggregator items
+audit: true
 migration_tags:
   - Drupal 6
 source:

@@ -1,5 +1,6 @@
 id: d7_aggregator_feed
 label: Aggregator feeds
+audit: true
 migration_tags:
   - Drupal 7
 source:

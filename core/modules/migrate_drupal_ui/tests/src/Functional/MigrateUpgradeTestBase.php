@@ -6,12 +6,15 @@ use Drupal\Core\Database\Database;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
 /**
  * Provides a base class for testing migration upgrades in the UI.
  */
 abstract class MigrateUpgradeTestBase extends BrowserTestBase {
+
   use MigrationConfigurationTrait;
+  use CreateTestContentEntitiesTrait;
 
   /**
    * Use the Standard profile to test help implementations of many core modules.
@@ -54,6 +57,9 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
 
     // Log in as user 1. Migrations in the UI can only be performed as user 1.
     $this->drupalLogin($this->rootUser);
+
+    // Create content.
+    $this->createContent();
   }
 
   /**
@@ -116,7 +122,8 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   public function testMigrateUpgrade() {
     $connection_options = $this->sourceDatabase->getConnectionOptions();
     $this->drupalGet('/upgrade');
-    $this->assertSession()->responseContains('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
+    $session = $this->assertSession();
+    $session->responseContains('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
 
     $this->drupalPostForm(NULL, [], t('Continue'));
     $this->assertText('Provide credentials for the database of the Drupal site you want to upgrade.');
@@ -153,37 +160,52 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $this->assertText('Resolve the issue below to continue the upgrade.');
 
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
+    $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
+    $session->pageTextContains('There is conflicting content of these types:');
+    $session->pageTextContains('aggregator feed entities');
+    $session->pageTextContains('aggregator feed item entities');
+    $session->pageTextContains('custom block entities');
+    $session->pageTextContains('custom menu link entities');
+    $session->pageTextContains('file entities');
+    $session->pageTextContains('taxonomy term entities');
+    $session->pageTextContains('user entities');
+    $session->pageTextContains('comments');
+    $session->pageTextContains('content item revisions');
+    $session->pageTextContains('content items');
+    $session->pageTextContains('There is translated content of these types:');
+    $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
     $this->assertResponse(200);
     $this->assertText('Upgrade analysis report');
     // Ensure we get errors about missing modules.
-    $this->assertSession()->pageTextContains(t('Source module not found for migration_provider_no_annotation.'));
-    $this->assertSession()->pageTextContains(t('Source module not found for migration_provider_test.'));
-    $this->assertSession()->pageTextContains(t('Destination module not found for migration_provider_test'));
+    $session->pageTextContains(t('Source module not found for migration_provider_no_annotation.'));
+    $session->pageTextContains(t('Source module not found for migration_provider_test.'));
+    $session->pageTextContains(t('Destination module not found for migration_provider_test'));
 
     // Uninstall the module causing the missing module error messages.
     $this->container->get('module_installer')->uninstall(['migration_provider_test'], TRUE);
 
     // Restart the upgrade process.
     $this->drupalGet('/upgrade');
-    $this->assertSession()->responseContains('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
+    $session->responseContains('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
 
     $this->drupalPostForm(NULL, [], t('Continue'));
-    $this->assertSession()->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
-    $this->assertSession()->fieldExists('mysql[host]');
+    $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
+    $session->fieldExists('mysql[host]');
 
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Upgrade analysis report');
+    $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
+    $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
+    $session->statusCodeEquals(200);
+    $session->pageTextContains('Upgrade analysis report');
     // Ensure there are no errors about the missing modules from the test module.
-    $this->assertSession()->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));
-    $this->assertSession()->pageTextNotContains(t('Source module not found for migration_provider_test.'));
-    $this->assertSession()->pageTextNotContains(t('Destination module not found for migration_provider_test'));
+    $session->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));
+    $session->pageTextNotContains(t('Source module not found for migration_provider_test.'));
+    $session->pageTextNotContains(t('Destination module not found for migration_provider_test'));
     // Ensure there are no errors about any other missing migration providers.
-    $this->assertSession()->pageTextNotContains(t('module not found'));
+    $session->pageTextNotContains(t('module not found'));
 
     // Test the available migration paths.
     $all_available = $this->getAvailablePaths();
-    $session = $this->assertSession();
     foreach ($all_available as $available) {
       $session->elementExists('xpath', "//span[contains(@class, 'checked') and text() = '$available']");
       $session->elementNotExists('xpath', "//span[contains(@class, 'warning') and text() = '$available']");

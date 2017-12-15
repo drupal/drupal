@@ -8,9 +8,9 @@
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\migrate\MigrateException;
@@ -39,6 +39,11 @@ class EntityContentBaseTest extends UnitTestCase {
   protected $storage;
 
   /**
+   * @var \Drupal\Core\Entity\EntityTypeInterface
+   */
+  protected $entityType;
+
+  /**
    * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
@@ -51,6 +56,11 @@ class EntityContentBaseTest extends UnitTestCase {
 
     $this->migration = $this->prophesize(MigrationInterface::class);
     $this->storage = $this->prophesize(EntityStorageInterface::class);
+
+    $this->entityType = $this->prophesize(EntityTypeInterface::class);
+    $this->entityType->getPluralLabel()->willReturn('wonkiness');
+    $this->storage->getEntityType()->willReturn($this->entityType->reveal());
+
     $this->entityManager = $this->prophesize(EntityManagerInterface::class);
   }
 
@@ -104,13 +114,10 @@ class EntityContentBaseTest extends UnitTestCase {
    */
   public function testUntranslatable() {
     // An entity type without a language.
-    $entity_type = $this->prophesize(ContentEntityType::class);
-    $entity_type->getKey('langcode')->willReturn('');
-    $entity_type->getKey('id')->willReturn('id');
+    $this->entityType->getKey('langcode')->willReturn('');
+    $this->entityType->getKey('id')->willReturn('id');
     $this->entityManager->getBaseFieldDefinitions('foo')
       ->willReturn(['id' => BaseFieldDefinitionTest::create('integer')]);
-
-    $this->storage->getEntityType()->willReturn($entity_type->reveal());
 
     $destination = new EntityTestDestination(
       ['translations' => TRUE],

@@ -39,7 +39,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'aggregator_item' => 10,
+      'aggregator_item' => 11,
       'aggregator_feed' => 1,
       'block' => 25,
       'block_content' => 1,
@@ -72,7 +72,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
       'tour' => 4,
       'user' => 4,
       'user_role' => 3,
-      'menu_link_content' => 7,
+      'menu_link_content' => 8,
       'view' => 16,
       'date_format' => 11,
       'entity_form_display' => 17,

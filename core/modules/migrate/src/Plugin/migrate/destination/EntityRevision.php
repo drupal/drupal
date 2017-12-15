@@ -3,7 +3,12 @@
 namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -15,6 +20,16 @@ use Drupal\migrate\Row;
  * )
  */
 class EntityRevision extends EntityContentBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager) {
+    $plugin_definition += [
+      'label' => new TranslatableMarkup('@entity_type revisions', ['@entity_type' => $storage->getEntityType()->getSingularLabel()]),
+    ];
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_manager, $field_type_manager);
+  }
 
   /**
    * {@inheritdoc}
@@ -76,6 +91,21 @@ class EntityRevision extends EntityContentBase {
       return [$key => $this->getDefinitionFromEntity($key)];
     }
     throw new MigrateException('This entity type does not support revisions.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHighestId() {
+    $values = $this->storage->getQuery()
+      ->accessCheck(FALSE)
+      ->allRevisions()
+      ->sort($this->getKey('revision'), 'DESC')
+      ->range(0, 1)
+      ->execute();
+    // The array keys are the revision IDs.
+    // The array contains only one entry, so we can use key().
+    return (int) key($values);
   }
 
 }

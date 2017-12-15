@@ -1,5 +1,6 @@
 id: d6_node
 label: Nodes
+audit: true
 migration_tags:
   - Drupal 6
 deriver: Drupal\node\Plugin\migrate\D6NodeDeriver

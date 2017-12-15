@@ -127,4 +127,18 @@ class EntityUser extends EntityContentBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getHighestId() {
+    $highest_id = parent::getHighestId();
+
+    // Every Drupal site must have a user with UID of 1 and it's normal for
+    // migrations to overwrite this user.
+    if ($highest_id === 1) {
+      return 0;
+    }
+    return $highest_id;
+  }
+
 }

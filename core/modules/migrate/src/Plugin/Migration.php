@@ -155,6 +155,17 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $migration_tags = [];
 
   /**
+   * Whether the migration is auditable.
+   *
+   * If set to TRUE, the migration's IDs will be audited. This means that, if
+   * the highest destination ID is greater than the highest source ID, a warning
+   * will be displayed that entities might be overwritten.
+   *
+   * @var bool
+   */
+  protected $audit = FALSE;
+
+  /**
    * These migrations, if run, must be executed before this migration.
    *
    * These are different from the configuration dependencies. Migration

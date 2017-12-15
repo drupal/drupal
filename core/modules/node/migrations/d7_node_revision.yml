@@ -1,5 +1,6 @@
 id: d7_node_revision
 label: Node revisions
+audit: true
 migration_tags:
   - Drupal 7
 deriver: Drupal\node\Plugin\migrate\D7NodeDeriver

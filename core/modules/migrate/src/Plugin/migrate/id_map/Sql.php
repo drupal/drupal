@@ -7,6 +7,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\MigrateMessage;
+use Drupal\migrate\Audit\HighestIdInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Event\MigrateIdMapMessageEvent;
 use Drupal\migrate\MigrateException;
@@ -27,7 +28,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * @PluginID("sql")
  */
-class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryPluginInterface {
+class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryPluginInterface, HighestIdInterface {
 
   /**
    * Column name of hashed source id values.
@@ -152,6 +153,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *   The configuration for the plugin.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to do.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -923,6 +926,71 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    */
   public function valid() {
     return $this->currentRow !== FALSE;
+  }
+
+  /**
+   * Returns the migration plugin manager.
+   *
+   * @todo Inject as a dependency in https://www.drupal.org/node/2919158.
+   *
+   * @return \Drupal\migrate\Plugin\MigrationPluginManagerInterface
+   *   The migration plugin manager.
+   */
+  protected function getMigrationPluginManager() {
+    return \Drupal::service('plugin.manager.migration');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHighestId() {
+    array_filter(
+      $this->migration->getDestinationPlugin()->getIds(),
+      function (array $id) {
+        if ($id['type'] !== 'integer') {
+          throw new \LogicException('Cannot determine the highest migrated ID without an integer ID column');
+        }
+      }
+    );
+
+    // List of mapping tables to look in for the highest ID.
+    $map_tables = [
+      $this->migration->id() => $this->mapTableName(),
+    ];
+
+    // If there's a bundle, it means we have a derived migration and we need to
+    // find all the mapping tables from the related derived migrations.
+    if ($base_id = substr($this->migration->id(), 0, strpos($this->migration->id(), static::DERIVATIVE_SEPARATOR))) {
+      $migration_manager = $this->getMigrationPluginManager();
+      $migrations = $migration_manager->getDefinitions();
+      foreach ($migrations as $migration_id => $migration) {
+        if ($migration['id'] === $base_id) {
+          // Get this derived migration's mapping table and add it to the list
+          // of mapping tables to look in for the highest ID.
+          $stub = $migration_manager->createInstance($migration_id);
+          $map_tables[$migration_id] = $stub->getIdMap()->mapTableName();
+        }
+      }
+    }
+
+    // Get the highest id from the list of map tables.
+    $ids = [0];
+    foreach ($map_tables as $map_table) {
+      if (!$this->getDatabase()->schema()->tableExists($map_table)) {
+        break;
+      }
+
+      $query = $this->getDatabase()->select($map_table, 'map')
+        ->fields('map', $this->destinationIdFields())
+        ->range(0, 1);
+      foreach (array_values($this->destinationIdFields()) as $order_field) {
+        $query->orderBy($order_field, 'DESC');
+      }
+      $ids[] = $query->execute()->fetchField();
+    }
+
+    // Return the highest of all the mapped IDs.
+    return (int) max($ids);
   }
 
 }

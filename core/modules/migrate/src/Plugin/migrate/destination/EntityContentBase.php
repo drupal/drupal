@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\migrate\Audit\HighestIdInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * The destination class for all content entities lacking a specific class.
  */
-class EntityContentBase extends Entity {
+class EntityContentBase extends Entity implements HighestIdInterface {
 
   /**
    * Entity manager.
@@ -111,12 +112,9 @@ class EntityContentBase extends Entity {
   }
 
   /**
-   * Get whether this destination is for translations.
-   *
-   * @return bool
-   *   Whether this destination is for translations.
+   * {@inheritdoc}
    */
-  protected function isTranslationDestination() {
+  public function isTranslationDestination() {
     return !empty($this->configuration['translations']);
   }
 
@@ -292,6 +290,18 @@ class EntityContentBase extends Entity {
     return [
       'type' => $field_definition->getType(),
     ] + $field_definition->getSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHighestId() {
+    $values = $this->storage->getQuery()
+      ->accessCheck(FALSE)
+      ->sort($this->getKey('id'), 'DESC')
+      ->range(0, 1)
+      ->execute();
+    return (int) current($values);
   }
 
 }

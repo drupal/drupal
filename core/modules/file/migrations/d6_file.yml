@@ -2,6 +2,7 @@
 # migration as an optional dependency.
 id: d6_file
 label: Public files
+audit: true
 migration_tags:
   - Drupal 6
 source:

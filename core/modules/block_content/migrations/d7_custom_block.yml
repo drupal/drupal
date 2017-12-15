@@ -1,5 +1,6 @@
 id: d7_custom_block
 label: Custom blocks
+audit: true
 migration_tags:
   - Drupal 7
 source:

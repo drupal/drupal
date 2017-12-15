@@ -35,7 +35,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
   protected function getEntityCounts() {
     return [
       'aggregator_item' => 1,
-      'aggregator_feed' => 1,
+      'aggregator_feed' => 2,
       'block' => 35,
       'block_content' => 2,
       'block_content_type' => 1,
@@ -48,7 +48,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
       'editor' => 2,
       'field_config' => 84,
       'field_storage_config' => 58,
-      'file' => 7,
+      'file' => 8,
       'filter_format' => 7,
       'image_style' => 5,
       'language_content_settings' => 2,
@@ -68,7 +68,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
       'tour' => 4,
       'user' => 7,
       'user_role' => 6,
-      'menu_link_content' => 4,
+      'menu_link_content' => 5,
       'view' => 16,
       'date_format' => 11,
       'entity_form_display' => 29,

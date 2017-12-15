@@ -1,5 +1,6 @@
 id: d7_taxonomy_term
 label: Taxonomy terms
+audit: true
 migration_tags:
   - Drupal 7
 deriver: Drupal\taxonomy\Plugin\migrate\D7TaxonomyTermDeriver
