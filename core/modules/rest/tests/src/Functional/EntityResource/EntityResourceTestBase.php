@@ -451,18 +451,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // for the keys with the array order the same (it needs to match with
     // identical comparison).
     $expected = $this->getExpectedNormalizedEntity();
-    if ($this->entity instanceof FieldableEntityInterface) {
-      $expected += [
-        'field_rest_test_multivalue' => [
-          0 => [
-            'value' => 'One',
-          ],
-          1 => [
-            'value' => 'Two',
-          ],
-        ]
-      ];
-    }
     static::recursiveKSort($expected);
     $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
     static::recursiveKSort($actual);
@@ -533,18 +521,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // normalized entity's values to strings. This ensures the BC layer for
       // bc_primitives_as_strings works as expected.
       $expected = $this->getExpectedNormalizedEntity();
-      if ($this->entity instanceof FieldableEntityInterface) {
-        $expected += [
-          'field_rest_test_multivalue' => [
-            0 => [
-              'value' => 'One',
-            ],
-            1 => [
-              'value' => 'Two',
-            ],
-          ]
-        ];
-      }
       // Config entities are not affected.
       // @see \Drupal\serialization\Normalizer\ConfigEntityNormalizer::normalize()
       $expected = static::castToString($expected);
@@ -578,18 +554,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // ::formatExpectedTimestampValue() to generate the timestamp value. This
       // will take into account the above config setting.
       $expected = $this->getExpectedNormalizedEntity();
-      if ($this->entity instanceof FieldableEntityInterface) {
-        $expected += [
-          'field_rest_test_multivalue' => [
-            0 => [
-              'value' => 'One',
-            ],
-            1 => [
-              'value' => 'Two',
-            ],
-          ]
-        ];
-      }
       // Config entities are not affected.
       // @see \Drupal\serialization\Normalizer\ConfigEntityNormalizer::normalize()
       static::recursiveKSort($expected);
@@ -1088,13 +1052,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // Multi-value field: remove item 0. Then item 1 becomes item 0.
     $normalization_multi_value_tests = $this->getNormalizedPatchEntity();
-    $normalization_multi_value_tests['field_rest_test_multivalue'] = $updated_entity_normalization['field_rest_test_multivalue'];
+    $normalization_multi_value_tests['field_rest_test_multivalue'] = $this->entity->get('field_rest_test_multivalue')->getValue();
     $normalization_remove_item = $normalization_multi_value_tests;
     unset($normalization_remove_item['field_rest_test_multivalue'][0]);
     $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization_remove_item, static::$format);
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
-    $this->assertSame([0 => ['value' => 'Two']], $this->serializer->decode((string) $response->getBody(), static::$format)['field_rest_test_multivalue']);
+    $this->assertSame([0 => ['value' => 'Two']], $this->entityStorage->loadUnchanged($this->entity->id())->get('field_rest_test_multivalue')->getValue());
 
     // Multi-value field: add one item before the existing one, and one after.
     $normalization_add_items = $normalization_multi_value_tests;
@@ -1102,7 +1066,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization_add_items, static::$format);
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
-    $this->assertSame([0 => ['value' => 'One'], 1 => ['value' => 'Two'], 2 => ['value' => 'Three']], $this->serializer->decode((string) $response->getBody(), static::$format)['field_rest_test_multivalue']);
+    $this->assertSame([0 => ['value' => 'One'], 1 => ['value' => 'Two'], 2 => ['value' => 'Three']], $this->entityStorage->loadUnchanged($this->entity->id())->get('field_rest_test_multivalue')->getValue());
 
     // BC: rest_update_8203().
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
