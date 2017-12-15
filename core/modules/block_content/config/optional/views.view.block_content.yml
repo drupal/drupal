@@ -445,7 +445,7 @@ display:
           admin_label: ''
           empty: true
           tokenize: false
-          content: 'There are no custom blocks available. '
+          content: 'There are no custom blocks available.'
           plugin_id: text_custom
         block_content_listing_empty:
           admin_label: ''
