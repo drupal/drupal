@@ -50,14 +50,13 @@ abstract class TourTestBase extends BrowserTestBase {
       // Check for corresponding page elements.
       $total = 0;
       $modals = 0;
-      $raw_content = $this->getSession()->getPage()->getContent();
       foreach ($tips as $tip) {
         if (!empty($tip['data-id'])) {
-          $elements = \PHPUnit_Util_XML::cssSelect('#' . $tip['data-id'], TRUE, $raw_content, TRUE);
+          $elements = $this->getSession()->getPage()->findAll('css', '#' . $tip['data-id']);
           $this->assertTrue(!empty($elements) && count($elements) === 1, format_string('Found corresponding page element for tour tip with id #%data-id', ['%data-id' => $tip['data-id']]));
         }
         elseif (!empty($tip['data-class'])) {
-          $elements = \PHPUnit_Util_XML::cssSelect('.' . $tip['data-class'], TRUE, $raw_content, TRUE);
+          $elements = $this->getSession()->getPage()->findAll('css', '.' . $tip['data-class']);
           $this->assertFalse(empty($elements), format_string('Found corresponding page element for tour tip with class .%data-class', ['%data-class' => $tip['data-class']]));
         }
         else {

@@ -101,8 +101,8 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
       'random attachment type (unofficial), with random assigned value, to prove BigPipeResponseAttachmentsProcessor is a perfect decorator' => [$random_attachments],
     ];
 
-    $big_pipe_placeholder_attachments = ['big_pipe_placeholders' => $this->randomMachineName()];
-    $big_pipe_nojs_placeholder_attachments = ['big_pipe_nojs_placeholders' => $this->randomMachineName()];
+    $big_pipe_placeholder_attachments = ['big_pipe_placeholders' => [$this->randomMachineName()]];
+    $big_pipe_nojs_placeholder_attachments = ['big_pipe_nojs_placeholders' => [$this->randomMachineName()]];
     $big_pipe_cases = [
       'only big_pipe_placeholders' => [$big_pipe_placeholder_attachments],
       'only big_pipe_nojs_placeholders' => [$big_pipe_nojs_placeholder_attachments],
