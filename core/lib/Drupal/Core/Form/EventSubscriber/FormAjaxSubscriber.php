@@ -3,7 +3,7 @@
 namespace Drupal\Core\Form\EventSubscriber;
 
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Form\FormAjaxException;
@@ -78,7 +78,7 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
       $this->drupalSetMessage($this->t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', ['@size' => $this->formatSize($exception->getSize())]), 'error');
       $response = new AjaxResponse();
       $status_messages = ['#type' => 'status_messages'];
-      $response->addCommand(new ReplaceCommand(NULL, $status_messages));
+      $response->addCommand(new PrependCommand(NULL, $status_messages));
       $response->headers->set('X-Status-Code', 200);
       $event->setResponse($response);
       return;

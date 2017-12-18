@@ -181,7 +181,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
     $this->assertSame(200, $actual_response->headers->get('X-Status-Code'));
     $expected_commands[] = [
       'command' => 'insert',
-      'method' => 'replaceWith',
+      'method' => 'prepend',
       'selector' => NULL,
       'data' => $rendered_output,
       'settings' => NULL,
