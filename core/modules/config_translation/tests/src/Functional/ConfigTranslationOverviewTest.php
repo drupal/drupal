@@ -77,7 +77,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     // Make sure there is only a single operation for each dropbutton, either
     // 'List' or 'Translate'.
     foreach ($this->cssSelect('ul.dropbutton') as $i => $dropbutton) {
-      $this->assertIdentical(1, count($dropbutton->find('xpath', 'li')));
+      $this->assertIdentical(1, count($dropbutton->findAll('xpath', 'li')));
       $this->assertTrue(($dropbutton->getText() === 'Translate') || ($dropbutton->getText() === 'List'));
     }
 
@@ -103,7 +103,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
       // Make sure there is only a single 'Translate' operation for each
       // dropbutton.
       foreach ($this->cssSelect('ul.dropbutton') as $i => $dropbutton) {
-        $this->assertIdentical(1, count($dropbutton->find('xpath', 'li')));
+        $this->assertIdentical(1, count($dropbutton->findAll('xpath', 'li')));
         $this->assertIdentical('Translate', $dropbutton->getText());
       }
 
