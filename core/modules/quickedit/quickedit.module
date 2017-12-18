@@ -180,18 +180,16 @@ function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityVie
  * @internal
  */
 function _quickedit_entity_is_latest_revision(ContentEntityInterface $entity) {
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_definition = $entity_type_manager->getDefinition($entity->getEntityTypeId());
-  if (!$entity_definition->isRevisionable()) {
+  if (!$entity->getEntityType()->isRevisionable() || $entity->isNew()) {
     return TRUE;
   }
-  $revision_ids = $entity_type_manager
+
+  $latest_revision = \Drupal::entityTypeManager()
     ->getStorage($entity->getEntityTypeId())
     ->getQuery()
-    ->allRevisions()
-    ->condition($entity_definition->getKey('id'), $entity->id())
-    ->sort($entity_definition->getKey('revision'), 'DESC')
-    ->range(0, 1)
+    ->latestRevision()
+    ->condition($entity->getEntityType()->getKey('id'), $entity->id())
     ->execute();
-  return $entity->getLoadedRevisionId() == array_keys($revision_ids)[0];
+
+  return !empty($latest_revision) && $entity->getLoadedRevisionId() == key($latest_revision) ? TRUE : FALSE;
 }
