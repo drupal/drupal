@@ -11,6 +11,6 @@ use Drupal\Core\Url;
  * Implements hook_install().
  */
 function migrate_drupal_ui_install() {
-  $url = Url::fromUri('base:upgrade')->toString();
+  $url = Url::fromRoute('migrate_drupal_ui.upgrade')->toString();
   drupal_set_message(t('The Migrate Drupal UI module has been enabled. Proceed to the <a href=":url">upgrade form</a>.', [':url' => $url]));
 }
