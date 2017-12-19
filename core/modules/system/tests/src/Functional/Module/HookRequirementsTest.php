@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Module;
+namespace Drupal\Tests\system\Functional\Module;
 
 /**
  * Attempts enabling a module that fails hook_requirements('install').

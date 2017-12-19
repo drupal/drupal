@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Module;
+namespace Drupal\Tests\system\Functional\Module;
 
 /**
  * Attempt disabling of required modules.
