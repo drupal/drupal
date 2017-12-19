@@ -8,6 +8,7 @@ use Drupal\entity_test\Entity\EntityTestBaseFieldDisplay;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\layout_builder\Section;
 
 /**
  * Ensures that Layout Builder and Field Layout are compatible with each other.
@@ -108,13 +109,9 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends KernelTestBase {
     $this->assertSame($original_markup, $new_markup);
 
     // Add a layout override.
-    /** @var \Drupal\layout_builder\Field\LayoutSectionItemListInterface $field_list */
+    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
     $field_list = $entity->layout_builder__layout;
-    $field_list->appendItem([
-      'layout' => 'layout_onecol',
-      'layout_settings' => [],
-      'section' => [],
-    ]);
+    $field_list->appendSection(new Section('layout_onecol'));
     $entity->save();
 
     // The rendered entity has now changed. The non-configurable field is shown

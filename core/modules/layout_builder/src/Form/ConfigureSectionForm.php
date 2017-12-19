@@ -14,6 +14,7 @@ use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
+use Drupal\layout_builder\Section;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -121,14 +122,15 @@ class ConfigureSectionForm extends FormBase {
     $this->delta = $delta;
     $this->isUpdate = is_null($plugin_id);
 
-    $configuration = [];
     if ($this->isUpdate) {
-      /** @var \Drupal\layout_builder\Field\LayoutSectionItemInterface $field */
-      $field = $this->entity->layout_builder__layout->get($this->delta);
-      $plugin_id = $field->layout;
-      $configuration = $field->layout_settings;
+      /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
+      $field_list = $this->entity->layout_builder__layout;
+      $section = $field_list->getSection($this->delta);
     }
-    $this->layout = $this->layoutManager->createInstance($plugin_id, $configuration);
+    else {
+      $section = new Section($plugin_id);
+    }
+    $this->layout = $section->getLayout();
 
     $form['#tree'] = TRUE;
     $form['layout_settings'] = [];
@@ -166,19 +168,13 @@ class ConfigureSectionForm extends FormBase {
     $plugin_id = $this->layout->getPluginId();
     $configuration = $this->layout->getConfiguration();
 
-    /** @var \Drupal\layout_builder\Field\LayoutSectionItemListInterface $field_list */
+    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
     $field_list = $this->entity->layout_builder__layout;
     if ($this->isUpdate) {
-      $field = $field_list->get($this->delta);
-      $field->layout = $plugin_id;
-      $field->layout_settings = $configuration;
+      $field_list->getSection($this->delta)->setLayoutSettings($configuration);
     }
     else {
-      $field_list->addItem($this->delta, [
-        'layout' => $plugin_id,
-        'layout_settings' => $configuration,
-        'section' => [],
-      ]);
+      $field_list->insertSection($this->delta, new Section($plugin_id, $configuration));
     }
 
     $this->layoutTempstoreRepository->set($this->entity);

@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
+use Drupal\layout_builder\Section;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -63,13 +64,9 @@ class AddSectionController implements ContainerInjectionInterface {
    *   The controller response.
    */
   public function build(EntityInterface $entity, $delta, $plugin_id) {
-    /** @var \Drupal\layout_builder\Field\LayoutSectionItemListInterface $field_list */
+    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
     $field_list = $entity->layout_builder__layout;
-    $field_list->addItem($delta, [
-      'layout' => $plugin_id,
-      'layout_settings' => [],
-      'section' => [],
-    ]);
+    $field_list->insertSection($delta, new Section($plugin_id));
 
     $this->layoutTempstoreRepository->set($entity);
 

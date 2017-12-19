@@ -10,8 +10,8 @@ use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\layout_builder\LayoutSectionBuilder;
-use Drupal\layout_builder\Field\LayoutSectionItemInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
+use Drupal\layout_builder\Section;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -111,20 +111,20 @@ class LayoutBuilderController implements ContainerInjectionInterface {
     $entity_id = $entity->id();
     $entity_type_id = $entity->getEntityTypeId();
 
-    /** @var \Drupal\layout_builder\Field\LayoutSectionItemListInterface $field_list */
+    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
     $field_list = $entity->layout_builder__layout;
 
     // For a new layout override, begin with a single section of one column.
-    if (!$is_rebuilding && $field_list->isEmpty()) {
-      $field_list->addItem(0, ['layout' => 'layout_onecol']);
+    if (!$is_rebuilding && $field_list->count() === 0) {
+      $field_list->appendSection(new Section('layout_onecol'));
       $this->layoutTempstoreRepository->set($entity);
     }
 
     $output = [];
     $count = 0;
-    foreach ($field_list as $item) {
+    foreach ($field_list->getSections() as $section) {
       $output[] = $this->buildAddSectionLink($entity_type_id, $entity_id, $count);
-      $output[] = $this->buildAdministrativeSection($item, $entity, $count);
+      $output[] = $this->buildAdministrativeSection($section, $entity, $count);
       $count++;
     }
     $output[] = $this->buildAddSectionLink($entity_type_id, $entity_id, $count);
@@ -179,8 +179,8 @@ class LayoutBuilderController implements ContainerInjectionInterface {
   /**
    * Builds the render array for the layout section while editing.
    *
-   * @param \Drupal\layout_builder\Field\LayoutSectionItemInterface $item
-   *   The layout section item.
+   * @param \Drupal\layout_builder\Section $section
+   *   The layout section.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    * @param int $delta
@@ -189,12 +189,12 @@ class LayoutBuilderController implements ContainerInjectionInterface {
    * @return array
    *   The render array for a given section.
    */
-  protected function buildAdministrativeSection(LayoutSectionItemInterface $item, EntityInterface $entity, $delta) {
+  protected function buildAdministrativeSection(Section $section, EntityInterface $entity, $delta) {
     $entity_type_id = $entity->getEntityTypeId();
     $entity_id = $entity->id();
 
-    $layout = $this->layoutManager->createInstance($item->layout, $item->layout_settings);
-    $build = $this->builder->buildSectionFromLayout($layout, $item->section);
+    $layout = $section->getLayout();
+    $build = $section->toRenderArray();
     $layout_definition = $layout->getPluginDefinition();
 
     foreach ($layout_definition->getRegions() as $region => $info) {

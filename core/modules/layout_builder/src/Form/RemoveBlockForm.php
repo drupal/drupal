@@ -60,11 +60,9 @@ class RemoveBlockForm extends LayoutRebuildConfirmFormBase {
    * {@inheritdoc}
    */
   protected function handleEntity(EntityInterface $entity, FormStateInterface $form_state) {
-    /** @var \Drupal\layout_builder\Field\LayoutSectionItemInterface $field */
-    $field = $entity->layout_builder__layout->get($this->delta);
-    $section = $field->getSection();
-    $section->removeBlock($this->region, $this->uuid);
-    $field->updateFromSection($section);
+    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
+    $field_list = $this->entity->layout_builder__layout;
+    $field_list->getSection($this->delta)->removeComponent($this->uuid);
   }
 
 }

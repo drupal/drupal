@@ -3,6 +3,7 @@
 namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -24,242 +25,158 @@ class SectionTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->section = new Section([
-      'empty-region' => [],
-      'some-region' => [
-        'existing-uuid' => [
-          'block' => [
-            'id' => 'existing-block-id',
-          ],
-        ],
-      ],
-      'ordered-region' => [
-        'first-uuid' => [
-          'block' => [
-            'id' => 'first-block-id',
-          ],
-        ],
-        'second-uuid' => [
-          'block' => [
-            'id' => 'second-block-id',
-          ],
-        ],
-      ],
+    $this->section = new Section('layout_onecol', [], [
+      new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']),
+      (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
     ]);
   }
 
   /**
    * @covers ::__construct
-   * @covers ::getValue
+   * @covers ::setComponent
+   * @covers ::getComponents
    */
-  public function testGetValue() {
+  public function testGetComponents() {
     $expected = [
-      'empty-region' => [],
-      'some-region' => [
-        'existing-uuid' => [
-          'block' => [
-            'id' => 'existing-block-id',
-          ],
-        ],
-      ],
-      'ordered-region' => [
-        'first-uuid' => [
-          'block' => [
-            'id' => 'first-block-id',
-          ],
-        ],
-        'second-uuid' => [
-          'block' => [
-            'id' => 'second-block-id',
-          ],
-        ],
-      ],
+      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
     ];
-    $result = $this->section->getValue();
-    $this->assertSame($expected, $result);
+
+    $this->assertComponents($expected, $this->section);
   }
 
   /**
-   * @covers ::getBlock
+   * @covers ::getComponent
    */
-  public function testGetBlockInvalidRegion() {
-    $this->setExpectedException(\InvalidArgumentException::class, 'Invalid region');
-    $this->section->getBlock('invalid-region', 'existing-uuid');
+  public function testGetComponentInvalidUuid() {
+    $this->setExpectedException(\InvalidArgumentException::class, 'Invalid UUID "invalid-uuid"');
+    $this->section->getComponent('invalid-uuid');
   }
 
   /**
-   * @covers ::getBlock
+   * @covers ::getComponent
    */
-  public function testGetBlockInvalidUuid() {
-    $this->setExpectedException(\InvalidArgumentException::class, 'Invalid UUID');
-    $this->section->getBlock('some-region', 'invalid-uuid');
+  public function testGetComponent() {
+    $expected = new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']);
+
+    $this->assertEquals($expected, $this->section->getComponent('existing-uuid'));
   }
 
   /**
-   * @covers ::getBlock
+   * @covers ::removeComponent
+   * @covers ::getComponentsByRegion
    */
-  public function testGetBlock() {
-    $expected = ['block' => ['id' => 'existing-block-id']];
-
-    $block = $this->section->getBlock('some-region', 'existing-uuid');
-    $this->assertSame($expected, $block);
-  }
-
-  /**
-   * @covers ::removeBlock
-   */
-  public function testRemoveBlock() {
-    $this->section->removeBlock('some-region', 'existing-uuid');
+  public function testRemoveComponent() {
     $expected = [
-      'ordered-region' => [
-        'first-uuid' => [
-          'block' => [
-            'id' => 'first-block-id',
-          ],
-        ],
-        'second-uuid' => [
-          'block' => [
-            'id' => 'second-block-id',
-          ],
-        ],
-      ],
+      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
     ];
-    $this->assertSame($expected, $this->section->getValue());
+
+    $this->section->removeComponent('first-uuid');
+    $this->assertComponents($expected, $this->section);
   }
 
   /**
-   * @covers ::addBlock
+   * @covers ::appendComponent
+   * @covers ::getNextHighestWeight
+   * @covers ::getComponentsByRegion
    */
-  public function testAddBlock() {
-    $this->section->addBlock('some-region', 'new-uuid', []);
+  public function testAppendComponent() {
     $expected = [
-      'empty-region' => [],
-      'some-region' => [
-        'new-uuid' => [],
-        'existing-uuid' => [
-          'block' => [
-            'id' => 'existing-block-id',
-          ],
-        ],
-      ],
-      'ordered-region' => [
-        'first-uuid' => [
-          'block' => [
-            'id' => 'first-block-id',
-          ],
-        ],
-        'second-uuid' => [
-          'block' => [
-            'id' => 'second-block-id',
-          ],
-        ],
-      ],
+      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      'new-uuid' => (new SectionComponent('new-uuid', 'some-region', []))->setWeight(1),
     ];
-    $this->assertSame($expected, $this->section->getValue());
+
+    $this->section->appendComponent(new SectionComponent('new-uuid', 'some-region'));
+    $this->assertComponents($expected, $this->section);
   }
 
   /**
-   * @covers ::insertBlock
+   * @covers ::insertAfterComponent
    */
-  public function testInsertBlock() {
-    $this->section->insertBlock('ordered-region', 'new-uuid', [], 'first-uuid');
+  public function testInsertAfterComponent() {
     $expected = [
-      'empty-region' => [],
-      'some-region' => [
-        'existing-uuid' => [
-          'block' => [
-            'id' => 'existing-block-id',
-          ],
-        ],
-      ],
-      'ordered-region' => [
-        'first-uuid' => [
-          'block' => [
-            'id' => 'first-block-id',
-          ],
-        ],
-        'new-uuid' => [],
-        'second-uuid' => [
-          'block' => [
-            'id' => 'second-block-id',
-          ],
-        ],
-      ],
+      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
+      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(3),
     ];
-    $this->assertSame($expected, $this->section->getValue());
+
+    $this->section->insertAfterComponent('first-uuid', new SectionComponent('new-uuid', 'ordered-region'));
+    $this->assertComponents($expected, $this->section);
   }
 
   /**
-   * @covers ::insertBlock
+   * @covers ::insertAfterComponent
    */
-  public function testInsertBlockInvalidRegion() {
-    $this->setExpectedException(\InvalidArgumentException::class, 'Invalid region');
-    $this->section->insertBlock('invalid-region', 'new-uuid', [], 'first-uuid');
+  public function testInsertAfterComponentValidUuidRegionMismatch() {
+    $this->setExpectedException(\InvalidArgumentException::class, 'Invalid preceding UUID "existing-uuid"');
+    $this->section->insertAfterComponent('existing-uuid', new SectionComponent('new-uuid', 'ordered-region'));
   }
 
   /**
-   * @covers ::insertBlock
+   * @covers ::insertAfterComponent
    */
-  public function testInsertBlockInvalidUuid() {
-    $this->setExpectedException(\InvalidArgumentException::class, 'Invalid preceding UUID');
-    $this->section->insertBlock('ordered-region', 'new-uuid', [], 'invalid-uuid');
+  public function testInsertAfterComponentInvalidUuid() {
+    $this->setExpectedException(\InvalidArgumentException::class, 'Invalid preceding UUID "invalid-uuid"');
+    $this->section->insertAfterComponent('invalid-uuid', new SectionComponent('new-uuid', 'ordered-region'));
   }
 
   /**
-   * @covers ::updateBlock
+   * @covers ::insertComponent
+   * @covers ::getComponentsByRegion
    */
-  public function testUpdateBlock() {
-    $this->section->updateBlock('some-region', 'existing-uuid', [
-      'block' => [
-        'id' => 'existing-block-id',
-        'settings' => [
-          'foo' => 'bar',
-        ],
-      ],
-    ]);
-
+  public function testInsertComponent() {
     $expected = [
-      'empty-region' => [],
-      'some-region' => [
-        'existing-uuid' => [
-          'block' => [
-            'id' => 'existing-block-id',
-            'settings' => [
-              'foo' => 'bar',
-            ],
-          ],
-        ],
-      ],
-      'ordered-region' => [
-        'first-uuid' => [
-          'block' => [
-            'id' => 'first-block-id',
-          ],
-        ],
-        'second-uuid' => [
-          'block' => [
-            'id' => 'second-block-id',
-          ],
-        ],
-      ],
+      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
+      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(3),
+      'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(2),
     ];
-    $this->assertSame($expected, $this->section->getValue());
+
+    $this->section->insertComponent(0, new SectionComponent('new-uuid', 'ordered-region'));
+    $this->assertComponents($expected, $this->section);
   }
 
   /**
-   * @covers ::updateBlock
+   * @covers ::insertComponent
    */
-  public function testUpdateBlockInvalidRegion() {
-    $this->setExpectedException(\InvalidArgumentException::class, 'Invalid region');
-    $this->section->updateBlock('invalid-region', 'new-uuid', []);
+  public function testInsertComponentAppend() {
+    $expected = [
+      'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(4),
+    ];
+
+    $this->section->insertComponent(2, new SectionComponent('new-uuid', 'ordered-region'));
+    $this->assertComponents($expected, $this->section);
   }
 
   /**
-   * @covers ::updateBlock
+   * @covers ::insertComponent
    */
-  public function testUpdateBlockInvalidUuid() {
-    $this->setExpectedException(\InvalidArgumentException::class, 'Invalid UUID');
-    $this->section->updateBlock('ordered-region', 'new-uuid', []);
+  public function testInsertComponentInvalidDelta() {
+    $this->setExpectedException(\OutOfBoundsException::class, 'Invalid delta "7" for the "new-uuid" component');
+    $this->section->insertComponent(7, new SectionComponent('new-uuid', 'ordered-region'));
+  }
+
+  /**
+   * Asserts that the section has the expected components.
+   *
+   * @param \Drupal\layout_builder\SectionComponent[] $expected
+   *   The expected sections.
+   * @param \Drupal\layout_builder\Section $section
+   *   The section storage to check.
+   */
+  protected function assertComponents(array $expected, Section $section) {
+    $result = $section->getComponents();
+    $this->assertEquals($expected, $result);
+    $this->assertSame(array_keys($expected), array_keys($result));
   }
 
 }

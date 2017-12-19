@@ -78,9 +78,9 @@ class LayoutSectionFormatter extends FormatterBase implements ContainerFactoryPl
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
 
-    /** @var \Drupal\layout_builder\Field\LayoutSectionItemInterface[] $items */
-    foreach ($items as $delta => $item) {
-      $elements[$delta] = $this->builder->buildSection($item->layout, $item->layout_settings, $item->section);
+    /** @var \Drupal\layout_builder\SectionStorageInterface $items */
+    foreach ($items->getSections() as $delta => $section) {
+      $elements[$delta] = $section->toRenderArray();
     }
 
     return $elements;

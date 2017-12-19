@@ -69,31 +69,28 @@ class MoveBlockController implements ContainerInjectionInterface {
    *   An AJAX response.
    */
   public function build(EntityInterface $entity, $delta_from, $delta_to, $region_from, $region_to, $block_uuid, $preceding_block_uuid = NULL) {
-    /** @var \Drupal\layout_builder\Field\LayoutSectionItemInterface $field */
-    $field = $entity->layout_builder__layout->get($delta_from);
-    $section = $field->getSection();
+    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
+    $field_list = $entity->layout_builder__layout;
+    $section = $field_list->getSection($delta_from);
 
-    $block = $section->getBlock($region_from, $block_uuid);
-    $section->removeBlock($region_from, $block_uuid);
+    $component = $section->getComponent($block_uuid);
+    $section->removeComponent($block_uuid);
 
     // If the block is moving from one section to another, update the original
     // section and load the new one.
     if ($delta_from !== $delta_to) {
-      $field->updateFromSection($section);
-      $field = $entity->layout_builder__layout->get($delta_to);
-      $section = $field->getSection();
+      $section = $field_list->getSection($delta_to);
     }
 
     // If a preceding block was specified, insert after that. Otherwise add the
     // block to the front.
+    $component->setRegion($region_to);
     if (isset($preceding_block_uuid)) {
-      $section->insertBlock($region_to, $block_uuid, $block, $preceding_block_uuid);
+      $section->insertAfterComponent($preceding_block_uuid, $component);
     }
     else {
-      $section->addBlock($region_to, $block_uuid, $block);
+      $section->appendComponent($component);
     }
-
-    $field->updateFromSection($section);
 
     $this->layoutTempstoreRepository->set($entity);
     return $this->rebuildLayout($entity);

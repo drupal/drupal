@@ -40,14 +40,11 @@ class UpdateBlockForm extends ConfigureBlockFormBase {
    *   The form array.
    */
   public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity = NULL, $delta = NULL, $region = NULL, $uuid = NULL) {
-    /** @var \Drupal\layout_builder\Field\LayoutSectionItemInterface $field */
-    $field = $entity->layout_builder__layout->get($delta);
-    $block = $field->getSection()->getBlock($region, $uuid);
-    if (empty($block['block']['id'])) {
-      throw new \InvalidArgumentException('Invalid UUID specified');
-    }
+    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
+    $field_list = $entity->layout_builder__layout;
+    $plugin = $field_list->getSection($delta)->getComponent($uuid)->getPlugin();
 
-    return parent::buildForm($form, $form_state, $entity, $delta, $region, $block['block']['id'], $block['block']);
+    return parent::buildForm($form, $form_state, $entity, $delta, $region, $plugin->getPluginId(), $plugin->getConfiguration());
   }
 
   /**
@@ -61,7 +58,7 @@ class UpdateBlockForm extends ConfigureBlockFormBase {
    * {@inheritdoc}
    */
   protected function submitBlock(Section $section, $region, $uuid, array $configuration) {
-    $section->updateBlock($region, $uuid, $configuration);
+    $section->getComponent($uuid)->setConfiguration($configuration);
   }
 
 }

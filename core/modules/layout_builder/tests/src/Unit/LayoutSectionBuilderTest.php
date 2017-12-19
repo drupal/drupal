@@ -7,6 +7,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Layout\LayoutPluginManagerInterface;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
@@ -14,6 +16,7 @@ use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\LayoutSectionBuilder;
+use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
@@ -86,7 +89,16 @@ class LayoutSectionBuilderTest extends UnitTestCase {
     $this->layoutSectionBuilder = new LayoutSectionBuilder($this->account->reveal(), $this->layoutPluginManager->reveal(), $this->blockManager->reveal(), $this->contextHandler->reveal(), $this->contextRepository->reveal());
 
     $this->layout = $this->prophesize(LayoutInterface::class);
+    $this->layout->getPluginDefinition()->willReturn(new LayoutDefinition([]));
+    $this->layout->build(Argument::type('array'))->willReturnArgument(0);
     $this->layoutPluginManager->createInstance('layout_onecol', [])->willReturn($this->layout->reveal());
+
+    $container = new ContainerBuilder();
+    $container->set('current_user', $this->account->reveal());
+    $container->set('plugin.manager.block', $this->blockManager->reveal());
+    $container->set('context.handler', $this->contextHandler->reveal());
+    $container->set('context.repository', $this->contextRepository->reveal());
+    \Drupal::setContainer($container);
   }
 
   /**
@@ -102,8 +114,12 @@ class LayoutSectionBuilderTest extends UnitTestCase {
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
+      '#cache' => [
+        'contexts' => [],
+        'tags' => [],
+        'max-age' => -1,
+      ],
     ];
-    $this->layout->build(['content' => ['some_uuid' => $render_array]])->willReturnArgument(0);
 
     $block = $this->prophesize(BlockPluginInterface::class);
     $this->blockManager->createInstance('block_plugin_id', ['id' => 'block_plugin_id'])->willReturn($block->reveal());
@@ -120,20 +136,9 @@ class LayoutSectionBuilderTest extends UnitTestCase {
     $block->getConfiguration()->willReturn([]);
 
     $section = [
-      'content' => [
-        'some_uuid' => [
-          'block' => [
-            'id' => 'block_plugin_id',
-          ],
-        ],
-      ],
+      new SectionComponent('some_uuid', 'content', ['id' => 'block_plugin_id']),
     ];
     $expected = [
-      '#cache' => [
-        'contexts' => [],
-        'tags' => [],
-        'max-age' => -1,
-      ],
       'content' => [
         'some_uuid' => $render_array,
       ],
@@ -146,7 +151,6 @@ class LayoutSectionBuilderTest extends UnitTestCase {
    * @covers ::buildSection
    */
   public function testBuildSectionAccessDenied() {
-    $this->layout->build([])->willReturn([]);
 
     $block = $this->prophesize(BlockPluginInterface::class);
     $this->blockManager->createInstance('block_plugin_id', ['id' => 'block_plugin_id'])->willReturn($block->reveal());
@@ -156,19 +160,17 @@ class LayoutSectionBuilderTest extends UnitTestCase {
     $block->build()->shouldNotBeCalled();
 
     $section = [
-      'content' => [
-        'some_uuid' => [
-          'block' => [
-            'id' => 'block_plugin_id',
-          ],
-        ],
-      ],
+      new SectionComponent('some_uuid', 'content', ['id' => 'block_plugin_id']),
     ];
     $expected = [
-      '#cache' => [
-        'contexts' => [],
-        'tags' => [],
-        'max-age' => -1,
+      'content' => [
+        'some_uuid' => [
+          '#cache' => [
+            'contexts' => [],
+            'tags' => [],
+            'max-age' => -1,
+          ],
+        ],
       ],
     ];
     $result = $this->layoutSectionBuilder->buildSection('layout_onecol', [], $section);
@@ -179,23 +181,14 @@ class LayoutSectionBuilderTest extends UnitTestCase {
    * @covers ::buildSection
    */
   public function testBuildSectionEmpty() {
-    $this->layout->build([])->willReturn([]);
-
     $section = [];
-    $expected = [
-      '#cache' => [
-        'contexts' => [],
-        'tags' => [],
-        'max-age' => -1,
-      ],
-    ];
+    $expected = [];
     $result = $this->layoutSectionBuilder->buildSection('layout_onecol', [], $section);
     $this->assertEquals($expected, $result);
   }
 
   /**
    * @covers ::buildSection
-   * @covers ::getBlock
    */
   public function testContextAwareBlock() {
     $render_array = [
@@ -206,8 +199,12 @@ class LayoutSectionBuilderTest extends UnitTestCase {
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
       'content' => [],
+      '#cache' => [
+        'contexts' => [],
+        'tags' => [],
+        'max-age' => -1,
+      ],
     ];
-    $this->layout->build(['content' => ['some_uuid' => $render_array]])->willReturnArgument(0);
 
     $block = $this->prophesize(BlockPluginInterface::class)->willImplement(ContextAwarePluginInterface::class);
     $this->blockManager->createInstance('block_plugin_id', ['id' => 'block_plugin_id'])->willReturn($block->reveal());
@@ -228,20 +225,9 @@ class LayoutSectionBuilderTest extends UnitTestCase {
     $this->contextHandler->applyContextMapping($block->reveal(), [])->shouldBeCalled();
 
     $section = [
-      'content' => [
-        'some_uuid' => [
-          'block' => [
-            'id' => 'block_plugin_id',
-          ],
-        ],
-      ],
+      new SectionComponent('some_uuid', 'content', ['id' => 'block_plugin_id']),
     ];
     $expected = [
-      '#cache' => [
-        'contexts' => [],
-        'tags' => [],
-        'max-age' => -1,
-      ],
       'content' => [
         'some_uuid' => $render_array,
       ],
@@ -252,50 +238,10 @@ class LayoutSectionBuilderTest extends UnitTestCase {
 
   /**
    * @covers ::buildSection
-   * @covers ::getBlock
    */
   public function testBuildSectionMissingPluginId() {
-    $section = [
-      'content' => [
-        'some_uuid' => [
-          'block' => [],
-        ],
-      ],
-    ];
-    $this->setExpectedException(PluginException::class, 'No plugin ID specified for block with "some_uuid" UUID');
-    $this->layoutSectionBuilder->buildSection('layout_onecol', [], $section);
-  }
-
-  /**
-   * @covers ::buildSection
-   *
-   * @dataProvider providerTestBuildSectionMalformedData
-   */
-  public function testBuildSectionMalformedData($section, $message) {
-    $this->layout->build(Argument::type('array'))->willReturnArgument(0);
-    $this->layout->getPluginId()->willReturn('the_plugin_id');
-    $this->setExpectedException(\InvalidArgumentException::class, $message);
-    $this->layoutSectionBuilder->buildSection('layout_onecol', [], $section);
-  }
-
-  /**
-   * Provides test data for ::testBuildSectionMalformedData().
-   */
-  public function providerTestBuildSectionMalformedData() {
-    $data = [];
-    $data['invalid_region'] = [
-      ['content' => 'bar'],
-      'The "content" region in the "the_plugin_id" layout has invalid configuration',
-    ];
-    $data['invalid_configuration'] = [
-      ['content' => ['some_uuid' => 'bar']],
-      'The block with UUID of "some_uuid" has invalid configuration',
-    ];
-    $data['invalid_blocks'] = [
-      ['content' => ['some_uuid' => []]],
-      'The block with UUID of "some_uuid" has invalid configuration',
-    ];
-    return $data;
+    $this->setExpectedException(PluginException::class, 'No plugin ID specified for component with "some_uuid" UUID');
+    $this->layoutSectionBuilder->buildSection('layout_onecol', [], [new SectionComponent('some_uuid', 'content')]);
   }
 
 }

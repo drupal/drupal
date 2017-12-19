@@ -7,8 +7,6 @@ use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\TypedData\MapDataDefinition;
-use Drupal\layout_builder\Field\LayoutSectionItemInterface;
 use Drupal\layout_builder\Section;
 
 /**
@@ -25,22 +23,16 @@ use Drupal\layout_builder\Section;
  *   no_ui = TRUE,
  *   cardinality = \Drupal\Core\Field\FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
  * )
+ *
+ * @property \Drupal\layout_builder\Section section
  */
-class LayoutSectionItem extends FieldItemBase implements LayoutSectionItemInterface {
+class LayoutSectionItem extends FieldItemBase {
 
   /**
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    // Prevent early t() calls by using the TranslatableMarkup.
-    $properties['layout'] = DataDefinition::create('string')
-      ->setLabel(new TranslatableMarkup('Layout'))
-      ->setSetting('case_sensitive', FALSE)
-      ->setRequired(TRUE);
-    $properties['layout_settings'] = MapDataDefinition::create('map')
-      ->setLabel(new TranslatableMarkup('Layout Settings'))
-      ->setRequired(FALSE);
-    $properties['section'] = MapDataDefinition::create('map')
+    $properties['section'] = DataDefinition::create('layout_section')
       ->setLabel(new TranslatableMarkup('Layout Section'))
       ->setRequired(FALSE);
 
@@ -73,17 +65,6 @@ class LayoutSectionItem extends FieldItemBase implements LayoutSectionItemInterf
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $schema = [
       'columns' => [
-        'layout' => [
-          'type' => 'varchar',
-          'length' => '255',
-          'binary' => FALSE,
-        ],
-        'layout_settings' => [
-          'type' => 'blob',
-          'size' => 'normal',
-          // @todo Address in https://www.drupal.org/node/2914503.
-          'serialize' => TRUE,
-        ],
         'section' => [
           'type' => 'blob',
           'size' => 'normal',
@@ -100,10 +81,8 @@ class LayoutSectionItem extends FieldItemBase implements LayoutSectionItemInterf
    * {@inheritdoc}
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-    $values['layout'] = 'layout_onecol';
-    $values['layout_settings'] = [];
     // @todo Expand this in https://www.drupal.org/node/2912331.
-    $values['section'] = [];
+    $values['section'] = new Section('layout_onecol');
     return $values;
   }
 
@@ -111,22 +90,7 @@ class LayoutSectionItem extends FieldItemBase implements LayoutSectionItemInterf
    * {@inheritdoc}
    */
   public function isEmpty() {
-    return empty($this->layout);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSection() {
-    return new Section($this->section);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function updateFromSection(Section $section) {
-    $this->section = $section->getValue();
-    return $this;
+    return empty($this->section);
   }
 
 }

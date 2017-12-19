@@ -246,11 +246,10 @@ abstract class ConfigureBlockFormBase extends FormBase {
 
     $configuration = $this->block->getConfiguration();
 
-    /** @var \Drupal\layout_builder\Field\LayoutSectionItemInterface $field */
-    $field = $this->entity->layout_builder__layout->get($this->delta);
-    $section = $field->getSection();
-    $this->submitBlock($section, $this->region, $configuration['uuid'], ['block' => $configuration]);
-    $field->updateFromSection($section);
+    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
+    $field_list = $this->entity->layout_builder__layout;
+    $section = $field_list->getSection($this->delta);
+    $this->submitBlock($section, $this->region, $configuration['uuid'], $configuration);
 
     $this->layoutTempstoreRepository->set($this->entity);
     $form_state->setRedirectUrl($this->entity->toUrl('layout-builder'));
