@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\system\Tests\Module;
+namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\simpletest\WebTestBase;
-use Drupal\taxonomy\Tests\TaxonomyTestTrait;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
 
 /**
  * Tests that modules which provide entity types can be uninstalled.
  *
  * @group Module
  */
-class PrepareUninstallTest extends WebTestBase {
+class PrepareUninstallTest extends BrowserTestBase {
 
   use TaxonomyTestTrait;
 
