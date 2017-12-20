@@ -31,3 +31,15 @@ function hal_update_8301() {
   $hal_settings->set('link_domain', $link_domain);
   $hal_settings->save(TRUE);
 }
+
+/**
+ * Add hal.settings::bc_file_uri_as_url_normalizer configuration.
+ */
+function hal_update_8501() {
+  $config_factory = \Drupal::configFactory();
+  $config_factory->getEditable('hal.settings')
+    ->set('bc_file_uri_as_url_normalizer', TRUE)
+    ->save(TRUE);
+
+  return t('Backwards compatibility mode has been enabled for File entities\' HAL normalization of the "uri" field. Like before, it will continue to return only the absolute file URL. If you want the new behavior, which returns both the stored URI and a root-relative file URL, <a href="https://www.drupal.org/node/2925783">read the change record to learn how to opt in.</a>');
+}

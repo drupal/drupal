@@ -21,6 +21,20 @@ class FileDenormalizeTest extends BrowserTestBase {
   public static $modules = ['hal', 'file', 'node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // @todo Remove this work-around in https://www.drupal.org/node/1927648.
+    // @see hal_update_8501()
+    \Drupal::configFactory()
+      ->getEditable('hal.settings')
+      ->set('bc_file_uri_as_url_normalizer', TRUE)
+      ->save(TRUE);
+  }
+
+  /**
    * Tests file entity denormalization.
    */
   public function testFileDenormalize() {

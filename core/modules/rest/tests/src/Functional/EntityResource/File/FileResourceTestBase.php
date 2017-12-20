@@ -154,6 +154,7 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
       ],
       'uri' => [
         [
+          'url' => base_path() . $this->siteDirectory . '/files/drupal.txt',
           'value' => 'public://drupal.txt',
         ],
       ],

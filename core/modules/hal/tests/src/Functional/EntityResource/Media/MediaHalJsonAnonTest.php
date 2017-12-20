@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\hal\Functional\EntityResource\Media;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\file\Entity\File;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
@@ -86,11 +87,6 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
               ],
             ],
             'lang' => 'en',
-            'uri' => [
-              [
-                'value' => $file->url(),
-              ],
-            ],
             'uuid' => [
               [
                 'value' => $file->uuid(),
@@ -126,11 +122,6 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
               ],
             ],
             'lang' => 'en',
-            'uri' => [
-              [
-                'value' => $thumbnail->url(),
-              ],
-            ],
             'uuid' => [
               [
                 'value' => $thumbnail->uuid(),
@@ -171,6 +162,13 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
         ],
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedCacheTags() {
+    return Cache::mergeTags(parent::getExpectedCacheTags(), ['config:hal.settings']);
   }
 
 }

@@ -13,7 +13,8 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "file_uri",
  *   label = @Translation("File URI"),
  *   field_types = {
- *     "uri"
+ *     "uri",
+ *     "file_uri",
  *   }
  * )
  */

@@ -14,9 +14,10 @@ services:
       - { name: normalizer, priority: 10 }
   serializer.normalizer.file_entity.hal:
     class: Drupal\hal\Normalizer\FileEntityNormalizer
+    deprecated: 'The "%service_id%" normalizer service is deprecated: it is obsolete, it only remains available for backwards compatibility.'
+    arguments: ['@entity.manager', '@http_client', '@hal.link_manager', '@module_handler', '@config.factory']
     tags:
       - { name: normalizer, priority: 20 }
-    arguments: ['@entity.manager', '@http_client', '@hal.link_manager', '@module_handler']
   serializer.normalizer.timestamp_item.hal:
    class: Drupal\hal\Normalizer\TimestampItemNormalizer
    tags:

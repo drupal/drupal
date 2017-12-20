@@ -461,8 +461,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Note: deserialization of the XML format is not supported, so only test
     // this for other formats.
     if (static::$format !== 'xml') {
-      $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
-      $this->assertSame($unserialized->uuid(), $this->entity->uuid());
+      // @todo Work-around for HAL's FileEntityNormalizer::denormalize() being
+      // broken, being fixed in https://www.drupal.org/node/1927648, where this
+      // if-test should be removed.
+      if (!(static::$entityTypeId === 'file' && static::$format === 'hal_json')) {
+        $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
+        $this->assertSame($unserialized->uuid(), $this->entity->uuid());
+      }
     }
     // Finally, assert that the expected 'Link' headers are present.
     if ($this->entity->getEntityType()->getLinkTemplates()) {

@@ -49,6 +49,16 @@ function file_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_field_widget_info_alter().
+ */
+function file_field_widget_info_alter(array &$info) {
+  // Allows using the 'uri' widget for the 'file_uri' field type, which uses it
+  // as the default widget.
+  // @see \Drupal\file\Plugin\Field\FieldType\FileUriItem
+  $info['uri']['field_types'][] = 'file_uri';
+}
+
+/**
  * Loads file entities from the database.
  *
  * @param array|null $fids
