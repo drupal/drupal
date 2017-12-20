@@ -5,7 +5,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\TypedData\TranslatableInterface;
+use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
 
 /**
  * Provides several mechanisms for retrieving entities.
@@ -82,7 +82,7 @@ class EntityRepository implements EntityRepositoryInterface {
   public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = []) {
     $translation = $entity;
 
-    if ($entity instanceof TranslatableInterface && count($entity->getTranslationLanguages()) > 1) {
+    if ($entity instanceof TranslatableDataInterface && count($entity->getTranslationLanguages()) > 1) {
       if (empty($langcode)) {
         $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
         $entity->addCacheContexts(['languages:' . LanguageInterface::TYPE_CONTENT]);

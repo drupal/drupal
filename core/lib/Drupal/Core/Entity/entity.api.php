@@ -68,6 +68,57 @@ use Drupal\node\Entity\NodeType;
  * - During many operations, static methods are called on the entity class,
  *   which implements \Drupal\Entity\EntityInterface.
  *
+ * @section entities_revisions_translations Entities, revisions and translations
+ * A content entity can have multiple stored variants: based on its definition,
+ * it can be revisionable, translatable, or both.
+ *
+ * A revisionable entity can keep track of the changes that affect its data. In
+ * fact all previous revisions of the entity can be stored and made available as
+ * "historical" information. The "default" revision is the canonical variant of
+ * the entity, the one that is loaded when no specific revision is requested.
+ * Only changes to the default revision may be performed without triggering the
+ * creation of a new revision, in any other case revision data is not supposed
+ * to change. Aside from historical revisions, there can be "pending" revisions,
+ * that contain changes that did not make their way into the default revision.
+ * Typically these revisions contain data that is waiting for some form of
+ * approval, before being accepted as canonical.
+ * @see \Drupal\Core\Entity\RevisionableInterface
+ * @see \Drupal\Core\Entity\RevisionableStorageInterface
+ *
+ * A translatable entity can contain multiple translations of the same content.
+ * Content entity data is stored via fields, and each field can have one version
+ * for each enabled language. Some fields may be defined as untranslatable,
+ * which means that their values are shared among all translations. The
+ * "default" translation is the canonical variant of the entity, the one whose
+ * content will be accessible in the entity field data. Other translations
+ * can be instantiated from the default one. Every translation has an "active
+ * language" that is used to determine which field translation values should be
+ * handled. Typically the default translation's active language is the language
+ * of the content that was originally entered and served as source for the other
+ * translations.
+ * @see \Drupal\Core\Entity\TranslatableInterface
+ * @see \Drupal\Core\Entity\TranslatableStorageInterface
+ *
+ * An entity that is both revisionable and translatable has all the features
+ * described above: every revision can contain one or more translations. The
+ * canonical variant of the entity is the default translation of the default
+ * revision. Any revision will be initially loaded as the default translation,
+ * the other revision translations can be instantiated from this one. If a
+ * translation has changes in a certain revision, the translation is considered
+ * "affected" by that revision, and will be flagged as such via the
+ * "revision_translation_affected" field. With the built-in UI, every time a new
+ * revision is saved, the changes for the edited translations will be stored,
+ * while all field values for the other translations will be copied as-is.
+ * However, if multiple translations of the default revision are being
+ * subsequently modified without creating a new revision when saving, they will
+ * all be affected by the default revision. Additionally, all revision
+ * translations will be affected when saving a revision containing changes for
+ * untranslatable fields. On the other hand, pending revisions are not supposed
+ * to contain multiple affected translations, even when they are being
+ * manipulated via the API.
+ * @see \Drupal\Core\Entity\TranslatableRevisionableInterface
+ * @see \Drupal\Core\Entity\TranslatableRevisionableStorageInterface
+ *
  * @section create Create operations
  * To create an entity:
  * @code
@@ -84,6 +135,10 @@ use Drupal\node\Entity\NodeType;
  * Hooks invoked during the create operation:
  * - hook_ENTITY_TYPE_create()
  * - hook_entity_create()
+ * - When handling content entities, if a new translation is added to the entity
+ *   object:
+ *   - hook_ENTITY_TYPE_translation_create()
+ *   - hook_entity_translation_create()
  *
  * See @ref save below for the save portion of the operation.
  *
@@ -112,17 +167,6 @@ use Drupal\node\Entity\NodeType;
  * $entity = $storage->loadRevision($revision_id);
  * @endcode
  * This involves the same hooks and operations as regular entity loading.
- *
- * @section entities_revisions_translations Entities, revisions and translations
- *
- * A translation is not a revision and a revision is not necessarily a
- * translation. Revisions and translations are the two axes on the "spreadsheet"
- * of an entity. If you use the built-in UI and have revisions enabled, then a
- * new translation change would create a new revision (with a copy of all data
- * for other languages in that revision). If an entity does not use revisions or
- * the entity is being modified via the API, then multiple translations can be
- * modified in a single revision. Conceptually, the revisions are columns on the
- * spreadsheet and translations are rows.
  *
  * @section save Save operations
  * To update an existing entity, you will need to load it, change properties,

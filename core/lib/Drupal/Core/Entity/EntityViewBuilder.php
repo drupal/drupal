@@ -11,7 +11,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Theme\Registry;
-use Drupal\Core\TypedData\TranslatableInterface;
+use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -189,7 +189,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
         'bin' => $this->cacheBin,
       ];
 
-      if ($entity instanceof TranslatableInterface && count($entity->getTranslationLanguages()) > 1) {
+      if ($entity instanceof TranslatableDataInterface && count($entity->getTranslationLanguages()) > 1) {
         $build['#cache']['keys'][] = $entity->language()->getId();
       }
     }
