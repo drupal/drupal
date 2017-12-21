@@ -98,6 +98,13 @@ use Drupal\migrate\Row;
  *
  * hook_migrate_MIGRATION_ID_prepare_row() is also available.
  *
+ * @param \Drupal\migrate\Row $row
+ *   The row being imported.
+ * @param \Drupal\migrate\Plugin\MigrateSourceInterface $source
+ *   The source migration.
+ * @param \Drupal\migrate\Plugin\MigrationInterface $migration
+ *   The current migration.
+ *
  * @ingroup migration
  */
 function hook_migrate_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
@@ -106,6 +113,28 @@ function hook_migrate_prepare_row(Row $row, MigrateSourceInterface $source, Migr
     if ($value) {
       $row->setSourceProperty('settings:mymodule:foo', unserialize($value));
     }
+  }
+}
+
+/**
+ * Allows adding data to a row for a migration with the specified ID.
+ *
+ * This provides the same functionality as hook_migrate_prepare_row() but
+ * removes the need to check the value of $migration->id().
+ *
+ * @param \Drupal\migrate\Row $row
+ *   The row being imported.
+ * @param \Drupal\migrate\Plugin\MigrateSourceInterface $source
+ *   The source migration.
+ * @param \Drupal\migrate\Plugin\MigrationInterface $migration
+ *   The current migration.
+ *
+ * @ingroup migration
+ */
+function hook_migrate_MIGRATION_ID_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
+  $value = $source->getDatabase()->query('SELECT value FROM {variable} WHERE name = :name', [':name' => 'mymodule_filter_foo_' . $row->getSourceProperty('format')])->fetchField();
+  if ($value) {
+    $row->setSourceProperty('settings:mymodule:foo', unserialize($value));
   }
 }
 
