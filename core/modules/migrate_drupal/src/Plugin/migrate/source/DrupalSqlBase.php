@@ -13,10 +13,19 @@ use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * A base source class for Drupal migrate sources.
+ * A base class for source plugins using a Drupal database as a source.
  *
- * Mainly to let children retrieve information from the origin system in an
- * easier way.
+ * Provides general purpose helper methods that are commonly needed
+ * when writing source plugins that use a Drupal database as a source, for
+ * example:
+ * - Check if the given module exists in the source database.
+ * - Read Drupal configuration variables from the source database.
+ *
+ * For a full list, refer to the methods of this class.
+ *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
 abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginInterface, DependentPluginInterface {
 
@@ -52,7 +61,7 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
   }
 
   /**
-   * Retrieves all system data information from origin system.
+   * Retrieves all system data information from the source Drupal database.
    *
    * @return array
    *   List of system table information keyed by type and name.
@@ -109,7 +118,7 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
   }
 
   /**
-   * Get a module schema_version value in the source installation.
+   * Retrieves a module schema_version from the source Drupal database.
    *
    * @param string $module
    *   Name of module.
@@ -124,7 +133,7 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
   }
 
   /**
-   * Check to see if a given module is enabled in the source installation.
+   * Checks if a given module is enabled in the source Drupal database.
    *
    * @param string $module
    *   Name of module to check.
@@ -138,7 +147,7 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
   }
 
   /**
-   * Read a variable from a Drupal database.
+   * Reads a variable from a source Drupal database.
    *
    * @param $name
    *   Name of the variable.
