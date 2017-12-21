@@ -158,7 +158,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
       return AccessResult::forbidden()->addCacheableDependency($entity);
     }
     if ($admin_permission = $this->entityType->getAdminPermission()) {
-      return AccessResult::allowedIfHasPermission($account, $this->entityType->getAdminPermission());
+      return AccessResult::allowedIfHasPermission($account, $admin_permission);
     }
     else {
       // No opinion.
