@@ -21,14 +21,17 @@ class MediaTest extends MediaKernelTestBase {
   }
 
   /**
-   * Ensure media name is configurable on manage display.
+   * Tests the Media "name" base field behavior.
    */
-  public function testNameIsConfigurable() {
+  public function testNameBaseField() {
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $field_definitions */
     $field_definitions = $this->container->get('entity_field.manager')
       ->getBaseFieldDefinitions('media');
 
+    // Ensure media name is configurable on manage display.
     $this->assertTrue($field_definitions['name']->isDisplayConfigurable('view'));
+    // Ensure it is not visible by default.
+    $this->assertEquals($field_definitions['name']->getDisplayOptions('view'), ['region' => 'hidden']);
   }
 
 }
