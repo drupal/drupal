@@ -149,7 +149,7 @@
 #drupal-off-canvas ol li {
   display: block;
 }
-#drupal-off-canvas quote,
+#drupal-off-canvas blockquote,
 #drupal-off-canvas code {
   margin: 20px 0;
 }
