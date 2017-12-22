@@ -35,11 +35,13 @@ class UpdateBlockForm extends ConfigureBlockFormBase {
    *   The region of the block.
    * @param string $uuid
    *   The UUID of the block being updated.
+   * @param array $configuration
+   *   (optional) The array of configuration for the block.
    *
    * @return array
    *   The form array.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity = NULL, $delta = NULL, $region = NULL, $uuid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity = NULL, $delta = NULL, $region = NULL, $uuid = NULL, array $configuration = []) {
     /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
     $field_list = $entity->layout_builder__layout;
     $plugin = $field_list->getSection($delta)->getComponent($uuid)->getPlugin();

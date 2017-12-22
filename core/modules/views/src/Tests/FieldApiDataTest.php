@@ -35,8 +35,8 @@ class FieldApiDataTest extends FieldTestBase {
    */
   protected $translationNodes;
 
-  protected function setUp() {
-    parent::setUp(FALSE);
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     $field_names = $this->setUpFieldStorages(4);
 

@@ -30,8 +30,8 @@ class RelationshipUserImageDataTest extends ViewTestBase {
    */
   public static $testViews = ['test_image_user_image_data'];
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Create the user profile field and instance.
     FieldStorageConfig::create([

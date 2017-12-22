@@ -42,8 +42,8 @@ abstract class FieldTestBase extends ViewTestBase {
    */
   public $fields;
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Ensure the page node type exists.
     NodeType::create([

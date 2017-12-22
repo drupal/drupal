@@ -19,8 +19,8 @@ class ViewAjaxTest extends ViewTestBase {
    */
   public static $testViews = ['test_ajax_view', 'test_view'];
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     $this->enableViewsTestModule();
   }

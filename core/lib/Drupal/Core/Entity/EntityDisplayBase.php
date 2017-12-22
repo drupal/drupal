@@ -250,7 +250,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    */
-  public function preSave(EntityStorageInterface $storage, $update = TRUE) {
+  public function preSave(EntityStorageInterface $storage) {
     // Ensure that a region is set on each component.
     foreach ($this->getComponents() as $name => $component) {
       $this->handleHiddenType($name, $component);
@@ -263,7 +263,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
 
     ksort($this->content);
     ksort($this->hidden);
-    parent::preSave($storage, $update);
+    parent::preSave($storage);
   }
 
   /**

@@ -26,8 +26,8 @@ class DisplayFeedTest extends PluginTestBase {
    */
   public static $modules = ['block', 'node', 'views'];
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     $this->enableViewsTestModule();
 

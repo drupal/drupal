@@ -8,6 +8,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Form\OverviewTerms;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\taxonomy\VocabularyInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -47,7 +48,7 @@ class Overview extends OverviewTerms {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state, VocabularyInterface $taxonomy_vocabulary = NULL) {
     $forum_config = $this->config('forum.settings');
     $vid = $forum_config->get('vocabulary');
     $vocabulary = $this->entityManager->getStorage('taxonomy_vocabulary')->load($vid);

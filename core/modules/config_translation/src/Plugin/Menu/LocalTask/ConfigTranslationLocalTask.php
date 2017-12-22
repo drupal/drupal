@@ -5,6 +5,7 @@ namespace Drupal\config_translation\Plugin\Menu\LocalTask;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Menu\LocalTaskDefault;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines a local task plugin with a dynamic title.
@@ -22,7 +23,7 @@ class ConfigTranslationLocalTask extends LocalTaskDefault {
   /**
    * {@inheritdoc}
    */
-  public function getTitle() {
+  public function getTitle(Request $request = NULL) {
     // Take custom 'config_translation_plugin_id' plugin definition key to
     // retrieve title. We need to retrieve a runtime title (as opposed to
     // storing the title on the plugin definition for the link) because

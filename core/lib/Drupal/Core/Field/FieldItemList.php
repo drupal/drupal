@@ -97,18 +97,6 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
 
   /**
    * {@inheritdoc}
-   * @todo Revisit the need when all entity types are converted to NG entities.
-   */
-  public function getValue($include_computed = FALSE) {
-    $values = [];
-    foreach ($this->list as $delta => $item) {
-      $values[$delta] = $item->getValue($include_computed);
-    }
-    return $values;
-  }
-
-  /**
-   * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
     // Support passing in only the value of the first item, either as a literal
