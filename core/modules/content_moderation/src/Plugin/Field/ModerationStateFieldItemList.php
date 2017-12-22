@@ -153,7 +153,7 @@ class ModerationStateFieldItemList extends FieldItemList {
 
     // Change the entity's default revision flag and the publishing status only
     // if the new workflow state is a valid one.
-    if ($workflow->getTypePlugin()->hasState($moderation_state_id)) {
+    if ($workflow && $workflow->getTypePlugin()->hasState($moderation_state_id)) {
       /** @var \Drupal\content_moderation\ContentModerationState $current_state */
       $current_state = $workflow->getTypePlugin()->getState($moderation_state_id);
 
