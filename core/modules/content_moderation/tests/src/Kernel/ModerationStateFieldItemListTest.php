@@ -99,4 +99,29 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $this->assertFalse($this->testNode->isDefaultRevision());
   }
 
+  /**
+   * Test updating the state for an entity without a workflow.
+   */
+  public function testEntityWithNoWorkflow() {
+    $node_type = NodeType::create([
+      'type' => 'example_no_workflow',
+    ]);
+    $node_type->save();
+    $test_node = Node::create([
+      'type' => 'example_no_workflow',
+      'title' => 'Test node with no workflow',
+    ]);
+    $test_node->save();
+
+    /** @var \Drupal\content_moderation\ModerationInformationInterface $content_moderation_info */
+    $content_moderation_info = \Drupal::service('content_moderation.moderation_information');
+    $workflow = $content_moderation_info->getWorkflowForEntity($test_node);
+    $this->assertNull($workflow);
+
+    $this->assertTrue($test_node->isPublished());
+    $test_node->moderation_state->setValue('draft');
+    // The entity is still published because there is not a workflow.
+    $this->assertTrue($test_node->isPublished());
+  }
+
 }
