@@ -156,4 +156,26 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     ];
   }
 
+  /**
+   * Test the validation message is displayed only once for ajax uploads.
+   */
+  public function testAJAXValidationMessage() {
+    $field_name = strtolower($this->randomMachineName());
+    $this->createImageField($field_name, 'article', ['cardinality' => -1]);
+
+    $this->drupalGet('node/add/article');
+    /** @var \Drupal\file\FileInterface[] $text_files */
+    $text_files = $this->drupalGetTestFiles('text');
+    $text_file = reset($text_files);
+    $edit = [
+      'files[' . $field_name . '_0][]' => $this->container->get('file_system')->realpath($text_file->uri),
+      'title[0][value]' => $this->randomMachineName(),
+    ];
+    $this->drupalPostAjaxForm(NULL, $edit, $field_name . '_0_upload_button');
+    $elements = $this->xpath('//div[contains(@class, :class)]', [
+      ':class' => 'messages--error',
+    ]);
+    $this->assertEqual(count($elements), 1, 'Ajax validation messages are displayed once.');
+  }
+
 }

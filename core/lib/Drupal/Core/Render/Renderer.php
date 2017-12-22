@@ -509,11 +509,17 @@ class Renderer implements RendererInterface {
     // We store the resulting output in $elements['#markup'], to be consistent
     // with how render cached output gets stored. This ensures that placeholder
     // replacement logic gets the same data to work with, no matter if #cache is
-    // disabled, #cache is enabled, there is a cache hit or miss.
-    $prefix = isset($elements['#prefix']) ? $this->xssFilterAdminIfUnsafe($elements['#prefix']) : '';
-    $suffix = isset($elements['#suffix']) ? $this->xssFilterAdminIfUnsafe($elements['#suffix']) : '';
-
-    $elements['#markup'] = Markup::create($prefix . $elements['#children'] . $suffix);
+    // disabled, #cache is enabled, there is a cache hit or miss. If
+    // #render_children is set the #prefix and #suffix will have already been
+    // added.
+    if (isset($elements['#render_children'])) {
+      $elements['#markup'] = Markup::create($elements['#children']);
+    }
+    else {
+      $prefix = isset($elements['#prefix']) ? $this->xssFilterAdminIfUnsafe($elements['#prefix']) : '';
+      $suffix = isset($elements['#suffix']) ? $this->xssFilterAdminIfUnsafe($elements['#suffix']) : '';
+      $elements['#markup'] = Markup::create($prefix . $elements['#children'] . $suffix);
+    }
 
     // We've rendered this element (and its subtree!), now update the context.
     $context->update($elements);

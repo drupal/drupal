@@ -291,6 +291,42 @@ class RendererBubblingTest extends RendererTestBase {
     ];
     $data[] = [$test_element, ['bar', 'foo'], $expected_cache_items];
 
+    // Ensure that bubbleable metadata has been collected from children and set
+    // correctly to the main level of the render array. That ensures that correct
+    // bubbleable metadata exists if render array gets rendered multiple times.
+    $test_element = [
+      '#cache' => [
+        'keys' => ['parent'],
+        'tags' => ['yar', 'har']
+      ],
+      '#markup' => 'parent',
+      'child' => [
+        '#render_children' => TRUE,
+        'subchild' => [
+          '#cache' => [
+            'contexts' => ['foo'],
+            'tags' => ['fiddle', 'dee'],
+          ],
+          '#attached' => [
+            'library' => ['foo/bar']
+          ],
+          '#markup' => '',
+        ]
+      ],
+    ];
+    $expected_cache_items = [
+      'parent:foo' => [
+        '#attached' => ['library' => ['foo/bar']],
+        '#cache' => [
+          'contexts' => ['foo'],
+          'tags' => ['dee', 'fiddle', 'har', 'yar'],
+          'max-age' => Cache::PERMANENT,
+        ],
+        '#markup' => 'parent',
+      ],
+    ];
+    $data[] = [$test_element, ['foo'], $expected_cache_items];
+
     return $data;
   }
 
