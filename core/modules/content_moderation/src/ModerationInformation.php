@@ -87,6 +87,9 @@ class ModerationInformation implements ModerationInformationInterface {
       $result = $storage->getQuery()
         ->latestRevision()
         ->condition($this->entityTypeManager->getDefinition($entity_type_id)->getKey('id'), $entity_id)
+        // No access check is performed here since this is an API function and
+        // should return the same ID regardless of the current user.
+        ->accessCheck(FALSE)
         ->execute();
       if ($result) {
         return key($result);
@@ -102,6 +105,9 @@ class ModerationInformation implements ModerationInformationInterface {
       $result = $storage->getQuery()
         ->currentRevision()
         ->condition($this->entityTypeManager->getDefinition($entity_type_id)->getKey('id'), $entity_id)
+        // No access check is performed here since this is an API function and
+        // should return the same ID regardless of the current user.
+        ->accessCheck(FALSE)
         ->execute();
       if ($result) {
         return key($result);

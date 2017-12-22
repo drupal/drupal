@@ -152,6 +152,12 @@ function node_access_test_node_access(NodeInterface $node, $op, AccountInterface
     // Make all Catalan content secret.
     return AccessResult::forbidden()->setCacheMaxAge(0);
   }
+
+  // Grant access if a specific user is specified.
+  if (\Drupal::state()->get('node_access_test.allow_uid') === $account->id()) {
+    return AccessResult::allowed();
+  }
+
   // No opinion.
   return AccessResult::neutral()->setCacheMaxAge(0);
 }
