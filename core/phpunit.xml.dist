@@ -8,8 +8,7 @@
 <phpunit bootstrap="tests/bootstrap.php" colors="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
-         beStrictAboutChangesToGlobalState="true"
-         checkForUnintentionallyCoveredCode="false">
+         beStrictAboutChangesToGlobalState="true">
 <!-- TODO set printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter" once
  https://youtrack.jetbrains.com/issue/WI-24808 is resolved. Drupal provides a
  result printer that links to the html output results for functional tests.
@@ -30,7 +29,7 @@
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value=""/>
     <!-- To disable deprecation testing uncomment the next line. -->
-    <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/> -->
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak_vendors"/>
     <!-- Example for changing the driver args to mink tests MINK_DRIVER_ARGS value: '["http://127.0.0.1:8510"]' -->
     <!-- Example for changing the driver args to phantomjs tests MINK_DRIVER_ARGS_PHANTOMJS value: '["http://127.0.0.1:8510"]' -->
   </php>

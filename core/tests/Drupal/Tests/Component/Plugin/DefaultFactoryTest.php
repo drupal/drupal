@@ -35,7 +35,7 @@ class DefaultFactoryTest extends TestCase {
    */
   public function testGetPluginClassWithValidObjectPluginDefinition() {
     $plugin_class = Cherry::class;
-    $plugin_definition = $this->getMock(PluginDefinitionInterface::class);
+    $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)->getMock();
     $plugin_definition->expects($this->atLeastOnce())
       ->method('getClass')
       ->willReturn($plugin_class);
@@ -50,7 +50,13 @@ class DefaultFactoryTest extends TestCase {
    * @covers ::getPluginClass
    */
   public function testGetPluginClassWithMissingClassWithArrayPluginDefinition() {
-    $this->setExpectedException(PluginException::class, 'The plugin (cherry) did not specify an instance class.');
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(PluginException::class);
+      $this->expectExceptionMessage('The plugin (cherry) did not specify an instance class.');
+    }
+    else {
+      $this->setExpectedException(PluginException::class, 'The plugin (cherry) did not specify an instance class.');
+    }
     DefaultFactory::getPluginClass('cherry', []);
   }
 
@@ -60,8 +66,14 @@ class DefaultFactoryTest extends TestCase {
    * @covers ::getPluginClass
    */
   public function testGetPluginClassWithMissingClassWithObjectPluginDefinition() {
-    $plugin_definition = $this->getMock(PluginDefinitionInterface::class);
-    $this->setExpectedException(PluginException::class, 'The plugin (cherry) did not specify an instance class.');
+    $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)->getMock();
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(PluginException::class);
+      $this->expectExceptionMessage('The plugin (cherry) did not specify an instance class.');
+    }
+    else {
+      $this->setExpectedException(PluginException::class, 'The plugin (cherry) did not specify an instance class.');
+    }
     DefaultFactory::getPluginClass('cherry', $plugin_definition);
   }
 
@@ -71,7 +83,13 @@ class DefaultFactoryTest extends TestCase {
    * @covers ::getPluginClass
    */
   public function testGetPluginClassWithNotExistingClassWithArrayPluginDefinition() {
-    $this->setExpectedException(PluginException::class, 'Plugin (kiwifruit) instance class "\Drupal\plugin_test\Plugin\plugin_test\fruit\Kiwifruit" does not exist.');
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(PluginException::class);
+      $this->expectExceptionMessage('Plugin (kiwifruit) instance class "\Drupal\plugin_test\Plugin\plugin_test\fruit\Kiwifruit" does not exist.');
+    }
+    else {
+      $this->setExpectedException(PluginException::class, 'Plugin (kiwifruit) instance class "\Drupal\plugin_test\Plugin\plugin_test\fruit\Kiwifruit" does not exist.');
+    }
     DefaultFactory::getPluginClass('kiwifruit', ['class' => '\Drupal\plugin_test\Plugin\plugin_test\fruit\Kiwifruit']);
   }
 
@@ -82,11 +100,16 @@ class DefaultFactoryTest extends TestCase {
    */
   public function testGetPluginClassWithNotExistingClassWithObjectPluginDefinition() {
     $plugin_class = '\Drupal\plugin_test\Plugin\plugin_test\fruit\Kiwifruit';
-    $plugin_definition = $this->getMock(PluginDefinitionInterface::class);
+    $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)->getMock();
     $plugin_definition->expects($this->atLeastOnce())
       ->method('getClass')
       ->willReturn($plugin_class);
-    $this->setExpectedException(PluginException::class);
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(PluginException::class);
+    }
+    else {
+      $this->setExpectedException(PluginException::class);
+    }
     DefaultFactory::getPluginClass('kiwifruit', $plugin_definition);
   }
 
@@ -109,7 +132,7 @@ class DefaultFactoryTest extends TestCase {
    */
   public function testGetPluginClassWithInterfaceWithObjectPluginDefinition() {
     $plugin_class = Cherry::class;
-    $plugin_definition = $this->getMock(PluginDefinitionInterface::class);
+    $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)->getMock();
     $plugin_definition->expects($this->atLeastOnce())
       ->method('getClass')
       ->willReturn($plugin_class);
@@ -125,7 +148,13 @@ class DefaultFactoryTest extends TestCase {
    */
   public function testGetPluginClassWithInterfaceAndInvalidClassWithArrayPluginDefinition() {
     $plugin_class = Kale::class;
-    $this->setExpectedException(PluginException::class, 'Plugin "cherry" (Drupal\plugin_test\Plugin\plugin_test\fruit\Kale) must implement interface Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface.');
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(PluginException::class);
+      $this->expectExceptionMessage('Plugin "cherry" (Drupal\plugin_test\Plugin\plugin_test\fruit\Kale) must implement interface Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface.');
+    }
+    else {
+      $this->setExpectedException(PluginException::class, 'Plugin "cherry" (Drupal\plugin_test\Plugin\plugin_test\fruit\Kale) must implement interface Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface.');
+    }
     DefaultFactory::getPluginClass('cherry', ['class' => $plugin_class, 'provider' => 'core'], FruitInterface::class);
   }
 
@@ -136,11 +165,16 @@ class DefaultFactoryTest extends TestCase {
    */
   public function testGetPluginClassWithInterfaceAndInvalidClassWithObjectPluginDefinition() {
     $plugin_class = Kale::class;
-    $plugin_definition = $this->getMock(PluginDefinitionInterface::class);
+    $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)->getMock();
     $plugin_definition->expects($this->atLeastOnce())
       ->method('getClass')
       ->willReturn($plugin_class);
-    $this->setExpectedException(PluginException::class);
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(PluginException::class);
+    }
+    else {
+      $this->setExpectedException(PluginException::class);
+    }
     DefaultFactory::getPluginClass('cherry', $plugin_definition, FruitInterface::class);
   }
 

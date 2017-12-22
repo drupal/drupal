@@ -124,7 +124,13 @@ class YamlDirectoryDiscoveryTest extends TestCase {
    * @covers ::getIdentifier
    */
   public function testDiscoveryNoIdException() {
-    $this->setExpectedException(DiscoveryException::class, 'The vfs://modules/test_1/item_1.test.yml contains no data in the identifier key \'id\'');
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(DiscoveryException::class);
+      $this->expectExceptionMessage('The vfs://modules/test_1/item_1.test.yml contains no data in the identifier key \'id\'');
+    }
+    else {
+      $this->setExpectedException(DiscoveryException::class, 'The vfs://modules/test_1/item_1.test.yml contains no data in the identifier key \'id\'');
+    }
     vfsStream::setup('modules', NULL, [
       'test_1' => [
         'item_1.test.yml' => "",
@@ -144,7 +150,13 @@ class YamlDirectoryDiscoveryTest extends TestCase {
    * @covers ::findAll
    */
   public function testDiscoveryInvalidYamlException() {
-    $this->setExpectedException(DiscoveryException::class, 'The vfs://modules/test_1/item_1.test.yml contains invalid YAML');
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(DiscoveryException::class);
+      $this->expectExceptionMessage('The vfs://modules/test_1/item_1.test.yml contains invalid YAML');
+    }
+    else {
+      $this->setExpectedException(DiscoveryException::class, 'The vfs://modules/test_1/item_1.test.yml contains invalid YAML');
+    }
     vfsStream::setup('modules', NULL, [
       'test_1' => [
         'item_1.test.yml' => "id: invalid\nfoo : [bar}",

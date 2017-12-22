@@ -96,9 +96,9 @@ class ArgumentsResolverTest extends TestCase {
    * Tests getArgument() with a Route, Request, and Account object.
    */
   public function testGetArgumentOrder() {
-    $a1 = $this->getMock('\Drupal\Tests\Component\Utility\Test1Interface');
-    $a2 = $this->getMock('\Drupal\Tests\Component\Utility\TestClass');
-    $a3 = $this->getMock('\Drupal\Tests\Component\Utility\Test2Interface');
+    $a1 = $this->getMockBuilder('\Drupal\Tests\Component\Utility\Test1Interface')->getMock();
+    $a2 = $this->getMockBuilder('\Drupal\Tests\Component\Utility\TestClass')->getMock();
+    $a3 = $this->getMockBuilder('\Drupal\Tests\Component\Utility\Test2Interface')->getMock();
 
     $objects = [
       't1' => $a1,
@@ -123,12 +123,18 @@ class ArgumentsResolverTest extends TestCase {
    * Without the typehint, the wildcard object will not be passed to the callable.
    */
   public function testGetWildcardArgumentNoTypehint() {
-    $a = $this->getMock('\Drupal\Tests\Component\Utility\Test1Interface');
+    $a = $this->getMockBuilder('\Drupal\Tests\Component\Utility\Test1Interface')->getMock();
     $wildcards = [$a];
     $resolver = new ArgumentsResolver([], [], $wildcards);
 
     $callable = function ($route) {};
-    $this->setExpectedException(\RuntimeException::class, 'requires a value for the "$route" argument.');
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(\RuntimeException::class);
+      $this->expectExceptionMessage('requires a value for the "$route" argument.');
+    }
+    else {
+      $this->setExpectedException(\RuntimeException::class, 'requires a value for the "$route" argument.');
+    }
     $resolver->getArguments($callable);
   }
 
@@ -156,7 +162,13 @@ class ArgumentsResolverTest extends TestCase {
     $resolver = new ArgumentsResolver($scalars, $objects, []);
 
     $callable = function (\stdClass $foo) {};
-    $this->setExpectedException(\RuntimeException::class, 'requires a value for the "$foo" argument.');
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(\RuntimeException::class);
+      $this->expectExceptionMessage('requires a value for the "$foo" argument.');
+    }
+    else {
+      $this->setExpectedException(\RuntimeException::class, 'requires a value for the "$foo" argument.');
+    }
     $resolver->getArguments($callable);
   }
 
@@ -167,7 +179,13 @@ class ArgumentsResolverTest extends TestCase {
    */
   public function testHandleUnresolvedArgument($callable) {
     $resolver = new ArgumentsResolver([], [], []);
-    $this->setExpectedException(\RuntimeException::class, 'requires a value for the "$foo" argument.');
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(\RuntimeException::class);
+      $this->expectExceptionMessage('requires a value for the "$foo" argument.');
+    }
+    else {
+      $this->setExpectedException(\RuntimeException::class, 'requires a value for the "$foo" argument.');
+    }
     $resolver->getArguments($callable);
   }
 

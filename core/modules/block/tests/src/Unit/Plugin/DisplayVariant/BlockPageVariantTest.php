@@ -49,6 +49,7 @@ class BlockPageVariantTest extends UnitTestCase {
     $container = new Container();
     $cache_context_manager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
       ->disableOriginalConstructor()
+      ->setMethods(['assertValidTokens'])
       ->getMock();
     $container->set('cache_contexts_manager', $cache_context_manager);
     $cache_context_manager->expects($this->any())
@@ -209,9 +210,6 @@ class BlockPageVariantTest extends UnitTestCase {
     $title_block_plugin = $this->getMock('Drupal\Core\Block\TitleBlockPluginInterface');
     foreach ($blocks_config as $block_id => $block_config) {
       $block = $this->getMock('Drupal\block\BlockInterface');
-      $block->expects($this->any())
-        ->method('getContexts')
-        ->willReturn([]);
       $block->expects($this->atLeastOnce())
         ->method('getPlugin')
         ->willReturn($block_config[1] ? $main_content_block_plugin : ($block_config[2] ? $messages_block_plugin : ($block_config[3] ? $title_block_plugin : $block_plugin)));

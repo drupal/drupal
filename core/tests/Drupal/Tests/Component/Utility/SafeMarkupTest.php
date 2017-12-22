@@ -37,7 +37,7 @@ class SafeMarkupTest extends TestCase {
    * @covers ::isSafe
    */
   public function testIsSafe() {
-    $safe_string = $this->getMock('\Drupal\Component\Render\MarkupInterface');
+    $safe_string = $this->getMockBuilder('\Drupal\Component\Render\MarkupInterface')->getMock();
     $this->assertTrue(SafeMarkup::isSafe($safe_string));
     $string_object = new SafeMarkupTestString('test');
     $this->assertFalse(SafeMarkup::isSafe($string_object));

@@ -17,6 +17,8 @@ class CckFileTest extends UnitTestCase {
 
   /**
    * Tests that alt and title attributes are included in transformed values.
+   *
+   * @expectedDeprecation CckFile is deprecated in Drupal 8.3.x and will be be removed before Drupal 9.0.x. Use \Drupal\file\Plugin\migrate\process\d6\FieldFile instead.
    */
   public function testTransformAltTitle() {
     $executable = $this->prophesize(MigrateExecutableInterface::class)->reveal();

@@ -11,7 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
  * @group Messenger
  * @coversDefaultClass \Drupal\Core\Messenger\LegacyMessenger
  */
-class LegacyMessengerTest extends KernelTestBase {
+class MessengerTest extends KernelTestBase {
 
   /**
    * Retrieves the Messenger service from LegacyMessenger.

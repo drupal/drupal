@@ -217,7 +217,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   /**
    * Tests that content without prior moderation information can be moderated.
    */
-  public function testLegacyContent() {
+  public function testExistingContentWithNoModeration() {
     $node_type = NodeType::create([
       'type' => 'example',
     ]);
@@ -251,7 +251,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   /**
    * Tests that content without prior moderation information can be translated.
    */
-  public function testLegacyMultilingualContent() {
+  public function testExistingMultilingualContentWithNoModeration() {
     // Enable French.
     ConfigurableLanguage::createFromLangcode('fr')->save();
 

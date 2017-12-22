@@ -361,7 +361,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->assertSame('foo', $entity->getOriginalId());
 
     $expected = ['id' => 'foo'];
-    $entity->expects($this->once())
+    $entity->expects($this->atLeastOnce())
       ->method('toArray')
       ->will($this->returnValue($expected));
 

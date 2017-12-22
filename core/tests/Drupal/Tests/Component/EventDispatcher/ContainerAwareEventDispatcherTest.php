@@ -38,7 +38,7 @@ class ContainerAwareEventDispatcherTest extends SymfonyContainerAwareEventDispat
         // When passing in callables exclusively as listeners into the event
         // dispatcher constructor, the event dispatcher must not attempt to
         // resolve any services.
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $container->expects($this->never())->method($this->anything());
 
         $firstListener = new CallableClass();
@@ -73,7 +73,7 @@ class ContainerAwareEventDispatcherTest extends SymfonyContainerAwareEventDispat
         // When passing in callables exclusively as listeners into the event
         // dispatcher constructor, the event dispatcher must not attempt to
         // resolve any services.
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $container->expects($this->never())->method($this->anything());
 
         $firstListener = new CallableClass();

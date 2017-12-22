@@ -70,7 +70,7 @@ class ViewsBlockTest extends UnitTestCase {
 
     $this->executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
-      ->setMethods(['buildRenderable', 'setDisplay', 'setItemsPerPage'])
+      ->setMethods(['buildRenderable', 'setDisplay', 'setItemsPerPage', 'getShowAdminLinks'])
       ->getMock();
     $this->executable->expects($this->any())
       ->method('setDisplay')

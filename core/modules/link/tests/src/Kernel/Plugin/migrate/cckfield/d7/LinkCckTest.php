@@ -53,6 +53,8 @@ class LinkCckTest extends KernelTestBase {
 
   /**
    * @covers ::processCckFieldValues
+   * @expectedDeprecation CckFieldPluginBase is deprecated in Drupal 8.3.x and will be be removed before Drupal 9.0.x. Use \Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase instead.
+   * @expectedDeprecation MigrateCckFieldInterface is deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.x. Use \Drupal\migrate_drupal\Annotation\MigrateField instead.
    */
   public function testProcessCckFieldValues() {
     $this->plugin->processFieldInstance($this->migration);

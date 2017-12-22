@@ -343,7 +343,12 @@ class HtmlTest extends TestCase {
    * @dataProvider providerTestTransformRootRelativeUrlsToAbsoluteAssertion
    */
   public function testTransformRootRelativeUrlsToAbsoluteAssertion($scheme_and_host) {
-    $this->setExpectedException(\AssertionError::class);
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(\AssertionError::class);
+    }
+    else {
+      $this->setExpectedException(\AssertionError::class);
+    }
     Html::transformRootRelativeUrlsToAbsolute('', $scheme_and_host);
   }
 

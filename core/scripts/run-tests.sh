@@ -793,7 +793,11 @@ function simpletest_script_run_one_test($test_id, $test_class) {
       putenv('SYMFONY_DEPRECATIONS_HELPER=disabled');
     }
     else {
-      putenv('SYMFONY_DEPRECATIONS_HELPER=strict');
+      // Prevent deprecations caused by vendor code calling deprecated code.
+      // This also prevents mock objects in PHPUnit 6 triggering silenced
+      // deprecations from breaking the test suite. We should consider changing
+      // this to 'strict' once PHPUnit 4 is no longer used.
+      putenv('SYMFONY_DEPRECATIONS_HELPER=weak_vendors');
     }
     if (is_subclass_of($test_class, TestCase::class)) {
       $status = simpletest_script_run_phpunit($test_id, $test_class);

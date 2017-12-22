@@ -44,7 +44,7 @@
         "jcalderonzumba/gastonjs": "^1.0.2",
         "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
         "mikey179/vfsStream": "^1.2",
-        "phpunit/phpunit": ">=4.8.35 <5",
+        "phpunit/phpunit": "^4.8.35 || ^6.1",
         "phpspec/prophecy": "^1.4",
         "symfony/css-selector": "~3.2.8",
         "symfony/phpunit-bridge": "^3.4.0@beta"

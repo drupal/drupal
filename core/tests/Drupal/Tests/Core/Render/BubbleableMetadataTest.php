@@ -38,6 +38,7 @@ class BubbleableMetadataTest extends UnitTestCase {
     if (!$b instanceof BubbleableMetadata) {
       $renderer = $this->getMockBuilder('Drupal\Core\Render\Renderer')
         ->disableOriginalConstructor()
+        ->setMethods(['mergeAttachments'])
         ->getMock();
       $renderer->expects($this->never())
         ->method('mergeAttachments');

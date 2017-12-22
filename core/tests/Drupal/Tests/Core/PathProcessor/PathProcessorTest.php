@@ -76,12 +76,6 @@ class PathProcessorTest extends UnitTestCase {
     $language_manager->expects($this->any())
       ->method('getLanguageTypes')
       ->will($this->returnValue([LanguageInterface::TYPE_INTERFACE]));
-    $language_manager->expects($this->any())
-      ->method('getNegotiationMethods')
-      ->will($this->returnValue($method_definitions));
-    $language_manager->expects($this->any())
-      ->method('getNegotiationMethodInstance')
-      ->will($this->returnValue($method_instance));
 
     $method_instance->setLanguageManager($language_manager);
     $this->languageManager = $language_manager;

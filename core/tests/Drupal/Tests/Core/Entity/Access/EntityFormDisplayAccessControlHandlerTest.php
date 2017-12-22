@@ -166,10 +166,6 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
       ]);
     $entity_type_manager
       ->expects($this->any())
-      ->method('getFieldDefinitions')
-      ->willReturn([]);
-    $entity_type_manager
-      ->expects($this->any())
       ->method('getDefinition')
       ->will($this->returnValue($entity_form_display_entity_type));
 

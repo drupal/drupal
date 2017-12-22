@@ -33,7 +33,12 @@ class UnicodeTest extends TestCase {
    */
   public function testStatus($value, $expected, $invalid = FALSE) {
     if ($invalid) {
-      $this->setExpectedException('InvalidArgumentException');
+      if (method_exists($this, 'expectException')) {
+        $this->expectException('InvalidArgumentException');
+      }
+      else {
+        $this->setExpectedException('InvalidArgumentException');
+      }
     }
     Unicode::setStatus($value);
     $this->assertEquals($expected, Unicode::getStatus());

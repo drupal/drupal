@@ -11,7 +11,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *
  * @group taxonomy
  */
-class LegacyTest extends TaxonomyTestBase {
+class EarlyDateTest extends TaxonomyTestBase {
 
   /**
    * Modules to enable.
@@ -51,7 +51,7 @@ class LegacyTest extends TaxonomyTestBase {
   /**
    * Test taxonomy functionality with nodes prior to 1970.
    */
-  public function testTaxonomyLegacyNode() {
+  public function testTaxonomyEarlyDateNode() {
     // Posts an article with a taxonomy term and a date prior to 1970.
     $date = new DrupalDateTime('1969-01-01 00:00:00');
     $edit = [];

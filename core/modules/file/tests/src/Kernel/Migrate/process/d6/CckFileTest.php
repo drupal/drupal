@@ -20,6 +20,7 @@ class CckFileTest extends MigrateDrupalTestBase {
    * Tests configurability of file migration name.
    *
    * @covers ::__construct
+   * @expectedDeprecation CckFile is deprecated in Drupal 8.3.x and will be be removed before Drupal 9.0.x. Use \Drupal\file\Plugin\migrate\process\d6\FieldFile instead.
    */
   public function testConfigurableFileMigration() {
     $migration = Migration::create($this->container, [], 'custom_migration', []);

@@ -123,9 +123,6 @@ class EntityListBuilderTest extends UnitTestCase {
     $url = $this->getMockBuilder('\Drupal\Core\Url')
       ->disableOriginalConstructor()
       ->getMock();
-    $url->expects($this->any())
-      ->method('toArray')
-      ->will($this->returnValue([]));
     $url->expects($this->atLeastOnce())
       ->method('mergeOptions')
       ->with(['query' => ['destination' => '/foo/bar']]);

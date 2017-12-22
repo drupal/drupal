@@ -77,7 +77,12 @@ class CryptTest extends TestCase {
    *   Key to use in hashing process.
    */
   public function testHmacBase64Invalid($data, $key) {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    if (method_exists($this, 'expectException')) {
+      $this->expectException('InvalidArgumentException');
+    }
+    else {
+      $this->setExpectedException('InvalidArgumentException');
+    }
     Crypt::hmacBase64($data, $key);
   }
 

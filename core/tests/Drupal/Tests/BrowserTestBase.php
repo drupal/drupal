@@ -497,6 +497,11 @@ abstract class BrowserTestBase extends TestCase {
     if ($disable_gc) {
       gc_enable();
     }
+
+    // Ensure that the test is not marked as risky because of no assertions. In
+    // PHPUnit 6 tests that only make assertions using $this->assertSession()
+    // can be marked as risky.
+    $this->addToAssertionCount(1);
   }
 
   /**

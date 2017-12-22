@@ -21,6 +21,7 @@ use Drupal\Tests\UnitTestCase;
  * would trigger another deprecation error.
  *
  * @group Listeners
+ * @group legacy
  *
  * @coversDefaultClass \Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass
  */
@@ -28,6 +29,8 @@ class DrupalStandardsListenerDeprecationTest extends UnitTestCase {
 
   /**
    * Exercise DrupalStandardsListener's coverage validation.
+   *
+   * @expectedDeprecation Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass is deprecated.
    *
    * @covers ::testFunction
    */

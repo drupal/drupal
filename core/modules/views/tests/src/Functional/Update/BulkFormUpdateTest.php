@@ -10,7 +10,7 @@ use Drupal\views\Entity\View;
  *
  * @group views
  */
-class LegacyBulkFormUpdateTest extends UpdatePathTestBase {
+class BulkFormUpdateTest extends UpdatePathTestBase {
 
   /**
    * {@inheritdoc}

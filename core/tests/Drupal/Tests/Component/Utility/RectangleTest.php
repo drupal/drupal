@@ -17,7 +17,12 @@ class RectangleTest extends TestCase {
    * @covers ::rotate
    */
   public function testWrongWidth() {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(\InvalidArgumentException::class);
+    }
+    else {
+      $this->setExpectedException(\InvalidArgumentException::class);
+    }
     $rect = new Rectangle(-40, 20);
   }
 
@@ -27,7 +32,12 @@ class RectangleTest extends TestCase {
    * @covers ::rotate
    */
   public function testWrongHeight() {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(\InvalidArgumentException::class);
+    }
+    else {
+      $this->setExpectedException(\InvalidArgumentException::class);
+    }
     $rect = new Rectangle(40, 0);
   }
 

@@ -269,7 +269,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
    */
   protected function getMockNode($has_field, $comment_status, $form_location, $comment_count) {
     $node = $this->getMock('\Drupal\node\NodeInterface');
-    $node->expects($this->once())
+    $node->expects($this->any())
       ->method('hasField')
       ->willReturn($has_field);
 

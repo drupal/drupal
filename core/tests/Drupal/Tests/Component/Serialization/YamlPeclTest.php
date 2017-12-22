@@ -87,7 +87,12 @@ foo:
    * @covers ::errorHandler
    */
   public function testError() {
-    $this->setExpectedException(InvalidDataTypeException::class);
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(InvalidDataTypeException::class);
+    }
+    else {
+      $this->setExpectedException(InvalidDataTypeException::class);
+    }
     YamlPecl::decode('foo: [ads');
   }
 

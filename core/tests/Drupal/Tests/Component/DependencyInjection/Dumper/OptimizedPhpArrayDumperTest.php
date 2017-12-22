@@ -545,7 +545,12 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $services['bar'] = $bar_definition;
 
       $this->containerBuilder->getDefinitions()->willReturn($services);
-      $this->setExpectedException(InvalidArgumentException::class);
+      if (method_exists($this, 'expectException')) {
+        $this->expectException(InvalidArgumentException::class);
+      }
+      else {
+        $this->setExpectedException(InvalidArgumentException::class);
+      }
       $this->dumper->getArray();
     }
 
@@ -562,7 +567,12 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $services['bar'] = $bar_definition;
 
       $this->containerBuilder->getDefinitions()->willReturn($services);
-      $this->setExpectedException(RuntimeException::class);
+      if (method_exists($this, 'expectException')) {
+        $this->expectException(RuntimeException::class);
+      }
+      else {
+        $this->setExpectedException(RuntimeException::class);
+      }
       $this->dumper->getArray();
     }
 
@@ -579,7 +589,12 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $services['bar'] = $bar_definition;
 
       $this->containerBuilder->getDefinitions()->willReturn($services);
-      $this->setExpectedException(RuntimeException::class);
+      if (method_exists($this, 'expectException')) {
+        $this->expectException(RuntimeException::class);
+      }
+      else {
+        $this->setExpectedException(RuntimeException::class);
+      }
       $this->dumper->getArray();
     }
 
@@ -596,7 +611,12 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $services['bar'] = $bar_definition;
 
       $this->containerBuilder->getDefinitions()->willReturn($services);
-      $this->setExpectedException(RuntimeException::class);
+      if (method_exists($this, 'expectException')) {
+        $this->expectException(RuntimeException::class);
+      }
+      else {
+        $this->setExpectedException(RuntimeException::class);
+      }
       $this->dumper->getArray();
     }
 
