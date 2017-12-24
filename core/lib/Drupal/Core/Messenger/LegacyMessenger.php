@@ -34,7 +34,7 @@ class LegacyMessenger implements MessengerInterface {
    * {@inheritdoc}
    */
   public function addError($message, $repeat = FALSE) {
-    return $this->addMessage($message, static::TYPE_ERROR);
+    return $this->addMessage($message, static::TYPE_ERROR, $repeat);
   }
 
   /**
@@ -67,14 +67,14 @@ class LegacyMessenger implements MessengerInterface {
    * {@inheritdoc}
    */
   public function addStatus($message, $repeat = FALSE) {
-    return $this->addMessage($message, static::TYPE_STATUS);
+    return $this->addMessage($message, static::TYPE_STATUS, $repeat);
   }
 
   /**
    * {@inheritdoc}
    */
   public function addWarning($message, $repeat = FALSE) {
-    return $this->addMessage($message, static::TYPE_WARNING);
+    return $this->addMessage($message, static::TYPE_WARNING, $repeat);
   }
 
   /**
@@ -100,13 +100,16 @@ class LegacyMessenger implements MessengerInterface {
     if (\Drupal::hasService('messenger')) {
       // Note: because the container has the potential to be rebuilt during
       // requests, this service cannot be directly stored on this class.
+      /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
       $messenger = \Drupal::service('messenger');
 
       // Transfer any messages into the service.
       if (isset($this->messages)) {
         foreach ($this->messages as $type => $messages) {
           foreach ($messages as $message) {
-            $messenger->addMessage($message, $type);
+            // Force repeat to TRUE since this is merging existing messages to
+            // the Messenger service and would have already checked this prior.
+            $messenger->addMessage($message, $type, TRUE);
           }
         }
         unset($this->messages);

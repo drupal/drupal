@@ -43,7 +43,7 @@ class Messenger implements MessengerInterface {
    * {@inheritdoc}
    */
   public function addError($message, $repeat = FALSE) {
-    return $this->addMessage($message, static::TYPE_ERROR);
+    return $this->addMessage($message, static::TYPE_ERROR, $repeat);
   }
 
   /**
@@ -70,14 +70,14 @@ class Messenger implements MessengerInterface {
    * {@inheritdoc}
    */
   public function addStatus($message, $repeat = FALSE) {
-    return $this->addMessage($message, static::TYPE_STATUS);
+    return $this->addMessage($message, static::TYPE_STATUS, $repeat);
   }
 
   /**
    * {@inheritdoc}
    */
   public function addWarning($message, $repeat = FALSE) {
-    return $this->addMessage($message, static::TYPE_WARNING);
+    return $this->addMessage($message, static::TYPE_WARNING, $repeat);
   }
 
   /**
