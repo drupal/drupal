@@ -757,6 +757,16 @@ field.value.float:
       type: float
       label: 'Value'
 
+# Schema for the configuration of the Timestamp field type.
+
+field.value.timestamp:
+  type: mapping
+  label: 'Timestamp value'
+  mapping:
+    value:
+      type: timestamp
+      label: 'Value'
+
 # Text with a text format.
 text_format:
   type: mapping
