@@ -133,7 +133,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.entity_form_display.node.default':
     case 'entity.entity_form_display.node.form_mode':
       $type = $route_match->getParameter('node_type');
-      return '<p>' . t('Content items can be edited using different form modes. Here, you can define which fields are shown and hidden when %type content is edited in each form mode, and define how the field form widgets are displayed in each form mode.', ['%type' => $type->label()]) . '</p>' ;
+      return '<p>' . t('Content items can be edited using different form modes. Here, you can define which fields are shown and hidden when %type content is edited in each form mode, and define how the field form widgets are displayed in each form mode.', ['%type' => $type->label()]) . '</p>';
 
     case 'entity.entity_view_display.node.default':
     case 'entity.entity_view_display.node.view_mode':
