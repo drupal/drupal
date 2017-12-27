@@ -41,7 +41,7 @@ function layout_builder_entity_type_alter(array &$entity_types) {
  * Removes the Layout Builder field both visually and from the #fields handling.
  *
  * This prevents any interaction with this field. It is rendered directly
- * in layout_builder_entity_view_display_alter().
+ * in layout_builder_entity_view_alter().
  *
  * @internal
  */
@@ -162,26 +162,15 @@ function layout_builder_add_layout_section_field($entity_type_id, $bundle, $fiel
 }
 
 /**
- * Implements hook_entity_view_display_alter().
- */
-function layout_builder_entity_view_display_alter(EntityViewDisplayInterface $display, array $context) {
-  if ($display->getThirdPartySetting('layout_builder', 'allow_custom', FALSE)) {
-    // Force the layout to render with no label.
-    $display->setComponent('layout_builder__layout', [
-      'label' => 'hidden',
-      'region' => '__layout_builder',
-    ]);
-  }
-  else {
-    $display->removeComponent('layout_builder__layout');
-  }
-}
-
-/**
  * Implements hook_entity_view_alter().
  */
 function layout_builder_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   if ($display->getThirdPartySetting('layout_builder', 'allow_custom', FALSE) && !$entity->layout_builder__layout->isEmpty()) {
+    $sections = $entity->layout_builder__layout->getSections();
+    foreach ($sections as $delta => $section) {
+      $build['_layout_builder'][$delta] = $section->toRenderArray();
+    }
+
     // If field layout is active, that is all that needs to be removed.
     if (\Drupal::moduleHandler()->moduleExists('field_layout') && isset($build['_field_layout'])) {
       unset($build['_field_layout']);

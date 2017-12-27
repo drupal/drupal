@@ -15,16 +15,16 @@ use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\layout_builder\LayoutSectionBuilder;
+use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\LayoutSectionBuilder
+ * @coversDefaultClass \Drupal\layout_builder\Section
  * @group layout_builder
  */
-class LayoutSectionBuilderTest extends UnitTestCase {
+class SectionRenderTest extends UnitTestCase {
 
   /**
    * The current user.
@@ -32,13 +32,6 @@ class LayoutSectionBuilderTest extends UnitTestCase {
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $account;
-
-  /**
-   * The layout plugin manager.
-   *
-   * @var \Drupal\Core\Layout\LayoutPluginManagerInterface
-   */
-  protected $layoutPluginManager;
 
   /**
    * The block plugin manager.
@@ -62,49 +55,35 @@ class LayoutSectionBuilderTest extends UnitTestCase {
   protected $contextRepository;
 
   /**
-   * The object under test.
-   *
-   * @var \Drupal\layout_builder\LayoutSectionBuilder
-   */
-  protected $layoutSectionBuilder;
-
-  /**
-   * The layout plugin.
-   *
-   * @var \Drupal\Core\Layout\LayoutInterface
-   */
-  protected $layout;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
     $this->account = $this->prophesize(AccountInterface::class);
-    $this->layoutPluginManager = $this->prophesize(LayoutPluginManagerInterface::class);
+    $layout_plugin_manager = $this->prophesize(LayoutPluginManagerInterface::class);
     $this->blockManager = $this->prophesize(BlockManagerInterface::class);
     $this->contextHandler = $this->prophesize(ContextHandlerInterface::class);
     $this->contextRepository = $this->prophesize(ContextRepositoryInterface::class);
-    $this->layoutSectionBuilder = new LayoutSectionBuilder($this->account->reveal(), $this->layoutPluginManager->reveal(), $this->blockManager->reveal(), $this->contextHandler->reveal(), $this->contextRepository->reveal());
 
-    $this->layout = $this->prophesize(LayoutInterface::class);
-    $this->layout->getPluginDefinition()->willReturn(new LayoutDefinition([]));
-    $this->layout->build(Argument::type('array'))->willReturnArgument(0);
-    $this->layoutPluginManager->createInstance('layout_onecol', [])->willReturn($this->layout->reveal());
+    $layout = $this->prophesize(LayoutInterface::class);
+    $layout->getPluginDefinition()->willReturn(new LayoutDefinition([]));
+    $layout->build(Argument::type('array'))->willReturnArgument(0);
+    $layout_plugin_manager->createInstance('layout_onecol', [])->willReturn($layout->reveal());
 
     $container = new ContainerBuilder();
     $container->set('current_user', $this->account->reveal());
     $container->set('plugin.manager.block', $this->blockManager->reveal());
+    $container->set('plugin.manager.core.layout', $layout_plugin_manager->reveal());
     $container->set('context.handler', $this->contextHandler->reveal());
     $container->set('context.repository', $this->contextRepository->reveal());
     \Drupal::setContainer($container);
   }
 
   /**
-   * @covers ::buildSection
+   * @covers ::toRenderArray
    */
-  public function testBuildSection() {
+  public function testToRenderArray() {
     $block_content = ['#markup' => 'The block content.'];
     $render_array = [
       '#theme' => 'block',
@@ -143,15 +122,14 @@ class LayoutSectionBuilderTest extends UnitTestCase {
         'some_uuid' => $render_array,
       ],
     ];
-    $result = $this->layoutSectionBuilder->buildSection('layout_onecol', [], $section);
+    $result = (new Section('layout_onecol', [], $section))->toRenderArray();
     $this->assertEquals($expected, $result);
   }
 
   /**
-   * @covers ::buildSection
+   * @covers ::toRenderArray
    */
-  public function testBuildSectionAccessDenied() {
-
+  public function testToRenderArrayAccessDenied() {
     $block = $this->prophesize(BlockPluginInterface::class);
     $this->blockManager->createInstance('block_plugin_id', ['id' => 'block_plugin_id'])->willReturn($block->reveal());
 
@@ -173,22 +151,22 @@ class LayoutSectionBuilderTest extends UnitTestCase {
         ],
       ],
     ];
-    $result = $this->layoutSectionBuilder->buildSection('layout_onecol', [], $section);
+    $result = (new Section('layout_onecol', [], $section))->toRenderArray();
     $this->assertEquals($expected, $result);
   }
 
   /**
-   * @covers ::buildSection
+   * @covers ::toRenderArray
    */
-  public function testBuildSectionEmpty() {
+  public function testToRenderArrayEmpty() {
     $section = [];
     $expected = [];
-    $result = $this->layoutSectionBuilder->buildSection('layout_onecol', [], $section);
+    $result = (new Section('layout_onecol', [], $section))->toRenderArray();
     $this->assertEquals($expected, $result);
   }
 
   /**
-   * @covers ::buildSection
+   * @covers ::toRenderArray
    */
   public function testContextAwareBlock() {
     $render_array = [
@@ -232,16 +210,16 @@ class LayoutSectionBuilderTest extends UnitTestCase {
         'some_uuid' => $render_array,
       ],
     ];
-    $result = $this->layoutSectionBuilder->buildSection('layout_onecol', [], $section);
+    $result = (new Section('layout_onecol', [], $section))->toRenderArray();
     $this->assertEquals($expected, $result);
   }
 
   /**
-   * @covers ::buildSection
+   * @covers ::toRenderArray
    */
-  public function testBuildSectionMissingPluginId() {
+  public function testToRenderArrayMissingPluginId() {
     $this->setExpectedException(PluginException::class, 'No plugin ID specified for component with "some_uuid" UUID');
-    $this->layoutSectionBuilder->buildSection('layout_onecol', [], [new SectionComponent('some_uuid', 'content')]);
+    (new Section('layout_onecol', [], [new SectionComponent('some_uuid', 'content')]))->toRenderArray();
   }
 
 }

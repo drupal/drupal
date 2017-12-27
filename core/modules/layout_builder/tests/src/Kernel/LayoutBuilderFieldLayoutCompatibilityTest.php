@@ -4,18 +4,17 @@ namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity_test\Entity\EntityTestBaseFieldDisplay;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_builder\Section;
+use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
 /**
  * Ensures that Layout Builder and Field Layout are compatible with each other.
  *
  * @group layout_builder
  */
-class LayoutBuilderFieldLayoutCompatibilityTest extends KernelTestBase {
+class LayoutBuilderFieldLayoutCompatibilityTest extends EntityKernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -23,12 +22,6 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends KernelTestBase {
   public static $modules = [
     'layout_discovery',
     'field_layout',
-    'user',
-    'field',
-    'entity_test',
-    'system',
-    'text',
-    'filter',
   ];
 
   /**
@@ -45,9 +38,7 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends KernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_base_field_display');
-    $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences', 'key_value']);
-    $this->installConfig(['field', 'filter', 'user', 'system']);
+    $this->installConfig(['filter']);
 
     \Drupal::service('theme_handler')->install(['classy']);
     $this->config('system.theme')->set('default', 'classy')->save();
@@ -100,9 +91,10 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends KernelTestBase {
 
     // Install the Layout Builder, configure it for this entity display, and
     // reload the entity.
-    $this->enableModules(['layout_builder']);
+    $this->installModule('layout_builder');
+    $this->display = $this->reloadEntity($this->display);
     $this->display->setThirdPartySetting('layout_builder', 'allow_custom', TRUE)->save();
-    $entity = EntityTestBaseFieldDisplay::load($entity->id());
+    $entity = $this->reloadEntity($entity);
 
     // Without using Layout Builder for an override, the result has not changed.
     $new_markup = $this->renderEntity($entity);

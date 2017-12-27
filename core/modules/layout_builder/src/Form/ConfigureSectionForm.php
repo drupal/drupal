@@ -8,7 +8,6 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Layout\LayoutInterface;
-use Drupal\Core\Layout\LayoutPluginManagerInterface;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
@@ -40,13 +39,6 @@ class ConfigureSectionForm extends FormBase {
    * @var \Drupal\Core\Layout\LayoutInterface|\Drupal\Core\Plugin\PluginFormInterface
    */
   protected $layout;
-
-  /**
-   * The layout manager.
-   *
-   * @var \Drupal\Core\Layout\LayoutPluginManagerInterface
-   */
-  protected $layoutManager;
 
   /**
    * The plugin form manager.
@@ -81,16 +73,13 @@ class ConfigureSectionForm extends FormBase {
    *
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
    *   The layout tempstore repository.
-   * @param \Drupal\Core\Layout\LayoutPluginManagerInterface $layout_manager
-   *   The layout manager.
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver.
    * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $plugin_form_manager
    *   The plugin form manager.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, LayoutPluginManagerInterface $layout_manager, ClassResolverInterface $class_resolver, PluginFormFactoryInterface $plugin_form_manager) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, ClassResolverInterface $class_resolver, PluginFormFactoryInterface $plugin_form_manager) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
-    $this->layoutManager = $layout_manager;
     $this->classResolver = $class_resolver;
     $this->pluginFormFactory = $plugin_form_manager;
   }
@@ -101,7 +90,6 @@ class ConfigureSectionForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('layout_builder.tempstore_repository'),
-      $container->get('plugin.manager.core.layout'),
       $container->get('class_resolver'),
       $container->get('plugin_form.factory')
     );

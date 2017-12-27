@@ -18,7 +18,6 @@ use Drupal\layout_builder\Section;
  *   id = "layout_section",
  *   label = @Translation("Layout Section"),
  *   description = @Translation("Layout Section"),
- *   default_formatter = "layout_section",
  *   list_class = "\Drupal\layout_builder\Field\LayoutSectionItemList",
  *   no_ui = TRUE,
  *   cardinality = \Drupal\Core\Field\FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
