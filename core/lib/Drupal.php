@@ -102,22 +102,6 @@ class Drupal {
   protected static $container;
 
   /**
-   * The LegacyMessenger instance.
-   *
-   * Note: this is merely used to ensure that the instance survives when
-   * \Drupal::messenger() is invoked. It is required to ensure that messages
-   * are properly transferred to the Messenger service once the container has
-   * been initialized. Do not store the Messenger service here.
-   *
-   * @todo Remove once LegacyMessenger has been removed before 9.0.0.
-   *
-   * @see https://www.drupal.org/node/2928994
-   *
-   * @var \Drupal\Core\Messenger\LegacyMessenger|null
-   */
-  protected static $legacyMessenger;
-
-  /**
    * Sets a new global container.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
@@ -783,10 +767,7 @@ class Drupal {
   public static function messenger() {
     // @todo Replace with service once LegacyMessenger is removed in 9.0.0.
     // @see https://www.drupal.org/node/2928994
-    if (!isset(static::$legacyMessenger)) {
-      static::$legacyMessenger = new LegacyMessenger();
-    }
-    return static::$legacyMessenger;
+    return new LegacyMessenger();
   }
 
 }

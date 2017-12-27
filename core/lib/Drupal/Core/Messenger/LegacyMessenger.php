@@ -26,9 +26,13 @@ class LegacyMessenger implements MessengerInterface {
   /**
    * The messages.
    *
+   * Note: this property must remain static because it must behave in a
+   * persistent manner, similar to $_SESSION['messages']. Creating a new class
+   * each time would destroy any previously set messages.
+   *
    * @var array
    */
-  protected $messages;
+  protected static $messages;
 
   /**
    * {@inheritdoc}
@@ -46,8 +50,8 @@ class LegacyMessenger implements MessengerInterface {
       return $messenger->addMessage($message, $type, $repeat);
     }
 
-    if (!isset($this->messages[$type])) {
-      $this->messages[$type] = [];
+    if (!isset(static::$messages[$type])) {
+      static::$messages[$type] = [];
     }
 
     if (!($message instanceof Markup) && $message instanceof MarkupInterface) {
@@ -56,8 +60,8 @@ class LegacyMessenger implements MessengerInterface {
 
     // Do not use strict type checking so that equivalent string and
     // MarkupInterface objects are detected.
-    if ($repeat || !in_array($message, $this->messages[$type])) {
-      $this->messages[$type][] = $message;
+    if ($repeat || !in_array($message, static::$messages[$type])) {
+      static::$messages[$type][] = $message;
     }
 
     return $this;
@@ -86,7 +90,7 @@ class LegacyMessenger implements MessengerInterface {
       return $messenger->all();
     }
 
-    return $this->messages;
+    return static::$messages;
   }
 
   /**
@@ -104,15 +108,15 @@ class LegacyMessenger implements MessengerInterface {
       $messenger = \Drupal::service('messenger');
 
       // Transfer any messages into the service.
-      if (isset($this->messages)) {
-        foreach ($this->messages as $type => $messages) {
+      if (isset(static::$messages)) {
+        foreach (static::$messages as $type => $messages) {
           foreach ($messages as $message) {
             // Force repeat to TRUE since this is merging existing messages to
             // the Messenger service and would have already checked this prior.
             $messenger->addMessage($message, $type, TRUE);
           }
         }
-        unset($this->messages);
+        static::$messages = NULL;
       }
 
       return $messenger;
@@ -128,18 +132,18 @@ class LegacyMessenger implements MessengerInterface {
     // reasonable to assume that if the container becomes available in a
     // subsequent request, a new instance of this class will be created and
     // this code will never be reached. This is merely for BC purposes.
-    if (!isset($this->messages)) {
+    if (!isset(static::$messages)) {
       // A "session" was already created, perhaps to simply allow usage of
       // the previous method core used to store messages, use it.
       if (isset($_SESSION)) {
         if (!isset($_SESSION['messages'])) {
           $_SESSION['messages'] = [];
         }
-        $this->messages = &$_SESSION['messages'];
+        static::$messages = &$_SESSION['messages'];
       }
       // Otherwise, just set an empty array.
       else {
-        $this->messages = [];
+        static::$messages = [];
       }
     }
   }
@@ -153,7 +157,7 @@ class LegacyMessenger implements MessengerInterface {
       return $messenger->messagesByType($type);
     }
 
-    return $this->messages[$type];
+    return static::$messages[$type];
   }
 
   /**
@@ -165,8 +169,8 @@ class LegacyMessenger implements MessengerInterface {
       return $messenger->deleteAll();
     }
 
-    $messages = $this->messages;
-    unset($this->messages);
+    $messages = static::$messages;
+    static::$messages = NULL;
     return $messages;
   }
 
@@ -179,8 +183,8 @@ class LegacyMessenger implements MessengerInterface {
       return $messenger->messagesByType($type);
     }
 
-    $messages = $this->messages[$type];
-    unset($this->messages[$type]);
+    $messages = static::$messages[$type];
+    unset(static::$messages[$type]);
     return $messages;
   }
 
