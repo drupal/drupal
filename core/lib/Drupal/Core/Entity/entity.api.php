@@ -287,11 +287,11 @@ use Drupal\node\Entity\NodeType;
  *   out-of-the-box support for Entity API's revisioning and publishing
  *   features, which will allow your entity type to be used with Drupal's
  *   editorial workflow provided by the Content Moderation module.
- * - The 'id' annotation gives the entity type ID, and the 'label' annotation
- *   gives the human-readable name of the entity type. If you are defining a
- *   content entity type that uses bundles, the 'bundle_label' annotation gives
- *   the human-readable name to use for a bundle of this entity type (for
- *   example, "Content type" for the Node entity).
+ * - In the annotation, the 'id' property gives the entity type ID, and the
+ *   'label' property gives the human-readable name of the entity type. If you
+ *   are defining a content entity type that uses bundles, the 'bundle_label'
+ *   property gives the human-readable name to use for a bundle of this entity
+ *   type (for example, "Content type" for the Node entity).
  * - The annotation will refer to several handler classes, which you will also
  *   need to define:
  *   - list_builder: Define a class that extends
@@ -310,16 +310,17 @@ use Drupal\node\Entity\NodeType;
  *     \Drupal\Core\Entity\EntityViewBuilderInterface (usually extending
  *     \Drupal\Core\Entity\EntityViewBuilder), to display a single entity.
  *   - translation: For translatable content entities (if the 'translatable'
- *     annotation has value TRUE), define a class that extends
+ *     annotation property has value TRUE), define a class that extends
  *     \Drupal\content_translation\ContentTranslationHandler, to translate
  *     the content. Configuration translation is handled automatically by the
  *     Configuration Translation module, without the need of a handler class.
  *   - access: If your configuration entity has complex permissions, you might
  *     need an access control handling, implementing
- *     \Drupal\Core\Entity\EntityAccessControlHandlerInterface, but most entities
- *     can just use the 'admin_permission' annotation instead. Note that if you
- *     are creating your own access control handler, you should override the
- *     checkAccess() and checkCreateAccess() methods, not access().
+ *     \Drupal\Core\Entity\EntityAccessControlHandlerInterface, but most
+ *     entities can just use the 'admin_permission' annotation property
+ *     instead. Note that if you are creating your own access control handler,
+ *     you should override the checkAccess() and checkCreateAccess() methods,
+ *     not access().
  *   - storage: A class implementing
  *     \Drupal\Core\Entity\EntityStorageInterface. If not specified, content
  *     entities will use \Drupal\Core\Entity\Sql\SqlContentEntityStorage, and
@@ -352,25 +353,26 @@ use Drupal\node\Entity\NodeType;
  *   - delete-form: Confirmation form to delete the entity.
  *   - edit-form: Editing form.
  *   - Other link types specific to your entity type can also be defined.
- * - If your content entity is fieldable, provide 'field_ui_base_route'
- *   annotation, giving the name of the route that the Manage Fields, Manage
- *   Display, and Manage Form Display pages from the Field UI module will be
- *   attached to. This is usually the bundle settings edit page, or an entity
- *   type settings page if there are no bundles.
+ * - If your content entity is fieldable, provide the 'field_ui_base_route'
+ *   annotation property, giving the name of the route that the Manage Fields,
+ *   Manage Display, and Manage Form Display pages from the Field UI module
+ *   will be attached to. This is usually the bundle settings edit page, or an
+ *   entity type settings page if there are no bundles.
  * - If your content entity has bundles, you will also need to define a second
  *   plugin to handle the bundles. This plugin is itself a configuration entity
  *   type, so follow the steps here to define it. The machine name ('id'
- *   annotation) of this configuration entity class goes into the
- *   'bundle_entity_type' annotation on the entity type class. For example, for
- *   the Node entity, the bundle class is \Drupal\node\Entity\NodeType, whose
- *   machine name is 'node_type'. This is the annotation value for
- *   'bundle_entity_type' on the \Drupal\node\Entity\Node class. Also, the
- *   bundle config entity type annotation must have a 'bundle_of' entry,
+ *   annotation property) of this configuration entity class goes into the
+ *   'bundle_entity_type' annotation property on the entity type class. For
+ *   example, for the Node entity, the bundle class is
+ *   \Drupal\node\Entity\NodeType, whose machine name is 'node_type'. This is
+ *   the annotation property 'bundle_entity_type' on the
+ *   \Drupal\node\Entity\Node class. Also, the
+ *   bundle config entity type annotation must have a 'bundle_of' property,
  *   giving the machine name of the entity type it is acting as a bundle for.
  *   These machine names are considered permanent, they may not be renamed.
- * - Additional annotations can be seen on entity class examples such as
- *   \Drupal\node\Entity\Node (content) and \Drupal\user\Entity\Role
- *   (configuration). These annotations are documented on
+ * - Additional annotation properties can be seen on entity class examples such
+ *   as \Drupal\node\Entity\Node (content) and \Drupal\user\Entity\Role
+ *   (configuration). These annotation properties are documented on
  *   \Drupal\Core\Entity\EntityType.
  *
  * @section sec_routes Entity routes
@@ -456,8 +458,8 @@ use Drupal\node\Entity\NodeType;
  * $storage = $container->get('entity.manager')->getStorage('your_entity_type');
  * @endcode
  * Here, 'your_entity_type' is the machine name of your entity type ('id'
- * annotation on the entity class), and note that you should use dependency
- * injection to retrieve this object if possible. See the
+ * annotation property on the entity class), and note that you should use
+ * dependency injection to retrieve this object if possible. See the
  * @link container Services and Dependency Injection topic @endlink for more
  * about how to properly retrieve services.
  *
