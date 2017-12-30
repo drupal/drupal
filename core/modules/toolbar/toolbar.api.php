@@ -152,10 +152,10 @@ function hook_toolbar() {
 /**
  * Alter the toolbar menu after hook_toolbar() is invoked.
  *
- * This hook is invoked by toolbar_view() immediately after hook_toolbar(). The
- * toolbar definitions are passed in by reference. Each element of the $items
- * array is one item returned by a module from hook_toolbar(). Additional items
- * may be added, or existing items altered.
+ * This hook is invoked by Toolbar::preRenderToolbar() immediately after
+ * hook_toolbar(). The toolbar definitions are passed in by reference. Each
+ * element of the $items array is one item returned by a module from
+ * hook_toolbar(). Additional items may be added, or existing items altered.
  *
  * @param $items
  *   Associative array of toolbar menu definitions returned from hook_toolbar().
