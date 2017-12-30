@@ -138,7 +138,8 @@ function hook_field_widget_info_alter(array &$info) {
  * Alter forms for field widgets provided by other modules.
  *
  * @param $element
- *   The field widget form element as constructed by hook_field_widget_form().
+ *   The field widget form element as constructed by
+ *   \Drupal\Core\Field\WidgetBaseInterface::form().
  * @param $form_state
  *   The current state of the form.
  * @param $context
@@ -152,6 +153,7 @@ function hook_field_widget_info_alter(array &$info) {
  *   - default: A boolean indicating whether the form is being shown as a dummy
  *     form to set default values.
  *
+ * @see \Drupal\Core\Field\WidgetBaseInterface::form()
  * @see \Drupal\Core\Field\WidgetBase::formSingleElement()
  * @see hook_field_widget_WIDGET_TYPE_form_alter()
  */
@@ -172,13 +174,15 @@ function hook_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInte
  * checking the widget type.
  *
  * @param $element
- *   The field widget form element as constructed by hook_field_widget_form().
+ *   The field widget form element as constructed by
+ *   \Drupal\Core\Field\WidgetBaseInterface::form().
  * @param $form_state
  *   The current state of the form.
  * @param $context
  *   An associative array. See hook_field_widget_form_alter() for the structure
  *   and content of the array.
  *
+ * @see \Drupal\Core\Field\WidgetBaseInterface::form()
  * @see \Drupal\Core\Field\WidgetBase::formSingleElement()
  * @see hook_field_widget_form_alter()
  */
