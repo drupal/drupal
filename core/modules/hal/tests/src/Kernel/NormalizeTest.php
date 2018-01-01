@@ -5,6 +5,7 @@ namespace Drupal\Tests\hal\Kernel;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Tests HAL normalization edge cases for EntityResource.
@@ -18,6 +19,27 @@ class NormalizeTest extends NormalizerTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    FilterFormat::create([
+      'format' => 'my_text_format',
+      'name' => 'My Text Format',
+      'filters' => [
+        'filter_html' => [
+          'module' => 'filter',
+          'status' => TRUE,
+          'weight' => 10,
+          'settings' => [
+            'allowed_html' => '<p>',
+          ],
+        ],
+        'filter_autop' => [
+          'module' => 'filter',
+          'status' => TRUE,
+          'weight' => 10,
+          'settings' => [],
+        ],
+      ],
+    ])->save();
 
     \Drupal::service('router.builder')->rebuild();
   }
@@ -37,7 +59,7 @@ class NormalizeTest extends NormalizerTestBase {
       'name' => $this->randomMachineName(),
       'field_test_text' => [
         'value' => $this->randomMachineName(),
-        'format' => 'full_html',
+        'format' => 'my_text_format',
       ],
       'field_test_entity_reference' => [
         'target_id' => $target_entity_de->id(),
@@ -152,6 +174,7 @@ class NormalizeTest extends NormalizerTestBase {
         [
           'value' => $values['field_test_text']['value'],
           'format' => $values['field_test_text']['format'],
+          'processed' => "<p>{$values['field_test_text']['value']}</p>",
         ],
       ],
     ];

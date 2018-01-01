@@ -3,6 +3,7 @@
 namespace Drupal\filter\Element;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\filter\Entity\FilterFormat;
@@ -69,7 +70,12 @@ class ProcessedText extends RenderElement {
     $langcode = $element['#langcode'];
 
     if (!isset($format_id)) {
-      $format_id = static::configFactory()->get('filter.settings')->get('fallback_format');
+      $filter_settings = static::configFactory()->get('filter.settings');
+      $format_id = $filter_settings->get('fallback_format');
+      // Ensure 'filter.settings' config's cacheability is respected.
+      CacheableMetadata::createFromRenderArray($element)
+        ->addCacheableDependency($filter_settings)
+        ->applyTo($element);
     }
     /** @var \Drupal\filter\Entity\FilterFormat $format **/
     $format = FilterFormat::load($format_id);

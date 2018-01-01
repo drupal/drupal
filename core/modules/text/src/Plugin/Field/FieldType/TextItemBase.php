@@ -29,7 +29,8 @@ abstract class TextItemBase extends FieldItemBase {
       ->setDescription(t('The text with the text format applied.'))
       ->setComputed(TRUE)
       ->setClass('\Drupal\text\TextProcessed')
-      ->setSetting('text source', 'value');
+      ->setSetting('text source', 'value')
+      ->setInternal(FALSE);
 
     return $properties;
   }

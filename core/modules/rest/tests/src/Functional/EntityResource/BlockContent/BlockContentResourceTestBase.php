@@ -4,6 +4,7 @@ namespace Drupal\Tests\rest\Functional\EntityResource\BlockContent;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
+use Drupal\Core\Cache\Cache;
 use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
@@ -131,6 +132,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
           'value' => 'The name "llama" was adopted by European settlers from native Peruvians.',
           'format' => 'plain_text',
           'summary' => NULL,
+          'processed' => "<p>The name &quot;llama&quot; was adopted by European settlers from native Peruvians.</p>\n",
         ],
       ],
       'status' => [
@@ -178,6 +180,20 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
     // @see \Drupal\block_content\BlockContentAccessControlHandler()
     return parent::getExpectedUnauthorizedAccessCacheability()
       ->addCacheTags(['block_content:1']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedCacheTags() {
+    return Cache::mergeTags(parent::getExpectedCacheTags(), ['config:filter.format.plain_text']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedCacheContexts() {
+    return Cache::mergeContexts(['url.site'], $this->container->getParameter('renderer.config')['required_cache_contexts']);
   }
 
 }
