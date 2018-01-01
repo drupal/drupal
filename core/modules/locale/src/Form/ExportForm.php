@@ -165,7 +165,7 @@ class ExportForm extends FormBase {
       $header->setLanguageName($language_name);
 
       $writer = new PoStreamWriter();
-      $writer->setUri($uri);
+      $writer->setURI($uri);
       $writer->setHeader($header);
 
       $writer->open();
