@@ -37,6 +37,11 @@ interface EntityChangedInterface {
   /**
    * Gets the timestamp of the last entity change across all translations.
    *
+   * This method will return the highest timestamp across all translations. To
+   * check that no translation is older than in another version of the entity
+   * (e.g. to avoid overwriting newer translations with old data), compare each
+   * translation to the other version individually.
+   *
    * @return int
    *   The timestamp of the last entity save operation across all
    *   translations.
