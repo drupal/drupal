@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests the Entity Validation API.
@@ -16,7 +17,7 @@ class EntityValidationTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter', 'text'];
+  public static $modules = ['filter', 'text', 'language'];
 
   /**
    * @var string
@@ -38,6 +39,10 @@ class EntityValidationTest extends EntityKernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    // Enable an additional language.
+    ConfigurableLanguage::createFromLangcode('de')
+      ->save();
 
     // Create the test field.
     module_load_install('entity_test');
@@ -198,6 +203,51 @@ class EntityValidationTest extends EntityKernelTestBase {
 
     /** @var \Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase $constraint */
     $this->assertEqual($constraint->coversFields(), ['name', 'type'], 'Information about covered fields can be retrieved.');
+  }
+
+  /**
+   * Tests the EntityChangedConstraintValidator with multiple translations.
+   */
+  public function testEntityChangedConstraintOnConcurrentMultilingualEditing() {
+    $this->installEntitySchema('entity_test_mulrev_changed');
+    $storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_test_mulrev_changed');
+
+    // Create a test entity.
+    $entity = $this->createTestEntity('entity_test_mulrev_changed');
+    $entity->save();
+
+    $entity->setChangedTime($entity->getChangedTime() - 1);
+    $violations = $entity->validate();
+    $this->assertEquals(1, $violations->count());
+    $this->assertEqual($violations[0]->getMessage(), 'The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
+
+    $entity = $storage->loadUnchanged($entity->id());
+    $translation = $entity->addTranslation('de');
+    $entity->save();
+
+    // Ensure that the new translation has a newer changed timestamp than the
+    // default translation.
+    $this->assertGreaterThan($entity->getChangedTime(), $translation->getChangedTime());
+
+    // Simulate concurrent form editing by saving the entity with an altered
+    // non-translatable field in order for the changed timestamp to be updated
+    // across all entity translations.
+    $original_entity_time = $entity->getChangedTime();
+    $entity->set('not_translatable', $this->randomString());
+    $entity->save();
+    // Simulate form submission of an uncached form by setting the previous
+    // timestamp of an entity translation on the saved entity object. This
+    // happens in the entity form API where we put the changed timestamp of
+    // the entity in a form hidden value and then set it on the entity which on
+    // form submit is loaded from the storage if the form is not yet cached.
+    $entity->setChangedTime($original_entity_time);
+    // Setting the changed timestamp from the user input on the entity loaded
+    // from the storage is used as a prevention from saving a form built with a
+    // previous version of the entity and thus reverting changes by other users.
+    $violations = $entity->validate();
+    $this->assertEquals(1, $violations->count());
+    $this->assertEqual($violations[0]->getMessage(), 'The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
   }
 
 }
