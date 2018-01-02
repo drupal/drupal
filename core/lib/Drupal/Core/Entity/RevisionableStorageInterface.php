@@ -40,4 +40,15 @@ interface RevisionableStorageInterface {
    */
   public function deleteRevision($revision_id);
 
+  /**
+   * Returns the latest revision identifier for an entity.
+   *
+   * @param int|string $entity_id
+   *   The entity identifier.
+   *
+   * @return int|string|null
+   *   The latest revision identifier or NULL if no revision could be found.
+   */
+  public function getLatestRevisionId($entity_id);
+
 }

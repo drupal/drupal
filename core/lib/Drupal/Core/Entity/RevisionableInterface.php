@@ -52,6 +52,14 @@ interface RevisionableInterface {
   public function isDefaultRevision($new_value = NULL);
 
   /**
+   * Checks if this entity is the latest revision.
+   *
+   * @return bool
+   *   TRUE if the entity is the latest revision, FALSE otherwise.
+   */
+  public function isLatestRevision();
+
+  /**
    * Acts on a revision before it gets saved.
    *
    * @param EntityStorageInterface $storage

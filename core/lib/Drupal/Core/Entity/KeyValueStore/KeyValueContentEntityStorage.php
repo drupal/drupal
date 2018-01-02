@@ -30,4 +30,18 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
     return [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getLatestRevisionId($entity_id) {
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLatestTranslationAffectedRevisionId($entity_id, $langcode) {
+    return NULL;
+  }
+
 }

@@ -168,6 +168,35 @@ use Drupal\node\Entity\NodeType;
  * @endcode
  * This involves the same hooks and operations as regular entity loading.
  *
+ * The "latest revision" of an entity is the most recently created one,
+ * regardless of it being default or pending. If the entity is translatable,
+ * revision translations are not taken into account either. In other words, any
+ * time a new revision is created, that becomes the latest revision for the
+ * entity overall, regardless of the affected translations. To load the latest
+ * revision of an entity:
+ * @code
+ * $revision_id = $storage->getLatestRevisionId($entity_id);
+ * $entity = $storage->loadRevision($revision_id);
+ * @endcode
+ * As usual, if the entity is translatable, this code instantiates into $entity
+ * the default translation of the revision, even if the latest revision contains
+ * only changes to a different translation:
+ * @code
+ * $is_default = $entity->isDefaultTranslation(); // returns TRUE
+ * @endcode
+ *
+ * The "latest translation-affected revision" is the most recently created one
+ * that affects the specified translation. For example, when a new revision
+ * introducing some changes to an English translation is saved, that becomes the
+ * new "latest revision". However, if an existing Italian translation was not
+ * affected by those changes, then the "latest translation-affected revision"
+ * for Italian remains what it was. To load the Italian translation at its
+ * latest translation-affected revision:
+ * @code
+ * $revision_id = $storage->getLatestTranslationAffectedRevisionId($entity_id, 'it');
+ * $it_translation = $storage->loadRevision($revision_id)->getTranslation('it');
+ * @endcode
+ *
  * @section save Save operations
  * To update an existing entity, you will need to load it, change properties,
  * and then save; as described above, when creating a new entity, you will also
@@ -197,6 +226,10 @@ use Drupal\node\Entity\NodeType;
  *   hook_entity_bundle_create()
  * - Comment: hook_comment_publish() and hook_comment_unpublish() as
  *   appropriate.
+ *
+ * Note that all translations available for the entity are stored during a save
+ * operation. When saving a new revision, a copy of every translation is stored,
+ * regardless of it being affected by the revision.
  *
  * @section edit Editing operations
  * When an entity's add/edit form is used to add or edit an entity, there

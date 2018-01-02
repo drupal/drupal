@@ -8,9 +8,11 @@ use Drupal\language\Entity\ConfigurableLanguage;
 /**
  * Tests the loaded Revision of an entity.
  *
+ * @coversDefaultClass \Drupal\Core\Entity\ContentEntityBase
+ *
  * @group entity
  */
-class EntityLoadedRevisionTest extends EntityKernelTestBase {
+class EntityRevisionsTest extends EntityKernelTestBase {
 
   /**
    * Modules to enable.
@@ -164,7 +166,99 @@ class EntityLoadedRevisionTest extends EntityKernelTestBase {
     $loadedRevisionId = \Drupal::state()->get('entity_test.loadedRevisionId');
     $this->assertEquals($entity->getLoadedRevisionId(), $loadedRevisionId);
     $this->assertEquals($entity->getRevisionId(), $entity->getLoadedRevisionId());
+  }
 
+  /**
+   * Tests that latest revisions are working as expected.
+   *
+   * @covers ::isLatestRevision
+   */
+  public function testIsLatestRevision() {
+    // Create a basic EntityTestMulRev entity and save it.
+    $entity = EntityTestMulRev::create();
+    $entity->save();
+    $this->assertTrue($entity->isLatestRevision());
+
+    // Load the created entity and create a new pending revision.
+    $pending_revision = EntityTestMulRev::load($entity->id());
+    $pending_revision->setNewRevision(TRUE);
+    $pending_revision->isDefaultRevision(FALSE);
+
+    // The pending revision should still be marked as the latest one before it
+    // is saved.
+    $this->assertTrue($pending_revision->isLatestRevision());
+    $pending_revision->save();
+    $this->assertTrue($pending_revision->isLatestRevision());
+
+    // Load the default revision and check that it is not marked as the latest
+    // revision.
+    $default_revision = EntityTestMulRev::load($entity->id());
+    $this->assertFalse($default_revision->isLatestRevision());
+  }
+
+  /**
+   * Tests that latest affected revisions are working as expected.
+   *
+   * The latest revision affecting a particular translation behaves as the
+   * latest revision for monolingual entities.
+   *
+   * @covers ::isLatestTranslationAffectedRevision
+   * @covers \Drupal\Core\Entity\ContentEntityStorageBase::getLatestRevisionId
+   * @covers \Drupal\Core\Entity\ContentEntityStorageBase::getLatestTranslationAffectedRevisionId
+   */
+  public function testIsLatestAffectedRevisionTranslation() {
+    ConfigurableLanguage::createFromLangcode('it')->save();
+
+    // Create a basic EntityTestMulRev entity and save it.
+    $entity = EntityTestMulRev::create();
+    $entity->setName($this->randomString());
+    $entity->save();
+    $this->assertTrue($entity->isLatestTranslationAffectedRevision());
+
+    // Load the created entity and create a new pending revision.
+    $pending_revision = EntityTestMulRev::load($entity->id());
+    $pending_revision->setName($this->randomString());
+    $pending_revision->setNewRevision(TRUE);
+    $pending_revision->isDefaultRevision(FALSE);
+
+    // Check that no revision affecting Italian is available, given that no
+    // Italian translation has been created yet.
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $this->entityManager->getStorage($entity->getEntityTypeId());
+    $this->assertNull($storage->getLatestTranslationAffectedRevisionId($entity->id(), 'it'));
+    $this->assertEquals($pending_revision->getLoadedRevisionId(), $storage->getLatestRevisionId($entity->id()));
+
+    // The pending revision should still be marked as the latest affected one
+    // before it is saved.
+    $this->assertTrue($pending_revision->isLatestTranslationAffectedRevision());
+    $pending_revision->save();
+    $this->assertTrue($pending_revision->isLatestTranslationAffectedRevision());
+
+    // Load the default revision and check that it is not marked as the latest
+    // (translation-affected) revision.
+    $default_revision = EntityTestMulRev::load($entity->id());
+    $this->assertFalse($default_revision->isLatestRevision());
+    $this->assertFalse($default_revision->isLatestTranslationAffectedRevision());
+
+    // Add a translation in a new pending revision and verify that both the
+    // English and Italian revision translations are the latest affected
+    // revisions for their respective languages, while the English revision is
+    // not the latest revision.
+    /** @var \Drupal\entity_test\Entity\EntityTestMulRev $en_revision */
+    $en_revision = clone $pending_revision;
+    /** @var \Drupal\entity_test\Entity\EntityTestMulRev $it_revision */
+    $it_revision = $pending_revision->addTranslation('it');
+    $it_revision->setName($this->randomString());
+    $it_revision->setNewRevision(TRUE);
+    $it_revision->isDefaultRevision(FALSE);
+    // @todo Remove this once the "original" property works with revisions. See
+    //   https://www.drupal.org/project/drupal/issues/2859042.
+    $it_revision->original = $storage->loadRevision($it_revision->getLoadedRevisionId());
+    $it_revision->save();
+    $this->assertTrue($it_revision->isLatestRevision());
+    $this->assertTrue($it_revision->isLatestTranslationAffectedRevision());
+    $this->assertFalse($en_revision->isLatestRevision());
+    $this->assertTrue($en_revision->isLatestTranslationAffectedRevision());
   }
 
 }

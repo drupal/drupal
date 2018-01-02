@@ -122,4 +122,32 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
     $this->assertEquals($translated_entity->getLoadedRevisionId(), $converted->getLoadedRevisionId());
   }
 
+  /**
+   * Tests that pending revisions are loaded only when needed.
+   */
+  public function testOptimizedConvert() {
+    $entity = EntityTestMulRev::create();
+    $entity->save();
+
+    // Populate static cache for the current entity.
+    $entity = EntityTestMulRev::load($entity->id());
+
+    // Delete the base table entry for the current entity, however, since the
+    // storage will query the revision table to get the latest revision, the
+    // logic handling pending revisions will work correctly anyway.
+    /** @var \Drupal\Core\Database\Connection $database */
+    $database = $this->container->get('database');
+    $database->delete('entity_test_mulrev')
+      ->condition('id', $entity->id())
+      ->execute();
+
+    // If optimization works, converting a default revision should not trigger
+    // a storage load, thus making the following assertion pass.
+    $converted = $this->converter->convert(1, [
+      'load_latest_revision' => TRUE,
+      'type' => 'entity:entity_test_mulrev',
+    ], 'foo', []);
+    $this->assertEquals($entity->getLoadedRevisionId(), $converted->getLoadedRevisionId());
+  }
+
 }

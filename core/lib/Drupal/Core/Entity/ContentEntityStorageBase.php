@@ -169,6 +169,47 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * {@inheritdoc}
    */
+  public function getLatestRevisionId($entity_id) {
+    if (!$this->entityType->isRevisionable()) {
+      return NULL;
+    }
+
+    $result = $this->getQuery()
+      ->latestRevision()
+      ->condition($this->entityType->getKey('id'), $entity_id)
+      ->accessCheck(FALSE)
+      ->execute();
+
+    return key($result);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLatestTranslationAffectedRevisionId($entity_id, $langcode) {
+    if (!$this->entityType->isRevisionable()) {
+      return NULL;
+    }
+
+    if (!$this->entityType->isTranslatable()) {
+      return $this->getLatestRevisionId($entity_id);
+    }
+
+    $result = $this->getQuery()
+      ->allRevisions()
+      ->condition($this->entityType->getKey('id'), $entity_id)
+      ->condition($this->entityType->getKey('revision_translation_affected'), 1, '=', $langcode)
+      ->range(0, 1)
+      ->sort($this->entityType->getKey('revision'), 'DESC')
+      ->accessCheck(FALSE)
+      ->execute();
+
+    return key($result);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition) {}
 
   /**

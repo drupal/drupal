@@ -5,8 +5,6 @@ namespace Drupal\Core\ParamConverter;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Symfony\Component\Routing\Route;
 
@@ -71,8 +69,11 @@ class EntityConverter implements ParamConverterInterface {
     // If the entity type is revisionable and the parameter has the
     // "load_latest_revision" flag, load the latest revision.
     if ($entity instanceof ContentEntityInterface && !empty($definition['load_latest_revision']) && $entity_definition->isRevisionable()) {
-      $latest_revision_id = $this->getLatestRevisionId($storage, $entity_definition, $value);
-      if ($entity->getLoadedRevisionId() !== $latest_revision_id) {
+      /** @var \Drupal\Core\Entity\ContentEntityStorageInterface  $storage */
+      $latest_revision_id = $storage->getLatestRevisionId($value);
+      // We explicitly perform a loose equality check, since a revision ID may
+      // be returned as an integer or a string.
+      if ($entity->getLoadedRevisionId() != $latest_revision_id) {
         $entity = $storage->loadRevision($latest_revision_id);
       }
     }
@@ -84,33 +85,6 @@ class EntityConverter implements ParamConverterInterface {
     }
 
     return $entity;
-  }
-
-  /**
-   * Get the latest revision ID.
-   *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The entity storage.
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_definition
-   *   The entity definition.
-   * @param mixed $value
-   *   The raw value.
-   *
-   * @return int
-   *   The latest revision ID for a given entity.
-   */
-  protected function getLatestRevisionId(EntityStorageInterface $storage, EntityTypeInterface $entity_definition, $value) {
-    // @todo, replace this query with a standardized way of getting the
-    //   latest revision in https://www.drupal.org/node/2784201.
-    $result = $storage
-      ->getQuery()
-      ->latestRevision()
-      ->condition($entity_definition->getKey('id'), $value)
-      // The entity converter is not concerned with access checking, skip the
-      // access check when looking up the latest revision.
-      ->accessCheck(FALSE)
-      ->execute();
-    return key($result);
   }
 
   /**

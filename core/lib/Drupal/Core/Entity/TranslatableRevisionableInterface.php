@@ -8,6 +8,15 @@ namespace Drupal\Core\Entity;
 interface TranslatableRevisionableInterface extends TranslatableInterface, RevisionableInterface {
 
   /**
+   * Checks whether this is the latest revision affecting this translation.
+   *
+   * @return bool
+   *   TRUE if this revision is the latest one affecting the active translation,
+   *   FALSE otherwise.
+   */
+  public function isLatestTranslationAffectedRevision();
+
+  /**
    * Marks the current revision translation as affected.
    *
    * Setting the revision translation affected flag through the setter or
