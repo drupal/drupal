@@ -235,20 +235,6 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
     $response = $this->request('GET', $url, $this->getAuthenticationRequestOptions('GET'));
     $normalization = $this->serializer->decode((string) $response->getBody(), static::$format);
 
-    // @todo In https://www.drupal.org/node/2824851, we will be able to stop
-    //       unsetting these fields from the normalization, because
-    //       EntityResource::patch() will ignore any fields that are sent that
-    //       match the current value (and obviously we're sending the current
-    //       value).
-    $normalization = $this->removeFieldsFromNormalization($normalization, [
-      'revision_timestamp',
-      'revision_uid',
-      'created',
-      'changed',
-      'promote',
-      'sticky',
-    ]);
-
     // Change node's path alias.
     $normalization['path'][0]['alias'] .= 's-rule-the-world';
 
@@ -258,8 +244,11 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
     $request_options = array_merge_recursive($request_options, $this->getAuthenticationRequestOptions('PATCH'));
     $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
 
-    // PATCH request: 403 when creating URL aliases unauthorized.
+    // PATCH request: 403 when creating URL aliases unauthorized. Before
+    // asserting the 403 response, assert that the stored path alias remains
+    // unchanged.
     $response = $this->request('PATCH', $url, $request_options);
+    $this->assertSame('/llama', $this->entityStorage->loadUnchanged($this->entity->id())->get('path')->alias);
     $this->assertResourceErrorResponse(403, "Access denied on updating field 'path'.", $response);
 
     // Grant permission to create URL aliases.

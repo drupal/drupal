@@ -208,15 +208,6 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
     $response = $this->request('GET', $url, $this->getAuthenticationRequestOptions('GET'));
     $normalization = $this->serializer->decode((string) $response->getBody(), static::$format);
 
-    // @todo In https://www.drupal.org/node/2824851, we will be able to stop
-    //       unsetting these fields from the normalization, because
-    //       EntityResource::patch() will ignore any fields that are sent that
-    //       match the current value (and obviously we're sending the current
-    //       value).
-    $normalization = $this->removeFieldsFromNormalization($normalization, [
-      'changed',
-    ]);
-
     // Change term's path alias.
     $normalization['path'][0]['alias'] .= 's-rule-the-world';
 

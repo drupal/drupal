@@ -11,6 +11,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Http\Exception\CacheableAccessDeniedHttpException;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -226,38 +227,18 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       throw new AccessDeniedHttpException($entity_access->getReason() ?: $this->generateFallbackAccessDeniedMessage($entity, 'update'));
     }
 
-    // Overwrite the received properties.
-    $entity_keys = $entity->getEntityType()->getKeys();
+    // Overwrite the received fields.
     foreach ($entity->_restSubmittedFields as $field_name) {
       $field = $entity->get($field_name);
-
-      // Entity key fields need special treatment: together they uniquely
-      // identify the entity. Therefore it does not make sense to modify any of
-      // them. However, rather than throwing an error, we just ignore them as
-      // long as their specified values match their current values.
-      if (in_array($field_name, $entity_keys, TRUE)) {
-        // @todo Work around the wrong assumption that entity keys need special
-        // treatment, when only read-only fields need it.
-        // This will be fixed in https://www.drupal.org/node/2824851.
-        if ($entity->getEntityTypeId() == 'comment' && $field_name == 'status' && !$original_entity->get($field_name)->access('edit')) {
-          throw new AccessDeniedHttpException("Access denied on updating field '$field_name'.");
-        }
-
-        // Unchanged values for entity keys don't need access checking.
-        if ($original_entity->get($field_name)->equals($field)) {
-          continue;
-        }
-        // It is not possible to set the language to NULL as it is automatically
-        // re-initialized. As it must not be empty, skip it if it is.
-        elseif (isset($entity_keys['langcode']) && $field_name === $entity_keys['langcode'] && $field->isEmpty()) {
-          continue;
-        }
+      // It is not possible to set the language to NULL as it is automatically
+      // re-initialized. As it must not be empty, skip it if it is.
+      // @todo Remove in https://www.drupal.org/project/drupal/issues/2933408.
+      if ($entity->getEntityType()->hasKey('langcode') && $field_name === $entity->getEntityType()->getKey('langcode') && $field->isEmpty()) {
+        continue;
       }
-
-      if (!$original_entity->get($field_name)->access('edit')) {
-        throw new AccessDeniedHttpException("Access denied on updating field '$field_name'.");
+      if ($this->checkPatchFieldAccess($original_entity->get($field_name), $field)) {
+        $original_entity->set($field_name, $field->getValue());
       }
-      $original_entity->set($field_name, $field->getValue());
     }
 
     // Validate the received data before saving.
@@ -272,6 +253,49 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     catch (EntityStorageException $e) {
       throw new HttpException(500, 'Internal Server Error', $e);
     }
+  }
+
+  /**
+   * Checks whether the given field should be PATCHed.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $original_field
+   *   The original (stored) value for the field.
+   * @param \Drupal\Core\Field\FieldItemListInterface $received_field
+   *   The received value for the field.
+   *
+   * @return bool
+   *   Whether the field should be PATCHed or not.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   Thrown when the user sending the request is not allowed to update the
+   *   field. Only thrown when the user could not abuse this information to
+   *   determine the stored value.
+   *
+   * @internal
+   */
+  protected function checkPatchFieldAccess(FieldItemListInterface $original_field, FieldItemListInterface $received_field) {
+    // If the user is allowed to edit the field, it is always safe to set the
+    // received value. We may be setting an unchanged value, but that is ok.
+    if ($original_field->access('edit')) {
+      return TRUE;
+    }
+
+    // The user might not have access to edit the field, but still needs to
+    // submit the current field value as part of the PATCH request. For
+    // example, the entity keys required by denormalizers. Therefore, if the
+    // received value equals the stored value, return FALSE without throwing an
+    // exception. But only for fields that the user has access to view, because
+    // the user has no legitimate way of knowing the current value of fields
+    // that they are not allowed to view, and we must not make the presence or
+    // absence of a 403 response a way to find that out.
+    if ($original_field->equals($received_field) && $original_field->access('view')) {
+      return FALSE;
+    }
+
+    // It's helpful and safe to let the user know when they are not allowed to
+    // update a field.
+    $field_name = $received_field->getName();
+    throw new AccessDeniedHttpException("Access denied on updating field '$field_name'.");
   }
 
   /**
