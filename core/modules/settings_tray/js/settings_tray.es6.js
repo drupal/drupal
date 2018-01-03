@@ -5,7 +5,7 @@
  * @private
  */
 
-(function ($, Drupal) {
+(($, Drupal) => {
   const blockConfigureSelector = '[data-settings-tray-edit]';
   const toggleEditSelector = '[data-drupal-settingstray="toggle"]';
   const itemsToToggleSelector = '[data-off-canvas-main-canvas], #toolbar-bar, [data-drupal-settingstray="editable"] a, [data-drupal-settingstray="editable"] button';
@@ -81,9 +81,10 @@
       if ($editables.length) {
         // Use event capture to prevent clicks on links.
         document.querySelector('[data-off-canvas-main-canvas]').addEventListener('click', preventClick, true);
-
-        // When a click occurs try and find the settings-tray edit link
-        // and click it.
+        /**
+         * When a click occurs try and find the settings-tray edit link
+         * and click it.
+         */
         $editables
           .not(contextualItemsSelector)
           .on('click.settingstray', (e) => {
@@ -154,14 +155,18 @@
   function prepareAjaxLinks() {
     // Find all Ajax instances that use the 'off_canvas' renderer.
     Drupal.ajax.instances
-    // If there is an element and the renderer is 'off_canvas' then we want
-    // to add our changes.
+      /**
+       * If there is an element and the renderer is 'off_canvas' then we want
+       * to add our changes.
+       */
       .filter(instance => instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas')
-      // Loop through all Ajax instances that use the 'off_canvas' renderer to
-      // set active editable ID.
+      /**
+       * Loop through all Ajax instances that use the 'off_canvas' renderer to
+       * set active editable ID.
+       */
       .forEach((instance) => {
         // Check to make sure existing dialogOptions aren't overridden.
-        if (!('dialogOptions' in instance.options.data)) {
+        if (!instance.options.data.hasOwnProperty('dialogOptions')) {
           instance.options.data.dialogOptions = {};
         }
         instance.options.data.dialogOptions.settingsTrayActiveEditableId = $(instance.element).parents('.settings-tray-editable').attr('id');
@@ -253,4 +258,4 @@
       }
     },
   });
-}(jQuery, Drupal));
+})(jQuery, Drupal);

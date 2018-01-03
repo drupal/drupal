@@ -97,7 +97,7 @@
     Drupal.ajax.instances.filter(function (instance) {
       return instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
     }).forEach(function (instance) {
-      if (!('dialogOptions' in instance.options.data)) {
+      if (!instance.options.data.hasOwnProperty('dialogOptions')) {
         instance.options.data.dialogOptions = {};
       }
       instance.options.data.dialogOptions.settingsTrayActiveEditableId = $(instance.element).parents('.settings-tray-editable').attr('id');
