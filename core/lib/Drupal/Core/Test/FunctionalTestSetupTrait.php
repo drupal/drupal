@@ -42,6 +42,18 @@ trait FunctionalTestSetupTrait {
   protected $configDirectories = [];
 
   /**
+   * The flag to set 'apcu_ensure_unique_prefix' setting.
+   *
+   * Wide use of a unique prefix can lead to problems with memory, if tests are
+   * run with a concurrency higher than 1. Therefore, FALSE by default.
+   *
+   * @var bool
+   *
+   * @see \Drupal\Core\Site\Settings::getApcuPrefix().
+   */
+  protected $apcuEnsureUniquePrefix = FALSE;
+
+  /**
    * Prepares site settings and services before installation.
    */
   protected function prepareSettings() {
@@ -81,6 +93,10 @@ trait FunctionalTestSetupTrait {
     // @see \Drupal\Core\Extension\ExtensionDiscovery::getProfileDirectories()
     $settings['conf']['simpletest.settings']['parent_profile'] = (object) [
       'value' => $this->originalProfile,
+      'required' => TRUE,
+    ];
+    $settings['settings']['apcu_ensure_unique_prefix'] = (object) [
+      'value' => $this->apcuEnsureUniquePrefix,
       'required' => TRUE,
     ];
     $this->writeSettings($settings);
