@@ -44,27 +44,45 @@ class EditModeTest extends JavascriptTestBase {
   }
 
   /**
-   * Tests that Drupal.announce messages appear.
+   * Tests enabling and disabling edit mode.
    */
-  public function testAnnounceEditMode() {
+  public function testEditModeEnableDisalbe() {
     $web_assert = $this->assertSession();
-    $this->drupalGet('user');
+    $page = $this->getSession()->getPage();
+    // Get the page twice to ensure edit mode remains enabled after a new page
+    // request.
+    for ($page_get_count = 0; $page_get_count < 2; $page_get_count++) {
+      $this->drupalGet('user');
+      $expected_restricted_tab_count = 1 + count($page->findAll('css', '[data-contextual-id]'));
 
-    // After the page loaded we need to additionally wait until the settings
-    // tray Ajax activity is done.
-    $web_assert->assertWaitOnAjaxRequest();
+      // After the page loaded we need to additionally wait until the settings
+      // tray Ajax activity is done.
+      $web_assert->assertWaitOnAjaxRequest();
 
-    // Enable edit mode.
-    $this->pressToolbarEditButton();
-    $this->assertAnnounceEditMode();
-    // Disable edit mode.
-    $this->pressToolbarEditButton();
-    $this->assertAnnounceLeaveEditMode();
-    // Enable edit mode again.
-    $this->pressToolbarEditButton();
-    // Finally assert that the 'edit mode enabled' announcement is still correct
-    // after toggling the edit mode at least once.
-    $this->assertAnnounceEditMode();
+      if ($page_get_count == 0) {
+        $unrestricted_tab_count = $this->getTabbableElementsCount();
+        $this->assertGreaterThan($expected_restricted_tab_count, $unrestricted_tab_count);
+
+        // Enable edit mode.
+        // After the first page load the page will be in edit mode when loaded.
+        $this->pressToolbarEditButton();
+      }
+
+      $this->assertAnnounceEditMode();
+      $this->assertSame($expected_restricted_tab_count, $this->getTabbableElementsCount());
+
+      // Disable edit mode.
+      $this->pressToolbarEditButton();
+      $this->assertAnnounceLeaveEditMode();
+      $this->assertSame($unrestricted_tab_count, $this->getTabbableElementsCount());
+      // Enable edit mode again.
+      $this->pressToolbarEditButton();
+      // Finally assert that the 'edit mode enabled' announcement is still
+      // correct after toggling the edit mode at least once.
+      $this->assertAnnounceEditMode();
+      $this->assertSame($expected_restricted_tab_count, $this->getTabbableElementsCount());
+    }
+
   }
 
   /**
@@ -98,6 +116,22 @@ class EditModeTest extends JavascriptTestBase {
     });
     $web_assert->elementContains('css', static::ANNOUNCE_SELECTOR, 'Tabbing is no longer constrained by the Contextual module.');
     $web_assert->elementNotContains('css', static::ANNOUNCE_SELECTOR, 'Tabbing is constrained to a set of');
+  }
+
+  /**
+   * Gets the number of elements that are tabbable.
+   *
+   * @return int
+   *   The number of tabbable elements.
+   */
+  protected function getTabbableElementsCount() {
+    // Mark all tabbable elements.
+    $this->getSession()->executeScript("jQuery(':tabbable').attr('data-marked', '');");
+    // Count all marked elements.
+    $count = count($this->getSession()->getPage()->findAll('css', "[data-marked]"));
+    // Remove set attributes.
+    $this->getSession()->executeScript("jQuery('[data-marked]').removeAttr('data-marked');");
+    return $count;
   }
 
 }

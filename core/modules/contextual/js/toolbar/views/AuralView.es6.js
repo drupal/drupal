@@ -30,6 +30,7 @@
       this.listenTo(this.model, 'change:isViewing', this.manageTabbing);
 
       $(document).on('keyup', _.bind(this.onKeypress, this));
+      this.manageTabbing();
     },
 
     /**
