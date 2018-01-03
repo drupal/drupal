@@ -81,11 +81,11 @@ function text_summary($text, $format = NULL, $size = NULL) {
 
   // Retrieve the filters of the specified text format, if any.
   if (isset($format)) {
-    $filters = FilterFormat::load($format)->filters();
+    $filter_format = FilterFormat::load($format);
     // If the specified format does not exist, return nothing. $text is already
     // filtered text, but the remainder of this function will not be able to
     // ensure a sane and secure summary.
-    if (!$filters) {
+    if (!$filter_format || !($filters = $filter_format->filters())) {
       return '';
     }
   }

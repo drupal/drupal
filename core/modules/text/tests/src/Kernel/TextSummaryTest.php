@@ -208,6 +208,15 @@ class TextSummaryTest extends KernelTestBase {
   }
 
   /**
+   * Test text_summary() returns an empty string without any error when called
+   * with an invalid format.
+   */
+  public function testInvalidFilterFormat() {
+
+    $this->assertTextSummary($this->randomString(100), '', 'non_existent_format');
+  }
+
+  /**
    * Calls text_summary() and asserts that the expected teaser is returned.
    */
   public function assertTextSummary($text, $expected, $format = NULL, $size = NULL) {
