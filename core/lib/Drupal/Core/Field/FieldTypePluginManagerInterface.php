@@ -85,6 +85,26 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface, Catego
   public function getUiDefinitions();
 
   /**
+   * Returns preconfigured field options for a field type.
+   *
+   * This is a wrapper around
+   * \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface::getPreconfiguredOptions()
+   * allowing modules to alter the result of this method by implementing
+   * hook_field_ui_preconfigured_options_alter().
+   *
+   * @param string $field_type
+   *   The field type plugin ID.
+   *
+   * @return array
+   *   A multi-dimensional array as returned from
+   *   \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface::getPreconfiguredOptions().
+   *
+   * @see \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface::getPreconfiguredOptions()
+   * @see hook_field_ui_preconfigured_options_alter()
+   */
+  public function getPreconfiguredOptions($field_type);
+
+  /**
    * Returns the PHP class that implements the field type plugin.
    *
    * @param string $type

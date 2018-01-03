@@ -171,3 +171,14 @@ function field_test_entity_bundle_field_info_alter(&$fields, EntityTypeInterface
     ]);
   }
 }
+
+/**
+ * Implements hook_field_ui_preconfigured_options_alter().
+ */
+function field_test_field_ui_preconfigured_options_alter(array &$options, $field_type) {
+  if ($field_type === 'test_field_with_preconfigured_options') {
+    $options['custom_options']['entity_view_display']['settings'] = [
+      'test_formatter_setting_multiple' => 'altered dummy test string',
+    ];
+  }
+}

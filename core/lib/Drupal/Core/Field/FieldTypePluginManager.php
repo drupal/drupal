@@ -135,7 +135,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
     // Add preconfigured definitions.
     foreach ($definitions as $id => $definition) {
       if (is_subclass_of($definition['class'], '\Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface')) {
-        foreach ($definition['class']::getPreconfiguredOptions() as $key => $option) {
+        foreach ($this->getPreconfiguredOptions($definition['id']) as $key => $option) {
           $definitions['field_ui:' . $id . ':' . $key] = [
             'label' => $option['label'],
           ] + $definition;
@@ -148,6 +148,19 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
     }
 
     return $definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPreconfiguredOptions($field_type) {
+    $options = [];
+    $class = $this->getPluginClass($field_type);
+    if (is_subclass_of($class, '\Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface')) {
+      $options = $class::getPreconfiguredOptions();
+      $this->moduleHandler->alter('field_ui_preconfigured_options', $options, $field_type);
+    }
+    return $options;
   }
 
   /**

@@ -16,6 +16,11 @@ interface PreconfiguredFieldUiOptionsInterface {
   /**
    * Returns preconfigured field options for a field type.
    *
+   * Note that if you want to give modules an opportunity to alter the result
+   * of this method, you should call
+   * \Drupal\Core\Field\FieldTypePluginManagerInterface::getPreconfiguredOptions()
+   * instead.
+   *
    * @return mixed[][]
    *   A multi-dimensional array with string keys and the following structure:
    *   - label: The label to show in the field type selection list.
@@ -35,6 +40,7 @@ interface PreconfiguredFieldUiOptionsInterface {
    * @see \Drupal\field\Entity\FieldStorageConfig
    * @see \Drupal\field\Entity\FieldConfig
    * @see \Drupal\Core\Entity\Display\EntityDisplayInterface::setComponent()
+   * @see \Drupal\Core\Field\FieldTypePluginManagerInterface::getPreconfiguredOptions()
    */
   public static function getPreconfiguredOptions();
 

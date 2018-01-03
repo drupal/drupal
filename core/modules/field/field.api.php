@@ -59,6 +59,33 @@ function hook_field_info_alter(&$info) {
 }
 
 /**
+ * Perform alterations on preconfigured field options.
+ *
+ * @param array $options
+ *   Array of options as returned from
+ *   \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface::getPreconfiguredOptions().
+ * @param string $field_type
+ *   The field type plugin ID.
+ *
+ * @see \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface::getPreconfiguredOptions()
+ */
+function hook_field_ui_preconfigured_options_alter(array &$options, $field_type) {
+  // If the field is not an "entity_reference"-based field, bail out.
+  /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
+  $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+  $class = $field_type_manager->getPluginClass($field_type);
+  if (!is_a($class, 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem', TRUE)) {
+    return;
+  }
+
+  // Set the default formatter for media in entity reference fields to be the
+  // "Rendered entity" formatter.
+  if (!empty($options['media'])) {
+    $options['media']['entity_view_display']['type'] = 'entity_reference_entity_view';
+  }
+}
+
+/**
  * Forbid a field storage update from occurring.
  *
  * Any module may forbid any update for any reason. For example, the

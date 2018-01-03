@@ -175,4 +175,21 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $assert_session->pageTextContains($second_media_item->getName());
   }
 
+  /**
+   * Test that media in ER fields use the Rendered Entity formatter by default.
+   */
+  public function testRenderedEntityReferencedMedia() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
+    $this->drupalGet('/admin/structure/types/manage/page/fields/add-field');
+    $page->selectFieldOption('new_storage_type', 'field_ui:entity_reference:media');
+    $page->fillField('label', 'Foo field');
+    $page->fillField('field_name', 'foo_field');
+    $page->pressButton('Save and continue');
+    $this->drupalGet('/admin/structure/types/manage/page/display');
+    $assert_session->fieldValueEquals('fields[field_foo_field][type]', 'entity_reference_entity_view');
+  }
+
 }

@@ -750,6 +750,7 @@ class ManageFieldsTest extends WebTestBase {
     $this->assertEqual($form_display->getComponent('field_test_custom_options')['type'], 'test_field_widget_multiple');
     $view_display = entity_get_display('node', 'article', 'default');
     $this->assertEqual($view_display->getComponent('field_test_custom_options')['type'], 'field_test_multiple');
+    $this->assertEqual($view_display->getComponent('field_test_custom_options')['settings']['test_formatter_setting_multiple'], 'altered dummy test string');
   }
 
   /**

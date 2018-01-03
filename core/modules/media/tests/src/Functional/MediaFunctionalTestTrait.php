@@ -32,6 +32,7 @@ trait MediaFunctionalTestTrait {
     'administer content types',
     'administer node fields',
     'administer node form display',
+    'administer node display',
     'bypass node access',
   ];
 
