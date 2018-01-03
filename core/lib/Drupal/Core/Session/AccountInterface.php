@@ -148,8 +148,9 @@ interface AccountInterface {
   /**
    * Returns the email address of this account.
    *
-   * @return string
-   *   The email address.
+   * @return string|null
+   *   The email address, or NULL if the account is anonymous or the user does
+   *   not have an email address.
    */
   public function getEmail();
 
