@@ -117,7 +117,7 @@ class SettingsTest extends UnitTestCase {
    * @covers ::getApcuPrefix
    */
   public function testGetApcuPrefix() {
-    $settings = new Settings(['hash_salt' => 123]);
+    $settings = new Settings(['hash_salt' => 123, 'apcu_ensure_unique_prefix' => TRUE]);
     $this->assertNotEquals($settings::getApcuPrefix('cache_test', '/test/a'), $settings::getApcuPrefix('cache_test', '/test/b'));
 
     $settings = new Settings(['hash_salt' => 123, 'apcu_ensure_unique_prefix' => FALSE]);
