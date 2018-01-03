@@ -3,12 +3,13 @@
 namespace Drupal\Core\Routing;
 
 use Symfony\Cmf\Component\Routing\PagedRouteProviderInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * A Route Provider front-end for all Drupal-stored routes.
  */
-class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, PagedRouteProviderInterface {
+class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, PagedRouteProviderInterface, EventSubscriberInterface {
 
   /**
    * The route provider service.
@@ -32,6 +33,18 @@ class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, Pag
   protected $rebuilt = FALSE;
 
   /**
+   * Flag to determine if router is currently being rebuilt.
+   *
+   * Used to prevent recursive router rebuilds during module installation.
+   * Recursive rebuilds can occur when route information is required by alter
+   * hooks that are triggered during a rebuild, for example,
+   * hook_menu_links_discovered_alter().
+   *
+   * @var bool
+   */
+  protected $rebuilding = FALSE;
+
+  /**
    * RouteProviderLazyBuilder constructor.
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
@@ -51,7 +64,7 @@ class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, Pag
    *   The route provider service.
    */
   protected function getRouteProvider() {
-    if (!$this->rebuilt) {
+    if (!$this->rebuilt && !$this->rebuilding) {
       $this->routeBuilder->rebuild();
       $this->rebuilt = TRUE;
     }
@@ -130,6 +143,29 @@ class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, Pag
    */
   public function hasRebuilt() {
     return $this->rebuilt;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents() {
+    $events[RoutingEvents::DYNAMIC][] = ['routerRebuilding', 3000];
+    $events[RoutingEvents::FINISHED][] = ['routerRebuildFinished', -3000];
+    return $events;
+  }
+
+  /**
+   * Sets the router rebuilding flag to TRUE.
+   */
+  public function routerRebuilding() {
+    $this->rebuilding = TRUE;
+  }
+
+  /**
+   * Sets the router rebuilding flag to FALSE.
+   */
+  public function routerRebuildFinished() {
+    $this->rebuilding = FALSE;
   }
 
 }

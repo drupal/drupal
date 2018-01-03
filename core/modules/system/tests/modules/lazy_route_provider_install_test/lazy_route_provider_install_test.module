@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the lazy route provider tests.
+ */
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function lazy_route_provider_install_test_menu_links_discovered_alter(&$links) {
+  $message = \Drupal::state()->get(__FUNCTION__, 'success');
+  try {
+    // Ensure that calling this does not cause a recursive rebuild.
+    \Drupal::service('router.route_provider')->getAllRoutes();
+  }
+  catch (\RuntimeException $e) {
+    $message = 'failed';
+  }
+  \Drupal::state()->set(__FUNCTION__, $message);
+}
