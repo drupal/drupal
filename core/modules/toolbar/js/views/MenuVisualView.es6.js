@@ -23,14 +23,12 @@
     render() {
       const subtrees = this.model.get('subtrees');
       // Add subtrees.
-      for (const id in subtrees) {
-        if (subtrees.hasOwnProperty(id)) {
-          this.$el
-            .find(`#toolbar-link-${id}`)
-            .once('toolbar-subtrees')
-            .after(subtrees[id]);
-        }
-      }
+      Object.keys(subtrees || {}).forEach((id) => {
+        this.$el
+          .find(`#toolbar-link-${id}`)
+          .once('toolbar-subtrees')
+          .after(subtrees[id]);
+      });
       // Render the main menu as a nested, collapsible accordion.
       if ('drupalToolbarMenu' in $.fn) {
         this.$el

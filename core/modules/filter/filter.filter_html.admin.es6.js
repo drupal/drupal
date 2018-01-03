@@ -135,46 +135,44 @@
      *   A list of new allowed tags.
      */
     _calculateAutoAllowedTags(userAllowedTags, newFeatures) {
-      let featureName;
-      let feature;
-      let featureRule;
-      let filterRule;
-      let tag;
       const editorRequiredTags = {};
+
       // Map the newly added Text Editor features to Drupal.FilterHtmlRule
       // objects (to allow comparing userTags with autoTags).
-      for (featureName in newFeatures) {
-        if (newFeatures.hasOwnProperty(featureName)) {
-          feature = newFeatures[featureName];
-          for (let f = 0; f < feature.length; f++) {
-            featureRule = feature[f];
-            for (let t = 0; t < featureRule.required.tags.length; t++) {
-              tag = featureRule.required.tags[t];
-              if (!_.has(editorRequiredTags, tag)) {
-                filterRule = new Drupal.FilterHTMLRule();
-                filterRule.restrictedTags.tags = [tag];
-                // @todo Neither Drupal.FilterHtmlRule nor
-                //   Drupal.EditorFeatureHTMLRule allow for generic attribute
-                //   value restrictions, only for the "class" and "style"
-                //   attribute's values to be restricted. The filter_html filter
-                //   always disallows the "style" attribute, so we only need to
-                //   support "class" attribute value restrictions. Fix once
-                //   https://www.drupal.org/node/2567801 lands.
-                filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(0);
-                filterRule.restrictedTags.allowed.classes = featureRule.required.classes.slice(0);
-                editorRequiredTags[tag] = filterRule;
-              }
-              // The tag is already allowed, add any additionally allowed
-              // attributes.
-              else {
-                filterRule = editorRequiredTags[tag];
-                filterRule.restrictedTags.allowed.attributes = _.union(filterRule.restrictedTags.allowed.attributes, featureRule.required.attributes);
-                filterRule.restrictedTags.allowed.classes = _.union(filterRule.restrictedTags.allowed.classes, featureRule.required.classes);
-              }
+      Object.keys(newFeatures || {}).forEach((featureName) => {
+        const feature = newFeatures[featureName];
+        let featureRule;
+        let filterRule;
+        let tag;
+
+        for (let f = 0; f < feature.length; f++) {
+          featureRule = feature[f];
+          for (let t = 0; t < featureRule.required.tags.length; t++) {
+            tag = featureRule.required.tags[t];
+            if (!_.has(editorRequiredTags, tag)) {
+              filterRule = new Drupal.FilterHTMLRule();
+              filterRule.restrictedTags.tags = [tag];
+              // @todo Neither Drupal.FilterHtmlRule nor
+              //   Drupal.EditorFeatureHTMLRule allow for generic attribute
+              //   value restrictions, only for the "class" and "style"
+              //   attribute's values to be restricted. The filter_html filter
+              //   always disallows the "style" attribute, so we only need to
+              //   support "class" attribute value restrictions. Fix once
+              //   https://www.drupal.org/node/2567801 lands.
+              filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(0);
+              filterRule.restrictedTags.allowed.classes = featureRule.required.classes.slice(0);
+              editorRequiredTags[tag] = filterRule;
+            }
+            // The tag is already allowed, add any additionally allowed
+            // attributes.
+            else {
+              filterRule = editorRequiredTags[tag];
+              filterRule.restrictedTags.allowed.attributes = _.union(filterRule.restrictedTags.allowed.attributes, featureRule.required.attributes);
+              filterRule.restrictedTags.allowed.classes = _.union(filterRule.restrictedTags.allowed.classes, featureRule.required.classes);
             }
           }
         }
-      }
+      });
 
       // Now compare userAllowedTags with editorRequiredTags, and build
       // autoAllowedTags, which contains:
@@ -183,7 +181,7 @@
       // - any tags in editorRequiredTags that already exists in userAllowedTags
       //   but does not allow all attributes or attribute values
       const autoAllowedTags = {};
-      for (tag in editorRequiredTags) {
+      Object.keys(editorRequiredTags).forEach((tag) => {
         // If userAllowedTags does not contain a rule for this editor-required
         // tag, then add it to the list of automatically allowed tags.
         if (!_.has(userAllowedTags, tag)) {
@@ -209,7 +207,7 @@
             autoAllowedTags[tag].restrictedTags.allowed.classes = _.union(allowedClasses, requiredClasses);
           }
         }
-      }
+      });
 
       return autoAllowedTags;
     },

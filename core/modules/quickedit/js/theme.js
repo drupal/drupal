@@ -53,7 +53,8 @@
 
   Drupal.theme.quickeditButtons = function (settings) {
     var html = '';
-    for (var i = 0; i < settings.buttons.length; i++) {
+
+    var _loop = function _loop(i) {
       var button = settings.buttons[i];
       if (!button.hasOwnProperty('type')) {
         button.type = 'button';
@@ -61,12 +62,14 @@
 
       var attributes = [];
       var attrMap = settings.buttons[i].attributes || {};
-      for (var attr in attrMap) {
-        if (attrMap.hasOwnProperty(attr)) {
-          attributes.push(attr + (attrMap[attr] ? '="' + attrMap[attr] + '"' : ''));
-        }
-      }
+      Object.keys(attrMap).forEach(function (attr) {
+        attributes.push(attr + (attrMap[attr] ? '="' + attrMap[attr] + '"' : ''));
+      });
       html += '<button type="' + button.type + '" class="' + button.classes + '" ' + attributes.join(' ') + '>' + button.label + '</button>';
+    };
+
+    for (var i = 0; i < settings.buttons.length; i++) {
+      _loop(i);
     }
     return html;
   };

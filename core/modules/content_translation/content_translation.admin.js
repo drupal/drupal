@@ -11,7 +11,6 @@
       var $context = $(context);
       var options = drupalSettings.contentTranslationDependentOptions;
       var $fields = void 0;
-      var dependentColumns = void 0;
 
       function fieldsChangeHandler($fields, dependentColumns) {
         return function (e) {
@@ -20,15 +19,13 @@
       }
 
       if (options && options.dependent_selectors) {
-        for (var field in options.dependent_selectors) {
-          if (options.dependent_selectors.hasOwnProperty(field)) {
-            $fields = $context.find('input[name^="' + field + '"]');
-            dependentColumns = options.dependent_selectors[field];
+        Object.keys(options.dependent_selectors).forEach(function (field) {
+          $fields = $context.find('input[name^="' + field + '"]');
+          var dependentColumns = options.dependent_selectors[field];
 
-            $fields.on('change', fieldsChangeHandler($fields, dependentColumns));
-            Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependentColumns);
-          }
-        }
+          $fields.on('change', fieldsChangeHandler($fields, dependentColumns));
+          Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependentColumns);
+        });
       }
     },
     check: function check($fields, dependentColumns, $changed) {
@@ -39,21 +36,19 @@
         return $(field).val() === column;
       }
 
-      for (var index in dependentColumns) {
-        if (dependentColumns.hasOwnProperty(index)) {
-          column = dependentColumns[index];
+      Object.keys(dependentColumns || {}).forEach(function (index) {
+        column = dependentColumns[index];
 
-          if (!$changed) {
-            $element = $fields.filter(filterFieldsList);
-          }
-
-          if ($element.is('input[value="' + column + '"]:checked')) {
-            $fields.prop('checked', true).not($element).prop('disabled', true);
-          } else {
-            $fields.prop('disabled', false);
-          }
+        if (!$changed) {
+          $element = $fields.filter(filterFieldsList);
         }
-      }
+
+        if ($element.is('input[value="' + column + '"]:checked')) {
+          $fields.prop('checked', true).not($element).prop('disabled', true);
+        } else {
+          $fields.prop('disabled', false);
+        }
+      });
     }
   };
 

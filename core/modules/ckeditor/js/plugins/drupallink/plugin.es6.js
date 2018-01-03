@@ -34,11 +34,9 @@
 
   function getAttributes(editor, data) {
     const set = {};
-    for (const attributeName in data) {
-      if (data.hasOwnProperty(attributeName)) {
-        set[attributeName] = data[attributeName];
-      }
-    }
+    Object.keys(data || {}).forEach((attributeName) => {
+      set[attributeName] = data[attributeName];
+    });
 
     // CKEditor tracks the *actual* saved href in a data-cke-saved-* attribute
     // to work around browser quirks. We need to update it.
@@ -46,11 +44,9 @@
 
     // Remove all attributes which are not currently set.
     const removed = {};
-    for (const s in set) {
-      if (set.hasOwnProperty(s)) {
-        delete removed[s];
-      }
-    }
+    Object.keys(set).forEach((s) => {
+      delete removed[s];
+    });
 
     return {
       set,
@@ -133,20 +129,18 @@
             }
             // Update the link properties.
             else if (linkElement) {
-              for (const attrName in returnValues.attributes) {
-                if (returnValues.attributes.hasOwnProperty(attrName)) {
-                  // Update the property if a value is specified.
-                  if (returnValues.attributes[attrName].length > 0) {
-                    const value = returnValues.attributes[attrName];
-                    linkElement.data(`cke-saved-${attrName}`, value);
-                    linkElement.setAttribute(attrName, value);
-                  }
-                  // Delete the property if set to an empty string.
-                  else {
-                    linkElement.removeAttribute(attrName);
-                  }
+              Object.keys(returnValues.attributes || {}).forEach((attrName) => {
+                // Update the property if a value is specified.
+                if (returnValues.attributes[attrName].length > 0) {
+                  const value = returnValues.attributes[attrName];
+                  linkElement.data(`cke-saved-${attrName}`, value);
+                  linkElement.setAttribute(attrName, value);
                 }
-              }
+                // Delete the property if set to an empty string.
+                else {
+                  linkElement.removeAttribute(attrName);
+                }
+              });
             }
 
             // Save snapshot for undo support.

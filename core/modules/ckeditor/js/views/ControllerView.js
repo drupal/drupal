@@ -91,11 +91,9 @@
       var hiddenEditorConfig = this.model.get('hiddenEditorConfig');
       if (hiddenEditorConfig.drupalExternalPlugins) {
         var externalPlugins = hiddenEditorConfig.drupalExternalPlugins;
-        for (var pluginName in externalPlugins) {
-          if (externalPlugins.hasOwnProperty(pluginName)) {
-            CKEDITOR.plugins.addExternal(pluginName, externalPlugins[pluginName], '');
-          }
-        }
+        Object.keys(externalPlugins || {}).forEach(function (pluginName) {
+          CKEDITOR.plugins.addExternal(pluginName, externalPlugins[pluginName], '');
+        });
       }
       CKEDITOR.inline($('#' + hiddenCKEditorID).get(0), CKEditorConfig);
 
@@ -116,17 +114,15 @@
 
           var features = {};
           var buttonsToFeatures = {};
-          for (var featureName in CKEFeatureRulesMap) {
-            if (CKEFeatureRulesMap.hasOwnProperty(featureName)) {
-              var feature = new Drupal.EditorFeature(featureName);
-              convertCKERulesToEditorFeature(feature, CKEFeatureRulesMap[featureName]);
-              features[featureName] = feature;
-              var command = e.editor.getCommand(featureName);
-              if (command) {
-                buttonsToFeatures[command.uiItems[0].name] = featureName;
-              }
+          Object.keys(CKEFeatureRulesMap).forEach(function (featureName) {
+            var feature = new Drupal.EditorFeature(featureName);
+            convertCKERulesToEditorFeature(feature, CKEFeatureRulesMap[featureName]);
+            features[featureName] = feature;
+            var command = e.editor.getCommand(featureName);
+            if (command) {
+              buttonsToFeatures[command.uiItems[0].name] = featureName;
             }
-          }
+          });
 
           callback(features, buttonsToFeatures);
         }
@@ -200,22 +196,18 @@
         var configEvent = action === 'added' ? 'addedFeature' : 'removedFeature';
         Drupal.editorConfiguration[configEvent](feature);
       }).on('CKEditorPluginSettingsChanged.ckeditorAdmin', function (event, settingsChanges) {
-        for (var key in settingsChanges) {
-          if (settingsChanges.hasOwnProperty(key)) {
-            hiddenEditorConfig[key] = settingsChanges[key];
-          }
-        }
+        Object.keys(settingsChanges || {}).forEach(function (key) {
+          hiddenEditorConfig[key] = settingsChanges[key];
+        });
 
         getCKEditorFeatures(hiddenEditorConfig, function (features) {
           var featuresMetadata = view.model.get('featuresMetadata');
-          for (var name in features) {
-            if (features.hasOwnProperty(name)) {
-              var feature = features[name];
-              if (featuresMetadata.hasOwnProperty(name) && !_.isEqual(featuresMetadata[name], feature)) {
-                Drupal.editorConfiguration.modifiedFeature(feature);
-              }
+          Object.keys(features || {}).forEach(function (name) {
+            var feature = features[name];
+            if (featuresMetadata.hasOwnProperty(name) && !_.isEqual(featuresMetadata[name], feature)) {
+              Drupal.editorConfiguration.modifiedFeature(feature);
             }
-          }
+          });
 
           view.model.set('featuresMetadata', features);
         });

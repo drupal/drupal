@@ -34,17 +34,15 @@
 
         Drupal.toolbar.models.toolbarModel = model;
 
-        for (var label in options.breakpoints) {
-          if (options.breakpoints.hasOwnProperty(label)) {
-            var mq = options.breakpoints[label];
-            var mql = window.matchMedia(mq);
-            Drupal.toolbar.mql[label] = mql;
+        Object.keys(options.breakpoints).forEach(function (label) {
+          var mq = options.breakpoints[label];
+          var mql = window.matchMedia(mq);
+          Drupal.toolbar.mql[label] = mql;
 
-            mql.addListener(Drupal.toolbar.mediaQueryChangeHandler.bind(null, model, label));
+          mql.addListener(Drupal.toolbar.mediaQueryChangeHandler.bind(null, model, label));
 
-            Drupal.toolbar.mediaQueryChangeHandler.call(null, model, label, mql);
-          }
-        }
+          Drupal.toolbar.mediaQueryChangeHandler.call(null, model, label, mql);
+        });
 
         Drupal.toolbar.views.toolbarVisualView = new Drupal.toolbar.ToolbarVisualView({
           el: this,

@@ -21,11 +21,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         });
       }
 
-      for (var base in settings.ajax) {
-        if (settings.ajax.hasOwnProperty(base)) {
-          loadAjaxBehavior(base);
-        }
-      }
+      Object.keys(settings.ajax || {}).forEach(function (base) {
+        return loadAjaxBehavior(base);
+      });
 
       Drupal.ajax.bindAjaxLinks(document.body);
 
@@ -397,6 +395,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   };
 
   Drupal.Ajax.prototype.success = function (response, status) {
+    var _this = this;
+
     if (this.progress.element) {
       $(this.progress.element).remove();
     }
@@ -408,14 +408,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     var elementParents = $(this.element).parents('[data-drupal-selector]').addBack().toArray();
 
     var focusChanged = false;
-    for (var i in response) {
-      if (response.hasOwnProperty(i) && response[i].command && this.commands[response[i].command]) {
-        this.commands[response[i].command](this, response[i], status);
+    Object.keys(response || {}).forEach(function (i) {
+      if (response[i].command && _this.commands[response[i].command]) {
+        _this.commands[response[i].command](_this, response[i], status);
         if (response[i].command === 'invoke' && response[i].method === 'focus') {
           focusChanged = true;
         }
       }
-    }
+    });
 
     if (!focusChanged && this.element && !$(this.element).data('disable-refocus')) {
       var target = false;

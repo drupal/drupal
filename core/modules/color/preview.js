@@ -17,33 +17,27 @@
       form.find('#text a, #text h2').css('color', form.find('.color-palette input[name="palette[link]"]').val());
 
       function gradientLineColor(i, element) {
-        for (var k in accum) {
-          if (accum.hasOwnProperty(k)) {
-            accum[k] += delta[k];
-          }
-        }
+        Object.keys(accum || {}).forEach(function (k) {
+          accum[k] += delta[k];
+        });
         element.style.backgroundColor = farb.pack(accum);
       }
 
       var colorStart = void 0;
       var colorEnd = void 0;
-      for (var i in settings.gradients) {
-        if (settings.gradients.hasOwnProperty(i)) {
-          colorStart = farb.unpack(form.find('.color-palette input[name="palette[' + settings.gradients[i].colors[0] + ']"]').val());
-          colorEnd = farb.unpack(form.find('.color-palette input[name="palette[' + settings.gradients[i].colors[1] + ']"]').val());
-          if (colorStart && colorEnd) {
-            delta = [];
-            for (var j in colorStart) {
-              if (colorStart.hasOwnProperty(j)) {
-                delta[j] = (colorEnd[j] - colorStart[j]) / (settings.gradients[i].vertical ? height[i] : width[i]);
-              }
-            }
-            accum = colorStart;
+      Object.keys(settings.gradients || {}).forEach(function (i) {
+        colorStart = farb.unpack(form.find('.color-palette input[name="palette[' + settings.gradients[i].colors[0] + ']"]').val());
+        colorEnd = farb.unpack(form.find('.color-palette input[name="palette[' + settings.gradients[i].colors[1] + ']"]').val());
+        if (colorStart && colorEnd) {
+          delta = [];
+          Object.keys(colorStart || {}).forEach(function (colorStartKey) {
+            delta[colorStartKey] = (colorEnd[colorStartKey] - colorStart[colorStartKey]) / (settings.gradients[i].vertical ? height[i] : width[i]);
+          });
+          accum = colorStart;
 
-            form.find('#gradient-' + i + ' > div').each(gradientLineColor);
-          }
+          form.find('#gradient-' + i + ' > div').each(gradientLineColor);
         }
-      }
+      });
     }
   };
 })(jQuery, Drupal);

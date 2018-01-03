@@ -45,11 +45,9 @@
         data: { 'node_ids[]': nodeIDs },
         dataType: 'json',
         success(results) {
-          for (const nodeID in results) {
-            if (results.hasOwnProperty(nodeID)) {
-              storage.setItem(`Drupal.history.${currentUserID}.${nodeID}`, results[nodeID]);
-            }
-          }
+          Object.keys(results || {}).forEach((nodeID) => {
+            storage.setItem(`Drupal.history.${currentUserID}.${nodeID}`, results[nodeID]);
+          });
           callback();
         },
       });

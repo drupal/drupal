@@ -103,13 +103,13 @@
       data: { 'node_ids[]': nodeIDs },
       dataType: 'json',
       success(results) {
-        for (const nodeID in results) {
-          if (results.hasOwnProperty(nodeID) && placeholdersToUpdate.hasOwnProperty(nodeID)) {
+        Object.keys(results || {}).forEach((nodeID) => {
+          if (placeholdersToUpdate.hasOwnProperty(nodeID)) {
             const url = results[nodeID].first_new_comment_link;
             const text = Drupal.formatPlural(results[nodeID].new_comment_count, '1 new', '@count new');
             $(placeholdersToUpdate[nodeID]).append(`<br /><a href="${url}">${text}</a>`);
           }
-        }
+        });
       },
     });
   }

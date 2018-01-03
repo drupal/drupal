@@ -38,12 +38,10 @@
         $select.children().remove();
 
         var totalOptions = 0;
-        for (var machineName in options) {
-          if (options.hasOwnProperty(machineName)) {
-            $select.append($('<option ' + (machineName === selected ? ' selected="selected"' : '') + '></option>').val(machineName).text(options[machineName]));
-            totalOptions++;
-          }
-        }
+        Object.keys(options || {}).forEach(function (machineName) {
+          $select.append($('<option ' + (machineName === selected ? ' selected="selected"' : '') + '></option>').val(machineName).text(options[machineName]));
+          totalOptions++;
+        });
 
         $select.closest('div').toggle(totalOptions > 0).attr('hidden', totalOptions === 0);
       }

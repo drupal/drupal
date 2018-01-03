@@ -87,13 +87,13 @@
       data: { 'node_ids[]': nodeIDs },
       dataType: 'json',
       success: function success(results) {
-        for (var nodeID in results) {
-          if (results.hasOwnProperty(nodeID) && placeholdersToUpdate.hasOwnProperty(nodeID)) {
+        Object.keys(results || {}).forEach(function (nodeID) {
+          if (placeholdersToUpdate.hasOwnProperty(nodeID)) {
             var url = results[nodeID].first_new_comment_link;
             var text = Drupal.formatPlural(results[nodeID].new_comment_count, '1 new', '@count new');
             $(placeholdersToUpdate[nodeID]).append('<br /><a href="' + url + '">' + text + '</a>');
           }
-        }
+        });
       }
     });
   }
