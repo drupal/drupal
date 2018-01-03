@@ -239,6 +239,59 @@ interface ModuleHandlerInterface {
   public function invokeAll($hook, array $args = []);
 
   /**
+   * Invokes a deprecated hook in a particular module.
+   *
+   * Invoking a deprecated hook adds the behavior of triggering an
+   * E_USER_DEPRECATED error if any implementations are found.
+   *
+   * API maintainers should use this method instead of invoke() when their hook
+   * is deprecated. This method does not detect when a hook is deprecated.
+   *
+   * @param string $description
+   *   Helpful text describing what to do instead of implementing this hook.
+   * @param string $module
+   *   The name of the module (without the .module extension).
+   * @param string $hook
+   *   The name of the hook to invoke.
+   * @param array $args
+   *   Arguments to pass to the hook implementation.
+   *
+   * @return mixed
+   *   The return value of the hook implementation.
+   *
+   * @see \Drupal\Core\Extension\ModuleHandlerInterface::invoke()
+   * @see https://www.drupal.org/core/deprecation#how-hook
+   */
+  public function invokeDeprecated($description, $module, $hook, array $args = []);
+
+  /**
+   * Invokes a deprecated hook in all enabled modules that implement it.
+   *
+   * Invoking a deprecated hook adds the behavior of triggering an
+   * E_USER_DEPRECATED error if any implementations are found.
+   *
+   * API maintainers should use this method instead of invokeAll() when their
+   * hook is deprecated. This method does not detect when a hook is deprecated.
+   *
+   * @param string $description
+   *   Helpful text describing what to do instead of implementing this hook.
+   * @param string $hook
+   *   The name of the hook to invoke.
+   * @param array $args
+   *   Arguments to pass to the hook.
+   *
+   * @return array
+   *   An array of return values of the hook implementations. If modules return
+   *   arrays from their implementations, those are merged into one array
+   *   recursively. Note: integer keys in arrays will be lost, as the merge is
+   *   done using array_merge_recursive().
+   *
+   * @see \Drupal\Core\Extension\ModuleHandlerInterface::invokeAll()
+   * @see https://www.drupal.org/core/deprecation#how-hook
+   */
+  public function invokeAllDeprecated($description, $hook, array $args = []);
+
+  /**
    * Passes alterable variables to specific hook_TYPE_alter() implementations.
    *
    * This dispatch function hands off the passed-in variables to type-specific
@@ -288,6 +341,42 @@ interface ModuleHandlerInterface {
    *   associative array as described above.
    */
   public function alter($type, &$data, &$context1 = NULL, &$context2 = NULL);
+
+  /**
+   * Passes alterable variables to deprecated hook_TYPE_alter() implementations.
+   *
+   * This method triggers an E_USER_DEPRECATED error if any implementations of
+   * the alter hook are found. It is otherwise identical to alter().
+   *
+   * See the documentation for alter() for more details.
+   *
+   * @param string $description
+   *   Helpful text describing what to do instead of implementing this alter
+   *   hook.
+   * @param string|array $type
+   *   A string describing the type of the alterable $data. 'form', 'links',
+   *   'node_content', and so on are several examples. Alternatively can be an
+   *   array, in which case hook_TYPE_alter() is invoked for each value in the
+   *   array, ordered first by module, and then for each module, in the order of
+   *   values in $type. For example, when Form API is using $this->alter() to
+   *   execute both hook_form_alter() and hook_form_FORM_ID_alter()
+   *   implementations, it passes array('form', 'form_' . $form_id) for $type.
+   * @param mixed $data
+   *   The variable that will be passed to hook_TYPE_alter() implementations to be
+   *   altered. The type of this variable depends on the value of the $type
+   *   argument. For example, when altering a 'form', $data will be a structured
+   *   array. When altering a 'profile', $data will be an object.
+   * @param mixed $context1
+   *   (optional) An additional variable that is passed by reference.
+   * @param mixed $context2
+   *   (optional) An additional variable that is passed by reference. If more
+   *   context needs to be provided to implementations, then this should be an
+   *   associative array as described above.
+   *
+   * @see \Drupal\Core\Extension\ModuleHandlerInterface::alter()
+   * @see https://www.drupal.org/core/deprecation#how-hook
+   */
+  public function alterDeprecated($description, $type, &$data, &$context1 = NULL, &$context2 = NULL);
 
   /**
    * Returns an array of directories for all enabled modules. Useful for

@@ -414,6 +414,44 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  public function invokeDeprecated($description, $module, $hook, array $args = array()) {
+    $result = $this->invoke($module, $hook, $args);
+    $this->triggerDeprecationError($description, $hook);
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function invokeAllDeprecated($description, $hook, array $args = array()) {
+    $result = $this->invokeAll($hook, $args);
+    $this->triggerDeprecationError($description, $hook);
+    return $result;
+  }
+
+
+  /**
+   * Triggers an E_USER_DEPRECATED error if any module implements the hook.
+   *
+   * @param string $description
+   *   Helpful text describing what to do instead of implementing this hook.
+   * @param string $hook
+   *   The name of the hook.
+   */
+  private function triggerDeprecationError($description, $hook) {
+    $modules = array_keys($this->getImplementationInfo($hook));
+    if (!empty($modules)) {
+      $message = 'The deprecated hook hook_' . $hook . '() is implemented in these functions: ';
+      $implementations = array_map(function ($module) use ($hook) {
+        return $module . '_' . $hook . '()';
+      }, $modules);
+      @trigger_error($message . implode(', ', $implementations) . '. ' . $description, E_USER_DEPRECATED);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
     // Most of the time, $type is passed as a string, so for performance,
     // normalize it to that. When passed as an array, usually the first item in
@@ -499,6 +537,28 @@ class ModuleHandler implements ModuleHandlerInterface {
 
     foreach ($this->alterFunctions[$cid] as $function) {
       $function($data, $context1, $context2);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterDeprecated($description, $type, &$data, &$context1 = NULL, &$context2 = NULL) {
+    // Invoke the alter hook. This has the side effect of populating
+    // $this->alterFunctions.
+    $this->alter($type, $data, $context1, $context2);
+    // The $type parameter can be an array. alter() will deal with this
+    // internally, but we have to extract the proper $cid in order to discover
+    // implementations.
+    $cid = $type;
+    if (is_array($type)) {
+      $cid = implode(',', $type);
+      $extra_types = $type;
+      $type = array_shift($extra_types);
+    }
+    if (!empty($this->alterFunctions[$cid])) {
+      $message = 'The deprecated alter hook hook_' . $type . '_alter() is implemented in these functions: ' . implode(', ', $this->alterFunctions[$cid]) . '.';
+      @trigger_error($message . ' ' . $description, E_USER_DEPRECATED);
     }
   }
 

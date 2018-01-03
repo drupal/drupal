@@ -18,3 +18,17 @@ function deprecation_test_function() {
   @trigger_error('This is the deprecation message for deprecation_test_function().', E_USER_DEPRECATED);
   return 'known_return_value';
 }
+
+/**
+ * Implements hook_deprecated_hook().
+ */
+function deprecation_test_deprecated_hook($arg) {
+  return $arg;
+}
+
+/**
+ * Implements hook_deprecated_alter_alter().
+ */
+function deprecation_test_deprecated_alter_alter(&$data, $context1, $context2) {
+  $data = [$context1, $context2];
+}
