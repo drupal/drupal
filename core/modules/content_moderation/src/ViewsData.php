@@ -78,7 +78,11 @@ class ViewsData {
             ],
           ],
         ],
-        'field' => ['default_formatter' => 'content_moderation_state'],
+        'field' => [
+          'id' => 'field',
+          'default_formatter' => 'content_moderation_state',
+          'field_name' => 'moderation_state',
+        ],
       ];
 
       $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
@@ -97,7 +101,11 @@ class ViewsData {
             ],
           ],
         ],
-        'field' => ['default_formatter' => 'content_moderation_state'],
+        'field' => [
+          'id' => 'field',
+          'default_formatter' => 'content_moderation_state',
+          'field_name' => 'moderation_state',
+        ],
       ];
     }
 
