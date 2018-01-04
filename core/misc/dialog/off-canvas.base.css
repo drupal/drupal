@@ -27,8 +27,7 @@
 #drupal-off-canvas .link:focus,
 #drupal-off-canvas a:hover,
 #drupal-off-canvas .link:hover {
-  outline: none;
-  color: #46a0f5;
+  text-decoration: underline;
 }
 #drupal-off-canvas hr {
   height: 1px;

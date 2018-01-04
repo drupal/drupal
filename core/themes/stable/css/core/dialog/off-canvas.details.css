@@ -40,7 +40,6 @@
 #drupal-off-canvas summary:hover,
 #drupal-off-canvas summary:focus {
   background-color: #222;
-  outline: none;
 }
 #drupal-off-canvas details[open] {
   padding-bottom: 10px;
