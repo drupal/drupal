@@ -38,7 +38,7 @@ class DrupalDateTime extends DateTimePlus {
    *   timezone are ignored when the $time parameter either is a UNIX timestamp
    *   (e.g. @946684800) or specifies a timezone
    *   (e.g. 2010-01-28T15:00:00+02:00).
-   *   @see http://php.net/manual/en/datetime.construct.php
+   *   @see http://php.net/manual/datetime.construct.php
    * @param array $settings
    *   - validate_format: (optional) Boolean choice to validate the
    *     created date using the input format. The format used in

@@ -47,7 +47,7 @@ class YamlPecl implements SerializationInterface {
     // and then restore it after decoding has occurred. This allows us to turn
     // parsing errors into a throwable exception.
     // @see Drupal\Component\Serialization\Exception\InvalidDataTypeException
-    // @see http://php.net/manual/en/class.errorexception.php
+    // @see http://php.net/manual/class.errorexception.php
     set_error_handler([__CLASS__, 'errorHandler']);
     $ndocs = 0;
     $data = yaml_parse($raw, 0, $ndocs, [

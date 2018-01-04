@@ -1584,7 +1584,7 @@
  * Introduction to namespaces
  *
  * PHP classes, interfaces, and traits in Drupal are
- * @link http://php.net/manual/en/language.namespaces.rationale.php namespaced. @endlink
+ * @link http://php.net/manual/language.namespaces.rationale.php namespaced. @endlink
  * See the
  * @link oo_conventions Objected-oriented programming conventions @endlink
  * for more information.

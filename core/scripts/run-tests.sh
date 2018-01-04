@@ -1424,7 +1424,7 @@ function simpletest_script_color_code($status) {
  *   string in $array would be identical to $string by changing 1/4 or fewer of
  *   its characters.
  *
- * @see http://php.net/manual/en/function.levenshtein.php
+ * @see http://php.net/manual/function.levenshtein.php
  */
 function simpletest_script_print_alternatives($string, $array, $degree = 4) {
   $alternatives = array();

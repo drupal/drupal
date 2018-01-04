@@ -20,7 +20,7 @@ trait TimeStampItemNormalizerTrait {
    *
    * @var string[]
    *
-   * @see http://php.net/manual/en/datetime.createfromformat.php
+   * @see http://php.net/manual/datetime.createfromformat.php
    */
   protected $allowedFormats = [
     'UNIX timestamp' => 'U',

@@ -35,7 +35,7 @@ class TestStatus {
    * the returned value could be as high as 127. Since that's the case, this
    * constant should be used for range comparisons, and not just for equality.
    *
-   * @see http://php.net/manual/en/pcntl.constants.php
+   * @see http://php.net/manual/pcntl.constants.php
    */
   const SYSTEM = 3;
 

@@ -58,7 +58,7 @@ class DateTimeComputed extends TypedData {
         // that the local date portion is the same, across nearly all time
         // zones.
         // @see \Drupal\Component\Datetime\DateTimePlus::setDefaultDateTime()
-        // @see http://php.net/manual/en/datetime.createfromformat.php
+        // @see http://php.net/manual/datetime.createfromformat.php
         if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATE) {
           $this->date->setDefaultDateTime();
         }
