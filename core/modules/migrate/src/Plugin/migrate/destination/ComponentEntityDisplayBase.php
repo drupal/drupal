@@ -6,7 +6,14 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 
 /**
- * Defines the base abstract class for component entity display.
+ * Provides a destination plugin for migrating entity display components.
+ *
+ * Display modes provide different presentations for viewing ('view modes') or
+ * editing ('form modes') content. This destination plugin is an abstract base
+ * class for migrating fields and other components into view and form modes.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\destination\PerComponentEntityDisplay
+ * @see \Drupal\migrate\Plugin\migrate\destination\PerComponentEntityFormDisplay
  */
 abstract class ComponentEntityDisplayBase extends DestinationBase {
 
