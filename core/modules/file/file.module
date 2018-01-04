@@ -406,7 +406,7 @@ function file_validate_is_image(FileInterface $file) {
   $image = $image_factory->get($file->getFileUri());
   if (!$image->isValid()) {
     $supported_extensions = $image_factory->getSupportedExtensions();
-    $errors[] = t('Image type not supported. Allowed types: %types', ['%types' => implode(' ', $supported_extensions)]);
+    $errors[] = t('The image file is invalid or the image type is not allowed. Allowed types: %types', ['%types' => implode(', ', $supported_extensions)]);
   }
 
   return $errors;
