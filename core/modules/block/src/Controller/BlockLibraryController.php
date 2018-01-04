@@ -105,6 +105,10 @@ class BlockLibraryController extends ControllerBase {
     $definitions = $this->blockManager->getDefinitionsForContexts($this->contextRepository->getAvailableContexts());
     // Order by category, and then by admin label.
     $definitions = $this->blockManager->getSortedDefinitions($definitions);
+    // Filter out definitions that are not intended to be placed by the UI.
+    $definitions = array_filter($definitions, function (array $definition) {
+      return empty($definition['_block_ui_hidden']);
+    });
 
     $region = $request->query->get('region');
     $weight = $request->query->get('weight');

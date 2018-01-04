@@ -55,35 +55,42 @@ core.entity_view_display.*.*.*:
       type: sequence
       label: 'Field formatters'
       sequence:
-        type: mapping
-        label: 'Field formatter'
-        mapping:
-          type:
-            type: string
-            label: 'Format type machine name'
-          weight:
-            type: integer
-            label: 'Weight'
-          region:
-            type: string
-            label: 'Region'
-          label:
-             type: string
-             label: 'Label setting machine name'
-          settings:
-            type: field.formatter.settings.[%parent.type]
-            label: 'Settings'
-          third_party_settings:
-             type: sequence
-             label: 'Third party settings'
-             sequence:
-               type: field.formatter.third_party.[%key]
+        type: field_formatter.entity_view_display
     hidden:
       type: sequence
       label: 'Field display setting'
       sequence:
         type: boolean
         label: 'Value'
+
+field_formatter:
+  type: mapping
+  label: 'Field formatter'
+  mapping:
+    type:
+      type: string
+      label: 'Format type machine name'
+    label:
+       type: string
+       label: 'Label setting machine name'
+    settings:
+      type: field.formatter.settings.[%parent.type]
+      label: 'Settings'
+    third_party_settings:
+       type: sequence
+       label: 'Third party settings'
+       sequence:
+         type: field.formatter.third_party.[%key]
+
+field_formatter.entity_view_display:
+  type: field_formatter
+  mapping:
+    weight:
+      type: integer
+      label: 'Weight'
+    region:
+      type: string
+      label: 'Region'
 
 # Overview configuration information for form mode displays.
 core.entity_form_display.*.*.*:
@@ -362,3 +369,8 @@ field.formatter.settings.entity_reference_label:
       type: boolean
       label: 'Link label to the referenced entity'
 
+block.settings.field_block:*:*:
+  type: block_settings
+  mapping:
+    formatter:
+      type: field_formatter

@@ -81,3 +81,10 @@ function system_post_update_classy_message_library() {
 function system_post_update_field_type_plugins() {
   // Empty post-update hook.
 }
+
+/**
+ * Clear caches due to schema changes in core.entity.schema.yml.
+ */
+function system_post_update_field_formatter_entity_schema() {
+  // Empty post-update hook.
+}
