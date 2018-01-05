@@ -16,9 +16,9 @@
   margin: 5px 0;
   /* Disallow any user selections in the drag-and-drop toolbar config UI. */
   -webkit-user-select: none;
-  -moz-user-select:    none;
-  -ms-user-select:     none;
-  user-select:         none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .ckeditor-toolbar-active {
   margin-top: 0.25em;

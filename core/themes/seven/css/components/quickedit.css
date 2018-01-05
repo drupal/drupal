@@ -23,7 +23,7 @@
 .quickedit-button.action-saving {
   border-color: #1e5c90;
   background-image: -webkit-linear-gradient(top, #007bc6, #0071b8);
-  background-image:   linear-gradient(to bottom, #007bc6, #0071b8);
+  background-image: linear-gradient(to bottom, #007bc6, #0071b8);
   color: #fff;
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
   font-weight: 700;
@@ -36,7 +36,7 @@
 .quickedit-button.action-saving:focus {
   background-color: #2369a6;
   background-image: -webkit-linear-gradient(top, #0c97ed, #1f86c7);
-  background-image:   linear-gradient(to bottom, #0c97ed, #1f86c7);
+  background-image: linear-gradient(to bottom, #0c97ed, #1f86c7);
   border-color: #1e5c90;
   color: #fff;
 }
@@ -49,7 +49,7 @@
 .quickedit-button.action-save:active,
 .quickedit-button.action-saving:active {
   background-image: -webkit-linear-gradient(top, #08639b, #0071b8);
-  background-image:   linear-gradient(to bottom, #08639b, #0071b8);
+  background-image: linear-gradient(to bottom, #08639b, #0071b8);
   border-color: #144b78;
   box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.2);
 }

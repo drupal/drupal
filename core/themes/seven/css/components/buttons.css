@@ -35,7 +35,7 @@
   border-radius: 20em;
   background-color: #f2f1eb;
   background-image: -webkit-linear-gradient(top, #f6f6f3, #e7e7df);
-  background-image:   linear-gradient(to bottom, #f6f6f3, #e7e7df);
+  background-image: linear-gradient(to bottom, #f6f6f3, #e7e7df);
   color: #333;
   text-decoration: none;
   text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
@@ -50,7 +50,7 @@
 .button:focus {
   background-color: #f9f8f6;
   background-image: -webkit-linear-gradient(top, #fcfcfa, #e9e9dd);
-  background-image:   linear-gradient(to bottom, #fcfcfa, #e9e9dd);
+  background-image: linear-gradient(to bottom, #fcfcfa, #e9e9dd);
   color: #1a1a1a;
   text-decoration: none;
   outline: none;
@@ -69,7 +69,7 @@
   border: 1px solid #a6a6a6;
   background-color: #dfdfd9;
   background-image: -webkit-linear-gradient(top, #f6f6f3, #e7e7df);
-  background-image:   linear-gradient(to bottom, #f6f6f3, #e7e7df);
+  background-image: linear-gradient(to bottom, #f6f6f3, #e7e7df);
   box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.2);
   -webkit-transition: none;
   transition: none;
@@ -79,7 +79,7 @@
   border-color: #1e5c90;
   background-color: #0071b8;
   background-image: -webkit-linear-gradient(top, #007bc6, #0071b8);
-  background-image:   linear-gradient(to bottom, #007bc6, #0071b8);
+  background-image: linear-gradient(to bottom, #007bc6, #0071b8);
   color: #fff;
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
   font-weight: 700;
@@ -89,7 +89,7 @@
 .button--primary:focus {
   background-color: #2369a6;
   background-image: -webkit-linear-gradient(top, #0c97ed, #1f86c7);
-  background-image:   linear-gradient(to bottom, #0c97ed, #1f86c7);
+  background-image: linear-gradient(to bottom, #0c97ed, #1f86c7);
   border-color: #1e5c90;
   color: #fff;
 }
@@ -101,7 +101,7 @@
 }
 .button--primary:active {
   background-image: -webkit-linear-gradient(top, #08639b, #0071b8);
-  background-image:   linear-gradient(to bottom, #08639b, #0071b8);
+  background-image: linear-gradient(to bottom, #08639b, #0071b8);
   border-color: #144b78;
   box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.2);
 }

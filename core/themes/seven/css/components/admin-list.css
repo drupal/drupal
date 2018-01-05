@@ -28,7 +28,7 @@ ul.admin-list {
   padding-left: 15px;
 }
 .admin-list.compact li a {
-  background-image:  none;
+  background-image: none;
   padding: 2px 0;
 }
 .admin-list li a:hover,

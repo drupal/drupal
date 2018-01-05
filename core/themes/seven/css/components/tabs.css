@@ -155,7 +155,7 @@ li.tabs__tab a {
 }
 .tabs.is-open {
   max-height: 999em;
-  padding-bottom:16px;
+  padding-bottom: 16px;
   padding-bottom: 1rem;
 }
 .is-collapse-enabled .tabs__tab.is-active {

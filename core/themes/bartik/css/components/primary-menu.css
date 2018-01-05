@@ -78,7 +78,7 @@ body:not(:target) .region-primary-menu .menu-toggle {
   z-index: 1000;
 }
 body:not(:target) .region-primary-menu .menu-toggle:after {
-  content:"";
+  content: "";
   background: url(../../../../misc/icons/ffffff/hamburger.svg) no-repeat;
   background-size: contain;
   width: 22px;
