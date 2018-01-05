@@ -4,7 +4,6 @@
     "stylelint-no-browser-hacks/lib"
   ],
   "rules": {
-    "block-no-empty": null,
     "color-hex-case": null,
     "color-hex-length": null,
     "comment-empty-line-before": null,
