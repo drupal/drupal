@@ -431,7 +431,7 @@ td.group-title {
   background-color: #ddd;
 }
 .edit-display-settings {
-  margin: 12px 12px 0 12px
+  margin: 12px 12px 0 12px;
 }
 .edit-display-settings-top.views-ui-display-tab-bucket {
   border: 1px solid #f3f3f3;

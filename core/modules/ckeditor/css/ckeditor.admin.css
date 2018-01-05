@@ -296,7 +296,7 @@ ul.ckeditor-buttons li.ckeditor-button-separator a {
   height: 18px;
   width: 1px;
   display: block;
-  box-shadow: 1px 0 1px rgba(255, 255, 255, 0.5)
+  box-shadow: 1px 0 1px rgba(255, 255, 255, 0.5);
 }
 .ckeditor-button-arrow {
   width: 0;
