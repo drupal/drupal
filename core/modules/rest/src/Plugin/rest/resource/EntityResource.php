@@ -288,7 +288,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     // the user has no legitimate way of knowing the current value of fields
     // that they are not allowed to view, and we must not make the presence or
     // absence of a 403 response a way to find that out.
-    if ($original_field->equals($received_field) && $original_field->access('view')) {
+    if ($original_field->access('view') && $original_field->equals($received_field)) {
       return FALSE;
     }
 
