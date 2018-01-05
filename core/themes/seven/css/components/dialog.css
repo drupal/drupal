@@ -34,14 +34,22 @@
   -webkit-font-smoothing: antialiased;
 }
 .ui-dialog .ui-dialog-titlebar-close {
-  border: 0;
+  border: 3px solid #6b6b6b;
+  border-radius: 5px;
   background: none;
-  right: 20px; /* LTR */
-  top: 20px;
+  right: 12px; /* LTR */
+  top: 10px;
   margin: 0;
-  height: 16px;
-  width: 16px;
+  padding: 0;
+  height: 30px;
+  width: 30px;
   position: absolute;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+}
+.ui-dialog .ui-dialog-titlebar-close:hover,
+.ui-dialog .ui-dialog-titlebar-close:focus {
+  border-color: #ffffff;
 }
 [dir="rtl"] .ui-dialog .ui-dialog-titlebar-close {
   right: auto;
@@ -49,7 +57,7 @@
 }
 .ui-dialog .ui-icon.ui-icon-closethick {
   background: url(../../../../misc/icons/ffffff/ex.svg) 0 0 no-repeat;
-  margin-top: -12px;
+  margin-top: -8px;
 }
 .ui-dialog .ui-widget-content.ui-dialog-content {
   background: #ffffff;
