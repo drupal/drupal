@@ -483,6 +483,7 @@ td.group-title {
 .view-preview-form .form-actions {
   vertical-align: top;
 }
+
 @media screen and (min-width: 45em) { /* 720px */
   .view-preview-form .form-type-textfield .description {
     white-space: nowrap;

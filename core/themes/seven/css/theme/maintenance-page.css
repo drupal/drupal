@@ -110,6 +110,7 @@
   display: table;
   clear: both;
 }
+
 @media all and (max-width: 48em) { /* 768px */
   .layout-container {
     margin: 1.25em;

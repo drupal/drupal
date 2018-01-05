@@ -10,6 +10,7 @@
 .site-footer .layout-container {
   padding: 0 15px;
 }
+
 @media all and (min-width: 560px) {
   .site-footer__top .region {
     float: left; /* LTR */
@@ -20,6 +21,7 @@
     float: right;
   }
 }
+
 @media all and (min-width: 560px) and (max-width: 850px) {
   .site-footer .region {
     box-sizing: border-box;
@@ -42,6 +44,7 @@
     clear: both;
   }
 }
+
 @media all and (min-width: 851px) {
   .site-footer__top .region {
     width: 24%;

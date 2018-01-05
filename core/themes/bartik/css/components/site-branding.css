@@ -16,11 +16,13 @@
   display: inline-block;
   vertical-align: top;
 }
+
 @media all and (min-width: 461px) {
   .site-branding__text {
     margin-bottom: 1.857em;
   }
 }
+
 @media all and (min-width: 901px) {
   .site-branding__text {
     padding: 1.286em 0 0;
@@ -31,6 +33,7 @@
   color: #686868;
   line-height: 1;
 }
+
 @media all and (min-width: 901px) {
   .site-branding__name {
     font-size: 1.821em;

@@ -12,6 +12,7 @@
   margin-right: auto;
   box-sizing: border-box;
 }
+
 @media all and (min-width: 851px) {
   .layout-container {
     max-width: 1290px;

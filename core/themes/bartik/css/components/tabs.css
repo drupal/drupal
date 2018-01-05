@@ -24,6 +24,7 @@ div.tabs {
   background-color: #ffffff;
   border: 1px solid #bbb;
 }
+
 @media screen and (max-width: 37.5em) { /* 600px */
   .tabs ul.primary {
     border-bottom: 1px solid #bbb;
@@ -39,6 +40,7 @@ div.tabs {
     border-bottom: none;
   }
 }
+
 @media screen and (min-width: 37.5em) { /* 600px */
   .tabs ul.primary {
     border-collapse: collapse;

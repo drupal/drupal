@@ -143,6 +143,7 @@ button.is-unlocked,
 .js[dir="rtl"] .color-preview {
   float: right;
 }
+
 @media screen and (max-width: 30em) { /* 480px */
   .color-form .color-preview-sidebar,
   .color-form .color-preview-content {

@@ -13,6 +13,7 @@
     width: 100%;
   }
 }
+
 @media all and (min-width: 851px) {
   .layout-one-sidebar .sidebar {
     width: 25%;

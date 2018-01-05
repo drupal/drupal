@@ -10,6 +10,7 @@
 .featured-bottom .region {
   padding: 0 20px;
 }
+
 @media all and (min-width: 560px) {
   .featured-bottom .region {
     float: left; /* LTR */
@@ -22,6 +23,7 @@
     float: right;
   }
 }
+
 @media all and (min-width: 851px) {
   .featured-bottom .region {
     padding: 0 20px;

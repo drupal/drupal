@@ -42,6 +42,7 @@
   padding: 0 0 0 1em;
   float: right;
 }
+
 @media all and (min-width: 560px) {
   .node .field--type-image {
     float: left; /* LTR */

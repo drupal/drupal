@@ -11,6 +11,7 @@
 .region-header .site-branding {
   margin-top: 0.429em;
 }
+
 @media all and (min-width: 461px) {
   .region-header .block {
     float: right; /* LTR */
@@ -27,6 +28,7 @@
     float: right;
   }
 }
+
 @media screen and (max-width: 460px) {
   .region-header {
     padding-bottom: 0.357em;
@@ -38,6 +40,7 @@
   margin: 0 0 1em;
   clear: right;
 }
+
 @media all and (min-width: 901px) {
   .region-header .block:not(.site-branding) {
     margin: 1.167em 0 1em;

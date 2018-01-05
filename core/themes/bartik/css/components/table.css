@@ -68,6 +68,7 @@ tr th {
     display: none;
   }
 }
+
 @media screen and (max-width: 60em) { /* 920px */
   th.priority-low,
   td.priority-low {

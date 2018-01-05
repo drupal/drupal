@@ -9,6 +9,7 @@
   z-index: 1260;
   padding: 0;
 }
+
 @media all and (max-width: 48em) { /* 768px */
   .ui-dialog {
     min-width: 92%;
