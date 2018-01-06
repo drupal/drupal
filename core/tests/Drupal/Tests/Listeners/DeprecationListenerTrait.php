@@ -21,8 +21,20 @@ trait DeprecationListenerTrait {
    */
   protected function deprecationEndTest($test, $time) {
     /** @var \PHPUnit\Framework\Test $test */
-    // Need to edit the file of deprecations.
     if ($file = getenv('SYMFONY_DEPRECATIONS_SERIALIZE')) {
+      $util_test_class = class_exists('PHPUnit_Util_Test') ? 'PHPUnit_Util_Test' : 'PHPUnit\Util\Test';
+      $method = $test->getName(FALSE);
+      if (strpos($method, 'testLegacy') === 0
+        || strpos($method, 'provideLegacy') === 0
+        || strpos($method, 'getLegacy') === 0
+        || strpos(get_class($test), '\Legacy')
+        || in_array('legacy', $util_test_class::getGroups(get_class($test), $method), TRUE)) {
+        // This is a legacy test don't skip deprecations.
+        return;
+      }
+
+      // Need to edit the file of deprecations to remove any skipped
+      // deprecations.
       $deprecations = file_get_contents($file);
       $deprecations = $deprecations ? unserialize($deprecations) : [];
       $resave = FALSE;

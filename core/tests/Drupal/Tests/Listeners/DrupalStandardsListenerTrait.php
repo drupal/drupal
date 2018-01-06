@@ -144,6 +144,28 @@ trait DrupalStandardsListenerTrait {
   }
 
   /**
+   * Handles errors to ensure deprecation messages are not triggered.
+   *
+   * @param int $type
+   *   The severity level of the error.
+   * @param string $msg
+   *   The error message.
+   * @param $file
+   *   The file that caused the error.
+   * @param $line
+   *   The line number that caused the error.
+   * @param array $context
+   *   The error context.
+   */
+  public static function errorHandler($type, $msg, $file, $line, $context = array()) {
+    if ($type === E_USER_DEPRECATED) {
+      return;
+    }
+    $error_handler = class_exists('PHPUnit_Util_ErrorHandler') ? 'PHPUnit_Util_ErrorHandler' : 'PHPUnit\Util\ErrorHandler';
+    return $error_handler::handleError($type, $msg, $file, $line, $context);
+  }
+
+  /**
    * Reacts to the end of a test.
    *
    * We must mark this method as belonging to the special legacy group because
@@ -166,7 +188,11 @@ trait DrupalStandardsListenerTrait {
     // our purpose, so we have to distinguish between the different known
     // subclasses.
     if ($test instanceof TestCase) {
+      // Change the error handler to ensure deprecation messages are not
+      // triggered.
+      set_error_handler([$this, 'errorHandler']);
       $this->checkValidCoversForTest($test);
+      restore_error_handler();
     }
     elseif ($this->isTestSuite($test)) {
       foreach ($test->getGroupDetails() as $tests) {
