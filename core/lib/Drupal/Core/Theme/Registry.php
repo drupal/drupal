@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Theme;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DestructableInterface;
@@ -565,10 +566,18 @@ class Registry implements DestructableInterface {
           $info['preprocess functions'] = array_merge($cache[$hook]['preprocess functions'], $info['preprocess functions']);
         }
         $result[$hook]['preprocess functions'] = $info['preprocess functions'];
+
+        // If a theme implementation definition provides both 'template' and
+        // 'function', the 'function' will be used. In this case, if the new
+        // result provides a 'template' value, any existing 'function' value
+        // must be removed for the override to be called.
+        if (isset($result[$hook]['template'])) {
+          unset($cache[$hook]['function']);
+        }
       }
 
       // Merge the newly created theme hooks into the existing cache.
-      $cache = $result + $cache;
+      $cache = NestedArray::mergeDeep($cache, $result);
     }
 
     // Let themes have variable preprocessors even if they didn't register a

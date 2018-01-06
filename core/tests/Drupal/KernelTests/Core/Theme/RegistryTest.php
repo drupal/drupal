@@ -192,4 +192,23 @@ class RegistryTest extends KernelTestBase {
     ], $suggestions, 'Found expected page node suggestions.');
   }
 
+  /**
+   * Tests theme-provided templates that are registered by modules.
+   */
+  public function testThemeTemplatesRegisteredByModules() {
+    $theme_handler = \Drupal::service('theme_handler');
+    $theme_handler->install(['test_theme']);
+
+    $registry_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
+    $registry_theme->setThemeManager(\Drupal::theme());
+
+    $expected = [
+      'template_preprocess',
+      'template_preprocess_container',
+      'template_preprocess_theme_test_registered_by_module'
+    ];
+    $registry = $registry_theme->get();
+    $this->assertEquals($expected, array_values($registry['theme_test_registered_by_module']['preprocess functions']));
+  }
+
 }

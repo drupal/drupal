@@ -66,6 +66,10 @@ function theme_test_theme($existing, $type, $theme, $path) {
       'bar' => '',
     ],
   ];
+  $items['theme_test_registered_by_module'] = [
+    'render element' => 'content',
+    'base hook' => 'container',
+  ];
   return $items;
 }
 
@@ -212,4 +216,10 @@ function theme_test_theme_suggestions_node(array $variables) {
   $suggestions[] = 'node__' . $xss;
 
   return $suggestions;
+}
+
+/**
+ * Implements template_preprocess_HOOK() for theme_test_registered_by_module.
+ */
+function template_preprocess_theme_test_registered_by_module() {
 }

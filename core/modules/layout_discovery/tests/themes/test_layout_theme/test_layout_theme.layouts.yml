@@ -1,0 +1,7 @@
+test_layout_theme:
+  label: 'Test Layout - Theme'
+  category: 'Test Layout Theme'
+  template: templates/test-layout-theme
+  regions:
+    content:
+      label: Content

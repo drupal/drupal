@@ -34,6 +34,17 @@ class LayoutTest extends KernelTestBase {
   }
 
   /**
+   * Tests that a layout provided by a theme has the preprocess function set.
+   */
+  public function testThemeProvidedLayout() {
+    $this->container->get('theme_installer')->install(['test_layout_theme']);
+    $this->config('system.theme')->set('default', 'test_layout_theme')->save();
+
+    $theme_definitions = $this->container->get('theme.registry')->get();
+    $this->assertTrue(in_array('template_preprocess_layout', $theme_definitions['test_layout_theme']['preprocess functions']));
+  }
+
+  /**
    * Test rendering a layout.
    *
    * @dataProvider renderLayoutData

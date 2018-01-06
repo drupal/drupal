@@ -1,0 +1,6 @@
+name: 'Test layout theme'
+type: theme
+description: 'Theme for testing a theme-provided layout'
+version: VERSION
+base theme: classy
+core: 8.x
