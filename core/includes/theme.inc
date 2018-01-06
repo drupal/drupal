@@ -1190,10 +1190,9 @@ function template_preprocess_maintenance_task_list(&$variables) {
 /**
  * Adds a default set of helper variables for preprocessors and templates.
  *
- * This function is called for theme hooks implemented as templates only, not
- * for theme hooks implemented as functions. This preprocess function is the
- * first in the sequence of preprocessing functions that are called when
- * preparing variables for a template.
+ * This function is called for every theme hook. It is the first in the
+ * sequence of preprocessing functions called when preparing variables for a
+ * template.
  *
  * See the @link themeable Default theme implementations topic @endlink for
  * details.
