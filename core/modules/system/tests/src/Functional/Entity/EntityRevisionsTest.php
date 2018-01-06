@@ -256,6 +256,16 @@ class EntityRevisionsTest extends BrowserTestBase {
     $this->assertNull($entity->getRevisionId());
     $this->assertEquals($revision_id, $entity->getLoadedRevisionId());
     $this->assertTrue($entity->isNewRevision());
+
+    // Check that calling setNewRevision() on a new entity without a revision ID
+    // and then with a revision ID does not unset the revision ID.
+    $entity = EntityTestMulRev::create(['name' => 'EntityLoadedRevisionTest']);
+    $entity->set('revision_id', NULL);
+    $entity->set('revision_id', 5);
+    $this->assertTrue($entity->isNewRevision());
+    $entity->setNewRevision();
+    $this->assertEquals(5, $entity->get('revision_id')->value);
+
   }
 
 }
