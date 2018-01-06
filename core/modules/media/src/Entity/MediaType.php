@@ -21,6 +21,7 @@ use Drupal\media\MediaTypeInterface;
  *     plural = "@count media types"
  *   ),
  *   handlers = {
+ *     "access" = "Drupal\media\MediaTypeAccessControlHandler",
  *     "form" = {
  *       "add" = "Drupal\media\MediaTypeForm",
  *       "edit" = "Drupal\media\MediaTypeForm",

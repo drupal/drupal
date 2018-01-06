@@ -6,6 +6,8 @@ use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
+use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
 
 /**
  * Tests creation of media types and media items.
@@ -33,6 +35,27 @@ class MediaCreationTest extends MediaKernelTestBase {
     // be created automatically when a config is being imported.
     $this->assertEquals(['source_field' => '', 'test_config_value' => 'Kakec'], $test_media_type->get('source_configuration'), 'Could not assure the correct media source configuration.');
     $this->assertEquals(['metadata_attribute' => 'field_attribute_config_test'], $test_media_type->get('field_map'), 'Could not assure the correct field map.');
+    // Check the Media Type access handler behavior.
+    // We grant access to the 'view label' operation to all users having
+    // permission to 'view media'.
+    $user1 = User::create([
+      'name' => 'username1',
+      'status' => 1,
+    ]);
+    $user1->save();
+    $user2 = User::create([
+      'name' => 'username2',
+      'status' => 1,
+    ]);
+    $user2->save();
+    $role = Role::create([
+      'id' => 'role1',
+      'label' => 'role1',
+    ]);
+    $role->grantPermission('view media')->trustData()->save();
+    $user2->addRole($role->id());
+    $this->assertFalse($test_media_type->access('view label', $user1));
+    $this->assertTrue($test_media_type->access('view label', $user2));
   }
 
   /**
