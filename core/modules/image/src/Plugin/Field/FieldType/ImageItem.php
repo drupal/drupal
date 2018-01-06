@@ -344,7 +344,7 @@ class ImageItem extends FileItem {
     if (!isset($images[$extension][$min_resolution][$max_resolution]) || count($images[$extension][$min_resolution][$max_resolution]) <= 5) {
       $tmp_file = drupal_tempnam('temporary://', 'generateImage_');
       $destination = $tmp_file . '.' . $extension;
-      file_unmanaged_move($tmp_file, $destination, FILE_CREATE_DIRECTORY);
+      file_unmanaged_move($tmp_file, $destination);
       if ($path = $random->image(drupal_realpath($destination), $min_resolution, $max_resolution)) {
         $image = File::create();
         $image->setFileUri($path);
@@ -354,7 +354,7 @@ class ImageItem extends FileItem {
         $destination_dir = static::doGetUploadLocation($settings);
         file_prepare_directory($destination_dir, FILE_CREATE_DIRECTORY);
         $destination = $destination_dir . '/' . basename($path);
-        $file = file_move($image, $destination, FILE_CREATE_DIRECTORY);
+        $file = file_move($image, $destination);
         $images[$extension][$min_resolution][$max_resolution][$file->id()] = $file;
       }
       else {
