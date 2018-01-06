@@ -14,7 +14,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 function rest_requirements($phase) {
   $requirements = [];
 
-  if (version_compare(PHP_VERSION, '5.6.0', '>=') && version_compare(PHP_VERSION, '7', '<') && ini_get('always_populate_raw_post_data') != -1) {
+  if ($phase == 'runtime' && PHP_SAPI !== 'cli' && version_compare(PHP_VERSION, '5.6.0', '>=') && version_compare(PHP_VERSION, '7', '<') && ini_get('always_populate_raw_post_data') != -1) {
     $requirements['always_populate_raw_post_data'] = [
       'title' => t('always_populate_raw_post_data PHP setting'),
       'value' => t('Not set to -1.'),
