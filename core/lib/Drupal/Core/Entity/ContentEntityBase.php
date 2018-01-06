@@ -716,7 +716,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         // If the revision identifier field is being populated with the original
         // value, we need to make sure the "new revision" flag is reset
         // accordingly.
-        if ($key === 'revision' && $this->getRevisionId() == $this->getLoadedRevisionId()) {
+        if ($key === 'revision' && $this->getRevisionId() == $this->getLoadedRevisionId() && !$this->isNew()) {
           $this->newRevision = FALSE;
         }
       }
