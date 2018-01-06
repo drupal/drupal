@@ -12,9 +12,26 @@ use Drupal\user\RoleInterface;
  *
  * @group media
  */
-class MediaAccessTest extends MediaUiFunctionalTest {
+class MediaAccessTest extends MediaFunctionalTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = [
+    'block',
+    'media_test_source',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    // This is needed to provide the user cache context for a below assertion.
+    $this->drupalPlaceBlock('local_tasks_block');
+  }
 
   /**
    * Test some access control functionality.
