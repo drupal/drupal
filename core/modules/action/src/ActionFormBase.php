@@ -14,18 +14,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class ActionFormBase extends EntityForm {
 
   /**
-   * The action plugin being configured.
-   *
-   * @var \Drupal\Core\Action\ActionInterface
-   */
-  protected $plugin;
-
-  /**
    * The action storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $storage;
+
+  /**
+   * The action entity.
+   *
+   * @var \Drupal\system\ActionConfigEntityInterface
+   */
+  protected $entity;
 
   /**
    * Constructs a new action form.
@@ -44,14 +44,6 @@ abstract class ActionFormBase extends EntityForm {
     return new static(
       $container->get('entity.manager')->getStorage('action')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    $this->plugin = $this->entity->getPlugin();
-    return parent::buildForm($form, $form_state);
   }
 
   /**
@@ -85,8 +77,8 @@ abstract class ActionFormBase extends EntityForm {
       '#value' => $this->entity->getType(),
     ];
 
-    if ($this->plugin instanceof PluginFormInterface) {
-      $form += $this->plugin->buildConfigurationForm($form, $form_state);
+    if ($plugin = $this->getPlugin()) {
+      $form += $plugin->buildConfigurationForm($form, $form_state);
     }
 
     return parent::form($form, $form_state);
@@ -96,7 +88,7 @@ abstract class ActionFormBase extends EntityForm {
    * Determines if the action already exists.
    *
    * @param string $id
-   *   The action ID
+   *   The action ID.
    *
    * @return bool
    *   TRUE if the action exists, FALSE otherwise.
@@ -120,9 +112,8 @@ abstract class ActionFormBase extends EntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
-
-    if ($this->plugin instanceof PluginFormInterface) {
-      $this->plugin->validateConfigurationForm($form, $form_state);
+    if ($plugin = $this->getPlugin()) {
+      $plugin->validateConfigurationForm($form, $form_state);
     }
   }
 
@@ -131,9 +122,8 @@ abstract class ActionFormBase extends EntityForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-
-    if ($this->plugin instanceof PluginFormInterface) {
-      $this->plugin->submitConfigurationForm($form, $form_state);
+    if ($plugin = $this->getPlugin()) {
+      $plugin->submitConfigurationForm($form, $form_state);
     }
   }
 
@@ -145,6 +135,19 @@ abstract class ActionFormBase extends EntityForm {
     drupal_set_message($this->t('The action has been successfully saved.'));
 
     $form_state->setRedirect('entity.action.collection');
+  }
+
+  /**
+   * Gets the action plugin while ensuring it implements configuration form.
+   *
+   * @return \Drupal\Core\Action\ActionInterface|\Drupal\Core\Plugin\PluginFormInterface|null
+   *   The action plugin, or NULL if it does not implement configuration forms.
+   */
+  protected function getPlugin() {
+    if ($this->entity->getPlugin() instanceof PluginFormInterface) {
+      return $this->entity->getPlugin();
+    }
+    return NULL;
   }
 
 }
