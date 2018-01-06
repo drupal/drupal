@@ -199,6 +199,27 @@ class Sql extends QueryPluginBase {
   }
 
   /**
+   * Returns a reference to the table queue array for this query.
+   *
+   * Because this method returns by reference, alter hooks may edit the tables
+   * array directly to make their changes. If just adding tables, however, the
+   * use of the addTable() method is preferred.
+   *
+   * Note that if you want to manipulate the table queue array, this method must
+   * be called by reference as well:
+   *
+   * @code
+   * $tables =& $query->getTableQueue();
+   * @endcode
+   *
+   * @return array
+   *   A reference to the table queue array structure.
+   */
+  public function &getTableQueue() {
+    return $this->tableQueue;
+  }
+
+  /**
    * Set the view to be distinct (per base field).
    *
    * @param bool $value
