@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\inline_form_errors\RenderElementHelper;
 
 /**
  * Implements hook_help().
@@ -52,6 +53,14 @@ function inline_form_errors_preprocess_fieldset(&$variables) {
  */
 function inline_form_errors_preprocess_datetime_wrapper(&$variables) {
   _inline_form_errors_set_errors($variables);
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function inline_form_errors_element_info_alter(array &$info) {
+  \Drupal::classResolver()->getInstanceFromDefinition(RenderElementHelper::class)
+    ->alterElementInfo($info);
 }
 
 /**

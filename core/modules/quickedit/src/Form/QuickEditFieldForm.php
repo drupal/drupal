@@ -116,6 +116,10 @@ class QuickEditFieldForm extends FormBase {
       '#attributes' => ['class' => ['quickedit-form-submit']],
     ];
 
+    // Use the non-inline form error display for Quick Edit forms, because in
+    // this case the errors are already near the form element.
+    $form['#disable_inline_form_errors'] = TRUE;
+
     // Simplify it for optimal in-place use.
     $this->simplify($form, $form_state);
 
