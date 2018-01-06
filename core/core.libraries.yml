@@ -496,6 +496,7 @@ jquery.ui.checkboxradio:
   css:
     component:
       assets/vendor/jquery.ui/themes/base/checkboxradio.css: {}
+      assets/vendor/jquery.ui/themes/base/button.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -759,6 +760,7 @@ jquery.ui.selectmenu:
   css:
     component:
       assets/vendor/jquery.ui/themes/base/selectmenu.css: {}
+      assets/vendor/jquery.ui/themes/base/button.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.menu
