@@ -42,15 +42,26 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
   }
 
   /**
-   * Tests that routes are not filtered on GET requests.
+   * Tests that routes are not filtered on safe requests.
+   *
+   * @dataProvider providerTestSafeRequestFilter
    */
-  public function testGetRequestFilter() {
+  public function testSafeRequestFilter($method) {
     $collection = $this->fixtures->sampleRouteCollection();
     $collection->addCollection($this->fixtures->contentRouteCollection());
 
-    $request = Request::create('path/two', 'GET');
+    $request = Request::create('path/two', $method);
     $routes = $this->matcher->filter($collection, $request);
     $this->assertEquals(count($routes), 7, 'The correct number of routes was found.');
+  }
+
+  public function providerTestSafeRequestFilter() {
+    return [
+      ['GET'],
+      ['HEAD'],
+      ['OPTIONS'],
+      ['TRACE'],
+    ];
   }
 
   /**

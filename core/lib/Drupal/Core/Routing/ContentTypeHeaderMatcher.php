@@ -16,8 +16,9 @@ class ContentTypeHeaderMatcher implements FilterInterface {
    */
   public function filter(RouteCollection $collection, Request $request) {
     // The Content-type header does not make sense on GET requests, because GET
-    // requests do not carry any content. Nothing to filter in this case.
-    if ($request->isMethod('GET')) {
+    // requests do not carry any content. Nothing to filter in this case. Same
+    // for all other safe methods.
+    if ($request->isMethodSafe(FALSE)) {
       return $collection;
     }
 
