@@ -3,6 +3,7 @@
 namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\media\Entity\Media;
+use Drupal\media\Plugin\media\Source\File;
 
 /**
  * Tests the file media source.
@@ -17,15 +18,31 @@ class MediaSourceFileTest extends MediaSourceTestBase {
   public function testMediaFileSource() {
     $media_type_id = 'test_media_file_type';
     $source_field_id = 'field_media_file';
+    $provided_fields = [
+      File::METADATA_ATTRIBUTE_SIZE,
+      File::METADATA_ATTRIBUTE_MIME,
+    ];
 
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();
 
-    $this->doTestCreateMediaType($media_type_id, 'file');
+    $this->doTestCreateMediaType($media_type_id, 'file', $provided_fields);
+
+    // Create custom fields for the media type to store metadata attributes.
+    $fields = [
+      'field_string_file_size' => 'string',
+      'field_string_mime_type' => 'string',
+    ];
+    $this->createMediaTypeFields($fields, $media_type_id);
 
     // Hide the name field widget to test default name generation.
     $this->hideMediaTypeFieldWidget('name', $media_type_id);
+
+    $this->drupalGet("admin/structure/media/manage/{$media_type_id}");
+    $page->selectFieldOption("field_map[" . File::METADATA_ATTRIBUTE_SIZE . "]", 'field_string_file_size');
+    $page->selectFieldOption("field_map[" . File::METADATA_ATTRIBUTE_MIME . "]", 'field_string_mime_type');
+    $page->pressButton('Save');
 
     $test_filename = $this->randomMachineName() . '.txt';
     $test_filepath = 'public://' . $test_filename;
@@ -50,9 +67,11 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     $page->checkField('revision');
     $assert_session->elementAttributeNotContains('css', '.field--name-revision-log-message', 'style', 'display');
 
-    // Load the media and check if the label was properly populated.
+    // Load the media and check that all the fields are properly populated.
     $media = Media::load(1);
     $this->assertEquals($test_filename, $media->getName());
+    $this->assertEquals('8', $media->get('field_string_file_size')->value);
+    $this->assertEquals('text/plain', $media->get('field_string_mime_type')->value);
 
     // Test the MIME type icon.
     $icon_base = \Drupal::config('media.settings')->get('icon_base_uri');
