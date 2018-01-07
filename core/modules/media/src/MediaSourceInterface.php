@@ -177,4 +177,18 @@ interface MediaSourceInterface extends PluginInspectionInterface, ConfigurablePl
    */
   public function prepareFormDisplay(MediaTypeInterface $type, EntityFormDisplayInterface $display);
 
+  /**
+   * Get the primary value stored in the source field.
+   *
+   * @param MediaInterface $media
+   *   A media item.
+   *
+   * @return mixed
+   *   The source value.
+   *
+   * @throws \RuntimeException
+   *   If the source field for the media source is not defined.
+   */
+  public function getSourceFieldValue(MediaInterface $media);
+
 }

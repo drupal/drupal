@@ -141,6 +141,20 @@ class MediaSourceTest extends MediaKernelTestBase {
   }
 
   /**
+   * Tests the getSourceFieldValue() method.
+   */
+  public function testGetSourceFieldValue() {
+    /** @var \Drupal\media\MediaInterface $media */
+    $media = Media::create([
+      'bundle' => $this->testMediaType->id(),
+      'field_media_test' => 'some_value',
+    ]);
+    $media->save();
+    $media_source = $media->getSource();
+    $this->assertSame('some_value', $media_source->getSourceFieldValue($media));
+  }
+
+  /**
    * Tests the thumbnail functionality.
    */
   public function testThumbnail() {

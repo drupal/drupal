@@ -322,6 +322,20 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
   /**
    * {@inheritdoc}
    */
+  public function getSourceFieldValue(MediaInterface $media) {
+    $source_field = $this->configuration['source_field'];
+    if (empty($source_field)) {
+      throw new \RuntimeException('Source field for media source is not defined.');
+    }
+
+    /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
+    $field_item = $media->get($source_field)->first();
+    return $field_item->{$field_item->mainPropertyName()};
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function prepareViewDisplay(MediaTypeInterface $type, EntityViewDisplayInterface $display) {
     $display->setComponent($this->getSourceFieldDefinition($type)->getName());
   }
