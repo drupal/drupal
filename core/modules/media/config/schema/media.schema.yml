@@ -52,6 +52,14 @@ media.source.image:
   type: media.source.field_aware
   label: '"Image" media source configuration'
 
+media.source.audio_file:
+  type: media.source.field_aware
+  label: '"Audio" media source configuration'
+
+media.source.video_file:
+  type: media.source.field_aware
+  label: '"Video" media source configuration'
+
 media.source.field_aware:
   type: mapping
   mapping:
