@@ -20,4 +20,16 @@ interface ContextDefinitionInterface extends ComponentContextDefinitionInterface
    */
   public function getDataDefinition();
 
+  /**
+   * Determines if this definition is satisfied by a context object.
+   *
+   * @param \Drupal\Core\Plugin\Context\ContextInterface $context
+   *   The context object.
+   *
+   * @return bool
+   *   TRUE if this definition is satisfiable by the context object, FALSE
+   *   otherwise.
+   */
+  public function isSatisfiedBy(ContextInterface $context);
+
 }

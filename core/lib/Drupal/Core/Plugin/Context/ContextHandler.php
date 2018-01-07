@@ -43,23 +43,7 @@ class ContextHandler implements ContextHandlerInterface {
    */
   public function getMatchingContexts(array $contexts, ContextDefinitionInterface $definition) {
     return array_filter($contexts, function (ContextInterface $context) use ($definition) {
-      $context_definition = $context->getContextDefinition();
-
-      // If the data types do not match, this context is invalid unless the
-      // expected data type is any, which means all data types are supported.
-      if ($definition->getDataType() != 'any' && $definition->getDataType() != $context_definition->getDataType()) {
-        return FALSE;
-      }
-
-      // If any constraint does not match, this context is invalid.
-      foreach ($definition->getConstraints() as $constraint_name => $constraint) {
-        if ($context_definition->getConstraint($constraint_name) != $constraint) {
-          return FALSE;
-        }
-      }
-
-      // All contexts with matching data type and contexts are valid.
-      return TRUE;
+      return $definition->isSatisfiedBy($context);
     });
   }
 

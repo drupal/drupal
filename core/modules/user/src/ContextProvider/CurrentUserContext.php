@@ -50,6 +50,10 @@ class CurrentUserContext implements ContextProviderInterface {
   public function getRuntimeContexts(array $unqualified_context_ids) {
     $current_user = $this->userStorage->load($this->account->id());
 
+    // @todo Do not validate protected fields to avoid bug in TypedData, remove
+    //   this in https://www.drupal.org/project/drupal/issues/2934192.
+    $current_user->_skipProtectedUserFieldConstraint = TRUE;
+
     $context = new Context(new ContextDefinition('entity:user', $this->t('Current user')), $current_user);
     $cacheability = new CacheableMetadata();
     $cacheability->setCacheContexts(['user']);

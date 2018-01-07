@@ -3,6 +3,11 @@
 namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
+use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
+use Drupal\Core\Entity\Plugin\Validation\Constraint\BundleConstraint;
+use Drupal\Core\Entity\Plugin\Validation\Constraint\EntityTypeConstraint;
+use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\TypedData\TypedDataTrait;
 
 /**
@@ -250,6 +255,107 @@ class ContextDefinition implements ContextDefinitionInterface {
     $constraints = $definition->getConstraints() + $this->getConstraints();
     $definition->setConstraints($constraints);
     return $definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isSatisfiedBy(ContextInterface $context) {
+    $definition = $context->getContextDefinition();
+    // If the data types do not match, this context is invalid unless the
+    // expected data type is any, which means all data types are supported.
+    if ($this->getDataType() != 'any' && $definition->getDataType() != $this->getDataType()) {
+      return FALSE;
+    }
+
+    // Get the value for this context, either directly if possible or by
+    // introspecting the definition.
+    if ($context->hasContextValue()) {
+      $values = [$context->getContextData()];
+    }
+    elseif ($definition instanceof static) {
+      $values = $definition->getSampleValues();
+    }
+    else {
+      $values = [];
+    }
+
+    $validator = $this->getTypedDataManager()->getValidator();
+    foreach ($values as $value) {
+      $violations = $validator->validate($value, array_values($this->getConstraintObjects()));
+      // If a value has no violations then the requirement is satisfied.
+      if (!$violations->count()) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Returns typed data objects representing this context definition.
+   *
+   * This should return as many objects as needed to reflect the variations of
+   * the constraints it supports.
+   *
+   * @yield \Drupal\Core\TypedData\TypedDataInterface
+   *   The set of typed data object.
+   */
+  protected function getSampleValues() {
+    // @todo Move the entity specific logic out of this class in
+    //   https://www.drupal.org/node/2932462.
+    // Get the constraints from the context's definition.
+    $constraints = $this->getConstraintObjects();
+    // If constraints include EntityType, we generate an entity or adapter.
+    if (!empty($constraints['EntityType']) && $constraints['EntityType'] instanceof EntityTypeConstraint) {
+      $entity_type_manager = \Drupal::entityTypeManager();
+      $entity_type_id = $constraints['EntityType']->type;
+      $storage = $entity_type_manager->getStorage($entity_type_id);
+      // If the storage can generate a sample entity we might delegate to that.
+      if ($storage instanceof ContentEntityStorageInterface) {
+        if (!empty($constraints['Bundle']) && $constraints['Bundle'] instanceof BundleConstraint) {
+          foreach ($constraints['Bundle']->bundle as $bundle) {
+            // We have a bundle, we are bundleable and we can generate a sample.
+            yield EntityAdapter::createFromEntity($storage->createWithSampleValues($bundle));
+          }
+          return;
+        }
+      }
+
+      // Either no bundle, or not bundleable, so generate an entity adapter.
+      $definition = EntityDataDefinition::create($entity_type_id);
+      yield new EntityAdapter($definition);
+      return;
+    }
+
+    // No entity related constraints, so generate a basic typed data object.
+    yield $this->getTypedDataManager()->create($this->getDataDefinition());
+  }
+
+  /**
+   * Extracts an array of constraints for a context definition object.
+   *
+   * @return \Symfony\Component\Validator\Constraint[]
+   *   A list of applied constraints for the context definition.
+   */
+  protected function getConstraintObjects() {
+    $constraint_definitions = $this->getConstraints();
+
+    // @todo Move the entity specific logic out of this class in
+    //   https://www.drupal.org/node/2932462.
+    // If the data type is an entity, manually add one to the constraints array.
+    if (strpos($this->getDataType(), 'entity:') === 0) {
+      $entity_type_id = substr($this->getDataType(), 7);
+      $constraint_definitions['EntityType'] = ['type' => $entity_type_id];
+    }
+
+    $validation_constraint_manager = $this->getTypedDataManager()->getValidationConstraintManager();
+    $constraints = [];
+    foreach ($constraint_definitions as $constraint_name => $constraint_definition) {
+      $constraints[$constraint_name] = $validation_constraint_manager->create($constraint_name, $constraint_definition);
+    }
+
+    return $constraints;
   }
 
 }
