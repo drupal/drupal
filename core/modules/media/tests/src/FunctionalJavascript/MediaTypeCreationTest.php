@@ -53,6 +53,15 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     // Check that the plugin cannot be changed after it is set on type creation.
     $assert_session->fieldDisabled('Media source');
     $assert_session->pageTextContains('The media source cannot be changed after the media type is created.');
+
+    // Check that a new type with the same machine name cannot be created.
+    $this->drupalGet('admin/structure/media/add');
+    $page->fillField('label', $label);
+    $session->wait(5000, "jQuery('.machine-name-value').text() === '{$mediaTypeMachineName}'");
+    $page->selectFieldOption('Media source', 'test');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Save');
+    $assert_session->pageTextContains('The machine-readable name is already in use. It must be unique.');
   }
 
   /**
