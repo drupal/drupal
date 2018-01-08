@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\media\FunctionalJavascript;
 
+use Drupal\Component\Utility\Html;
+
 /**
  * Tests the media type creation.
  *
@@ -53,6 +55,27 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     // Check that the plugin cannot be changed after it is set on type creation.
     $assert_session->fieldDisabled('Media source');
     $assert_session->pageTextContains('The media source cannot be changed after the media type is created.');
+
+    // Open up the media add form and verify that the source field is right
+    // after the name, and before the vertical tabs.
+    $this->drupalGet("/media/add/$mediaTypeMachineName");
+
+    // Get the form element, and its HTML representation.
+    $form_selector = '#media-' . Html::cleanCssIdentifier($mediaTypeMachineName) . '-add-form';
+    $form = $assert_session->elementExists('css', $form_selector);
+    $form_html = $form->getOuterHtml();
+
+    // The name field should come before the source field, which should itself
+    // come before the vertical tabs.
+    $name_field = $assert_session->fieldExists('Name', $form)->getOuterHtml();
+    $test_source_field = $assert_session->fieldExists('Test source', $form)->getOuterHtml();
+    $vertical_tabs = $assert_session->elementExists('css', '.vertical-tabs', $form)->getOuterHtml();
+    $date_field = $assert_session->fieldExists('Date', $form)->getOuterHtml();
+    $published_checkbox = $assert_session->fieldExists('Published', $form)->getOuterHtml();
+    $this->assertTrue(strpos($form_html, $test_source_field) > strpos($form_html, $name_field));
+    $this->assertTrue(strpos($form_html, $vertical_tabs) > strpos($form_html, $test_source_field));
+    // The "Published" checkbox should be the last element.
+    $this->assertTrue(strpos($form_html, $published_checkbox) > strpos($form_html, $date_field));
 
     // Check that a new type with the same machine name cannot be created.
     $this->drupalGet('admin/structure/media/add');

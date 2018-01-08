@@ -19,7 +19,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_media_audio_file:
-    weight: 1
+    weight: 0
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
@@ -27,7 +27,7 @@ content:
     region: content
   name:
     type: string_textfield
-    weight: 0
+    weight: -5
     region: content
     settings:
       size: 60

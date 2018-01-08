@@ -24,7 +24,7 @@ content:
       preview_image_style: thumbnail
     third_party_settings: {  }
     type: image_image
-    weight: 26
+    weight: 0
     region: content
   name:
     type: string_textfield

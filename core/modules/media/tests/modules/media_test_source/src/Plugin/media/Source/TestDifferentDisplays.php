@@ -22,18 +22,22 @@ class TestDifferentDisplays extends Test {
    * {@inheritdoc}
    */
   public function prepareViewDisplay(MediaTypeInterface $type, EntityViewDisplayInterface $display) {
-    $display->setComponent($this->getSourceFieldDefinition($type)->getName(), [
-      'type' => 'entity_reference_entity_id',
-    ]);
+    parent::prepareViewDisplay($type, $display);
+    $source_name = $this->getSourceFieldDefinition($type)->getName();
+    $source_component = $display->getComponent($source_name) ?: [];
+    $source_component['type'] = 'entity_reference_entity_id';
+    $display->setComponent($source_name, $source_component);
   }
 
   /**
    * {@inheritdoc}
    */
   public function prepareFormDisplay(MediaTypeInterface $type, EntityFormDisplayInterface $display) {
-    $display->setComponent($this->getSourceFieldDefinition($type)->getName(), [
-      'type' => 'entity_reference_autocomplete_tags',
-    ]);
+    parent::prepareFormDisplay($type, $display);
+    $source_name = $this->getSourceFieldDefinition($type)->getName();
+    $source_component = $display->getComponent($source_name) ?: [];
+    $source_component['type'] = 'entity_reference_autocomplete_tags';
+    $display->setComponent($source_name, $source_component);
   }
 
   /**
