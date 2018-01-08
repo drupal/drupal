@@ -34,13 +34,18 @@
   background-position: center center;
   background-repeat: no-repeat;
   background-color: transparent;
-  border: 0;
+  border: 3px solid transparent;
+  height: 30px;
+  width: 30px;
   position: absolute;
+  top: calc(50% - 6px);
   right: 1em;
-  transition: background .5s ease;
+  transition: all .5s ease;
 }
-.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:hover {
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:hover,
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:focus {
   background-image: url(../../../images/core/icons/ffffff/ex.svg);
+  border: 3px solid #ffffff;
 }
 [dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
   left: 1em;
