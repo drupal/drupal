@@ -7,12 +7,17 @@
  * - name: Name of the media.
  * - content: Media content.
  *
+ * Note that we print {{ title_suffix }} even though the title is not included.
+ * This is intentional, once contextual links are embedded in the "title_suffix"
+ * variable. See #2775131 for more information on the background about this.
+ *
  * @see template_preprocess_media()
  *
  * @ingroup themeable
  */
 #}
 <article{{ attributes }}>
+  {{ title_suffix }}
   {% if content %}
     {{ content }}
   {% endif %}
