@@ -36,7 +36,7 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
     $assert_session->statusCodeEquals(200);
     $assert_session->titleEquals('Media | Drupal');
     $assert_session->fieldExists('Media name');
-    $assert_session->selectExists('source');
+    $assert_session->selectExists('type');
     $assert_session->selectExists('status');
     $assert_session->selectExists('langcode');
     $assert_session->buttonExists('Filter');
@@ -45,7 +45,7 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
     $header = $assert_session->elementExists('css', 'th#view-name-table-column');
     $this->assertEquals('Media name', $header->getText());
     $header = $assert_session->elementExists('css', 'th#view-bundle-table-column');
-    $this->assertEquals('Source', $header->getText());
+    $this->assertEquals('Type', $header->getText());
     $header = $assert_session->elementExists('css', 'th#view-uid-table-column');
     $this->assertEquals('Author', $header->getText());
     $header = $assert_session->elementExists('css', 'th#view-status-table-column');
