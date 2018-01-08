@@ -40,6 +40,9 @@ function migrate_drupal_migration_plugins_alter(&$definitions) {
       'destination' => [
         'plugin' => 'null',
       ],
+      'idMap' => [
+        'plugin' => 'null',
+      ],
     ];
     $vocabulary_migration = \Drupal::service('plugin.manager.migration')->createStubMigration($vocabulary_migration_definition);
 
