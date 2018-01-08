@@ -125,9 +125,6 @@
   font-size: smaller;
   line-height: normal;
 }
-#drupal-off-canvas nobr {
-  white-space: nowrap;
-}
 #drupal-off-canvas abbr,
 #drupal-off-canvas acronym {
   border-bottom: dotted 1px;

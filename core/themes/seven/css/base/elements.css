@@ -121,9 +121,6 @@ sup {
   font-size: smaller;
   line-height: normal;
 }
-nobr {
-  white-space: nowrap;
-}
 abbr,
 acronym {
   border-bottom: dotted 1px;
@@ -150,7 +147,6 @@ ol {
   margin-left: 0;
   margin-right: 2em;
 }
-quote,
 code {
   margin: .5em 0;
 }
