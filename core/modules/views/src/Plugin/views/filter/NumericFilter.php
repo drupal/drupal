@@ -26,7 +26,67 @@ class NumericFilter extends FilterPluginBase {
       ],
     ];
 
+    $options['expose']['contains']['placeholder'] = ['default' => ''];
+    $options['expose']['contains']['min_placeholder'] = ['default' => ''];
+    $options['expose']['contains']['max_placeholder'] = ['default' => ''];
+
     return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultExposeOptions() {
+    parent::defaultExposeOptions();
+    $this->options['expose']['min_placeholder'] = NULL;
+    $this->options['expose']['max_placeholder'] = NULL;
+    $this->options['expose']['placeholder'] = NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildExposeForm(&$form, FormStateInterface $form_state) {
+    parent::buildExposeForm($form, $form_state);
+
+    $form['expose']['min_placeholder'] = [
+      '#type' => 'textfield',
+      '#default_value' => $this->options['expose']['min_placeholder'],
+      '#title' => $this->t('Min placeholder'),
+      '#size' => 40,
+      '#description' => $this->t('Hint text that appears inside the Min field when empty.'),
+    ];
+    $form['expose']['max_placeholder'] = [
+      '#type' => 'textfield',
+      '#default_value' => $this->options['expose']['max_placeholder'],
+      '#title' => $this->t('Max placeholder'),
+      '#size' => 40,
+      '#description' => $this->t('Hint text that appears inside the Max field when empty.'),
+    ];
+    // Setup #states for all operators with two value.
+    $states = [[':input[name="options[expose][use_operator]"]' => ['checked' => TRUE]]];
+    foreach ($this->operatorValues(2) as $operator) {
+      $states[] = [
+        ':input[name="options[operator]"]' => ['value' => $operator],
+      ];
+    }
+    $form['expose']['min_placeholder']['#states']['visible'] = $states;
+    $form['expose']['max_placeholder']['#states']['visible'] = $states;
+
+    $form['expose']['placeholder'] = [
+      '#type' => 'textfield',
+      '#default_value' => $this->options['expose']['placeholder'],
+      '#title' => $this->t('Placeholder'),
+      '#size' => 40,
+      '#description' => $this->t('Hint text that appears inside the field when empty.'),
+    ];
+    // Setup #states for all operators with one value.
+    $form['expose']['placeholder']['#states']['visible'] = [[':input[name="options[expose][use_operator]"]' => ['checked' => TRUE]]];
+    foreach ($this->operatorValues(1) as $operator) {
+      $form['expose']['placeholder']['#states']['visible'][] = [
+        ':input[name="options[operator]"]' => ['value' => $operator],
+      ];
+    }
   }
 
   public function operators() {
@@ -165,6 +225,9 @@ class NumericFilter extends FilterPluginBase {
         '#size' => 30,
         '#default_value' => $this->value['value'],
       ];
+      if (!empty($this->options['expose']['placeholder'])) {
+        $form['value']['value']['#attributes']['placeholder'] = $this->options['expose']['placeholder'];
+      }
       // Setup #states for all operators with one value.
       foreach ($this->operatorValues(1) as $operator) {
         $form['value']['value']['#states']['visible'][] = [
@@ -185,6 +248,9 @@ class NumericFilter extends FilterPluginBase {
         '#size' => 30,
         '#default_value' => $this->value['value'],
       ];
+      if (!empty($this->options['expose']['placeholder'])) {
+        $form['value']['#attributes']['placeholder'] = $this->options['expose']['placeholder'];
+      }
       if ($exposed && !isset($user_input[$identifier])) {
         $user_input[$identifier] = $this->value['value'];
         $form_state->setUserInput($user_input);
@@ -197,14 +263,20 @@ class NumericFilter extends FilterPluginBase {
         '#title' => !$exposed ? $this->t('Min') : $this->exposedInfo()['label'],
         '#size' => 30,
         '#default_value' => $this->value['min'],
-        '#description' => !$exposed ? '' : $this->exposedInfo()['description']
+        '#description' => !$exposed ? '' : $this->exposedInfo()['description'],
       ];
+      if (!empty($this->options['expose']['min_placeholder'])) {
+        $form['value']['min']['#attributes']['placeholder'] = $this->options['expose']['min_placeholder'];
+      }
       $form['value']['max'] = [
         '#type' => 'textfield',
         '#title' => !$exposed ? $this->t('And max') : $this->t('And'),
         '#size' => 30,
         '#default_value' => $this->value['max'],
       ];
+      if (!empty($this->options['expose']['max_placeholder'])) {
+        $form['value']['max']['#attributes']['placeholder'] = $this->options['expose']['max_placeholder'];
+      }
       if ($which == 'all') {
         $states = [];
         // Setup #states for all operators with two values.

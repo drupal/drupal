@@ -7,6 +7,8 @@
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Entity\View;
+use Drupal\views\Plugin\views\filter\NumericFilter;
+use Drupal\views\Plugin\views\filter\StringFilter;
 use Drupal\views\Views;
 
 /**
@@ -269,4 +271,53 @@ function views_post_update_bulk_field_moved() {
       $view->save();
     }
   });
+}
+
+/**
+ * Add placeholder settings to string or numeric filters.
+ */
+function views_post_update_filter_placeholder_text() {
+  // Load all views.
+  $views = \Drupal::entityTypeManager()->getStorage('view')->loadMultiple();
+  /** @var \Drupal\views\Plugin\ViewsHandlerManager $filter_manager */
+  $filter_manager = \Drupal::service('plugin.manager.views.filter');
+
+  /* @var \Drupal\views\Entity\View[] $views */
+  foreach ($views as $view) {
+    $displays = $view->get('display');
+    $save = FALSE;
+    foreach ($displays as $display_name => &$display) {
+      if (isset($display['display_options']['filters'])) {
+        foreach ($display['display_options']['filters'] as $filter_name => &$filter) {
+          // Any of the children of the modified classes will also be inheriting
+          // the new settings.
+          $filter_instance = $filter_manager->createInstance($filter['plugin_id']);
+          if ($filter_instance instanceof StringFilter) {
+            if (!isset($filter['expose']['placeholder'])) {
+              $filter['expose']['placeholder'] = '';
+              $save = TRUE;
+            }
+          }
+          elseif ($filter_instance instanceof NumericFilter) {
+            if (!isset($filter['expose']['placeholder'])) {
+              $filter['expose']['placeholder'] = '';
+              $save = TRUE;
+            }
+            if (!isset($filter['expose']['min_placeholder'])) {
+              $filter['expose']['min_placeholder'] = '';
+              $save = TRUE;
+            }
+            if (!isset($filter['expose']['max_placeholder'])) {
+              $filter['expose']['max_placeholder'] = '';
+              $save = TRUE;
+            }
+          }
+        }
+      }
+    }
+    if ($save) {
+      $view->set('display', $displays);
+      $view->save();
+    }
+  }
 }
