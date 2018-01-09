@@ -6,5 +6,5 @@ dependencies:
 id: comment_unpublish_action
 label: 'Unpublish comment'
 type: comment
-plugin: comment_unpublish_action
+plugin: entity:unpublish_action:comment
 configuration: {  }

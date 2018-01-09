@@ -88,3 +88,26 @@ function system_post_update_field_type_plugins() {
 function system_post_update_field_formatter_entity_schema() {
   // Empty post-update hook.
 }
+
+/**
+ * Change plugin IDs of actions.
+ */
+function system_post_update_change_action_plugins() {
+  $old_new_action_id_map = [
+    'comment_publish_action' => 'entity:publish_action:comment',
+    'comment_unpublish_action' => 'entity:unpublish_action:comment',
+    'comment_save_action' => 'entity:save_action:comment',
+    'node_publish_action' => 'entity:publish_action:node',
+    'node_unpublish_action' => 'entity:unpublish_action:node',
+    'node_save_action' => 'entity:save_action:node',
+  ];
+
+  /** @var \Drupal\system\Entity\Action[] $actions */
+  $actions = \Drupal::entityTypeManager()->getStorage('action')->loadMultiple();
+  foreach ($actions as $action) {
+    if (isset($old_new_action_id_map[$action->getPlugin()->getPluginId()])) {
+      $action->setPlugin($old_new_action_id_map[$action->getPlugin()->getPluginId()]);
+      $action->save();
+    }
+  }
+}

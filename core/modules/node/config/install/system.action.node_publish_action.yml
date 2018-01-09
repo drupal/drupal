@@ -6,5 +6,5 @@ dependencies:
 id: node_publish_action
 label: 'Publish content'
 type: node
-plugin: node_publish_action
+plugin: entity:publish_action:node
 configuration: {  }

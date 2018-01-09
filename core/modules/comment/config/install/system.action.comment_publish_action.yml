@@ -6,5 +6,5 @@ dependencies:
 id: comment_publish_action
 label: 'Publish comment'
 type: comment
-plugin: comment_publish_action
+plugin: entity:publish_action:comment
 configuration: {  }

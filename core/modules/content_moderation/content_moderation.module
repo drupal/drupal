@@ -8,8 +8,8 @@
 use Drupal\content_moderation\EntityOperations;
 use Drupal\content_moderation\EntityTypeInfo;
 use Drupal\content_moderation\ContentPreprocess;
-use Drupal\content_moderation\Plugin\Action\ModerationOptOutPublishNode;
-use Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublishNode;
+use Drupal\content_moderation\Plugin\Action\ModerationOptOutPublish;
+use Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublish;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -21,8 +21,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\workflows\WorkflowInterface;
-use Drupal\node\Plugin\Action\PublishNode;
-use Drupal\node\Plugin\Action\UnpublishNode;
+use Drupal\Core\Action\Plugin\Action\PublishAction;
+use Drupal\Core\Action\Plugin\Action\UnpublishAction;
 use Drupal\workflows\Entity\Workflow;
 
 /**
@@ -227,13 +227,15 @@ function content_moderation_action_info_alter(&$definitions) {
 
   // The publish/unpublish actions are not valid on moderated entities. So swap
   // their implementations out for alternates that will become a no-op on a
-  // moderated node. If another module has already swapped out those classes,
+  // moderated entity. If another module has already swapped out those classes,
   // though, we'll be polite and do nothing.
-  if (isset($definitions['node_publish_action']['class']) && $definitions['node_publish_action']['class'] == PublishNode::class) {
-    $definitions['node_publish_action']['class'] = ModerationOptOutPublishNode::class;
-  }
-  if (isset($definitions['node_unpublish_action']['class']) && $definitions['node_unpublish_action']['class'] == UnpublishNode::class) {
-    $definitions['node_unpublish_action']['class'] = ModerationOptOutUnpublishNode::class;
+  foreach ($definitions as &$definition) {
+    if ($definition['id'] === 'entity:publish_action' && $definition['class'] == PublishAction::class) {
+      $definition['class'] = ModerationOptOutPublish::class;
+    }
+    if ($definition['id'] === 'entity:unpublish_action' && $definition['class'] == UnpublishAction::class) {
+      $definition['class'] = ModerationOptOutUnpublish::class;
+    }
   }
 }
 
