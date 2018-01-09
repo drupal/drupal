@@ -18,8 +18,8 @@
 }
 .ui-dialog .button {
   background-color: #fff;
-  background-image: -webkit-linear-gradient(top,#f3f3f3,#e8e8e8);
-  background-image: linear-gradient(to bottom,#f3f3f3,#e8e8e8);
+  background-image: -webkit-linear-gradient(top, #f3f3f3, #e8e8e8);
+  background-image: linear-gradient(to bottom, #f3f3f3, #e8e8e8);
   border: 1px solid #e4e4e4;
   border-bottom-color: #b4b4b4;
   border-left-color: #d2d2d2;

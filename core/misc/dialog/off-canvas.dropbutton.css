@@ -252,7 +252,7 @@
 
 /* Create visual separation if there is an adjacent button. */
 #drupal-off-canvas .dropbutton-multiple.open .dropbutton-widget {
-  box-shadow: 0 3px 3px 2px rgba(0,0,0,0.5);
+  box-shadow: 0 3px 3px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Triggered dropbutton expands to show secondary items. */

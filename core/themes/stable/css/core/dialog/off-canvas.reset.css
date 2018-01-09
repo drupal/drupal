@@ -383,6 +383,6 @@
 /* To standardize off-canvas selection color. */
 #drupal-off-canvas ::-moz-selection,
 #drupal-off-canvas ::selection {
-  background-color: rgba(175,175,175,0.5);
+  background-color: rgba(175, 175, 175, 0.5);
   color: inherit;
 }

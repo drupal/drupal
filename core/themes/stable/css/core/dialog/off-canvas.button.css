@@ -58,7 +58,7 @@
 }
 #drupal-off-canvas input[type="submit"].button:focus,
 #drupal-off-canvas input[type="submit"].button:active {
-  box-shadow: 0 3px 3px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 3px 2px rgba(0, 0, 0, 0.1);
 }
 #drupal-off-canvas input[type="submit"].button--primary {
   border: 0;
