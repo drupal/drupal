@@ -153,7 +153,7 @@ class BooleanFieldTest extends WebTestBase {
     $this->drupalPostAjaxForm(NULL, [], $field_name . "_settings_edit");
 
     $this->assertText(
-      'Use field label instead of the "On label" as label',
+      'Use field label instead of the "On" label as the label.',
       t('Display setting checkbox available.')
     );
 
@@ -169,7 +169,7 @@ class BooleanFieldTest extends WebTestBase {
 
     $this->drupalPostAjaxForm(NULL, [], $field_name . "_settings_edit");
     $this->assertText(
-      'Use field label instead of the "On label" as label',
+      'Use field label instead of the "On" label as the label.',
       t('Display setting checkbox is available')
     );
     $this->assertFieldByXPath(
