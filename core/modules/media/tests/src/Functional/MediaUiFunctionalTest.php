@@ -192,4 +192,33 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $assert_session->fieldValueEquals('fields[field_foo_field][type]', 'entity_reference_entity_view');
   }
 
+  /**
+   * Test the media collection route.
+   */
+  public function testMediaCollectionRoute() {
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $media_storage */
+    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
+
+    $this->container->get('module_installer')->uninstall(['views']);
+
+    // Create a media type and media item.
+    $media_type = $this->createMediaType();
+    $media = $media_storage->create([
+      'bundle' => $media_type->id(),
+      'name' => 'Unnamed',
+    ]);
+    $media->save();
+
+    $this->drupalGet($media->toUrl('collection'));
+
+    $assert_session = $this->assertSession();
+
+    // Media list table exists.
+    $assert_session->elementExists('css', 'th:contains("Media Name")');
+    $assert_session->elementExists('css', 'th:contains("Type")');
+    $assert_session->elementExists('css', 'th:contains("Operations")');
+    // Media item is present.
+    $assert_session->elementExists('css', 'td:contains("Unnamed")');
+  }
+
 }

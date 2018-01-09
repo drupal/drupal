@@ -23,3 +23,9 @@ entity.media_type.collection:
   title: List
   route_name: entity.media_type.collection
   base_route: entity.media_type.collection
+
+entity.media.collection:
+  title: Media
+  route_name: entity.media.collection
+  base_route: system.admin_content
+  weight: 10

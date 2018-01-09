@@ -9,4 +9,4 @@ media.add:
   title: 'Add media'
   weight: 10
   appears_on:
-    - view.media.media_page_list
+    - entity.media.collection
