@@ -157,7 +157,7 @@ trait DrupalStandardsListenerTrait {
    * @param array $context
    *   The error context.
    */
-  public static function errorHandler($type, $msg, $file, $line, $context = array()) {
+  public static function errorHandler($type, $msg, $file, $line, $context = []) {
     if ($type === E_USER_DEPRECATED) {
       return;
     }
