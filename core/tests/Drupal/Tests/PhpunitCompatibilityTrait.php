@@ -48,7 +48,7 @@ trait PhpunitCompatibilityTrait {
    *
    * @see https://www.drupal.org/node/2907725
    */
-  public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE, $cloneArguments = FALSE, $callOriginalMethods = FALSE, $proxyTarget = NULL) {
+  public function getMock($originalClassName, $methods = [], array $arguments = [], $mockClassName = '', $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE, $cloneArguments = FALSE, $callOriginalMethods = FALSE, $proxyTarget = NULL) {
     if (!$this->supports('getMock')) {
       $mock = $this->getMockBuilder($originalClassName)
         ->setMethods($methods)

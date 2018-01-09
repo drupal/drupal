@@ -16,7 +16,6 @@
 
   <!-- Only include specific sniffs that pass. This ensures that, if new sniffs are added, HEAD does not fail.-->
   <!-- Drupal sniffs -->
-  <rule ref="Drupal.Array.DisallowLongArraySyntax"/>
   <rule ref="Drupal.Classes.ClassCreateInstance"/>
   <rule ref="Drupal.Classes.ClassDeclaration"/>
   <rule ref="Drupal.Classes.FullyQualifiedNamespace"/>
@@ -133,6 +132,7 @@
   <rule ref="DrupalPractice.Commenting.ExpectedException"/>
 
   <!-- Generic sniffs -->
+  <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
   <rule ref="Generic.Files.ByteOrderMark"/>
   <rule ref="Generic.Files.LineEndings"/>
   <rule ref="Generic.Formatting.SpaceAfterCast"/>

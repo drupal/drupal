@@ -634,7 +634,7 @@ EOD;
   public function fieldExists($table, $column) {
     $prefixInfo = $this->getPrefixInfo($table);
 
-    return (bool) $this->connection->query("SELECT 1 FROM pg_attribute WHERE attrelid = :key::regclass AND attname = :column AND NOT attisdropped AND attnum > 0", array(':key' => $prefixInfo['schema'] . '.' . $prefixInfo['table'], ':column' => $column))->fetchField();
+    return (bool) $this->connection->query("SELECT 1 FROM pg_attribute WHERE attrelid = :key::regclass AND attname = :column AND NOT attisdropped AND attnum > 0", [':key' => $prefixInfo['schema'] . '.' . $prefixInfo['table'], ':column' => $column])->fetchField();
   }
 
   /**

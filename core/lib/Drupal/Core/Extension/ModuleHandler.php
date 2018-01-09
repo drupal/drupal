@@ -414,7 +414,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function invokeDeprecated($description, $module, $hook, array $args = array()) {
+  public function invokeDeprecated($description, $module, $hook, array $args = []) {
     $result = $this->invoke($module, $hook, $args);
     $this->triggerDeprecationError($description, $hook);
     return $result;
@@ -423,7 +423,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function invokeAllDeprecated($description, $hook, array $args = array()) {
+  public function invokeAllDeprecated($description, $hook, array $args = []) {
     $result = $this->invokeAll($hook, $args);
     $this->triggerDeprecationError($description, $hook);
     return $result;
