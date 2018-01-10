@@ -303,4 +303,42 @@ class Config extends StorableConfigBase {
     }
   }
 
+  /**
+   * Determines if overrides are applied to a key for this configuration object.
+   *
+   * @param string $key
+   *   (optional) A string that maps to a key within the configuration data.
+   *   For instance in the following configuration array:
+   *   @code
+   *   array(
+   *     'foo' => array(
+   *       'bar' => 'baz',
+   *     ),
+   *   );
+   *   @endcode
+   *   A key of 'foo.bar' would map to the string 'baz'. However, a key of 'foo'
+   *   would map to the array('bar' => 'baz').
+   *   If not supplied TRUE will be returned if there are any overrides at all
+   *   for this configuration object.
+   *
+   * @return bool
+   *   TRUE if there are any overrides for the key, otherwise FALSE.
+   */
+  public function hasOverrides($key = '') {
+    if (empty($key)) {
+      return !(empty($this->moduleOverrides) && empty($this->settingsOverrides));
+    }
+    else {
+      $parts = explode('.', $key);
+      $override_exists = FALSE;
+      if (isset($this->moduleOverrides) && is_array($this->moduleOverrides)) {
+        $override_exists = NestedArray::keyExists($this->moduleOverrides, $parts);
+      }
+      if (!$override_exists && isset($this->settingsOverrides) && is_array($this->settingsOverrides)) {
+        $override_exists = NestedArray::keyExists($this->settingsOverrides, $parts);
+      }
+      return $override_exists;
+    }
+  }
+
 }

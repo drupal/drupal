@@ -173,6 +173,7 @@ class ConfigTest extends UnitTestCase {
    * @covers ::setModuleOverride
    * @covers ::setSettingsOverride
    * @covers ::getOriginal
+   * @covers ::hasOverrides
    * @dataProvider overrideDataProvider
    */
   public function testOverrideData($data, $module_data, $setting_data) {
@@ -184,26 +185,40 @@ class ConfigTest extends UnitTestCase {
 
     // Save so that the original data is stored.
     $this->config->save();
+    $this->assertFalse($this->config->hasOverrides());
+    $this->assertOverriddenKeys($data, []);
 
     // Set module override data and check value before and after save.
     $this->config->setModuleOverride($module_data);
     $this->assertConfigDataEquals($module_data);
+    $this->assertOverriddenKeys($data, $module_data);
+
     $this->config->save();
     $this->assertConfigDataEquals($module_data);
+    $this->assertOverriddenKeys($data, $module_data);
+
+    // Reset the module overrides.
+    $this->config->setModuleOverride([]);
+    $this->assertOverriddenKeys($data, []);
 
     // Set setting override data and check value before and after save.
     $this->config->setSettingsOverride($setting_data);
     $this->assertConfigDataEquals($setting_data);
+    $this->assertOverriddenKeys($data, $setting_data);
     $this->config->save();
     $this->assertConfigDataEquals($setting_data);
+    $this->assertOverriddenKeys($data, $setting_data);
 
     // Set module overrides again to ensure override order is correct.
     $this->config->setModuleOverride($module_data);
+    $merged_overrides = array_merge($module_data, $setting_data);
 
     // Setting data should be overriding module data.
     $this->assertConfigDataEquals($setting_data);
+    $this->assertOverriddenKeys($data, $merged_overrides);
     $this->config->save();
     $this->assertConfigDataEquals($setting_data);
+    $this->assertOverriddenKeys($data, $merged_overrides);
 
     // Check original data has not changed.
     $this->assertOriginalConfigDataEquals($data, FALSE);
@@ -216,6 +231,15 @@ class ConfigTest extends UnitTestCase {
       $config_value = $this->config->getOriginal($key);
       $this->assertEquals($value, $config_value);
     }
+
+    // Check that the overrides can be completely reset.
+    $this->config->setModuleOverride([]);
+    $this->config->setSettingsOverride([]);
+    $this->assertConfigDataEquals($data);
+    $this->assertOverriddenKeys($data, []);
+    $this->config->save();
+    $this->assertConfigDataEquals($data);
+    $this->assertOverriddenKeys($data, []);
   }
 
   /**
@@ -434,7 +458,7 @@ class ConfigTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Config\ConfigTest::testDelete()
    */
   public function overrideDataProvider() {
-    return [
+    $test_cases = [
       [
         // Original data.
         [
@@ -449,7 +473,57 @@ class ConfigTest extends UnitTestCase {
           'a' => 'settingValue',
         ],
       ],
+      [
+        // Original data.
+        [
+          'a' => 'originalValue',
+          'b' => 'originalValue',
+          'c' => 'originalValue',
+        ],
+        // Module overrides.
+        [
+          'a' => 'moduleValue',
+          'b' => 'moduleValue',
+        ],
+        // Setting overrides.
+        [
+          'a' => 'settingValue',
+        ],
+      ],
+      [
+        // Original data.
+        [
+          'a' => 'allTheSameValue',
+        ],
+        // Module overrides.
+        [
+          'a' => 'allTheSameValue',
+        ],
+        // Setting overrides.
+        [
+          'a' => 'allTheSameValue',
+        ],
+      ],
     ];
+    // For each of the above test cases create duplicate test case except with
+    // config values nested.
+    foreach ($test_cases as $test_key => $test_case) {
+      foreach ($test_case as $parameter) {
+        $nested_parameter = [];
+        foreach ($parameter as $config_key => $value) {
+          // Nest config value 5 levels.
+          $nested_value = $value;
+          for ($i = 5; $i >= 0; $i--) {
+            $nested_value = [
+              $i => $nested_value,
+            ];
+          }
+          $nested_parameter[$config_key] = $nested_value;
+        }
+        $test_cases["nested:$test_key"][] = $nested_parameter;
+      }
+    }
+    return $test_cases;
   }
 
   /**
@@ -543,6 +617,51 @@ class ConfigTest extends UnitTestCase {
     // Safe strings are not cast when using ::initWithData().
     $this->config->initWithData(['bar' => $safe_string]);
     $this->assertSame($safe_string, $this->config->get('bar'));
+  }
+
+  /**
+   * Asserts that the correct keys are overridden.
+   *
+   * @param array $data
+   *   The original data.
+   * @param array $overridden_data
+   *   The overridden data.
+   */
+  protected function assertOverriddenKeys(array $data, array $overridden_data) {
+    if (empty($overridden_data)) {
+      $this->assertFalse($this->config->hasOverrides());
+    }
+    else {
+      $this->assertTrue($this->config->hasOverrides());
+      foreach ($overridden_data as $key => $value) {
+        // If there are nested overrides test a keys at every level.
+        if (is_array($value)) {
+          $nested_key = $key;
+          $nested_value = $overridden_data[$key];
+          while (is_array($nested_value)) {
+            $nested_key .= '.' . key($nested_value);
+            $this->assertTrue($this->config->hasOverrides($nested_key));
+            $nested_value = array_pop($nested_value);
+          }
+        }
+        $this->assertTrue($this->config->hasOverrides($key));
+      }
+    }
+
+    $non_overridden_keys = array_diff(array_keys($data), array_keys($overridden_data));
+    foreach ($non_overridden_keys as $non_overridden_key) {
+      $this->assertFalse($this->config->hasOverrides($non_overridden_key));
+      // If there are nested overrides test keys at every level.
+      if (is_array($data[$non_overridden_key])) {
+        $nested_key = $non_overridden_key;
+        $nested_value = $data[$non_overridden_key];
+        while (is_array($nested_value)) {
+          $nested_key .= '.' . key($nested_value);
+          $this->assertFalse($this->config->hasOverrides($nested_key));
+          $nested_value = array_pop($nested_value);
+        }
+      }
+    }
   }
 
 }
