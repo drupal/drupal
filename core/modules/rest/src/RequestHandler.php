@@ -9,23 +9,21 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Drupal\rest\Plugin\ResourceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Acts as intermediate request forwarder for resource plugins.
  *
  * @see \Drupal\rest\EventSubscriber\ResourceResponseSubscriber
  */
-class RequestHandler implements ContainerAwareInterface, ContainerInjectionInterface {
-
-  use ContainerAwareTrait;
+class RequestHandler implements ContainerInjectionInterface {
 
   /**
    * The resource configuration storage.
@@ -42,16 +40,26 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
   protected $configFactory;
 
   /**
+   * The serializer.
+   *
+   * @var \Symfony\Component\Serializer\SerializerInterface|\Symfony\Component\Serializer\Encoder\DecoderInterface
+   */
+  protected $serializer;
+
+  /**
    * Creates a new RequestHandler instance.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
    *   The resource configuration storage.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Symfony\Component\Serializer\SerializerInterface|\Symfony\Component\Serializer\Encoder\DecoderInterface $serializer
+   *   The serializer.
    */
-  public function __construct(EntityStorageInterface $entity_storage, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityStorageInterface $entity_storage, ConfigFactoryInterface $config_factory, SerializerInterface $serializer) {
     $this->resourceStorage = $entity_storage;
     $this->configFactory = $config_factory;
+    $this->serializer = $serializer;
   }
 
   /**
@@ -60,22 +68,51 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager')->getStorage('rest_resource_config'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('serializer')
     );
   }
 
   /**
-   * Handles a web API request.
+   * Handles a REST API request.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The HTTP request object.
    *
-   * @return \Symfony\Component\HttpFoundation\Response
-   *   The response object.
+   * @return \Symfony\Component\HttpFoundation\Response|\Drupal\rest\ResourceResponseInterface
+   *   The REST resource response.
    */
   public function handle(RouteMatchInterface $route_match, Request $request) {
+    $resource_config_id = $route_match->getRouteObject()->getDefault('_rest_resource_config');
+    /** @var \Drupal\rest\RestResourceConfigInterface $resource_config */
+    $resource_config = $this->resourceStorage->load($resource_config_id);
+
+    $response = $this->delegateToRestResourcePlugin($route_match, $request, $resource_config->getResourcePlugin());
+
+    if ($response instanceof CacheableResponseInterface) {
+      $response->addCacheableDependency($resource_config);
+      // Add global rest settings config's cache tag, for BC flags.
+      // @see \Drupal\rest\Plugin\rest\resource\EntityResource::permissions()
+      // @see \Drupal\rest\EventSubscriber\RestConfigSubscriber
+      // @todo Remove in https://www.drupal.org/node/2893804
+      $response->addCacheableDependency($this->configFactory->get('rest.settings'));
+    }
+
+    return $response;
+  }
+
+  /**
+   * Gets the normalized HTTP request method of the matched route.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   *
+   * @return string
+   *   The normalized HTTP request method.
+   */
+  protected static function getNormalizedRequestMethod(RouteMatchInterface $route_match) {
     // Symfony is built to transparently map HEAD requests to a GET request. In
     // the case of the REST module's RequestHandler though, we essentially have
     // our own light-weight routing system on top of the Drupal/symfony routing
@@ -89,18 +126,34 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
     // @see \Symfony\Component\HttpFoundation\Response::prepare()
     $method = strtolower($route_match->getRouteObject()->getMethods()[0]);
     assert(count($route_match->getRouteObject()->getMethods()) === 1);
+    return $method;
+  }
 
-    $resource_config_id = $route_match->getRouteObject()->getDefault('_rest_resource_config');
-    /** @var \Drupal\rest\RestResourceConfigInterface $resource_config */
-    $resource_config = $this->resourceStorage->load($resource_config_id);
-    $resource = $resource_config->getResourcePlugin();
-
+  /**
+   * Deserializes request body, if any.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The HTTP request object.
+   * @param \Drupal\rest\Plugin\ResourceInterface $resource
+   *   The REST resource plugin.
+   *
+   * @return array|null
+   *   An object normalization, ikf there is a valid request body. NULL if there
+   *   is no request body.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+   *   Thrown if the request body cannot be decoded.
+   * @throws \Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException
+   *   Thrown if the request body cannot be denormalized.
+   */
+  protected function deserialize(RouteMatchInterface $route_match, Request $request, ResourceInterface $resource) {
     // Deserialize incoming data if available.
-    /** @var \Symfony\Component\Serializer\SerializerInterface $serializer */
-    $serializer = $this->container->get('serializer');
     $received = $request->getContent();
     $unserialized = NULL;
     if (!empty($received)) {
+      $method = static::getNormalizedRequestMethod($route_match);
       $format = $request->getContentType();
 
       $definition = $resource->getPluginDefinition();
@@ -108,7 +161,7 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
       // First decode the request data. We can then determine if the
       // serialized data was malformed.
       try {
-        $unserialized = $serializer->decode($received, $format, ['request_method' => $method]);
+        $unserialized = $this->serializer->decode($received, $format, ['request_method' => $method]);
       }
       catch (UnexpectedValueException $e) {
         // If an exception was thrown at this stage, there was a problem
@@ -119,7 +172,7 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
       // Then attempt to denormalize if there is a serialization class.
       if (!empty($definition['serialization_class'])) {
         try {
-          $unserialized = $serializer->denormalize($unserialized, $definition['serialization_class'], $format, ['request_method' => $method]);
+          $unserialized = $this->serializer->denormalize($unserialized, $definition['serialization_class'], $format, ['request_method' => $method]);
         }
         // These two serialization exception types mean there was a problem
         // with the structure of the decoded data and it's not valid.
@@ -131,6 +184,26 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
         }
       }
     }
+
+    return $unserialized;
+  }
+
+  /**
+   * Delegates an incoming request to the appropriate REST resource plugin.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The HTTP request object.
+   * @param \Drupal\rest\Plugin\ResourceInterface $resource
+   *   The REST resource plugin.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response|\Drupal\rest\ResourceResponseInterface
+   *   The REST resource response.
+   */
+  protected function delegateToRestResourcePlugin(RouteMatchInterface $route_match, Request $request, ResourceInterface $resource) {
+    $unserialized = $this->deserialize($route_match, $request, $resource);
+    $method = static::getNormalizedRequestMethod($route_match);
 
     // Determine the request parameters that should be passed to the resource
     // plugin.
@@ -144,18 +217,7 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
     }
 
     // Invoke the operation on the resource plugin.
-    $response = call_user_func_array([$resource, $method], $arguments);
-
-    if ($response instanceof CacheableResponseInterface) {
-      $response->addCacheableDependency($resource_config);
-      // Add global rest settings config's cache tag, for BC flags.
-      // @see \Drupal\rest\Plugin\rest\resource\EntityResource::permissions()
-      // @see \Drupal\rest\EventSubscriber\RestConfigSubscriber
-      // @todo Remove in https://www.drupal.org/node/2893804
-      $response->addCacheableDependency($this->configFactory->get('rest.settings'));
-    }
-
-    return $response;
+    return call_user_func_array([$resource, $method], $arguments);
   }
 
   /**

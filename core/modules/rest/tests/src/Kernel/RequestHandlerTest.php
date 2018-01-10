@@ -13,6 +13,7 @@ use Drupal\rest\ResourceResponse;
 use Drupal\rest\RestResourceConfigInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Test REST RequestHandler controller logic.
@@ -45,8 +46,8 @@ class RequestHandlerTest extends KernelTestBase {
     $config_factory = $this->prophesize(ConfigFactoryInterface::class);
     $config_factory->get('rest.settings')
       ->willReturn($this->prophesize(ImmutableConfig::class)->reveal());
-    $this->requestHandler = new RequestHandler($this->entityStorage->reveal(), $config_factory->reveal());
-    $this->requestHandler->setContainer($this->container);
+    $serializer = $this->prophesize(SerializerInterface::class);
+    $this->requestHandler = new RequestHandler($this->entityStorage->reveal(), $config_factory->reveal(), $serializer->reveal());
   }
 
   /**
