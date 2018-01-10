@@ -118,7 +118,7 @@ small .admin-link:after {
 }
 .system-modules td details a {
   color: #5C5C5B;
-  border: 0px;
+  border: 0;
 }
 .system-modules td details {
   border: 0;

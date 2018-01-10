@@ -11,7 +11,7 @@
   float: right;
 }
 .ajax-progress-throbber .throbber {
-  background: transparent url(../../../images/core/throbber-active.gif) no-repeat 0px center;
+  background: transparent url(../../../images/core/throbber-active.gif) no-repeat 0 center;
   display: inline;
   padding: 1px 5px 2px;
 }

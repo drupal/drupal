@@ -8,7 +8,7 @@
   padding-right: 0.5em;
 }
 .collapse-processed > summary:before {
-  background: url(../../../../misc/menu-expanded.png) 0px 100% no-repeat; /* LTR */
+  background: url(../../../../misc/menu-expanded.png) 0 100% no-repeat; /* LTR */
   content: "";
   float: left; /* LTR */
   height: 1em;

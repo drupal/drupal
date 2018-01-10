@@ -26,7 +26,7 @@
 }
 .quickedit-editing.quickedit-validation-error,
 .quickedit-form.quickedit-validation-error {
-  box-shadow: 0 0 0px 1px #ee8b74, 0 0 0 2px #fa2209;
+  box-shadow: 0 0 0 1px #ee8b74, 0 0 0 2px #fa2209;
 }
 .quickedit-editing.quickedit-editor-is-popup {
   box-shadow: none;
@@ -121,7 +121,7 @@
 .quickedit-toolbar-container > .quickedit-toolbar-pointer {
   background-color: #e4e4e4;
   bottom: 2px;
-  box-shadow: 0 0 0 1px #818181, 0px 0px 0 4px rgba(150, 150, 150, 0.5);
+  box-shadow: 0 0 0 1px #818181, 0 0 0 4px rgba(150, 150, 150, 0.5);
   display: block;
   height: 16px;
   left: 18px; /* LTR */
@@ -142,7 +142,7 @@
 }
 .quickedit-toolbar-container > .quickedit-toolbar-lining {
   bottom: 7px;
-  box-shadow: 0 0 0 1px #818181, 0px 3px 0px 1px rgba(150, 150, 150, 0.5);
+  box-shadow: 0 0 0 1px #818181, 0 3px 0 1px rgba(150, 150, 150, 0.5);
   display: block;
   left: 0;
   position: absolute;

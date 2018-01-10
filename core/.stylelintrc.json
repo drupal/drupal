@@ -11,7 +11,6 @@
     "declaration-block-no-shorthand-property-overrides": null,
     "function-linear-gradient-no-nonstandard-direction": null,
     "function-whitespace-after": null,
-    "length-zero-no-unit": null,
     "no-empty-source": null,
     "no-unknown-animations": true,
     "number-leading-zero": null,

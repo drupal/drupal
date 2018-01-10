@@ -84,7 +84,7 @@ a.simpletest-collapse {
 a.simpletest-collapse:focus,
 a.simpletest-collapse:hover {
   font-size: 80%;
-  top: 0px;
+  top: 0;
   height: auto;
   width: auto;
   overflow: visible;
