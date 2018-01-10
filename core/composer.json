@@ -47,7 +47,7 @@
         "phpunit/phpunit": "^4.8.35 || ^6.1",
         "phpspec/prophecy": "^1.4",
         "symfony/css-selector": "~3.2.8",
-        "symfony/phpunit-bridge": "^3.4.0@beta"
+        "symfony/phpunit-bridge": "^3.4.3"
     },
     "replace": {
         "drupal/action": "self.version",
