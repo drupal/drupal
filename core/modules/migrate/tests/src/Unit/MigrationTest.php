@@ -19,7 +19,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\migrate\Plugin\Migration
  *
- * @group Migration
+ * @group migrate
  */
 class MigrationTest extends UnitTestCase {
 
