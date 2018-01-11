@@ -688,4 +688,11 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
     return $this->migration_tags;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isAuditable() {
+    return (bool) $this->audit;
+  }
+
 }

@@ -16,12 +16,8 @@ class IdAuditor implements AuditorInterface {
    * {@inheritdoc}
    */
   public function audit(MigrationInterface $migration) {
-    $plugin_definition = $migration->getPluginDefinition();
-
     // If the migration does not opt into auditing, it passes.
-    // @todo Use $migration->isAuditable() when
-    // https://www.drupal.org/project/drupal/issues/2930832 is in.
-    if (empty($plugin_definition['audit'])) {
+    if (!$migration->isAuditable()) {
       return AuditResult::pass($migration);
     }
 
