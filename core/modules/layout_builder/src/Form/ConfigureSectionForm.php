@@ -3,7 +3,6 @@
 namespace Drupal\layout_builder\Form;
 
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
@@ -14,6 +13,7 @@ use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -48,11 +48,11 @@ class ConfigureSectionForm extends FormBase {
   protected $pluginFormFactory;
 
   /**
-   * The entity.
+   * The section storage.
    *
-   * @var \Drupal\Core\Entity\EntityInterface
+   * @var \Drupal\layout_builder\SectionStorageInterface
    */
-  protected $entity;
+  protected $sectionStorage;
 
   /**
    * The field delta.
@@ -105,15 +105,13 @@ class ConfigureSectionForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity = NULL, $delta = NULL, $plugin_id = NULL) {
-    $this->entity = $entity;
+  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $plugin_id = NULL) {
+    $this->sectionStorage = $section_storage;
     $this->delta = $delta;
     $this->isUpdate = is_null($plugin_id);
 
     if ($this->isUpdate) {
-      /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
-      $field_list = $this->entity->layout_builder__layout;
-      $section = $field_list->getSection($this->delta);
+      $section = $this->sectionStorage->getSection($this->delta);
     }
     else {
       $section = new Section($plugin_id);
@@ -156,24 +154,22 @@ class ConfigureSectionForm extends FormBase {
     $plugin_id = $this->layout->getPluginId();
     $configuration = $this->layout->getConfiguration();
 
-    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
-    $field_list = $this->entity->layout_builder__layout;
     if ($this->isUpdate) {
-      $field_list->getSection($this->delta)->setLayoutSettings($configuration);
+      $this->sectionStorage->getSection($this->delta)->setLayoutSettings($configuration);
     }
     else {
-      $field_list->insertSection($this->delta, new Section($plugin_id, $configuration));
+      $this->sectionStorage->insertSection($this->delta, new Section($plugin_id, $configuration));
     }
 
-    $this->layoutTempstoreRepository->set($this->entity);
-    $form_state->setRedirectUrl($this->entity->toUrl('layout-builder'));
+    $this->layoutTempstoreRepository->set($this->sectionStorage);
+    $form_state->setRedirectUrl($this->sectionStorage->getLayoutBuilderUrl());
   }
 
   /**
    * {@inheritdoc}
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
-    return $this->rebuildAndClose($this->entity);
+    return $this->rebuildAndClose($this->sectionStorage);
   }
 
   /**

@@ -51,80 +51,80 @@ class LayoutBuilderRoutes {
     $routes = [];
 
     foreach ($this->getEntityTypes() as $entity_type_id => $entity_type) {
-      $integer_id = $this->hasIntegerId($entity_type);
+      $defaults = [];
+      $defaults['entity_type_id'] = $entity_type_id;
+
+      $requirements = [];
+      if ($this->hasIntegerId($entity_type)) {
+        $requirements[$entity_type_id] = '\d+';
+      }
+
+      $options = [];
+      $options['parameters']['section_storage']['layout_builder_tempstore'] = TRUE;
+      $options['parameters'][$entity_type_id]['type'] = 'entity:' . $entity_type_id;
 
       $template = $entity_type->getLinkTemplate('layout-builder');
-      $route = (new Route($template))
-        ->setDefaults([
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::layout',
-          '_title_callback' => '\Drupal\layout_builder\Controller\LayoutBuilderController::title',
-          'entity' => NULL,
-          'entity_type_id' => $entity_type_id,
-          'is_rebuilding' => FALSE,
-        ])
-        ->addRequirements([
-          '_has_layout_section' => 'true',
-        ])
-        ->addOptions([
-          '_layout_builder' => TRUE,
-          'parameters' => [
-            $entity_type_id => [
-              'type' => 'entity:{entity_type_id}',
-              'layout_builder_tempstore' => TRUE,
-            ],
-          ],
-        ]);
-      if ($integer_id) {
-        $route->setRequirement($entity_type_id, '\d+');
-      }
-      $routes["entity.$entity_type_id.layout_builder"] = $route;
-
-      $route = (new Route("$template/save"))
-        ->setDefaults([
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout',
-          'entity' => NULL,
-          'entity_type_id' => $entity_type_id,
-        ])
-        ->addRequirements([
-          '_has_layout_section' => 'true',
-        ])
-        ->addOptions([
-          '_layout_builder' => TRUE,
-          'parameters' => [
-            $entity_type_id => [
-              'type' => 'entity:{entity_type_id}',
-              'layout_builder_tempstore' => TRUE,
-            ],
-          ],
-        ]);
-      if ($integer_id) {
-        $route->setRequirement($entity_type_id, '\d+');
-      }
-      $routes["entity.$entity_type_id.save_layout"] = $route;
-
-      $route = (new Route("$template/cancel"))
-        ->setDefaults([
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
-          'entity' => NULL,
-          'entity_type_id' => $entity_type_id,
-        ])
-        ->addRequirements([
-          '_has_layout_section' => 'true',
-        ])
-        ->addOptions([
-          '_layout_builder' => TRUE,
-          'parameters' => [
-            $entity_type_id => [
-              'type' => 'entity:{entity_type_id}',
-              'layout_builder_tempstore' => TRUE,
-            ],
-          ],
-        ]);
-      if ($integer_id) {
-        $route->setRequirement($entity_type_id, '\d+');
-      }
-      $routes["entity.$entity_type_id.cancel_layout"] = $route;
+      $routes += $this->buildRoute('overrides', 'entity.' . $entity_type_id, $template, $defaults, $requirements, $options);
     }
+    return $routes;
+  }
+
+  /**
+   * Builds the layout routes for the given values.
+   *
+   * @param string $type
+   *   The section storage type.
+   * @param string $route_name_prefix
+   *   The prefix to use for the route name.
+   * @param string $path
+   *   The path patten for the routes.
+   * @param array $defaults
+   *   An array of default parameter values.
+   * @param array $requirements
+   *   An array of requirements for parameters.
+   * @param array $options
+   *   An array of options.
+   *
+   * @return \Symfony\Component\Routing\Route[]
+   *   An array of route objects.
+   */
+  protected function buildRoute($type, $route_name_prefix, $path, array $defaults, array $requirements, array $options) {
+    $routes = [];
+
+    $defaults['section_storage_type'] = $type;
+    // Provide an empty value to allow the section storage to be upcast.
+    $defaults['section_storage'] = '';
+    // Trigger the layout builder access check.
+    $requirements['_has_layout_section'] = 'true';
+    // Trigger the layout builder RouteEnhancer.
+    $options['_layout_builder'] = TRUE;
+
+    $main_defaults = $defaults;
+    $main_defaults['is_rebuilding'] = FALSE;
+    $main_defaults['_controller'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::layout';
+    $main_defaults['_title_callback'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::title';
+    $route = (new Route($path))
+      ->setDefaults($main_defaults)
+      ->setRequirements($requirements)
+      ->setOptions($options);
+    $routes["{$route_name_prefix}.layout_builder"] = $route;
+
+    $save_defaults = $defaults;
+    $save_defaults['_controller'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout';
+    $route = (new Route("$path/save"))
+      ->setDefaults($save_defaults)
+      ->setRequirements($requirements)
+      ->setOptions($options);
+    $routes["{$route_name_prefix}.layout_builder_save"] = $route;
+
+    $cancel_defaults = $defaults;
+    $cancel_defaults['_controller'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout';
+    $route = (new Route("$path/cancel"))
+      ->setDefaults($cancel_defaults)
+      ->setRequirements($requirements)
+      ->setOptions($options);
+    $routes["{$route_name_prefix}.layout_builder_cancel"] = $route;
+
     return $routes;
   }
 

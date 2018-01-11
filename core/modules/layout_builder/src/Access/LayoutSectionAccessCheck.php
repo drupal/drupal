@@ -3,10 +3,10 @@
 namespace Drupal\layout_builder\Access;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\layout_builder\SectionStorageInterface;
 
 /**
  * Provides an access check for the Layout Builder UI.
@@ -16,7 +16,7 @@ use Drupal\Core\Session\AccountInterface;
 class LayoutSectionAccessCheck implements AccessInterface {
 
   /**
-   * Checks routing access to layout for the entity.
+   * Checks routing access to the layout.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
@@ -27,24 +27,20 @@ class LayoutSectionAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(RouteMatchInterface $route_match, AccountInterface $account) {
-    // Attempt to retrieve the generic 'entity' parameter, otherwise look up the
-    // specific entity via the entity type ID.
-    $entity = $route_match->getParameter('entity') ?: $route_match->getParameter($route_match->getParameter('entity_type_id'));
+    $section_storage = $route_match->getParameter('section_storage');
 
-    // If we don't have an entity, forbid access.
-    if (empty($entity)) {
+    if (empty($section_storage)) {
       return AccessResult::forbidden()->addCacheContexts(['route']);
     }
 
-    // If the entity isn't fieldable, forbid access.
-    if (!$entity instanceof FieldableEntityInterface || !$entity->hasField('layout_builder__layout')) {
+    if (!$section_storage instanceof SectionStorageInterface) {
       $access = AccessResult::forbidden();
     }
     else {
       $access = AccessResult::allowedIfHasPermission($account, 'configure any layout');
     }
 
-    return $access->addCacheableDependency($entity);
+    return $access->addCacheableDependency($section_storage);
   }
 
 }

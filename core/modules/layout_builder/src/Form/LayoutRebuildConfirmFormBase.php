@@ -3,11 +3,11 @@
 namespace Drupal\layout_builder\Form;
 
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
+use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -28,11 +28,11 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
   protected $layoutTempstoreRepository;
 
   /**
-   * The entity.
+   * The section storage.
    *
-   * @var \Drupal\Core\Entity\EntityInterface
+   * @var \Drupal\layout_builder\SectionStorageInterface
    */
-  protected $entity;
+  protected $sectionStorage;
 
   /**
    * The field delta.
@@ -68,14 +68,14 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->entity->toUrl('layout-builder', ['query' => ['layout_is_rebuilding' => TRUE]]);
+    return $this->sectionStorage->getLayoutBuilderUrl()->setOption('query', ['layout_is_rebuilding' => TRUE]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity = NULL, $delta = NULL) {
-    $this->entity = $entity;
+  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL) {
+    $this->sectionStorage = $section_storage;
     $this->delta = $delta;
 
     $form = parent::buildForm($form, $form_state);
@@ -92,9 +92,9 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->handleEntity($this->entity, $form_state);
+    $this->handleSectionStorage($this->sectionStorage, $form_state);
 
-    $this->layoutTempstoreRepository->set($this->entity);
+    $this->layoutTempstoreRepository->set($this->sectionStorage);
 
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
@@ -103,17 +103,17 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
    * {@inheritdoc}
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
-    return $this->rebuildAndClose($this->entity);
+    return $this->rebuildAndClose($this->sectionStorage);
   }
 
   /**
-   * Performs any actions on the layout entity before saving.
+   * Performs any actions on the section storage before saving.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  abstract protected function handleEntity(EntityInterface $entity, FormStateInterface $form_state);
+  abstract protected function handleSectionStorage(SectionStorageInterface $section_storage, FormStateInterface $form_state);
 
 }

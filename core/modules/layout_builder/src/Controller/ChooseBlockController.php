@@ -4,8 +4,8 @@ namespace Drupal\layout_builder\Controller;
 
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
+use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -46,8 +46,8 @@ class ChooseBlockController implements ContainerInjectionInterface {
   /**
    * Provides the UI for choosing a new block.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    * @param int $delta
    *   The delta of the section to splice.
    * @param string $region
@@ -56,7 +56,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
    * @return array
    *   A render array.
    */
-  public function build(EntityInterface $entity, $delta, $region) {
+  public function build(SectionStorageInterface $section_storage, $delta, $region) {
     $build['#type'] = 'container';
     $build['#attributes']['class'][] = 'block-categories';
 
@@ -72,8 +72,8 @@ class ChooseBlockController implements ContainerInjectionInterface {
           'title' => $block['admin_label'],
           'url' => Url::fromRoute('layout_builder.add_block',
             [
-              'entity_type_id' => $entity->getEntityTypeId(),
-              'entity' => $entity->id(),
+              'section_storage_type' => $section_storage->getStorageType(),
+              'section_storage' => $section_storage->getStorageId(),
               'delta' => $delta,
               'region' => $region,
               'plugin_id' => $block_id,

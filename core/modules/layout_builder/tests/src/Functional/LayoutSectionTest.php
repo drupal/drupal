@@ -248,7 +248,7 @@ class LayoutSectionTest extends BrowserTestBase {
     ]);
     $node->save();
     $this->drupalGet($node->toUrl('layout-builder'));
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**

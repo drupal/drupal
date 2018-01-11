@@ -68,4 +68,55 @@ interface SectionStorageInterface extends \Countable {
    */
   public function removeSection($delta);
 
+  /**
+   * Returns an identifier for this storage.
+   *
+   * @return string
+   *   The unique identifier for this storage.
+   */
+  public function getStorageId();
+
+  /**
+   * Returns the type of this storage.
+   *
+   * Used in conjunction with the storage ID.
+   *
+   * @return string
+   *   The type of storage.
+   */
+  public function getStorageType();
+
+  /**
+   * Gets the label for the object using the sections.
+   *
+   * @return string
+   *   The label, or NULL if there is no label defined.
+   */
+  public function label();
+
+  /**
+   * Saves the sections.
+   *
+   * @return int
+   *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation
+   *   performed.
+   */
+  public function save();
+
+  /**
+   * Returns a URL for viewing the object using the sections.
+   *
+   * @return \Drupal\Core\Url
+   *   The URL object.
+   */
+  public function getCanonicalUrl();
+
+  /**
+   * Returns a URL to edit the sections in the Layout Builder UI.
+   *
+   * @return \Drupal\Core\Url
+   *   The URL object.
+   */
+  public function getLayoutBuilderUrl();
+
 }

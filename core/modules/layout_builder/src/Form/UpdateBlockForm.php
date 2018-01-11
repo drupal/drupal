@@ -2,9 +2,10 @@
 
 namespace Drupal\layout_builder\Form;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionStorageInterface;
 
 /**
  * Provides a form to update a block.
@@ -27,8 +28,8 @@ class UpdateBlockForm extends ConfigureBlockFormBase {
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity being configured.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage being configured.
    * @param int $delta
    *   The delta of the section.
    * @param string $region
@@ -41,12 +42,13 @@ class UpdateBlockForm extends ConfigureBlockFormBase {
    * @return array
    *   The form array.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity = NULL, $delta = NULL, $region = NULL, $uuid = NULL, array $configuration = []) {
-    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
-    $field_list = $entity->layout_builder__layout;
-    $plugin = $field_list->getSection($delta)->getComponent($uuid)->getPlugin();
+  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL, array $configuration = []) {
+    $plugin = $section_storage->getSection($delta)->getComponent($uuid)->getPlugin();
+    if ($plugin instanceof ConfigurablePluginInterface) {
+      $configuration = $plugin->getConfiguration();
+    }
 
-    return parent::buildForm($form, $form_state, $entity, $delta, $region, $plugin->getPluginId(), $plugin->getConfiguration());
+    return parent::buildForm($form, $form_state, $section_storage, $delta, $region, $plugin->getPluginId(), $configuration);
   }
 
   /**

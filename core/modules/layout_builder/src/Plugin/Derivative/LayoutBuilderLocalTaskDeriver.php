@@ -7,7 +7,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\layout_builder\Plugin\Menu\LayoutBuilderLocalTask;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -56,23 +55,20 @@ class LayoutBuilderLocalTaskDeriver extends DeriverBase implements ContainerDeri
         'title' => $this->t('Layout'),
         'base_route' => "entity.$entity_type_id.canonical",
         'entity_type_id' => $entity_type_id,
-        'class' => LayoutBuilderLocalTask::class,
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
       ];
-      $this->derivatives["entity.$entity_type_id.save_layout"] = $base_plugin_definition + [
-        'route_name' => "entity.$entity_type_id.save_layout",
+      $this->derivatives["entity.$entity_type_id.layout_builder_save"] = $base_plugin_definition + [
+        'route_name' => "entity.$entity_type_id.layout_builder_save",
         'title' => $this->t('Save Layout'),
         'parent_id' => "layout_builder_ui:entity.$entity_type_id.layout_builder",
         'entity_type_id' => $entity_type_id,
-        'class' => LayoutBuilderLocalTask::class,
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
       ];
-      $this->derivatives["entity.$entity_type_id.cancel_layout"] = $base_plugin_definition + [
-        'route_name' => "entity.$entity_type_id.cancel_layout",
+      $this->derivatives["entity.$entity_type_id.layout_builder_cancel"] = $base_plugin_definition + [
+        'route_name' => "entity.$entity_type_id.layout_builder_cancel",
         'title' => $this->t('Cancel Layout'),
         'parent_id' => "layout_builder_ui:entity.$entity_type_id.layout_builder",
         'entity_type_id' => $entity_type_id,
-        'class' => LayoutBuilderLocalTask::class,
         'weight' => 5,
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
       ];

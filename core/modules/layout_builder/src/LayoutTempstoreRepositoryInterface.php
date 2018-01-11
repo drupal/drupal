@@ -2,8 +2,6 @@
 
 namespace Drupal\layout_builder;
 
-use Drupal\Core\Entity\EntityInterface;
-
 /**
  * Provides an interface for loading layouts from tempstore.
  *
@@ -15,51 +13,34 @@ use Drupal\Core\Entity\EntityInterface;
 interface LayoutTempstoreRepositoryInterface {
 
   /**
-   * Gets the tempstore version of an entity, if it exists.
+   * Gets the tempstore version of a section storage, if it exists.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity to check for in tempstore.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage to check for in tempstore.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   Either the version of this entity from tempstore, or the passed entity if
-   *   none exists.
-   *
-   * @throw \UnexpectedValueException
-   *   Thrown if a value exists, but is not an entity.
-   */
-  public function get(EntityInterface $entity);
-
-  /**
-   * Loads an entity from tempstore given the entity ID.
-   *
-   * @param string $entity_type_id
-   *   The entity type ID.
-   * @param string $entity_id
-   *   The entity ID (or revision ID).
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   Either the version of this entity from tempstore, or the entity from
-   *   storage if none exists.
+   * @return \Drupal\layout_builder\SectionStorageInterface
+   *   Either the version of this section storage from tempstore, or the passed
+   *   section storage if none exists.
    *
    * @throw \UnexpectedValueException
-   *   Thrown if a value exists, but is not an entity.
+   *   Thrown if a value exists, but is not a section storage.
    */
-  public function getFromId($entity_type_id, $entity_id);
+  public function get(SectionStorageInterface $section_storage);
 
   /**
-   * Stores this entity in tempstore.
+   * Stores this section storage in tempstore.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity to set in tempstore.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage to set in tempstore.
    */
-  public function set(EntityInterface $entity);
+  public function set(SectionStorageInterface $section_storage);
 
   /**
-   * Removes the tempstore version of an entity.
+   * Removes the tempstore version of a section storage.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity to remove from tempstore.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage to remove from tempstore.
    */
-  public function delete(EntityInterface $entity);
+  public function delete(SectionStorageInterface $section_storage);
 
 }

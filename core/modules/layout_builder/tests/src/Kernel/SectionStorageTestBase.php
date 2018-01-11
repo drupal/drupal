@@ -36,18 +36,14 @@ abstract class SectionStorageTestBase extends KernelTestBase {
     parent::setUp();
 
     $section_data = [
-      [
-        'section' => new Section('layout_test_plugin', [], [
-          'first-uuid' => new SectionComponent('first-uuid', 'content'),
-        ]),
-      ],
-      [
-        'section' => new Section('layout_test_plugin', ['setting_1' => 'bar'], [
-          'second-uuid' => new SectionComponent('second-uuid', 'content'),
-        ]),
-      ],
+      new Section('layout_test_plugin', [], [
+        'first-uuid' => new SectionComponent('first-uuid', 'content'),
+      ]),
+      new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+        'second-uuid' => new SectionComponent('second-uuid', 'content'),
+      ]),
     ];
-    $this->sectionStorage = $this->getEntity($section_data);
+    $this->sectionStorage = $this->getSectionStorage($section_data);
   }
 
   /**
@@ -59,7 +55,7 @@ abstract class SectionStorageTestBase extends KernelTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The entity.
    */
-  abstract protected function getEntity(array $section_data);
+  abstract protected function getSectionStorage(array $section_data);
 
   /**
    * @covers ::getSections

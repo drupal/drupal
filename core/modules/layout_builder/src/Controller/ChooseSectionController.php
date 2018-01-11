@@ -3,11 +3,11 @@
 namespace Drupal\layout_builder\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Layout\LayoutPluginManagerInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -49,15 +49,15 @@ class ChooseSectionController implements ContainerInjectionInterface {
   /**
    * Choose a layout plugin to add as a section.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    * @param int $delta
    *   The delta of the section to splice.
    *
    * @return array
    *   The render array.
    */
-  public function build(EntityInterface $entity, $delta) {
+  public function build(SectionStorageInterface $section_storage, $delta) {
     $output['#title'] = $this->t('Choose a layout');
 
     $items = [];
@@ -75,8 +75,8 @@ class ChooseSectionController implements ContainerInjectionInterface {
         '#url' => Url::fromRoute(
           $layout instanceof PluginFormInterface ? 'layout_builder.configure_section' : 'layout_builder.add_section',
           [
-            'entity_type_id' => $entity->getEntityTypeId(),
-            'entity' => $entity->id(),
+            'section_storage_type' => $section_storage->getStorageType(),
+            'section_storage' => $section_storage->getStorageId(),
             'delta' => $delta,
             'plugin_id' => $plugin_id,
           ]

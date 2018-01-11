@@ -74,4 +74,55 @@ class LayoutSectionItemList extends FieldItemList implements SectionStorageInter
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getStorageType() {
+    return 'overrides';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStorageId() {
+    $entity = $this->getEntity();
+    return $entity->getEntityTypeId() . ':' . $entity->id();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function label() {
+    return $this->getEntity()->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save() {
+    return $this->getEntity()->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCanonicalUrl() {
+    return $this->getEntity()->toUrl('canonical');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLayoutBuilderUrl() {
+    return $this->getEntity()->toUrl('layout-builder');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __wakeup() {
+    // Ensure the entity is updated with the latest value.
+    $this->getEntity()->set($this->getName(), $this->getValue());
+  }
+
 }

@@ -4,8 +4,8 @@ namespace Drupal\layout_builder\Controller;
 
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
+use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -50,8 +50,8 @@ class MoveBlockController implements ContainerInjectionInterface {
   /**
    * Moves a block to another region.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    * @param int $delta_from
    *   The delta of the original section.
    * @param int $delta_to
@@ -68,10 +68,8 @@ class MoveBlockController implements ContainerInjectionInterface {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   An AJAX response.
    */
-  public function build(EntityInterface $entity, $delta_from, $delta_to, $region_from, $region_to, $block_uuid, $preceding_block_uuid = NULL) {
-    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
-    $field_list = $entity->layout_builder__layout;
-    $section = $field_list->getSection($delta_from);
+  public function build(SectionStorageInterface $section_storage, $delta_from, $delta_to, $region_from, $region_to, $block_uuid, $preceding_block_uuid = NULL) {
+    $section = $section_storage->getSection($delta_from);
 
     $component = $section->getComponent($block_uuid);
     $section->removeComponent($block_uuid);
@@ -79,7 +77,7 @@ class MoveBlockController implements ContainerInjectionInterface {
     // If the block is moving from one section to another, update the original
     // section and load the new one.
     if ($delta_from !== $delta_to) {
-      $section = $field_list->getSection($delta_to);
+      $section = $section_storage->getSection($delta_to);
     }
 
     // If a preceding block was specified, insert after that. Otherwise add the
@@ -92,8 +90,8 @@ class MoveBlockController implements ContainerInjectionInterface {
       $section->appendComponent($component);
     }
 
-    $this->layoutTempstoreRepository->set($entity);
-    return $this->rebuildLayout($entity);
+    $this->layoutTempstoreRepository->set($section_storage);
+    return $this->rebuildLayout($section_storage);
   }
 
 }

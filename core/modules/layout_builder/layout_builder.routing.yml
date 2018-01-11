@@ -1,5 +1,5 @@
 layout_builder.choose_section:
-  path: '/layout_builder/choose/section/{entity_type_id}/{entity}/{delta}'
+  path: '/layout_builder/choose/section/{section_storage_type}/{section_storage}/{delta}'
   defaults:
    _controller: '\Drupal\layout_builder\Controller\ChooseSectionController::build'
   requirements:
@@ -7,12 +7,11 @@ layout_builder.choose_section:
   options:
     _admin_route: TRUE
     parameters:
-      entity:
-        type: entity:{entity_type_id}
+      section_storage:
         layout_builder_tempstore: TRUE
 
 layout_builder.add_section:
-  path: '/layout_builder/add/section/{entity_type_id}/{entity}/{delta}/{plugin_id}'
+  path: '/layout_builder/add/section/{section_storage_type}/{section_storage}/{delta}/{plugin_id}'
   defaults:
     _controller: '\Drupal\layout_builder\Controller\AddSectionController::build'
   requirements:
@@ -20,12 +19,11 @@ layout_builder.add_section:
   options:
     _admin_route: TRUE
     parameters:
-      entity:
-        type: entity:{entity_type_id}
+      section_storage:
         layout_builder_tempstore: TRUE
 
 layout_builder.configure_section:
-  path: '/layout_builder/configure/section/{entity_type_id}/{entity}/{delta}/{plugin_id}'
+  path: '/layout_builder/configure/section/{section_storage_type}/{section_storage}/{delta}/{plugin_id}'
   defaults:
     _title: 'Configure section'
     _form: '\Drupal\layout_builder\Form\ConfigureSectionForm'
@@ -37,12 +35,11 @@ layout_builder.configure_section:
   options:
     _admin_route: TRUE
     parameters:
-      entity:
-        type: entity:{entity_type_id}
+      section_storage:
         layout_builder_tempstore: TRUE
 
 layout_builder.remove_section:
-  path: '/layout_builder/remove/section/{entity_type_id}/{entity}/{delta}'
+  path: '/layout_builder/remove/section/{section_storage_type}/{section_storage}/{delta}'
   defaults:
     _form: '\Drupal\layout_builder\Form\RemoveSectionForm'
   requirements:
@@ -50,12 +47,11 @@ layout_builder.remove_section:
   options:
     _admin_route: TRUE
     parameters:
-      entity:
-        type: entity:{entity_type_id}
+      section_storage:
         layout_builder_tempstore: TRUE
 
 layout_builder.choose_block:
-  path: '/layout_builder/choose/block/{entity_type_id}/{entity}/{delta}/{region}'
+  path: '/layout_builder/choose/block/{section_storage_type}/{section_storage}/{delta}/{region}'
   defaults:
     _controller: '\Drupal\layout_builder\Controller\ChooseBlockController::build'
   requirements:
@@ -63,12 +59,11 @@ layout_builder.choose_block:
   options:
     _admin_route: TRUE
     parameters:
-      entity:
-        type: entity:{entity_type_id}
+      section_storage:
         layout_builder_tempstore: TRUE
 
 layout_builder.add_block:
-  path: '/layout_builder/add/block/{entity_type_id}/{entity}/{delta}/{region}/{plugin_id}'
+  path: '/layout_builder/add/block/{section_storage_type}/{section_storage}/{delta}/{region}/{plugin_id}'
   defaults:
     _form: '\Drupal\layout_builder\Form\AddBlockForm'
   requirements:
@@ -76,12 +71,11 @@ layout_builder.add_block:
   options:
     _admin_route: TRUE
     parameters:
-      entity:
-        type: entity:{entity_type_id}
+      section_storage:
         layout_builder_tempstore: TRUE
 
 layout_builder.update_block:
-  path: '/layout_builder/update/block/{entity_type_id}/{entity}/{delta}/{region}/{uuid}'
+  path: '/layout_builder/update/block/{section_storage_type}/{section_storage}/{delta}/{region}/{uuid}'
   defaults:
     _form: '\Drupal\layout_builder\Form\UpdateBlockForm'
   requirements:
@@ -89,12 +83,11 @@ layout_builder.update_block:
   options:
     _admin_route: TRUE
     parameters:
-      entity:
-        type: entity:{entity_type_id}
+      section_storage:
         layout_builder_tempstore: TRUE
 
 layout_builder.remove_block:
-  path: '/layout_builder/remove/block/{entity_type_id}/{entity}/{delta}/{region}/{uuid}'
+  path: '/layout_builder/remove/block/{section_storage_type}/{section_storage}/{delta}/{region}/{uuid}'
   defaults:
     _form: '\Drupal\layout_builder\Form\RemoveBlockForm'
   requirements:
@@ -102,12 +95,11 @@ layout_builder.remove_block:
   options:
     _admin_route: TRUE
     parameters:
-      entity:
-        type: entity:{entity_type_id}
+      section_storage:
         layout_builder_tempstore: TRUE
 
 layout_builder.move_block:
-  path: '/layout_builder/move/block/{entity_type_id}/{entity}/{delta_from}/{delta_to}/{region_from}/{region_to}/{block_uuid}/{preceding_block_uuid}'
+  path: '/layout_builder/move/block/{section_storage_type}/{section_storage}/{delta_from}/{delta_to}/{region_from}/{region_to}/{block_uuid}/{preceding_block_uuid}'
   defaults:
     _controller: '\Drupal\layout_builder\Controller\MoveBlockController::build'
     delta_from: null
@@ -121,8 +113,7 @@ layout_builder.move_block:
   options:
     _admin_route: TRUE
     parameters:
-      entity:
-        type: entity:{entity_type_id}
+      section_storage:
         layout_builder_tempstore: TRUE
 
 route_callbacks:

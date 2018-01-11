@@ -4,9 +4,9 @@ namespace Drupal\layout_builder\Controller;
 
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -51,10 +51,10 @@ class AddSectionController implements ContainerInjectionInterface {
   }
 
   /**
-   * Add the layout to the entity field in a tempstore.
+   * Adds the new section.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    * @param int $delta
    *   The delta of the section to splice.
    * @param string $plugin_id
@@ -63,18 +63,16 @@ class AddSectionController implements ContainerInjectionInterface {
    * @return \Symfony\Component\HttpFoundation\Response
    *   The controller response.
    */
-  public function build(EntityInterface $entity, $delta, $plugin_id) {
-    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
-    $field_list = $entity->layout_builder__layout;
-    $field_list->insertSection($delta, new Section($plugin_id));
+  public function build(SectionStorageInterface $section_storage, $delta, $plugin_id) {
+    $section_storage->insertSection($delta, new Section($plugin_id));
 
-    $this->layoutTempstoreRepository->set($entity);
+    $this->layoutTempstoreRepository->set($section_storage);
 
     if ($this->isAjax()) {
-      return $this->rebuildAndClose($entity);
+      return $this->rebuildAndClose($section_storage);
     }
     else {
-      $url = $entity->toUrl('layout-builder');
+      $url = $section_storage->getLayoutBuilderUrl();
       return new RedirectResponse($url->setAbsolute()->toString());
     }
   }

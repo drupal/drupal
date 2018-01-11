@@ -3,12 +3,12 @@
 namespace Drupal\layout_builder\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -50,48 +50,38 @@ class LayoutBuilderController implements ContainerInjectionInterface {
   /**
    * Provides a title callback.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    *
    * @return string
    *   The title for the layout page.
    */
-  public function title(EntityInterface $entity) {
-    return $this->t('Edit layout for %label', ['%label' => $entity->label()]);
+  public function title(SectionStorageInterface $section_storage) {
+    return $this->t('Edit layout for %label', ['%label' => $section_storage->label()]);
   }
 
   /**
    * Renders the Layout UI.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    * @param bool $is_rebuilding
    *   (optional) Indicates if the layout is rebuilding, defaults to FALSE.
    *
    * @return array
    *   A render array.
    */
-  public function layout(EntityInterface $entity, $is_rebuilding = FALSE) {
-    $entity_id = $entity->id();
-    $entity_type_id = $entity->getEntityTypeId();
-
-    /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
-    $field_list = $entity->layout_builder__layout;
-
-    // For a new layout override, begin with a single section of one column.
-    if (!$is_rebuilding && $field_list->count() === 0) {
-      $field_list->appendSection(new Section('layout_onecol'));
-      $this->layoutTempstoreRepository->set($entity);
-    }
+  public function layout(SectionStorageInterface $section_storage, $is_rebuilding = FALSE) {
+    $this->prepareLayout($section_storage, $is_rebuilding);
 
     $output = [];
     $count = 0;
-    foreach ($field_list->getSections() as $section) {
-      $output[] = $this->buildAddSectionLink($entity_type_id, $entity_id, $count);
-      $output[] = $this->buildAdministrativeSection($section, $entity, $count);
+    for ($i = 0; $i < $section_storage->count(); $i++) {
+      $output[] = $this->buildAddSectionLink($section_storage, $count);
+      $output[] = $this->buildAdministrativeSection($section_storage, $count);
       $count++;
     }
-    $output[] = $this->buildAddSectionLink($entity_type_id, $entity_id, $count);
+    $output[] = $this->buildAddSectionLink($section_storage, $count);
     $output['#attached']['library'][] = 'layout_builder/drupal.layout_builder';
     $output['#type'] = 'container';
     $output['#attributes']['id'] = 'layout-builder';
@@ -101,27 +91,50 @@ class LayoutBuilderController implements ContainerInjectionInterface {
   }
 
   /**
+   * Prepares a layout for use in the UI.
+   *
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
+   * @param bool $is_rebuilding
+   *   Indicates if the layout is rebuilding.
+   */
+  protected function prepareLayout(SectionStorageInterface $section_storage, $is_rebuilding) {
+    // For a new layout, begin with a single section of one column.
+    if (!$is_rebuilding && $section_storage->count() === 0) {
+      $sections = [];
+      if (!$sections) {
+        $sections[] = new Section('layout_onecol');
+      }
+
+      foreach ($sections as $section) {
+        $section_storage->appendSection($section);
+      }
+      $this->layoutTempstoreRepository->set($section_storage);
+    }
+  }
+
+  /**
    * Builds a link to add a new section at a given delta.
    *
-   * @param string $entity_type_id
-   *   The entity type.
-   * @param string $entity_id
-   *   The entity ID.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    * @param int $delta
    *   The delta of the section to splice.
    *
    * @return array
    *   A render array for a link.
    */
-  protected function buildAddSectionLink($entity_type_id, $entity_id, $delta) {
+  protected function buildAddSectionLink(SectionStorageInterface $section_storage, $delta) {
+    $storage_type = $section_storage->getStorageType();
+    $storage_id = $section_storage->getStorageId();
     return [
       'link' => [
         '#type' => 'link',
         '#title' => $this->t('Add Section'),
         '#url' => Url::fromRoute('layout_builder.choose_section',
           [
-            'entity_type_id' => $entity_type_id,
-            'entity' => $entity_id,
+            'section_storage_type' => $storage_type,
+            'section_storage' => $storage_id,
             'delta' => $delta,
           ],
           [
@@ -143,19 +156,18 @@ class LayoutBuilderController implements ContainerInjectionInterface {
   /**
    * Builds the render array for the layout section while editing.
    *
-   * @param \Drupal\layout_builder\Section $section
-   *   The layout section.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    * @param int $delta
    *   The delta of the section.
    *
    * @return array
    *   The render array for a given section.
    */
-  protected function buildAdministrativeSection(Section $section, EntityInterface $entity, $delta) {
-    $entity_type_id = $entity->getEntityTypeId();
-    $entity_id = $entity->id();
+  protected function buildAdministrativeSection(SectionStorageInterface $section_storage, $delta) {
+    $storage_type = $section_storage->getStorageType();
+    $storage_id = $section_storage->getStorageId();
+    $section = $section_storage->getSection($delta);
 
     $layout = $section->getLayout();
     $build = $section->toRenderArray();
@@ -169,8 +181,8 @@ class LayoutBuilderController implements ContainerInjectionInterface {
           $build[$region][$uuid]['#contextual_links'] = [
             'layout_builder_block' => [
               'route_parameters' => [
-                'entity_type_id' => $entity_type_id,
-                'entity' => $entity_id,
+                'section_storage_type' => $storage_type,
+                'section_storage' => $storage_id,
                 'delta' => $delta,
                 'region' => $region,
                 'uuid' => $uuid,
@@ -185,8 +197,8 @@ class LayoutBuilderController implements ContainerInjectionInterface {
         '#title' => $this->t('Add Block'),
         '#url' => Url::fromRoute('layout_builder.choose_block',
           [
-            'entity_type_id' => $entity_type_id,
-            'entity' => $entity_id,
+            'section_storage_type' => $storage_type,
+            'section_storage' => $storage_id,
             'delta' => $delta,
             'region' => $region,
           ],
@@ -207,8 +219,8 @@ class LayoutBuilderController implements ContainerInjectionInterface {
     }
 
     $build['#attributes']['data-layout-update-url'] = Url::fromRoute('layout_builder.move_block', [
-      'entity_type_id' => $entity_type_id,
-      'entity' => $entity_id,
+      'section_storage_type' => $storage_type,
+      'section_storage' => $storage_id,
     ])->toString();
     $build['#attributes']['data-layout-delta'] = $delta;
     $build['#attributes']['class'][] = 'layout-builder--layout';
@@ -223,8 +235,8 @@ class LayoutBuilderController implements ContainerInjectionInterface {
         '#title' => $this->t('Configure section'),
         '#access' => $layout instanceof PluginFormInterface,
         '#url' => Url::fromRoute('layout_builder.configure_section', [
-          'entity_type_id' => $entity_type_id,
-          'entity' => $entity_id,
+          'section_storage_type' => $storage_type,
+          'section_storage' => $storage_id,
           'delta' => $delta,
         ]),
         '#attributes' => [
@@ -237,8 +249,8 @@ class LayoutBuilderController implements ContainerInjectionInterface {
         '#type' => 'link',
         '#title' => $this->t('Remove section'),
         '#url' => Url::fromRoute('layout_builder.remove_section', [
-          'entity_type_id' => $entity_type_id,
-          'entity' => $entity_id,
+          'section_storage_type' => $storage_type,
+          'section_storage' => $storage_id,
           'delta' => $delta,
         ]),
         '#attributes' => [
@@ -254,30 +266,30 @@ class LayoutBuilderController implements ContainerInjectionInterface {
   /**
    * Saves the layout.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response.
    */
-  public function saveLayout(EntityInterface $entity) {
-    $entity->save();
-    $this->layoutTempstoreRepository->delete($entity);
-    return new RedirectResponse($entity->toUrl()->setAbsolute()->toString());
+  public function saveLayout(SectionStorageInterface $section_storage) {
+    $section_storage->save();
+    $this->layoutTempstoreRepository->delete($section_storage);
+    return new RedirectResponse($section_storage->getCanonicalUrl()->setAbsolute()->toString());
   }
 
   /**
    * Cancels the layout.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response.
    */
-  public function cancelLayout(EntityInterface $entity) {
-    $this->layoutTempstoreRepository->delete($entity);
-    return new RedirectResponse($entity->toUrl()->setAbsolute()->toString());
+  public function cancelLayout(SectionStorageInterface $section_storage) {
+    $this->layoutTempstoreRepository->delete($section_storage);
+    return new RedirectResponse($section_storage->getCanonicalUrl()->setAbsolute()->toString());
   }
 
 }

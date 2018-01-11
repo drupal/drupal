@@ -2,8 +2,8 @@
 
 namespace Drupal\layout_builder\Form;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\layout_builder\SectionStorageInterface;
 
 /**
  * Provides a form to confirm the removal of a section.
@@ -36,8 +36,8 @@ class RemoveSectionForm extends LayoutRebuildConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function handleEntity(EntityInterface $entity, FormStateInterface $form_state) {
-    $entity->layout_builder__layout->removeItem($this->delta);
+  protected function handleSectionStorage(SectionStorageInterface $section_storage, FormStateInterface $form_state) {
+    $section_storage->removeSection($this->delta);
   }
 
 }
