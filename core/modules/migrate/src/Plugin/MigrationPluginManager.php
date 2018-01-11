@@ -127,13 +127,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   }
 
   /**
-   * Create migrations given a tag.
-   *
-   * @param string $tag
-   *   A migration tag we want to filter by.
-   *
-   * @return array|\Drupal\migrate\Plugin\MigrationInterface[]
-   *   An array of migration objects with the given tag.
+   * {@inheritdoc}
    */
   public function createInstancesByTag($tag) {
     $migrations = array_filter($this->getDefinitions(), function ($migration) use ($tag) {
