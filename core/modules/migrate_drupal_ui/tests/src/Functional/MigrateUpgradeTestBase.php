@@ -31,23 +31,6 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   protected $sourceDatabase;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = [
-    'language',
-    'content_translation',
-    'migrate_drupal_ui',
-    'telephone',
-    'aggregator',
-    'book',
-    'forum',
-    'statistics',
-    'migration_provider_test',
-  ];
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {

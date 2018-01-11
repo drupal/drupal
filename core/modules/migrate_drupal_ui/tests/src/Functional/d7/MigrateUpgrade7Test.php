@@ -15,9 +15,22 @@ use Drupal\user\Entity\User;
 class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
-  public static $modules = ['file'];
+  public static $modules = [
+    'file',
+    'language',
+    'content_translation',
+    'migrate_drupal_ui',
+    'telephone',
+    'aggregator',
+    'book',
+    'forum',
+    'statistics',
+    'migration_provider_test',
+  ];
 
   /**
    * {@inheritdoc}
