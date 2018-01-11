@@ -17,7 +17,66 @@ use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * The destination class for all content entities lacking a specific class.
+ * Provides destination class for all content entities lacking a specific class.
+ *
+ * Available configuration keys:
+ * - translations: (optional) Boolean, indicates if the entity is translatable,
+ *   defaults to FALSE.
+ * - overwrite_properties: (optional) A list of properties that will be
+ *   overwritten if an entity with the same ID already exists. Any properties
+ *   that are not listed will not be overwritten.
+ *
+ * Example:
+ *
+ * The example below will create a 'node' entity of content type 'article'.
+ *
+ * The language of the source will be used because the configuration
+ * 'translations: true' was set. Without this configuration option the site's
+ * default language would be used.
+ *
+ * The example content type has fields 'title', 'body' and 'field_example'.
+ * The text format of the body field is defaulted to 'basic_html'. The example
+ * uses the EmbeddedDataSource source plugin for the sake of simplicity.
+ *
+ * If the migration is executed again in an update mode, any updates done in the
+ * destination Drupal site to the 'title' and 'body' fields would be overwritten
+ * with the original source values. Updates done to 'field_example' would be
+ * preserved because 'field_example' is not included in 'overwrite_properties'
+ * configuration.
+ * @code
+ * id: custom_article_migration
+ * label: Custom article migration
+ * source:
+ *   plugin: embedded_data
+ *   data_rows:
+ *     -
+ *       id: 1
+ *       langcode: 'fi'
+ *       title: 'Sivun otsikko'
+ *       field_example: 'Huhuu'
+ *       content: '<p>Hoi maailma</p>'
+ *   ids:
+ *     id:
+ *       type: integer
+ * process:
+ *   nid: id
+ *   langcode: langcode
+ *   title: title
+ *   field_example: field_example
+ *   'body/0/value': content
+ *   'body/0/format':
+ *     plugin: default_value
+ *     default_value: basic_html
+ * destination:
+ *   plugin: entity:node
+ *   default_bundle: article
+ *   translations: true
+ *   overwrite_properties:
+ *     - title
+ *     - body
+ * @endcode
+ *
+ * @see \Drupal\migrate\Plugin\migrate\destination\EntityRevision
  */
 class EntityContentBase extends Entity implements HighestIdInterface {
 
