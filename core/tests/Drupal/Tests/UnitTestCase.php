@@ -3,6 +3,7 @@
 namespace Drupal\Tests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -93,18 +94,19 @@ abstract class UnitTestCase extends TestCase {
   }
 
   /**
-   * Returns a stub config factory that behaves according to the passed in array.
+   * Returns a stub config factory that behaves according to the passed array.
    *
    * Use this to generate a config factory that will return the desired values
    * for the given config names.
    *
    * @param array $configs
-   *   An associative array of configuration settings whose keys are configuration
-   *   object names and whose values are key => value arrays for the configuration
-   *   object in question. Defaults to an empty array.
+   *   An associative array of configuration settings whose keys are
+   *   configuration object names and whose values are key => value arrays for
+   *   the configuration object in question. Defaults to an empty array.
    *
    * @return \PHPUnit_Framework_MockObject_MockBuilder
-   *   A MockBuilder object for the ConfigFactory with the desired return values.
+   *   A MockBuilder object for the ConfigFactory with the desired return
+   *   values.
    */
   public function getConfigFactoryStub(array $configs = []) {
     $config_get_map = [];
@@ -112,19 +114,29 @@ abstract class UnitTestCase extends TestCase {
     // Construct the desired configuration object stubs, each with its own
     // desired return map.
     foreach ($configs as $config_name => $config_values) {
-      $map = [];
-      foreach ($config_values as $key => $value) {
-        $map[] = [$key, $value];
-      }
-      // Also allow to pass in no argument.
-      $map[] = ['', $config_values];
+      // Define a closure over the $config_values, which will be used as a
+      // returnCallback below. This function will mimic
+      // \Drupal\Core\Config\Config::get and allow using dotted keys.
+      $config_get = function ($key = '') use ($config_values) {
+        // Allow to pass in no argument.
+        if (empty($key)) {
+          return $config_values;
+        }
+        // See if we have the key as is.
+        if (isset($config_values[$key])) {
+          return $config_values[$key];
+        }
+        $parts = explode('.', $key);
+        $value = NestedArray::getValue($config_values, $parts, $key_exists);
+        return $key_exists ? $value : NULL;
+      };
 
       $immutable_config_object = $this->getMockBuilder('Drupal\Core\Config\ImmutableConfig')
         ->disableOriginalConstructor()
         ->getMock();
       $immutable_config_object->expects($this->any())
         ->method('get')
-        ->will($this->returnValueMap($map));
+        ->will($this->returnCallback($config_get));
       $config_get_map[] = [$config_name, $immutable_config_object];
 
       $mutable_config_object = $this->getMockBuilder('Drupal\Core\Config\Config')
@@ -132,7 +144,7 @@ abstract class UnitTestCase extends TestCase {
         ->getMock();
       $mutable_config_object->expects($this->any())
         ->method('get')
-        ->will($this->returnValueMap($map));
+        ->will($this->returnCallback($config_get));
       $config_editable_map[] = [$config_name, $mutable_config_object];
     }
     // Construct a config factory with the array of configuration object stubs
