@@ -331,7 +331,7 @@
  */
 .ui-widget-overlay {
   background: #000;
-  opacity: .70;
+  opacity: .7;
   filter: alpha(Opacity=70);
 }
 

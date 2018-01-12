@@ -14,7 +14,6 @@
     "no-empty-source": null,
     "no-unknown-animations": true,
     "number-leading-zero": null,
-    "number-no-trailing-zeros": null,
     "plugin/no-browser-hacks": [true, {
       "browsers": [
         "ie >= 9",
