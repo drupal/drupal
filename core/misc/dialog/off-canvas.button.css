@@ -69,7 +69,7 @@
 #drupal-off-canvas input[type="submit"].button--primary:hover,
 #drupal-off-canvas input[type="submit"].button--primary:focus,
 #drupal-off-canvas input[type="submit"].button--primary:active {
-  background: #2b8bd8;
+  background: #236aaf;
   outline: none;
 }
 #drupal-off-canvas .button-action:before {

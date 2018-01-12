@@ -20,25 +20,25 @@
 
 /* Style both the edit and editing states of the contextual links toggle tab. */
 .toolbar-icon-edit.toolbar-item {
-  background-color: #50a0e9;
-  background-image: linear-gradient(to bottom, #007bc6, #0071b8);
+  background-color: #0066A1;
+  background-image: linear-gradient(to bottom, #0066A1, #005b98);
   color: #eee;
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
   font-weight: 700;
   -webkit-font-smoothing: antialiased;
 }
 .toolbar-icon-edit.toolbar-item.is-active {
-  background-color: #50a0e9;
-  background-image: linear-gradient(to bottom, #007bc6, #0071b8);
-  color: #eee;
+  background-color: #0a7bc1;
+  background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
+  color: #fff;
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
   font-weight: 700;
   -webkit-font-smoothing: antialiased;
 }
 .toolbar-tab:hover > .toolbar-icon-edit,
 .toolbar-icon-edit:focus .toolbar-item {
-  background-color: #2369a6;
-  background-image: linear-gradient(to bottom, #0c97ed, #1f86c7);
+  background-color: #0a7bc1;
+  background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
   border-color: #1e5c90;
   color: #fff;
   outline: none;
@@ -59,9 +59,8 @@ button.toolbar-icon.toolbar-icon-edit.toolbar-item:before:focus {
 }
 
 #toolbar-bar.js-settings-tray-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active {
-  background-image: none;
   color: #fff;
 }
 #toolbar-bar.js-settings-tray-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:hover {
-  background-image: linear-gradient(to bottom, #0094f0, #0e69be);
+  background-image: linear-gradient(to bottom, #0a6fb4, #0a65aa);
 }
