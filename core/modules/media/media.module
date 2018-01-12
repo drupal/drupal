@@ -6,12 +6,13 @@
  */
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\field\FieldConfigInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_help().
@@ -20,18 +21,39 @@ function media_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.media':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Media module manages the creation, editing, deletion, settings and display of media. Items are typically images, documents, slideshows, YouTube videos, tweets, Instagram photos, etc. You can reference media items from any other content on your site. For more information, see the <a href=":media">online documentation for the Media module</a>.', [':media' => 'https://www.drupal.org/docs/8/core/modules/media']) . '</p>';
+      $output .= '<p>' . t('The Media module manages the creation, editing, deletion, settings, and display of media. Items are typically images, documents, slideshows, YouTube videos, tweets, Instagram photos, etc. You can reference media items from any other content on your site. For more information, see the <a href=":media">online documentation for the Media module</a>.', [':media' => 'https://www.drupal.org/docs/8/core/modules/media']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating media items') . '</dt>';
       $output .= '<dd>' . t('When a new media item is created, the Media module records basic information about it, including the author, date of creation, and the <a href=":media-type">media type</a>. It also manages the <em>publishing options</em>, which define whether or not the item is published. Default settings can be configured for each type of media on your site.', [':media-type' => Url::fromRoute('entity.media_type.collection')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Listing media items') . '</dt>';
+      $output .= '<dd>' . t('Media items are listed at the <a href=":media-collection">media administration page</a>.', [
+        ':media-collection' => Url::fromRoute('entity.media.collection')->toString(),
+      ]) . '</dd>';
       $output .= '<dt>' . t('Creating custom media types') . '</dt>';
-      $output .= '<dd>' . t('The Media module gives users with the <em>Administer media types</em> permission the ability to <a href=":media-new">create new media types</a> in addition to the default ones already configured. Each media type has an associated media source (such as the image source) which support thumbnail generation and metadata extraction. Fields managed by the <a href=":field">Field module</a> may be added for storing that metadata, such as width and height, as well as any other associated values.', [':media-new' => Url::fromRoute('entity.media_type.add_form')->toString(), ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString()]) . '</dd>';
+      $output .= '<dd>' . t('The Media module gives users with the <em>Administer media types</em> permission the ability to <a href=":media-new">create new media types</a> in addition to the default ones already configured. Each media type has an associated media source (such as the image source) which support thumbnail generation and metadata extraction. Fields managed by the <a href=":field">Field module</a> may be added for storing that metadata, such as width and height, as well as any other associated values.', [
+        ':media-new' => Url::fromRoute('entity.media_type.add_form')->toString(),
+        ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(),
+      ]) . '</dd>';
       $output .= '<dt>' . t('Creating revisions') . '</dt>';
       $output .= '<dd>' . t('The Media module also enables you to create multiple versions of any media item, and revert to older versions using the <em>Revision information</em> settings.') . '</dd>';
       $output .= '<dt>' . t('User permissions') . '</dt>';
-      $output .= '<dd>' . t('The Media module makes a number of permissions available, which can be set by role on the <a href=":permissions">permissions page</a>.', [':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-media'])->toString()]) . '</dd>';
+      $output .= '<dd>' . t('The Media module makes a number of permissions available, which can be set by role on the <a href=":permissions">permissions page</a>.', [
+        ':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-media'])->toString(),
+      ]) . '</dd>';
+      $output .= '<dt>' . t('Adding media to other content') . '</dt>';
+      $output .= '<dd>' . t('Users with permission to administer content types can add media support by adding a media reference field to the content type on the content type administration page. (The same is true of block types, taxonomy terms, user profiles, and other content that supports fields.) A media reference field can refer to any configured media type. It is possible to allow multiple media types in the same field.') . '</dd>';
       $output .= '</dl>';
+      $output .= '<h3>' . t('Differences between Media, File, and Image reference fields') . '</h3>';
+      $output .= '<p>' . t('<em>Media</em> reference fields offer several advantages over basic <em>File</em> and <em>Image</em> references:') . '</p>';
+      $output .= '<ul>';
+      $output .= '<li>' . t('Media reference fields can reference multiple media types in the same field.') . '</li>';
+      $output .= '<li>' . t('Fields can also be added to media types themselves, which means that custom metadata like descriptions and taxonomy tags can be added for the referenced media. (Basic file and image fields do not support this.)') . '</li>';
+      $output .= '<li>' . t('Media types for audio and video files are provided by default, so there is no need for additional configuration to upload these media.') . '</li>';
+      $output .= '<li>' . t('Contributed or custom projects can provide additional media sources (such as third-party websites, Twitter, etc.).') . '</li>';
+      $output .= '<li>' . t('Existing media items can be reused on any other content items with a media reference field.') . '</li>';
+      $output .= '</ul>';
+      $output .= '<p>' . t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before enabling the Media module.') . '</p>';
       return $output;
   }
 }
@@ -114,4 +136,39 @@ function media_field_ui_preconfigured_options_alter(array &$options, $field_type
   if (!empty($options['media'])) {
     $options['media']['entity_view_display']['type'] = 'entity_reference_entity_view';
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Provide some help text to aid users decide whether they need a Media,
+  // File, or Image reference field.
+  $description_text = t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before enabling the Media module.');
+  if (\Drupal::moduleHandler()->moduleExists('help')) {
+    $description_text .= ' ' . t('For more information, see the <a href="@help_url">Media help page</a>.', [
+      '@help_url' => Url::fromRoute('help.page', ['name' => 'media'])->toString(),
+    ]);
+  }
+  $form['add']['description_wrapper'] = [
+    '#type' => 'container',
+  ];
+  $field_types = [
+    'file',
+    'image',
+    'field_ui:entity_reference:media',
+  ];
+  foreach ($field_types as $field_name) {
+    $form['add']['description_wrapper']["description_{$field_name}"] = [
+      '#type' => 'item',
+      '#markup' => $description_text,
+      '#states' => [
+        'visible' => [
+          ':input[name="new_storage_type"]' => ['value' => $field_name],
+        ],
+      ],
+    ];
+  }
+  $form['add']['new_storage_type']['#weight'] = 0;
+  $form['add']['description_wrapper']['#weight'] = 1;
 }
