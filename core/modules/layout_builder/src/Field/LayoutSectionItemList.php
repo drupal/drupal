@@ -3,6 +3,9 @@
 namespace Drupal\layout_builder\Field;
 
 use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionStorageInterface;
 
@@ -72,6 +75,17 @@ class LayoutSectionItemList extends FieldItemList implements SectionStorageInter
   public function removeSection($delta) {
     $this->removeItem($delta);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContexts() {
+    $entity = $this->getEntity();
+    // @todo Use EntityContextDefinition after resolving
+    //   https://www.drupal.org/node/2932462.
+    $contexts['layout_builder.entity'] = new Context(new ContextDefinition("entity:{$entity->getEntityTypeId()}", new TranslatableMarkup('@entity being viewed', ['@entity' => $entity->getEntityType()->getLabel()])), $entity);
+    return $contexts;
   }
 
   /**
