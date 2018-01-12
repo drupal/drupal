@@ -11,7 +11,8 @@ use Drupal\migrate\Row;
  * variable.
  *
  * @MigrateSource(
- *   id = "variable_multirow"
+ *   id = "variable_multirow",
+ *   source_module = "system",
  * )
  */
 class VariableMultiRow extends DrupalSqlBase {

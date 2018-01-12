@@ -13,7 +13,8 @@ use Drupal\migrate\Plugin\MigrationInterface;
  * example for any normal source class returning multiple rows.
  *
  * @MigrateSource(
- *   id = "variable"
+ *   id = "variable",
+ *   source_module = "system",
  * )
  */
 class Variable extends DrupalSqlBase {

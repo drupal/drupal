@@ -110,7 +110,6 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
       'email',
       'entityreference',
       'field',
-      'field_sql_storage',
       'file',
       'filefield',
       'filter',

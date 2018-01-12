@@ -8,7 +8,8 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
  * Drupal i18n_variable source from database.
  *
  * @MigrateSource(
- *   id = "i18n_variable"
+ *   id = "i18n_variable",
+ *   source_module = "system",
  * )
  *
  * @deprecated in Drupal 8.4.x and will be removed in Drupal 9.0.x. Use

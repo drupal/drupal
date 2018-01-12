@@ -11,7 +11,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * Drupal i18n_variable source from database.
  *
  * @MigrateSource(
- *   id = "variable_translation"
+ *   id = "variable_translation",
+ *   source_module = "system",
  * )
  */
 class VariableTranslation extends DrupalSqlBase {

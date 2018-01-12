@@ -109,8 +109,8 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $session->responseContains('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
 
     $this->drupalPostForm(NULL, [], t('Continue'));
-    $this->assertText('Provide credentials for the database of the Drupal site you want to upgrade.');
-    $this->assertFieldByName('mysql[host]');
+    $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
+    $session->fieldExists('mysql[host]');
 
     $driver = $connection_options['driver'];
     $connection_options['prefix'] = $connection_options['prefix']['default'];
@@ -140,7 +140,23 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     // Ensure submitting the form with invalid database credentials gives us a
     // nice warning.
     $this->drupalPostForm(NULL, [$driver . '[database]' => 'wrong'] + $edits, t('Review upgrade'));
-    $this->assertText('Resolve the issue below to continue the upgrade.');
+    $session->pageTextContains('Resolve the issue below to continue the upgrade.');
+
+    $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
+    // Ensure we get errors about missing modules.
+    $session->pageTextContains(t('Resolve the issue below to continue the upgrade'));
+    $session->pageTextContains(t('The no_source_module plugin must define the source_module property.'));
+
+    // Uninstall the module causing the missing module error messages.
+    $this->container->get('module_installer')->uninstall(['migration_provider_test'], TRUE);
+
+    // Restart the upgrade process.
+    $this->drupalGet('/upgrade');
+    $session->responseContains('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
+
+    $this->drupalPostForm(NULL, [], t('Continue'));
+    $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
+    $session->fieldExists('mysql[host]');
 
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
     $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
@@ -157,33 +173,11 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $session->pageTextContains('content items');
     $session->pageTextContains('There is translated content of these types:');
     $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
-    $this->assertResponse(200);
-    $this->assertText('Upgrade analysis report');
-    // Ensure we get errors about missing modules.
-    $session->pageTextContains(t('Source module not found for migration_provider_no_annotation.'));
-    $session->pageTextContains(t('Source module not found for migration_provider_test.'));
-    $session->pageTextContains(t('Destination module not found for migration_provider_test'));
-
-    // Uninstall the module causing the missing module error messages.
-    $this->container->get('module_installer')->uninstall(['migration_provider_test'], TRUE);
-
-    // Restart the upgrade process.
-    $this->drupalGet('/upgrade');
-    $session->responseContains('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
-
-    $this->drupalPostForm(NULL, [], t('Continue'));
-    $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
-    $session->fieldExists('mysql[host]');
-
-    $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
-    $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
-    $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
     $session->statusCodeEquals(200);
     $session->pageTextContains('Upgrade analysis report');
     // Ensure there are no errors about the missing modules from the test module.
     $session->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));
     $session->pageTextNotContains(t('Source module not found for migration_provider_test.'));
-    $session->pageTextNotContains(t('Destination module not found for migration_provider_test'));
     // Ensure there are no errors about any other missing migration providers.
     $session->pageTextNotContains(t('module not found'));
 

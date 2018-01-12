@@ -1,0 +1,5 @@
+# Migrations with any of these tags will raise an exception if their source
+# plugin is missing the source_module property in their annotation.
+enforce_source_module_tags:
+  - Drupal 6
+  - Drupal 7

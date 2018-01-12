@@ -42,9 +42,7 @@ class MigrateNodeDeriverTest extends MigrateDrupal6TestBase {
     // With content_translation, there should be translation migrations for
     // each content type.
     $this->enableModules(['language', 'content_translation']);
-    $migrations = $this->pluginManager->createInstances('d6_node_translation');
-    $this->assertArrayHasKey('d6_node_translation:story', $migrations,
-      "Node translation migrations exist after content_translation installed");
+    $this->assertTrue($this->container->get('plugin.manager.migration')->hasDefinition('d6_node_translation:story'), "Node translation migrations exist after content_translation installed");
   }
 
 }
