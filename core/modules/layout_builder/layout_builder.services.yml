@@ -1,7 +1,7 @@
 services:
   layout_builder.tempstore_repository:
     class: Drupal\layout_builder\LayoutTempstoreRepository
-    arguments: ['@user.shared_tempstore']
+    arguments: ['@tempstore.shared']
   access_check.entity.layout:
     class: Drupal\layout_builder\Access\LayoutSectionAccessCheck
     tags:

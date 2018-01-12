@@ -8,7 +8,7 @@ use Drupal\Core\ParamConverter\AdminPathConfigEntityConverter;
 use Drupal\Core\Routing\AdminContext;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
-use Drupal\user\SharedTempStoreFactory;
+use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\views_ui\ViewUI;
 
 /**
@@ -32,7 +32,7 @@ class ViewUIConverter extends AdminPathConfigEntityConverter implements ParamCon
   /**
    * Stores the tempstore factory.
    *
-   * @var \Drupal\user\SharedTempStoreFactory
+   * @var \Drupal\Core\TempStore\SharedTempStoreFactory
    */
   protected $tempStoreFactory;
 
@@ -41,7 +41,7 @@ class ViewUIConverter extends AdminPathConfigEntityConverter implements ParamCon
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\user\SharedTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */
   public function __construct(EntityManagerInterface $entity_manager, SharedTempStoreFactory $temp_store_factory, ConfigFactoryInterface $config_factory = NULL, AdminContext $admin_context = NULL) {

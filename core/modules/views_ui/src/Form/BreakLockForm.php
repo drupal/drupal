@@ -5,7 +5,7 @@ namespace Drupal\views_ui\Form;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\SharedTempStoreFactory;
+use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -23,9 +23,9 @@ class BreakLockForm extends EntityConfirmFormBase {
   protected $entityManager;
 
   /**
-   * Stores the user tempstore.
+   * Stores the shared tempstore.
    *
-   * @var \Drupal\user\SharedTempStore
+   * @var \Drupal\Core\TempStore\SharedTempStore
    */
   protected $tempStore;
 
@@ -34,7 +34,7 @@ class BreakLockForm extends EntityConfirmFormBase {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The Entity manager.
-   * @param \Drupal\user\SharedTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */
   public function __construct(EntityManagerInterface $entity_manager, SharedTempStoreFactory $temp_store_factory) {
@@ -48,7 +48,7 @@ class BreakLockForm extends EntityConfirmFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('user.shared_tempstore')
+      $container->get('tempstore.shared')
     );
   }
 

@@ -2,7 +2,7 @@
 
 namespace Drupal\node\ParamConverter;
 
-use Drupal\user\PrivateTempStoreFactory;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
 
@@ -14,14 +14,14 @@ class NodePreviewConverter implements ParamConverterInterface {
   /**
    * Stores the tempstore factory.
    *
-   * @var \Drupal\user\PrivateTempStoreFactory
+   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
   /**
    * Constructs a new NodePreviewConverter.
    *
-   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */
   public function __construct(PrivateTempStoreFactory $temp_store_factory) {

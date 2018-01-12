@@ -5,8 +5,8 @@ namespace Drupal\Tests\layout_builder\Unit;
 use Drupal\layout_builder\LayoutTempstoreRepository;
 use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\user\SharedTempStore;
-use Drupal\user\SharedTempStoreFactory;
+use Drupal\Core\TempStore\SharedTempStore;
+use Drupal\Core\TempStore\SharedTempStoreFactory;
 
 /**
  * @coversDefaultClass \Drupal\layout_builder\LayoutTempstoreRepository

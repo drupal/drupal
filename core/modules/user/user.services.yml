@@ -50,12 +50,14 @@ services:
     arguments: ['@entity.manager', '@password']
   user.private_tempstore:
     class: Drupal\user\PrivateTempStoreFactory
-    arguments: ['@keyvalue.expirable', '@lock', '@current_user', '@request_stack', '%user.tempstore.expire%']
+    arguments: ['@keyvalue.expirable', '@lock', '@current_user', '@request_stack', '%tempstore.expire%']
+    deprecated: The "%service_id%" service is deprecated. You should use the 'tempstore.private' service instead. See https://www.drupal.org/node/2935639.
     tags:
       - { name: backend_overridable }
   user.shared_tempstore:
     class: Drupal\user\SharedTempStoreFactory
-    arguments: ['@keyvalue.expirable', '@lock', '@request_stack', '%user.tempstore.expire%']
+    arguments: ['@keyvalue.expirable', '@lock', '@request_stack', '%tempstore.expire%']
+    deprecated: The "%service_id%" service is deprecated. You should use the 'tempstore.shared' service instead. See https://www.drupal.org/node/2935639.
     tags:
       - { name: backend_overridable }
   user.permissions:
@@ -66,6 +68,3 @@ services:
     arguments: ['@current_user', '@entity.manager']
     tags:
       - { name: 'context_provider' }
-
-parameters:
-  user.tempstore.expire: 604800

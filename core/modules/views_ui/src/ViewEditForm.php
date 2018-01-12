@@ -11,7 +11,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Url;
-use Drupal\user\SharedTempStoreFactory;
+use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -27,7 +27,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * The views temp store.
    *
-   * @var \Drupal\user\SharedTempStore
+   * @var \Drupal\Core\TempStore\SharedTempStore
    */
   protected $tempStore;
 
@@ -55,7 +55,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Constructs a new ViewEditForm object.
    *
-   * @param \Drupal\user\SharedTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack object.
@@ -76,7 +76,7 @@ class ViewEditForm extends ViewFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('user.shared_tempstore'),
+      $container->get('tempstore.shared'),
       $container->get('request_stack'),
       $container->get('date.formatter'),
       $container->get('element_info')

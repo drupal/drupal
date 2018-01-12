@@ -3,7 +3,7 @@
 namespace Drupal\comment\Form;
 
 use Drupal\comment\CommentStorageInterface;
-use Drupal\user\PrivateTempStoreFactory;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -19,7 +19,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
   /**
    * The tempstore factory.
    *
-   * @var \Drupal\user\PrivateTempStoreFactory
+   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
@@ -42,7 +42,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
    *
    * @param \Drupal\comment\CommentStorageInterface $comment_storage
    *   The comment storage.
-   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
    */
   public function __construct(CommentStorageInterface $comment_storage, PrivateTempStoreFactory $temp_store_factory) {
@@ -56,7 +56,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager')->getStorage('comment'),
-      $container->get('user.private_tempstore')
+      $container->get('tempstore.private')
     );
   }
 

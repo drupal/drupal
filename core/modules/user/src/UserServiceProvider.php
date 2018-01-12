@@ -1,8 +1,20 @@
 <?php
-// @codingStandardsIgnoreFile
-// This class is intentionally empty so that it overwrites when sites are
-// updated from a zip/tarball without deleting the /core folder first.
-// @todo: remove in 8.3.x
-//
+
 namespace Drupal\user;
-class UserServiceProvider {}
+
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ServiceModifierInterface;
+
+class UserServiceProvider implements ServiceModifierInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alter(ContainerBuilder $container) {
+    if ($container->hasParameter('user.tempstore.expire')) {
+      @trigger_error('The container parameter "user.tempstore.expire" is deprecated. Use "tempstore.expire" instead. See https://www.drupal.org/node/2935639.', E_USER_DEPRECATED);
+      $container->setParameter('tempstore.expire', $container->getParameter('user.tempstore.expire'));
+    }
+  }
+
+}

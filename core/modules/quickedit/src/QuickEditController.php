@@ -5,7 +5,7 @@ namespace Drupal\quickedit;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\user\PrivateTempStoreFactory;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +25,7 @@ class QuickEditController extends ControllerBase {
   /**
    * The PrivateTempStore factory.
    *
-   * @var \Drupal\user\PrivateTempStoreFactory
+   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
@@ -53,7 +53,7 @@ class QuickEditController extends ControllerBase {
   /**
    * Constructs a new QuickEditController.
    *
-   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
    *   The PrivateTempStore factory.
    * @param \Drupal\quickedit\MetadataGeneratorInterface $metadata_generator
    *   The in-place editing metadata generator.
@@ -74,7 +74,7 @@ class QuickEditController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('user.private_tempstore'),
+      $container->get('tempstore.private'),
       $container->get('quickedit.metadata.generator'),
       $container->get('quickedit.editor.selector'),
       $container->get('renderer')

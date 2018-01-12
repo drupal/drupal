@@ -41,6 +41,7 @@ parameters:
     exposedHeaders: false
     maxAge: false
     supportsCredentials: false
+  tempstore.expire: 604800
 services:
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
@@ -1650,3 +1651,13 @@ services:
   messenger:
     class: Drupal\Core\Messenger\Messenger
     arguments: ['@session.flash_bag', '@page_cache_kill_switch']
+  tempstore.private:
+    class: Drupal\Core\TempStore\PrivateTempStoreFactory
+    arguments: ['@keyvalue.expirable', '@lock', '@current_user', '@request_stack', '%tempstore.expire%']
+    tags:
+      - { name: backend_overridable }
+  tempstore.shared:
+    class: Drupal\Core\TempStore\SharedTempStoreFactory
+    arguments: ['@keyvalue.expirable', '@lock', '@request_stack', '%tempstore.expire%']
+    tags:
+      - { name: backend_overridable }

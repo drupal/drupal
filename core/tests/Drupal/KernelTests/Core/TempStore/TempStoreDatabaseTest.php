@@ -1,19 +1,18 @@
 <?php
 
-namespace Drupal\Tests\user\Kernel;
+namespace Drupal\KernelTests\Core\TempStore;
 
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\user\SharedTempStoreFactory;
+use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\Core\Database\Database;
 
 /**
  * Tests the temporary object storage system.
  *
- * @group user
- * @group legacy
- * @see \Drupal\user\SharedTempStore
+ * @group TempStore
+ * @see \Drupal\Core\TempStore\SharedTempStore
  */
 class TempStoreDatabaseTest extends KernelTestBase {
 
@@ -22,12 +21,12 @@ class TempStoreDatabaseTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user'];
+  public static $modules = ['system'];
 
   /**
    * A key/value store factory.
    *
-   * @var \Drupal\user\SharedTempStoreFactory
+   * @var \Drupal\Core\TempStore\SharedTempStoreFactory
    */
   protected $storeFactory;
 
@@ -37,13 +36,6 @@ class TempStoreDatabaseTest extends KernelTestBase {
    * @var string
    */
   protected $collection;
-
-  /**
-   * An array of (fake) user IDs.
-   *
-   * @var array
-   */
-  protected $users = [];
 
   /**
    * An array of random stdClass objects.
@@ -67,12 +59,9 @@ class TempStoreDatabaseTest extends KernelTestBase {
   }
 
   /**
-   * Tests the UserTempStore API.
-   *
-   * @expectedDeprecation \Drupal\user\SharedTempStoreFactory is scheduled for removal in Drupal 9.0.0. Use \Drupal\Core\TempStore\SharedTempStoreFactory instead. See https://www.drupal.org/node/2935639.
-   * @expectedDeprecation \Drupal\user\SharedTempStore is scheduled for removal in Drupal 9.0.0. Use \Drupal\Core\TempStore\SharedTempStore instead. See https://www.drupal.org/node/2935639.
+   * Tests the SharedTempStore API.
    */
-  public function testUserTempStore() {
+  public function testSharedTempStore() {
     // Create a key/value collection.
     $factory = new SharedTempStoreFactory(new KeyValueExpirableFactory(\Drupal::getContainer()), new DatabaseLockBackend(Database::getConnection()), $this->container->get('request_stack'));
     $collection = $this->randomMachineName();
@@ -140,7 +129,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
     // assert it is no longer accessible.
     db_update('key_value_expire')
       ->fields(['expire' => REQUEST_TIME - 1])
-      ->condition('collection', "user.shared_tempstore.$collection")
+      ->condition('collection', "tempstore.shared.$collection")
       ->condition('name', $key)
       ->execute();
     $this->assertFalse($stores[0]->get($key));

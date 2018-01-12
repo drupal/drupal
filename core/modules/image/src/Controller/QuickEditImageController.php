@@ -10,7 +10,7 @@ use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Render\Element\StatusMessages;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
-use Drupal\user\PrivateTempStoreFactory;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -23,7 +23,7 @@ class QuickEditImageController extends ControllerBase {
   /**
    * Stores The Quick Edit tempstore.
    *
-   * @var \Drupal\user\PrivateTempStore
+   * @var \Drupal\Core\TempStore\PrivateTempStore
    */
   protected $tempStore;
 
@@ -48,7 +48,7 @@ class QuickEditImageController extends ControllerBase {
    *   The renderer.
    * @param \Drupal\Core\Image\ImageFactory $image_factory
    *   The image factory.
-   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
    */
   public function __construct(RendererInterface $renderer, ImageFactory $image_factory, PrivateTempStoreFactory $temp_store_factory) {
@@ -64,7 +64,7 @@ class QuickEditImageController extends ControllerBase {
     return new static(
       $container->get('renderer'),
       $container->get('image.factory'),
-      $container->get('user.private_tempstore')
+      $container->get('tempstore.private')
     );
   }
 

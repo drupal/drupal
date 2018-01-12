@@ -1,7 +1,7 @@
 services:
   paramconverter.views_ui:
     class: Drupal\views_ui\ParamConverter\ViewUIConverter
-    arguments: ['@entity.manager', '@user.shared_tempstore', '@config.factory', '@router.admin_context']
+    arguments: ['@entity.manager', '@tempstore.shared', '@config.factory', '@router.admin_context']
     tags:
       - { name: paramconverter, priority: 10 }
     lazy: true
