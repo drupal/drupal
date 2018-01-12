@@ -334,6 +334,21 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   /**
    * {@inheritdoc}
    */
+  public function wasDefaultRevision() {
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
+    $entity_type = $this->getEntityType();
+    if (!$entity_type->isRevisionable()) {
+      return TRUE;
+    }
+
+    $revision_default_key = $entity_type->getRevisionMetadataKey('revision_default');
+    $value = $this->isNew() || $this->get($revision_default_key)->value;
+    return $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isLatestRevision() {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $this->entityTypeManager()->getStorage($this->getEntityTypeId());

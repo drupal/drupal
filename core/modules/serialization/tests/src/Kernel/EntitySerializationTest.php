@@ -150,6 +150,9 @@ class EntitySerializationTest extends NormalizerTestBase {
       'default_langcode' => [
         ['value' => TRUE],
       ],
+      'revision_default' => [
+        ['value' => TRUE],
+      ],
       'revision_translation_affected' => [
         ['value' => TRUE],
       ],
@@ -226,6 +229,7 @@ class EntitySerializationTest extends NormalizerTestBase {
       'user_id' => '<user_id><target_id>' . $this->user->id() . '</target_id><target_type>' . $this->user->getEntityTypeId() . '</target_type><target_uuid>' . $this->user->uuid() . '</target_uuid><url>' . $this->user->url() . '</url></user_id>',
       'revision_id' => '<revision_id><value>' . $this->entity->getRevisionId() . '</value></revision_id>',
       'default_langcode' => '<default_langcode><value>1</value></default_langcode>',
+      'revision_default' => '<revision_default><value>1</value></revision_default>',
       'revision_translation_affected' => '<revision_translation_affected><value>1</value></revision_translation_affected>',
       'non_mul_field' => '<non_mul_field/>',
       'non_rev_field' => '<non_rev_field/>',

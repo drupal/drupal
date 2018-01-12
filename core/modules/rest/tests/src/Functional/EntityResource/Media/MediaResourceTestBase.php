@@ -212,6 +212,11 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
           'value' => TRUE,
         ],
       ],
+      'revision_default' => [
+        [
+          'value' => TRUE,
+        ],
+      ],
     ];
   }
 
