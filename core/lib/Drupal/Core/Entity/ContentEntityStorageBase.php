@@ -506,6 +506,15 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     }
 
     $this->populateAffectedRevisionTranslations($entity);
+
+    // Populate the "revision_default" flag. We skip this when we are resaving
+    // the revision because this is only allowed for default revisions, and
+    // these cannot be made non-default.
+    if ($this->entityType->isRevisionable() && $entity->isNewRevision()) {
+      $revision_default_key = $this->entityType->getRevisionMetadataKey('revision_default');
+      $entity->set($revision_default_key, $entity->isDefaultRevision());
+    }
+
     $this->doSaveFieldItems($entity);
 
     return $return;

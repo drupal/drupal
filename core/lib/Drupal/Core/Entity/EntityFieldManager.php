@@ -190,8 +190,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    *   flagged as translatable.
    */
   protected function buildBaseFieldDefinitions($entity_type_id) {
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $class = $entity_type->getClass();
+    /** @var string[] $keys */
     $keys = array_filter($entity_type->getKeys());
 
     // Fail with an exception for non-fieldable entity types.
@@ -221,6 +223,18 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     }
 
     // Make sure that revisionable entity types are correctly defined.
+    if ($entity_type->isRevisionable()) {
+      $field_name = $entity_type->getRevisionMetadataKey('revision_default');
+      $base_field_definitions[$field_name] = BaseFieldDefinition::create('boolean')
+        ->setLabel($this->t('Default revision'))
+        ->setDescription($this->t('A flag indicating whether this was a default revision when it was saved.'))
+        ->setStorageRequired(TRUE)
+        ->setTranslatable(FALSE)
+        ->setRevisionable(TRUE);
+    }
+
+    // Make sure that revisionable and translatable entity types are correctly
+    // defined.
     if ($entity_type->isRevisionable() && $entity_type->isTranslatable()) {
       // The 'revision_translation_affected' field should always be defined.
       // This field has been added unconditionally in Drupal 8.4.0 and it is

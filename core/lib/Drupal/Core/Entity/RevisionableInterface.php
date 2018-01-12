@@ -52,6 +52,14 @@ interface RevisionableInterface {
   public function isDefaultRevision($new_value = NULL);
 
   /**
+   * Checks whether the entity object was a default revision when it was saved.
+   *
+   * @return bool
+   *   TRUE if the entity object was a revision, FALSE otherwise.
+   */
+  public function wasDefaultRevision();
+
+  /**
    * Checks if this entity is the latest revision.
    *
    * @return bool
