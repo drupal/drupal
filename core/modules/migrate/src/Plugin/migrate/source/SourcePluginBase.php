@@ -216,7 +216,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * Initializes the iterator with the source data.
    *
-   * @return array
+   * @return \Iterator
    *   An array of the data for this source.
    */
   abstract protected function initializeIterator();

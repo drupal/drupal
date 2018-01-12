@@ -9,6 +9,7 @@ namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Database\StatementInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\Core\Database\Database;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
@@ -149,10 +150,10 @@ class SqlBaseTest extends MigrateTestBase {
       $source->getHighWaterStorage()->set($this->migration->id(), $high_water);
     }
 
-    $query_result = new \ArrayIterator($query_result);
-
-    $query = $this->getMock(SelectInterface::class);
-    $query->method('execute')->willReturn($query_result);
+    $statement = $this->createMock(StatementInterface::class);
+    $statement->expects($this->atLeastOnce())->method('setFetchMode')->with(\PDO::FETCH_ASSOC);
+    $query = $this->createMock(SelectInterface::class);
+    $query->method('execute')->willReturn($statement);
     $query->expects($this->atLeastOnce())->method('orderBy')->with('order', 'ASC');
 
     $condition_group = $this->getMock(ConditionInterface::class);
