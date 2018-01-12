@@ -5,7 +5,6 @@ namespace Drupal\KernelTests\Core\Entity;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\entity_test_revlog\Entity\EntityTestMulWithRevisionLog;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
@@ -13,7 +12,7 @@ use Drupal\user\UserInterface;
  * @coversDefaultClass \Drupal\Core\Entity\RevisionableContentEntityBase
  * @group Entity
  */
-class RevisionableContentEntityBaseTest extends KernelTestBase {
+class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -25,10 +24,7 @@ class RevisionableContentEntityBaseTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-
     $this->installEntitySchema('entity_test_mul_revlog');
-    $this->installEntitySchema('user');
-    $this->installSchema('system', 'sequences');
   }
 
   /**
@@ -87,6 +83,74 @@ class RevisionableContentEntityBaseTest extends KernelTestBase {
 
     // We should have only data for three revisions.
     $this->assertItemsTableCount(3, $definition);
+  }
+
+  /**
+   * Tests the behavior of the "revision_default" flag.
+   *
+   * @covers \Drupal\Core\Entity\ContentEntityBase::wasDefaultRevision
+   */
+  public function testWasDefaultRevision() {
+    $entity_type_id = 'entity_test_mul_revlog';
+    $entity = EntityTestMulWithRevisionLog::create([
+      'type' => $entity_type_id,
+    ]);
+
+    // Checks that in a new entity ::wasDefaultRevision() always matches
+    // ::isDefaultRevision().
+    $this->assertEquals($entity->isDefaultRevision(), $entity->wasDefaultRevision());
+    $entity->isDefaultRevision(FALSE);
+    $this->assertEquals($entity->isDefaultRevision(), $entity->wasDefaultRevision());
+
+    // Check that a new entity is always flagged as a default revision on save,
+    // regardless of its default revision status.
+    $entity->save();
+    $this->assertTrue($entity->wasDefaultRevision());
+
+    // Check that a pending revision is not flagged as default.
+    $entity->setNewRevision();
+    $entity->isDefaultRevision(FALSE);
+    $entity->save();
+    $this->assertFalse($entity->wasDefaultRevision());
+
+    // Check that a default revision is flagged as such.
+    $entity->setNewRevision();
+    $entity->isDefaultRevision(TRUE);
+    $entity->save();
+    $this->assertTrue($entity->wasDefaultRevision());
+
+    // Check that a manually set value for the "revision_default" flag is
+    // ignored on save.
+    $entity->setNewRevision();
+    $entity->isDefaultRevision(FALSE);
+    $entity->set('revision_default', TRUE);
+    $this->assertTrue($entity->wasDefaultRevision());
+    $entity->save();
+    $this->assertFalse($entity->wasDefaultRevision());
+
+    // Check that the default revision status was stored correctly.
+    $storage = $this->entityManager->getStorage($entity_type_id);
+    foreach ([TRUE, FALSE, TRUE, FALSE] as $index => $expected) {
+      /** @var \Drupal\entity_test_revlog\Entity\EntityTestMulWithRevisionLog $revision */
+      $revision = $storage->loadRevision($index + 1);
+      $this->assertEquals($expected, $revision->wasDefaultRevision());
+    }
+
+    // Check that the default revision is flagged correctly.
+    /** @var \Drupal\entity_test_revlog\Entity\EntityTestMulWithRevisionLog $entity */
+    $entity = $storage->loadUnchanged($entity->id());
+    $this->assertTrue($entity->wasDefaultRevision());
+
+    // Check that the "revision_default" flag cannot be changed once set.
+    /** @var \Drupal\entity_test_revlog\Entity\EntityTestMulWithRevisionLog $entity2 */
+    $entity2 = EntityTestMulWithRevisionLog::create([
+      'type' => $entity_type_id,
+    ]);
+    $entity2->save();
+    $this->assertTrue($entity2->wasDefaultRevision());
+    $entity2->isDefaultRevision(FALSE);
+    $entity2->save();
+    $this->assertTrue($entity2->wasDefaultRevision());
   }
 
   /**
