@@ -88,13 +88,16 @@ class SectionComponent {
   /**
    * Returns the renderable array for this component.
    *
+   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
+   *   An array of available contexts.
+   *
    * @return array
    *   A renderable array representing the content of the component.
    */
-  public function toRenderArray() {
+  public function toRenderArray(array $contexts = []) {
     $output = [];
 
-    $plugin = $this->getPlugin();
+    $plugin = $this->getPlugin($contexts);
     // @todo Figure out the best way to unify fields and blocks and components
     //   in https://www.drupal.org/node/1875974.
     if ($plugin instanceof BlockPluginInterface) {
@@ -259,13 +262,15 @@ class SectionComponent {
   /**
    * Gets the plugin for this component.
    *
+   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
+   *   An array of contexts to set on the plugin.
+   *
    * @return \Drupal\Component\Plugin\PluginInspectionInterface
    *   The plugin.
    */
-  public function getPlugin() {
+  public function getPlugin(array $contexts = []) {
     $plugin = $this->pluginManager()->createInstance($this->getPluginId(), $this->getConfiguration());
-    if ($plugin instanceof ContextAwarePluginInterface) {
-      $contexts = $this->contextRepository()->getRuntimeContexts(array_values($plugin->getContextMapping()));
+    if ($contexts && $plugin instanceof ContextAwarePluginInterface) {
       $this->contextHandler()->applyContextMapping($plugin, $contexts);
     }
     return $plugin;
@@ -279,16 +284,6 @@ class SectionComponent {
    */
   protected function pluginManager() {
     return \Drupal::service('plugin.manager.block');
-  }
-
-  /**
-   * Wraps the context repository.
-   *
-   * @return \Drupal\Core\Plugin\Context\ContextRepositoryInterface
-   *   The context repository.
-   */
-  protected function contextRepository() {
-    return \Drupal::service('context.repository');
   }
 
   /**
