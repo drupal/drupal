@@ -9,9 +9,6 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -169,13 +166,9 @@ function layout_builder_add_layout_section_field($entity_type_id, $bundle, $fiel
  */
 function layout_builder_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   if ($display->getThirdPartySetting('layout_builder', 'allow_custom', FALSE) && !$entity->layout_builder__layout->isEmpty()) {
-    $contexts = \Drupal::service('context.repository')->getAvailableContexts();
-    // @todo Use EntityContextDefinition after resolving
-    //   https://www.drupal.org/node/2932462.
-    $contexts['layout_builder.entity'] = new Context(new ContextDefinition("entity:{$entity->getEntityTypeId()}", new TranslatableMarkup('@entity being viewed', ['@entity' => $entity->getEntityType()->getLabel()])), $entity);
     $sections = $entity->layout_builder__layout->getSections();
     foreach ($sections as $delta => $section) {
-      $build['_layout_builder'][$delta] = $section->toRenderArray($contexts);
+      $build['_layout_builder'][$delta] = $section->toRenderArray();
     }
 
     // If field layout is active, that is all that needs to be removed.

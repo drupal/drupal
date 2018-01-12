@@ -199,6 +199,9 @@ class SectionRenderTest extends UnitTestCase {
     $block->getDerivativeId()->willReturn(NULL);
     $block->getConfiguration()->willReturn([]);
 
+    $this->contextRepository->getRuntimeContexts([])->willReturn([]);
+    $this->contextHandler->applyContextMapping($block->reveal(), [])->shouldBeCalled();
+
     $section = [
       new SectionComponent('some_uuid', 'content', ['id' => 'block_plugin_id']),
     ];
