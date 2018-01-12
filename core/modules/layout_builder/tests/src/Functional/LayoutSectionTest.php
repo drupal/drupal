@@ -55,7 +55,7 @@ class LayoutSectionTest extends BrowserTestBase {
    */
   public function providerTestLayoutSectionFormatter() {
     $data = [];
-    $data['block_with_context'] = [
+    $data['block_with_global_context'] = [
       [
         [
           'section' => new Section('layout_onecol', [], [
@@ -79,6 +79,31 @@ class LayoutSectionTest extends BrowserTestBase {
       'user',
       'user:2',
       'UNCACHEABLE',
+    ];
+    $data['block_with_entity_context'] = [
+      [
+        [
+          'section' => new Section('layout_onecol', [], [
+            'baz' => new SectionComponent('baz', 'content', [
+              'id' => 'field_block:node:body',
+              'context_mapping' => [
+                'entity' => 'layout_builder.entity',
+              ],
+            ]),
+          ]),
+        ],
+      ],
+      [
+        '.layout--onecol',
+        '.field--name-body',
+      ],
+      [
+        'Body',
+        'The node body',
+      ],
+      '',
+      '',
+      'MISS',
     ];
     $data['single_section_single_block'] = [
       [

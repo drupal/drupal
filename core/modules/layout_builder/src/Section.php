@@ -66,13 +66,16 @@ class Section {
   /**
    * Returns the renderable array for this section.
    *
+   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
+   *   An array of available contexts.
+   *
    * @return array
    *   A renderable array representing the content of the section.
    */
-  public function toRenderArray() {
+  public function toRenderArray(array $contexts = []) {
     $regions = [];
     foreach ($this->getComponents() as $component) {
-      if ($output = $component->toRenderArray()) {
+      if ($output = $component->toRenderArray($contexts)) {
         $regions[$component->getRegion()][$component->getUuid()] = $output;
       }
     }

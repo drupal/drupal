@@ -69,6 +69,14 @@ interface SectionStorageInterface extends \Countable {
   public function removeSection($delta);
 
   /**
+   * Provides any available contexts for the object using the sections.
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextInterface[]
+   *   The array of context objects.
+   */
+  public function getContexts();
+
+  /**
    * Returns an identifier for this storage.
    *
    * @return string

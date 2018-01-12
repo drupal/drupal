@@ -14,6 +14,7 @@ use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
+use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\Section;
@@ -29,6 +30,7 @@ abstract class ConfigureBlockFormBase extends FormBase {
 
   use AjaxFormHelperTrait;
   use ContextAwarePluginAssignmentTrait;
+  use LayoutBuilderContextTrait;
   use LayoutRebuildTrait;
 
   /**
@@ -37,13 +39,6 @@ abstract class ConfigureBlockFormBase extends FormBase {
    * @var \Drupal\Core\Block\BlockPluginInterface
    */
   protected $block;
-
-  /**
-   * The context repository.
-   *
-   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
-   */
-  protected $contextRepository;
 
   /**
    * The layout tempstore repository.
@@ -179,7 +174,7 @@ abstract class ConfigureBlockFormBase extends FormBase {
     $this->region = $region;
     $this->block = $this->prepareBlock($plugin_id, $configuration);
 
-    $form_state->setTemporaryValue('gathered_contexts', $this->contextRepository->getAvailableContexts());
+    $form_state->setTemporaryValue('gathered_contexts', $this->getAvailableContexts($section_storage));
 
     // @todo Remove once https://www.drupal.org/node/2268787 is resolved.
     $form_state->set('block_theme', $this->config('system.theme')->get('default'));
