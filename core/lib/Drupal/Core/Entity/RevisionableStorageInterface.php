@@ -8,6 +8,20 @@ namespace Drupal\Core\Entity;
 interface RevisionableStorageInterface {
 
   /**
+   * Creates a new revision starting off from the specified entity object.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface $entity
+   *   The revisionable entity object being modified.
+   * @param bool $default
+   *   (optional) Whether the new revision should be marked as default. Defaults
+   *   to TRUE.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface
+   *   A new entity revision object.
+   */
+  public function createRevision(RevisionableInterface $entity, $default = TRUE);
+
+  /**
    * Loads a specific entity revision.
    *
    * @param int $revision_id

@@ -207,6 +207,23 @@ function entity_test_entity_bundle_info() {
 }
 
 /**
+ * Implements hook_entity_bundle_info_alter().
+ */
+function entity_test_entity_bundle_info_alter(&$bundles) {
+  $entity_info = \Drupal::entityTypeManager()->getDefinitions();
+  $state = \Drupal::state();
+  foreach ($bundles as $entity_type_id => &$all_bundle_info) {
+    if ($entity_info[$entity_type_id]->getProvider() == 'entity_test') {
+      if ($state->get('entity_test.translation')) {
+        foreach ($all_bundle_info as $bundle_name => &$bundle_info) {
+          $bundle_info['translatable'] = TRUE;
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_entity_view_mode_info_alter().
  */
 function entity_test_entity_view_mode_info_alter(&$view_modes) {

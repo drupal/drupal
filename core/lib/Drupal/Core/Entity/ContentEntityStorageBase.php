@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\TypedData\TranslationStatusInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -149,6 +150,51 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   }
 
   /**
+   * Checks whether any entity revision is translated.
+   *
+   * A revisionable entity can have translations in a pending revision, hence
+   * the default revision may appear as not translated. This determines whether
+   * the entity has any translation in the storage and thus should be considered
+   * as multilingual.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\TranslatableInterface $entity
+   *   The entity object to be checked.
+   *
+   * @return bool
+   *   TRUE if the entity has at least one translation in any revision, FALSE
+   *   otherwise.
+   *
+   * @see \Drupal\Core\TypedData\TranslatableInterface::getTranslationLanguages()
+   */
+  protected function isAnyRevisionTranslated(TranslatableInterface $entity) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    if ($entity->isNew()) {
+      return FALSE;
+    }
+
+    if ($entity instanceof TranslationStatusInterface) {
+      foreach ($entity->getTranslationLanguages(FALSE) as $langcode => $language) {
+        if ($entity->getTranslationStatus($langcode) === TranslationStatusInterface::TRANSLATION_EXISTING) {
+          return TRUE;
+        }
+      }
+    }
+
+    $query = $this->getQuery()
+      ->condition($this->entityType->getKey('id'), $entity->id())
+      ->condition($this->entityType->getKey('default_langcode'), 0)
+      ->accessCheck(FALSE)
+      ->range(0, 1);
+
+    if ($entity->getEntityType()->isRevisionable()) {
+      $query->allRevisions();
+    }
+
+    $result = $query->execute();
+    return !empty($result);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function createTranslation(ContentEntityInterface $entity, $langcode, array $values = []) {
@@ -164,6 +210,91 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     $this->initFieldValues($translation, $values, $field_names);
     $this->invokeHook('translation_create', $translation);
     return $translation;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createRevision(RevisionableInterface $entity, $default = TRUE, $keep_untranslatable_fields = NULL) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $new_revision = clone $entity;
+
+    // For translatable entities, create a merged revision of the active
+    // translation and the other translations in the default revision. This
+    // permits the creation of pending revisions that can always be saved as the
+    // new default revision without reverting changes in other languages.
+    if (!$entity->isNew() && !$entity->isDefaultRevision() && $entity->isTranslatable() && $this->isAnyRevisionTranslated($entity)) {
+      $active_langcode = $entity->language()->getId();
+      $skipped_field_names = array_flip($this->getRevisionTranslationMergeSkippedFieldNames());
+
+      // Default to preserving the untranslatable field values in the default
+      // revision, otherwise we may expose data that was not meant to be
+      // accessible.
+      if (!isset($keep_untranslatable_fields)) {
+        // @todo Implement a more complete default logic in
+        //    https://www.drupal.org/project/drupal/issues/2878556.
+        $keep_untranslatable_fields = FALSE;
+      }
+
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $default_revision */
+      $default_revision = $this->load($entity->id());
+      foreach ($default_revision->getTranslationLanguages() as $langcode => $language) {
+        if ($langcode == $active_langcode) {
+          continue;
+        }
+
+        $default_revision_translation = $default_revision->getTranslation($langcode);
+        $new_revision_translation = $new_revision->hasTranslation($langcode) ?
+          $new_revision->getTranslation($langcode) : $new_revision->addTranslation($langcode);
+
+        /** @var \Drupal\Core\Field\FieldItemListInterface[] $sync_items */
+        $sync_items = array_diff_key(
+          $keep_untranslatable_fields ? $default_revision_translation->getTranslatableFields() : $default_revision_translation->getFields(),
+          $skipped_field_names
+        );
+        foreach ($sync_items as $field_name => $items) {
+          $new_revision_translation->set($field_name, $items->getValue());
+        }
+
+        // Make sure the "revision_translation_affected" flag is recalculated.
+        $new_revision_translation->setRevisionTranslationAffected(NULL);
+
+        // No need to copy untranslatable field values more than once.
+        $keep_untranslatable_fields = TRUE;
+      }
+    }
+
+    // Eventually mark the new revision as such.
+    $new_revision->setNewRevision();
+    $new_revision->isDefaultRevision($default);
+
+    // Actually make sure the current translation is marked as affected, even if
+    // there are no explicit changes, to be sure this revision can be related
+    // to the correct translation.
+    $new_revision->setRevisionTranslationAffected(TRUE);
+
+    return $new_revision;
+  }
+
+  /**
+   * Returns an array of field names to skip when merging revision translations.
+   *
+   * @return array
+   *   An array of field names.
+   */
+  protected function getRevisionTranslationMergeSkippedFieldNames() {
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
+    $entity_type = $this->getEntityType();
+
+    // A list of known revision metadata fields which should be skipped from
+    // the comparision.
+    $field_names = [
+      $entity_type->getKey('revision'),
+      $entity_type->getKey('revision_translation_affected'),
+    ];
+    $field_names = array_merge($field_names, array_values($entity_type->getRevisionMetadataKeys()));
+
+    return $field_names;
   }
 
   /**

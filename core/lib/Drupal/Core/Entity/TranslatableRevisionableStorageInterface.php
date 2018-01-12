@@ -8,6 +8,26 @@ namespace Drupal\Core\Entity;
 interface TranslatableRevisionableStorageInterface extends TranslatableStorageInterface, RevisionableStorageInterface {
 
   /**
+   * Creates a new revision starting off from the specified entity object.
+   *
+   * When dealing with a translatable entity, this will merge the default
+   * revision with the active translation of the passed entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface $entity
+   *   The revisionable entity object being modified.
+   * @param bool $default
+   *   (optional) Whether the new revision should be marked as default. Defaults
+   *   to TRUE.
+   * @param bool|null $keep_untranslatable_fields
+   *   (optional) Whether untranslatable field values should be kept or copied
+   *   from the default revision when generating a merged revision.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface
+   *   A new translatable entity revision object.
+   */
+  public function createRevision(RevisionableInterface $entity, $default = TRUE, $keep_untranslatable_fields = NULL);
+
+  /**
    * Returns the latest revision affecting the specified translation.
    *
    * @param int|string $entity_id
