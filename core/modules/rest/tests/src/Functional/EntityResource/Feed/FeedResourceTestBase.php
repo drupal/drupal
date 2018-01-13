@@ -3,10 +3,10 @@
 namespace Drupal\Tests\rest\Functional\EntityResource\Feed;
 
 use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
-use Drupal\Tests\rest\Functional\EntityResource\EntityTest\EntityTestResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\aggregator\Entity\Feed;
 
-abstract class FeedResourceTestBase extends EntityTestResourceTestBase {
+abstract class FeedResourceTestBase extends EntityResourceTestBase {
 
   use BcTimestampNormalizerUnixTestTrait;
 
@@ -19,6 +19,16 @@ abstract class FeedResourceTestBase extends EntityTestResourceTestBase {
    * {@inheritdoc}
    */
   public static $entityTypeId = 'aggregator_feed';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $patchProtectedFieldNames = [];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $uniqueFieldNames = ['url'];
 
   /**
    * {@inheritdoc}

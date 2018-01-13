@@ -82,6 +82,17 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function createAnotherEntity() {
+    /** @var \Drupal\user\UserInterface $user */
+    $user = $this->entity->createDuplicate();
+    $user->setUsername($user->label() . '_dupe');
+    $user->save();
+    return $user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getExpectedNormalizedEntity() {
     return [
       'uid' => [
@@ -241,6 +252,49 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
     ];
     $response = $this->request('POST', Url::fromRoute('user.login.http')->setRouteParameter('_format', 'json'), $request_options);
     $this->assertSame(200, $response->getStatusCode());
+  }
+
+  /**
+   * Tests PATCHing security-sensitive base fields to change other users.
+   */
+  public function testPatchSecurityOtherUser() {
+    // The anonymous user is never allowed to modify other users.
+    if (!static::$auth) {
+      $this->markTestSkipped();
+    }
+
+    $this->initAuthentication();
+    $this->provisionEntityResource();
+
+    /** @var \Drupal\user\UserInterface $user */
+    $user = $this->account;
+    $original_normalization = array_diff_key($this->serializer->normalize($user, static::$format), ['changed' => TRUE]);
+
+    // Since this test must be performed by the user that is being modified,
+    // we cannot use $this->getUrl().
+    $url = $user->toUrl()->setOption('query', ['_format' => static::$format]);
+    $request_options = [
+      RequestOptions::HEADERS => ['Content-Type' => static::$mimeType],
+    ];
+    $request_options = array_merge_recursive($request_options, $this->getAuthenticationRequestOptions('PATCH'));
+
+    $normalization = $original_normalization;
+    $normalization['mail'] = [['value' => 'new-email@example.com']];
+    $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
+
+    // Try changing user 1's email.
+    $user1 = [
+      'mail' => [['value' => 'another_email_address@example.com']],
+      'uid' => [['value' => 1]],
+      'name' => [['value' => 'another_user_name']],
+      'pass' => [['existing' => $this->account->passRaw]],
+      'uuid' => [['value' => '2e9403a4-d8af-4096-a116-624710140be0']],
+    ] + $original_normalization;
+    $request_options[RequestOptions::BODY] = $this->serializer->encode($user1, static::$format);
+    $response = $this->request('PATCH', $url, $request_options);
+    // Ensure the email address has not changed.
+    $this->assertEquals('admin@example.com', $this->entityStorage->loadUnchanged(1)->getEmail());
+    $this->assertResourceErrorResponse(403, "Access denied on updating field 'uid'.", $response);
   }
 
   /**

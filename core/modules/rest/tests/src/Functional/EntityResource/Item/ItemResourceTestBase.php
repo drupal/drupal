@@ -81,6 +81,20 @@ abstract class ItemResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function createAnotherEntity() {
+    $entity = $this->entity->createDuplicate();
+    $entity->setLink('https://www.example.org/');
+    $label_key = $entity->getEntityType()->getKey('label');
+    if ($label_key) {
+      $entity->set($label_key, $entity->label() . '_dupe');
+    }
+    $entity->save();
+    return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getExpectedNormalizedEntity() {
     $feed = Feed::load($this->entity->getFeedId());
 
