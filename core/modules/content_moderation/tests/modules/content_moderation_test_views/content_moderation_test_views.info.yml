@@ -8,3 +8,4 @@ dependencies:
   - content_moderation
   - node
   - views
+  - entity_test
