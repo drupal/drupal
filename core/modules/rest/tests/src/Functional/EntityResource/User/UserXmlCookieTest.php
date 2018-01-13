@@ -36,4 +36,12 @@ class UserXmlCookieTest extends UserResourceTestBase {
     $this->markTestSkipped();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function testPatchSecurityOtherUser() {
+    // Deserialization of the XML format is not supported.
+    $this->markTestSkipped();
+  }
+
 }

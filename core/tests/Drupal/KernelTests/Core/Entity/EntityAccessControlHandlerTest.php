@@ -8,6 +8,7 @@ use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\entity_test\Entity\EntityTestDefaultAccess;
 use Drupal\entity_test\Entity\EntityTestNoUuid;
 use Drupal\entity_test\Entity\EntityTestLabel;
@@ -18,6 +19,7 @@ use Drupal\user\Entity\User;
 /**
  * Tests the entity access control handler.
  *
+ * @coversDefaultClass \Drupal\Core\Entity\EntityAccessControlHandler
  * @group Entity
  */
 class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
@@ -30,6 +32,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
 
     $this->installEntitySchema('entity_test_no_uuid');
     $this->installEntitySchema('entity_test_rev');
+    $this->installEntitySchema('entity_test_string_id');
   }
 
   /**
@@ -291,6 +294,75 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
     $entity->access('view');
     $this->assertEqual($state->get('entity_test_entity_access'), TRUE);
     $this->assertEqual($state->get('entity_test_entity_test_access'), TRUE);
+  }
+
+  /**
+   * Tests the default access handling for the ID and UUID fields.
+   *
+   * @covers ::fieldAccess
+   * @dataProvider providerTestFieldAccess
+   */
+  public function testFieldAccess($entity_class, array $entity_create_values, $expected_id_create_access) {
+    // Set up a non-admin user that is allowed to create and update test
+    // entities.
+    \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2], ['administer entity_test content']));
+
+    // Create the entity to test field access with.
+    $entity = $entity_class::create($entity_create_values);
+
+    // On newly-created entities, field access must allow setting the UUID
+    // field.
+    $this->assertTrue($entity->get('uuid')->access('edit'));
+    $this->assertTrue($entity->get('uuid')->access('edit', NULL, TRUE)->isAllowed());
+    // On newly-created entities, field access will not allow setting the ID
+    // field if the ID is of type serial. It will allow access if it is of type
+    // string.
+    $this->assertEquals($expected_id_create_access, $entity->get('id')->access('edit'));
+    $this->assertEquals($expected_id_create_access, $entity->get('id')->access('edit', NULL, TRUE)->isAllowed());
+
+    // Save the entity and check that we can not update the ID or UUID fields
+    // anymore.
+    $entity->save();
+
+    // If the ID has been set as part of the create ensure it has been set
+    // correctly.
+    if (isset($entity_create_values['id'])) {
+      $this->assertSame($entity_create_values['id'], $entity->id());
+    }
+    // The UUID is hard-coded by the data provider.
+    $this->assertSame('60e3a179-79ed-4653-ad52-5e614c8e8fbe', $entity->uuid());
+    $this->assertFalse($entity->get('uuid')->access('edit'));
+    $access_result = $entity->get('uuid')->access('edit', NULL, TRUE);
+    $this->assertTrue($access_result->isForbidden());
+    $this->assertEquals('The entity UUID cannot be changed', $access_result->getReason());
+
+    // Ensure the ID is still not allowed to be edited.
+    $this->assertFalse($entity->get('id')->access('edit'));
+    $access_result = $entity->get('id')->access('edit', NULL, TRUE);
+    $this->assertTrue($access_result->isForbidden());
+    $this->assertEquals('The entity ID cannot be changed', $access_result->getReason());
+  }
+
+  public function providerTestFieldAccess() {
+    return [
+      'serial ID entity' => [
+        EntityTest::class,
+        [
+          'name' => 'A test entity',
+          'uuid' => '60e3a179-79ed-4653-ad52-5e614c8e8fbe',
+        ],
+        FALSE
+      ],
+      'string ID entity' => [
+        EntityTestStringId::class,
+        [
+          'id' => 'a_test_entity',
+          'name' => 'A test entity',
+          'uuid' => '60e3a179-79ed-4653-ad52-5e614c8e8fbe',
+        ],
+        TRUE
+      ],
+    ];
   }
 
 }
