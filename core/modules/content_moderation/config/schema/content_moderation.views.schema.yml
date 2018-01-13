@@ -1,0 +1,18 @@
+views.filter.latest_revision:
+  type: views_filter
+  label: 'Latest revision'
+  mapping:
+    value:
+      type: string
+      label: 'Value'
+
+views.filter.moderation_state_filter:
+  type: views.filter.in_operator
+  label: 'Moderation state filter'
+  mapping:
+    limit_workflows:
+      type: sequence
+      label: 'Workflow'
+      sequence:
+        type: string
+        label: 'Workflow'

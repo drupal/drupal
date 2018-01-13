@@ -229,7 +229,9 @@ class InOperator extends FilterPluginBase {
         '#default_value' => $default_value,
         // These are only valid for 'select' type, but do no harm to checkboxes.
         '#multiple' => TRUE,
-        '#size' => count($options) > 8 ? 8 : count($options),
+        // The value options can be a multidimensional array if the value form
+        // type is a select list, so make sure that they are counted correctly.
+        '#size' => min(count($options, COUNT_RECURSIVE), 8),
       ];
       $user_input = $form_state->getUserInput();
       if ($exposed && !isset($user_input[$identifier])) {

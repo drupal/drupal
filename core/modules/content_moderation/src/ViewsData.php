@@ -83,6 +83,7 @@ class ViewsData {
           'default_formatter' => 'content_moderation_state',
           'field_name' => 'moderation_state',
         ],
+        'filter' => ['id' => 'moderation_state_filter', 'allow empty' => TRUE],
       ];
 
       $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
@@ -106,6 +107,7 @@ class ViewsData {
           'default_formatter' => 'content_moderation_state',
           'field_name' => 'moderation_state',
         ],
+        'filter' => ['id' => 'moderation_state_filter', 'allow empty' => TRUE],
       ];
     }
 

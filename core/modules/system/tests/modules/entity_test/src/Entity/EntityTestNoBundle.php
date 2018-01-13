@@ -9,6 +9,9 @@ namespace Drupal\entity_test\Entity;
  *   id = "entity_test_no_bundle",
  *   label = @Translation("Entity Test without bundle"),
  *   base_table = "entity_test_no_bundle",
+ *   handlers = {
+ *     "views_data" = "Drupal\views\EntityViewsData"
+ *   },
  *   entity_keys = {
  *     "id" = "id",
  *     "revision" = "revision_id",

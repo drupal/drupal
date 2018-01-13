@@ -124,7 +124,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    *   A list of state IDs to get. If NULL then all states will be returned.
    *
    * @return \Drupal\workflows\StateInterface[]
-   *   An array of workflow states.
+   *   An array of workflow states, keyed by state IDs.
    *
    * @throws \InvalidArgumentException
    *   Thrown if $state_ids contains a state ID that does not exist.
