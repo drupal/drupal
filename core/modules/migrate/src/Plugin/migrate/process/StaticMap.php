@@ -17,10 +17,10 @@ use Drupal\migrate\MigrateSkipRowException;
  *
  * Available configuration keys:
  * - source: The input value - either a scalar or an array.
- * - map: An array (of 1 or more dimensions) that identifies the mapping between
+ * - map: An array (of 1 or more dimensions) that defines the mapping between
  *   source values and destination values.
  * - bypass: (optional) Whether the plugin should proceed when the source is not
- *   found in the map array. Defaults to FALSE.
+ *   found in the map array, defaults to FALSE.
  *   - TRUE: Return the unmodified input value, or another default value, if one
  *     is specified.
  *   - FALSE: Throw a MigrateSkipRowException.
@@ -29,6 +29,8 @@ use Drupal\migrate\MigrateSkipRowException;
  *
  * Examples:
  *
+ * If the value of the source property 'foo' is 'from' then the value of the
+ * destination property bar will be 'to'. Similarly 'this' becomes 'that'.
  * @code
  * process:
  *   bar:
@@ -39,68 +41,75 @@ use Drupal\migrate\MigrateSkipRowException;
  *       this: that
  * @endcode
  *
- * If the value of the source property foo was "from" then the value of the
- * destination property bar will be "to". Similarly "this" becomes "that".
- * static_map can do a lot more than this: it supports a list of source
- * properties. This is super useful in module-delta to machine name conversions.
- *
+ * The static_map process plugin supports a list of source properties. This is
+ * useful in module-delta to machine name conversions. In the example below,
+ * value 'filter_url' is returned if the source property 'module' is 'filter'
+ * and the source property 'delta' is '2'.
  * @code
  * process:
  *   id:
  *     plugin: static_map
- *       source:
- *         - module
- *         - delta
- *        map:
- *          filter:
- *            0: filter_html_escape
- *            1: filter_autop
- *            2: filter_url
- *            3: filter_htmlcorrector
- *            4: filter_html_escape
- *          php:
- *            0: php_code
+ *     source:
+ *       - module
+ *       - delta
+ *     map:
+ *       filter:
+ *         0: filter_html_escape
+ *         1: filter_autop
+ *         2: filter_url
+ *         3: filter_htmlcorrector
+ *         4: filter_html_escape
+ *       php:
+ *         0: php_code
  * @endcode
  *
- * If the value of the source properties module and delta are "filter" and "2"
- * respectively, then the returned value will be "filter_url". By default, if a
- * value is not found in the map, an exception is thrown.
- *
- * When static_map is used to just rename a few things and leave the others, a
- * "bypass: true" option can be added. In this case, the source value is used
- * unchanged, e.g.:
- *
+ * When static_map is used to just rename a few values and leave the others
+ * unchanged, a 'bypass: true' option can be used. See the example below. If the
+ * value of the source property 'foo' is 'from', 'to' will be returned. If the
+ * value of the source property 'foo' is 'another' (a value that is not in the
+ * map), 'another' will be returned unchanged.
  * @code
  * process:
  *   bar:
  *     plugin: static_map
  *     source: foo
- *       map:
- *         from: to
- *         this: that
- *       bypass: TRUE
+ *     map:
+ *       from: to
+ *       this: that
+ *     bypass: TRUE
  * @endcode
  *
- * If the value of the source property "foo" is "from" then the returned value
- * will be "to", but if the value of "foo" is "another" (a value that is not in
- * the map) then the source value is used unchanged so the returned value will
- * be "from" because "bypass" is set to TRUE.
- *
+ * A default value can be defined for all values that are not included in the
+ * map. See the example below. If the value of the source property 'foo' is
+ * 'yet_another' (a value that is not in the map), 'bar' will be returned.
  * @code
  * process:
  *   bar:
  *     plugin: static_map
  *     source: foo
- *       map:
- *         from: to
- *         this: that
- *       default_value: bar
+ *     map:
+ *       from: to
+ *       this: that
+ *     default_value: bar
  * @endcode
  *
- * If the value of the source property "foo" is "yet_another" (a value that is
- * not in the map) then the default_value is used so the returned value will
- * be "bar".
+ * If your source data has boolean values as strings, you need to use single
+ * quotes in the map. See the example below.
+ * @code
+ * process:
+ *   bar:
+ *     plugin: static_map
+ *     source: foo
+ *     map:
+ *       'TRUE': to
+ * @endcode
  *
+ * Mapping from a string which contains a period is not supported. A custom
+ * process plugin can be written to handle this kind of a transformation.
+ * Another option which may be feasible in certain use cases is to first pass
+ * the value through the machine_name process plugin.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2827897
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
  * @MigrateProcessPlugin(
