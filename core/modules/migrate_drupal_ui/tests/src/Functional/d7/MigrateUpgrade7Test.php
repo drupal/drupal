@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
-use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
+use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -12,7 +12,7 @@ use Drupal\user\Entity\User;
  *
  * @group migrate_drupal_ui
  */
-class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
+class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
 
   /**
    * Modules to enable.
@@ -110,21 +110,19 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
       'email',
       'entityreference',
       'field',
+      'field_sql_storage',
       'file',
-      'filefield',
       'filter',
       'forum',
       'image',
-      'imagefield',
+      'language',
       'link',
       'list',
       'locale',
       'menu',
       'node',
-      'node_reference',
       'number',
       'options',
-      'optionwidgets',
       'path',
       'phone',
       'search',
@@ -133,9 +131,21 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
       'system',
       'taxonomy',
       'text',
-      'translation',
       'user',
-      'user_reference',
+      // Include modules that do not have an upgrade path and are enabled in the
+      // source database, defined in the $noUpgradePath property
+      // in MigrateUpgradeForm.
+      'blog',
+      'contextual',
+      'date_api',
+      'entity',
+      'field_ui',
+      'help',
+      'php',
+      'simpletest',
+      'toolbar',
+      'translation',
+      'trigger',
     ];
   }
 
@@ -144,21 +154,13 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
    */
   protected function getMissingPaths() {
     return [
-      'blog',
       'book',
       'color',
-      'contextual',
-      'date_api',
-      'entity',
-      'field_ui',
-      'help',
-      'php',
       'rdf',
-      'simpletest',
+      // These modules are in the missing path list because they are installed
+      // on the source site but they are not installed on the destination site.
       'syslog',
-      'toolbar',
       'tracker',
-      'trigger',
       'update',
     ];
   }
@@ -166,8 +168,8 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
   /**
    * Executes all steps of migrations upgrade.
    */
-  public function testMigrateUpgrade() {
-    parent::testMigrateUpgrade();
+  public function testMigrateUpgradeExecute() {
+    parent::testMigrateUpgradeExecute();
 
     // Ensure migrated users can log in.
     $user = User::load(2);

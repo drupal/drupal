@@ -62,11 +62,11 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
   public function testFieldProvidersExist() {
     $expected_mappings = [
       'userreference' => [
-        'source_module' => 'user_reference',
+        'source_module' => 'userreference',
         'destination_module' => 'core',
       ],
       'nodereference' => [
-        'source_module' => 'node_reference',
+        'source_module' => 'nodereference',
         'destination_module' => 'core',
       ],
       'optionwidgets' => [
