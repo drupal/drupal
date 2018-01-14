@@ -43,3 +43,8 @@ services:
     arguments: ['@entity_type.manager']
     tags:
       - { name: path_processor_inbound }
+  rest.route_processor_get_bc:
+    class: \Drupal\rest\RouteProcessor\RestResourceGetRouteProcessorBC
+    arguments: ['%serializer.formats%', '@router.route_provider']
+    tags:
+      - { name: route_processor_outbound }

@@ -21,6 +21,7 @@ use Drupal\rest\ResourceResponseInterface;
 use Drupal\Tests\rest\Functional\ResourceTestBase;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Even though there is the generic EntityResource, it's necessary for every
@@ -693,15 +694,27 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assert406Response($response);
     $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
 
-    $url = Url::fromRoute('rest.entity.' . static::$entityTypeId . '.GET.' . static::$format);
+    $url = Url::fromRoute('rest.entity.' . static::$entityTypeId . '.GET');
     $url->setRouteParameter(static::$entityTypeId, 987654321);
     $url->setOption('query', ['_format' => static::$format]);
 
     // DX: 404 when GETting non-existing entity.
     $response = $this->request('GET', $url, $request_options);
     $path = str_replace('987654321', '{' . static::$entityTypeId . '}', $url->setAbsolute()->setOptions(['base_url' => '', 'query' => []])->toString());
-    $message = 'The "' . static::$entityTypeId . '" parameter was not converted for the path "' . $path . '" (route name: "rest.entity.' . static::$entityTypeId . '.GET.' . static::$format . '")';
+    $message = 'The "' . static::$entityTypeId . '" parameter was not converted for the path "' . $path . '" (route name: "rest.entity.' . static::$entityTypeId . '.GET")';
     $this->assertResourceErrorResponse(404, $message, $response);
+
+    // BC: Format-specific GET routes are deprecated. They are available on both
+    // new and old sites, but trigger deprecation notices.
+    $bc_route = Url::fromRoute('rest.entity.' . static::$entityTypeId . '.GET.' . static::$format, $url->getRouteParameters(), $url->getOptions());
+    $bc_route->setUrlGenerator($this->container->get('url_generator'));
+    $this->assertSame($url->toString(TRUE)->getGeneratedUrl(), $bc_route->toString(TRUE)->getGeneratedUrl());
+    // Verify no format-specific GET BC routes are created for other formats.
+    $other_format = static::$format === 'json' ? 'xml' : 'json';
+    $bc_route_other_format = Url::fromRoute('rest.entity.' . static::$entityTypeId . '.GET.' . $other_format, $url->getRouteParameters(), $url->getOptions());
+    $bc_route_other_format->setUrlGenerator($this->container->get('url_generator'));
+    $this->setExpectedException(RouteNotFoundException::class);
+    $bc_route_other_format->toString(TRUE);
   }
 
   /**
@@ -968,6 +981,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     if ($this->entity->getEntityType()->hasLinkTemplate('create')) {
       $this->entityStorage->load(static::$secondCreatedEntityId)->delete();
       $old_url = Url::fromUri('base:entity/' . static::$entityTypeId);
+      $old_url->setOption('query', ['_format' => static::$format]);
       $response = $this->request('POST', $old_url, $request_options);
       $this->assertResourceResponse(201, FALSE, $response);
     }

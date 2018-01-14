@@ -62,7 +62,7 @@ class DbLogResourceTest extends ResourceTestBase {
       ->fetchField();
 
     $this->initAuthentication();
-    $url = Url::fromRoute('rest.dblog.GET.' . static::$format, ['id' => $id, '_format' => static::$format]);
+    $url = Url::fromRoute('rest.dblog.GET', ['id' => $id, '_format' => static::$format]);
     $request_options = $this->getAuthenticationRequestOptions('GET');
 
     $response = $this->request('GET', $url, $request_options);
