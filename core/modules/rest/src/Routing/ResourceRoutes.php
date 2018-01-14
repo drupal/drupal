@@ -92,8 +92,11 @@ class ResourceRoutes implements EventSubscriberInterface {
       /** @var \Symfony\Component\Routing\Route $route */
       // @todo: Are multiple methods possible here?
       $methods = $route->getMethods();
-      // Only expose routes where the method is enabled in the configuration.
-      if ($methods && ($method = $methods[0]) && $supported_formats = $rest_resource_config->getFormats($method)) {
+      // Only expose routes
+      // - that have an explicit method and allow >=1 format for that method
+      // - that exist for BC
+      // @see \Drupal\rest\RouteProcessor\RestResourceGetRouteProcessorBC
+      if (($methods && ($method = $methods[0]) && $supported_formats = $rest_resource_config->getFormats($method)) || $route->hasOption('bc_route')) {
         $route->setRequirement('_csrf_request_header_token', 'TRUE');
 
         // Check that authentication providers are defined.
@@ -108,20 +111,24 @@ class ResourceRoutes implements EventSubscriberInterface {
           continue;
         }
 
-        // If the route has a format requirement, then verify that the
-        // resource has it.
-        $format_requirement = $route->getRequirement('_format');
-        if ($format_requirement && !in_array($format_requirement, $rest_resource_config->getFormats($method))) {
-          continue;
+        // Remove BC routes for unsupported formats.
+        if ($route->getOption('bc_route') === TRUE) {
+          $format_requirement = $route->getRequirement('_format');
+          if ($format_requirement && !in_array($format_requirement, $rest_resource_config->getFormats($method))) {
+            continue;
+          }
         }
 
         // The configuration has been validated, so we update the route to:
+        // - set the allowed response body content types/formats for methods
+        //   that may send response bodies
         // - set the allowed request body content types/formats for methods that
         //   allow request bodies to be sent
         // - set the allowed authentication providers
+        if (in_array($method, ['GET', 'HEAD', 'POST', 'PUT', 'PATCH'], TRUE)) {
+          $route->addRequirements(['_format' => implode('|', $rest_resource_config->getFormats($method))]);
+        }
         if (in_array($method, ['POST', 'PATCH', 'PUT'], TRUE)) {
-          // Restrict the incoming HTTP Content-type header to the allowed
-          // formats.
           $route->addRequirements(['_content_type_format' => implode('|', $rest_resource_config->getFormats($method))]);
         }
         $route->setOption('_auth', $rest_resource_config->getAuthenticationProviders($method));
