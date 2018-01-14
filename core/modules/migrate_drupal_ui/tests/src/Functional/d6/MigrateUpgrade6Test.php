@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
-use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
+use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -12,7 +12,7 @@ use Drupal\user\Entity\User;
  *
  * @group migrate_drupal_ui
  */
-class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
+class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
 
   /**
    * Modules to enable.
@@ -110,34 +110,42 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
       'date',
       'dblog',
       'email',
-      'entityreference',
-      'file',
       'filefield',
       'filter',
+      'forum',
       'i18ntaxonomy',
-      'image',
       'imagecache',
       'imagefield',
+      'language',
       'link',
-      'list',
-      'menu',
       'locale',
+      'menu',
       'node',
-      'node_reference',
-      'number',
-      'options',
+      'nodereference',
       'optionwidgets',
       'path',
-      'phone',
       'profile',
       'search',
+      'statistics',
       'system',
       'taxonomy',
       'text',
-      'translation',
       'upload',
       'user',
-      'user_reference',
+      'userreference',
+      // Include modules that do not have an upgrade path and are enabled in the
+      // source database, defined in the $noUpgradePath property
+      // in MigrateUpgradeForm.
+      'date_api',
+      'date_timezone',
+      'event',
+      'i18n',
+      'i18nstrings',
+      'imageapi',
+      'number',
+      'php',
+      'profile',
+      'variable_admin',
     ];
   }
 
@@ -146,27 +154,21 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
    */
   protected function getMissingPaths() {
     return [
-      'date_api',
-      'date_timezone',
-      'event',
-      'i18n',
       'i18nblocks',
       'i18ncck',
       'i18ncontent',
       'i18nmenu',
+      // This module is in the missing path list because it is installed on the
+      // source site but it is not installed on the destination site.
       'i18nprofile',
-      'i18nstrings',
-      'imageapi',
-      'php',
-      'variable_admin',
     ];
   }
 
   /**
    * Executes all steps of migrations upgrade.
    */
-  public function testMigrateUpgrade() {
-    parent::testMigrateUpgrade();
+  public function testMigrateUpgradeExecute() {
+    parent::testMigrateUpgradeExecute();
 
     // Ensure migrated users can log in.
     $user = User::load(2);

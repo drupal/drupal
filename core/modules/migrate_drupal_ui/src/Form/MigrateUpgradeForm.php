@@ -69,6 +69,102 @@ class MigrateUpgradeForm extends ConfirmFormBase {
   protected $moduleHandler;
 
   /**
+   * List of extensions that do not need an upgrade path.
+   *
+   * This property is an array where the keys are the major Drupal core version
+   * from which we are upgrading, and the values are arrays of extension names
+   * that do not need an upgrade path.
+   *
+   * @var array[]
+   */
+  protected $noUpgradePaths = [
+    '6' => [
+      'blog',
+      'blogapi',
+      'calendarsignup',
+      'color',
+      'content_copy',
+      'content_multigroup',
+      'content_permissions',
+      'date_api',
+      'date_locale',
+      'date_php4',
+      'date_popup',
+      'date_repeat',
+      'date_timezone',
+      'date_tools',
+      'datepicker',
+      'ddblock',
+      'event',
+      'fieldgroup',
+      'filefield_meta',
+      'help',
+      'i18n',
+      'i18nstrings',
+      'imageapi',
+      'imageapi_gd',
+      'imageapi_imagemagick',
+      'imagecache_ui',
+      'jquery_ui',
+      'nodeaccess',
+      'number',
+      'openid',
+      'php',
+      'ping',
+      'poll',
+      'throttle',
+      'tracker',
+      'translation',
+      'trigger',
+      'variable',
+      'variable_admin',
+      'views_export',
+      'views_ui',
+    ],
+    '7' => [
+      'blog',
+      'bulk_export',
+      'contextual',
+      'ctools',
+      'ctools_access_ruleset',
+      'ctools_ajax_sample',
+      'ctools_custom_content',
+      'dashboard',
+      'date_all_day',
+      'date_api',
+      'date_context',
+      'date_migrate',
+      'date_popup',
+      'date_repeat',
+      'date_repeat_field',
+      'date_tools',
+      'date_views',
+      'entity',
+      'entity_feature',
+      'entity_token',
+      'entityreference',
+      'field_ui',
+      'help',
+      'openid',
+      'overlay',
+      'page_manager',
+      'php',
+      'poll',
+      'search_embedded_form',
+      'search_extra_type',
+      'search_node_tags',
+      'simpletest',
+      'stylizer',
+      'term_depth',
+      'toolbar',
+      'translation',
+      'trigger',
+      'views_content',
+      'views_ui',
+    ],
+  ];
+
+  /**
    * Constructs the MigrateUpgradeForm.
    *
    * @param \Drupal\Core\State\StateInterface $state
@@ -269,7 +365,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       '#type' => 'radios',
       '#default_value' => 7,
       '#title' => $this->t('Drupal version of the source site'),
-      '#options' => [6 => $this->t('Drupal 6'), 7 => $this->t('Drupal 7')],
+      '#options' => ['6' => $this->t('Drupal 6'), '7' => $this->t('Drupal 7')],
       '#required' => TRUE,
     ];
 
@@ -332,7 +428,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       '#description' => $this->t('To import files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
       '#states' => [
         'visible' => [
-          ':input[name="version"]' => ['value' => 6],
+          ':input[name="version"]' => ['value' => '6'],
         ],
       ],
     ];
@@ -343,7 +439,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       '#description' => $this->t('To import public files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
       '#states' => [
         'visible' => [
-          ':input[name="version"]' => ['value' => 7],
+          ':input[name="version"]' => ['value' => '7'],
         ],
       ],
     ];
@@ -355,7 +451,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       '#description' => $this->t('To import private files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot).'),
       '#states' => [
         'visible' => [
-          ':input[name="version"]' => ['value' => 7],
+          ':input[name="version"]' => ['value' => '7'],
         ],
       ],
     ];
@@ -404,11 +500,11 @@ class MigrateUpgradeForm extends ConfirmFormBase {
 
     try {
       $connection = $this->getConnection($database);
-      $version = $this->getLegacyDrupalVersion($connection);
+      $version = (string) $this->getLegacyDrupalVersion($connection);
       if (!$version) {
         $form_state->setErrorByName($database['driver'] . '][0', $this->t('Source database does not contain a recognizable Drupal version.'));
       }
-      elseif ($version != $form_state->getValue('version')) {
+      elseif ($version !== (string) $form_state->getValue('version')) {
         $form_state->setErrorByName($database['driver'] . '][0', $this->t('Source database is Drupal version @version but version @selected was selected.', [
           '@version' => $version,
           '@selected' => $form_state->getValue('version'),
@@ -431,7 +527,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
         // Store the retrieved migration IDs in form storage.
         $form_state->set('version', $version);
         $form_state->set('migrations', $migration_array);
-        if ($version == 6) {
+        if ($version === '6') {
           $form_state->set('source_base_path', $form_state->getValue('d6_source_base_path'));
         }
         else {
@@ -661,9 +757,24 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     // Get the source_module and destination_module from the field plugins.
     $definitions = $this->fieldPluginManager->getDefinitions();
     foreach ($definitions as $definition) {
-      $source_module = $definition['source_module'];
-      $destination_module = $definition['destination_module'];
-      $table_data[$source_module][$destination_module][$definition['id']] = $definition['id'];
+      // This is not strict so that we find field plugins with an annotation
+      // where the Drupal core version is an integer and when it is a string.
+      if (in_array($version, $definition['core'])) {
+        $source_module = $definition['source_module'];
+        $destination_module = $definition['destination_module'];
+        $table_data[$source_module][$destination_module][$definition['id']] = $definition['id'];
+      }
+    }
+
+    // Fetch the system data at the first opportunity.
+    $system_data = $form_state->get('system_data');
+
+    // Add source_module and destination_module for modules that do not need an
+    // upgrade path and are enabled on the source site.
+    foreach ($this->noUpgradePaths[$version] as $extension) {
+      if ($system_data['module'][$extension]['status']) {
+        $table_data[$extension]['core'][$extension] = $extension;
+      }
     }
 
     // Sort the table by source module names and within that destination
@@ -673,8 +784,6 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       ksort($table_data[$source_module]);
     }
 
-    // Fetch the system data at the first opportunity.
-    $system_data = $form_state->get('system_data');
     // Remove core profiles from the system data.
     foreach (['standard', 'minimal'] as $profile) {
       unset($system_data['module'][$profile]);
