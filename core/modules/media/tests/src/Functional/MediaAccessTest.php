@@ -81,43 +81,66 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->assertSame("The 'view media' permission is required and the media item must be published.", $access_result->getReason());
     $this->grantPermissions($role, ['view media']);
     $this->drupalGet('media/' . $media->id());
-    $this->assertCacheContext('user');
+    $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);
+
+    // Test 'create BUNDLE media' permission.
+    $this->drupalGet('media/add/' . $media_type->id());
+    $this->assertCacheContext('user.permissions');
+    $assert_session->statusCodeEquals(403);
+    $permissions = ['create ' . $media_type->id() . ' media'];
+    $this->grantPermissions($role, $permissions);
+    $this->drupalGet('media/add/' . $media_type->id());
+    $this->assertCacheContext('user.permissions');
+    $assert_session->statusCodeEquals(200);
+    user_role_revoke_permissions($role->id(), $permissions);
+    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
 
     // Test 'create media' permission.
     $this->drupalGet('media/add/' . $media_type->id());
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(403);
-    $this->grantPermissions($role, ['create media']);
+    $permissions = ['create media'];
+    $this->grantPermissions($role, $permissions);
     $this->drupalGet('media/add/' . $media_type->id());
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);
+    user_role_revoke_permissions($role->id(), $permissions);
+    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
 
-    // Test 'update media' and 'delete media' permissions.
+    // Test 'edit own BUNDLE media' and 'delete own BUNDLE media' permissions.
     $this->drupalGet('media/' . $user_media->id() . '/edit');
-    $this->assertCacheContext('user');
+    $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(403);
     $this->drupalGet('media/' . $user_media->id() . '/delete');
-    $this->assertCacheContext('user');
+    $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(403);
-    $this->grantPermissions($role, ['update media']);
-    $this->grantPermissions($role, ['delete media']);
+    $permissions = [
+      'edit own ' . $user_media->bundle() . ' media',
+      'delete own ' . $user_media->bundle() . ' media',
+    ];
+    $this->grantPermissions($role, $permissions);
     $this->drupalGet('media/' . $user_media->id() . '/edit');
     $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
     $this->drupalGet('media/' . $user_media->id() . '/delete');
     $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
+    user_role_revoke_permissions($role->id(), $permissions);
+    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
 
-    // Test 'update any media' and 'delete any media' permissions.
+    // Test 'edit any BUNDLE media' and 'delete any BUNDLE media' permissions.
     $this->drupalGet('media/' . $media->id() . '/edit');
-    $this->assertCacheContext('user');
+    $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(403);
     $this->drupalGet('media/' . $media->id() . '/delete');
-    $this->assertCacheContext('user');
+    $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(403);
-    $this->grantPermissions($role, ['update any media']);
-    $this->grantPermissions($role, ['delete any media']);
+    $permissions = [
+      'edit any ' . $media->bundle() . ' media',
+      'delete any ' . $media->bundle() . ' media',
+    ];
+    $this->grantPermissions($role, $permissions);
     $this->drupalGet('media/' . $media->id() . '/edit');
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);

@@ -66,7 +66,7 @@ use Drupal\user\UserInterface;
  *     "revision_log_message" = "revision_log_message",
  *   },
  *   bundle_entity_type = "media_type",
- *   permission_granularity = "entity_type",
+ *   permission_granularity = "bundle",
  *   admin_permission = "administer media",
  *   field_ui_base_route = "entity.media_type.edit_form",
  *   common_reference_target = TRUE,

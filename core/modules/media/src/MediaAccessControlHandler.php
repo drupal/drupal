@@ -20,6 +20,7 @@ class MediaAccessControlHandler extends EntityAccessControlHandler {
       return AccessResult::allowed()->cachePerPermissions();
     }
 
+    $type = $entity->bundle();
     $is_owner = ($account->id() && $account->id() === $entity->getOwnerId());
     switch ($operation) {
       case 'view':
@@ -32,22 +33,38 @@ class MediaAccessControlHandler extends EntityAccessControlHandler {
         return $access_result;
 
       case 'update':
+        if ($account->hasPermission('edit any ' . $type . ' media')) {
+          return AccessResult::allowed()->cachePerPermissions();
+        }
+        if ($account->hasPermission('edit own ' . $type . ' media') && $is_owner) {
+          return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
+        }
+        // @todo Deprecate this permission in
+        // https://www.drupal.org/project/drupal/issues/2925459.
         if ($account->hasPermission('update any media')) {
           return AccessResult::allowed()->cachePerPermissions();
         }
-        return AccessResult::allowedIf($account->hasPermission('update media') && $is_owner)
-          ->cachePerPermissions()
-          ->cachePerUser()
-          ->addCacheableDependency($entity);
+        if ($account->hasPermission('update media') && $is_owner) {
+          return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
+        }
+        return AccessResult::neutral()->cachePerPermissions();
 
       case 'delete':
+        if ($account->hasPermission('delete any ' . $type . ' media')) {
+          return AccessResult::allowed()->cachePerPermissions();
+        }
+        if ($account->hasPermission('delete own ' . $type . ' media') && $is_owner) {
+          return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
+        }
+        // @todo Deprecate this permission in
+        // https://www.drupal.org/project/drupal/issues/2925459.
         if ($account->hasPermission('delete any media')) {
           return AccessResult::allowed()->cachePerPermissions();
         }
-        return AccessResult::allowedIf($account->hasPermission('delete media') && $is_owner)
-          ->cachePerPermissions()
-          ->cachePerUser()
-          ->addCacheableDependency($entity);
+        if ($account->hasPermission('delete media') && $is_owner) {
+          return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
+        }
+        return AccessResult::neutral()->cachePerPermissions();
 
       default:
         return AccessResult::neutral()->cachePerPermissions();
@@ -58,7 +75,12 @@ class MediaAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return AccessResult::allowedIfHasPermissions($account, ['administer media', 'create media'], 'OR');
+    $permissions = [
+      'administer media',
+      'create media',
+      'create ' . $entity_bundle . ' media',
+    ];
+    return AccessResult::allowedIfHasPermissions($account, $permissions, 'OR');
   }
 
 }
