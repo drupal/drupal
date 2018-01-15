@@ -21,7 +21,12 @@ class VocabularyStorage extends ConfigEntityStorage implements VocabularyStorage
    * {@inheritdoc}
    */
   public function getToplevelTids($vids) {
-    return db_query('SELECT t.tid FROM {taxonomy_term_data} t INNER JOIN {taxonomy_term_hierarchy} th ON th.tid = t.tid WHERE t.vid IN ( :vids[] ) AND th.parent = 0', [':vids[]' => $vids])->fetchCol();
+    $tids = \Drupal::entityQuery('taxonomy_term')
+      ->condition('vid', $vids, 'IN')
+      ->condition('parent.target_id', 0)
+      ->execute();
+
+    return array_values($tids);
   }
 
 }

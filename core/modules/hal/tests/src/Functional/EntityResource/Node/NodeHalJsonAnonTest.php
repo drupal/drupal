@@ -33,6 +33,19 @@ class NodeHalJsonAnonTest extends NodeResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $patchProtectedFieldNames = [
+    'revision_timestamp',
+    'created',
+    'changed',
+    'promote',
+    'sticky',
+    'path',
+    'revision_uid',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getExpectedNormalizedEntity() {
     $default_normalization = parent::getExpectedNormalizedEntity();
 

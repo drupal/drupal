@@ -92,6 +92,66 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedNormalizedEntity() {
+    // We test with multiple parent terms, and combinations thereof.
+    // @see ::createEntity()
+    // @see ::testGet()
+    // @see ::testGetTermWithParent()
+    // @see ::providerTestGetTermWithParent()
+    $parent_term_ids = [];
+    for ($i = 0; $i < $this->entity->get('parent')->count(); $i++) {
+      $parent_term_ids[$i] = (int) $this->entity->get('parent')[$i]->target_id;
+    }
+
+    $expected_parent_normalization = FALSE;
+    switch ($parent_term_ids) {
+      case [0]:
+        $expected_parent_normalization = [
+          [
+            'target_id' => NULL,
+          ],
+        ];
+        break;
+      case [2]:
+        $expected_parent_normalization = [
+          [
+            'target_id' => 2,
+            'target_type' => 'taxonomy_term',
+            'target_uuid' => Term::load(2)->uuid(),
+            'url' => base_path() . 'taxonomy/term/2',
+          ],
+        ];
+        break;
+      case [0, 2]:
+        $expected_parent_normalization = [
+          [
+            'target_id' => NULL,
+          ],
+          [
+            'target_id' => 2,
+            'target_type' => 'taxonomy_term',
+            'target_uuid' => Term::load(2)->uuid(),
+            'url' => base_path() . 'taxonomy/term/2',
+          ],
+        ];
+        break;
+      case [3, 2]:
+        $expected_parent_normalization = [
+          [
+            'target_id' => 3,
+            'target_type' => 'taxonomy_term',
+            'target_uuid' => Term::load(3)->uuid(),
+            'url' => base_path() . 'taxonomy/term/3',
+          ],
+          [
+            'target_id' => 2,
+            'target_type' => 'taxonomy_term',
+            'target_uuid' => Term::load(2)->uuid(),
+            'url' => base_path() . 'taxonomy/term/2',
+          ],
+        ];
+        break;
+    }
+
     return [
       'tid' => [
         ['value' => 1],
@@ -116,7 +176,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
           'processed' => "<p>It is a little known fact that llamas cannot count higher than seven.</p>\n",
         ],
       ],
-      'parent' => [],
+      'parent' => $expected_parent_normalization,
       'weight' => [
         ['value' => 0],
       ],
@@ -236,6 +296,56 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
    */
   protected function getExpectedCacheContexts() {
     return Cache::mergeContexts(['url.site'], $this->container->getParameter('renderer.config')['required_cache_contexts']);
+  }
+
+  /**
+   * Tests GETting a term with a parent term other than the default <root> (0).
+   *
+   * @see ::getExpectedNormalizedEntity()
+   *
+   * @dataProvider providerTestGetTermWithParent
+   */
+  public function testGetTermWithParent(array $parent_term_ids) {
+    // Create all possible parent terms.
+    Term::create(['vid' => Vocabulary::load('camelids')->id()])
+      ->setName('Lamoids')
+      ->save();
+    Term::create(['vid' => Vocabulary::load('camelids')->id()])
+      ->setName('Wimoids')
+      ->save();
+
+    // Modify the entity under test to use the provided parent terms.
+    $this->entity->set('parent', $parent_term_ids)->save();
+
+    $this->initAuthentication();
+    $url = $this->getEntityResourceUrl();
+    $url->setOption('query', ['_format' => static::$format]);
+    $request_options = $this->getAuthenticationRequestOptions('GET');
+    $this->provisionEntityResource();
+    $this->setUpAuthorization('GET');
+    $response = $this->request('GET', $url, $request_options);
+    $expected = $this->getExpectedNormalizedEntity();
+    static::recursiveKSort($expected);
+    $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
+    static::recursiveKSort($actual);
+    $this->assertSame($expected, $actual);
+  }
+
+  public function providerTestGetTermWithParent() {
+    return [
+      'root parent: [0] (= no parent)' => [
+        [0]
+      ],
+      'non-root parent: [2]' => [
+        [2]
+      ],
+      'multiple parents: [0,2] (root + non-root parent)' => [
+        [0, 2]
+      ],
+      'multiple parents: [3,2] (both non-root parents)' => [
+        [3, 2]
+      ],
+    ];
   }
 
 }

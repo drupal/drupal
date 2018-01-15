@@ -186,8 +186,8 @@ display:
           plugin_id: standard
         parent:
           id: parent
-          table: taxonomy_term_hierarchy
-          field: parent
+          table: taxonomy_term__parent
+          field: parent_target_id
           relationship: none
           group_type: group
           admin_label: Parent

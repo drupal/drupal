@@ -50,12 +50,12 @@ class TaxonomyQueryAlterTest extends BrowserTestBase {
     $this->setupQueryTagTestHooks();
     $loaded_terms = $term_storage->loadParents($terms[2]->id());
     $this->assertEqual(count($loaded_terms), 1, 'All parent terms were loaded');
-    $this->assertQueryTagTestResult(2, 1, 'TermStorage::loadParents()');
+    $this->assertQueryTagTestResult(3, 1, 'TermStorage::loadParents()');
 
     $this->setupQueryTagTestHooks();
     $loaded_terms = $term_storage->loadChildren($terms[1]->id());
     $this->assertEqual(count($loaded_terms), 1, 'All child terms were loaded');
-    $this->assertQueryTagTestResult(2, 1, 'TermStorage::loadChildren()');
+    $this->assertQueryTagTestResult(3, 1, 'TermStorage::loadChildren()');
 
     $this->setupQueryTagTestHooks();
     $query = db_select('taxonomy_term_data', 't');

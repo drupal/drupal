@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the taxonomy module.
+ */
+
+/**
+ * Convert the custom taxonomy term hierarchy storage to a default storage.
+ */
+function taxonomy_update_8501() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  /** @var \Drupal\Core\Field\BaseFieldDefinition $field_storage_definition */
+  $field_storage_definition = $definition_update_manager->getFieldStorageDefinition('parent', 'taxonomy_term');
+  $field_storage_definition->setCustomStorage(FALSE);
+  $definition_update_manager->updateFieldStorageDefinition($field_storage_definition);
+}
+
+/**
+ * Copy hierarchy from {taxonomy_term_hierarchy} to {taxonomy_term__parent}.
+ */
+function taxonomy_update_8502(&$sandbox) {
+  $database = \Drupal::database();
+
+  if (!isset($sandbox['current'])) {
+    // Set batch ops sandbox.
+    $sandbox['current'] = 0;
+    $sandbox['max'] = $database->select('taxonomy_term_hierarchy')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+  }
+
+  // Save the hierarchy.
+  $select = $database->select('taxonomy_term_hierarchy', 'h');
+  $select->join('taxonomy_term_data', 'd', 'h.tid = d.tid');
+  $hierarchy = $select
+    ->fields('h', ['tid', 'parent'])
+    ->fields('d', ['vid', 'langcode'])
+    ->range($sandbox['current'], $sandbox['current'] + 100)
+    ->execute()
+    ->fetchAll();
+
+  // Restore data.
+  $insert = $database->insert('taxonomy_term__parent')
+    ->fields(['bundle', 'entity_id', 'revision_id', 'langcode', 'delta', 'parent_target_id']);
+  $tid = -1;
+
+  foreach ($hierarchy as $row) {
+    if ($row->tid !== $tid) {
+      $delta = 0;
+      $tid = $row->tid;
+    }
+
+    $insert->values([
+      'bundle' => $row->vid,
+      'entity_id' => $row->tid,
+      'revision_id' => $row->tid,
+      'langcode' => $row->langcode,
+      'delta' => $delta,
+      'parent_target_id' => $row->parent,
+    ]);
+
+    $delta++;
+    $sandbox['current']++;
+  }
+
+  $insert->execute();
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['current'] / $sandbox['max']);
+
+  if ($sandbox['#finished'] >= 1) {
+    // Update the entity type because the 'taxonomy_term_hierarchy' table is no
+    // longer part of its shared tables schema.
+    $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+    $definition_update_manager->updateEntityType($definition_update_manager->getEntityType('taxonomy_term'));
+
+    // \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::onEntityTypeUpdate()
+    // only deletes *known* entity tables (i.e. the base, data and revision
+    // tables), so we have to drop it manually.
+    $database->schema()->dropTable('taxonomy_term_hierarchy');
+
+    return t('Taxonomy term hierarchy has been converted to default entity reference storage.');
+  }
+}
+
+/**
+ * Update views to use {taxonomy_term__parent} in relationships.
+ */
+function taxonomy_update_8503() {
+  $config_factory = \Drupal::configFactory();
+
+  foreach ($config_factory->listAll('views.view.') as $id) {
+    $view = $config_factory->getEditable($id);
+
+    foreach (array_keys($view->get('display')) as $display_id) {
+      $changed = FALSE;
+
+      foreach (['relationships', 'filters', 'arguments'] as $handler_type) {
+        $base_path = "display.$display_id.display_options.$handler_type";
+        $handlers = $view->get($base_path);
+
+        if (!$handlers) {
+          continue;
+        }
+
+        foreach ($handlers as $handler_key => $handler_config) {
+          $table_path = "$base_path.$handler_key.table";
+          $field_path = "$base_path.$handler_key.field";
+          $table = $view->get($table_path);
+          $field = $view->get($field_path);
+
+          if (($table && ($table === 'taxonomy_term_hierarchy')) && ($field && ($field === 'parent'))) {
+            $view->set($table_path, 'taxonomy_term__parent');
+            $view->set($field_path, 'parent_target_id');
+
+            $changed = TRUE;
+          }
+        }
+      }
+
+      if ($changed) {
+        $view->save(TRUE);
+      }
+    }
+  }
+}

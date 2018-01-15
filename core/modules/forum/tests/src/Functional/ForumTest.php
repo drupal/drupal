@@ -433,7 +433,7 @@ class ForumTest extends BrowserTestBase {
 
     // Verify forum hierarchy.
     $tid = $term['tid'];
-    $parent_tid = db_query("SELECT t.parent FROM {taxonomy_term_hierarchy} t WHERE t.tid = :tid", [':tid' => $tid])->fetchField();
+    $parent_tid = db_query("SELECT t.parent_target_id FROM {taxonomy_term__parent} t WHERE t.entity_id = :tid", [':tid' => $tid])->fetchField();
     $this->assertTrue($parent == $parent_tid, 'The ' . $type . ' is linked to its container');
 
     $forum = $this->container->get('entity.manager')->getStorage('taxonomy_term')->load($tid);

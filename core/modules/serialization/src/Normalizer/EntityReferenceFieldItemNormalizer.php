@@ -12,6 +12,8 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
  */
 class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
 
+  use EntityReferenceFieldItemNormalizerTrait;
+
   /**
    * The interface or class that this Normalizer supports.
    *
@@ -42,6 +44,8 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
   public function normalize($field_item, $format = NULL, array $context = []) {
     $values = parent::normalize($field_item, $format, $context);
 
+    $this->normalizeRootReferenceValue($values, $field_item);
+
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     if ($entity = $field_item->get('entity')->getValue()) {
       $values['target_type'] = $entity->getEntityTypeId();
@@ -55,6 +59,7 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
         $values['url'] = $url;
       }
     }
+
     return $values;
   }
 

@@ -92,7 +92,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
       $this->assertSame($values['vid'], $term->vid->target_id);
       $this->assertSame((string) $values['weight'], $term->weight->value);
       if ($values['parent'] === [0]) {
-        $this->assertNull($term->parent->target_id);
+        $this->assertSame(0, (int) $term->parent->target_id);
       }
       else {
         $parents = [];
