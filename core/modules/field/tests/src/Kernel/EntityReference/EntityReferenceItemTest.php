@@ -16,6 +16,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\node\NodeInterface;
+use Drupal\taxonomy\TermInterface;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
@@ -191,6 +192,24 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $user = User::create(['name' => $this->randomString()]);
     $user->save();
     $entity = EntityTest::create(['user_id' => ['target_id' => (int) $user->id(), 'entity' => $user]]);
+  }
+
+  /**
+   * Tests the ::generateSampleValue() method.
+   */
+  public function testGenerateSampleValue() {
+    $entity = EntityTest::create();
+
+    // Test while a term exists.
+    $entity->field_test_taxonomy_term->generateSampleItems();
+    $this->assertInstanceOf(TermInterface::class, $entity->field_test_taxonomy_term->entity);
+    $this->entityValidateAndSave($entity);
+
+    // Delete the term and test again.
+    $this->term->delete();
+    $entity->field_test_taxonomy_term->generateSampleItems();
+    $this->assertInstanceOf(TermInterface::class, $entity->field_test_taxonomy_term->entity);
+    $this->entityValidateAndSave($entity);
   }
 
   /**
