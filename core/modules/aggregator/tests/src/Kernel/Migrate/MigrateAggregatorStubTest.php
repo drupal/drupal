@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\aggregator\Kernel\Migrate;
 
-use Drupal\migrate\MigrateException;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use Drupal\migrate_drupal\Tests\StubTestTrait;
 
@@ -40,18 +39,6 @@ class MigrateAggregatorStubTest extends MigrateDrupalTestBase {
    * Tests creation of aggregator feed items.
    */
   public function testItemStub() {
-    try {
-      // We expect an exception, because there's no feed to reference.
-      $this->performStubTest('aggregator_item');
-      $this->fail('Expected exception has not been thrown.');
-    }
-    catch (MigrateException $e) {
-      $this->assertIdentical($e->getMessage(),
-        'Stubbing failed, unable to generate value for field fid');
-    }
-
-    // The stub should pass when there's a feed to point to.
-    $this->createStub('aggregator_feed');
     $this->performStubTest('aggregator_item');
   }
 

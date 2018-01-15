@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Language\LanguageInterface;
@@ -115,6 +116,22 @@ class LanguageItem extends FieldItemBase {
       $this->writePropertyValue('value', $this->get('language')->getTargetIdentifier());
     }
     parent::onChange($property_name, $notify);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    // Defer to the callback in the item definition as it can be overridden.
+    $constraint = $field_definition->getItemDefinition()->getConstraint('ComplexData');
+    if (isset($constraint['value']['AllowedValues']['callback'])) {
+      $languages = $constraint['value']['AllowedValues']['callback']();
+    }
+    else {
+      $languages = static::getAllowedLanguageCodes();
+    }
+    $values['value'] = $languages[array_rand($languages)];
+    return $values;
   }
 
 }
