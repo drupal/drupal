@@ -1,3 +1,14 @@
 content_moderation.workflows:
   deriver: 'Drupal\content_moderation\Plugin\Derivative\DynamicLocalTasks'
   weight: 100
+
+content_moderation.content:
+  title: 'Overview'
+  route_name: system.admin_content
+  parent_id: system.admin_content
+
+content_moderation.moderated_content:
+  title: 'Moderated content'
+  route_name: content_moderation.admin_moderated_content
+  parent_id: system.admin_content
+  weight: 1
