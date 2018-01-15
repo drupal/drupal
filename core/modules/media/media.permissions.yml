@@ -9,6 +9,7 @@ administer media types:
 view media:
   title: 'View media'
 
+# @todo: Deprecate some permissions in https://www.drupal.org/project/drupal/issues/2925459
 update media:
   title: 'Update own media'
 
@@ -31,3 +32,6 @@ view all media revisions:
 access media overview:
   title: 'Access media overview'
   description: 'Users with this permission can access the media overview page.'
+
+permission_callbacks:
+  - \Drupal\media\MediaPermissions::mediaTypePermissions

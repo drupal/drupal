@@ -45,17 +45,17 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
         break;
 
       case 'POST':
-        $this->grantPermissionsToTestedRole(['create media']);
+        $this->grantPermissionsToTestedRole(['create camelids media']);
         break;
 
       case 'PATCH':
-        $this->grantPermissionsToTestedRole(['update any media']);
+        $this->grantPermissionsToTestedRole(['edit any camelids media']);
         // @todo Remove this in https://www.drupal.org/node/2824851.
         $this->grantPermissionsToTestedRole(['access content']);
         break;
 
       case 'DELETE':
-        $this->grantPermissionsToTestedRole(['delete any media']);
+        $this->grantPermissionsToTestedRole(['delete any camelids media']);
         break;
     }
   }

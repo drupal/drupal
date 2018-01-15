@@ -6,6 +6,7 @@
  */
 
 use Drupal\user\RoleInterface;
+use Drupal\user\Entity\Role;
 
 /**
  * Implements hook_install().
@@ -76,4 +77,46 @@ function media_requirements($phase) {
   }
 
   return $requirements;
+}
+
+/**
+ * Introduce per-bundle permissions.
+ */
+function media_update_8500() {
+  $media_types = \Drupal::entityQuery('media_type')->execute();
+
+  /** @var \Drupal\user\RoleInterface $role */
+  foreach (Role::loadMultiple() as $role) {
+    if ($role->hasPermission('update media')) {
+      foreach ($media_types as $media_type) {
+        $role->grantPermission("edit own $media_type media");
+      }
+    }
+
+    if ($role->hasPermission('update any media')) {
+      foreach ($media_types as $media_type) {
+        $role->grantPermission("edit any $media_type media");
+      }
+    }
+
+    if ($role->hasPermission('delete media')) {
+      foreach ($media_types as $media_type) {
+        $role->grantPermission("delete own $media_type media");
+      }
+    }
+
+    if ($role->hasPermission('delete any media')) {
+      foreach ($media_types as $media_type) {
+        $role->grantPermission("delete any $media_type media");
+      }
+    }
+
+    if ($role->hasPermission('create media')) {
+      foreach ($media_types as $media_type) {
+        $role->grantPermission("create $media_type media");
+      }
+    }
+
+    $role->save();
+  }
 }
