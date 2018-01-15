@@ -11,14 +11,28 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Implements hook_help().
  */
-function layout_builder_help($route_name) {
+function layout_builder_help($route_name, RouteMatchInterface $route_match) {
+  // Add help text to the Layout Builder UI.
+  if ($route_match->getRouteObject()->getOption('_layout_builder')) {
+    $output = '<p>' . t('This layout builder tool allows you to configure the layout of the main content area.') . '</p>';
+    if (\Drupal::currentUser()->hasPermission('administer blocks')) {
+      $output .= '<p>' . t('To manage other areas of the page, use the <a href="@block-ui">block administration page</a>.', ['@block-ui' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
+    }
+    else {
+      $output .= '<p>' . t('To manage other areas of the page, use the block administration page.') . '</p>';
+    }
+    return $output;
+  }
+
   switch ($route_name) {
     case 'help.page.layout_builder':
       $output = '<h3>' . t('About') . '</h3>';
