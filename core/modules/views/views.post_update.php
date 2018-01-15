@@ -291,7 +291,7 @@ function views_post_update_filter_placeholder_text() {
         foreach ($display['display_options']['filters'] as $filter_name => &$filter) {
           // Any of the children of the modified classes will also be inheriting
           // the new settings.
-          $filter_instance = $filter_manager->createInstance($filter['plugin_id']);
+          $filter_instance = $filter_manager->getHandler($filter);
           if ($filter_instance instanceof StringFilter) {
             if (!isset($filter['expose']['placeholder'])) {
               $filter['expose']['placeholder'] = '';
