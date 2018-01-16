@@ -450,7 +450,7 @@ class Schema extends DatabaseSchema {
    *   Name of the table.
    *
    * @return
-   *   An array representing the schema, from drupal_get_schema().
+   *   An array representing the schema.
    *
    * @throws \Exception
    *   If a column of the table could not be parsed.

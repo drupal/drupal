@@ -788,9 +788,8 @@ class ConfigImporter {
       // services.
       $this->reInjectMe();
       // During a module install or uninstall the container is rebuilt and the
-      // module handler is called from drupal_get_complete_schema(). This causes
-      // the container's instance of the module handler not to have loaded all
-      // the enabled modules.
+      // module handler is called. This causes the container's instance of the
+      // module handler not to have loaded all the enabled modules.
       $this->moduleHandler->loadAll();
     }
     if ($type == 'theme') {
