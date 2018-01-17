@@ -1,0 +1,5 @@
+    - image.style.max_325x325
+    - image.style.max_650x650
+_core:
+  default_config_hash: 3mjM9p-kQ8syzH7N8T0L9OnCJDSPvHAZoi3q6jcXJKM
+fallback_image_style: max_325x325
