@@ -201,8 +201,9 @@ class DiffEngine {
           continue;
         }
         $matches = $ymatches[$line];
+        $found_empty = FALSE;
         foreach ($matches as $y) {
-          if (!isset($found_empty)) {
+          if (!$found_empty) {
             if (empty($this->in_seq[$y])) {
               $k = $this->_lcs_pos($y);
               $this::USE_ASSERTS && assert($k > 0);
