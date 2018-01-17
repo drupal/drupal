@@ -20,6 +20,13 @@ class DrupalListener extends \PHPUnit_Framework_BaseTestListener {
   /**
    * {@inheritdoc}
    */
+  public function startTest(\PHPUnit_Framework_Test $test) {
+    $this->deprecationStartTest($test);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function endTest(\PHPUnit_Framework_Test $test, $time) {
     $this->deprecationEndTest($test, $time);
     $this->componentEndTest($test, $time);

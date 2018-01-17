@@ -26,6 +26,13 @@ else {
     /**
      * {@inheritdoc}
      */
+    public function startTest(Test $test) {
+      $this->deprecationStartTest($test);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function endTest(Test $test, $time) {
       $this->deprecationEndTest($test, $time);
       $this->componentEndTest($test, $time);
