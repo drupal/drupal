@@ -8,7 +8,7 @@ use Drupal\Core\Serialization\Yaml;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
@@ -155,9 +155,11 @@ class YamlFileLoader
         }
 
         if (isset($service['parent'])) {
-            $definition = new DefinitionDecorator($service['parent']);
+            $definition = new ChildDefinition($service['parent']);
         } else {
             $definition = new Definition();
+            // As of Symfony 3.4 all services are private by default.
+            $definition->setPublic(TRUE);
         }
 
         if (isset($service['class'])) {
@@ -329,7 +331,10 @@ class YamlFileLoader
             throw new InvalidArgumentException(sprintf('The service file "%s" is not valid.', $file));
         }
 
-        return $this->validate(Yaml::decode(file_get_contents($file)), $file);
+        // @todo Remove preg_replace() once
+        //   https://github.com/symfony/symfony/pull/25787 is in Symfony 3.4.
+        $content = preg_replace('/:$\n^\s+{\s*}$/m', ': {}', file_get_contents($file));
+        return $this->validate(Yaml::decode($content), $file);
     }
 
     /**

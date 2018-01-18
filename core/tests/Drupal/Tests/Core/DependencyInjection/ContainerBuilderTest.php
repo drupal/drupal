@@ -62,6 +62,25 @@ class ContainerBuilderTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::register
+   */
+  public function testRegister() {
+    $container = new ContainerBuilder();
+    $service = $container->register('bar');
+    $this->assertTrue($service->isPublic());
+  }
+
+  /**
+   * @covers ::setAlias
+   */
+  public function testSetAlias() {
+    $container = new ContainerBuilder();
+    $container->register('bar');
+    $alias = $container->setAlias('foo', 'bar');
+    $this->assertTrue($alias->isPublic());
+  }
+
+  /**
    * Tests serialization.
    */
   public function testSerialize() {

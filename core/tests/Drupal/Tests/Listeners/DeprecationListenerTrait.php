@@ -318,6 +318,12 @@ trait DeprecationListenerTrait {
       "The 'rest.entity.workflow.GET.json' route is deprecated since version 8.5.x and will be removed in 9.0.0. Use the 'rest.entity.workflow.GET' route instead.",
       "The 'rest.entity.workflow.GET.xml' route is deprecated since version 8.5.x and will be removed in 9.0.0. Use the 'rest.entity.workflow.GET' route instead.",
       "The 'rest.entity.workflow.GET.hal_json' route is deprecated since version 8.5.x and will be removed in 9.0.0. Use the 'rest.entity.workflow.GET' route instead.",
+      'The Symfony\Component\ClassLoader\ApcClassLoader class is deprecated since Symfony 3.3 and will be removed in 4.0. Use `composer install --apcu-autoloader` instead.',
+      'The Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher class is deprecated since Symfony 3.3 and will be removed in 4.0. Use EventDispatcher with closure factories instead.',
+      'The Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler class is deprecated since Symfony 3.4 and will be removed in 4.0. Implement `SessionUpdateTimestampHandlerInterface` or extend `AbstractSessionHandler` instead.',
+      'The "session_handler.write_check" service relies on the deprecated "Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler" class. It should either be deprecated or its implementation upgraded.',
+      'Not setting the strict option of the Choice constraint to true is deprecated since Symfony 3.4 and will throw an exception in 4.0.',
+      'Using the Yaml::PARSE_KEYS_AS_STRINGS flag is deprecated since Symfony 3.4 as it will be removed in 4.0. Quote your keys when they are evaluable instead.',
     ];
   }
 

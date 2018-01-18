@@ -67,9 +67,15 @@ class QueryTest extends DatabaseTestBase {
   public function testConditionOperatorArgumentsSQLInjection() {
     $injection = "IS NOT NULL) ;INSERT INTO {test} (name) VALUES ('test12345678'); -- ";
 
-    // Convert errors to exceptions for testing purposes below.
-    set_error_handler(function ($severity, $message, $filename, $lineno) {
-      throw new \ErrorException($message, 0, $severity, $filename, $lineno);
+    $previous_error_handler = set_error_handler(function ($severity, $message, $filename, $lineno, $context) use (&$previous_error_handler) {
+      // Normalize the filename to use UNIX directory separators.
+      if (preg_match('@core/lib/Drupal/Core/Database/Query/Condition.php$@', str_replace(DIRECTORY_SEPARATOR, '/', $filename))) {
+        // Convert errors to exceptions for testing purposes below.
+        throw new \ErrorException($message, 0, $severity, $filename, $lineno);
+      }
+      if ($previous_error_handler) {
+        return $previous_error_handler($severity, $message, $filename, $lineno, $context);
+      }
     });
     try {
       $result = db_select('test', 't')

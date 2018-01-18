@@ -172,12 +172,24 @@ EOD;
       'import' => $import,
     ];
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
-    $this->assertRaw(t('Are you sure you want to update the %name @type?', ['%name' => 'second', '@type' => 'test configuration']));
-    $this->drupalPostForm(NULL, [], t('Confirm'));
-    $entity = $storage->load('second');
-    $this->assertRaw(t('The configuration was imported successfully.'));
-    $this->assertTrue(is_string($entity->label()), 'Entity label is a string');
-    $this->assertTrue(strpos($entity->label(), 'ObjectSerialization') > 0, 'Label contains serialized object');
+    if (extension_loaded('yaml')) {
+      // If the yaml extension is loaded it will work but not create the PHP
+      // object.
+      $this->assertRaw(t('Are you sure you want to update the %name @type?', [
+        '%name' => 'second',
+        '@type' => 'test configuration'
+      ]));
+      $this->drupalPostForm(NULL, [], t('Confirm'));
+      $entity = $storage->load('second');
+      $this->assertRaw(t('The configuration was imported successfully.'));
+      $this->assertTrue(is_string($entity->label()), 'Entity label is a string');
+      $this->assertTrue(strpos($entity->label(), 'ObjectSerialization') > 0, 'Label contains serialized object');
+    }
+    else {
+      // If the Symfony parser is used there will be an error.
+      $this->assertSession()->responseContains('The import failed with the following message:');
+      $this->assertSession()->responseContains('Object support when parsing a YAML file has been disabled');
+    }
   }
 
   /**

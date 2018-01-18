@@ -28,6 +28,9 @@ class YamlFileLoaderTest extends UnitTestCase {
 services:
   example_service:
     class: \Drupal\Core\ExampleClass
+  example_private_service:
+    class: \Drupal\Core\ExampleClass
+    public: false
 YAML;
 
     vfsStream::setup('drupal', NULL, [
@@ -39,6 +42,11 @@ YAML;
     $yaml_file_loader->load('vfs://drupal/modules/example/example.yml');
 
     $this->assertEquals(['_provider' => [['provider' => 'example']]], $builder->getDefinition('example_service')->getTags());
+    $this->assertTrue($builder->getDefinition('example_service')->isPublic());
+    $this->assertFalse($builder->getDefinition('example_private_service')->isPublic());
+    $builder->compile();
+    $this->assertTrue($builder->has('example_service'));
+    $this->assertFalse($builder->has('example_private_service'));
   }
 
 }

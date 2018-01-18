@@ -46,9 +46,12 @@ class ContainerBuilder extends SymfonyContainerBuilder {
   }
 
   /**
-   * {@inheritdoc}
+   * A 1to1 copy of parent::shareService.
+   *
+   * @todo https://www.drupal.org/project/drupal/issues/2937010 Since Symfony
+   *   3.4 this is not a 1to1 copy.
    */
-  protected function shareService(Definition $definition, $service, $id)
+  protected function shareService(Definition $definition, $service, $id, array &$inlineServices)
   {
     if ($definition->isShared()) {
       $this->services[$lowerId = strtolower($id)] = $service;
@@ -85,7 +88,20 @@ class ContainerBuilder extends SymfonyContainerBuilder {
     if (strtolower($id) !== $id) {
       throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
     }
-    return parent::register($id, $class);
+    $definition = parent::register($id, $class);
+    // As of Symfony 3.4 all services are private by default.
+    $definition->setPublic(TRUE);
+    return $definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAlias($alias, $id) {
+    $alias = parent::setAlias($alias, $id);
+    // As of Symfony 3.4 all aliases are private by default.
+    $alias->setPublic(TRUE);
+    return $alias;
   }
 
   /**
@@ -100,8 +116,11 @@ class ContainerBuilder extends SymfonyContainerBuilder {
 
   /**
    * A 1to1 copy of parent::callMethod.
+   *
+   * @todo https://www.drupal.org/project/drupal/issues/2937010 Since Symfony
+   *   3.4 this is not a 1to1 copy.
    */
-  protected function callMethod($service, $call) {
+  protected function callMethod($service, $call, array &$inlineServices = array()) {
     $services = self::getServiceConditionals($call[1]);
 
     foreach ($services as $s) {

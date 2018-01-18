@@ -47,6 +47,10 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
    * Tests that subscriber sets trusted headers when reverse proxy is set.
    *
    * @dataProvider reverseProxyEnabledProvider
+   *
+   * @group legacy
+   *
+   * @expectedDeprecation The "Symfony\Component\HttpFoundation\Request::setTrustedHeaderName()" method is deprecated since Symfony 3.3 and will be removed in 4.0. Use the $trustedHeaderSet argument of the Request::setTrustedProxies() method instead.
    */
   public function testReverseProxyEnabled($provided_settings) {
     // Enable reverse proxy and add test values.
@@ -87,10 +91,10 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
     $request = new Request();
 
     $middleware->handle($request);
-    $this->assertSame($settings->get('reverse_proxy_header'), $request->getTrustedHeaderName($request::HEADER_CLIENT_IP));
-    $this->assertSame($settings->get('reverse_proxy_proto_header'), $request->getTrustedHeaderName($request::HEADER_CLIENT_PROTO));
-    $this->assertSame($settings->get('reverse_proxy_host_header'), $request->getTrustedHeaderName($request::HEADER_CLIENT_HOST));
-    $this->assertSame($settings->get('reverse_proxy_port_header'), $request->getTrustedHeaderName($request::HEADER_CLIENT_PORT));
+    $this->assertSame($settings->get('reverse_proxy_header'), $request->getTrustedHeaderName($request::HEADER_X_FORWARDED_FOR));
+    $this->assertSame($settings->get('reverse_proxy_proto_header'), $request->getTrustedHeaderName($request::HEADER_X_FORWARDED_PROTO));
+    $this->assertSame($settings->get('reverse_proxy_host_header'), $request->getTrustedHeaderName($request::HEADER_X_FORWARDED_HOST));
+    $this->assertSame($settings->get('reverse_proxy_port_header'), $request->getTrustedHeaderName($request::HEADER_X_FORWARDED_PORT));
     $this->assertSame($settings->get('reverse_proxy_forwarded_header'), $request->getTrustedHeaderName($request::HEADER_FORWARDED));
     $this->assertSame($settings->get('reverse_proxy_addresses'), $request->getTrustedProxies());
   }

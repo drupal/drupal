@@ -68,7 +68,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $this->containerBuilder->getAliases()->willReturn([]);
       $this->containerBuilder->getParameterBag()->willReturn(new ParameterBag());
       $this->containerBuilder->getDefinitions()->willReturn(NULL);
-      $this->containerBuilder->isFrozen()->willReturn(TRUE);
+      $this->containerBuilder->isCompiled()->willReturn(TRUE);
 
       $definition = [];
       $definition['aliases'] = [];
@@ -147,7 +147,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
 
       $parameter_bag = new ParameterBag($parameters);
       $this->containerBuilder->getParameterBag()->willReturn($parameter_bag);
-      $this->containerBuilder->isFrozen()->willReturn($is_frozen);
+      $this->containerBuilder->isCompiled()->willReturn($is_frozen);
 
       if (isset($parameters['reference'])) {
         $definition = new Definition('\stdClass');
