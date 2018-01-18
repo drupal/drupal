@@ -120,6 +120,9 @@ trait FunctionalTestSetupTrait {
       // Add a listener to validate configuration schema on save.
       $yaml = new SymfonyYaml();
       $content = file_get_contents($directory . '/services.yml');
+      // @todo Remove preg_replace() once
+      //   https://github.com/symfony/symfony/pull/25787 is in Symfony 3.4.
+      $content = preg_replace('/:$\n^\s+{\s*}$/m', ': {}', $content);
       $services = $yaml->parse($content);
       $services['services']['simpletest.config_schema_checker'] = [
         'class' => ConfigSchemaChecker::class,
@@ -165,7 +168,11 @@ trait FunctionalTestSetupTrait {
     $filename = $this->siteDirectory . '/services.yml';
     chmod($filename, 0666);
 
-    $services = Yaml::decode(file_get_contents($filename));
+    // @todo Remove preg_replace() once
+    //   https://github.com/symfony/symfony/pull/25787 is in Symfony 3.4.
+    $content = file_get_contents($filename);
+    $content = preg_replace('/:$\n^\s+{\s*}$/m', ': {}', $content);
+    $services = Yaml::decode($content);
     $services['parameters'][$name] = $value;
     file_put_contents($filename, Yaml::encode($services));
 

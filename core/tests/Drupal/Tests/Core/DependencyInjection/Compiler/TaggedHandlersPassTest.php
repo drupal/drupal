@@ -38,7 +38,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
     $handler_pass = new TaggedHandlersPass();
     $handler_pass->process($container);
 
-    $this->assertCount(1, $container->getDefinitions());
+    $this->assertCount(2, $container->getDefinitions());
     $this->assertFalse($container->getDefinition('consumer_id')->hasMethodCall('addHandler'));
   }
 

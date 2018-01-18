@@ -39,7 +39,7 @@ class ProxyServicesPassTest extends UnitTestCase {
 
     $this->proxyServicesPass->process($container);
 
-    $this->assertCount(1, $container->getDefinitions());
+    $this->assertCount(2, $container->getDefinitions());
     $this->assertEquals('Drupal\Core\Plugin\CachedDiscoveryClearer', $container->getDefinition('plugin_cache_clearer')->getClass());
   }
 
@@ -53,7 +53,7 @@ class ProxyServicesPassTest extends UnitTestCase {
 
     $this->proxyServicesPass->process($container);
 
-    $this->assertCount(2, $container->getDefinitions());
+    $this->assertCount(3, $container->getDefinitions());
 
     $non_proxy_definition = $container->getDefinition('drupal.proxy_original_service.plugin_cache_clearer');
     $this->assertEquals('Drupal\Core\Plugin\CachedDiscoveryClearer', $non_proxy_definition->getClass());

@@ -76,10 +76,10 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
     // the configured upload limit.
     if ($exception instanceof BrokenPostRequestException && $request->query->has(FormBuilderInterface::AJAX_FORM_REQUEST)) {
       $this->drupalSetMessage($this->t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', ['@size' => $this->formatSize($exception->getSize())]), 'error');
-      $response = new AjaxResponse();
+      $response = new AjaxResponse(NULL, 200);
       $status_messages = ['#type' => 'status_messages'];
       $response->addCommand(new PrependCommand(NULL, $status_messages));
-      $response->headers->set('X-Status-Code', 200);
+      $event->allowCustomResponseCode();
       $event->setResponse($response);
       return;
     }
@@ -99,7 +99,8 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
 
         // Since this response is being set in place of an exception, explicitly
         // mark this as a 200 status.
-        $response->headers->set('X-Status-Code', 200);
+        $response->setStatusCode(200);
+        $event->allowCustomResponseCode();
         $event->setResponse($response);
       }
       catch (\Exception $e) {

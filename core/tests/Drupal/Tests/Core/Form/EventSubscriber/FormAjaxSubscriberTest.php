@@ -76,7 +76,8 @@ class FormAjaxSubscriberTest extends UnitTestCase {
       ->willReturn($response);
 
     $event = $this->assertResponseFromException($request, $exception, $response);
-    $this->assertSame(200, $event->getResponse()->headers->get('X-Status-Code'));
+    $this->assertTrue($event->isAllowingCustomResponseCode());
+    $this->assertSame(200, $event->getResponse()->getStatusCode());
   }
 
   /**
@@ -100,7 +101,8 @@ class FormAjaxSubscriberTest extends UnitTestCase {
       ->willReturn($response);
 
     $event = $this->assertResponseFromException($request, $exception, $response);
-    $this->assertSame(200, $event->getResponse()->headers->get('X-Status-Code'));
+    $this->assertTrue($event->isAllowingCustomResponseCode());
+    $this->assertSame(200, $event->getResponse()->getStatusCode());
   }
 
   /**
@@ -176,9 +178,10 @@ class FormAjaxSubscriberTest extends UnitTestCase {
 
     $event = new GetResponseForExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
     $this->subscriber->onException($event);
+    $this->assertTrue($event->isAllowingCustomResponseCode());
     $actual_response = $event->getResponse();
     $this->assertInstanceOf('\Drupal\Core\Ajax\AjaxResponse', $actual_response);
-    $this->assertSame(200, $actual_response->headers->get('X-Status-Code'));
+    $this->assertSame(200, $actual_response->getStatusCode());
     $expected_commands[] = [
       'command' => 'insert',
       'method' => 'prepend',

@@ -59,23 +59,23 @@ class ReverseProxyMiddleware implements HttpKernelInterface {
     // Initialize proxy settings.
     if ($settings->get('reverse_proxy', FALSE)) {
       $ip_header = $settings->get('reverse_proxy_header', 'X_FORWARDED_FOR');
-      $request::setTrustedHeaderName($request::HEADER_CLIENT_IP, $ip_header);
+      $request::setTrustedHeaderName($request::HEADER_X_FORWARDED_FOR, $ip_header);
 
       $proto_header = $settings->get('reverse_proxy_proto_header', 'X_FORWARDED_PROTO');
-      $request::setTrustedHeaderName($request::HEADER_CLIENT_PROTO, $proto_header);
+      $request::setTrustedHeaderName($request::HEADER_X_FORWARDED_PROTO, $proto_header);
 
       $host_header = $settings->get('reverse_proxy_host_header', 'X_FORWARDED_HOST');
-      $request::setTrustedHeaderName($request::HEADER_CLIENT_HOST, $host_header);
+      $request::setTrustedHeaderName($request::HEADER_X_FORWARDED_HOST, $host_header);
 
       $port_header = $settings->get('reverse_proxy_port_header', 'X_FORWARDED_PORT');
-      $request::setTrustedHeaderName($request::HEADER_CLIENT_PORT, $port_header);
+      $request::setTrustedHeaderName($request::HEADER_X_FORWARDED_PORT, $port_header);
 
       $forwarded_header = $settings->get('reverse_proxy_forwarded_header', 'FORWARDED');
       $request::setTrustedHeaderName($request::HEADER_FORWARDED, $forwarded_header);
 
       $proxies = $settings->get('reverse_proxy_addresses', []);
       if (count($proxies) > 0) {
-        $request::setTrustedProxies($proxies);
+        $request::setTrustedProxies($proxies, Request::HEADER_X_FORWARDED_ALL | Request::HEADER_FORWARDED);
       }
     }
   }
