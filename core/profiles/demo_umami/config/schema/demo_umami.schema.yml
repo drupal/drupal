@@ -1,0 +1,31 @@
+block.settings.umami_disclaimer:
+  type: block_settings
+  label: 'Disclaimer block'
+  mapping:
+    umami_disclaimer:
+      type: text_format
+      label: 'Disclaimer'
+    umami_copyright:
+      type: text_format
+      label: 'Copyright'
+
+block.settings.umami_footer_promo:
+  type: block_settings
+  label: 'Footer promo block'
+  mapping:
+    promo_title:
+      type: string
+      label: 'Promo title'
+    promo_text:
+      type: string
+      label: 'Promo text'
+    findmore_url:
+      type: string
+      label: 'Find more URL'
+    findmore_text:
+      type: string
+      label: 'Find more text'
+
+block.settings.umami_recipes_banner_temp:
+  type: block_settings
+  label: 'Banner'

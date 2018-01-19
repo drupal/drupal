@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Theme override for an 'input' #type form element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ *
+ * @see template_preprocess_input()
+ */
+#}
+
+{%
+  set placeholder_text = 'Search by keyword, ingredient, dish'
+%}
+
+<input{{ attributes.setAttribute('placeholder', placeholder_text) }} />{{ children }}

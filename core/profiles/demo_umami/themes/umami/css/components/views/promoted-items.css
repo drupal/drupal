@@ -1,0 +1,116 @@
+/**
+ * @file
+ * This file is used to style the 'Promoted Items' view.
+ */
+
+.block-views-blockpromoted-items-block-1 {
+  margin-top: 1rem;
+}
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .block-views-blockpromoted-items-block-1 {
+    margin-top: 2rem;
+  }
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .block-views-blockpromoted-items-block-1 {
+    margin-top: 3rem;
+  }
+}
+
+.view-promoted-items--single {
+  padding: 1rem 14px 2rem;
+}
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .view-promoted-items--single {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+  }
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single {
+    display: flex;
+  }
+}
+/* 77em == the max width of .container + 1em either side */
+@media screen and (min-width: 77em) {
+  .view-promoted-items--single {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single > .view-content {
+    flex: 0 0 50%;
+    margin-right: 14px;
+    display: flex;
+  }
+}
+
+.view-promoted-items--single > .view-content .views-row {
+  margin-bottom: 14px;
+}
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .view-promoted-items--single > .view-content .views-row {
+    margin-bottom: 28px;
+    display: flex;
+  }
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single > .view-content .views-row {
+    margin-bottom: 0;
+  }
+}
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single > .attachment-after {
+    margin-left: 14px;
+    display: flex;
+  }
+}
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single .attachment-after .views-element-container {
+    display: flex;
+  }
+}
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single .attachment-after .view-promoted-items--double {
+    display: flex;
+  }
+}
+
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .view-promoted-items--double {
+    overflow-x: hidden;
+  }
+}
+
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .view-promoted-items--double .view-content {
+    display: flex;
+    margin: 0 -14px;
+  }
+}
+
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .view-promoted-items--double .views-row {
+    display: flex;
+    margin: 0 14px;
+    width: calc(50% - 28px);
+  }
+}

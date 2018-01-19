@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_recipe_instruction
+    - node.type.recipe
+  module:
+    - text
+id: node.recipe.field_recipe_instruction
+field_name: field_recipe_instruction
+entity_type: node
+bundle: recipe
+label: 'Recipe instruction'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

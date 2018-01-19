@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Umami theme.
+ */
+
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ *
+ * Adds body classes if certain regions have content.
+ */
+function umami_preprocess_html(&$variables) {
+  // Add a sidebar class if the sidebar has content in it.
+  if (!empty($variables['page']['sidebar'])) {
+    $variables['attributes']['class'][] = 'two-columns';
+    $variables['#attached']['library'][] = 'umami/two-columns';
+  }
+  else {
+    $variables['attributes']['class'][] = 'one-column';
+  }
+}
+
+/**
+ * Implements hook_preprocess_field().
+ */
+function umami_preprocess_field(&$variables, $hook) {
+  $element = $variables['element'];
+  // Add class to label and items fields to be styled using the meta styles.
+  if (isset($element['#field_name'])) {
+    if (
+      $element['#field_name'] == 'field_recipe_category' ||
+      $element['#field_name'] == 'field_tags' ||
+      $element['#field_name'] == 'field_difficulty') {
+      $variables['attributes']['class'] = 'label-items';
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function umami_preprocess_block(&$vars) {
+  $vars['title_attributes']['class'][] = 'block__title';
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for form templates.
+ */
+function umami_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+  // Block suggestions for custom block bundles.
+  if (isset($variables['elements']['content']['#block_content'])) {
+    array_splice($suggestions, 1, 0, 'block__bundle__' . $variables['elements']['content']['#block_content']->bundle());
+  }
+}
+
+/**
+ * Implements hook_preprocess_breadcrumb().
+ */
+function umami_preprocess_breadcrumb(&$variables) {
+  // We are creating a variable for the Current Page Title, to allow us to print
+  // it after the breadcrumbs loop has run.
+  $request = \Drupal::request();
+  if ($route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) {
+    // Search page titles aren't resolved using the title_resolver service - it
+    // will always return 'Search' instead of 'Search for [term]', which would
+    // give us a breadcrumb of Home >> Search >> Search.
+    // @see https://www.drupal.org/project/drupal/issues/2359901
+    // @see https://www.drupal.org/project/drupal/issues/2403359
+    if (($entity = $request->attributes->get('entity')) && $entity->getEntityTypeId() === 'search_page') {
+      $variables['current_page_title'] = $entity->getPlugin()->suggestedTitle();
+    }
+    else {
+      $variables['current_page_title'] = \Drupal::service('title_resolver')->getTitle($request, $route);
+    }
+  }
+  // Since we are printing the 'Current Page Title', add the URL cache context.
+  // If we don't, then we might end up with something like
+  // "Home > Articles" on the Recipes page, which should read "Home > Recipes".
+  $variables['#cache']['contexts'][] = 'url';
+}

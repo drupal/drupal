@@ -1,0 +1,54 @@
+/**
+ * @file
+ * This file is used to style the Footer promo block.
+ */
+
+.footer-promo {
+  padding-top: 250px;
+  background: url('../../../../images/png/umami-bundle.png') no-repeat center top;
+}
+
+.footer-promo__title {
+  font-size: 1.5rem;
+  font-weight: normal;
+}
+
+.footer-promo__text a {
+  background-color: inherit;
+  clear: left;
+  display: block;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.footer-promo__text a:active,
+.footer-promo__text a:focus,
+.footer-promo__text a:hover {
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+.footer-promo__text a:after {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  content: '';
+  background: url('../../../../images/svg/pointer--white.svg') no-repeat center center;
+  vertical-align: middle;
+}
+
+@media screen and (min-width: 60rem) {
+  .footer-promo {
+    flex-basis: 60%;
+    height: 200px;
+    padding-top: 0;
+    padding-left: 280px;
+    background-position: left top;
+    font-size: 0.9rem;
+  }
+
+  .footer-promo__title {
+    padding-top: 2rem;
+  }
+}

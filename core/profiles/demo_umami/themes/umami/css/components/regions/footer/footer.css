@@ -1,0 +1,27 @@
+/**
+ * @file
+ * This file is used to style the footer.
+ *
+ * It styles the footer as a global component; it does not style individual
+ * footer items, such as a menu, which are styled by their own CSS files.
+ */
+
+.footer {
+  padding: 2rem 1rem;
+  background-color: #5f635d;
+  color: #fff;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+@media screen and (min-width: 60rem) {
+  .footer {
+    padding: 1rem 1rem 0;
+    text-align: left;
+  }
+
+  .region-footer {
+    display: flex;
+    justify-content: space-between;
+  }
+}

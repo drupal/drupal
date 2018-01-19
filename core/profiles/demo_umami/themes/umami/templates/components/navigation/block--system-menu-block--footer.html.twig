@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Theme override for Menu footer block.
+ */
+#}
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+    'menu-footer-wrapper',
+  ]
+%}
+{% set title_classes = ['menu-footer__title'] %}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if label %}
+    <h2{{ title_attributes.addClass(title_classes) }}>{{ label }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  {% block content %}
+    {{ content }}
+  {% endblock %}
+</div>

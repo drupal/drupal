@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+name: large_21_9_2x
+label: 'Large 21:9 2x (2880x1240)'
+effects:
+  6b96b7e5-aabd-406e-86ec-2c2e2c18bd82:
+    uuid: 6b96b7e5-aabd-406e-86ec-2c2e2c18bd82
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 2880
+      height: 1240

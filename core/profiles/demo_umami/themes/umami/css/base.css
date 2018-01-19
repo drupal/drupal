@@ -1,0 +1,225 @@
+/**
+ * @file
+ * This is the base CSS file, for styling elements.
+ */
+
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+  margin-top: 0; /* This allows us to ensure that items side-by-side line up nicely. */
+}
+
+a {
+  color: #00836D;
+  text-decoration: underline;
+}
+a:hover,
+a:focus {
+  background-color: #e6eee0;
+  color: #444444;
+  text-decoration: none;
+}
+
+body {
+  background: #fbf5ee;
+  color: #464646;
+  font-family: 'Open Sans', Verdana, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  margin: 0;
+}
+
+blockquote {
+  background: #f4f2e9;
+  margin-bottom: 1.28rem;
+  padding: 3rem;
+}
+blockquote > * {
+  color: #000;
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 1.266rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+blockquote a {
+  /* Tweak default link colour to improve contrast for accessibility */
+  color: #057d6d;
+}
+blockquote a:hover,
+blockquote a:focus {
+  background-color: #fdfcf9;
+}
+
+button,
+.button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  background-color: #00836d;
+  border: 3px solid #00836d;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0.4em 1.5em;
+  text-align: center;
+  text-decoration: none;
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  font-weight: normal;
+  transition: background-color 0.5s ease;
+}
+button:hover,
+button:active,
+button:focus,
+.button:hover,
+.button:active,
+.button:focus {
+  background-color: #e6eee0;
+  border: 3px solid #00836d;
+  color: #000000;
+  text-decoration: none;
+  transition: background-color 0.5s ease;
+}
+button[disabled]:hover,
+button[disabled]:active,
+button[disabled]:focus,
+button[disabled],
+.button[disabled]:hover,
+.button[disabled]:active,
+.button[disabled]:focus,
+.button[disabled] {
+  background: #767775;
+  color: #464646;
+  cursor: default;
+}
+
+h1 {
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 1.424rem; /* +3 based on 1.125 modular scale (major second) */
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0 0 1.07rem 0;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  h1 {
+    font-size: 2.369rem;
+  }
+}
+
+h2 {
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 1.266rem;  /* +2 based on 1.125 modular scale (major second) */
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0 0 0.7rem 0;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  h2 {
+    font-size: 1.77rem;
+  }
+}
+
+h3 {
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 1.125rem;/* +1 based on 1.125 modular scale (major second) */
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0 0 0.96rem 0;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  h3 {
+    font-size: 1.5rem;
+  }
+}
+
+h4 {
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0 0 1.28rem 0;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  h4 {
+    font-size: 1.33rem;
+  }
+}
+
+h5 {
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 0.889rem; /* -1 based on 1.125 modular scale (major second) */
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 1.28rem 0;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  h5 {
+    font-size: 1.25rem;
+    font-weight: 400;
+  }
+}
+
+h6 {
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 0.79rem; /* -1 based on 1.125 modular scale (major second) */
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 1.28rem 0;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  h6 {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+input {
+  border: 2px solid #767775;
+  color: #000;
+  margin: 0.25rem 0;
+  min-width: 100%;
+  max-width: 100%;
+  font-size: 1rem;
+  padding: 0.8rem 0.4rem;
+}
+
+label {
+  color: #464646;
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0.25rem 0;
+}
+
+ul,
+ol {
+  margin-bottom: 1.28rem;
+}
+ol ol,
+ol ul,
+ul ul,
+ul ol {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+p {
+  margin-bottom: 1.28rem;
+}

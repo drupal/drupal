@@ -1,0 +1,39 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.recipe.field_author
+    - field.field.node.recipe.field_cooking_time
+    - field.field.node.recipe.field_difficulty
+    - field.field.node.recipe.field_image
+    - field.field.node.recipe.field_ingredients
+    - field.field.node.recipe.field_number_of_servings
+    - field.field.node.recipe.field_preparation_time
+    - field.field.node.recipe.field_recipe_category
+    - field.field.node.recipe.field_recipe_instruction
+    - field.field.node.recipe.field_summary
+    - field.field.node.recipe.field_tags
+    - node.type.recipe
+  module:
+    - user
+id: node.recipe.teaser
+targetEntityType: node
+bundle: recipe
+mode: teaser
+content:
+  links:
+    weight: 100
+    region: content
+hidden:
+  field_author: true
+  field_cooking_time: true
+  field_difficulty: true
+  field_image: true
+  field_ingredients: true
+  field_number_of_servings: true
+  field_preparation_time: true
+  field_recipe_category: true
+  field_recipe_instruction: true
+  field_summary: true
+  field_tags: true

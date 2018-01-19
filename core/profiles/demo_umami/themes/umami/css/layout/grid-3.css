@@ -1,0 +1,40 @@
+/**
+ * @file
+ * This file is used to create a 3 column grid layout.
+ */
+
+.grid--3 .views-row {
+  margin-bottom: 28px;
+  padding: 0 14px;
+}
+
+@media screen and (min-width: 30em) {
+  .grid--3 {
+    overflow-x: hidden;
+  }
+  .grid--3 .view-content {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+  .grid--3 .views-row {
+    display: flex;
+    flex: 0 0 calc(50% - 28px);
+    margin: 0 14px 28px;
+    padding: 0;
+  }
+}
+
+@media screen and (min-width: 60em) {
+  .grid--3 .views-row {
+    flex: 0 0 calc(33% - 28px);
+  }
+}
+
+/* 77em == the max width of .container + 1em either side */
+@media screen and (min-width: 77em) {
+  .grid--3 .view-content {
+    margin-left: -14px;
+    margin-right: -14px;
+  }
+}

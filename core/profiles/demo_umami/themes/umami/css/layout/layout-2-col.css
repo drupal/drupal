@@ -1,0 +1,19 @@
+/**
+ * @file
+ * This file is used to create the layout when the theme has 2 columns.
+ */
+.layout-sidebar {
+  margin: 0 1.562rem;
+}
+
+@media screen and (min-width: 60em) {
+  .two-columns .main {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .layout-sidebar {
+    min-width: 300px;
+    width: 25%;
+  }
+}

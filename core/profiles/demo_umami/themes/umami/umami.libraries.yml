@@ -1,0 +1,91 @@
+global:
+  version: VERSION
+  css:
+    component:
+      css/base.css: {}
+      css/components/blocks/banner/banner.css: {}
+      css/components/blocks/branding/branding.css: {}
+      css/components/blocks/page-title/page-title.css: {}
+      css/components/blocks/footer-promo/footer-promo.css: {}
+      css/components/blocks/search/search.css: {}
+      css/components/blocks/search/search-results.css: {}
+      css/components/blocks/articles-aside/articles-aside.css: {}
+      css/components/forms/contact.css: {}
+      css/components/content/node.css: {}
+      css/components/content/full/node-full.css: {}
+      css/components/content-types/article/article.css: {}
+      css/components/content-types/recipe/recipe.css: {}
+      css/components/fields/label-items.css: {}
+      css/components/forms/buttons.css: {}
+      css/components/views/promoted-items.css: {}
+      css/components/views/frontpage.css: {}
+      css/components/navigation/menu-footer/menu-footer.css: {}
+      css/components/navigation/menu-main/menu-main.css: {}
+      css/components/navigation/menu-account/menu-account.css: {}
+      css/components/navigation/skip-link/skip-link.css: {}
+      css/components/navigation/tabs/tabs.css: {}
+      css/components/navigation/breadcrumbs/breadcrumbs.css: {}
+      css/components/regions/bottom/bottom.css: {}
+      css/components/regions/footer/footer.css: {}
+      css/components/regions/header/header.css: {}
+    layout:
+      css/layout/grid-2.css: {}
+      css/layout/grid-3.css: {}
+      css/layout/grid-4.css: {}
+      css/layout/layout.css: {}
+  js:
+    js/components/navigation/menu-main/menu-main.js: {}
+
+messages:
+  css:
+    component:
+      css/components/messages/messages.css: { weight: -10 }
+
+more-link:
+  css:
+    theme:
+      css/components/navigation/more-link/more-link.css: { weight: -10 }
+
+quicklinks:
+  css:
+    theme:
+      css/components/blocks/quicklinks/quicklinks.css: {}
+
+two-columns:
+  css:
+    layout:
+      css/layout/layout-2-col.css: {}
+
+
+webfonts:
+  css:
+    theme:
+      'https://fonts.googleapis.com/css?family=Open+Sans|Scope+One': { type: external, minified: true }
+
+view-mode-highlighted-bottom:
+  css:
+    theme:
+      css/components/content/highlighted-bottom/highlighted-bottom.css: {}
+  dependencies:
+    - umami/more-link
+
+view-mode-highlighted-small:
+  css:
+    theme:
+      css/components/content/highlighted-small/highlighted-small.css: {}
+  dependencies:
+    - umami/more-link
+
+view-mode-highlighted-medium:
+  css:
+    theme:
+      css/components/content/highlighted-medium/highlighted-medium.css: {}
+  dependencies:
+    - umami/more-link
+
+view-mode-highlighted-top:
+  css:
+    theme:
+      css/components/content/highlighted-top/highlighted-top.css: {}
+  dependencies:
+    - umami/more-link

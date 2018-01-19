@@ -1,0 +1,22 @@
+/**
+ * @file
+ * Styles for the skip link.
+ */
+
+.skip-link {
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  z-index: 50;
+  background: #444;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 1px 10px 2px;
+  border-radius: 0 0 10px 10px;
+  border: 1px solid #444;
+  border-top-width: 0;
+  outline: 0;
+}
+.skip-link.visually-hidden.focusable:focus {
+  position: absolute !important;
+}

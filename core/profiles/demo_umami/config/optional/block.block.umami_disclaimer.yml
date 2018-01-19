@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - demo_umami
+  theme:
+    - umami
+id: umami_disclaimer
+theme: umami
+region: bottom
+weight: 10
+provider: null
+plugin: umami_disclaimer
+settings:
+  id: umami_disclaimer
+  label: 'Umami disclaimer'
+  provider: demo_umami
+  label_display: '0'
+  umami_disclaimer:
+    value: '<strong>Umami Magazine & Umami Publications</strong> is a fictional magazine and publisher for illustrative purposes only.'
+    format: basic_html
+  umami_copyright:
+    value: '&copy; 2018 Terms & Conditions'
+    format: basic_html
+visibility: {  }

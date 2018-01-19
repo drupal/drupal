@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+name: scale_crop_7_3_large
+label: 'Scale crop 7:3 large'
+effects:
+  6e4edf30-59c0-45d0-ba6d-63dac5128eef:
+    uuid: 6e4edf30-59c0-45d0-ba6d-63dac5128eef
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 1440
+      height: 617

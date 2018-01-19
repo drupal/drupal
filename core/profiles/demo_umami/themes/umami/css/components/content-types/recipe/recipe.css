@@ -1,0 +1,227 @@
+/**
+ * @file
+ * This file is used to style the recipe using the 'full' view mode.
+ */
+
+.node--type-recipe.node--view-mode-full .field--name-field-recipe-category {
+  flex: 0 0 100%;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .field--name-field-recipe-category {
+    flex: 0 1 auto;
+    margin-right: 1em;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .layout__region--top {
+  margin-bottom: 2.369em;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+/* Override the recipe's img margin-bottom on larger displays */
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--top .field--name-field-image img {
+    margin-bottom: 0;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .layout__region--top-first,
+.node--type-recipe.node--view-mode-full .layout__region--top-second {
+  flex: 0 0 calc(50% - 1rem);
+}
+
+/* Recipe meta */
+.node--type-recipe.node--view-mode-full .layout__region--top-second {
+  display: flex;
+  flex-direction: column;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  /* Recipe meta */
+  .node--type-recipe.node--view-mode-full .layout__region--top-second {
+    align-self: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .layout__region--top-second > .recipe-meta {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-bottom: 1em;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--top-second > .recipe-meta {
+    align-items: center;
+    flex: 0 0 40%;
+    flex-direction: column;
+    margin-bottom: 2em;
+    text-align: center;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .layout__region--top-second > .field--name-field-summary {
+  flex-basis: 100%;
+  text-align: left;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--top-second > .field--name-field-summary {
+    flex-basis: 90%;
+    text-align: center;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .layout__region--top-second svg {
+  flex: 0 0 26px;
+  height: 26px;
+  margin-bottom: 0;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--top-second svg {
+    flex: 0 0 auto;
+    height: 47px;
+    margin-bottom: 0.889em;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .layout__region--top-second .field {
+  flex: 1 0 auto;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--top-second .field {
+    flex: 0 0 100%;
+  }
+}
+.node--type-recipe.node--view-mode-full .layout__region--top-second .field .field__label,
+.node--type-recipe.node--view-mode-full .layout__region--top-second .field .field__item {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--top-second .field .field__label,
+  .node--type-recipe.node--view-mode-full .layout__region--top-second .field .field__item {
+    display: block;
+  }
+}
+.node--type-recipe.node--view-mode-full .layout__region--top .field__label {
+  font-family: 'Open Sans', Verdana, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* Recipe instructions */
+.node--type-recipe.node--view-mode-full .layout__region--bottom {
+  background-color: #f4f2e9;
+  border: 1px solid #e6eee0;
+  margin: 0 -1.266em;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0;
+  }
+}
+.node--type-recipe.node--view-mode-full .layout__region--bottom > h2 {
+  flex: 0 0 100%;
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 1.424em;
+  font-weight: 400;
+  line-height: 1.2;
+  padding: 1.266rem 1.266rem 1em 1.266rem;
+  text-align: left;
+  margin: 0;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--bottom > h2 {
+    font-size: 2.369rem;
+    padding: 1.2em;
+    text-align: center;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .layout__region--bottom-first {
+  padding: 0 1.266em 1.266em 1.266em;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--bottom-first {
+    flex: 0 0 33%;
+    padding: 0 2.369em 2.369em 2.369em;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .layout__region--bottom-second {
+  padding: 0 1.266em 1.266em 1.266em;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--bottom-second {
+    flex: 0 0 67%;
+    padding: 0 2.369em 2.369em 2.369em;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .layout__region--bottom .field__label {
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 1.266rem;
+  font-weight: 400;
+  line-height: 1.2;
+  padding: 0 0 0.6em 0;
+  margin: 0 0 1em 0;
+  border-bottom: 1px solid #EEC2CB;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-recipe.node--view-mode-full .layout__region--bottom .field__label {
+    font-size: 1.77rem;
+    margin: 0 0 1.5em 0;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .field--name-field-ingredients .field__item {
+  border-bottom: 1px solid #eec2cb;
+  padding: 0 0 0.6em 0;
+  margin: 0 0 0.6em 0;
+}
+.node--type-recipe.node--view-mode-full .field--name-field-recipe-instruction ol {
+  margin-left: 0;
+  padding-left: 0;
+  list-style-type: none;
+}
+.node--type-recipe.node--view-mode-full .field--name-field-recipe-instruction ol > li {
+  counter-increment: step-counter;
+  padding: 0 0 0.6em 2.5em;
+  min-height: 1.5em;
+  list-style: none;
+  position: relative;
+}
+.node--type-recipe.node--view-mode-full .field--name-field-recipe-instruction ol > li::before {
+  content: counter(step-counter);
+  color: #cc2a00;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

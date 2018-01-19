@@ -1,0 +1,55 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.banner_block
+    - field.field.block_content.banner_block.field_banner_image
+    - field.field.block_content.banner_block.field_content_link
+    - field.field.block_content.banner_block.field_summary
+    - field.field.block_content.banner_block.field_title
+    - image.style.scale_crop_7_3_large
+  module:
+    - image
+    - link
+id: block_content.banner_block.default
+targetEntityType: block_content
+bundle: banner_block
+mode: default
+content:
+  field_banner_image:
+    weight: 0
+    label: hidden
+    settings:
+      image_style: scale_crop_7_3_large
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
+  field_content_link:
+    weight: 3
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_summary:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_title:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden: {  }

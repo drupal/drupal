@@ -1,0 +1,41 @@
+/**
+ * @file
+ * This file is used to style the main menu.
+ */
+
+.menu-footer {
+  padding: 0;
+}
+
+.menu-footer__title {
+  font-size: 1.5rem;
+  font-weight: normal;
+}
+
+.menu-footer__item {
+  list-style: none;
+}
+
+.menu-footer .menu-footer__link {
+  background-color: transparent;
+  text-decoration: none;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.menu-footer .menu-footer__link:active,
+.menu-footer .menu-footer__link:focus,
+.menu-footer .menu-footer__link:hover {
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+@media screen and (min-width: 60rem) {
+  .menu-footer__title {
+    padding-top: 2rem;
+  }
+
+  .menu-footer-wrapper {
+    flex-basis: 25%;
+  }
+}

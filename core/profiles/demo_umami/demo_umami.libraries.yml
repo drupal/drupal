@@ -1,0 +1,4 @@
+toolbar-warning:
+  css:
+    component:
+      css/toolbar-warning.css: {}

@@ -1,0 +1,83 @@
+/**
+ * @file
+ * This file is used to style the Quick Links block.
+ */
+
+.quicklinks {
+  background-color: #fff;
+}
+
+@media screen and (min-width: 60rem) { /* 960px */
+  .quicklinks {
+    padding: 2rem 0;
+  }
+}
+
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .quicklinks__content {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .quicklinks__content {
+    flex-wrap: nowrap;
+  }
+}
+
+.quicklinks__col {
+  position: relative;
+  min-height: 9rem;
+  padding: 1.5rem 0.25rem;
+  text-align: center;
+}
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .quicklinks__col {
+    flex-basis: 50%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+.quicklinks__col::after {
+  position: absolute;
+  display: block;
+  bottom: 0;
+  right: 10%;
+  height: 1px;
+  width: 80%;
+  content: '';
+  background-color: #E6EEE0;
+}
+.quicklinks__col:last-child::after {
+  display: none;
+}
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .quicklinks__col:nth-child(3)::after {
+    display: none;
+  }
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .quicklinks__col::after {
+    position: absolute;
+    display: block;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 1px;
+    content: '';
+    background-color: #E6EEE0;
+  }
+  .quicklinks__col:nth-child(3)::after {
+    display: block;
+  }
+}
+
+.quicklinks__img {
+  margin-bottom: 1rem;
+}

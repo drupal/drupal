@@ -1,0 +1,82 @@
+/**
+ * @file
+ * This file is used to style the banner block.
+ */
+
+.cover-image {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.block-banner-block {
+  background-size: 0 0;
+  background-position: 0 0;
+}
+
+.block-banner-block .summary {
+  margin: 1em;
+}
+
+.block-banner-block .field--name-field-title {
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 1.424rem;
+  font-weight: 400;
+  margin: 0 0 1.07em 0;
+}
+
+.block-banner-block .field--name-field-summary {
+  margin-bottom: 1.28em;
+}
+
+.block-banner-block .field--name-field-content-link a {
+  display: inline-block;
+  padding: 0.5em 1.5em 0.4em;
+  border: 0;
+  border-radius: 4px;
+  background-color: #E84265;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-family: 'Scope One', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  font-weight: normal;
+  transition: background-color 0.5s ease;
+}
+
+.block-banner-block .field--name-field-content-link a:focus,
+.block-banner-block .field--name-field-content-link a:hover {
+  background-color: #00836D;
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* 768px */
+@media screen and (min-width: 48rem) { /* 768px */
+  .block-banner-block {
+    background-size: cover;
+    background-position: left center;
+    /* Image ratio 7:3 */
+  }
+
+  .block-banner-block .block-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    padding: 0 1em;
+    min-height: 43vw;
+    align-items: center;
+  }
+
+  .block-banner-block .summary {
+    margin: 0;
+    flex: 0 0 30%;
+    color: #ffffff;
+  }
+
+  .block-banner-block .field--name-field-banner-image {
+    display: none;
+  }
+}
