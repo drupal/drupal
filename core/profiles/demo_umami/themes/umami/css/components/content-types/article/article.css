@@ -1,0 +1,25 @@
+/**
+ * @file
+ * This file is used to style the article content type using the 'full' view mode.
+ */
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-article.node--view-mode-full .node__header {
+    padding-right: 2.75rem;
+  }
+}
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-article.node--view-mode-full .node__content {
+    padding: 0 2.75rem 2.4rem 10.2rem;
+  }
+}
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--type-article.node--view-mode-full .field--name-field-image {
+    margin-left: -12.6rem;
+  }
+}

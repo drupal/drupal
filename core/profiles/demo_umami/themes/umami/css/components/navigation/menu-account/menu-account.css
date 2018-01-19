@@ -1,0 +1,35 @@
+/**
+ * @file
+ * This file is used to style the account menu.
+ */
+
+.menu--account {
+  display: none;
+}
+
+@media screen and (min-width: 48em) {
+  .menu--account {
+    flex: 0 1 50%;
+    order: 2;
+    display: block;
+    border-bottom: 1px solid #E6EEE0;
+    text-align: right;
+  }
+}
+
+.menu-account {
+  display: inline-flex;
+  margin: 1.6em 0;
+  padding: 0;
+  line-height: 1.5;
+  list-style-type: none;
+}
+.menu-account__item + .menu-account__item {
+  margin-left: 1em;
+}
+.menu-account__link,
+.menu-account__link:hover {
+  color: inherit;
+  text-decoration: none;
+  background-color: inherit;
+}

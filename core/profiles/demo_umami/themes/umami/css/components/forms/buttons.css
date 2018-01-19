@@ -1,0 +1,27 @@
+/**
+ * @file
+ * This file is used to style form buttons generically, with overrides per form
+ */
+.form-actions {
+  display: inline-flex;
+}
+
+.form-actions .button {
+  margin-left: 1em;
+}
+.form-actions .button:first-child {
+  margin-left: 0;
+}
+
+.form-submit {
+  padding: 0.6em 1.25em 0.4em;
+  margin: 0;
+  border: 1px solid #dbdbdb;
+  font-size: 0.875rem;
+  background-color: #fff;
+  color: #000;
+}
+.form-submit:hover,
+.form-submit:focus {
+  padding: calc(0.6em - 2px) calc(1.25em - 2px) calc(0.4em - 2px) calc(1.25em - 2px);
+}

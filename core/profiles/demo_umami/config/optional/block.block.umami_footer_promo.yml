@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - demo_umami
+  theme:
+    - umami
+id: umami_footer_promo
+theme: umami
+region: footer
+weight: -1
+provider: null
+plugin: umami_footer_promo
+settings:
+  id: umami_footer_promo
+  label: 'Umami Footer promo'
+  provider: demo_umami
+  label_display: '0'
+  promo_title: 'Umami Food Magazine'
+  promo_text: 'Skills and know-how. Magazine exclusive articles, recipes and plenty of reasons to get your copy today.'
+  findmore_url: '/about-umami'
+  findmore_text: 'Find out more'
+visibility: {  }

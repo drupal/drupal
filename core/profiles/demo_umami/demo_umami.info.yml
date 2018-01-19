@@ -1,0 +1,44 @@
+name: Umami Demo - <strong>Experimental</strong>
+type: profile
+description: 'Install with the <i>Umami</i> food magazine demonstration website, a sample Drupal website that shows off some of the features of what is possible with Drupal "Out of the Box".<br><div role="contentinfo" aria-label="Warning message" class="messages messages--warning">Warning: this is a sample website, you should not use it as the basis for your website.</div>'
+version: VERSION
+core: 8.x
+dependencies:
+  - node
+  - history
+  - big_pipe
+  - block
+  - breakpoint
+  - ckeditor
+  - color
+  - config
+  - contextual
+  - contact
+  - menu_link_content
+  - datetime
+  - block_content
+  - quickedit
+  - editor
+  - help
+  - image
+  - menu_ui
+  - options
+  - path
+  - page_cache
+  - dynamic_page_cache
+  - taxonomy
+  - dblog
+  - search
+  - shortcut
+  - toolbar
+  - field_ui
+  - file
+  - rdf
+  - views
+  - views_ui
+  - tour
+  - automated_cron
+  - responsive_image
+themes:
+  - seven
+  - umami

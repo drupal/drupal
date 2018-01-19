@@ -1,0 +1,72 @@
+/**
+ * @file
+ * This file is used to style the 'full' view mode.
+ */
+.node--view-mode-full {
+  background-color: #ffffff;
+  border-bottom: 1px solid #fcece7;
+  border-left: none;
+  border-right: none;
+  border-top: 1px solid #fcece7;
+  margin: 0 auto 2.37rem;
+  padding: 1.266rem;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--view-mode-full {
+    border-left: 1px solid #fcece7;
+    border-right: 1px solid #fcece7;
+    padding: 2.37rem;
+  }
+}
+
+.node--view-mode-full > .node__header {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.node--view-mode-full .page-title {
+  flex: 0 0 100%;
+}
+
+.node--view-mode-full .node__submitted {
+  flex: 0 0 100%;
+  font-size: 0.889em;
+  margin-bottom: 1.2em;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--view-mode-full .node__submitted {
+    flex: 0 1 auto;
+    margin-right: 2rem;
+  }
+}
+.node--view-mode-full .by-author::after {
+  content: "•";
+  font-size: 2em;
+  vertical-align: middle;
+  display: inline-block;
+  margin: 0 0.25ex;
+  color: #7CBE8C;
+}
+
+.node--view-mode-full .field--name-field-tags {
+  flex: 0 0 100%;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--view-mode-full .field--name-field-tags {
+    flex: 0 1 auto;
+    margin-left: auto;
+  }
+}
+
+.node--view-mode-full .field--name-field-image {
+  margin-bottom: 1.184rem;
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .node--view-mode-full .field--name-field-image {
+    margin-bottom: 2.369rem;
+  }
+}

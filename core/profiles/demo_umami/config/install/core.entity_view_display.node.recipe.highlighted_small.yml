@@ -1,0 +1,58 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.highlighted_small
+    - field.field.node.recipe.field_author
+    - field.field.node.recipe.field_cooking_time
+    - field.field.node.recipe.field_difficulty
+    - field.field.node.recipe.field_image
+    - field.field.node.recipe.field_ingredients
+    - field.field.node.recipe.field_number_of_servings
+    - field.field.node.recipe.field_preparation_time
+    - field.field.node.recipe.field_recipe_category
+    - field.field.node.recipe.field_recipe_instruction
+    - field.field.node.recipe.field_summary
+    - field.field.node.recipe.field_tags
+    - node.type.recipe
+    - responsive_image.styles.3_2_image
+  module:
+    - options
+    - responsive_image
+    - user
+id: node.recipe.highlighted_small
+targetEntityType: node
+bundle: recipe
+mode: highlighted_small
+content:
+  field_difficulty:
+    weight: 1
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_image:
+    weight: 0
+    label: hidden
+    settings:
+      responsive_image_style: 3_2_image
+      image_link: content
+    third_party_settings: {  }
+    type: responsive_image
+    region: content
+  links:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_author: true
+  field_cooking_time: true
+  field_ingredients: true
+  field_number_of_servings: true
+  field_preparation_time: true
+  field_recipe_category: true
+  field_recipe_instruction: true
+  field_summary: true
+  field_tags: true

@@ -1,0 +1,35 @@
+/**
+ * @file
+ * Visual styles for tabs.
+ */
+
+.layout-tabs {
+  background-color: #79bd8f;
+}
+.tabs.primary {
+  display: flex;
+  list-style: none;
+  margin: 0 0 0.5em;
+  padding: 0;
+}
+.tabs .tab {
+  margin: 0;
+  background-color: #e6eee0;
+}
+.tabs .tab.is-active {
+  background-color: #fff;
+}
+.tabs a {
+  display: block;
+  padding: 0.75rem 1rem;
+  background-color: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+.tabs a.is-active {
+  background-color: inherit;
+}
+.tabs a:focus,
+.tabs a:hover {
+  background-color: #fff;
+}

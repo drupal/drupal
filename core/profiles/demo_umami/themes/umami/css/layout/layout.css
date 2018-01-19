@@ -1,0 +1,12 @@
+/**
+ * @file
+ * This file is used to create generic layout styles.
+ *
+ * More specific layout items may be found within their respective files, e.g.
+ * the layout for two columns is in the layout-2-cols.css file.
+ */
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+}

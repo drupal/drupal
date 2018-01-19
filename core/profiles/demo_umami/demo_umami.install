@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the demo_umami installation profile.
+ */
+
+use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
+use Drupal\shortcut\Entity\Shortcut;
+
+/**
+ * Implements hook_requirements().
+ */
+function demo_umami_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'runtime') {
+    $demo_umami_installed_drupal = \Drupal::state()->get('demo_umami_drupal_version');
+
+    $requirements['experimental_profile_used'] = [
+      'title' => t('Experimental profile used'),
+      'value' => \Drupal::VERSION,
+      'description' => t('Demo Umami is an experimental profile to be used for demonstration purposes only, and should not be used for a production/live site. To start building a new site, you should re-install Drupal and choose another profile, for example "Standard".'),
+      'severity' => REQUIREMENT_WARNING,
+    ];
+
+    // Check if Drupal version has changed since demo_umami was installed.
+    if ($demo_umami_installed_drupal != \Drupal::VERSION) {
+      $requirements['demo_umami_drupal_version'] = [
+        'title' => t('Demo Umami Drupal Version'),
+        'value' => \Drupal::VERSION,
+        'description' => t('Drupal has been updated since this demo was installed, which could cause issues with this site. It is recommended that you re-install the demo to evaluate the latest changes.'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ *
+ * Perform actions to set up the site for this profile.
+ *
+ * @see system_install()
+ */
+function demo_umami_install() {
+  // Set front page to "node".
+  \Drupal::configFactory()->getEditable('system.site')->set('page.front', '/node')->save(TRUE);
+
+  // Allow visitor account creation with administrative approval.
+  $user_settings = \Drupal::configFactory()->getEditable('user.settings');
+  $user_settings->set('register', USER_REGISTER_ADMINISTRATORS_ONLY)->save(TRUE);
+
+  // Assign user 1 the "administrator" role.
+  $user = User::load(1);
+  $user->roles[] = 'administrator';
+  $user->save();
+
+  // We install some menu links, so we have to rebuild the router, to ensure the
+  // menu links are valid.
+  \Drupal::service('router.builder')->rebuildIfNeeded();
+
+  // Enable the Contact link in the footer menu.
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $menu_link_manager->updateDefinition('contact.site_page', ['enabled' => TRUE]);
+
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access site-wide contact form']);
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access site-wide contact form']);
+
+  // Allow authenticated users to use shortcuts.
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access shortcuts']);
+
+  // Populate the default shortcut set.
+  $shortcut = Shortcut::create([
+    'shortcut_set' => 'default',
+    'title' => t('Add content'),
+    'weight' => -20,
+    'link' => ['uri' => 'internal:/node/add'],
+  ]);
+  $shortcut->save();
+
+  $shortcut = Shortcut::create([
+    'shortcut_set' => 'default',
+    'title' => t('All content'),
+    'weight' => -19,
+    'link' => ['uri' => 'internal:/admin/content'],
+  ]);
+  $shortcut->save();
+
+  // Allow all users to use search.
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['search content']);
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['search content']);
+
+  // Enable the admin theme.
+  \Drupal::configFactory()->getEditable('node.settings')->set('use_admin_theme', TRUE)->save(TRUE);
+
+  // Enable the demo content module. This can't be specified as a dependency
+  // in the demo_umami.info.yml file, as it requires configuration provided by
+  // the profile (fields etc.).
+  \Drupal::service('module_installer')->install(['demo_umami_content'], TRUE);
+
+  // Store the version of Drupal installed.
+  \Drupal::state()->set('demo_umami_drupal_version', \Drupal::VERSION);
+}

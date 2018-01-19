@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.highlighted_small
+    - field.field.node.article.body
+    - field.field.node.article.field_image
+    - field.field.node.article.field_tags
+    - node.type.article
+    - responsive_image.styles.3_2_image
+  module:
+    - responsive_image
+    - user
+id: node.article.highlighted_small
+targetEntityType: node
+bundle: article
+mode: highlighted_small
+content:
+  field_image:
+    type: responsive_image
+    weight: 0
+    region: content
+    settings:
+      responsive_image_style: 3_2_image
+      image_link: content
+    third_party_settings: {  }
+    label: hidden
+hidden:
+  body: true
+  field_tags: true
+  links: true

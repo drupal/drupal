@@ -1,0 +1,32 @@
+/**
+ * @file
+ * This file is used to style the header.
+ *
+ * It styles the header as a global component; it does not style individual
+ * header items, such as a menu, which are styled by their own CSS files.
+ */
+
+.layout-header {
+  background: #fff;
+  padding: 0;
+}
+
+.region-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0.75rem 0;
+}
+
+@media screen and (min-width: 48em) {
+  .region-header {
+    padding: 0 1rem;
+  }
+}
+
+/* 77em == the max width of .container + 1em either side */
+@media screen and (min-width: 77em) {
+  .region-header {
+    padding: 0;
+  }
+}

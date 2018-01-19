@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+name: small_21_9
+label: 'Small 21:9 (768x330)'
+effects:
+  06eaf095-124b-435d-af50-442044e91e7d:
+    uuid: 06eaf095-124b-435d-af50-442044e91e7d
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 768
+      height: 330

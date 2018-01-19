@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.highlighted_small
+label: 'Highlighted Small'
+targetEntityType: node
+cache: true

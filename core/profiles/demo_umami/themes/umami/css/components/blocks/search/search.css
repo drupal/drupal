@@ -1,0 +1,106 @@
+/**
+ * @file
+ * This file is used to style the search block.
+ */
+
+.search-form + h2 {
+  margin: 0 14px 1rem;
+}
+
+.search-block-form {
+  display: none;
+}
+
+@media screen and (min-width: 48em) {
+  .search-block-form {
+    flex: 0 1 50%;
+    order: 1;
+    display: block;
+    border-bottom: 1px solid #E6EEE0;
+  }
+}
+
+.search-block-form form {
+  display: flex;
+  margin-top: 1.3rem;
+  margin-bottom: 1.2rem;
+}
+
+.search-iconwrap {
+  flex: 0 1 30%;
+  order: 3;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 1rem;
+}
+
+@media screen and (min-width: 48em) {
+  .search-iconwrap {
+    display: none;
+  }
+}
+
+/* Search icon for mobile */
+.search-link {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  /* Centres the icon when focused/hovered */
+  padding-right: 7px;
+  margin-right: -7px;
+}
+.search-link svg {
+  display: block;
+  width: 26px;
+  height: auto;
+}
+
+/* Search input */
+.form-type-search {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.form-search {
+  width: 26em;
+  max-width: calc(100vw - 6.25em);
+  height: auto;
+  margin: 0;
+  padding: 0.5em 6.25em 0.5em 2.25em;
+  border: 1px solid #dbdbdb;
+  border-right: none;
+  border-radius: 3px;
+  font-size: 0.875rem;
+  line-height: normal;
+  background: url(../../../../images/svg/search.svg) no-repeat 0.5em center #fff;
+  background-size: 1.5em;
+  color: #464646;
+}
+.form-search:focus {
+  outline: none;
+  box-shadow: 0 0 1px 1px #d62e5f;
+}
+
+.form-search::placeholder {
+  opacity: 1;
+}
+.form-type-search .form-search {
+  box-sizing: border-box; /* Override input[type="search"] of normalize.css */
+}
+
+/* Search submit */
+.search-block-form .form-actions {
+  margin-top: 0;
+  margin-bottom: 0;
+  width: 80px;
+  margin-left: -80px;
+  position: relative;
+  z-index: 1;
+}
+.search-block-form .form-submit,
+.search-form .form-submit {
+  /* Take off the border radius on the left side as it bumps into the search field */
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

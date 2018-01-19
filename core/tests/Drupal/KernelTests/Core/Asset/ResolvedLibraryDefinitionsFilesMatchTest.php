@@ -108,6 +108,10 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
       }
       return TRUE;
     });
+    // Remove demo_umami_content module as its install hook creates content
+    // that relies on the presence of entity tables and various other elements
+    // not present in a kernel test.
+    unset($all_modules['demo_umami_content']);
     $this->allModules = array_keys($all_modules);
     $this->allModules[] = 'system';
     sort($this->allModules);
