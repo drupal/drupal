@@ -6,3 +6,4 @@ entity.block.off_canvas_form:
   requirements:
     _permission: 'administer blocks'
     _access_block_plugin_has_settings_tray_form: 'TRUE'
+    _access_block_has_overrides_settings_tray_form: 'TRUE'
