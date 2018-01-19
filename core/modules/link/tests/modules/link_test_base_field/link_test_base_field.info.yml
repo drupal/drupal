@@ -1,0 +1,8 @@
+name: Link test base field
+description: Tests link field as an optional base field
+type: module
+core: 8.x
+hidden: true
+dependencies:
+  - link
+  - entity_test

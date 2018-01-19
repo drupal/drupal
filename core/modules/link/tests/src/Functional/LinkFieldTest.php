@@ -24,7 +24,12 @@ class LinkFieldTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test', 'link', 'node'];
+  public static $modules = [
+    'entity_test',
+    'link',
+    'node',
+    'link_test_base_field',
+  ];
 
   /**
    * A field to use in this test class.

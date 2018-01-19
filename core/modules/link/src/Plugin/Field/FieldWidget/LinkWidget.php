@@ -227,7 +227,7 @@ class LinkWidget extends WidgetBase {
 
       if (!$element['title']['#required']) {
         // Make title required on the front-end when URI filled-in.
-        $field_name = $this->fieldDefinition->get('field_name');
+        $field_name = $this->fieldDefinition->getName();
 
         $parents = $element['#field_parents'];
         $parents[] = $field_name;
