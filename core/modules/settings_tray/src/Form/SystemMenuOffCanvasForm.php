@@ -3,6 +3,8 @@
 namespace Drupal\settings_tray\Form;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -52,16 +54,26 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
   protected $entityTypeManager;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * SystemMenuOffCanvasForm constructor.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $menu_storage
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
-  public function __construct(EntityStorageInterface $menu_storage, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
+  public function __construct(EntityStorageInterface $menu_storage, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation, ConfigFactoryInterface $config_factory) {
     $this->menuStorage = $menu_storage;
     $this->entityTypeManager = $entity_type_manager;
     $this->stringTranslation = $string_translation;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -71,7 +83,8 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
     return new static(
       $container->get('entity_type.manager')->getStorage('menu'),
       $container->get('entity_type.manager'),
-      $container->get('string_translation')
+      $container->get('string_translation'),
+      $container->get('config.factory')
     );
   }
 
@@ -87,6 +100,7 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
       '#type' => 'details',
       '#title' => $this->t('Edit menu %label', ['%label' => $this->menu->label()]),
       '#open' => TRUE,
+      '#access' => AccessResult::allowedIf(!$this->hasMenuOverrides()),
     ];
     $form['entity_form'] += $this->getEntityForm($this->menu)->buildForm([], $form_state);
 
@@ -115,7 +129,9 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->plugin->validateConfigurationForm($form, $form_state);
-    $this->getEntityForm($this->menu)->validateForm($form, $form_state);
+    if (!$this->hasMenuOverrides()) {
+      $this->getEntityForm($this->menu)->validateForm($form, $form_state);
+    }
   }
 
   /**
@@ -123,8 +139,10 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->plugin->submitConfigurationForm($form, $form_state);
-    $this->getEntityForm($this->menu)->submitForm($form, $form_state);
-    $this->menu->save();
+    if (!$this->hasMenuOverrides()) {
+      $this->getEntityForm($this->menu)->submitForm($form, $form_state);
+      $this->menu->save();
+    }
   }
 
   /**
@@ -147,7 +165,20 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
    */
   public function setPlugin(PluginInspectionInterface $plugin) {
     $this->plugin = $plugin;
-    $this->menu = $this->menuStorage->load($this->plugin->getDerivativeId());
+    $this->menu = $this->menuStorage->loadOverrideFree($this->plugin->getDerivativeId());
+  }
+
+  /**
+   * Determines if the menu has configuration overrides.
+   *
+   * @return bool
+   *   TRUE if the menu has configuration overrides, otherwise FALSE.
+   */
+  protected function hasMenuOverrides() {
+    // @todo Replace the following with $this->menu->hasOverrides() in https://www.drupal.org/project/drupal/issues/2910353
+    //   and remove this function.
+    return $this->configFactory->get($this->menu->getEntityType()
+      ->getConfigPrefix() . '.' . $this->menu->id())->hasOverrides();
   }
 
 }

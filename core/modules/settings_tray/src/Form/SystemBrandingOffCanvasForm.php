@@ -2,6 +2,7 @@
 
 namespace Drupal\settings_tray\Form;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -63,10 +64,13 @@ class SystemBrandingOffCanvasForm extends PluginFormBase implements ContainerInj
     unset($form['block_branding']['use_site_name']['#description'], $form['block_branding']['use_site_slogan']['#description']);
 
     $site_config = $this->configFactory->getEditable('system.site');
+    // Load the immutable config to load the overrides.
+    $site_config_immutable = $this->configFactory->get('system.site');
     $form['site_information'] = [
       '#type' => 'details',
       '#title' => t('Site details'),
       '#open' => TRUE,
+      '#access' => AccessResult::allowedIf(!$site_config_immutable->hasOverrides('name') && !$site_config_immutable->hasOverrides('slogan')),
     ];
     $form['site_information']['site_name'] = [
       '#type' => 'textfield',
@@ -95,11 +99,15 @@ class SystemBrandingOffCanvasForm extends PluginFormBase implements ContainerInj
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $site_info = $form_state->getValue('site_information');
-    $this->configFactory->getEditable('system.site')
-      ->set('name', $site_info['site_name'])
-      ->set('slogan', $site_info['site_slogan'])
-      ->save();
+    $site_config = $this->configFactory->get('system.site');
+    if (AccessResult::allowedIf(!$site_config->hasOverrides('name') && !$site_config->hasOverrides('slogan'))->isAllowed()) {
+      $site_info = $form_state->getValue('site_information');
+      $this->configFactory->getEditable('system.site')
+        ->set('name', $site_info['site_name'])
+        ->set('slogan', $site_info['site_slogan'])
+        ->save();
+    }
+
     $this->plugin->submitConfigurationForm($form, $form_state);
   }
 
