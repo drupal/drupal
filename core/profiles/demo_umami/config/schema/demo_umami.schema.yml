@@ -25,7 +25,3 @@ block.settings.umami_footer_promo:
     findmore_text:
       type: string
       label: 'Find more text'
-
-block.settings.umami_recipes_banner_temp:
-  type: block_settings
-  label: 'Banner'
