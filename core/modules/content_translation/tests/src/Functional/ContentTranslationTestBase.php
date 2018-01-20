@@ -138,7 +138,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
    * Returns an array of permissions needed for the administrator.
    */
   protected function getAdministratorPermissions() {
-    return array_merge($this->getEditorPermissions(), $this->getTranslatorPermissions(), ['administer content translation']);
+    return array_merge($this->getEditorPermissions(), $this->getTranslatorPermissions(), ['administer languages', 'administer content translation']);
   }
 
   /**

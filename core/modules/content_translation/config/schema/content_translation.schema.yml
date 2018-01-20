@@ -18,3 +18,9 @@ language.content_settings.*.*.third_party.content_translation:
     enabled:
       type: boolean
       label: 'Content translation enabled'
+    bundle_settings:
+      type: sequence
+      label: 'Content translation bundle settings'
+      sequence:
+        type: string
+        label: 'Bundle settings values'

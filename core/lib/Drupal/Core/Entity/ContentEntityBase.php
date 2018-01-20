@@ -20,6 +20,10 @@ use Drupal\Core\TypedData\TypedDataInterface;
  */
 abstract class ContentEntityBase extends Entity implements \IteratorAggregate, ContentEntityInterface, TranslationStatusInterface {
 
+  use EntityChangesDetectionTrait {
+    getFieldsToSkipFromTranslationChangesCheck as traitGetFieldsToSkipFromTranslationChangesCheck;
+  }
+
   /**
    * The plain data values of the contained fields.
    *
@@ -1373,17 +1377,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    *   An array of field names.
    */
   protected function getFieldsToSkipFromTranslationChangesCheck() {
-    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
-    $entity_type = $this->getEntityType();
-    // A list of known revision metadata fields which should be skipped from
-    // the comparision.
-    $fields = [
-      $entity_type->getKey('revision'),
-      'revision_translation_affected',
-    ];
-    $fields = array_merge($fields, array_values($entity_type->getRevisionMetadataKeys()));
-
-    return $fields;
+    return $this->traitGetFieldsToSkipFromTranslationChangesCheck($this);
   }
 
   /**
@@ -1423,10 +1417,15 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // The list of fields to skip from the comparision.
     $skip_fields = $this->getFieldsToSkipFromTranslationChangesCheck();
 
+    // We also check untranslatable fields, so that a change to those will mark
+    // all translations as affected, unless they are configured to only affect
+    // the default translation.
+    $skip_untranslatable_fields = !$this->isDefaultTranslation() && $this->isDefaultTranslationAffectedOnly();
+
     foreach ($this->getFieldDefinitions() as $field_name => $definition) {
       // @todo Avoid special-casing the following fields. See
       //    https://www.drupal.org/node/2329253.
-      if (in_array($field_name, $skip_fields, TRUE)) {
+      if (in_array($field_name, $skip_fields, TRUE) || ($skip_untranslatable_fields && !$definition->isTranslatable())) {
         continue;
       }
       $field = $this->get($field_name);
@@ -1445,6 +1444,16 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     }
 
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isDefaultTranslationAffectedOnly() {
+    $bundle_name = $this->bundle();
+    $bundle_info = \Drupal::service('entity_type.bundle.info')
+      ->getBundleInfo($this->getEntityTypeId());
+    return !empty($bundle_info[$bundle_name]['untranslatable_fields.default_translation_affected']);
   }
 
 }

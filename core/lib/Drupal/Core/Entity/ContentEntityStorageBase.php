@@ -227,13 +227,13 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       $active_langcode = $entity->language()->getId();
       $skipped_field_names = array_flip($this->getRevisionTranslationMergeSkippedFieldNames());
 
-      // Default to preserving the untranslatable field values in the default
-      // revision, otherwise we may expose data that was not meant to be
-      // accessible.
+      // By default we copy untranslatable field values from the default
+      // revision, unless they are configured to affect only the default
+      // translation. This way we can ensure we always have only one affected
+      // translation in pending revisions. This constraint is enforced by
+      // EntityUntranslatableFieldsConstraintValidator.
       if (!isset($keep_untranslatable_fields)) {
-        // @todo Implement a more complete default logic in
-        //    https://www.drupal.org/project/drupal/issues/2878556.
-        $keep_untranslatable_fields = FALSE;
+        $keep_untranslatable_fields = $entity->isDefaultTranslation() && $entity->isDefaultTranslationAffectedOnly();
       }
 
       /** @var \Drupal\Core\Entity\ContentEntityInterface $default_revision */
@@ -262,6 +262,13 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
         // No need to copy untranslatable field values more than once.
         $keep_untranslatable_fields = TRUE;
       }
+
+      // The "original" property is used in various places to detect changes in
+      // field values with respect to the stored ones. If the property is not
+      // defined, the stored version is loaded explicitly. Since the merged
+      // revision generated here is not stored anywhere, we need to populate the
+      // "original" property manually, so that changes can be properly detected.
+      $new_revision->original = clone $new_revision;
     }
 
     // Eventually mark the new revision as such.

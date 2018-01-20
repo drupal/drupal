@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\User;
@@ -216,12 +217,32 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
     $sets['Default behavior - Untranslatable fields affect all revisions'] = [
       [
         ['en', TRUE, TRUE],
+        ['it', FALSE, TRUE, FALSE],
+        ['en', FALSE, TRUE, FALSE],
+        ['en', TRUE, TRUE],
         ['it', TRUE, TRUE],
         ['en', FALSE],
         ['it', FALSE],
         ['en', TRUE],
         ['it', TRUE],
       ],
+      FALSE,
+    ];
+
+    $sets['Alternative behavior - Untranslatable fields affect only default translation'] = [
+      [
+        ['en', TRUE, TRUE],
+        ['it', FALSE, TRUE, FALSE],
+        ['en', FALSE, TRUE],
+        ['it', FALSE],
+        ['it', TRUE],
+        ['en', TRUE, TRUE],
+        ['it', FALSE],
+        ['en', FALSE],
+        ['it', TRUE],
+        ['en', TRUE, TRUE],
+      ],
+      TRUE,
     ];
 
     return $sets;
@@ -234,11 +255,20 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *   An array with arrays of arguments for the ::doSaveNewRevision() method as
    *   values. Every child array corresponds to a method invocation.
    *
+   * @param bool $default_translation_affected
+   *   Whether untranslatable field changes affect all revisions or only the
+   *   default revision.
+   *
    * @covers ::createRevision
+   * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraintValidator::validate
    *
    * @dataProvider dataTestUntranslatableFields
    */
-  public function testUntranslatableFields($sequence) {
+  public function testUntranslatableFields($sequence, $default_translation_affected) {
+    // Configure the untranslatable fields edit mode.
+    $this->state->set('entity_test.untranslatable_fields.default_translation_affected', $default_translation_affected);
+    $this->bundleInfo->clearCachedBundles();
+
     // Test that a new entity is always valid.
     $entity = EntityTestMulRev::create();
     $entity->set('non_mul_field', 0);
@@ -289,14 +319,23 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   protected function doEditStep($active_langcode, $default_revision, $untranslatable_update = FALSE, $valid = TRUE) {
     $this->stepInfo = [$active_langcode, $default_revision, $untranslatable_update, $valid];
 
+    // If changes to untranslatable fields affect only the default translation,
+    // we can different values for untranslatable fields in the various
+    // revision translations, so we need to track their previous value per
+    // language.
+    $all_translations_affected = !$this->state->get('entity_test.untranslatable_fields.default_translation_affected');
+    $previous_untranslatable_field_langcode = $all_translations_affected ? LanguageInterface::LANGCODE_DEFAULT : $active_langcode;
+
     // Initialize previous data tracking.
     if (!isset($this->translations)) {
       $this->translations[$active_langcode] = EntityTestMulRev::create();
       $this->previousRevisionId[$active_langcode] = 0;
+      $this->previousUntranslatableFieldValue[$previous_untranslatable_field_langcode] = NULL;
     }
     if (!isset($this->translations[$active_langcode])) {
       $this->translations[$active_langcode] = reset($this->translations)->addTranslation($active_langcode);
       $this->previousRevisionId[$active_langcode] = 0;
+      $this->previousUntranslatableFieldValue[$active_langcode] = NULL;
     }
 
     // We want to update previous data only if we expect a valid result,
@@ -304,10 +343,12 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
     if ($valid) {
       $entity = &$this->translations[$active_langcode];
       $previous_revision_id = &$this->previousRevisionId[$active_langcode];
+      $previous_untranslatable_field_value = &$this->previousUntranslatableFieldValue[$previous_untranslatable_field_langcode];
     }
     else {
       $entity = clone $this->translations[$active_langcode];
       $previous_revision_id = $this->previousRevisionId[$active_langcode];
+      $previous_untranslatable_field_value = $this->previousUntranslatableFieldValue[$previous_untranslatable_field_langcode];
     }
 
     // Check that after instantiating a new revision for the specified
@@ -332,9 +373,20 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
       $this->assertEquals($previous_label, $entity->label(), $this->formatMessage('Loaded translatable field value does not match the previous one.'));
     }
 
+    // Check that the previous untranslatable field value is loaded in the new
+    // revision as expected. When we are dealing with a non default translation
+    // the expected value is always the one stored in the default revision, as
+    // untranslatable fields can only be changed in the default translation or
+    // in the default revision, depending on the configured mode.
     $value = $entity->get('non_mul_field')->value;
     if (isset($previous_untranslatable_field_value)) {
       $this->assertEquals($previous_untranslatable_field_value, $value, $this->formatMessage('Loaded untranslatable field value does not match the previous one.'));
+    }
+    elseif (!$entity->isDefaultTranslation()) {
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $default_revision */
+      $default_revision = $this->storage->loadUnchanged($entity->id());
+      $expected_value = $default_revision->get('non_mul_field')->value;
+      $this->assertEquals($expected_value, $value, $this->formatMessage('Loaded untranslatable field value does not match the previous one.'));
     }
 
     // Perform a change and store it.
@@ -345,12 +397,13 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
       // the new value, besides the upcoming revision ID. Useful to analyze test
       // failures.
       $prev = 0;
-      if (isset($value)) {
-        preg_match('/^\d+ -> (\d+)$/', $value, $matches);
+      if (isset($previous_untranslatable_field_value)) {
+        preg_match('/^\d+ -> (\d+)$/', $previous_untranslatable_field_value, $matches);
         $prev = $matches[1];
       }
       $value = $prev . ' -> ' . ($entity->getLoadedRevisionId() + 1);
       $entity->set('non_mul_field', $value);
+      $previous_untranslatable_field_value = $value;
     }
 
     $violations = $entity->validate();
@@ -378,7 +431,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
       // translation was marked as affected.
       foreach ($entity->getTranslationLanguages() as $langcode => $language) {
         $translation = $entity->getTranslation($langcode);
-        $rta_expected = $langcode == $active_langcode || $untranslatable_update;
+        $rta_expected = $langcode == $active_langcode || ($untranslatable_update && $all_translations_affected);
         $this->assertEquals($rta_expected, $translation->isRevisionTranslationAffected(), $this->formatMessage("'$langcode' translation incorrectly affected"));
         $label_expected = $label;
         if ($langcode !== $active_langcode) {

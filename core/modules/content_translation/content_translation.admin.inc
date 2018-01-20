@@ -5,6 +5,7 @@
  * The content translation administration forms.
  */
 
+use Drupal\content_translation\BundleTranslationSettingsInterface;
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -83,6 +84,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
     return;
   }
 
+  /** @var \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager */
   $content_translation_manager = \Drupal::service('content_translation.manager');
   $default = $form['entity_types']['#default_value'];
   foreach ($default as $entity_type_id => $enabled) {
@@ -108,6 +110,23 @@ function _content_translation_form_language_content_settings_form_alter(array &$
       if (!$entity_type_translatable) {
         $form['settings'][$entity_type_id]['#title'] = t('@label (Translation is not supported).', ['@label' => $entity_type->getLabel()]);
         continue;
+      }
+
+      // Displayed the "shared fields widgets" toggle.
+      if ($content_translation_manager instanceof BundleTranslationSettingsInterface) {
+        $settings = $content_translation_manager->getBundleTranslationSettings($entity_type_id, $bundle);
+        $form['settings'][$entity_type_id][$bundle]['settings']['content_translation']['untranslatable_fields_hide'] = [
+          '#type' => 'checkbox',
+          '#title' => t('Hide non translatable fields on translation forms'),
+          '#default_value' => !empty($settings['untranslatable_fields_hide']),
+          '#states' => [
+            'visible' => [
+              ':input[name="settings[' . $entity_type_id . '][' . $bundle . '][translatable]"]' => [
+                'checked' => TRUE,
+              ],
+            ],
+          ],
+        ];
       }
 
       $fields = $entity_manager->getFieldDefinitions($entity_type_id, $bundle);
@@ -317,6 +336,8 @@ function content_translation_form_language_content_settings_validate(array $form
  * @see content_translation_admin_settings_form_validate()
  */
 function content_translation_form_language_content_settings_submit(array $form, FormStateInterface $form_state) {
+  /** @var \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager */
+  $content_translation_manager = \Drupal::service('content_translation.manager');
   $entity_types = $form_state->getValue('entity_types');
   $settings = &$form_state->getValue('settings');
 
@@ -347,7 +368,12 @@ function content_translation_form_language_content_settings_submit(array $form, 
       }
       if (isset($bundle_settings['translatable'])) {
         // Store whether a bundle has translation enabled or not.
-        \Drupal::service('content_translation.manager')->setEnabled($entity_type_id, $bundle, $bundle_settings['translatable']);
+        $content_translation_manager->setEnabled($entity_type_id, $bundle, $bundle_settings['translatable']);
+
+        // Store any other bundle settings.
+        if ($content_translation_manager instanceof BundleTranslationSettingsInterface) {
+          $content_translation_manager->setBundleTranslationSettings($entity_type_id, $bundle, $bundle_settings['settings']['content_translation']);
+        }
 
         // Save translation_sync settings.
         if (!empty($bundle_settings['columns'])) {
@@ -367,8 +393,8 @@ function content_translation_form_language_content_settings_submit(array $form, 
       }
     }
   }
+
   // Ensure entity and menu router information are correctly rebuilt.
   \Drupal::entityManager()->clearCachedDefinitions();
   \Drupal::service('router.builder')->setRebuildNeeded();
-
 }

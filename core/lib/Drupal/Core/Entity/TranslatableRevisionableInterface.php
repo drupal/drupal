@@ -71,4 +71,13 @@ interface TranslatableRevisionableInterface extends TranslatableInterface, Revis
    */
   public function setRevisionTranslationAffectedEnforced($enforced);
 
+  /**
+   * Checks if untranslatable fields should affect only the default translation.
+   *
+   * @return bool
+   *   TRUE if untranslatable fields should affect only the default translation,
+   *   FALSE otherwise.
+   */
+  public function isDefaultTranslationAffectedOnly();
+
 }
