@@ -88,10 +88,15 @@ class NodeRevisionRevertTranslationForm extends NodeRevisionRevertForm {
     $this->langcode = $langcode;
     $form = parent::buildForm($form, $form_state, $node_revision);
 
+    // Unless untranslatable fields are configured to affect only the default
+    // translation, we need to ask the user whether they should be included in
+    // the revert process.
+    $default_translation_affected = $this->revision->isDefaultTranslationAffectedOnly();
     $form['revert_untranslated_fields'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Revert content shared among translations'),
-      '#default_value' => FALSE,
+      '#default_value' => $default_translation_affected && $this->revision->getTranslation($this->langcode)->isDefaultTranslation(),
+      '#access' => !$default_translation_affected,
     ];
 
     return $form;

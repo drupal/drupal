@@ -58,7 +58,8 @@ class EntityTestMulRev extends EntityTestRev {
 
     $fields['non_mul_field'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Non translatable'))
-      ->setDescription(t('A non-translatable string field'));
+      ->setDescription(t('A non-translatable string field'))
+      ->setRevisionable(TRUE);
 
     return $fields;
   }

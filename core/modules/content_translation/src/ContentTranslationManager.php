@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 /**
  * Provides common functionality for content translation.
  */
-class ContentTranslationManager implements ContentTranslationManagerInterface {
+class ContentTranslationManager implements ContentTranslationManagerInterface, BundleTranslationSettingsInterface {
 
   /**
    * The entity type manager.
@@ -103,6 +103,23 @@ class ContentTranslationManager implements ContentTranslationManagerInterface {
     }
 
     return $enabled;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setBundleTranslationSettings($entity_type_id, $bundle, array $settings) {
+    $config = $this->loadContentLanguageSettings($entity_type_id, $bundle);
+    $config->setThirdPartySetting('content_translation', 'bundle_settings', $settings)
+      ->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundleTranslationSettings($entity_type_id, $bundle) {
+    $config = $this->loadContentLanguageSettings($entity_type_id, $bundle);
+    return $config->getThirdPartySetting('content_translation', 'bundle_settings', []);
   }
 
   /**
