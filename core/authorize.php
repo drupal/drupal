@@ -113,7 +113,7 @@ if ($is_allowed) {
       $page_title = $results['page_title'];
     }
     if (!empty($results['page_message'])) {
-      drupal_set_message($results['page_message']['message'], $results['page_message']['type']);
+      \Drupal::messenger()->addMessage($results['page_message']['message'], $results['page_message']['type']);
     }
 
     $content['authorize_report'] = [

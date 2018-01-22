@@ -51,7 +51,7 @@ if (Settings::get('rebuild_access', FALSE) ||
   array_map('call_user_func', array_filter($user_caches, 'is_callable'));
 
   drupal_rebuild($autoloader, $request);
-  drupal_set_message('Cache rebuild complete.');
+  \Drupal::messenger()->addStatus('Cache rebuild complete.');
 }
 $base_path = dirname(dirname($request->getBaseUrl()));
 header('Location: ' . $base_path);

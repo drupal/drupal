@@ -639,7 +639,7 @@ function template_preprocess_form_element_label(&$variables) {
  *   else {
  *     $message = t('Finished with an error.');
  *   }
- *   drupal_set_message($message);
+ *   \Drupal::messenger()->addMessage($message);
  *   // Providing data for the redirected page is done through $_SESSION.
  *   foreach ($results as $result) {
  *     $items[] = t('Loaded node %title.', array('%title' => $result));

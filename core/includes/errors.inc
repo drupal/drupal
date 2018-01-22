@@ -272,7 +272,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     if ($message) {
       if (\Drupal::hasService('session')) {
         // Message display is dependent on sessions being available.
-        drupal_set_message($message, $class, TRUE);
+        \Drupal::messenger()->addMessage($message, $class, TRUE);
       }
       else {
         print $message;

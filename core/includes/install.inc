@@ -1013,7 +1013,7 @@ function drupal_check_module($module) {
         if (isset($requirement['value']) && $requirement['value']) {
           $message = t('@requirements_message (Currently using @item version @version)', ['@requirements_message' => $requirement['description'], '@item' => $requirement['title'], '@version' => $requirement['value']]);
         }
-        drupal_set_message($message, 'error');
+        \Drupal::messenger()->addError($message);
       }
     }
     return FALSE;

@@ -1793,7 +1793,7 @@ function install_finished(&$install_state) {
   $success_message = t('Congratulations, you installed @drupal!', [
     '@drupal' => drupal_install_profile_distribution_name(),
   ]);
-  drupal_set_message($success_message);
+  \Drupal::messenger()->addStatus($success_message);
 }
 
 /**
