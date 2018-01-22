@@ -210,7 +210,7 @@ function config_get_config_directory($type) {
  *   The filename of the item if it is to be set explicitly rather
  *   than by consulting the database.
  *
- * @return
+ * @return string
  *   The filename of the requested item or NULL if the item is not found.
  */
 function drupal_get_filename($type, $name, $filename = NULL) {
@@ -275,7 +275,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
  *   The name of the item for which the path is requested. Ignored for
  *   $type 'core'.
  *
- * @return
+ * @return string
  *   The path to the requested item or an empty string if the item is not found.
  */
 function drupal_get_path($type, $name) {
@@ -534,6 +534,9 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
 
 /**
  * Returns the time zone of the current user.
+ *
+ * @return string
+ *   The name of the current user's timezone or the name of the default timezone.
  */
 function drupal_get_user_timezone() {
   $user = \Drupal::currentUser();
@@ -913,7 +916,7 @@ function drupal_classloader_register($name, $path) {
  *   internally and should not be passed in; use drupal_static_reset() instead.
  *   (This function's return value should not be used when TRUE is passed in.)
  *
- * @return
+ * @return array
  *   Returns a variable by reference.
  *
  * @see drupal_static_reset()
@@ -989,7 +992,7 @@ function drupal_placeholder($text) {
  * @param ...
  *   Additional arguments to pass to the shutdown function.
  *
- * @return
+ * @return array
  *   Array of shutdown functions to be executed.
  *
  * @see register_shutdown_function()
