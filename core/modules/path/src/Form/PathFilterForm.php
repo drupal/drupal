@@ -32,7 +32,7 @@ class PathFilterForm extends FormBase {
     ];
     $form['basic']['filter'] = [
       '#type' => 'search',
-      '#title' => 'Path alias',
+      '#title' => $this->t('Path alias'),
       '#title_display' => 'invisible',
       '#default_value' => $keys,
       '#maxlength' => 128,
