@@ -5,6 +5,7 @@
  * Functions to support theming in the Umami theme.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
@@ -80,4 +81,11 @@ function umami_preprocess_breadcrumb(&$variables) {
   // If we don't, then we might end up with something like
   // "Home > Articles" on the Recipes page, which should read "Home > Recipes".
   $variables['#cache']['contexts'][] = 'url';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function umami_form_search_block_form_alter(&$form, FormStateInterface $form_state) {
+  $form['keys']['#attributes']['placeholder'] = t('Search by keyword, ingredient, dish');
 }
