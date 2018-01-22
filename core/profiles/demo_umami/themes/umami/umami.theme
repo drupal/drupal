@@ -42,8 +42,8 @@ function umami_preprocess_field(&$variables, $hook) {
 /**
  * Implements hook_preprocess_block().
  */
-function umami_preprocess_block(&$vars) {
-  $vars['title_attributes']['class'][] = 'block__title';
+function umami_preprocess_block(&$variables) {
+  $variables['title_attributes']['class'][] = 'block__title';
 }
 
 /**
