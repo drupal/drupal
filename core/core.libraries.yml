@@ -713,6 +713,8 @@ jquery.ui.position:
   license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/position-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui
 
 jquery.ui.progressbar:
   version: *jquery_ui_version
