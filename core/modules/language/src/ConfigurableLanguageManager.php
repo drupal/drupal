@@ -426,7 +426,12 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   }
 
   /**
-   * {@inheritdoc}
+   * Sets the configuration override language.
+   *
+   * @param \Drupal\Core\Language\LanguageInterface $language
+   *   The language to override configuration with.
+   *
+   * @return $this
    */
   public function setConfigOverrideLanguage(LanguageInterface $language = NULL) {
     $this->configFactoryOverride->setLanguage($language);
