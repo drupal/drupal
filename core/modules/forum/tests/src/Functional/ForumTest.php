@@ -266,7 +266,12 @@ class ForumTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalPostForm('node/add/forum', $edit, t('Save'));
 
-    $nid_count = db_query('SELECT COUNT(nid) FROM {node}')->fetchField();
+    $nid_count = $this->container->get('entity_type.manager')
+      ->getStorage('node')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->count()
+      ->execute();
     $this->assertEqual(0, $nid_count, 'A forum node was not created when missing a forum vocabulary.');
 
     // Reset the defaults for future tests.
@@ -427,18 +432,30 @@ class ForumTest extends BrowserTestBase {
     $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'term/']);
     $this->assert(isset($view_link), 'The message area contains a link to a term');
 
+    /** @var \Drupal\taxonomy\TermStorageInterface $taxonomy_term_storage */
+    $taxonomy_term_storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
     // Verify forum.
-    $term = db_query("SELECT * FROM {taxonomy_term_field_data} t WHERE t.vid = :vid AND t.name = :name AND t.description__value = :desc AND t.default_langcode = 1", [':vid' => $this->config('forum.settings')->get('vocabulary'), ':name' => $name, ':desc' => $description])->fetchAssoc();
+    $term = $taxonomy_term_storage->loadByProperties([
+      'vid' => $this->config('forum.settings')->get('vocabulary'),
+      'name' => $name,
+      'description__value' => $description,
+    ]);
+    $term = array_shift($term);
     $this->assertTrue(!empty($term), 'The ' . $type . ' exists in the database');
 
     // Verify forum hierarchy.
-    $tid = $term['tid'];
-    $parent_tid = db_query("SELECT t.parent_target_id FROM {taxonomy_term__parent} t WHERE t.entity_id = :tid", [':tid' => $tid])->fetchField();
+    $tid = $term->id();
+    $parent_tid = $taxonomy_term_storage->loadParents($tid);
+    $parent_tid = empty($parent_tid) ? 0 : array_shift($parent_tid)->id();
     $this->assertTrue($parent == $parent_tid, 'The ' . $type . ' is linked to its container');
 
-    $forum = $this->container->get('entity.manager')->getStorage('taxonomy_term')->load($tid);
+    $forum = $taxonomy_term_storage->load($tid);
     $this->assertEqual(($type == 'forum container'), (bool) $forum->forum_container->value);
-    return $term;
+    return [
+      'tid' => $tid,
+      'name' => $term->getName(),
+      'vid' => $term->bundle(),
+    ];
   }
 
   /**
@@ -633,10 +650,14 @@ class ForumTest extends BrowserTestBase {
       $this->assertText(t('Forum topic @title has been updated.', ['@title' => $edit['title[0][value]']]), 'Forum node was edited');
 
       // Verify topic was moved to a different forum.
-      $forum_tid = db_query("SELECT tid FROM {forum} WHERE nid = :nid AND vid = :vid", [
-        ':nid' => $node->id(),
-        ':vid' => $node->getRevisionId(),
-      ])->fetchField();
+      $forum_tid = $this->container
+        ->get('database')
+        ->select('forum', 'f')
+        ->fields('f', ['tid'])
+        ->condition('nid', $node->id())
+        ->condition('vid', $node->getRevisionId())
+        ->execute()
+        ->fetchField();
       $this->assertTrue($forum_tid == $this->rootForum['tid'], 'The forum topic is linked to a different forum');
 
       // Delete forum node.
