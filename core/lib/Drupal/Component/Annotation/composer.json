@@ -3,7 +3,7 @@
   "description": "Annotation discovery and implementation of plugins.",
   "keywords": ["drupal"],
   "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=5.5.9",
     "doctrine/common": "2.5.*",

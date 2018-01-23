@@ -4,7 +4,7 @@
   "keywords": ["drupal", "dependency injection"],
   "type": "library",
   "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "support": {
     "issues": "https://www.drupal.org/project/issues/drupal",
     "irc": "irc://irc.freenode.net/drupal-contribute",
