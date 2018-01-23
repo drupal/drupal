@@ -895,7 +895,7 @@ function file_unmanaged_delete($path) {
  *
  * @param $path
  *   A string containing either an URI or a file or directory path.
- * @param $callback
+ * @param callable $callback
  *   (optional) Callback function to run on each file prior to deleting it and
  *   on each directory prior to traversing it. For example, can be used to
  *   modify permissions.
