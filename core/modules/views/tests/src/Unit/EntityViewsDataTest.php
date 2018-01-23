@@ -93,8 +93,10 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $typed_data_manager->expects($this->any())
       ->method('getDefinition')
-      ->with($this->equalTo('field_item:string_long'))
-      ->willReturn(['class' => '\Drupal\Core\Field\Plugin\Field\FieldType\StringLongItem']);
+      ->will($this->returnValueMap([
+        'entity:user' => ['class' => '\Drupal\Core\TypedData\DataDefinitionInterface'],
+        'field_item:string_long' => ['class' => '\Drupal\Core\Field\Plugin\Field\FieldType\StringLongItem'],
+      ]));
 
     $this->baseEntityType = new TestEntityType([
       'base_table' => 'entity_test',
