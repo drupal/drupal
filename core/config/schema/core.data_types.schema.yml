@@ -28,6 +28,9 @@ email:
 integer:
   label: 'Integer'
   class: '\Drupal\Core\TypedData\Plugin\DataType\IntegerData'
+timestamp:
+  label: 'Timestamp'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\Timestamp'
 float:
   label: 'Float'
   class: '\Drupal\Core\TypedData\Plugin\DataType\FloatData'
