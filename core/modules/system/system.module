@@ -450,7 +450,7 @@ function template_preprocess_entity_add_list(&$variables) {
  *  $form_state->setRedirectUrl(system_authorized_get_url());
  * @endcode
  *
- * @param $callback
+ * @param callable $callback
  *   The name of the function to invoke once the user authorizes the operation.
  * @param $file
  *   The full path to the file where the callback function is implemented.
