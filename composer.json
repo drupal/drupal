@@ -2,7 +2,7 @@
     "name": "drupal/drupal",
     "description": "Drupal is an open source content management platform powering millions of websites and applications.",
     "type": "project",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "require": {
         "composer/installers": "^1.0.24",
         "wikimedia/composer-merge-plugin": "^1.4"
