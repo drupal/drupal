@@ -81,12 +81,6 @@ class DefaultConfigTest extends KernelTestBase {
     /** @var \Drupal\Core\Extension\ModuleInstallerInterface $module_installer */
     $module_installer = $this->container->get('module_installer');
 
-    // @todo https://www.drupal.org/node/2308745 Rest has an implicit dependency
-    //   on the Node module remove once solved.
-    if (in_array($module, ['rest', 'hal'])) {
-      $module_installer->install(['node']);
-    }
-
     // Work out any additional modules and themes that need installing to create
     // an optional config.
     $optional_config_storage = new FileStorage($module_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
