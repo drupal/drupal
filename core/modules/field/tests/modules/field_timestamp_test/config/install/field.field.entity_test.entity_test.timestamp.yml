@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.entity_test.timestamp
+id: entity_test.entity_test.timestamp
+field_name: timestamp
+entity_type: entity_test
+bundle: entity_test
+label: 'Time stamp'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1514847537
+default_value_callback: ''
+settings: {  }
+field_type: timestamp
