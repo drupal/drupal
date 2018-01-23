@@ -3,7 +3,7 @@
   "description": "Provides a lightweight mechanism to provide lazy loaded proxies.",
   "keywords": ["drupal", "proxy"],
   "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=5.5.9"
   },

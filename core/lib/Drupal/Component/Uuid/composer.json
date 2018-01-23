@@ -2,7 +2,7 @@
   "name": "drupal/core-uuid",
   "description": "PHP library for reading PO files.",
   "type": "library",
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "support": {
     "issues": "https://www.drupal.org/project/issues/drupal",
     "irc": "irc://irc.freenode.net/drupal-contribute",
