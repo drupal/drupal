@@ -9,6 +9,8 @@
  * and in the right human-readable format.
  */
 
+use Drupal\Core\Locale\CountryManager;
+
 // Determine DRUPAL_ROOT.
 $dir = dirname(__FILE__);
 while (!defined('DRUPAL_ROOT')) {
@@ -45,7 +47,7 @@ if (!function_exists('t')) {
 // @see https://www.drupal.org/node/1436754
 require_once DRUPAL_ROOT . '/core/lib/Drupal/Core/Locale/CountryManagerInterface.php';
 require_once DRUPAL_ROOT . '/core/lib/Drupal/Core/Locale/CountryManager.php';
-$existing_countries = \Drupal\Core\Locale\CountryManager::getStandardList();
+$existing_countries = CountryManager::getStandardList();
 $countries = $existing_countries;
 
 // Parse the source data into an array.
@@ -53,19 +55,21 @@ $data = json_decode(file_get_contents($uri));
 
 foreach ($data->main->en->localeDisplayNames->territories as $code => $name) {
   // Use any alternate codes the Drupal community wishes to.
-  $alt_codes = array(
+  $alt_codes = [
     // 'CI-alt-variant', // Use CI-alt-variant instead of the CI entry.
-  );
+  ];
   if (in_array($code, $alt_codes)) {
     // Just use the first 2 character part of the alt code.
     $code = strtok($code, '-');
   }
 
   // Skip any codes we wish to exclude from our country list.
-  $exclude_codes = array(
-    'EU', // The European Union is not a country.
-    'ZZ', // Don't allow "Unknown Region".
-  );
+  $exclude_codes = [
+    // The European Union is not a country.
+    'EU',
+    // Don't allow "Unknown Region".
+    'ZZ',
+  ];
   if (in_array($code, $exclude_codes)) {
     continue;
   }
@@ -95,5 +99,5 @@ foreach ($countries as $code => $name) {
 // Replace the actual PHP code in standard.inc.
 $file = DRUPAL_ROOT . '/core/lib/Drupal/Core/Locale/CountryManager.php';
 $content = file_get_contents($file);
-$content = preg_replace('/(\$countries = array\(\n)(.+?)(^\s+\);)/ms', '$1' . $out . '$3', $content);
+$content = preg_replace('/(\$countries = \[\n)(.+?)(^\s+\];)/ms', '$1' . $out . '$3', $content, -1, $count);
 file_put_contents($file, $content);
