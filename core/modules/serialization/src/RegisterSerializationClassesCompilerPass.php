@@ -23,6 +23,9 @@ class RegisterSerializationClassesCompilerPass implements CompilerPassInterface 
 
     // Retrieve registered Normalizers and Encoders from the container.
     foreach ($container->findTaggedServiceIds('normalizer') as $id => $attributes) {
+      // The 'serializer' service is the public API: mark normalizers private.
+      $container->getDefinition($id)->setPublic(FALSE);
+
       // If there is a BC key present, pass this to determine if the normalizer
       // should be skipped.
       if (isset($attributes[0]['bc']) && $this->normalizerBcSettingIsEnabled($attributes[0]['bc'], $attributes[0]['bc_config_name'])) {
@@ -33,6 +36,9 @@ class RegisterSerializationClassesCompilerPass implements CompilerPassInterface 
       $normalizers[$priority][] = new Reference($id);
     }
     foreach ($container->findTaggedServiceIds('encoder') as $id => $attributes) {
+      // The 'serializer' service is the public API: mark encoders private.
+      $container->getDefinition($id)->setPublic(FALSE);
+
       $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
       $encoders[$priority][] = new Reference($id);
     }
