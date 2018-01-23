@@ -2,6 +2,11 @@
 <ruleset name="drupal_core">
   <description>Default PHP CodeSniffer configuration for Drupal core.</description>
   <file>.</file>
+  <file>scripts/drupal.sh</file>
+  <file>scripts/password-hash.sh</file>
+  <file>scripts/rebuild_token_calculator.sh</file>
+  <file>scripts/run-tests.sh</file>
+  <file>scripts/update-countries.sh</file>
   <arg name="extensions" value="inc,install,module,php,profile,test,theme"/>
 
   <!--Exclude third party code.-->
