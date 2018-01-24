@@ -173,6 +173,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
 
     $rows = [];
     $default_revision = $node->getRevisionId();
+    $current_revision_displayed = FALSE;
 
     foreach ($this->getRevisionIds($node, $node_storage) as $vid) {
       /** @var \Drupal\node\NodeInterface $revision */
@@ -187,11 +188,18 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
 
         // Use revision link to link to revisions that are not active.
         $date = $this->dateFormatter->format($revision->revision_timestamp->value, 'short');
-        if ($vid != $node->getRevisionId()) {
+
+        // We treat also the latest translation-affecting revision as current
+        // revision, if it was the default revision, as its values for the
+        // current language will be the same of the current default revision in
+        // this case.
+        $is_current_revision = $vid == $default_revision || (!$current_revision_displayed && $revision->wasDefaultRevision());
+        if (!$is_current_revision) {
           $link = $this->l($date, new Url('entity.node.revision', ['node' => $node->id(), 'node_revision' => $vid]));
         }
         else {
           $link = $node->link($date);
+          $current_revision_displayed = TRUE;
         }
 
         $row = [];
@@ -210,7 +218,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
         $this->renderer->addCacheableDependency($column['data'], $username);
         $row[] = $column;
 
-        if ($vid == $default_revision) {
+        if ($is_current_revision) {
           $row[] = [
             'data' => [
               '#prefix' => '<em>',
