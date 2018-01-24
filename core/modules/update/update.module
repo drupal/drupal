@@ -625,7 +625,6 @@ function template_preprocess_update_last_check(&$variables) {
  * version of Drupal core.
  *
  * @see \Drupal\Core\Extension\ExtensionDiscovery
- * @see _system_rebuild_module_data()
  */
 function update_verify_update_archive($project, $archive_file, $directory) {
   $errors = [];

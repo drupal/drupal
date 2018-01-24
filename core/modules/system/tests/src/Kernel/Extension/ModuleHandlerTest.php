@@ -105,7 +105,7 @@ class ModuleHandlerTest extends KernelTestBase {
     // Color will depend on Config, which depends on a non-existing module Foo.
     // Nothing should be installed.
     \Drupal::state()->set('module_test.dependency', 'missing dependency');
-    drupal_static_reset('system_rebuild_module_data');
+    \Drupal::service('extension.list.module')->reset();
 
     try {
       $result = $this->moduleInstaller()->install(['color']);
@@ -120,7 +120,7 @@ class ModuleHandlerTest extends KernelTestBase {
     // Fix the missing dependency.
     // Color module depends on Config. Config depends on Help module.
     \Drupal::state()->set('module_test.dependency', 'dependency');
-    drupal_static_reset('system_rebuild_module_data');
+    \Drupal::service('extension.list.module')->reset();
 
     $result = $this->moduleInstaller()->install(['color']);
     $this->assertTrue($result, 'ModuleInstaller::install() returns the correct value.');
@@ -152,7 +152,7 @@ class ModuleHandlerTest extends KernelTestBase {
     // dependency on a specific version of Help module in its info file. Make
     // sure that Drupal\Core\Extension\ModuleInstaller::install() still works.
     \Drupal::state()->set('module_test.dependency', 'version dependency');
-    drupal_static_reset('system_rebuild_module_data');
+    \Drupal::service('extension.list.module')->reset();
 
     $result = $this->moduleInstaller()->install(['color']);
     $this->assertTrue($result, 'ModuleInstaller::install() returns the correct value.');
@@ -182,8 +182,7 @@ class ModuleHandlerTest extends KernelTestBase {
     drupal_get_filename('profile', $profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
     $this->enableModules(['module_test', $profile]);
 
-    drupal_static_reset('system_rebuild_module_data');
-    $data = system_rebuild_module_data();
+    $data = \Drupal::service('extension.list.module')->reset()->getList();
     $this->assertTrue(isset($data[$profile]->requires[$dependency]));
 
     $this->moduleInstaller()->install([$dependency]);
@@ -221,7 +220,7 @@ class ModuleHandlerTest extends KernelTestBase {
     // entity_test will depend on help. This way help can not be uninstalled
     // when there is test content preventing entity_test from being uninstalled.
     \Drupal::state()->set('module_test.dependency', 'dependency');
-    drupal_static_reset('system_rebuild_module_data');
+    \Drupal::service('extension.list.module')->reset();
 
     // Create an entity so that the modules can not be disabled.
     $entity = EntityTest::create(['name' => $this->randomString()]);

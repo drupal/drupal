@@ -14,6 +14,11 @@ use Drupal\Core\Serialization\Yaml;
  *
  * It registers the module in config, installs its own configuration,
  * installs the schema, updates the Drupal kernel and more.
+ *
+ * We don't inject dependencies yet, as we would need to reload them after
+ * each installation or uninstallation of a module.
+ * https://www.drupal.org/project/drupal/issues/2350111 for example tries to
+ * solve this dilemma.
  */
 class ModuleInstaller implements ModuleInstallerInterface {
 
@@ -170,7 +175,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
             $module_filenames[$name] = $current_module_filenames[$name];
           }
           else {
-            $module_path = drupal_get_path('module', $name);
+            $module_path = \Drupal::service('extension.list.module')->getPath($name);
             $pathname = "$module_path/$name.info.yml";
             $filename = file_exists($module_path . "/$name.module") ? "$name.module" : NULL;
             $module_filenames[$name] = new Extension($this->root, 'module', $pathname, $filename);
@@ -186,10 +191,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
         $this->moduleHandler->load($module);
         module_load_install($module);
 
-        // Clear the static cache of system_rebuild_module_data() to pick up the
-        // new module, since it merges the installation status of modules into
-        // its statically cached list.
-        drupal_static_reset('system_rebuild_module_data');
+        // Clear the static cache of the "extension.list.module" service to pick
+        // up the new module, since it merges the installation status of modules
+        // into its statically cached list.
+        \Drupal::service('extension.list.module')->reset();
 
         // Update the kernel to include it.
         $this->updateKernel($module_filenames);
@@ -443,10 +448,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Remove any potential cache bins provided by the module.
       $this->removeCacheBins($module);
 
-      // Clear the static cache of system_rebuild_module_data() to pick up the
-      // new module, since it merges the installation status of modules into
-      // its statically cached list.
-      drupal_static_reset('system_rebuild_module_data');
+      // Clear the static cache of the "extension.list.module" service to pick
+      // up the new module, since it merges the installation status of modules
+      // into its statically cached list.
+      \Drupal::service('extension.list.module')->reset();
 
       // Clear plugin manager caches.
       \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();

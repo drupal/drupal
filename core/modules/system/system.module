@@ -12,7 +12,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Extension\Extension;
-use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\PageCache\RequestPolicyInterface;
@@ -961,27 +960,17 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
  */
 function system_get_info($type, $name = NULL) {
   if ($type == 'module') {
-    $info = &drupal_static(__FUNCTION__);
-    if (!isset($info)) {
-      if ($cache = \Drupal::cache()->get('system.module.info')) {
-        $info = $cache->data;
-      }
-      else {
-        $data = system_rebuild_module_data();
-        foreach (\Drupal::moduleHandler()->getModuleList() as $module => $filename) {
-          if (isset($data[$module])) {
-            $info[$module] = $data[$module]->info;
-          }
-        }
-        // Store the module information in cache. This cache is cleared by
-        // calling system_rebuild_module_data(), for example, when listing
-        // modules, (un)installing modules, importing configuration, updating
-        // the site and when flushing all the caches.
-        \Drupal::cache()->set('system.module.info', $info);
-      }
+    /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
+    $module_list = \Drupal::service('extension.list.module');
+    if (isset($name)) {
+      return $module_list->getExtensionInfo($name);
+    }
+    else {
+      return $module_list->getAllInstalledInfo();
     }
   }
   else {
+    // @todo move into ThemeExtensionList https://www.drupal.org/node/2659940
     $info = [];
     $list = system_list($type);
     foreach ($list as $shortname => $item) {
@@ -989,96 +978,11 @@ function system_get_info($type, $name = NULL) {
         $info[$shortname] = $item->info;
       }
     }
-  }
-  if (isset($name)) {
-    return isset($info[$name]) ? $info[$name] : [];
-  }
-  return $info;
-}
-
-/**
- * Helper function to scan and collect module .info.yml data.
- *
- * @return \Drupal\Core\Extension\Extension[]
- *   An associative array of module information.
- */
-function _system_rebuild_module_data() {
-  $listing = new ExtensionDiscovery(\Drupal::root());
-
-  // Find installation profiles. This needs to happen before performing a
-  // module scan as the module scan requires knowing what the active profile is.
-  // @todo Remove as part of https://www.drupal.org/node/2186491.
-  $profiles = $listing->scan('profile');
-  $profile = drupal_get_profile();
-  if ($profile && isset($profiles[$profile])) {
-    // Prime the drupal_get_filename() static cache with the profile info file
-    // location so we can use drupal_get_path() on the active profile during
-    // the module scan.
-    // @todo Remove as part of https://www.drupal.org/node/2186491.
-    drupal_get_filename('profile', $profile, $profiles[$profile]->getPathname());
-  }
-
-  // Find modules.
-  $modules = $listing->scan('module');
-  // Include the installation profile in modules that are loaded.
-  if ($profile) {
-    $modules[$profile] = $profiles[$profile];
-    // Installation profile hooks are always executed last.
-    $modules[$profile]->weight = 1000;
-  }
-
-  // Set defaults for module info.
-  $defaults = [
-    'dependencies' => [],
-    'description' => '',
-    'package' => 'Other',
-    'version' => NULL,
-    'php' => DRUPAL_MINIMUM_PHP,
-  ];
-
-  // Read info files for each module.
-  foreach ($modules as $key => $module) {
-    // Look for the info file.
-    $module->info = \Drupal::service('info_parser')->parse($module->getPathname());
-
-    // Add the info file modification time, so it becomes available for
-    // contributed modules to use for ordering module lists.
-    $module->info['mtime'] = $module->getMTime();
-
-    // Merge in defaults and save.
-    $modules[$key]->info = $module->info + $defaults;
-
-    // Installation profiles are hidden by default, unless explicitly specified
-    // otherwise in the .info.yml file.
-    if ($key == $profile && !isset($modules[$key]->info['hidden'])) {
-      $modules[$key]->info['hidden'] = TRUE;
+    if (isset($name)) {
+      return isset($info[$name]) ? $info[$name] : [];
     }
-
-    // Invoke hook_system_info_alter() to give installed modules a chance to
-    // modify the data in the .info.yml files if necessary.
-    // @todo Remove $type argument, obsolete with $module->getType().
-    $type = 'module';
-    \Drupal::moduleHandler()->alter('system_info', $modules[$key]->info, $modules[$key], $type);
+    return $info;
   }
-
-  // It is possible that a module was marked as required by
-  // hook_system_info_alter() and modules that it depends on are not required.
-  foreach ($modules as $module) {
-    _system_rebuild_module_data_ensure_required($module, $modules);
-  }
-
-  if ($profile && isset($modules[$profile])) {
-    // The installation profile is required, if it's a valid module.
-    $modules[$profile]->info['required'] = TRUE;
-    // Add a default distribution name if the profile did not provide one.
-    // @see install_profile_info()
-    // @see drupal_install_profile_distribution_name()
-    if (!isset($modules[$profile]->info['distribution']['name'])) {
-      $modules[$profile]->info['distribution']['name'] = 'Drupal';
-    }
-  }
-
-  return $modules;
 }
 
 /**
@@ -1088,8 +992,14 @@ function _system_rebuild_module_data() {
  *   The module info.
  * @param \Drupal\Core\Extension\Extension[] $modules
  *   The array of all module info.
+ *
+ * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. This
+ *   function is no longer used in Drupal core.
+ *
+ * @see https://www.drupal.org/node/2709919
  */
 function _system_rebuild_module_data_ensure_required($module, &$modules) {
+  @trigger_error("_system_rebuild_module_data_ensure_required() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. This function is no longer used in Drupal core. See https://www.drupal.org/node/2709919", E_USER_DEPRECATED);
   if (!empty($module->info['required'])) {
     foreach ($module->info['dependencies'] as $dependency) {
       $dependency_name = ModuleHandler::parseDependency($dependency)['name'];
@@ -1104,39 +1014,30 @@ function _system_rebuild_module_data_ensure_required($module, &$modules) {
 }
 
 /**
+ * Helper function to scan and collect module .info.yml data.
+ *
+ * @return \Drupal\Core\Extension\Extension[]
+ *   An associative array of module information.
+ *
+ * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0.
+ *   Use \Drupal::service('extension.list.module')->reset()->getList()
+ *   instead. Note: You probably don't need the reset() method.
+ *
+ * @see https://www.drupal.org/node/2709919
+ */
+function _system_rebuild_module_data() {
+  @trigger_error("_system_rebuild_module_data() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Instead, you should use \\Drupal::service('extension.list.module')->reset()->getList(). See https://www.drupal.org/node/2709919", E_USER_DEPRECATED);
+  return \Drupal::service('extension.list.module')->reset()->getList();
+}
+
+/**
  * Rebuild, save, and return data about all currently available modules.
  *
  * @return \Drupal\Core\Extension\Extension[]
  *   Array of all available modules and their data.
  */
 function system_rebuild_module_data() {
-  $modules_cache = &drupal_static(__FUNCTION__);
-  // Only rebuild once per request. $modules and $modules_cache cannot be
-  // combined into one variable, because the $modules_cache variable is reset by
-  // reference from system_list_reset() during the rebuild.
-  if (!isset($modules_cache)) {
-    $modules = _system_rebuild_module_data();
-    $files = [];
-    ksort($modules);
-    // Add status, weight, and schema version.
-    $installed_modules = \Drupal::config('core.extension')->get('module') ?: [];
-    foreach ($modules as $name => $module) {
-      $module->weight = isset($installed_modules[$name]) ? $installed_modules[$name] : 0;
-      $module->status = (int) isset($installed_modules[$name]);
-      $module->schema_version = SCHEMA_UNINSTALLED;
-      $files[$name] = $module->getPathname();
-    }
-    $modules = \Drupal::moduleHandler()->buildModuleDependencies($modules);
-    $modules_cache = $modules;
-
-    // Store filenames to allow drupal_get_filename() to retrieve them without
-    // having to rebuild or scan the filesystem.
-    \Drupal::state()->set('system.module.files', $files);
-    // Clear the module info cache.
-    \Drupal::cache()->delete('system.module.info');
-    drupal_static_reset('system_get_info');
-  }
-  return $modules_cache;
+  return \Drupal::service('extension.list.module')->reset()->getList();
 }
 
 /**

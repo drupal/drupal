@@ -612,6 +612,8 @@ function drupal_verify_profile($install_state) {
 function drupal_install_system($install_state) {
   // Remove the service provider of the early installer.
   unset($GLOBALS['conf']['container_service_providers']['InstallerServiceProvider']);
+  // Add the normal installer service provider.
+  $GLOBALS['conf']['container_service_providers']['InstallerServiceProvider'] = 'Drupal\Core\Installer\NormalInstallerServiceProvider';
 
   $request = \Drupal::request();
   // Reboot into a full production environment to continue the installation.
@@ -621,6 +623,13 @@ function drupal_install_system($install_state) {
   // Have installer rebuild from the disk, rather then building from scratch.
   $kernel->rebuildContainer(FALSE);
   $kernel->prepareLegacyRequest($request);
+
+  // Before having installed the system module and being able to do a module
+  // rebuild, prime the \Drupal\Core\Extension\ModuleExtensionList static cache
+  // with the module's location.
+  // @todo Try to install system as any other module, see
+  //   https://www.drupal.org/node/2719315.
+  \Drupal::service('extension.list.module')->setPathname('system', 'core/modules/system/system.info.yml');
 
   // Install base system configuration.
   \Drupal::service('config.installer')->installDefaultConfig('core', 'core');

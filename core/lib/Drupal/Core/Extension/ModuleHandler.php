@@ -777,8 +777,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getName($module) {
-    $info = system_get_info('module', $module);
-    return isset($info['name']) ? $info['name'] : $module;
+    return \Drupal::service('extension.list.module')->getName($module);
   }
 
 }

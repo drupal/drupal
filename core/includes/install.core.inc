@@ -302,12 +302,6 @@ function install_begin_request($class_loader, &$install_state) {
   // Allow command line scripts to override server variables used by Drupal.
   require_once __DIR__ . '/bootstrap.inc';
 
-  // Before having installed the system module and being able to do a module
-  // rebuild, prime the drupal_get_filename() static cache with the module's
-  // exact location.
-  // @todo Remove as part of https://www.drupal.org/node/2186491
-  drupal_get_filename('module', 'system', 'core/modules/system/system.info.yml');
-
   // If the hash salt leaks, it becomes possible to forge a valid testing user
   // agent, install a new copy of Drupal, and take over the original site.
   // The user agent header is used to pass a database prefix in the request when
@@ -414,6 +408,7 @@ function install_begin_request($class_loader, &$install_state) {
   }
   else {
     $environment = 'prod';
+    $GLOBALS['conf']['container_service_providers']['InstallerServiceProvider'] = 'Drupal\Core\Installer\NormalInstallerServiceProvider';
   }
   $GLOBALS['conf']['container_service_providers']['InstallerConfigOverride'] = 'Drupal\Core\Installer\ConfigOverride';
 
@@ -444,6 +439,9 @@ function install_begin_request($class_loader, &$install_state) {
   // Prime drupal_get_filename()'s static cache.
   foreach ($install_state['profiles'] as $name => $profile) {
     drupal_get_filename('profile', $name, $profile->getPathname());
+    // drupal_get_filename() is called both with 'module' and 'profile', see
+    // \Drupal\Core\Config\ConfigInstaller::getProfileStorages for example.
+    drupal_get_filename('module', $name, $profile->getPathname());
   }
 
   if ($profile = _install_select_profile($install_state)) {
@@ -453,6 +451,12 @@ function install_begin_request($class_loader, &$install_state) {
       $install_state['theme'] = $install_state['profile_info']['distribution']['install']['theme'];
     }
   }
+
+  // Before having installed the system module and being able to do a module
+  // rebuild, prime the drupal_get_filename() static cache with the system
+  // module's location.
+  // @todo Remove as part of https://www.drupal.org/node/2186491
+  drupal_get_filename('module', 'system', 'core/modules/system/system.info.yml');
 
   // Use the language from the profile configuration, if available, to override
   // the language previously set in the parameters.

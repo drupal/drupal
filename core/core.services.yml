@@ -505,6 +505,12 @@ services:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
     arguments: ['@app.root', '@module_handler', '@kernel', '@router.builder']
     lazy: true
+  extension.list.module:
+    class: Drupal\Core\Extension\ModuleExtensionList
+    arguments: ['@app.root', 'module', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.profile', '%install_profile%', '%container.modules%']
+  extension.list.profile:
+    class: Drupal\Core\Extension\ProfileExtensionList
+    arguments: ['@app.root', 'profile', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
   content_uninstall_validator:
     class: Drupal\Core\Entity\ContentUninstallValidator
     tags:

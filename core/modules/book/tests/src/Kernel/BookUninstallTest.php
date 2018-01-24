@@ -76,7 +76,7 @@ class BookUninstallTest extends KernelTestBase {
 
     $book_node->delete();
     // No nodes exist therefore the book module is not required.
-    $module_data = _system_rebuild_module_data();
+    $module_data = \Drupal::service('extension.list.module')->reset()->getList();
     $this->assertFalse(isset($module_data['book']->info['required']), 'The book module is not required.');
 
     $node = Node::create(['title' => $this->randomString(), 'type' => $content_type->id()]);

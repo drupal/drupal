@@ -72,7 +72,7 @@ class FilterFormTest extends BrowserTestBase {
     // @see https://www.drupal.org/node/2387983
     \Drupal::service('module_installer')->install(['filter_test_plugin']);
     // Force rebuild module data.
-    _system_rebuild_module_data();
+    \Drupal::service('extension.list.module')->reset();
   }
 
   /**
