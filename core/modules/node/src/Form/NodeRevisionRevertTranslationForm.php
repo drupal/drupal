@@ -106,24 +106,9 @@ class NodeRevisionRevertTranslationForm extends NodeRevisionRevertForm {
    * {@inheritdoc}
    */
   protected function prepareRevertedRevision(NodeInterface $revision, FormStateInterface $form_state) {
-    $revert_untranslated_fields = $form_state->getValue('revert_untranslated_fields');
-
-    /** @var \Drupal\node\NodeInterface $default_revision */
-    $latest_revision = $this->nodeStorage->load($revision->id());
-    $latest_revision_translation = $latest_revision->getTranslation($this->langcode);
-
-    $revision_translation = $revision->getTranslation($this->langcode);
-
-    foreach ($latest_revision_translation->getFieldDefinitions() as $field_name => $definition) {
-      if ($definition->isTranslatable() || $revert_untranslated_fields) {
-        $latest_revision_translation->set($field_name, $revision_translation->get($field_name)->getValue());
-      }
-    }
-
-    $latest_revision_translation->setNewRevision();
-    $latest_revision_translation->isDefaultRevision(TRUE);
-
-    return $latest_revision_translation;
+    $revert_untranslated_fields = (bool) $form_state->getValue('revert_untranslated_fields');
+    $translation = $revision->getTranslation($this->langcode);
+    return $this->nodeStorage->createRevision($translation, TRUE, $revert_untranslated_fields);
   }
 
 }
