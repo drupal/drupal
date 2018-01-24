@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\image\Functional;
 
+use Drupal\field\Entity\FieldConfig;
+
 /**
  * Tests the image field widget.
  *
@@ -27,6 +29,22 @@ class ImageFieldWidgetTest extends ImageFieldTestBase {
     $this->assertNotEqual(0, count($this->xpath('//div[contains(@class, "field--widget-image-image")]')), 'Image field widget found on add/node page', 'Browser');
     $this->assertNotEqual(0, count($this->xpath('//input[contains(@accept, "image/*")]')), 'Image field widget limits accepted files.', 'Browser');
     $this->assertNoText('Image test on [site:name]');
+
+    // Check for allowed image file extensions - default.
+    $this->assertText('Allowed types: png gif jpg jpeg.');
+
+    // Try adding to the field config an unsupported extension, should not
+    // appear in the allowed types.
+    $field_config = FieldConfig::loadByName('node', 'article', $field_name);
+    $field_config->setSetting('file_extensions', 'png gif jpg jpeg tiff')->save();
+    $this->drupalGet('node/add/article');
+    $this->assertText('Allowed types: png gif jpg jpeg.');
+
+    // Add a supported extension and remove some supported ones, we should see
+    // the intersect of those entered in field config with those supported.
+    $field_config->setSetting('file_extensions', 'png jpe tiff')->save();
+    $this->drupalGet('node/add/article');
+    $this->assertText('Allowed types: png jpe.');
   }
 
 }

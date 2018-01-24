@@ -2,9 +2,12 @@
 
 namespace Drupal\image\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Image\ImageFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 use Drupal\image\Entity\ImageStyle;
@@ -21,6 +24,36 @@ use Drupal\image\Entity\ImageStyle;
  * )
  */
 class ImageWidget extends FileWidget {
+
+  /**
+   * The image factory service.
+   *
+   * @var \Drupal\Core\Image\ImageFactory
+   */
+  protected $imageFactory;
+
+  /**
+   * Constructs an ImageWidget object.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the widget.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the widget is associated.
+   * @param array $settings
+   *   The widget settings.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info
+   *   The element info manager service.
+   * @param \Drupal\Core\Image\ImageFactory $image_factory
+   *   The image factory service.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, ElementInfoManagerInterface $element_info, ImageFactory $image_factory = NULL) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $element_info);
+    $this->imageFactory = $image_factory ?: \Drupal::service('image.factory');
+  }
 
   /**
    * {@inheritdoc}
@@ -120,10 +153,13 @@ class ImageWidget extends FileWidget {
       $element['#upload_validators']['file_validate_image_resolution'] = [$field_settings['max_resolution'], $field_settings['min_resolution']];
     }
 
-    // If not using custom extension validation, ensure this is an image.
-    $supported_extensions = ['png', 'gif', 'jpg', 'jpeg'];
-    $extensions = isset($element['#upload_validators']['file_validate_extensions'][0]) ? $element['#upload_validators']['file_validate_extensions'][0] : implode(' ', $supported_extensions);
-    $extensions = array_intersect(explode(' ', $extensions), $supported_extensions);
+    $extensions = $field_settings['file_extensions'];
+    $supported_extensions = $this->imageFactory->getSupportedExtensions();
+
+    // If using custom extension validation, ensure that the extensions are
+    // supported by the current image toolkit. Otherwise, validate against all
+    // toolkit supported extensions.
+    $extensions = !empty($extensions) ? array_intersect(explode(' ', $extensions), $supported_extensions) : $supported_extensions;
     $element['#upload_validators']['file_validate_extensions'][0] = implode(' ', $extensions);
 
     // Add mobile device image capture acceptance.
