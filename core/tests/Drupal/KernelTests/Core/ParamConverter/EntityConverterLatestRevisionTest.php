@@ -96,17 +96,24 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
    * Tests with a translated pending revision.
    */
   public function testWithTranslatedPendingRevision() {
+    // Enable translation for test entities.
+    $this->container->get('state')->set('entity_test.translation', TRUE);
+    $this->container->get('entity_type.bundle.info')->clearCachedBundles();
+
+    // Create a new English entity.
     $entity = EntityTestMulRev::create();
     $entity->save();
 
     // Create a translated pending revision.
-    $translated_entity = $entity->addTranslation('de');
-    $translated_entity->isDefaultRevision(FALSE);
-    $translated_entity->setNewRevision(TRUE);
+    $entity_type_id = 'entity_test_mulrev';
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $this->container->get('entity_type.manager')->getStorage($entity_type_id);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $translated_entity */
+    $translated_entity = $storage->createRevision($entity->addTranslation('de'), FALSE);
     $translated_entity->save();
 
     // Change the site language so the converters will attempt to load entities
-    // with 'de'.
+    // with language 'de'.
     $this->config('system.site')->set('default_langcode', 'de')->save();
 
     // The default loaded language is still 'en'.
@@ -120,6 +127,17 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
     ], 'foo', []);
     $this->assertEquals('de', $converted->language()->getId());
     $this->assertEquals($translated_entity->getLoadedRevisionId(), $converted->getLoadedRevisionId());
+
+    // Revert back to English as default language.
+    $this->config('system.site')->set('default_langcode', 'en')->save();
+
+    // The converter will load the latest revision in the correct language.
+    $converted = $this->converter->convert(1, [
+      'load_latest_revision' => TRUE,
+      'type' => 'entity:entity_test_mulrev',
+    ], 'foo', []);
+    $this->assertEquals('en', $converted->language()->getId());
+    $this->assertEquals($entity->getLoadedRevisionId(), $converted->getLoadedRevisionId());
   }
 
   /**

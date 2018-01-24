@@ -30,7 +30,7 @@ class EntityRevisionConverter extends EntityConverter {
    *   The moderation info utility service.
    */
   public function __construct(EntityManagerInterface $entity_manager, ModerationInformationInterface $moderation_info) {
-    parent::__construct($entity_manager);
+    parent::__construct($entity_manager, \Drupal::languageManager());
     $this->moderationInformation = $moderation_info;
   }
 
