@@ -3,14 +3,12 @@
 namespace Drupal\serialization\Normalizer;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\rest\EventSubscriber\ResourceResponseSubscriber;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer;
 
 /**
  * Base class for Normalizers.
  */
-abstract class NormalizerBase extends SerializerAwareNormalizer implements NormalizerInterface {
+abstract class NormalizerBase extends SerializerAwareNormalizer implements CacheableNormalizerInterface {
 
   /**
    * The interface or class that this Normalizer supports.
@@ -92,8 +90,8 @@ abstract class NormalizerBase extends SerializerAwareNormalizer implements Norma
    *   The data that might have cacheability information.
    */
   protected function addCacheableDependency(array $context, $data) {
-    if ($data instanceof CacheableDependencyInterface && isset($context[ResourceResponseSubscriber::SERIALIZATION_CONTEXT_CACHEABILITY])) {
-      $context[ResourceResponseSubscriber::SERIALIZATION_CONTEXT_CACHEABILITY]->addCacheableDependency($data);
+    if ($data instanceof CacheableDependencyInterface && isset($context[static::SERIALIZATION_CONTEXT_CACHEABILITY])) {
+      $context[static::SERIALIZATION_CONTEXT_CACHEABILITY]->addCacheableDependency($data);
     }
   }
 

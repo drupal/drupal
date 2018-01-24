@@ -8,7 +8,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
-use Drupal\rest\EventSubscriber\ResourceResponseSubscriber;
+use Drupal\serialization\Normalizer\CacheableNormalizerInterface;
 
 /**
  * @coversDefaultClass \Drupal\hal\LinkManager\LinkManager
@@ -70,10 +70,10 @@ class HalLinkManagerTest extends KernelTestBase {
 
   public function providerTestGetTypeUri() {
     $serialization_context_collecting_cacheability = [
-      ResourceResponseSubscriber::SERIALIZATION_CONTEXT_CACHEABILITY => new CacheableMetadata()
+      CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => new CacheableMetadata()
     ];
     $expected_serialization_context_cacheability_url_site = [
-      ResourceResponseSubscriber::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheContexts(['url.site'])
+      CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheContexts(['url.site'])
     ];
 
     $base_test_case = [
@@ -133,7 +133,7 @@ class HalLinkManagerTest extends KernelTestBase {
         'context' => $serialization_context_collecting_cacheability,
         'expected return' => 'http://llamas-rock.com/for-real/rest/type/node/page',
         'expected context' => [
-          ResourceResponseSubscriber::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheTags(['config:hal.settings']),
+          CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheTags(['config:hal.settings']),
         ],
       ],
     ];
@@ -163,10 +163,10 @@ class HalLinkManagerTest extends KernelTestBase {
 
   public function providerTestGetRelationUri() {
     $serialization_context_collecting_cacheability = [
-      ResourceResponseSubscriber::SERIALIZATION_CONTEXT_CACHEABILITY => new CacheableMetadata()
+      CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => new CacheableMetadata()
     ];
     $expected_serialization_context_cacheability_url_site = [
-      ResourceResponseSubscriber::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheContexts(['url.site'])
+      CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheContexts(['url.site'])
     ];
 
     $field_name = $this->randomMachineName();
@@ -230,7 +230,7 @@ class HalLinkManagerTest extends KernelTestBase {
         'context' => $serialization_context_collecting_cacheability,
         'expected return' => 'http://llamas-rock.com/for-real/rest/relation/node/page/' . $field_name,
         'expected context' => [
-          ResourceResponseSubscriber::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheTags(['config:hal.settings']),
+          CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheTags(['config:hal.settings']),
         ],
       ],
     ];
@@ -258,7 +258,7 @@ class HalLinkManagerTest extends KernelTestBase {
    */
   public function testHalLinkManagersSetLinkDomain() {
     $serialization_context = [
-      ResourceResponseSubscriber::SERIALIZATION_CONTEXT_CACHEABILITY => new CacheableMetadata()
+      CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => new CacheableMetadata()
     ];
 
     /* @var \Drupal\rest\LinkManager\LinkManager $link_manager */
@@ -266,10 +266,10 @@ class HalLinkManagerTest extends KernelTestBase {
     $link_manager->setLinkDomain('http://example.com/');
     $link = $link_manager->getTypeUri('node', 'page', $serialization_context);
     $this->assertEqual($link, 'http://example.com/rest/type/node/page');
-    $this->assertEqual(new CacheableMetadata(), $serialization_context[ResourceResponseSubscriber::SERIALIZATION_CONTEXT_CACHEABILITY]);
+    $this->assertEqual(new CacheableMetadata(), $serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY]);
     $link = $link_manager->getRelationUri('node', 'page', 'field_ref', $serialization_context);
     $this->assertEqual($link, 'http://example.com/rest/relation/node/page/field_ref');
-    $this->assertEqual(new CacheableMetadata(), $serialization_context[ResourceResponseSubscriber::SERIALIZATION_CONTEXT_CACHEABILITY]);
+    $this->assertEqual(new CacheableMetadata(), $serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY]);
   }
 
 }

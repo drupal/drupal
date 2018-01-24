@@ -9,6 +9,7 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\rest\ResourceResponseInterface;
+use Drupal\serialization\Normalizer\CacheableNormalizerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -20,15 +21,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  * Response subscriber that serializes and removes ResourceResponses' data.
  */
 class ResourceResponseSubscriber implements EventSubscriberInterface {
-
-  /**
-   * Name of key for bubbling cacheability metadata via serialization context.
-   *
-   * @see \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
-   * @see \Symfony\Component\Serializer\SerializerInterface::serialize()
-   * @see \Drupal\rest\EventSubscriber\ResourceResponseSubscriber::renderResponseBody()
-   */
-  const SERIALIZATION_CONTEXT_CACHEABILITY = 'cacheability';
 
   /**
    * The serializer.
@@ -172,7 +164,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
     if ($data !== NULL) {
       $serialization_context = [
         'request' => $request,
-        static::SERIALIZATION_CONTEXT_CACHEABILITY => new CacheableMetadata(),
+        CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => new CacheableMetadata(),
       ];
 
       // @deprecated In Drupal 8.5.0, will be removed before Drupal 9.0.0. Use
@@ -188,7 +180,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
           @trigger_error('Implicit cacheability metadata bubbling (onto the global render context) in normalizers is deprecated since Drupal 8.5.0 and will be removed in Drupal 9.0.0. Use the "cacheability" serialization context instead, for explicit cacheability metadata bubbling. See https://www.drupal.org/node/2918937', E_USER_DEPRECATED);
           $response->addCacheableDependency($context->pop());
         }
-        $response->addCacheableDependency($serialization_context[static::SERIALIZATION_CONTEXT_CACHEABILITY]);
+        $response->addCacheableDependency($serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY]);
       }
 
       $response->setContent($output);
