@@ -3,7 +3,6 @@ type: theme
 base theme: classy
 description: 'The theme used for the out of the box initiative.'
 core: 8.x
-hidden: true
 libraries:
   - umami/global
   - umami/messages

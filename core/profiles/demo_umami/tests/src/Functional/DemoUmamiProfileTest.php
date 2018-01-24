@@ -110,4 +110,16 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $webassert->pageTextContains('Recipe Deep mediterranean quiche has been updated.');
   }
 
+  /**
+   * Tests that the Umami theme is the default theme on the Appearance page.
+   */
+  public function testAppearance() {
+    $account = $this->drupalCreateUser(['administer themes']);
+    $this->drupalLogin($account);
+    $webassert = $this->assertSession();
+
+    $this->drupalGet('admin/appearance');
+    $webassert->pageTextContains('Umami');
+  }
+
 }
