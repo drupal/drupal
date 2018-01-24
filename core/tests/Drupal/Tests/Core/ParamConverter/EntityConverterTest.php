@@ -3,9 +3,15 @@
 namespace Drupal\Tests\Core\ParamConverter;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -128,6 +134,76 @@ class EntityConverterTest extends UnitTestCase {
   public function testConvertWithInvalidDynamicEntityType() {
     $this->setExpectedException(ParamNotConvertedException::class, 'The "foo" parameter was not converted because the "invalid_id" parameter is missing');
     $this->entityConverter->convert('id', ['type' => 'entity:{invalid_id}'], 'foo', ['foo' => 'id']);
+  }
+
+  /**
+   * Tests that omitting the language manager triggers a deprecation error.
+   *
+   * @group legacy
+   *
+   * @expectedDeprecation The language manager parameter has been added to EntityConverter since version 8.5.0 and will be made required in version 9.0.0 when requesting the latest translation-affected revision of an entity.
+   */
+  public function testDeprecatedOptionalLanguageManager() {
+    $entity = $this->createMock(ContentEntityInterface::class);
+    $entity->expects($this->any())
+      ->method('getEntityTypeId')
+      ->willReturn('entity_test');
+    $entity->expects($this->any())
+      ->method('id')
+      ->willReturn('id');
+    $entity->expects($this->any())
+      ->method('isTranslatable')
+      ->willReturn(FALSE);
+    $entity->expects($this->any())
+      ->method('getLoadedRevisionId')
+      ->willReturn('revision_id');
+
+    $storage = $this->createMock(ContentEntityStorageInterface::class);
+    $storage->expects($this->any())
+      ->method('load')
+      ->with('id')
+      ->willReturn($entity);
+    $storage->expects($this->any())
+      ->method('getLatestRevisionId')
+      ->with('id')
+      ->willReturn('revision_id');
+
+    $this->entityManager->expects($this->any())
+      ->method('getStorage')
+      ->with('entity_test')
+      ->willReturn($storage);
+
+    $entity_type = $this->createMock(ContentEntityTypeInterface::class);
+    $entity_type->expects($this->any())
+      ->method('isRevisionable')
+      ->willReturn(TRUE);
+
+    $this->entityManager->expects($this->any())
+      ->method('getDefinition')
+      ->with('entity_test')
+      ->willReturn($entity_type);
+
+    $language = $this->createMock(LanguageInterface::class);
+    $language->expects($this->any())
+      ->method('getId')
+      ->willReturn('en');
+
+    $language_manager = $this->createMock(LanguageManagerInterface::class);
+    $language_manager->expects($this->any())
+      ->method('getCurrentLanguage')
+      ->with(LanguageInterface::TYPE_CONTENT)
+      ->willReturn($language);
+
+    /** @var \Symfony\Component\DependencyInjection\ContainerInterface|\PHPUnit_Framework_MockObject_MockObject $container */
+    $container = $this->createMock(ContainerInterface::class);
+    $container->expects($this->any())
+      ->method('get')
+      ->with('language_manager')
+      ->willReturn($language_manager);
+
+    \Drupal::setContainer($container);
+    $definition = ['type' => 'entity:entity_test', 'load_latest_revision' => TRUE];
+    $this->entityConverter->convert('id', $definition, 'foo', []);
   }
 
 }

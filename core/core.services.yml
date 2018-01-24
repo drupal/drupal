@@ -965,7 +965,7 @@ services:
     class: Drupal\Core\ParamConverter\EntityConverter
     tags:
       - { name: paramconverter }
-    arguments: ['@entity.manager']
+    arguments: ['@entity.manager', '@language_manager']
   paramconverter.entity_revision:
     class: Drupal\Core\ParamConverter\EntityRevisionParamConverter
     tags:
