@@ -28,7 +28,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
   /**
    * The node storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\node\NodeStorageInterface
    */
   protected $nodeStorage;
 
