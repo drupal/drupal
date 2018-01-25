@@ -127,8 +127,8 @@ class YamlTest extends TestCase {
     $dirs = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../../../../', \RecursiveDirectoryIterator::FOLLOW_SYMLINKS));
     foreach ($dirs as $dir) {
       $pathname = $dir->getPathname();
-      // Exclude vendor.
-      if ($dir->getExtension() == 'yml' && strpos($pathname, '/../../../../../vendor') === FALSE) {
+      // Exclude core/node_modules.
+      if ($dir->getExtension() == 'yml' && strpos($pathname, '/../../../../../node_modules') === FALSE) {
         if (strpos($dir->getRealPath(), 'invalid_file') !== FALSE) {
           // There are some intentionally invalid files provided for testing
           // library API behaviours, ignore them.
