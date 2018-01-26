@@ -310,6 +310,7 @@ class InstallHelper implements ContainerInjectionInterface {
         ],
         'field_banner_image' => [
           'target_id' => $this->createFileEntity($module_path . '/default_content/images/veggie-pasta-bake-hero-umami.jpg'),
+          'alt' => 'Mouth watering vegetarian pasta bake with rich tomato sauce and cheese toppings',
         ],
       ],
     ];

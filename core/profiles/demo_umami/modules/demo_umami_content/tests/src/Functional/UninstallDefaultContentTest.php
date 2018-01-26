@@ -99,6 +99,8 @@ class UninstallDefaultContentTest extends BrowserTestBase {
     $assert = $this->assertSession();
     $this->drupalGet('/recipes');
     $assert->pageTextContains('Super easy vegetarian pasta bake');
+    $img_alt_text = $assert->elementExists('css', '#block-umami-banner-recipes img')->getAttribute('alt');
+    $this->assertEquals('Mouth watering vegetarian pasta bake with rich tomato sauce and cheese toppings', $img_alt_text);
 
     $count = $block_storage->getQuery()
       ->condition('type', 'banner_block')

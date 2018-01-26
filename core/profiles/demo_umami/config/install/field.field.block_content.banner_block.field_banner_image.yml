@@ -22,8 +22,8 @@ settings:
   max_filesize: ''
   max_resolution: ''
   min_resolution: ''
-  alt_field: false
-  alt_field_required: true
+  alt_field: true
+  alt_field_required: false
   title_field: false
   title_field_required: false
   default_image:
