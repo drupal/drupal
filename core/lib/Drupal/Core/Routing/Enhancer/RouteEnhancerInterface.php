@@ -5,7 +5,7 @@ namespace Drupal\Core\Routing\Enhancer;
 use Drupal\Core\Routing\EnhancerInterface;
 use Symfony\Component\Routing\Route;
 
-@trigger_error('\Drupal\Core\Routing\Enhancer\RouteEnhancerInterface is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, you should use \Drupal\Core\Routing\EnhancerInterface. See https://www.drupal.org/node/2894934', E_USER_DEPRECATED);
+@trigger_error('\Drupal\Core\Routing\Enhancer\RouteEnhancerInterface is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Instead, you should use \Drupal\Core\Routing\EnhancerInterface. See https://www.drupal.org/node/2894934', E_USER_DEPRECATED);
 
 /**
  * A route enhance service to determine route enhance rules.
