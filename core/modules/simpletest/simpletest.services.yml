@@ -1,4 +1,9 @@
 services:
   test_discovery:
     class: Drupal\simpletest\TestDiscovery
-    arguments: ['@app.root', '@class_loader', '@module_handler', '@?cache.discovery']
+    arguments: ['@app.root', '@class_loader', '@module_handler']
+  cache_context.test_discovery:
+    class: Drupal\simpletest\Cache\Context\TestDiscoveryCacheContext
+    arguments: ['@test_discovery', '@private_key']
+    tags:
+      - { name: cache.context}
