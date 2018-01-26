@@ -520,6 +520,22 @@ class EntityResolverManagerTest extends UnitTestCase {
           ],
         ],
       ],
+      'Entity form with no operation' => [
+        [
+          '_entity_form' => 'entity_test_rev'
+        ],
+        [
+          'entity_test_rev' => [
+            'type' => 'entity:entity_test_rev',
+          ],
+        ],
+        [
+          'entity_test_rev' => [
+            'type' => 'entity:entity_test_rev',
+            'load_latest_revision' => TRUE,
+          ],
+        ],
+      ],
       'Multiple entity parameters on an entity form' => [
         [
           '_entity_form' => 'entity_test_rev.edit'

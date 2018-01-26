@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\ParamConverter;
 
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -41,6 +42,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test_mulrev');
+    $this->installEntitySchema('entity_test');
     $this->installConfig(['system', 'language']);
 
     $this->converter = $this->container->get('paramconverter.entity');
@@ -166,6 +168,21 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
       'type' => 'entity:entity_test_mulrev',
     ], 'foo', []);
     $this->assertEquals($entity->getLoadedRevisionId(), $converted->getLoadedRevisionId());
+  }
+
+  /**
+   * Test the latest revision flag and non-revisionable entities.
+   */
+  public function testConvertNonRevisionableEntityType() {
+    $entity = EntityTest::create();
+    $entity->save();
+
+    $converted = $this->converter->convert(1, [
+      'load_latest_revision' => TRUE,
+      'type' => 'entity:entity_test',
+    ], 'foo', []);
+
+    $this->assertEquals($entity->id(), $converted->id());
   }
 
 }
