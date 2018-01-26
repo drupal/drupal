@@ -80,6 +80,8 @@ action.configuration.node_save_action:
   type: action_configuration_default
   label: 'Save content configuration'
 
+# @deprecated in Drupal 8.6.x, to be removed before Drupal 9.0.0.
+# @see https://www.drupal.org/node/2934349
 action.configuration.node_delete_action:
   type: action_configuration_default
   label: 'Delete content configuration'

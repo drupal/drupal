@@ -56,6 +56,7 @@ use Drupal\user\UserInterface;
  *   links = {
  *     "canonical" = "/comment/{comment}",
  *     "delete-form" = "/comment/{comment}/delete",
+ *     "delete-multiple-form" = "/admin/content/comment/delete",
  *     "edit-form" = "/comment/{comment}/edit",
  *     "create" = "/comment",
  *   },

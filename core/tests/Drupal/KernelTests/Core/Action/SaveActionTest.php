@@ -29,7 +29,7 @@ class SaveActionTest extends KernelTestBase {
    * @covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver::getDerivativeDefinitions
    */
   public function testGetDerivativeDefinitions() {
-    $deriver = new EntityChangedActionDeriver(\Drupal::entityTypeManager());
+    $deriver = new EntityChangedActionDeriver(\Drupal::entityTypeManager(), \Drupal::translation());
     $this->assertArraySubset([
       'entity_test_mul_changed' => [
         'type' => 'entity_test_mul_changed',

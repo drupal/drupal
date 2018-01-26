@@ -1132,6 +1132,11 @@ services:
     arguments: ['@entity_type.manager', '@entity_type.bundle.info']
     tags:
       - { name: access_check, applies_to: _entity_create_any_access }
+  access_check.entity_delete_multiple:
+    class: Drupal\Core\Entity\EntityDeleteMultipleAccessCheck
+    arguments: ['@entity_type.manager', '@tempstore.private', '@request_stack']
+    tags:
+      - { name: access_check, applies_to: _entity_delete_multiple_access }
   access_check.theme:
     class: Drupal\Core\Theme\ThemeAccessCheck
     arguments: ['@theme_handler']

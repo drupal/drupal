@@ -29,7 +29,7 @@ class PublishActionTest extends KernelTestBase {
    * @covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityPublishedActionDeriver::getDerivativeDefinitions
    */
   public function testGetDerivativeDefinitions() {
-    $deriver = new EntityPublishedActionDeriver(\Drupal::entityTypeManager());
+    $deriver = new EntityPublishedActionDeriver(\Drupal::entityTypeManager(), \Drupal::translation());
     $this->assertArraySubset([
       'entity_test_mulrevpub' => [
         'type' => 'entity_test_mulrevpub',

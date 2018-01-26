@@ -17,7 +17,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestForm",
- *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"
+ *       "delete" = "Drupal\entity_test\EntityTestDeleteForm",
+ *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm"
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *     "views_data" = "Drupal\views\EntityViewsData",
@@ -45,6 +46,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "add-form" = "/entity_test_mulrevpub/add",
  *     "canonical" = "/entity_test_mulrevpub/manage/{entity_test_mulrevpub}",
  *     "delete-form" = "/entity_test/delete/entity_test_mulrevpub/{entity_test_mulrevpub}",
+ *     "delete-multiple-form" = "/entity_test/delete",
  *     "edit-form" = "/entity_test_mulrevpub/manage/{entity_test_mulrevpub}/edit",
  *     "revision" = "/entity_test_mulrevpub/{entity_test_mulrevpub}/revision/{entity_test_mulrevpub_revision}/view",
  *   }

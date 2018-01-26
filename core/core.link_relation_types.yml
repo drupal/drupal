@@ -9,6 +9,9 @@ add-page:
 delete-form:
   uri: https://drupal.org/link-relations/delete-form
   description: A form where a resource of this type can be deleted.
+delete-multiple-form:
+  uri: https://drupal.org/link-relations/delete-multiple-form
+  description: A form where multiple resources of this type can be deleted.
 revision:
   uri: https://drupal.org/link-relations/revision
   description: A particular version of this resource.

@@ -24,6 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
  * - edit-form
  * - delete-form
  * - collection
+ * - delete-multiple-form
  *
  * @see \Drupal\Core\Entity\Routing\AdminHtmlRouteProvider.
  */
@@ -96,6 +97,10 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
     if ($collection_route = $this->getCollectionRoute($entity_type)) {
       $collection->add("entity.{$entity_type_id}.collection", $collection_route);
+    }
+
+    if ($delete_multiple_route = $this->getDeleteMultipleFormRoute($entity_type)) {
+      $collection->add('entity.' . $entity_type->id() . '.delete_multiple_form', $delete_multiple_route);
     }
 
     return $collection;
@@ -348,6 +353,25 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id());
     return $field_storage_definitions[$entity_type->getKey('id')]->getType();
+  }
+
+  /**
+   * Returns the delete multiple form route.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type.
+   *
+   * @return \Symfony\Component\Routing\Route|null
+   *   The generated route, if available.
+   */
+  protected function getDeleteMultipleFormRoute(EntityTypeInterface $entity_type) {
+    if ($entity_type->hasLinkTemplate('delete-multiple-form') && $entity_type->hasHandlerClass('form', 'delete-multiple-confirm')) {
+      $route = new Route($entity_type->getLinkTemplate('delete-multiple-form'));
+      $route->setDefault('_form', $entity_type->getFormClass('delete-multiple-confirm'));
+      $route->setDefault('entity_type_id', $entity_type->id());
+      $route->setRequirement('_entity_delete_multiple_access', $entity_type->id());
+      return $route;
+    }
   }
 
 }

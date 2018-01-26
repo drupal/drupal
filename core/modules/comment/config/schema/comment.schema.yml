@@ -44,6 +44,8 @@ action.configuration.comment_unpublish_action:
   type: action_configuration_default
   label: 'Unpublish comment configuration'
 
+# @deprecated in Drupal 8.6.x, to be removed before Drupal 9.0.0.
+# @see https://www.drupal.org/node/2934349
 action.configuration.comment_delete_action:
   type: action_configuration_default
   label: 'Delete comment configuration'

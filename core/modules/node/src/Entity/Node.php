@@ -33,7 +33,8 @@ use Drupal\user\UserInterface;
  *     "form" = {
  *       "default" = "Drupal\node\NodeForm",
  *       "delete" = "Drupal\node\Form\NodeDeleteForm",
- *       "edit" = "Drupal\node\NodeForm"
+ *       "edit" = "Drupal\node\NodeForm",
+ *       "delete-multiple-confirm" = "Drupal\node\Form\DeleteMultiple"
  *     },
  *     "route_provider" = {
  *       "html" = "Drupal\node\Entity\NodeRouteProvider",
@@ -71,6 +72,7 @@ use Drupal\user\UserInterface;
  *   links = {
  *     "canonical" = "/node/{node}",
  *     "delete-form" = "/node/{node}/delete",
+ *     "delete-multiple-form" = "/admin/content/node/delete",
  *     "edit-form" = "/node/{node}/edit",
  *     "version-history" = "/node/{node}/revisions",
  *     "revision" = "/node/{node}/revisions/{node_revision}/view",

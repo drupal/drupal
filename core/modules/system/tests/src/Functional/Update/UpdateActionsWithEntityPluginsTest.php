@@ -53,4 +53,33 @@ class UpdateActionsWithEntityPluginsTest extends UpdatePathTestBase {
     }
   }
 
+  /**
+   * Tests upgrading comment and node delete actions to generic entity ones.
+   *
+   * @see system_post_update_change_delete_action_plugins()
+   */
+  public function testUpdateDeleteActionsWithEntityPlugins() {
+    // comment_delete_actions is not part of the dump files.
+    $array = [
+      'node_delete_action' => ['node_delete_action', 'entity:delete_action:node'],
+    ];
+
+    foreach ($array as $key => list($before, $after)) {
+      /** @var \Drupal\system\Entity\Action $action */
+      $action = Action::load($key);
+      $this->assertSame($before, $action->getPlugin()->getPluginId());
+    }
+
+    $this->runUpdates();
+
+    foreach ($array as $key => list($before, $after)) {
+      /** @var \Drupal\system\Entity\Action $action */
+      $action = Action::load($key);
+      $this->assertSame($after, $action->getPlugin()->getPluginId());
+
+      // Check that the type the action is based on will be a module dependency.
+      $this->assertArraySubset(['module' => [$action->getPluginDefinition()['type']]], $action->getDependencies());
+    }
+  }
+
 }

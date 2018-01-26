@@ -111,3 +111,22 @@ function system_post_update_change_action_plugins() {
     }
   }
 }
+
+/**
+ * Change plugin IDs of delete actions.
+ */
+function system_post_update_change_delete_action_plugins() {
+  $old_new_action_id_map = [
+    'comment_delete_action' => 'entity:delete_action:comment',
+    'node_delete_action' => 'entity:delete_action:node',
+  ];
+
+  /** @var \Drupal\system\Entity\Action[] $actions */
+  $actions = \Drupal::entityTypeManager()->getStorage('action')->loadMultiple();
+  foreach ($actions as $action) {
+    if (isset($old_new_action_id_map[$action->getPlugin()->getPluginId()])) {
+      $action->setPlugin($old_new_action_id_map[$action->getPlugin()->getPluginId()]);
+      $action->save();
+    }
+  }
+}
