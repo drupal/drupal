@@ -215,7 +215,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
       ];
       $build[$region]['layout_builder_add_block']['#type'] = 'container';
       $build[$region]['layout_builder_add_block']['#attributes'] = ['class' => ['add-block']];
-      $build[$region]['layout_builder_add_block']['#weight'] = -1000;
+      $build[$region]['layout_builder_add_block']['#weight'] = 1000;
       $build[$region]['#attributes']['data-region'] = $region;
       $build[$region]['#attributes']['class'][] = 'layout-builder--layout__region';
     }

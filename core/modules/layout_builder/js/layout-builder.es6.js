@@ -14,15 +14,19 @@
          *   An object containing information about the item being sorted.
          */
         update(event, ui) {
-          // Only process if the item was moved from one region to another.
-          if (ui.sender) {
+          // Check if the region from the event and region for the item match.
+          const itemRegion = ui.item.closest('.layout-builder--layout__region');
+          if (event.target === itemRegion[0]) {
+            // Find the destination delta.
+            const deltaTo = ui.item.closest('[data-layout-delta]').data('layout-delta');
+            // If the block didn't leave the original delta use the destination.
+            const deltaFrom = ui.sender ? ui.sender.closest('[data-layout-delta]').data('layout-delta') : deltaTo;
             ajax({
               url: [
                 ui.item.closest('[data-layout-update-url]').data('layout-update-url'),
-                ui.sender.closest('[data-layout-delta]').data('layout-delta'),
-                ui.item.closest('[data-layout-delta]').data('layout-delta'),
-                ui.sender.data('region'),
-                $(this).data('region'),
+                deltaFrom,
+                deltaTo,
+                itemRegion.data('region'),
                 ui.item.data('layout-block-uuid'),
                 ui.item.prev('[data-layout-block-uuid]').data('layout-block-uuid'),
               ]

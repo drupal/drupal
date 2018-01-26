@@ -99,7 +99,7 @@ layout_builder.remove_block:
         layout_builder_tempstore: TRUE
 
 layout_builder.move_block:
-  path: '/layout_builder/move/block/{section_storage_type}/{section_storage}/{delta_from}/{delta_to}/{region_from}/{region_to}/{block_uuid}/{preceding_block_uuid}'
+  path: '/layout_builder/move/block/{section_storage_type}/{section_storage}/{delta_from}/{delta_to}/{region_to}/{block_uuid}/{preceding_block_uuid}'
   defaults:
     _controller: '\Drupal\layout_builder\Controller\MoveBlockController::build'
     delta_from: null

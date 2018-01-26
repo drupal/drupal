@@ -16,9 +16,13 @@
         connectWith: '.layout-builder--layout__region',
 
         update: function update(event, ui) {
-          if (ui.sender) {
+          var itemRegion = ui.item.closest('.layout-builder--layout__region');
+          if (event.target === itemRegion[0]) {
+            var deltaTo = ui.item.closest('[data-layout-delta]').data('layout-delta');
+
+            var deltaFrom = ui.sender ? ui.sender.closest('[data-layout-delta]').data('layout-delta') : deltaTo;
             ajax({
-              url: [ui.item.closest('[data-layout-update-url]').data('layout-update-url'), ui.sender.closest('[data-layout-delta]').data('layout-delta'), ui.item.closest('[data-layout-delta]').data('layout-delta'), ui.sender.data('region'), $(this).data('region'), ui.item.data('layout-block-uuid'), ui.item.prev('[data-layout-block-uuid]').data('layout-block-uuid')].filter(function (element) {
+              url: [ui.item.closest('[data-layout-update-url]').data('layout-update-url'), deltaFrom, deltaTo, itemRegion.data('region'), ui.item.data('layout-block-uuid'), ui.item.prev('[data-layout-block-uuid]').data('layout-block-uuid')].filter(function (element) {
                 return element !== undefined;
               }).join('/')
             }).execute();

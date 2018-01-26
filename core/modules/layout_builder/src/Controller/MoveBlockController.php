@@ -56,8 +56,6 @@ class MoveBlockController implements ContainerInjectionInterface {
    *   The delta of the original section.
    * @param int $delta_to
    *   The delta of the destination section.
-   * @param string $region_from
-   *   The original region for this block.
    * @param string $region_to
    *   The new region for this block.
    * @param string $block_uuid
@@ -68,7 +66,7 @@ class MoveBlockController implements ContainerInjectionInterface {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   An AJAX response.
    */
-  public function build(SectionStorageInterface $section_storage, $delta_from, $delta_to, $region_from, $region_to, $block_uuid, $preceding_block_uuid = NULL) {
+  public function build(SectionStorageInterface $section_storage, $delta_from, $delta_to, $region_to, $block_uuid, $preceding_block_uuid = NULL) {
     $section = $section_storage->getSection($delta_from);
 
     $component = $section->getComponent($block_uuid);
@@ -87,7 +85,7 @@ class MoveBlockController implements ContainerInjectionInterface {
       $section->insertAfterComponent($preceding_block_uuid, $component);
     }
     else {
-      $section->appendComponent($component);
+      $section->insertComponent(0, $component);
     }
 
     $this->layoutTempstoreRepository->set($section_storage);
