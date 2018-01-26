@@ -1010,23 +1010,4 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     return $contents;
   }
 
-  public function testMapTableCreation() {
-    $id_map = $this->getIdMap();
-
-    $map_table_name = $id_map->mapTableName();
-    $message_table_name = $id_map->messageTableName();
-    $this->assertEquals('migrate_map_sql_idmap_test', $map_table_name);
-    $this->assertEquals('migrate_message_sql_idmap_test', $message_table_name);
-
-    // Check that tables don't exist.
-    $this->assertFalse($this->database->schema()->tableExists($map_table_name));
-    $this->assertFalse($this->database->schema()->tableExists($message_table_name));
-
-    $id_map->getDatabase();
-
-    // Check that tables do exist.
-    $this->assertTrue($this->database->schema()->tableExists($map_table_name));
-    $this->assertTrue($this->database->schema()->tableExists($message_table_name));
-  }
-
 }
