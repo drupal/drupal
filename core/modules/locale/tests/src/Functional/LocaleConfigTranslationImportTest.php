@@ -21,6 +21,18 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   public static $modules = ['language', 'locale_test_translate'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // @todo Re-enable the test and only skip it when the translation cannot be
+    //   downloaded, or provide a translation as a fixture instead. See
+    //   https://www.drupal.org/project/drupal/issues/2828143.
+    $this->markTestSkipped();
+  }
+
+  /**
    * Test update changes configuration translations if enabled after language.
    */
   public function testConfigTranslationImport() {
