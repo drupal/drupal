@@ -51,7 +51,7 @@ interface ConditionInterface {
    *
    * @param string $field
    * @return ConditionInterface
-   * @see \Drupal\Core\Entity\Query\QueryInterface::notexists()
+   * @see \Drupal\Core\Entity\Query\QueryInterface::notExists()
    */
   public function notExists($field, $langcode = NULL);
 
