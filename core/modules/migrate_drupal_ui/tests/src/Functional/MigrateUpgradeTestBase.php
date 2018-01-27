@@ -132,17 +132,17 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     // Test the available migration paths.
     foreach ($available_paths as $available) {
       $session->elementExists('xpath', "//span[contains(@class, 'checked') and text() = '$available']");
-      $session->elementNotExists('xpath', "//span[contains(@class, 'warning') and text() = '$available']");
+      $session->elementNotExists('xpath', "//span[contains(@class, 'error') and text() = '$available']");
     }
 
     // Test the missing migration paths.
     foreach ($missing_paths as $missing) {
-      $session->elementExists('xpath', "//span[contains(@class, 'warning') and text() = '$missing']");
+      $session->elementExists('xpath', "//span[contains(@class, 'error') and text() = '$missing']");
       $session->elementNotExists('xpath', "//span[contains(@class, 'checked') and text() = '$missing']");
     }
 
     // Test the total count of missing and available paths.
-    $session->elementsCount('xpath', "//span[contains(@class, 'upgrade-analysis-report__status-icon--warning')]", count($missing_paths));
+    $session->elementsCount('xpath', "//span[contains(@class, 'upgrade-analysis-report__status-icon--error')]", count($missing_paths));
     $session->elementsCount('xpath', "//span[contains(@class, 'upgrade-analysis-report__status-icon--checked')]", count($available_paths));
   }
 
