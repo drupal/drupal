@@ -6,6 +6,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
@@ -25,6 +26,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MigrateUpgradeForm extends ConfirmFormBase {
 
   use MigrationConfigurationTrait;
+
+  /**
+   * The current form step.
+   *
+   * @var string
+   */
+  protected $step;
 
   /**
    * The state service.
@@ -67,6 +75,13 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
+
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
 
   /**
    * List of extensions that do not need an upgrade path.
@@ -180,13 +195,14 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(StateInterface $state, DateFormatterInterface $date_formatter, RendererInterface $renderer, MigrationPluginManagerInterface $plugin_manager, MigrateFieldPluginManagerInterface $field_plugin_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(StateInterface $state, DateFormatterInterface $date_formatter, RendererInterface $renderer, MigrationPluginManagerInterface $plugin_manager, MigrateFieldPluginManagerInterface $field_plugin_manager, ModuleHandlerInterface $module_handler, MessengerInterface $messenger) {
     $this->state = $state;
     $this->dateFormatter = $date_formatter;
     $this->renderer = $renderer;
     $this->pluginManager = $plugin_manager;
     $this->fieldPluginManager = $field_plugin_manager;
     $this->moduleHandler = $module_handler;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -199,7 +215,8 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       $container->get('renderer'),
       $container->get('plugin.manager.migration'),
       $container->get('plugin.manager.migrate.field'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('messenger')
     );
   }
 
@@ -214,8 +231,8 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $step = $form_state->get('step') ?: 'overview';
-    switch ($step) {
+    $this->step = $form_state->get('step') ?: 'overview';
+    switch ($this->step) {
       case 'overview':
         return $this->buildOverviewForm($form, $form_state);
 
@@ -229,7 +246,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
         return $this->buildConfirmForm($form, $form_state);
 
       default:
-        drupal_set_message($this->t('Unrecognized form step @step', ['@step' => $step]), 'error');
+        $this->messenger->addError($this->t('Unrecognized form step @step', ['@step' => $this->step]));
         return [];
     }
   }
@@ -601,7 +618,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       return $this->buildForm($form, $form_state);
     }
 
-    drupal_set_message($this->t('WARNING: Content may be overwritten on your new site.'), 'warning');
+    $this->messenger->addWarning($this->t('WARNING: Content may be overwritten on your new site.'));
 
     $form = parent::buildForm($form, $form_state);
     $form['actions']['submit']['#submit'] = ['::submitConfirmIdConflictForm'];
@@ -742,11 +759,11 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       $migration_id = $migration->getPluginId();
       $source_module = $migration->getSourcePlugin()->getSourceModule();
       if (!$source_module) {
-        drupal_set_message($this->t('Source module not found for @migration_id.', ['@migration_id' => $migration_id]), 'error');
+        $this->messenger->addError($this->t('Source module not found for @migration_id.', ['@migration_id' => $migration_id]));
       }
       $destination_module = $migration->getDestinationPlugin()->getDestinationModule();
       if (!$destination_module) {
-        drupal_set_message($this->t('Destination module not found for @migration_id.', ['@migration_id' => $migration_id]), 'error');
+        $this->messenger->addError($this->t('Destination module not found for @migration_id.', ['@migration_id' => $migration_id]));
       }
 
       if ($source_module && $destination_module) {
@@ -798,17 +815,17 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       '#title' => [
         '#type' => 'html_tag',
         '#tag' => 'span',
-        '#value' => $this->t('Missing upgrade paths'),
-        '#attributes' => ['id' => ['warning']],
+        '#value' => $this->t('Modules that will not be upgraded'),
+        '#attributes' => ['id' => ['error']],
       ],
-      '#description' => $this->t('The following items will not be upgraded. For more information see <a href=":migrate">Upgrading from Drupal 6 or 7 to Drupal 8</a>.', [':migrate' => 'https://www.drupal.org/upgrade/migrate']),
+      '#description' => $this->t('There are no modules installed on your new site to replace these modules. If you proceed with the upgrade now, configuration and/or content needed by these modules will not be available on your new site. For more information, see <a href=":review">Review the pre-upgrade analysis</a> in the <a href=":migrate">Upgrading to Drupal 8</a> handbook.', [':review' => 'https://www.drupal.org/docs/8/upgrade/upgrade-using-web-browser#pre-upgrade-analysis', ':migrate' => 'https://www.drupal.org/docs/8/upgrade']),
       '#weight' => 2,
     ];
     $missing_module_list['module_list'] = [
       '#type' => 'table',
       '#header' => [
-        $this->t('Source module: Drupal @version', ['@version' => $version]),
-        $this->t('Upgrade module: Drupal 8'),
+        $this->t('Drupal @version', ['@version' => $version]),
+        $this->t('Drupal 8'),
       ],
     ];
     $missing_count = 0;
@@ -824,21 +841,22 @@ class MigrateUpgradeForm extends ConfirmFormBase {
             '#attributes' => [
               'class' => [
                 'upgrade-analysis-report__status-icon',
-                'upgrade-analysis-report__status-icon--warning',
+                'upgrade-analysis-report__status-icon--error',
               ],
             ],
           ],
-          'destination_module' => ['#plain_text' => 'Missing'],
+          'destination_module' => ['#plain_text' => 'Not upgraded'],
         ];
       }
     }
+
     // Available migrations.
     $available_module_list = [
       '#type' => 'details',
       '#title' => [
         '#type' => 'html_tag',
         '#tag' => 'span',
-        '#value' => $this->t('Available upgrade paths'),
+        '#value' => $this->t('Modules that will be upgraded'),
         '#attributes' => ['id' => ['checked']],
       ],
       '#weight' => 3,
@@ -847,8 +865,8 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     $available_module_list['module_list'] = [
       '#type' => 'table',
       '#header' => [
-        $this->t('Source module: Drupal @version', ['@version' => $version]),
-        $this->t('Upgrade module: Drupal 8'),
+        $this->t('Drupal @version', ['@version' => $version]),
+        $this->t('Drupal 8'),
       ],
     ];
 
@@ -885,8 +903,8 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       $counters[] = [
         '#theme' => 'status_report_counter',
         '#amount' => $missing_count,
-        '#text' => $this->formatPlural($missing_count, 'Missing upgrade path', 'Missing upgrade paths'),
-        '#severity' => 'warning',
+        '#text' => $this->formatPlural($missing_count, 'Module will not be upgraded', 'Modules will not be upgraded'),
+        '#severity' => 'error',
         '#weight' => 0,
       ];
       $general_info[] = $missing_module_list;
@@ -895,7 +913,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       $counters[] = [
         '#theme' => 'status_report_counter',
         '#amount' => $available_count,
-        '#text' => $this->formatPlural($available_count, 'Available upgrade path', 'Available upgrade paths'),
+        '#text' => $this->formatPlural($available_count, 'Module will be upgraded', 'Modules will be upgraded'),
         '#severity' => 'checked',
         '#weight' => 1,
       ];
@@ -960,7 +978,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Upgrade analysis report');
+    if ($this->step === 'confirm_id_conflicts') {
+      return $this->t('Upgrade analysis report');
+    }
+    return $this->t('What will be upgraded?');
   }
 
   /**

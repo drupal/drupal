@@ -99,7 +99,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     $session->pageTextContains('There is translated content of these types:');
     $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
     $session->statusCodeEquals(200);
-    $session->pageTextContains('Upgrade analysis report');
+    $session->pageTextContains('What will be upgraded?');
     // Ensure there are no errors about missing modules from the test module.
     $session->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));
     $session->pageTextNotContains(t('Source module not found for migration_provider_test.'));
