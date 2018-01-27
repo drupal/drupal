@@ -2,6 +2,7 @@ name: Umami
 type: theme
 base theme: classy
 description: 'The theme used for the out of the box initiative.'
+version: VERSION
 core: 8.x
 libraries:
   - umami/global
