@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the Content Translation tests.
+ */
+
+/**
+ * Implements hook_entity_bundle_info_alter().
+ */
+function a_content_translation_test_entity_bundle_info_alter(&$bundles) {
+  \Drupal::state()->set('a_content_translation_test.translatable', !empty($bundles['entity_test_mul']['entity_test_mul']['translatable']));
+}
