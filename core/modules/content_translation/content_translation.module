@@ -60,6 +60,14 @@ function content_translation_module_implements_alter(&$implementations, $hook) {
       unset($implementations['content_translation']);
       $implementations['content_translation'] = $group;
       break;
+
+    // Move our hook_entity_bundle_info_alter() implementation to the top of the
+    // list, so that any other hook implementation can rely on bundles being
+    // correctly marked as translatable.
+    case 'entity_bundle_info_alter':
+      $group = $implementations['content_translation'];
+      $implementations = ['content_translation' => $group] + $implementations;
+      break;
   }
 }
 
