@@ -359,12 +359,20 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
       $previous_label = NULL;
       if (!$entity->isNewTranslation()) {
         $previous_label = $this->generateNewEntityLabel($entity, $previous_revision_id);
+        $latest_affected_revision_id = $this->storage->getLatestTranslationAffectedRevisionId($entity->id(), $entity->language()->getId());
+      }
+      else {
+        // Normally it would make sense to load the default revision in this
+        // case, however that would mean simulating here the logic that we need
+        // to test, thus "masking" possible flaws. To avoid that, we simply
+        // pretend we are starting from an earlier non translated revision.
+        // This ensures that the we can check that the merging logic is applied
+        // also when adding a new translation.
+        $latest_affected_revision_id = 1;
       }
       $previous_revision_id = (int) $entity->getLoadedRevisionId();
-      $latest_affected_revision_id = $this->storage->getLatestTranslationAffectedRevisionId($entity->id(), $entity->language()->getId());
       /** @var \Drupal\Core\Entity\ContentEntityInterface $latest_affected_revision */
-      $latest_affected_revision = isset($latest_affected_revision_id) ?
-        $this->storage->loadRevision($latest_affected_revision_id) : $this->storage->load($entity->id());
+      $latest_affected_revision = $this->storage->loadRevision($latest_affected_revision_id);
       $translation = $latest_affected_revision->hasTranslation($active_langcode) ?
         $latest_affected_revision->getTranslation($active_langcode) : $latest_affected_revision->addTranslation($active_langcode);
       $entity = $this->storage->createRevision($translation, $default_revision);
