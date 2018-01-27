@@ -111,7 +111,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the Umami theme is the default theme on the Appearance page.
+   * Tests that the Umami theme is available on the Appearance page.
    */
   public function testAppearance() {
     $account = $this->drupalCreateUser(['administer themes']);
