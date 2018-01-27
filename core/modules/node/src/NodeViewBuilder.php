@@ -4,7 +4,6 @@ namespace Drupal\node;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
-use Drupal\node\Entity\Node;
 
 /**
  * View builder handler for nodes.
@@ -34,6 +33,7 @@ class NodeViewBuilder extends EntityViewBuilder {
               $view_mode,
               $entity->language()->getId(),
               !empty($entity->in_preview),
+              $entity->isDefaultRevision() ? NULL : $entity->getLoadedRevisionId(),
             ],
           ],
         ];
@@ -77,11 +77,14 @@ class NodeViewBuilder extends EntityViewBuilder {
    *   The language in which the node entity is being viewed.
    * @param bool $is_in_preview
    *   Whether the node is currently being previewed.
+   * @param $revision_id
+   *   (optional) The identifier of the node revision to be loaded. If none
+   *   is provided, the default revision will be loaded.
    *
    * @return array
    *   A renderable array representing the node links.
    */
-  public static function renderLinks($node_entity_id, $view_mode, $langcode, $is_in_preview) {
+  public static function renderLinks($node_entity_id, $view_mode, $langcode, $is_in_preview, $revision_id = NULL) {
     $links = [
       '#theme' => 'links__node',
       '#pre_render' => ['drupal_pre_render_links'],
@@ -89,7 +92,10 @@ class NodeViewBuilder extends EntityViewBuilder {
     ];
 
     if (!$is_in_preview) {
-      $entity = Node::load($node_entity_id)->getTranslation($langcode);
+      $storage = \Drupal::entityTypeManager()->getStorage('node');
+      /** @var \Drupal\node\NodeInterface $revision */
+      $revision = !isset($revision_id) ? $storage->load($node_entity_id) : $storage->loadRevision($revision_id);
+      $entity = $revision->getTranslation($langcode);
       $links['node'] = static::buildLinks($entity, $view_mode);
 
       // Allow other modules to alter the node links.
