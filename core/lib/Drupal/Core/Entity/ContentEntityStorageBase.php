@@ -152,6 +152,23 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * Checks whether any entity revision is translated.
    *
+   * @param \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\TranslatableInterface $entity
+   *   The entity object to be checked.
+   *
+   * @return bool
+   *   TRUE if the entity has at least one translation in any revision, FALSE
+   *   otherwise.
+   *
+   * @see \Drupal\Core\TypedData\TranslatableInterface::getTranslationLanguages()
+   * @see \Drupal\Core\Entity\ContentEntityStorageBase::isAnyStoredRevisionTranslated()
+   */
+  protected function isAnyRevisionTranslated(TranslatableInterface $entity) {
+    return $entity->getTranslationLanguages(FALSE) || $this->isAnyStoredRevisionTranslated($entity);
+  }
+
+  /**
+   * Checks whether any stored entity revision is translated.
+   *
    * A revisionable entity can have translations in a pending revision, hence
    * the default revision may appear as not translated. This determines whether
    * the entity has any translation in the storage and thus should be considered
@@ -165,8 +182,9 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   otherwise.
    *
    * @see \Drupal\Core\TypedData\TranslatableInterface::getTranslationLanguages()
+   * @see \Drupal\Core\Entity\ContentEntityStorageBase::isAnyRevisionTranslated()
    */
-  protected function isAnyRevisionTranslated(TranslatableInterface $entity) {
+  protected function isAnyStoredRevisionTranslated(TranslatableInterface $entity) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if ($entity->isNew()) {
       return FALSE;

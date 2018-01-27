@@ -192,12 +192,12 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
   /**
    * Tests that revision translations are correctly detected.
    *
-   * @covers \Drupal\Core\Entity\ContentEntityStorageBase::isAnyRevisionTranslated
+   * @covers \Drupal\Core\Entity\ContentEntityStorageBase::isAnyStoredRevisionTranslated
    */
-  public function testIsAnyRevisionTranslated() {
+  public function testIsAnyStoredRevisionTranslated() {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $this->entityManager->getStorage('entity_test_mul');
-    $method = new \ReflectionMethod(get_class($storage), 'isAnyRevisionTranslated');
+    $method = new \ReflectionMethod(get_class($storage), 'isAnyStoredRevisionTranslated');
     $method->setAccessible(TRUE);
 
     // Check that a non-revisionable new entity is handled correctly.
