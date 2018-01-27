@@ -45,6 +45,13 @@ libraries-override:
       theme:
         css/content_translation.admin.css: css/content_translation/content_translation.admin.css
 
+  content_moderation/content_moderation:
+    css:
+      component:
+        css/content_moderation.module.css: css/content_moderation/content_moderation.module.css
+      theme:
+        css/content_moderation.theme.css: css/content_moderation/content_moderation.theme.css
+
   contextual/drupal.contextual-links:
     css:
       component:
