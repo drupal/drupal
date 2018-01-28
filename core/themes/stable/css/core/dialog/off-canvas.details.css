@@ -35,7 +35,7 @@
   text-shadow: none;
   padding: 10px 20px;
   font-size: 14px;
-  transition: all .5s ease;
+  transition: all 0.5s ease;
 }
 #drupal-off-canvas summary:hover,
 #drupal-off-canvas summary:focus {

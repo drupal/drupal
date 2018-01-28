@@ -40,7 +40,7 @@
   position: absolute;
   top: calc(50% - 6px);
   right: 1em;
-  transition: all .5s ease;
+  transition: all 0.5s ease;
 }
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:hover,
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:focus {

@@ -53,7 +53,7 @@
   text-decoration: none;
 }
 #drupal-off-canvas tr td {
-  transition: background .3s ease;
+  transition: background 0.3s ease;
 }
 
 #drupal-off-canvas tr td abbr {

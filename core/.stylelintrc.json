@@ -12,7 +12,7 @@
     "function-whitespace-after": null,
     "no-empty-source": null,
     "no-unknown-animations": true,
-    "number-leading-zero": null,
+    "number-leading-zero": "always",
     "plugin/no-browser-hacks": [true, {
       "browsers": [
         "ie >= 9",

@@ -45,7 +45,7 @@
   margin: 0;
 }
 .quickedit-form .form-wrapper {
-  margin: .5em;
+  margin: 0.5em;
 }
 
 /**
@@ -55,35 +55,35 @@
   opacity: 0;
 }
 .quickedit-animate-default {
-  -webkit-transition: all .4s ease;
-  transition: all .4s ease;
+  -webkit-transition: all 0.4s ease;
+  transition: all 0.4s ease;
 }
 .quickedit-animate-slow {
-  -webkit-transition: all .6s ease;
-  transition: all .6s ease;
+  -webkit-transition: all 0.6s ease;
+  transition: all 0.6s ease;
 }
 .quickedit-animate-delay-veryfast {
-  -webkit-transition-delay: .05s;
-  transition-delay: .05s;
+  -webkit-transition-delay: 0.05s;
+  transition-delay: 0.05s;
 }
 .quickedit-animate-delay-fast {
-  -webkit-transition-delay: .2s;
-  transition-delay: .2s;
+  -webkit-transition-delay: 0.2s;
+  transition-delay: 0.2s;
 }
 .quickedit-animate-disable-width {
   -webkit-transition: width 0s;
   transition: width 0s;
 }
 .quickedit-animate-only-visibility {
-  -webkit-transition: opacity .2s ease;
-  transition: opacity .2s ease;
+  -webkit-transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 
 /**
  * In-place editors that don't use a popup.
  */
 .quickedit-validation-errors .messages.error {
-  box-shadow: 0 0 1px 1px red, 0 0 3px 3px rgba(153, 153, 153, .5);
+  box-shadow: 0 0 1px 1px red, 0 0 3px 3px rgba(153, 153, 153, 0.5);
   background-color: white;
 }
 
@@ -208,8 +208,8 @@
   margin: 0;
   opacity: 1;
   padding: 0.345em;
-  -webkit-transition: opacity .1s ease;
-  transition: opacity .1s ease;
+  -webkit-transition: opacity 0.1s ease;
+  transition: opacity 0.1s ease;
 }
 .quickedit-button[aria-hidden="true"] {
   visibility: hidden;

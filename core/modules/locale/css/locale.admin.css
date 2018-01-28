@@ -72,12 +72,12 @@
   vertical-align: top;
 }
 .locale-translation-update__wrapper {
-  background: transparent url(../../../misc/menu-collapsed.png) left .6em no-repeat;
+  background: transparent url(../../../misc/menu-collapsed.png) left 0.6em no-repeat;
   margin-left: -12px;
   padding-left: 12px;
 }
 .expanded .locale-translation-update__wrapper {
-  background: transparent url(../../../misc/menu-expanded.png) left .6em no-repeat;
+  background: transparent url(../../../misc/menu-expanded.png) left 0.6em no-repeat;
 }
 #locale-translation-status-form .description {
   cursor: pointer;

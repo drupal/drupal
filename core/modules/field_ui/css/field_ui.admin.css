@@ -17,7 +17,7 @@
 }
 .field-ui-overview .field-plugin-summary {
   float: left; /* LTR */
-  font-size: .9em;
+  font-size: 0.9em;
 }
 [dir="rtl"] .field-ui-overview .field-plugin-summary {
   float: right;
@@ -25,7 +25,7 @@
 .field-ui-overview .field-plugin-summary-cell .warning {
   display: block;
   float: left; /* LTR */
-  margin-right: .5em;
+  margin-right: 0.5em;
 }
 [dir="rtl"] .field-ui-overview .field-plugin-summary-cell .warning {
   float: right;

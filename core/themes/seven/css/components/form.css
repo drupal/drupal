@@ -84,7 +84,7 @@ label[for] {
 .form-disabled textarea.form-textarea,
 .form-disabled select.form-select {
   border-color: #d4d4d4;
-  background-color: hsla(0, 0%, 0%, .08);
+  background-color: hsla(0, 0%, 0%, 0.08);
   box-shadow: none;
 }
 .form-item input.error,
@@ -105,7 +105,7 @@ label[for] {
 .form-item select.error:focus {
   border-color: #e62600;
   outline: 0;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .05), 0 0 8px 1px #e62600;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px 1px #e62600;
   background-color: #fcf4f2;
 }
 .form-required:after {
@@ -175,7 +175,7 @@ input.form-date,
 input.form-time,
 textarea.form-textarea {
   box-sizing: border-box;
-  padding: .3em .4em .3em .5em; /* LTR */
+  padding: 0.3em 0.4em 0.3em 0.5em; /* LTR */
   max-width: 100%;
   border: 1px solid #b8b8b8;
   border-top-color: #999;
@@ -183,14 +183,14 @@ textarea.form-textarea {
   color: #333;
   border-radius: 2px;
   background: #fcfcfa;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .125);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.125);
   font-size: 1em;
   color: #595959;
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
 }
 [dir="rtl"] textarea.form-textarea {
-  padding: .3em .5em .3em .4em;
+  padding: 0.3em 0.5em 0.3em 0.4em;
 }
 .form-text:focus,
 .form-tel:focus,
@@ -205,7 +205,7 @@ textarea.form-textarea {
 .form-time:focus {
   border-color: #40b6ff;
   outline: 0;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .05), 0 0 8px #40b6ff;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px #40b6ff;
   background-color: #fff;
 }
 

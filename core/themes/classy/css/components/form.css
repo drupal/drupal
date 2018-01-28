@@ -14,14 +14,14 @@ form .field-multiple-table .field-multiple-drag {
   padding-left: 0;
 }
 form .field-multiple-table .field-multiple-drag .tabledrag-handle {
-  padding-right: .5em; /* LTR */
+  padding-right: 0.5em; /* LTR */
 }
 [dir="rtl"] form .field-multiple-table .field-multiple-drag .tabledrag-handle {
   padding-right: 0;
-  padding-left: .5em;
+  padding-left: 0.5em;
 }
 form .field-add-more-submit {
-  margin: .5em 0 0;
+  margin: 0.5em 0 0;
 }
 
 /**
