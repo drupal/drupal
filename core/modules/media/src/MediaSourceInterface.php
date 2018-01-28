@@ -25,7 +25,7 @@ use Drupal\Core\Plugin\PluginFormInterface;
  * - Image: handles local images,
  * - oEmbed: handles resources that are exposed through the oEmbed standard,
  * - YouTube: handles YouTube videos,
- * - SoundCould: handles SoundCloud audio,
+ * - SoundCloud: handles SoundCloud audio,
  * - Instagram: handles Instagram posts,
  * - Twitter: handles tweets,
  * - ...
