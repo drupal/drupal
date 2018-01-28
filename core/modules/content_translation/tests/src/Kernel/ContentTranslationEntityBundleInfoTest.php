@@ -3,6 +3,8 @@
 namespace Drupal\Tests\content_translation\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\entity_test\Entity\EntityTestMul;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests the Content Translation bundle info logic.
@@ -40,6 +42,8 @@ class ContentTranslationEntityBundleInfoTest extends KernelTestBase {
     $this->bundleInfo = $this->container->get('entity_type.bundle.info');
 
     $this->installEntitySchema('entity_test_mul');
+
+    ConfigurableLanguage::createFromLangcode('it')->save();
   }
 
   /**
@@ -67,6 +71,20 @@ class ContentTranslationEntityBundleInfoTest extends KernelTestBase {
     /** @var \Drupal\Core\State\StateInterface $state */
     $state = $this->container->get('state');
     $this->assertTrue($state->get('content_translation_test.translatable'));
+  }
+
+  /**
+   * Tests that field synchronization is skipped for disabled bundles.
+   */
+  public function testFieldSynchronizationWithDisabledBundle() {
+    $entity = EntityTestMul::create();
+    $entity->save();
+
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $translation */
+    $translation = $entity->addTranslation('it');
+    $translation->save();
+
+    $this->assertTrue($entity->isTranslatable());
   }
 
 }

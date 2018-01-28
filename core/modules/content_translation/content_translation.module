@@ -430,6 +430,11 @@ function content_translation_form_field_config_edit_form_alter(array &$form, For
  */
 function content_translation_entity_presave(EntityInterface $entity) {
   if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && !$entity->isNew()) {
+    /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
+    $manager = \Drupal::service('content_translation.manager');
+    if (!$manager->isEnabled($entity->getEntityTypeId(), $entity->bundle())) {
+      return;
+    }
     // If we are creating a new translation we need to use the source language
     // as original language, since source values are the only ones available to
     // compare against.
@@ -438,8 +443,6 @@ function content_translation_entity_presave(EntityInterface $entity) {
         ->getStorage($entity->entityType())->loadUnchanged($entity->id());
     }
     $langcode = $entity->language()->getId();
-    /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
-    $manager = \Drupal::service('content_translation.manager');
     $source_langcode = !$entity->original->hasTranslation($langcode) ? $manager->getTranslationMetadata($entity)->getSource() : NULL;
     \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $langcode, $source_langcode);
   }
