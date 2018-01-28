@@ -234,7 +234,7 @@ small .admin-link:after {
   background-image: url(../../../misc/icons/e29700/warning.svg);
 }
 .system-status-report__entry__value {
-  padding: 1em .5em;
+  padding: 1em 0.5em;
 }
 
 /**

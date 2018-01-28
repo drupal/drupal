@@ -5,11 +5,11 @@
 
 .system-status-report-counters__item {
   width: 100%;
-  padding: .5em 0;
+  padding: 0.5em 0;
   text-align: center;
   white-space: nowrap;
   background-color: rgba(0, 0, 0, 0.063);
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 
 @media screen and (min-width: 60em) {

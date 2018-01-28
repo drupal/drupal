@@ -24,7 +24,7 @@
   text-align: center;
   line-height: normal;
   cursor: pointer;
-  transition: background .5s ease;
+  transition: background 0.5s ease;
 }
 #drupal-off-canvas .dropbutton-widget:hover {
   background: #2b8bd8;

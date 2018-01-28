@@ -42,12 +42,12 @@
 }
 .ui-state-disabled,
 .ui-widget-content .ui-state-disabled {
-  opacity: .35;
+  opacity: 0.35;
   filter: alpha(Opacity=35);
 }
 .ui-priority-secondary,
 .ui-widget-content .ui-priority-secondary {
-  opacity: .7;
+  opacity: 0.7;
   filter: alpha(Opacity=70);
 }
 
@@ -331,7 +331,7 @@
  */
 .ui-widget-overlay {
   background: #000;
-  opacity: .7;
+  opacity: 0.7;
   filter: alpha(Opacity=70);
 }
 

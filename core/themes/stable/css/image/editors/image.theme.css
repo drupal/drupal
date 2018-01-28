@@ -5,12 +5,12 @@
 
 .quickedit-image-dropzone {
   background: rgba(116, 183, 255, 0.8);
-  transition: background .2s;
+  transition: background 0.2s;
 }
 
 .quickedit-image-icon {
   margin: 0 0 10px 0;
-  transition: margin .5s;
+  transition: margin 0.5s;
 }
 
 .quickedit-image-dropzone.hover {

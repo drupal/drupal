@@ -20,7 +20,7 @@
   font-weight: normal;
   color: #85bef4;
   text-decoration: none;
-  transition: color .5s ease;
+  transition: color 0.5s ease;
 }
 
 #drupal-off-canvas a:focus,

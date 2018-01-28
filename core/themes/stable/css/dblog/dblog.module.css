@@ -5,12 +5,12 @@
 .dblog-filter-form .form-item-type,
 .dblog-filter-form .form-item-severity {
   display: inline-block;
-  margin: .1em .9em .1em .1em; /* LTR */
+  margin: 0.1em 0.9em 0.1em 0.1em; /* LTR */
   max-width: 30%;
 }
 [dir="rtl"] .dblog-filter-form .form-item-type,
 [dir="rtl"] .dblog-filter-form .form-item-severity {
-  margin: .1em .1em .1em .9em;
+  margin: 0.1em 0.1em 0.1em 0.9em;
 }
 .dblog-filter-form .form-actions {
   display: inline-block;

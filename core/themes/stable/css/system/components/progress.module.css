@@ -27,7 +27,7 @@
 .progress__percentage {
   color: #555;
   overflow: hidden;
-  font-size: .875em;
+  font-size: 0.875em;
   margin-top: 0.2em;
 }
 .progress__description {
