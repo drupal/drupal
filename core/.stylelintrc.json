@@ -4,7 +4,6 @@
     "stylelint-no-browser-hacks/lib"
   ],
   "rules": {
-    "color-hex-case": null,
     "color-hex-length": null,
     "comment-empty-line-before": null,
     "declaration-block-no-duplicate-properties": null,

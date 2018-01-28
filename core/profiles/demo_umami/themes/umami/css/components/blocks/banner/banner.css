@@ -27,7 +27,7 @@
   padding: 0.5em 1.5em 0.4em;
   border: 0;
   border-radius: 4px;
-  background-color: #E84265;
+  background-color: #e84265;
   color: #fff;
   cursor: pointer;
   text-align: center;
@@ -41,7 +41,7 @@
 
 .block-banner-block .field--name-field-content-link a:focus,
 .block-banner-block .field--name-field-content-link a:hover {
-  background-color: #00836D;
+  background-color: #00836d;
   color: #fff;
   text-decoration: underline;
 }

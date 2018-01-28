@@ -241,6 +241,7 @@ select {
     background:
       url(../../../../misc/icons/333333/caret-down.svg) no-repeat 99% 63%,
       -webkit-linear-gradient(top, #f6f6f3, #e7e7df); /* LTR */
+
     text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
     font-size: 0.875rem;
     -webkit-transition: all 0.1s;
