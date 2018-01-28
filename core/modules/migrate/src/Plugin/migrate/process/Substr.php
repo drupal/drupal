@@ -33,8 +33,8 @@ use Drupal\Component\Utility\Unicode;
  *   new_text_field:
  *     plugin: substr
  *     source: some_text_field
- *       start: 6
- *       length: 10
+ *     start: 6
+ *     length: 10
  * @endcode
  * If some_text_field was 'Marie Skłodowska Curie' then
  * $destination['new_text_field'] would be 'Skłodowska'.
