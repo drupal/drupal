@@ -247,7 +247,6 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
 }
 [dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
   margin-left: auto;
-  margin-left: auto;
   margin-right: 240px;
   margin-right: 15rem;
 }
