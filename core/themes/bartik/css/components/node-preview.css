@@ -10,7 +10,6 @@
   padding: 5px 10px;
 }
 .node-preview-backlink {
-  background-color: #419ff1;
   background: url(../../../../misc/icons/000000/chevron-left.svg) left no-repeat, -webkit-linear-gradient(top, #419ff1, #1076d5);
   background: url(../../../../misc/icons/000000/chevron-left.svg) left no-repeat, linear-gradient(to bottom, #419ff1, #1076d5); /* LTR */
   border: 1px solid #0048c8;
@@ -33,7 +32,6 @@
 }
 .node-preview-backlink:focus,
 .node-preview-backlink:hover {
-  background-color: #419cf1;
   background: url(../../../../misc/icons/000000/chevron-left.svg) left no-repeat, -webkit-linear-gradient(top, #59abf3, #2a90ef);
   background: url(../../../../misc/icons/000000/chevron-left.svg) left no-repeat, linear-gradient(to bottom, #59abf3, #2a90ef); /* LTR */
   border: 1px solid #0048c8;
@@ -46,7 +44,6 @@
   background: url(../../../../misc/icons/000000/chevron-right.svg) right no-repeat, linear-gradient(to bottom, #59abf3, #2a90ef);
 }
 .node-preview-backlink:active {
-  background-color: #0e69be;
   background: url(../../../../misc/icons/000000/chevron-left.svg) left no-repeat, -webkit-linear-gradient(top, #0e69be, #2a93ef);
   background: url(../../../../misc/icons/000000/chevron-left.svg) left no-repeat, linear-gradient(to bottom, #0e69be, #2a93ef); /* LTR */
   border: 1px solid #0048c8;
