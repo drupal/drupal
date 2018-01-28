@@ -1,11 +1,3 @@
-entity.block_content_type.collection:
-  path: '/admin/structure/block/block-content/types'
-  defaults:
-    _entity_list: 'block_content_type'
-    _title: 'Custom block library'
-  requirements:
-    _permission: 'administer blocks'
-
 block_content.add_page:
   path: '/block/add'
   defaults:
@@ -25,16 +17,6 @@ block_content.add_form:
     _admin_route: TRUE
   requirements:
     _permission: 'administer blocks'
-
-entity.block_content_type.delete_form:
-  path: '/admin/structure/block/block-content/manage/{block_content_type}/delete'
-  defaults:
-    _entity_form: 'block_content_type.delete'
-    _title: 'Delete'
-  requirements:
-    _entity_access: 'block_content_type.delete'
-  options:
-    _admin_route: TRUE
 
 entity.block_content.canonical:
   path: '/block/{block_content}'
@@ -74,14 +56,6 @@ block_content.type_add:
     _title: 'Add'
   requirements:
     _permission: 'administer blocks'
-
-entity.block_content_type.edit_form:
-  path: '/admin/structure/block/block-content/manage/{block_content_type}'
-  defaults:
-    _entity_form: 'block_content_type.edit'
-    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
-  requirements:
-    _entity_access: 'block_content_type.update'
 
 entity.block_content.collection:
   path: '/admin/structure/block/block-content'
