@@ -963,7 +963,12 @@ function system_get_info($type, $name = NULL) {
     /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
     $module_list = \Drupal::service('extension.list.module');
     if (isset($name)) {
-      return $module_list->getExtensionInfo($name);
+      try {
+        return $module_list->getExtensionInfo($name);
+      }
+      catch (\InvalidArgumentException $e) {
+        return [];
+      }
     }
     else {
       return $module_list->getAllInstalledInfo();
