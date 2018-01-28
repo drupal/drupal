@@ -196,7 +196,7 @@
 }
 .cke_reset_all .cke_dialog_footer_buttons a.cke_dialog_ui_button:focus {
   z-index: 10;
-  border: 1px solid #3AB2FF;
+  border: 1px solid #3ab2ff;
   box-shadow: 0 0 0.5em 0.1em hsla(203, 100%, 60%, 0.7);
 }
 .cke_reset_all .cke_dialog_footer_buttons a.cke_dialog_ui_button:active {

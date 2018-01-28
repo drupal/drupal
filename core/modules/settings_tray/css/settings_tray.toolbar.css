@@ -20,8 +20,8 @@
 
 /* Style both the edit and editing states of the contextual links toggle tab. */
 .toolbar-icon-edit.toolbar-item {
-  background-color: #0066A1;
-  background-image: linear-gradient(to bottom, #0066A1, #005b98);
+  background-color: #0066a1;
+  background-image: linear-gradient(to bottom, #0066a1, #005b98);
   color: #eee;
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
   font-weight: 700;

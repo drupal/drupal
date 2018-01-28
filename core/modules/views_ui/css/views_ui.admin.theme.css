@@ -624,10 +624,10 @@ td.group-title {
   border: none;
 }
 .views-ui-dialog .views-offset-top {
-  border-bottom: 1px solid #CCC;
+  border-bottom: 1px solid #ccc;
 }
 .views-ui-dialog .views-offset-bottom {
-  border-top: 1px solid #CCC;
+  border-top: 1px solid #ccc;
 }
 .views-ui-dialog .views-override > * {
   margin: 0;

@@ -9,7 +9,7 @@
 }
 .views-displays .tabs .open > a:hover,
 .views-displays .tabs .open > a:focus {
-  color: #0071B3;
+  color: #0071b3;
 }
 .views-displays .secondary .form-submit {
   font-size: 0.846em;
@@ -22,14 +22,14 @@
 
 /* Contextual filter options styles */
 .views-filterable-options .filterable-option:nth-of-type(even) .form-type-checkbox {
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
 }
 
 /* Views action dropbutton styles */
 .views-ui-display-tab-actions .dropbutton .form-submit {
-  color: #0071B3;
+  color: #0071b3;
 }
 .views-ui-display-tab-actions .dropbutton .form-submit:hover,
 .views-ui-display-tab-actions .dropbutton .form-submit:focus {
-  color: #018FE2;
+  color: #018fe2;
 }

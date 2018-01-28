@@ -3,12 +3,12 @@
   margin-bottom: 1.2em;
 }
 .caption > * {
-  background: #F3F3F3;
+  background: #f3f3f3;
   padding: 0.5ex;
-  border: 1px solid #CCC;
+  border: 1px solid #ccc;
 }
 .caption > figcaption {
-  border: 1px solid #CCC;
+  border: 1px solid #ccc;
   border-top: none;
   padding-top: 0.5ex;
   font-size: small;

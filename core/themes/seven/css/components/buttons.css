@@ -62,7 +62,7 @@
 /* Prevent focus ring being covered by next siblings. */
 .button:focus {
   z-index: 10;
-  border: 1px solid #3AB2FF;
+  border: 1px solid #3ab2ff;
   box-shadow: 0 0 0.5em 0.1em hsla(203, 100%, 60%, 0.7);
 }
 .button:active {
@@ -94,7 +94,7 @@
   color: #fff;
 }
 .button--primary:focus {
-  border: 1px solid #1280DF;
+  border: 1px solid #1280df;
 }
 .button--primary:hover {
   box-shadow: 0 1px 2px hsla(203, 10%, 10%, 0.25);
