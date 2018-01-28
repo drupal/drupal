@@ -1,13 +1,14 @@
 <?php
 
-namespace Drupal\Tests\TestSuites;
+namespace Drupal\Tests\Core\Test;
 
+use Drupal\Tests\TestSuites\TestSuiteBase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
 // The test suite class is not part of the autoloader, we need to include it
 // manually.
-require_once __DIR__ . '/../../../TestSuites/TestSuiteBase.php';
+require_once __DIR__ . '/../../../../TestSuites/TestSuiteBase.php';
 
 /**
  * @coversDefaultClass \Drupal\Tests\TestSuites\TestSuiteBase
