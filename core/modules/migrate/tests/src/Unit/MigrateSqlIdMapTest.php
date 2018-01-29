@@ -211,10 +211,10 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     }
 
     // Truncate and check that 4 messages were deleted.
-    $this->assertEquals($id_map->messageCount(), 4);
+    $this->assertSame($id_map->messageCount(), 4);
     $id_map->clearMessages();
     $count = $id_map->messageCount();
-    $this->assertEquals($count, 0);
+    $this->assertSame($count, 0);
   }
 
   /**
@@ -284,7 +284,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     // Test count message multiple times starting from 0.
     foreach ($expected_results as $key => $expected_result) {
       $count = $id_map->messageCount();
-      $this->assertEquals($expected_result, $count);
+      $this->assertSame($expected_result, $count);
       $id_map->saveMessage(['source_id_property' => $key], $message);
     }
   }
@@ -684,21 +684,21 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $row = new Row($source, ['source_id_property' => []]);
     $destination = ['destination_id_property' => 'destination_value_failed'];
     $id_map->saveIdMapping($row, $destination, MigrateIdMapInterface::STATUS_FAILED);
-    $this->assertSame(0, (int) $id_map->importedCount());
+    $this->assertSame(0, $id_map->importedCount());
 
     // Add an imported row and assert single count.
     $source = ['source_id_property' => 'source_value_imported'];
     $row = new Row($source, ['source_id_property' => []]);
     $destination = ['destination_id_property' => 'destination_value_imported'];
     $id_map->saveIdMapping($row, $destination, MigrateIdMapInterface::STATUS_IMPORTED);
-    $this->assertSame(1, (int) $id_map->importedCount());
+    $this->assertSame(1, $id_map->importedCount());
 
     // Add a row needing update and assert multiple imported rows.
     $source = ['source_id_property' => 'source_value_update'];
     $row = new Row($source, ['source_id_property' => []]);
     $destination = ['destination_id_property' => 'destination_value_update'];
     $id_map->saveIdMapping($row, $destination, MigrateIdMapInterface::STATUS_NEEDS_UPDATE);
-    $this->assertSame(2, (int) $id_map->importedCount());
+    $this->assertSame(2, $id_map->importedCount());
   }
 
   /**
@@ -712,7 +712,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   public function testProcessedCount() {
     $id_map = $this->getIdMap();
     // Assert zero rows have been processed before adding rows.
-    $this->assertSame(0, (int) $id_map->processedCount());
+    $this->assertSame(0, $id_map->processedCount());
     $row_statuses = [
       MigrateIdMapInterface::STATUS_IMPORTED,
       MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
@@ -727,11 +727,11 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       $id_map->saveIdMapping($row, $destination, $status);
       if ($status == MigrateIdMapInterface::STATUS_IMPORTED) {
         // Assert a single row has been processed.
-        $this->assertSame(1, (int) $id_map->processedCount());
+        $this->assertSame(1, $id_map->processedCount());
       }
     }
     // Assert multiple rows have been processed.
-    $this->assertSame(count($row_statuses), (int) $id_map->processedCount());
+    $this->assertSame(count($row_statuses), $id_map->processedCount());
   }
 
   /**
@@ -779,7 +779,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       $this->saveMap($row);
     }
     $id_map = $this->getIdMap();
-    $this->assertSame($num_update_rows, (int) $id_map->updateCount());
+    $this->assertSame($num_update_rows, $id_map->updateCount());
   }
 
   /**
@@ -827,7 +827,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       $this->saveMap($row);
     }
 
-    $this->assertSame($num_error_rows, (int) $this->getIdMap()->errorCount());
+    $this->assertSame($num_error_rows, $this->getIdMap()->errorCount());
   }
 
   /**
