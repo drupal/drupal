@@ -30,10 +30,26 @@ if (file_exists('.' . $url['path'])) {
   return FALSE;
 }
 
-// The use of a router script means that a number of $_SERVER variables have to
-// be updated to point to the index-file.
-$index_file_absolute = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'index.php';
-$index_file_relative = DIRECTORY_SEPARATOR . 'index.php';
+// Work around the PHP bug.
+$path = $url['path'];
+$script = 'index.php';
+if (strpos($path, '.php') !== FALSE) {
+  // Work backwards through the path to check if a script exists. Otherwise
+  // fallback to index.php.
+  do {
+    $path = dirname($path);
+    if (preg_match('/\.php$/', $path) && is_file('.' . $path)) {
+      // Discovered that the path contains an existing PHP file. Use that as the
+      // script to include.
+      $script = ltrim($path, '/');
+      break;
+    }
+  } while ($path !== '/' && $path !== '.');
+}
+
+// Update $_SERVER variables to point to the correct index-file.
+$index_file_absolute = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $script;
+$index_file_relative = DIRECTORY_SEPARATOR . $script;
 
 // SCRIPT_FILENAME will point to the router script itself, it should point to
 // the full path of index.php.
@@ -45,5 +61,5 @@ $_SERVER['SCRIPT_FILENAME'] = $index_file_absolute;
 $_SERVER['SCRIPT_NAME'] = $index_file_relative;
 $_SERVER['PHP_SELF'] = $index_file_relative;
 
-// Require the main index.php and let core take over.
-require $index_file_absolute;
+// Require the script and let core take over.
+require $_SERVER['SCRIPT_FILENAME'];
