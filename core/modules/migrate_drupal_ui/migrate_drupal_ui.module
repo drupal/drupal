@@ -31,8 +31,6 @@ function migrate_drupal_ui_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Reviewing the upgrade log') . '</dt>';
       $output .= '<dd>' . t('You can review a <a href=":log">log of upgrade messages</a> by clicking the link in the message provided after the upgrade or by filtering the messages for the type <em>migrate_drupal_ui</em> on the <a href=":messages">Recent log messages</a> page.',
           [':log' => \Drupal::url('migrate_drupal_ui.log'), ':messages' => \Drupal::url('dblog.overview')]) . '</dd>';
-      $output .= '<dt>' . t('Incremental upgrades') . '</dt>';
-      $output .= '<dd>' . t('Incremental upgrades are not yet supported through the user interface.') . '</dd>';
       $output .= '<dt>' . t('Rolling back an upgrade') . '</dt>';
       $output .= '<dd>' . t('Rolling back an upgrade is not yet supported through the user interface.') . '</dd>';
       $output .= '</dl>';

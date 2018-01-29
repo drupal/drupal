@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
-use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
@@ -26,6 +25,12 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
 
   /**
    * Executes all steps of migrations upgrade.
+   *
+   * The upgrade is started three times. The first time is to test that
+   * providing incorrect database credentials fails as expected. The second
+   * time is to run the migration and assert the results. The third time is
+   * to test an incremental migration, by installing the aggregator module,
+   * and assert the results.
    */
   public function testMigrateUpgradeExecute() {
     $connection_options = $this->sourceDatabase->getConnectionOptions();
@@ -84,22 +89,11 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     $session->fieldExists('mysql[host]');
 
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
-    $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
-    $session->pageTextContains('There is conflicting content of these types:');
-    $session->pageTextContains('aggregator feed entities');
-    $session->pageTextContains('aggregator feed item entities');
-    $session->pageTextContains('custom block entities');
-    $session->pageTextContains('custom menu link entities');
-    $session->pageTextContains('file entities');
-    $session->pageTextContains('taxonomy term entities');
-    $session->pageTextContains('user entities');
-    $session->pageTextContains('comments');
-    $session->pageTextContains('content item revisions');
-    $session->pageTextContains('content items');
-    $session->pageTextContains('There is translated content of these types:');
+    $this->assertIdConflict($session);
+
     $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
     $session->statusCodeEquals(200);
-    $session->pageTextContains('What will be upgraded?');
+
     // Ensure there are no errors about missing modules from the test module.
     $session->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));
     $session->pageTextNotContains(t('Source module not found for migration_provider_test.'));
@@ -109,49 +103,40 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     // Test the upgrade paths.
     $available_paths = $this->getAvailablePaths();
     $missing_paths = $this->getMissingPaths();
-    $this->assertUpgradePaths($session, $available_paths, $missing_paths);
+    $this->assertReviewPage($session, $available_paths, $missing_paths);
 
     $this->drupalPostForm(NULL, [], t('Perform upgrade'));
     $this->assertText(t('Congratulations, you upgraded Drupal!'));
+    $this->assertMigrationResults($this->getEntityCounts(), $version);
 
-    // Have to reset all the statics after migration to ensure entities are
-    // loadable.
-    $this->resetAll();
-
-    $expected_counts = $this->getEntityCounts();
-    foreach (array_keys(\Drupal::entityTypeManager()
-      ->getDefinitions()) as $entity_type) {
-      $real_count = \Drupal::entityQuery($entity_type)->count()->execute();
-      $expected_count = isset($expected_counts[$entity_type]) ? $expected_counts[$entity_type] : 0;
-      $this->assertEqual($expected_count, $real_count, "Found $real_count $entity_type entities, expected $expected_count.");
-    }
-
-    $plugin_manager = \Drupal::service('plugin.manager.migration');
-    /** @var \Drupal\migrate\Plugin\Migration[] $all_migrations */
-    $all_migrations = $plugin_manager->createInstancesByTag('Drupal ' . $version);
-    foreach ($all_migrations as $migration) {
-      $id_map = $migration->getIdMap();
-      foreach ($id_map as $source_id => $map) {
-        // Convert $source_id into a keyless array so that
-        // \Drupal\migrate\Plugin\migrate\id_map\Sql::getSourceHash() works as
-        // expected.
-        $source_id_values = array_values(unserialize($source_id));
-        $row = $id_map->getRowBySource($source_id_values);
-        $destination = serialize($id_map->currentDestination());
-        $message = "Migration of $source_id to $destination as part of the {$migration->id()} migration. The source row status is " . $row['source_row_status'];
-        // A completed migration should have maps with
-        // MigrateIdMapInterface::STATUS_IGNORED or
-        // MigrateIdMapInterface::STATUS_IMPORTED.
-        if ($row['source_row_status'] == MigrateIdMapInterface::STATUS_FAILED || $row['source_row_status'] == MigrateIdMapInterface::STATUS_NEEDS_UPDATE) {
-          $this->fail($message);
-        }
-        else {
-          $this->pass($message);
-        }
-      }
-    }
     \Drupal::service('module_installer')->install(['forum']);
     \Drupal::service('module_installer')->install(['book']);
+
+    // Test incremental migration.
+    $this->createContentPostUpgrade();
+
+    $this->drupalGet('/upgrade');
+    $session->pageTextContains('An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal 8. Rollbacks are not yet supported through the user interface.');
+    $this->drupalPostForm(NULL, [], t('Import new configuration and content from old site'));
+    $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
+    $session->pageTextContains('There is conflicting content of these types:');
+    $session->pageTextContains('file entities');
+    $session->pageTextContains('content item revisions');
+    $session->pageTextContains('There is translated content of these types:');
+    $session->pageTextContains('content items');
+
+    $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
+    $session->statusCodeEquals(200);
+
+    // Need to update available and missing path lists.
+    $all_available = $this->getAvailablePaths();
+    $all_available[] = 'aggregator';
+    $all_missing = $this->getMissingPaths();
+    $all_missing = array_diff($all_missing, ['aggregator']);
+    $this->assertReviewPage($session, $all_available, $all_missing);
+    $this->drupalPostForm(NULL, [], t('Perform upgrade'));
+    $session->pageTextContains(t('Congratulations, you upgraded Drupal!'));
+    $this->assertMigrationResults($this->getEntityCountsIncremental(), $version);
   }
 
 }

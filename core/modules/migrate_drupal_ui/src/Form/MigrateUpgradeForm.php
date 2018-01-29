@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_drupal_ui\Form;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
@@ -279,8 +280,15 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       //   https://www.drupal.org/node/2687849
       $form['upgrade_option_item'] = [
         '#type' => 'item',
-        '#prefix' => $this->t('An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal 8. Rollbacks and incremental migrations are not yet supported through the user interface. For more information, see the <a href=":url">upgrading handbook</a>.', [':url' => 'https://www.drupal.org/upgrade/migrate']),
+        '#prefix' => $this->t('An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal 8. Rollbacks are not yet supported through the user interface. For more information, see the <a href=":url">upgrading handbook</a>.', [':url' => 'https://www.drupal.org/upgrade/migrate']),
         '#description' => $this->t('Last upgrade: @date', ['@date' => $this->dateFormatter->format($date_performed)]),
+      ];
+      $form['actions']['incremental'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Import new configuration and content from old site'),
+        '#button_type' => 'primary',
+        '#validate' => ['::validateIncrementalForm'],
+        '#submit' => ['::submitIncrementalForm'],
       ];
       return $form;
     }
@@ -344,8 +352,50 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    *   The current state of the form.
    */
   public function submitOverviewForm(array &$form, FormStateInterface $form_state) {
-    $form_state->set('step', 'credentials');
-    $form_state->setRebuild();
+    $form_state->set('step', 'credentials')->setRebuild();
+  }
+
+  /**
+   * Validation handler for the incremental overview form.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function validateIncrementalForm(array &$form, FormStateInterface $form_state) {
+    // Retrieve the database driver from state.
+    $database_state_key = $this->state->get('migrate.fallback_state_key', '');
+    if ($database_state_key) {
+      try {
+        $database = $this->state->get($database_state_key, [])['database'];
+        if ($connection = $this->getConnection($database)) {
+          if ($version = $this->getLegacyDrupalVersion($connection)) {
+            $this->setupMigrations($database, $form_state);
+            $valid_legacy_database = TRUE;
+          }
+        }
+      }
+      catch (DatabaseExceptionWrapper $exception) {
+        // Hide DB exceptions and forward to the DB credentials form. In that
+        // form we can more properly display errors and accept new credentials.
+      }
+    }
+    if (empty($valid_legacy_database)) {
+      $form_state->setValue('step', 'credentials')->setRebuild();
+    }
+  }
+
+  /**
+   * Form submission handler for the incremental overview form.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function submitIncrementalForm(array &$form, FormStateInterface $form_state) {
+    $form_state->set('step', 'confirm_id_conflicts')->setRebuild();
   }
 
   /**
@@ -528,31 +578,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
         ]));
       }
       else {
-        $this->createDatabaseStateSettings($database, $version);
-        $migrations = $this->getMigrations('migrate_drupal_' . $version, $version);
-
-        // Get the system data from source database.
-        $system_data = $this->getSystemData($connection);
-
-        // Convert the migration object into array
-        // so that it can be stored in form storage.
-        $migration_array = [];
-        foreach ($migrations as $migration) {
-          $migration_array[$migration->id()] = $migration->label();
-        }
-
-        // Store the retrieved migration IDs in form storage.
-        $form_state->set('version', $version);
-        $form_state->set('migrations', $migration_array);
-        if ($version === '6') {
-          $form_state->set('source_base_path', $form_state->getValue('d6_source_base_path'));
-        }
-        else {
-          $form_state->set('source_base_path', $form_state->getValue('source_base_path'));
-        }
-        $form_state->set('source_private_file_path', $form_state->getValue('source_private_file_path'));
-        // Store the retrived system data in form storage.
-        $form_state->set('system_data', $system_data);
+        $this->setupMigrations($database, $form_state);
       }
     }
     catch (\Exception $e) {
@@ -972,6 +998,48 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     // Make sure the install API is available.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
     return drupal_get_database_types();
+  }
+
+  /**
+   * Puts migrations information in form state.
+   *
+   * Gets all the migrations, converts each to an array and stores it in the
+   * form state. The source base path for public and private files is also
+   * put into form state.
+   *
+   * @param array $database
+   *   Database array representing the source Drupal database.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function setupMigrations(array $database, FormStateInterface $form_state) {
+    $connection = $this->getConnection($database);
+    $version = $this->getLegacyDrupalVersion($connection);
+    $this->createDatabaseStateSettings($database, $version);
+    $migrations = $this->getMigrations('migrate_drupal_' . $version, $version);
+
+    // Get the system data from source database.
+    $system_data = $this->getSystemData($connection);
+
+    // Convert the migration object into array
+    // so that it can be stored in form storage.
+    $migration_array = [];
+    foreach ($migrations as $migration) {
+      $migration_array[$migration->id()] = $migration->label();
+    }
+
+    // Store the retrieved migration IDs in form storage.
+    $form_state->set('version', $version);
+    $form_state->set('migrations', $migration_array);
+    if ($version == 6) {
+      $form_state->set('source_base_path', $form_state->getValue('d6_source_base_path'));
+    }
+    else {
+      $form_state->set('source_base_path', $form_state->getValue('source_base_path'));
+    }
+    $form_state->set('source_private_file_path', $form_state->getValue('source_private_file_path'));
+    // Store the retrieved system data in form storage.
+    $form_state->set('system_data', $system_data);
   }
 
   /**

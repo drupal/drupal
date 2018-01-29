@@ -121,4 +121,11 @@ abstract class MigrateUpgradeReviewPageTestBase extends MigrateUpgradeTestBase {
     return [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEntityCountsIncremental() {
+    return [];
+  }
+
 }
