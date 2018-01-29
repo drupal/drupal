@@ -275,7 +275,7 @@ class EntityContentBase extends Entity implements HighestIdInterface {
       if ($field_definition->isRequired() && is_null($row->getDestinationProperty($field_name))) {
         // Use the configured default value for this specific field, if any.
         if ($default_value = $field_definition->getDefaultValueLiteral()) {
-          $values[] = $default_value;
+          $values = $default_value;
         }
         else {
           // Otherwise, ask the field type to generate a sample value.
