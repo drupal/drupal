@@ -9,8 +9,6 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\settings_tray\Block\BlockEntityOffCanvasForm;
-use Drupal\settings_tray\Form\SystemBrandingOffCanvasForm;
-use Drupal\settings_tray\Form\SystemMenuOffCanvasForm;
 use Drupal\block\entity\Block;
 use Drupal\block\BlockInterface;
 
@@ -168,47 +166,10 @@ function settings_tray_toolbar_alter(&$items) {
  */
 function settings_tray_block_alter(&$definitions) {
   foreach ($definitions as &$definition) {
-    // If a block plugin already defines its own 'settings_tray' form, use that
-    // form instead of specifying one here.
-    if (isset($definition['forms']['settings_tray'])) {
-      continue;
-    }
-
-    switch ($definition['id']) {
-      // Use specialized forms for certain blocks that do not yet provide the
-      // form with their own annotation.
-      // @todo Move these into the corresponding block plugin annotations in
-      //   https://www.drupal.org/node/2896356.
-      case 'system_menu_block':
-        $definition['forms']['settings_tray'] = SystemMenuOffCanvasForm::class;
-        break;
-
-      case 'system_branding_block':
-        $definition['forms']['settings_tray'] = SystemBrandingOffCanvasForm::class;
-        break;
-
-      // No off-canvas form for the page title block, despite it having
-      // contextual links: it's too confusing that you're editing configuration,
-      // not content, so the title itself cannot actually be changed.
-      // @todo Move these into the corresponding block plugin annotations in
-      //   https://www.drupal.org/node/2896356.
-      case 'page_title_block':
-        $definition['forms']['settings_tray'] = FALSE;
-        break;
-
-      case 'system_main_block':
-        $definition['forms']['settings_tray'] = FALSE;
-        break;
-
-      case 'help_block':
-        $definition['forms']['settings_tray'] = FALSE;
-        break;
-
-      // Otherwise, use the block plugin's normal form rather than
-      // a custom form for Settings Tray.
-      default:
-        $definition['forms']['settings_tray'] = $definition['class'];
-        break;
+    // If a block plugin does not define its own 'settings_tray' form, use the
+    // plugin class itself.
+    if (!isset($definition['forms']['settings_tray'])) {
+      $definition['forms']['settings_tray'] = $definition['class'];
     }
   }
 }

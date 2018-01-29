@@ -10,7 +10,10 @@ use Drupal\Core\Block\MainContentBlockPluginInterface;
  *
  * @Block(
  *   id = "system_main_block",
- *   admin_label = @Translation("Main page content")
+ *   admin_label = @Translation("Main page content"),
+ *   forms = {
+ *     "settings_tray" = FALSE,
+ *   },
  * )
  */
 class SystemMainBlock extends BlockBase implements MainContentBlockPluginInterface {

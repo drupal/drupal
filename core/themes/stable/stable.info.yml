@@ -169,6 +169,15 @@ libraries-override:
         css/quickedit.theme.css: css/quickedit/quickedit.theme.css
         css/quickedit.icons.theme.css: css/quickedit/quickedit.icons.theme.css
 
+  settings_tray/drupal.settings_tray:
+    css:
+      component:
+        css/settings_tray.module.css: css/settings_tray/settings_tray.module.css
+        css/settings_tray.motion.css: css/settings_tray/settings_tray.motion.css
+        css/settings_tray.toolbar.css: css/settings_tray/settings_tray.toolbar.css
+      theme:
+        css/settings_tray.theme.css: css/settings_tray/settings_tray.theme.css
+
   shortcut/drupal.shortcut:
     css:
       theme:

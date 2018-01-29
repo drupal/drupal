@@ -1,0 +1,66 @@
+/**
+ * @file
+ * Visual styling for the toolbar when Settings Tray module is enabled.
+ */
+
+/* @todo Move this into toolbar when module is not experimental:
+ *   https://www.drupal.org/node/2784593.
+ */
+
+/* Style the edit mode toolbar and tabs. */
+#toolbar-bar.js-settings-tray-edit-mode {
+  background-color: #fff;
+}
+#toolbar-bar.js-settings-tray-edit-mode .toolbar-item {
+  color: #999;
+}
+#toolbar-bar.js-settings-tray-edit-mode .toolbar-item .is-active {
+  color: #333;
+}
+
+/* Style both the edit and editing states of the contextual links toggle tab. */
+.toolbar-icon-edit.toolbar-item {
+  background-color: #0066a1;
+  background-image: linear-gradient(to bottom, #0066a1, #005b98);
+  color: #eee;
+  text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
+  font-weight: 700;
+  -webkit-font-smoothing: antialiased;
+}
+.toolbar-icon-edit.toolbar-item.is-active {
+  background-color: #0a7bc1;
+  background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
+  color: #fff;
+  text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
+  font-weight: 700;
+  -webkit-font-smoothing: antialiased;
+}
+.toolbar-tab:hover > .toolbar-icon-edit,
+.toolbar-icon-edit:focus .toolbar-item {
+  background-color: #0a7bc1;
+  background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
+  border-color: #1e5c90;
+  color: #fff;
+  outline: none;
+}
+.toolbar-icon.toolbar-icon-edit.toolbar-item:before,
+button.toolbar-icon.toolbar-icon-edit.toolbar-item:before {
+  background-image: url(../../../misc/icons/bebebe/pencil.svg);
+}
+.toolbar-icon.toolbar-icon-edit.toolbar-item:before:hover,
+button.toolbar-icon.toolbar-icon-edit.toolbar-item:before:focus {
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+}
+.toolbar-icon.toolbar-icon-edit.toolbar-item:hover > .toolbar-icon-edit:before {
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+}
+#toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+}
+
+#toolbar-bar.js-settings-tray-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active {
+  color: #fff;
+}
+#toolbar-bar.js-settings-tray-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:hover {
+  background-image: linear-gradient(to bottom, #0a6fb4, #0a65aa);
+}

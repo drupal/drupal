@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\settings_tray\Form;
+namespace Drupal\system\Form;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Access\AccessResult;
@@ -18,9 +18,7 @@ use Drupal\system\MenuInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * The off-canvas form handler for the SystemMenuBlock.
- *
- * @see settings_tray_block_alter()
+ * The setting_tray form handler for the SystemMenuBlock.
  *
  * @internal
  */

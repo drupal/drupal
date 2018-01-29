@@ -1,0 +1,23 @@
+/**
+ * @file
+ * Styling for Settings Tray module.
+ */
+/*
+ * Position the edit toolbar tab.
+ * @todo Move changes into contextual module when Settings Tray is not
+ *   experimental: https://www.drupal.org/node/2784591.
+ */
+.toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
+  float: left;
+}
+[dir="rtl"] .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
+  float: right;
+}
+
+.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode a,
+.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode input {
+  pointer-events: none;
+}
+.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode .contextual-links a {
+  pointer-events: inherit;
+}
