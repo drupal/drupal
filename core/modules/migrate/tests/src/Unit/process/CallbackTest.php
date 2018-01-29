@@ -30,7 +30,7 @@ class CallbackTest extends MigrateProcessTestCase {
   public function testCallbackWithFunction() {
     $this->plugin->setCallable('strtolower');
     $value = $this->plugin->transform('FooBar', $this->migrateExecutable, $this->row, 'destinationproperty');
-    $this->assertSame($value, 'foobar');
+    $this->assertSame('foobar', $value);
   }
 
   /**
@@ -39,7 +39,7 @@ class CallbackTest extends MigrateProcessTestCase {
   public function testCallbackWithClassMethod() {
     $this->plugin->setCallable(['\Drupal\Component\Utility\Unicode', 'strtolower']);
     $value = $this->plugin->transform('FooBar', $this->migrateExecutable, $this->row, 'destinationproperty');
-    $this->assertSame($value, 'foobar');
+    $this->assertSame('foobar', $value);
   }
 
 }

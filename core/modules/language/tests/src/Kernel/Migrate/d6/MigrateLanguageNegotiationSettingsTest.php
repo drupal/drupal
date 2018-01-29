@@ -29,26 +29,26 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
     ]);
 
     $config = $this->config('language.negotiation');
-    $this->assertSame($config->get('session.parameter'), 'language');
-    $this->assertSame($config->get('url.source'), LanguageNegotiationUrl::CONFIG_PATH_PREFIX);
-    $this->assertSame($config->get('selected_langcode'), 'site_default');
+    $this->assertSame('language', $config->get('session.parameter'));
+    $this->assertSame(LanguageNegotiationUrl::CONFIG_PATH_PREFIX, $config->get('url.source'));
+    $this->assertSame('site_default', $config->get('selected_langcode'));
     $expected_prefixes = [
       'en' => '',
       'fr' => 'fr',
       'zu' => 'zu',
     ];
-    $this->assertSame($config->get('url.prefixes'), $expected_prefixes);
+    $this->assertSame($expected_prefixes, $config->get('url.prefixes'));
 
     $config = $this->config('language.types');
-    $this->assertSame($config->get('all'), ['language_interface', 'language_content', 'language_url']);
-    $this->assertSame($config->get('configurable'), ['language_interface']);
-    $this->assertSame($config->get('negotiation.language_content.enabled'), ['language-interface' => 0]);
-    $this->assertSame($config->get('negotiation.language_url.enabled'), ['language-url' => 0, 'language-url-fallback' => 1]);
+    $this->assertSame(['language_interface', 'language_content', 'language_url'], $config->get('all'));
+    $this->assertSame(['language_interface'], $config->get('configurable'));
+    $this->assertSame(['language-interface' => 0], $config->get('negotiation.language_content.enabled'));
+    $this->assertSame(['language-url' => 0, 'language-url-fallback' => 1], $config->get('negotiation.language_url.enabled'));
     $expected_language_interface = [
       'language-url' => 0,
       'language-selected' => 1,
     ];
-    $this->assertSame($config->get('negotiation.language_interface.enabled'), $expected_language_interface);
+    $this->assertSame($expected_language_interface, $config->get('negotiation.language_interface.enabled'));
   }
 
   /**
@@ -68,19 +68,19 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
     ]);
 
     $config = $this->config('language.negotiation');
-    $this->assertSame($config->get('session.parameter'), 'language');
-    $this->assertSame($config->get('url.source'), LanguageNegotiationUrl::CONFIG_PATH_PREFIX);
-    $this->assertSame($config->get('selected_langcode'), 'site_default');
+    $this->assertSame('language', $config->get('session.parameter'));
+    $this->assertSame(LanguageNegotiationUrl::CONFIG_PATH_PREFIX, $config->get('url.source'));
+    $this->assertSame('site_default', $config->get('selected_langcode'));
 
     $config = $this->config('language.types');
-    $this->assertSame($config->get('all'), ['language_interface', 'language_content', 'language_url']);
-    $this->assertSame($config->get('configurable'), ['language_interface']);
-    $this->assertSame($config->get('negotiation.language_content.enabled'), ['language-interface' => 0]);
-    $this->assertSame($config->get('negotiation.language_url.enabled'), ['language-url' => 0, 'language-url-fallback' => 1]);
+    $this->assertSame(['language_interface', 'language_content', 'language_url'], $config->get('all'));
+    $this->assertSame(['language_interface'], $config->get('configurable'));
+    $this->assertSame(['language-interface' => 0], $config->get('negotiation.language_content.enabled'));
+    $this->assertSame(['language-url' => 0, 'language-url-fallback' => 1], $config->get('negotiation.language_url.enabled'));
     $expected_language_interface = [
       'language-selected' => 0,
     ];
-    $this->assertSame($config->get('negotiation.language_interface.enabled'), $expected_language_interface);
+    $this->assertSame($expected_language_interface, $config->get('negotiation.language_interface.enabled'));
   }
 
   /**
@@ -100,28 +100,28 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
     ]);
 
     $config = $this->config('language.negotiation');
-    $this->assertSame($config->get('session.parameter'), 'language');
-    $this->assertSame($config->get('url.source'), LanguageNegotiationUrl::CONFIG_PATH_PREFIX);
-    $this->assertSame($config->get('selected_langcode'), 'site_default');
+    $this->assertSame('language', $config->get('session.parameter'));
+    $this->assertSame(LanguageNegotiationUrl::CONFIG_PATH_PREFIX, $config->get('url.source'));
+    $this->assertSame('site_default', $config->get('selected_langcode'));
     $expected_prefixes = [
       'en' => '',
       'fr' => 'fr',
       'zu' => 'zu',
     ];
-    $this->assertSame($config->get('url.prefixes'), $expected_prefixes);
+    $this->assertSame($expected_prefixes, $config->get('url.prefixes'));
 
     $config = $this->config('language.types');
-    $this->assertSame($config->get('all'), ['language_interface', 'language_content', 'language_url']);
-    $this->assertSame($config->get('configurable'), ['language_interface']);
-    $this->assertSame($config->get('negotiation.language_content.enabled'), ['language-interface' => 0]);
-    $this->assertSame($config->get('negotiation.language_url.enabled'), ['language-url' => 0, 'language-url-fallback' => 1]);
+    $this->assertSame(['language_interface', 'language_content', 'language_url'], $config->get('all'));
+    $this->assertSame(['language_interface'], $config->get('configurable'));
+    $this->assertSame(['language-interface' => 0], $config->get('negotiation.language_content.enabled'));
+    $this->assertSame(['language-url' => 0, 'language-url-fallback' => 1], $config->get('negotiation.language_url.enabled'));
     $expected_language_interface = [
       'language-url' => 0,
       'language-user' => 1,
       'language-browser' => 2,
       'language-selected' => 3,
     ];
-    $this->assertSame($config->get('negotiation.language_interface.enabled'), $expected_language_interface);
+    $this->assertSame($expected_language_interface, $config->get('negotiation.language_interface.enabled'));
   }
 
   /**
@@ -142,26 +142,26 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
 
     global $base_url;
     $config = $this->config('language.negotiation');
-    $this->assertSame($config->get('session.parameter'), 'language');
-    $this->assertSame($config->get('url.source'), LanguageNegotiationUrl::CONFIG_DOMAIN);
-    $this->assertSame($config->get('selected_langcode'), 'site_default');
+    $this->assertSame('language', $config->get('session.parameter'));
+    $this->assertSame(LanguageNegotiationUrl::CONFIG_DOMAIN, $config->get('url.source'));
+    $this->assertSame('site_default', $config->get('selected_langcode'));
     $expected_domains = [
       'en' => parse_url($base_url, PHP_URL_HOST),
       'fr' => 'fr.drupal.org',
       'zu' => 'zu.drupal.org',
     ];
-    $this->assertSame($config->get('url.domains'), $expected_domains);
+    $this->assertSame($expected_domains, $config->get('url.domains'));
 
     $config = $this->config('language.types');
-    $this->assertSame($config->get('all'), ['language_interface', 'language_content', 'language_url']);
-    $this->assertSame($config->get('configurable'), ['language_interface']);
-    $this->assertSame($config->get('negotiation.language_content.enabled'), ['language-interface' => 0]);
-    $this->assertSame($config->get('negotiation.language_url.enabled'), ['language-url' => 0, 'language-url-fallback' => 1]);
+    $this->assertSame(['language_interface', 'language_content', 'language_url'], $config->get('all'));
+    $this->assertSame(['language_interface'], $config->get('configurable'));
+    $this->assertSame(['language-interface' => 0], $config->get('negotiation.language_content.enabled'));
+    $this->assertSame(['language-url' => 0, 'language-url-fallback' => 1], $config->get('negotiation.language_url.enabled'));
     $expected_language_interface = [
       'language-url' => 0,
       'language-selected' => 1,
     ];
-    $this->assertSame($config->get('negotiation.language_interface.enabled'), $expected_language_interface);
+    $this->assertSame($expected_language_interface, $config->get('negotiation.language_interface.enabled'));
   }
 
 }

@@ -65,23 +65,23 @@ class TaxonomyParentUpdateTest extends UpdatePathTestBase {
     $term = Term::load(3);
     $this->assertCount(1, $term->parent);
     // Target ID is returned as string.
-    $this->assertSame((int) $term->get('parent')[0]->target_id, 0);
+    $this->assertSame(0, (int) $term->get('parent')[0]->target_id);
 
     // Test if the view has been converted to use the {taxonomy_term__parent}
     // table instead of the {taxonomy_term_hierarchy} table.
     $view = $this->config("views.view.test_taxonomy_parent");
 
     $relationship_base_path = 'display.default.display_options.relationships.parent';
-    $this->assertSame($view->get("$relationship_base_path.table"), 'taxonomy_term__parent');
-    $this->assertSame($view->get("$relationship_base_path.field"), 'parent_target_id');
+    $this->assertSame('taxonomy_term__parent', $view->get("$relationship_base_path.table"));
+    $this->assertSame('parent_target_id', $view->get("$relationship_base_path.field"));
 
     $filters_base_path_1 = 'display.default.display_options.filters.parent';
-    $this->assertSame($view->get("$filters_base_path_1.table"), 'taxonomy_term__parent');
-    $this->assertSame($view->get("$filters_base_path_1.field"), 'parent_target_id');
+    $this->assertSame('taxonomy_term__parent', $view->get("$filters_base_path_1.table"));
+    $this->assertSame('parent_target_id', $view->get("$filters_base_path_1.field"));
 
     $filters_base_path_2 = 'display.default.display_options.filters.parent';
-    $this->assertSame($view->get("$filters_base_path_2.table"), 'taxonomy_term__parent');
-    $this->assertSame($view->get("$filters_base_path_2.field"), 'parent_target_id');
+    $this->assertSame('taxonomy_term__parent', $view->get("$filters_base_path_2.table"));
+    $this->assertSame('parent_target_id', $view->get("$filters_base_path_2.field"));
 
     // The {taxonomy_term_hierarchy} table has been removed.
     $this->assertFalse($this->db->schema()->tableExists('taxonomy_term_hierarchy'));

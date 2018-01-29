@@ -45,10 +45,10 @@ class MigrateDefaultLanguageTest extends MigrateDrupal6TestBase {
     $count = 0;
     foreach ($messages as $message) {
       $count++;
-      $this->assertSame($message->message, "The language 'tv' does not exist on this site.");
-      $this->assertSame((int) $message->level, MigrationInterface::MESSAGE_ERROR);
+      $this->assertSame("The language 'tv' does not exist on this site.", $message->message);
+      $this->assertSame(MigrationInterface::MESSAGE_ERROR, (int) $message->level);
     }
-    $this->assertSame($count, 1);
+    $this->assertSame(1, $count);
   }
 
   /**

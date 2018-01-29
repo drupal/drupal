@@ -52,9 +52,9 @@ class AjaxResponseTest extends UnitTestCase {
 
     // Ensure that the added commands are in the right order.
     $commands =& $this->ajaxResponse->getCommands();
-    $this->assertSame($commands[1], ['command' => 'one']);
-    $this->assertSame($commands[2], ['command' => 'two']);
-    $this->assertSame($commands[0], ['command' => 'three']);
+    $this->assertSame(['command' => 'one'], $commands[1]);
+    $this->assertSame(['command' => 'two'], $commands[2]);
+    $this->assertSame(['command' => 'three'], $commands[0]);
 
     // Remove one and change one element from commands and ensure the reference
     // worked as expected.
@@ -62,9 +62,9 @@ class AjaxResponseTest extends UnitTestCase {
     $commands[0]['class'] = 'test-class';
 
     $commands = $this->ajaxResponse->getCommands();
-    $this->assertSame($commands[1], ['command' => 'one']);
+    $this->assertSame(['command' => 'one'], $commands[1]);
     $this->assertFalse(isset($commands[2]));
-    $this->assertSame($commands[0], ['command' => 'three', 'class' => 'test-class']);
+    $this->assertSame(['command' => 'three', 'class' => 'test-class'], $commands[0]);
   }
 
   /**

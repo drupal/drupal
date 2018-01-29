@@ -47,8 +47,8 @@ class SqlBaseTest extends MigrateTestBase {
 
     // Verify that falling back to the default 'migrate' connection (defined in
     // the base class) works.
-    $this->assertSame($sql_base->getDatabase()->getTarget(), 'default');
-    $this->assertSame($sql_base->getDatabase()->getKey(), 'migrate');
+    $this->assertSame('default', $sql_base->getDatabase()->getTarget());
+    $this->assertSame('migrate', $sql_base->getDatabase()->getKey());
 
     // Verify the fallback state key overrides the 'migrate' connection.
     $target = 'test_fallback_target';

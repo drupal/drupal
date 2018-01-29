@@ -27,7 +27,7 @@ class StaticMapTest extends MigrateProcessTestCase {
    */
   public function testMapWithSourceString() {
     $value = $this->plugin->transform('foo', $this->migrateExecutable, $this->row, 'destinationproperty');
-    $this->assertSame($value, ['bar' => 'baz']);
+    $this->assertSame(['bar' => 'baz'], $value);
   }
 
   /**
@@ -35,7 +35,7 @@ class StaticMapTest extends MigrateProcessTestCase {
    */
   public function testMapWithSourceList() {
     $value = $this->plugin->transform(['foo', 'bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
-    $this->assertSame($value, 'baz');
+    $this->assertSame('baz', $value);
   }
 
   /**
@@ -62,7 +62,7 @@ class StaticMapTest extends MigrateProcessTestCase {
     $configuration['default_value'] = 'test';
     $this->plugin = new StaticMap($configuration, 'map', []);
     $value = $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
-    $this->assertSame($value, 'test');
+    $this->assertSame('test', $value);
   }
 
   /**

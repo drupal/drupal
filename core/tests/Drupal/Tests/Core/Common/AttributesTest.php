@@ -78,8 +78,8 @@ class AttributesTest extends UnitTestCase {
     $attributes['selected'] = $original_attributes['checked'];
     $attributes['id'] = $original_attributes['id'];
     $attributes = new Attribute($attributes);
-    $this->assertSame((string) $original_attributes, ' checked class="who is on" id="first"', 'Original boolean value used with original name.');
-    $this->assertSame((string) $attributes, ' selected id="first"', 'Original boolean value used with new name.');
+    $this->assertSame(' checked class="who is on" id="first"', (string) $original_attributes, 'Original boolean value used with original name.');
+    $this->assertSame(' selected id="first"', (string) $attributes, 'Original boolean value used with new name.');
   }
 
 }

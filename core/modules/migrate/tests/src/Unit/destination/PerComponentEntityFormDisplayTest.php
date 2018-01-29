@@ -44,8 +44,8 @@ class PerComponentEntityFormDisplayTest extends MigrateTestCase {
       ->method('save')
       ->with();
     $plugin = new TestPerComponentEntityFormDisplay($entity);
-    $this->assertSame($plugin->import($row), ['entity_type_test', 'bundle_test', 'form_mode_test', 'field_name_test']);
-    $this->assertSame($plugin->getTestValues(), ['entity_type_test', 'bundle_test', 'form_mode_test']);
+    $this->assertSame(['entity_type_test', 'bundle_test', 'form_mode_test', 'field_name_test'], $plugin->import($row));
+    $this->assertSame(['entity_type_test', 'bundle_test', 'form_mode_test'], $plugin->getTestValues());
   }
 
 }

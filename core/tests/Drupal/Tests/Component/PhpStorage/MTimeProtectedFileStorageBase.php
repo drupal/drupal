@@ -89,8 +89,8 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
     // minimal permissions. fileperms() can return high bits unrelated to
     // permissions, so mask with 0777.
     $this->assertTrue(file_exists($expected_filename));
-    $this->assertSame(fileperms($expected_filename) & 0777, 0444);
-    $this->assertSame(fileperms($expected_directory) & 0777, 0777);
+    $this->assertSame(0444, fileperms($expected_filename) & 0777);
+    $this->assertSame(0777, fileperms($expected_directory) & 0777);
 
     // Ensure the root directory for the bin has a .htaccess file denying web
     // access.
@@ -121,9 +121,9 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
       chmod($expected_filename, 0400);
       chmod($expected_directory, 0100);
       $this->assertSame(file_get_contents($expected_filename), $untrusted_code);
-      $this->assertSame($php->exists($name), $this->expected[$i]);
-      $this->assertSame($php->load($name), $this->expected[$i]);
-      $this->assertSame($GLOBALS['hacked'], $this->expected[$i]);
+      $this->assertSame($this->expected[$i], $php->exists($name));
+      $this->assertSame($this->expected[$i], $php->load($name));
+      $this->assertSame($this->expected[$i], $GLOBALS['hacked']);
     }
     unset($GLOBALS['hacked']);
   }

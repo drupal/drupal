@@ -96,7 +96,7 @@ class PasswordHashingTest extends UnitTestCase {
    * @covers ::needsRehash
    */
   public function testPasswordHashing() {
-    $this->assertSame($this->passwordHasher->getCountLog2($this->hashedPassword), PhpassHashedPassword::MIN_HASH_COUNT, 'Hashed password has the minimum number of log2 iterations.');
+    $this->assertSame(PhpassHashedPassword::MIN_HASH_COUNT, $this->passwordHasher->getCountLog2($this->hashedPassword), 'Hashed password has the minimum number of log2 iterations.');
     $this->assertNotEquals($this->hashedPassword, $this->md5HashedPassword, 'Password hashes not the same.');
     $this->assertTrue($this->passwordHasher->check($this->password, $this->md5HashedPassword), 'Password check succeeds.');
     $this->assertTrue($this->passwordHasher->check($this->password, $this->hashedPassword), 'Password check succeeds.');
@@ -119,7 +119,7 @@ class PasswordHashingTest extends UnitTestCase {
     $this->assertTrue($password_hasher->needsRehash($this->hashedPassword), 'Needs a new hash after incrementing the log2 count.');
     // Re-hash the password.
     $rehashed_password = $password_hasher->hash($this->password);
-    $this->assertSame($password_hasher->getCountLog2($rehashed_password), PhpassHashedPassword::MIN_HASH_COUNT + 1, 'Re-hashed password has the correct number of log2 iterations.');
+    $this->assertSame(PhpassHashedPassword::MIN_HASH_COUNT + 1, $password_hasher->getCountLog2($rehashed_password), 'Re-hashed password has the correct number of log2 iterations.');
     $this->assertNotEquals($rehashed_password, $this->hashedPassword, 'Password hash changed again.');
 
     // Now the hash should be OK.
