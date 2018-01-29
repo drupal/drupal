@@ -2,6 +2,9 @@
 
 namespace Drupal\image\Tests;
 
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
+
 /**
  * Tests validation functions such as min/max resolution.
  *
@@ -236,6 +239,50 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       ':class' => 'messages--error',
     ]);
     $this->assertEqual(count($elements), 1, 'Ajax validation messages are displayed once.');
+  }
+
+  /**
+   * Tests that image field validation works with other form submit handlers.
+   */
+  public function testFriendlyAjaxValidation() {
+    // Add a custom field to the Article content type that contains an AJAX
+    // handler on a select field.
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'field_dummy_select',
+      'type' => 'image_module_test_dummy_ajax',
+      'entity_type' => 'node',
+      'cardinality' => 1,
+    ]);
+    $field_storage->save();
+
+    $field = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'entity_type' => 'node',
+      'bundle' => 'article',
+      'field_name' => 'field_dummy_select',
+      'label' => t('Dummy select'),
+    ])->save();
+
+    \Drupal::entityTypeManager()
+      ->getStorage('entity_form_display')
+      ->load('node.article.default')
+      ->setComponent(
+      'field_dummy_select',
+      [
+        'type' => 'image_module_test_dummy_ajax_widget',
+        'weight' => 1,
+      ])
+      ->save();
+
+    // Then, add an image field.
+    $this->createImageField('field_dummy_image', 'article');
+
+    // Open an article and trigger the AJAX handler.
+    $this->drupalGet('node/add/article');
+    $edit = [
+      'field_dummy_select[select_widget]' => 'bam',
+    ];
+    $this->drupalPostAjaxForm(NULL, $edit, 'field_dummy_select[select_widget]');
   }
 
 }
