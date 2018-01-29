@@ -28,7 +28,7 @@
             "include": [
                 "core/composer.json"
             ],
-            "recurse": false,
+            "recurse": true,
             "replace": false,
             "merge-extra": false
         },

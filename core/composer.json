@@ -155,6 +155,37 @@
         "drupal/views_ui": "self.version",
         "drupal/workflows": "self.version"
     },
+    "extra": {
+        "merge-plugin": {
+            "require": [
+                "core/lib/Drupal/Component/Annotation/composer.json",
+                "core/lib/Drupal/Component/Assertion/composer.json",
+                "core/lib/Drupal/Component/Bridge/composer.json",
+                "core/lib/Drupal/Component/ClassFinder/composer.json",
+                "core/lib/Drupal/Component/Datetime/composer.json",
+                "core/lib/Drupal/Component/DependencyInjection/composer.json",
+                "core/lib/Drupal/Component/Diff/composer.json",
+                "core/lib/Drupal/Component/Discovery/composer.json",
+                "core/lib/Drupal/Component/EventDispatcher/composer.json",
+                "core/lib/Drupal/Component/FileCache/composer.json",
+                "core/lib/Drupal/Component/FileSystem/composer.json",
+                "core/lib/Drupal/Component/Gettext/composer.json",
+                "core/lib/Drupal/Component/Graph/composer.json",
+                "core/lib/Drupal/Component/HttpFoundation/composer.json",
+                "core/lib/Drupal/Component/PhpStorage/composer.json",
+                "core/lib/Drupal/Component/Plugin/composer.json",
+                "core/lib/Drupal/Component/ProxyBuilder/composer.json",
+                "core/lib/Drupal/Component/Render/composer.json",
+                "core/lib/Drupal/Component/Serialization/composer.json",
+                "core/lib/Drupal/Component/Transliteration/composer.json",
+                "core/lib/Drupal/Component/Utility/composer.json",
+                "core/lib/Drupal/Component/Uuid/composer.json"
+            ],
+            "recurse": false,
+            "replace": false,
+            "merge-extra": false
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
