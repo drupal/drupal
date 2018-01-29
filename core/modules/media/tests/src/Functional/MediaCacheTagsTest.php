@@ -7,7 +7,7 @@ use Drupal\media\Entity\Media;
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
 
 /**
- * Tests the media entity's cache tags.
+ * Tests the media items cache tags.
  *
  * @group media
  */

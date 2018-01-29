@@ -5,7 +5,7 @@ namespace Drupal\Tests\media\Kernel;
 use Drupal\media\Entity\Media;
 
 /**
- * Tests link relationships for Media entity.
+ * Tests link relationships for media items.
  *
  * @group media
  */
@@ -20,7 +20,7 @@ class MediaLinkRelationsTest extends MediaKernelTestBase {
     $media = Media::create(['bundle' => $this->testMediaType->id()]);
     $media->save();
     foreach ($media->uriRelationships() as $relation_name) {
-      $this->assertTrue($link_relation_type_manager->hasDefinition($relation_name), "Link relationship '{$relation_name}' for Media entity");
+      $this->assertTrue($link_relation_type_manager->hasDefinition($relation_name), "Link relationship '{$relation_name}' for a media item");
     }
   }
 

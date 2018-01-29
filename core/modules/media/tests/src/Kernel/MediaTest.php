@@ -12,7 +12,7 @@ use Drupal\media\Entity\Media;
 class MediaTest extends MediaKernelTestBase {
 
   /**
-   * Tests various aspects of a Media entity.
+   * Tests various aspects of a media item.
    */
   public function testEntity() {
     $media = Media::create(['bundle' => $this->testMediaType->id()]);

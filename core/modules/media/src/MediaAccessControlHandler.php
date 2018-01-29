@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines an access control handler for the media entity.
+ * Defines an access control handler for media items.
  */
 class MediaAccessControlHandler extends EntityAccessControlHandler {
 

@@ -109,7 +109,7 @@ abstract class MediaKernelTestBase extends KernelTestBase {
   }
 
   /**
-   * Helper to generate media entity.
+   * Helper to generate a media item.
    *
    * @param string $filename
    *   String filename with extension.
@@ -117,7 +117,7 @@ abstract class MediaKernelTestBase extends KernelTestBase {
    *   The the media type.
    *
    * @return \Drupal\media\Entity\Media
-   *   A media entity.
+   *   A media item.
    */
   protected function generateMedia($filename, MediaTypeInterface $media_type) {
     vfsStream::setup('drupal_root');
