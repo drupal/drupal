@@ -24,7 +24,7 @@
     <div class="system-status-report__requirements-group">
       <h3 id="{{ group.type }}">{{ group.title }}</h3>
       {% for requirement in group.items %}
-        <details class="system-status-report__entry system-status-report__entry--{{ group.type }} color-{{ group.type }}">
+        <details class="system-status-report__entry system-status-report__entry--{{ group.type }} color-{{ group.type }}" open>
           {%
             set summary_classes = [
               'system-status-report__status-title',
