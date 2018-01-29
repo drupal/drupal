@@ -181,7 +181,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     ]);
     $node->save();
 
-    $node_fr = $node->addTranslation('fr');
+    $node_fr = $node->addTranslation('fr', $node->toArray());
     $node_fr->setTitle('French Published Node');
     $node_fr->save();
     $this->assertEquals('published', $node_fr->moderation_state->value);
@@ -207,7 +207,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $this->assertCount(0, $violations);
 
     // From the latest french revision, there should also be no violation.
-    $node_fr = $node->getTranslation('fr');
+    $node_fr = Node::load($node->id())->getTranslation('fr');
     $this->assertEquals('published', $node_fr->moderation_state->value);
     $node_fr->moderation_state = 'archived';
     $violations = $node_fr->validate();

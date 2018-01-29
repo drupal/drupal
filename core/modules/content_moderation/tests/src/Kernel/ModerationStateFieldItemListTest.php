@@ -43,6 +43,10 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
 
+    NodeType::create([
+      'type' => 'unmoderated',
+    ])->save();
+
     $node_type = NodeType::create([
       'type' => 'example',
     ]);
@@ -77,6 +81,51 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
       $states[] = $item->value;
     }
     $this->assertEquals(['draft'], $states);
+  }
+
+  /**
+   * @covers ::getValue
+   */
+  public function testGetValue() {
+    $this->assertEquals([['value' => 'draft']], $this->testNode->moderation_state->getValue());
+  }
+
+  /**
+   * @covers ::get
+   */
+  public function testGet() {
+    $this->assertEquals('draft', $this->testNode->moderation_state->get(0)->value);
+    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->testNode->moderation_state->get(2);
+  }
+
+  /**
+   * Tests the computed field when it is unset or set to an empty value.
+   */
+  public function testSetEmptyState() {
+    $this->testNode->moderation_state->value = '';
+    $this->assertEquals('draft', $this->testNode->moderation_state->value);
+
+    $this->testNode->moderation_state = '';
+    $this->assertEquals('draft', $this->testNode->moderation_state->value);
+
+    unset($this->testNode->moderation_state);
+    $this->assertEquals('draft', $this->testNode->moderation_state->value);
+  }
+
+  /**
+   * Test the list class with a non moderated entity.
+   */
+  public function testNonModeratedEntity() {
+    $unmoderated_node = Node::create([
+      'type' => 'unmoderated',
+      'title' => 'Test title',
+    ]);
+    $unmoderated_node->save();
+    $this->assertEquals(0, $unmoderated_node->moderation_state->count());
+
+    $unmoderated_node->moderation_state = NULL;
+    $this->assertEquals(0, $unmoderated_node->moderation_state->count());
   }
 
   /**
