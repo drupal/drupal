@@ -423,7 +423,7 @@ class UnicodeTest extends TestCase {
       ['Help! Help! Help!', 2, 'H…', TRUE, TRUE],
     ];
 
-    // Test truncate on text with muliplte lines.
+    // Test truncate on text with multiple lines.
     $multi_line = <<<EOF
 This is a text that spans multiple lines.
 Line 2 goes here.
