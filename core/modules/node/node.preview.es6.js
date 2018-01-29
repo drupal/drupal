@@ -45,9 +45,9 @@
         }
       }
 
-      const $preview = $(context).find('.content').once('node-preview');
+      const $preview = $(context).once('node-preview');
       if ($(context).find('.node-preview-container').length) {
-        $preview.on('click.preview', 'a:not([href^=#], #edit-backlink, #toolbar-administration a)', clickPreviewModal);
+        $preview.on('click.preview', 'a:not([href^="#"], .node-preview-container a)', clickPreviewModal);
       }
     },
     detach(context, settings, trigger) {
