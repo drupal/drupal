@@ -376,7 +376,7 @@ class UnicodeTest extends TestCase {
    *     - (optional) Boolean for the $add_ellipsis flag. Defaults to FALSE.
    */
   public function providerTruncate() {
-    return [
+    $tests = [
       ['frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome'],
       ['frànçAIS is über-åwesome', 23, 'frànçAIS is über-åwesom'],
       ['frànçAIS is über-åwesome', 17, 'frànçAIS is über-'],
@@ -422,6 +422,24 @@ class UnicodeTest extends TestCase {
       ['Help! Help! Help!', 3, 'He…', TRUE, TRUE],
       ['Help! Help! Help!', 2, 'H…', TRUE, TRUE],
     ];
+
+    // Test truncate on text with muliplte lines.
+    $multi_line = <<<EOF
+This is a text that spans multiple lines.
+Line 2 goes here.
+EOF;
+    $multi_line_wordsafe = <<<EOF
+This is a text that spans multiple lines.
+Line 2
+EOF;
+    $multi_line_non_wordsafe = <<<EOF
+This is a text that spans multiple lines.
+Line 2 go
+EOF;
+    $tests[] = [$multi_line, 51, $multi_line_wordsafe, TRUE];
+    $tests[] = [$multi_line, 51, $multi_line_non_wordsafe, FALSE];
+
+    return $tests;
   }
 
   /**
