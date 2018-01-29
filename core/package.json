@@ -15,23 +15,23 @@
     "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js || exit 0"
   },
   "devDependencies": {
-    "babel-core": "6.24.1",
-    "babel-plugin-add-header-comment": "1.0.3",
-    "babel-preset-env": "1.4.0",
-    "chalk": "^1.1.3",
-    "chokidar": "1.6.1",
-    "cross-env": "^4.0.0",
-    "eslint": "3.19.0",
-    "eslint-config-airbnb": "14.1.0",
-    "eslint-plugin-import": "2.2.0",
-    "eslint-plugin-jsx-a11y": "4.0.0",
-    "eslint-plugin-react": "6.10.3",
-    "glob": "7.1.1",
+    "babel-core": "^6.26.0",
+    "babel-plugin-add-header-comment": "^1.0.3",
+    "babel-preset-env": "^1.4.0",
+    "chalk": "^2.3.0",
+    "chokidar": "^2.0.0",
+    "cross-env": "^5.1.3",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
+    "glob": "^7.1.1",
     "minimist": "^1.2.0",
-    "stylelint": "^7.10.1",
-    "stylelint-checkstyle-formatter": "^0.1.0",
+    "stylelint": "^7.13.0",
+    "stylelint-checkstyle-formatter": "^0.1.1",
     "stylelint-config-standard": "^16.0.0",
-    "stylelint-no-browser-hacks": "^1.0.2"
+    "stylelint-no-browser-hacks": "^1.1.0"
   },
   "babel": {
     "presets": [
