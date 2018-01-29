@@ -259,7 +259,8 @@ class ImageWidget extends FileWidget {
   public static function validateRequiredFields($element, FormStateInterface $form_state) {
     // Only do validation if the function is triggered from other places than
     // the image process form.
-    if (!in_array('file_managed_file_submit', $form_state->getTriggeringElement()['#submit'])) {
+    $triggering_element = $form_state->getTriggeringElement();
+    if (empty($triggering_element['#submit']) || !in_array('file_managed_file_submit', $triggering_element['#submit'])) {
       // If the image is not there, we do not check for empty values.
       $parents = $element['#parents'];
       $field = array_pop($parents);
