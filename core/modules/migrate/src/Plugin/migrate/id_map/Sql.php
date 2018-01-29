@@ -696,7 +696,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * {@inheritdoc}
    */
   public function processedCount() {
-    return $this->getDatabase()->select($this->mapTableName())
+    return (int) $this->getDatabase()->select($this->mapTableName())
       ->countQuery()
       ->execute()
       ->fetchField();
@@ -706,7 +706,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * {@inheritdoc}
    */
   public function importedCount() {
-    return $this->getDatabase()->select($this->mapTableName())
+    return (int) $this->getDatabase()->select($this->mapTableName())
       ->condition('source_row_status', [MigrateIdMapInterface::STATUS_IMPORTED, MigrateIdMapInterface::STATUS_NEEDS_UPDATE], 'IN')
       ->countQuery()
       ->execute()
@@ -750,7 +750,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     if (isset($status)) {
       $query->condition('source_row_status', $status);
     }
-    return $query->countQuery()->execute()->fetchField();
+    return (int) $query->countQuery()->execute()->fetchField();
   }
 
   /**
