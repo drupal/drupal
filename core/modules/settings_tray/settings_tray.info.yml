@@ -1,7 +1,7 @@
 name: 'Settings Tray'
 type: module
 description: 'Provides a sidebar to configure blocks on the page.'
-package: Core (Experimental)
+package: Core
 version: VERSION
 core: 8.x
 dependencies:

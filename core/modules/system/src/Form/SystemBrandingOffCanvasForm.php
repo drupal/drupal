@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\settings_tray\Form;
+namespace Drupal\system\Form;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -10,9 +10,7 @@ use Drupal\Core\Plugin\PluginFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * The off-canvas form handler for the SystemBrandingBlock.
- *
- * @see settings_tray_block_alter()
+ * The settings_tray form handler for the SystemBrandingBlock.
  *
  * @internal
  */

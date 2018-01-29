@@ -16,7 +16,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "system_menu_block",
  *   admin_label = @Translation("Menu"),
  *   category = @Translation("Menus"),
- *   deriver = "Drupal\system\Plugin\Derivative\SystemMenuBlock"
+ *   deriver = "Drupal\system\Plugin\Derivative\SystemMenuBlock",
+ *   forms = {
+ *     "settings_tray" = "\Drupal\system\Form\SystemMenuOffCanvasForm",
+ *   },
  * )
  */
 class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterface {

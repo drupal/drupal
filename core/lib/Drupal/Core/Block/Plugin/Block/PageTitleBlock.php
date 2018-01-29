@@ -11,6 +11,9 @@ use Drupal\Core\Block\TitleBlockPluginInterface;
  * @Block(
  *   id = "page_title_block",
  *   admin_label = @Translation("Page title"),
+ *   forms = {
+ *     "settings_tray" = FALSE,
+ *   },
  * )
  */
 class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface {
