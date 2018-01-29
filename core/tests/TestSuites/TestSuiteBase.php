@@ -42,10 +42,11 @@ abstract class TestSuiteBase extends TestSuite {
     // to this is Unit tests for historical reasons.
     if ($suite_namespace == 'Unit') {
       $tests = TestDiscovery::scanDirectory("Drupal\\Tests\\", "$root/core/tests/Drupal/Tests");
-      $tests = array_filter($tests, function ($test) use ($root) {
-        // The Listeners directory does not contain tests.
-        return !preg_match("@^$root/core/tests/Drupal/Tests/Listeners(/|$)@", dirname($test));
-      });
+      $tests = array_filter($tests, function ($test_class) {
+        // The Listeners directory does not contain tests. Use the class name
+        // to be compatible with all operating systems.
+        return !preg_match('/^Drupal\\\\Tests\\\\Listeners\\\\/', $test_class);
+      }, ARRAY_FILTER_USE_KEY);
       $this->addTestFiles($tests);
     }
     else {
