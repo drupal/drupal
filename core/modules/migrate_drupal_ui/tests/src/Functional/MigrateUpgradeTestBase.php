@@ -3,6 +3,7 @@
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 use Drupal\Core\Database\Database;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
@@ -177,5 +178,108 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    *   An array of missing upgrade paths.
    */
   abstract protected function getMissingPaths();
+
+  /**
+   * Gets expected number of entities per entity after incremental migration.
+   *
+   * @return int[]
+   *   An array of expected counts keyed by entity type ID.
+   */
+  abstract protected function getEntityCountsIncremental();
+
+  /**
+   * Helper method to assert the text on the 'Upgrade analysis report' page.
+   *
+   * @param \Drupal\Tests\WebAssert $session
+   *   The current session.
+   * @param array $all_available
+   *   Array of modules that will be upgraded.
+   * @param array $all_missing
+   *   Array of modules that will not be upgraded.
+   */
+  protected function assertReviewPage(WebAssert $session, array $all_available, array $all_missing) {
+    $this->assertText('What will be upgraded?');
+
+    // Ensure there are no errors about the missing modules from the test module.
+    $session->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));
+    $session->pageTextNotContains(t('Source module not found for migration_provider_test.'));
+    $session->pageTextNotContains(t('Destination module not found for migration_provider_test'));
+    // Ensure there are no errors about any other missing migration providers.
+    $session->pageTextNotContains(t('module not found'));
+
+    // Test the available migration paths.
+    foreach ($all_available as $available) {
+      $session->elementExists('xpath', "//span[contains(@class, 'checked') and text() = '$available']");
+      $session->elementNotExists('xpath', "//span[contains(@class, 'error') and text() = '$available']");
+    }
+
+    // Test the missing migration paths.
+    foreach ($all_missing as $missing) {
+      $session->elementExists('xpath', "//span[contains(@class, 'error') and text() = '$missing']");
+      $session->elementNotExists('xpath', "//span[contains(@class, 'checked') and text() = '$missing']");
+    }
+  }
+
+  /**
+   * Helper method that asserts text on the ID conflict form.
+   *
+   * @param \Drupal\Tests\WebAssert $session
+   *   The current session.
+   * @param $session
+   *   The current session.
+   */
+  protected function assertIdConflict(WebAssert $session) {
+    $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
+    $session->pageTextContains('There is conflicting content of these types:');
+    $session->pageTextContains('custom block entities');
+    $session->pageTextContains('custom menu link entities');
+    $session->pageTextContains('file entities');
+    $session->pageTextContains('taxonomy term entities');
+    $session->pageTextContains('user entities');
+    $session->pageTextContains('comments');
+    $session->pageTextContains('content item revisions');
+    $session->pageTextContains('content items');
+    $session->pageTextContains('There is translated content of these types:');
+  }
+
+  /**
+   * Checks that migrations have been performed successfully.
+   *
+   * @param array $expected_counts
+   *   The expected counts of each entity type.
+   * @param int $version
+   *   The Drupal version.
+   */
+  protected function assertMigrationResults(array $expected_counts, $version) {
+    // Have to reset all the statics after migration to ensure entities are
+    // loadable.
+    $this->resetAll();
+    foreach (array_keys(\Drupal::entityTypeManager()->getDefinitions()) as $entity_type) {
+      $real_count = (int) \Drupal::entityQuery($entity_type)->count()->execute();
+      $expected_count = isset($expected_counts[$entity_type]) ? $expected_counts[$entity_type] : 0;
+      $this->assertSame($expected_count, $real_count, "Found $real_count $entity_type entities, expected $expected_count.");
+    }
+
+    $plugin_manager = \Drupal::service('plugin.manager.migration');
+    /** @var \Drupal\migrate\Plugin\Migration[] $all_migrations */
+    $all_migrations = $plugin_manager->createInstancesByTag('Drupal ' . $version);
+    foreach ($all_migrations as $migration) {
+      $id_map = $migration->getIdMap();
+      foreach ($id_map as $source_id => $map) {
+        // Convert $source_id into a keyless array so that
+        // \Drupal\migrate\Plugin\migrate\id_map\Sql::getSourceHash() works as
+        // expected.
+        $source_id_values = array_values(unserialize($source_id));
+        $row = $id_map->getRowBySource($source_id_values);
+        $destination = serialize($id_map->currentDestination());
+        $message = "Migration of $source_id to $destination as part of the {$migration->id()} migration. The source row status is " . $row['source_row_status'];
+        // A completed migration should have maps with
+        // MigrateIdMapInterface::STATUS_IGNORED or
+        // MigrateIdMapInterface::STATUS_IMPORTED.
+        $this->assertNotSame(MigrateIdMapInterface::STATUS_FAILED, $row['source_row_status'], $message);
+        $this->assertNotSame(MigrateIdMapInterface::STATUS_NEEDS_UPDATE, $row['source_row_status'], $message);
+      }
+    }
+  }
 
 }

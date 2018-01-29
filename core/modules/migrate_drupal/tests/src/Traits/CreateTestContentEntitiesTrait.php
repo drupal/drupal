@@ -2,16 +2,6 @@
 
 namespace Drupal\Tests\migrate_drupal\Traits;
 
-use Drupal\aggregator\Entity\Feed;
-use Drupal\aggregator\Entity\Item;
-use Drupal\block_content\Entity\BlockContent;
-use Drupal\comment\Entity\Comment;
-use Drupal\file\Entity\File;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\node\Entity\Node;
-use Drupal\taxonomy\Entity\Term;
-use Drupal\user\Entity\User;
-
 /**
  * Provides helper methods for creating test content.
  */
@@ -60,72 +50,161 @@ trait CreateTestContentEntitiesTrait {
    * Create several pieces of generic content.
    */
   protected function createContent() {
-    // Create an aggregator feed.
-    $feed = Feed::create([
-      'title' => 'feed',
-      'url' => 'http://www.example.com',
-    ]);
-    $feed->save();
+    $entity_type_manager = \Drupal::entityTypeManager();
 
-    // Create an aggregator feed item.
-    $item = Item::create([
-      'title' => 'feed item',
-      'fid' => $feed->id(),
-      'link' => 'http://www.example.com',
-    ]);
-    $item->save();
+    // Create an aggregator feed.
+    if ($entity_type_manager->hasDefinition('aggregator_feed')) {
+      $feed = $entity_type_manager->getStorage('aggregator_feed')->create([
+        'title' => 'feed',
+        'url' => 'http://www.example.com',
+      ]);
+      $feed->save();
+
+      // Create an aggregator feed item.
+      $item = $entity_type_manager->getStorage('aggregator_item')->create([
+        'title' => 'feed item',
+        'fid' => $feed->id(),
+        'link' => 'http://www.example.com',
+      ]);
+      $item->save();
+    }
 
     // Create a block content.
-    $block = BlockContent::create([
-      'info' => 'block',
-      'type' => 'block',
-    ]);
-    $block->save();
+    if ($entity_type_manager->hasDefinition('block_content')) {
+      $block = $entity_type_manager->getStorage('block_content')->create([
+        'info' => 'block',
+        'type' => 'block',
+      ]);
+      $block->save();
+    }
 
     // Create a node.
-    $node = Node::create([
-      'type' => 'page',
-      'title' => 'page',
-    ]);
-    $node->save();
+    if ($entity_type_manager->hasDefinition('node')) {
+      $node = $entity_type_manager->getStorage('node')->create([
+        'type' => 'page',
+        'title' => 'page',
+      ]);
+      $node->save();
 
-    // Create a comment.
-    $comment = Comment::create([
-      'comment_type' => 'comment',
-      'field_name' => 'comment',
-      'entity_type' => 'node',
-      'entity_id' => $node->id(),
-    ]);
-    $comment->save();
+      // Create a comment.
+      if ($entity_type_manager->hasDefinition('comment')) {
+        $comment = $entity_type_manager->getStorage('comment')->create([
+          'comment_type' => 'comment',
+          'field_name' => 'comment',
+          'entity_type' => 'node',
+          'entity_id' => $node->id(),
+        ]);
+        $comment->save();
+      }
+    }
 
     // Create a file.
-    $file = File::create([
-      'uri' => 'public://example.txt',
-    ]);
-    $file->save();
+    if ($entity_type_manager->hasDefinition('file')) {
+      $file = $entity_type_manager->getStorage('file')->create([
+        'uri' => 'public://example.txt',
+      ]);
+      $file->save();
+    }
 
     // Create a menu link.
-    $menu_link = MenuLinkContent::create([
-      'title' => 'menu link',
-      'link' => ['uri' => 'http://www.example.com'],
-      'menu_name' => 'tools',
-    ]);
-    $menu_link->save();
+    if ($entity_type_manager->hasDefinition('menu_link_content')) {
+      $menu_link = $entity_type_manager->getStorage('menu_link_content')->create([
+        'title' => 'menu link',
+        'link' => ['uri' => 'http://www.example.com'],
+        'menu_name' => 'tools',
+      ]);
+      $menu_link->save();
+    }
 
     // Create a taxonomy term.
-    $term = Term::create([
-      'name' => 'term',
-      'vid' => 'term',
-    ]);
-    $term->save();
+    if ($entity_type_manager->hasDefinition('taxonomy_term')) {
+      $term = $entity_type_manager->getStorage('taxonomy_term')->create([
+        'name' => 'term',
+        'vid' => 'term',
+      ]);
+      $term->save();
+    }
 
     // Create a user.
-    $user = User::create([
-      'uid' => 2,
-      'name' => 'user',
-      'mail' => 'user@example.com',
-    ]);
-    $user->save();
+    if ($entity_type_manager->hasDefinition('user')) {
+      $user = $entity_type_manager->getStorage('user')->create([
+        'name' => 'user',
+        'mail' => 'user@example.com',
+      ]);
+      $user->save();
+    }
+  }
+
+  /**
+   * Create several pieces of generic content.
+   */
+  protected function createContentPostUpgrade() {
+    $entity_type_manager = \Drupal::entityTypeManager();
+
+    // Create a block content.
+    if ($entity_type_manager->hasDefinition('block_content')) {
+      $block = $entity_type_manager->getStorage('block_content')->create([
+        'info' => 'Post upgrade block',
+        'type' => 'block',
+      ]);
+      $block->save();
+    }
+
+    // Create a node.
+    if ($entity_type_manager->hasDefinition('node')) {
+      $node = $entity_type_manager->getStorage('node')->create([
+        'type' => 'page',
+        'title' => 'Post upgrade page',
+      ]);
+      $node->save();
+
+      // Create a comment.
+      if ($entity_type_manager->hasDefinition('comment')) {
+        $comment = $entity_type_manager->getStorage('comment')->create([
+          'comment_type' => 'comment',
+          'field_name' => 'comment',
+          'entity_type' => 'node',
+          'entity_id' => $node->id(),
+        ]);
+        $comment->save();
+      }
+    }
+
+    // Create a file.
+    if ($entity_type_manager->hasDefinition('file')) {
+      $file = $entity_type_manager->getStorage('file')->create([
+        'uri' => 'public://post_upgrade_example.txt',
+      ]);
+      $file->save();
+    }
+
+    // Create a menu link.
+    if ($entity_type_manager->hasDefinition('menu_link_content')) {
+      $menu_link = $entity_type_manager->getStorage('menu_link_content')->create([
+        'title' => 'post upgrade menu link',
+        'link' => ['uri' => 'http://www.drupal.org'],
+        'menu_name' => 'tools',
+      ]);
+      $menu_link->save();
+    }
+
+    // Create a taxonomy term.
+    if ($entity_type_manager->hasDefinition('taxonomy_term')) {
+      $term = $entity_type_manager->getStorage('taxonomy_term')->create([
+        'name' => 'post upgrade term',
+        'vid' => 'term',
+      ]);
+      $term->save();
+    }
+
+    // Create a user.
+    if ($entity_type_manager->hasDefinition('user')) {
+      $user = $entity_type_manager->getStorage('user')->create([
+        'name' => 'universe',
+        'mail' => 'universe@example.com',
+      ]);
+      $user->save();
+    }
   }
 
 }

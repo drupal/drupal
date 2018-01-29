@@ -99,6 +99,24 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEntityCountsIncremental() {
+    $counts = $this->getEntityCounts();
+    $counts['block_content'] = 3;
+    $counts['comment'] = 7;
+    $counts['entity_view_display'] = 53;
+    $counts['entity_view_mode'] = 14;
+    $counts['file'] = 9;
+    $counts['menu_link_content'] = 6;
+    $counts['node'] = 18;
+    $counts['taxonomy_term'] = 9;
+    $counts['user'] = 8;
+    $counts['view'] = 16;
+    return $counts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getAvailablePaths() {
     return [
       'aggregator',
