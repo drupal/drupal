@@ -161,7 +161,7 @@ class MediaSourceTest extends MediaKernelTestBase {
     file_put_contents('public://thumbnail1.jpg', '');
     file_put_contents('public://thumbnail2.jpg', '');
 
-    // Save a media entity and make sure thumbnail was added.
+    // Save a media item and make sure thumbnail was added.
     \Drupal::state()->set('media_source_test_attributes', [
       'thumbnail_uri' => ['title' => 'Thumbnail', 'value' => 'public://thumbnail1.jpg'],
     ]);
@@ -174,7 +174,7 @@ class MediaSourceTest extends MediaKernelTestBase {
     $media_source = $media->getSource();
     $this->assertEquals('public://thumbnail1.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'Thumbnail was not added to the media entity.');
+    $this->assertEquals('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'Thumbnail was not added to the media item.');
     $this->assertEquals('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('Thumbnail', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
 
@@ -193,7 +193,7 @@ class MediaSourceTest extends MediaKernelTestBase {
     $media->thumbnail->target_id = NULL;
     $this->assertEquals('public://thumbnail2.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('public://thumbnail2.jpg', $media->thumbnail->entity->getFileUri(), 'New thumbnail was not added to the media entity.');
+    $this->assertEquals('public://thumbnail2.jpg', $media->thumbnail->entity->getFileUri(), 'New thumbnail was not added to the media item.');
     $this->assertEquals('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('Thumbnail', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
 
@@ -205,7 +205,7 @@ class MediaSourceTest extends MediaKernelTestBase {
     $media->field_media_test->value = 'some_new_value';
     $this->assertEquals('public://thumbnail1.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'New thumbnail was not added to the media entity.');
+    $this->assertEquals('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'New thumbnail was not added to the media item.');
     $this->assertEquals('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('Thumbnail', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
 
@@ -282,13 +282,13 @@ class MediaSourceTest extends MediaKernelTestBase {
       'field_media_test' => 'some_value',
     ]);
     $media->save();
-    $this->assertEquals('Boxer', $media->getName(), 'Correct name was not set on the media entity.');
+    $this->assertEquals('Boxer', $media->getName(), 'Correct name was not set on the media item.');
     $this->assertEquals('This will be title.', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('This will be alt.', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
   }
 
   /**
-   * Tests the media entity constraints functionality.
+   * Tests the media item constraints functionality.
    */
   public function testConstraints() {
     // Test entity constraints.

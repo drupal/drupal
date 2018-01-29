@@ -91,7 +91,7 @@ class MediaSource extends Plugin {
   /**
    * (optional) The metadata attribute name to provide the thumbnail title.
    *
-   * The name of the media entity will be used if the attribute name is not
+   * The name of the media item will be used if the attribute name is not
    * provided.
    *
    * @var string|null

@@ -13,7 +13,7 @@ trait MediaFunctionalTestTrait {
    * @var array
    */
   protected static $adminUserPermissions = [
-    // Media entity permissions.
+    // Media module permissions.
     'administer media',
     'administer media fields',
     'administer media form display',
