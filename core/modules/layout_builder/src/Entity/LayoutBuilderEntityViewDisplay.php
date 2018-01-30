@@ -240,8 +240,8 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
           }
         }
 
-        // Bypass ::getActiveContexts() in order to use the runtime entity, not
-        // a sample entity.
+        // Bypass ::getContexts() in order to use the runtime entity, not a
+        // sample entity.
         $contexts = $this->contextRepository()->getAvailableContexts();
         // @todo Use EntityContextDefinition after resolving
         //   https://www.drupal.org/node/2932462.
