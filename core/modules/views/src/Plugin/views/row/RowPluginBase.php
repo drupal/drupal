@@ -43,7 +43,7 @@ abstract class RowPluginBase extends PluginBase {
   protected $usesOptions = TRUE;
 
   /**
-   * Does the row plugin support to add fields to it's output.
+   * Does the row plugin support to add fields to its output.
    *
    * @var bool
    */

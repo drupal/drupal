@@ -86,7 +86,7 @@ class reEnableModuleFieldTest extends WebTestBase {
     $this->assertRaw('<a href="tel:123456789">');
 
     // Test that the module can't be uninstalled from the UI while there is data
-    // for it's fields.
+    // for its fields.
     $admin_user = $this->drupalCreateUser(['access administration pages', 'administer modules']);
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/modules/uninstall');

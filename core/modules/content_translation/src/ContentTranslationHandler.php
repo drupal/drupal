@@ -688,7 +688,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // after the entity has been validated, so that it does not break the
     // EntityChanged constraint validator. The content translation metadata
     // field for the changed timestamp  does not have such a constraint defined
-    // at the moment, but it is correct to update it's value in a submission
+    // at the moment, but it is correct to update its value in a submission
     // handler as well and have the same logic like in the Form API.
     if ($entity->hasField('content_translation_changed')) {
       $metadata = $this->manager->getTranslationMetadata($entity);

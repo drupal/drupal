@@ -331,7 +331,7 @@ class ViewExecutable {
   protected $request;
 
   /**
-   * Does this view already have loaded it's handlers.
+   * Does this view already have loaded its handlers.
    *
    * @todo Group with other static properties.
    *

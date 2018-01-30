@@ -127,7 +127,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
         }
 
         // Additionally store the errors of the direct child itself, keyed by
-        // it's parent elements structure.
+        // its parent elements structure.
         if (!empty($child['#errors'])) {
           $child_parents = implode('][', $child['#array_parents']);
           $children_errors[$child_parents] = $child['#errors'];

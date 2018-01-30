@@ -387,7 +387,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     views_invalidate_cache();
     $this->invalidateCaches();
 
-    // Rebuild the router if this is a new view, or it's status changed.
+    // Rebuild the router if this is a new view, or its status changed.
     if (!isset($this->original) || ($this->status() != $this->original->status())) {
       \Drupal::service('router.builder')->setRebuildNeeded();
     }

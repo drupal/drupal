@@ -18,7 +18,7 @@ use Drupal\Core\Form\FormStateInterface;
 class OpmlFields extends RowPluginBase {
 
   /**
-   * Does the row plugin support to add fields to it's output.
+   * Does the row plugin support to add fields to its output.
    *
    * @var bool
    */
