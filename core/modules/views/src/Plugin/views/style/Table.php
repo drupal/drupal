@@ -23,7 +23,7 @@ use Drupal\views\Plugin\views\wizard\WizardInterface;
 class Table extends StylePluginBase implements CacheableDependencyInterface {
 
   /**
-   * Does the style plugin for itself support to add fields to it's output.
+   * Does the style plugin for itself support to add fields to its output.
    *
    * @var bool
    */

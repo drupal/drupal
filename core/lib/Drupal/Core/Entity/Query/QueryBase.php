@@ -449,7 +449,7 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Generates an alias for a field and it's aggregated function.
+   * Generates an alias for a field and its aggregated function.
    *
    * @param string $field
    *   The field name used in the alias.

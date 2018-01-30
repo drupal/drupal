@@ -174,7 +174,7 @@ class Merge extends Query implements ConditionInterface {
    * Specifies fields to be updated as an expression.
    *
    * Expression fields are cases such as counter = counter + 1. This method
-   * takes precedence over MergeQuery::updateFields() and it's wrappers,
+   * takes precedence over MergeQuery::updateFields() and its wrappers,
    * MergeQuery::key() and MergeQuery::fields().
    *
    * @param $field

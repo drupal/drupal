@@ -71,7 +71,7 @@ abstract class StylePluginBase extends PluginBase {
   protected $usesGrouping = TRUE;
 
   /**
-   * Does the style plugin for itself support to add fields to it's output.
+   * Does the style plugin for itself support to add fields to its output.
    *
    * This option only makes sense on style plugins without row plugins, like
    * for example table.

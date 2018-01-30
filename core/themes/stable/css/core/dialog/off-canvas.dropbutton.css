@@ -224,7 +224,7 @@
   background: transparent;
 }
 
-/* Prevent list item from expanding it's container. */
+/* Prevent list item from expanding its container. */
 #drupal-off-canvas td ul.dropbutton li.edit {
   width: 2em;
   height: 2em;

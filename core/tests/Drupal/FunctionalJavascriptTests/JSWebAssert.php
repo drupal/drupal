@@ -172,7 +172,7 @@ JS;
   }
 
   /**
-   * Test that a node, or it's specific corner, is visible in the viewport.
+   * Test that a node, or its specific corner, is visible in the viewport.
    *
    * Note: Always set the viewport size. This can be done with a PhantomJS
    * startup parameter or in your test with \Behat\Mink\Session->resizeWindow().
@@ -255,7 +255,7 @@ JS;
   }
 
   /**
-   * Check the visibility of a node, or it's specific corner.
+   * Check the visibility of a node, or its specific corner.
    *
    * @param \Behat\Mink\Element\NodeElement $node
    *   A valid node.

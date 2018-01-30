@@ -118,7 +118,7 @@ interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInsp
   /**
    * Flattens the structure of form elements.
    *
-   * If a form element has #flatten = TRUE, then all of it's children get moved
+   * If a form element has #flatten = TRUE, then all of its children get moved
    * to the same level as the element itself. So $form['to_be_flattened'][$key]
    * becomes $form[$key], and $form['to_be_flattened'] gets unset.
    *

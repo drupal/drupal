@@ -184,7 +184,7 @@ class DisplayTest extends UITestBase {
     $view = $this->randomView();
     $id = $view['id'];
 
-    // The view should initially have the enabled class on it's form wrapper.
+    // The view should initially have the enabled class on its form wrapper.
     $this->drupalGet('admin/structure/views/view/' . $id);
     $elements = $this->xpath('//div[contains(@class, :edit) and contains(@class, :status)]', [':edit' => 'views-edit-view', ':status' => 'enabled']);
     $this->assertTrue($elements, 'The enabled class was found on the form wrapper');

@@ -413,7 +413,7 @@ class Schema extends DatabaseSchema {
 
     // Now add the fields.
     foreach ($mapping as $field_alias => $field_source) {
-      // Just ignore this field (ie. use it's default value).
+      // Just ignore this field (ie. use its default value).
       if (!isset($field_source)) {
         continue;
       }

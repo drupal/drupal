@@ -39,7 +39,7 @@ class EntityAutocomplete extends Textfield {
     $info['#validate_reference'] = TRUE;
     // IMPORTANT! This should only be set to FALSE if the #default_value
     // property is processed at another level (e.g. by a Field API widget) and
-    // it's value is properly checked for access.
+    // its value is properly checked for access.
     $info['#process_default_value'] = TRUE;
 
     $info['#element_validate'] = [[$class, 'validateEntityAutocomplete']];
