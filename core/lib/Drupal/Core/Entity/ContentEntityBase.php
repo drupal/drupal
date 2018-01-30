@@ -420,8 +420,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function isTranslatable() {
-    // Check that the bundle is translatable, the entity has a language defined
-    // and if we have more than one language on the site.
+    // Check the bundle is translatable, the entity has a language defined, and
+    // the site has more than one language.
     $bundles = $this->entityManager()->getBundleInfo($this->entityTypeId);
     return !empty($bundles[$this->bundle()]['translatable']) && !$this->getUntranslated()->language()->isLocked() && $this->languageManager()->isMultilingual();
   }
