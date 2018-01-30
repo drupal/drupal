@@ -6,6 +6,8 @@ use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionStorageInterface;
 
@@ -16,7 +18,7 @@ use Drupal\layout_builder\SectionStorageInterface;
  *
  * @see \Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem
  */
-class LayoutSectionItemList extends FieldItemList implements SectionStorageInterface {
+class LayoutSectionItemList extends FieldItemList implements SectionStorageInterface, OverridesSectionStorageInterface {
 
   /**
    * {@inheritdoc}
@@ -27,6 +29,7 @@ class LayoutSectionItemList extends FieldItemList implements SectionStorageInter
       $item = $this->createItem($delta);
       $item->section = $section;
 
+      // @todo Use https://www.drupal.org/node/66183 once resolved.
       $start = array_slice($this->list, 0, $delta);
       $end = array_slice($this->list, $delta);
       $this->list = array_merge($start, [$item], $end);
@@ -91,7 +94,7 @@ class LayoutSectionItemList extends FieldItemList implements SectionStorageInter
   /**
    * {@inheritdoc}
    */
-  public function getStorageType() {
+  public static function getStorageType() {
     return 'overrides';
   }
 
@@ -129,6 +132,13 @@ class LayoutSectionItemList extends FieldItemList implements SectionStorageInter
    */
   public function getLayoutBuilderUrl() {
     return $this->getEntity()->toUrl('layout-builder');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefaultSectionStorage() {
+    return LayoutBuilderEntityViewDisplay::collectRenderDisplay($this->getEntity(), 'default');
   }
 
   /**

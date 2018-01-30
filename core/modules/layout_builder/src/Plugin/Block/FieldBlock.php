@@ -17,7 +17,9 @@ use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -50,6 +52,13 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
    * @var string
    */
   protected $entityTypeId;
+
+  /**
+   * The bundle ID.
+   *
+   * @var string
+   */
+  protected $bundle;
 
   /**
    * The field name.
@@ -94,8 +103,9 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     $this->moduleHandler = $module_handler;
 
     // Get the entity type and field name from the plugin ID.
-    list (, $entity_type_id, $field_name) = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 3);
+    list (, $entity_type_id, $bundle, $field_name) = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 4);
     $this->entityTypeId = $entity_type_id;
+    $this->bundle = $bundle;
     $this->fieldName = $field_name;
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -130,7 +140,11 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
    */
   public function build() {
     $display_settings = $this->getConfiguration()['formatter'];
-    $build = $this->getEntity()->get($this->fieldName)->view($display_settings);
+    $entity = $this->getEntity();
+    $build = $entity->get($this->fieldName)->view($display_settings);
+    if (!empty($entity->in_preview) && !Element::getVisibleChildren($build)) {
+      $build['content']['#markup'] = new TranslatableMarkup('Placeholder for the "@field" field', ['@field' => $this->getFieldDefinition()->getLabel()]);
+    }
     CacheableMetadata::createFromObject($this)->applyTo($build);
     return $build;
   }
@@ -299,8 +313,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
    */
   protected function getFieldDefinition() {
     if (empty($this->fieldDefinition)) {
-      $bundle = reset($this->getPluginDefinition()['bundles']);
-      $field_definitions = $this->entityFieldManager->getFieldDefinitions($this->entityTypeId, $bundle);
+      $field_definitions = $this->entityFieldManager->getFieldDefinitions($this->entityTypeId, $this->bundle);
       $this->fieldDefinition = $field_definitions[$this->fieldName];
     }
     return $this->fieldDefinition;

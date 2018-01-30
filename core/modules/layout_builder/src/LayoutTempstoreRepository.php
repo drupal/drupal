@@ -71,7 +71,7 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
    *   The tempstore.
    */
   protected function getTempstore(SectionStorageInterface $section_storage) {
-    $collection = 'layout_builder.' . $section_storage->getStorageType();
+    $collection = 'layout_builder.section_storage.' . $section_storage->getStorageType();
     return $this->tempStoreFactory->get($collection);
   }
 

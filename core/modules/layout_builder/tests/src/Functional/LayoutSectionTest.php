@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\layout_builder\Functional;
 
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\BrowserTestBase;
@@ -18,7 +18,7 @@ class LayoutSectionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['layout_builder', 'node', 'block_test'];
+  public static $modules = ['field_ui', 'layout_builder', 'node', 'block_test'];
 
   /**
    * The name of the layout section field.
@@ -34,19 +34,21 @@ class LayoutSectionTest extends BrowserTestBase {
     parent::setUp();
 
     $this->createContentType([
-      'type' => 'bundle_with_section_field',
-    ]);
-    $this->createContentType([
       'type' => 'bundle_without_section_field',
     ]);
+    $this->createContentType([
+      'type' => 'bundle_with_section_field',
+    ]);
 
-    layout_builder_add_layout_section_field('node', 'bundle_with_section_field');
-    $display = EntityViewDisplay::load('node.bundle_with_section_field.default');
-    $display->setThirdPartySetting('layout_builder', 'allow_custom', TRUE);
-    $display->save();
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->setOverridable()
+      ->save();
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
+      'administer node display',
+      'administer node fields',
+      'administer content types',
     ], 'foobar'));
   }
 
@@ -85,7 +87,7 @@ class LayoutSectionTest extends BrowserTestBase {
         [
           'section' => new Section('layout_onecol', [], [
             'baz' => new SectionComponent('baz', 'content', [
-              'id' => 'field_block:node:body',
+              'id' => 'field_block:node:bundle_with_section_field:body',
               'context_mapping' => [
                 'entity' => 'layout_builder.entity',
               ],
@@ -274,6 +276,46 @@ class LayoutSectionTest extends BrowserTestBase {
     $node->save();
     $this->drupalGet($node->toUrl('layout-builder'));
     $this->assertSession()->statusCodeEquals(404);
+  }
+
+  /**
+   * Tests that deleting a field removes it from the layout.
+   */
+  public function testLayoutDeletingField() {
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('/admin/structure/types/manage/bundle_with_section_field/display-layout/default');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->elementExists('css', '.field--name-body');
+
+    // Delete the field from both bundles.
+    $this->drupalGet('/admin/structure/types/manage/bundle_without_section_field/fields/node.bundle_without_section_field.body/delete');
+    $this->submitForm([], 'Delete');
+    $this->drupalGet('/admin/structure/types/manage/bundle_with_section_field/display-layout/default');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->elementExists('css', '.field--name-body');
+
+    $this->drupalGet('/admin/structure/types/manage/bundle_with_section_field/fields/node.bundle_with_section_field.body/delete');
+    $this->submitForm([], 'Delete');
+    $this->drupalGet('/admin/structure/types/manage/bundle_with_section_field/display-layout/default');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->elementNotExists('css', '.field--name-body');
+  }
+
+  /**
+   * Tests that deleting a bundle removes the layout.
+   */
+  public function testLayoutDeletingBundle() {
+    $assert_session = $this->assertSession();
+
+    $display = LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default');
+    $this->assertInstanceOf(LayoutBuilderEntityViewDisplay::class, $display);
+
+    $this->drupalPostForm('/admin/structure/types/manage/bundle_with_section_field/delete', [], 'Delete');
+    $assert_session->statusCodeEquals(200);
+
+    $display = LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default');
+    $this->assertNull($display);
   }
 
   /**

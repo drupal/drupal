@@ -9,6 +9,8 @@ services:
   layout_builder.routes:
     class: Drupal\layout_builder\Routing\LayoutBuilderRoutes
     arguments: ['@entity_type.manager', '@entity_field.manager']
+    tags:
+     - { name: event_subscriber }
   layout_builder.route_enhancer:
     class: Drupal\layout_builder\Routing\LayoutBuilderRouteEnhancer
     tags:
@@ -18,6 +20,9 @@ services:
     arguments: ['@layout_builder.tempstore_repository', '@class_resolver']
     tags:
       - { name: paramconverter, priority: 10 }
+  layout_builder.section_storage_param_converter.defaults:
+    class: Drupal\layout_builder\Routing\SectionStorageDefaultsParamConverter
+    arguments: ['@entity.manager']
   layout_builder.section_storage_param_converter.overrides:
     class: Drupal\layout_builder\Routing\SectionStorageOverridesParamConverter
     arguments: ['@entity.manager']

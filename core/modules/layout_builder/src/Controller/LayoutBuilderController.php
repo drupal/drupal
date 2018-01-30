@@ -3,11 +3,13 @@
 namespace Drupal\layout_builder\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
+use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -31,13 +33,23 @@ class LayoutBuilderController implements ContainerInjectionInterface {
   protected $layoutTempstoreRepository;
 
   /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * LayoutBuilderController constructor.
    *
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
    *   The layout tempstore repository.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, MessengerInterface $messenger) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -45,7 +57,8 @@ class LayoutBuilderController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('layout_builder.tempstore_repository')
+      $container->get('layout_builder.tempstore_repository'),
+      $container->get('messenger')
     );
   }
 
@@ -101,9 +114,16 @@ class LayoutBuilderController implements ContainerInjectionInterface {
    *   Indicates if the layout is rebuilding.
    */
   protected function prepareLayout(SectionStorageInterface $section_storage, $is_rebuilding) {
-    // For a new layout, begin with a single section of one column.
+    // Only add sections if the layout is new and empty.
     if (!$is_rebuilding && $section_storage->count() === 0) {
       $sections = [];
+      // If this is an empty override, copy the sections from the corresponding
+      // default.
+      if ($section_storage instanceof OverridesSectionStorageInterface) {
+        $sections = $section_storage->getDefaultSectionStorage()->getSections();
+      }
+
+      // For an empty layout, begin with a single section of one column.
       if (!$sections) {
         $sections[] = new Section('layout_onecol');
       }
@@ -172,7 +192,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
     $section = $section_storage->getSection($delta);
 
     $layout = $section->getLayout();
-    $build = $section->toRenderArray($this->getAvailableContexts($section_storage));
+    $build = $section->toRenderArray($this->getAvailableContexts($section_storage), TRUE);
     $layout_definition = $layout->getPluginDefinition();
 
     foreach ($layout_definition->getRegions() as $region => $info) {
@@ -277,6 +297,14 @@ class LayoutBuilderController implements ContainerInjectionInterface {
   public function saveLayout(SectionStorageInterface $section_storage) {
     $section_storage->save();
     $this->layoutTempstoreRepository->delete($section_storage);
+
+    if ($section_storage instanceof OverridesSectionStorageInterface) {
+      $this->messenger->addMessage($this->t('The layout override has been saved.'));
+    }
+    else {
+      $this->messenger->addMessage($this->t('The layout has been saved.'));
+    }
+
     return new RedirectResponse($section_storage->getCanonicalUrl()->setAbsolute()->toString());
   }
 
@@ -291,6 +319,9 @@ class LayoutBuilderController implements ContainerInjectionInterface {
    */
   public function cancelLayout(SectionStorageInterface $section_storage) {
     $this->layoutTempstoreRepository->delete($section_storage);
+
+    $this->messenger->addMessage($this->t('The changes to the layout have been discarded.'));
+
     return new RedirectResponse($section_storage->getCanonicalUrl()->setAbsolute()->toString());
   }
 

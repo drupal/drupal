@@ -5,17 +5,14 @@
  * Provides hook implementations for Layout Builder.
  */
 
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\FieldConfigInterface;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplayStorage;
+use Drupal\layout_builder\Form\LayoutBuilderEntityViewDisplayForm;
 
 /**
  * Implements hook_help().
@@ -52,17 +49,18 @@ function layout_builder_entity_type_alter(array &$entity_types) {
       $entity_type->setLinkTemplate('layout-builder', $entity_type->getLinkTemplate('canonical') . '/layout');
     }
   }
+  $entity_types['entity_view_display']
+    ->setClass(LayoutBuilderEntityViewDisplay::class)
+    ->setStorageClass(LayoutBuilderEntityViewDisplayStorage::class)
+    ->setFormClass('edit', LayoutBuilderEntityViewDisplayForm::class);
 }
 
 /**
- * Removes the Layout Builder field both visually and from the #fields handling.
- *
- * This prevents any interaction with this field. It is rendered directly
- * in layout_builder_entity_view_alter().
- *
- * @internal
+ * Implements hook_form_FORM_ID_alter() for \Drupal\field_ui\Form\EntityFormDisplayEditForm.
  */
-function _layout_builder_hide_layout_field(array &$form) {
+function layout_builder_form_entity_form_display_edit_form_alter(&$form, FormStateInterface $form_state) {
+  // Hides the Layout Builder field. It is rendered directly in
+  // \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::buildMultiple().
   unset($form['fields']['layout_builder__layout']);
   $key = array_search('layout_builder__layout', $form['#fields']);
   if ($key !== FALSE) {
@@ -71,140 +69,23 @@ function _layout_builder_hide_layout_field(array &$form) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for \Drupal\field_ui\Form\EntityFormDisplayEditForm.
+ * Implements hook_field_config_insert().
  */
-function layout_builder_form_entity_form_display_edit_form_alter(&$form, FormStateInterface $form_state) {
-  _layout_builder_hide_layout_field($form);
+function layout_builder_field_config_insert(FieldConfigInterface $field_config) {
+  // Clear the sample entity for this entity type and bundle.
+  /** @var \Drupal\Core\TempStore\SharedTempStore $tempstore */
+  $tempstore = \Drupal::service('tempstore.shared')->get('layout_builder.sample_entity');
+  $tempstore->delete($field_config->getTargetEntityTypeId() . '.' . $field_config->getTargetBundle());
+  \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for \Drupal\field_ui\Form\EntityViewDisplayEditForm.
+ * Implements hook_field_config_delete().
  */
-function layout_builder_form_entity_view_display_edit_form_alter(&$form, FormStateInterface $form_state) {
-  /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
-  $display = $form_state->getFormObject()->getEntity();
-  $entity_type = \Drupal::entityTypeManager()->getDefinition($display->getTargetEntityTypeId());
-
-  _layout_builder_hide_layout_field($form);
-
-  // @todo Expand to work for all view modes in
-  //   https://www.drupal.org/node/2907413.
-  if (!in_array($display->getMode(), ['full', 'default'], TRUE)) {
-    return;
-  }
-
-  $form['layout'] = [
-    '#type' => 'details',
-    '#open' => TRUE,
-    '#title' => t('Layout options'),
-    '#tree' => TRUE,
-  ];
-  // @todo Unchecking this box is a destructive action, this should be made
-  //   clear to the user in https://www.drupal.org/node/2914484.
-  $form['layout']['allow_custom'] = [
-    '#type' => 'checkbox',
-    '#title' => t('Allow each @entity to have its layout customized.', [
-      '@entity' => $entity_type->getSingularLabel(),
-    ]),
-    '#default_value' => $display->getThirdPartySetting('layout_builder', 'allow_custom', FALSE),
-  ];
-
-  $form['#entity_builders'][] = 'layout_builder_form_entity_view_display_edit_entity_builder';
-}
-
-/**
- * Entity builder for layout options on the entity view display form.
- *
- * @see layout_builder_form_entity_view_display_edit_form_alter()
- */
-function layout_builder_form_entity_view_display_edit_entity_builder($entity_type_id, EntityViewDisplayInterface $display, &$form, FormStateInterface &$form_state) {
-  $new_value = (bool) $form_state->getValue(['layout', 'allow_custom'], FALSE);
-  $display->setThirdPartySetting('layout_builder', 'allow_custom', $new_value);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave().
- */
-function layout_builder_entity_view_display_presave(EntityViewDisplayInterface $display) {
-  $original_value = isset($display->original) ? $display->original->getThirdPartySetting('layout_builder', 'allow_custom', FALSE) : FALSE;
-  $new_value = $display->getThirdPartySetting('layout_builder', 'allow_custom', FALSE);
-  if ($original_value !== $new_value) {
-    $entity_type_id = $display->getTargetEntityTypeId();
-    $bundle = $display->getTargetBundle();
-
-    if ($new_value) {
-      layout_builder_add_layout_section_field($entity_type_id, $bundle);
-    }
-    elseif ($field = FieldConfig::loadByName($entity_type_id, $bundle, 'layout_builder__layout')) {
-      $field->delete();
-    }
-  }
-}
-
-/**
- * Adds a layout section field to a given bundle.
- *
- * @param string $entity_type_id
- *   The entity type ID.
- * @param string $bundle
- *   The bundle.
- * @param string $field_name
- *   (optional) The name for the layout section field. Defaults to
- *   'layout_builder__layout'.
- *
- * @return \Drupal\field\FieldConfigInterface
- *   A layout section field.
- */
-function layout_builder_add_layout_section_field($entity_type_id, $bundle, $field_name = 'layout_builder__layout') {
-  $field = FieldConfig::loadByName($entity_type_id, $bundle, $field_name);
-  if (!$field) {
-    $field_storage = FieldStorageConfig::loadByName($entity_type_id, $field_name);
-    if (!$field_storage) {
-      $field_storage = FieldStorageConfig::create([
-        'entity_type' => $entity_type_id,
-        'field_name' => $field_name,
-        'type' => 'layout_section',
-      ]);
-      $field_storage->save();
-    }
-
-    $field = FieldConfig::create([
-      'field_storage' => $field_storage,
-      'bundle' => $bundle,
-      'label' => t('Layout'),
-    ]);
-    $field->save();
-  }
-  return $field;
-}
-
-/**
- * Implements hook_entity_view_alter().
- */
-function layout_builder_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  if ($display->getThirdPartySetting('layout_builder', 'allow_custom', FALSE) && !$entity->layout_builder__layout->isEmpty()) {
-    $contexts = \Drupal::service('context.repository')->getAvailableContexts();
-    // @todo Use EntityContextDefinition after resolving
-    //   https://www.drupal.org/node/2932462.
-    $contexts['layout_builder.entity'] = new Context(new ContextDefinition("entity:{$entity->getEntityTypeId()}", new TranslatableMarkup('@entity being viewed', ['@entity' => $entity->getEntityType()->getLabel()])), $entity);
-    $sections = $entity->layout_builder__layout->getSections();
-    foreach ($sections as $delta => $section) {
-      $build['_layout_builder'][$delta] = $section->toRenderArray($contexts);
-    }
-
-    // If field layout is active, that is all that needs to be removed.
-    if (\Drupal::moduleHandler()->moduleExists('field_layout') && isset($build['_field_layout'])) {
-      unset($build['_field_layout']);
-      return;
-    }
-
-    /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $field_definitions */
-    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($display->getTargetEntityTypeId(), $display->getTargetBundle());
-    // Remove all display-configurable fields.
-    foreach (array_keys($display->getComponents()) as $name) {
-      if ($name !== 'layout_builder__layout' && isset($field_definitions[$name]) && $field_definitions[$name]->isDisplayConfigurable('view')) {
-        unset($build[$name]);
-      }
-    }
-  }
+function layout_builder_field_config_delete(FieldConfigInterface $field_config) {
+  // Clear the sample entity for this entity type and bundle.
+  /** @var \Drupal\Core\TempStore\SharedTempStore $tempstore */
+  $tempstore = \Drupal::service('tempstore.shared')->get('layout_builder.sample_entity');
+  $tempstore->delete($field_config->getTargetEntityTypeId() . '.' . $field_config->getTargetBundle());
+  \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
 }

@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides local task definitions for the layout builder user interface.
  *
+ * @todo Remove this in https://www.drupal.org/project/drupal/issues/2936655.
+ *
  * @internal
  */
 class LayoutBuilderLocalTaskDeriver extends DeriverBase implements ContainerDeriverInterface {
@@ -48,7 +50,8 @@ class LayoutBuilderLocalTaskDeriver extends DeriverBase implements ContainerDeri
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    foreach (array_keys($this->getEntityTypes()) as $entity_type_id) {
+    foreach ($this->getEntityTypes() as $entity_type_id => $entity_type) {
+      // Overrides.
       $this->derivatives["entity.$entity_type_id.layout_builder"] = $base_plugin_definition + [
         'route_name' => "entity.$entity_type_id.layout_builder",
         'weight' => 15,
@@ -71,6 +74,37 @@ class LayoutBuilderLocalTaskDeriver extends DeriverBase implements ContainerDeri
         'entity_type_id' => $entity_type_id,
         'weight' => 5,
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
+      ];
+      // @todo This link should be conditionally displayed, see
+      //   https://www.drupal.org/node/2917777.
+      $this->derivatives["entity.$entity_type_id.layout_builder_revert"] = $base_plugin_definition + [
+        'route_name' => "entity.$entity_type_id.layout_builder_revert",
+        'title' => $this->t('Revert to defaults'),
+        'parent_id' => "layout_builder_ui:entity.$entity_type_id.layout_builder",
+        'entity_type_id' => $entity_type_id,
+        'weight' => 10,
+        'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
+      ];
+
+      // Defaults.
+      $this->derivatives["entity.entity_view_display.$entity_type_id.layout_builder"] = $base_plugin_definition + [
+        'route_name' => "entity.entity_view_display.$entity_type_id.layout_builder",
+        'title' => $this->t('Manage layout'),
+        'base_route' => "entity.entity_view_display.$entity_type_id.layout_builder",
+        'entity_type_id' => $entity_type_id,
+      ];
+      $this->derivatives["entity.entity_view_display.$entity_type_id.layout_builder_save"] = $base_plugin_definition + [
+        'route_name' => "entity.entity_view_display.$entity_type_id.layout_builder_save",
+        'title' => $this->t('Save Layout'),
+        'parent_id' => "layout_builder_ui:entity.entity_view_display.$entity_type_id.layout_builder",
+        'entity_type_id' => $entity_type_id,
+      ];
+      $this->derivatives["entity.entity_view_display.$entity_type_id.layout_builder_cancel"] = $base_plugin_definition + [
+        'route_name' => "entity.entity_view_display.$entity_type_id.layout_builder_cancel",
+        'title' => $this->t('Cancel Layout'),
+        'weight' => 5,
+        'parent_id' => "layout_builder_ui:entity.entity_view_display.$entity_type_id.layout_builder",
+        'entity_type_id' => $entity_type_id,
       ];
     }
 

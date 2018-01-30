@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\layout_builder\Kernel;
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\layout_builder\Section;
 
 /**
@@ -49,6 +51,40 @@ class LayoutBuilderInstallTest extends LayoutBuilderCompatibilityTestBase {
     $this->entity->get('layout_builder__layout')->removeSection(0);
     $this->entity->save();
     $this->assertFieldAttributes($this->entity, $expected_fields);
+
+    // Test that adding a new field after Layout Builder has been installed will
+    // add the new field to the default region of the first section.
+    $field_storage = FieldStorageConfig::create([
+      'entity_type' => 'entity_test_base_field_display',
+      'field_name' => 'test_field_display_post_install',
+      'type' => 'text',
+    ]);
+    $field_storage->save();
+    FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'entity_test_base_field_display',
+      'label' => 'FieldConfig with configurable display',
+    ])->save();
+
+    $this->entity = $this->reloadEntity($this->entity);
+    $this->entity->test_field_display_post_install = 'Test string';
+    $this->entity->save();
+
+    $this->display = $this->reloadEntity($this->display);
+    $this->display
+      ->setComponent('test_field_display_post_install', ['weight' => 50])
+      ->save();
+    $new_expected_fields = [
+      'field field--name-name field--type-string field--label-hidden field__item',
+      'field field--name-test-field-display-configurable field--type-boolean field--label-above',
+      'clearfix text-formatted field field--name-test-display-configurable field--type-text field--label-above',
+      'clearfix text-formatted field field--name-test-field-display-post-install field--type-text field--label-above',
+      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above',
+      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above',
+    ];
+    $this->assertFieldAttributes($this->entity, $new_expected_fields);
+    $this->assertNotEmpty($this->cssSelect('.layout--onecol'));
+    $this->assertText('Test string');
   }
 
 }

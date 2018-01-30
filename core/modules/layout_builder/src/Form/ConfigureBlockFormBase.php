@@ -17,7 +17,7 @@ use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
-use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -59,7 +59,7 @@ abstract class ConfigureBlockFormBase extends FormBase {
    *
    * @var \Drupal\Component\Uuid\UuidInterface
    */
-  protected $uuid;
+  protected $uuidGenerator;
 
   /**
    * The plugin form manager.
@@ -81,6 +81,13 @@ abstract class ConfigureBlockFormBase extends FormBase {
    * @var string
    */
   protected $region;
+
+  /**
+   * The UUID of the component.
+   *
+   * @var string
+   */
+  protected $uuid;
 
   /**
    * The section storage.
@@ -109,7 +116,7 @@ abstract class ConfigureBlockFormBase extends FormBase {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
     $this->contextRepository = $context_repository;
     $this->blockManager = $block_manager;
-    $this->uuid = $uuid;
+    $this->uuidGenerator = $uuid;
     $this->classResolver = $class_resolver;
     $this->pluginFormFactory = $plugin_form_manager;
   }
@@ -129,25 +136,6 @@ abstract class ConfigureBlockFormBase extends FormBase {
   }
 
   /**
-   * Prepares the block plugin based on the block ID.
-   *
-   * @param string $block_id
-   *   Either a block ID, or the plugin ID used to create a new block.
-   * @param array $configuration
-   *   The block configuration.
-   *
-   * @return \Drupal\Core\Block\BlockPluginInterface
-   *   The block plugin.
-   */
-  protected function prepareBlock($block_id, array $configuration) {
-    if (!isset($configuration['uuid'])) {
-      $configuration['uuid'] = $this->uuid->generate();
-    }
-
-    return $this->blockManager->createInstance($block_id, $configuration);
-  }
-
-  /**
    * Builds the form for the block.
    *
    * @param array $form
@@ -158,21 +146,17 @@ abstract class ConfigureBlockFormBase extends FormBase {
    *   The section storage being configured.
    * @param int $delta
    *   The delta of the section.
-   * @param string $region
-   *   The region of the block.
-   * @param string|null $plugin_id
-   *   The plugin ID of the block to add.
-   * @param array $configuration
-   *   (optional) The array of configuration for the block.
+   * @param \Drupal\layout_builder\SectionComponent $component
+   *   The section component containing the block.
    *
    * @return array
    *   The form array.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $plugin_id = NULL, array $configuration = []) {
+  public function doBuildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, SectionComponent $component = NULL) {
     $this->sectionStorage = $section_storage;
     $this->delta = $delta;
-    $this->region = $region;
-    $this->block = $this->prepareBlock($plugin_id, $configuration);
+    $this->uuid = $component->getUuid();
+    $this->block = $component->getPlugin();
 
     $form_state->setTemporaryValue('gathered_contexts', $this->getAvailableContexts($section_storage));
 
@@ -205,20 +189,6 @@ abstract class ConfigureBlockFormBase extends FormBase {
   abstract protected function submitLabel();
 
   /**
-   * Handles the submission of a block.
-   *
-   * @param \Drupal\layout_builder\Section $section
-   *   The layout section.
-   * @param string $region
-   *   The region name.
-   * @param string $uuid
-   *   The UUID of the block.
-   * @param array $configuration
-   *   The block configuration.
-   */
-  abstract protected function submitBlock(Section $section, $region, $uuid, array $configuration);
-
-  /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
@@ -242,7 +212,7 @@ abstract class ConfigureBlockFormBase extends FormBase {
     $configuration = $this->block->getConfiguration();
 
     $section = $this->sectionStorage->getSection($this->delta);
-    $this->submitBlock($section, $this->region, $configuration['uuid'], $configuration);
+    $section->getComponent($this->uuid)->setConfiguration($configuration);
 
     $this->layoutTempstoreRepository->set($this->sectionStorage);
     $form_state->setRedirectUrl($this->sectionStorage->getLayoutBuilderUrl());

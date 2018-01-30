@@ -4,8 +4,8 @@ namespace Drupal\layout_builder\Cache;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CalculatedCacheContextInterface;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\layout_builder\OverridesSectionStorageInterface;
 
 /**
  * Determines whether Layout Builder is active for a given entity type or not.
@@ -49,7 +49,7 @@ class LayoutBuilderIsActiveCacheContext implements CalculatedCacheContextInterfa
     }
 
     $display = $this->getDisplay($entity_type_id);
-    return ($display && $display->getThirdPartySetting('layout_builder', 'allow_custom', FALSE)) ? '1' : '0';
+    return ($display && $display->isOverridable()) ? '1' : '0';
   }
 
   /**
@@ -72,15 +72,15 @@ class LayoutBuilderIsActiveCacheContext implements CalculatedCacheContextInterfa
    *
    * @param string $entity_type_id
    *   The entity type ID.
-   * @param string $view_mode
-   *   (optional) The view mode that should be used to render the entity.
    *
-   * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface|null
+   * @return \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface|null
    *   The entity view display, if it exists.
    */
-  protected function getDisplay($entity_type_id, $view_mode = 'full') {
+  protected function getDisplay($entity_type_id) {
     if ($entity = $this->routeMatch->getParameter($entity_type_id)) {
-      return EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
+      if ($entity instanceof OverridesSectionStorageInterface) {
+        return $entity->getDefaultSectionStorage();
+      }
     }
   }
 

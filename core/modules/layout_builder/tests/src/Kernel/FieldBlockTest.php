@@ -186,7 +186,7 @@ class FieldBlockTest extends EntityKernelTestBase {
 
     $block = new FieldBlock(
       $configuration,
-      'field_block:entity_test:the_field_name',
+      'field_block:entity_test:entity_test:the_field_name',
       $plugin_definition,
       $entity_field_manager->reveal(),
       $formatter_manager->reveal(),

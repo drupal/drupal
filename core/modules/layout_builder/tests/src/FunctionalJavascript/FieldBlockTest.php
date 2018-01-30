@@ -67,7 +67,7 @@ class FieldBlockTest extends JavascriptTestBase {
     $assert_session->pageTextNotContains('Initial email');
 
     $assert_session->pageTextContains('Date field');
-    $block_url = 'admin/structure/block/add/field_block%3Auser%3Afield_date/classy';
+    $block_url = 'admin/structure/block/add/field_block%3Auser%3Auser%3Afield_date/classy';
     $assert_session->linkByHrefExists($block_url);
 
     $this->drupalGet($block_url);
@@ -112,6 +112,7 @@ class FieldBlockTest extends JavascriptTestBase {
     ];
     $config = $this->container->get('config.factory')->get('block.block.datefield');
     $this->assertEquals($expected, $config->get('settings.formatter'));
+    $this->assertEquals(['field.field.user.user.field_date'], $config->get('dependencies.config'));
 
     // Assert that the block is displaying the user field.
     $this->drupalGet('admin');

@@ -6,9 +6,11 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\layout_builder\Routing\LayoutBuilderRoutes;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * @coversDefaultClass \Drupal\layout_builder\Routing\LayoutBuilderRoutes
@@ -146,6 +148,25 @@ class LayoutBuilderRoutesTest extends UnitTestCase {
           '_layout_builder' => TRUE,
         ]
       ),
+      'entity.with_link_template.layout_builder_revert' => new Route(
+        '/entity/{entity}/layout/revert',
+        [
+          'entity_type_id' => 'with_link_template',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          '_form' => '\Drupal\layout_builder\Form\RevertOverridesForm',
+        ],
+        [
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_link_template' => ['type' => 'entity:with_link_template'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
       'entity.with_integer_id.layout_builder' => new Route(
         '/entity/{entity}/layout',
         [
@@ -195,6 +216,26 @@ class LayoutBuilderRoutesTest extends UnitTestCase {
           'section_storage_type' => 'overrides',
           'section_storage' => '',
           '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
+        ],
+        [
+          '_has_layout_section' => 'true',
+          'with_integer_id' => '\d+',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_integer_id' => ['type' => 'entity:with_integer_id'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
+      'entity.with_integer_id.layout_builder_revert' => new Route(
+        '/entity/{entity}/layout/revert',
+        [
+          'entity_type_id' => 'with_integer_id',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          '_form' => '\Drupal\layout_builder\Form\RevertOverridesForm',
         ],
         [
           '_has_layout_section' => 'true',
@@ -270,6 +311,26 @@ class LayoutBuilderRoutesTest extends UnitTestCase {
           '_layout_builder' => TRUE,
         ]
       ),
+      'entity.with_field_ui_route.layout_builder_revert' => new Route(
+        '/entity/{entity}/layout/revert',
+        [
+          'entity_type_id' => 'with_field_ui_route',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          '_form' => '\Drupal\layout_builder\Form\RevertOverridesForm',
+        ],
+        [
+          '_has_layout_section' => 'true',
+          'with_field_ui_route' => '\d+',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_field_ui_route' => ['type' => 'entity:with_field_ui_route'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
       'entity.with_bundle_key.layout_builder' => new Route(
         '/entity/{entity}/layout',
         [
@@ -319,6 +380,26 @@ class LayoutBuilderRoutesTest extends UnitTestCase {
           'section_storage_type' => 'overrides',
           'section_storage' => '',
           '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
+        ],
+        [
+          '_has_layout_section' => 'true',
+          'with_bundle_key' => '\d+',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_bundle_key' => ['type' => 'entity:with_bundle_key'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
+      'entity.with_bundle_key.layout_builder_revert' => new Route(
+        '/entity/{entity}/layout/revert',
+        [
+          'entity_type_id' => 'with_bundle_key',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          '_form' => '\Drupal\layout_builder\Form\RevertOverridesForm',
         ],
         [
           '_has_layout_section' => 'true',
@@ -394,9 +475,242 @@ class LayoutBuilderRoutesTest extends UnitTestCase {
           '_layout_builder' => TRUE,
         ]
       ),
+      'entity.with_bundle_parameter.layout_builder_revert' => new Route(
+        '/entity/{entity}/layout/revert',
+        [
+          'entity_type_id' => 'with_bundle_parameter',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          '_form' => '\Drupal\layout_builder\Form\RevertOverridesForm',
+        ],
+        [
+          '_has_layout_section' => 'true',
+          'with_bundle_parameter' => '\d+',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_bundle_parameter' => ['type' => 'entity:with_bundle_parameter'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
     ];
 
     $this->assertEquals($expected, $this->routeBuilder->getRoutes());
+  }
+
+  /**
+   * @covers ::onAlterRoutes
+   * @covers ::buildRoute
+   * @covers ::hasIntegerId
+   * @covers ::getEntityTypes
+   */
+  public function testOnAlterRoutes() {
+    $collection = new RouteCollection();
+    $collection->add('known', new Route('/admin/entity/whatever', [], [], ['_admin_route' => TRUE]));
+    $collection->add('with_bundle', new Route('/admin/entity/{bundle}'));
+    $event = new RouteBuildEvent($collection);
+
+    $expected = [
+      'known' => new Route('/admin/entity/whatever', [], [], ['_admin_route' => TRUE]),
+      'with_bundle' => new Route('/admin/entity/{bundle}'),
+      'entity.entity_view_display.with_field_ui_route.layout_builder' => new Route(
+        '/admin/entity/whatever/display-layout/{view_mode_name}',
+        [
+          'entity_type_id' => 'with_field_ui_route',
+          'bundle' => 'with_field_ui_route',
+          'section_storage_type' => 'defaults',
+          'section_storage' => '',
+          'is_rebuilding' => FALSE,
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::layout',
+          '_title_callback' => '\Drupal\layout_builder\Controller\LayoutBuilderController::title',
+        ],
+        [
+          '_field_ui_view_mode_access' => 'administer with_field_ui_route display',
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+          ],
+          '_layout_builder' => TRUE,
+          '_admin_route' => FALSE,
+        ]
+      ),
+      'entity.entity_view_display.with_field_ui_route.layout_builder_save' => new Route(
+        '/admin/entity/whatever/display-layout/{view_mode_name}/save',
+        [
+          'entity_type_id' => 'with_field_ui_route',
+          'bundle' => 'with_field_ui_route',
+          'section_storage_type' => 'defaults',
+          'section_storage' => '',
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout',
+        ],
+        [
+          '_field_ui_view_mode_access' => 'administer with_field_ui_route display',
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+          ],
+          '_layout_builder' => TRUE,
+          '_admin_route' => FALSE,
+        ]
+      ),
+      'entity.entity_view_display.with_field_ui_route.layout_builder_cancel' => new Route(
+        '/admin/entity/whatever/display-layout/{view_mode_name}/cancel',
+        [
+          'entity_type_id' => 'with_field_ui_route',
+          'bundle' => 'with_field_ui_route',
+          'section_storage_type' => 'defaults',
+          'section_storage' => '',
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
+        ],
+        [
+          '_field_ui_view_mode_access' => 'administer with_field_ui_route display',
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+          ],
+          '_layout_builder' => TRUE,
+          '_admin_route' => FALSE,
+        ]
+      ),
+      'entity.entity_view_display.with_bundle_key.layout_builder' => new Route(
+        '/admin/entity/whatever/display-layout/{view_mode_name}',
+        [
+          'entity_type_id' => 'with_bundle_key',
+          'bundle_key' => 'my_bundle_type',
+          'section_storage_type' => 'defaults',
+          'section_storage' => '',
+          'is_rebuilding' => FALSE,
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::layout',
+          '_title_callback' => '\Drupal\layout_builder\Controller\LayoutBuilderController::title',
+        ],
+        [
+          '_field_ui_view_mode_access' => 'administer with_bundle_key display',
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+          ],
+          '_layout_builder' => TRUE,
+          '_admin_route' => FALSE,
+        ]
+      ),
+      'entity.entity_view_display.with_bundle_key.layout_builder_save' => new Route(
+        '/admin/entity/whatever/display-layout/{view_mode_name}/save',
+        [
+          'entity_type_id' => 'with_bundle_key',
+          'bundle_key' => 'my_bundle_type',
+          'section_storage_type' => 'defaults',
+          'section_storage' => '',
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout',
+        ],
+        [
+          '_field_ui_view_mode_access' => 'administer with_bundle_key display',
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+          ],
+          '_layout_builder' => TRUE,
+          '_admin_route' => FALSE,
+        ]
+      ),
+      'entity.entity_view_display.with_bundle_key.layout_builder_cancel' => new Route(
+        '/admin/entity/whatever/display-layout/{view_mode_name}/cancel',
+        [
+          'entity_type_id' => 'with_bundle_key',
+          'bundle_key' => 'my_bundle_type',
+          'section_storage_type' => 'defaults',
+          'section_storage' => '',
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
+        ],
+        [
+          '_field_ui_view_mode_access' => 'administer with_bundle_key display',
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+          ],
+          '_layout_builder' => TRUE,
+          '_admin_route' => FALSE,
+        ]
+      ),
+      'entity.entity_view_display.with_bundle_parameter.layout_builder' => new Route(
+        '/admin/entity/{bundle}/display-layout/{view_mode_name}',
+        [
+          'entity_type_id' => 'with_bundle_parameter',
+          'section_storage_type' => 'defaults',
+          'section_storage' => '',
+          'is_rebuilding' => FALSE,
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::layout',
+          '_title_callback' => '\Drupal\layout_builder\Controller\LayoutBuilderController::title',
+        ],
+        [
+          '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+          ],
+          '_layout_builder' => TRUE,
+          '_admin_route' => FALSE,
+        ]
+      ),
+      'entity.entity_view_display.with_bundle_parameter.layout_builder_save' => new Route(
+        '/admin/entity/{bundle}/display-layout/{view_mode_name}/save',
+        [
+          'entity_type_id' => 'with_bundle_parameter',
+          'section_storage_type' => 'defaults',
+          'section_storage' => '',
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout',
+        ],
+        [
+          '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+          ],
+          '_layout_builder' => TRUE,
+          '_admin_route' => FALSE,
+        ]
+      ),
+      'entity.entity_view_display.with_bundle_parameter.layout_builder_cancel' => new Route(
+        '/admin/entity/{bundle}/display-layout/{view_mode_name}/cancel',
+        [
+          'entity_type_id' => 'with_bundle_parameter',
+          'section_storage_type' => 'defaults',
+          'section_storage' => '',
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
+        ],
+        [
+          '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+          ],
+          '_layout_builder' => TRUE,
+          '_admin_route' => FALSE,
+        ]
+      ),
+    ];
+
+    $this->routeBuilder->onAlterRoutes($event);
+    $this->assertEquals($expected, $event->getRouteCollection()->all());
   }
 
 }

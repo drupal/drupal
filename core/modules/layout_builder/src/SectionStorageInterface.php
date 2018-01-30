@@ -18,7 +18,7 @@ interface SectionStorageInterface extends \Countable {
    * Gets the layout sections.
    *
    * @return \Drupal\layout_builder\Section[]
-   *   An array of sections.
+   *   A sequentially and numerically keyed array of section objects.
    */
   public function getSections();
 
@@ -61,6 +61,9 @@ interface SectionStorageInterface extends \Countable {
   /**
    * Removes the section at the given delta.
    *
+   * As sections are stored sequentially and numerically this will re-key every
+   * subsequent section, shifting them forward.
+   *
    * @param int $delta
    *   The delta of the section.
    *
@@ -92,7 +95,7 @@ interface SectionStorageInterface extends \Countable {
    * @return string
    *   The type of storage.
    */
-  public function getStorageType();
+  public static function getStorageType();
 
   /**
    * Gets the label for the object using the sections.

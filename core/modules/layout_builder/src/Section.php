@@ -68,14 +68,16 @@ class Section {
    *
    * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   An array of available contexts.
+   * @param bool $in_preview
+   *   TRUE if the section is being previewed, FALSE otherwise.
    *
    * @return array
    *   A renderable array representing the content of the section.
    */
-  public function toRenderArray(array $contexts = []) {
+  public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
     $regions = [];
     foreach ($this->getComponents() as $component) {
-      if ($output = $component->toRenderArray($contexts)) {
+      if ($output = $component->toRenderArray($contexts, $in_preview)) {
         $regions[$component->getRegion()][$component->getUuid()] = $output;
       }
     }
@@ -130,6 +132,16 @@ class Section {
   public function setLayoutSettings(array $layout_settings) {
     $this->layoutSettings = $layout_settings;
     return $this;
+  }
+
+  /**
+   * Gets the default region.
+   *
+   * @return string
+   *   The machine-readable name of the default region.
+   */
+  public function getDefaultRegion() {
+    return $this->layoutPluginManager()->getDefinition($this->getLayoutId())->getDefaultRegion();
   }
 
   /**
@@ -305,6 +317,25 @@ class Section {
    */
   protected function layoutPluginManager() {
     return \Drupal::service('plugin.manager.core.layout');
+  }
+
+  /**
+   * Returns an array representation of the section.
+   *
+   * @internal
+   *   This is intended for use by a storage mechanism for sections.
+   *
+   * @return array
+   *   An array representation of the section component.
+   */
+  public function toArray() {
+    return [
+      'layout_id' => $this->getLayoutId(),
+      'layout_settings' => $this->getLayoutSettings(),
+      'components' => array_map(function (SectionComponent $component) {
+        return $component->toArray();
+      }, $this->getComponents()),
+    ];
   }
 
 }

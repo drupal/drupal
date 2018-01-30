@@ -3,6 +3,7 @@
 namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\entity_test\Entity\EntityTestBaseFieldDisplay;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 
 /**
  * Tests the field type for Layout Sections.
@@ -26,7 +27,12 @@ class LayoutSectionItemListTest extends SectionStorageTestBase {
    */
   protected function getSectionStorage(array $section_data) {
     $this->installEntitySchema('entity_test_base_field_display');
-    layout_builder_add_layout_section_field('entity_test_base_field_display', 'entity_test_base_field_display');
+    LayoutBuilderEntityViewDisplay::create([
+      'targetEntityType' => 'entity_test_base_field_display',
+      'bundle' => 'entity_test_base_field_display',
+      'mode' => 'default',
+      'status' => TRUE,
+    ])->setOverridable()->save();
 
     array_map(function ($row) {
       return ['section' => $row];

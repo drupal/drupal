@@ -2,17 +2,24 @@
 
 namespace Drupal\layout_builder\Routing;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Symfony\Component\Routing\Route;
+use Drupal\Core\Routing\RouteBuildEvent;
+use Drupal\Core\Routing\RoutingEvents;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\Field\LayoutSectionItemList;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Provides routes for the Layout Builder UI.
  *
  * @internal
  */
-class LayoutBuilderRoutes {
+class LayoutBuilderRoutes implements EventSubscriberInterface {
+
+  use LayoutBuilderRoutesTrait;
 
   /**
    * The entity type manager.
@@ -64,68 +71,55 @@ class LayoutBuilderRoutes {
       $options['parameters'][$entity_type_id]['type'] = 'entity:' . $entity_type_id;
 
       $template = $entity_type->getLinkTemplate('layout-builder');
-      $routes += $this->buildRoute('overrides', 'entity.' . $entity_type_id, $template, $defaults, $requirements, $options);
+      $routes += $this->buildRoute(LayoutSectionItemList::class, 'entity.' . $entity_type_id, $template, $defaults, $requirements, $options);
     }
     return $routes;
   }
 
   /**
-   * Builds the layout routes for the given values.
+   * Alters existing routes for a specific collection.
    *
-   * @param string $type
-   *   The section storage type.
-   * @param string $route_name_prefix
-   *   The prefix to use for the route name.
-   * @param string $path
-   *   The path patten for the routes.
-   * @param array $defaults
-   *   An array of default parameter values.
-   * @param array $requirements
-   *   An array of requirements for parameters.
-   * @param array $options
-   *   An array of options.
-   *
-   * @return \Symfony\Component\Routing\Route[]
-   *   An array of route objects.
+   * @param \Drupal\Core\Routing\RouteBuildEvent $event
+   *   The route build event.
    */
-  protected function buildRoute($type, $route_name_prefix, $path, array $defaults, array $requirements, array $options) {
-    $routes = [];
+  public function onAlterRoutes(RouteBuildEvent $event) {
+    $collection = $event->getRouteCollection();
+    foreach ($this->getEntityTypes() as $entity_type_id => $entity_type) {
+      if ($route_name = $entity_type->get('field_ui_base_route')) {
+        // Try to get the route from the current collection.
+        if (!$entity_route = $collection->get($route_name)) {
+          continue;
+        }
+        $path = $entity_route->getPath() . '/display-layout/{view_mode_name}';
 
-    $defaults['section_storage_type'] = $type;
-    // Provide an empty value to allow the section storage to be upcast.
-    $defaults['section_storage'] = '';
-    // Trigger the layout builder access check.
-    $requirements['_has_layout_section'] = 'true';
-    // Trigger the layout builder RouteEnhancer.
-    $options['_layout_builder'] = TRUE;
+        $defaults = [];
+        $defaults['entity_type_id'] = $entity_type_id;
+        // If the entity type has no bundles and it doesn't use {bundle} in its
+        // admin path, use the entity type.
+        if (strpos($path, '{bundle}') === FALSE) {
+          if (!$entity_type->hasKey('bundle')) {
+            $defaults['bundle'] = $entity_type_id;
+          }
+          else {
+            $defaults['bundle_key'] = $entity_type->getBundleEntityType();
+          }
+        }
 
-    $main_defaults = $defaults;
-    $main_defaults['is_rebuilding'] = FALSE;
-    $main_defaults['_controller'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::layout';
-    $main_defaults['_title_callback'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::title';
-    $route = (new Route($path))
-      ->setDefaults($main_defaults)
-      ->setRequirements($requirements)
-      ->setOptions($options);
-    $routes["{$route_name_prefix}.layout_builder"] = $route;
+        $requirements = [];
+        $requirements['_field_ui_view_mode_access'] = 'administer ' . $entity_type_id . ' display';
 
-    $save_defaults = $defaults;
-    $save_defaults['_controller'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout';
-    $route = (new Route("$path/save"))
-      ->setDefaults($save_defaults)
-      ->setRequirements($requirements)
-      ->setOptions($options);
-    $routes["{$route_name_prefix}.layout_builder_save"] = $route;
+        $options['parameters']['section_storage']['layout_builder_tempstore'] = TRUE;
+        // Merge the entity route options in after Layout Builder's.
+        $options = NestedArray::mergeDeep($options, $entity_route->getOptions());
+        // Disable the admin route flag after merging in entity route options.
+        $options['_admin_route'] = FALSE;
 
-    $cancel_defaults = $defaults;
-    $cancel_defaults['_controller'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout';
-    $route = (new Route("$path/cancel"))
-      ->setDefaults($cancel_defaults)
-      ->setRequirements($requirements)
-      ->setOptions($options);
-    $routes["{$route_name_prefix}.layout_builder_cancel"] = $route;
-
-    return $routes;
+        $routes = $this->buildRoute(LayoutBuilderEntityViewDisplay::class, 'entity.entity_view_display.' . $entity_type_id, $path, $defaults, $requirements, $options);
+        foreach ($routes as $name => $route) {
+          $collection->add($name, $route);
+        }
+      }
+    }
   }
 
   /**
@@ -152,6 +146,15 @@ class LayoutBuilderRoutes {
     return array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $entity_type) {
       return $entity_type->hasLinkTemplate('layout-builder');
     });
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents() {
+    // Run after \Drupal\field_ui\Routing\RouteSubscriber.
+    $events[RoutingEvents::ALTER] = ['onAlterRoutes', -110];
+    return $events;
   }
 
 }

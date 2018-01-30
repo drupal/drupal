@@ -2,9 +2,7 @@
 
 namespace Drupal\layout_builder\Form;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionStorageInterface;
 
 /**
@@ -36,19 +34,13 @@ class UpdateBlockForm extends ConfigureBlockFormBase {
    *   The region of the block.
    * @param string $uuid
    *   The UUID of the block being updated.
-   * @param array $configuration
-   *   (optional) The array of configuration for the block.
    *
    * @return array
    *   The form array.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL, array $configuration = []) {
-    $plugin = $section_storage->getSection($delta)->getComponent($uuid)->getPlugin();
-    if ($plugin instanceof ConfigurablePluginInterface) {
-      $configuration = $plugin->getConfiguration();
-    }
-
-    return parent::buildForm($form, $form_state, $section_storage, $delta, $region, $plugin->getPluginId(), $configuration);
+  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL) {
+    $component = $section_storage->getSection($delta)->getComponent($uuid);
+    return $this->doBuildForm($form, $form_state, $section_storage, $delta, $component);
   }
 
   /**
@@ -56,13 +48,6 @@ class UpdateBlockForm extends ConfigureBlockFormBase {
    */
   protected function submitLabel() {
     return $this->t('Update');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function submitBlock(Section $section, $region, $uuid, array $configuration) {
-    $section->getComponent($uuid)->setConfiguration($configuration);
   }
 
 }

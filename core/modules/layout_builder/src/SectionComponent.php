@@ -90,11 +90,13 @@ class SectionComponent {
    *
    * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   An array of available contexts.
+   * @param bool $in_preview
+   *   TRUE if the component is being previewed, FALSE otherwise.
    *
    * @return array
    *   A renderable array representing the content of the component.
    */
-  public function toRenderArray(array $contexts = []) {
+  public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
     $output = [];
 
     $plugin = $this->getPlugin($contexts);
@@ -104,7 +106,7 @@ class SectionComponent {
       $access = $plugin->access($this->currentUser(), TRUE);
       $cacheability = CacheableMetadata::createFromObject($access);
 
-      if ($access->isAllowed()) {
+      if ($in_preview || $access->isAllowed()) {
         $cacheability->addCacheableDependency($plugin);
         // @todo Move this to BlockBase in https://www.drupal.org/node/2931040.
         $output = [
@@ -242,7 +244,7 @@ class SectionComponent {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    *   Thrown if the plugin ID cannot be found.
    */
-  protected function getPluginId() {
+  public function getPluginId() {
     if (empty($this->configuration['id'])) {
       throw new PluginException(sprintf('No plugin ID specified for component with "%s" UUID', $this->uuid));
     }
@@ -304,6 +306,25 @@ class SectionComponent {
    */
   protected function currentUser() {
     return \Drupal::currentUser();
+  }
+
+  /**
+   * Returns an array representation of the section component.
+   *
+   * @internal
+   *   This is intended for use by a storage mechanism for section components.
+   *
+   * @return array
+   *   An array representation of the section component.
+   */
+  public function toArray() {
+    return [
+      'uuid' => $this->getUuid(),
+      'region' => $this->getRegion(),
+      'configuration' => $this->getConfiguration(),
+      'additional' => $this->additional,
+      'weight' => $this->getWeight(),
+    ];
   }
 
 }

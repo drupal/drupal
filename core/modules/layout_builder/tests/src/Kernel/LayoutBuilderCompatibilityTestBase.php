@@ -42,6 +42,7 @@ abstract class LayoutBuilderCompatibilityTestBase extends EntityKernelTestBase {
 
     $this->installEntitySchema('entity_test_base_field_display');
     $this->installConfig(['filter']);
+    $this->installSchema('system', ['key_value_expire']);
 
     // Set up a non-admin user that is allowed to view test entities.
     \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2], ['view test entity']));
@@ -68,7 +69,7 @@ abstract class LayoutBuilderCompatibilityTestBase extends EntityKernelTestBase {
       'status' => TRUE,
     ]);
     $this->display
-      ->setComponent('test_field_display_configurable', ['region' => 'content', 'weight' => 5])
+      ->setComponent('test_field_display_configurable', ['weight' => 5])
       ->save();
 
     // Create an entity with fields that are configurable and non-configurable.
@@ -92,7 +93,7 @@ abstract class LayoutBuilderCompatibilityTestBase extends EntityKernelTestBase {
     $this->refreshServices();
 
     $this->display = $this->reloadEntity($this->display);
-    $this->display->setThirdPartySetting('layout_builder', 'allow_custom', TRUE)->save();
+    $this->display->setOverridable()->save();
     $this->entity = $this->reloadEntity($this->entity);
   }
 
