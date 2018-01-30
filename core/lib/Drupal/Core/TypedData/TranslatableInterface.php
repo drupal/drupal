@@ -71,7 +71,7 @@ interface TranslatableInterface {
   public function getUntranslated();
 
   /**
-   * Returns TRUE there is a translation for the given language code.
+   * Checks there is a translation for the given language code.
    *
    * @param string $langcode
    *   The language code identifying the translation.
