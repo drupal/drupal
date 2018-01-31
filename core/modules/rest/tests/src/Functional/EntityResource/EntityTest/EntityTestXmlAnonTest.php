@@ -3,6 +3,7 @@
 namespace Drupal\Tests\rest\Functional\EntityResource\EntityTest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use Drupal\Tests\rest\Functional\EntityResource\FormatSpecificGetBcRouteTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 
 /**
@@ -11,6 +12,7 @@ use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrai
 class EntityTestXmlAnonTest extends EntityTestResourceTestBase {
 
   use AnonResourceTestTrait;
+  use FormatSpecificGetBcRouteTestTrait;
   use XmlEntityNormalizationQuirksTrait;
 
   /**

@@ -5,11 +5,13 @@ namespace Drupal\Tests\rest\Functional\EntityResource\EntityTest;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\Traits\ExpectDeprecationTrait;
 use Drupal\user\Entity\User;
 
 abstract class EntityTestResourceTestBase extends EntityResourceTestBase {
 
   use BcTimestampNormalizerUnixTestTrait;
+  use ExpectDeprecationTrait;
 
   /**
    * {@inheritdoc}
