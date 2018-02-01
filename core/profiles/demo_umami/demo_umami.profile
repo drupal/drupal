@@ -34,8 +34,17 @@ function demo_umami_toolbar() {
   // @todo: This can be removed once a generic warning for experimental profiles has been introduced.
   // @see https://www.drupal.org/project/drupal/issues/2934374
   $items['experimental-profile-warning'] = [
-    '#type' => 'toolbar_item',
-    'tab' => [
+    '#weight' => 999,
+    '#cache' => [
+      'contexts' => ['route'],
+    ],
+  ];
+
+  // Show warning only on administration pages.
+  $admin_context = \Drupal::service('router.admin_context');
+  if ($admin_context->isAdminRoute()) {
+    $items['experimental-profile-warning']['#type'] = 'toolbar_item';
+    $items['experimental-profile-warning']['tab'] = [
       '#type' => 'inline_template',
       '#template' => '<a class="toolbar-warning" href="{{ more_info_link }}">This installation is for demonstration purposes only.</a>',
       '#context' => [
@@ -44,8 +53,7 @@ function demo_umami_toolbar() {
       '#attached' => [
         'library' => ['demo_umami/toolbar-warning'],
       ],
-    ],
-    '#weight' => 999,
-  ];
+    ];
+  }
   return $items;
 }
