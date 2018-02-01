@@ -16,7 +16,7 @@ class MigrateUploadTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['menu_ui'];
+  public static $modules = ['language', 'menu_ui'];
 
   /**
    * {@inheritdoc}
@@ -51,7 +51,7 @@ class MigrateUploadTest extends MigrateDrupal6TestBase {
     }
     $this->prepareMigrations($id_mappings);
 
-    $this->migrateContent();
+    $this->migrateContent(['translations']);
     // Since we are only testing a subset of the file migration, do not check
     // that the full file migration has been run.
     $migration = $this->getMigration('d6_upload');
@@ -65,16 +65,18 @@ class MigrateUploadTest extends MigrateDrupal6TestBase {
   public function testUpload() {
     $this->container->get('entity.manager')
       ->getStorage('node')
-      ->resetCache([1, 2]);
+      ->resetCache([1, 2, 12]);
 
-    $nodes = Node::loadMultiple([1, 2]);
+    $nodes = Node::loadMultiple([1, 2, 12]);
     $node = $nodes[1];
+    $this->assertEquals('en', $node->langcode->value);
     $this->assertIdentical(1, count($node->upload));
     $this->assertIdentical('1', $node->upload[0]->target_id);
     $this->assertIdentical('file 1-1-1', $node->upload[0]->description);
     $this->assertIdentical(FALSE, $node->upload[0]->isDisplayed());
 
     $node = $nodes[2];
+    $this->assertEquals('en', $node->langcode->value);
     $this->assertIdentical(2, count($node->upload));
     $this->assertIdentical('3', $node->upload[0]->target_id);
     $this->assertIdentical('file 2-3-3', $node->upload[0]->description);
@@ -82,6 +84,13 @@ class MigrateUploadTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('2', $node->upload[1]->target_id);
     $this->assertIdentical(TRUE, $node->upload[1]->isDisplayed());
     $this->assertIdentical('file 2-3-2', $node->upload[1]->description);
+
+    $node = $nodes[12];
+    $this->assertEquals('zu', $node->langcode->value);
+    $this->assertEquals(1, count($node->upload));
+    $this->assertEquals('3', $node->upload[0]->target_id);
+    $this->assertEquals('file 12-15-3', $node->upload[0]->description);
+    $this->assertEquals(FALSE, $node->upload[0]->isDisplayed());
   }
 
 }
