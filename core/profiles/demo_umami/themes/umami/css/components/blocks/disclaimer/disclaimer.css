@@ -1,0 +1,31 @@
+/**
+ * @file
+ * This file is used to style the disclaimer block.
+ */
+
+.block-type-disclaimer-block .field--name-field-disclaimer,
+.block-type-disclaimer-block .field--name-field-copyright {
+  display: block;
+  text-align: center;
+  font-size: 0.94rem;
+}
+
+@media screen and (min-width: 75rem) {
+  .block-type-disclaimer-block .field--name-field-disclaimer,
+  .block-type-disclaimer-block .field--name-field-copyright {
+    margin-bottom: 0;
+  }
+
+  .block-type-disclaimer-block .field--name-field-disclaimer {
+    float: left;
+    max-width: 40%;
+    text-align: left;
+    margin-left: 0.5rem;
+  }
+
+  .block-type-disclaimer-block .field--name-field-copyright {
+    float: right;
+    width: 25%;
+    text-align: left;
+  }
+}

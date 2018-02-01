@@ -1,8 +1,13 @@
 langcode: en
 status: true
 dependencies:
+  content:
+    - 'block_content:disclaimer_block:9b4dcd67-99f3-48d0-93c9-2c46648b29de'
+  enforced:
+    module:
+      - demo_umami_content
   module:
-    - demo_umami
+    - block_content
   theme:
     - umami
 id: umami_disclaimer
@@ -10,16 +15,13 @@ theme: umami
 region: bottom
 weight: 10
 provider: null
-plugin: umami_disclaimer
+plugin: 'block_content:9b4dcd67-99f3-48d0-93c9-2c46648b29de'
 settings:
-  id: umami_disclaimer
+  id: 'block_content:9b4dcd67-99f3-48d0-93c9-2c46648b29de'
   label: 'Umami disclaimer'
-  provider: demo_umami
+  provider: block_content
   label_display: '0'
-  umami_disclaimer:
-    value: '<strong>Umami Magazine & Umami Publications</strong> is a fictional magazine and publisher for illustrative purposes only.'
-    format: basic_html
-  umami_copyright:
-    value: '&copy; 2018 Terms & Conditions'
-    format: basic_html
+  status: true
+  info: ''
+  view_mode: full
 visibility: {  }

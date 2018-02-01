@@ -3,17 +3,21 @@
  * This file is used to style the Footer promo block.
  */
 
-.footer-promo {
+.block-type-footer-promo-block {
   padding-top: 250px;
   background: url('../../../../images/png/umami-bundle.png') no-repeat center top;
 }
 
-.footer-promo__title {
+.block-type-footer-promo-block .block__title {
   font-size: 1.5rem;
   font-weight: normal;
 }
 
-.footer-promo__text a {
+.block-type-footer-promo-block .footer-promo-content {
+  margin-bottom: 1.28rem;
+}
+
+.block-type-footer-promo-block .footer-promo-content a {
   background-color: inherit;
   clear: left;
   display: block;
@@ -22,14 +26,14 @@
   text-decoration: none;
 }
 
-.footer-promo__text a:active,
-.footer-promo__text a:focus,
-.footer-promo__text a:hover {
+.block-type-footer-promo-block .footer-promo-content a:active,
+.block-type-footer-promo-block .footer-promo-content a:focus,
+.block-type-footer-promo-block .footer-promo-content a:hover {
   background-color: transparent;
   text-decoration: underline;
 }
 
-.footer-promo__text a:after {
+.block-type-footer-promo-block .footer-promo-content a:after {
   display: inline-block;
   width: 14px;
   height: 14px;
@@ -39,7 +43,7 @@
 }
 
 @media screen and (min-width: 60rem) {
-  .footer-promo {
+  .block-type-footer-promo-block {
     flex-basis: 60%;
     height: 200px;
     padding-top: 0;
@@ -48,7 +52,7 @@
     font-size: 0.9rem;
   }
 
-  .footer-promo__title {
+  .block-type-footer-promo-block .block__title {
     padding-top: 2rem;
   }
 }

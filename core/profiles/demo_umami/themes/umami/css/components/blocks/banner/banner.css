@@ -3,26 +3,26 @@
  * This file is used to style the banner block.
  */
 
-.block-banner-block {
+.block-type-banner-block {
   background-size: 0 0;
 }
 
-.block-banner-block .summary {
+.block-type-banner-block .summary {
   margin: 1em;
 }
 
-.block-banner-block .field--name-field-title {
+.block-type-banner-block .field--name-field-title {
   font-family: 'Scope One', Georgia, serif;
   font-size: 1.424rem;
   font-weight: 400;
   margin: 0 0 1.07em 0;
 }
 
-.block-banner-block .field--name-field-summary {
+.block-type-banner-block .field--name-field-summary {
   margin-bottom: 1.28em;
 }
 
-.block-banner-block .field--name-field-content-link a {
+.block-type-banner-block .field--name-field-content-link a {
   display: inline-block;
   padding: 0.5em 1.5em 0.4em;
   border: 0;
@@ -39,8 +39,8 @@
   transition: background-color 0.5s ease;
 }
 
-.block-banner-block .field--name-field-content-link a:focus,
-.block-banner-block .field--name-field-content-link a:hover {
+.block-type-banner-block .field--name-field-content-link a:focus,
+.block-type-banner-block .field--name-field-content-link a:hover {
   background-color: #00836d;
   color: #fff;
   text-decoration: underline;
@@ -48,7 +48,7 @@
 
 /* 768px */
 @media screen and (min-width: 48rem) { /* 768px */
-  .block-banner-block {
+  .block-type-banner-block {
     background-color: #464646;
     background-size: cover;
     background-position: left center;
@@ -56,7 +56,7 @@
     /* Image ratio 7:3 */
   }
 
-  .block-banner-block .block-inner {
+  .block-type-banner-block .block-inner {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
@@ -65,13 +65,13 @@
     align-items: center;
   }
 
-  .block-banner-block .summary {
+  .block-type-banner-block .summary {
     margin: 0;
     flex: 0 0 30%;
     color: #ffffff;
   }
 
-  .block-banner-block .field--name-field-banner-image {
+  .block-type-banner-block .field--name-field-banner-image {
     display: none;
   }
 }

@@ -313,6 +313,38 @@ class InstallHelper implements ContainerInjectionInterface {
           'alt' => 'Mouth watering vegetarian pasta bake with rich tomato sauce and cheese toppings',
         ],
       ],
+      'umami_disclaimer' => [
+        'uuid' => '9b4dcd67-99f3-48d0-93c9-2c46648b29de',
+        'info' => 'Umami disclaimer',
+        'type' => 'disclaimer_block',
+        'field_disclaimer' => [
+          'value' => '<strong>Umami Magazine & Umami Publications</strong> is a fictional magazine and publisher for illustrative purposes only.',
+          'format' => 'basic_html',
+        ],
+        'field_copyright' => [
+          'value' => '&copy; 2018 Terms & Conditions',
+          'format' => 'basic_html',
+        ],
+      ],
+      'umami_footer_promo' => [
+        'uuid' => '924ab293-8f5f-45a1-9c7f-2423ae61a241',
+        'info' => 'Umami footer promo',
+        'type' => 'footer_promo_block',
+        'field_title' => [
+          'value' => 'Umami Food Magazine',
+        ],
+        'field_summary' => [
+          'value' => 'Skills and know-how. Magazine exclusive articles, recipes and plenty of reasons to get your copy today.',
+        ],
+        'field_content_link' => [
+          'uri' => 'internal:' . call_user_func(function () {
+            $nodes = $this->entityTypeManager->getStorage('node')->loadByProperties(['title' => 'About Umami']);
+            $node = reset($nodes);
+            return $this->aliasManager->getAliasByPath('/node/' . $node->id());
+          }),
+          'title' => 'Find out more',
+        ],
+      ],
     ];
 
     // Create block content.

@@ -1,0 +1,39 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.disclaimer_block
+    - field.field.block_content.disclaimer_block.field_copyright
+    - field.field.block_content.disclaimer_block.field_disclaimer
+  module:
+    - text
+id: block_content.disclaimer_block.default
+targetEntityType: block_content
+bundle: disclaimer_block
+mode: default
+content:
+  field_copyright:
+    weight: 28
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_disclaimer:
+    weight: 27
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }
