@@ -7,7 +7,6 @@ use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\rest\Plugin\ResourceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -26,13 +25,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 class RequestHandler implements ContainerInjectionInterface {
 
   /**
-   * The resource configuration storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $resourceStorage;
-
-  /**
    * The config factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -49,15 +41,12 @@ class RequestHandler implements ContainerInjectionInterface {
   /**
    * Creates a new RequestHandler instance.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
-   *   The resource configuration storage.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Symfony\Component\Serializer\SerializerInterface|\Symfony\Component\Serializer\Encoder\DecoderInterface $serializer
    *   The serializer.
    */
-  public function __construct(EntityStorageInterface $entity_storage, ConfigFactoryInterface $config_factory, SerializerInterface $serializer) {
-    $this->resourceStorage = $entity_storage;
+  public function __construct(ConfigFactoryInterface $config_factory, SerializerInterface $serializer) {
     $this->configFactory = $config_factory;
     $this->serializer = $serializer;
   }
@@ -67,7 +56,6 @@ class RequestHandler implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')->getStorage('rest_resource_config'),
       $container->get('config.factory'),
       $container->get('serializer')
     );
@@ -80,19 +68,17 @@ class RequestHandler implements ContainerInjectionInterface {
    *   The route match.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The HTTP request object.
+   * @param \Drupal\rest\RestResourceConfigInterface $_rest_resource_config
+   *   REST resource config entity ID.
    *
-   * @return \Symfony\Component\HttpFoundation\Response|\Drupal\rest\ResourceResponseInterface
+   * @return \Drupal\rest\ResourceResponseInterface|\Symfony\Component\HttpFoundation\Response
    *   The REST resource response.
    */
-  public function handle(RouteMatchInterface $route_match, Request $request) {
-    $resource_config_id = $route_match->getRouteObject()->getDefault('_rest_resource_config');
-    /** @var \Drupal\rest\RestResourceConfigInterface $resource_config */
-    $resource_config = $this->resourceStorage->load($resource_config_id);
-
-    $response = $this->delegateToRestResourcePlugin($route_match, $request, $resource_config->getResourcePlugin());
+  public function handle(RouteMatchInterface $route_match, Request $request, RestResourceConfigInterface $_rest_resource_config) {
+    $response = $this->delegateToRestResourcePlugin($route_match, $request, $_rest_resource_config->getResourcePlugin());
 
     if ($response instanceof CacheableResponseInterface) {
-      $response->addCacheableDependency($resource_config);
+      $response->addCacheableDependency($_rest_resource_config);
       // Add global rest settings config's cache tag, for BC flags.
       // @see \Drupal\rest\Plugin\rest\resource\EntityResource::permissions()
       // @see \Drupal\rest\EventSubscriber\RestConfigSubscriber
