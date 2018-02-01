@@ -133,6 +133,12 @@ class ResourceRoutes implements EventSubscriberInterface {
         }
         $route->setOption('_auth', $rest_resource_config->getAuthenticationProviders($method));
         $route->setDefault('_rest_resource_config', $rest_resource_config->id());
+        $parameters = $route->getOption('parameters') ?: [];
+        $route->setOption('parameters', $parameters + [
+          '_rest_resource_config' => [
+            'type' => 'entity:' . $rest_resource_config->getEntityTypeId(),
+          ],
+        ]);
         $collection->add("rest.$name", $route);
       }
 
