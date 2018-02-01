@@ -21,7 +21,7 @@ use Drupal\Core\Url;
  *
  * @internal
  */
-class BlockEntityOffCanvasForm extends BlockForm {
+class BlockEntitySettingTrayForm extends BlockForm {
 
   /**
    * Provides a title callback to get the block's admin label.

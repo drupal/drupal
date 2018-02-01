@@ -84,7 +84,7 @@ class SettingsTrayBlockFormTest extends OffCanvasTestBase {
 
     $link = $page->find('css', "$block_selector .contextual-links li a");
     $this->assertEquals('Quick edit', $link->getText(), "'Quick edit' is the first contextual link for the block.");
-    $this->assertContains("/admin/structure/block/manage/$block_id/off-canvas?destination=user/2", $link->getAttribute('href'));
+    $this->assertContains("/admin/structure/block/manage/$block_id/settings-tray?destination=user/2", $link->getAttribute('href'));
 
     if (isset($toolbar_item)) {
       // Check that you can open a toolbar tray and it will be closed after
@@ -525,7 +525,7 @@ class SettingsTrayBlockFormTest extends OffCanvasTestBase {
     $href = array_search('Quick edit', $link_labels);
     $this->assertEquals('', $href);
     $href = array_search('Quick edit settings', $link_labels);
-    $this->assertTrue(strstr($href, '/admin/structure/block/manage/custom/off-canvas?destination=user/2') !== FALSE);
+    $this->assertTrue(strstr($href, '/admin/structure/block/manage/custom/settings-tray?destination=user/2') !== FALSE);
   }
 
   /**
