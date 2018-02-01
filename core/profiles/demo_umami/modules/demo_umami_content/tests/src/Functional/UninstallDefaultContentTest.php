@@ -45,12 +45,15 @@ class UninstallDefaultContentTest extends BrowserTestBase {
     $node_storage->resetCache();
 
     // Assert the removal of blocks on uninstall.
-    $count = $block_storage->getQuery()
-      ->condition('type', 'banner_block')
-      ->count()
-      ->execute();
-    $this->assertEquals(0, $count);
-    $this->assertNull($this->container->get('entity_type.manager')->getStorage('block')->load('umami_banner_recipes'));
+    foreach ($this->expectedBlocks() as $block_info) {
+      $count = $block_storage->getQuery()
+        ->condition('type', $block_info['type'])
+        ->count()
+        ->execute();
+      $this->assertEquals(0, $count);
+      $block = $block_storage->loadByProperties(['uuid' => $block_info['uuid']]);
+      $this->assertCount(0, $block);
+    }
 
     // Assert the removal of nodes on uninstall.
     $count = $node_storage->getQuery()
@@ -95,20 +98,49 @@ class UninstallDefaultContentTest extends BrowserTestBase {
    *   Block storage.
    */
   protected function assertImportedCustomBlock(EntityStorageInterface $block_storage) {
-    // Verify that block is placed.
     $assert = $this->assertSession();
     $this->drupalGet('/recipes');
-    $assert->pageTextContains('Super easy vegetarian pasta bake');
-    $img_alt_text = $assert->elementExists('css', '#block-umami-banner-recipes img')->getAttribute('alt');
-    $this->assertEquals('Mouth watering vegetarian pasta bake with rich tomato sauce and cheese toppings', $img_alt_text);
+    foreach ($this->expectedBlocks() as $block_info) {
+      // Verify that the block is placed.
+      $assert->pageTextContains($block_info['unique_text']);
+      // For the banner block, also verify the presence of alt text on the
+      // banner image.
+      if ($block_info['type'] == 'banner_block') {
+        $img_alt_text = $assert->elementExists('css', '#block-umami-banner-recipes img')->getAttribute('alt');
+        $this->assertEquals('Mouth watering vegetarian pasta bake with rich tomato sauce and cheese toppings', $img_alt_text);
+      }
+      // Verify that the block can be loaded.
+      $count = $block_storage->getQuery()
+        ->condition('type', $block_info['type'])
+        ->count()
+        ->execute();
+      $this->assertGreaterThan(0, $count);
+      $block = $block_storage->loadByProperties(['uuid' => $block_info['uuid']]);
+      $this->assertCount(1, $block);
+    }
+  }
 
-    $count = $block_storage->getQuery()
-      ->condition('type', 'banner_block')
-      ->count()
-      ->execute();
-    $this->assertGreaterThan(0, $count);
-    $block = $block_storage->loadByProperties(['uuid' => '4c7d58a3-a45d-412d-9068-259c57e40541']);
-    $this->assertCount(1, $block);
+  /**
+   * Returns the expected properties of this profile's custom blocks.
+   */
+  protected function expectedBlocks() {
+    return [
+      [
+        'type' => 'banner_block',
+        'uuid' => '4c7d58a3-a45d-412d-9068-259c57e40541',
+        'unique_text' => 'A wholesome pasta bake is the ultimate comfort food.',
+      ],
+      [
+        'type' => 'disclaimer_block',
+        'uuid' => '9b4dcd67-99f3-48d0-93c9-2c46648b29de',
+        'unique_text' => 'is a fictional magazine and publisher for illustrative purposes only',
+      ],
+      [
+        'type' => 'footer_promo_block',
+        'uuid' => '924ab293-8f5f-45a1-9c7f-2423ae61a241',
+        'unique_text' => 'Magazine exclusive articles, recipes and plenty of reasons to get your copy today.',
+      ],
+    ];
   }
 
 }

@@ -5,6 +5,7 @@
  * Functions to support theming in the Umami theme.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
@@ -45,6 +46,10 @@ function umami_preprocess_field(&$variables, $hook) {
  */
 function umami_preprocess_block(&$variables) {
   $variables['title_attributes']['class'][] = 'block__title';
+  // Add a class indicating the custom block bundle.
+  if (isset($variables['elements']['content']['#block_content'])) {
+    $variables['attributes']['class'][] = Html::getClass('block-type-' . $variables['elements']['content']['#block_content']->bundle());
+  }
 }
 
 /**

@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: disclaimer_block
+label: 'Disclaimer block'
+revision: 0
+description: 'A disclaimer block contains disclaimer and copyright text.'

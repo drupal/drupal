@@ -1,8 +1,13 @@
 langcode: en
 status: true
 dependencies:
+  content:
+    - 'block_content:footer_promo_block:924ab293-8f5f-45a1-9c7f-2423ae61a241'
+  enforced:
+    module:
+      - demo_umami_content
   module:
-    - demo_umami
+    - block_content
   theme:
     - umami
 id: umami_footer_promo
@@ -10,14 +15,13 @@ theme: umami
 region: footer
 weight: -1
 provider: null
-plugin: umami_footer_promo
+plugin: 'block_content:924ab293-8f5f-45a1-9c7f-2423ae61a241'
 settings:
-  id: umami_footer_promo
-  label: 'Umami Footer promo'
-  provider: demo_umami
+  id: 'block_content:924ab293-8f5f-45a1-9c7f-2423ae61a241'
+  label: 'Umami footer promo'
+  provider: block_content
   label_display: '0'
-  promo_title: 'Umami Food Magazine'
-  promo_text: 'Skills and know-how. Magazine exclusive articles, recipes and plenty of reasons to get your copy today.'
-  findmore_url: '/about-umami'
-  findmore_text: 'Find out more'
+  status: true
+  info: ''
+  view_mode: full
 visibility: {  }

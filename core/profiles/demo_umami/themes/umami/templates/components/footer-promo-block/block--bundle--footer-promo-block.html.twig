@@ -25,29 +25,21 @@
  * @see template_preprocess_block()
  */
 #}
-{%
-  set classes = [
-    'block',
-    'block-' ~ configuration.provider|clean_class,
-    'block-' ~ plugin_id|clean_class,
-    'cover-image',
-  ]
-%}
-
-{% set background_image = file_url(content.field_banner_image.0['#item'].entity.uri.value) %}
-
-<div{{ attributes.addClass(classes) }} style="background-image: url({{ background_image }})">
-  <div class="block-inner">
-    {{ title_prefix }}
-    {% if label %}
-      <h2{{ title_attributes }}>{{ label }}</h2>
-    {% endif %}
-    {{ title_suffix }}
-    {% block content %}
-      {{ content.field_banner_image }}
-      <div class="summary">
-        {{ content|without('field_banner_image') }}
-      </div>
-    {% endblock %}
-  </div>
+<div{{ attributes }}>
+  {{ title_prefix }}
+  {% if label %}
+    <h2{{ title_attributes }}>{{ label }}</h2>
+  {% elseif content.field_title %}
+    <h2{{ title_attributes }}>{{ content.field_title }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  {% block content %}
+    <div class="footer-promo-content">
+      {% if not label %}
+        {{ content|without('field_title') }}
+      {% else %}
+        {{ content }}
+      {% endif %}
+    </div>
+  {% endblock %}
 </div>

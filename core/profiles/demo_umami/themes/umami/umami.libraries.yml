@@ -5,6 +5,7 @@ global:
       css/base.css: {}
       css/components/blocks/banner/banner.css: {}
       css/components/blocks/branding/branding.css: {}
+      css/components/blocks/disclaimer/disclaimer.css: {}
       css/components/blocks/page-title/page-title.css: {}
       css/components/blocks/footer-promo/footer-promo.css: {}
       css/components/blocks/search/search.css: {}
