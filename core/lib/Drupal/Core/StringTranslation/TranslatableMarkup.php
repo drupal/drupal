@@ -24,13 +24,6 @@ class TranslatableMarkup extends FormattableMarkup {
   use ToStringTrait;
 
   /**
-   * The string to be translated.
-   *
-   * @var string
-   */
-  protected $string;
-
-  /**
    * The translated markup without placeholder replacements.
    *
    * @var string
@@ -139,8 +132,7 @@ class TranslatableMarkup extends FormattableMarkup {
       $message = $string instanceof TranslatableMarkup ? '$string ("' . $string->getUntranslatedString() . '") must be a string.' : '$string ("' . (string) $string . '") must be a string.';
       throw new \InvalidArgumentException($message);
     }
-    $this->string = $string;
-    $this->arguments = $arguments;
+    parent::__construct($string, $arguments);
     $this->options = $options;
     $this->stringTranslation = $string_translation;
   }
