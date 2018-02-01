@@ -2,12 +2,23 @@
 
 namespace Drupal\Tests;
 
+use Composer\Semver\Semver;
+
 /**
  * Tests Composer integration.
  *
  * @group Composer
  */
 class ComposerIntegrationTest extends UnitTestCase {
+
+  /**
+   * The minimum PHP version supported by Drupal.
+   *
+   * @see https://www.drupal.org/docs/8/system-requirements/web-server
+   *
+   * @todo Remove as part of https://www.drupal.org/node/2908079
+   */
+  const MIN_PHP_VERSION = '5.5.9';
 
   /**
    * Gets human-readable JSON error messages.
@@ -168,6 +179,34 @@ class ComposerIntegrationTest extends UnitTestCase {
         $composer_replace_packages,
         'Unable to find ' . $module_name . ' in replace list of composer.json'
       );
+    }
+  }
+
+  /**
+   * Tests package requirements for the minimum supported PHP version by Drupal.
+   *
+   * @todo This can be removed when DrupalCI supports dependency regression
+   *   testing in https://www.drupal.org/node/2874198
+   */
+  public function testMinPHPVersion() {
+    // Check for lockfile in the application root. If the lockfile does not
+    // exist, then skip this test.
+    $lockfile = $this->root . '/composer.lock';
+    if (!file_exists($lockfile)) {
+      $this->markTestSkipped('/composer.lock is not available.');
+    }
+
+    $lock = json_decode(file_get_contents($lockfile), TRUE);
+
+    // Check the PHP version for each installed non-development  package. The
+    // testing infrastructure uses the uses the development packages, and may
+    // update them for particular environment configurations. In particular,
+    // PHP 7.2+ require an updated version of phpunit, which is incompatible
+    // with Drupal's minimum PHP requirement.
+    foreach ($lock['packages'] as $package) {
+      if (isset($package['require']['php'])) {
+        $this->assertTrue(Semver::satisfies(static::MIN_PHP_VERSION, $package['require']['php']), $package['name'] . ' has a PHP dependency requirement of "' . $package['require']['php'] . '"');
+      }
     }
   }
 

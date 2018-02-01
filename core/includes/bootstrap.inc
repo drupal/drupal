@@ -21,6 +21,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Minimum supported version of PHP.
  *
  * Drupal cannot be installed on versions of PHP older than this version.
+ *
+ * @todo Move this to an appropriate autoloadable class. See
+ *   https://www.drupal.org/project/drupal/issues/2908079
  */
 const DRUPAL_MINIMUM_PHP = '5.5.9';
 
@@ -30,6 +33,9 @@ const DRUPAL_MINIMUM_PHP = '5.5.9';
  * Sites installing Drupal on PHP versions lower than this will see a warning
  * message, but Drupal can still be installed. Used for (e.g.) PHP versions
  * that have reached their EOL or will in the near future.
+ *
+ * @todo Move this to an appropriate autoloadable class. See
+ *   https://www.drupal.org/project/drupal/issues/2908079
  */
 const DRUPAL_RECOMMENDED_PHP = '7.1';
 
@@ -39,6 +45,9 @@ const DRUPAL_RECOMMENDED_PHP = '7.1';
  * 64M was chosen as a minimum requirement in order to allow for additional
  * contributed modules to be installed prior to hitting the limit. However,
  * 40M is the target for the Standard installation profile.
+ *
+ * @todo Move this to an appropriate autoloadable class. See
+ *   https://www.drupal.org/project/drupal/issues/2908079
  */
 const DRUPAL_MINIMUM_PHP_MEMORY_LIMIT = '64M';
 
