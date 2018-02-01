@@ -122,4 +122,51 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $webassert->pageTextContains('Umami');
   }
 
+  /**
+   * Tests that the toolbar warning only appears on the admin pages.
+   */
+  public function testDemonstrationWarningMessage() {
+    $permissions = [
+      'access content overview',
+      'administer nodes',
+      'create recipe content',
+      'edit any recipe content',
+      'access toolbar',
+    ];
+    $account = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($account);
+    $web_assert = $this->assertSession();
+
+    $nodes = $this->container->get('entity_type.manager')
+      ->getStorage('node')
+      ->loadByProperties(['title' => 'Deep mediterranean quiche']);
+    /* @var \Drupal\node\Entity\Node $recipe_node */
+    $recipe_node = reset($nodes);
+
+    // Check when editing a node, the warning is visible.
+    $this->drupalGet($recipe_node->toUrl('edit-form'));
+    $web_assert->statusCodeEquals('200');
+    $web_assert->pageTextContains('This installation is for demonstration purposes only.');
+
+    // Check when adding a node, the warning is visible.
+    $this->drupalGet('node/add/recipe');
+    $web_assert->statusCodeEquals('200');
+    $web_assert->pageTextContains('This installation is for demonstration purposes only.');
+
+    // Check when looking at admin/content, the warning is visible.
+    $this->drupalGet('admin/content');
+    $web_assert->statusCodeEquals('200');
+    $web_assert->pageTextContains('This installation is for demonstration purposes only.');
+
+    // Check when viewing a node, the warning is not visible.
+    $this->drupalGet($recipe_node->toUrl());
+    $web_assert->statusCodeEquals('200');
+    $web_assert->pageTextNotContains('This installation is for demonstration purposes only.');
+
+    // Check when viewing the homepage, the warning is not visible.
+    $this->drupalGet('<front>');
+    $web_assert->statusCodeEquals('200');
+    $web_assert->pageTextNotContains('This installation is for demonstration purposes only.');
+  }
+
 }
