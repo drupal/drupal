@@ -1056,7 +1056,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       '#type' => 'textarea',
       '#title' => $this->t('No results text'),
       '#default_value' => $this->options['empty'],
-      '#description' => $this->t('Provide text to display if this field contains an empty result. You may include HTML. You may enter data from this view as per the "Replacement patterns" in the "Rewrite Results" section below.'),
+      '#description' => $this->t('Provide text to display if this field contains an empty result. You may include HTML. You may enter data from this view as per the "Replacement patterns" in the "Rewrite Results" section above.'),
       '#fieldset' => 'empty_field_behavior',
     ];
 
