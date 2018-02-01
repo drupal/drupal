@@ -1401,9 +1401,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
           // PathItem::generateSampleValue() doesn't set a PID, which causes
           // PathItem::postSave() to fail. Keep the PID (and other properties),
           // just modify the alias.
-          $value = $field->getValue();
-          $value['alias'] = str_replace(' ', '-', strtolower((new Random())->sentences(3)));
-          $field->setValue($value);
+          $field->alias = str_replace(' ', '-', strtolower((new Random())->sentences(3)));
           break;
         default:
           $original_field = clone $field;
