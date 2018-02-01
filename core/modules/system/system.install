@@ -189,12 +189,19 @@ function system_requirements($phase) {
     // If PHP is old, it's not safe to continue with the requirements check.
     return $requirements;
   }
-  // @todo Warn about specific end dates for our PHP 5.5, 5.6, and 7.0 support
-  //   once each is set.
-  // @see https://www.drupal.org/project/drupal/issues/2927344
   if ((version_compare($phpversion, DRUPAL_RECOMMENDED_PHP) < 0) && ($phase === 'install' || $phase === 'runtime')) {
-    $requirements['php']['description'] = t('Your PHP installation is running version %version. Support for this version will be dropped in a future Drupal release. Upgrade to PHP version %recommended or higher to ensure your site continues to receive Drupal updates and remains secure. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal 8 PHP requirements handbook page</a> for more information.', ['%version' => $phpversion, '%recommended' => DRUPAL_RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/8/system-requirements/php']);
-    $requirements['php']['severity'] = REQUIREMENT_WARNING;
+    // Warn if still on PHP 5. If If at least PHP 7.0, relax from "warning" to
+    // "info", and show it at runtime only, to not scare users while installing.
+    if (version_compare($phpversion, '7.0') < 0) {
+      $requirements['php']['description'] = t('Drupal will drop support for this version on March 6, 2019. Upgrade to PHP version %recommended or higher to ensure your site can receive updates and remain secure. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal 8 PHP requirements handbook page</a> for more information.', ['%recommended' => DRUPAL_RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/8/system-requirements/php']);
+      $requirements['php']['severity'] = REQUIREMENT_WARNING;
+    }
+    else {
+      if ($phase === 'runtime') {
+        $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal 8 PHP requirements handbook page</a> for more information.', ['%recommended' => DRUPAL_RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/8/system-requirements/php']);
+        $requirements['php']['severity'] = REQUIREMENT_INFO;
+      }
+    }
   }
 
   // Suggest to update to at least 5.5.21 or 5.6.5 for disabling multiple

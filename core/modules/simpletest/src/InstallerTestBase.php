@@ -210,7 +210,7 @@ abstract class InstallerTestBase extends WebTestBase {
     // By default, skip the "recommended PHP version" warning on older test
     // environments. This allows the installer to be tested consistently on
     // both recommended PHP versions and older (but still supported) versions.
-    if (version_compare(phpversion(), DRUPAL_RECOMMENDED_PHP) < 0) {
+    if (version_compare(phpversion(), '7.0') < 0) {
       $this->continueOnExpectedWarnings(['PHP']);
     }
   }
