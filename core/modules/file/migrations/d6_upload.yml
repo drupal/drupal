@@ -7,6 +7,10 @@ source:
 process:
   nid: nid
   vid: vid
+  langcode:
+    plugin: user_langcode
+    source: language
+    fallback_to_site_default: true
   type: type
   upload:
     plugin: sub_process
