@@ -1,19 +1,19 @@
 <?php
 
-namespace Drupal\field\Tests\Boolean;
+namespace Drupal\Tests\field\Functional\Boolean;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests boolean field functionality.
  *
  * @group field
  */
-class BooleanFieldTest extends WebTestBase {
+class BooleanFieldTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -108,15 +108,13 @@ class BooleanFieldTest extends WebTestBase {
       "{$field_name}[value]" => 1,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
     // Verify that boolean value is displayed.
     $entity = EntityTest::load($id);
-    $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
-    $content = $display->build($entity);
-    $this->setRawContent(\Drupal::service('renderer')->renderRoot($content));
+    $this->drupalGet($entity->toUrl());
     $this->assertRaw('<div class="field__item">' . $on . '</div>');
 
     // Test with "On" label option.
@@ -150,7 +148,7 @@ class BooleanFieldTest extends WebTestBase {
     $this->drupalGet($fieldEditUrl);
 
     // Click on the widget settings button to open the widget settings form.
-    $this->drupalPostAjaxForm(NULL, [], $field_name . "_settings_edit");
+    $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
 
     $this->assertText(
       'Use field label instead of the "On" label as the label.',
@@ -159,7 +157,7 @@ class BooleanFieldTest extends WebTestBase {
 
     // Enable setting.
     $edit = ['fields[' . $field_name . '][settings_edit_form][settings][display_label]' => 1];
-    $this->drupalPostAjaxForm(NULL, $edit, $field_name . "_plugin_settings_update");
+    $this->drupalPostForm(NULL, $edit, $field_name . "_plugin_settings_update");
     $this->drupalPostForm(NULL, NULL, 'Save');
 
     // Go again to the form display page and check if the setting
@@ -167,16 +165,12 @@ class BooleanFieldTest extends WebTestBase {
     $this->drupalGet($fieldEditUrl);
     $this->assertText('Use field label: Yes', 'Checking the display settings checkbox updated the value.');
 
-    $this->drupalPostAjaxForm(NULL, [], $field_name . "_settings_edit");
+    $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
     $this->assertText(
       'Use field label instead of the "On" label as the label.',
       t('Display setting checkbox is available')
     );
-    $this->assertFieldByXPath(
-      '*//input[starts-with(@id, "edit-fields-' . $field_name . '-settings-edit-form-settings-display-label") and @value="1"]',
-      TRUE,
-      t('Display label changes label of the checkbox')
-    );
+    $this->getSession()->getPage()->hasCheckedField('fields[' . $field_name . '][settings_edit_form][settings][display_label]');
 
     // Test the boolean field settings.
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name);
@@ -230,7 +224,7 @@ class BooleanFieldTest extends WebTestBase {
 
     // Should be posted OK.
     $this->drupalPostForm(NULL, [], t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
@@ -241,7 +235,7 @@ class BooleanFieldTest extends WebTestBase {
     $this->assertNoFieldByName("{$field_name}[value]");
     // Should still be able to post the form.
     $this->drupalPostForm(NULL, [], t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
   }
