@@ -7,10 +7,9 @@
 
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
-use Drupal\settings_tray\Block\BlockEntityOffCanvasForm;
 use Drupal\block\entity\Block;
 use Drupal\block\BlockInterface;
+use Drupal\settings_tray\Block\BlockEntitySettingTrayForm;
 
 /**
  * Implements hook_help().
@@ -96,8 +95,8 @@ function settings_tray_block_view_alter(array &$build) {
 function settings_tray_entity_type_build(array &$entity_types) {
   /* @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_types['block']
-    ->setFormClass('off_canvas', BlockEntityOffCanvasForm::class)
-    ->setLinkTemplate('off_canvas-form', '/admin/structure/block/manage/{block}/off-canvas');
+    ->setFormClass('settings_tray', BlockEntitySettingTrayForm::class)
+    ->setLinkTemplate('settings_tray-form', '/admin/structure/block/manage/{block}/settings-tray');
 }
 
 /**
