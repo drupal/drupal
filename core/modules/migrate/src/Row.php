@@ -104,7 +104,7 @@ class Row {
     $this->isStub = $is_stub;
     foreach (array_keys($source_ids) as $id) {
       if (!$this->hasSourceProperty($id)) {
-        throw new \InvalidArgumentException("$id has no value");
+        throw new \InvalidArgumentException("$id is defined as a source ID but has no value.");
       }
     }
   }
