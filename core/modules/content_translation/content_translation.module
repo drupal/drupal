@@ -163,8 +163,6 @@ function content_translation_entity_type_alter(array &$entity_types) {
       }
       $entity_type->set('translation', $translation);
     }
-
-    $entity_type->addConstraint('ContentTranslationSynchronizedFields');
   }
 }
 
