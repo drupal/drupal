@@ -169,4 +169,15 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $web_assert->pageTextNotContains('This installation is for demonstration purposes only.');
   }
 
+  /**
+   * Tests that sample images are not accessible to the webserver.
+   */
+  public function testAccessDeniedToSampleImages() {
+    $file_name = 'chocolate-brownie-umami.jpg';
+    $file_path = '/' . drupal_get_path('module', 'demo_umami_content') . '/default_content/images/' . $file_name;
+    $this->assertTrue(file_exists(DRUPAL_ROOT . $file_path));
+    $this->drupalGet($file_path);
+    $this->assertSession()->statusCodeEquals(403);
+  }
+
 }
