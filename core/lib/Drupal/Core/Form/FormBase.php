@@ -12,6 +12,7 @@ use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\Core\Messenger\MessengerTrait;
 
 /**
  * Provides a base class for forms.
@@ -45,6 +46,7 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   use DependencySerializationTrait;
   use LinkGeneratorTrait;
   use LoggerChannelTrait;
+  use MessengerTrait;
   use RedirectDestinationTrait;
   use StringTranslationTrait;
   use UrlGeneratorTrait;

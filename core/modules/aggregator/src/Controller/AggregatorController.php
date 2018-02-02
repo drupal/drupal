@@ -93,7 +93,7 @@ class AggregatorController extends ControllerBase {
     $message = $aggregator_feed->refreshItems()
       ? $this->t('There is new syndicated content from %site.', ['%site' => $aggregator_feed->label()])
       : $this->t('There is no new syndicated content from %site.', ['%site' => $aggregator_feed->label()]);
-    drupal_set_message($message);
+    $this->messenger()->addStatus($message);
     return $this->redirect('aggregator.admin_overview');
   }
 
