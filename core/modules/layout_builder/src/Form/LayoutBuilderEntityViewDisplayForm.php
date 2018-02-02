@@ -54,8 +54,6 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
       ];
 
       $entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
-      // @todo Unchecking this box is a destructive action, this should be made
-      //   clear to the user in https://www.drupal.org/node/2914484.
       $form['layout']['allow_custom'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Allow each @entity to have its layout customized.', [
@@ -63,10 +61,39 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
         ]),
         '#default_value' => $this->entity->isOverridable(),
       ];
-
-      $form['#entity_builders'][] = '::entityFormEntityBuild';
+      // Prevent turning off overrides while any exist.
+      if ($this->hasOverrides($this->entity)) {
+        $form['layout']['allow_custom']['#disabled'] = TRUE;
+        $form['layout']['allow_custom']['#description'] = $this->t('You must revert all customized layouts of this display before you can disable this option.');
+      }
+      else {
+        $form['#entity_builders'][] = '::entityFormEntityBuild';
+      }
     }
     return $form;
+  }
+
+  /**
+   * Determines if the defaults have any overrides.
+   *
+   * @param \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface $display
+   *   The entity display.
+   *
+   * @return bool
+   *   TRUE if there are any overrides of this default, FALSE otherwise.
+   */
+  protected function hasOverrides(LayoutEntityDisplayInterface $display) {
+    if (!$display->isOverridable()) {
+      return FALSE;
+    }
+
+    $entity_type = $this->entityTypeManager->getDefinition($display->getTargetEntityTypeId());
+    $query = $this->entityTypeManager->getStorage($display->getTargetEntityTypeId())->getQuery()
+      ->exists('layout_builder__layout');
+    if ($bundle_key = $entity_type->getKey('bundle')) {
+      $query->condition($bundle_key, $display->getTargetBundle());
+    }
+    return (bool) $query->count()->execute();
   }
 
   /**

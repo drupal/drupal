@@ -123,6 +123,10 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextNotContains('The first node body');
     $assert_session->pageTextNotContains('Powered by Drupal');
 
+    // Assert that overrides cannot be turned off while overrides exist.
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $assert_session->fieldDisabled('layout[allow_custom]');
+
     // Alter the defaults.
     $this->drupalGet("$field_ui_prefix/display-layout/default");
     $assert_session->linkExists('Add Block');
@@ -156,6 +160,11 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementExists('css', '.field--name-title');
     $assert_session->pageTextContains('The first node body');
     $assert_session->pageTextContains('Powered by Drupal');
+
+    // Assert that overrides can be turned off now that all overrides are gone.
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => FALSE], 'Save');
+    $this->drupalGet('node/1');
+    $assert_session->linkNotExists('Layout');
 
     // Add a new field.
     $edit = [
