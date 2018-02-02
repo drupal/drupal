@@ -5,7 +5,7 @@ namespace Drupal\migrate\Exception;
 use Exception;
 
 /**
- * Defines an
+ * Defines an exception thrown when a migration does not meet the requirements.
  *
  * @see \Drupal\migrate\Plugin\RequirementsInterface
  */
