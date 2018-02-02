@@ -1,7 +1,7 @@
 name: Umami
 type: theme
 base theme: classy
-description: 'The theme used for the out of the box initiative.'
+description: 'The theme used for the Umami food magazine demonstration site.'
 version: VERSION
 core: 8.x
 libraries:
