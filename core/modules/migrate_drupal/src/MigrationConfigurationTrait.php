@@ -125,8 +125,8 @@ trait MigrationConfigurationTrait {
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection object.
    *
-   * @return int|false
-   *   An integer representing the major branch of Drupal core (e.g. '6' for
+   * @return string|false
+   *   A string representing the major branch of Drupal core (e.g. '6' for
    *   Drupal 6.x), or FALSE if no valid version is matched.
    */
   protected function getLegacyDrupalVersion(Connection $connection) {
