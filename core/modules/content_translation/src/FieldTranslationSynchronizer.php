@@ -5,6 +5,8 @@ namespace Drupal\content_translation;
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
 
 /**
  * Provides field translation synchronization capabilities.
@@ -19,13 +21,56 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
   protected $entityManager;
 
   /**
+   * The field type plugin manager.
+   *
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
+   */
+  protected $fieldTypeManager;
+
+  /**
    * Constructs a FieldTranslationSynchronizer object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entityManager
    *   The entity manager.
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
+   *   The field type plugin manager.
    */
-  public function __construct(EntityManagerInterface $entityManager) {
+  public function __construct(EntityManagerInterface $entityManager, FieldTypePluginManagerInterface $field_type_manager) {
     $this->entityManager = $entityManager;
+    $this->fieldTypeManager = $field_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldSynchronizedProperties(FieldDefinitionInterface $field_definition) {
+    $properties = [];
+    $settings = $this->getFieldSynchronizationSettings($field_definition);
+    foreach ($settings as $group => $translatable) {
+      if (!$translatable) {
+        $field_type_definition = $this->fieldTypeManager->getDefinition($field_definition->getType());
+        if (!empty($field_type_definition['column_groups'][$group]['columns'])) {
+          $properties = array_merge($properties, $field_type_definition['column_groups'][$group]['columns']);
+        }
+      }
+    }
+    return $properties;
+  }
+
+  /**
+   * Returns the synchronization settings for the specified field.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   A field definition.
+   *
+   * @return string[]
+   *   An array of synchronized field property names.
+   */
+  protected function getFieldSynchronizationSettings(FieldDefinitionInterface $field_definition) {
+    if ($field_definition instanceof ThirdPartySettingsInterface && $field_definition->isTranslatable()) {
+      return $field_definition->getThirdPartySetting('content_translation', 'translation_sync', []);
+    }
+    return [];
   }
 
   /**
@@ -33,7 +78,6 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
    */
   public function synchronizeFields(ContentEntityInterface $entity, $sync_langcode, $original_langcode = NULL) {
     $translations = $entity->getTranslationLanguages();
-    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     // If we have no information about what to sync to, if we are creating a new
     // entity, if we have no translations for the current entity and we are not
@@ -43,21 +87,55 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
     }
 
     // If the entity language is being changed there is nothing to synchronize.
-    $entity_type = $entity->getEntityTypeId();
-    $entity_unchanged = isset($entity->original) ? $entity->original : $this->entityManager->getStorage($entity_type)->loadUnchanged($entity->id());
+    $entity_unchanged = $this->getOriginalEntity($entity);
     if ($entity->getUntranslated()->language()->getId() != $entity_unchanged->getUntranslated()->language()->getId()) {
       return;
+    }
+
+    if ($entity->isNewRevision()) {
+      if ($entity->isDefaultTranslationAffectedOnly()) {
+        // If changes to untranslatable fields are configured to affect only the
+        // default translation, we need to skip synchronization in pending
+        // revisions, otherwise multiple translations would be affected.
+        if (!$entity->isDefaultRevision()) {
+          return;
+        }
+        // When this mode is enabled, changes to synchronized properties are
+        // allowed only in the default translation, thus we need to make sure this
+        // is always used as source for the synchronization process.
+        else {
+          $sync_langcode = $entity->getUntranslated()->language()->getId();
+        }
+      }
+      elseif ($entity->isDefaultRevision()) {
+        // If a new default revision is being saved, but a newer default
+        // revision was created meanwhile, use any other translation as source
+        // for synchronization, since that will have been merged from the
+        // default revision. In this case the actual language does not matter as
+        // synchronized properties are the same for all the translations in the
+        // default revision.
+        /** @var \Drupal\Core\Entity\ContentEntityInterface $default_revision */
+        $default_revision = $this->entityManager
+          ->getStorage($entity->getEntityTypeId())
+          ->load($entity->id());
+        if ($default_revision->getLoadedRevisionId() !== $entity->getLoadedRevisionId()) {
+          $other_langcodes = array_diff_key($default_revision->getTranslationLanguages(), [$sync_langcode => FALSE]);
+          if ($other_langcodes) {
+            $sync_langcode = key($other_langcodes);
+          }
+        }
+      }
     }
 
     /** @var \Drupal\Core\Field\FieldItemListInterface $items */
     foreach ($entity as $field_name => $items) {
       $field_definition = $items->getFieldDefinition();
-      $field_type_definition = $field_type_manager->getDefinition($field_definition->getType());
+      $field_type_definition = $this->fieldTypeManager->getDefinition($field_definition->getType());
       $column_groups = $field_type_definition['column_groups'];
 
       // Sync if the field is translatable, not empty, and the synchronization
       // setting is enabled.
-      if ($field_definition instanceof ThirdPartySettingsInterface && $field_definition->isTranslatable() && !$items->isEmpty() && $translation_sync = $field_definition->getThirdPartySetting('content_translation', 'translation_sync')) {
+      if (($translation_sync = $this->getFieldSynchronizationSettings($field_definition)) && !$items->isEmpty()) {
         // Retrieve all the untranslatable column groups and merge them into
         // single list.
         $groups = array_keys(array_diff($translation_sync, array_filter($translation_sync)));
@@ -99,6 +177,26 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
         }
       }
     }
+  }
+
+  /**
+   * Returns the original unchanged entity to be used to detect changes.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity being changed.
+   *
+   * @return \Drupal\Core\Entity\ContentEntityInterface
+   *   The unchanged entity.
+   */
+  protected function getOriginalEntity(ContentEntityInterface $entity) {
+    if (!isset($entity->original)) {
+      $storage = $this->entityManager->getStorage($entity->getEntityTypeId());
+      $original = $entity->isDefaultRevision() ? $storage->loadUnchanged($entity->id()) : $storage->loadRevision($entity->getLoadedRevisionId());
+    }
+    else {
+      $original = $entity->original;
+    }
+    return $original;
   }
 
   /**
@@ -174,9 +272,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
           // items and the other columns from the existing values. This only
           // works if the delta exists in the language.
           elseif ($created && !empty($original_field_values[$langcode][$delta])) {
-            $item_columns_to_sync = array_intersect_key($source_items[$delta], array_flip($columns));
-            $item_columns_to_keep = array_diff_key($original_field_values[$langcode][$delta], array_flip($columns));
-            $values[$langcode][$delta] = $item_columns_to_sync + $item_columns_to_keep;
+            $values[$langcode][$delta] = $this->createMergedItem($source_items[$delta], $original_field_values[$langcode][$delta], $columns);
           }
           // If the delta doesn't exist, copy from the source language.
           elseif ($created) {
@@ -190,11 +286,35 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
             // If the value has only been reordered we just move the old one in
             // the new position.
             $item = isset($original_field_values[$langcode][$old_delta]) ? $original_field_values[$langcode][$old_delta] : $source_items[$new_delta];
-            $values[$langcode][$new_delta] = $item;
+            // When saving a default revision starting from a pending revision,
+            // we may have desynchronized field values, so we make sure that
+            // untranslatable properties are synchronized, even if in any other
+            // situation this would not be necessary.
+            $values[$langcode][$new_delta] = $this->createMergedItem($source_items[$new_delta], $item, $columns);
           }
         }
       }
     }
+  }
+
+  /**
+   * Creates a merged item.
+   *
+   * @param array $source_item
+   *   An item containing the untranslatable properties to be synchronized.
+   * @param array $target_item
+   *   An item containing the translatable properties to be kept.
+   * @param string[] $properties
+   *   An array of properties to be synchronized.
+   *
+   * @return array
+   *   A merged item array.
+   */
+  protected function createMergedItem(array $source_item, array $target_item, array $properties) {
+    $property_keys = array_flip($properties);
+    $item_properties_to_sync = array_intersect_key($source_item, $property_keys);
+    $item_properties_to_keep = array_diff_key($target_item, $property_keys);
+    return $item_properties_to_sync + $item_properties_to_keep;
   }
 
   /**

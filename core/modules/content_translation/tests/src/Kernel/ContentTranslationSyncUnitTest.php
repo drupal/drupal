@@ -59,7 +59,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->synchronizer = new FieldTranslationSynchronizer($this->container->get('entity.manager'));
+    $this->synchronizer = new FieldTranslationSynchronizer($this->container->get('entity.manager'), $this->container->get('plugin.manager.field.field_type'));
     $this->synchronized = ['sync1', 'sync2'];
     $this->columns = array_merge($this->synchronized, ['var1', 'var2']);
     $this->langcodes = ['en', 'it', 'fr', 'de', 'es'];
