@@ -5,7 +5,10 @@
  * Helper module for the Content Translation tests.
  */
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Implements hook_entity_bundle_info_alter().
@@ -20,6 +23,19 @@ function content_translation_test_entity_bundle_info_alter(&$bundles) {
   // settings.
   if (!$translatable) {
     $bundles['entity_test_mul']['entity_test_mul']['translatable'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function content_translation_test_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $access = \Drupal::state()->get('content_translation.entity_access.' . $entity->getEntityTypeId());
+  if (!empty($access[$operation])) {
+    return AccessResult::allowed();
+  }
+  else {
+    return AccessResult::neutral();
   }
 }
 
