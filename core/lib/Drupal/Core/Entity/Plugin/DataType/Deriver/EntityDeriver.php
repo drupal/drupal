@@ -89,6 +89,7 @@ class EntityDeriver implements ContainerDeriverInterface {
       $this->derivatives[$entity_type_id] = [
         'label' => $entity_type->getLabel(),
         'constraints' => $entity_type->getConstraints(),
+        'internal' => $entity_type->isInternal(),
       ] + $base_plugin_definition;
 
       // Incorporate the bundles as entity:$entity_type:$bundle, if any.

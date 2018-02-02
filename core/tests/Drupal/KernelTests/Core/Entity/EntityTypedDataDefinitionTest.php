@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -136,6 +138,38 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
     $reference_definition2 = $this->typedDataManager->createDataDefinition('entity_reference');
     $this->assertTrue($reference_definition2 instanceof DataReferenceDefinitionInterface);
     $this->assertEqual(serialize($reference_definition2), serialize($reference_definition));
+  }
+
+  /**
+   * Tests that an entity annotation can mark the data definition as internal.
+   *
+   * @dataProvider entityDefinitionIsInternalProvider
+   */
+  public function testEntityDefinitionIsInternal($internal, $expected) {
+    $entity_type_id = $this->randomMachineName();
+
+    $entity_type = $this->prophesize(EntityTypeInterface::class);
+    $entity_type->getLabel()->willReturn($this->randomString());
+    $entity_type->getConstraints()->willReturn([]);
+    $entity_type->isInternal()->willReturn($internal);
+
+    $entity_manager = $this->prophesize(EntityManagerInterface::class);
+    $entity_manager->getDefinitions()->willReturn([$entity_type_id => $entity_type->reveal()]);
+    $this->container->set('entity.manager', $entity_manager->reveal());
+
+    $entity_data_definition = EntityDataDefinition::create($entity_type_id);
+    $this->assertSame($expected, $entity_data_definition->isInternal());
+  }
+
+  /**
+   * Provides test cases for testEntityDefinitionIsInternal.
+   */
+  public function entityDefinitionIsInternalProvider() {
+    return [
+      'internal' => [TRUE, TRUE],
+      'external' => [FALSE, FALSE],
+      'undefined' => [NULL, FALSE],
+    ];
   }
 
 }
