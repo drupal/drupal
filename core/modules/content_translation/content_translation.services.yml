@@ -1,7 +1,7 @@
 services:
   content_translation.synchronizer:
     class: Drupal\content_translation\FieldTranslationSynchronizer
-    arguments: ['@entity.manager', '@plugin.manager.field.field_type']
+    arguments: ['@entity.manager']
 
   content_translation.subscriber:
     class: Drupal\content_translation\Routing\ContentTranslationRouteSubscriber

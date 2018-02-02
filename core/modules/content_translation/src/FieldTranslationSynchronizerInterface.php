@@ -3,7 +3,6 @@
 namespace Drupal\content_translation;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Provides field translation synchronization capabilities.
@@ -54,16 +53,5 @@ interface FieldTranslationSynchronizerInterface {
    *   An array of column names to be synchronized.
    */
   public function synchronizeItems(array &$field_values, array $unchanged_items, $sync_langcode, array $translations, array $columns);
-
-  /**
-   * Returns the synchronized properties for the specified field definition.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   A field definition.
-   *
-   * @return string[]
-   *   An array of synchronized field property names.
-   */
-  public function getFieldSynchronizedProperties(FieldDefinitionInterface $field_definition);
 
 }
