@@ -128,6 +128,18 @@ class EntityTypeTest extends UnitTestCase {
   }
 
   /**
+   * Tests the isInternal() method.
+   */
+  public function testIsInternal() {
+    $entity_type = $this->setUpEntityType(['internal' => TRUE]);
+    $this->assertTrue($entity_type->isInternal());
+    $entity_type = $this->setUpEntityType(['internal' => FALSE]);
+    $this->assertFalse($entity_type->isInternal());
+    $entity_type = $this->setUpEntityType([]);
+    $this->assertFalse($entity_type->isInternal());
+  }
+
+  /**
    * Tests the isRevisionable() method.
    */
   public function testIsRevisionable() {

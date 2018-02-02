@@ -563,6 +563,24 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function getBaseTable();
 
   /**
+   * Indicates whether the entity data is internal.
+   *
+   * This can be used in a scenario when it is not desirable to expose data of
+   * this entity type to an external system.
+   *
+   * The implications of this method are left to the discretion of the caller.
+   * For example, a module providing an HTTP API may not expose entities of
+   * this type or a custom entity reference field settings form may deprioritize
+   * entities of this type in a select list.
+   *
+   * @return bool
+   *   TRUE if the entity data is internal, FALSE otherwise.
+   *
+   * @see \Drupal\Core\TypedData\DataDefinitionInterface::isInternal()
+   */
+  public function isInternal();
+
+  /**
    * Indicates whether entities of this type have multilingual support.
    *
    * At an entity level, this indicates language support and at a bundle level
