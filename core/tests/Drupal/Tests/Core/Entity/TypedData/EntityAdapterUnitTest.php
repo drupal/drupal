@@ -29,18 +29,32 @@ class EntityAdapterUnitTest extends UnitTestCase {
   protected $bundle;
 
   /**
-   * The entity used for testing.
+   * The content entity used for testing.
    *
    * @var \Drupal\Core\Entity\ContentEntityBase|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entity;
 
   /**
-   * The entity adapter under test.
+   * The config entity used for testing.
+   *
+   * @var \Drupal\Core\Entity\ConfigtEntityBase|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $configEntity;
+
+  /**
+   * The content entity adapter under test.
    *
    * @var \Drupal\Core\Entity\Plugin\DataType\EntityAdapter
    */
   protected $entityAdapter;
+
+  /**
+   * The config entity adapter under test.
+   *
+   * @var \Drupal\Core\Entity\Plugin\DataType\EntityAdapter
+   */
+  protected $configEntityAdapter;
 
   /**
    * The entity type used for testing.
@@ -228,6 +242,10 @@ class EntityAdapterUnitTest extends UnitTestCase {
     $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', [$values, $this->entityTypeId, $this->bundle]);
 
     $this->entityAdapter = EntityAdapter::createFromEntity($this->entity);
+
+    $this->configEntity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', [$values, $this->entityTypeId, $this->bundle]);
+
+    $this->configEntityAdapter = EntityAdapter::createFromEntity($this->configEntity);
   }
 
   /**
@@ -428,6 +446,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
    * @covers ::getIterator
    */
   public function testGetIterator() {
+    // Content entity test.
     $iterator = $this->entityAdapter->getIterator();
     $fields = iterator_to_array($iterator);
     $this->assertArrayHasKey('id', $fields);
@@ -435,6 +454,11 @@ class EntityAdapterUnitTest extends UnitTestCase {
     $this->assertEquals(count($fields), 2);
 
     $this->entityAdapter->setValue(NULL);
+    $this->assertEquals(new \ArrayIterator([]), $this->entityAdapter->getIterator());
+
+    // Config entity test.
+    $iterator = $this->configEntityAdapter->getIterator();
+    $this->configEntityAdapter->setValue(NULL);
     $this->assertEquals(new \ArrayIterator([]), $this->entityAdapter->getIterator());
   }
 
