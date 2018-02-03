@@ -147,8 +147,12 @@ class LinksTest extends BrowserTestBase {
    * Tests that menu link pointing to entities get removed on entity remove.
    */
   public function testMenuLinkOnEntityDelete() {
+
+    // Create user.
     $user = User::create(['name' => 'username']);
     $user->save();
+
+    // Create "canonical" menu link pointing to the user.
     $menu_link_content = MenuLinkContent::create([
       'title' => 'username profile',
       'menu_name' => 'menu_test',
@@ -156,11 +160,30 @@ class LinksTest extends BrowserTestBase {
       'bundle' => 'menu_test',
     ]);
     $menu_link_content->save();
+
+    // Create "collection" menu link pointing to the user listing page.
+    $menu_link_content_collection = MenuLinkContent::create([
+      'title' => 'users listing',
+      'menu_name' => 'menu_test',
+      'link' => [['uri' => 'internal:/' . $user->toUrl('collection')->getInternalPath()]],
+      'bundle' => 'menu_test',
+    ]);
+    $menu_link_content_collection->save();
+
+    // Check is menu links present in the menu.
     $menu_tree_condition = (new MenuTreeParameters())->addCondition('route_name', 'entity.user.canonical');
     $this->assertCount(1, \Drupal::menuTree()->load('menu_test', $menu_tree_condition));
+    $menu_tree_condition_collection = (new MenuTreeParameters())->addCondition('route_name', 'entity.user.collection');
+    $this->assertCount(1, \Drupal::menuTree()->load('menu_test', $menu_tree_condition_collection));
 
+    // Delete the user.
     $user->delete();
+
+    // The "canonical" menu item has to be deleted.
     $this->assertCount(0, \Drupal::menuTree()->load('menu_test', $menu_tree_condition));
+
+    // The "collection" menu item should still present in the menu.
+    $this->assertCount(1, \Drupal::menuTree()->load('menu_test', $menu_tree_condition_collection));
   }
 
   /**
