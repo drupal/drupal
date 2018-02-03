@@ -167,7 +167,7 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
    * {@inheritdoc}
    */
   public function getIterator() {
-    return isset($this->entity) ? $this->entity->getIterator() : new \ArrayIterator([]);
+    return $this->entity instanceof \IteratorAggregate ? $this->entity->getIterator() : new \ArrayIterator([]);
   }
 
 }
