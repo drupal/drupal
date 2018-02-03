@@ -89,10 +89,17 @@ function menu_link_content_path_delete($path) {
 function menu_link_content_entity_predelete(EntityInterface $entity) {
   /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
   $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $entity_type_id = $entity->getEntityTypeId();
   foreach ($entity->uriRelationships() as $rel) {
     $url = $entity->toUrl($rel);
+    $route_parameters = $url->getRouteParameters();
+    if (!isset($route_parameters[$entity_type_id])) {
+      // Do not delete links which do not relate to this exact entity. For
+      // example, "collection", "add-form", etc.
+      continue;
+    }
     // Delete all MenuLinkContent links that point to this entity route.
-    $result = $menu_link_manager->loadLinksByRoute($url->getRouteName(), $url->getRouteParameters());
+    $result = $menu_link_manager->loadLinksByRoute($url->getRouteName(), $route_parameters);
 
     if ($result) {
       foreach ($result as $id => $instance) {
