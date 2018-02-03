@@ -48,7 +48,7 @@ function demo_umami_toolbar() {
       '#type' => 'inline_template',
       '#template' => '<a class="toolbar-warning" href="{{ more_info_link }}">This installation is for demonstration purposes only.</a>',
       '#context' => [
-        'more_info_link' => 'https://www.drupal.org/project/drupal/issues/2829101',
+        'more_info_link' => 'https://www.drupal.org/node/2941833',
       ],
       '#attached' => [
         'library' => ['demo_umami/toolbar-warning'],
