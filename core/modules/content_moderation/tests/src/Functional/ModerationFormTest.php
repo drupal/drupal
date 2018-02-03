@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\content_moderation\Functional;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\workflows\Entity\Workflow;
 
 /**
@@ -466,6 +467,23 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalPostForm(NULL, [
       'moderation_state[0][state]' => 'draft',
     ], t('Save (this translation)'));
+  }
+
+  /**
+   * Test the moderation_state field when an alternative widget is set.
+   */
+  public function testAlternativeModerationStateWidget() {
+    $entity_form_display = EntityFormDisplay::load('node.moderated_content.default');
+    $entity_form_display->setComponent('moderation_state', [
+      'type' => 'string_textfield',
+      'region' => 'content',
+    ]);
+    $entity_form_display->save();
+    $this->drupalPostForm('node/add/moderated_content', [
+      'title[0][value]' => 'Test content',
+      'moderation_state[0][value]' => 'published',
+    ], 'Save');
+    $this->assertSession()->pageTextContains('Moderated content Test content has been created.');
   }
 
   /**
