@@ -27,8 +27,8 @@ class ContainerBuilder extends SymfonyContainerBuilder {
    * {@inheritdoc}
    */
   public function __construct(ParameterBagInterface $parameterBag = NULL) {
-    $this->setResourceTracking(FALSE);
     parent::__construct($parameterBag);
+    $this->setResourceTracking(FALSE);
   }
 
   /**
