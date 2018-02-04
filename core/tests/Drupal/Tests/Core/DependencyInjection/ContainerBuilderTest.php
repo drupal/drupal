@@ -118,4 +118,27 @@ class ContainerBuilderTest extends UnitTestCase {
     serialize($container);
   }
 
+  /**
+   * Tests constructor and resource tracking disabling.
+   *
+   * This test runs in a separate process to ensure the aliased class does not
+   * affect any other tests.
+   *
+   * @runInSeparateProcess
+   * @preserveGlobalState disabled
+   */
+  public function testConstructor() {
+    class_alias(testInterface::class, 'Symfony\Component\Config\Resource\ResourceInterface');
+    $container = new ContainerBuilder();
+    $this->assertFalse($container->isTrackingResources());
+  }
+
+}
+
+/**
+ * A test interface for testing ContainerBuilder::__construct().
+ *
+ * @see \Drupal\Tests\Core\DependencyInjection\ContainerBuilderTest::testConstructor()
+ */
+interface testInterface {
 }
