@@ -39,13 +39,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
 
     // Check the requirements warning for using an experimental profile.
     $this->drupalGet('admin/reports/status');
-    $this->assertSession()->pageTextContains('Demo Umami is an experimental profile to be used for demonstration purposes only, and should not be used for a production/live site. To start building a new site, you should re-install Drupal and choose another profile, for example "Standard".');
-
-    // Check the requirements error for the version of Drupal being updated.
-    // Change the stored installed version of Drupal.
-    \Drupal::state()->set('demo_umami_drupal_version', \Drupal::VERSION . '1');
-    $this->drupalGet('admin/reports/status');
-    $this->assertSession()->pageTextContains('Drupal has been updated since this demo was installed, which could cause issues with this site. It is recommended that you re-install the demo to evaluate the latest changes.');
+    $this->assertSession()->pageTextContains('Experimental profiles are provided for testing purposes only. Use at your own risk. To start building a new site, reinstall Drupal and choose a non-experimental profile.');
   }
 
   /**

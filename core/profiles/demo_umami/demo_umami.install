@@ -15,24 +15,14 @@ use Drupal\shortcut\Entity\Shortcut;
 function demo_umami_requirements($phase) {
   $requirements = [];
   if ($phase == 'runtime') {
-    $demo_umami_installed_drupal = \Drupal::state()->get('demo_umami_drupal_version');
-
+    $profile = \Drupal::installProfile();
+    $info = system_get_info('module', $profile);
     $requirements['experimental_profile_used'] = [
-      'title' => t('Experimental profile used'),
-      'value' => \Drupal::VERSION,
-      'description' => t('Demo Umami is an experimental profile to be used for demonstration purposes only, and should not be used for a production/live site. To start building a new site, you should re-install Drupal and choose another profile, for example "Standard".'),
+      'title' => t('Experimental installation profile used'),
+      'value' => $info['name'],
+      'description' => t('Experimental profiles are provided for testing purposes only. Use at your own risk. To start building a new site, reinstall Drupal and choose a non-experimental profile.'),
       'severity' => REQUIREMENT_WARNING,
     ];
-
-    // Check if Drupal version has changed since demo_umami was installed.
-    if ($demo_umami_installed_drupal != \Drupal::VERSION) {
-      $requirements['demo_umami_drupal_version'] = [
-        'title' => t('Demo Umami Drupal Version'),
-        'value' => \Drupal::VERSION,
-        'description' => t('Drupal has been updated since this demo was installed, which could cause issues with this site. It is recommended that you re-install the demo to evaluate the latest changes.'),
-        'severity' => REQUIREMENT_ERROR,
-      ];
-    }
   }
   return $requirements;
 }
@@ -100,7 +90,4 @@ function demo_umami_install() {
   // in the demo_umami.info.yml file, as it requires configuration provided by
   // the profile (fields etc.).
   \Drupal::service('module_installer')->install(['demo_umami_content'], TRUE);
-
-  // Store the version of Drupal installed.
-  \Drupal::state()->set('demo_umami_drupal_version', \Drupal::VERSION);
 }
