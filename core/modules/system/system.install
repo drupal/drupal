@@ -190,7 +190,7 @@ function system_requirements($phase) {
     return $requirements;
   }
   if ((version_compare($phpversion, DRUPAL_RECOMMENDED_PHP) < 0) && ($phase === 'install' || $phase === 'runtime')) {
-    // Warn if still on PHP 5. If If at least PHP 7.0, relax from "warning" to
+    // Warn if still on PHP 5. If at least PHP 7.0, relax from "warning" to
     // "info", and show it at runtime only, to not scare users while installing.
     if (version_compare($phpversion, '7.0') < 0) {
       $requirements['php']['description'] = t('Drupal will drop support for this version on March 6, 2019. Upgrade to PHP version %recommended or higher to ensure your site can receive updates and remain secure. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal 8 PHP requirements handbook page</a> for more information.', ['%recommended' => DRUPAL_RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/8/system-requirements/php']);
