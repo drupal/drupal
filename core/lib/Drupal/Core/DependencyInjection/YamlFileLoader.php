@@ -158,8 +158,6 @@ class YamlFileLoader
             $definition = new ChildDefinition($service['parent']);
         } else {
             $definition = new Definition();
-            // As of Symfony 3.4 all services are private by default.
-            $definition->setPublic(TRUE);
         }
 
         if (isset($service['class'])) {

@@ -88,10 +88,7 @@ class ContainerBuilder extends SymfonyContainerBuilder {
     if (strtolower($id) !== $id) {
       throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
     }
-    $definition = parent::register($id, $class);
-    // As of Symfony 3.4 all services are private by default.
-    $definition->setPublic(TRUE);
-    return $definition;
+    return parent::register($id, $class);
   }
 
   /**
@@ -102,6 +99,22 @@ class ContainerBuilder extends SymfonyContainerBuilder {
     // As of Symfony 3.4 all aliases are private by default.
     $alias->setPublic(TRUE);
     return $alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDefinition($id, Definition $definition) {
+    $definition = parent::setDefinition($id, $definition);
+    // As of Symfony 3.4 all definitions are private by default.
+    // \Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPassOnly
+    // removes services marked as private from the container even if they are
+    // also marked as public. Drupal requires services that are public to
+    // remain in the container and not be removed.
+    if ($definition->isPublic()) {
+      $definition->setPrivate(FALSE);
+    }
+    return $definition;
   }
 
   /**

@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\DependencyInjection;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\Core\DependencyInjection\Fixture\BarClass;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @coversDefaultClass \Drupal\Core\DependencyInjection\ContainerBuilder
@@ -68,6 +69,34 @@ class ContainerBuilderTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $service = $container->register('bar');
     $this->assertTrue($service->isPublic());
+  }
+
+  /**
+   * @covers ::setDefinition
+   */
+  public function testSetDefinition() {
+    // Test a service with defaults.
+    $container = new ContainerBuilder();
+    $definition = new Definition();
+    $service = $container->setDefinition('foo', $definition);
+    $this->assertTrue($service->isPublic());
+    $this->assertFalse($service->isPrivate());
+
+    // Test a service with public set to false.
+    $definition = new Definition();
+    $definition->setPublic(FALSE);
+    $service = $container->setDefinition('foo', $definition);
+    $this->assertFalse($service->isPublic());
+    $this->assertFalse($service->isPrivate());
+
+    // Test a service with private set to true. Drupal does not support this.
+    // We only support using setPublic() to make things not available outside
+    // the container.
+    $definition = new Definition();
+    $definition->setPrivate(TRUE);
+    $service = $container->setDefinition('foo', $definition);
+    $this->assertTrue($service->isPublic());
+    $this->assertFalse($service->isPrivate());
   }
 
   /**

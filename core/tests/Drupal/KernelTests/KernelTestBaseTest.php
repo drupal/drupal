@@ -137,6 +137,10 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertInstanceOf('Symfony\Component\HttpFoundation\Request', $new_request);
     $this->assertSame($new_request, \Drupal::request());
     $this->assertSame($request, $new_request);
+
+    // Ensure getting the router.route_provider does not trigger a deprecation
+    // message that errors.
+    $this->container->get('router.route_provider');
   }
 
   /**
