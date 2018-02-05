@@ -275,8 +275,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     $form['#title'] = $this->t('Upgrade');
 
     if ($date_performed = $this->state->get('migrate_drupal_ui.performed')) {
-      // @todo Add back support for rollbacks and incremental migrations.
-      //   https://www.drupal.org/node/2687843
+      // @todo Add back support for rollbacks.
       //   https://www.drupal.org/node/2687849
       $form['upgrade_option_item'] = [
         '#type' => 'item',
