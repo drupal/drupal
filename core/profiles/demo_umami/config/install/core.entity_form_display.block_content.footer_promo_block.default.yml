@@ -4,9 +4,12 @@ dependencies:
   config:
     - block_content.type.footer_promo_block
     - field.field.block_content.footer_promo_block.field_content_link
+    - field.field.block_content.footer_promo_block.field_promo_image
     - field.field.block_content.footer_promo_block.field_summary
     - field.field.block_content.footer_promo_block.field_title
+    - image.style.thumbnail
   module:
+    - image
     - link
 id: block_content.footer_promo_block.default
 targetEntityType: block_content
@@ -20,6 +23,14 @@ content:
       placeholder_title: ''
     third_party_settings: {  }
     type: link_default
+    region: content
+  field_promo_image:
+    weight: 4
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
     region: content
   field_summary:
     weight: 2

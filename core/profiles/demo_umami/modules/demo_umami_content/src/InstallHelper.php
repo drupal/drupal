@@ -348,6 +348,10 @@ class InstallHelper implements ContainerInjectionInterface {
           }),
           'title' => 'Find out more',
         ],
+        'field_promo_image' => [
+          'target_id' => $this->createFileEntity($module_path . '/default_content/images/umami-bundle.png'),
+          'alt' => '3 issue bundle of the Umami food magazine',
+        ],
       ],
     ];
 

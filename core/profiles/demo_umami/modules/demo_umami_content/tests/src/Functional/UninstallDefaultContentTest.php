@@ -105,11 +105,11 @@ class UninstallDefaultContentTest extends BrowserTestBase {
     foreach ($this->expectedBlocks() as $block_info) {
       // Verify that the block is placed.
       $assert->pageTextContains($block_info['unique_text']);
-      // For the banner block, also verify the presence of alt text on the
-      // banner image.
-      if ($block_info['type'] == 'banner_block') {
-        $img_alt_text = $assert->elementExists('css', '#block-umami-banner-recipes img')->getAttribute('alt');
-        $this->assertEquals('Mouth watering vegetarian pasta bake with rich tomato sauce and cheese toppings', $img_alt_text);
+      // For blocks that have image alt text, also verify the presence of the
+      // expected alt text.
+      if (isset($block_info['image_alt_text'])) {
+        $img_alt_text = $assert->elementExists('css', $block_info['image_css_selector'])->getAttribute('alt');
+        $this->assertEquals($block_info['image_alt_text'], $img_alt_text);
       }
       // Verify that the block can be loaded.
       $count = $block_storage->getQuery()
@@ -131,6 +131,8 @@ class UninstallDefaultContentTest extends BrowserTestBase {
         'type' => 'banner_block',
         'uuid' => '4c7d58a3-a45d-412d-9068-259c57e40541',
         'unique_text' => 'A wholesome pasta bake is the ultimate comfort food.',
+        'image_css_selector' => '#block-umami-banner-recipes img',
+        'image_alt_text' => 'Mouth watering vegetarian pasta bake with rich tomato sauce and cheese toppings',
       ],
       [
         'type' => 'disclaimer_block',
@@ -141,6 +143,8 @@ class UninstallDefaultContentTest extends BrowserTestBase {
         'type' => 'footer_promo_block',
         'uuid' => '924ab293-8f5f-45a1-9c7f-2423ae61a241',
         'unique_text' => 'Magazine exclusive articles, recipes and plenty of reasons to get your copy today.',
+        'image_css_selector' => '#block-umami-footer-promo img',
+        'image_alt_text' => '3 issue bundle of the Umami food magazine',
       ],
     ];
   }
