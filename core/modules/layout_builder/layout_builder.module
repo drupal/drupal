@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * @file
+ * Provides hook implementations for Layout Builder.
+ */
+
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\field\FieldConfigInterface;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplayStorage;
+use Drupal\layout_builder\Form\LayoutBuilderEntityViewDisplayForm;
+
+/**
+ * Implements hook_help().
+ */
+function layout_builder_help($route_name, RouteMatchInterface $route_match) {
+  // Add help text to the Layout Builder UI.
+  if ($route_match->getRouteObject()->getOption('_layout_builder')) {
+    $output = '<p>' . t('This layout builder tool allows you to configure the layout of the main content area.') . '</p>';
+    if (\Drupal::currentUser()->hasPermission('administer blocks')) {
+      $output .= '<p>' . t('To manage other areas of the page, use the <a href="@block-ui">block administration page</a>.', ['@block-ui' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
+    }
+    else {
+      $output .= '<p>' . t('To manage other areas of the page, use the block administration page.') . '</p>';
+    }
+    return $output;
+  }
+
+  switch ($route_name) {
+    case 'help.page.layout_builder':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Layout Builder provides layout building utility.') . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href=":layout-builder-documentation">online documentation for the Layout Builder module</a>.', [':layout-builder-documentation' => 'https://www.drupal.org/docs/8/core/modules/layout_builder']) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function layout_builder_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  foreach ($entity_types as $entity_type) {
+    if ($entity_type->entityClassImplements(FieldableEntityInterface::class) && $entity_type->hasLinkTemplate('canonical') && $entity_type->hasViewBuilderClass()) {
+      $entity_type->setLinkTemplate('layout-builder', $entity_type->getLinkTemplate('canonical') . '/layout');
+    }
+  }
+  $entity_types['entity_view_display']
+    ->setClass(LayoutBuilderEntityViewDisplay::class)
+    ->setStorageClass(LayoutBuilderEntityViewDisplayStorage::class)
+    ->setFormClass('edit', LayoutBuilderEntityViewDisplayForm::class);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for \Drupal\field_ui\Form\EntityFormDisplayEditForm.
+ */
+function layout_builder_form_entity_form_display_edit_form_alter(&$form, FormStateInterface $form_state) {
+  // Hides the Layout Builder field. It is rendered directly in
+  // \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::buildMultiple().
+  unset($form['fields']['layout_builder__layout']);
+  $key = array_search('layout_builder__layout', $form['#fields']);
+  if ($key !== FALSE) {
+    unset($form['#fields'][$key]);
+  }
+}
+
+/**
+ * Implements hook_field_config_insert().
+ */
+function layout_builder_field_config_insert(FieldConfigInterface $field_config) {
+  // Clear the sample entity for this entity type and bundle.
+  $sample_entity_generator = \Drupal::service('layout_builder.sample_entity_generator');
+  $sample_entity_generator->delete($field_config->getTargetEntityTypeId(), $field_config->getTargetBundle());
+  \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+}
+
+/**
+ * Implements hook_field_config_delete().
+ */
+function layout_builder_field_config_delete(FieldConfigInterface $field_config) {
+  // Clear the sample entity for this entity type and bundle.
+  $sample_entity_generator = \Drupal::service('layout_builder.sample_entity_generator');
+  $sample_entity_generator->delete($field_config->getTargetEntityTypeId(), $field_config->getTargetBundle());
+  \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+}

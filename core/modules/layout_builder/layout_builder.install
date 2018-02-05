@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Layout Builder.
+ */
+
+use Drupal\Core\Cache\Cache;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\Section;
+
+/**
+ * Implements hook_install().
+ */
+function layout_builder_install() {
+  $displays = LayoutBuilderEntityViewDisplay::loadMultiple();
+  /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface[] $displays */
+  foreach ($displays as $display) {
+    // Create the first section from any existing Field Layout settings.
+    $field_layout = $display->getThirdPartySettings('field_layout');
+    if (isset($field_layout['id'])) {
+      $field_layout += ['settings' => []];
+      $display->appendSection(new Section($field_layout['id'], $field_layout['settings']));
+    }
+
+    // Sort the components by weight.
+    $components = $display->get('content');
+    uasort($components, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+    foreach ($components as $name => $component) {
+      $display->setComponent($name, $component);
+    }
+    $display->save();
+  }
+
+  // Clear the rendered cache to ensure the new layout builder flow is used.
+  // While in many cases the above change will not affect the rendered output,
+  // the cacheability metadata will have changed and should be processed to
+  // prepare for future changes.
+  Cache::invalidateTags(['rendered']);
+}

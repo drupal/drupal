@@ -1,0 +1,11 @@
+name: 'Layout Builder'
+type: module
+description: 'Provides layout building utility.'
+package: Core (Experimental)
+version: VERSION
+core: 8.x
+dependencies:
+  - layout_discovery
+  - contextual
+  # @todo Discuss removing in https://www.drupal.org/project/drupal/issues/2935999.
+  - field_ui

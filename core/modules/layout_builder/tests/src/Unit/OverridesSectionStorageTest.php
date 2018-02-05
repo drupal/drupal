@@ -1,0 +1,363 @@
+<?php
+
+namespace Drupal\Tests\layout_builder\Unit;
+
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityType;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
+use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
+use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
+
+/**
+ * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage
+ *
+ * @group layout_builder
+ */
+class OverridesSectionStorageTest extends UnitTestCase {
+
+  /**
+   * The plugin.
+   *
+   * @var \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage
+   */
+  protected $plugin;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
+    $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class);
+
+    $definition = new SectionStorageDefinition([
+      'id' => 'overrides',
+      'class' => OverridesSectionStorage::class,
+    ]);
+    $this->plugin = new OverridesSectionStorage([], 'overrides', $definition, $this->entityTypeManager->reveal(), $this->entityFieldManager->reveal());
+  }
+
+  /**
+   * @covers ::extractIdFromRoute
+   *
+   * @dataProvider providerTestExtractIdFromRoute
+   */
+  public function testExtractIdFromRoute($expected, $value, array $defaults) {
+    $result = $this->plugin->extractIdFromRoute($value, [], 'the_parameter_name', $defaults);
+    $this->assertSame($expected, $result);
+  }
+
+  /**
+   * Provides data for ::testExtractIdFromRoute().
+   */
+  public function providerTestExtractIdFromRoute() {
+    $data = [];
+    $data['with value, with layout'] = [
+      'my_entity_type.entity_with_layout',
+      'my_entity_type.entity_with_layout',
+      [],
+    ];
+    $data['with value, without layout'] = [
+      NULL,
+      'my_entity_type',
+      [],
+    ];
+    $data['empty value, populated defaults'] = [
+      'my_entity_type.entity_with_layout',
+      '',
+      [
+        'entity_type_id' => 'my_entity_type',
+        'my_entity_type' => 'entity_with_layout',
+      ],
+    ];
+    $data['empty value, empty defaults'] = [
+      NULL,
+      '',
+      [],
+    ];
+    return $data;
+  }
+
+  /**
+   * @covers ::getSectionListFromId
+   *
+   * @dataProvider providerTestGetSectionListFromId
+   */
+  public function testGetSectionListFromId($success, $expected_entity_type_id, $id) {
+    $defaults['the_parameter_name'] = $id;
+
+    if ($expected_entity_type_id) {
+      $entity_storage = $this->prophesize(EntityStorageInterface::class);
+
+      $entity_without_layout = $this->prophesize(FieldableEntityInterface::class);
+      $entity_without_layout->hasField('layout_builder__layout')->willReturn(FALSE);
+      $entity_without_layout->get('layout_builder__layout')->shouldNotBeCalled();
+      $entity_storage->load('entity_without_layout')->willReturn($entity_without_layout->reveal());
+
+      $entity_with_layout = $this->prophesize(FieldableEntityInterface::class);
+      $entity_with_layout->hasField('layout_builder__layout')->willReturn(TRUE);
+      $entity_with_layout->get('layout_builder__layout')->willReturn('the_return_value');
+      $entity_storage->load('entity_with_layout')->willReturn($entity_with_layout->reveal());
+
+      $this->entityTypeManager->getStorage($expected_entity_type_id)->willReturn($entity_storage->reveal());
+    }
+    else {
+      $this->entityTypeManager->getStorage(Argument::any())->shouldNotBeCalled();
+    }
+
+    if (!$success) {
+      $this->setExpectedException(\InvalidArgumentException::class);
+    }
+
+    $result = $this->plugin->getSectionListFromId($id);
+    if ($success) {
+      $this->assertEquals('the_return_value', $result);
+    }
+  }
+
+  /**
+   * Provides data for ::testGetSectionListFromId().
+   */
+  public function providerTestGetSectionListFromId() {
+    $data = [];
+    $data['with value, with layout'] = [
+      TRUE,
+      'my_entity_type',
+      'my_entity_type.entity_with_layout',
+    ];
+    $data['with value, without layout'] = [
+      FALSE,
+      'my_entity_type',
+      'my_entity_type.entity_without_layout',
+    ];
+    $data['empty value, empty defaults'] = [
+      FALSE,
+      NULL,
+      '',
+    ];
+    return $data;
+  }
+
+  /**
+   * @covers ::buildRoutes
+   * @covers ::hasIntegerId
+   * @covers ::getEntityTypes
+   */
+  public function testBuildRoutes() {
+    $entity_types = [];
+
+    $entity_types['no_link_template'] = new EntityType(['id' => 'no_link_template']);
+    $this->entityFieldManager->getFieldStorageDefinitions('no_link_template')->shouldNotBeCalled();
+
+    $entity_types['with_string_id'] = new EntityType([
+      'id' => 'with_string_id',
+      'links' => ['layout-builder' => '/entity/{entity}/layout'],
+      'entity_keys' => ['id' => 'id'],
+    ]);
+    $string_id = $this->prophesize(FieldStorageDefinitionInterface::class);
+    $string_id->getType()->willReturn('string');
+    $this->entityFieldManager->getFieldStorageDefinitions('with_string_id')->willReturn(['id' => $string_id->reveal()]);
+
+    $entity_types['with_integer_id'] = new EntityType([
+      'id' => 'with_integer_id',
+      'links' => ['layout-builder' => '/entity/{entity}/layout'],
+      'entity_keys' => ['id' => 'id'],
+    ]);
+    $integer_id = $this->prophesize(FieldStorageDefinitionInterface::class);
+    $integer_id->getType()->willReturn('integer');
+    $this->entityFieldManager->getFieldStorageDefinitions('with_integer_id')->willReturn(['id' => $integer_id->reveal()]);
+
+    $this->entityTypeManager->getDefinitions()->willReturn($entity_types);
+
+    $expected = [
+      'layout_builder.overrides.with_string_id.view' => new Route(
+        '/entity/{entity}/layout',
+        [
+          'entity_type_id' => 'with_string_id',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          'is_rebuilding' => FALSE,
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::layout',
+          '_title_callback' => '\Drupal\layout_builder\Controller\LayoutBuilderController::title',
+        ],
+        [
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_string_id' => ['type' => 'entity:with_string_id'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
+      'layout_builder.overrides.with_string_id.save' => new Route(
+        '/entity/{entity}/layout/save',
+        [
+          'entity_type_id' => 'with_string_id',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout',
+        ],
+        [
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_string_id' => ['type' => 'entity:with_string_id'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
+      'layout_builder.overrides.with_string_id.cancel' => new Route(
+        '/entity/{entity}/layout/cancel',
+        [
+          'entity_type_id' => 'with_string_id',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
+        ],
+        [
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_string_id' => ['type' => 'entity:with_string_id'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
+      'layout_builder.overrides.with_string_id.revert' => new Route(
+        '/entity/{entity}/layout/revert',
+        [
+          'entity_type_id' => 'with_string_id',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          '_form' => '\Drupal\layout_builder\Form\RevertOverridesForm',
+        ],
+        [
+          '_has_layout_section' => 'true',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_string_id' => ['type' => 'entity:with_string_id'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
+      'layout_builder.overrides.with_integer_id.view' => new Route(
+        '/entity/{entity}/layout',
+        [
+          'entity_type_id' => 'with_integer_id',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          'is_rebuilding' => FALSE,
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::layout',
+          '_title_callback' => '\Drupal\layout_builder\Controller\LayoutBuilderController::title',
+        ],
+        [
+          '_has_layout_section' => 'true',
+          'with_integer_id' => '\d+',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_integer_id' => ['type' => 'entity:with_integer_id'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
+      'layout_builder.overrides.with_integer_id.save' => new Route(
+        '/entity/{entity}/layout/save',
+        [
+          'entity_type_id' => 'with_integer_id',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout',
+        ],
+        [
+          '_has_layout_section' => 'true',
+          'with_integer_id' => '\d+',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_integer_id' => ['type' => 'entity:with_integer_id'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
+      'layout_builder.overrides.with_integer_id.cancel' => new Route(
+        '/entity/{entity}/layout/cancel',
+        [
+          'entity_type_id' => 'with_integer_id',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
+        ],
+        [
+          '_has_layout_section' => 'true',
+          'with_integer_id' => '\d+',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_integer_id' => ['type' => 'entity:with_integer_id'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
+      'layout_builder.overrides.with_integer_id.revert' => new Route(
+        '/entity/{entity}/layout/revert',
+        [
+          'entity_type_id' => 'with_integer_id',
+          'section_storage_type' => 'overrides',
+          'section_storage' => '',
+          '_form' => '\Drupal\layout_builder\Form\RevertOverridesForm',
+        ],
+        [
+          '_has_layout_section' => 'true',
+          'with_integer_id' => '\d+',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+            'with_integer_id' => ['type' => 'entity:with_integer_id'],
+          ],
+          '_layout_builder' => TRUE,
+        ]
+      ),
+    ];
+
+    $collection = new RouteCollection();
+    $this->plugin->buildRoutes($collection);
+    $this->assertEquals($expected, $collection->all());
+    $this->assertSame(array_keys($expected), array_keys($collection->all()));
+  }
+
+}

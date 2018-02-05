@@ -369,7 +369,7 @@ field.formatter.settings.entity_reference_label:
       type: boolean
       label: 'Link label to the referenced entity'
 
-block.settings.field_block:*:*:
+block.settings.field_block:*:*:*:
   type: block_settings
   mapping:
     formatter:
