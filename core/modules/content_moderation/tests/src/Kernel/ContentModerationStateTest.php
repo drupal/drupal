@@ -537,6 +537,48 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
+   * Test the revision default state of the moderation state entity revisions.
+   *
+   * @param string $entity_type_id
+   *   The ID of entity type to be tested.
+   *
+   * @dataProvider basicModerationTestCases
+   */
+  public function testRevisionDefaultState($entity_type_id) {
+    // Check that the revision default state of the moderated entity and the
+    // content moderation state entity always match.
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $cms_storage */
+    $cms_storage = $this->entityTypeManager->getStorage('content_moderation_state');
+
+    $entity = $this->createEntity($entity_type_id);
+    $entity->get('moderation_state')->value = 'published';
+    $storage->save($entity);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $cms_entity */
+    $cms_entity = $cms_storage->loadUnchanged(1);
+    $this->assertEquals($entity->getLoadedRevisionId(), $cms_entity->get('content_entity_revision_id')->value);
+
+    $entity->get('moderation_state')->value = 'published';
+    $storage->save($entity);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $cms_entity */
+    $cms_entity = $cms_storage->loadUnchanged(1);
+    $this->assertEquals($entity->getLoadedRevisionId(), $cms_entity->get('content_entity_revision_id')->value);
+
+    $entity->get('moderation_state')->value = 'draft';
+    $storage->save($entity);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $cms_entity */
+    $cms_entity = $cms_storage->loadUnchanged(1);
+    $this->assertEquals($entity->getLoadedRevisionId() - 1, $cms_entity->get('content_entity_revision_id')->value);
+
+    $entity->get('moderation_state')->value = 'published';
+    $storage->save($entity);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $cms_entity */
+    $cms_entity = $cms_storage->loadUnchanged(1);
+    $this->assertEquals($entity->getLoadedRevisionId(), $cms_entity->get('content_entity_revision_id')->value);
+  }
+
+  /**
    * Creates an entity.
    *
    * The entity will have required fields populated and the corresponding bundle

@@ -147,9 +147,10 @@ class EntityOperations implements ContainerInjectionInterface {
     $entity_revision_id = $entity->getRevisionId();
     $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
     $content_moderation_state = ContentModerationStateEntity::loadFromModeratedEntity($entity);
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage('content_moderation_state');
 
     if (!($content_moderation_state instanceof ContentModerationStateInterface)) {
-      $storage = $this->entityTypeManager->getStorage('content_moderation_state');
       $content_moderation_state = $storage->create([
         'content_entity_type_id' => $entity->getEntityTypeId(),
         'content_entity_id' => $entity->id(),
@@ -158,11 +159,6 @@ class EntityOperations implements ContainerInjectionInterface {
         'langcode' => $entity->language()->getId(),
       ]);
       $content_moderation_state->workflow->target_id = $workflow->id();
-    }
-    elseif ($content_moderation_state->content_entity_revision_id->value != $entity_revision_id) {
-      // If a new revision of the content has been created, add a new content
-      // moderation state revision.
-      $content_moderation_state->setNewRevision(TRUE);
     }
 
     // Sync translations.
@@ -174,6 +170,12 @@ class EntityOperations implements ContainerInjectionInterface {
       if ($content_moderation_state->language()->getId() !== $entity_langcode) {
         $content_moderation_state = $content_moderation_state->getTranslation($entity_langcode);
       }
+    }
+
+    // If a new revision of the content has been created, add a new content
+    // moderation state revision.
+    if (!$content_moderation_state->isNew() && $content_moderation_state->content_entity_revision_id->value != $entity_revision_id) {
+      $content_moderation_state = $storage->createRevision($content_moderation_state, $entity->isDefaultRevision());
     }
 
     // Create the ContentModerationState entity for the inserted entity.
