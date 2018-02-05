@@ -6,6 +6,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field_ui\Form\EntityViewDisplayEditForm;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
+use Drupal\layout_builder\SectionStorageInterface;
 
 /**
  * Edit form for the LayoutBuilderEntityViewDisplay entity type.
@@ -25,6 +26,21 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
   protected $entity;
 
   /**
+   * The storage section.
+   *
+   * @var \Drupal\layout_builder\SectionStorageInterface
+   */
+  protected $sectionStorage;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
+    $this->sectionStorage = $section_storage;
+    return parent::buildForm($form, $form_state);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
@@ -40,7 +56,7 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
       '#title' => $this->t('Manage layout'),
       '#weight' => -10,
       '#attributes' => ['class' => ['button']],
-      '#url' => $this->entity->getLayoutBuilderUrl(),
+      '#url' => $this->sectionStorage->getLayoutBuilderUrl(),
     ];
 
     // @todo Expand to work for all view modes in

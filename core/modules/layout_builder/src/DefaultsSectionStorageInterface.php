@@ -1,22 +1,19 @@
 <?php
 
-namespace Drupal\layout_builder\Entity;
-
-use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\layout_builder\SectionListInterface;
+namespace Drupal\layout_builder;
 
 /**
- * Provides an interface for entity displays that have layout.
+ * Defines an interface for an object that stores layout sections for defaults.
  *
  * @internal
  *   Layout Builder is currently experimental and should only be leveraged by
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
  */
-interface LayoutEntityDisplayInterface extends EntityDisplayInterface, SectionListInterface {
+interface DefaultsSectionStorageInterface extends SectionStorageInterface {
 
   /**
-   * Determines if the display allows custom overrides.
+   * Determines if the defaults allow custom overrides.
    *
    * @return bool
    *   TRUE if custom overrides are allowed, FALSE otherwise.
@@ -24,7 +21,7 @@ interface LayoutEntityDisplayInterface extends EntityDisplayInterface, SectionLi
   public function isOverridable();
 
   /**
-   * Sets the display to allow or disallow overrides.
+   * Sets the defaults to allow or disallow overrides.
    *
    * @param bool $overridable
    *   TRUE if the display should allow overrides, FALSE otherwise.

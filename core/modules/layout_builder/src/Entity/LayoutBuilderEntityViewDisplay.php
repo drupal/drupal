@@ -5,18 +5,17 @@ namespace Drupal\layout_builder\Entity;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay as BaseEntityViewDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
+use Drupal\layout_builder\SectionStorage\SectionStorageTrait;
 
 /**
  * Provides an entity view display entity that has a layout.
@@ -27,6 +26,8 @@ use Drupal\layout_builder\SectionComponent;
  *   See https://www.drupal.org/core/experimental for more information.
  */
 class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements LayoutEntityDisplayInterface {
+
+  use SectionStorageTrait;
 
   /**
    * {@inheritdoc}
@@ -51,102 +52,11 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   }
 
   /**
-   * Store the information for all sections.
-   *
-   * @param \Drupal\layout_builder\Section[] $sections
-   *   The sections information.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   protected function setSections(array $sections) {
     $this->setThirdPartySetting('layout_builder', 'sections', array_values($sections));
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function count() {
-    return count($this->getSections());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSection($delta) {
-    if (!$this->hasSection($delta)) {
-      throw new \OutOfBoundsException(sprintf('Invalid delta "%s" for the "%s" entity', $delta, $this->id()));
-    }
-
-    return $this->getSections()[$delta];
-  }
-
-  /**
-   * Sets the section for the given delta on the display.
-   *
-   * @param int $delta
-   *   The delta of the section.
-   * @param \Drupal\layout_builder\Section $section
-   *   The layout section.
-   *
-   * @return $this
-   */
-  protected function setSection($delta, Section $section) {
-    $sections = $this->getSections();
-    $sections[$delta] = $section;
-    $this->setSections($sections);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appendSection(Section $section) {
-    $delta = $this->count();
-
-    $this->setSection($delta, $section);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function insertSection($delta, Section $section) {
-    if ($this->hasSection($delta)) {
-      $sections = $this->getSections();
-      // @todo Use https://www.drupal.org/node/66183 once resolved.
-      $start = array_slice($sections, 0, $delta);
-      $end = array_slice($sections, $delta);
-      $this->setSections(array_merge($start, [$section], $end));
-    }
-    else {
-      $this->appendSection($section);
-    }
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function removeSection($delta) {
-    $sections = $this->getSections();
-    unset($sections[$delta]);
-    $this->setSections($sections);
-    return $this;
-  }
-
-  /**
-   * Indicates if there is a section at the specified delta.
-   *
-   * @param int $delta
-   *   The delta of the section.
-   *
-   * @return bool
-   *   TRUE if there is a section for this delta, FALSE otherwise.
-   */
-  protected function hasSection($delta) {
-    $sections = $this->getSections();
-    return isset($sections[$delta]);
   }
 
   /**
@@ -256,50 +166,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getContexts() {
-    $entity = $this->getSampleEntity($this->getTargetEntityTypeId(), $this->getTargetBundle());
-    $context_label = new TranslatableMarkup('@entity being viewed', ['@entity' => $entity->getEntityType()->getLabel()]);
-
-    // @todo Use EntityContextDefinition after resolving
-    //   https://www.drupal.org/node/2932462.
-    $contexts = [];
-    $contexts['layout_builder.entity'] = new Context(new ContextDefinition("entity:{$entity->getEntityTypeId()}", $context_label), $entity);
-    return $contexts;
-  }
-
-  /**
-   * Returns a sample entity.
-   *
-   * @param string $entity_type_id
-   *   The entity type ID.
-   * @param string $bundle_id
-   *   The bundle ID.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   An entity.
-   */
-  protected function getSampleEntity($entity_type_id, $bundle_id) {
-    /** @var \Drupal\Core\TempStore\SharedTempStore $tempstore */
-    $tempstore = \Drupal::service('tempstore.shared')->get('layout_builder.sample_entity');
-    if ($entity = $tempstore->get("$entity_type_id.$bundle_id")) {
-      return $entity;
-    }
-
-    $entity_storage = $this->entityTypeManager()->getStorage($entity_type_id);
-    if (!$entity_storage instanceof ContentEntityStorageInterface) {
-      throw new \InvalidArgumentException(sprintf('The "%s" entity storage is not supported', $entity_type_id));
-    }
-
-    $entity = $entity_storage->createWithSampleValues($bundle_id);
-    // Mark the sample entity as being a preview.
-    $entity->in_preview = TRUE;
-    $tempstore->set("$entity_type_id.$bundle_id", $entity);
-    return $entity;
-  }
-
-  /**
    * Gets the runtime sections for a given entity.
    *
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
@@ -326,51 +192,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     $bundle_label = $bundle_info[$this->getTargetBundle()]['label'];
     $target_entity_type = $this->entityTypeManager()->getDefinition($this->getTargetEntityTypeId());
     return new TranslatableMarkup('@bundle @label', ['@bundle' => $bundle_label, '@label' => $target_entity_type->getPluralLabel()]);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getStorageType() {
-    return 'defaults';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getStorageId() {
-    return $this->id();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCanonicalUrl() {
-    return Url::fromRoute("entity.entity_view_display.{$this->getTargetEntityTypeId()}.view_mode", $this->getRouteParameters());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLayoutBuilderUrl() {
-    return Url::fromRoute("entity.entity_view_display.{$this->getTargetEntityTypeId()}.layout_builder", $this->getRouteParameters());
-  }
-
-  /**
-   * Returns the route parameters needed to build routes for this entity.
-   *
-   * @return string[]
-   *   An array of route parameters.
-   */
-  protected function getRouteParameters() {
-    $route_parameters = [];
-
-    $entity_type = $this->entityTypeManager()->getDefinition($this->getTargetEntityTypeId());
-    $bundle_parameter_key = $entity_type->getBundleEntityType() ?: 'bundle';
-    $route_parameters[$bundle_parameter_key] = $this->getTargetBundle();
-
-    $route_parameters['view_mode_name'] = $this->getMode();
-    return $route_parameters;
   }
 
   /**

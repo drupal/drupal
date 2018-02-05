@@ -115,6 +115,3 @@ layout_builder.move_block:
     parameters:
       section_storage:
         layout_builder_tempstore: TRUE
-
-route_callbacks:
-  - 'layout_builder.routes:getRoutes'

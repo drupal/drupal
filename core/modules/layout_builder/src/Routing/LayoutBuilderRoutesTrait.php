@@ -2,9 +2,11 @@
 
 namespace Drupal\layout_builder\Routing;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
-use Drupal\layout_builder\SectionStorageInterface;
+use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides a trait for building routes for a Layout Builder UI.
@@ -19,36 +21,41 @@ trait LayoutBuilderRoutesTrait {
   /**
    * Builds the layout routes for the given values.
    *
-   * @param string $class
-   *   The class defining the section storage.
-   * @param string $route_name_prefix
-   *   The prefix to use for the route name.
+   * @param \Symfony\Component\Routing\RouteCollection $collection
+   *   The route collection.
+   * @param \Drupal\layout_builder\SectionStorage\SectionStorageDefinition $definition
+   *   The definition of the section storage.
    * @param string $path
    *   The path patten for the routes.
    * @param array $defaults
-   *   An array of default parameter values.
+   *   (optional) An array of default parameter values.
    * @param array $requirements
-   *   An array of requirements for parameters.
+   *   (optional) An array of requirements for parameters.
    * @param array $options
-   *   An array of options.
-   *
-   * @return \Symfony\Component\Routing\Route[]
-   *   An array of route objects.
+   *   (optional) An array of options.
+   * @param string $route_name_prefix
+   *   (optional) The prefix to use for the route name.
    */
-  protected function buildRoute($class, $route_name_prefix, $path, array $defaults, array $requirements, array $options) {
-    $routes = [];
-
-    if (!is_subclass_of($class, SectionStorageInterface::class)) {
-      return $routes;
-    }
-
-    $defaults['section_storage_type'] = $class::getStorageType();
+  protected function buildLayoutRoutes(RouteCollection $collection, SectionStorageDefinition $definition, $path, array $defaults = [], array $requirements = [], array $options = [], $route_name_prefix = '') {
+    $type = $definition->id();
+    $defaults['section_storage_type'] = $type;
     // Provide an empty value to allow the section storage to be upcast.
     $defaults['section_storage'] = '';
     // Trigger the layout builder access check.
     $requirements['_has_layout_section'] = 'true';
     // Trigger the layout builder RouteEnhancer.
     $options['_layout_builder'] = TRUE;
+    // Trigger the layout builder param converter.
+    $parameters['section_storage']['layout_builder_tempstore'] = TRUE;
+    // Merge the passed in options in after Layout Builder's parameters.
+    $options = NestedArray::mergeDeep(['parameters' => $parameters], $options);
+
+    if ($route_name_prefix) {
+      $route_name_prefix = "layout_builder.$type.$route_name_prefix";
+    }
+    else {
+      $route_name_prefix = "layout_builder.$type";
+    }
 
     $main_defaults = $defaults;
     $main_defaults['is_rebuilding'] = FALSE;
@@ -58,7 +65,7 @@ trait LayoutBuilderRoutesTrait {
       ->setDefaults($main_defaults)
       ->setRequirements($requirements)
       ->setOptions($options);
-    $routes["{$route_name_prefix}.layout_builder"] = $route;
+    $collection->add("$route_name_prefix.view", $route);
 
     $save_defaults = $defaults;
     $save_defaults['_controller'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout';
@@ -66,7 +73,7 @@ trait LayoutBuilderRoutesTrait {
       ->setDefaults($save_defaults)
       ->setRequirements($requirements)
       ->setOptions($options);
-    $routes["{$route_name_prefix}.layout_builder_save"] = $route;
+    $collection->add("$route_name_prefix.save", $route);
 
     $cancel_defaults = $defaults;
     $cancel_defaults['_controller'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout';
@@ -74,19 +81,17 @@ trait LayoutBuilderRoutesTrait {
       ->setDefaults($cancel_defaults)
       ->setRequirements($requirements)
       ->setOptions($options);
-    $routes["{$route_name_prefix}.layout_builder_cancel"] = $route;
+    $collection->add("$route_name_prefix.cancel", $route);
 
-    if (is_subclass_of($class, OverridesSectionStorageInterface::class)) {
+    if (is_subclass_of($definition->getClass(), OverridesSectionStorageInterface::class)) {
       $revert_defaults = $defaults;
       $revert_defaults['_form'] = '\Drupal\layout_builder\Form\RevertOverridesForm';
       $route = (new Route("$path/revert"))
         ->setDefaults($revert_defaults)
         ->setRequirements($requirements)
         ->setOptions($options);
-      $routes["{$route_name_prefix}.layout_builder_revert"] = $route;
+      $collection->add("$route_name_prefix.revert", $route);
     }
-
-    return $routes;
   }
 
 }

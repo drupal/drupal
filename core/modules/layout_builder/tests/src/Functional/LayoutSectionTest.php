@@ -169,10 +169,11 @@ class LayoutSectionTest extends BrowserTestBase {
   public function testLayoutSectionFormatter($layout_data, $expected_selector, $expected_content, $expected_cache_contexts, $expected_cache_tags, $expected_dynamic_cache) {
     $node = $this->createSectionNode($layout_data);
 
-    $this->drupalGet($node->toUrl('canonical'));
+    $canonical_url = $node->toUrl('canonical');
+    $this->drupalGet($canonical_url);
     $this->assertLayoutSection($expected_selector, $expected_content, $expected_cache_contexts, $expected_cache_tags, $expected_dynamic_cache);
 
-    $this->drupalGet($node->toUrl('layout-builder'));
+    $this->drupalGet($canonical_url->toString() . '/layout');
     $this->assertLayoutSection($expected_selector, $expected_content, $expected_cache_contexts, $expected_cache_tags, 'UNCACHEABLE');
   }
 
@@ -255,7 +256,7 @@ class LayoutSectionTest extends BrowserTestBase {
     $this->drupalPlaceBlock('page_title_block');
     $node = $this->createSectionNode([]);
 
-    $this->drupalGet($node->toUrl('layout-builder'));
+    $this->drupalGet($node->toUrl('canonical')->toString() . '/layout');
     $this->assertSession()->titleEquals('Edit layout for The node title | Drupal');
     $this->assertEquals('Edit layout for The node title', $this->cssSelect('h1.page-title')[0]->getText());
   }
@@ -274,7 +275,8 @@ class LayoutSectionTest extends BrowserTestBase {
       ],
     ]);
     $node->save();
-    $this->drupalGet($node->toUrl('layout-builder'));
+
+    $this->drupalGet($node->toUrl('canonical')->toString() . '/layout');
     $this->assertSession()->statusCodeEquals(404);
   }
 

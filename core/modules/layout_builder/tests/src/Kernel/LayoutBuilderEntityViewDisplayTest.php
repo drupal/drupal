@@ -32,14 +32,6 @@ class LayoutBuilderEntityViewDisplayTest extends SectionStorageTestBase {
   }
 
   /**
-   * @covers ::getSection
-   */
-  public function testGetSectionInvalidDelta() {
-    $this->setExpectedException(\OutOfBoundsException::class, 'Invalid delta "2" for the "entity_test.entity_test.default"');
-    $this->sectionStorage->getSection(2);
-  }
-
-  /**
    * Tests that configuration schema enforces valid values.
    */
   public function testInvalidConfiguration() {

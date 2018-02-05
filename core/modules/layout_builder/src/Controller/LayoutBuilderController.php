@@ -305,7 +305,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
       $this->messenger->addMessage($this->t('The layout has been saved.'));
     }
 
-    return new RedirectResponse($section_storage->getCanonicalUrl()->setAbsolute()->toString());
+    return new RedirectResponse($section_storage->getRedirectUrl()->setAbsolute()->toString());
   }
 
   /**
@@ -322,7 +322,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
 
     $this->messenger->addMessage($this->t('The changes to the layout have been discarded.'));
 
-    return new RedirectResponse($section_storage->getCanonicalUrl()->setAbsolute()->toString());
+    return new RedirectResponse($section_storage->getRedirectUrl()->setAbsolute()->toString());
   }
 
 }

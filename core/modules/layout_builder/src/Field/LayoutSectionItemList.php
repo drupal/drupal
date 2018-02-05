@@ -3,13 +3,8 @@
 namespace Drupal\layout_builder\Field;
 
 use Drupal\Core\Field\FieldItemList;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
-use Drupal\layout_builder\OverridesSectionStorageInterface;
-use Drupal\layout_builder\Section;
-use Drupal\layout_builder\SectionStorageInterface;
+use Drupal\layout_builder\SectionListInterface;
+use Drupal\layout_builder\SectionStorage\SectionStorageTrait;
 
 /**
  * Defines a item list class for layout section fields.
@@ -18,35 +13,9 @@ use Drupal\layout_builder\SectionStorageInterface;
  *
  * @see \Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem
  */
-class LayoutSectionItemList extends FieldItemList implements SectionStorageInterface, OverridesSectionStorageInterface {
+class LayoutSectionItemList extends FieldItemList implements SectionListInterface {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function insertSection($delta, Section $section) {
-    if ($this->get($delta)) {
-      /** @var \Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem $item */
-      $item = $this->createItem($delta);
-      $item->section = $section;
-
-      // @todo Use https://www.drupal.org/node/66183 once resolved.
-      $start = array_slice($this->list, 0, $delta);
-      $end = array_slice($this->list, $delta);
-      $this->list = array_merge($start, [$item], $end);
-    }
-    else {
-      $this->appendSection($section);
-    }
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appendSection(Section $section) {
-    $this->appendItem()->section = $section;
-    return $this;
-  }
+  use SectionStorageTrait;
 
   /**
    * {@inheritdoc}
@@ -63,82 +32,16 @@ class LayoutSectionItemList extends FieldItemList implements SectionStorageInter
   /**
    * {@inheritdoc}
    */
-  public function getSection($delta) {
+  protected function setSections(array $sections) {
+    $this->list = [];
+    $sections = array_values($sections);
     /** @var \Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem $item */
-    if (!$item = $this->get($delta)) {
-      throw new \OutOfBoundsException(sprintf('Invalid delta "%s" for the "%s" entity', $delta, $this->getEntity()->label()));
+    foreach ($sections as $section) {
+      $item = $this->appendItem();
+      $item->section = $section;
     }
 
-    return $item->section;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function removeSection($delta) {
-    $this->removeItem($delta);
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getContexts() {
-    $entity = $this->getEntity();
-    // @todo Use EntityContextDefinition after resolving
-    //   https://www.drupal.org/node/2932462.
-    $contexts['layout_builder.entity'] = new Context(new ContextDefinition("entity:{$entity->getEntityTypeId()}", new TranslatableMarkup('@entity being viewed', ['@entity' => $entity->getEntityType()->getLabel()])), $entity);
-    return $contexts;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getStorageType() {
-    return 'overrides';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getStorageId() {
-    $entity = $this->getEntity();
-    return $entity->getEntityTypeId() . ':' . $entity->id();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function label() {
-    return $this->getEntity()->label();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function save() {
-    return $this->getEntity()->save();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCanonicalUrl() {
-    return $this->getEntity()->toUrl('canonical');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLayoutBuilderUrl() {
-    return $this->getEntity()->toUrl('layout-builder');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDefaultSectionStorage() {
-    return LayoutBuilderEntityViewDisplay::collectRenderDisplay($this->getEntity(), 'default');
   }
 
   /**

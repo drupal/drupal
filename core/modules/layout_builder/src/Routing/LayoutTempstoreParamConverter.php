@@ -2,9 +2,9 @@
 
 namespace Drupal\layout_builder\Routing;
 
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
+use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -22,59 +22,33 @@ class LayoutTempstoreParamConverter implements ParamConverterInterface {
   protected $layoutTempstoreRepository;
 
   /**
-   * The class resolver.
+   * The section storage manager.
    *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
+   * @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface
    */
-  protected $classResolver;
+  protected $sectionStorageManager;
 
   /**
    * Constructs a new LayoutTempstoreParamConverter.
    *
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
    *   The layout tempstore repository.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
-   *   The class resolver.
+   * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
+   *   The section storage manager.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, ClassResolverInterface $class_resolver) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, SectionStorageManagerInterface $section_storage_manager) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
-    $this->classResolver = $class_resolver;
+    $this->sectionStorageManager = $section_storage_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public function convert($value, $definition, $name, array $defaults) {
-    if ($converter = $this->getParamConverterFromDefaults($defaults)) {
-      if ($object = $converter->convert($value, $definition, $name, $defaults)) {
-        // Pass the result of the storage param converter through the
-        // tempstore repository.
-        return $this->layoutTempstoreRepository->get($object);
-      }
-    }
-  }
-
-  /**
-   * Gets a param converter based on the provided defaults.
-   *
-   * @param array $defaults
-   *   The route defaults array.
-   *
-   * @return \Drupal\layout_builder\Routing\SectionStorageParamConverterInterface|null
-   *   A section storage param converter if found, NULL otherwise.
-   */
-  protected function getParamConverterFromDefaults(array $defaults) {
-    // If a storage type was specified, get the corresponding param converter.
-    if (isset($defaults['section_storage_type'])) {
-      try {
-        $converter = $this->classResolver->getInstanceFromDefinition('layout_builder.section_storage_param_converter.' . $defaults['section_storage_type']);
-      }
-      catch (\InvalidArgumentException $e) {
-        $converter = NULL;
-      }
-
-      if ($converter instanceof SectionStorageParamConverterInterface) {
-        return $converter;
+    if (isset($defaults['section_storage_type']) && $this->sectionStorageManager->hasDefinition($defaults['section_storage_type'])) {
+      if ($section_storage = $this->sectionStorageManager->loadFromRoute($defaults['section_storage_type'], $value, $definition, $name, $defaults)) {
+        // Pass the plugin through the tempstore repository.
+        return $this->layoutTempstoreRepository->get($section_storage);
       }
     }
   }

@@ -73,9 +73,8 @@ function layout_builder_form_entity_form_display_edit_form_alter(&$form, FormSta
  */
 function layout_builder_field_config_insert(FieldConfigInterface $field_config) {
   // Clear the sample entity for this entity type and bundle.
-  /** @var \Drupal\Core\TempStore\SharedTempStore $tempstore */
-  $tempstore = \Drupal::service('tempstore.shared')->get('layout_builder.sample_entity');
-  $tempstore->delete($field_config->getTargetEntityTypeId() . '.' . $field_config->getTargetBundle());
+  $sample_entity_generator = \Drupal::service('layout_builder.sample_entity_generator');
+  $sample_entity_generator->delete($field_config->getTargetEntityTypeId(), $field_config->getTargetBundle());
   \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
 }
 
@@ -84,8 +83,7 @@ function layout_builder_field_config_insert(FieldConfigInterface $field_config) 
  */
 function layout_builder_field_config_delete(FieldConfigInterface $field_config) {
   // Clear the sample entity for this entity type and bundle.
-  /** @var \Drupal\Core\TempStore\SharedTempStore $tempstore */
-  $tempstore = \Drupal::service('tempstore.shared')->get('layout_builder.sample_entity');
-  $tempstore->delete($field_config->getTargetEntityTypeId() . '.' . $field_config->getTargetBundle());
+  $sample_entity_generator = \Drupal::service('layout_builder.sample_entity_generator');
+  $sample_entity_generator->delete($field_config->getTargetEntityTypeId(), $field_config->getTargetBundle());
   \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
 }

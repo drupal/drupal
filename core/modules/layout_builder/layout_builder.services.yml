@@ -6,9 +6,12 @@ services:
     class: Drupal\layout_builder\Access\LayoutSectionAccessCheck
     tags:
       - { name: access_check, applies_to: _has_layout_section }
+  plugin.manager.layout_builder.section_storage:
+    class: Drupal\layout_builder\SectionStorage\SectionStorageManager
+    parent: default_plugin_manager
   layout_builder.routes:
     class: Drupal\layout_builder\Routing\LayoutBuilderRoutes
-    arguments: ['@entity_type.manager', '@entity_field.manager']
+    arguments: ['@plugin.manager.layout_builder.section_storage']
     tags:
      - { name: event_subscriber }
   layout_builder.route_enhancer:
@@ -17,17 +20,14 @@ services:
       - { name: route_enhancer }
   layout_builder.param_converter:
     class: Drupal\layout_builder\Routing\LayoutTempstoreParamConverter
-    arguments: ['@layout_builder.tempstore_repository', '@class_resolver']
+    arguments: ['@layout_builder.tempstore_repository', '@plugin.manager.layout_builder.section_storage']
     tags:
       - { name: paramconverter, priority: 10 }
-  layout_builder.section_storage_param_converter.defaults:
-    class: Drupal\layout_builder\Routing\SectionStorageDefaultsParamConverter
-    arguments: ['@entity.manager']
-  layout_builder.section_storage_param_converter.overrides:
-    class: Drupal\layout_builder\Routing\SectionStorageOverridesParamConverter
-    arguments: ['@entity.manager']
   cache_context.layout_builder_is_active:
     class: Drupal\layout_builder\Cache\LayoutBuilderIsActiveCacheContext
     arguments: ['@current_route_match']
     tags:
       - { name: cache.context}
+  layout_builder.sample_entity_generator:
+    class: Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator
+    arguments: ['@tempstore.shared', '@entity_type.manager']

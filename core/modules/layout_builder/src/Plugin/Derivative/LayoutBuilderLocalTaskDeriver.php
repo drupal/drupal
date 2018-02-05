@@ -52,59 +52,52 @@ class LayoutBuilderLocalTaskDeriver extends DeriverBase implements ContainerDeri
   public function getDerivativeDefinitions($base_plugin_definition) {
     foreach ($this->getEntityTypes() as $entity_type_id => $entity_type) {
       // Overrides.
-      $this->derivatives["entity.$entity_type_id.layout_builder"] = $base_plugin_definition + [
-        'route_name' => "entity.$entity_type_id.layout_builder",
+      $this->derivatives["layout_builder.overrides.$entity_type_id.view"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.overrides.$entity_type_id.view",
         'weight' => 15,
         'title' => $this->t('Layout'),
         'base_route' => "entity.$entity_type_id.canonical",
-        'entity_type_id' => $entity_type_id,
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
       ];
-      $this->derivatives["entity.$entity_type_id.layout_builder_save"] = $base_plugin_definition + [
-        'route_name' => "entity.$entity_type_id.layout_builder_save",
+      $this->derivatives["layout_builder.overrides.$entity_type_id.save"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.overrides.$entity_type_id.save",
         'title' => $this->t('Save Layout'),
-        'parent_id' => "layout_builder_ui:entity.$entity_type_id.layout_builder",
-        'entity_type_id' => $entity_type_id,
+        'parent_id' => "layout_builder_ui:layout_builder.overrides.$entity_type_id.view",
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
       ];
-      $this->derivatives["entity.$entity_type_id.layout_builder_cancel"] = $base_plugin_definition + [
-        'route_name' => "entity.$entity_type_id.layout_builder_cancel",
+      $this->derivatives["layout_builder.overrides.$entity_type_id.cancel"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.overrides.$entity_type_id.cancel",
         'title' => $this->t('Cancel Layout'),
-        'parent_id' => "layout_builder_ui:entity.$entity_type_id.layout_builder",
-        'entity_type_id' => $entity_type_id,
+        'parent_id' => "layout_builder_ui:layout_builder.overrides.$entity_type_id.view",
         'weight' => 5,
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
       ];
       // @todo This link should be conditionally displayed, see
       //   https://www.drupal.org/node/2917777.
-      $this->derivatives["entity.$entity_type_id.layout_builder_revert"] = $base_plugin_definition + [
-        'route_name' => "entity.$entity_type_id.layout_builder_revert",
+      $this->derivatives["layout_builder.overrides.$entity_type_id.revert"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.overrides.$entity_type_id.revert",
         'title' => $this->t('Revert to defaults'),
-        'parent_id' => "layout_builder_ui:entity.$entity_type_id.layout_builder",
-        'entity_type_id' => $entity_type_id,
+        'parent_id' => "layout_builder_ui:layout_builder.overrides.$entity_type_id.view",
         'weight' => 10,
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
       ];
 
       // Defaults.
-      $this->derivatives["entity.entity_view_display.$entity_type_id.layout_builder"] = $base_plugin_definition + [
-        'route_name' => "entity.entity_view_display.$entity_type_id.layout_builder",
+      $this->derivatives["layout_builder.defaults.$entity_type_id.view"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.defaults.$entity_type_id.view",
         'title' => $this->t('Manage layout'),
-        'base_route' => "entity.entity_view_display.$entity_type_id.layout_builder",
-        'entity_type_id' => $entity_type_id,
+        'base_route' => "layout_builder.defaults.$entity_type_id.view",
       ];
-      $this->derivatives["entity.entity_view_display.$entity_type_id.layout_builder_save"] = $base_plugin_definition + [
-        'route_name' => "entity.entity_view_display.$entity_type_id.layout_builder_save",
+      $this->derivatives["layout_builder.defaults.$entity_type_id.save"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.defaults.$entity_type_id.save",
         'title' => $this->t('Save Layout'),
-        'parent_id' => "layout_builder_ui:entity.entity_view_display.$entity_type_id.layout_builder",
-        'entity_type_id' => $entity_type_id,
+        'parent_id' => "layout_builder_ui:layout_builder.defaults.$entity_type_id.view",
       ];
-      $this->derivatives["entity.entity_view_display.$entity_type_id.layout_builder_cancel"] = $base_plugin_definition + [
-        'route_name' => "entity.entity_view_display.$entity_type_id.layout_builder_cancel",
+      $this->derivatives["layout_builder.defaults.$entity_type_id.cancel"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.defaults.$entity_type_id.cancel",
         'title' => $this->t('Cancel Layout'),
         'weight' => 5,
-        'parent_id' => "layout_builder_ui:entity.entity_view_display.$entity_type_id.layout_builder",
-        'entity_type_id' => $entity_type_id,
+        'parent_id' => "layout_builder_ui:layout_builder.defaults.$entity_type_id.view",
       ];
     }
 
