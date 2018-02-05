@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies: {  }
+name: medium_8_7
+label: 'Medium 8:7 (266x236)'
+effects:
+  a7d919ee-5a34-476b-b893-c9649a621e60:
+    uuid: a7d919ee-5a34-476b-b893-c9649a621e60
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 266
+      height: 236
