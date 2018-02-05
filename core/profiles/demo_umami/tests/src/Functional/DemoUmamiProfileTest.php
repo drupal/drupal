@@ -174,4 +174,15 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
   }
 
+  /**
+   * Tests that sample recipes are not accessible to the webserver.
+   */
+  public function testAccessDeniedToSampleRecipes() {
+    $file_name = 'chocolate-brownie-umami.html';
+    $file_path = '/' . drupal_get_path('module', 'demo_umami_content') . '/default_content/recipe_instructions/' . $file_name;
+    $this->assertTrue(file_exists(DRUPAL_ROOT . $file_path));
+    $this->drupalGet($file_path);
+    $this->assertSession()->statusCodeEquals(403);
+  }
+
 }
