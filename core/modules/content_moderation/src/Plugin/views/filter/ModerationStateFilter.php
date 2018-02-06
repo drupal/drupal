@@ -176,8 +176,8 @@ class ModerationStateFilter extends InOperator implements DependentWithRemovalPl
         $entity_base_table_alias = $this->table;
 
         // The bundle field of an entity type is not revisionable so we need to
-        // join the data table.
-        $entity_base_table = $entity_type->isTranslatable() ? $entity_type->getDataTable() : $entity_type->getBaseTable();
+        // join the base table.
+        $entity_base_table = $entity_type->getBaseTable();
         $entity_revision_base_table = $entity_type->isTranslatable() ? $entity_type->getRevisionDataTable() : $entity_type->getRevisionTable();
         if ($this->table === $entity_revision_base_table) {
           $configuration = [
@@ -187,12 +187,6 @@ class ModerationStateFilter extends InOperator implements DependentWithRemovalPl
             'left_field' => $entity_type->getKey('id'),
             'type' => 'INNER',
           ];
-          if ($entity_type->isTranslatable()) {
-            $configuration['extra'][] = [
-              'field' => $entity_type->getKey('langcode'),
-              'left_field' => $entity_type->getKey('langcode'),
-            ];
-          }
 
           $join = Views::pluginManager('join')->createInstance('standard', $configuration);
           $entity_base_table_alias = $this->query->addRelationship($entity_base_table, $join, $entity_revision_base_table);

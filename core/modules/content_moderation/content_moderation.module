@@ -128,6 +128,15 @@ function content_moderation_entity_translation_delete(EntityInterface $translati
 }
 
 /**
+ * Implements hook_entity_prepare_form().
+ */
+function content_moderation_entity_prepare_form(EntityInterface $entity, $operation, FormStateInterface $form_state) {
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->entityPrepareForm($entity, $operation, $form_state);
+}
+
+/**
  * Implements hook_form_alter().
  */
 function content_moderation_form_alter(&$form, FormStateInterface $form_state, $form_id) {
@@ -252,6 +261,7 @@ function content_moderation_action_info_alter(&$definitions) {
  * Implements hook_entity_bundle_info_alter().
  */
 function content_moderation_entity_bundle_info_alter(&$bundles) {
+  $translatable = FALSE;
   /** @var \Drupal\workflows\WorkflowInterface $workflow */
   foreach (Workflow::loadMultipleByType('content_moderation') as $workflow) {
     /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $plugin */
@@ -260,10 +270,18 @@ function content_moderation_entity_bundle_info_alter(&$bundles) {
       foreach ($plugin->getBundlesForEntityType($entity_type_id) as $bundle_id) {
         if (isset($bundles[$entity_type_id][$bundle_id])) {
           $bundles[$entity_type_id][$bundle_id]['workflow'] = $workflow->id();
+          // If we have even one moderation-enabled translatable bundle, we need
+          // to make the moderation state bundle translatable as well, to enable
+          // the revision translation merge logic also for content moderation
+          // state revisions.
+          if (!empty($bundles[$entity_type_id][$bundle_id]['translatable'])) {
+            $translatable = TRUE;
+          }
         }
       }
     }
   }
+  $bundles['content_moderation_state']['content_moderation_state']['translatable'] = $translatable;
 }
 
 /**

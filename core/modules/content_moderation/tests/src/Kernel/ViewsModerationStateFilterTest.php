@@ -121,10 +121,10 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
     $translated_forward_revision->moderation_state = 'translated_draft';
     $translated_forward_revision->save();
 
-    // Four revisions for the nodes when no filter.
-    $this->assertNodesWithFilters([$node, $second_node, $third_node, $third_node], []);
+    // The three default revisions are listed when no filter is specified.
+    $this->assertNodesWithFilters([$node, $second_node, $third_node], []);
 
-    // The default revision of node one and three is published.
+    // The default revision of node one and three are published.
     $this->assertNodesWithFilters([$node, $third_node], [
       'default_revision_state' => 'editorial-published',
     ]);

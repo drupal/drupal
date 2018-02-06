@@ -145,4 +145,21 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
     return $config;
   }
 
+  /**
+   * Checks whether support for pending revisions should be enabled.
+   *
+   * @return bool
+   *   TRUE if pending revisions should be enabled, FALSE otherwise.
+   *
+   * @internal
+   *   There is ongoing discussion about how pending revisions should behave.
+   *   The logic enabling pending revision support is likely to change once a
+   *   decision is made.
+   *
+   * @see https://www.drupal.org/node/2940575
+   */
+  public static function isPendingRevisionSupportEnabled() {
+    return \Drupal::moduleHandler()->moduleExists('content_moderation');
+  }
+
 }

@@ -138,6 +138,9 @@ class EntityModerationForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $form_state->get('entity');
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
+    $entity = $storage->createRevision($entity, $entity->isDefaultRevision());
 
     $new_state = $form_state->getValue('new_state');
 
