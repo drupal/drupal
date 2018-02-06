@@ -7,10 +7,12 @@ use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -269,6 +271,40 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   }
 
   /**
+   * Replaces the entity form entity object with a proper revision object.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity being edited.
+   * @param string $operation
+   *   The entity form operation.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @see hook_entity_prepare_form()
+   */
+  public function entityPrepareForm(EntityInterface $entity, $operation, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Entity\EntityFormInterface $form_object */
+    $form_object = $form_state->getFormObject();
+
+    if ($this->isModeratedEntityEditForm($form_object) && !$entity->isNew()) {
+      // Generate a proper revision object for the current entity. This allows
+      // to correctly handle translatable entities having pending revisions.
+      /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+      $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $new_revision */
+      $new_revision = $storage->createRevision($entity, FALSE);
+
+      // Restore the revision ID as other modules may expect to find it still
+      // populated. This will reset the "new revision" flag, however the entity
+      // object will be marked as a new revision again on submit.
+      // @see \Drupal\Core\Entity\ContentEntityForm::buildEntity()
+      $revision_key = $new_revision->getEntityType()->getKey('revision');
+      $new_revision->set($revision_key, $new_revision->getLoadedRevisionId());
+      $form_object->setEntity($new_revision);
+    }
+  }
+
+  /**
    * Alters bundle forms to enforce revision handling.
    *
    * @param array $form
@@ -291,56 +327,14 @@ class EntityTypeInfo implements ContainerInjectionInterface {
         $this->entityTypeManager->getHandler($config_entity_type->getBundleOf(), 'moderation')->enforceRevisionsBundleFormAlter($form, $form_state, $form_id);
       }
     }
-    elseif ($form_object instanceof ContentEntityFormInterface && in_array($form_object->getOperation(), ['edit', 'default'])) {
+    elseif ($this->isModeratedEntityEditForm($form_object)) {
+      /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       $entity = $form_object->getEntity();
       if ($this->moderationInfo->isModeratedEntity($entity)) {
         $this->entityTypeManager
           ->getHandler($entity->getEntityTypeId(), 'moderation')
           ->enforceRevisionsEntityFormAlter($form, $form_state, $form_id);
-
-        if (!$this->moderationInfo->isPendingRevisionAllowed($entity)) {
-          $latest_revision = $this->moderationInfo->getLatestRevision($entity->getEntityTypeId(), $entity->id());
-          if ($entity->bundle()) {
-            $bundle_type_id = $entity->getEntityType()->getBundleEntityType();
-            $bundle = $this->entityTypeManager->getStorage($bundle_type_id)->load($entity->bundle());
-            $type_label = $bundle->label();
-          }
-          else {
-            $type_label = $entity->getEntityType()->getLabel();
-          }
-
-          $translation = $this->moderationInfo->getAffectedRevisionTranslation($latest_revision);
-          $args = [
-            '@type_label' => $type_label,
-            '@latest_revision_edit_url' => $translation->toUrl('edit-form', ['language' => $translation->language()])->toString(),
-            '@latest_revision_delete_url' => $translation->toUrl('delete-form', ['language' => $translation->language()])->toString(),
-          ];
-          $label = $this->t('Unable to save this @type_label.', $args);
-          $message = $this->t('<a href="@latest_revision_edit_url">Publish</a> or <a href="@latest_revision_delete_url">delete</a> the latest revision to allow all workflow transitions.', $args);
-          $full_message = $this->t('Unable to save this @type_label. <a href="@latest_revision_edit_url">Publish</a> or <a href="@latest_revision_delete_url">delete</a> the latest revision to allow all workflow transitions.', $args);
-          drupal_set_message($full_message, 'error');
-
-          $form['moderation_state']['#access'] = FALSE;
-          $form['actions']['#access'] = FALSE;
-          $form['invalid_transitions'] = [
-            'label' => [
-              '#type' => 'item',
-              '#prefix' => '<strong class="label">',
-              '#markup' => $label,
-              '#suffix' => '</strong>',
-            ],
-            'message' => [
-              '#type' => 'item',
-              '#markup' => $message,
-            ],
-            '#weight' => 999,
-            '#no_valid_transitions' => TRUE,
-          ];
-
-          if ($form['footer']) {
-            $form['invalid_transitions']['#group'] = 'footer';
-          }
-        }
 
         // Submit handler to redirect to the latest version, if available.
         $form['actions']['submit']['#submit'][] = [EntityTypeInfo::class, 'bundleFormRedirect'];
@@ -358,6 +352,21 @@ class EntityTypeInfo implements ContainerInjectionInterface {
         }
       }
     }
+  }
+
+  /**
+   * Checks whether the specified form allows to edit a moderated entity.
+   *
+   * @param \Drupal\Core\Form\FormInterface $form_object
+   *   The form object.
+   *
+   * @return bool
+   *   TRUE if the form should get form moderation, FALSE otherwise.
+   */
+  protected function isModeratedEntityEditForm(FormInterface $form_object) {
+    return $form_object instanceof ContentEntityFormInterface &&
+      in_array($form_object->getOperation(), ['edit', 'default'], TRUE) &&
+      $this->moderationInfo->isModeratedEntity($form_object->getEntity());
   }
 
   /**

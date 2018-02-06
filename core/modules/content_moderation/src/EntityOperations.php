@@ -98,10 +98,9 @@ class EntityOperations implements ContainerInjectionInterface {
       $current_state = $workflow->getTypePlugin()
         ->getState($entity->moderation_state->value);
 
-      // This entity is default if it is new, a new translation, the default
-      // revision, or the default revision is not published.
+      // This entity is default if it is new, the default revision, or the
+      // default revision is not published.
       $update_default_revision = $entity->isNew()
-        || $entity->isNewTranslation()
         || $current_state->isDefaultRevisionState()
         || !$this->moderationInfo->isDefaultRevisionPublished($entity);
 
@@ -247,27 +246,28 @@ class EntityOperations implements ContainerInjectionInterface {
    * @see EntityFieldManagerInterface::getExtraFields()
    */
   public function entityView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if (!$this->moderationInfo->isModeratedEntity($entity)) {
       return;
     }
-    if (!$this->moderationInfo->isLatestRevision($entity)) {
+    // If the component is not defined for this display, we have nothing to do.
+    if (!$display->getComponent('content_moderation_control')) {
       return;
     }
-    if ($this->moderationInfo->isLiveRevision($entity)) {
+    // The moderation form should be displayed only when viewing the latest
+    // (translation-affecting) revision, unless it was created as published
+    // default revision.
+    if (!$entity->isLatestRevision() && !$entity->isLatestTranslationAffectedRevision()) {
       return;
     }
-    // Don't display the moderation form when when:
-    // - The revision is not translation affected.
-    // - There are more than one translation languages.
-    // - The entity has pending revisions.
-    if (!$this->moderationInfo->isPendingRevisionAllowed($entity)) {
-      return;
+    if (($entity->isDefaultRevision() || $entity->wasDefaultRevision()) && ($moderation_state = $entity->get('moderation_state')->value)) {
+      $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
+      if ($workflow->getTypePlugin()->getState($moderation_state)->isPublishedState()) {
+        return;
+      }
     }
 
-    $component = $display->getComponent('content_moderation_control');
-    if ($component) {
-      $build['content_moderation_control'] = $this->formBuilder->getForm(EntityModerationForm::class, $entity);
-    }
+    $build['content_moderation_control'] = $this->formBuilder->getForm(EntityModerationForm::class, $entity);
   }
 
 }

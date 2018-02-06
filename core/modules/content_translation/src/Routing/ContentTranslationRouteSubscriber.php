@@ -2,6 +2,7 @@
 
 namespace Drupal\content_translation\Routing;
 
+use Drupal\content_translation\ContentTranslationManager;
 use Drupal\content_translation\ContentTranslationManagerInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
@@ -55,6 +56,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
       }
 
       $path = $base_path . '/translations';
+      $load_latest_revision = ContentTranslationManager::isPendingRevisionSupportEnabled();
 
       $route = new Route(
         $path,
@@ -70,6 +72,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           'parameters' => [
             $entity_type_id => [
               'type' => 'entity:' . $entity_type_id,
+              'load_latest_revision' => $load_latest_revision,
             ],
           ],
           '_admin_route' => $is_admin,
@@ -102,6 +105,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
             ],
             $entity_type_id => [
               'type' => 'entity:' . $entity_type_id,
+              'load_latest_revision' => $load_latest_revision,
             ],
           ],
           '_admin_route' => $is_admin,
@@ -127,6 +131,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
             ],
             $entity_type_id => [
               'type' => 'entity:' . $entity_type_id,
+              'load_latest_revision' => $load_latest_revision,
             ],
           ],
           '_admin_route' => $is_admin,
@@ -152,6 +157,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
             ],
             $entity_type_id => [
               'type' => 'entity:' . $entity_type_id,
+              'load_latest_revision' => $load_latest_revision,
             ],
           ],
           '_admin_route' => $is_admin,

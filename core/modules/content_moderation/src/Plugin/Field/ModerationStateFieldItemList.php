@@ -166,10 +166,9 @@ class ModerationStateFieldItemList extends FieldItemList {
       /** @var \Drupal\content_moderation\ContentModerationState $current_state */
       $current_state = $workflow->getTypePlugin()->getState($moderation_state_id);
 
-      // This entity is default if it is new, a new translation, the default
-      // revision state, or the default revision is not published.
+      // This entity is default if it is new, the default revision state, or the
+      // default revision is not published.
       $update_default_revision = $entity->isNew()
-        || $entity->isNewTranslation()
         || $current_state->isDefaultRevisionState()
         || !$content_moderation_info->isDefaultRevisionPublished($entity);
 

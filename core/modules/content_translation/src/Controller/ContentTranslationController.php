@@ -2,6 +2,7 @@
 
 namespace Drupal\content_translation\Controller;
 
+use Drupal\content_translation\ContentTranslationManager;
 use Drupal\content_translation\ContentTranslationManagerInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
@@ -87,6 +88,7 @@ class ContentTranslationController extends ControllerBase {
     $handler = $this->entityManager()->getHandler($entity_type_id, 'translation');
     $manager = $this->manager;
     $entity_type = $entity->getEntityType();
+    $use_latest_revisions = $entity_type->isRevisionable() && ContentTranslationManager::isPendingRevisionSupportEnabled();
 
     // Start collecting the cacheability metadata, starting with the entity and
     // later merge in the access result cacheability metadata.
@@ -99,6 +101,9 @@ class ContentTranslationController extends ControllerBase {
 
     $rows = [];
     $show_source_column = FALSE;
+    $default_revision = $entity;
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $this->entityTypeManager()->getStorage($entity_type_id);
 
     if ($this->languageManager()->isMultilingual()) {
       // Determine whether the current entity is translatable.
@@ -120,6 +125,16 @@ class ContentTranslationController extends ControllerBase {
       foreach ($languages as $language) {
         $language_name = $language->getName();
         $langcode = $language->getId();
+
+        // If the entity type is revisionable, we may have pending revisions
+        // with translations not available yet in the default revision. Thus we
+        // need to load the latest translation-affecting revision for each
+        // language to be sure we are listing all available translations.
+        if ($use_latest_revisions) {
+          $latest_revision_id = $storage->getLatestTranslationAffectedRevisionId($entity->id(), $langcode);
+          $entity = $latest_revision_id ? $storage->loadRevision($latest_revision_id) : $default_revision;
+          $translations = $entity->getTranslationLanguages();
+        }
 
         $add_url = new Url(
           "entity.$entity_type_id.content_translation_add",
@@ -330,7 +345,20 @@ class ContentTranslationController extends ControllerBase {
    *   A processed form array ready to be rendered.
    */
   public function add(LanguageInterface $source, LanguageInterface $target, RouteMatchInterface $route_match, $entity_type_id = NULL) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $route_match->getParameter($entity_type_id);
+
+    // In case of a pending revision, make sure we load the latest
+    // translation-affecting revision for the source language, otherwise the
+    // initial form values may not be up-to-date.
+    if (!$entity->isDefaultRevision() && ContentTranslationManager::isPendingRevisionSupportEnabled()) {
+      /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+      $storage = $this->entityTypeManager()->getStorage($entity->getEntityTypeId());
+      $revision_id = $storage->getLatestTranslationAffectedRevisionId($entity->id(), $source->getId());
+      if ($revision_id != $entity->getRevisionId()) {
+        $entity = $storage->loadRevision($revision_id);
+      }
+    }
 
     // @todo Exploit the upcoming hook_entity_prepare() when available.
     // See https://www.drupal.org/node/1810394.
