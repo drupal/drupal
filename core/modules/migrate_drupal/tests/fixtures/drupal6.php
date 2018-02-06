@@ -46591,6 +46591,12 @@ $connection->insert('url_alias')
   'dst' => 'the-zulu-people',
   'language' => 'en',
 ))
+->values(array(
+  'pid' => '8',
+  'src' => 'admin',
+  'dst' => 'source-noslash',
+  'language' => '',
+))
 ->execute();
 
 $connection->schema()->createTable('users', array(
