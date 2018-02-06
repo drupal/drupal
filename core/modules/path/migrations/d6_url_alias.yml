@@ -26,7 +26,9 @@ process:
       source: src
       delimiter: /
     -
+      # If the source path has no slashes return a dummy default value.
       plugin: extract
+      default: 'INVALID_NID'
       index:
         - 1
     -
