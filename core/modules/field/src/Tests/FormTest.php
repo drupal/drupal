@@ -113,6 +113,9 @@ class FormTest extends FieldTestBase {
     // Check that hook_field_widget_form_alter() does not believe this is the
     // default value form.
     $this->assertNoText('From hook_field_widget_form_alter(): Default form is true.', 'Not default value form in hook_field_widget_form_alter().');
+    // Check that hook_field_widget_form_alter() does not believe this is the
+    // default value form.
+    $this->assertNoText('From hook_field_widget_multivalue_form_alter(): Default form is true.', 'Not default value form in hook_field_widget_form_alter().');
 
     // Submit with invalid value (field-level validation).
     $edit = [
@@ -632,6 +635,46 @@ class FormTest extends FieldTestBase {
     $this->assertText('A field with multiple values');
     // Test if labels were XSS filtered.
     $this->assertEscaped("<script>alert('a configurable field');</script>");
+  }
+
+  /**
+   * Tests hook_field_widget_multivalue_form_alter().
+   */
+  public function testFieldFormMultipleWidgetAlter() {
+    $this->widgetAlterTest('hook_field_widget_multivalue_form_alter');
+  }
+
+  /**
+   * Tests hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
+   */
+  public function testFieldFormMultipleWidgetTypeAlter() {
+    $this->widgetAlterTest('hook_field_widget_multivalue_WIDGET_TYPE_form_alter');
+  }
+
+  /**
+   * Tests widget alter hooks for a given hook name.
+   */
+  protected function widgetAlterTest($hook) {
+    // Set a flag in state so that the hook implementations will run.
+    \Drupal::state()->set("field_test.$hook", TRUE);
+
+    // Create a field with fixed cardinality, configure the form to use a
+    // "multiple" widget.
+    $field_storage = $this->fieldStorageMultiple;
+    $field_name = $field_storage['field_name'];
+    $this->field['field_name'] = $field_name;
+    FieldStorageConfig::create($field_storage)->save();
+    FieldConfig::create($this->field)->save();
+    entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
+      ->setComponent($field_name, [
+        'type' => 'test_field_widget_multiple',
+      ])
+      ->save();
+
+    $this->drupalGet('entity_test/add');
+    $this->assertUniqueText("From $hook(): prefix on field_test_text parent element.");
+    $this->assertText("From $hook(): description on field_test_text child element.");
+    $this->drupalGet('entity_test/add');
   }
 
 }

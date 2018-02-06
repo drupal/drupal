@@ -241,6 +241,19 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
           ],
         ];
       }
+
+      // Allow modules to alter the field multi-value widget form element.
+      // This hook can also be used for single-value fields.
+      $context = [
+        'form' => $form,
+        'widget' => $this,
+        'items' => $items,
+        'default' => $this->isDefaultValueWidget($form_state),
+      ];
+      \Drupal::moduleHandler()->alter([
+        'field_widget_multivalue_form',
+        'field_widget_multivalue_' . $this->getPluginId() . '_form',
+      ], $elements, $form_state, $context);
     }
 
     return $elements;

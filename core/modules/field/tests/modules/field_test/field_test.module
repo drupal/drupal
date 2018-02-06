@@ -15,6 +15,7 @@
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\field\FieldStorageConfigInterface;
 
 require_once __DIR__ . '/field_test.entity.inc';
@@ -100,20 +101,47 @@ function field_test_entity_display_build_alter(&$output, $context) {
  * Implements hook_field_widget_form_alter().
  */
 function field_test_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
-  $field_definition = $context['items']->getFieldDefinition();
-  switch ($field_definition->getName()) {
-    case 'alter_test_text':
-      drupal_set_message('Field size: ' . $context['widget']->getSetting('size'));
-      break;
-
-    case 'alter_test_options':
-      drupal_set_message('Widget type: ' . $context['widget']->getPluginId());
-      break;
-  }
   // Set a message if this is for the form displayed to set default value for
   // the field.
   if ($context['default']) {
     drupal_set_message('From hook_field_widget_form_alter(): Default form is true.');
+  }
+}
+
+/**
+ * Implements hook_field_widget_multivalue_form_alter().
+ */
+function field_test_field_widget_multivalue_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
+  _field_test_alter_widget("hook_field_widget_multivalue_form_alter", $elements, $form_state, $context);
+}
+
+/**
+ * Implements hook_field_widget_multivalue_form_alter().
+ */
+function field_test_field_widget_multivalue_text_textfield_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
+  _field_test_alter_widget("hook_field_widget_multivalue_WIDGET_TYPE_form_alter", $elements, $form_state, $context);
+}
+
+/**
+ * Sets up alterations for widget alter tests.
+ *
+ * @see \Drupal\field\Tests\FormTest::widgetAlterTest()
+ */
+function _field_test_alter_widget($hook, array &$elements, FormStateInterface $form_state, array $context) {
+
+  // Set a message if this is for the form displayed to set default value for
+  // the field.
+  if ($context['default']) {
+    drupal_set_message("From $hook(): Default form is true.");
+  }
+  if (\Drupal::state()->get("field_test.$hook")) {
+    $name = $context['items']->getFieldDefinition()->getName();
+    if ($name === 'field_test_text') {
+      $elements['#prefix'] = "From $hook(): prefix on $name parent element.";
+      foreach (Element::children($elements) as $delta => $element) {
+        $elements[$delta]['#description'] = "From $hook(): description on $name child element.";
+      }
+    }
   }
 }
 
