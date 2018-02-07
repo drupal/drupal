@@ -136,6 +136,9 @@ class SectionRenderTest extends UnitTestCase {
     $access_result = AccessResult::forbidden();
     $block->access($this->account->reveal(), TRUE)->willReturn($access_result);
     $block->build()->shouldNotBeCalled();
+    $block->getCacheContexts()->willReturn([]);
+    $block->getCacheTags()->willReturn([]);
+    $block->getCacheMaxAge()->willReturn(Cache::PERMANENT);
 
     $section = [
       new SectionComponent('some_uuid', 'content', ['id' => 'block_plugin_id']),
@@ -152,6 +155,50 @@ class SectionRenderTest extends UnitTestCase {
       ],
     ];
     $result = (new Section('layout_onecol', [], $section))->toRenderArray();
+    $this->assertEquals($expected, $result);
+  }
+
+  /**
+   * @covers ::toRenderArray
+   */
+  public function testToRenderArrayPreview() {
+    $block_content = ['#markup' => 'The block content.'];
+    $render_array = [
+      '#theme' => 'block',
+      '#weight' => 0,
+      '#configuration' => [],
+      '#plugin_id' => 'block_plugin_id',
+      '#base_plugin_id' => 'block_plugin_id',
+      '#derivative_plugin_id' => NULL,
+      'content' => $block_content,
+      '#cache' => [
+        'contexts' => [],
+        'tags' => [],
+        'max-age' => 0,
+      ],
+    ];
+    $block = $this->prophesize(BlockPluginInterface::class);
+    $this->blockManager->createInstance('block_plugin_id', ['id' => 'block_plugin_id'])->willReturn($block->reveal());
+
+    $block->access($this->account->reveal(), TRUE)->shouldNotBeCalled();
+    $block->build()->willReturn($block_content);
+    $block->getCacheContexts()->willReturn([]);
+    $block->getCacheTags()->willReturn([]);
+    $block->getCacheMaxAge()->willReturn(Cache::PERMANENT);
+    $block->getConfiguration()->willReturn([]);
+    $block->getPluginId()->willReturn('block_plugin_id');
+    $block->getBaseId()->willReturn('block_plugin_id');
+    $block->getDerivativeId()->willReturn(NULL);
+
+    $section = [
+      new SectionComponent('some_uuid', 'content', ['id' => 'block_plugin_id']),
+    ];
+    $expected = [
+      'content' => [
+        'some_uuid' => $render_array,
+      ],
+    ];
+    $result = (new Section('layout_onecol', [], $section))->toRenderArray([], TRUE);
     $this->assertEquals($expected, $result);
   }
 

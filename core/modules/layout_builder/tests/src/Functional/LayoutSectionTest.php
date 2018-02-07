@@ -76,7 +76,6 @@ class LayoutSectionTest extends BrowserTestBase {
       ],
       [
         'foobar',
-        'User context found',
       ],
       'user',
       'user:2',

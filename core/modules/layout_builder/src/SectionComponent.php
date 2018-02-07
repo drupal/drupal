@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder;
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
@@ -103,11 +104,18 @@ class SectionComponent {
     // @todo Figure out the best way to unify fields and blocks and components
     //   in https://www.drupal.org/node/1875974.
     if ($plugin instanceof BlockPluginInterface) {
-      $access = $plugin->access($this->currentUser(), TRUE);
-      $cacheability = CacheableMetadata::createFromObject($access);
+      $cacheability = CacheableMetadata::createFromObject($plugin);
 
-      if ($in_preview || $access->isAllowed()) {
-        $cacheability->addCacheableDependency($plugin);
+      // Only check access if the component is not being previewed.
+      if ($in_preview) {
+        $access = AccessResult::allowed()->setCacheMaxAge(0);
+      }
+      else {
+        $access = $plugin->access($this->currentUser(), TRUE);
+      }
+
+      $cacheability->addCacheableDependency($access);
+      if ($access->isAllowed()) {
         // @todo Move this to BlockBase in https://www.drupal.org/node/2931040.
         $output = [
           '#theme' => 'block',
