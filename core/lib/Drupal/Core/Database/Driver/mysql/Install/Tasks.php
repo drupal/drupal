@@ -108,6 +108,16 @@ class Tasks extends InstallTasks {
           // Now, attempt the connection again; if it's successful, attempt to
           // create the database.
           Database::getConnection()->createDatabase($database);
+          Database::closeConnection();
+
+          // Now, restore the database config.
+          Database::removeConnection('default');
+          $connection_info['default']['database'] = $database;
+          Database::addConnectionInfo('default', 'default', $connection_info['default']);
+
+          // Check the database connection.
+          Database::getConnection();
+          $this->pass('Drupal can CONNECT to the database ok.');
         }
         catch (DatabaseNotFoundException $e) {
           // Still no dice; probably a permission issue. Raise the error to the
