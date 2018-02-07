@@ -38,6 +38,7 @@ use Drupal\user\UserInterface;
  *       "add" = "Drupal\media\MediaForm",
  *       "edit" = "Drupal\media\MediaForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
+ *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm",
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *     "views_data" = "Drupal\media\MediaViewsData",
@@ -76,6 +77,7 @@ use Drupal\user\UserInterface;
  *     "canonical" = "/media/{media}",
  *     "collection" = "/admin/content/media",
  *     "delete-form" = "/media/{media}/delete",
+ *     "delete-multiple-form" = "/media/delete",
  *     "edit-form" = "/media/{media}/edit",
  *     "revision" = "/media/{media}/revisions/{media_revision}/view",
  *   }
