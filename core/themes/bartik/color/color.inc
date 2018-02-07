@@ -31,7 +31,7 @@ $info = [
         'footer' => '#292929',
         'titleslogan' => '#fffeff',
         'text' => '#3b3b3b',
-        'link' => '#0071B3',
+        'link' => '#0071b3',
       ],
     ],
     'firehouse' => [
