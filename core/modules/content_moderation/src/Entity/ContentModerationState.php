@@ -31,6 +31,7 @@ use Drupal\user\UserInterface;
  *   data_table = "content_moderation_state_field_data",
  *   revision_data_table = "content_moderation_state_field_revision",
  *   translatable = TRUE,
+ *   internal = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "revision" = "revision_id",

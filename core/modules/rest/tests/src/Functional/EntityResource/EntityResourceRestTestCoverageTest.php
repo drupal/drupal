@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource;
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -45,15 +46,11 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
 
     $this->definitions = $this->container->get('entity_type.manager')->getDefinitions();
 
-    // Remove definitions for which the REST resource plugin definition was
-    // removed via hook_rest_resource_alter(). Entity types which are never
-    // exposed via REST also don't need test coverage.
-    $resource_plugin_ids = array_keys($this->container->get('plugin.manager.rest')->getDefinitions());
-    foreach (array_keys($this->definitions) as $entity_type_id) {
-      if (!in_array("entity:$entity_type_id", $resource_plugin_ids, TRUE)) {
-        unset($this->definitions[$entity_type_id]);
-      }
-    }
+    // Entity types marked as "internal" are not exposed by the entity REST
+    // resource plugin and hence also don't need test coverage.
+    $this->definitions = array_filter($this->definitions, function (EntityTypeInterface $entity_type) {
+      return !$entity_type->isInternal();
+    });
   }
 
   /**
