@@ -33,7 +33,7 @@ use Drupal\migrate\Row;
  *   bar: foo
  * @endcode
  *
- * get also supports a list of source properties.
+ * Get also supports a list of source properties.
  *
  * Example:
  *
@@ -53,7 +53,7 @@ use Drupal\migrate\Row;
  * value will be used. This makes it impossible to reach a source property with
  * an empty string as its name.
  *
- * get also supports copying destination values. These are indicated by a
+ * Get also supports copying destination values. These are indicated by a
  * starting @ sign. Values using @ must be wrapped in quotes.
  *
  * @code
@@ -69,20 +69,18 @@ use Drupal\migrate\Row;
  * This will simply copy the destination value of foo to the destination
  * property bar. foo configuration is included for illustration purposes.
  *
- * Because of this, if your source or destination property actually starts with
- * a @ you need to double those starting characters up. This means that if a
- * destination property happens to start with a @ and you want to refer it,
- * you'll need to start with three @ characters -- one to indicate the
- * destination and two for escaping the real @.
+ * Because of this, if the source or destination property actually starts with a
+ * @, that character must be escaped with @@.
+ * The referenced property becomes, for example, @@@foo.
  *
  * @code
  * process:
- * @foo:
- *   plugin: machine_name
- *   source: baz
- * bar:
- *   plugin: get
- *   source: '@@@foo'
+ *   '@foo':
+ *     plugin: machine_name
+ *     source: baz
+ *   bar:
+ *     plugin: get
+ *     source: '@@@foo'
  * @endcode
  *
  * This should occur extremely rarely.
