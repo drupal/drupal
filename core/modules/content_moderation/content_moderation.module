@@ -319,13 +319,3 @@ function content_moderation_workflow_update(WorkflowInterface $entity) {
   // Clear field cache so extra field is added or removed.
   \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 }
-
-/**
- * Implements hook_rest_resource_alter().
- */
-function content_moderation_rest_resource_alter(&$definitions) {
-  // ContentModerationState is an internal entity type. Therefore it should not
-  // be exposed via REST.
-  // @see \Drupal\content_moderation\ContentModerationStateAccessControlHandler
-  unset($definitions['entity:content_moderation_state']);
-}
