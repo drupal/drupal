@@ -13,7 +13,7 @@ class BookTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['book', 'migrate_drupal'];
+  public static $modules = ['book', 'migrate_drupal', 'node'];
 
   /**
    * {@inheritdoc}
