@@ -9,6 +9,7 @@ use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Uuid\Php;
+use Drupal\Core\Composer\Composer;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Database\Database;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -18,9 +19,8 @@ use Drupal\simpletest\Form\SimpletestResultsForm;
 use Drupal\simpletest\TestBase;
 use Drupal\simpletest\TestDiscovery;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Runner\Version;
 use Symfony\Component\HttpFoundation\Request;
-
-$autoloader = require_once __DIR__ . '/../../autoload.php';
 
 // Define some colors for display.
 // A nice calming green.
@@ -37,11 +37,6 @@ const SIMPLETEST_SCRIPT_EXIT_SUCCESS = 0;
 const SIMPLETEST_SCRIPT_EXIT_FAILURE = 1;
 const SIMPLETEST_SCRIPT_EXIT_EXCEPTION = 2;
 
-if (!class_exists(TestCase::class)) {
-  echo "\nrun-tests.sh requires the PHPUnit testing framework. Please use 'composer install --dev' to ensure that it is present.\n\n";
-  exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
-}
-
 // Set defaults and get overrides.
 list($args, $count) = simpletest_script_parse_args();
 
@@ -52,14 +47,9 @@ if ($args['help'] || $count == 0) {
 
 simpletest_script_init();
 
-try {
-  $request = Request::createFromGlobals();
-  $kernel = TestRunnerKernel::createFromRequest($request, $autoloader);
-  $kernel->prepareLegacyRequest($request);
-}
-catch (Exception $e) {
-  echo (string) $e;
-  exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
+if (!class_exists(TestCase::class)) {
+  echo "\nrun-tests.sh requires the PHPUnit testing framework. Please use 'composer install --dev' to ensure that it is present.\n\n";
+  exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
 }
 
 if ($args['execute-test']) {
@@ -140,6 +130,18 @@ if ($args['clean']) {
     echo " - " . $text . "\n";
   }
   exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
+}
+
+// Ensure we have the correct PHPUnit version for the version of PHP.
+if (class_exists('\PHPUnit_Runner_Version')) {
+  $phpunit_version = \PHPUnit_Runner_Version::id();
+}
+else {
+  $phpunit_version = Version::id();
+}
+if (!Composer::upgradePHPUnitCheck($phpunit_version)) {
+  simpletest_script_print_error("PHPUnit testing framework version 6 or greater is required when running on PHP 7.2 or greater. Run the command 'composer run-script drupal-phpunit-upgrade' in order to fix this.");
+  exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
 }
 
 $test_list = simpletest_script_get_test_list();
@@ -463,6 +465,25 @@ function simpletest_script_init() {
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
 
+  // Detect if we're in the top-level process using the private 'execute-test'
+  // argument. Determine if being run on drupal.org's testing infrastructure
+  // using the presence of 'drupaltestbot' in the database url.
+  // @todo https://www.drupal.org/project/drupalci_testbot/issues/2860941 Use
+  //   better environment variable to detect DrupalCI.
+  // @todo https://www.drupal.org/project/drupal/issues/2942473 Remove when
+  //   dropping PHPUnit 4 and PHP 5 support.
+  if (!$args['execute-test'] && preg_match('/drupalci/', $args['sqlite'])) {
+    // Update PHPUnit if needed and possible. There is a later check once the
+    // autoloader is in place to ensure we're on the correct version. We need to
+    // do this before the autoloader is in place to ensure that it is correct.
+    $composer = ($composer = rtrim('\\' === DIRECTORY_SEPARATOR ? preg_replace('/[\r\n].*/', '', `where.exe composer.phar`) : `which composer.phar`))
+      ? $php . ' ' . escapeshellarg($composer)
+      : 'composer';
+    passthru("$composer run-script drupal-phpunit-upgrade-check");
+  }
+
+  $autoloader = require_once __DIR__ . '/../../autoload.php';
+
   // Get URL from arguments.
   if (!empty($args['url'])) {
     $parsed_url = parse_url($args['url']);
@@ -521,6 +542,17 @@ function simpletest_script_init() {
   }
 
   chdir(realpath(__DIR__ . '/../..'));
+
+  // Prepare the kernel.
+  try {
+    $request = Request::createFromGlobals();
+    $kernel = TestRunnerKernel::createFromRequest($request, $autoloader);
+    $kernel->prepareLegacyRequest($request);
+  }
+  catch (Exception $e) {
+    echo (string) $e;
+    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
+  }
 }
 
 /**

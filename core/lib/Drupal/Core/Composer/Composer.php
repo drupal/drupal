@@ -162,11 +162,27 @@ EOT;
 
     // If the PHP version is 7.2 or above and PHPUnit is less than version 6
     // call the drupal-phpunit-upgrade script to upgrade PHPUnit.
-    if (version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, '7.2') >= 0 && version_compare($phpunit_package->getVersion(), '6.1') < 0) {
+    if (!static::upgradePHPUnitCheck($phpunit_package->getVersion())) {
       $event->getComposer()
         ->getEventDispatcher()
         ->dispatchScript('drupal-phpunit-upgrade');
     }
+  }
+
+  /**
+   * Determines if PHPUnit needs to be upgraded.
+   *
+   * This method is located in this file because it is possible that it is
+   * called before the autoloader is available.
+   *
+   * @param string $phpunit_version
+   *   The PHPUnit version string.
+   *
+   * @return bool
+   *   TRUE if the PHPUnit needs to be upgraded, FALSE if not.
+   */
+  public static function upgradePHPUnitCheck($phpunit_version) {
+    return !(version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, '7.2') >= 0 && version_compare($phpunit_version, '6.1') < 0);
   }
 
   /**
