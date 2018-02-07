@@ -108,7 +108,11 @@ class InstallHelper implements ContainerInjectionInterface {
         // Fields mapping starts.
         // Set Body Field.
         if (!empty($data['body'])) {
-          $values['body'] = [['value' => $data['body'], 'format' => 'basic_html']];
+          $body_path = $module_path . '/default_content/article_body/' . $data['body'];
+          $body = file_get_contents($body_path);
+          if ($body !== FALSE) {
+            $values['body'] = [['value' => $body, 'format' => 'basic_html']];
+          }
         }
         // Set node alias if exists.
         if (!empty($data['slug'])) {
