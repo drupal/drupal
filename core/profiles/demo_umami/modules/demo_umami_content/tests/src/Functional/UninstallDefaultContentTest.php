@@ -71,6 +71,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
     // Re-install and assert imported content.
     $module_installer->install(['demo_umami_content']);
     $this->assertRecipesImported($node_storage);
+    $this->assertArticlesImported($node_storage);
     $this->assertImportedCustomBlock($block_storage);
 
   }
@@ -91,6 +92,24 @@ class UninstallDefaultContentTest extends BrowserTestBase {
     $this->assertCount(1, $nodes);
     $node = reset($nodes);
     $this->assertContains('Mix the some of the milk and water in a jug', $node->field_recipe_instruction->value);
+  }
+
+  /**
+   * Assert articles are imported.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
+   *   Node storage.
+   */
+  protected function assertArticlesImported(EntityStorageInterface $node_storage) {
+    $count = $node_storage->getQuery()
+      ->condition('type', 'article')
+      ->count()
+      ->execute();
+    $this->assertGreaterThan(0, $count);
+    $nodes = $node_storage->loadByProperties(['title' => 'The umami guide to our favourite mushrooms']);
+    $this->assertCount(1, $nodes);
+    $node = reset($nodes);
+    $this->assertContains('One of the best things about mushrooms is their versatility', $node->body->value);
   }
 
   /**
