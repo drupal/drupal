@@ -94,4 +94,28 @@ class Color {
     return '#' . str_pad(dechex($out), 6, 0, STR_PAD_LEFT);
   }
 
+  /**
+   * Normalize the hex color length to 6 characters for comparison.
+   *
+   * @param string $hex
+   *   The hex color to normalize.
+   *
+   * @return string
+   *   The 6 character hex color.
+   */
+  public static function normalizeHexLength($hex) {
+    // Ignore '#' prefixes.
+    $hex = ltrim($hex, '#');
+
+    if (strlen($hex) === 3) {
+      $hex[5] = $hex[2];
+      $hex[4] = $hex[2];
+      $hex[3] = $hex[1];
+      $hex[2] = $hex[1];
+      $hex[1] = $hex[0];
+    }
+
+    return '#' . $hex;
+  }
+
 }
