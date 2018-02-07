@@ -2092,9 +2092,23 @@ function system_update_8501() {
       // also to code using the latest installed definition.
       $installed_entity_type = $definition_update_manager->getEntityType($entity_type_id);
       $revision_metadata_keys = $installed_entity_type->get('revision_metadata_keys');
-      $revision_metadata_keys['revision_default'] = $field_name;
-      $installed_entity_type->set('revision_metadata_keys', $revision_metadata_keys);
-      $definition_update_manager->updateEntityType($installed_entity_type);
+
+      if (!isset($revision_metadata_keys['revision_default'])) {
+        // Update the property holding the required revision metadata keys,
+        // which is used by the BC layer for retrieving the revision metadata
+        // keys.
+        // @see \Drupal\Core\Entity\ContentEntityType::getRevisionMetadataKeys().
+        $required_revision_metadata_keys = $installed_entity_type->get('requiredRevisionMetadataKeys');
+        $required_revision_metadata_keys['revision_default'] = $field_name;
+        $installed_entity_type->set('requiredRevisionMetadataKeys', $required_revision_metadata_keys);
+
+        // Update the revision metadata keys to add the new required revision
+        // metadata key "revision_default".
+        $revision_metadata_keys['revision_default'] = $required_revision_metadata_keys['revision_default'];
+        $installed_entity_type->set('revision_metadata_keys', $revision_metadata_keys);
+
+        $definition_update_manager->updateEntityType($installed_entity_type);
+      }
 
       $storage_definition = BaseFieldDefinition::create('boolean')
         ->setLabel(t('Default revision'))
@@ -2109,6 +2123,15 @@ function system_update_8501() {
 
       $definition_update_manager
         ->installFieldStorageDefinition($field_name, $entity_type_id, $entity_type_id, $storage_definition);
+    }
+    else {
+      $variables = ['@entity_type_label' => $entity_type->getLabel()];
+      if ($field_name === 'revision_default') {
+        \Drupal::logger('system')->error('An existing "Default revision" field was found for the @entity_type_label entity type, but no "revision_default" revision metadata key was found in its definition.', $variables);
+      }
+      else {
+        \Drupal::logger('system')->error('An existing "Default revision" field was found for the @entity_type_label entity type.', $variables);
+      }
     }
   }
 }

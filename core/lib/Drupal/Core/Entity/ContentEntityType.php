@@ -15,6 +15,18 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
   protected $revision_metadata_keys = [];
 
   /**
+   * The required revision metadata keys.
+   *
+   * This property should only be filled in the constructor. This ensures that
+   * only new instances get newly added required revision metadata keys.
+   * Unserialized objects will only retrieve the keys that they already have
+   * been cached with.
+   *
+   * @var array
+   */
+  protected $requiredRevisionMetadataKeys = [];
+
+  /**
    * {@inheritdoc}
    */
   public function __construct($definition) {
@@ -25,9 +37,23 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
       'view_builder' => 'Drupal\Core\Entity\EntityViewBuilder',
     ];
 
-    $this->revision_metadata_keys += [
-      'revision_default' => 'revision_default',
-    ];
+    // Only new instances should provide the required revision metadata keys.
+    // The cached instances should return only what already has been stored
+    // under the property $revision_metadata_keys. The BC layer in
+    // ::getRevisionMetadataKeys() has to detect if the revision metadata keys
+    // have been provided by the entity type annotation, therefore we add keys
+    // to the property $requiredRevisionMetadataKeys only if those keys aren't
+    // set in the entity type annotation.
+    if (!isset($this->revision_metadata_keys['revision_default'])) {
+      $this->requiredRevisionMetadataKeys['revision_default'] = 'revision_default';
+    }
+
+    // Add the required revision metadata fields here instead in the getter
+    // method, so that they are serialized as part of the object even if the
+    // getter method doesn't get called. This allows the list to be further
+    // extended. Only new instances of the class will contain the new list,
+    // while the cached instances contain the previous version of the list.
+    $this->revision_metadata_keys += $this->requiredRevisionMetadataKeys;
   }
 
   /**
@@ -59,7 +85,7 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
   public function getRevisionMetadataKeys($include_backwards_compatibility_field_names = TRUE) {
     // Provide backwards compatibility in case the revision metadata keys are
     // not defined in the entity annotation.
-    if (!$this->revision_metadata_keys && $include_backwards_compatibility_field_names) {
+    if ((!$this->revision_metadata_keys || ($this->revision_metadata_keys == $this->requiredRevisionMetadataKeys)) && $include_backwards_compatibility_field_names) {
       $base_fields = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($this->id());
       if ((isset($base_fields['revision_uid']) && $revision_user = 'revision_uid') || (isset($base_fields['revision_user']) && $revision_user = 'revision_user')) {
         @trigger_error('The revision_user revision metadata key is not set.', E_USER_DEPRECATED);
