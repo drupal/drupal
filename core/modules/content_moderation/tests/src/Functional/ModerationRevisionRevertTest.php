@@ -38,6 +38,10 @@ class ModerationRevisionRevertTest extends BrowserTestBase {
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'moderated_bundle');
     $workflow->save();
 
+    /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
+    $router_builder = $this->container->get('router.builder');
+    $router_builder->rebuildIfNeeded();
+
     $admin = $this->drupalCreateUser([
       'access content overview',
       'administer nodes',

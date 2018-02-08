@@ -20,3 +20,8 @@ services:
     arguments: ['@config.manager', '@entity_type.manager']
     tags:
       - { name: event_subscriber }
+  content_moderation.route_subscriber:
+    class: Drupal\content_moderation\Routing\ContentModerationRouteSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: event_subscriber }
