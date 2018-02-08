@@ -245,7 +245,6 @@ Interface Translation (locale)
 
 JavaScript
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
-- Kay Leung 'droplet' https://www.drupal.org/u/droplet
 - Matthew Grill 'drpal' https://www.drupal.org/u/drpal
 - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
