@@ -116,11 +116,19 @@ function field_test_field_widget_multivalue_form_alter(array &$elements, FormSta
 }
 
 /**
- * Implements hook_field_widget_multivalue_form_alter().
+ * Implements hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
  */
-function field_test_field_widget_multivalue_text_textfield_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
+function field_test_field_widget_multivalue_test_field_widget_multiple_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
   _field_test_alter_widget("hook_field_widget_multivalue_WIDGET_TYPE_form_alter", $elements, $form_state, $context);
 }
+
+/**
+ * Implements hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
+ */
+function field_test_field_widget_multivalue_test_field_widget_multiple_single_value_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
+  _field_test_alter_widget("hook_field_widget_multivalue_WIDGET_TYPE_form_alter", $elements, $form_state, $context);
+}
+
 
 /**
  * Sets up alterations for widget alter tests.
@@ -134,13 +142,12 @@ function _field_test_alter_widget($hook, array &$elements, FormStateInterface $f
   if ($context['default']) {
     drupal_set_message("From $hook(): Default form is true.");
   }
-  if (\Drupal::state()->get("field_test.$hook")) {
-    $name = $context['items']->getFieldDefinition()->getName();
-    if ($name === 'field_test_text') {
-      $elements['#prefix'] = "From $hook(): prefix on $name parent element.";
-      foreach (Element::children($elements) as $delta => $element) {
-        $elements[$delta]['#description'] = "From $hook(): description on $name child element.";
-      }
+  $alter_info = \Drupal::state()->get("field_test.widget_alter_test");
+  $name = $context['items']->getFieldDefinition()->getName();
+  if (!empty($alter_info) && $hook === $alter_info['hook'] && $name === $alter_info['field_name']) {
+    $elements['#prefix'] = "From $hook(): prefix on $name parent element.";
+    foreach (Element::children($elements) as $delta => $element) {
+      $elements[$delta]['#suffix'] = "From $hook(): suffix on $name child element.";
     }
   }
 }

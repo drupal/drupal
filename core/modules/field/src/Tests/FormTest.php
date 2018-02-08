@@ -641,23 +641,34 @@ class FormTest extends FieldTestBase {
    * Tests hook_field_widget_multivalue_form_alter().
    */
   public function testFieldFormMultipleWidgetAlter() {
-    $this->widgetAlterTest('hook_field_widget_multivalue_form_alter');
+    $this->widgetAlterTest('hook_field_widget_multivalue_form_alter', 'test_field_widget_multiple');
+  }
+
+  /**
+   * Tests hook_field_widget_multivalue_form_alter() with single value elements.
+   */
+  public function testFieldFormMultipleWidgetAlterSingleValues() {
+    $this->widgetAlterTest('hook_field_widget_multivalue_form_alter', 'test_field_widget_multiple_single_value');
   }
 
   /**
    * Tests hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
    */
   public function testFieldFormMultipleWidgetTypeAlter() {
-    $this->widgetAlterTest('hook_field_widget_multivalue_WIDGET_TYPE_form_alter');
+    $this->widgetAlterTest('hook_field_widget_multivalue_WIDGET_TYPE_form_alter', 'test_field_widget_multiple');
+  }
+
+  /**
+   * Tests hook_field_widget_multivalue_WIDGET_TYPE_form_alter() with single value elements.
+   */
+  public function testFieldFormMultipleWidgetTypeAlterSingleValues() {
+    $this->widgetAlterTest('hook_field_widget_multivalue_WIDGET_TYPE_form_alter', 'test_field_widget_multiple_single_value');
   }
 
   /**
    * Tests widget alter hooks for a given hook name.
    */
-  protected function widgetAlterTest($hook) {
-    // Set a flag in state so that the hook implementations will run.
-    \Drupal::state()->set("field_test.$hook", TRUE);
-
+  protected function widgetAlterTest($hook, $widget) {
     // Create a field with fixed cardinality, configure the form to use a
     // "multiple" widget.
     $field_storage = $this->fieldStorageMultiple;
@@ -665,16 +676,25 @@ class FormTest extends FieldTestBase {
     $this->field['field_name'] = $field_name;
     FieldStorageConfig::create($field_storage)->save();
     FieldConfig::create($this->field)->save();
+
+    // Set a flag in state so that the hook implementations will run.
+    \Drupal::state()->set("field_test.widget_alter_test", [
+      'hook' => $hook,
+      'field_name' => $field_name,
+      'widget' => $widget,
+    ]);
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
       ->setComponent($field_name, [
-        'type' => 'test_field_widget_multiple',
+        'type' => $widget,
       ])
       ->save();
 
     $this->drupalGet('entity_test/add');
-    $this->assertUniqueText("From $hook(): prefix on field_test_text parent element.");
-    $this->assertText("From $hook(): description on field_test_text child element.");
-    $this->drupalGet('entity_test/add');
+    $this->assertUniqueText("From $hook(): prefix on $field_name parent element.");
+    if ($widget === 'test_field_widget_multiple_single_value') {
+      $suffix_text = "From $hook(): suffix on $field_name child element.";
+      $this->assertEqual($field_storage['cardinality'], substr_count($this->getTextContent(), $suffix_text), "'$suffix_text' was found {$field_storage['cardinality']} times  using widget $widget");
+    }
   }
 
 }
