@@ -36,7 +36,8 @@
 
 <div class="search-iconwrap">
   <a class="search-link" title="{{ 'Go to the search page'|t }}" href="{{ path('search.view') }}">
-    {% include active_theme_path() ~ '/images/svg/search.svg' %}
+    <span class="search-icon" aria-hidden="true">{% include active_theme_path() ~ '/images/svg/search.svg' %}</span>
+    <span class="visually-hidden">{{ 'Search'|t }}</span>
   </a>
 </div>
 
