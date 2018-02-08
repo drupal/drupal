@@ -906,11 +906,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // contains the serialized created entity.
       $created_entity = $this->entityStorage->loadUnchanged(static::$firstCreatedEntityId);
       $created_entity_normalization = $this->serializer->normalize($created_entity, static::$format, ['account' => $this->account]);
-      // @todo Remove this if-test in https://www.drupal.org/node/2543726: execute
-      // its body unconditionally.
-      if (static::$entityTypeId !== 'taxonomy_term') {
-        $this->assertSame($created_entity_normalization, $this->serializer->decode((string) $response->getBody(), static::$format));
-      }
+      $this->assertSame($created_entity_normalization, $this->serializer->decode((string) $response->getBody(), static::$format));
       // Assert that the entity was indeed created using the POSTed values.
       foreach ($this->getNormalizedPostEntity() as $field_name => $field_normalization) {
         // Some top-level keys in the normalization may not be fields on the
