@@ -55,6 +55,14 @@ field.widget.settings.test_field_widget_multiple:
       type: string
       label: 'Test setting'
 
+field.widget.settings.test_field_widget_multiple_single_value:
+  type: mapping
+  label: 'Test multiple field widget settings: single values'
+  mapping:
+    test_widget_setting_multiple:
+      type: string
+      label: 'Test setting'
+
 field.widget.third_party.color:
   type: mapping
   label: 'Field test entity display color module third party settings'
