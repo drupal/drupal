@@ -11,6 +11,8 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\content_moderation\Form\EntityModerationForm;
+use Drupal\Core\Routing\RouteBuilderInterface;
+use Drupal\workflows\Entity\Workflow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -49,6 +51,13 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $bundleInfo;
 
   /**
+   * The router builder service.
+   *
+   * @var \Drupal\Core\Routing\RouteBuilderInterface
+   */
+  protected $routerBuilder;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_info
@@ -59,12 +68,15 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The form builder.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info
    *   The entity bundle information service.
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $router_builder
+   *   The router builder service.
    */
-  public function __construct(ModerationInformationInterface $moderation_info, EntityTypeManagerInterface $entity_type_manager, FormBuilderInterface $form_builder, EntityTypeBundleInfoInterface $bundle_info) {
+  public function __construct(ModerationInformationInterface $moderation_info, EntityTypeManagerInterface $entity_type_manager, FormBuilderInterface $form_builder, EntityTypeBundleInfoInterface $bundle_info, RouteBuilderInterface $router_builder) {
     $this->moderationInfo = $moderation_info;
     $this->entityTypeManager = $entity_type_manager;
     $this->formBuilder = $form_builder;
     $this->bundleInfo = $bundle_info;
+    $this->routerBuilder = $router_builder;
   }
 
   /**
@@ -75,7 +87,8 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('content_moderation.moderation_information'),
       $container->get('entity_type.manager'),
       $container->get('form_builder'),
-      $container->get('entity_type.bundle.info')
+      $container->get('entity_type.bundle.info'),
+      $container->get('router.builder')
     );
   }
 
@@ -132,6 +145,12 @@ class EntityOperations implements ContainerInjectionInterface {
   public function entityUpdate(EntityInterface $entity) {
     if ($this->moderationInfo->isModeratedEntity($entity)) {
       $this->updateOrCreateFromEntity($entity);
+    }
+    // When updating workflow settings for Content Moderation, we need to
+    // rebuild routes as we may be enabling new entity types and the related
+    // entity forms.
+    elseif ($entity instanceof Workflow && $entity->getTypePlugin()->getPluginId() == 'content_moderation') {
+      $this->routerBuilder->setRebuildNeeded();
     }
   }
 

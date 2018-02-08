@@ -132,6 +132,9 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
     // @see content_moderation_workflow_insert()
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+    /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
+    $router_builder = $this->container->get('router.builder');
+    $router_builder->rebuildIfNeeded();
   }
 
   /**
