@@ -471,6 +471,11 @@ API-first Initiative
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 - Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
 
+JavaScript Modernization Initiative
+- Angela Byron 'webchick' https://www.drupal.org/u/webchick
+- Matthew Grill 'drpal' https://www.drupal.org/u/drpal
+- Sally Young 'justafish' https://www.drupal.org/u/justafish
+
 Layout Initiative
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 - Emilie Nouveau 'DyanneNova' https://www.drupal.org/u/dyannenova
