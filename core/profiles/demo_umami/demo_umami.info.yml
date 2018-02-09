@@ -3,6 +3,7 @@ type: profile
 description: 'Install an example site that shows off some of Drupal’s capabilities.'
 version: VERSION
 core: 8.x
+hidden: true
 dependencies:
   - node
   - history
