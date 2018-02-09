@@ -14,6 +14,7 @@ trait MediaFunctionalTestTrait {
    */
   protected static $adminUserPermissions = [
     // Media module permissions.
+    'access media overview',
     'administer media',
     'administer media fields',
     'administer media form display',
