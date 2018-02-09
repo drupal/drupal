@@ -3,9 +3,12 @@
 namespace Drupal\Tests\field\Functional\Update;
 
 use Drupal\Core\Config\Config;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Tests that field settings are properly updated during database updates.
@@ -13,6 +16,8 @@ use Drupal\node\Entity\Node;
  * @group field
  */
 class FieldUpdateTest extends UpdatePathTestBase {
+
+  use CronRunTrait;
 
   /**
    * The config factory service.
@@ -22,11 +27,44 @@ class FieldUpdateTest extends UpdatePathTestBase {
   protected $configFactory;
 
   /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * The key-value collection for tracking installed storage schema.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $installedStorageSchema;
+
+  /**
+   * The state service.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
+   * The deleted fields repository.
+   *
+   * @var \Drupal\Core\Field\DeletedFieldsRepositoryInterface
+   */
+  protected $deletedFieldsRepository;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
     $this->configFactory = $this->container->get('config.factory');
+    $this->database = $this->container->get('database');
+    $this->installedStorageSchema = $this->container->get('keyvalue')->get('entity.storage_schema.sql');
+    $this->state = $this->container->get('state');
+    $this->deletedFieldsRepository = $this->container->get('entity_field.deleted_fields_repository');
   }
 
   /**
@@ -37,6 +75,7 @@ class FieldUpdateTest extends UpdatePathTestBase {
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/drupal-8.views_entity_reference_plugins-2429191.php',
       __DIR__ . '/../../../fixtures/update/drupal-8.remove_handler_submit_setting-2715589.php',
+      __DIR__ . '/../../../fixtures/update/drupal-8.update_deleted_field_definitions-2931436.php',
     ];
   }
 
@@ -125,6 +164,76 @@ class FieldUpdateTest extends UpdatePathTestBase {
 
     $this->assertTrue($handler_settings['auto_create']);
     $this->assertEqual($handler_settings['auto_create_bundle'], 'tags');
+  }
+
+  /**
+   * Tests field_update_8500().
+   *
+   * @see field_update_8500()
+   */
+  public function testFieldUpdate8500() {
+    $field_name = 'field_test';
+    $field_uuid = '5d0d9870-560b-46c4-b838-0dcded0502dd';
+    $field_storage_uuid = 'ce93d7c2-1da7-4a2c-9e6d-b4925e3b129f';
+
+    // Check that we have pre-existing entries for 'field.field.deleted' and
+    // 'field.storage.deleted'.
+    $deleted_fields = $this->state->get('field.field.deleted');
+    $this->assertCount(1, $deleted_fields);
+    $this->assertArrayHasKey($field_uuid, $deleted_fields);
+
+    $deleted_field_storages = $this->state->get('field.storage.deleted');
+    $this->assertCount(1, $deleted_field_storages);
+    $this->assertArrayHasKey($field_storage_uuid, $deleted_field_storages);
+
+    // Ensure that cron does not run automatically after running the updates.
+    $this->state->set('system.cron_last', REQUEST_TIME + 100);
+
+    // Run updates.
+    $this->runUpdates();
+
+    // Now that we can use the API, check that the "delete fields" state entries
+    // have been converted to proper field definition objects.
+    $deleted_fields = $this->deletedFieldsRepository->getFieldDefinitions();
+
+    $this->assertCount(1, $deleted_fields);
+    $this->assertArrayHasKey($field_uuid, $deleted_fields);
+    $this->assertTrue($deleted_fields[$field_uuid] instanceof FieldDefinitionInterface);
+    $this->assertEquals($field_name, $deleted_fields[$field_uuid]->getName());
+
+    $deleted_field_storages = $this->deletedFieldsRepository->getFieldStorageDefinitions();
+    $this->assertCount(1, $deleted_field_storages);
+    $this->assertArrayHasKey($field_storage_uuid, $deleted_field_storages);
+    $this->assertTrue($deleted_field_storages[$field_storage_uuid] instanceof FieldStorageDefinitionInterface);
+    $this->assertEquals($field_name, $deleted_field_storages[$field_storage_uuid]->getName());
+
+    // Check that the installed storage schema still exists.
+    $this->assertNotNull($this->installedStorageSchema->get("node.field_schema_data.$field_name"));
+
+    // Check that the deleted field tables exist.
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = \Drupal::entityTypeManager()->getStorage('node')->getTableMapping();
+
+    $deleted_field_data_table_name = $table_mapping->getDedicatedDataTableName($deleted_field_storages[$field_storage_uuid], TRUE);
+    $this->assertTrue($this->database->schema()->tableExists($deleted_field_data_table_name));
+    $deleted_field_revision_table_name = $table_mapping->getDedicatedRevisionTableName($deleted_field_storages[$field_storage_uuid], TRUE);
+    $this->assertTrue($this->database->schema()->tableExists($deleted_field_revision_table_name));
+
+    // Run cron and repeat the checks above.
+    $this->cronRun();
+
+    $deleted_fields = $this->deletedFieldsRepository->getFieldDefinitions();
+    $this->assertCount(0, $deleted_fields);
+
+    $deleted_field_storages = $this->deletedFieldsRepository->getFieldStorageDefinitions();
+    $this->assertCount(0, $deleted_field_storages);
+
+    // Check that the installed storage schema has been deleted.
+    $this->assertNull($this->installedStorageSchema->get("node.field_schema_data.$field_name"));
+
+    // Check that the deleted field tables have been deleted.
+    $this->assertFalse($this->database->schema()->tableExists($deleted_field_data_table_name));
+    $this->assertFalse($this->database->schema()->tableExists($deleted_field_revision_table_name));
   }
 
   /**

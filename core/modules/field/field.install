@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Removes the stale 'target_bundle' storage setting on entity_reference fields.
@@ -103,4 +105,31 @@ function field_update_8003() {
       $field->set('settings.handler_settings', $handler_settings)->save(TRUE);
     }
   }
+}
+
+/**
+ * Update the definition of deleted fields.
+ */
+function field_update_8500() {
+  $state = \Drupal::state();
+
+  // Convert the old deleted field definitions from an array to a FieldConfig
+  // object.
+  $deleted_field_definitions = $state->get('field.field.deleted', []);
+  foreach ($deleted_field_definitions as $key => $deleted_field_definition) {
+    if (is_array($deleted_field_definition)) {
+      $deleted_field_definitions[$key] = new FieldConfig($deleted_field_definition);
+    }
+  }
+  $state->set('field.field.deleted', $deleted_field_definitions);
+
+  // Convert the old deleted field storage definitions from an array to a
+  // FieldStorageConfig object.
+  $deleted_field_storage_definitions = $state->get('field.storage.deleted', []);
+  foreach ($deleted_field_storage_definitions as $key => $deleted_field_storage_definition) {
+    if (is_array($deleted_field_storage_definition)) {
+      $deleted_field_storage_definitions[$key] = new FieldStorageConfig($deleted_field_storage_definition);
+    }
+  }
+  $state->set('field.storage.deleted', $deleted_field_storage_definitions);
 }
