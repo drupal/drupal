@@ -9,8 +9,10 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 
@@ -65,6 +67,10 @@ function media_theme() {
   return [
     'media' => [
       'render element' => 'elements',
+    ],
+    'media_reference_help' => [
+      'render element' => 'element',
+      'base hook' => 'field_multiple_value_form',
     ],
   ];
 }
@@ -171,4 +177,129 @@ function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInter
   }
   $form['add']['new_storage_type']['#weight'] = 0;
   $form['add']['description_wrapper']['#weight'] = 1;
+}
+
+/**
+ * Implements hook_field_widget_multivalue_form_alter().
+ */
+function media_field_widget_multivalue_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
+  // Do not alter the default settings form.
+  if ($context['default']) {
+    return;
+  }
+
+  // Only act on entity reference fields that reference media.
+  $field_type = $context['items']->getFieldDefinition()->getType();
+  $target_type = $context['items']->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type');
+  if ($field_type !== 'entity_reference' ||  $target_type !== 'media') {
+    return;
+  }
+
+  // Autocomplete widgets need different help text than options widgets.
+  $widget_plugin_id = $context['widget']->getPluginId();
+  if (in_array($widget_plugin_id, ['entity_reference_autocomplete', 'entity_reference_autocomplete_tags'])) {
+    $is_autocomplete = TRUE;
+  }
+  else {
+    // @todo We can't yet properly alter non-autocomplete fields. Resolve this
+    //   in https://www.drupal.org/node/2943020 and remove this condition.
+    return;
+  }
+  $elements['#media_help'] = [];
+
+  // Retrieve the media bundle list and add information for the user based on
+  // which bundles are available to be created or referenced.
+  $settings = $context['items']->getFieldDefinition()->getSetting('handler_settings');
+  $allowed_bundles = isset($settings['target_bundles']) ? $settings['target_bundles'] : [];
+  $access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('media');
+  $all_bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('media');
+  $bundle_labels = [];
+  $create_bundles = [];
+  foreach ($allowed_bundles as $bundle) {
+    $bundle_labels[] = $all_bundles[$bundle]['label'];
+    if ($access_handler->createAccess($bundle)) {
+      $create_bundles[] = $bundle;
+      if (count($create_bundles) > 1) {
+        // If the user has access to create more than 1 bundle then the
+        // individual media type form can not be used.
+        break;
+      }
+    }
+  }
+
+  // Add a section about how to create media if the user has access to do so.
+  if (!empty($create_bundles)) {
+    if (count($create_bundles) === 1) {
+      $add_url = Url::fromRoute('entity.media.add_form', ['media_type' => $create_bundles[0]])->toString();
+    }
+    elseif (count($create_bundles) > 1) {
+      $add_url = Url::fromRoute('entity.media.add_page')->toString();
+    }
+    $elements['#media_help']['#media_add_help'] = t('Create your media on the <a href=":add_page" target="_blank">media add page</a> (opens a new window), then add it by name to the field below.', [':add_page' => $add_url]);
+  }
+
+  $elements['#theme'] = 'media_reference_help';
+  // @todo template_preprocess_field_multiple_value_form() assumes this key
+  //   exists, but it does not exist in the case of a single widget that
+  //   accepts multiple values. This is for some reason necessary to use
+  //   our template for the entity_autocomplete_tags widget.
+  //   Research and resolve this in https://www.drupal.org/node/2943020.
+  if (empty($elements['#cardinality_multiple'])) {
+    $elements['#cardinality_multiple'] = NULL;
+  }
+
+  // Use the title set on the element if it exists, otherwise fall back to the
+  // field label.
+  $elements['#media_help']['#original_label'] = isset($elements['#title']) ? $elements['#title'] : $context['items']->getFieldDefinition()->getLabel();
+
+  // Customize the label for the field widget.
+  // @todo Research a better approach https://www.drupal.org/node/2943024.
+  $use_existing_label = t('Use existing media');
+  if (!empty($elements[0]['target_id']['#title'])) {
+    $elements[0]['target_id']['#title'] = $use_existing_label;
+  }
+  if (!empty($elements['#title'])) {
+    $elements['#title'] = $use_existing_label;
+  }
+  if (!empty($elements['target_id']['#title'])) {
+    $elements['target_id']['#title'] = $use_existing_label;
+  }
+
+  // This help text is only relevant for autocomplete widgets. When the user
+  // is presented with options, they don't need to type anything or know what
+  // types of media are allowed.
+  if ($is_autocomplete) {
+    $elements['#media_help']['#media_list_help'] = t('Type part of the media name.');
+
+    $overview_url = Url::fromRoute('entity.media.collection');
+    if ($overview_url->access()) {
+      $elements['#media_help']['#media_list_link'] = t('See the <a href=":list_url" target="_blank">media list</a> (opens a new window) to help locate media.', [':list_url' => $overview_url->toString()]);
+    }
+    $elements['#media_help']['#allowed_types_help'] = t('Allowed media types: %types', ['%types' => implode(", ", $bundle_labels)]);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for media reference widgets.
+ */
+function media_preprocess_media_reference_help(&$variables) {
+  // Most of these attribute checks are copied from
+  // template_preprocess_fieldset(). Our template extends
+  // field-multiple-value-form.html.twig to provide our help text, but also
+  // groups the information within a semantic fieldset with a legend. So, we
+  // incorporate parity for both.
+  $element = $variables['element'];
+  Element::setAttributes($element, ['id']);
+  RenderElement::setAttributes($element);
+  $variables['attributes'] = isset($element['#attributes']) ? $element['#attributes'] : [];
+  $variables['legend_attributes'] = new Attribute();
+  $variables['header_attributes'] = new Attribute();
+  $variables['description']['attributes'] = new Attribute();
+  $variables['legend_span_attributes'] = new Attribute();
+
+  if (!empty($element['#media_help'])) {
+    foreach ($element['#media_help'] as $key => $text) {
+      $variables[substr($key, 1)] = $text;
+    }
+  }
 }
