@@ -4,7 +4,6 @@ type: module
 package: Core
 version: VERSION
 core: 8.x
-hidden: true
 dependencies:
   - file
   - image
