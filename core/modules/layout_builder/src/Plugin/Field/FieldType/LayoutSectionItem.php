@@ -67,7 +67,6 @@ class LayoutSectionItem extends FieldItemBase {
         'section' => [
           'type' => 'blob',
           'size' => 'normal',
-          // @todo Address in https://www.drupal.org/node/2914503.
           'serialize' => TRUE,
         ],
       ],
