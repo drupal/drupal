@@ -4,6 +4,7 @@ namespace Drupal\file_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,13 +21,23 @@ class FileTestSaveUploadFromForm extends FormBase {
   protected $state;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a FileTestSaveUploadFromForm object.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    */
-  public function __construct(StateInterface $state) {
+  public function __construct(StateInterface $state, MessengerInterface $messenger) {
     $this->state = $state;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -34,7 +45,8 @@ class FileTestSaveUploadFromForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('state')
+      $container->get('state'),
+      $container->get('messenger')
     );
   }
 
@@ -117,7 +129,7 @@ class FileTestSaveUploadFromForm extends FormBase {
 
     // Preset custom error message if requested.
     if ($form_state->getValue('error_message')) {
-      drupal_set_message($form_state->getValue('error_message'), 'error');
+      $this->messenger->addError($form_state->getValue('error_message'));
     }
 
     // Setup validators.
@@ -143,19 +155,19 @@ class FileTestSaveUploadFromForm extends FormBase {
     $form['file_test_upload']['#upload_validators'] = $validators;
     $form['file_test_upload']['#upload_location'] = $destination;
 
-    drupal_set_message($this->t('Number of error messages before _file_save_upload_from_form(): @count.', ['@count' => count(drupal_get_messages('error', FALSE))]));
+    $this->messenger->addStatus($this->t('Number of error messages before _file_save_upload_from_form(): @count.', ['@count' => count($this->messenger->messagesByType(MessengerInterface::TYPE_ERROR))]));
     $file = _file_save_upload_from_form($form['file_test_upload'], $form_state, 0, $form_state->getValue('file_test_replace'));
-    drupal_set_message($this->t('Number of error messages after _file_save_upload_from_form(): @count.', ['@count' => count(drupal_get_messages('error', FALSE))]));
+    $this->messenger->addStatus($this->t('Number of error messages after _file_save_upload_from_form(): @count.', ['@count' => count($this->messenger->messagesByType(MessengerInterface::TYPE_ERROR))]));
 
     if ($file) {
       $form_state->setValue('file_test_upload', $file);
-      drupal_set_message($this->t('File @filepath was uploaded.', ['@filepath' => $file->getFileUri()]));
-      drupal_set_message($this->t('File name is @filename.', ['@filename' => $file->getFilename()]));
-      drupal_set_message($this->t('File MIME type is @mimetype.', ['@mimetype' => $file->getMimeType()]));
-      drupal_set_message($this->t('You WIN!'));
+      $this->messenger->addStatus($this->t('File @filepath was uploaded.', ['@filepath' => $file->getFileUri()]));
+      $this->messenger->addStatus($this->t('File name is @filename.', ['@filename' => $file->getFilename()]));
+      $this->messenger->addStatus($this->t('File MIME type is @mimetype.', ['@mimetype' => $file->getMimeType()]));
+      $this->messenger->addStatus($this->t('You WIN!'));
     }
     elseif ($file === FALSE) {
-      drupal_set_message($this->t('Epic upload FAIL!'), 'error');
+      $this->messenger->addError($this->t('Epic upload FAIL!'));
     }
   }
 
