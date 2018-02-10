@@ -45,17 +45,17 @@
 }
 .toolbar-icon.toolbar-icon-edit.toolbar-item:before,
 button.toolbar-icon.toolbar-icon-edit.toolbar-item:before {
-  background-image: url(../../../misc/icons/bebebe/pencil.svg);
+  background-image: url(../../../../misc/icons/bebebe/pencil.svg);
 }
 .toolbar-icon.toolbar-icon-edit.toolbar-item:before:hover,
 button.toolbar-icon.toolbar-icon-edit.toolbar-item:before:focus {
-  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+  background-image: url(../../../../misc/icons/ffffff/pencil.svg);
 }
 .toolbar-icon.toolbar-icon-edit.toolbar-item:hover > .toolbar-icon-edit:before {
-  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+  background-image: url(../../../../misc/icons/ffffff/pencil.svg);
 }
 #toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
-  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+  background-image: url(../../../../misc/icons/ffffff/pencil.svg);
 }
 
 #toolbar-bar.js-settings-tray-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active {
