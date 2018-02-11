@@ -32,11 +32,11 @@
   margin-right: 0.3em;
 }
 .shortcut-action__message {
-  background: #000000;
+  background: #000;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 5px;
   padding: 0 5px;
-  color: #ffffff;
+  color: #fff;
   display: inline-block;
   margin-left: 0.3em; /* LTR */
   opacity: 0;

@@ -9,7 +9,7 @@
 .js .dropbutton .dropbutton-action > input,
 .js .dropbutton .dropbutton-action > a,
 .js .dropbutton .dropbutton-action > button {
-  color: #333333;
+  color: #333;
   text-decoration: none;
   padding: 0;
   margin: 0;
@@ -173,7 +173,7 @@
   background-color: #f2f1eb;
   background-image: -webkit-linear-gradient(top, #f6f6f3, #e7e7df);
   background-image: linear-gradient(to bottom, #f6f6f3, #e7e7df);
-  color: #333333;
+  color: #333;
   text-decoration: none;
   text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
   font-weight: 600;

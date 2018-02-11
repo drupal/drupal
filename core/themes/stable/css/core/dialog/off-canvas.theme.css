@@ -45,7 +45,7 @@
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:hover,
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:focus {
   background-image: url(../../../images/core/icons/ffffff/ex.svg);
-  border: 3px solid #ffffff;
+  border: 3px solid #fff;
 }
 [dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
   left: 1em;

@@ -266,11 +266,11 @@ details.fieldset-no-legend {
 }
 
 .views-ui-rearrange-filter-form tr.drag td {
-  background-color: #ffee77 !important;
+  background-color: #fe7 !important;
 }
 
 .views-ui-rearrange-filter-form tr.drag-previous td {
-  background-color: #ffffbb !important;
+  background-color: #ffb !important;
 }
 
 /* @end */

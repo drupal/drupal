@@ -21,7 +21,7 @@ div.tabs {
   text-shadow: 0 1px 0 #fff;
 }
 .tabs ul.primary li.is-active a {
-  background-color: #ffffff;
+  background-color: #fff;
   border: 1px solid #bbb;
 }
 

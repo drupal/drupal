@@ -61,38 +61,38 @@
  */
 .toolbar .level-2 > ul {
   background-color: #fafafa;
-  border-bottom-color: #cccccc;
+  border-bottom-color: #ccc;
   border-top-color: #e5e5e5;
 }
 .toolbar .level-3 > ul {
   background-color: #f5f5f5;
   border-bottom-color: #c5c5c5;
-  border-top-color: #dddddd;
+  border-top-color: #ddd;
 }
 .toolbar .level-4 > ul {
-  background-color: #eeeeee;
-  border-bottom-color: #bbbbbb;
+  background-color: #eee;
+  border-bottom-color: #bbb;
   border-top-color: #d5d5d5;
 }
 .toolbar .level-5 > ul {
   background-color: #e5e5e5;
   border-bottom-color: #b5b5b5;
-  border-top-color: #cccccc;
+  border-top-color: #ccc;
 }
 .toolbar .level-6 > ul {
-  background-color: #eeeeee;
-  border-bottom-color: #aaaaaa;
+  background-color: #eee;
+  border-bottom-color: #aaa;
   border-top-color: #c5c5c5;
 }
 .toolbar .level-7 > ul {
   background-color: #fafafa;
   border-bottom-color: #b5b5b5;
-  border-top-color: #cccccc;
+  border-top-color: #ccc;
 }
 .toolbar .level-8 > ul {
-  background-color: #dddddd;
-  border-bottom-color: #cccccc;
-  border-top-color: #dddddd;
+  background-color: #ddd;
+  border-bottom-color: #ccc;
+  border-top-color: #ddd;
 }
 
 /**
