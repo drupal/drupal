@@ -31,7 +31,7 @@
 }
 #drupal-off-canvas hr {
   height: 1px;
-  background: #cccccc;
+  background: #ccc;
 }
 #drupal-off-canvas summary,
 #drupal-off-canvas .fieldgroup:not(.form-composite) > legend {

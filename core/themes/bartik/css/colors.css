@@ -8,14 +8,14 @@ body {
 #main-wrapper,
 .region-primary-menu .menu-item a.is-active,
 .region-primary-menu .menu-item--active-trail a {
-  background: #ffffff;
+  background: #fff;
 }
 .tabs ul.primary li a.is-active {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .tabs ul.primary li.is-active a {
-  background-color: #ffffff;
-  border-bottom-color: #ffffff;
+  background-color: #fff;
+  border-bottom-color: #fff;
 }
 #header {
   background-color: #1d84c3;

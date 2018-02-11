@@ -30,7 +30,7 @@
   font-size: 1.231em;
   font-weight: 600;
   margin: 0;
-  color: #ffffff;
+  color: #fff;
   -webkit-font-smoothing: antialiased;
 }
 .ui-dialog .ui-dialog-titlebar-close {
@@ -49,7 +49,7 @@
 }
 .ui-dialog .ui-dialog-titlebar-close:hover,
 .ui-dialog .ui-dialog-titlebar-close:focus {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 [dir="rtl"] .ui-dialog .ui-dialog-titlebar-close {
   right: auto;
@@ -60,7 +60,7 @@
   margin-top: -8px;
 }
 .ui-dialog .ui-widget-content.ui-dialog-content {
-  background: #ffffff;
+  background: #fff;
   overflow: auto;
   padding: 1em;
 }

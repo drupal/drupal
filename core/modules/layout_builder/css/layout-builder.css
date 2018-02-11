@@ -22,8 +22,8 @@
 
 .layout-section .remove-section {
   position: relative;
-  background: url(../../../misc/icons/bebebe/ex.svg) #ffffff center center / 16px 16px no-repeat;
-  border: 1px solid #cccccc;
+  background: url(../../../misc/icons/bebebe/ex.svg) #fff center center / 16px 16px no-repeat;
+  border: 1px solid #ccc;
   box-sizing: border-box;
   font-size: 1rem;
   padding: 0;

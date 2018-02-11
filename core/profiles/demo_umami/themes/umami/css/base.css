@@ -20,7 +20,7 @@ a {
 a:hover,
 a:focus {
   background-color: #e6eee0;
-  color: #444444;
+  color: #444;
   text-decoration: none;
 }
 
@@ -82,7 +82,7 @@ button:focus,
 .button:focus {
   background-color: #e6eee0;
   border: 3px solid #00836d;
-  color: #000000;
+  color: #000;
   text-decoration: none;
   transition: background-color 0.5s ease;
 }

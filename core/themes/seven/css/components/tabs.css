@@ -86,7 +86,7 @@ li.tabs__tab a {
   z-index: 15;
   border-color: #a6a6a6;
   border-radius: 4px 0 0 0; /* LTR */
-  background-color: #ffffff;
+  background-color: #fff;
   color: #004f80;
 }
 [dir="rtl"] .tabs.primary .tabs__tab.is-active {
@@ -174,7 +174,7 @@ li.tabs__tab a {
 }
 .is-open .tabs__tab.is-active {
   border-color: #a6a6a6;
-  background-color: #ffffff;
+  background-color: #fff;
   color: #004f80;
   border-bottom: 1px solid #a6a6a6;
 }

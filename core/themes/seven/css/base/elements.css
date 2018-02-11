@@ -23,7 +23,7 @@ hr {
   padding: 0;
   border: none;
   height: 1px;
-  background: #cccccc;
+  background: #ccc;
 }
 summary,
 .fieldgroup:not(.form-composite) > legend {
