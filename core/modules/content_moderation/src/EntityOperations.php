@@ -269,6 +269,9 @@ class EntityOperations implements ContainerInjectionInterface {
     if (!$this->moderationInfo->isModeratedEntity($entity)) {
       return;
     }
+    if (isset($entity->in_preview) && $entity->in_preview) {
+      return;
+    }
     // If the component is not defined for this display, we have nothing to do.
     if (!$display->getComponent('content_moderation_control')) {
       return;
