@@ -60,8 +60,9 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
 
     // Insert data in the d7_node:page migration mappping table to simulate a
     // previously migrated node.
-    $table_name = $this->getMigration('d7_node:page')->getIdMap()->mapTableName();
-    $this->container->get('database')->insert($table_name)
+    $id_map = $this->getMigration('d7_node:page')->getIdMap();
+    $table_name = $id_map->mapTableName();
+    $id_map->getDatabase()->insert($table_name)
       ->fields([
         'source_ids_hash' => 1,
         'sourceid1' => 1,
@@ -156,8 +157,9 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
 
     // Insert data in the d7_node_revision:page migration mappping table to
     // simulate a previously migrated node revison.
-    $table_name = $this->getMigration('d7_node_revision:page')->getIdMap()->mapTableName();
-    $this->container->get('database')->insert($table_name)
+    $id_map = $this->getMigration('d7_node_revision:page')->getIdMap();
+    $table_name = $id_map->mapTableName();
+    $id_map->getDatabase()->insert($table_name)
       ->fields([
         'source_ids_hash' => 1,
         'sourceid1' => 1,
