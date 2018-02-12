@@ -8,12 +8,17 @@ namespace Drupal\entity_test\Entity;
  * @ContentEntityType(
  *   id = "entity_test_no_label",
  *   label = @Translation("Entity Test without label"),
+ *   internal = TRUE,
  *   persistent_cache = FALSE,
  *   base_table = "entity_test_no_label",
+ *   handlers = {
+ *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
+ *   },
  *   entity_keys = {
  *     "id" = "id",
- *     "bundle" = "type"
- *   }
+ *     "uuid" = "uuid",
+ *     "bundle" = "type",
+ *   },
  * )
  */
 class EntityTestNoLabel extends EntityTest {
