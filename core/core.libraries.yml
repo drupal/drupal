@@ -378,11 +378,11 @@ jquery.farbtastic:
     - core/jquery
 
 jquery.form:
-  remote: https://github.com/malsup/form
-  version: "3.51"
+  remote: https://github.com/jquery-form/form
+  version: "4.22"
   license:
     name: GNU-GPL-2.0-or-later
-    url: http://malsup.github.com/gpl-license-v2.txt
+    url: https://raw.githubusercontent.com/jquery-form/form/master/LICENSE-LGPLv3
     gpl-compatible: true
   js:
     assets/vendor/jquery-form/jquery.form.min.js: { minified: true }
