@@ -3,6 +3,7 @@
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Defines the test entity class for testing entity constraint violations.
@@ -38,6 +39,16 @@ class EntityTestConstraintViolation extends EntityTest {
       'weight' => 0,
     ]);
     $fields['name']->addConstraint('FieldWidgetConstraint', []);
+
+    // Add a field that uses a widget with a custom implementation for
+    // \Drupal\Core\Field\WidgetInterface::errorElement().
+    $fields['test_field'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Test field'))
+      ->setDisplayOptions('form', [
+        'type' => 'number',
+        'weight' => 1,
+      ])
+      ->addConstraint('FieldWidgetConstraint', []);
 
     return $fields;
   }
