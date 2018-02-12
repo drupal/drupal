@@ -4,6 +4,7 @@ namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\workflows\Entity\Workflow;
+use Drupal\Core\Url;
 
 /**
  * Tests the moderation form, specifically on nodes.
@@ -79,6 +80,21 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet($canonical_path);
     $this->assertResponse(200);
     $this->assertField('edit-new-state', 'The node view page has a moderation form.');
+
+    // Preview the draft.
+    $this->drupalPostForm($edit_path, [
+      'body[0][value]' => 'Second version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], t('Preview'));
+
+    // The preview view should not have a moderation form.
+    $preview_url = Url::fromRoute('entity.node.preview', [
+      'node_preview' => $node->uuid(),
+      'view_mode_id' => 'full',
+    ]);
+    $this->assertResponse(200);
+    $this->assertUrl($preview_url);
+    $this->assertNoField('edit-new-state', 'The node preview page has no moderation form.');
 
     // The latest version page should not show, because there is still no
     // pending revision.
