@@ -45982,6 +45982,12 @@ $connection->insert('url_alias')
   'alias' => 'firefly',
   'language' => 'en',
 ))
+->values(array(
+  'pid' => '6',
+  'source' => 'admin',
+  'alias' => 'source-noslash',
+  'language' => 'und',
+))
 ->execute();
 
 $connection->schema()->createTable('users', array(
