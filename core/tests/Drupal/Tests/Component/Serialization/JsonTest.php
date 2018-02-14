@@ -58,7 +58,7 @@ class JsonTest extends TestCase {
    */
   public function testEncodingAscii() {
     // Verify there aren't character encoding problems with the source string.
-    $this->assertSame(strlen($this->string), 127, 'A string with the full ASCII table has the correct length.');
+    $this->assertSame(127, strlen($this->string), 'A string with the full ASCII table has the correct length.');
     foreach ($this->htmlUnsafe as $char) {
       $this->assertTrue(strpos($this->string, $char) > 0, sprintf('A string with the full ASCII table includes %s.', $char));
     }

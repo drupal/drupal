@@ -51,12 +51,12 @@ class StackedKernelPassTest extends UnitTestCase {
     $stacked_kernel_args = $this->containerBuilder->getDefinition('http_kernel')->getArguments();
 
     // Check the stacked kernel args.
-    $this->assertSame((string) $stacked_kernel_args[0], 'http_kernel.one');
+    $this->assertSame('http_kernel.one', (string) $stacked_kernel_args[0]);
     $this->assertCount(4, $stacked_kernel_args[1]);
-    $this->assertSame((string) $stacked_kernel_args[1][0], 'http_kernel.one');
-    $this->assertSame((string) $stacked_kernel_args[1][1], 'http_kernel.two');
-    $this->assertSame((string) $stacked_kernel_args[1][2], 'http_kernel.three');
-    $this->assertSame((string) $stacked_kernel_args[1][3], 'http_kernel.basic');
+    $this->assertSame('http_kernel.one', (string) $stacked_kernel_args[1][0]);
+    $this->assertSame('http_kernel.two', (string) $stacked_kernel_args[1][1]);
+    $this->assertSame('http_kernel.three', (string) $stacked_kernel_args[1][2]);
+    $this->assertSame('http_kernel.basic', (string) $stacked_kernel_args[1][3]);
 
     // Check the modified definitions.
     $definition = $this->containerBuilder->getDefinition('http_kernel.one');

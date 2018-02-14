@@ -182,7 +182,7 @@ class PhpTransliterationTest extends TestCase {
     ]);
     $transliteration = new PhpTransliteration(vfsStream::url('transliteration/dir'));
     $transliterated = $transliteration->transliterate(chr(0xC2) . chr(0x82), '../index');
-    $this->assertSame($transliterated, 'safe');
+    $this->assertSame('safe', $transliterated);
   }
 
 }
