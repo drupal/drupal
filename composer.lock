@@ -2898,16 +2898,16 @@
         },
         {
             "name": "behat/mink-selenium2-driver",
-            "version": "v1.3.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/MinkSelenium2Driver.git",
-                "reference": "473a9f3ebe0c134ee1e623ce8a9c852832020288"
+                "reference": "93474c65a2a7bf959200ab5f7a14cc450645c185"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/MinkSelenium2Driver/zipball/473a9f3ebe0c134ee1e623ce8a9c852832020288",
-                "reference": "473a9f3ebe0c134ee1e623ce8a9c852832020288",
+                "url": "https://api.github.com/repos/minkphp/MinkSelenium2Driver/zipball/93474c65a2a7bf959200ab5f7a14cc450645c185",
+                "reference": "93474c65a2a7bf959200ab5f7a14cc450645c185",
                 "shasum": ""
             },
             "require": {
@@ -2916,7 +2916,7 @@
                 "php": ">=5.3.1"
             },
             "require-dev": {
-                "symfony/phpunit-bridge": "~2.7"
+                "mink/driver-testsuite": "dev-master"
             },
             "type": "mink-driver",
             "extra": {
@@ -2955,7 +2955,7 @@
                 "testing",
                 "webdriver"
             ],
-            "time": "2016-03-05T09:10:18+00:00"
+            "time": "2018-01-07T19:17:08+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -4533,7 +4533,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "behat/mink": 20
+        "behat/mink": 20,
+        "behat/mink-selenium2-driver": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
