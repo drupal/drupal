@@ -148,7 +148,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    * examined for changes in new Symfony releases.
    *
    * @param array $variables
-   *   The variables form the compiled route, corresponding to slugs in the
+   *   The variables from the compiled route, corresponding to slugs in the
    *   route path.
    * @param array $defaults
    *   The defaults from the route.
