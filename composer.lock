@@ -4539,6 +4539,19 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
+        "ext-date": "*",
+        "ext-dom": "*",
+        "ext-filter": "*",
+        "ext-gd": "*",
+        "ext-hash": "*",
+        "ext-json": "*",
+        "ext-pcre": "*",
+        "ext-pdo": "*",
+        "ext-session": "*",
+        "ext-simplexml": "*",
+        "ext-spl": "*",
+        "ext-tokenizer": "*",
+        "ext-xml": "*",
         "php": "^5.5.9|>=7.0.8"
     },
     "platform-dev": []
