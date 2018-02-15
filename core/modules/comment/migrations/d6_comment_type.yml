@@ -2,6 +2,7 @@ id: d6_comment_type
 label: Comment type
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: d6_node_type
   constants:

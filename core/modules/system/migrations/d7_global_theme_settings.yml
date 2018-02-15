@@ -2,6 +2,7 @@ id: d7_global_theme_settings
 label: D7 global theme settings
 migration_tags:
   - Drupal 7
+  - Configuration
 source:
   plugin: variable
   variables:

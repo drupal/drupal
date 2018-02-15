@@ -2,6 +2,7 @@ id: d7_field_instance_widget_settings
 label: Field instance widget configuration
 migration_tags:
   - Drupal 7
+  - Configuration
 class: Drupal\migrate_drupal\Plugin\migrate\FieldMigration
 field_plugin_method: processFieldWidget
 source:

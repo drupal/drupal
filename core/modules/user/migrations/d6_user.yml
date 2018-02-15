@@ -3,6 +3,7 @@ label: User accounts
 audit: true
 migration_tags:
   - Drupal 6
+  - Content
 source:
   plugin: d6_user
 process:

@@ -3,6 +3,7 @@ label: Private files
 audit: true
 migration_tags:
   - Drupal 7
+  - Content
 source:
   plugin: d7_file
   scheme: private

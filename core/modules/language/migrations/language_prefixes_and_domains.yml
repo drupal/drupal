@@ -3,6 +3,7 @@ label: Language prefixes and domains
 migration_tags:
   - Drupal 6
   - Drupal 7
+  - Configuration
 source:
   plugin: language
   fetch_all: true

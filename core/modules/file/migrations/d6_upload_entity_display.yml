@@ -2,6 +2,7 @@ id: d6_upload_entity_display
 label: Upload display configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: d6_upload_instance
   constants:

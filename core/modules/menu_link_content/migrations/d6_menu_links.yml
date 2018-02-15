@@ -3,6 +3,7 @@ label: Menu links
 audit: true
 migration_tags:
   - Drupal 6
+  - Content
 source:
   plugin: menu_link
 process:

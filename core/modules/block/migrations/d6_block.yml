@@ -2,6 +2,7 @@ id: d6_block
 label: Blocks
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: block
 process:

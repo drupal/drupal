@@ -2,6 +2,7 @@ id: d6_node_settings
 label: Node configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: variable
   variables:

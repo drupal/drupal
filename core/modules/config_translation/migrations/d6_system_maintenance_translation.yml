@@ -2,6 +2,7 @@ id: d6_system_maintenance_translation
 label: Maintenance page configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: variable_translation
   variables:

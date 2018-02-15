@@ -3,6 +3,7 @@ label: Body field display configuration
 migration_tags:
   - Drupal 6
   - Drupal 7
+  - Configuration
 source:
   plugin: embedded_data
   data_rows:

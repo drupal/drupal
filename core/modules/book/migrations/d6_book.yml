@@ -2,6 +2,7 @@ id: d6_book
 label: Books
 migration_tags:
   - Drupal 6
+  - Content
 source:
   plugin: d6_book
 process:

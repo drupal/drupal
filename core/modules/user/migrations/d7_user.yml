@@ -3,6 +3,7 @@ label: User accounts
 audit: true
 migration_tags:
   - Drupal 7
+  - Content
 class: Drupal\user\Plugin\migrate\User
 source:
   plugin: d7_user

@@ -3,6 +3,7 @@ label: Comments
 audit: true
 migration_tags:
   - Drupal 6
+  - Content
 source:
   plugin: d6_comment
   constants:

@@ -2,6 +2,7 @@ id: d6_date_formats
 label: Date format configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: variable_multirow
   variables:

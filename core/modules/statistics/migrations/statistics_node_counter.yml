@@ -3,6 +3,7 @@ label: Node counter
 migration_tags:
   - Drupal 6
   - Drupal 7
+  - Content
 source:
   plugin: node_counter
 process:

@@ -3,6 +3,7 @@ label: Menu links
 audit: true
 migration_tags:
   - Drupal 7
+  - Content
 source:
   plugin: menu_link
   constants:

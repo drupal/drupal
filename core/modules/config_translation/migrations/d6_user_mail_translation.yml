@@ -2,6 +2,7 @@ id: d6_user_mail_translation
 label: User mail configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: variable_translation
   variables:

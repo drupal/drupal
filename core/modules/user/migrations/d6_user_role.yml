@@ -2,6 +2,7 @@ id: d6_user_role
 label: User roles
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: d6_user_role
 process:

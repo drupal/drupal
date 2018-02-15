@@ -2,6 +2,7 @@ id: d6_taxonomy_vocabulary_translation
 label: Taxonomy vocabularies
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: d6_taxonomy_vocabulary_translation
 process:

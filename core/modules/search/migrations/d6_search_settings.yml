@@ -2,6 +2,7 @@ id: d6_search_settings
 label: Search configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: variable
   constants:

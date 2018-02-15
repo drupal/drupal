@@ -2,6 +2,7 @@ id: d6_filter_format
 label: Filter format configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: d6_filter_format
 process:

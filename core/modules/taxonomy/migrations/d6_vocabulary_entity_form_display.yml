@@ -2,6 +2,7 @@ id: d6_vocabulary_entity_form_display
 label: Vocabulary form display configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: d6_taxonomy_vocabulary_per_type
   constants:
