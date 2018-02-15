@@ -152,7 +152,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       $options['parameters']['section_storage'] = [];
       $options['parameters'][$entity_type_id]['type'] = 'entity:' . $entity_type_id;
 
-      $template = $entity_type->getLinkTemplate('layout-builder');
+      $template = $entity_type->getLinkTemplate('canonical') . '/layout';
       $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), $template, $defaults, $requirements, $options, $entity_type_id);
     }
   }
@@ -179,7 +179,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    */
   protected function getEntityTypes() {
     return array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $entity_type) {
-      return $entity_type->hasLinkTemplate('layout-builder');
+      return $entity_type->entityClassImplements(FieldableEntityInterface::class) && $entity_type->hasViewBuilderClass() && $entity_type->hasLinkTemplate('canonical');
     });
   }
 

@@ -5,6 +5,7 @@ namespace Drupal\layout_builder\Plugin\Derivative;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -50,7 +51,7 @@ class LayoutBuilderLocalTaskDeriver extends DeriverBase implements ContainerDeri
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    foreach ($this->getEntityTypes() as $entity_type_id => $entity_type) {
+    foreach ($this->getEntityTypesForOverrides() as $entity_type_id => $entity_type) {
       // Overrides.
       $this->derivatives["layout_builder.overrides.$entity_type_id.view"] = $base_plugin_definition + [
         'route_name' => "layout_builder.overrides.$entity_type_id.view",
@@ -81,7 +82,9 @@ class LayoutBuilderLocalTaskDeriver extends DeriverBase implements ContainerDeri
         'weight' => 10,
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
       ];
+    }
 
+    foreach ($this->getEntityTypesForDefaults() as $entity_type_id => $entity_type) {
       // Defaults.
       $this->derivatives["layout_builder.defaults.$entity_type_id.view"] = $base_plugin_definition + [
         'route_name' => "layout_builder.defaults.$entity_type_id.view",
@@ -105,14 +108,26 @@ class LayoutBuilderLocalTaskDeriver extends DeriverBase implements ContainerDeri
   }
 
   /**
-   * Returns an array of relevant entity types.
+   * Returns an array of entity types relevant for defaults.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface[]
    *   An array of entity types.
    */
-  protected function getEntityTypes() {
+  protected function getEntityTypesForDefaults() {
     return array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $entity_type) {
-      return $entity_type->hasLinkTemplate('layout-builder');
+      return $entity_type->entityClassImplements(FieldableEntityInterface::class) && $entity_type->hasViewBuilderClass() && $entity_type->get('field_ui_base_route');
+    });
+  }
+
+  /**
+   * Returns an array of entity types relevant for overrides.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeInterface[]
+   *   An array of entity types.
+   */
+  protected function getEntityTypesForOverrides() {
+    return array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $entity_type) {
+      return $entity_type->entityClassImplements(FieldableEntityInterface::class) && $entity_type->hasViewBuilderClass() && $entity_type->hasLinkTemplate('canonical');
     });
   }
 
