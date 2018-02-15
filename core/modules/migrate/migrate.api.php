@@ -10,77 +10,81 @@ use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
 
 /**
- * @defgroup migration Migration API
+ * @defgroup migration Migrate API
  * @{
- * Overview of the Migration API, which migrates data into Drupal.
+ * Overview of the Migrate API, which migrates data into Drupal.
  *
- * @section overview Overview of migration
+ * @section overview Overview of a migration
  * Migration is an
  * @link http://wikipedia.org/wiki/Extract,_transform,_load Extract, Transform, Load @endlink
- * (ETL) process. In the Drupal migration API the extract phase is called
- * "source", the transform phase is called "process", and the load phase is
- * called "destination". It is important to understand that the "load" in ETL
- * means to load data into storage, while traditionally Drupal uses "load" to
- * mean load data from storage into memory.
+ * (ETL) process. In the Drupal Migrate API, the extract phase is called
+ * 'source', the transform phase is called 'process', and the load phase is
+ * called 'destination'. It is important to understand that the term 'load' in
+ * ETL refers to loading data into the storage while in a typical Drupal context
+ * the term 'load' refers to loading data from storage.
  *
  * In the source phase, a set of data, called the row, is retrieved from the
- * data source, typically a database but it can be a CSV, JSON or XML file. The
- * row is sent to the process phase where it is transformed as needed by the
- * destination, or marked to be skipped. Processing can also determine that a
- * stub needs to be created, for example, if a term has a parent term that does
- * not yet exist. After processing the transformed row is passed to the
- * destination phase where it is loaded (saved) into the Drupal 8 site.
+ * data source. The data can be migrated from a database, loaded from a file
+ * (for example CSV, JSON or XML) or fetched from a web service (for example RSS
+ * or REST). The row is sent to the process phase where it is transformed as
+ * needed or marked to be skipped. Processing can also determine if a 'stub'
+ * needs to be created. For example, if a term has a parent term which hasn't
+ * been migrated yet, a stub term is created so that the parent relation can be
+ * established, and the stub is updated at a later point. After processing, the
+ * transformed row is passed to the destination phase where it is loaded (saved)
+ * into the target Drupal site.
  *
- * The ETL process is configured by the migration plugin. The different phases:
- * source, process, and destination are also plugins, and are managed by the
- * Migration plugin. So there are four types of plugins in the migration
- * process: migration, source, process and destination.
+ * Migrate API uses the Drupal plugin system for many different purposes. Most
+ * importantly, the overall ETL process is defined as a migration plugin and the
+ * three phases (source, process and destination) have their own plugin types.
  *
- * @section sec_migrations Migration plugins
+ * @section sec_migrations Migrate API migration plugins
  * Migration plugin definitions are stored in a module's 'migrations' directory.
- * Examples of migration plugin definitions can be found in
- * 'core/modules/action/migrations'. The plugin class is
- * \Drupal\migrate\Plugin\Migration, with interface
+ * The plugin class is \Drupal\migrate\Plugin\Migration, with interface
  * \Drupal\migrate\Plugin\MigrationInterface. Migration plugins are managed by
  * the \Drupal\migrate\Plugin\MigrationPluginManager class. Migration plugins
  * are only available if the providers of their source plugins are installed.
  *
- * @section sec_source Source plugins
- * Migration source plugins implement
+ * @link https://www.drupal.org/docs/8/api/migrate-api/migrate-destination-plugins-examples Example migrations in Migrate API handbook. @endlink
+ *
+ * @section sec_source Migrate API source plugins
+ * Migrate API source plugins implement
  * \Drupal\migrate\Plugin\MigrateSourceInterface and usually extend
  * \Drupal\migrate\Plugin\migrate\source\SourcePluginBase. They are annotated
- * with \Drupal\migrate\Annotation\MigrateSource annotation, and must be in
- * namespace subdirectory Plugin\migrate\source under the namespace of the
- * module that defines them. Migration source plugins are managed by the
- * \Drupal\migrate\Plugin\MigrateSourcePluginManager class. Source plugin
- * providers are determined by their and their parents namespaces.
+ * with \Drupal\migrate\Annotation\MigrateSource annotation and must be in
+ * namespace subdirectory 'Plugin\migrate\source' under the namespace of the
+ * module that defines them. Migrate API source plugins are managed by the
+ * \Drupal\migrate\Plugin\MigrateSourcePluginManager class.
  *
- * @section sec_process Process plugins
- * Migration process plugins implement
+ * @link https://api.drupal.org/api/drupal/namespace/Drupal!migrate!Plugin!migrate!source List of source plugins provided by the core Migrate module. @endlink
+ * @link https://www.drupal.org/docs/8/api/migrate-api/migrate-source-plugins Core and contributed source plugin usage examples in Migrate API handbook. @endlink
+ *
+ * @section sec_process Migrate API process plugins
+ * Migrate API process plugins implement
  * \Drupal\migrate\Plugin\MigrateProcessInterface and usually extend
- * \Drupal\migrate\ProcessPluginBase. They are annotated
- * with \Drupal\migrate\Annotation\MigrateProcessPlugin annotation, and must be
- * in namespace subdirectory Plugin\migrate\process under the namespace of the
- * module that defines them. Migration process plugins are managed by the
- * \Drupal\migrate\Plugin\MigratePluginManager class. The Migrate module
- * provides process plugins for common operations (setting default values,
- * mapping values, etc.).
+ * \Drupal\migrate\ProcessPluginBase. They are annotated with
+ * \Drupal\migrate\Annotation\MigrateProcessPlugin annotation and must be in
+ * namespace subdirectory 'Plugin\migrate\process' under the namespace of the
+ * module that defines them. Migrate API process plugins are managed by the
+ * \Drupal\migrate\Plugin\MigratePluginManager class.
  *
- * @section sec_destination Destination plugins
- * Migration destination plugins implement
+ * @link https://api.drupal.org/api/drupal/namespace/Drupal!migrate!Plugin!migrate!process List of process plugins for common operations provided by the core Migrate module. @endlink
+ *
+ * @section sec_destination Migrate API destination plugins
+ * Migrate API destination plugins implement
  * \Drupal\migrate\Plugin\MigrateDestinationInterface and usually extend
  * \Drupal\migrate\Plugin\migrate\destination\DestinationBase. They are
- * annotated with \Drupal\migrate\Annotation\MigrateDestination annotation, and
- * must be in namespace subdirectory Plugin\migrate\destination under the
- * namespace of the module that defines them. Migration destination plugins
+ * annotated with \Drupal\migrate\Annotation\MigrateDestination annotation and
+ * must be in namespace subdirectory 'Plugin\migrate\destination' under the
+ * namespace of the module that defines them. Migrate API destination plugins
  * are managed by the \Drupal\migrate\Plugin\MigrateDestinationPluginManager
- * class. The Migrate module provides destination plugins for Drupal core
- * objects (configuration and entity).
+ * class.
  *
- * @section sec_more_info More information
- * @link https://www.drupal.org/node/2127611 Migration API documentation. @endlink
+ * @link https://api.drupal.org/api/drupal/namespace/Drupal!migrate!Plugin!migrate!destination List of destination plugins for Drupal configuration and content entities provided by the core Migrate module. @endlink
  *
- * @see update_api
+ * @section sec_more_info Documentation handbooks
+ * @link https://www.drupal.org/docs/8/api/migrate-api Migrate API handbook. @endlink
+ * @link https://www.drupal.org/docs/8/upgrade Upgrading to Drupal 8 handbook. @endlink
  * @}
  */
 
