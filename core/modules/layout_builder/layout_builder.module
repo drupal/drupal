@@ -5,7 +5,6 @@
  * Provides hook implementations for Layout Builder.
  */
 
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -44,11 +43,6 @@ function layout_builder_help($route_name, RouteMatchInterface $route_match) {
  */
 function layout_builder_entity_type_alter(array &$entity_types) {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
-  foreach ($entity_types as $entity_type) {
-    if ($entity_type->entityClassImplements(FieldableEntityInterface::class) && $entity_type->hasLinkTemplate('canonical') && $entity_type->hasViewBuilderClass()) {
-      $entity_type->setLinkTemplate('layout-builder', $entity_type->getLinkTemplate('canonical') . '/layout');
-    }
-  }
   $entity_types['entity_view_display']
     ->setClass(LayoutBuilderEntityViewDisplay::class)
     ->setStorageClass(LayoutBuilderEntityViewDisplayStorage::class)

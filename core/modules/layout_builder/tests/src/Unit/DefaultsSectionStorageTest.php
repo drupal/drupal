@@ -5,7 +5,9 @@ namespace Drupal\Tests\layout_builder\Unit;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator;
 use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
 use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
@@ -173,26 +175,41 @@ class DefaultsSectionStorageTest extends UnitTestCase {
    */
   public function testBuildRoutes() {
     $entity_types = [];
-    $entity_types['no_link_template'] = new EntityType(['id' => 'no_link_template']);
-    $entity_types['unknown_field_ui_route'] = new EntityType([
-      'id' => 'unknown_field_ui_route',
-      'links' => ['layout-builder' => '/entity/{entity}/layout'],
-      'entity_keys' => ['id' => 'id'],
-      'field_ui_base_route' => 'unknown',
-    ]);
-    $entity_types['with_bundle_key'] = new EntityType([
-      'id' => 'with_bundle_key',
-      'links' => ['layout-builder' => '/entity/{entity}/layout'],
-      'entity_keys' => ['id' => 'id', 'bundle' => 'bundle'],
-      'bundle_entity_type' => 'my_bundle_type',
-      'field_ui_base_route' => 'known',
-    ]);
-    $entity_types['with_bundle_parameter'] = new EntityType([
-      'id' => 'with_bundle_parameter',
-      'links' => ['layout-builder' => '/entity/{entity}/layout'],
-      'entity_keys' => ['id' => 'id'],
-      'field_ui_base_route' => 'with_bundle',
-    ]);
+
+    $not_fieldable = $this->prophesize(EntityTypeInterface::class);
+    $not_fieldable->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
+    $entity_types['not_fieldable'] = $not_fieldable->reveal();
+
+    $no_view_builder = $this->prophesize(EntityTypeInterface::class);
+    $no_view_builder->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $no_view_builder->hasViewBuilderClass()->willReturn(FALSE);
+    $entity_types['no_view_builder'] = $no_view_builder->reveal();
+
+    $no_field_ui_route = $this->prophesize(EntityTypeInterface::class);
+    $no_field_ui_route->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $no_field_ui_route->hasViewBuilderClass()->willReturn(TRUE);
+    $no_field_ui_route->get('field_ui_base_route')->willReturn(NULL);
+    $entity_types['no_field_ui_route'] = $no_field_ui_route->reveal();
+
+    $unknown_field_ui_route = $this->prophesize(EntityTypeInterface::class);
+    $unknown_field_ui_route->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $unknown_field_ui_route->hasViewBuilderClass()->willReturn(TRUE);
+    $unknown_field_ui_route->get('field_ui_base_route')->willReturn('unknown');
+    $entity_types['unknown_field_ui_route'] = $unknown_field_ui_route->reveal();
+
+    $with_bundle_key = $this->prophesize(EntityTypeInterface::class);
+    $with_bundle_key->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $with_bundle_key->hasViewBuilderClass()->willReturn(TRUE);
+    $with_bundle_key->get('field_ui_base_route')->willReturn('known');
+    $with_bundle_key->hasKey('bundle')->willReturn(TRUE);
+    $with_bundle_key->getBundleEntityType()->willReturn('my_bundle_type');
+    $entity_types['with_bundle_key'] = $with_bundle_key->reveal();
+
+    $with_bundle_parameter = $this->prophesize(EntityTypeInterface::class);
+    $with_bundle_parameter->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $with_bundle_parameter->hasViewBuilderClass()->willReturn(TRUE);
+    $with_bundle_parameter->get('field_ui_base_route')->willReturn('with_bundle');
+    $entity_types['with_bundle_parameter'] = $with_bundle_parameter->reveal();
     $this->entityTypeManager->getDefinitions()->willReturn($entity_types);
 
     $expected = [

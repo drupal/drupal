@@ -4,7 +4,7 @@ namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityType;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -168,23 +168,42 @@ class OverridesSectionStorageTest extends UnitTestCase {
   public function testBuildRoutes() {
     $entity_types = [];
 
-    $entity_types['no_link_template'] = new EntityType(['id' => 'no_link_template']);
-    $this->entityFieldManager->getFieldStorageDefinitions('no_link_template')->shouldNotBeCalled();
+    $not_fieldable = $this->prophesize(EntityTypeInterface::class);
+    $not_fieldable->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
+    $entity_types['not_fieldable'] = $not_fieldable->reveal();
 
-    $entity_types['with_string_id'] = new EntityType([
-      'id' => 'with_string_id',
-      'links' => ['layout-builder' => '/entity/{entity}/layout'],
-      'entity_keys' => ['id' => 'id'],
-    ]);
+    $no_view_builder = $this->prophesize(EntityTypeInterface::class);
+    $no_view_builder->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $no_view_builder->hasViewBuilderClass()->willReturn(FALSE);
+    $entity_types['no_view_builder'] = $no_view_builder->reveal();
+
+    $no_canonical_link = $this->prophesize(EntityTypeInterface::class);
+    $no_canonical_link->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $no_canonical_link->hasViewBuilderClass()->willReturn(TRUE);
+    $no_canonical_link->hasLinkTemplate('canonical')->willReturn(FALSE);
+    $entity_types['no_canonical_link'] = $no_canonical_link->reveal();
+    $this->entityFieldManager->getFieldStorageDefinitions('no_canonical_link')->shouldNotBeCalled();
+
+    $with_string_id = $this->prophesize(EntityTypeInterface::class);
+    $with_string_id->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $with_string_id->hasViewBuilderClass()->willReturn(TRUE);
+    $with_string_id->hasLinkTemplate('canonical')->willReturn(TRUE);
+    $with_string_id->getLinkTemplate('canonical')->willReturn('/entity/{entity}');
+    $with_string_id->id()->willReturn('with_string_id');
+    $with_string_id->getKey('id')->willReturn('id');
+    $entity_types['with_string_id'] = $with_string_id->reveal();
     $string_id = $this->prophesize(FieldStorageDefinitionInterface::class);
     $string_id->getType()->willReturn('string');
     $this->entityFieldManager->getFieldStorageDefinitions('with_string_id')->willReturn(['id' => $string_id->reveal()]);
 
-    $entity_types['with_integer_id'] = new EntityType([
-      'id' => 'with_integer_id',
-      'links' => ['layout-builder' => '/entity/{entity}/layout'],
-      'entity_keys' => ['id' => 'id'],
-    ]);
+    $with_integer_id = $this->prophesize(EntityTypeInterface::class);
+    $with_integer_id->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $with_integer_id->hasViewBuilderClass()->willReturn(TRUE);
+    $with_integer_id->hasLinkTemplate('canonical')->willReturn(TRUE);
+    $with_integer_id->getLinkTemplate('canonical')->willReturn('/entity/{entity}');
+    $with_integer_id->id()->willReturn('with_integer_id');
+    $with_integer_id->getKey('id')->willReturn('id');
+    $entity_types['with_integer_id'] = $with_integer_id->reveal();
     $integer_id = $this->prophesize(FieldStorageDefinitionInterface::class);
     $integer_id->getType()->willReturn('integer');
     $this->entityFieldManager->getFieldStorageDefinitions('with_integer_id')->willReturn(['id' => $integer_id->reveal()]);
