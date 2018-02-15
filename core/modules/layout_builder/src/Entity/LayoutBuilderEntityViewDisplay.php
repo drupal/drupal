@@ -2,9 +2,6 @@
 
 namespace Drupal\layout_builder\Entity;
 
-use Drupal\Component\Plugin\DependentPluginInterface;
-use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Entity\EntityViewDisplay as BaseEntityViewDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -230,32 +227,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       }
     }
     return $changed;
-  }
-
-  /**
-   * Calculates and returns dependencies of a specific plugin instance.
-   *
-   * @param \Drupal\Component\Plugin\PluginInspectionInterface $instance
-   *   The plugin instance.
-   *
-   * @return array
-   *   An array of dependencies keyed by the type of dependency.
-   *
-   * @todo Replace this in https://www.drupal.org/project/drupal/issues/2939925.
-   */
-  protected function getPluginDependencies(PluginInspectionInterface $instance) {
-    $definition = $instance->getPluginDefinition();
-    $dependencies['module'][] = $definition['provider'];
-    // Plugins can declare additional dependencies in their definition.
-    if (isset($definition['config_dependencies'])) {
-      $dependencies = NestedArray::mergeDeep($dependencies, $definition['config_dependencies']);
-    }
-
-    // If a plugin is dependent, calculate its dependencies.
-    if ($instance instanceof DependentPluginInterface && $plugin_dependencies = $instance->calculateDependencies()) {
-      $dependencies = NestedArray::mergeDeep($dependencies, $plugin_dependencies);
-    }
-    return $dependencies;
   }
 
   /**
