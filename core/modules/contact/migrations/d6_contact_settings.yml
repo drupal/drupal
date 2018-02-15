@@ -2,6 +2,7 @@ id: d6_contact_settings
 label: Contact configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: contact_settings
   variables:

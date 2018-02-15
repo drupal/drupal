@@ -3,6 +3,7 @@ label: Aggregator feeds
 audit: true
 migration_tags:
   - Drupal 7
+  - Content
 source:
   plugin: aggregator_feed
 process:

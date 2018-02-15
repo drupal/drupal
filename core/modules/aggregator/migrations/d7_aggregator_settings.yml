@@ -2,6 +2,7 @@ id: d7_aggregator_settings
 label: Aggregator configuration
 migration_tags:
   - Drupal 7
+  - Configuration
 source:
   plugin: variable
   variables:

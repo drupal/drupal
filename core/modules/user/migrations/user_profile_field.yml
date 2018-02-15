@@ -3,6 +3,7 @@ label: User profile field configuration
 migration_tags:
   - Drupal 6
   - Drupal 7
+  - Configuration
 source:
   plugin: profile_field
   constants:

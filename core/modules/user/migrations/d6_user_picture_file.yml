@@ -2,6 +2,7 @@ id: d6_user_picture_file
 label: User pictures
 migration_tags:
   - Drupal 6
+  - Content
 source:
   plugin: d6_user_picture_file
   constants:

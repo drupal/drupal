@@ -2,6 +2,7 @@ id: d6_simpletest_settings
 label: Simpletest configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: variable
   variables:

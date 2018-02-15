@@ -2,6 +2,7 @@ id: d6_upload
 label: File uploads
 migration_tags:
   - Drupal 6
+  - Content
 source:
   plugin: d6_upload
 process:

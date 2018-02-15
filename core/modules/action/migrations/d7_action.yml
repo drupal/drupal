@@ -2,6 +2,7 @@ id: d7_action
 label: Actions
 migration_tags:
   - Drupal 7
+  - Configuration
 source:
   plugin: action
 process:

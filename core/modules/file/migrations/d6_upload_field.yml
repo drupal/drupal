@@ -2,6 +2,7 @@ id: d6_upload_field
 label: Upload field configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   # We do an empty source and a proper destination to have an idmap for
   # migration_dependencies.

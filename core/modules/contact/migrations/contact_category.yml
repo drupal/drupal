@@ -3,6 +3,7 @@ label: Contact category configuration
 migration_tags:
   - Drupal 6
   - Drupal 7
+  - Configuration
 source:
   plugin: contact_category
 process:

@@ -3,6 +3,7 @@ id: d6_menu
 label: Menus
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: menu
 process:

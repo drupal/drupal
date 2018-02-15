@@ -2,6 +2,7 @@ id: d6_system_site_translation
 label: Site configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: variable_translation
   constants:

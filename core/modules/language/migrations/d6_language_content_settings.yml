@@ -1,8 +1,8 @@
 id: d6_language_content_settings
 label: Drupal 6 language content settings
-
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: d6_language_content_settings
   constants:

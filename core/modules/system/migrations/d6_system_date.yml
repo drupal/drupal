@@ -2,6 +2,7 @@ id: d6_system_date
 label: System date configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: variable
   variables:

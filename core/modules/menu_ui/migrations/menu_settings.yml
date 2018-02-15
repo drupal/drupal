@@ -4,6 +4,7 @@ label: Menu UI configuration
 migration_tags:
   - Drupal 6
   - Drupal 7
+  - Configuration
 source:
   plugin: variable
   variables:

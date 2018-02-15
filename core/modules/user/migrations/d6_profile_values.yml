@@ -3,6 +3,7 @@ label: Profile values
 class: Drupal\user\Plugin\migrate\ProfileValues
 migration_tags:
   - Drupal 6
+  - Content
 source:
   plugin: d6_profile_field_values
 process:

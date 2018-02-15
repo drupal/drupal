@@ -2,6 +2,7 @@ id: d6_user_settings_translation
 label: User configuration
 migration_tags:
   - Drupal 6
+  - Configuration
 source:
   plugin: variable_translation
   variables:

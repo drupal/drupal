@@ -2,6 +2,7 @@ id: d7_shortcut_set_users
 label: Shortcut set user mapping
 migration_tags:
   - Drupal 7
+  - Configuration
 source:
   plugin: d7_shortcut_set_users
 process:
