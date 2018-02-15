@@ -1,6 +1,5 @@
 
-CONTENTS OF THIS FILE
----------------------
+# CONTENTS OF THIS FILE
 
  * About Drupal
  * Configuration and features
@@ -9,8 +8,7 @@ CONTENTS OF THIS FILE
  * Developing for Drupal
  * More information
 
-ABOUT DRUPAL
-------------
+## ABOUT DRUPAL
 
 Drupal is an open source content management platform supporting a variety of
 websites ranging from personal weblogs to large community-driven websites. For
@@ -18,9 +16,9 @@ more information, see the Drupal website at https://www.drupal.org, and join
 the Drupal community at https://www.drupal.org/community.
 
 Legal information about Drupal:
- * Know your rights when using Drupal:
+  - Know your rights when using Drupal:
    See LICENSE.txt in the "core" directory.
- * Learn about the Drupal trademark and logo policy:
+  - Learn about the Drupal trademark and logo policy:
    https://www.drupal.com/trademark
 
 CONFIGURATION AND FEATURES
