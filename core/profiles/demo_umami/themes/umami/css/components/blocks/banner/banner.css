@@ -73,6 +73,16 @@
   }
 
   .block-type-banner-block .field--name-field-banner-image {
-    display: none;
+    /**
+     * We need to ensure that the alt text on the image is accessible to
+     * screenreaders, so, when on large screens, let's give this the same CSS
+     * as the .visually-hidden class has.
+     */
+    position: absolute !important;
+    clip: rect(1px,1px,1px,1px);
+    overflow: hidden;
+    height: 1px;
+    width: 1px;
+    word-wrap: normal;
   }
 }
