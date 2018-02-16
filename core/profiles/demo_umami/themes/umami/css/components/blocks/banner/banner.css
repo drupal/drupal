@@ -43,7 +43,8 @@
 .block-type-banner-block .field--name-field-content-link a:hover {
   background-color: #00836d;
   color: #fff;
-  text-decoration: underline;
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
 }
 
 /* 768px */
