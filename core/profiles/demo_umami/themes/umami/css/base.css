@@ -199,6 +199,20 @@ input {
   font-size: 1rem;
   padding: 0.8rem 0.4rem;
 }
+input:focus {
+  border: 3px solid #00836d;
+  margin-bottom: 2px;
+}
+
+textarea {
+  border: 2px solid #767775;
+  color: #000;
+  padding: 0.8rem 0.4rem;
+}
+textarea:focus {
+  border: 3px solid #00836d;
+  margin-bottom: 2px;
+}
 
 label {
   color: #464646;
