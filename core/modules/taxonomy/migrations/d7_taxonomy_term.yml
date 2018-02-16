@@ -3,6 +3,7 @@ label: Taxonomy terms
 audit: true
 migration_tags:
   - Drupal 7
+  - Content
 deriver: Drupal\taxonomy\Plugin\migrate\D7TaxonomyTermDeriver
 source:
   plugin: d7_taxonomy_term

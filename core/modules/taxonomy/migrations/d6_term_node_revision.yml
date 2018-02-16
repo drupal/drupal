@@ -3,6 +3,7 @@ label: Term/node relationship revisions
 audit: true
 migration_tags:
   - Drupal 6
+  - Content
 deriver: Drupal\taxonomy\Plugin\migrate\D6TermNodeDeriver
 source:
   plugin: d6_term_node_revision

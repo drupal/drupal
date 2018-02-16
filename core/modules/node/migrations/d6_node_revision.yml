@@ -3,6 +3,7 @@ label: Node revisions
 audit: true
 migration_tags:
   - Drupal 6
+  - Content
 deriver: Drupal\node\Plugin\migrate\D6NodeDeriver
 source:
   plugin: d6_node_revision
