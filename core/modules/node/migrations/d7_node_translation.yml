@@ -3,6 +3,7 @@ label: Node translations
 migration_tags:
   - Drupal 7
   - translation
+  - Content
 deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
 source:
   plugin: d7_node
