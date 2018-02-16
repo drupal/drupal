@@ -140,27 +140,27 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     // Check when editing a node, the warning is visible.
     $this->drupalGet($recipe_node->toUrl('edit-form'));
     $web_assert->statusCodeEquals('200');
-    $web_assert->pageTextContains('This installation is for demonstration purposes only.');
+    $web_assert->pageTextContains('This site is intended for demonstration purposes.');
 
     // Check when adding a node, the warning is visible.
     $this->drupalGet('node/add/recipe');
     $web_assert->statusCodeEquals('200');
-    $web_assert->pageTextContains('This installation is for demonstration purposes only.');
+    $web_assert->pageTextContains('This site is intended for demonstration purposes.');
 
     // Check when looking at admin/content, the warning is visible.
     $this->drupalGet('admin/content');
     $web_assert->statusCodeEquals('200');
-    $web_assert->pageTextContains('This installation is for demonstration purposes only.');
+    $web_assert->pageTextContains('This site is intended for demonstration purposes.');
 
     // Check when viewing a node, the warning is not visible.
     $this->drupalGet($recipe_node->toUrl());
     $web_assert->statusCodeEquals('200');
-    $web_assert->pageTextNotContains('This installation is for demonstration purposes only.');
+    $web_assert->pageTextNotContains('This site is intended for demonstration purposes.');
 
     // Check when viewing the homepage, the warning is not visible.
     $this->drupalGet('<front>');
     $web_assert->statusCodeEquals('200');
-    $web_assert->pageTextNotContains('This installation is for demonstration purposes only.');
+    $web_assert->pageTextNotContains('This site is intended for demonstration purposes.');
   }
 
   /**
