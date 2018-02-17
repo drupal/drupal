@@ -36,7 +36,7 @@ class DeleteMultiple extends ConfirmFormBase {
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $manager;
+  protected $storage;
 
   /**
    * Constructs a DeleteMultiple form object.
