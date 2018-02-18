@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Functional\Plugin;
 
+use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
 
@@ -227,6 +228,20 @@ class StyleTableTest extends ViewTestBase {
     foreach ($expected_captions as $raw_caption) {
       $this->assertEscaped($raw_caption);
     }
+  }
+
+  /**
+   * Tests the cacheability of the table display.
+   */
+  public function testTableCacheability() {
+    \Drupal::service('module_installer')->uninstall(['page_cache']);
+
+    $url = 'test-table';
+    $this->drupalGet($url);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertEquals('MISS', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER));
+    $this->drupalGet($url);
+    $this->assertEquals('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER));
   }
 
 }
