@@ -194,11 +194,7 @@ class StatisticsPopularBlock extends BlockBase implements ContainerFactoryPlugin
     $items = [];
     foreach ($nids as $nid) {
       $node = $this->entityRepository->getTranslationFromContext($nodes[$nid]);
-      $item = [
-        '#type' => 'link',
-        '#title' => $node->getTitle(),
-        '#url' => $node->urlInfo('canonical'),
-      ];
+      $item = $node->toLink()->toRenderable();
       $this->renderer->addCacheableDependency($item, $node);
       $items[] = $item;
     }
