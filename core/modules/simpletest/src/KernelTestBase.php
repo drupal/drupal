@@ -14,6 +14,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
+use Drupal\KernelTests\TestServiceProvider;
 use Symfony\Component\DependencyInjection\Parameter;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Symfony\Component\DependencyInjection\Reference;
@@ -198,7 +199,7 @@ EOD;
 
     // Add this test class as a service provider.
     // @todo Remove the indirection; implement ServiceProviderInterface instead.
-    $GLOBALS['conf']['container_service_providers']['TestServiceProvider'] = 'Drupal\simpletest\TestServiceProvider';
+    $GLOBALS['conf']['container_service_providers']['TestServiceProvider'] = TestServiceProvider::class;
 
     // Bootstrap a new kernel.
     $class_loader = require DRUPAL_ROOT . '/autoload.php';
