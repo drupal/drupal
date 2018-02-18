@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
@@ -423,7 +424,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
    * {@inheritdoc}
    */
   public function getCacheMaxAge() {
-    return 0;
+    return Cache::PERMANENT;
   }
 
   /**

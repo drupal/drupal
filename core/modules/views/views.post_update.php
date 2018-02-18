@@ -321,3 +321,28 @@ function views_post_update_filter_placeholder_text() {
     }
   }
 }
+
+/**
+ * Fix cache max age for table displays.
+ */
+function views_post_update_table_display_cache_max_age(&$sandbox = NULL) {
+  $storage = \Drupal::entityTypeManager()->getStorage('view');
+  if (!isset($sandbox['views'])) {
+    $sandbox['views'] = $storage->getQuery()->accessCheck(FALSE)->execute();
+    $sandbox['count'] = count($sandbox['views']);
+  }
+
+  for ($i = 0; $i < 10 && count($sandbox['views']); $i++) {
+    $view_id = array_shift($sandbox['views']);
+    if ($view = $storage->load($view_id)) {
+      $displays = $view->get('display');
+      foreach ($displays as $display_name => &$display) {
+        if (isset($display['display_options']['style']['type']) && $display['display_options']['style']['type'] === 'table') {
+          $view->save();
+        }
+      }
+    }
+  }
+
+  $sandbox['#finished'] = empty($sandbox['views']) ? 1 : ($sandbox['count'] - count($sandbox['views'])) / $sandbox['count'];
+}
