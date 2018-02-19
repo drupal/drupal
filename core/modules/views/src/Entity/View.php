@@ -245,6 +245,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $display_duplicate = $displays[$old_display_id];
     unset($display_duplicate['display_title']);
     unset($display_duplicate['display_plugin']);
+    unset($display_duplicate['new_id']);
 
     $displays[$new_display_id] = NestedArray::mergeDeep($displays[$new_display_id], $display_duplicate);
     $displays[$new_display_id]['id'] = $new_display_id;
