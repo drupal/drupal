@@ -143,6 +143,16 @@ class DisplayCRUDTest extends UITestBase {
     $this->assertFalse(isset($block_1->display['display_options']['path']));
     $this->assertEqual($block_1->getOption('title'), $random_title, 'The overridden title option from the display got copied into the duplicate');
     $this->assertEqual($block_1->getOption('css_class'), $random_css, 'The overridden css_class option from the display got copied into the duplicate');
+
+    // Test duplicating a display after changing the machine name.
+    $view_id = $view->id();
+    $this->drupalPostForm("admin/structure/views/nojs/display/$view_id/page_2/display_id", ['display_id' => 'page_new'], 'Apply');
+    $this->drupalPostForm(NULL, [], 'Duplicate as Block');
+    $this->drupalPostForm(NULL, [], t('Save'));
+    $view = Views::getView($view_id);
+    $view->initDisplay();
+    $this->assertNotNull($view->displayHandlers->get('page_new'), 'The original display is saved with a changed id');
+    $this->assertNotNull($view->displayHandlers->get('block_2'), 'The duplicate display is saved with new id');
   }
 
 }
