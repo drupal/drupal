@@ -68,3 +68,6 @@ services:
     arguments: ['@current_user', '@entity.manager']
     tags:
       - { name: 'context_provider' }
+  user.toolbar_link_builder:
+    class: Drupal\user\ToolbarLinkBuilder
+    arguments: ['@current_user']
