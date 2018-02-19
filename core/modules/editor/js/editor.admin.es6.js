@@ -567,17 +567,10 @@
       // If any filter's current status forbids the editor feature, return
       // false.
       Drupal.filterConfiguration.update();
-      // eslint-disable-next-line no-restricted-syntax
-      for (const filterID in Drupal.filterConfiguration.statuses) {
-        if (Drupal.filterConfiguration.statuses.hasOwnProperty(filterID)) {
-          const filterStatus = Drupal.filterConfiguration.statuses[filterID];
-          if (!(filterStatusAllowsFeature(filterStatus, feature))) {
-            return false;
-          }
-        }
-      }
-
-      return true;
+      return Object.keys(Drupal.filterConfiguration.statuses)
+        .every(filterID => (
+          filterStatusAllowsFeature(Drupal.filterConfiguration.statuses[filterID], feature)
+        ));
     },
   };
 

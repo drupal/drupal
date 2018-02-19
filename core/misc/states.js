@@ -63,32 +63,27 @@
 
   states.Dependent.prototype = {
     initializeDependee: function initializeDependee(selector, dependeeStates) {
-      var state = void 0;
-      var self = this;
-
-      function stateEventHandler(e) {
-        self.update(e.data.selector, e.data.state, e.value);
-      }
+      var _this2 = this;
 
       this.values[selector] = {};
 
-      for (var i in dependeeStates) {
-        if (dependeeStates.hasOwnProperty(i)) {
-          state = dependeeStates[i];
+      Object.keys(dependeeStates).forEach(function (i) {
+        var state = dependeeStates[i];
 
-          if ($.inArray(state, dependeeStates) === -1) {
-            continue;
-          }
-
-          state = states.State.sanitize(state);
-
-          this.values[selector][state.name] = null;
-
-          $(selector).on('state:' + state, { selector: selector, state: state }, stateEventHandler);
-
-          new states.Trigger({ selector: selector, state: state });
+        if ($.inArray(state, dependeeStates) === -1) {
+          return;
         }
-      }
+
+        state = states.State.sanitize(state);
+
+        _this2.values[selector][state.name] = null;
+
+        $(selector).on('state:' + state, { selector: selector, state: state }, function (e) {
+          _this2.update(e.data.selector, e.data.state, e.value);
+        });
+
+        new states.Trigger({ selector: selector, state: state });
+      });
     },
     compare: function compare(reference, selector, state) {
       var value = this.values[selector][state.name];
@@ -116,6 +111,8 @@
       }
     },
     verifyConstraints: function verifyConstraints(constraints, selector) {
+      var _this3 = this;
+
       var result = void 0;
       if ($.isArray(constraints)) {
         var hasXor = $.inArray('xor', constraints) === -1;
@@ -131,15 +128,11 @@
           }
         }
       } else if ($.isPlainObject(constraints)) {
-          for (var n in constraints) {
-            if (constraints.hasOwnProperty(n)) {
-              result = ternary(result, this.checkConstraints(constraints[n], selector, n));
+          result = Object.keys(constraints).every(function (constraint) {
+            var check = _this3.checkConstraints(constraints[constraint], selector, constraint);
 
-              if (result === false) {
-                return false;
-              }
-            }
-          }
+            return typeof check === 'undefined' ? true : check;
+          });
         }
       return result;
     },
@@ -188,7 +181,7 @@
 
   states.Trigger.prototype = {
     initialize: function initialize() {
-      var _this2 = this;
+      var _this4 = this;
 
       var trigger = states.Trigger.states[this.state];
 
@@ -196,7 +189,7 @@
         trigger.call(window, this.element);
       } else {
         Object.keys(trigger || {}).forEach(function (event) {
-          _this2.defaultTrigger(event, trigger[event]);
+          _this4.defaultTrigger(event, trigger[event]);
         });
       }
 
@@ -352,16 +345,6 @@
       }
     }
   });
-
-  function ternary(a, b) {
-    if (typeof a === 'undefined') {
-      return b;
-    } else if (typeof b === 'undefined') {
-      return a;
-    }
-
-    return a && b;
-  }
 
   function invert(a, invertState) {
     return invertState && typeof a !== 'undefined' ? !a : a;

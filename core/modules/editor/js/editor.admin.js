@@ -256,17 +256,9 @@
       }
 
       Drupal.filterConfiguration.update();
-
-      for (var filterID in Drupal.filterConfiguration.statuses) {
-        if (Drupal.filterConfiguration.statuses.hasOwnProperty(filterID)) {
-          var filterStatus = Drupal.filterConfiguration.statuses[filterID];
-          if (!filterStatusAllowsFeature(filterStatus, feature)) {
-            return false;
-          }
-        }
-      }
-
-      return true;
+      return Object.keys(Drupal.filterConfiguration.statuses).every(function (filterID) {
+        return filterStatusAllowsFeature(Drupal.filterConfiguration.statuses[filterID], feature);
+      });
     }
   };
 
