@@ -231,6 +231,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
         ->setLabel($this->t('Default revision'))
         ->setDescription($this->t('A flag indicating whether this was a default revision when it was saved.'))
         ->setStorageRequired(TRUE)
+        ->setInternal(TRUE)
         ->setTranslatable(FALSE)
         ->setRevisionable(TRUE);
     }

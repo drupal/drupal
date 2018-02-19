@@ -83,6 +83,8 @@ class EntityTranslationNormalizeTest extends NormalizerTestBase {
     $this->assertSame($node->getTitle(), $denormalized_node->getTitle());
     $this->assertSame($translation->getTitle(), $denormalized_node->getTranslation('de')->getTitle());
 
+    $original_values['revision_default'] = [];
+    $original_translation_values['revision_default'] = [];
     $this->assertEquals($original_values, $denormalized_node->toArray(), 'Node values are restored after normalizing and denormalizing.');
     $this->assertEquals($original_translation_values, $denormalized_node->getTranslation('en')->toArray(), 'Node values are restored after normalizing and denormalizing.');
   }

@@ -152,11 +152,6 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
           'value' => TRUE,
         ],
       ],
-      'revision_default' => [
-        [
-          'value' => TRUE,
-        ],
-      ],
       'default_langcode' => [
         [
           'value' => TRUE,
