@@ -9,7 +9,6 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Render\Element;
@@ -1328,41 +1327,6 @@ function user_cookie_delete($cookie_name) {
 function user_toolbar() {
   $user = \Drupal::currentUser();
 
-  // Add logout & user account links or login link.
-  $links_cache_contexts = [];
-  if ($user->isAuthenticated()) {
-    $links = [
-      'account' => [
-        'title' => t('View profile'),
-        'url' => Url::fromRoute('user.page'),
-        'attributes' => [
-          'title' => t('User account'),
-        ],
-      ],
-      'account_edit' => [
-        'title' => t('Edit profile'),
-        'url' => Url::fromRoute('entity.user.edit_form', ['user' => $user->id()]),
-        'attributes' => [
-          'title' => t('Edit user account'),
-        ],
-      ],
-      'logout' => [
-        'title' => t('Log out'),
-        'url' => Url::fromRoute('user.logout'),
-      ],
-    ];
-    // The "Edit user account" link is per-user.
-    $links_cache_contexts[] = 'user';
-  }
-  else {
-    $links = [
-      'login' => [
-        'title' => t('Log in'),
-        'url' => Url::fromRoute('user.page'),
-      ],
-    ];
-  }
-
   $items['user'] = [
     '#type' => 'toolbar_item',
     'tab' => [
@@ -1374,26 +1338,12 @@ function user_toolbar() {
         'class' => ['toolbar-icon', 'toolbar-icon-user'],
       ],
       '#cache' => [
-        'contexts' => [
-          // Cacheable per user, because the current user's name is shown.
-          'user',
-        ],
+        // Vary cache for anonymous and authenticated users.
+        'contexts' => ['user.roles:anonymous'],
       ],
     ],
     'tray' => [
       '#heading' => t('User account actions'),
-      'user_links' => [
-        '#cache' => [
-          // Cacheable per "authenticated or not", because the links to
-          // display depend on that.
-          'contexts' => Cache::mergeContexts(['user.roles:authenticated'], $links_cache_contexts),
-        ],
-        '#theme' => 'links__toolbar_user',
-        '#links' => $links,
-        '#attributes' => [
-          'class' => ['toolbar-menu'],
-        ],
-      ],
     ],
     '#weight' => 100,
     '#attached' => [
@@ -1402,6 +1352,32 @@ function user_toolbar() {
       ],
     ],
   ];
+
+  if ($user->isAnonymous()) {
+    $links = [
+      'login' => [
+        'title' => t('Log in'),
+        'url' => Url::fromRoute('user.page'),
+      ],
+    ];
+    $items['user']['tray']['user_links'] = [
+      '#theme' => 'links__toolbar_user',
+      '#links' => $links,
+      '#attributes' => [
+        'class' => ['toolbar-menu'],
+      ],
+    ];
+  }
+  else {
+    $items['user']['tab']['#title'] = [
+      '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
+      '#create_placeholder' => TRUE,
+    ];
+    $items['user']['tray']['user_links'] = [
+      '#lazy_builder' => ['user.toolbar_link_builder:renderToolbarLinks', []],
+      '#create_placeholder' => TRUE,
+    ];
+  }
 
   return $items;
 }

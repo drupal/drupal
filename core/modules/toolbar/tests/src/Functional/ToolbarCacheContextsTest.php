@@ -59,6 +59,18 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
   }
 
   /**
+   * Tests toolbar cache integration.
+   */
+  public function testCacheIntegration() {
+    $this->installExtraModules(['dynamic_page_cache']);
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('test-page');
+    $this->assertSame('MISS', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
+    $this->drupalGet('test-page');
+    $this->assertSame('HIT', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
+  }
+
+  /**
    * Tests toolbar cache contexts.
    */
   public function testToolbarCacheContextsCaller() {
