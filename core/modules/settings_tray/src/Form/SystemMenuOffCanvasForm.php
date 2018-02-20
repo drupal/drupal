@@ -87,6 +87,7 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
       '#type' => 'details',
       '#title' => $this->t('Edit menu %label', ['%label' => $this->menu->label()]),
       '#open' => TRUE,
+      '#access' => $this->menu->access('edit'),
     ];
     $form['entity_form'] += $this->getEntityForm($this->menu)->buildForm([], $form_state);
 
