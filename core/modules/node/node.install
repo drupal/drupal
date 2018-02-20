@@ -255,3 +255,15 @@ function node_update_8400() {
   $schema['fields']['realm']['description'] = 'The realm in which the user must possess the grant ID. Modules can define one or more realms by implementing hook_node_grants().';
   Database::getConnection()->schema()->changeField('node_access', 'realm', 'realm', $schema['fields']['realm']);
 }
+
+/**
+ * Run a node access rebuild, if required.
+ */
+function node_update_8401() {
+  // Get the list of node access modules.
+  $modules = \Drupal::moduleHandler()->getImplementations('node_grants');
+  // If multilingual usage, then rebuild node access.
+  if (count($modules) > 0 && \Drupal::languageManager()->isMultilingual()) {
+    node_access_needs_rebuild(TRUE);
+  }
+}

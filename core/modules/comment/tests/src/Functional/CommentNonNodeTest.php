@@ -450,6 +450,7 @@ class CommentNonNodeTest extends BrowserTestBase {
       'post comments',
       'administer comment fields',
       'administer comment types',
+      'view test entity',
     ]);
     $this->drupalLogin($limited_user);
 

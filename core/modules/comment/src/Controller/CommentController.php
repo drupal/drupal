@@ -279,9 +279,12 @@ class CommentController extends ControllerBase {
     // Check if the user has the proper permissions.
     $access = AccessResult::allowedIfHasPermission($account, 'post comments');
 
+    // If commenting is open on the entity.
     $status = $entity->{$field_name}->status;
     $access = $access->andIf(AccessResult::allowedIf($status == CommentItemInterface::OPEN)
-      ->addCacheableDependency($entity));
+      ->addCacheableDependency($entity))
+      // And if user has access to the host entity.
+      ->andIf(AccessResult::allowedIf($entity->access('view')));
 
     // $pid indicates that this is a reply to a comment.
     if ($pid) {
