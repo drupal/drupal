@@ -1,3 +1,7 @@
+Drupal 8.4.5, 2018-02-20
+------------------------
+- Fixed security issues. See SA-CORE-2018-001.
+
 Drupal 8.4.0, 2017-10-04
 ------------------------
 ### Drush users: Update to Drush 8.1.12+ or higher
