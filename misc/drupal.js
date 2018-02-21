@@ -28,6 +28,42 @@ $.fn.init = function (selector, context, rootjQuery) {
 $.fn.init.prototype = jquery_init.prototype;
 
 /**
+ * Pre-filter Ajax requests to guard against XSS attacks.
+ *
+ * See https://github.com/jquery/jquery/issues/2432
+ */
+if ($.ajaxPrefilter) {
+  // For newer versions of jQuery, use an Ajax prefilter to prevent
+  // auto-executing script tags from untrusted domains. This is similar to the
+  // fix that is built in to jQuery 3.0 and higher.
+  $.ajaxPrefilter(function (s) {
+    if (s.crossDomain) {
+      s.contents.script = false;
+    }
+  });
+}
+else if ($.httpData) {
+  // For the version of jQuery that ships with Drupal core, override
+  // jQuery.httpData to prevent auto-detecting "script" data types from
+  // untrusted domains.
+  var jquery_httpData = $.httpData;
+  $.httpData = function (xhr, type, s) {
+    // @todo Consider backporting code from newer jQuery versions to check for
+    //   a cross-domain request here, rather than using Drupal.urlIsLocal() to
+    //   block scripts from all URLs that are not on the same site.
+    if (!type && !Drupal.urlIsLocal(s.url)) {
+      var content_type = xhr.getResponseHeader('content-type') || '';
+      if (content_type.indexOf('javascript') >= 0) {
+        // Default to a safe data type.
+        type = 'text';
+      }
+    }
+    return jquery_httpData.call(this, xhr, type, s);
+  };
+  $.httpData.prototype = jquery_httpData.prototype;
+}
+
+/**
  * Attach all registered behaviors to a page element.
  *
  * Behaviors are event-triggered actions that attach to page elements, enhancing
@@ -137,7 +173,7 @@ Drupal.detachBehaviors = function (context, settings, trigger) {
  */
 Drupal.checkPlain = function (str) {
   var character, regex,
-      replace = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
+      replace = { '&': '&amp;', "'": '&#39;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
   str = String(str);
   for (character in replace) {
     if (replace.hasOwnProperty(character)) {

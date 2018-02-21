@@ -140,7 +140,7 @@ function file_file_download($uri, $field_type = 'file') {
   }
 
   // Find out which (if any) fields of this type contain the file.
-  $references = file_get_file_references($file, NULL, FIELD_LOAD_CURRENT, $field_type);
+  $references = file_get_file_references($file, NULL, FIELD_LOAD_CURRENT, $field_type, FALSE);
 
   // Stop processing if there are no references in order to avoid returning
   // headers for files controlled by other modules. Make an exception for
@@ -1067,11 +1067,18 @@ function file_icon_map($file) {
  * @param $field_type
  *   (optional) The name of a field type. If given, limits the reference check
  *   to fields of the given type.
+ * @param $check_access
+ *   (optional) A boolean that specifies whether the permissions of the current
+ *   user should be checked when retrieving references. If FALSE, all
+ *   references to the file are returned. If TRUE, only references from
+ *   entities that the current user has access to are returned. Defaults to
+ *   TRUE for backwards compatibility reasons, but FALSE is recommended for
+ *   most situations.
  *
  * @return
  *   An integer value.
  */
-function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISION, $field_type = 'file') {
+function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISION, $field_type = 'file', $check_access = TRUE) {
   $references = drupal_static(__FUNCTION__, array());
   $fields = isset($field) ? array($field['field_name'] => $field) : field_info_fields();
 
@@ -1082,6 +1089,11 @@ function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISI
       $query
         ->fieldCondition($file_field, 'fid', $file->fid)
         ->age($age);
+      if (!$check_access) {
+        // Neutralize the 'entity_field_access' query tag added by
+        // field_sql_storage_field_storage_query().
+        $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
+      }
       $references[$field_name] = $query->execute();
     }
   }

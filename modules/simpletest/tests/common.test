@@ -76,7 +76,7 @@ class DrupalAlterTestCase extends DrupalWebTestCase {
 class CommonURLUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'URL generation tests',
+      'name' => 'URL generation unit tests',
       'description' => 'Confirm that url(), drupal_get_query_parameters(), drupal_http_build_query(), and l() work correctly with various input.',
       'group' => 'System',
     );
@@ -369,6 +369,38 @@ class CommonURLUnitTest extends DrupalWebTestCase {
     $url = '//drupal.org';
     $result = url($url);
     $this->assertEqual($url, $result, 'External URL without protocol is not altered.');
+  }
+}
+
+/**
+ * Web tests for URL generation functions.
+ */
+class CommonURLWebTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'URL generation web tests',
+      'description' => 'Confirm that URL-generating functions work correctly on specific site paths.',
+      'group' => 'System',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('common_test');
+  }
+
+  /**
+   * Tests the url() function on internal paths which mimic external URLs.
+   */
+  function testInternalPathMimicsExternal() {
+    // Ensure that calling url(current_path()) on "/http://example.com" (an
+    // internal path which mimics an external URL) always links to the internal
+    // path, not the external URL. This helps protect against external URL link
+    // injection vulnerabilities.
+    variable_set('common_test_link_to_current_path', TRUE);
+    $this->drupalGet('/http://example.com');
+    $this->clickLink('link which should point to the current path');
+    $this->assertUrl('/http://example.com');
+    $this->assertText('link which should point to the current path');
   }
 }
 
