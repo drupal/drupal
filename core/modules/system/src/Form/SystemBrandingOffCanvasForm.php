@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormBase;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,13 +32,23 @@ class SystemBrandingOffCanvasForm extends PluginFormBase implements ContainerInj
   protected $configFactory;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * SystemBrandingOffCanvasForm constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, AccountInterface $current_user) {
     $this->configFactory = $config_factory;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -45,7 +56,8 @@ class SystemBrandingOffCanvasForm extends PluginFormBase implements ContainerInj
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('current_user')
     );
   }
 
@@ -68,7 +80,7 @@ class SystemBrandingOffCanvasForm extends PluginFormBase implements ContainerInj
       '#type' => 'details',
       '#title' => t('Site details'),
       '#open' => TRUE,
-      '#access' => AccessResult::allowedIf(!$site_config_immutable->hasOverrides('name') && !$site_config_immutable->hasOverrides('slogan')),
+      '#access' => $this->currentUser->hasPermission('administer site configuration') && !$site_config_immutable->hasOverrides('name') && !$site_config_immutable->hasOverrides('slogan'),
     ];
     $form['site_information']['site_name'] = [
       '#type' => 'textfield',

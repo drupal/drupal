@@ -211,6 +211,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
       $query = $this->database->insert('node_access')->fields(['nid', 'langcode', 'fallback', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete']);
       // If we have defined a granted langcode, use it. But if not, add a grant
       // for every language this node is translated to.
+      $fallback_langcode = $node->getUntranslated()->language()->getId();
       foreach ($grants as $grant) {
         if ($realm && $realm != $grant['realm']) {
           continue;
@@ -227,7 +228,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
             $grant['nid'] = $node->id();
             $grant['langcode'] = $grant_langcode;
             // The record with the original langcode is used as the fallback.
-            if ($grant['langcode'] == $node->language()->getId()) {
+            if ($grant['langcode'] == $fallback_langcode) {
               $grant['fallback'] = 1;
             }
             else {

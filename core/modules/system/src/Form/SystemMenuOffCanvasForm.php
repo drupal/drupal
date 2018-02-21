@@ -3,7 +3,6 @@
 namespace Drupal\system\Form;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -98,7 +97,7 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
       '#type' => 'details',
       '#title' => $this->t('Edit menu %label', ['%label' => $this->menu->label()]),
       '#open' => TRUE,
-      '#access' => AccessResult::allowedIf(!$this->hasMenuOverrides()),
+      '#access' => !$this->hasMenuOverrides() && $this->menu->access('edit'),
     ];
     $form['entity_form'] += $this->getEntityForm($this->menu)->buildForm([], $form_state);
 

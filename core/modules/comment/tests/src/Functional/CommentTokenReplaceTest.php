@@ -144,6 +144,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
 
     // Create a user and a comment.
     $user = User::create(['name' => 'alice']);
+    $user->activate();
     $user->save();
     $this->postComment($user, 'user body', 'user subject', TRUE);
 
