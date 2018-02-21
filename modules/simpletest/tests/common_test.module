@@ -99,6 +99,9 @@ function common_test_init() {
   if (variable_get('common_test_redirect_current_path', FALSE)) {
     drupal_goto(current_path());
   }
+  if (variable_get('common_test_link_to_current_path', FALSE)) {
+    drupal_set_message(l('link which should point to the current path', current_path()));
+  }
 }
 
 /**

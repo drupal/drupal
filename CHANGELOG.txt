@@ -1,4 +1,8 @@
 
+Drupal 7.57, 2018-02-21
+-----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2018-001.
+
 Drupal 7.56, 2017-06-21
 -----------------------
 - Fixed security issues (access bypass). See SA-CORE-2017-003.

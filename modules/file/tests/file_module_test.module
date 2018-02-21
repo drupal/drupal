@@ -67,3 +67,18 @@ function file_module_test_form_submit($form, &$form_state) {
   }
   drupal_set_message(t('The file id is %fid.', array('%fid' => $fid)));
 }
+
+/**
+ * Implements hook_file_download().
+ */
+function file_module_test_file_download($uri) {
+  if (variable_get('file_module_test_grant_download_access')) {
+    // Mimic what file_get_content_headers() would do if we had a full $file
+    // object to pass to it.
+    return array(
+      'Content-Type' => mime_header_encode(file_get_mimetype($uri)),
+      'Content-Length' => filesize($uri),
+      'Cache-Control' => 'private',
+    );
+  }
+}
