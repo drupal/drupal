@@ -113,11 +113,11 @@ class LoggingTest extends DatabaseTestBase {
 
     db_query('SELECT name FROM {test} WHERE age > :age', [':age' => 25])->fetchCol();
 
-    $old_key = db_set_active('test2');
+    $old_key = Database::setActiveConnection('test2');
 
     db_query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo'], ['target' => 'replica'])->fetchCol();
 
-    db_set_active($old_key);
+    Database::setActiveConnection($old_key);
 
     $queries1 = Database::getLog('testing1');
     $queries2 = Database::getLog('testing1', 'test2');

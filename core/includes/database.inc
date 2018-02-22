@@ -335,6 +335,7 @@ function db_transaction($name = NULL, array $options = []) {
  * \Drupal\Core\Database\Database::setActiveConnection().
  */
 function db_set_active($key = 'default') {
+  @trigger_error('db_set_active() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Database\Database::setActiveConnection() instead. See https://www.drupal.org/node/2944084.', E_USER_DEPRECATED);
   return Database::setActiveConnection($key);
 }
 

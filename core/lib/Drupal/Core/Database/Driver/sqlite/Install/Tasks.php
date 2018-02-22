@@ -54,7 +54,7 @@ class Tasks extends InstallTasks {
   protected function connect() {
     try {
       // This doesn't actually test the connection.
-      db_set_active();
+      Database::setActiveConnection();
       // Now actually do a check.
       Database::getConnection();
       $this->pass('Drupal can CONNECT to the database ok.');
