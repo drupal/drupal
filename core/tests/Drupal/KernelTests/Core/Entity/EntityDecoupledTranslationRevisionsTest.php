@@ -234,6 +234,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
         ['en', TRUE, TRUE],
         ['it', FALSE, TRUE, FALSE],
         ['en', FALSE, TRUE],
+        ['it', TRUE, TRUE, FALSE],
         ['it', FALSE],
         ['it', TRUE],
         ['en', TRUE, TRUE],
@@ -490,6 +491,35 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
     array_unshift($params, $this->stepIndex + 1);
     array_unshift($params, '[Step %d] ' . $message . ' (langcode: %s, default_revision: %d, untranslatable_update: %d, valid: %d)');
     return call_user_func_array('sprintf', $params);
+  }
+
+  /**
+   * Checks that changes to multiple translations are handled correctly.
+   *
+   * @covers ::createRevision
+   * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraintValidator::validate
+   */
+  public function testMultipleTranslationChanges() {
+    // Configure the untranslatable fields edit mode.
+    $this->state->set('entity_test.untranslatable_fields.default_translation_affected', TRUE);
+    $this->bundleInfo->clearCachedBundles();
+
+    $entity = EntityTestMulRev::create();
+    $entity->get('name')->value = 'Test 1.1 EN';
+    $entity->get('non_mul_field')->value = 'Test 1.1';
+    $this->storage->save($entity);
+
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $revision */
+    $revision = $this->storage->createRevision($entity->addTranslation('it'));
+    $revision->get('name')->value = 'Test 1.2 IT';
+    $this->storage->save($revision);
+
+    $revision = $this->storage->createRevision($revision->getTranslation('en'), FALSE);
+    $revision->get('non_mul_field')->value = 'Test 1.3';
+    $revision->getTranslation('it')->get('name')->value = 'Test 1.3 IT';
+    $violations = $revision->validate();
+    $this->assertCount(1, $violations);
+    $this->assertEquals('Non-translatable fields can only be changed when updating the original language.', $violations[0]->getMessage());
   }
 
   /**

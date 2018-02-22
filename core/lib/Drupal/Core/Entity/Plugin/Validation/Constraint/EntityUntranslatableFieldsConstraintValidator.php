@@ -49,10 +49,14 @@ class EntityUntranslatableFieldsConstraintValidator extends ConstraintValidator 
    */
   public function validate($entity, Constraint $constraint) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    /** @var \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraint $constraint */
 
-    // Untranslatable field restrictions apply only to pending revisions of
-    // multilingual entities.
-    if ($entity->isNew() || $entity->isDefaultRevision() || !$entity->isTranslatable() || !$entity->getEntityType()->isRevisionable()) {
+    // Untranslatable field restrictions apply only to revisions of multilingual
+    // entities.
+    if ($entity->isNew() || !$entity->isTranslatable() || !$entity->getEntityType()->isRevisionable()) {
+      return;
+    }
+    if ($entity->isDefaultRevision() && !$entity->isDefaultTranslationAffectedOnly()) {
       return;
     }
 
@@ -63,18 +67,20 @@ class EntityUntranslatableFieldsConstraintValidator extends ConstraintValidator 
     // a pending revision contains only one affected translation. Even in this
     // case, multiple translations would be affected in a single revision, if we
     // allowed changes to untranslatable fields while editing non-default
-    // translations, so that is forbidden too.
+    // translations, so that is forbidden too. For the same reason, when changes
+    // to untranslatable fields affect all translations, we can only allow them
+    // in default revisions.
     if ($this->hasUntranslatableFieldsChanges($entity)) {
       if ($entity->isDefaultTranslationAffectedOnly()) {
         foreach ($entity->getTranslationLanguages(FALSE) as $langcode => $language) {
           if ($entity->getTranslation($langcode)->hasTranslationChanges()) {
-            $this->context->addViolation($constraint->message);
+            $this->context->addViolation($constraint->defaultTranslationMessage);
             break;
           }
         }
       }
       else {
-        $this->context->addViolation($constraint->message);
+        $this->context->addViolation($constraint->defaultRevisionMessage);
       }
     }
   }
