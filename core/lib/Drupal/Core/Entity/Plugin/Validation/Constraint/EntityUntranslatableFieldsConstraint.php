@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class EntityUntranslatableFieldsConstraint extends Constraint {
 
-  public $message = 'Non translatable fields can only be changed when updating the current revision or the original language.';
+  public $defaultRevisionMessage = 'Non-translatable fields can only be changed when updating the current revision.';
+  public $defaultTranslationMessage = 'Non-translatable fields can only be changed when updating the original language.';
 
 }
