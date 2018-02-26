@@ -1,9 +1,8 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\simpletest\InstallerTestBase;
 
 /**
  * Tests the installer when a config_directory set up but does not exist.
@@ -22,7 +21,8 @@ class InstallerConfigDirectorySetNoDirectoryErrorTest extends InstallerTestBase 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
     $this->configDirectory = $this->publicFilesDirectory . '/config_' . Crypt::randomBytesBase64();
     $this->settings['config_directories'][CONFIG_SYNC_DIRECTORY] = (object) [
       'value' => $this->configDirectory . '/sync',
@@ -32,7 +32,6 @@ class InstallerConfigDirectorySetNoDirectoryErrorTest extends InstallerTestBase 
     mkdir($this->publicFilesDirectory);
     // Create a file so the directory can not be created.
     file_put_contents($this->configDirectory, 'Test');
-    parent::setUp();
   }
 
   /**

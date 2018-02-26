@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
-
-use Drupal\simpletest\InstallerTestBase;
+namespace Drupal\FunctionalTests\Installer;
 
 /**
  * Tests the installer with empty settings file.
@@ -14,10 +12,11 @@ class InstallerEmptySettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
     // Create an empty settings.php file.
-    touch($this->siteDirectory . '/settings.php');
-    parent::setUp();
+    $path = $this->root . DIRECTORY_SEPARATOR . $this->siteDirectory;
+    file_put_contents($path . '/settings.php', '');
   }
 
   /**

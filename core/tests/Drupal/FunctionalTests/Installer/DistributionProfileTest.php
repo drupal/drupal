@@ -1,10 +1,9 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Site\Settings;
-use Drupal\simpletest\InstallerTestBase;
 
 /**
  * Tests distribution profile support.
@@ -20,7 +19,8 @@ class DistributionProfileTest extends InstallerTestBase {
    */
   protected $info;
 
-  protected function setUp() {
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
     $this->info = [
       'type' => 'profile',
       'core' => \Drupal::CORE_COMPATIBILITY,
@@ -36,8 +36,6 @@ class DistributionProfileTest extends InstallerTestBase {
     $path = $this->siteDirectory . '/profiles/mydistro';
     mkdir($path, 0777, TRUE);
     file_put_contents("$path/mydistro.info.yml", Yaml::encode($this->info));
-
-    parent::setUp();
   }
 
   /**

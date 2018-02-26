@@ -1,12 +1,11 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
-use Drupal\simpletest\InstallerTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -26,7 +25,8 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
     $this->info = [
       'type' => 'profile',
       'core' => \Drupal::CORE_COMPATIBILITY,
@@ -71,7 +71,6 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
       ],
     ];
     mkdir($this->settings['config_directories'][CONFIG_SYNC_DIRECTORY]->value, 0777, TRUE);
-    parent::setUp();
   }
 
   /**

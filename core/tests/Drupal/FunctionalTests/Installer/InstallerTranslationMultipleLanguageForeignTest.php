@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 /**
  * Tests translation files for multiple languages get imported during install.

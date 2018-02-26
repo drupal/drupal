@@ -1,10 +1,9 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Site\Settings;
-use Drupal\simpletest\InstallerTestBase;
 
 /**
  * Tests multiple distribution profile support.
@@ -23,7 +22,8 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
     // Create two distributions.
     foreach (['distribution_one', 'distribution_two'] as $name) {
       $info = [
@@ -38,14 +38,12 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
         ],
       ];
       // File API functions are not available yet.
-      $path = $this->siteDirectory . '/profiles/' . $name;
+      $path = $this->root . DIRECTORY_SEPARATOR . $this->siteDirectory . '/profiles/' . $name;
       mkdir($path, 0777, TRUE);
       file_put_contents("$path/$name.info.yml", Yaml::encode($info));
     }
     // Install the first distribution.
     $this->profile = 'distribution_one';
-
-    parent::setUp();
   }
 
   /**

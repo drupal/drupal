@@ -98,28 +98,6 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   }
 
   /**
-   * Transforms a nested array into a flat array suitable for BrowserTestBase::drupalPostForm().
-   *
-   * @param array $values
-   *   A multi-dimensional form values array to convert.
-   *
-   * @return array
-   *   The flattened $edit array suitable for BrowserTestBase::drupalPostForm().
-   */
-  protected function translatePostValues(array $values) {
-    $edit = [];
-    // The easiest and most straightforward way to translate values suitable for
-    // BrowserTestBase::drupalPostForm() is to actually build the POST data string
-    // and convert the resulting key/value pairs back into a flat array.
-    $query = http_build_query($values);
-    foreach (explode('&', $query) as $item) {
-      list($key, $value) = explode('=', $item);
-      $edit[urldecode($key)] = urldecode($value);
-    }
-    return $edit;
-  }
-
-  /**
    * Tests the displayed upgrade paths.
    *
    * @param \Drupal\Tests\WebAssert $session

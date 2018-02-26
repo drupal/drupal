@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 /**
  * Tests the interactive installer installing the standard profile.
@@ -50,7 +50,7 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
    */
   public function testStandardConfig() {
     $skipped_config = [];
-    // \Drupal\simpletest\WebTestBase::installParameters() uses
+    // FunctionalTestSetupTrait::installParameters() uses
     // simpletest@example.com as mail address.
     $skipped_config['contact.form.feedback'][] = '- simpletest@example.com';
     // \Drupal\filter\Entity\FilterFormat::toArray() drops the roles of filter

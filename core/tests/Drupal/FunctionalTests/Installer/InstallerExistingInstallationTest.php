@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
-
-use Drupal\simpletest\InstallerTestBase;
+namespace Drupal\FunctionalTests\Installer;
 
 /**
  * Tests the installer with an existing Drupal installation.
@@ -10,13 +8,6 @@ use Drupal\simpletest\InstallerTestBase;
  * @group Installer
  */
 class InstallerExistingInstallationTest extends InstallerTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-  }
 
   /**
    * Verifies that Drupal can't be reinstalled while an existing installation is

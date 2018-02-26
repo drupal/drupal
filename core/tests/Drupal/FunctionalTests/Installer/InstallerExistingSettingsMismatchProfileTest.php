@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\DrupalKernel;
-use Drupal\simpletest\InstallerTestBase;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Database\Database;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group Installer
  */
-class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
+class InstallerExistingSettingsMismatchProfileTest extends InstallerTestBase {
 
   /**
    * {@inheritdoc}
@@ -20,7 +20,8 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
    * Configures a preexisting settings.php file without an install_profile
    * setting before invoking the interactive installer.
    */
-  protected function setUp() {
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
     // Pre-configure hash salt.
     // Any string is valid, so simply use the class name of this test.
     $this->settings['settings']['hash_salt'] = (object) [
@@ -38,6 +39,13 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
       'required' => TRUE,
     ];
 
+    // During interactive install we'll change this to a different profile and
+    // this test will ensure that the new value is written to settings.php.
+    $this->settings['settings']['install_profile'] = (object) [
+      'value' => 'minimal',
+      'required' => TRUE,
+    ];
+
     // Pre-configure config directories.
     $this->settings['config_directories'] = [
       CONFIG_SYNC_DIRECTORY => (object) [
@@ -46,8 +54,28 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
       ],
     ];
     mkdir($this->settings['config_directories'][CONFIG_SYNC_DIRECTORY]->value, 0777, TRUE);
+  }
 
-    parent::setUp();
+  /**
+   * {@inheritdoc}
+   */
+  protected function visitInstaller() {
+    // Provide profile and language in query string to skip these pages.
+    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php?langcode=en&profile=testing');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpLanguage() {
+    // This step is skipped, because there is a lagcode as a query param.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpProfile() {
+    // This step is skipped, because there is a profile as a query param.
   }
 
   /**
@@ -65,6 +93,7 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
     $this->assertUrl('user/1');
     $this->assertResponse(200);
     $this->assertEqual('testing', \Drupal::installProfile());
+    $this->assertEqual('testing', Settings::get('install_profile'), 'Profile was correctly changed to testing in Settings.php');
   }
 
 }

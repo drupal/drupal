@@ -1,9 +1,8 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Site\Settings;
-use Drupal\simpletest\InstallerTestBase;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +20,8 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
    * Fully configures a preexisting settings.php file before invoking the
    * interactive installer.
    */
-  protected function setUp() {
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
     // Pre-configure hash salt.
     // Any string is valid, so simply use the class name of this test.
     $this->settings['settings']['hash_salt'] = (object) [
@@ -57,8 +57,6 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
       ],
     ];
     mkdir($this->settings['config_directories'][CONFIG_SYNC_DIRECTORY]->value, 0777, TRUE);
-
-    parent::setUp();
   }
 
   /**

@@ -1,20 +1,14 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
-
-@trigger_error(__NAMESPACE__ . '\ConfigAfterInstallerTestBase is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\FunctionalTests\Installer\ConfigAfterInstallerTestBase.', E_USER_DEPRECATED);
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\KernelTests\AssertConfigTrait;
-use Drupal\simpletest\InstallerTestBase;
 
 /**
  * Provides a class for install profiles to check their installed config.
- *
- * @deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\FunctionalTests\Installer\ConfigAfterInstallerTestBase.
  */
 abstract class ConfigAfterInstallerTestBase extends InstallerTestBase {
 
@@ -27,6 +21,7 @@ abstract class ConfigAfterInstallerTestBase extends InstallerTestBase {
    *   An array of skipped config.
    */
   protected function assertInstalledConfig(array $skipped_config) {
+    $this->addToAssertionCount(1);
     /** @var \Drupal\Core\Config\StorageInterface $active_config_storage */
     $active_config_storage = $this->container->get('config.storage');
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */

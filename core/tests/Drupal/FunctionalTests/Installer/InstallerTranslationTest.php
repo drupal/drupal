@@ -1,9 +1,8 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
-use Drupal\simpletest\InstallerTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -33,11 +32,11 @@ class InstallerTranslationTest extends InstallerTestBase {
     // After selecting a different language than English, all following screens
     // should be translated already.
     $elements = $this->xpath('//input[@type="submit"]/@value');
-    $this->assertEqual((string) current($elements), 'Save and continue de');
+    $this->assertEqual(current($elements)->getText(), 'Save and continue de');
     $this->translations['Save and continue'] = 'Save and continue de';
 
     // Check the language direction.
-    $direction = (string) current($this->xpath('/html/@dir'));
+    $direction = current($this->xpath('/@dir'))->getText();
     $this->assertEqual($direction, 'ltr');
   }
 

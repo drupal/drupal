@@ -1,9 +1,8 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
-use Drupal\simpletest\InstallerTestBase;
 
 /**
  * Tests the installer with database errors.
