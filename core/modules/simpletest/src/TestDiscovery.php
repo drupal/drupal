@@ -213,7 +213,7 @@ class TestDiscovery {
     }
 
     // Allow modules extending core tests to disable originals.
-    $this->moduleHandler->alter('simpletest', $list);
+    $this->moduleHandler->alterDeprecated('Convert your test to a PHPUnit-based one and implement test listeners. See: https://www.drupal.org/node/2939892', 'simpletest', $list);
 
     if (!isset($extension)) {
       if ($this->cacheBackend) {

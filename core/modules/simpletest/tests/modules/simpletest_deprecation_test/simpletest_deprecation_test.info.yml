@@ -1,0 +1,6 @@
+name: 'Simpletest deprecation test'
+type: module
+description: 'Support module for Simpletest deprecation tests.'
+package: Testing
+version: VERSION
+core: 8.x

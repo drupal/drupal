@@ -13,10 +13,17 @@
 /**
  * Alter the list of tests.
  *
+ * This hook will not be invoked by the phpunit tool.
+ *
  * @param $groups
  *   A two dimensional array, the first key is the test group, the second is the
  *   name of the test class, and the value is in associative array containing
  *   'name', 'description', 'group', and 'requires' keys.
+ *
+ * @deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Convert
+ *   your test to a PHPUnit-based one and implement test listeners.
+ *
+ * @see https://www.drupal.org/node/2939892
  */
 function hook_simpletest_alter(&$groups) {
   // An alternative session handler module would not want to run the original
