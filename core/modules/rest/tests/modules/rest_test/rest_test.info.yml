@@ -4,5 +4,3 @@ description: 'Provides test hooks and resources for REST module.'
 package: Testing
 version: VERSION
 core: 8.x
-dependencies:
-  - rest
