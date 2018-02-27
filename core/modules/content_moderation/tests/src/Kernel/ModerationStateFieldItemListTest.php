@@ -173,4 +173,15 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $this->assertTrue($test_node->isPublished());
   }
 
+  /**
+   * Test the moderation_state field after an entity has been serialized.
+   */
+  public function testEntityUnserialize() {
+    $this->testNode->moderation_state->value = 'draft';
+    $unserialized = unserialize(serialize($this->testNode));
+
+    $this->assertEquals('Test title', $unserialized->title->value);
+    $this->assertEquals('draft', $unserialized->moderation_state->value);
+  }
+
 }
