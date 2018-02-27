@@ -232,7 +232,9 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * {@inheritdoc}
    */
   public function isRevisionable() {
-    return !empty($this->definition['revisionable']);
+    // Multi-valued base fields are always considered revisionable, just like
+    // configurable fields.
+    return !empty($this->definition['revisionable']) || $this->isMultiple();
   }
 
   /**
@@ -262,6 +264,10 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *
    * Possible values are positive integers or
    * FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED.
+   *
+   * Note that if the entity type that this base field is attached to is
+   * revisionable and the field has a cardinality higher than 1, the field is
+   * considered revisionable by default.
    *
    * @param int $cardinality
    *   The field cardinality.
