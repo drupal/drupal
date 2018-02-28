@@ -41,7 +41,7 @@ function statistics_help($route_name, RouteMatchInterface $route_match) {
 function statistics_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if (!$node->isNew() && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
     $build['#attached']['library'][] = 'statistics/drupal.statistics';
-    $settings = ['data' => ['nid' => $node->id()], 'url' => Url::fromUri('base:' . drupal_get_path('module', 'statistics') . '/statistics.php')->toString()];
+    $settings = ['data' => ['nid' => $node->id()], 'url' => \Drupal::request()->getBasePath() . '/' . drupal_get_path('module', 'statistics') . '/statistics.php'];
     $build['#attached']['drupalSettings']['statistics'] = $settings;
   }
 }
