@@ -202,7 +202,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
   /**
    * {@inheritdoc}
    */
-  public function synchronizeItems(array &$values, array $unchanged_items, $sync_langcode, array $translations, array $columns) {
+  public function synchronizeItems(array &$values, array $unchanged_items, $sync_langcode, array $translations, array $properties) {
     $source_items = $values[$sync_langcode];
 
     // Make sure we can detect any change in the source items.
@@ -218,7 +218,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
     // for each column.
     for ($delta = 0; $delta < $total; $delta++) {
       foreach (['old' => $unchanged_items, 'new' => $source_items] as $key => $items) {
-        if ($item_id = $this->itemHash($items, $delta, $columns)) {
+        if ($item_id = $this->itemHash($items, $delta, $properties)) {
           $change_map[$item_id][$key][] = $delta;
         }
       }
@@ -251,7 +251,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
           $old_delta = NULL;
           $new_delta = NULL;
 
-          if ($item_id = $this->itemHash($source_items, $delta, $columns)) {
+          if ($item_id = $this->itemHash($source_items, $delta, $properties)) {
             if (!empty($change_map[$item_id]['old'])) {
               $old_delta = array_shift($change_map[$item_id]['old']);
             }
@@ -272,7 +272,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
           // items and the other columns from the existing values. This only
           // works if the delta exists in the language.
           elseif ($created && !empty($original_field_values[$langcode][$delta])) {
-            $values[$langcode][$delta] = $this->createMergedItem($source_items[$delta], $original_field_values[$langcode][$delta], $columns);
+            $values[$langcode][$delta] = $this->createMergedItem($source_items[$delta], $original_field_values[$langcode][$delta], $properties);
           }
           // If the delta doesn't exist, copy from the source language.
           elseif ($created) {
@@ -290,7 +290,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
             // we may have desynchronized field values, so we make sure that
             // untranslatable properties are synchronized, even if in any other
             // situation this would not be necessary.
-            $values[$langcode][$new_delta] = $this->createMergedItem($source_items[$new_delta], $item, $columns);
+            $values[$langcode][$new_delta] = $this->createMergedItem($source_items[$new_delta], $item, $properties);
           }
         }
       }
@@ -324,19 +324,19 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
    *   An array of field items.
    * @param int $delta
    *   The delta identifying the item to be processed.
-   * @param array $columns
+   * @param array $properties
    *   An array of column names to be synchronized.
    *
    * @returns string
    *   A hash code that can be used to identify the item.
    */
-  protected function itemHash(array $items, $delta, array $columns) {
+  protected function itemHash(array $items, $delta, array $properties) {
     $values = [];
 
     if (isset($items[$delta])) {
-      foreach ($columns as $column) {
-        if (!empty($items[$delta][$column])) {
-          $value = $items[$delta][$column];
+      foreach ($properties as $property) {
+        if (!empty($items[$delta][$property])) {
+          $value = $items[$delta][$property];
           // String and integer values are by far the most common item values,
           // thus we special-case them to improve performance.
           $values[] = is_string($value) || is_int($value) ? $value : hash('sha256', serialize($value));
