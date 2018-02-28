@@ -309,7 +309,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     // If any modules were newly installed, invoke hook_modules_installed().
     if (!empty($modules_installed)) {
-      \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
+      // If the container was rebuilt during hook_install() it might not have
+      // the 'router.route_provider.old' service.
+      if (\Drupal::hasService('router.route_provider.old')) {
+        \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
+      }
       if (!\Drupal::service('router.route_provider.lazy_builder')->hasRebuilt()) {
         // Rebuild routes after installing module. This is done here on top of
         // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
