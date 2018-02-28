@@ -25,6 +25,15 @@ class LinkField extends D6LinkField {
   /**
    * {@inheritdoc}
    */
+  public function getFieldFormatterMap() {
+    return [
+      'link_default' => 'link',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFieldWidgetMap() {
     // By default, use the plugin ID for the widget types.
     return ['link_field' => 'link_default'];

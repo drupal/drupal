@@ -173,7 +173,7 @@ process:
             default: entity_reference_label
             plain: entity_reference_label
       -
-        plugin: field_type_defaults
+        plugin: d6_field_type_defaults
   "options/settings":
     -
       plugin: static_map

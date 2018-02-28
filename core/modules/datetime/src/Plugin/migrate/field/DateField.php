@@ -24,6 +24,15 @@ class DateField extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
+  public function getFieldFormatterMap() {
+    return [
+      'date_default' => 'datetime_default',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFieldWidgetMap() {
     return [
       'date' => 'datetime_default',
