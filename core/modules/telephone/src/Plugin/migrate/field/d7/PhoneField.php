@@ -15,4 +15,15 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *   destination_module = "telephone"
  * )
  */
-class PhoneField extends FieldPluginBase {}
+class PhoneField extends FieldPluginBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldFormatterMap() {
+    return [
+      'phone' => 'basic_string',
+    ];
+  }
+
+}
