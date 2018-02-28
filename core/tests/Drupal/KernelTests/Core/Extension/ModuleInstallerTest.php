@@ -85,4 +85,13 @@ class ModuleInstallerTest extends KernelTestBase {
     $this->assertFalse($schema->tableExists($table));
   }
 
+  /**
+   * Ensure that rebuilding the container in hook_install() works.
+   */
+  public function testKernelRebuildDuringHookInstall() {
+    \Drupal::state()->set('module_test_install:rebuild_container', TRUE);
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['module_test']));
+  }
+
 }

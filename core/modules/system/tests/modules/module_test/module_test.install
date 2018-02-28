@@ -34,4 +34,9 @@ function module_test_install() {
       'data' => $schema['fields']['data']['type'],
     ])
     ->execute();
+  if (\Drupal::state()->get('module_test_install:rebuild_container')) {
+    // Ensure that the container can be rebuilt during hook_install(). Doing
+    // this in hook_install() is bad practice but it should not break anything.
+    \Drupal::service('kernel')->rebuildContainer();
+  }
 }
