@@ -201,6 +201,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     parent::calculateDependencies();
 
     foreach ($this->getSections() as $delta => $section) {
+      $this->calculatePluginDependencies($section->getLayout());
       foreach ($section->getComponents() as $uuid => $component) {
         $this->calculatePluginDependencies($component->getPlugin());
       }
@@ -215,17 +216,28 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   public function onDependencyRemoval(array $dependencies) {
     $changed = parent::onDependencyRemoval($dependencies);
 
-    // Loop through all components and determine if the removed dependencies are
-    // used by their plugins.
+    // Loop through all sections and determine if the removed dependencies are
+    // used by their layout plugins.
     foreach ($this->getSections() as $delta => $section) {
-      foreach ($section->getComponents() as $uuid => $component) {
-        $plugin_dependencies = $this->getPluginDependencies($component->getPlugin());
-        $component_removed_dependencies = $this->getPluginRemovedDependencies($plugin_dependencies, $dependencies);
-        if ($component_removed_dependencies) {
-          // @todo Allow the plugins to react to their dependency removal in
-          //   https://www.drupal.org/project/drupal/issues/2579743.
-          $section->removeComponent($uuid);
-          $changed = TRUE;
+      $layout_dependencies = $this->getPluginDependencies($section->getLayout());
+      $layout_removed_dependencies = $this->getPluginRemovedDependencies($layout_dependencies, $dependencies);
+      if ($layout_removed_dependencies) {
+        // @todo Allow the plugins to react to their dependency removal in
+        //   https://www.drupal.org/project/drupal/issues/2579743.
+        $this->removeSection($delta);
+        $changed = TRUE;
+      }
+      // If the section is not removed, loop through all components.
+      else {
+        foreach ($section->getComponents() as $uuid => $component) {
+          $plugin_dependencies = $this->getPluginDependencies($component->getPlugin());
+          $component_removed_dependencies = $this->getPluginRemovedDependencies($plugin_dependencies, $dependencies);
+          if ($component_removed_dependencies) {
+            // @todo Allow the plugins to react to their dependency removal in
+            //   https://www.drupal.org/project/drupal/issues/2579743.
+            $section->removeComponent($uuid);
+            $changed = TRUE;
+          }
         }
       }
     }
