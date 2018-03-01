@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Entity;
 
+use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Utility\NestedArray;
@@ -10,6 +11,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Definition\DependentPluginDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -201,6 +203,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     parent::calculateDependencies();
 
     foreach ($this->getSections() as $delta => $section) {
+      $this->calculatePluginDependencies($section->getLayout());
       foreach ($section->getComponents() as $uuid => $component) {
         $this->calculatePluginDependencies($component->getPlugin());
       }
@@ -215,17 +218,28 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   public function onDependencyRemoval(array $dependencies) {
     $changed = parent::onDependencyRemoval($dependencies);
 
-    // Loop through all components and determine if the removed dependencies are
-    // used by their plugins.
+    // Loop through all sections and determine if the removed dependencies are
+    // used by their layout plugins.
     foreach ($this->getSections() as $delta => $section) {
-      foreach ($section->getComponents() as $uuid => $component) {
-        $plugin_dependencies = $this->getPluginDependencies($component->getPlugin());
-        $component_removed_dependencies = $this->getPluginRemovedDependencies($plugin_dependencies, $dependencies);
-        if ($component_removed_dependencies) {
-          // @todo Allow the plugins to react to their dependency removal in
-          //   https://www.drupal.org/project/drupal/issues/2579743.
-          $section->removeComponent($uuid);
-          $changed = TRUE;
+      $layout_dependencies = $this->getPluginDependencies($section->getLayout());
+      $layout_removed_dependencies = $this->getPluginRemovedDependencies($layout_dependencies, $dependencies);
+      if ($layout_removed_dependencies) {
+        // @todo Allow the plugins to react to their dependency removal in
+        //   https://www.drupal.org/project/drupal/issues/2579743.
+        $this->removeSection($delta);
+        $changed = TRUE;
+      }
+      // If the section is not removed, loop through all components.
+      else {
+        foreach ($section->getComponents() as $uuid => $component) {
+          $plugin_dependencies = $this->getPluginDependencies($component->getPlugin());
+          $component_removed_dependencies = $this->getPluginRemovedDependencies($plugin_dependencies, $dependencies);
+          if ($component_removed_dependencies) {
+            // @todo Allow the plugins to react to their dependency removal in
+            //   https://www.drupal.org/project/drupal/issues/2579743.
+            $section->removeComponent($uuid);
+            $changed = TRUE;
+          }
         }
       }
     }
@@ -244,11 +258,20 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    * @todo Replace this in https://www.drupal.org/project/drupal/issues/2939925.
    */
   protected function getPluginDependencies(PluginInspectionInterface $instance) {
+    $dependencies = [];
     $definition = $instance->getPluginDefinition();
-    $dependencies['module'][] = $definition['provider'];
-    // Plugins can declare additional dependencies in their definition.
-    if (isset($definition['config_dependencies'])) {
-      $dependencies = NestedArray::mergeDeep($dependencies, $definition['config_dependencies']);
+    if ($definition instanceof PluginDefinitionInterface) {
+      $dependencies['module'][] = $definition->getProvider();
+      if ($definition instanceof DependentPluginDefinitionInterface && $config_dependencies = $definition->getConfigDependencies()) {
+        $dependencies = NestedArray::mergeDeep($dependencies, $config_dependencies);
+      }
+    }
+    elseif (is_array($definition)) {
+      $dependencies['module'][] = $definition['provider'];
+      // Plugins can declare additional dependencies in their definition.
+      if (isset($definition['config_dependencies'])) {
+        $dependencies = NestedArray::mergeDeep($dependencies, $definition['config_dependencies']);
+      }
     }
 
     // If a plugin is dependent, calculate its dependencies.
