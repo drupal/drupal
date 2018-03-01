@@ -16,7 +16,6 @@ class LayoutBuilderTest extends BrowserTestBase {
    */
   public static $modules = [
     'layout_builder',
-    'layout_test',
     'block',
     'node',
   ];
@@ -206,26 +205,9 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->fillField('label', 'My Menu');
     $page->fillField('id', 'mymenu');
     $page->pressButton('Save');
-    $this->drupalGet('admin/structure/menu/add');
-    $page->fillField('label', 'My Menu');
-    $page->fillField('id', 'myothermenu');
-    $page->pressButton('Save');
-
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display-layout/default');
-    $assert_session->linkExists('Add Section');
-    $this->clickLink('Add Section');
-    $assert_session->linkExists('Layout plugin (with dependencies)');
-    $this->clickLink('Layout plugin (with dependencies)');
-    $assert_session->elementExists('css', '.layout--layout-test-dependencies-plugin');
-    $assert_session->elementExists('css', '.field--name-body');
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
-    $this->drupalPostForm('admin/structure/menu/manage/myothermenu/delete', [], 'Delete');
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display-layout/default');
-    $assert_session->elementNotExists('css', '.layout--layout-test-dependencies-plugin');
-    $assert_session->elementExists('css', '.field--name-body');
 
     // Add a menu block.
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display-layout/default');
     $assert_session->linkExists('Add Block');
     $this->clickLink('Add Block');
     $assert_session->linkExists('My Menu');
