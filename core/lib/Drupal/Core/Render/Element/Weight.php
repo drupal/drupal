@@ -59,6 +59,11 @@ class Weight extends FormElement {
       for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
         $weights[$n] = $n;
       }
+      $default_value = (int) $element['#default_value'];
+      if (!isset($weights[$default_value])) {
+        $weights[$default_value] = $default_value;
+        ksort($weights);
+      }
       $element['#options'] = $weights;
       $element += $element_info_manager->getInfo('select');
     }
