@@ -118,6 +118,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     $this->drupalGet('/upgrade');
     $session->pageTextContains('An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal 8. Rollbacks are not yet supported through the user interface.');
     $this->drupalPostForm(NULL, [], t('Import new configuration and content from old site'));
+    $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
     $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
     $session->pageTextContains('There is conflicting content of these types:');
     $session->pageTextContains('file entities');
