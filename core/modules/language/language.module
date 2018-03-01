@@ -15,7 +15,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
@@ -344,38 +343,6 @@ function language_modules_installed($modules) {
  */
 function language_modules_uninstalled($modules) {
   language_modules_installed($modules);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_insert() for 'configurable_language'.
- */
-function language_configurable_language_insert(ConfigurableLanguageInterface $language) {
-  if ($language->isLocked()) {
-    return;
-  }
-
-  // Add language to the list of language domains.
-  $config = \Drupal::configFactory()->getEditable('language.negotiation');
-  $domains = $config->get('url.domains');
-  $domains[$language->id()] = '';
-  $config->set('url.domains', $domains)->save();
-}
-
-/**
- * Implements hook_ENTITY_TYPE_delete() for 'configurable_language'.
- */
-function language_configurable_language_delete(ConfigurableLanguageInterface $language) {
-  // Remove language from language prefix list.
-  $config = \Drupal::configFactory()->getEditable('language.negotiation');
-  $prefixes = $config->get('url.prefixes');
-  unset($prefixes[$language->id()]);
-  $config->set('url.prefixes', $prefixes)->save();
-
-  // Remove language from language domain list.
-  $config = \Drupal::configFactory()->getEditable('language.negotiation');
-  $domains = $config->get('url.domains');
-  unset($domains[$language->id()]);
-  $config->set('url.domains', $domains)->save();
 }
 
 /**
