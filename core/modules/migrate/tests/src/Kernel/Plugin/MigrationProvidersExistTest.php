@@ -87,7 +87,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
       ],
       'imagefield' => [
         'source_module' => 'imagefield',
-        'destination_module' => 'file',
+        'destination_module' => 'image',
       ],
       'file' => [
         'source_module' => 'file',
@@ -95,7 +95,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
       ],
       'image' => [
         'source_module' => 'image',
-        'destination_module' => 'file',
+        'destination_module' => 'image',
       ],
       'phone' => [
         'source_module' => 'phone',

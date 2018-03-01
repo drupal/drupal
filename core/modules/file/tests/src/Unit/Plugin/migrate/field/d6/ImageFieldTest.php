@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\Tests\file\Unit\Plugin\migrate\field\d7;
+namespace Drupal\Tests\file\Unit\Plugin\migrate\field\d6;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\file\Plugin\migrate\field\d7\ImageField;
+use Drupal\file\Plugin\migrate\field\d6\ImageField;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\file\Plugin\migrate\field\d7\ImageField
+ * @coversDefaultClass \Drupal\file\Plugin\migrate\field\d6\ImageField
  * @group file
  * @group legacy
  */
@@ -45,21 +45,14 @@ class ImageFieldTest extends UnitTestCase {
 
   /**
    * @covers ::processFieldValues
-   * @expectedDeprecation ImageField is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.x. Use \Drupal\image\Plugin\migrate\field\d7\ImageField instead. See https://www.drupal.org/node/2936061.
+   * @expectedDeprecation ImageField is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.x. Use \Drupal\image\Plugin\migrate\field\d6\ImageField instead. See https://www.drupal.org/node/2936061.
    */
   public function testProcessFieldValues() {
     $this->plugin->processFieldValues($this->migration, 'somefieldname', []);
 
     $expected = [
-      'plugin' => 'sub_process',
+      'plugin' => 'd6_field_file',
       'source' => 'somefieldname',
-      'process' => [
-        'target_id' => 'fid',
-        'alt' => 'alt',
-        'title' => 'title',
-        'width' => 'width',
-        'height' => 'height',
-      ],
     ];
     $this->assertSame($expected, $this->migration->getProcess());
   }

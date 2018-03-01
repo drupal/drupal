@@ -1,16 +1,15 @@
 <?php
 
-namespace Drupal\Tests\file\Unit\Plugin\migrate\field\d7;
+namespace Drupal\Tests\image\Unit\Plugin\migrate\field\d7;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\file\Plugin\migrate\field\d7\ImageField;
+use Drupal\image\Plugin\migrate\field\d7\ImageField;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\file\Plugin\migrate\field\d7\ImageField
- * @group file
- * @group legacy
+ * @coversDefaultClass \Drupal\image\Plugin\migrate\field\d7\ImageField
+ * @group image
  */
 class ImageFieldTest extends UnitTestCase {
 
@@ -45,7 +44,6 @@ class ImageFieldTest extends UnitTestCase {
 
   /**
    * @covers ::processFieldValues
-   * @expectedDeprecation ImageField is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.x. Use \Drupal\image\Plugin\migrate\field\d7\ImageField instead. See https://www.drupal.org/node/2936061.
    */
   public function testProcessFieldValues() {
     $this->plugin->processFieldValues($this->migration, 'somefieldname', []);
