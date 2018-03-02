@@ -87,7 +87,7 @@ More about themes:
  * Download contributed themes to /themes to modify Drupal's appearance:
    https://www.drupal.org/project/themes
  * Develop your own theme:
-   https://www.drupal.org/documentation/theme
+   https://www.drupal.org/docs/8/theming
 
 DEVELOPING FOR DRUPAL
 ---------------------
