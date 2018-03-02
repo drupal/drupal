@@ -20,16 +20,17 @@
     // Ignore any placeholders that are not in the known placeholder list. Used
     // to avoid someone trying to XSS the site via the placeholdering mechanism.
     if (typeof drupalSettings.bigPipePlaceholderIds[placeholderId] !== 'undefined') {
+      const response = mapTextContentToAjaxResponse(content);
       // If we try to parse the content too early (when the JSON containing Ajax
-      // commands is still arriving), textContent will be empty which will cause
-      // JSON.parse() to fail. Remove once so that it can be processed again
-      // later.
-      // @see bigPipeProcessDocument()
-      if (content === '') {
+      // commands is still arriving), textContent will be empty or incomplete.
+      if (response === false) {
+        /**
+         * Mark as unprocessed so this will be retried later.
+         * @see bigPipeProcessDocument()
+         */
         $(this).removeOnce('big-pipe');
       }
       else {
-        const response = JSON.parse(content);
         // Create a Drupal.Ajax object without associating an element, a
         // progress indicator or a URL.
         const ajaxObject = Drupal.ajax({
@@ -42,6 +43,28 @@
         // system handle it.
         ajaxObject.success(response, 'success');
       }
+    }
+  }
+
+  /**
+   * Maps textContent of <script type="application/vnd.drupal-ajax"> to an AJAX response.
+   *
+   * @param {string} content
+   *   The text content of a <script type="application/vnd.drupal-ajax"> DOM node.
+   * @return {Array|boolean}
+   *   The parsed Ajax response containing an array of Ajax commands, or false in
+   *   case the DOM node hasn't fully arrived yet.
+   */
+  function mapTextContentToAjaxResponse(content) {
+    if (content === '') {
+      return false;
+    }
+
+    try {
+      return JSON.parse(content);
+    }
+    catch (e) {
+      return false;
     }
   }
 
