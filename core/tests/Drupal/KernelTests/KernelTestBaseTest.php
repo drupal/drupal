@@ -306,4 +306,15 @@ class KernelTestBaseTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Ensures KernelTestBase tests can access modules in profiles.
+   */
+  public function testProfileModules() {
+    $this->assertFileExists('core/profiles/demo_umami/modules/demo_umami_content/demo_umami_content.info.yml');
+    $this->assertSame(
+      'core/profiles/demo_umami/modules/demo_umami_content/demo_umami_content.info.yml',
+      \Drupal::service('extension.list.module')->getPathname('demo_umami_content')
+    );
+  }
+
 }
