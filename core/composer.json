@@ -30,7 +30,7 @@
         "symfony/validator": "~3.4.0",
         "symfony/process": "~3.4.0",
         "symfony/polyfill-iconv": "^1.0",
-        "symfony/yaml": "~3.4.0",
+        "symfony/yaml": "~3.4.5",
         "twig/twig": "^1.35.0",
         "doctrine/common": "^2.5",
         "doctrine/annotations": "^1.2",
