@@ -6,7 +6,6 @@ use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Doctrine\Common\Reflection\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\simpletest\Exception\MissingGroupException;
@@ -25,11 +24,11 @@ class TestDiscovery {
   protected $classLoader;
 
   /**
-   * Backend for caching discovery results.
+   * Statically cached list of test classes.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
+   * @var array
    */
-  protected $cacheBackend;
+  protected $testClasses;
 
   /**
    * Cached map of all test namespaces to respective directories.
@@ -70,14 +69,11 @@ class TestDiscovery {
    *   \Symfony\Component\ClassLoader\ApcClassLoader.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   (optional) Backend for caching discovery results.
    */
-  public function __construct($root, $class_loader, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend = NULL) {
+  public function __construct($root, $class_loader, ModuleHandlerInterface $module_handler) {
     $this->root = $root;
     $this->classLoader = $class_loader;
     $this->moduleHandler = $module_handler;
-    $this->cacheBackend = $cache_backend;
   }
 
   /**
@@ -159,9 +155,9 @@ class TestDiscovery {
     $reader = new SimpleAnnotationReader();
     $reader->addNamespace('Drupal\\simpletest\\Annotation');
 
-    if (!isset($extension)) {
-      if ($this->cacheBackend && $cache = $this->cacheBackend->get('simpletest:discovery:classes')) {
-        return $cache->data;
+    if (!isset($extension) && empty($types)) {
+      if (!empty($this->testClasses)) {
+        return $this->testClasses;
       }
     }
     $list = [];
@@ -215,10 +211,8 @@ class TestDiscovery {
     // Allow modules extending core tests to disable originals.
     $this->moduleHandler->alterDeprecated('Convert your test to a PHPUnit-based one and implement test listeners. See: https://www.drupal.org/node/2939892', 'simpletest', $list);
 
-    if (!isset($extension)) {
-      if ($this->cacheBackend) {
-        $this->cacheBackend->set('simpletest:discovery:classes', $list);
-      }
+    if (!isset($extension) && empty($types)) {
+      $this->testClasses = $list;
     }
 
     if ($types) {
