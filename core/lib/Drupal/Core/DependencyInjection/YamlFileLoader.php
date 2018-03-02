@@ -329,10 +329,7 @@ class YamlFileLoader
             throw new InvalidArgumentException(sprintf('The service file "%s" is not valid.', $file));
         }
 
-        // @todo Remove preg_replace() once
-        //   https://github.com/symfony/symfony/pull/25787 is in Symfony 3.4.
-        $content = preg_replace('/:$\n^\s+{\s*}$/m', ': {}', file_get_contents($file));
-        return $this->validate(Yaml::decode($content), $file);
+        return $this->validate(Yaml::decode(file_get_contents($file)), $file);
     }
 
     /**
