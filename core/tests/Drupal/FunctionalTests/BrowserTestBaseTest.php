@@ -639,4 +639,13 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertEquals([NULL, ['key1' => ['key2' => ['key3' => 3, 'key3.1' => 3.1]]]], $this->minkDefaultDriverArgs);
   }
 
+  /**
+   * Ensures we can't access modules we shouldn't be able to after install.
+   */
+  public function testProfileModules() {
+    $this->setExpectedException(\InvalidArgumentException::class, 'The module demo_umami_content does not exist.');
+    $this->assertFileExists('core/profiles/demo_umami/modules/demo_umami_content/demo_umami_content.info.yml');
+    \Drupal::service('extension.list.module')->getPathname('demo_umami_content');
+  }
+
 }

@@ -135,6 +135,9 @@ function install_drupal($class_loader, $settings = []) {
   $state = $install_state;
   if (!empty($install_state['installation_finished'])) {
     unset($GLOBALS['install_state']);
+    // If installation is finished ensure any further container rebuilds do not
+    // use the installer's service provider.
+    unset($GLOBALS['conf']['container_service_providers']['InstallerServiceProvider']);
   }
 
   // All available tasks for this page request are now complete. Interactive
