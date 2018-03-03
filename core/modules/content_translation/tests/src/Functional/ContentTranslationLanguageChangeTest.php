@@ -3,7 +3,8 @@
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\node\Tests\NodeTestBase;
+use Drupal\Tests\node\Functional\NodeTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the content translation language that is set.
@@ -11,6 +12,10 @@ use Drupal\node\Tests\NodeTestBase;
  * @group content_translation
  */
 class ContentTranslationLanguageChangeTest extends NodeTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
 
   /**
    * Modules to enable.
