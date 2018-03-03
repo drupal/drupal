@@ -188,7 +188,7 @@ class PoHeader {
    *   - 'nplurals': The number of plural forms defined by the plural formula.
    *   - 'plurals': Array of plural positions keyed by plural value.
    *
-   * @throws Exception
+   * @throws \Exception
    */
   public function parsePluralForms($pluralforms) {
     $plurals = [];
@@ -473,7 +473,7 @@ class PoHeader {
    *   Number of the plural string to be used for the given plural value.
    *
    * @see parseArithmetic()
-   * @throws Exception
+   * @throws \Exception
    */
   protected function evaluatePlural($element_stack, $n) {
     $count = count($element_stack);
