@@ -86,7 +86,6 @@
  * Entity toolbar.
  */
 .quickedit-toolbar-container {
-  max-width: 100%;
   position: absolute;
   max-width: 320px;
   width: 320px;
