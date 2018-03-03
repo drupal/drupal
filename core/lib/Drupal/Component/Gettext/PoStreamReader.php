@@ -146,7 +146,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    * Opens the stream and reads the header. The stream is ready for reading
    * items after.
    *
-   * @throws Exception
+   * @throws \Exception
    *   If the URI is not yet set.
    */
   public function open() {
@@ -162,7 +162,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   /**
    * Implements Drupal\Component\Gettext\PoStreamInterface::close().
    *
-   * @throws Exception
+   * @throws \Exception
    *   If the stream is not open.
    */
   public function close() {
@@ -506,6 +506,8 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
       $this->_errors[] = SafeMarkup::format('The translation stream %uri ended unexpectedly at line %line.', $log_vars);
       return FALSE;
     }
+
+    return;
   }
 
   /**
