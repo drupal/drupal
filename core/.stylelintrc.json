@@ -7,6 +7,8 @@
     "comment-empty-line-before": null,
     "function-linear-gradient-no-nonstandard-direction": null,
     "function-whitespace-after": null,
+    "no-descending-specificity": null,
+    "no-duplicate-selectors": null,
     "no-unknown-animations": true,
     "number-leading-zero": "always",
     "plugin/no-browser-hacks": [true, {
