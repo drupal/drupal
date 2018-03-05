@@ -23,6 +23,44 @@
   Drupal.states = states;
 
   /**
+   * Inverts a (if it's not undefined) when invertState is true.
+   *
+   * @function Drupal.states~invert
+   *
+   * @param {*} a
+   *   The value to maybe invert.
+   * @param {bool} invertState
+   *   Whether to invert state or not.
+   *
+   * @return {bool}
+   *   The result.
+   */
+  function invert(a, invertState) {
+    return (invertState && typeof a !== 'undefined') ? !a : a;
+  }
+
+  /**
+   * Compares two values while ignoring undefined values.
+   *
+   * @function Drupal.states~compare
+   *
+   * @param {*} a
+   *   Value a.
+   * @param {*} b
+   *   Value b.
+   *
+   * @return {bool}
+   *   The comparison result.
+   */
+  function compare(a, b) {
+    if (a === b) {
+      return typeof a === 'undefined' ? a : true;
+    }
+
+    return typeof a === 'undefined' || typeof b === 'undefined';
+  }
+
+  /**
    * Attaches the states.
    *
    * @type {Drupal~behavior}
@@ -642,47 +680,4 @@
       }
     }
   });
-
-  /**
-   * These are helper functions implementing addition "operators" and don't
-   * implement any logic that is particular to states.
-   */
-
-  /**
-   * Inverts a (if it's not undefined) when invertState is true.
-   *
-   * @function Drupal.states~invert
-   *
-   * @param {*} a
-   *   The value to maybe invert.
-   * @param {bool} invertState
-   *   Whether to invert state or not.
-   *
-   * @return {bool}
-   *   The result.
-   */
-  function invert(a, invertState) {
-    return (invertState && typeof a !== 'undefined') ? !a : a;
-  }
-
-  /**
-   * Compares two values while ignoring undefined values.
-   *
-   * @function Drupal.states~compare
-   *
-   * @param {*} a
-   *   Value a.
-   * @param {*} b
-   *   Value b.
-   *
-   * @return {bool}
-   *   The comparison result.
-   */
-  function compare(a, b) {
-    if (a === b) {
-      return typeof a === 'undefined' ? a : true;
-    }
-
-    return typeof a === 'undefined' || typeof b === 'undefined';
-  }
 }(jQuery, Drupal));

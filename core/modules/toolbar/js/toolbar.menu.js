@@ -14,6 +14,17 @@
       handleClose: Drupal.t('Collapse')
     };
 
+    function toggleList($item, switcher) {
+      var $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
+      switcher = typeof switcher !== 'undefined' ? switcher : !$item.hasClass('open');
+
+      $item.toggleClass('open', switcher);
+
+      $toggle.toggleClass('open', switcher);
+
+      $toggle.find('.action').text(switcher ? ui.handleClose : ui.handleOpen);
+    }
+
     function toggleClickHandler(event) {
       var $toggle = $(event.target);
       var $item = $toggle.closest('li');
@@ -30,17 +41,6 @@
       }
 
       event.stopPropagation();
-    }
-
-    function toggleList($item, switcher) {
-      var $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
-      switcher = typeof switcher !== 'undefined' ? switcher : !$item.hasClass('open');
-
-      $item.toggleClass('open', switcher);
-
-      $toggle.toggleClass('open', switcher);
-
-      $toggle.find('.action').text(switcher ? ui.handleClose : ui.handleOpen);
     }
 
     function initItems($menu) {

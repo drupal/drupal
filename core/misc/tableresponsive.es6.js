@@ -5,26 +5,6 @@
 
 (function ($, Drupal, window) {
   /**
-   * Attach the tableResponsive function to {@link Drupal.behaviors}.
-   *
-   * @type {Drupal~behavior}
-   *
-   * @prop {Drupal~behaviorAttach} attach
-   *   Attaches tableResponsive functionality.
-   */
-  Drupal.behaviors.tableResponsive = {
-    attach(context, settings) {
-      const $tables = $(context).find('table.responsive-enabled').once('tableresponsive');
-      if ($tables.length) {
-        const il = $tables.length;
-        for (let i = 0; i < il; i++) {
-          TableResponsive.tables.push(new TableResponsive($tables[i]));
-        }
-      }
-    },
-  };
-
-  /**
    * The TableResponsive object optimizes table presentation for screen size.
    *
    * A responsive table hides columns at small screen sizes, leaving the most
@@ -59,6 +39,26 @@
       .on('resize.tableresponsive', $.proxy(this, 'eventhandlerEvaluateColumnVisibility'))
       .trigger('resize.tableresponsive');
   }
+
+  /**
+   * Attach the tableResponsive function to {@link Drupal.behaviors}.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches tableResponsive functionality.
+   */
+  Drupal.behaviors.tableResponsive = {
+    attach(context, settings) {
+      const $tables = $(context).find('table.responsive-enabled').once('tableresponsive');
+      if ($tables.length) {
+        const il = $tables.length;
+        for (let i = 0; i < il; i++) {
+          TableResponsive.tables.push(new TableResponsive($tables[i]));
+        }
+      }
+    },
+  };
 
   /**
    * Extend the TableResponsive function with a list of managed tables.

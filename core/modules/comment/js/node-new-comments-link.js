@@ -6,34 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-  Drupal.behaviors.nodeNewCommentsLink = {
-    attach: function attach(context) {
-      var nodeIDs = [];
-      var $placeholders = $(context).find('[data-history-node-last-comment-timestamp]').once('history').filter(function () {
-        var $placeholder = $(this);
-        var lastCommentTimestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
-        var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
-        if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
-          nodeIDs.push(nodeID);
-
-          hide($placeholder);
-          return true;
-        }
-
-        remove($placeholder);
-        return false;
-      });
-
-      if ($placeholders.length === 0) {
-        return;
-      }
-
-      Drupal.history.fetchTimestamps(nodeIDs, function () {
-        processNodeNewCommentLinks($placeholders);
-      });
-    }
-  };
-
   function hide($placeholder) {
     return $placeholder.closest('.comment-new-comments').prev().addClass('last').end().hide();
   }
@@ -90,4 +62,32 @@
       });
     }
   }
+
+  Drupal.behaviors.nodeNewCommentsLink = {
+    attach: function attach(context) {
+      var nodeIDs = [];
+      var $placeholders = $(context).find('[data-history-node-last-comment-timestamp]').once('history').filter(function () {
+        var $placeholder = $(this);
+        var lastCommentTimestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
+        var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
+        if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
+          nodeIDs.push(nodeID);
+
+          hide($placeholder);
+          return true;
+        }
+
+        remove($placeholder);
+        return false;
+      });
+
+      if ($placeholders.length === 0) {
+        return;
+      }
+
+      Drupal.history.fetchTimestamps(nodeIDs, function () {
+        processNodeNewCommentLinks($placeholders);
+      });
+    }
+  };
 })(jQuery, Drupal, drupalSettings);

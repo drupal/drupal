@@ -122,6 +122,9 @@
       response(suggestions);
     }
 
+    // Get the desired term and construct the autocomplete URL for it.
+    const term = autocomplete.extractLastTerm(request.term);
+
     /**
      * Transforms the data object into an array and update autocomplete results.
      *
@@ -134,9 +137,6 @@
       // Send the new string array of terms to the jQuery UI list.
       showSuggestions(data);
     }
-
-    // Get the desired term and construct the autocomplete URL for it.
-    const term = autocomplete.extractLastTerm(request.term);
 
     // Check if the term is already cached.
     if (autocomplete.cache[elementId].hasOwnProperty(term)) {

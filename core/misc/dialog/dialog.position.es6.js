@@ -14,6 +14,31 @@
   drupalSettings.dialog = $.extend({ autoResize: true, maxHeight: '95%' }, drupalSettings.dialog);
 
   /**
+   * Position the dialog's center at the center of displace.offsets boundaries.
+   *
+   * @function Drupal.dialog~resetPosition
+   *
+   * @param {object} options
+   *   Options object.
+   *
+   * @return {object}
+   *   Altered options object.
+   */
+  function resetPosition(options) {
+    const offsets = displace.offsets;
+    const left = offsets.left - offsets.right;
+    const top = offsets.top - offsets.bottom;
+
+    const leftString = `${(left > 0 ? '+' : '-') + Math.abs(Math.round(left / 2))}px`;
+    const topString = `${(top > 0 ? '+' : '-') + Math.abs(Math.round(top / 2))}px`;
+    options.position = {
+      my: `center${left !== 0 ? leftString : ''} center${top !== 0 ? topString : ''}`,
+      of: window,
+    };
+    return options;
+  }
+
+  /**
    * Resets the current options for positioning.
    *
    * This is used as a window resize and scroll callback to reposition the
@@ -59,31 +84,6 @@
     event.data.$element
       .dialog('option', adjustedOptions)
       .trigger('dialogContentResize');
-  }
-
-  /**
-   * Position the dialog's center at the center of displace.offsets boundaries.
-   *
-   * @function Drupal.dialog~resetPosition
-   *
-   * @param {object} options
-   *   Options object.
-   *
-   * @return {object}
-   *   Altered options object.
-   */
-  function resetPosition(options) {
-    const offsets = displace.offsets;
-    const left = offsets.left - offsets.right;
-    const top = offsets.top - offsets.bottom;
-
-    const leftString = `${(left > 0 ? '+' : '-') + Math.abs(Math.round(left / 2))}px`;
-    const topString = `${(top > 0 ? '+' : '-') + Math.abs(Math.round(top / 2))}px`;
-    options.position = {
-      my: `center${left !== 0 ? leftString : ''} center${top !== 0 ? topString : ''}`,
-      of: window,
-    };
-    return options;
   }
 
   $(window).on({

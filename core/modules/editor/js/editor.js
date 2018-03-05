@@ -12,6 +12,28 @@
     return $('#' + fieldId).get(0);
   }
 
+  function filterXssWhenSwitching(field, format, originalFormatID, callback) {
+    if (format.editor.isXssSafe) {
+      callback(field, format);
+    } else {
+        $.ajax({
+          url: Drupal.url('editor/filter_xss/' + format.format),
+          type: 'POST',
+          data: {
+            value: field.value,
+            original_format_id: originalFormatID
+          },
+          dataType: 'json',
+          success: function success(xssFilteredValue) {
+            if (xssFilteredValue !== false) {
+              field.value = xssFilteredValue;
+            }
+            callback(field, format);
+          }
+        });
+      }
+  }
+
   function changeTextEditor(field, newFormatID) {
     var previousFormatID = field.getAttribute('data-editor-active-text-format');
 
@@ -168,26 +190,4 @@
       }
     }
   };
-
-  function filterXssWhenSwitching(field, format, originalFormatID, callback) {
-    if (format.editor.isXssSafe) {
-      callback(field, format);
-    } else {
-        $.ajax({
-          url: Drupal.url('editor/filter_xss/' + format.format),
-          type: 'POST',
-          data: {
-            value: field.value,
-            original_format_id: originalFormatID
-          },
-          dataType: 'json',
-          success: function success(xssFilteredValue) {
-            if (xssFilteredValue !== false) {
-              field.value = xssFilteredValue;
-            }
-            callback(field, format);
-          }
-        });
-      }
-  }
 })(jQuery, Drupal, drupalSettings);

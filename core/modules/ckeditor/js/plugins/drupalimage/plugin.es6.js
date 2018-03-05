@@ -14,6 +14,77 @@
  */
 
 (function ($, Drupal, CKEDITOR) {
+  /**
+   * Gets the focused widget, if of the type specific for this plugin.
+   *
+   * @param {CKEDITOR.editor} editor
+   *   A CKEditor instance.
+   *
+   * @return {?CKEDITOR.plugins.widget}
+   *   The focused image2 widget instance, or null.
+   */
+  function getFocusedWidget(editor) {
+    const widget = editor.widgets.focused;
+
+    if (widget && widget.name === 'image') {
+      return widget;
+    }
+
+    return null;
+  }
+
+  /**
+   * Integrates the drupalimage widget with the drupallink plugin.
+   *
+   * Makes images linkable.
+   *
+   * @param {CKEDITOR.editor} editor
+   *   A CKEditor instance.
+   */
+  function linkCommandIntegrator(editor) {
+    // Nothing to integrate with if the drupallink plugin is not loaded.
+    if (!editor.plugins.drupallink) {
+      return;
+    }
+
+    // Override default behaviour of 'drupalunlink' command.
+    editor.getCommand('drupalunlink').on('exec', function (evt) {
+      const widget = getFocusedWidget(editor);
+
+      // Override 'drupalunlink' only when link truly belongs to the widget. If
+      // wrapped inline widget in a link, let default unlink work.
+      // @see https://dev.ckeditor.com/ticket/11814
+      if (!widget || !widget.parts.link) {
+        return;
+      }
+
+      widget.setData('link', null);
+
+      // Selection (which is fake) may not change if unlinked image in focused
+      // widget, i.e. if captioned image. Let's refresh command state manually
+      // here.
+      this.refresh(editor, editor.elementPath());
+
+      evt.cancel();
+    });
+
+    // Override default refresh of 'drupalunlink' command.
+    editor.getCommand('drupalunlink').on('refresh', function (evt) {
+      const widget = getFocusedWidget(editor);
+
+      if (!widget) {
+        return;
+      }
+
+      // Note that widget may be wrapped in a link, which
+      // does not belong to that widget (#11814).
+      this.setState(widget.data.link || widget.wrapper.getAscendant('a') ?
+        CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED);
+
+      evt.cancel();
+    });
+  }
+
   CKEDITOR.plugins.add('drupalimage', {
     requires: 'image2',
     icons: 'drupalimage',
@@ -288,77 +359,6 @@
   CKEDITOR.plugins.image2.getLinkAttributesGetter = function () {
     return CKEDITOR.plugins.drupallink.getLinkAttributes;
   };
-
-  /**
-   * Integrates the drupalimage widget with the drupallink plugin.
-   *
-   * Makes images linkable.
-   *
-   * @param {CKEDITOR.editor} editor
-   *   A CKEditor instance.
-   */
-  function linkCommandIntegrator(editor) {
-    // Nothing to integrate with if the drupallink plugin is not loaded.
-    if (!editor.plugins.drupallink) {
-      return;
-    }
-
-    // Override default behaviour of 'drupalunlink' command.
-    editor.getCommand('drupalunlink').on('exec', function (evt) {
-      const widget = getFocusedWidget(editor);
-
-      // Override 'drupalunlink' only when link truly belongs to the widget. If
-      // wrapped inline widget in a link, let default unlink work.
-      // @see https://dev.ckeditor.com/ticket/11814
-      if (!widget || !widget.parts.link) {
-        return;
-      }
-
-      widget.setData('link', null);
-
-      // Selection (which is fake) may not change if unlinked image in focused
-      // widget, i.e. if captioned image. Let's refresh command state manually
-      // here.
-      this.refresh(editor, editor.elementPath());
-
-      evt.cancel();
-    });
-
-    // Override default refresh of 'drupalunlink' command.
-    editor.getCommand('drupalunlink').on('refresh', function (evt) {
-      const widget = getFocusedWidget(editor);
-
-      if (!widget) {
-        return;
-      }
-
-      // Note that widget may be wrapped in a link, which
-      // does not belong to that widget (#11814).
-      this.setState(widget.data.link || widget.wrapper.getAscendant('a') ?
-        CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED);
-
-      evt.cancel();
-    });
-  }
-
-  /**
-   * Gets the focused widget, if of the type specific for this plugin.
-   *
-   * @param {CKEDITOR.editor} editor
-   *   A CKEditor instance.
-   *
-   * @return {?CKEDITOR.plugins.widget}
-   *   The focused image2 widget instance, or null.
-   */
-  function getFocusedWidget(editor) {
-    const widget = editor.widgets.focused;
-
-    if (widget && widget.name === 'image') {
-      return widget;
-    }
-
-    return null;
-  }
 
   // Expose an API for other plugins to interact with drupalimage widgets.
   CKEDITOR.plugins.drupalimage = {

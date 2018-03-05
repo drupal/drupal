@@ -5,91 +5,6 @@
 
 (function ($, Drupal, displace) {
   /**
-   * Attaches sticky table headers.
-   *
-   * @type {Drupal~behavior}
-   *
-   * @prop {Drupal~behaviorAttach} attach
-   *   Attaches the sticky table header behavior.
-   */
-  Drupal.behaviors.tableHeader = {
-    attach(context) {
-      $(window).one('scroll.TableHeaderInit', { context }, tableHeaderInitHandler);
-    },
-  };
-
-  function scrollValue(position) {
-    return document.documentElement[position] || document.body[position];
-  }
-
-  // Select and initialize sticky table headers.
-  function tableHeaderInitHandler(e) {
-    const $tables = $(e.data.context).find('table.sticky-enabled').once('tableheader');
-    const il = $tables.length;
-    for (let i = 0; i < il; i++) {
-      TableHeader.tables.push(new TableHeader($tables[i]));
-    }
-    forTables('onScroll');
-  }
-
-  // Helper method to loop through tables and execute a method.
-  function forTables(method, arg) {
-    const tables = TableHeader.tables;
-    const il = tables.length;
-    for (let i = 0; i < il; i++) {
-      tables[i][method](arg);
-    }
-  }
-
-  function tableHeaderResizeHandler(e) {
-    forTables('recalculateSticky');
-  }
-
-  function tableHeaderOnScrollHandler(e) {
-    forTables('onScroll');
-  }
-
-  function tableHeaderOffsetChangeHandler(e, offsets) {
-    forTables('stickyPosition', offsets.top);
-  }
-
-  // Bind event that need to change all tables.
-  $(window).on({
-
-    /**
-     * When resizing table width can change, recalculate everything.
-     *
-     * @ignore
-     */
-    'resize.TableHeader': tableHeaderResizeHandler,
-
-    /**
-     * Bind only one event to take care of calling all scroll callbacks.
-     *
-     * @ignore
-     */
-    'scroll.TableHeader': tableHeaderOnScrollHandler,
-  });
-  // Bind to custom Drupal events.
-  $(document).on({
-
-    /**
-     * Recalculate columns width when window is resized and when show/hide
-     * weight is triggered.
-     *
-     * @ignore
-     */
-    'columnschange.TableHeader': tableHeaderResizeHandler,
-
-    /**
-     * Recalculate TableHeader.topOffset when viewport is resized.
-     *
-     * @ignore
-     */
-    'drupalViewportOffsetChange.TableHeader': tableHeaderOffsetChangeHandler,
-  });
-
-  /**
    * Constructor for the tableHeader object. Provides sticky table headers.
    *
    * TableHeader will make the current table header stick to the top of the page
@@ -142,6 +57,91 @@
     // Create and display sticky header.
     this.createSticky();
   }
+
+  // Helper method to loop through tables and execute a method.
+  function forTables(method, arg) {
+    const tables = TableHeader.tables;
+    const il = tables.length;
+    for (let i = 0; i < il; i++) {
+      tables[i][method](arg);
+    }
+  }
+
+  // Select and initialize sticky table headers.
+  function tableHeaderInitHandler(e) {
+    const $tables = $(e.data.context).find('table.sticky-enabled').once('tableheader');
+    const il = $tables.length;
+    for (let i = 0; i < il; i++) {
+      TableHeader.tables.push(new TableHeader($tables[i]));
+    }
+    forTables('onScroll');
+  }
+
+  /**
+   * Attaches sticky table headers.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the sticky table header behavior.
+   */
+  Drupal.behaviors.tableHeader = {
+    attach(context) {
+      $(window).one('scroll.TableHeaderInit', { context }, tableHeaderInitHandler);
+    },
+  };
+
+  function scrollValue(position) {
+    return document.documentElement[position] || document.body[position];
+  }
+
+  function tableHeaderResizeHandler(e) {
+    forTables('recalculateSticky');
+  }
+
+  function tableHeaderOnScrollHandler(e) {
+    forTables('onScroll');
+  }
+
+  function tableHeaderOffsetChangeHandler(e, offsets) {
+    forTables('stickyPosition', offsets.top);
+  }
+
+  // Bind event that need to change all tables.
+  $(window).on({
+
+    /**
+     * When resizing table width can change, recalculate everything.
+     *
+     * @ignore
+     */
+    'resize.TableHeader': tableHeaderResizeHandler,
+
+    /**
+     * Bind only one event to take care of calling all scroll callbacks.
+     *
+     * @ignore
+     */
+    'scroll.TableHeader': tableHeaderOnScrollHandler,
+  });
+  // Bind to custom Drupal events.
+  $(document).on({
+
+    /**
+     * Recalculate columns width when window is resized and when show/hide
+     * weight is triggered.
+     *
+     * @ignore
+     */
+    'columnschange.TableHeader': tableHeaderResizeHandler,
+
+    /**
+     * Recalculate TableHeader.topOffset when viewport is resized.
+     *
+     * @ignore
+     */
+    'drupalViewportOffsetChange.TableHeader': tableHeaderOffsetChangeHandler,
+  });
 
   /**
    * Store the state of TableHeader.

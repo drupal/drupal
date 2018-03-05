@@ -21,6 +21,46 @@
   }
 
   /**
+   * Filter away XSS attack vectors when switching text formats.
+   *
+   * @param {HTMLElement} field
+   *   The textarea DOM element.
+   * @param {object} format
+   *   The text format that's being activated, from
+   *   drupalSettings.editor.formats.
+   * @param {string} originalFormatID
+   *   The text format ID of the original text format.
+   * @param {function} callback
+   *   A callback to be called (with no parameters) after the field's value has
+   *   been XSS filtered.
+   */
+  function filterXssWhenSwitching(field, format, originalFormatID, callback) {
+    // A text editor that already is XSS-safe needs no additional measures.
+    if (format.editor.isXssSafe) {
+      callback(field, format);
+    }
+    // Otherwise, ensure XSS safety: let the server XSS filter this value.
+    else {
+      $.ajax({
+        url: Drupal.url(`editor/filter_xss/${format.format}`),
+        type: 'POST',
+        data: {
+          value: field.value,
+          original_format_id: originalFormatID,
+        },
+        dataType: 'json',
+        success(xssFilteredValue) {
+          // If the server returns false, then no XSS filtering is needed.
+          if (xssFilteredValue !== false) {
+            field.value = xssFilteredValue;
+          }
+          callback(field, format);
+        },
+      });
+    }
+  }
+
+  /**
    * Changes the text editor on a text area.
    *
    * @param {HTMLElement} field
@@ -271,44 +311,4 @@
       }
     }
   };
-
-  /**
-   * Filter away XSS attack vectors when switching text formats.
-   *
-   * @param {HTMLElement} field
-   *   The textarea DOM element.
-   * @param {object} format
-   *   The text format that's being activated, from
-   *   drupalSettings.editor.formats.
-   * @param {string} originalFormatID
-   *   The text format ID of the original text format.
-   * @param {function} callback
-   *   A callback to be called (with no parameters) after the field's value has
-   *   been XSS filtered.
-   */
-  function filterXssWhenSwitching(field, format, originalFormatID, callback) {
-    // A text editor that already is XSS-safe needs no additional measures.
-    if (format.editor.isXssSafe) {
-      callback(field, format);
-    }
-    // Otherwise, ensure XSS safety: let the server XSS filter this value.
-    else {
-      $.ajax({
-        url: Drupal.url(`editor/filter_xss/${format.format}`),
-        type: 'POST',
-        data: {
-          value: field.value,
-          original_format_id: originalFormatID,
-        },
-        dataType: 'json',
-        success(xssFilteredValue) {
-          // If the server returns false, then no XSS filtering is needed.
-          if (xssFilteredValue !== false) {
-            field.value = xssFilteredValue;
-          }
-          callback(field, format);
-        },
-      });
-    }
-  }
 }(jQuery, Drupal, drupalSettings));

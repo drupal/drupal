@@ -10,6 +10,20 @@
     this.stack = [];
   }
 
+  function TabbingContext(options) {
+    $.extend(this, {
+      level: null,
+
+      $tabbableElements: $(),
+
+      $disabledElements: $(),
+
+      released: false,
+
+      active: false
+    }, options);
+  }
+
   $.extend(TabbingManager.prototype, {
     constrain: function constrain(elements) {
       var il = this.stack.length;
@@ -108,20 +122,6 @@
       }
     }
   });
-
-  function TabbingContext(options) {
-    $.extend(this, {
-      level: null,
-
-      $tabbableElements: $(),
-
-      $disabledElements: $(),
-
-      released: false,
-
-      active: false
-    }, options);
-  }
 
   $.extend(TabbingContext.prototype, {
     release: function release() {

@@ -73,13 +73,13 @@
       response(suggestions);
     }
 
+    var term = autocomplete.extractLastTerm(request.term);
+
     function sourceCallbackHandler(data) {
       autocomplete.cache[elementId][term] = data;
 
       showSuggestions(data);
     }
-
-    var term = autocomplete.extractLastTerm(request.term);
 
     if (autocomplete.cache[elementId].hasOwnProperty(term)) {
       showSuggestions(autocomplete.cache[elementId][term]);

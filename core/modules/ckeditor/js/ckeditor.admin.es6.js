@@ -215,6 +215,7 @@
          * Closes the dialog when the user cancels or supplies valid data.
          */
         function shutdown() {
+          // eslint-disable-next-line no-use-before-define
           dialog.close(action);
 
           // The processing marker can be deleted since the dialog has been
@@ -346,6 +347,7 @@
           $(event.target).remove();
         },
       });
+
       // A modal dialog is used because the user must provide a button group
       // name or cancel the button placement before taking any other action.
       dialog.showModal();

@@ -122,15 +122,15 @@
       var editorModel = this.model;
       var fieldModel = this.fieldModel;
 
-      function cleanUpAjax() {
-        Drupal.quickedit.util.form.unajaxifySaving(formSaveAjax);
-        formSaveAjax = null;
-      }
-
       var formSaveAjax = Drupal.quickedit.util.form.ajaxifySaving({
         nocssjs: false,
         other_view_modes: fieldModel.findOtherViewModes()
       }, $submit);
+
+      function cleanUpAjax() {
+        Drupal.quickedit.util.form.unajaxifySaving(formSaveAjax);
+        formSaveAjax = null;
+      }
 
       formSaveAjax.commands.quickeditFieldFormSaved = function (ajax, response, status) {
         cleanUpAjax();

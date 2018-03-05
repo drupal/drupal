@@ -6,6 +6,48 @@
 **/
 
 (function ($, Drupal, CKEDITOR) {
+  function getFocusedWidget(editor) {
+    var widget = editor.widgets.focused;
+
+    if (widget && widget.name === 'image') {
+      return widget;
+    }
+
+    return null;
+  }
+
+  function linkCommandIntegrator(editor) {
+    if (!editor.plugins.drupallink) {
+      return;
+    }
+
+    editor.getCommand('drupalunlink').on('exec', function (evt) {
+      var widget = getFocusedWidget(editor);
+
+      if (!widget || !widget.parts.link) {
+        return;
+      }
+
+      widget.setData('link', null);
+
+      this.refresh(editor, editor.elementPath());
+
+      evt.cancel();
+    });
+
+    editor.getCommand('drupalunlink').on('refresh', function (evt) {
+      var widget = getFocusedWidget(editor);
+
+      if (!widget) {
+        return;
+      }
+
+      this.setState(widget.data.link || widget.wrapper.getAscendant('a') ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED);
+
+      evt.cancel();
+    });
+  }
+
   CKEDITOR.plugins.add('drupalimage', {
     requires: 'image2',
     icons: 'drupalimage',
@@ -203,48 +245,6 @@
   CKEDITOR.plugins.image2.getLinkAttributesGetter = function () {
     return CKEDITOR.plugins.drupallink.getLinkAttributes;
   };
-
-  function linkCommandIntegrator(editor) {
-    if (!editor.plugins.drupallink) {
-      return;
-    }
-
-    editor.getCommand('drupalunlink').on('exec', function (evt) {
-      var widget = getFocusedWidget(editor);
-
-      if (!widget || !widget.parts.link) {
-        return;
-      }
-
-      widget.setData('link', null);
-
-      this.refresh(editor, editor.elementPath());
-
-      evt.cancel();
-    });
-
-    editor.getCommand('drupalunlink').on('refresh', function (evt) {
-      var widget = getFocusedWidget(editor);
-
-      if (!widget) {
-        return;
-      }
-
-      this.setState(widget.data.link || widget.wrapper.getAscendant('a') ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED);
-
-      evt.cancel();
-    });
-  }
-
-  function getFocusedWidget(editor) {
-    var widget = editor.widgets.focused;
-
-    if (widget && widget.name === 'image') {
-      return widget;
-    }
-
-    return null;
-  }
 
   CKEDITOR.plugins.drupalimage = {
     getFocusedWidget: getFocusedWidget

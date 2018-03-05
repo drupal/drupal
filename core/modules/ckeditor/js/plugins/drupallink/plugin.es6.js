@@ -54,6 +54,42 @@
     };
   }
 
+  /**
+   * Get the surrounding link element of current selection.
+   *
+   * The following selection will all return the link element.
+   *
+   * @example
+   *  <a href="#">li^nk</a>
+   *  <a href="#">[link]</a>
+   *  text[<a href="#">link]</a>
+   *  <a href="#">li[nk</a>]
+   *  [<b><a href="#">li]nk</a></b>]
+   *  [<a href="#"><b>li]nk</b></a>
+   *
+   * @param {CKEDITOR.editor} editor
+   *   The CKEditor editor object
+   *
+   * @return {?HTMLElement}
+   *   The selected link element, or null.
+   *
+   */
+  function getSelectedLink(editor) {
+    const selection = editor.getSelection();
+    const selectedElement = selection.getSelectedElement();
+    if (selectedElement && selectedElement.is('a')) {
+      return selectedElement;
+    }
+
+    const range = selection.getRanges(true)[0];
+
+    if (range) {
+      range.shrink(CKEDITOR.SHRINK_TEXT);
+      return editor.elementPath(range.getCommonAncestor()).contains('a', 1);
+    }
+    return null;
+  }
+
   CKEDITOR.plugins.add('drupallink', {
     icons: 'drupallink,drupalunlink',
     hidpi: true,
@@ -247,42 +283,6 @@
       }
     },
   });
-
-  /**
-   * Get the surrounding link element of current selection.
-   *
-   * The following selection will all return the link element.
-   *
-   * @example
-   *  <a href="#">li^nk</a>
-   *  <a href="#">[link]</a>
-   *  text[<a href="#">link]</a>
-   *  <a href="#">li[nk</a>]
-   *  [<b><a href="#">li]nk</a></b>]
-   *  [<a href="#"><b>li]nk</b></a>
-   *
-   * @param {CKEDITOR.editor} editor
-   *   The CKEditor editor object
-   *
-   * @return {?HTMLElement}
-   *   The selected link element, or null.
-   *
-   */
-  function getSelectedLink(editor) {
-    const selection = editor.getSelection();
-    const selectedElement = selection.getSelectedElement();
-    if (selectedElement && selectedElement.is('a')) {
-      return selectedElement;
-    }
-
-    const range = selection.getRanges(true)[0];
-
-    if (range) {
-      range.shrink(CKEDITOR.SHRINK_TEXT);
-      return editor.elementPath(range.getCommonAncestor()).contains('a', 1);
-    }
-    return null;
-  }
 
   // Expose an API for other plugins to interact with drupallink widgets.
   // (Compatible with the official CKEditor link plugin's API:

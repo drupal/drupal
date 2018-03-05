@@ -5,45 +5,6 @@
 
 (function ($, Drupal) {
   /**
-   * Process elements with the .dropbutton class on page load.
-   *
-   * @type {Drupal~behavior}
-   *
-   * @prop {Drupal~behaviorAttach} attach
-   *   Attaches dropButton behaviors.
-   */
-  Drupal.behaviors.dropButton = {
-    attach(context, settings) {
-      const $dropbuttons = $(context).find('.dropbutton-wrapper').once('dropbutton');
-      if ($dropbuttons.length) {
-        // Adds the delegated handler that will toggle dropdowns on click.
-        const $body = $('body').once('dropbutton-click');
-        if ($body.length) {
-          $body.on('click', '.dropbutton-toggle', dropbuttonClickHandler);
-        }
-        // Initialize all buttons.
-        const il = $dropbuttons.length;
-        for (let i = 0; i < il; i++) {
-          DropButton.dropbuttons.push(new DropButton($dropbuttons[i], settings.dropbutton));
-        }
-      }
-    },
-  };
-
-  /**
-   * Delegated callback for opening and closing dropbutton secondary actions.
-   *
-   * @function Drupal.DropButton~dropbuttonClickHandler
-   *
-   * @param {jQuery.Event} e
-   *   The event triggered.
-   */
-  function dropbuttonClickHandler(e) {
-    e.preventDefault();
-    $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
-  }
-
-  /**
    * A DropButton presents an HTML list as a button with a primary action.
    *
    * All secondary actions beyond the first in the list are presented in a
@@ -126,6 +87,45 @@
       this.$dropbutton.addClass('dropbutton-single');
     }
   }
+
+  /**
+   * Delegated callback for opening and closing dropbutton secondary actions.
+   *
+   * @function Drupal.DropButton~dropbuttonClickHandler
+   *
+   * @param {jQuery.Event} e
+   *   The event triggered.
+   */
+  function dropbuttonClickHandler(e) {
+    e.preventDefault();
+    $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
+  }
+
+  /**
+   * Process elements with the .dropbutton class on page load.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches dropButton behaviors.
+   */
+  Drupal.behaviors.dropButton = {
+    attach(context, settings) {
+      const $dropbuttons = $(context).find('.dropbutton-wrapper').once('dropbutton');
+      if ($dropbuttons.length) {
+        // Adds the delegated handler that will toggle dropdowns on click.
+        const $body = $('body').once('dropbutton-click');
+        if ($body.length) {
+          $body.on('click', '.dropbutton-toggle', dropbuttonClickHandler);
+        }
+        // Initialize all buttons.
+        const il = $dropbuttons.length;
+        for (let i = 0; i < il; i++) {
+          DropButton.dropbuttons.push(new DropButton($dropbuttons[i], settings.dropbutton));
+        }
+      }
+    },
+  };
 
   /**
    * Extend the DropButton constructor.

@@ -6,49 +6,6 @@
 **/
 
 (function ($, Drupal, window) {
-  Drupal.behaviors.trackerHistory = {
-    attach: function attach(context) {
-      var nodeIDs = [];
-      var $nodeNewPlaceholders = $(context).find('[data-history-node-timestamp]').once('history').filter(function () {
-        var nodeTimestamp = parseInt(this.getAttribute('data-history-node-timestamp'), 10);
-        var nodeID = this.getAttribute('data-history-node-id');
-        if (Drupal.history.needsServerCheck(nodeID, nodeTimestamp)) {
-          nodeIDs.push(nodeID);
-          return true;
-        }
-
-        return false;
-      });
-
-      var $newRepliesPlaceholders = $(context).find('[data-history-node-last-comment-timestamp]').once('history').filter(function () {
-        var lastCommentTimestamp = parseInt(this.getAttribute('data-history-node-last-comment-timestamp'), 10);
-        var nodeTimestamp = parseInt(this.previousSibling.previousSibling.getAttribute('data-history-node-timestamp'), 10);
-
-        if (lastCommentTimestamp === nodeTimestamp) {
-          return false;
-        }
-        var nodeID = this.previousSibling.previousSibling.getAttribute('data-history-node-id');
-        if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
-          if (nodeIDs.indexOf(nodeID) === -1) {
-            nodeIDs.push(nodeID);
-          }
-          return true;
-        }
-
-        return false;
-      });
-
-      if ($nodeNewPlaceholders.length === 0 && $newRepliesPlaceholders.length === 0) {
-        return;
-      }
-
-      Drupal.history.fetchTimestamps(nodeIDs, function () {
-        processNodeNewIndicators($nodeNewPlaceholders);
-        processNewRepliesIndicators($newRepliesPlaceholders);
-      });
-    }
-  };
-
   function processNodeNewIndicators($placeholders) {
     var newNodeString = Drupal.t('new');
     var updatedNodeString = Drupal.t('updated');
@@ -97,4 +54,47 @@
       }
     });
   }
+
+  Drupal.behaviors.trackerHistory = {
+    attach: function attach(context) {
+      var nodeIDs = [];
+      var $nodeNewPlaceholders = $(context).find('[data-history-node-timestamp]').once('history').filter(function () {
+        var nodeTimestamp = parseInt(this.getAttribute('data-history-node-timestamp'), 10);
+        var nodeID = this.getAttribute('data-history-node-id');
+        if (Drupal.history.needsServerCheck(nodeID, nodeTimestamp)) {
+          nodeIDs.push(nodeID);
+          return true;
+        }
+
+        return false;
+      });
+
+      var $newRepliesPlaceholders = $(context).find('[data-history-node-last-comment-timestamp]').once('history').filter(function () {
+        var lastCommentTimestamp = parseInt(this.getAttribute('data-history-node-last-comment-timestamp'), 10);
+        var nodeTimestamp = parseInt(this.previousSibling.previousSibling.getAttribute('data-history-node-timestamp'), 10);
+
+        if (lastCommentTimestamp === nodeTimestamp) {
+          return false;
+        }
+        var nodeID = this.previousSibling.previousSibling.getAttribute('data-history-node-id');
+        if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
+          if (nodeIDs.indexOf(nodeID) === -1) {
+            nodeIDs.push(nodeID);
+          }
+          return true;
+        }
+
+        return false;
+      });
+
+      if ($nodeNewPlaceholders.length === 0 && $newRepliesPlaceholders.length === 0) {
+        return;
+      }
+
+      Drupal.history.fetchTimestamps(nodeIDs, function () {
+        processNodeNewIndicators($nodeNewPlaceholders);
+        processNewRepliesIndicators($newRepliesPlaceholders);
+      });
+    }
+  };
 })(jQuery, Drupal, window);

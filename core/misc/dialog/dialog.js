@@ -23,15 +23,7 @@
     var $element = $(element);
     var dialog = {
       open: false,
-      returnValue: undef,
-      show: function show() {
-        openDialog({ modal: false });
-      },
-      showModal: function showModal() {
-        openDialog({ modal: true });
-      },
-
-      close: closeDialog
+      returnValue: undef
     };
 
     function openDialog(settings) {
@@ -50,6 +42,14 @@
       dialog.open = false;
       $(window).trigger('dialog:afterclose', [dialog, $element]);
     }
+
+    dialog.show = function () {
+      openDialog({ modal: false });
+    };
+    dialog.showModal = function () {
+      openDialog({ modal: true });
+    };
+    dialog.close = closeDialog;
 
     return dialog;
   };

@@ -49,6 +49,22 @@
     };
   }
 
+  function getSelectedLink(editor) {
+    var selection = editor.getSelection();
+    var selectedElement = selection.getSelectedElement();
+    if (selectedElement && selectedElement.is('a')) {
+      return selectedElement;
+    }
+
+    var range = selection.getRanges(true)[0];
+
+    if (range) {
+      range.shrink(CKEDITOR.SHRINK_TEXT);
+      return editor.elementPath(range.getCommonAncestor()).contains('a', 1);
+    }
+    return null;
+  }
+
   CKEDITOR.plugins.add('drupallink', {
     icons: 'drupallink,drupalunlink',
     hidpi: true,
@@ -215,22 +231,6 @@
       }
     }
   });
-
-  function getSelectedLink(editor) {
-    var selection = editor.getSelection();
-    var selectedElement = selection.getSelectedElement();
-    if (selectedElement && selectedElement.is('a')) {
-      return selectedElement;
-    }
-
-    var range = selection.getRanges(true)[0];
-
-    if (range) {
-      range.shrink(CKEDITOR.SHRINK_TEXT);
-      return editor.elementPath(range.getCommonAncestor()).contains('a', 1);
-    }
-    return null;
-  }
 
   CKEDITOR.plugins.drupallink = {
     parseLinkAttributes: parseAttributes,

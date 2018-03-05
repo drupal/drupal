@@ -26,6 +26,29 @@
     storage.setItem('Drupal.contextual.permissionsHash', permissionsHash);
   }
 
+  function adjustIfNestedAndOverlapping($contextual) {
+    var $contextuals = $contextual.parents('.contextual-region').eq(-1).find('.contextual');
+
+    if ($contextuals.length <= 1) {
+      return;
+    }
+
+    var firstTop = $contextuals.eq(0).offset().top;
+    var secondTop = $contextuals.eq(1).offset().top;
+    if (firstTop === secondTop) {
+      var $nestedContextual = $contextuals.eq(1);
+
+      var height = 0;
+      var $trigger = $nestedContextual.find('.trigger');
+
+      $trigger.removeClass('visually-hidden');
+      height = $nestedContextual.height();
+      $trigger.addClass('visually-hidden');
+
+      $nestedContextual.css({ top: $nestedContextual.position().top + height });
+    }
+  }
+
   function initContextual($contextual, html) {
     var $region = $contextual.closest('.contextual-region');
     var contextual = Drupal.contextual;
@@ -59,29 +82,6 @@
     });
 
     adjustIfNestedAndOverlapping($contextual);
-  }
-
-  function adjustIfNestedAndOverlapping($contextual) {
-    var $contextuals = $contextual.parents('.contextual-region').eq(-1).find('.contextual');
-
-    if ($contextuals.length <= 1) {
-      return;
-    }
-
-    var firstTop = $contextuals.eq(0).offset().top;
-    var secondTop = $contextuals.eq(1).offset().top;
-    if (firstTop === secondTop) {
-      var $nestedContextual = $contextuals.eq(1);
-
-      var height = 0;
-      var $trigger = $nestedContextual.find('.trigger');
-
-      $trigger.removeClass('visually-hidden');
-      height = $nestedContextual.height();
-      $trigger.addClass('visually-hidden');
-
-      $nestedContextual.css({ top: $nestedContextual.position().top + height });
-    }
   }
 
   Drupal.behaviors.contextual = {

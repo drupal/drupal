@@ -6,28 +6,6 @@
 **/
 
 (function ($, Drupal) {
-  Drupal.behaviors.dropButton = {
-    attach: function attach(context, settings) {
-      var $dropbuttons = $(context).find('.dropbutton-wrapper').once('dropbutton');
-      if ($dropbuttons.length) {
-        var $body = $('body').once('dropbutton-click');
-        if ($body.length) {
-          $body.on('click', '.dropbutton-toggle', dropbuttonClickHandler);
-        }
-
-        var il = $dropbuttons.length;
-        for (var i = 0; i < il; i++) {
-          DropButton.dropbuttons.push(new DropButton($dropbuttons[i], settings.dropbutton));
-        }
-      }
-    }
-  };
-
-  function dropbuttonClickHandler(e) {
-    e.preventDefault();
-    $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
-  }
-
   function DropButton(dropbutton, settings) {
     var options = $.extend({ title: Drupal.t('List additional actions') }, settings);
     var $dropbutton = $(dropbutton);
@@ -59,6 +37,28 @@
       this.$dropbutton.addClass('dropbutton-single');
     }
   }
+
+  function dropbuttonClickHandler(e) {
+    e.preventDefault();
+    $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
+  }
+
+  Drupal.behaviors.dropButton = {
+    attach: function attach(context, settings) {
+      var $dropbuttons = $(context).find('.dropbutton-wrapper').once('dropbutton');
+      if ($dropbuttons.length) {
+        var $body = $('body').once('dropbutton-click');
+        if ($body.length) {
+          $body.on('click', '.dropbutton-toggle', dropbuttonClickHandler);
+        }
+
+        var il = $dropbuttons.length;
+        for (var i = 0; i < il; i++) {
+          DropButton.dropbuttons.push(new DropButton($dropbuttons[i], settings.dropbutton));
+        }
+      }
+    }
+  };
 
   $.extend(DropButton, {
     dropbuttons: []

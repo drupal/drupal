@@ -12,6 +12,18 @@
 
   Drupal.states = states;
 
+  function invert(a, invertState) {
+    return invertState && typeof a !== 'undefined' ? !a : a;
+  }
+
+  function _compare2(a, b) {
+    if (a === b) {
+      return typeof a === 'undefined' ? a : true;
+    }
+
+    return typeof a === 'undefined' || typeof b === 'undefined';
+  }
+
   Drupal.behaviors.states = {
     attach: function attach(context, settings) {
       var $states = $(context).find('[data-drupal-states]');
@@ -345,16 +357,4 @@
       }
     }
   });
-
-  function invert(a, invertState) {
-    return invertState && typeof a !== 'undefined' ? !a : a;
-  }
-
-  function _compare2(a, b) {
-    if (a === b) {
-      return typeof a === 'undefined' ? a : true;
-    }
-
-    return typeof a === 'undefined' || typeof b === 'undefined';
-  }
 })(jQuery, Drupal);

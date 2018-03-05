@@ -89,6 +89,20 @@
      */
     featureIsAllowedByFilters(feature) {
       /**
+       * Provided a section of a feature or filter rule, checks if no property
+       * values are defined for all properties: attributes, classes and styles.
+       *
+       * @param {object} section
+       *   The section to check.
+       *
+       * @return {bool}
+       *   Returns true if the section has empty properties, false otherwise.
+       */
+      function emptyProperties(section) {
+        return section.attributes.length === 0 && section.classes.length === 0 && section.styles.length === 0;
+      }
+
+      /**
        * Generate the universe U of possible values that can result from the
        * feature's rules' requirements.
        *
@@ -183,79 +197,6 @@
       }
 
       /**
-       * Provided a section of a feature or filter rule, checks if no property
-       * values are defined for all properties: attributes, classes and styles.
-       *
-       * @param {object} section
-       *   The section to check.
-       *
-       * @return {bool}
-       *   Returns true if the section has empty properties, false otherwise.
-       */
-      function emptyProperties(section) {
-        return section.attributes.length === 0 && section.classes.length === 0 && section.styles.length === 0;
-      }
-
-      /**
-       * Calls findPropertyValueOnTag on the given tag for every property value
-       * that is listed in the "propertyValues" parameter. Supports the wildcard
-       * tag.
-       *
-       * @param {object} universe
-       *   The universe to check.
-       * @param {string} tag
-       *   The tag to look for.
-       * @param {string} property
-       *   The property to check.
-       * @param {Array} propertyValues
-       *   Values of the property to check.
-       * @param {bool} allowing
-       *   Whether to update the universe or not.
-       *
-       * @return {bool}
-       *   Returns true if found, false otherwise.
-       */
-      function findPropertyValuesOnTag(universe, tag, property, propertyValues, allowing) {
-        // Detect the wildcard case.
-        if (tag === '*') {
-          return findPropertyValuesOnAllTags(universe, property, propertyValues, allowing);
-        }
-
-        let atLeastOneFound = false;
-        _.each(propertyValues, (propertyValue) => {
-          if (findPropertyValueOnTag(universe, tag, property, propertyValue, allowing)) {
-            atLeastOneFound = true;
-          }
-        });
-        return atLeastOneFound;
-      }
-
-      /**
-       * Calls findPropertyValuesOnAllTags for all tags in the universe.
-       *
-       * @param {object} universe
-       *   The universe to check.
-       * @param {string} property
-       *   The property to check.
-       * @param {Array} propertyValues
-       *   Values of the property to check.
-       * @param {bool} allowing
-       *   Whether to update the universe or not.
-       *
-       * @return {bool}
-       *   Returns true if found, false otherwise.
-       */
-      function findPropertyValuesOnAllTags(universe, property, propertyValues, allowing) {
-        let atLeastOneFound = false;
-        _.each(_.keys(universe), (tag) => {
-          if (findPropertyValuesOnTag(universe, tag, property, propertyValues, allowing)) {
-            atLeastOneFound = true;
-          }
-        });
-        return atLeastOneFound;
-      }
-
-      /**
        * Finds out if a specific property value (potentially containing
        * wildcards) exists on the given tag. When the "allowing" parameter
        * equals true, the universe will be updated if that specific property
@@ -317,6 +258,86 @@
       }
 
       /**
+       * Calls findPropertyValuesOnAllTags for all tags in the universe.
+       *
+       * @param {object} universe
+       *   The universe to check.
+       * @param {string} property
+       *   The property to check.
+       * @param {Array} propertyValues
+       *   Values of the property to check.
+       * @param {bool} allowing
+       *   Whether to update the universe or not.
+       *
+       * @return {bool}
+       *   Returns true if found, false otherwise.
+       */
+      function findPropertyValuesOnAllTags(universe, property, propertyValues, allowing) {
+        let atLeastOneFound = false;
+        _.each(_.keys(universe), (tag) => {
+          // eslint-disable-next-line no-use-before-define
+          if (findPropertyValuesOnTag(universe, tag, property, propertyValues, allowing)) {
+            atLeastOneFound = true;
+          }
+        });
+        return atLeastOneFound;
+      }
+
+      /**
+       * Calls findPropertyValueOnTag on the given tag for every property value
+       * that is listed in the "propertyValues" parameter. Supports the wildcard
+       * tag.
+       *
+       * @param {object} universe
+       *   The universe to check.
+       * @param {string} tag
+       *   The tag to look for.
+       * @param {string} property
+       *   The property to check.
+       * @param {Array} propertyValues
+       *   Values of the property to check.
+       * @param {bool} allowing
+       *   Whether to update the universe or not.
+       *
+       * @return {bool}
+       *   Returns true if found, false otherwise.
+       */
+      function findPropertyValuesOnTag(universe, tag, property, propertyValues, allowing) {
+        // Detect the wildcard case.
+        if (tag === '*') {
+          return findPropertyValuesOnAllTags(universe, property, propertyValues, allowing);
+        }
+
+        let atLeastOneFound = false;
+        _.each(propertyValues, (propertyValue) => {
+          if (findPropertyValueOnTag(universe, tag, property, propertyValue, allowing)) {
+            atLeastOneFound = true;
+          }
+        });
+        return atLeastOneFound;
+      }
+
+      /**
+       * Calls deleteFromUniverseIfAllowed for all tags in the universe.
+       *
+       * @param {object} universe
+       *   The universe to delete from.
+       *
+       * @return {bool}
+       *   Whether something was deleted from the universe.
+       */
+      function deleteAllTagsFromUniverseIfAllowed(universe) {
+        let atLeastOneDeleted = false;
+        _.each(_.keys(universe), (tag) => {
+          // eslint-disable-next-line no-use-before-define
+          if (deleteFromUniverseIfAllowed(universe, tag)) {
+            atLeastOneDeleted = true;
+          }
+        });
+        return atLeastOneDeleted;
+      }
+
+      /**
        * Deletes a tag from the universe if the tag itself and each of its
        * properties are marked as allowed.
        *
@@ -338,25 +359,6 @@
           return true;
         }
         return false;
-      }
-
-      /**
-       * Calls deleteFromUniverseIfAllowed for all tags in the universe.
-       *
-       * @param {object} universe
-       *   The universe to delete from.
-       *
-       * @return {bool}
-       *   Whether something was deleted from the universe.
-       */
-      function deleteAllTagsFromUniverseIfAllowed(universe) {
-        let atLeastOneDeleted = false;
-        _.each(_.keys(universe), (tag) => {
-          if (deleteFromUniverseIfAllowed(universe, tag)) {
-            atLeastOneDeleted = true;
-          }
-        });
-        return atLeastOneDeleted;
       }
 
       /**

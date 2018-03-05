@@ -47,6 +47,61 @@
   }
 
   /**
+   * Stores a set of tabbable elements.
+   *
+   * This constraint can be removed with the release() method.
+   *
+   * @constructor Drupal~TabbingContext
+   *
+   * @param {object} options
+   *   A set of initiating values
+   * @param {number} options.level
+   *   The level in the TabbingManager's stack of this tabbingContext.
+   * @param {jQuery} options.$tabbableElements
+   *   The DOM elements that should be reachable via the tab key when this
+   *   tabbingContext is active.
+   * @param {jQuery} options.$disabledElements
+   *   The DOM elements that should not be reachable via the tab key when this
+   *   tabbingContext is active.
+   * @param {bool} options.released
+   *   A released tabbingContext can never be activated again. It will be
+   *   cleaned up when the TabbingManager unwinds its stack.
+   * @param {bool} options.active
+   *   When true, the tabbable elements of this tabbingContext will be reachable
+   *   via the tab key and the disabled elements will not. Only one
+   *   tabbingContext can be active at a time.
+   */
+  function TabbingContext(options) {
+    $.extend(this, /** @lends Drupal~TabbingContext# */{
+
+      /**
+       * @type {?number}
+       */
+      level: null,
+
+      /**
+       * @type {jQuery}
+       */
+      $tabbableElements: $(),
+
+      /**
+       * @type {jQuery}
+       */
+      $disabledElements: $(),
+
+      /**
+       * @type {bool}
+       */
+      released: false,
+
+      /**
+       * @type {bool}
+       */
+      active: false,
+    }, options);
+  }
+
+  /**
    * Add public methods to the TabbingManager class.
    */
   $.extend(TabbingManager.prototype, /** @lends Drupal~TabbingManager# */{
@@ -241,61 +296,6 @@
       }
     },
   });
-
-  /**
-   * Stores a set of tabbable elements.
-   *
-   * This constraint can be removed with the release() method.
-   *
-   * @constructor Drupal~TabbingContext
-   *
-   * @param {object} options
-   *   A set of initiating values
-   * @param {number} options.level
-   *   The level in the TabbingManager's stack of this tabbingContext.
-   * @param {jQuery} options.$tabbableElements
-   *   The DOM elements that should be reachable via the tab key when this
-   *   tabbingContext is active.
-   * @param {jQuery} options.$disabledElements
-   *   The DOM elements that should not be reachable via the tab key when this
-   *   tabbingContext is active.
-   * @param {bool} options.released
-   *   A released tabbingContext can never be activated again. It will be
-   *   cleaned up when the TabbingManager unwinds its stack.
-   * @param {bool} options.active
-   *   When true, the tabbable elements of this tabbingContext will be reachable
-   *   via the tab key and the disabled elements will not. Only one
-   *   tabbingContext can be active at a time.
-   */
-  function TabbingContext(options) {
-    $.extend(this, /** @lends Drupal~TabbingContext# */{
-
-      /**
-       * @type {?number}
-       */
-      level: null,
-
-      /**
-       * @type {jQuery}
-       */
-      $tabbableElements: $(),
-
-      /**
-       * @type {jQuery}
-       */
-      $disabledElements: $(),
-
-      /**
-       * @type {bool}
-       */
-      released: false,
-
-      /**
-       * @type {bool}
-       */
-      active: false,
-    }, options);
-  }
 
   /**
    * Add public methods to the TabbingContext class.

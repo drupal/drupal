@@ -21,6 +21,30 @@
     };
 
     /**
+     * Toggle the open/close state of a list is a menu.
+     *
+     * @param {jQuery} $item
+     *   The li item to be toggled.
+     *
+     * @param {Boolean} switcher
+     *   A flag that forces toggleClass to add or a remove a class, rather than
+     *   simply toggling its presence.
+     */
+    function toggleList($item, switcher) {
+      const $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
+      switcher = (typeof switcher !== 'undefined') ? switcher : !$item.hasClass('open');
+      // Toggle the item open state.
+      $item.toggleClass('open', switcher);
+      // Twist the toggle.
+      $toggle.toggleClass('open', switcher);
+      // Adjust the toggle text.
+      $toggle
+        .find('.action')
+        // Expand Structure, Collapse Structure.
+        .text((switcher) ? ui.handleClose : ui.handleOpen);
+    }
+
+    /**
      * Handle clicks from the disclosure button on an item with sub-items.
      *
      * @param {Object} event
@@ -54,30 +78,6 @@
       // Stopping propagation to make sure that once a toolbar-box is clicked
       // (the whitespace part), the page is not redirected anymore.
       event.stopPropagation();
-    }
-
-    /**
-     * Toggle the open/close state of a list is a menu.
-     *
-     * @param {jQuery} $item
-     *   The li item to be toggled.
-     *
-     * @param {Boolean} switcher
-     *   A flag that forces toggleClass to add or a remove a class, rather than
-     *   simply toggling its presence.
-     */
-    function toggleList($item, switcher) {
-      const $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
-      switcher = (typeof switcher !== 'undefined') ? switcher : !$item.hasClass('open');
-      // Toggle the item open state.
-      $item.toggleClass('open', switcher);
-      // Twist the toggle.
-      $toggle.toggleClass('open', switcher);
-      // Adjust the toggle text.
-      $toggle
-        .find('.action')
-        // Expand Structure, Collapse Structure.
-        .text((switcher) ? ui.handleClose : ui.handleOpen);
     }
 
     /**

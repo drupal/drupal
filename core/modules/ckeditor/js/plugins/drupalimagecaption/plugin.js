@@ -6,6 +6,22 @@
 **/
 
 (function (CKEDITOR) {
+  function findElementByName(element, name) {
+    if (element.name === name) {
+      return element;
+    }
+
+    var found = null;
+    element.forEach(function (el) {
+      if (el.name === name) {
+        found = el;
+
+        return false;
+      }
+    }, CKEDITOR.NODE_ELEMENT);
+    return found;
+  }
+
   CKEDITOR.plugins.add('drupalimagecaption', {
     requires: 'drupalimage',
 
@@ -192,20 +208,4 @@
       }
     }
   });
-
-  function findElementByName(element, name) {
-    if (element.name === name) {
-      return element;
-    }
-
-    var found = null;
-    element.forEach(function (el) {
-      if (el.name === name) {
-        found = el;
-
-        return false;
-      }
-    }, CKEDITOR.NODE_ELEMENT);
-    return found;
-  }
 })(CKEDITOR);

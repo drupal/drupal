@@ -8,51 +8,6 @@
 
 (function ($, Drupal, drupalSettings) {
   /**
-   * Render "X new comments" links wherever necessary.
-   *
-   * @type {Drupal~behavior}
-   *
-   * @prop {Drupal~behaviorAttach} attach
-   *   Attaches new comment links behavior.
-   */
-  Drupal.behaviors.nodeNewCommentsLink = {
-    attach(context) {
-      // Collect all "X new comments" node link placeholders (and their
-      // corresponding node IDs) newer than 30 days ago that have not already
-      // been read after their last comment timestamp.
-      const nodeIDs = [];
-      const $placeholders = $(context)
-        .find('[data-history-node-last-comment-timestamp]')
-        .once('history')
-        .filter(function () {
-          const $placeholder = $(this);
-          const lastCommentTimestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
-          const nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
-          if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
-            nodeIDs.push(nodeID);
-            // Hide this placeholder link until it is certain we'll need it.
-            hide($placeholder);
-            return true;
-          }
-
-            // Remove this placeholder link from the DOM because we won't need
-            // it.
-          remove($placeholder);
-          return false;
-        });
-
-      if ($placeholders.length === 0) {
-        return;
-      }
-
-      // Perform an AJAX request to retrieve node read timestamps.
-      Drupal.history.fetchTimestamps(nodeIDs, () => {
-        processNodeNewCommentLinks($placeholders);
-      });
-    },
-  };
-
-  /**
    * Hides a "new comment" element.
    *
    * @param {jQuery} $placeholder
@@ -173,4 +128,49 @@
       });
     }
   }
+
+  /**
+   * Render "X new comments" links wherever necessary.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches new comment links behavior.
+   */
+  Drupal.behaviors.nodeNewCommentsLink = {
+    attach(context) {
+      // Collect all "X new comments" node link placeholders (and their
+      // corresponding node IDs) newer than 30 days ago that have not already
+      // been read after their last comment timestamp.
+      const nodeIDs = [];
+      const $placeholders = $(context)
+        .find('[data-history-node-last-comment-timestamp]')
+        .once('history')
+        .filter(function () {
+          const $placeholder = $(this);
+          const lastCommentTimestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
+          const nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
+          if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
+            nodeIDs.push(nodeID);
+            // Hide this placeholder link until it is certain we'll need it.
+            hide($placeholder);
+            return true;
+          }
+
+            // Remove this placeholder link from the DOM because we won't need
+            // it.
+          remove($placeholder);
+          return false;
+        });
+
+      if ($placeholders.length === 0) {
+        return;
+      }
+
+      // Perform an AJAX request to retrieve node read timestamps.
+      Drupal.history.fetchTimestamps(nodeIDs, () => {
+        processNodeNewCommentLinks($placeholders);
+      });
+    },
+  };
 }(jQuery, Drupal, drupalSettings));

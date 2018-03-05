@@ -8,6 +8,20 @@
 (function ($, Drupal, drupalSettings, debounce, displace) {
   drupalSettings.dialog = $.extend({ autoResize: true, maxHeight: '95%' }, drupalSettings.dialog);
 
+  function resetPosition(options) {
+    var offsets = displace.offsets;
+    var left = offsets.left - offsets.right;
+    var top = offsets.top - offsets.bottom;
+
+    var leftString = (left > 0 ? '+' : '-') + Math.abs(Math.round(left / 2)) + 'px';
+    var topString = (top > 0 ? '+' : '-') + Math.abs(Math.round(top / 2)) + 'px';
+    options.position = {
+      my: 'center' + (left !== 0 ? leftString : '') + ' center' + (top !== 0 ? topString : ''),
+      of: window
+    };
+    return options;
+  }
+
   function resetSize(event) {
     var positionOptions = ['width', 'height', 'minWidth', 'minHeight', 'maxHeight', 'maxWidth', 'position'];
     var adjustedOptions = {};
@@ -35,20 +49,6 @@
       adjustedOptions = resetPosition(adjustedOptions);
     }
     event.data.$element.dialog('option', adjustedOptions).trigger('dialogContentResize');
-  }
-
-  function resetPosition(options) {
-    var offsets = displace.offsets;
-    var left = offsets.left - offsets.right;
-    var top = offsets.top - offsets.bottom;
-
-    var leftString = (left > 0 ? '+' : '-') + Math.abs(Math.round(left / 2)) + 'px';
-    var topString = (top > 0 ? '+' : '-') + Math.abs(Math.round(top / 2)) + 'px';
-    options.position = {
-      my: 'center' + (left !== 0 ? leftString : '') + ' center' + (top !== 0 ? topString : ''),
-      of: window
-    };
-    return options;
   }
 
   $(window).on({

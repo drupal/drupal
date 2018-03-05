@@ -11,6 +11,36 @@
  */
 
 (function (CKEDITOR) {
+  /**
+   * Finds an element by its name.
+   *
+   * Function will check first the passed element itself and then all its
+   * children in DFS order.
+   *
+   * @param {CKEDITOR.htmlParser.element} element
+   *   The element to search.
+   * @param {string} name
+   *   The element name to search for.
+   *
+   * @return {?CKEDITOR.htmlParser.element}
+   *   The found element, or null.
+   */
+  function findElementByName(element, name) {
+    if (element.name === name) {
+      return element;
+    }
+
+    let found = null;
+    element.forEach((el) => {
+      if (el.name === name) {
+        found = el;
+        // Stop here.
+        return false;
+      }
+    }, CKEDITOR.NODE_ELEMENT);
+    return found;
+  }
+
   CKEDITOR.plugins.add('drupalimagecaption', {
     requires: 'drupalimage',
 
@@ -263,34 +293,4 @@
       }
     },
   });
-
-  /**
-   * Finds an element by its name.
-   *
-   * Function will check first the passed element itself and then all its
-   * children in DFS order.
-   *
-   * @param {CKEDITOR.htmlParser.element} element
-   *   The element to search.
-   * @param {string} name
-   *   The element name to search for.
-   *
-   * @return {?CKEDITOR.htmlParser.element}
-   *   The found element, or null.
-   */
-  function findElementByName(element, name) {
-    if (element.name === name) {
-      return element;
-    }
-
-    let found = null;
-    element.forEach((el) => {
-      if (el.name === name) {
-        found = el;
-        // Stop here.
-        return false;
-      }
-    }, CKEDITOR.NODE_ELEMENT);
-    return found;
-  }
 }(CKEDITOR));

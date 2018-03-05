@@ -189,16 +189,16 @@
       const editorModel = this.model;
       const fieldModel = this.fieldModel;
 
-      function cleanUpAjax() {
-        Drupal.quickedit.util.form.unajaxifySaving(formSaveAjax);
-        formSaveAjax = null;
-      }
-
       // Create an AJAX object for the form associated with the field.
       let formSaveAjax = Drupal.quickedit.util.form.ajaxifySaving({
         nocssjs: false,
         other_view_modes: fieldModel.findOtherViewModes(),
       }, $submit);
+
+      function cleanUpAjax() {
+        Drupal.quickedit.util.form.unajaxifySaving(formSaveAjax);
+        formSaveAjax = null;
+      }
 
       // Successfully saved.
       formSaveAjax.commands.quickeditFieldFormSaved = function (ajax, response, status) {

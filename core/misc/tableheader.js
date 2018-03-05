@@ -6,14 +6,37 @@
 **/
 
 (function ($, Drupal, displace) {
-  Drupal.behaviors.tableHeader = {
-    attach: function attach(context) {
-      $(window).one('scroll.TableHeaderInit', { context: context }, tableHeaderInitHandler);
-    }
-  };
+  function TableHeader(table) {
+    var $table = $(table);
 
-  function scrollValue(position) {
-    return document.documentElement[position] || document.body[position];
+    this.$originalTable = $table;
+
+    this.$originalHeader = $table.children('thead');
+
+    this.$originalHeaderCells = this.$originalHeader.find('> tr > th');
+
+    this.displayWeight = null;
+    this.$originalTable.addClass('sticky-table');
+    this.tableHeight = $table[0].clientHeight;
+    this.tableOffset = this.$originalTable.offset();
+
+    this.$originalTable.on('columnschange', { tableHeader: this }, function (e, display) {
+      var tableHeader = e.data.tableHeader;
+      if (tableHeader.displayWeight === null || tableHeader.displayWeight !== display) {
+        tableHeader.recalculateSticky();
+      }
+      tableHeader.displayWeight = display;
+    });
+
+    this.createSticky();
+  }
+
+  function forTables(method, arg) {
+    var tables = TableHeader.tables;
+    var il = tables.length;
+    for (var i = 0; i < il; i++) {
+      tables[i][method](arg);
+    }
   }
 
   function tableHeaderInitHandler(e) {
@@ -25,12 +48,14 @@
     forTables('onScroll');
   }
 
-  function forTables(method, arg) {
-    var tables = TableHeader.tables;
-    var il = tables.length;
-    for (var i = 0; i < il; i++) {
-      tables[i][method](arg);
+  Drupal.behaviors.tableHeader = {
+    attach: function attach(context) {
+      $(window).one('scroll.TableHeaderInit', { context: context }, tableHeaderInitHandler);
     }
+  };
+
+  function scrollValue(position) {
+    return document.documentElement[position] || document.body[position];
   }
 
   function tableHeaderResizeHandler(e) {
@@ -56,31 +81,6 @@
 
     'drupalViewportOffsetChange.TableHeader': tableHeaderOffsetChangeHandler
   });
-
-  function TableHeader(table) {
-    var $table = $(table);
-
-    this.$originalTable = $table;
-
-    this.$originalHeader = $table.children('thead');
-
-    this.$originalHeaderCells = this.$originalHeader.find('> tr > th');
-
-    this.displayWeight = null;
-    this.$originalTable.addClass('sticky-table');
-    this.tableHeight = $table[0].clientHeight;
-    this.tableOffset = this.$originalTable.offset();
-
-    this.$originalTable.on('columnschange', { tableHeader: this }, function (e, display) {
-      var tableHeader = e.data.tableHeader;
-      if (tableHeader.displayWeight === null || tableHeader.displayWeight !== display) {
-        tableHeader.recalculateSticky();
-      }
-      tableHeader.displayWeight = display;
-    });
-
-    this.createSticky();
-  }
 
   $.extend(TableHeader, {
     tables: []
