@@ -256,7 +256,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
 
       /** @var \Drupal\Core\Entity\ContentEntityInterface $default_revision */
       $default_revision = $this->load($entity->id());
-      foreach ($default_revision->getTranslationLanguages() as $langcode => $language) {
+      $translation_languages = $default_revision->getTranslationLanguages();
+      foreach ($translation_languages as $langcode => $language) {
         if ($langcode == $active_langcode) {
           continue;
         }
@@ -279,6 +280,14 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
 
         // No need to copy untranslatable field values more than once.
         $keep_untranslatable_fields = TRUE;
+      }
+
+      // Make sure we do not inadvertently recreate removed translations.
+      foreach (array_diff_key($new_revision->getTranslationLanguages(), $translation_languages) as $langcode => $language) {
+        // Allow a new revision to be created for the active language.
+        if ($langcode !== $active_langcode) {
+          $new_revision->removeTranslation($langcode);
+        }
       }
 
       // The "original" property is used in various places to detect changes in
