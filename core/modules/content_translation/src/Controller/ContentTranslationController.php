@@ -88,7 +88,7 @@ class ContentTranslationController extends ControllerBase {
     $handler = $this->entityManager()->getHandler($entity_type_id, 'translation');
     $manager = $this->manager;
     $entity_type = $entity->getEntityType();
-    $use_latest_revisions = $entity_type->isRevisionable() && ContentTranslationManager::isPendingRevisionSupportEnabled();
+    $use_latest_revisions = $entity_type->isRevisionable() && ContentTranslationManager::isPendingRevisionSupportEnabled($entity_type_id, $entity->bundle());
 
     // Start collecting the cacheability metadata, starting with the entity and
     // later merge in the access result cacheability metadata.
@@ -351,7 +351,7 @@ class ContentTranslationController extends ControllerBase {
     // In case of a pending revision, make sure we load the latest
     // translation-affecting revision for the source language, otherwise the
     // initial form values may not be up-to-date.
-    if (!$entity->isDefaultRevision() && ContentTranslationManager::isPendingRevisionSupportEnabled()) {
+    if (!$entity->isDefaultRevision() && ContentTranslationManager::isPendingRevisionSupportEnabled($entity_type_id, $entity->bundle())) {
       /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
       $storage = $this->entityTypeManager()->getStorage($entity->getEntityTypeId());
       $revision_id = $storage->getLatestTranslationAffectedRevisionId($entity->id(), $source->getId());
