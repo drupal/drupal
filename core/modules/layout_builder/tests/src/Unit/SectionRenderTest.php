@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockManagerInterface;
@@ -15,6 +16,7 @@ use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
@@ -55,16 +57,28 @@ class SectionRenderTest extends UnitTestCase {
   protected $contextRepository;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
+   */
+  protected $eventDispatcher;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
-    $this->account = $this->prophesize(AccountInterface::class);
     $layout_plugin_manager = $this->prophesize(LayoutPluginManagerInterface::class);
     $this->blockManager = $this->prophesize(BlockManagerInterface::class);
     $this->contextHandler = $this->prophesize(ContextHandlerInterface::class);
     $this->contextRepository = $this->prophesize(ContextRepositoryInterface::class);
+    // @todo Refactor this into some better tests in https://www.drupal.org/node/2942605.
+    $this->eventDispatcher = (new \ReflectionClass(ContainerAwareEventDispatcher::class))->newInstanceWithoutConstructor();
+
+    $this->account = $this->prophesize(AccountInterface::class);
+    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $this->eventDispatcher->addSubscriber($subscriber);
 
     $layout = $this->prophesize(LayoutInterface::class);
     $layout->getPluginDefinition()->willReturn(new LayoutDefinition([]));
@@ -77,6 +91,7 @@ class SectionRenderTest extends UnitTestCase {
     $container->set('plugin.manager.core.layout', $layout_plugin_manager->reveal());
     $container->set('context.handler', $this->contextHandler->reveal());
     $container->set('context.repository', $this->contextRepository->reveal());
+    $container->set('event_dispatcher', $this->eventDispatcher);
     \Drupal::setContainer($container);
   }
 
