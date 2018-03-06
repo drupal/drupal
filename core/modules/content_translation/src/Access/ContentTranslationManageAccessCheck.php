@@ -3,6 +3,7 @@
 namespace Drupal\content_translation\Access;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -90,15 +91,12 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
         return AccessResult::allowed()->cachePerPermissions();
       }
 
-      /* @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */
-      $handler = $this->entityManager->getHandler($entity->getEntityTypeId(), 'translation');
-
-      // Load translation.
-      $translations = $entity->getTranslationLanguages();
-      $languages = $this->languageManager->getLanguages();
-
       switch ($operation) {
         case 'create':
+          /* @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */
+          $handler = $this->entityManager->getHandler($entity->getEntityTypeId(), 'translation');
+          $translations = $entity->getTranslationLanguages();
+          $languages = $this->languageManager->getLanguages();
           $source_language = $this->languageManager->getLanguage($source) ?: $entity->language();
           $target_language = $this->languageManager->getLanguage($target) ?: $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
           $is_new_translation = ($source_language->getId() != $target_language->getId()
@@ -109,17 +107,45 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
             ->andIf($handler->getTranslationAccess($entity, $operation));
 
         case 'delete':
+          // @todo Remove this in https://www.drupal.org/node/2945956.
+          /** @var \Drupal\Core\Access\AccessResultInterface $delete_access */
+          $delete_access = \Drupal::service('content_translation.delete_access')->checkAccess($entity);
+          $access = $this->checkAccess($entity, $language, $operation);
+          return $delete_access->andIf($access);
+
         case 'update':
-          $has_translation = isset($languages[$language->getId()])
-            && $language->getId() != $entity->getUntranslated()->language()->getId()
-            && isset($translations[$language->getId()]);
-          return AccessResult::allowedIf($has_translation)->cachePerPermissions()->addCacheableDependency($entity)
-            ->andIf($handler->getTranslationAccess($entity, $operation));
+          return $this->checkAccess($entity, $language, $operation);
       }
     }
 
     // No opinion.
     return AccessResult::neutral();
+  }
+
+  /**
+   * Performs access checks for the specified operation.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity being checked.
+   * @param \Drupal\Core\Language\LanguageInterface $language
+   *   For an update or delete operation, the language code of the translation
+   *   being updated or deleted.
+   * @param string $operation
+   *   The operation to be checked.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   An access result object.
+   */
+  protected function checkAccess(ContentEntityInterface $entity, LanguageInterface $language, $operation) {
+    /* @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */
+    $handler = $this->entityManager->getHandler($entity->getEntityTypeId(), 'translation');
+    $translations = $entity->getTranslationLanguages();
+    $languages = $this->languageManager->getLanguages();
+    $has_translation = isset($languages[$language->getId()])
+      && $language->getId() != $entity->getUntranslated()->language()->getId()
+      && isset($translations[$language->getId()]);
+    return AccessResult::allowedIf($has_translation)->cachePerPermissions()->addCacheableDependency($entity)
+      ->andIf($handler->getTranslationAccess($entity, $operation));
   }
 
 }
