@@ -169,11 +169,11 @@ abstract class RelationshipPluginBase extends HandlerBase {
    * {@inheritdoc}
    */
   public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
     // Add the provider of the relationship's base table to the dependencies.
     $table_data = $this->getViewsData()->get($this->definition['base']);
-    return [
-      'module' => [$table_data['table']['provider']],
-    ];
+    $dependencies['module'][] = $table_data['table']['provider'];
+    return $dependencies;
   }
 
 }

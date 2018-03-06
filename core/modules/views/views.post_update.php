@@ -323,6 +323,32 @@ function views_post_update_filter_placeholder_text() {
 }
 
 /**
+ * Include views data table provider in views dependencies.
+ */
+function views_post_update_views_data_table_dependencies(&$sandbox = NULL) {
+  $storage = \Drupal::entityTypeManager()->getStorage('view');
+  if (!isset($sandbox['views'])) {
+    $sandbox['views'] = $storage->getQuery()->accessCheck(FALSE)->execute();
+    $sandbox['count'] = count($sandbox['views']);
+  }
+
+  // Process 10 views at a time.
+  $views = $storage->loadMultiple(array_splice($sandbox['views'], 0, 10));
+  foreach ($views as $view) {
+    $original_dependencies = $view->getDependencies();
+    // Only re-save if dependencies have changed.
+    if ($view->calculateDependencies()->getDependencies() !== $original_dependencies) {
+      // We can trust the data because we've already recalculated the
+      // dependencies.
+      $view->trustData();
+      $view->save();
+    }
+  }
+
+  $sandbox['#finished'] = empty($sandbox['views']) ? 1 : ($sandbox['count'] - count($sandbox['views'])) / $sandbox['count'];
+}
+
+/**
  * Fix cache max age for table displays.
  */
 function views_post_update_table_display_cache_max_age(&$sandbox = NULL) {

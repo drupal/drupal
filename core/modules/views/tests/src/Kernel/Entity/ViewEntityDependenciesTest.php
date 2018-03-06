@@ -162,6 +162,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
       ],
       'module' => [
         'core',
+        'node',
         'text',
         'views'
       ],

@@ -39,7 +39,7 @@ class AccessRoleTest extends AccessTestBase {
     $this->container->get('router.builder')->rebuildIfNeeded();
     $expected = [
       'config' => ['user.role.' . $this->normalRole],
-      'module' => ['user'],
+      'module' => ['user', 'views_test_data'],
     ];
     $this->assertIdentical($expected, $view->calculateDependencies()->getDependencies());
 
@@ -79,7 +79,7 @@ class AccessRoleTest extends AccessTestBase {
     sort($roles);
     $expected = [
       'config' => $roles,
-      'module' => ['user'],
+      'module' => ['user', 'views_test_data'],
     ];
     $this->assertIdentical($expected, $view->calculateDependencies()->getDependencies());
     $this->drupalLogin($this->webUser);
