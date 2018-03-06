@@ -56,7 +56,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
       }
 
       $path = $base_path . '/translations';
-      $load_latest_revision = ContentTranslationManager::isPendingRevisionSupportEnabled();
+      $load_latest_revision = ContentTranslationManager::isPendingRevisionSupportEnabled($entity_type_id);
 
       $route = new Route(
         $path,

@@ -4,6 +4,7 @@ namespace Drupal\content_translation;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\workflows\Entity\Workflow;
 
 /**
  * Provides common functionality for content translation.
@@ -148,6 +149,11 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
   /**
    * Checks whether support for pending revisions should be enabled.
    *
+   * @param string $entity_type_id
+   *   The ID of the entity type to be checked.
+   * @param string $bundle_id
+   *   (optional) The ID of the bundle to be checked. Defaults to none.
+   *
    * @return bool
    *   TRUE if pending revisions should be enabled, FALSE otherwise.
    *
@@ -158,8 +164,29 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
    *
    * @see https://www.drupal.org/node/2940575
    */
-  public static function isPendingRevisionSupportEnabled() {
-    return \Drupal::moduleHandler()->moduleExists('content_moderation');
+  public static function isPendingRevisionSupportEnabled($entity_type_id, $bundle_id = NULL) {
+    if (!\Drupal::moduleHandler()->moduleExists('content_moderation')) {
+      return FALSE;
+    }
+
+    foreach (Workflow::loadMultipleByType('content_moderation') as $workflow) {
+      /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $plugin */
+      $plugin = $workflow->getTypePlugin();
+      $entity_type_ids = array_flip($plugin->getEntityTypes());
+      if (isset($entity_type_ids[$entity_type_id])) {
+        if (!isset($bundle_id)) {
+          return TRUE;
+        }
+        else {
+          $bundle_ids = array_flip($plugin->getBundlesForEntityType($entity_type_id));
+          if (isset($bundle_ids[$bundle_id])) {
+            return TRUE;
+          }
+        }
+      }
+    }
+
+    return FALSE;
   }
 
 }
