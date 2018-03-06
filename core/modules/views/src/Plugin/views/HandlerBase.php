@@ -845,4 +845,19 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     return $form_state_options + $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+    if ($this->table) {
+      // Ensure that the view depends on the module that provides the table.
+      $data = $this->getViewsData()->get($this->table);
+      if (isset($data['table']['provider'])) {
+        $dependencies['module'][] = $data['table']['provider'];
+      }
+    }
+    return $dependencies;
+  }
+
 }

@@ -36,7 +36,7 @@ class AreaViewTest extends ViewsKernelTestBase {
     $view = Views::getView('test_area_view');
 
     // Tests \Drupal\views\Plugin\views\area\View::calculateDependencies().
-    $this->assertIdentical(['config' => ['views.view.test_simple_argument']], $view->getDependencies());
+    $this->assertIdentical(['config' => ['views.view.test_simple_argument'], 'module' => ['views_test_data']], $view->getDependencies());
 
     $this->executeView($view);
     $output = $view->render();
