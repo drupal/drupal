@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\content_translation\Functional;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -234,6 +235,26 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
       ->create($entity_values);
     $entity->save();
     return $entity->id();
+  }
+
+  /**
+   * Returns the edit URL for the specified entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity being edited.
+   *
+   * @return \Drupal\Core\Url
+   *   The edit URL.
+   */
+  protected function getEditUrl(ContentEntityInterface $entity) {
+    if ($entity->access('update', $this->loggedInUser)) {
+      $url = $entity->toUrl('edit-form');
+    }
+    else {
+      $url = $entity->toUrl('drupal:content-translation-edit');
+      $url->setRouteParameter('language', $entity->language()->getId());
+    }
+    return $url;
   }
 
 }
