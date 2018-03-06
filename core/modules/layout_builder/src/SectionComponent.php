@@ -3,10 +3,8 @@
 namespace Drupal\layout_builder;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Block\BlockPluginInterface;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 
 /**
  * Provides a value object for a section component.
@@ -98,37 +96,10 @@ class SectionComponent {
    *   A renderable array representing the content of the component.
    */
   public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
-    $output = [];
-
-    $plugin = $this->getPlugin($contexts);
-    // @todo Figure out the best way to unify fields and blocks and components
-    //   in https://www.drupal.org/node/1875974.
-    if ($plugin instanceof BlockPluginInterface) {
-      $cacheability = CacheableMetadata::createFromObject($plugin);
-
-      // Only check access if the component is not being previewed.
-      if ($in_preview) {
-        $access = AccessResult::allowed()->setCacheMaxAge(0);
-      }
-      else {
-        $access = $plugin->access($this->currentUser(), TRUE);
-      }
-
-      $cacheability->addCacheableDependency($access);
-      if ($access->isAllowed()) {
-        // @todo Move this to BlockBase in https://www.drupal.org/node/2931040.
-        $output = [
-          '#theme' => 'block',
-          '#configuration' => $plugin->getConfiguration(),
-          '#plugin_id' => $plugin->getPluginId(),
-          '#base_plugin_id' => $plugin->getBaseId(),
-          '#derivative_plugin_id' => $plugin->getDerivativeId(),
-          '#weight' => $this->getWeight(),
-          'content' => $plugin->build(),
-        ];
-      }
-      $cacheability->applyTo($output);
-    }
+    $event = new SectionComponentBuildRenderArrayEvent($this, $contexts, $in_preview);
+    $this->eventDispatcher()->dispatch(LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY, $event);
+    $output = $event->getBuild();
+    $event->getCacheableMetadata()->applyTo($output);
     return $output;
   }
 
@@ -293,6 +264,8 @@ class SectionComponent {
    *   The plugin manager.
    */
   protected function pluginManager() {
+    // @todo Figure out the best way to unify fields and blocks and components
+    //   in https://www.drupal.org/node/1875974.
     return \Drupal::service('plugin.manager.block');
   }
 
@@ -307,13 +280,13 @@ class SectionComponent {
   }
 
   /**
-   * Wraps the current user.
+   * Wraps the event dispatcher.
    *
-   * @return \Drupal\Core\Session\AccountInterface
-   *   The current user.
+   * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   *   The event dispatcher.
    */
-  protected function currentUser() {
-    return \Drupal::currentUser();
+  protected function eventDispatcher() {
+    return \Drupal::service('event_dispatcher');
   }
 
   /**
