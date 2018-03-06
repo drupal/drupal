@@ -390,7 +390,12 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
             break;
           }
         }
-        $access = $this->getTranslationAccess($entity, 'delete')->isAllowed() || ($entity->access('delete') && $this->entityType->hasLinkTemplate('delete-form'));
+        /** @var \Drupal\Core\Access\AccessResultInterface $delete_access */
+        $delete_access = \Drupal::service('content_translation.delete_access')->checkAccess($entity);
+        $access = $delete_access->isAllowed() && (
+          $this->getTranslationAccess($entity, 'delete')->isAllowed() ||
+          ($entity->access('delete') && $this->entityType->hasLinkTemplate('delete-form'))
+        );
         $form['actions']['delete_translation'] = [
           '#type' => 'submit',
           '#value' => t('Delete translation'),

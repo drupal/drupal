@@ -9,6 +9,12 @@ services:
     tags:
       - { name: event_subscriber }
 
+  content_translation.delete_access:
+    class: Drupal\content_translation\Access\ContentTranslationDeleteAccess
+    arguments: ['@entity_type.manager', '@content_translation.manager']
+    tags:
+      - { name: access_check, applies_to: _access_content_translation_delete }
+
   content_translation.overview_access:
     class: Drupal\content_translation\Access\ContentTranslationOverviewAccess
     arguments: ['@entity.manager']

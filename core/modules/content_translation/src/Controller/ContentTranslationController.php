@@ -101,9 +101,9 @@ class ContentTranslationController extends ControllerBase {
 
     $rows = [];
     $show_source_column = FALSE;
-    $default_revision = $entity;
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $this->entityTypeManager()->getStorage($entity_type_id);
+    $default_revision = $storage->load($entity->id());
 
     if ($this->languageManager()->isMultilingual()) {
       // Determine whether the current entity is translatable.
@@ -131,8 +131,17 @@ class ContentTranslationController extends ControllerBase {
         // need to load the latest translation-affecting revision for each
         // language to be sure we are listing all available translations.
         if ($use_latest_revisions) {
+          $entity = $default_revision;
           $latest_revision_id = $storage->getLatestTranslationAffectedRevisionId($entity->id(), $langcode);
-          $entity = $latest_revision_id ? $storage->loadRevision($latest_revision_id) : $default_revision;
+          if ($latest_revision_id) {
+            /** @var \Drupal\Core\Entity\ContentEntityInterface $latest_revision */
+            $latest_revision = $storage->loadRevision($latest_revision_id);
+            // Make sure we do not list removed translations, i.e. translations
+            // that have been part of a default revision but no longer are.
+            if (!$latest_revision->wasDefaultRevision() || $default_revision->hasTranslation($langcode)) {
+              $entity = $latest_revision;
+            }
+          }
           $translations = $entity->getTranslationLanguages();
         }
 
@@ -227,24 +236,34 @@ class ContentTranslationController extends ControllerBase {
             $source_name = $this->t('n/a');
           }
           else {
-            $source_name = isset($languages[$source]) ? $languages[$source]->getName() : $this->t('n/a');
-            $delete_access = $entity->access('delete', NULL, TRUE);
-            $translation_access = $handler->getTranslationAccess($entity, 'delete');
-            $cacheability = $cacheability
-              ->merge(CacheableMetadata::createFromObject($delete_access))
-              ->merge(CacheableMetadata::createFromObject($translation_access));
-            if ($entity->access('delete') && $entity_type->hasLinkTemplate('delete-form')) {
-              $links['delete'] = [
-                'title' => $this->t('Delete'),
-                'url' => $entity->urlInfo('delete-form'),
-                'language' => $language,
-              ];
+            /** @var \Drupal\Core\Access\AccessResultInterface $delete_route_access */
+            $delete_route_access = \Drupal::service('content_translation.delete_access')->checkAccess($translation);
+            $cacheability->addCacheableDependency($delete_route_access);
+
+            if ($delete_route_access->isAllowed()) {
+              $source_name = isset($languages[$source]) ? $languages[$source]->getName() : $this->t('n/a');
+              $delete_access = $entity->access('delete', NULL, TRUE);
+              $translation_access = $handler->getTranslationAccess($entity, 'delete');
+              $cacheability
+                ->addCacheableDependency($delete_access)
+                ->addCacheableDependency($translation_access);
+
+              if ($delete_access->isAllowed() && $entity_type->hasLinkTemplate('delete-form')) {
+                $links['delete'] = [
+                  'title' => $this->t('Delete'),
+                  'url' => $entity->urlInfo('delete-form'),
+                  'language' => $language,
+                ];
+              }
+              elseif ($translation_access->isAllowed()) {
+                $links['delete'] = [
+                  'title' => $this->t('Delete'),
+                  'url' => $delete_url,
+                ];
+              }
             }
-            elseif ($translation_access->isAllowed()) {
-              $links['delete'] = [
-                'title' => $this->t('Delete'),
-                'url' => $delete_url,
-              ];
+            else {
+              $this->messenger()->addWarning($this->t('The "Delete translation" action is only available for published translations.'), FALSE);
             }
           }
         }

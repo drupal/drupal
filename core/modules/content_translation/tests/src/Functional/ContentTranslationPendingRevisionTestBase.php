@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\content_translation\Functional;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
@@ -109,6 +110,64 @@ abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslat
   protected function setupBundle() {
     parent::setupBundle();
     $this->createContentType(['type' => $this->bundle]);
+  }
+
+  /**
+   * Loads the active revision translation for the specified entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity being edited.
+   * @param string $langcode
+   *   The translation language code.
+   *
+   * @return \Drupal\Core\Entity\ContentEntityInterface|null
+   *   The active revision translation or NULL if none could be identified.
+   */
+  protected function loadRevisionTranslation(ContentEntityInterface $entity, $langcode) {
+    $revision_id = $this->storage->getLatestTranslationAffectedRevisionId($entity->id(), $langcode);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $revision */
+    $revision = $revision_id ? $this->storage->loadRevision($revision_id) : NULL;
+    return $revision && $revision->hasTranslation($langcode) ? $revision->getTranslation($langcode) : NULL;
+  }
+
+  /**
+   * Returns the edit URL for the specified entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity being edited.
+   *
+   * @return \Drupal\Core\Url
+   *   The edit URL.
+   */
+  protected function getEditUrl(ContentEntityInterface $entity) {
+    if ($entity->access('update', $this->loggedInUser)) {
+      $url = $entity->toUrl('edit-form');
+    }
+    else {
+      $url = $entity->toUrl('drupal:content-translation-edit');
+      $url->setRouteParameter('language', $entity->language()->getId());
+    }
+    return $url;
+  }
+
+  /**
+   * Returns the delete translation URL for the specified entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity being edited.
+   *
+   * @return \Drupal\Core\Url
+   *   The delete translation URL.
+   */
+  protected function getDeleteUrl(ContentEntityInterface $entity) {
+    if ($entity->access('delete', $this->loggedInUser)) {
+      $url = $entity->toUrl('delete-form');
+    }
+    else {
+      $url = $entity->toUrl('drupal:content-translation-delete');
+      $url->setRouteParameter('language', $entity->language()->getId());
+    }
+    return $url;
   }
 
 }
