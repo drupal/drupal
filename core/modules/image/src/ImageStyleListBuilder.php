@@ -39,9 +39,17 @@ class ImageStyleListBuilder extends ConfigEntityListBuilder {
       'url' => $entity->urlInfo('flush-form'),
     ];
 
-    return parent::getDefaultOperations($entity) + [
+    $operations = parent::getDefaultOperations($entity) + [
       'flush' => $flush,
     ];
+
+    // Remove destination URL from the edit link to allow editing image
+    // effects.
+    if (isset($operations['edit'])) {
+      $operations['edit']['url'] = $entity->toUrl('edit-form');
+    }
+
+    return $operations;
   }
 
   /**
