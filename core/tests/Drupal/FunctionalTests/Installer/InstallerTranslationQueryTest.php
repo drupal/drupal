@@ -1,15 +1,13 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
-
-use Drupal\simpletest\InstallerTestBase;
+namespace Drupal\FunctionalTests\Installer;
 
 /**
  * Installs Drupal in German and checks resulting site.
  *
  * @group Installer
  *
- * @see \Drupal\system\Tests\Installer\InstallerTranslationTest
+ * @see \Drupal\FunctionalTests\Installer\InstallerTranslationTest
  */
 class InstallerTranslationQueryTest extends InstallerTestBase {
 
@@ -35,11 +33,11 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
     // The language should have been automatically detected, all following
     // screens should be translated already.
     $elements = $this->xpath('//input[@type="submit"]/@value');
-    $this->assertEqual((string) current($elements), 'Save and continue de');
+    $this->assertEqual(current($elements)->getText(), 'Save and continue de');
     $this->translations['Save and continue'] = 'Save and continue de';
 
     // Check the language direction.
-    $direction = (string) current($this->xpath('/html/@dir'));
+    $direction = current($this->xpath('/@dir'))->getText();
     $this->assertEqual($direction, 'ltr');
   }
 

@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
-
-use Drupal\simpletest\InstallerTestBase;
+namespace Drupal\FunctionalTests\Installer;
 
 /**
  * Tests the installer when a config_directory has already been set up.
@@ -21,14 +19,14 @@ class InstallerExistingConfigDirectoryTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    mkdir($this->siteDirectory . '/config_read_only', 0444);
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
+    mkdir($this->root . DIRECTORY_SEPARATOR . $this->siteDirectory . '/config_read_only', 0444);
     $this->expectedFilePerms = fileperms($this->siteDirectory . '/config_read_only');
     $this->settings['config_directories'][CONFIG_SYNC_DIRECTORY] = (object) [
       'value' => $this->siteDirectory . '/config_read_only',
       'required' => TRUE,
     ];
-    parent::setUp();
   }
 
   /**

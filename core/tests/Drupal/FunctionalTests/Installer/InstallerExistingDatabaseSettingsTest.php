@@ -1,8 +1,7 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
-use Drupal\simpletest\InstallerTestBase;
 use Drupal\Core\Database\Database;
 
 /**
@@ -16,7 +15,8 @@ class InstallerExistingDatabaseSettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
     // Pre-configure database credentials in settings.php.
     $connection_info = Database::getConnectionInfo();
     unset($connection_info['default']['pdo']);
@@ -26,7 +26,6 @@ class InstallerExistingDatabaseSettingsTest extends InstallerTestBase {
       'value' => $connection_info,
       'required' => TRUE,
     ];
-    parent::setUp();
   }
 
   /**

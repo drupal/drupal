@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\KernelTests\AssertConfigTrait;
 

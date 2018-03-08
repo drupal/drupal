@@ -1,9 +1,8 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Language\LanguageManager;
-use Drupal\simpletest\InstallerTestBase;
 
 /**
  * Verifies that the installer language list combines local and remote languages.

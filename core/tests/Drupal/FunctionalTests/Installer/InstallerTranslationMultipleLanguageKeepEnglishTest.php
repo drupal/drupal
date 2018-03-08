@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 /**
  * Tests that keeping English in a foreign language install works.

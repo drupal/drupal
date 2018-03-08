@@ -1,19 +1,17 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Site\Settings;
-use Drupal\simpletest\InstallerTestBase;
 use Drupal\Core\Database\Database;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the installer with an existing settings file but no install profile.
+ * Tests installer breaks with a profile mismatch and a read-only settings.php.
  *
  * @group Installer
  */
-class InstallerExistingSettingsMismatchProfileTest extends InstallerTestBase {
+class InstallerExistingSettingsMismatchProfileBrokenTest extends InstallerTestBase {
 
   /**
    * {@inheritdoc}
@@ -21,7 +19,8 @@ class InstallerExistingSettingsMismatchProfileTest extends InstallerTestBase {
    * Configures a preexisting settings.php file without an install_profile
    * setting before invoking the interactive installer.
    */
-  protected function setUp() {
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
     // Pre-configure hash salt.
     // Any string is valid, so simply use the class name of this test.
     $this->settings['settings']['hash_salt'] = (object) [
@@ -47,22 +46,26 @@ class InstallerExistingSettingsMismatchProfileTest extends InstallerTestBase {
     ];
 
     // Pre-configure config directories.
+    $site_path = DrupalKernel::findSitePath(Request::createFromGlobals());
     $this->settings['config_directories'] = [
       CONFIG_SYNC_DIRECTORY => (object) [
-        'value' => DrupalKernel::findSitePath(Request::createFromGlobals()) . '/files/config_sync',
+        'value' => $site_path . '/files/config_staging',
         'required' => TRUE,
       ],
     ];
     mkdir($this->settings['config_directories'][CONFIG_SYNC_DIRECTORY]->value, 0777, TRUE);
-
-    parent::setUp();
   }
 
   /**
    * {@inheritdoc}
    */
   protected function visitInstaller() {
-    // Provide profile and language in query string to skip these pages.
+    // Make settings file not writable. This will break the installer.
+    $filename = $this->siteDirectory . '/settings.php';
+    // Make the settings file read-only.
+    // Not using File API; a potential error must trigger a PHP warning.
+    chmod($filename, 0444);
+
     $this->drupalGet($GLOBALS['base_url'] . '/core/install.php?langcode=en&profile=testing');
   }
 
@@ -88,14 +91,16 @@ class InstallerExistingSettingsMismatchProfileTest extends InstallerTestBase {
     // already.
   }
 
+  protected function setUpSite() {
+    // This step should not appear, since settings.php could not be written.
+  }
+
   /**
-   * Verifies that installation succeeded.
+   * Verifies that installation did not succeed.
    */
-  public function testInstaller() {
-    $this->assertUrl('user/1');
-    $this->assertResponse(200);
-    $this->assertEqual('testing', \Drupal::installProfile());
-    $this->assertEqual('testing', Settings::get('install_profile'), 'Profile was correctly changed to testing in Settings.php');
+  public function testBrokenInstaller() {
+    $this->assertTitle('Install profile mismatch | Drupal');
+    $this->assertText("The selected profile testing does not match the install_profile setting, which is minimal. Cannot write updated setting to {$this->siteDirectory}/settings.php.");
   }
 
 }

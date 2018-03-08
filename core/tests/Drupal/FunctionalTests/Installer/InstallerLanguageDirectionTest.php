@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
-
-use Drupal\simpletest\InstallerTestBase;
+namespace Drupal\FunctionalTests\Installer;
 
 /**
  * Verifies that the early installer uses the correct language direction.
@@ -30,11 +28,11 @@ class InstallerLanguageDirectionTest extends InstallerTestBase {
     // After selecting a different language than English, all following screens
     // should be translated already.
     $elements = $this->xpath('//input[@type="submit"]/@value');
-    $this->assertEqual((string) current($elements), 'Save and continue Arabic');
+    $this->assertEqual(current($elements)->getText(), 'Save and continue Arabic');
     $this->translations['Save and continue'] = 'Save and continue Arabic';
 
     // Verify that language direction is right-to-left.
-    $direction = (string) current($this->xpath('/html/@dir'));
+    $direction = current($this->xpath('/@dir'))->getText();
     $this->assertEqual($direction, 'rtl');
   }
 

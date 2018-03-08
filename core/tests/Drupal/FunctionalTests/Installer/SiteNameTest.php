@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that the site name can be set during a non-interactive installation.
  *
  * @group Installer
  */
-class SiteNameTest extends WebTestBase {
+class SiteNameTest extends BrowserTestBase {
 
   /**
    * The site name to be used when testing.

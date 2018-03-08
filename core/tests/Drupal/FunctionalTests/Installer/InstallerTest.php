@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
-
-use Drupal\simpletest\InstallerTestBase;
+namespace Drupal\FunctionalTests\Installer;
 
 /**
  * Tests the interactive installer.
@@ -37,11 +35,11 @@ class InstallerTest extends InstallerTestBase {
   protected function setUpLanguage() {
     // Test that \Drupal\Core\Render\BareHtmlPageRenderer adds assets and
     // metatags as expected to the first page of the installer.
-    $this->assertRaw('core/themes/seven/css/components/buttons.css');
+    $this->assertRaw("core/themes/seven/css/components/buttons.css");
     $this->assertRaw('<meta charset="utf-8" />');
 
     // Assert that the expected title is present.
-    $this->assertEqual('Choose language', $this->cssSelect('main h2')[0]);
+    $this->assertEqual('Choose language', $this->cssSelect('main h2')[0]->getText());
 
     parent::setUpLanguage();
   }
@@ -51,7 +49,7 @@ class InstallerTest extends InstallerTestBase {
    */
   protected function setUpProfile() {
     // Assert that the expected title is present.
-    $this->assertEqual('Select an installation profile', $this->cssSelect('main h2')[0]);
+    $this->assertEqual('Select an installation profile', $this->cssSelect('main h2')[0]->getText());
     $result = $this->xpath('//span[contains(@class, :class) and contains(text(), :text)]', [':class' => 'visually-hidden', ':text' => 'Select an installation profile']);
     $this->assertEqual(count($result), 1, "Title/Label not displayed when '#title_display' => 'invisible' attribute is set");
 
@@ -63,7 +61,7 @@ class InstallerTest extends InstallerTestBase {
    */
   protected function setUpSettings() {
     // Assert that the expected title is present.
-    $this->assertEqual('Database configuration', $this->cssSelect('main h2')[0]);
+    $this->assertEqual('Database configuration', $this->cssSelect('main h2')[0]->getText());
 
     parent::setUpSettings();
   }
@@ -73,7 +71,7 @@ class InstallerTest extends InstallerTestBase {
    */
   protected function setUpSite() {
     // Assert that the expected title is present.
-    $this->assertEqual('Configure site', $this->cssSelect('main h2')[0]);
+    $this->assertEqual('Configure site', $this->cssSelect('main h2')[0]->getText());
 
     parent::setUpSite();
   }

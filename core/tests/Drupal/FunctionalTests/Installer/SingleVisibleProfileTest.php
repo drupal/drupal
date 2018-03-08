@@ -1,9 +1,8 @@
 <?php
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
-use Drupal\simpletest\InstallerTestBase;
 
 /**
  * Tests distribution profile support.
@@ -21,7 +20,11 @@ class SingleVisibleProfileTest extends InstallerTestBase {
    */
   protected $profile = NULL;
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
     $profiles = ['standard', 'demo_umami'];
     foreach ($profiles as $profile) {
       $info = [
@@ -35,7 +38,6 @@ class SingleVisibleProfileTest extends InstallerTestBase {
       mkdir($path, 0777, TRUE);
       file_put_contents("$path/$profile.info.yml", Yaml::encode($info));
     }
-    parent::setUp();
   }
 
   /**
