@@ -12,21 +12,28 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *
    * @var string
    */
-  private $_uri;
+  protected $uri;
 
   /**
    * The Gettext PO header.
    *
    * @var \Drupal\Component\Gettext\PoHeader
    */
-  private $_header;
+  protected $header;
 
   /**
    * File handle of the current PO stream.
    *
    * @var resource
    */
-  private $_fd;
+  protected $fd;
+
+  /**
+   * The language code of this writer.
+   *
+   * @var string
+   */
+  protected $langcode;
 
   /**
    * Gets the PO header of the current stream.
@@ -35,7 +42,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   The Gettext PO header.
    */
   public function getHeader() {
-    return $this->_header;
+    return $this->header;
   }
 
   /**
@@ -45,7 +52,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   The Gettext PO header to set.
    */
   public function setHeader(PoHeader $header) {
-    $this->_header = $header;
+    $this->header = $header;
   }
 
   /**
@@ -55,7 +62,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   The language code.
    */
   public function getLangcode() {
-    return $this->_langcode;
+    return $this->langcode;
   }
 
   /**
@@ -65,7 +72,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   The language code.
    */
   public function setLangcode($langcode) {
-    $this->_langcode = $langcode;
+    $this->langcode = $langcode;
   }
 
   /**
@@ -73,7 +80,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    */
   public function open() {
     // Open in write mode. Will overwrite the stream if it already exists.
-    $this->_fd = fopen($this->getURI(), 'w');
+    $this->fd = fopen($this->getURI(), 'w');
     // Write the header at the start.
     $this->writeHeader();
   }
@@ -85,8 +92,8 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   If the stream is not open.
    */
   public function close() {
-    if ($this->_fd) {
-      fclose($this->_fd);
+    if ($this->fd) {
+      fclose($this->fd);
     }
     else {
       throw new \Exception('Cannot close stream that is not open.');
@@ -104,7 +111,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   If writing the data is not possible.
    */
   private function write($data) {
-    $result = fwrite($this->_fd, $data);
+    $result = fwrite($this->fd, $data);
     if ($result === FALSE || $result != strlen($data)) {
       throw new \Exception('Unable to write data: ' . substr($data, 0, 20));
     }
@@ -114,7 +121,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    * Write the PO header to the stream.
    */
   private function writeHeader() {
-    $this->write($this->_header);
+    $this->write($this->header);
   }
 
   /**
@@ -141,17 +148,17 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   If the URI is not set.
    */
   public function getURI() {
-    if (empty($this->_uri)) {
+    if (empty($this->uri)) {
       throw new \Exception('No URI set.');
     }
-    return $this->_uri;
+    return $this->uri;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setURI($uri) {
-    $this->_uri = $uri;
+    $this->uri = $uri;
   }
 
 }

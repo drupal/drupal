@@ -12,13 +12,13 @@ class PoMemoryWriter implements PoWriterInterface {
    *
    * @var array
    */
-  private $_items;
+  protected $items;
 
   /**
    * Constructor, initialize empty items.
    */
   public function __construct() {
-    $this->_items = [];
+    $this->items = [];
   }
 
   /**
@@ -30,7 +30,7 @@ class PoMemoryWriter implements PoWriterInterface {
       $item->setTranslation(implode(LOCALE_PLURAL_DELIMITER, $item->getTranslation()));
     }
     $context = $item->getContext();
-    $this->_items[$context != NULL ? $context : ''][$item->getSource()] = $item->getTranslation();
+    $this->items[$context != NULL ? $context : ''][$item->getSource()] = $item->getTranslation();
   }
 
   /**
@@ -49,7 +49,7 @@ class PoMemoryWriter implements PoWriterInterface {
    * @return array PoItem
    */
   public function getData() {
-    return $this->_items;
+    return $this->items;
   }
 
   /**
