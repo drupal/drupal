@@ -12,9 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
  * examine what in the form changed when the form submission process is
  * complete. Furthermore, it may be used to store information related to the
  * processed data in the form, which will persist across page requests when the
- * 'cache' or 'rebuild' flag is set. See
- * \Drupal\Core\Form\FormState::$internalStorage for documentation of the
- * available flags.
+ * 'cache' or 'rebuild' flag is set. See \Drupal\Core\Form\FormState for
+ * documentation of the available flags.
  *
  * @see \Drupal\Core\Form\FormBuilderInterface
  * @see \Drupal\Core\Form\FormValidatorInterface
