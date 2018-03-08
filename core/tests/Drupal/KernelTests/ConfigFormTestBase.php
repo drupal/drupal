@@ -1,24 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\System;
-
-@trigger_error('\Drupal\system\Tests\System\SystemConfigFormTestBase is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use \Drupal\KernelTests\ConfigFormTestBase instead.', E_USER_DEPRECATED);
+namespace Drupal\KernelTests;
 
 use Drupal\Core\Form\FormState;
-use Drupal\simpletest\WebTestBase;
 
 /**
  * Full generic test suite for any form that data with the configuration system.
  *
  * @see UserAdminSettingsFormTest
  *   For a full working implementation.
- *
- * @deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Use
- *   \Drupal\KernelTests\ConfigFormTestBase instead.
- *
- * @see https://www.drupal.org/node/2941907
  */
-abstract class SystemConfigFormTestBase extends WebTestBase {
+abstract class ConfigFormTestBase extends KernelTestBase {
   /**
    * Form ID to use for testing.
    *

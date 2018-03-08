@@ -2,15 +2,14 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\system\Tests\System\SystemConfigFormTestBase;
-use Drupal\form_test\FormTestObject;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests building a form from an object.
  *
  * @group Form
  */
-class FormObjectTest extends SystemConfigFormTestBase {
+class FormObjectTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -18,19 +17,6 @@ class FormObjectTest extends SystemConfigFormTestBase {
    * @var array
    */
   public static $modules = ['form_test'];
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->form = new FormTestObject($this->container->get('config.factory'));
-    $this->values = [
-      'bananas' => [
-        '#value' => $this->randomString(10),
-        '#config_name' => 'form_test.object',
-        '#config_key' => 'bananas',
-      ],
-    ];
-  }
 
   /**
    * Tests using an object as the form callback.

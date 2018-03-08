@@ -2,7 +2,7 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\system\Tests\System\SystemConfigFormTestBase;
+use Drupal\KernelTests\ConfigFormTestBase;
 use Drupal\user\AccountSettingsForm;
 
 /**
@@ -10,8 +10,16 @@ use Drupal\user\AccountSettingsForm;
  *
  * @group user
  */
-class UserAdminSettingsFormTest extends SystemConfigFormTestBase {
+class UserAdminSettingsFormTest extends ConfigFormTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['user', 'system'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
