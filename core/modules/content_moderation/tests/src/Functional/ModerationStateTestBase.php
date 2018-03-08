@@ -3,6 +3,7 @@
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 
@@ -109,6 +110,9 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
       'type' => $content_type_id,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save content type'));
+
+    // Check the content type has been set to create new revisions.
+    $this->assertTrue(NodeType::load($content_type_id)->isNewRevision());
 
     if ($moderated) {
       $this->enableModerationThroughUi($content_type_id, $workflow_id);
