@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Render\Element;
+namespace Drupal\KernelTests\Core\Render\Element;
 
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element\Weight;
