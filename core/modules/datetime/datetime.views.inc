@@ -11,18 +11,42 @@ use Drupal\field\FieldStorageConfigInterface;
  * Implements hook_field_views_data().
  */
 function datetime_field_views_data(FieldStorageConfigInterface $field_storage) {
+  return datetime_type_field_views_data_helper($field_storage, [], $field_storage->getMainPropertyName());
+}
+
+/**
+ * Provides Views integration for any datetime-based fields.
+ *
+ * Overrides the default Views data for datetime-based fields, adding datetime
+ * views plugins. Modules defining new datetime-based fields may use this
+ * function to simplify Views integration.
+ *
+ * @param \Drupal\field\FieldStorageConfigInterface $field_storage
+ *   The field storage config entity.
+ * @param array $data
+ *   Field view data or views_field_default_views_data($field_storage) if empty.
+ * @param string $column_name
+ *   The schema column name with the datetime value.
+ *
+ * @return array
+ *   The array of field views data with the datetime plugin.
+ *
+ * @see datetime_field_views_data()
+ * @see datetime_range_field_views_data()
+ */
+function datetime_type_field_views_data_helper(FieldStorageConfigInterface $field_storage, array $data, $column_name) {
   // @todo This code only covers configurable fields, handle base table fields
   //   in https://www.drupal.org/node/2489476.
-  $data = views_field_default_views_data($field_storage);
+  $data = empty($data) ? views_field_default_views_data($field_storage) : $data;
   foreach ($data as $table_name => $table_data) {
     // Set the 'datetime' filter type.
-    $data[$table_name][$field_storage->getName() . '_value']['filter']['id'] = 'datetime';
+    $data[$table_name][$field_storage->getName() . '_' . $column_name]['filter']['id'] = 'datetime';
 
     // Set the 'datetime' argument type.
-    $data[$table_name][$field_storage->getName() . '_value']['argument']['id'] = 'datetime';
+    $data[$table_name][$field_storage->getName() . '_' . $column_name]['argument']['id'] = 'datetime';
 
     // Create year, month, and day arguments.
-    $group = $data[$table_name][$field_storage->getName() . '_value']['group'];
+    $group = $data[$table_name][$field_storage->getName() . '_' . $column_name]['group'];
     $arguments = [
       // Argument type => help text.
       'year' => t('Date in the form of YYYY.'),
@@ -33,11 +57,16 @@ function datetime_field_views_data(FieldStorageConfigInterface $field_storage) {
       'full_date' => t('Date in the form of CCYYMMDD.'),
     ];
     foreach ($arguments as $argument_type => $help_text) {
-      $data[$table_name][$field_storage->getName() . '_value_' . $argument_type] = [
-        'title' => $field_storage->getLabel() . ' (' . $argument_type . ')',
+      $column_name_text = $column_name === $field_storage->getMainPropertyName() ? '' : ':' . $column_name;
+      $data[$table_name][$field_storage->getName() . '_' . $column_name . '_' . $argument_type] = [
+        'title' => t('@label@column (@argument)', [
+          '@label' => $field_storage->getLabel(),
+          '@column' => $column_name_text,
+          '@argument' => $argument_type,
+        ]),
         'help' => $help_text,
         'argument' => [
-          'field' => $field_storage->getName() . '_value',
+          'field' => $field_storage->getName() . '_' . $column_name,
           'id' => 'datetime_' . $argument_type,
           'entity_type' => $field_storage->getTargetEntityTypeId(),
           'field_name' => $field_storage->getName(),
@@ -47,7 +76,7 @@ function datetime_field_views_data(FieldStorageConfigInterface $field_storage) {
     }
 
     // Set the 'datetime' sort handler.
-    $data[$table_name][$field_storage->getName() . '_value']['sort']['id'] = 'datetime';
+    $data[$table_name][$field_storage->getName() . '_' . $column_name]['sort']['id'] = 'datetime';
   }
 
   return $data;

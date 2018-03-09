@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\views\Views;
+use Drupal\views\ViewEntityInterface;
 
 /**
  * Implements hook_help().
@@ -24,5 +26,135 @@ function datetime_range_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('Dates can be displayed using the <em>Plain</em> or the <em>Default</em> formatter. The <em>Plain</em> formatter displays the date in the <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format. If you choose the <em>Default</em> formatter, you can choose a format from a predefined list that can be managed on the <a href=":date_format_list">Date and time formats</a> page.', [':date_format_list' => \Drupal::url('entity.date_format.collection')]) . '</dd>';
       $output .= '</dl>';
       return $output;
+  }
+}
+
+/**
+ * Implements hook_view_presave().
+ *
+ * When a view is saved using the old string or standard plugin format for
+ * Datetime Range filters or sorts, they will automatically be updated to
+ * Datetime filters or sorts. Old plugins usage must to be considered
+ * deprecated and must be converted before 9.0.0, when this updating layer will
+ * be removed.
+ *
+ * @deprecated in Drupal 8.5.x and will be removed before 9.0.0.
+ *
+ * @see https://www.drupal.org/node/2857691
+ */
+function datetime_range_view_presave(ViewEntityInterface $view) {
+  $config_factory = \Drupal::configFactory();
+  $displays = $view->get('display');
+  $changed = FALSE;
+
+  foreach ($displays as $display_name => &$display) {
+
+    // Update datetime_range filters.
+    if (isset($display['display_options']['filters'])) {
+      foreach ($display['display_options']['filters'] as $field_name => &$filter) {
+        if ($filter['plugin_id'] === 'string') {
+
+          // Get field config.
+          $filter_views_data = Views::viewsData()->get($filter['table'])[$filter['field']]['filter'];
+          if (!isset($filter_views_data['entity_type']) || !isset($filter_views_data['field_name'])) {
+            continue;
+          }
+          $field_storage_name = 'field.storage.' . $filter_views_data['entity_type'] . '.' . $filter_views_data['field_name'];
+          $field_configuration = $config_factory->get($field_storage_name);
+
+          if ($field_configuration->get('type') === 'daterange') {
+
+            // Set entity_type if missing.
+            if (!isset($filter['entity_type'])) {
+              $filter['entity_type'] = $filter_views_data['entity_type'];
+            }
+
+            // Set datetime plugin_id.
+            $filter['plugin_id'] = 'datetime';
+
+            // Create datetime value array.
+            $datetime_value = [
+              'min' => '',
+              'max' => '',
+              'value' => $filter['value'],
+              'type' => 'date',
+            ];
+
+            // Map string operator/value to numeric equivalent.
+            switch ($filter['operator']) {
+              case '=':
+              case 'empty':
+              case 'not empty':
+                $operator = $filter['operator'];
+                break;
+
+              case '!=':
+              case 'not':
+                $operator = '!=';
+                break;
+
+              case 'starts':
+                $operator = 'regular_expression';
+                $datetime_value['value'] = '^' . preg_quote($datetime_value['value']);
+                break;
+
+              case 'ends':
+                $operator = 'regular_expression';
+                $datetime_value['value'] = preg_quote($datetime_value['value']) . '$';
+                break;
+
+              default:
+                $operator = 'regular_expression';
+                // Add .* to prevent blank regexes.
+                if (empty($datetime_value['value'])) {
+                  $datetime_value['value'] = '.*';
+                }
+                else {
+                  $datetime_value['value'] = preg_quote($datetime_value['value']);
+                }
+            }
+
+            // Set value and operator.
+            $filter['value'] = $datetime_value;
+            $filter['operator'] = $operator;
+            $changed = TRUE;
+            @trigger_error('Use of string filters for datetime_range fields is deprecated. Use the datetime filters instead. See https://www.drupal.org/node/2857691', E_USER_DEPRECATED);
+          }
+        }
+      }
+    }
+
+    // Update datetime_range sort handlers.
+    if (isset($display['display_options']['sorts'])) {
+      foreach ($display['display_options']['sorts'] as $field_name => &$sort) {
+        if ($sort['plugin_id'] === 'standard') {
+
+          // Get field config.
+          $sort_views_data = Views::viewsData()->get($sort['table'])[$sort['field']]['sort'];
+          if (!isset($sort_views_data['entity_type']) || !isset($sort_views_data['field_name'])) {
+            continue;
+          }
+          $field_storage_name = 'field.storage.' . $sort_views_data['entity_type'] . '.' . $sort_views_data['field_name'];
+          $field_configuration = $config_factory->get($field_storage_name);
+
+          if ($field_configuration->get('type') === 'daterange') {
+
+            // Set entity_type if missing.
+            if (!isset($sort['entity_type'])) {
+              $sort['entity_type'] = $sort_views_data['entity_type'];
+            }
+
+            // Set datetime plugin_id.
+            $sort['plugin_id'] = 'datetime';
+            $changed = TRUE;
+            @trigger_error('Use of standard sort handlers for datetime_range fields is deprecated. Use the datetime sort handlers instead. See https://www.drupal.org/node/2857691', E_USER_DEPRECATED);
+          }
+        }
+      }
+    }
+  }
+
+  if ($changed) {
+    $view->set('display', $displays);
   }
 }

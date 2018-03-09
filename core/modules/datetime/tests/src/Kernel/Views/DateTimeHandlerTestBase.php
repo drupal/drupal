@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\datetime\Kernel\Views;
 
+use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -27,6 +29,13 @@ abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
    * @var string
    */
   protected static $field_name = 'field_date';
+
+  /**
+   * Type of the field.
+   *
+   * @var string
+   */
+  protected static $field_type = 'datetime';
 
   /**
    * Nodes to test.
@@ -54,7 +63,7 @@ abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
     $fieldStorage = FieldStorageConfig::create([
       'field_name' => static::$field_name,
       'entity_type' => 'node',
-      'type' => 'datetime',
+      'type' => static::$field_type,
       'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
     ]);
     $fieldStorage->save();
@@ -89,6 +98,44 @@ abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
       ->set('timezone.user.configurable', 0)
       ->set('timezone.default', $timezone)
       ->save();
+  }
+
+  /**
+   * Returns UTC timestamp of user's TZ 'now'.
+   *
+   * The date field stores date_only values without conversion, considering them
+   * already as UTC. This method returns the UTC equivalent of user's 'now' as a
+   * unix timestamp, so they match using Y-m-d format.
+   *
+   * @return int
+   *   Unix timestamp.
+   */
+  protected function getUTCEquivalentOfUserNowAsTimestamp() {
+    $user_now = new DateTimePlus('now', new \DateTimeZone(drupal_get_user_timezone()));
+    $utc_equivalent = new DateTimePlus($user_now->format('Y-m-d H:i:s'), new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
+
+    return $utc_equivalent->getTimestamp();
+  }
+
+  /**
+   * Returns an array formatted date_only values relative to timestamp.
+   *
+   * @param int $timestamp
+   *   Unix Timestamp used as 'today'.
+   *
+   * @return array
+   *   An array of DateTimeItemInterface::DATE_STORAGE_FORMAT date values. In
+   *   order tomorrow, today and yesterday.
+   */
+  protected function getRelativeDateValuesFromTimestamp($timestamp) {
+    return [
+      // Tomorrow.
+      \Drupal::service('date.formatter')->format($timestamp + 86400, 'custom', DateTimeItemInterface::DATE_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE),
+      // Today.
+      \Drupal::service('date.formatter')->format($timestamp, 'custom', DateTimeItemInterface::DATE_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE),
+      // Yesterday.
+      \Drupal::service('date.formatter')->format($timestamp - 86400, 'custom', DateTimeItemInterface::DATE_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE),
+    ];
   }
 
 }
