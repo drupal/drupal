@@ -1017,9 +1017,6 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
       continue;
     }
 
-    // Move uploaded files from PHP's upload_tmp_dir to Drupal's temporary
-    // directory. This overcomes open_basedir restrictions for future file
-    // operations.
     $file->setFileUri($file->destination);
     if (!drupal_move_uploaded_file($file_info->getRealPath(), $file->getFileUri())) {
       drupal_set_message(t('File upload error. Could not move uploaded file.'), 'error');
