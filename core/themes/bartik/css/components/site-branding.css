@@ -7,6 +7,7 @@
   display: inline-block;
   margin-right: 1em; /* LTR */
   margin-bottom: 0.286em;
+  border-bottom: 0;
 }
 [dir="rtl"] .site-branding__logo {
   margin-right: 0;
