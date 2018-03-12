@@ -237,7 +237,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
     // Add source_module and destination_module for modules that do not need an
     // upgrade path and are enabled on the source site.
     foreach ($this->noUpgradePaths[$version] as $extension) {
-      if ($system_data['module'][$extension]['status']) {
+      if (isset($system_data['module'][$extension]) && $system_data['module'][$extension]['status']) {
         $table_data[$extension]['core'][$extension] = $extension;
       }
     }
