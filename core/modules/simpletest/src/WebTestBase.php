@@ -19,11 +19,11 @@ use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\EntityViewTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait as BaseBlockCreationTrait;
 use Drupal\Tests\Listeners\DeprecationListenerTrait;
-use Drupal\Tests\node\Traits\ContentTypeCreationTrait as BaseContentTypeCreationTrait;
-use Drupal\Tests\node\Traits\NodeCreationTrait as BaseNodeCreationTrait;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\Tests\TestFileCreationTrait;
-use Drupal\Tests\user\Traits\UserCreationTrait as BaseUserCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\XdebugRequestTrait;
 use Zend\Diactoros\Uri;
 
@@ -44,18 +44,18 @@ abstract class WebTestBase extends TestBase {
   use BaseBlockCreationTrait {
     placeBlock as drupalPlaceBlock;
   }
-  use BaseContentTypeCreationTrait {
+  use ContentTypeCreationTrait {
     createContentType as drupalCreateContentType;
   }
   use CronRunTrait;
   use AssertMailTrait {
     getMails as drupalGetMails;
   }
-  use BaseNodeCreationTrait {
+  use NodeCreationTrait {
     getNodeByTitle as drupalGetNodeByTitle;
     createNode as drupalCreateNode;
   }
-  use BaseUserCreationTrait {
+  use UserCreationTrait {
     createUser as drupalCreateUser;
     createRole as drupalCreateRole;
     createAdminRole as drupalCreateAdminRole;
