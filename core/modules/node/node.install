@@ -246,3 +246,15 @@ function node_update_8301() {
   $entity_type->set('entity_keys', $keys);
   $definition_update_manager->updateEntityType($entity_type);
 }
+
+/**
+ * Run a node access rebuild, if required.
+ */
+function node_update_8302() {
+  // Get the list of node access modules.
+  $modules = \Drupal::moduleHandler()->getImplementations('node_grants');
+  // If multilingual usage, then rebuild node access.
+  if (count($modules) > 0 && \Drupal::languageManager()->isMultilingual()) {
+    node_access_needs_rebuild(TRUE);
+  }
+}
