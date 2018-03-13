@@ -118,6 +118,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
     return [
       'aggregator',
       'block',
+      'book',
       'comment',
       'contact',
       'date',
@@ -169,7 +170,6 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
-      'book',
       'color',
       'rdf',
       // These modules are in the missing path list because they are installed

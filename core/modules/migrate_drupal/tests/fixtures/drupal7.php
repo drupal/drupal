@@ -1906,6 +1906,34 @@ $connection->schema()->createTable('book', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('book')
+  ->fields(array(
+    'mlid',
+    'nid',
+    'bid',
+  ))
+  ->values(array(
+    'mlid' => '480',
+    'nid' => '4',
+    'bid' => '4',
+  ))
+  ->values(array(
+    'mlid' => '481',
+    'nid' => '6',
+    'bid' => '4',
+  ))
+  ->values(array(
+    'mlid' => '482',
+    'nid' => '2',
+    'bid' => '4',
+  ))
+  ->values(array(
+    'mlid' => '483',
+    'nid' => '1',
+    'bid' => '8',
+  ))
+  ->execute();
+
 $connection->schema()->createTable('cache', array(
   'fields' => array(
     'cid' => array(
@@ -22957,6 +22985,114 @@ $connection->insert('menu_links')
   'p9' => '0',
   'updated' => '0',
 ))
+  ->values(array(
+    'menu_name' => 'book-toc-1',
+    'mlid' => '480',
+    'plid' => '0',
+    'link_path' => 'node/4',
+    'router_path' => 'node/%',
+    'link_title' => 'Test top book title',
+    'options' => 'a:0:{}',
+    'module' => 'book',
+    'hidden' => '0',
+    'external' => '0',
+    'has_children' => '1',
+    'expanded' => '0',
+    'weight' => '-10',
+    'depth' => '1',
+    'customized' => '0',
+    'p1' => '480',
+    'p2' => '0',
+    'p3' => '0',
+    'p4' => '0',
+    'p5' => '0',
+    'p6' => '0',
+    'p7' => '0',
+    'p8' => '0',
+    'p9' => '0',
+    'updated' => '0',
+  ))
+  ->values(array(
+    'menu_name' => 'book-toc-1',
+    'mlid' => '481',
+    'plid' => '480',
+    'link_path' => 'node/6',
+    'router_path' => 'node/%',
+    'link_title' => 'Test book title child 1',
+    'options' => 'a:0:{}',
+    'module' => 'book',
+    'hidden' => '0',
+    'external' => '0',
+    'has_children' => '1',
+    'expanded' => '0',
+    'weight' => '0',
+    'depth' => '2',
+    'customized' => '0',
+    'p1' => '480',
+    'p2' => '481',
+    'p3' => '0',
+    'p4' => '0',
+    'p5' => '0',
+    'p6' => '0',
+    'p7' => '0',
+    'p8' => '0',
+    'p9' => '0',
+    'updated' => '0',
+  ))
+  ->values(array(
+    'menu_name' => 'book-toc-1',
+    'mlid' => '482',
+    'plid' => '481',
+    'link_path' => 'node/2',
+    'router_path' => 'node/%',
+    'link_title' => 'Test book title child 1.1',
+    'options' => 'a:0:{}',
+    'module' => 'book',
+    'hidden' => '0',
+    'external' => '0',
+    'has_children' => '0',
+    'expanded' => '0',
+    'weight' => '0',
+    'depth' => '3',
+    'customized' => '0',
+    'p1' => '480',
+    'p2' => '481',
+    'p3' => '482',
+    'p4' => '0',
+    'p5' => '0',
+    'p6' => '0',
+    'p7' => '0',
+    'p8' => '0',
+    'p9' => '0',
+    'updated' => '0',
+  ))
+  ->values(array(
+    'menu_name' => 'book-toc-2',
+    'mlid' => '483',
+    'plid' => '481',
+    'link_path' => 'node/1',
+    'router_path' => 'node/%',
+    'link_title' => 'Test book title 2',
+    'options' => 'a:0:{}',
+    'module' => 'book',
+    'hidden' => '0',
+    'external' => '0',
+    'has_children' => '0',
+    'expanded' => '0',
+    'weight' => '0',
+    'depth' => '3',
+    'customized' => '0',
+    'p1' => '480',
+    'p2' => '481',
+    'p3' => '483',
+    'p4' => '0',
+    'p5' => '0',
+    'p6' => '0',
+    'p7' => '0',
+    'p8' => '0',
+    'p9' => '0',
+    'updated' => '0',
+  ))
 ->execute();
 
 $connection->schema()->createTable('menu_router', array(
@@ -46323,6 +46459,10 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'book_allowed_types',
   'value' => 'a:1:{i:0;s:4:"book";}',
+))
+->values(array(
+  'name' => 'book_block_mode',
+  'value' => 's:9:"all pages";',
 ))
 ->values(array(
   'name' => 'book_child_type',

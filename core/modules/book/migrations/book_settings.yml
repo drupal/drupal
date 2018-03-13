@@ -1,7 +1,8 @@
-id: d6_book_settings
+id: book_settings
 label: Book configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
   - Configuration
 source:
   plugin: variable
