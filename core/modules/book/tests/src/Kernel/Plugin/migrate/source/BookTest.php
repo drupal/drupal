@@ -1,12 +1,14 @@
 <?php
 
-namespace Drupal\Tests\book\Kernel\Plugin\migrate\source\d6;
+namespace Drupal\Tests\book\Kernel\Plugin\migrate\source;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use Drupal\book\Plugin\migrate\source\d6\Book as D6Book;
 
 /**
- * @covers \Drupal\book\Plugin\migrate\source\d6\Book
+ * @covers \Drupal\book\Plugin\migrate\source\Book
  * @group book
+ * @group legacy
  */
 class BookTest extends MigrateSqlSourceTestBase {
 
@@ -79,6 +81,20 @@ class BookTest extends MigrateSqlSourceTestBase {
       ],
     ];
     return $tests;
+  }
+
+  /**
+   * @expectedDeprecation Book is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.x. Use \Drupal\book\Plugin\migrate\source\Book instead. See https://www.drupal.org/node/2947487 for more information.
+   */
+  public function testDeprecatedPlugin() {
+    new D6Book(
+      [],
+      'd6_book',
+      [],
+      $this->prophesize('Drupal\migrate\Plugin\MigrationInterface')->reveal(),
+      $this->prophesize('Drupal\Core\State\StateInterface')->reveal(),
+      $this->prophesize('Drupal\Core\Entity\EntityManagerInterface')->reveal()
+    );
   }
 
 }

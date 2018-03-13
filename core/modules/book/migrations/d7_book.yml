@@ -1,7 +1,7 @@
-id: d6_book
+id: d7_book
 label: Books
 migration_tags:
-  - Drupal 6
+  - Drupal 7
   - Content
 source:
   plugin: book
@@ -16,9 +16,9 @@ process:
       source: plid
     -
       plugin: migration_lookup
-      migration: d6_book
+      migration: d7_book
 destination:
   plugin: book
 migration_dependencies:
   required:
-    - d6_node
+    - d7_node

@@ -20,17 +20,29 @@ class MigrateBookConfigsTest extends MigrateDrupal6TestBase {
   public static $modules = ['book'];
 
   /**
-   * {@inheritdoc}
+   * Data provider for testBookSettings().
+   *
+   * @return array
+   *   The data for each test scenario.
    */
-  protected function setUp() {
-    parent::setUp();
-    $this->executeMigration('d6_book_settings');
+  public function providerBookSettings() {
+    return [
+      // d6_book_settings was renamed to book_settings, but use the old alias to
+      // prove that it works.
+      // @see book_migration_plugins_alter()
+      ['d6_book_settings'],
+      ['book_settings'],
+    ];
   }
 
   /**
    * Tests migration of book variables to book.settings.yml.
+   *
+   * @dataProvider providerBookSettings
    */
-  public function testBookSettings() {
+  public function testBookSettings($migration_id) {
+    $this->executeMigration($migration_id);
+
     $config = $this->config('book.settings');
     $this->assertIdentical('book', $config->get('child_type'));
     $this->assertSame('book pages', $config->get('block.navigation.mode'));
