@@ -326,10 +326,10 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function getAccessControlClass();
 
   /**
-   * Gets the access class.
+   * Sets the access control handler class.
    *
    * @param string $class
-   *   The class for this entity type's access.
+   *   The class for this entity type's access control handler.
    *
    * @return $this
    */
