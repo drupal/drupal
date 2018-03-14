@@ -237,17 +237,4 @@ class Term extends ContentEntityBase implements TermInterface {
     return $this->bundle();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function getFieldsToSkipFromTranslationChangesCheck() {
-    // @todo the current implementation of the parent field makes it impossible
-    // for ::hasTranslationChanges() to correctly check the field for changes,
-    // so it is currently skipped from the comparision and has to be fixed by
-    // https://www.drupal.org/node/2843060.
-    $fields = parent::getFieldsToSkipFromTranslationChangesCheck();
-    $fields[] = 'parent';
-    return $fields;
-  }
-
 }
