@@ -66,7 +66,7 @@ function drupal_phpunit_contrib_extension_directory_roots($root = NULL) {
     $paths[] = is_dir("$path/profiles") ? realpath("$path/profiles") : NULL;
     $paths[] = is_dir("$path/themes") ? realpath("$path/themes") : NULL;
   }
-  return array_filter($paths);
+  return array_filter($paths, 'file_exists');
 }
 
 /**
