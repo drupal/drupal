@@ -1177,6 +1177,7 @@ abstract class BrowserTestBase extends TestCase {
   protected function clickLink($label, $index = 0) {
     $label = (string) $label;
     $links = $this->getSession()->getPage()->findAll('named', ['link', $label]);
+    $this->assertArrayHasKey($index, $links, 'The link ' . $label . ' was not found on the page.');
     $links[$index]->click();
   }
 
