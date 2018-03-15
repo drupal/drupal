@@ -64,7 +64,7 @@ if ($args['list']) {
   echo "\nAvailable test groups & classes\n";
   echo "-------------------------------\n\n";
   try {
-    $groups = simpletest_test_get_all($args['module']);
+    $groups = \Drupal::service('test_discovery')->getTestClasses($args['module']);
   }
   catch (Exception $e) {
     error_log((string) $e);
@@ -1004,11 +1004,13 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
 function simpletest_script_get_test_list() {
   global $args;
 
+  /** $test_discovery \Drupal\simpletest\TestDiscovery */
+  $test_discovery = \Drupal::service('test_discovery');
   $types_processed = empty($args['types']);
   $test_list = [];
   if ($args['all'] || $args['module']) {
     try {
-      $groups = simpletest_test_get_all($args['module'], $args['types']);
+      $groups = $test_discovery->getTestClasses($args['module'], $args['types']);
       $types_processed = TRUE;
     }
     catch (Exception $e) {
@@ -1031,7 +1033,7 @@ function simpletest_script_get_test_list() {
         }
         else {
           try {
-            $groups = simpletest_test_get_all(NULL, $args['types']);
+            $groups = $test_discovery->getTestClasses(NULL, $args['types']);
           }
           catch (Exception $e) {
             echo (string) $e;
@@ -1132,7 +1134,7 @@ function simpletest_script_get_test_list() {
     }
     else {
       try {
-        $groups = simpletest_test_get_all(NULL, $args['types']);
+        $groups = $test_discovery->getTestClasses(NULL, $args['types']);
         $types_processed = TRUE;
       }
       catch (Exception $e) {

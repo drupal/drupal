@@ -403,7 +403,7 @@ function simpletest_phpunit_command() {
  * Implements callback_batch_operation().
  */
 function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
-  simpletest_classloader_register();
+  \Drupal::service('test_discovery')->registerTestNamespaces();
   // Get working values.
   if (!isset($context['sandbox']['max'])) {
     // First iteration: initialize working values.
@@ -587,6 +587,7 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
  *   instead.
  */
 function simpletest_test_get_all($extension = NULL, array $types = []) {
+  @trigger_error('The ' . __FUNCTION__ . ' function is deprecated in version 8.3.x and will be removed in 9.0.0. Use \Drupal::service(\'test_discovery\')->getTestClasses($extension, $types) instead.', E_USER_DEPRECATED);
   return \Drupal::service('test_discovery')->getTestClasses($extension, $types);
 }
 
@@ -597,6 +598,7 @@ function simpletest_test_get_all($extension = NULL, array $types = []) {
  *   \Drupal::service('test_discovery')->registerTestNamespaces() instead.
  */
 function simpletest_classloader_register() {
+  @trigger_error('The ' . __FUNCTION__ . ' function is deprecated in version 8.3.x and will be removed in 9.0.0. Use \Drupal::service(\'test_discovery\')->registerTestNamespaces() instead.', E_USER_DEPRECATED);
   \Drupal::service('test_discovery')->registerTestNamespaces();
 }
 
