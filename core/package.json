@@ -41,7 +41,7 @@
           "modules": false,
           "targets": {
             "browsers": [
-              "ie >= 9",
+              "ie >= 11",
               "edge >= 13",
               "firefox >= 5",
               "opera >= 12",
