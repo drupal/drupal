@@ -292,8 +292,7 @@ class SectionComponent {
   /**
    * Returns an array representation of the section component.
    *
-   * @internal
-   *   This is intended for use by a storage mechanism for section components.
+   * Only use this method if you are implementing custom storage for sections.
    *
    * @return array
    *   An array representation of the section component.
@@ -306,6 +305,26 @@ class SectionComponent {
       'additional' => $this->additional,
       'weight' => $this->getWeight(),
     ];
+  }
+
+  /**
+   * Creates an object from an array representation of the section component.
+   *
+   * Only use this method if you are implementing custom storage for sections.
+   *
+   * @param array $component
+   *   An array of section component data in the format returned by ::toArray().
+   *
+   * @return static
+   *   The section component object.
+   */
+  public static function fromArray(array $component) {
+    return (new static(
+      $component['uuid'],
+      $component['region'],
+      $component['configuration'],
+      $component['additional']
+    ))->setWeight($component['weight']);
   }
 
 }
