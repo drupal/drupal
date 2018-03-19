@@ -3634,6 +3634,21 @@ $connection->insert('field_config')
   'translatable' => '0',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '37',
+  'field_name' => 'field_float_list',
+  'type' => 'list_float',
+  'module' => 'list',
+  'active' => '1',
+  'storage_type' => 'field_sql_storage',
+  'storage_module' => 'field_sql_storage',
+  'storage_active' => '1',
+  'locked' => '0',
+  'data' => 'a:7:{s:12:"translatable";s:1:"0";s:12:"entity_types";a:0:{}s:8:"settings";a:2:{s:14:"allowed_values";a:2:{s:6:"3.1416";s:2:"Pi";s:6:"6.2832";s:3:"Tau";}s:23:"allowed_values_function";s:0:"";}s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:27:"field_data_field_float_list";a:1:{s:5:"value";s:22:"field_float_list_value";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:31:"field_revision_field_float_list";a:1:{s:5:"value";s:22:"field_float_list_value";}}}}}s:12:"foreign keys";a:0:{}s:7:"indexes";a:1:{s:5:"value";a:1:{i:0;s:5:"value";}}s:2:"id";s:2:"37";}',
+  'cardinality' => '1',
+  'translatable' => '0',
+  'deleted' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('field_config_instance', array(
@@ -4232,6 +4247,15 @@ $connection->insert('field_config_instance')
   'entity_type' => 'node',
   'bundle' => 'test_content_type',
   'data' => 'a:6:{s:5:"label";s:17:"Date without time";s:6:"widget";a:5:{s:6:"weight";s:1:"2";s:4:"type";s:11:"date_select";s:6:"module";s:4:"date";s:6:"active";i:1;s:8:"settings";a:6:{s:12:"input_format";s:13:"m/d/Y - H:i:s";s:19:"input_format_custom";s:0:"";s:10:"year_range";s:5:"-3:+3";s:9:"increment";s:2:"15";s:14:"label_position";s:5:"above";s:10:"text_parts";a:0:{}}}s:8:"settings";a:5:{s:13:"default_value";s:3:"now";s:18:"default_value_code";s:0:"";s:14:"default_value2";s:4:"same";s:19:"default_value_code2";s:0:"";s:18:"user_register_form";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"date_default";s:6:"weight";s:1:"3";s:8:"settings";a:5:{s:11:"format_type";s:4:"long";s:15:"multiple_number";s:0:"";s:13:"multiple_from";s:0:"";s:11:"multiple_to";s:0:"";s:6:"fromto";s:4:"both";}s:6:"module";s:4:"date";}}s:8:"required";i:0;s:11:"description";s:0:"";}',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '63',
+  'field_id' => '37',
+  'field_name' => 'field_float_list',
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'data' => 'a:7:{s:5:"label";s:10:"Float List";s:6:"widget";a:5:{s:6:"weight";s:2:"20";s:4:"type";s:14:"options_select";s:6:"module";s:7:"options";s:6:"active";i:1;s:8:"settings";a:0:{}}s:8:"settings";a:1:{s:18:"user_register_form";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"list_default";s:8:"settings";a:0:{}s:6:"module";s:4:"list";s:6:"weight";i:19;}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
   'deleted' => '0',
 ))
 ->execute();
@@ -5145,6 +5169,112 @@ $connection->insert('field_data_field_float')
   'language' => 'und',
   'delta' => '0',
   'field_float_value' => '1',
+))
+->execute();
+
+$connection->schema()->createTable('field_data_field_float_list', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_float_list_value' => array(
+      'type' => 'float',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_float_list_value' => array(
+      'field_float_list_value',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('field_data_field_float_list')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'field_float_list_value',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'und',
+  'delta' => '0',
+  'field_float_list_value' => '3.1416',
 ))
 ->execute();
 
@@ -8504,6 +8634,113 @@ $connection->insert('field_revision_field_float')
   'language' => 'und',
   'delta' => '0',
   'field_float_value' => '1',
+))
+->execute();
+
+$connection->schema()->createTable('field_revision_field_float_list', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_float_list_value' => array(
+      'type' => 'float',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'revision_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_float_list_value' => array(
+      'field_float_list_value',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('field_revision_field_float_list')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'field_float_list_value',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'und',
+  'delta' => '0',
+  'field_float_list_value' => '3.1416',
 ))
 ->execute();
 
