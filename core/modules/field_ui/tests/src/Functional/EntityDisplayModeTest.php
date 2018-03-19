@@ -19,13 +19,19 @@ class EntityDisplayModeTest extends BrowserTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['block', 'entity_test', 'field_ui'];
+  public static $modules = ['block', 'entity_test', 'field_ui', 'node'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    // Create a node type.
+    $this->drupalCreateContentType([
+      'type' => 'article',
+      'name' => 'Article',
+    ]);
 
     $this->drupalPlaceBlock('local_actions_block');
     $this->drupalPlaceBlock('page_title_block');
@@ -138,6 +144,64 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->assertRaw(t('Are you sure you want to delete the form mode %label?', ['%label' => $edit['label']]));
     $this->drupalPostForm(NULL, NULL, t('Delete'));
     $this->assertRaw(t('The form mode %label has been deleted.', ['%label' => $edit['label']]));
+  }
+
+  /**
+   * Tests if view modes appear in alphabetical order by visible name.
+   *
+   * The machine name should not be used for sorting.
+   *
+   * @see https://www.drupal.org/node/2858569
+   */
+  public function testAlphabeticalDisplaySettings() {
+    $this->drupalLogin($this->drupalCreateUser([
+      'access administration pages',
+      'administer content types',
+      'administer display modes',
+      'administer nodes',
+      'administer node fields',
+      'administer node display',
+      'administer node form display',
+      'view the administration theme',
+    ]));
+    $this->drupalGet('admin/structure/types/manage/article/display');
+    // Verify that the order of view modes is alphabetical by visible label.
+    // Since the default view modes all have machine names which coincide with
+    // the English labels, they should appear in alphabetical order, by default
+    // if viewing the site in English and if no changes have been made. We will
+    // verify this first.
+    $page_text = $this->getTextContent();
+    $start = strpos($page_text, 'view modes');
+    $pos = $start;
+    $list = ['Full content', 'RSS', 'Search index', 'Search result', 'Teaser'];
+    foreach ($list as $name) {
+      $new_pos = strpos($page_text, $name, $start);
+      $this->assertTrue($new_pos > $pos, 'Order of ' . $name . ' is correct on page');
+      $pos = $new_pos;
+    }
+    // Now that we have verified the original display order, we can change the
+    // label for one of the view modes. If we rename "Teaser" to "Breezer", it
+    // should appear as the first of the listed view modes:
+    // Set new values and enable test plugins.
+    $edit = [
+      'label' => 'Breezer',
+    ];
+    $this->drupalPostForm('admin/structure/display-modes/view/manage/node.teaser', $edit, 'Save');
+    $this->assertSession()->pageTextContains('Saved the Breezer view mode.');
+
+    // Re-open the display settings for the article content type and verify
+    // that changing "Teaser" to "Breezer" makes it appear before "Full
+    // content".
+    $this->drupalGet('admin/structure/types/manage/article/display');
+    $page_text = $this->getTextContent();
+    $start = strpos($page_text, 'view modes');
+    $pos = $start;
+    $list = ['Breezer', 'Full content'];
+    foreach ($list as $name) {
+      $new_pos = strpos($page_text, $name, $start);
+      $this->assertTrue($new_pos > $pos, 'Order of ' . $name . ' is correct on page');
+      $pos = $new_pos;
+    }
   }
 
 }
