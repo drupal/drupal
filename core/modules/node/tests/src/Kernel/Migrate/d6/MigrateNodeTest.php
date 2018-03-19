@@ -94,6 +94,10 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertCount(2, $node->field_company);
     $this->assertSame('Klingon Empire', $node->field_company[0]->entity->label());
     $this->assertSame('Romulan Empire', $node->field_company[1]->entity->label());
+    $this->assertCount(1, $node->field_company_2);
+    $this->assertSame('Klingon Empire', $node->field_company_2[0]->entity->label());
+    $this->assertCount(1, $node->field_company_3);
+    $this->assertSame('Romulan Empire', $node->field_company_3[0]->entity->label());
 
     // Test that user reference field values were migrated.
     $this->assertCount(1, $node->field_commander);
