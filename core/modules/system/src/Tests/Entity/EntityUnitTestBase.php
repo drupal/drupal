@@ -2,6 +2,8 @@
 
 namespace Drupal\system\Tests\Entity;
 
+@trigger_error(__FILE__ . ' is deprecated in Drupal 8.1.0 and will be removed before Drupal 9.0.0. Use \Drupal\KernelTests\Core\Entity\EntityKernelTestBase instead.', E_USER_DEPRECATED);
+
 use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\user\Entity\Role;
@@ -10,7 +12,7 @@ use Drupal\user\Entity\User;
 /**
  * Defines an abstract test base for entity unit tests.
  *
- * @deprecated in Drupal 8.1.x, will be removed before Drupal 8.2.x. Use
+ * @deprecated in Drupal 8.1.0, will be removed before Drupal 9.0.0. Use
  *   \Drupal\KernelTests\Core\Entity\EntityKernelTestBase instead.
  */
 abstract class EntityUnitTestBase extends KernelTestBase {

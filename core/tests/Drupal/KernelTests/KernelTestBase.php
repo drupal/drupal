@@ -1027,7 +1027,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * Test authors should follow the provided instructions and adjust their tests
    * accordingly.
    *
-   * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.2.0.
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    */
   public function __get($name) {
     if (in_array($name, [
