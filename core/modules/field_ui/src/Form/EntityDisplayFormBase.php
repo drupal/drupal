@@ -210,6 +210,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
         if ($enabled_displays = array_filter($this->getDisplayStatuses())) {
           $default = array_keys(array_intersect_key($display_mode_options, $enabled_displays));
         }
+        natcasesort($display_mode_options);
         $form['modes']['display_modes_custom'] = [
           '#type' => 'checkboxes',
           '#title' => $this->t('Use custom display settings for the following @display_context modes', ['@display_context' => $this->displayContext]),
