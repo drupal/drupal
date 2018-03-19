@@ -141,6 +141,7 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
     $this->assertComponent('node.test_content_type.default', 'field_term_entityreference', 'entity_reference_autocomplete_tags', 18);
     $this->assertComponent('node.test_content_type.default', 'field_text', 'string_textfield', 15);
     $this->assertComponent('node.test_content_type.default', 'field_text_list', 'options_select', 11);
+    $this->assertComponent('node.test_content_type.default', 'field_float_list', 'options_select', 20);
 
     $this->assertEntity('user.user.default', 'user', 'user');
     $this->assertComponent('user.user.default', 'field_file', 'file_generic', 8);

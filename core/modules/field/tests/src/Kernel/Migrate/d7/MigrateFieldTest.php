@@ -93,6 +93,7 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.taxonomy_forums', 'entity_reference', TRUE, 1);
     $this->assertEntity('node.field_text', 'string', TRUE, 1);
     $this->assertEntity('node.field_text_list', 'list_string', TRUE, 3);
+    $this->assertEntity('node.field_float_list', 'list_float', TRUE, 1);
     $this->assertEntity('node.field_boolean', 'boolean', TRUE, 1);
     $this->assertEntity('node.field_email', 'email', TRUE, -1);
     $this->assertEntity('node.field_phone', 'telephone', TRUE, 1);

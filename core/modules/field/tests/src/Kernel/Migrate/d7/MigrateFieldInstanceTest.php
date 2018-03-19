@@ -122,6 +122,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.test_content_type.field_link', 'Link', 'link', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_text_list', 'Text List', 'list_string', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_integer_list', 'Integer List', 'list_integer', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_float_list', 'Float List', 'list_float', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_long_text', 'Long text', 'text_with_summary', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_term_reference', 'Term Reference', 'entity_reference', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_text', 'Text', 'string', FALSE, FALSE);
