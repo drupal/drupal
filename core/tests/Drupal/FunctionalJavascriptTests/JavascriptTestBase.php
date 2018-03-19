@@ -92,11 +92,12 @@ abstract class JavascriptTestBase extends BrowserTestBase {
    * @param string $message
    *   Optional message to show alongside the assertion.
    *
-   * @deprecated in Drupal 8.1.x, will be removed before Drupal 8.3.x. Use
+   * @deprecated in Drupal 8.1.0, will be removed before Drupal 9.0.0. Use
    *   \Behat\Mink\Element\NodeElement::isVisible() instead.
    */
   protected function assertElementVisible($css_selector, $message = '') {
     $this->assertTrue($this->getSession()->getDriver()->isVisible($this->cssSelectToXpath($css_selector)), $message);
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 8.1.0 and will be removed in 9.0.0. Use \Behat\Mink\Element\NodeElement::isVisible() instead.', E_USER_DEPRECATED);
   }
 
   /**
@@ -107,11 +108,12 @@ abstract class JavascriptTestBase extends BrowserTestBase {
    * @param string $message
    *   Optional message to show alongside the assertion.
    *
-   * @deprecated in Drupal 8.1.x, will be removed before Drupal 8.3.x. Use
+   * @deprecated in Drupal 8.1.0, will be removed before Drupal 9.0.0. Use
    *   \Behat\Mink\Element\NodeElement::isVisible() instead.
    */
   protected function assertElementNotVisible($css_selector, $message = '') {
     $this->assertFalse($this->getSession()->getDriver()->isVisible($this->cssSelectToXpath($css_selector)), $message);
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 8.1.0 and will be removed in 9.0.0. Use \Behat\Mink\Element\NodeElement::isVisible() instead.', E_USER_DEPRECATED);
   }
 
   /**
