@@ -243,7 +243,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertNoFieldByXpath('//td', 'dotted.default', "No machine name found for deleted 'Default' entity.");
 
     // Confirm that the empty text is displayed.
-    $this->assertText('There is no Test configuration yet.');
+    $this->assertText('There are no test configuration entities yet.');
   }
 
   /**

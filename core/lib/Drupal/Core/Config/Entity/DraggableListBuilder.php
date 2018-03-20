@@ -107,7 +107,7 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
     $form[$this->entitiesKey] = [
       '#type' => 'table',
       '#header' => $this->buildHeader(),
-      '#empty' => t('There is no @label yet.', ['@label' => $this->entityType->getLabel()]),
+      '#empty' => t('There are no @label yet.', ['@label' => $this->entityType->getPluralLabel()]),
       '#tabledrag' => [
         [
           'action' => 'order',
