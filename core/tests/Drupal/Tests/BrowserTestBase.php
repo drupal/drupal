@@ -1054,7 +1054,20 @@ abstract class BrowserTestBase extends TestCase {
    *   The CSS selector identifying the element to click.
    */
   protected function click($css_selector) {
+    $starting_url = $this->getSession()->getCurrentUrl();
     $this->getSession()->getDriver()->click($this->cssSelectToXpath($css_selector));
+    // Log only for JavascriptTestBase tests because for Goutte we log with
+    // ::getResponseLogHandler.
+    if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
+      $out = $this->getSession()->getPage()->getContent();
+      $html_output =
+        'Clicked element with CSS selector: ' . $css_selector .
+        '<hr />Starting URL: ' . $starting_url .
+        '<hr />Ending URL: ' . $this->getSession()->getCurrentUrl();
+      $html_output .= '<hr />' . $out;
+      $html_output .= $this->getHtmlOutputHeaders();
+      $this->htmlOutput($html_output);
+    }
   }
 
   /**
@@ -1080,8 +1093,9 @@ abstract class BrowserTestBase extends TestCase {
    *
    * The link to the HTML output message will be printed by the results printer.
    *
-   * @param string $message
-   *   The HTML output message to be stored.
+   * @param string|null $message
+   *   (optional) The HTML output message to be stored. If not supplied the
+   *   current page content is used.
    *
    * @see \Drupal\Tests\Listeners\VerbosePrinter::printResult()
    */
@@ -1089,6 +1103,7 @@ abstract class BrowserTestBase extends TestCase {
     if (!$this->htmlOutputEnabled) {
       return;
     }
+    $message = $message ?: $this->getSession()->getPage()->getContent();
     $message = '<hr />ID #' . $this->htmlOutputCounter . ' (<a href="' . $this->htmlOutputClassName . '-' . ($this->htmlOutputCounter - 1) . '-' . $this->htmlOutputTestId . '.html">Previous</a> | <a href="' . $this->htmlOutputClassName . '-' . ($this->htmlOutputCounter + 1) . '-' . $this->htmlOutputTestId . '.html">Next</a>)<hr />' . $message;
     $html_output_filename = $this->htmlOutputClassName . '-' . $this->htmlOutputCounter . '-' . $this->htmlOutputTestId . '.html';
     file_put_contents($this->htmlOutputDirectory . '/' . $html_output_filename, $message);
