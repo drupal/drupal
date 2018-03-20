@@ -13,6 +13,13 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * @ContentEntityType(
  *   id = "contact_message",
  *   label = @Translation("Contact message"),
+ *   label_collection = @Translation("Contact messages"),
+ *   label_singular = @Translation("contact message"),
+ *   label_plural = @Translation("contact messages"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count contact message",
+ *     plural = "@count contact messages",
+ *   ),
  *   bundle_label = @Translation("Contact form"),
  *   handlers = {
  *     "access" = "Drupal\contact\ContactMessageAccessControlHandler",

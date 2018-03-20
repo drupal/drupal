@@ -15,6 +15,13 @@ use Drupal\field\FieldConfigInterface;
  * @ConfigEntityType(
  *   id = "field_config",
  *   label = @Translation("Field"),
+ *   label_collection = @Translation("Fields"),
+ *   label_singular = @Translation("field"),
+ *   label_plural = @Translation("fields"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count field",
+ *     plural = "@count fields",
+ *   ),
  *   handlers = {
  *     "access" = "Drupal\field\FieldConfigAccessControlHandler",
  *     "storage" = "Drupal\field\FieldConfigStorage"

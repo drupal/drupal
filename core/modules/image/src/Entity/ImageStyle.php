@@ -25,6 +25,13 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
  * @ConfigEntityType(
  *   id = "image_style",
  *   label = @Translation("Image style"),
+ *   label_collection = @Translation("Image styles"),
+ *   label_singular = @Translation("image style"),
+ *   label_plural = @Translation("image styles"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count image style",
+ *     plural = "@count image styles",
+ *   ),
  *   handlers = {
  *     "form" = {
  *       "add" = "Drupal\image\Form\ImageStyleAddForm",

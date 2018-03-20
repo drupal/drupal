@@ -244,7 +244,7 @@ class ContentEntityTest extends KernelTestBase {
     ];
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:user'));
     $user_source = $this->sourcePluginManager->createInstance('content_entity:user', $configuration, $migration);
-    $this->assertSame('user entities', $user_source->__toString());
+    $this->assertSame('users', $user_source->__toString());
     $this->assertEquals(1, $user_source->count());
     $ids = $user_source->getIds();
     $this->assertArrayHasKey('langcode', $ids);
@@ -279,7 +279,7 @@ class ContentEntityTest extends KernelTestBase {
     ];
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:file'));
     $file_source = $this->sourcePluginManager->createInstance('content_entity:file', $configuration, $migration);
-    $this->assertSame('file entities', $file_source->__toString());
+    $this->assertSame('files', $file_source->__toString());
     $this->assertEquals(1, $file_source->count());
     $ids = $file_source->getIds();
     $this->assertArrayHasKey('fid', $ids);
@@ -395,7 +395,7 @@ class ContentEntityTest extends KernelTestBase {
     ];
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:taxonomy_term'));
     $term_source = $this->sourcePluginManager->createInstance('content_entity:taxonomy_term', $configuration, $migration);
-    $this->assertSame('taxonomy term entities', $term_source->__toString());
+    $this->assertSame('taxonomy terms', $term_source->__toString());
     $this->assertEquals(2, $term_source->count());
     $ids = $term_source->getIds();
     $this->assertArrayHasKey('langcode', $ids);

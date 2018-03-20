@@ -78,15 +78,15 @@ class PrepareUninstallTest extends BrowserTestBase {
       $this->assertText($this->terms[$term_count - $i]->label());
     }
     $term_count = $term_count - 10;
-    $this->assertText("And $term_count more taxonomy term entities.");
+    $this->assertText("And $term_count more taxonomy terms.");
     $this->assertText('This action cannot be undone.');
     $this->assertText('Make a backup of your database if you want to be able to restore these items.');
-    $this->drupalPostForm(NULL, [], t('Delete all taxonomy term entities'));
+    $this->drupalPostForm(NULL, [], t('Delete all taxonomy terms'));
 
     // Check that we are redirected to the uninstall page and data has been
     // removed.
     $this->assertUrl('admin/modules/uninstall', []);
-    $this->assertText('All taxonomy term entities have been deleted.');
+    $this->assertText('All taxonomy terms have been deleted.');
 
     // Check that there is no more data to be deleted, Taxonomy is ready to be
     // uninstalled.

@@ -92,7 +92,7 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
     $session->fieldDisabled('type_settings[default_revision]');
 
     $this->drupalGet('admin/config/workflow/workflows/manage/test/type/node');
-    $session->pageTextContains('Select the content type entities for the Test workflow');
+    $session->pageTextContains('Select the content types for the Test workflow');
     foreach ($types as $type) {
       $session->pageTextContains($type->label());
     }

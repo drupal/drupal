@@ -19,6 +19,13 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  * @ContentEntityType(
  *   id = "menu_link_content",
  *   label = @Translation("Custom menu link"),
+ *   label_collection = @Translation("Custom menu links"),
+ *   label_singular = @Translation("custom menu link"),
+ *   label_plural = @Translation("custom menu links"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count custom menu link",
+ *     plural = "@count custom menu links",
+ *   ),
  *   handlers = {
  *     "storage" = "Drupal\Core\Entity\Sql\SqlContentEntityStorage",
  *     "storage_schema" = "Drupal\menu_link_content\MenuLinkContentStorageSchema",

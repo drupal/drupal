@@ -18,6 +18,13 @@ use Drupal\field\FieldStorageConfigInterface;
  * @ConfigEntityType(
  *   id = "field_storage_config",
  *   label = @Translation("Field storage"),
+ *   label_collection = @Translation("Field storages"),
+ *   label_singular = @Translation("field storage"),
+ *   label_plural = @Translation("field storages"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count field storage",
+ *     plural = "@count field storages",
+ *   ),
  *   handlers = {
  *     "access" = "Drupal\field\FieldStorageConfigAccessControlHandler",
  *     "storage" = "Drupal\field\FieldStorageConfigStorage"

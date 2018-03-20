@@ -19,6 +19,14 @@ use Drupal\views\ViewEntityInterface;
  * @ConfigEntityType(
  *   id = "view",
  *   label = @Translation("View", context = "View entity type"),
+ *   label_collection = @Translation("Views", context = "View entity type"),
+ *   label_singular = @Translation("view", context = "View entity type"),
+ *   label_plural = @Translation("views", context = "View entity type"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count view",
+ *     plural = "@count views",
+ *     context = "View entity type",
+ *   ),
  *   admin_permission = "administer views",
  *   entity_keys = {
  *     "id" = "id",

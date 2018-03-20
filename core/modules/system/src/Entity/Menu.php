@@ -11,6 +11,13 @@ use Drupal\system\MenuInterface;
  * @ConfigEntityType(
  *   id = "menu",
  *   label = @Translation("Menu"),
+ *   label_collection = @Translation("Menus"),
+ *   label_singular = @Translation("menu"),
+ *   label_plural = @Translation("menus"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count menu",
+ *     plural = "@count menus",
+ *   ),
  *   handlers = {
  *     "access" = "Drupal\system\MenuAccessControlHandler"
  *   },

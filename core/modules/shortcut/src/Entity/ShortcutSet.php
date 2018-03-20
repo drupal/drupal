@@ -12,6 +12,13 @@ use Drupal\shortcut\ShortcutSetInterface;
  * @ConfigEntityType(
  *   id = "shortcut_set",
  *   label = @Translation("Shortcut set"),
+ *   label_collection = @Translation("Shortcut sets"),
+ *   label_singular = @Translation("shortcut set"),
+ *   label_plural = @Translation("shortcut sets"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count shortcut set",
+ *     plural = "@count shortcut sets",
+ *   ),
  *   handlers = {
  *     "storage" = "Drupal\shortcut\ShortcutSetStorage",
  *     "access" = "Drupal\shortcut\ShortcutSetAccessControlHandler",

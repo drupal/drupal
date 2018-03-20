@@ -15,6 +15,13 @@ use Drupal\taxonomy\TermInterface;
  * @ContentEntityType(
  *   id = "taxonomy_term",
  *   label = @Translation("Taxonomy term"),
+ *   label_collection = @Translation("Taxonomy terms"),
+ *   label_singular = @Translation("taxonomy term"),
+ *   label_plural = @Translation("taxonomy terms"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count taxonomy term",
+ *     plural = "@count taxonomy terms",
+ *   ),
  *   bundle_label = @Translation("Vocabulary"),
  *   handlers = {
  *     "storage" = "Drupal\taxonomy\TermStorage",

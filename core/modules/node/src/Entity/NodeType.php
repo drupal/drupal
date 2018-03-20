@@ -12,6 +12,13 @@ use Drupal\node\NodeTypeInterface;
  * @ConfigEntityType(
  *   id = "node_type",
  *   label = @Translation("Content type"),
+ *   label_collection = @Translation("Content types"),
+ *   label_singular = @Translation("content type"),
+ *   label_plural = @Translation("content types"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count content type",
+ *     plural = "@count content types",
+ *   ),
  *   handlers = {
  *     "access" = "Drupal\node\NodeTypeAccessControlHandler",
  *     "form" = {

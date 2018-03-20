@@ -15,6 +15,13 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "block_content",
  *   label = @Translation("Custom block"),
+ *   label_collection = @Translation("Custom blocks"),
+ *   label_singular = @Translation("custom block"),
+ *   label_plural = @Translation("custom blocks"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count custom block",
+ *     plural = "@count custom blocks",
+ *   ),
  *   bundle_label = @Translation("Custom block type"),
  *   handlers = {
  *     "storage" = "Drupal\Core\Entity\Sql\SqlContentEntityStorage",

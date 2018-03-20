@@ -16,6 +16,13 @@ use Drupal\Core\Url;
  * @ContentEntityType(
  *   id = "aggregator_item",
  *   label = @Translation("Aggregator feed item"),
+ *   label_collection = @Translation("Aggregator feed items"),
+ *   label_singular = @Translation("aggregator feed item"),
+ *   label_plural = @Translation("aggregator feed items"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count aggregator feed item",
+ *     plural = "@count aggregator feed items",
+ *   ),
  *   handlers = {
  *     "storage" = "Drupal\aggregator\ItemStorage",
  *     "storage_schema" = "Drupal\aggregator\ItemStorageSchema",

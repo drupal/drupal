@@ -16,6 +16,13 @@ use Drupal\language\ConfigurableLanguageInterface;
  * @ConfigEntityType(
  *   id = "configurable_language",
  *   label = @Translation("Language"),
+ *   label_collection = @Translation("Languages"),
+ *   label_singular = @Translation("language"),
+ *   label_plural = @Translation("languages"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count language",
+ *     plural = "@count languages",
+ *   ),
  *   handlers = {
  *     "list_builder" = "Drupal\language\LanguageListBuilder",
  *     "access" = "Drupal\language\LanguageAccessControlHandler",

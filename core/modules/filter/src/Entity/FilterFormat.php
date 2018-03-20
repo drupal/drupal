@@ -16,6 +16,13 @@ use Drupal\filter\Plugin\FilterInterface;
  * @ConfigEntityType(
  *   id = "filter_format",
  *   label = @Translation("Text format"),
+ *   label_collection = @Translation("Text formats"),
+ *   label_singular = @Translation("text format"),
+ *   label_plural = @Translation("text formats"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count text format",
+ *     plural = "@count text formats",
+ *   ),
  *   handlers = {
  *     "form" = {
  *       "add" = "Drupal\filter\FilterFormatAddForm",

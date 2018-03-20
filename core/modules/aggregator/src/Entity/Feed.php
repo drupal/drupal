@@ -14,6 +14,13 @@ use Drupal\aggregator\FeedInterface;
  * @ContentEntityType(
  *   id = "aggregator_feed",
  *   label = @Translation("Aggregator feed"),
+ *   label_collection = @Translation("Aggregator feeds"),
+ *   label_singular = @Translation("aggregator feed"),
+ *   label_plural = @Translation("aggregator feeds"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count aggregator feed",
+ *     plural = "@count aggregator feeds",
+ *   ),
  *   handlers = {
  *     "storage" = "Drupal\aggregator\FeedStorage",
  *     "storage_schema" = "Drupal\aggregator\FeedStorageSchema",

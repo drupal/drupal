@@ -11,6 +11,13 @@ use Drupal\editor\EditorInterface;
  * @ConfigEntityType(
  *   id = "editor",
  *   label = @Translation("Text Editor"),
+ *   label_collection = @Translation("Text Editors"),
+ *   label_singular = @Translation("text editor"),
+ *   label_plural = @Translation("text editors"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count text editor",
+ *     plural = "@count text editors",
+ *   ),
  *   handlers = {
  *     "access" = "Drupal\editor\EditorAccessControlHandler",
  *   },

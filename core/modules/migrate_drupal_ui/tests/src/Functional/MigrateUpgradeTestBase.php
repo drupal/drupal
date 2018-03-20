@@ -209,11 +209,11 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   protected function assertIdConflict(WebAssert $session) {
     $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
     $session->pageTextContains('There is conflicting content of these types:');
-    $session->pageTextContains('custom block entities');
-    $session->pageTextContains('custom menu link entities');
-    $session->pageTextContains('file entities');
-    $session->pageTextContains('taxonomy term entities');
-    $session->pageTextContains('user entities');
+    $session->pageTextContains('custom blocks');
+    $session->pageTextContains('custom menu links');
+    $session->pageTextContains('files');
+    $session->pageTextContains('taxonomy terms');
+    $session->pageTextContains('users');
     $session->pageTextContains('comments');
     $session->pageTextContains('content item revisions');
     $session->pageTextContains('content items');

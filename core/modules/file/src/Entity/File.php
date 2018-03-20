@@ -18,6 +18,13 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "file",
  *   label = @Translation("File"),
+ *   label_collection = @Translation("Files"),
+ *   label_singular = @Translation("file"),
+ *   label_plural = @Translation("files"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count file",
+ *     plural = "@count files",
+ *   ),
  *   handlers = {
  *     "storage" = "Drupal\file\FileStorage",
  *     "storage_schema" = "Drupal\file\FileStorageSchema",

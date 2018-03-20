@@ -12,6 +12,13 @@ use Drupal\Core\Url;
  * @ConfigEntityType(
  *   id = "contact_form",
  *   label = @Translation("Contact form"),
+ *   label_collection = @Translation("Contact forms"),
+ *   label_singular = @Translation("contact form"),
+ *   label_plural = @Translation("contact forms"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count contact form",
+ *     plural = "@count contact forms",
+ *   ),
  *   handlers = {
  *     "access" = "Drupal\contact\ContactFormAccessControlHandler",
  *     "list_builder" = "Drupal\contact\ContactFormListBuilder",

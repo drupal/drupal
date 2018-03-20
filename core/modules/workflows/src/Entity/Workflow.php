@@ -16,6 +16,12 @@ use Drupal\workflows\WorkflowInterface;
  *   id = "workflow",
  *   label = @Translation("Workflow"),
  *   label_collection = @Translation("Workflows"),
+ *   label_singular = @Translation("workflow"),
+ *   label_plural = @Translation("workflows"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count workflow",
+ *     plural = "@count workflows",
+ *   ),
  *   handlers = {
  *     "access" = "Drupal\workflows\WorkflowAccessControlHandler",
  *     "list_builder" = "Drupal\workflows\WorkflowListBuilder",

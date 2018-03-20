@@ -17,6 +17,13 @@ use Drupal\Core\Entity\EntityStorageInterface;
  * @ConfigEntityType(
  *   id = "block",
  *   label = @Translation("Block"),
+ *   label_collection = @Translation("Blocks"),
+ *   label_singular = @Translation("block"),
+ *   label_plural = @Translation("blocks"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count block",
+ *     plural = "@count blocks",
+ *   ),
  *   handlers = {
  *     "access" = "Drupal\block\BlockAccessControlHandler",
  *     "view_builder" = "Drupal\block\BlockViewBuilder",

@@ -22,6 +22,13 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "user",
  *   label = @Translation("User"),
+ *   label_collection = @Translation("Users"),
+ *   label_singular = @Translation("user"),
+ *   label_plural = @Translation("users"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count user",
+ *     plural = "@count users",
+ *   ),
  *   handlers = {
  *     "storage" = "Drupal\user\UserStorage",
  *     "storage_schema" = "Drupal\user\UserStorageSchema",

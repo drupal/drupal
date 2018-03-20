@@ -13,6 +13,13 @@ use Drupal\rest\RestResourceConfigInterface;
  * @ConfigEntityType(
  *   id = "rest_resource_config",
  *   label = @Translation("REST resource configuration"),
+ *   label_collection = @Translation("REST resource configurations"),
+ *   label_singular = @Translation("REST resource configuration"),
+ *   label_plural = @Translation("REST resource configurations"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count REST resource configuration",
+ *     plural = "@count REST resource configurations",
+ *   ),
  *   config_prefix = "resource",
  *   admin_permission = "administer rest resources",
  *   label_callback = "getLabelFromPlugin",
