@@ -320,10 +320,20 @@ class Drupal {
    * One common usecase is to provide a class which contains the actual code
    * of a hook implementation, without having to create a service.
    *
-   * @return \Drupal\Core\DependencyInjection\ClassResolverInterface
-   *   The class resolver.
+   * @param string $class
+   *   (optional) A class name to instantiate.
+   *
+   * @return \Drupal\Core\DependencyInjection\ClassResolverInterface|object
+   *   The class resolver or if $class is provided, a class instance with a
+   *   given class definition.
+   *
+   * @throws \InvalidArgumentException
+   *   If $class does not exist.
    */
-  public static function classResolver() {
+  public static function classResolver($class = NULL) {
+    if ($class) {
+      return static::getContainer()->get('class_resolver')->getInstanceFromDefinition($class);
+    }
     return static::getContainer()->get('class_resolver');
   }
 

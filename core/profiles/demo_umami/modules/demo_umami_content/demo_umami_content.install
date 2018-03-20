@@ -12,7 +12,7 @@ use Drupal\demo_umami_content\InstallHelper;
  */
 function demo_umami_content_install() {
   if (!\Drupal::service('config.installer')->isSyncing()) {
-    \Drupal::classResolver()->getInstanceFromDefinition(InstallHelper::class)->importContent();
+    \Drupal::classResolver(InstallHelper::class)->importContent();
   }
 }
 
@@ -21,6 +21,6 @@ function demo_umami_content_install() {
  */
 function demo_umami_content_uninstall() {
   if (!\Drupal::service('config.installer')->isSyncing()) {
-    \Drupal::classResolver()->getInstanceFromDefinition(InstallHelper::class)->deleteImportedContent();
+    \Drupal::classResolver(InstallHelper::class)->deleteImportedContent();
   }
 }
