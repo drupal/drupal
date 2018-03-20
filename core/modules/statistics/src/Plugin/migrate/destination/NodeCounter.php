@@ -81,15 +81,24 @@ class NodeCounter extends DestinationBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function import(Row $row, array $old_destination_id_values = []) {
+    $nid = $row->getDestinationProperty('nid');
+    $daycount = $row->getDestinationProperty('daycount');
+    $totalcount = $row->getDestinationProperty('totalcount');
+    $timestamp = $row->getDestinationProperty('timestamp');
+
     $this->connection
-      ->insert('node_counter')
+      ->merge('node_counter')
+      ->key('nid', $nid)
       ->fields([
-        'nid' => $row->getDestinationProperty('nid'),
-        'daycount' => $row->getDestinationProperty('daycount'),
-        'totalcount' => $row->getDestinationProperty('totalcount'),
-        'timestamp' => $row->getDestinationProperty('timestamp'),
+        'daycount' => $daycount,
+        'totalcount' => $totalcount,
+        'timestamp' => $timestamp,
       ])
+      ->expression('daycount', 'daycount + :daycount', [':daycount' => $daycount])
+      ->expression('totalcount', 'totalcount + :totalcount', [':totalcount' => $totalcount])
+      ->expression('timestamp', 'CASE WHEN timestamp > :timestamp THEN timestamp ELSE :timestamp END', [':timestamp' => $timestamp])
       ->execute();
+
     return [$row->getDestinationProperty('nid')];
   }
 
