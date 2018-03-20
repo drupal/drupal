@@ -183,7 +183,7 @@ class ViewsExposedForm extends FormBase {
           //   https://www.drupal.org/node/342316 is resolved.
           $checked = Checkboxes::getCheckedCheckboxes($value);
           foreach ($checked as $option_id) {
-            $view->exposed_raw_input[$option_id] = $value[$option_id];
+            $view->exposed_raw_input[$key][] = $value[$option_id];
           }
         }
         else {
