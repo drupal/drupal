@@ -57,6 +57,17 @@ class UninstallTest extends BrowserTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->assertTitle(t('Uninstall') . ' | Drupal');
 
+    foreach (\Drupal::service('extension.list.module')->getAllInstalledInfo() as $module => $info) {
+      $field_name = "uninstall[$module]";
+      if (!empty($info['required'])) {
+        // A required module should not be listed on the uninstall page.
+        $this->assertSession()->fieldNotExists($field_name);
+      }
+      else {
+        $this->assertSession()->fieldExists($field_name);
+      }
+    }
+
     // Be sure labels are rendered properly.
     // @see regression https://www.drupal.org/node/2512106
     $this->assertRaw('<label for="edit-uninstall-node" class="module-name table-filter-text-source">Node</label>');
