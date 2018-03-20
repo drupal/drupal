@@ -43635,6 +43635,30 @@ $connection->insert('node_counter')
   'timestamp' => '1478755314',
 ))
 ->values(array(
+  'nid' => '10',
+  'totalcount' => '5',
+  'daycount' => '1',
+  'timestamp' => '1521137459',
+))
+->values(array(
+  'nid' => '11',
+  'totalcount' => '3',
+  'daycount' => '1',
+  'timestamp' => '1521137463',
+))
+->values(array(
+  'nid' => '12',
+  'totalcount' => '3',
+  'daycount' => '0',
+  'timestamp' => '1521137469',
+))
+->values(array(
+  'nid' => '13',
+  'totalcount' => '2',
+  'daycount' => '1',
+  'timestamp' => '1521137470',
+))
+->values(array(
   'nid' => '14',
   'totalcount' => '1',
   'daycount' => '1',

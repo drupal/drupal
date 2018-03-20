@@ -15,6 +15,8 @@ class MigrateNodeCounterTest extends MigrateDrupal7TestBase {
    * {@inheritdoc}
    */
   public static $modules = [
+    'content_translation',
+    'language',
     'menu_ui',
     'node',
     'statistics',
@@ -29,14 +31,18 @@ class MigrateNodeCounterTest extends MigrateDrupal7TestBase {
 
     $this->installEntitySchema('node');
     $this->installConfig('node');
+    $this->installSchema('node', ['node_access']);
     $this->installSchema('statistics', ['node_counter']);
 
     $this->executeMigrations([
+      'language',
       'd7_user_role',
       'd7_user',
       'd7_node_type',
+      'd7_language_content_settings',
       'd7_node',
-      'statistics_node_counter'
+      'd7_node_translation',
+      'statistics_node_counter',
     ]);
   }
 
@@ -47,6 +53,11 @@ class MigrateNodeCounterTest extends MigrateDrupal7TestBase {
     $this->assertNodeCounter(1, 2, 0, 1421727536);
     $this->assertNodeCounter(2, 1, 0, 1471428059);
     $this->assertNodeCounter(4, 1, 1, 1478755275);
+
+    // Tests that translated node counts include all translation counts.
+    $this->executeMigration('statistics_node_translation_counter');
+    $this->assertNodeCounter(2, 2, 0, 1471428153);
+    $this->assertNodeCounter(4, 2, 2, 1478755314);
   }
 
   /**
