@@ -47,7 +47,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase implem
   protected $entityTypeManager;
 
   /**
-   * The entity type manager.
+   * The entity display repository.
    *
    * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
    */
