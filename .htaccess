@@ -34,6 +34,11 @@ DirectoryIndex index.php index.html index.htm
   php_flag mbstring.encoding_translation    off
 </IfModule>
 
+<IfModule mod_php7.c>
+  php_value mbstring.http_input             pass
+  php_value mbstring.http_output            pass
+</IfModule>
+
 # Requires mod_expires to be enabled.
 <IfModule mod_expires.c>
   # Enable expirations.
