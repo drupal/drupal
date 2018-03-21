@@ -336,10 +336,10 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
         $merge_other = TRUE;
       }
 
-      if ($this->isForbidden() && $this instanceof AccessResultReasonInterface) {
+      if ($this->isForbidden() && $this instanceof AccessResultReasonInterface && !is_null($this->getReason())) {
         $result->setReason($this->getReason());
       }
-      elseif ($other->isForbidden() && $other instanceof AccessResultReasonInterface) {
+      elseif ($other->isForbidden() && $other instanceof AccessResultReasonInterface && !is_null($other->getReason())) {
         $result->setReason($other->getReason());
       }
     }
@@ -353,14 +353,13 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
       $result = static::neutral();
       if (!$this->isNeutral() || ($this->getCacheMaxAge() === 0 && $other->isNeutral()) || ($this->getCacheMaxAge() !== 0 && $other instanceof CacheableDependencyInterface && $other->getCacheMaxAge() !== 0)) {
         $merge_other = TRUE;
-        if ($other instanceof AccessResultReasonInterface) {
-          $result->setReason($other->getReason());
-        }
       }
-      else {
-        if ($this instanceof AccessResultReasonInterface) {
-          $result->setReason($this->getReason());
-        }
+
+      if ($this instanceof AccessResultReasonInterface && !is_null($this->getReason())) {
+        $result->setReason($this->getReason());
+      }
+      elseif ($other instanceof AccessResultReasonInterface && !is_null($other->getReason())) {
+        $result->setReason($other->getReason());
       }
     }
     $result->inheritCacheability($this);
