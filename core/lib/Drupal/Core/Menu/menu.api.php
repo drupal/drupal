@@ -302,10 +302,12 @@ function hook_menu_links_discovered_alter(&$links) {
  *   as described above.
  * @param string $route_name
  *   The route name of the page.
+ * @param \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability
+ *   The cacheability metadata for the current route's local tasks.
  *
  * @ingroup menu
  */
-function hook_menu_local_tasks_alter(&$data, $route_name) {
+function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\RefinableCacheableDependencyInterface &$cacheability) {
 
   // Add a tab linking to node/add to all pages.
   $data['tabs'][0]['node.add_page'] = [
@@ -320,6 +322,8 @@ function hook_menu_local_tasks_alter(&$data, $route_name) {
           ],
       ],
   ];
+  // The tab we're adding is dependent on a user's access to add content.
+  $cacheability->addCacheTags(['user.permissions']);
 }
 
 /**
