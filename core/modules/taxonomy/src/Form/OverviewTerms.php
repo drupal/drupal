@@ -241,6 +241,11 @@ class OverviewTerms extends FormBase {
     $form['terms'] = [
       '#type' => 'table',
       '#empty' => $empty,
+      '#header' => [
+        'term' => $this->t('Name'),
+        'operations' => $this->t('Operations'),
+        'weight' => $this->t('Weight'),
+      ],
       '#attributes' => [
         'id' => 'taxonomy',
       ],
@@ -251,6 +256,11 @@ class OverviewTerms extends FormBase {
     // all terms.
     $change_weight_access = AccessResult::allowed();
     foreach ($current_page as $key => $term) {
+      $form['terms'][$key] = [
+        'term' => [],
+        'operations' => [],
+        'weight' => [],
+      ];
       /** @var $term \Drupal\Core\Entity\EntityInterface */
       $term = $this->entityManager->getTranslationFromContext($term);
       $form['terms'][$key]['#term'] = $term;
@@ -344,11 +354,8 @@ class OverviewTerms extends FormBase {
       $row_position++;
     }
 
-    $form['terms']['#header'] = [$this->t('Name')];
-
     $this->renderer->addCacheableDependency($form['terms'], $change_weight_access);
     if ($change_weight_access->isAllowed()) {
-      $form['terms']['#header'][] = $this->t('Weight');
       if ($parent_fields) {
         $form['terms']['#tabledrag'][] = [
           'action' => 'match',
@@ -376,8 +383,6 @@ class OverviewTerms extends FormBase {
         'group' => 'term-weight',
       ];
     }
-
-    $form['terms']['#header'][] = $this->t('Operations');
 
     if (($taxonomy_vocabulary->getHierarchy() !== VocabularyInterface::HIERARCHY_MULTIPLE && count($tree) > 1) && $change_weight_access->isAllowed()) {
       $form['actions'] = ['#type' => 'actions', '#tree' => FALSE];
