@@ -65,8 +65,13 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
       'configurable_language' => 4,
       'contact_form' => 3,
       'editor' => 2,
+<<<<<<< HEAD
       'field_config' => 64,
       'field_storage_config' => 47,
+=======
+      'field_config' => 63,
+      'field_storage_config' => 46,
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       'file' => 3,
       'filter_format' => 7,
       'image_style' => 6,
@@ -85,7 +90,11 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
       'tour' => 4,
       'user' => 4,
       'user_role' => 3,
+<<<<<<< HEAD
       'menu_link_content' => 8,
+=======
+      'menu_link_content' => 7,
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       'view' => 16,
       'date_format' => 11,
       'entity_form_display' => 17,

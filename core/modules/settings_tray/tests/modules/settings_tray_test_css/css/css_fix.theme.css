@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 .dialog-off-canvas-main-canvas.js-settings-tray-edit-mode a,
 .dialog-off-canvas-main-canvas.js-settings-tray-edit-mode input {
+=======
+.dialog-off-canvas__main-canvas.js-settings-tray-edit-mode a,
+.dialog-off-canvas__main-canvas.js-settings-tray-edit-mode input {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   pointer-events: inherit !important;
 }
 /**

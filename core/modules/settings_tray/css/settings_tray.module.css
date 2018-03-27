@@ -14,10 +14,18 @@
   float: right;
 }
 
+<<<<<<< HEAD
 .dialog-off-canvas-main-canvas.js-settings-tray-edit-mode a,
 .dialog-off-canvas-main-canvas.js-settings-tray-edit-mode input {
   pointer-events: none;
 }
 .dialog-off-canvas-main-canvas.js-settings-tray-edit-mode .contextual-links a {
+=======
+.dialog-off-canvas__main-canvas.js-settings-tray-edit-mode a,
+.dialog-off-canvas__main-canvas.js-settings-tray-edit-mode input {
+  pointer-events: none;
+}
+.dialog-off-canvas__main-canvas.js-settings-tray-edit-mode .contextual-links a {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   pointer-events: inherit;
 }

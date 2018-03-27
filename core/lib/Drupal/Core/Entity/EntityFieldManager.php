@@ -223,6 +223,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     }
 
     // Make sure that revisionable entity types are correctly defined.
+<<<<<<< HEAD
     if ($entity_type->isRevisionable()) {
       // Disable the BC layer to prevent a recursion, this only needs the
       // revision_default key that is always set.
@@ -238,6 +239,8 @@ class EntityFieldManager implements EntityFieldManagerInterface {
 
     // Make sure that revisionable and translatable entity types are correctly
     // defined.
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     if ($entity_type->isRevisionable() && $entity_type->isTranslatable()) {
       // The 'revision_translation_affected' field should always be defined.
       // This field has been added unconditionally in Drupal 8.4.0 and it is

@@ -826,6 +826,7 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
+<<<<<<< HEAD
    * Tests setting the default time for date-only objects.
    */
   public function testDefaultDateTime() {
@@ -838,6 +839,8 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    * Tests that object methods are chainable.
    *
    * @covers ::__call
@@ -880,6 +883,7 @@ class DateTimePlusTest extends TestCase {
    * @covers ::__call
    */
   public function testChainableNonCallable() {
+<<<<<<< HEAD
     if (method_exists($this, 'expectException')) {
       $this->expectException(\BadMethodCallException::class);
       $this->expectExceptionMessage('Call to undefined method Drupal\Component\Datetime\DateTimePlus::nonexistent()');
@@ -887,6 +891,9 @@ class DateTimePlusTest extends TestCase {
     else {
       $this->setExpectedException(\BadMethodCallException::class, 'Call to undefined method Drupal\Component\Datetime\DateTimePlus::nonexistent()');
     }
+=======
+    $this->setExpectedException(\BadMethodCallException::class, 'Call to undefined method Drupal\Component\Datetime\DateTimePlus::nonexistent()');
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $date = new DateTimePlus('now', 'Australia/Sydney');
     $date->setTimezone(new \DateTimeZone('America/New_York'))->nonexistent();
   }

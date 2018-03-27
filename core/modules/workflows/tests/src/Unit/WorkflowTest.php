@@ -223,6 +223,7 @@ class WorkflowTest extends UnitTestCase {
     $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->getTypePlugin()->setStateWeight('draft', 10);
+<<<<<<< HEAD
   }
 
   /**
@@ -233,6 +234,8 @@ class WorkflowTest extends UnitTestCase {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->getTypePlugin()->addState('published', 'Published');
     $workflow->getTypePlugin()->setStateWeight('published', 'foo');
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
   /**
@@ -564,6 +567,7 @@ class WorkflowTest extends UnitTestCase {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->getTypePlugin()->addState('published', 'Published');
     $workflow->getTypePlugin()->setTransitionWeight('draft-published', 10);
+<<<<<<< HEAD
   }
 
   /**
@@ -575,6 +579,8 @@ class WorkflowTest extends UnitTestCase {
     $workflow->getTypePlugin()->addState('published', 'Published');
     $workflow->getTypePlugin()->addTransition('publish', 'Publish', [], 'published');
     $workflow->getTypePlugin()->setTransitionWeight('publish', 'foo');
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
   /**

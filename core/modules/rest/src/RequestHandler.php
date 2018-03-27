@@ -115,6 +115,7 @@ class RequestHandler implements ContainerInjectionInterface {
     return $method;
   }
 
+<<<<<<< HEAD
   /**
    * Deserializes request body, if any.
    *
@@ -135,6 +136,13 @@ class RequestHandler implements ContainerInjectionInterface {
    *   Thrown if the request body cannot be denormalized.
    */
   protected function deserialize(RouteMatchInterface $route_match, Request $request, ResourceInterface $resource) {
+=======
+    $resource_config_id = $route_match->getRouteObject()->getDefault('_rest_resource_config');
+    /** @var \Drupal\rest\RestResourceConfigInterface $resource_config */
+    $resource_config = $this->resourceStorage->load($resource_config_id);
+    $resource = $resource_config->getResourcePlugin();
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     // Deserialize incoming data if available.
     $received = $request->getContent();
     $unserialized = NULL;

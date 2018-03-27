@@ -5,7 +5,11 @@
  * @private
  */
 
+<<<<<<< HEAD:core/modules/settings_tray/js/settings_tray.es6.js
 (($, Drupal) => {
+=======
+(function ($, Drupal) {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/settings_tray/js/settings_tray.es6.js
   const blockConfigureSelector = '[data-settings-tray-edit]';
   const toggleEditSelector = '[data-drupal-settingstray="toggle"]';
   const itemsToToggleSelector = '[data-off-canvas-main-canvas], #toolbar-bar, [data-drupal-settingstray="editable"] a, [data-drupal-settingstray="editable"] button';
@@ -81,10 +85,16 @@
       if ($editables.length) {
         // Use event capture to prevent clicks on links.
         document.querySelector('[data-off-canvas-main-canvas]').addEventListener('click', preventClick, true);
+<<<<<<< HEAD:core/modules/settings_tray/js/settings_tray.es6.js
         /**
          * When a click occurs try and find the settings-tray edit link
          * and click it.
          */
+=======
+
+        // When a click occurs try and find the settings-tray edit link
+        // and click it.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/settings_tray/js/settings_tray.es6.js
         $editables
           .not(contextualItemsSelector)
           .on('click.settingstray', (e) => {
@@ -150,6 +160,7 @@
   }
 
   /**
+<<<<<<< HEAD:core/modules/settings_tray/js/settings_tray.es6.js
    * Prepares Ajax links to work with off-canvas and Settings Tray module.
    */
   function prepareAjaxLinks() {
@@ -175,6 +186,8 @@
   }
 
   /**
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/settings_tray/js/settings_tray.es6.js
    * Reacts to contextual links being added.
    *
    * @param {jQuery.Event} event
@@ -185,11 +198,14 @@
    * @listens event:drupalContextualLinkAdded
    */
   $(document).on('drupalContextualLinkAdded', (event, data) => {
+<<<<<<< HEAD:core/modules/settings_tray/js/settings_tray.es6.js
     /**
      * When contextual links are add we need to set extra properties on the
      * instances in Drupal.ajax.instances for them to work with Edit Mode.
      */
     prepareAjaxLinks();
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/settings_tray/js/settings_tray.es6.js
 
     // When the first contextual link is added to the page set Edit Mode.
     $('body').once('settings_tray.edit_mode_init').each(() => {
@@ -200,6 +216,15 @@
     });
 
     /**
+<<<<<<< HEAD:core/modules/settings_tray/js/settings_tray.es6.js
+=======
+     * Bind Ajax behaviors to all items showing the class.
+     * @todo Fix contextual links to work with use-ajax links in
+     * https://www.drupal.org/node/2764931.
+     */
+    Drupal.attachBehaviors(data.$el[0]);
+    /**
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/settings_tray/js/settings_tray.es6.js
      * Bind a listener to all 'Quick edit' links for blocks. Click "Edit"
      * button in toolbar to force Contextual Edit which starts Settings Tray
      * edit mode also.
@@ -238,6 +263,24 @@
   Drupal.behaviors.toggleEditMode = {
     attach() {
       $(toggleEditSelector).once('settingstray').on('click.settingstray', toggleEditMode);
+<<<<<<< HEAD:core/modules/settings_tray/js/settings_tray.es6.js
+=======
+      // Find all Ajax instances that use the 'off_canvas' renderer.
+      Drupal.ajax.instances
+        // If there is an element and the renderer is 'off_canvas' then we want
+        // to add our changes.
+        .filter(instance => instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas')
+        // Loop through all Ajax instances that use the 'off_canvas' renderer to
+        // set active editable ID.
+        .forEach((instance) => {
+          // Check to make sure existing dialogOptions aren't overridden.
+          if (!('dialogOptions' in instance.options.data)) {
+            instance.options.data.dialogOptions = {};
+          }
+          instance.options.data.dialogOptions.settingsTrayActiveEditableId = $(instance.element).parents('.settings-tray-editable').attr('id');
+          instance.progress = { type: 'fullscreen' };
+        });
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/settings_tray/js/settings_tray.es6.js
     },
   };
 

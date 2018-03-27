@@ -1,0 +1,16 @@
+id: migration_provider_test
+label: Missing source and destination provider
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - site_offline_message
+# Do not add a provider for the test.
+process:
+  message: site_offline_message
+destination:
+  plugin: config
+# An empty config_name will not have a destination provider.
+  config_name:

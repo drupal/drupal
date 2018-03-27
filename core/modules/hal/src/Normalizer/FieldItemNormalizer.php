@@ -92,7 +92,11 @@ class FieldItemNormalizer extends NormalizerBase {
     // We normalize each individual property, so each can do their own casting,
     // if needed.
     /** @var \Drupal\Core\TypedData\TypedDataInterface $property */
+<<<<<<< HEAD
     foreach (TypedDataInternalPropertiesHelper::getNonInternalProperties($field_item) as $property_name => $property) {
+=======
+    foreach ($field_item as $property_name => $property) {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       $normalized[$property_name] = $this->serializer->normalize($property, $format, $context);
     }
 

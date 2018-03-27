@@ -5,6 +5,7 @@
  * Helper module for the Content Translation tests.
  */
 
+<<<<<<< HEAD
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -38,6 +39,9 @@ function content_translation_test_entity_access(EntityInterface $entity, $operat
     return AccessResult::neutral();
   }
 }
+=======
+use Drupal\Core\Form\FormStateInterface;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter().

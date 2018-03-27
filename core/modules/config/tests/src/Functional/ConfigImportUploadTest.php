@@ -45,7 +45,11 @@ class ConfigImportUploadTest extends BrowserTestBase {
 
     // Attempt to upload a non-tar file.
     $text_file = $this->getTestFiles('text')[0];
+<<<<<<< HEAD:core/modules/config/tests/src/Functional/ConfigImportUploadTest.php
     $edit = ['files[import_tarball]' => \Drupal::service('file_system')->realpath($text_file->uri)];
+=======
+    $edit = ['files[import_tarball]' => drupal_realpath($text_file->uri)];
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/config/tests/src/Functional/ConfigImportUploadTest.php
     $this->drupalPostForm('admin/config/development/configuration/full/import', $edit, t('Upload'));
     $this->assertText(t('Could not extract the contents of the tar file'));
 

@@ -157,6 +157,7 @@ class DrupalDateTimeTest extends UnitTestCase {
   }
 
   /**
+<<<<<<< HEAD
    * Tests setting the default time for date-only objects.
    */
   public function testDefaultDateTime() {
@@ -169,6 +170,8 @@ class DrupalDateTimeTest extends UnitTestCase {
   }
 
   /**
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    * Tests that object methods are chainable.
    *
    * @covers ::__call

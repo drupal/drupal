@@ -117,8 +117,11 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Go back and re-submit the form.
     $this->getSession()->getDriver()->back();
+<<<<<<< HEAD:core/modules/comment/tests/src/Functional/CommentPreviewTest.php
     $submit_button = $this->assertSession()->buttonExists('Save');
     $submit_button->click();
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/comment/tests/src/Functional/CommentPreviewTest.php
     $this->assertText('Your comment has been posted.');
     $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
     $this->assertEqual(2, count($elements));

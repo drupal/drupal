@@ -150,6 +150,7 @@ class BaseFieldOverride extends FieldConfigBase {
   }
 
   /**
+<<<<<<< HEAD
    * {@inheritdoc}
    */
   public function getUniqueIdentifier() {
@@ -157,6 +158,8 @@ class BaseFieldOverride extends FieldConfigBase {
   }
 
   /**
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    * Gets the base field definition.
    *
    * @return \Drupal\Core\Field\BaseFieldDefinition

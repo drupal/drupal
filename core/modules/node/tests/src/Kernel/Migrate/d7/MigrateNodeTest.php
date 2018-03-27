@@ -164,7 +164,10 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertEquals('default@example.com', $node->field_email->value);
     $this->assertEquals('another@example.com', $node->field_email[1]->value);
     $this->assertEquals(CommentItemInterface::OPEN, $node->comment_node_test_content_type->status);
+<<<<<<< HEAD
     $this->assertEquals('3.1416', $node->field_float_list[0]->value);
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
     $node = Node::load(2);
     $this->assertEquals('en', $node->langcode->value);

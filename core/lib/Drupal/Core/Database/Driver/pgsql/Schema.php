@@ -631,6 +631,7 @@ EOD;
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   public function fieldExists($table, $column) {
     $prefixInfo = $this->getPrefixInfo($table);
 
@@ -640,6 +641,8 @@ EOD;
   /**
    * {@inheritdoc}
    */
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   public function indexExists($table, $name) {
     // Details http://www.postgresql.org/docs/9.1/interactive/view-pg-indexes.html
     $index_name = $this->ensureIdentifiersLength($table, $name, 'idx');

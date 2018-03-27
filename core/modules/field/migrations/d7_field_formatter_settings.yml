@@ -2,7 +2,10 @@ id: d7_field_formatter_settings
 label: Field formatter configuration
 migration_tags:
   - Drupal 7
+<<<<<<< HEAD:core/modules/field/migrations/d7_field_formatter_settings.yml
   - Configuration
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/field/migration_templates/d7_field_formatter_settings.yml
 class: Drupal\migrate_drupal\Plugin\migrate\FieldMigration
 field_plugin_method: processFieldFormatter
 source:
@@ -55,11 +58,14 @@ process:
   field_name: field_name
   "options/label": 'formatter/label'
   "options/weight": 'formatter/weight'
+<<<<<<< HEAD:core/modules/field/migrations/d7_field_formatter_settings.yml
   # The field plugin ID.
   plugin_id:
     plugin: process_field
     source: type
     method: getPluginId
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/field/migration_templates/d7_field_formatter_settings.yml
   # The formatter to use.
   formatter_type:
     plugin: process_field
@@ -69,6 +75,7 @@ process:
     -
       plugin: static_map
       bypass: true
+<<<<<<< HEAD:core/modules/field/migrations/d7_field_formatter_settings.yml
       source:
         - '@plugin_id'
         - '@formatter_type'
@@ -77,6 +84,21 @@ process:
       map: []
     -
       plugin: d7_field_type_defaults
+=======
+      source: '@formatter_type'
+      map:
+        date_default: datetime_default
+        email_default: email_mailto
+        # 0 should cause the row to be skipped by the next plugin in the
+        # pipeline.
+        hidden: 0
+        link_default: link
+        phone: basic_string
+        taxonomy_term_reference_link: entity_reference_label
+        entityreference_label: entity_reference_label
+        entityreference_entity_id: entity_reference_entity_id
+        entityreference_entity_view: entity_reference_entity_view
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/field/migration_templates/d7_field_formatter_settings.yml
     -
       plugin: skip_on_empty
       method: row

@@ -8,8 +8,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Form constructor to test #default_value settings of radios.
+<<<<<<< HEAD
  *
  * @internal
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  */
 class FormTestRadiosCheckedForm extends FormBase {
 

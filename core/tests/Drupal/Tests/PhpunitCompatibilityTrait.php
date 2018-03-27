@@ -48,7 +48,11 @@ trait PhpunitCompatibilityTrait {
    *
    * @see https://www.drupal.org/node/2907725
    */
+<<<<<<< HEAD
   public function getMock($originalClassName, $methods = [], array $arguments = [], $mockClassName = '', $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE, $cloneArguments = FALSE, $callOriginalMethods = FALSE, $proxyTarget = NULL) {
+=======
+  public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE, $cloneArguments = FALSE, $callOriginalMethods = FALSE, $proxyTarget = NULL) {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     if (!$this->supports('getMock')) {
       $mock = $this->getMockBuilder($originalClassName)
         ->setMethods($methods)
@@ -117,6 +121,7 @@ trait PhpunitCompatibilityTrait {
   }
 
   /**
+<<<<<<< HEAD
    * Compatibility layer for PHPUnit 6 to support PHPUnit 4 code.
    *
    * @param mixed $class
@@ -142,6 +147,8 @@ trait PhpunitCompatibilityTrait {
   }
 
   /**
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    * Checks if the trait is used in a class that has a method.
    *
    * @param string $method

@@ -4,6 +4,7 @@
     "type": "drupal-core",
     "license": "GPL-2.0-or-later",
     "require": {
+<<<<<<< HEAD
         "ext-date": "*",
         "ext-dom": "*",
         "ext-filter": "*",
@@ -32,6 +33,23 @@
         "symfony/polyfill-iconv": "^1.0",
         "symfony/yaml": "~3.4.5",
         "twig/twig": "^1.35.0",
+=======
+        "php": ">=5.5.9",
+        "symfony/class-loader": "~3.2.8",
+        "symfony/console": "~3.2.8",
+        "symfony/dependency-injection": "~3.2.8",
+        "symfony/event-dispatcher": "~3.2.8",
+        "symfony/http-foundation": "~3.2.8",
+        "symfony/http-kernel": "~3.2.8",
+        "symfony/routing": "~3.2.8",
+        "symfony/serializer": "~3.2.8",
+        "symfony/translation": "~3.2.8",
+        "symfony/validator": "~3.2.8",
+        "symfony/process": "~3.2.8",
+        "symfony/polyfill-iconv": "^1.0",
+        "symfony/yaml": "~3.2.8",
+        "twig/twig": "^1.23.1",
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
         "doctrine/common": "^2.5",
         "doctrine/annotations": "^1.2",
         "guzzlehttp/guzzle": "^6.2.1",
@@ -58,11 +76,18 @@
         "jcalderonzumba/gastonjs": "^1.0.2",
         "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
         "mikey179/vfsStream": "^1.2",
+<<<<<<< HEAD
         "phpunit/phpunit": "^4.8.35 || ^6.1",
         "phpspec/prophecy": "^1.4",
         "symfony/css-selector": "^3.4.0",
         "symfony/phpunit-bridge": "^3.4.3",
         "symfony/debug": "^3.4.0"
+=======
+        "phpunit/phpunit": ">=4.8.35 <5",
+        "phpspec/prophecy": "^1.4",
+        "symfony/css-selector": "~3.2.8",
+        "symfony/phpunit-bridge": "~3.2.8"
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     },
     "replace": {
         "drupal/action": "self.version",

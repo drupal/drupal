@@ -2,7 +2,10 @@
 
 namespace Drupal\Tests\hal\Functional\EntityResource\Media;
 
+<<<<<<< HEAD
 use Drupal\Core\Cache\Cache;
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 use Drupal\file\Entity\File;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
@@ -51,7 +54,11 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
         'type' => [
           'href' => $this->baseUrl . '/rest/type/media/camelids',
         ],
+<<<<<<< HEAD
         $this->baseUrl . '/rest/relation/media/camelids/field_media_file' => [
+=======
+        $this->baseUrl . '/rest/relation/media/camelids/field_media_file_1' => [
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
           [
             'href' => $file->url(),
             'lang' => 'en',
@@ -76,7 +83,11 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
         ],
       ],
       '_embedded' => [
+<<<<<<< HEAD
         $this->baseUrl . '/rest/relation/media/camelids/field_media_file' => [
+=======
+        $this->baseUrl . '/rest/relation/media/camelids/field_media_file_1' => [
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
           [
             '_links' => [
               'self' => [
@@ -87,6 +98,14 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
               ],
             ],
             'lang' => 'en',
+<<<<<<< HEAD
+=======
+            'uri' => [
+              [
+                'value' => $file->url(),
+              ],
+            ],
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
             'uuid' => [
               [
                 'value' => $file->uuid(),
@@ -122,6 +141,14 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
               ],
             ],
             'lang' => 'en',
+<<<<<<< HEAD
+=======
+            'uri' => [
+              [
+                'value' => $thumbnail->url(),
+              ],
+            ],
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
             'uuid' => [
               [
                 'value' => $thumbnail->uuid(),
@@ -164,6 +191,7 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
     ];
   }
 
+<<<<<<< HEAD
   /**
    * {@inheritdoc}
    */
@@ -171,4 +199,6 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
     return Cache::mergeTags(parent::getExpectedCacheTags(), ['config:hal.settings']);
   }
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

@@ -1,6 +1,9 @@
 id: d7_file_private
 label: Private files
+<<<<<<< HEAD:core/modules/file/migrations/d7_file_private.yml
 audit: true
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/file/migration_templates/d7_file_private.yml
 migration_tags:
   - Drupal 7
   - Content

@@ -7,9 +7,15 @@
 
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+<<<<<<< HEAD
 use Drupal\block\entity\Block;
 use Drupal\block\BlockInterface;
 use Drupal\settings_tray\Block\BlockEntitySettingTrayForm;
+=======
+use Drupal\settings_tray\Block\BlockEntityOffCanvasForm;
+use Drupal\settings_tray\Form\SystemBrandingOffCanvasForm;
+use Drupal\settings_tray\Form\SystemMenuOffCanvasForm;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
 /**
  * Implements hook_help().
@@ -18,6 +24,7 @@ function settings_tray_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.settings_tray':
       $output = '<h3>' . t('About') . '</h3>';
+<<<<<<< HEAD
       $output .= '<p>' . t('The Settings Tray module allows users with the <a href=":administer_block_permission">Administer blocks</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit blocks without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Settings Tray module</a>.', [':handbook_url' => 'https://www.drupal.org/documentation/modules/settings_tray', ':administer_block_permission' => \Drupal::url('user.admin_permissions', [], ['fragment' => 'module-block']), ':contextual_permission' => \Drupal::url('user.admin_permissions', [], ['fragment' => 'module-contextual'])]) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
@@ -27,6 +34,12 @@ function settings_tray_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('The Settings Tray for the block will open in a sidebar, with a compact form for configuring what the block shows.') . '</p>';
       $output .= '<p>' . t('Save the form and the changes will be immediately visible on the page.') . '</p>';
       $output .= '</dd>';
+=======
+      $output .= '<p>' . t('The Settings Tray module provides an \'edit mode\' in which clicking on a block opens a slide-out tray which allows configuration to be altered without leaving the page.For more information, see the <a href=":settings-tray-documentation">online documentation for the Settings Tray module</a>.', [':settings-tray-documentation' => 'https://www.drupal.org/documentation/modules/settings_tray']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Editing blocks on the same page in the slide-out tray') . '</dt>';
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       $output .= '</dl>';
       return ['#markup' => $output];
   }
@@ -49,11 +62,16 @@ function settings_tray_contextual_links_view_alter(&$element, $items) {
       $element['#links']['settings-trayblock-configure']['title'] = t('Quick edit settings');
     }
 
+<<<<<<< HEAD
     $element['#attached']['library'][] = 'core/drupal.dialog.off_canvas';
+=======
+    $element['#attached']['library'][] = 'settings_tray/drupal.off_canvas';
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 }
 
 /**
+<<<<<<< HEAD
  * Checks if a block has overrides.
  *
  * @param \Drupal\block\BlockInterface $block
@@ -81,6 +99,11 @@ function settings_tray_block_view_alter(array &$build) {
     $build['#contextual_links']['block']['metadata']['has_overrides'] = _settings_tray_has_block_overrides($build['#block']) ? 1 : 0;
   }
 
+=======
+ * Implements hook_block_view_alter().
+ */
+function settings_tray_block_view_alter(array &$build) {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   // Force a new 'data-contextual-id' attribute on blocks when this module is
   // enabled so as not to reuse stale data cached client-side.
   // @todo Remove when https://www.drupal.org/node/2773591 is fixed.
@@ -90,25 +113,62 @@ function settings_tray_block_view_alter(array &$build) {
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * Implements hook_element_info_alter().
+ */
+function settings_tray_element_info_alter(&$type) {
+  if (isset($type['page'])) {
+    $type['page']['#theme_wrappers']['settings_tray_page_wrapper'] = ['#weight' => -1000];
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function settings_tray_theme() {
+  return [
+    'settings_tray_page_wrapper' => [
+      'variables' => ['children' => NULL],
+    ],
+  ];
+}
+
+/**
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  * Implements hook_entity_type_build().
  */
 function settings_tray_entity_type_build(array &$entity_types) {
   /* @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_types['block']
+<<<<<<< HEAD
     ->setFormClass('settings_tray', BlockEntitySettingTrayForm::class)
     ->setLinkTemplate('settings_tray-form', '/admin/structure/block/manage/{block}/settings-tray');
+=======
+    ->setFormClass('off_canvas', BlockEntityOffCanvasForm::class)
+    ->setLinkTemplate('off_canvas-form', '/admin/structure/block/manage/{block}/off-canvas');
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }
 
 /**
  * Implements hook_preprocess_HOOK() for block templates.
  */
 function settings_tray_preprocess_block(&$variables) {
+<<<<<<< HEAD
   // Only blocks that have a settings_tray form and have no configuration
   // overrides will have a "Quick Edit" link. We could wait for the contextual
   // links to be initialized on the client side,  and then add the class and
   // data- attribute below there (via JavaScript). But that would mean that it
   // would be impossible to show Settings Tray's clickable regions immediately
   // when the page loads. When latency is high, this will cause flicker.
+=======
+  // Only blocks that have an settings_tray form will have a "Quick Edit" link.
+  // We could wait for the contextual links to be initialized on the client
+  // side,  and then add the class and data- attribute below there (via
+  // JavaScript). But that would mean that it would be impossible to show
+  // Settings Tray's clickable regions immediately when the page loads. When
+  // latency is high, this will cause flicker.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   // @see \Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck
   /** @var \Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck $access_checker */
   $access_checker = \Drupal::service('access_check.settings_tray.block.settings_tray_form');
@@ -116,6 +176,7 @@ function settings_tray_preprocess_block(&$variables) {
   $block_plugin_manager = \Drupal::service('plugin.manager.block');
   /** @var \Drupal\Core\Block\BlockPluginInterface $block_plugin */
   $block_plugin = $block_plugin_manager->createInstance($variables['plugin_id']);
+<<<<<<< HEAD
   if (isset($variables['elements']['#contextual_links']['block']['route_parameters']['block'])) {
     $block = Block::load($variables['elements']['#contextual_links']['block']['route_parameters']['block']);
     if ($access_checker->accessBlockPlugin($block_plugin)->isAllowed() && !_settings_tray_has_block_overrides($block)) {
@@ -123,6 +184,12 @@ function settings_tray_preprocess_block(&$variables) {
       $variables['attributes']['class'][] = 'settings-tray-editable';
       $variables['attributes']['data-drupal-settingstray'] = 'editable';
     }
+=======
+  if ($access_checker->accessBlockPlugin($block_plugin)->isAllowed()) {
+    // Add class and attributes to all blocks to allow Javascript to target.
+    $variables['attributes']['class'][] = 'settings-tray-editable';
+    $variables['attributes']['data-drupal-settingstray'] = 'editable';
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 }
 
@@ -165,10 +232,54 @@ function settings_tray_toolbar_alter(&$items) {
  */
 function settings_tray_block_alter(&$definitions) {
   foreach ($definitions as &$definition) {
+<<<<<<< HEAD
     // If a block plugin does not define its own 'settings_tray' form, use the
     // plugin class itself.
     if (!isset($definition['forms']['settings_tray'])) {
       $definition['forms']['settings_tray'] = $definition['class'];
+=======
+    // If a block plugin already defines its own 'settings_tray' form, use that
+    // form instead of specifying one here.
+    if (isset($definition['forms']['settings_tray'])) {
+      continue;
+    }
+
+    switch ($definition['id']) {
+      // Use specialized forms for certain blocks that do not yet provide the
+      // form with their own annotation.
+      // @todo Move these into the corresponding block plugin annotations in
+      //   https://www.drupal.org/node/2896356.
+      case 'system_menu_block':
+        $definition['forms']['settings_tray'] = SystemMenuOffCanvasForm::class;
+        break;
+
+      case 'system_branding_block':
+        $definition['forms']['settings_tray'] = SystemBrandingOffCanvasForm::class;
+        break;
+
+      // No off-canvas form for the page title block, despite it having
+      // contextual links: it's too confusing that you're editing configuration,
+      // not content, so the title itself cannot actually be changed.
+      // @todo Move these into the corresponding block plugin annotations in
+      //   https://www.drupal.org/node/2896356.
+      case 'page_title_block':
+        $definition['forms']['settings_tray'] = FALSE;
+        break;
+
+      case 'system_main_block':
+        $definition['forms']['settings_tray'] = FALSE;
+        break;
+
+      case 'help_block':
+        $definition['forms']['settings_tray'] = FALSE;
+        break;
+
+      // Otherwise, use the block plugin's normal form rather than
+      // a custom form for Settings Tray.
+      default:
+        $definition['forms']['settings_tray'] = $definition['class'];
+        break;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     }
   }
 }

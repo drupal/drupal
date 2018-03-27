@@ -596,7 +596,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->rebuildAll();
 
       $response = $this->request('GET', $url, $request_options);
+<<<<<<< HEAD
       $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
+=======
+      $this->assertResourceResponse(200, FALSE, $response);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
       // Again do an identical comparison, but this time transform the expected
       // normalized entity's values to strings. This ensures the BC layer for
@@ -628,7 +632,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->rebuildAll();
 
       $response = $this->request('GET', $url, $request_options);
+<<<<<<< HEAD
       $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
+=======
+      $this->assertResourceResponse(200, FALSE, $response);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
       // This ensures the BC layer for bc_timestamp_normalizer_unix works as
       // expected. This method should be using
@@ -659,6 +667,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // 200 for well-formed request.
     $response = $this->request('GET', $url, $request_options);
+<<<<<<< HEAD
     $expected_cache_tags = $this->getExpectedCacheTags();
     $expected_cache_contexts = $this->getExpectedCacheContexts();
     // @todo Fix BlockAccessControlHandler::mergeCacheabilityFromConditions() in
@@ -674,6 +683,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $expected_cache_tags = Cache::mergeTags($expected_cache_tags, ['config:user.role.anonymous']);
     }
     $this->assertResourceResponse(200, FALSE, $response, $expected_cache_tags, $expected_cache_contexts, static::$auth ? FALSE : 'MISS', 'MISS');
+=======
+    $this->assertResourceResponse(200, FALSE, $response);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
     $this->resourceConfigStorage->load(static::$resourceConfigId)->disable()->save();
     $this->refreshTestStateAfterRestConfigChange();
@@ -686,7 +698,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: upon re-enabling a resource, immediate 200.
     $response = $this->request('GET', $url, $request_options);
+<<<<<<< HEAD
     $this->assertResourceResponse(200, FALSE, $response, $expected_cache_tags, $expected_cache_contexts, static::$auth ? FALSE : 'MISS', 'MISS');
+=======
+    $this->assertResourceResponse(200, FALSE, $response);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
     $this->resourceConfigStorage->load(static::$resourceConfigId)->delete();
     $this->refreshTestStateAfterRestConfigChange();
@@ -710,7 +726,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assert406Response($response);
     $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
 
+<<<<<<< HEAD
     $url = Url::fromRoute('rest.entity.' . static::$entityTypeId . '.GET');
+=======
+    $url = Url::fromRoute('rest.entity.' . static::$entityTypeId . '.GET.' . static::$format);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $url->setRouteParameter(static::$entityTypeId, 987654321);
     $url->setOption('query', ['_format' => static::$format]);
 
@@ -1104,6 +1124,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceErrorResponse(403, "Access denied on updating field 'field_rest_test'.", $response);
 
+<<<<<<< HEAD
     // DX: 403 when entity trying to update an entity's ID field.
     $request_options[RequestOptions::BODY] = $this->serializer->encode($this->makeNormalizationInvalid($this->getNormalizedPatchEntity(), 'id'), static::$format);;
     $response = $this->request('PATCH', $url, $request_options);
@@ -1129,6 +1150,14 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Send PATCH request by serializing the modified entity, assert the error
     // response, change the modified entity field that caused the error response
     // back to its original value, repeat.
+=======
+    // DX: 403 when sending PATCH request with read-only fields.
+    // First send all fields (the "maximum normalization"). Assert the expected
+    // error message for the first PATCH-protected field. Remove that field from
+    // the normalization, send another request, assert the next PATCH-protected
+    // field error message. And so on.
+    $max_normalization = $this->getNormalizedPatchEntity() + $this->serializer->normalize($this->entity, static::$format);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     for ($i = 0; $i < count(static::$patchProtectedFieldNames); $i++) {
       $patch_protected_field_name = static::$patchProtectedFieldNames[$i];
       $request_options[RequestOptions::BODY] = $this->serializer->serialize($modified_entity, static::$format);
@@ -1183,6 +1212,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // is not sent in the PATCH request.
     $this->assertSame('All the faith he had had had had no effect on the outcome of his life.', $updated_entity->get('field_rest_test')->value);
 
+<<<<<<< HEAD
     // Multi-value field: remove item 0. Then item 1 becomes item 0.
     $normalization_multi_value_tests = $this->getNormalizedPatchEntity();
     $normalization_multi_value_tests['field_rest_test_multivalue'] = $this->entity->get('field_rest_test_multivalue')->getValue();
@@ -1202,6 +1232,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assertSame([0 => ['value' => 'One'], 1 => ['value' => 'Two'], 2 => ['value' => 'Three']], $this->entityStorage->loadUnchanged($this->entity->id())->get('field_rest_test_multivalue')->getValue());
 
     // BC: rest_update_8203().
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
     $this->refreshTestStateAfterRestConfigChange();
     $request_options[RequestOptions::BODY] = $parseable_valid_request_body_2;
@@ -1288,7 +1320,18 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // 204 for well-formed request.
     $response = $this->request('DELETE', $url, $request_options);
+<<<<<<< HEAD
     $this->assertResourceResponse(204, '', $response);
+=======
+    $this->assertSame(204, $response->getStatusCode());
+    // DELETE responses should not include a Content-Type header. But Apache
+    // sets it to 'text/html' by default. We also cannot detect the presence of
+    // Apache either here in the CLI. For now having this documented here is all
+    // we can do.
+    // $this->assertSame(FALSE, $response->hasHeader('Content-Type'));
+    $this->assertSame('', (string) $response->getBody());
+    $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
     $this->refreshTestStateAfterRestConfigChange();

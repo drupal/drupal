@@ -49,6 +49,12 @@ class GetFilenameTest extends KernelTestBase {
     // a fixed location and naming.
     $this->assertIdentical(drupal_get_filename('profile', 'testing'), 'core/profiles/testing/testing.info.yml');
 
+<<<<<<< HEAD
+=======
+    // Generate a non-existing module name.
+    $non_existing_module = uniqid("", TRUE);
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     // Set a custom error handler so we can ignore the file not found error.
     set_error_handler(function ($severity, $message, $file, $line) {
       // Skip error handling if this is a "file not found" error.

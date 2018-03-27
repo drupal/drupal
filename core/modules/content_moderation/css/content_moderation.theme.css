@@ -2,9 +2,15 @@
  * @file
  * Theme styles for the content_moderation module.
  */
+<<<<<<< HEAD
 .entity-moderation-form {
   border: 1px dashed #bbb;
   margin: 2em 0;
+=======
+ul.entity-moderation-form {
+  border: 1px dashed #bbb;
+  margin: 2em 0em;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   background: #fff;
   padding-left: 1em;
 }

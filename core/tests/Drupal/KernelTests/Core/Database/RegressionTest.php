@@ -57,6 +57,7 @@ class RegressionTest extends DatabaseTestBase {
   public function testDBIndexExists() {
     $this->assertSame(TRUE, db_index_exists('test', 'ages'), 'Returns true for existent index.');
     $this->assertSame(FALSE, db_index_exists('test', 'nosuchindex'), 'Returns false for nonexistent index.');
+<<<<<<< HEAD
   }
 
   /**
@@ -69,6 +70,8 @@ class RegressionTest extends DatabaseTestBase {
   public function testDBIsActive() {
     $get_active_db = Database::getConnection()->getKey();
     $this->assert(db_set_active($get_active_db), 'Database connection is active');
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
 }

@@ -2,7 +2,10 @@
 # migration as an optional dependency.
 id: d6_file
 label: Public files
+<<<<<<< HEAD:core/modules/file/migrations/d6_file.yml
 audit: true
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/file/migration_templates/d6_file.yml
 migration_tags:
   - Drupal 6
   - Content

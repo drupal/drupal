@@ -32,6 +32,26 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   protected $sourceDatabase;
 
   /**
+<<<<<<< HEAD
+=======
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = [
+    'language',
+    'content_translation',
+    'migrate_drupal_ui',
+    'telephone',
+    'aggregator',
+    'book',
+    'forum',
+    'statistics',
+    'migration_provider_test',
+  ];
+
+  /**
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -107,11 +127,45 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    * @param array $missing_paths
    *   An array of modules that will not be upgraded.
    */
+<<<<<<< HEAD
   protected function assertUpgradePaths(WebAssert $session, array $available_paths, array $missing_paths) {
     // Test the available migration paths.
     foreach ($available_paths as $available) {
       $session->elementExists('xpath', "//span[contains(@class, 'checked') and text() = '$available']");
       $session->elementNotExists('xpath', "//span[contains(@class, 'error') and text() = '$available']");
+=======
+  public function testMigrateUpgrade() {
+    $connection_options = $this->sourceDatabase->getConnectionOptions();
+    $this->drupalGet('/upgrade');
+    $this->assertSession()->responseContains('Upgrade a site by importing its database and files into a clean and empty new install of Drupal 8.');
+
+    $this->drupalPostForm(NULL, [], t('Continue'));
+    $this->assertText('Provide credentials for the database of the Drupal site you want to upgrade.');
+    $this->assertFieldByName('mysql[host]');
+
+    $driver = $connection_options['driver'];
+    $connection_options['prefix'] = $connection_options['prefix']['default'];
+
+    // Use the driver connection form to get the correct options out of the
+    // database settings. This supports all of the databases we test against.
+    $drivers = drupal_get_database_types();
+    $form = $drivers[$driver]->getFormOptions($connection_options);
+    $connection_options = array_intersect_key($connection_options, $form + $form['advanced_options']);
+    $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
+    $edit = [
+      $driver => $connection_options,
+      'source_private_file_path' => $this->getSourceBasePath(),
+      'version' => $version,
+    ];
+    if ($version == 6) {
+      $edit['d6_source_base_path'] = $this->getSourceBasePath();
+    }
+    else {
+      $edit['source_base_path'] = $this->getSourceBasePath();
+    }
+    if (count($drivers) !== 1) {
+      $edit['driver'] = $driver;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     }
 
     // Test the missing migration paths.
@@ -120,10 +174,43 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
       $session->elementNotExists('xpath', "//span[contains(@class, 'checked') and text() = '$missing']");
     }
 
+<<<<<<< HEAD
     // Test the total count of missing and available paths.
     $session->elementsCount('xpath', "//span[contains(@class, 'upgrade-analysis-report__status-icon--error')]", count($missing_paths));
     $session->elementsCount('xpath', "//span[contains(@class, 'upgrade-analysis-report__status-icon--checked')]", count($available_paths));
   }
+=======
+    $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
+    $this->assertResponse(200);
+    $this->assertText('Upgrade analysis report');
+    // Ensure we get errors about missing modules.
+    $this->assertSession()->pageTextContains(t('Source module not found for migration_provider_no_annotation.'));
+    $this->assertSession()->pageTextContains(t('Source module not found for migration_provider_test.'));
+    $this->assertSession()->pageTextContains(t('Destination module not found for migration_provider_test'));
+
+    // Uninstall the module causing the missing module error messages.
+    $this->container->get('module_installer')->uninstall(['migration_provider_test'], TRUE);
+
+    // Restart the upgrade process.
+    $this->drupalGet('/upgrade');
+    $this->assertSession()->responseContains('Upgrade a site by importing its database and files into a clean and empty new install of Drupal 8.');
+
+    $this->drupalPostForm(NULL, [], t('Continue'));
+    $this->assertSession()->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
+    $this->assertSession()->fieldExists('mysql[host]');
+
+    $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Upgrade analysis report');
+    // Ensure there are no errors about the missing modules from the test module.
+    $this->assertSession()->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));
+    $this->assertSession()->pageTextNotContains(t('Source module not found for migration_provider_test.'));
+    $this->assertSession()->pageTextNotContains(t('Destination module not found for migration_provider_test'));
+    // Ensure there are no errors about any other missing migration providers.
+    $this->assertSession()->pageTextNotContains(t('module not found'));
+    $this->drupalPostForm(NULL, [], t('Perform upgrade'));
+    $this->assertText(t('Congratulations, you upgraded Drupal!'));
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
   /**
    * Gets the source base path for the concrete test.

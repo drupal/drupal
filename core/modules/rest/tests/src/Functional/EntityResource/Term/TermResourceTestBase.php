@@ -268,6 +268,18 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
     $response = $this->request('GET', $url, $this->getAuthenticationRequestOptions('GET'));
     $normalization = $this->serializer->decode((string) $response->getBody(), static::$format);
 
+<<<<<<< HEAD
+=======
+    // @todo In https://www.drupal.org/node/2824851, we will be able to stop
+    //       unsetting these fields from the normalization, because
+    //       EntityResource::patch() will ignore any fields that are sent that
+    //       match the current value (and obviously we're sending the current
+    //       value).
+    $normalization = $this->removeFieldsFromNormalization($normalization, [
+      'changed',
+    ]);
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     // Change term's path alias.
     $normalization['path'][0]['alias'] .= 's-rule-the-world';
 
@@ -284,6 +296,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
     $this->assertSame($normalization['path'], $updated_normalization['path']);
   }
 
+<<<<<<< HEAD
   /**
    * {@inheritdoc}
    */
@@ -348,4 +361,6 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
     ];
   }
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

@@ -336,6 +336,53 @@ class EntityTypeInfo implements ContainerInjectionInterface {
           ->getHandler($entity->getEntityTypeId(), 'moderation')
           ->enforceRevisionsEntityFormAlter($form, $form_state, $form_id);
 
+<<<<<<< HEAD
+=======
+        if (!$this->moderationInfo->isPendingRevisionAllowed($entity)) {
+          $latest_revision = $this->moderationInfo->getLatestRevision($entity->getEntityTypeId(), $entity->id());
+          if ($entity->bundle()) {
+            $bundle_type_id = $entity->getEntityType()->getBundleEntityType();
+            $bundle = $this->entityTypeManager->getStorage($bundle_type_id)->load($entity->bundle());
+            $type_label = $bundle->label();
+          }
+          else {
+            $type_label = $entity->getEntityType()->getLabel();
+          }
+
+          $translation = $this->moderationInfo->getAffectedRevisionTranslation($latest_revision);
+          $args = [
+            '@type_label' => $type_label,
+            '@latest_revision_edit_url' => $translation->toUrl('edit-form', ['language' => $translation->language()])->toString(),
+            '@latest_revision_delete_url' => $translation->toUrl('delete-form', ['language' => $translation->language()])->toString(),
+          ];
+          $label = $this->t('Unable to save this @type_label.', $args);
+          $message = $this->t('<a href="@latest_revision_edit_url">Publish</a> or <a href="@latest_revision_delete_url">delete</a> the latest revision to allow all workflow transitions.', $args);
+          $full_message = $this->t('Unable to save this @type_label. <a href="@latest_revision_edit_url">Publish</a> or <a href="@latest_revision_delete_url">delete</a> the latest revision to allow all workflow transitions.', $args);
+          drupal_set_message($full_message, 'error');
+
+          $form['moderation_state']['#access'] = FALSE;
+          $form['actions']['#access'] = FALSE;
+          $form['invalid_transitions'] = [
+            'label' => [
+              '#type' => 'item',
+              '#prefix' => '<strong class="label">',
+              '#markup' => $label,
+              '#suffix' => '</strong>',
+            ],
+            'message' => [
+              '#type' => 'item',
+              '#markup' => $message,
+            ],
+            '#weight' => 999,
+            '#no_valid_transitions' => TRUE,
+          ];
+
+          if ($form['footer']) {
+            $form['invalid_transitions']['#group'] = 'footer';
+          }
+        }
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
         // Submit handler to redirect to the latest version, if available.
         $form['actions']['submit']['#submit'][] = [EntityTypeInfo::class, 'bundleFormRedirect'];
 
@@ -345,16 +392,24 @@ class EntityTypeInfo implements ContainerInjectionInterface {
           $form['moderation_state']['#group'] = 'footer';
         }
 
+<<<<<<< HEAD
         // If the publishing status exists in the meta region, replace it with
         // the current state instead.
         if (isset($form['meta']['published'])) {
           $form['meta']['published']['#markup'] = $this->moderationInfo->getWorkflowForEntity($entity)->getTypePlugin()->getState($entity->moderation_state->value)->label();
+=======
+        // Duplicate the label of the current moderation state to the meta
+        // region, if available.
+        if (isset($form['meta']['published'])) {
+          $form['meta']['published']['#markup'] = $form['moderation_state']['widget'][0]['current']['#markup'];
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
         }
       }
     }
   }
 
   /**
+<<<<<<< HEAD
    * Checks whether the specified form allows to edit a moderated entity.
    *
    * @param \Drupal\Core\Form\FormInterface $form_object
@@ -370,6 +425,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   }
 
   /**
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    * Redirect content entity edit forms on save, if there is a pending revision.
    *
    * When saving their changes, editors should see those changes displayed on

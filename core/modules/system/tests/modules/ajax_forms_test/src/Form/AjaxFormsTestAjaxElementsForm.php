@@ -9,8 +9,11 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Form builder: Builds a form that has each FAPI elements triggering a simple
  * Ajax callback.
+<<<<<<< HEAD
  *
  * @internal
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  */
 class AjaxFormsTestAjaxElementsForm extends FormBase {
 

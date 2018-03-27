@@ -17,11 +17,19 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
+<<<<<<< HEAD
+=======
+use Drupal\simpletest\AssertContentTrait;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 use Drupal\Tests\AssertHelperTrait;
 use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\PhpunitCompatibilityTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\TestRequirementsTrait;
+<<<<<<< HEAD
+=======
+use Drupal\simpletest\TestServiceProvider;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;

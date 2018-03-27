@@ -67,11 +67,17 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     $page->checkField('revision');
     $assert_session->elementAttributeNotContains('css', '.field--name-revision-log-message', 'style', 'display');
 
+<<<<<<< HEAD
     // Load the media and check that all the fields are properly populated.
     $media = Media::load(1);
     $this->assertEquals($test_filename, $media->getName());
     $this->assertEquals('8', $media->get('field_string_file_size')->value);
     $this->assertEquals('text/plain', $media->get('field_string_mime_type')->value);
+=======
+    // Load the media and check if the label was properly populated.
+    $media = Media::load(1);
+    $this->assertEquals($test_filename, $media->getName());
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
     // Test the MIME type icon.
     $icon_base = \Drupal::config('media.settings')->get('icon_base_uri');

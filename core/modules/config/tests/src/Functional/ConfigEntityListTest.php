@@ -2,7 +2,10 @@
 
 namespace Drupal\Tests\config\Functional;
 
+<<<<<<< HEAD:core/modules/config/tests/src/Functional/ConfigEntityListTest.php
 use Drupal\Core\Routing\RedirectDestinationTrait;
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/config/tests/src/Functional/ConfigEntityListTest.php
 use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Tests\BrowserTestBase;
@@ -13,8 +16,11 @@ use Drupal\Tests\BrowserTestBase;
  * @group config
  */
 class ConfigEntityListTest extends BrowserTestBase {
+<<<<<<< HEAD:core/modules/config/tests/src/Functional/ConfigEntityListTest.php
 
   use RedirectDestinationTrait;
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/config/tests/src/Functional/ConfigEntityListTest.php
 
   /**
    * Modules to enable.

@@ -12,7 +12,7 @@ use Drupal\user\RoleInterface;
  *
  * @group media
  */
-class MediaAccessTest extends MediaFunctionalTestBase {
+class MediaAccessTest extends MediaUiFunctionalTest {
 
   use AssertPageCacheContextsAndTagsTrait;
 
@@ -81,7 +81,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->assertSame("The 'view media' permission is required and the media item must be published.", $access_result->getReason());
     $this->grantPermissions($role, ['view media']);
     $this->drupalGet('media/' . $media->id());
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
 
     // Test 'create BUNDLE media' permission.

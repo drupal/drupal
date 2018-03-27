@@ -170,14 +170,22 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
 
     // DX: 422 when changing email without providing the password.
     $response = $this->request('PATCH', $url, $request_options);
+<<<<<<< HEAD
     $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the Email.\n", $response, FALSE, FALSE, FALSE, FALSE);
+=======
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the Email.\n", $response);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
     $normalization['pass'] = [['existing' => 'wrong']];
     $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
 
     // DX: 422 when changing email while providing a wrong password.
     $response = $this->request('PATCH', $url, $request_options);
+<<<<<<< HEAD
     $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the Email.\n", $response, FALSE, FALSE, FALSE, FALSE);
+=======
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the Email.\n", $response);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
     $normalization['pass'] = [['existing' => $this->account->passRaw]];
     $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
@@ -194,7 +202,11 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
 
     // DX: 422 when changing password without providing the current password.
     $response = $this->request('PATCH', $url, $request_options);
+<<<<<<< HEAD
     $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\npass: Your current password is missing or incorrect; it's required to change the Password.\n", $response, FALSE, FALSE, FALSE, FALSE);
+=======
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\npass: Your current password is missing or incorrect; it's required to change the Password.\n", $response);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
     $normalization['pass'][0]['existing'] = $this->account->pass_raw;
     $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);

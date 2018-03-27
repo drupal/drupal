@@ -128,6 +128,7 @@ function content_moderation_entity_translation_delete(EntityInterface $translati
 }
 
 /**
+<<<<<<< HEAD
  * Implements hook_entity_prepare_form().
  */
 function content_moderation_entity_prepare_form(EntityInterface $entity, $operation, FormStateInterface $form_state) {
@@ -137,6 +138,8 @@ function content_moderation_entity_prepare_form(EntityInterface $entity, $operat
 }
 
 /**
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  * Implements hook_form_alter().
  */
 function content_moderation_form_alter(&$form, FormStateInterface $form_state, $form_id) {
@@ -318,4 +321,17 @@ function content_moderation_workflow_update(WorkflowInterface $entity) {
   \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
   // Clear field cache so extra field is added or removed.
   \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+<<<<<<< HEAD
+=======
+}
+
+/**
+ * Implements hook_rest_resource_alter().
+ */
+function content_moderation_rest_resource_alter(&$definitions) {
+  // ContentModerationState is an internal entity type. Therefore it should not
+  // be exposed via REST.
+  // @see \Drupal\content_moderation\ContentModerationStateAccessControlHandler
+  unset($definitions['entity:content_moderation_state']);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

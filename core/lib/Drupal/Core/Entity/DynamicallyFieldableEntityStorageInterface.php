@@ -16,4 +16,30 @@ use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
  */
 interface DynamicallyFieldableEntityStorageInterface extends FieldableEntityStorageInterface, FieldStorageDefinitionListenerInterface, FieldDefinitionListenerInterface {
 
+<<<<<<< HEAD
+=======
+  /**
+   * Purges a batch of field data.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The deleted field whose data is being purged.
+   * @param $batch_size
+   *   The maximum number of field data records to purge before returning,
+   *   relating to the count of field data records returned by
+   *   \Drupal\Core\Entity\FieldableEntityStorageInterface::countFieldData().
+   *
+   * @return int
+   *   The number of field data records that have been purged.
+   */
+  public function purgeFieldData(FieldDefinitionInterface $field_definition, $batch_size);
+
+  /**
+   * Performs final cleanup after all data of a field has been purged.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field being purged.
+   */
+  public function finalizePurge(FieldStorageDefinitionInterface $storage_definition);
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

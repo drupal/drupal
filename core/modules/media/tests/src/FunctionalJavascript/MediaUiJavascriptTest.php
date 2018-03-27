@@ -63,10 +63,13 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     $this->assertJsCondition("jQuery('.form-item-source-configuration-test-config-value').length > 0;");
     $page->fillField('description', $description);
     $page->pressButton('Save');
+<<<<<<< HEAD
     // The wait prevents intermittent test failures.
     $result = $assert_session->waitForLink('Add media type');
     $this->assertNotEmpty($result);
     $assert_session->addressEquals('admin/structure/media');
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $assert_session->pageTextContains('The media type ' . $name . ' has been added.');
     $this->drupalGet('admin/structure/media');
     $assert_session->pageTextContains($name);
@@ -138,10 +141,13 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     $page->uncheckField('options[status]');
     $page->checkField('options[queue_thumbnail_downloads]');
     $page->pressButton('Save');
+<<<<<<< HEAD
     // The wait prevents intermittent test failures.
     $result = $assert_session->waitForLink('Add media type');
     $this->assertNotEmpty($result);
     $assert_session->addressEquals('admin/structure/media');
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $assert_session->pageTextContains("The media type $new_name has been updated.");
 
     // Test if edit worked and if new field values have been saved as expected.

@@ -8,6 +8,7 @@
 
 /* Transition the edit icon in the toolbar. */
 #toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
+<<<<<<< HEAD
   transition: all 0.7s ease;
 }
 
@@ -16,4 +17,14 @@
 .dialog-off-canvas-main-canvas .js-settings-tray-edit-mode .settings-tray-editable,
 .dialog-off-canvas-main-canvas.js-off-canvas-dialog-open .js-settings-tray-edit-mode .settings-tray-editable {
   transition: all 0.7s ease;
+=======
+  transition: all .7s ease;
+}
+
+/* Transition the editables on the page, their contextual links and their hover states. */
+.dialog-off-canvas__main-canvas .contextual,
+.dialog-off-canvas__main-canvas .js-settings-tray-edit-mode .settings-tray-editable,
+.dialog-off-canvas__main-canvas.js-tray-open .js-settings-tray-edit-mode .settings-tray-editable {
+  transition: all .7s ease;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

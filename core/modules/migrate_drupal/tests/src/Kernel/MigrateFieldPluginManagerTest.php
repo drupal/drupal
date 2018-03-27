@@ -14,7 +14,11 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   public static $modules = ['system', 'user', 'field', 'migrate_drupal', 'options', 'file', 'image', 'text', 'link', 'migrate_field_plugin_manager_test'];
+=======
+  public static $modules = ['system', 'user', 'field', 'migrate_drupal', 'options', 'file', 'text', 'link', 'migrate_field_plugin_manager_test'];
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
   /**
    * Tests that the correct MigrateField plugins are used.

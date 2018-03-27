@@ -18,6 +18,7 @@ use Drupal\shortcut\ShortcutInterface;
  * @ContentEntityType(
  *   id = "shortcut",
  *   label = @Translation("Shortcut link"),
+<<<<<<< HEAD
  *   label_collection = @Translation("Shortcut links"),
  *   label_singular = @Translation("shortcut link"),
  *   label_plural = @Translation("shortcut links"),
@@ -25,6 +26,8 @@ use Drupal\shortcut\ShortcutInterface;
  *     singular = "@count shortcut link",
  *     plural = "@count shortcut links",
  *   ),
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  *   bundle_label = @Translation("Shortcut set"),
  *   handlers = {
  *     "access" = "Drupal\shortcut\ShortcutAccessControlHandler",

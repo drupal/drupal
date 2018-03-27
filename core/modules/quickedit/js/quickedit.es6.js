@@ -105,6 +105,72 @@
    * Initialize a field; create FieldModel.
    *
    * @param {HTMLElement} fieldElement
+<<<<<<< HEAD
+=======
+   *   A Drupal Field API field's DOM element with a data-quickedit-field-id
+   *   attribute.
+   */
+  function processField(fieldElement) {
+    const metadata = Drupal.quickedit.metadata;
+    const fieldID = fieldElement.getAttribute('data-quickedit-field-id');
+    const entityID = extractEntityID(fieldID);
+    // Figure out the instance ID by looking at the ancestor
+    // [data-quickedit-entity-id] element's data-quickedit-entity-instance-id
+    // attribute.
+    const entityElementSelector = `[data-quickedit-entity-id="${entityID}"]`;
+    const $entityElement = $(entityElementSelector);
+
+    // If there are no elements returned from `entityElementSelector`
+    // throw an error. Check the browser console for this message.
+    if (!$entityElement.length) {
+      throw `Quick Edit could not associate the rendered entity field markup (with [data-quickedit-field-id="${fieldID}"]) with the corresponding rendered entity markup: no parent DOM node found with [data-quickedit-entity-id="${entityID}"]. This is typically caused by the theme's template for this entity type forgetting to print the attributes.`;
+    }
+    let entityElement = $(fieldElement).closest($entityElement);
+
+    // In the case of a full entity view page, the entity title is rendered
+    // outside of "the entity DOM node": it's rendered as the page title. So in
+    // this case, we find the lowest common parent element (deepest in the tree)
+    // and consider that the entity element.
+    if (entityElement.length === 0) {
+      const $lowestCommonParent = $entityElement.parents().has(fieldElement).first();
+      entityElement = $lowestCommonParent.find($entityElement);
+    }
+    const entityInstanceID = entityElement
+      .get(0)
+      .getAttribute('data-quickedit-entity-instance-id');
+
+    // Early-return if metadata for this field is missing.
+    if (!metadata.has(fieldID)) {
+      fieldsMetadataQueue.push({
+        el: fieldElement,
+        fieldID,
+        entityID,
+        entityInstanceID,
+      });
+      return;
+    }
+    // Early-return if the user is not allowed to in-place edit this field.
+    if (metadata.get(fieldID, 'access') !== true) {
+      return;
+    }
+
+    // If an EntityModel for this field already exists (and hence also a "Quick
+    // edit" contextual link), then initialize it immediately.
+    if (Drupal.quickedit.collections.entities.findWhere({ entityID, entityInstanceID })) {
+      initializeField(fieldElement, fieldID, entityID, entityInstanceID);
+    }
+    // Otherwise: queue the field. It is now available to be set up when its
+    // corresponding entity becomes in-place editable.
+    else {
+      fieldsAvailableQueue.push({ el: fieldElement, fieldID, entityID, entityInstanceID });
+    }
+  }
+
+  /**
+   * Initialize a field; create FieldModel.
+   *
+   * @param {HTMLElement} fieldElement
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    *   The field's DOM element.
    * @param {string} fieldID
    *   The field's ID.

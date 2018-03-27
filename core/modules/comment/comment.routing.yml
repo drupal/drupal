@@ -59,6 +59,7 @@ comment.multiple_delete_confirm:
   defaults:
     _title: 'Delete'
     _form: '\Drupal\comment\Form\ConfirmDeleteMultiple'
+<<<<<<< HEAD
     entity_type_id: 'comment'
   requirements:
     _entity_delete_multiple_access: 'comment'
@@ -71,6 +72,10 @@ entity.comment.delete_multiple_form:
     entity_type_id: 'comment'
   requirements:
     _entity_delete_multiple_access: 'comment'
+=======
+  requirements:
+    _permission: 'administer comments'
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
 comment.reply:
   path: '/comment/reply/{entity_type}/{entity}/{field_name}/{pid}'

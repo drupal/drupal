@@ -74,7 +74,11 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
    *   Entity type manager.
    * @param \Drupal\content_moderation\ModerationInformation $moderation_information
    *   Moderation information service.
+<<<<<<< HEAD
    * @param \Drupal\content_moderation\StateTransitionValidationInterface $validator
+=======
+   * @param \Drupal\content_moderation\StateTransitionValidation $validator
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    *   Moderation state transition validation service.
    */
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, ModerationInformation $moderation_information, StateTransitionValidationInterface $validator) {

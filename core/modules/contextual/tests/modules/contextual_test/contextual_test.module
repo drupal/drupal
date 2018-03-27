@@ -15,6 +15,7 @@ function contextual_test_block_view_alter(array &$build, BlockPluginInterface $b
     'route_parameters' => [],
   ];
 }
+<<<<<<< HEAD
 
 /**
  * Implements hook_contextual_links_view_alter().
@@ -35,3 +36,5 @@ function contextual_test_contextual_links_view_alter(&$element, $items) {
 function contextual_test_page_attachments_alter(array &$attachments) {
   $attachments['#attached']['library'][] = 'core/drupal.dialog.ajax';
 }
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd

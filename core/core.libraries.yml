@@ -24,10 +24,17 @@ classList:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor-dev
+<<<<<<< HEAD
   version: "4.8.0"
   license:
     name: GNU-GPL-2.0-or-later
     url: https://github.com/ckeditor/ckeditor-dev/blob/4.8.0/LICENSE.md
+=======
+  version: "4.7.2"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor-dev/blob/4.7.2/LICENSE.md
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }

@@ -297,4 +297,8 @@
    * is already in the URL.
    */
   $(document).on('click.form-fragment', 'a[href*="#"]', debouncedHandleFragmentLinkClickOrHashChange);
+<<<<<<< HEAD
+=======
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }(jQuery, Drupal, Drupal.debounce));

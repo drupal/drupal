@@ -354,8 +354,13 @@ abstract class BrowserTestBase extends TestCase {
    *   When provided default Mink driver class can't be instantiated.
    */
   protected function getDefaultDriverInstance() {
+<<<<<<< HEAD
     // Get default driver params from environment if available.
     if ($arg_json = $this->getMinkDriverArgs()) {
+=======
+    // Get default driver params from environment if availables.
+    if ($arg_json = getenv('MINK_DRIVER_ARGS')) {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       $this->minkDefaultDriverArgs = json_decode($arg_json, TRUE);
     }
 
@@ -405,6 +410,7 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
+<<<<<<< HEAD
    * Get the Mink driver args from an environment variable, if it is set. Can
    * be overridden in a derived class so it is possible to use a different
    * value for a subset of tests, e.g. the JavaScript tests.
@@ -417,6 +423,8 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    * Provides a Guzzle middleware handler to log every response received.
    *
    * @return callable

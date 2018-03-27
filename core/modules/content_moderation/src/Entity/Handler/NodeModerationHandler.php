@@ -54,7 +54,11 @@ class NodeModerationHandler extends ModerationHandler {
    */
   public function enforceRevisionsBundleFormAlter(array &$form, FormStateInterface $form_state, $form_id) {
     // Force the revision checkbox on.
+<<<<<<< HEAD
     $form['workflow']['options']['#value']['revision'] = 'revision';
+=======
+    $form['workflow']['options']['#default_value']['revision'] = 'revision';
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $form['workflow']['options']['revision']['#disabled'] = TRUE;
   }
 

@@ -244,7 +244,11 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
 
     $migration = \Drupal::service('plugin.manager.migration')
       ->createStubMigration($definition);
+<<<<<<< HEAD
     $executable = new MigrateExecutable($migration);
+=======
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $executable->import();
 
     /** @var \Drupal\migrate_entity_test\Entity\StringIdEntityTest $entity */
@@ -261,7 +265,11 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
 
     $migration = \Drupal::service('plugin.manager.migration')
       ->createStubMigration($definition);
+<<<<<<< HEAD
     $executable = new MigrateExecutable($migration);
+=======
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $executable->import();
 
     /** @var \Drupal\migrate_entity_test\Entity\StringIdEntityTest $entity */
@@ -271,6 +279,7 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     $this->assertNull($entity->version->value);
   }
 
+<<<<<<< HEAD
   /**
    * Tests stub rows.
    */
@@ -301,4 +310,6 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     }
   }
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

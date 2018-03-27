@@ -2063,6 +2063,7 @@ function system_update_8403() {
     }
   }
 }
+<<<<<<< HEAD
 
 /**
  * Add the 'revision_default' field to all relevant entity types.
@@ -2135,3 +2136,5 @@ function system_update_8501() {
     }
   }
 }
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd

@@ -29,7 +29,11 @@ class PoItem {
    *
    * @var string|array
    *
+<<<<<<< HEAD
    * @see $plural
+=======
+   * @see $_plural
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    */
   protected $source;
 
@@ -51,7 +55,11 @@ class PoItem {
    * The translation string or array of strings if it has plurals.
    *
    * @var string|array
+<<<<<<< HEAD
    * @see $plural
+=======
+   * @see $_plural
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    */
   protected $translation;
 

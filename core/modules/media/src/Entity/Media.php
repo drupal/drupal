@@ -407,7 +407,16 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
         'weight' => -5,
       ])
       ->setDisplayConfigurable('form', TRUE)
+<<<<<<< HEAD
       ->setDisplayConfigurable('view', TRUE);
+=======
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'string',
+        'weight' => -5,
+      ]);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
     $fields['thumbnail'] = BaseFieldDefinition::create('image')
       ->setLabel(t('Thumbnail'))

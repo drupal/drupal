@@ -374,15 +374,26 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function isRevisionTranslationAffected() {
+<<<<<<< HEAD
     return $this->hasField($this->revisionTranslationAffectedKey) ? $this->get($this->revisionTranslationAffectedKey)->value : TRUE;
+=======
+    $field_name = $this->getEntityType()->getKey('revision_translation_affected');
+    return $this->hasField($field_name) ? $this->get($field_name)->value : TRUE;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
   /**
    * {@inheritdoc}
    */
   public function setRevisionTranslationAffected($affected) {
+<<<<<<< HEAD
     if ($this->hasField($this->revisionTranslationAffectedKey)) {
       $this->set($this->revisionTranslationAffectedKey, $affected);
+=======
+    $field_name = $this->getEntityType()->getKey('revision_translation_affected');
+    if ($this->hasField($field_name)) {
+      $this->set($field_name, $affected);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     }
     return $this;
   }
