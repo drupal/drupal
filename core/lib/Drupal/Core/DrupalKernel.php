@@ -20,6 +20,7 @@ use Drupal\Core\File\MimeType\MimeTypeGuesser;
 use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Core\Installer\InstallerRedirectTrait;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -542,6 +543,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * {@inheritdoc}
    */
   public function preHandle(Request $request) {
+    // Sanitize the request.
+    $request = RequestSanitizer::sanitize(
+      $request,
+      (array) Settings::get(RequestSanitizer::SANITIZE_WHITELIST, []),
+      (bool) Settings::get(RequestSanitizer::SANITIZE_LOG, FALSE)
+    );
 
     $this->loadLegacyIncludes();
 
