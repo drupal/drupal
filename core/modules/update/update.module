@@ -404,7 +404,54 @@ function update_get_available($refresh = FALSE) {
     $available = \Drupal::keyValueExpirable('update_available_releases')->getAll();
   }
 
+  // Check for security releases that are covered under the same security
+  // advisories as the site's current release, and override the update status
+  // data so that those releases are not flagged as needed security updates.
+  // Any security releases beyond those specific releases will still be shown
+  // as required security updates.
+
+  // @todo This is a temporary fix to allow minor-version backports of security
+  //   fixes to be shown as secure. It should not be included in the codebase of
+  //   any release or branch other than such backports. Replace this with
+  //   https://www.drupal.org/project/drupal/issues/2766491.
+  foreach (_update_equivalent_security_releases() as $equivalent_release) {
+    if (!empty($available['drupal']['releases'][$equivalent_release]['terms']['Release type'])) {
+      $security_release_key = array_search('Security update', $available['drupal']['releases'][$equivalent_release]['terms']['Release type']);
+      if ($security_release_key !== FALSE) {
+        unset($available['drupal']['releases'][$equivalent_release]['terms']['Release type'][$security_release_key]);
+      }
+    }
+  }
   return $available;
+}
+
+/**
+ * Identifies equivalent security releases with a hardcoded list.
+ *
+ * Generally, only the latest minor version of Drupal 8 is supported. However,
+ * when security fixes are backported to an old branch, and the site owner
+ * updates to the release containing the backported fix, they should not
+ * see "Security update required!" again if the only other security releases
+ * are releases for the same advisories.
+ *
+ * @return string[]
+ *   A list of security release numbers that are equivalent to this release
+ *   (i.e. covered by the same advisory), for backported security fixes only.
+ *
+ * @todo This is a temporary fix to allow minor-version backports of security
+ *   fixes to be shown as secure. It should not be included in the codebase of
+ *   any release or branch other than such backports. Replace this with
+ *   https://www.drupal.org/project/drupal/issues/2766491.
+ */
+function _update_equivalent_security_releases() {
+  switch (\Drupal::VERSION) {
+    case '8.4.5':
+      return ['8.5.0-rc1'];
+    case '8.4.6':
+      return ['8.5.1'];
+  }
+
+  return [];
 }
 
 /**
