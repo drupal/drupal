@@ -241,6 +241,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->assertEqual(count($elements), 1, 'Ajax validation messages are displayed once.');
   }
 
+<<<<<<< HEAD
   /**
    * Tests that image field validation works with other form submit handlers.
    */
@@ -285,4 +286,6 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->drupalPostAjaxForm(NULL, $edit, 'field_dummy_select[select_widget]');
   }
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

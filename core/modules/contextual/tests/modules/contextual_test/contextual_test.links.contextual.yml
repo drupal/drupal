@@ -2,6 +2,7 @@ contextual_test:
   title: 'Test Link'
   route_name: 'contextual_test'
   group: 'contextual_test'
+<<<<<<< HEAD
 contextual_test_ajax:
   title: 'Test Link with Ajax'
   route_name: 'contextual_test'
@@ -10,3 +11,5 @@ contextual_test_ajax:
     attributes:
       class: ['use-ajax']
       data-dialog-type: 'modal'
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd

@@ -178,6 +178,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/' . $second_media_item->id());
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains($second_media_item->getName());
+<<<<<<< HEAD
   }
 
   /**
@@ -526,6 +527,8 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $assert_session->elementExists('css', 'th:contains("Operations")');
     // Media item is present.
     $assert_session->elementExists('css', 'td:contains("Unnamed")');
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
 }

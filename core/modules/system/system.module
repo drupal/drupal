@@ -988,6 +988,28 @@ function system_get_info($type, $name = NULL) {
     }
     return $info;
   }
+<<<<<<< HEAD
+=======
+
+  // It is possible that a module was marked as required by
+  // hook_system_info_alter() and modules that it depends on are not required.
+  foreach ($modules as $module) {
+    _system_rebuild_module_data_ensure_required($module, $modules);
+  }
+
+  if ($profile && isset($modules[$profile])) {
+    // The installation profile is required, if it's a valid module.
+    $modules[$profile]->info['required'] = TRUE;
+    // Add a default distribution name if the profile did not provide one.
+    // @see install_profile_info()
+    // @see drupal_install_profile_distribution_name()
+    if (!isset($modules[$profile]->info['distribution']['name'])) {
+      $modules[$profile]->info['distribution']['name'] = 'Drupal';
+    }
+  }
+
+  return $modules;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }
 
 /**

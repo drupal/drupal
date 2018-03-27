@@ -10,6 +10,7 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *   type_map = {
  *     "entityreference" = "entity_reference",
  *   },
+<<<<<<< HEAD
  *   core = {7},
  *   source_module = "entityreference",
  *   destination_module = "core"
@@ -29,3 +30,9 @@ class EntityReference extends FieldPluginBase {
   }
 
 }
+=======
+ *   core = {7}
+ * )
+ */
+class EntityReference extends FieldPluginBase {}
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd

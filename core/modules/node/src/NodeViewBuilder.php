@@ -33,7 +33,10 @@ class NodeViewBuilder extends EntityViewBuilder {
               $view_mode,
               $entity->language()->getId(),
               !empty($entity->in_preview),
+<<<<<<< HEAD
               $entity->isDefaultRevision() ? NULL : $entity->getLoadedRevisionId(),
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
             ],
           ],
         ];

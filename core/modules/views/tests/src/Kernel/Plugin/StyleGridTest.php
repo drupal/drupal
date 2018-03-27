@@ -71,12 +71,25 @@ class StyleGridTest extends PluginKernelTestBase {
     switch ($columns) {
       case 5: $width = '20';
         break;
+<<<<<<< HEAD
       case 4: $width = '25';
         break;
       case 3: $width = '33.3333';
         break;
       case 2: $width = '50';
         break;
+=======
+
+      case 4: $width = '25';
+        break;
+
+      case 3: $width = '33.3333';
+        break;
+
+      case 2: $width = '50';
+        break;
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       case 1: $width = '100';
         break;
     }

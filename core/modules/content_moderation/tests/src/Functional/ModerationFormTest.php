@@ -312,6 +312,17 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet($latest_version_path, ['language' => $french]);
     $this->assertTrue($this->xpath('//ul[@class="entity-moderation-form"]'));
 
+<<<<<<< HEAD
+=======
+    // It should not be possible to add a new english revision.
+    $this->drupalGet($edit_path);
+    $this->assertSession()->fieldNotExists('moderation_state[0][state]');
+    $this->assertSession()->pageTextContains('Unable to save this Moderated content.');
+
+    $this->clickLink('Publish');
+    $this->assertSession()->fieldValueEquals('body[0][value]', 'Third version of the content.');
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->drupalGet($edit_path);
     $this->clickLink('Delete');
     $this->assertSession()->buttonExists('Delete');
@@ -345,13 +356,21 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet($latest_version_path);
     $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
 
+<<<<<<< HEAD
     // Make sure we are allowed to create a pending French revision.
+=======
+    // Make sure we're allowed to create a pending french revision.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->drupalGet($edit_path, ['language' => $french]);
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
 
+<<<<<<< HEAD
     // Add an English pending revision (revision 6).
+=======
+    // Add a english pending revision (revision 6).
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->drupalGet($edit_path);
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
@@ -363,10 +382,23 @@ class ModerationFormTest extends ModerationStateTestBase {
 
     $this->drupalGet($latest_version_path);
     $this->assertTrue($this->xpath('//ul[@class="entity-moderation-form"]'));
+<<<<<<< HEAD
     $this->drupalGet($latest_version_path, ['language' => $french]);
     $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
 
     // Publish the English pending revision (revision 7)
+=======
+
+    // Make sure we're not allowed to create a pending french revision.
+    $this->drupalGet($edit_path, ['language' => $french]);
+    $this->assertSession()->fieldNotExists('moderation_state[0][state]');
+    $this->assertSession()->pageTextContains('Unable to save this Moderated content.');
+
+    $this->drupalGet($latest_version_path, ['language' => $french]);
+    $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
+
+    // We should be able to publish the english pending revision (revision 7)
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->drupalGet($edit_path);
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
@@ -379,17 +411,56 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet($latest_version_path);
     $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
 
+<<<<<<< HEAD
     // Make sure we are allowed to create a pending French revision.
+=======
+    // Make sure we're allowed to create a pending french revision.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->drupalGet($edit_path, ['language' => $french]);
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
+<<<<<<< HEAD
 
     // Make sure we are allowed to create a pending English revision.
+=======
+
+    // Make sure we're allowed to create a pending english revision.
     $this->drupalGet($edit_path);
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
+
+    // Create new moderated content. (revision 1).
+    $this->drupalPostForm('node/add/moderated_content', [
+      'title[0][value]' => 'Second moderated content',
+      'body[0][value]' => 'First version of the content.',
+      'moderation_state[0][state]' => 'published',
+    ], t('Save'));
+
+    $node = $this->drupalGetNodeByTitle('Second moderated content');
+    $this->assertTrue($node->language(), 'en');
+    $edit_path = sprintf('node/%d/edit', $node->id());
+    $translate_path = sprintf('node/%d/translations/add/en/fr', $node->id());
+
+    // Add a pending revision (revision 2).
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
+    $this->drupalGet($edit_path);
+    $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
+    $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
+    $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
+<<<<<<< HEAD
+=======
+    $this->drupalPostForm(NULL, [
+      'body[0][value]' => 'Second version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], t('Save'));
+
+    // It shouldn't be possible to translate as we have a pending revision.
+    $this->drupalGet($translate_path);
+    $this->assertSession()->fieldNotExists('moderation_state[0][state]');
+    $this->assertSession()->pageTextContains('Unable to save this Moderated content.');
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
     // Create new moderated content (revision 1).
     $this->drupalPostForm('node/add/moderated_content', [
@@ -419,6 +490,14 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalPostForm(NULL, [
       'moderation_state[0][state]' => 'draft',
     ], t('Save (this translation)'));
+<<<<<<< HEAD
+=======
+
+    // Editing the original translation should not be possible.
+    $this->drupalGet($edit_path);
+    $this->assertSession()->fieldNotExists('moderation_state[0][state]');
+    $this->assertSession()->pageTextContains('Unable to save this Moderated content.');
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
     // Updating and publishing the french translation is still possible.
     $this->drupalGet($edit_path, ['language' => $french]);
@@ -437,6 +516,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalPostForm(NULL, [
       'moderation_state[0][state]' => 'draft',
     ], t('Save (this translation)'));
+<<<<<<< HEAD
   }
 
   /**
@@ -454,6 +534,8 @@ class ModerationFormTest extends ModerationStateTestBase {
       'moderation_state[0][value]' => 'published',
     ], 'Save');
     $this->assertSession()->pageTextContains('Moderated content Test content has been created.');
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
   /**

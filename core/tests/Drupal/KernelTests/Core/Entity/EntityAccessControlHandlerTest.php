@@ -32,7 +32,10 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
 
     $this->installEntitySchema('entity_test_no_uuid');
     $this->installEntitySchema('entity_test_rev');
+<<<<<<< HEAD
     $this->installEntitySchema('entity_test_string_id');
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
   /**

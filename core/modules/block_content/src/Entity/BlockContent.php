@@ -200,6 +200,20 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE);
 
+<<<<<<< HEAD
+=======
+    $fields['revision_created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Revision create time'))
+      ->setDescription(t('The time that the current revision was created.'))
+      ->setRevisionable(TRUE);
+
+    $fields['revision_user'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Revision user'))
+      ->setDescription(t('The user ID of the author of the current revision.'))
+      ->setSetting('target_type', 'user')
+      ->setRevisionable(TRUE);
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     return $fields;
   }
 

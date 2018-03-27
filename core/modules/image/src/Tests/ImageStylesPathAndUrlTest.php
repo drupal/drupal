@@ -231,15 +231,24 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
 
       $this->drupalGet($generate_url_noaccess);
       $this->assertResponse(403, 'Confirmed that access is denied for the private image style.');
+<<<<<<< HEAD
       // Verify that images are not appended to the response.
       // Currently this test only uses PNG images.
+=======
+      // Verify that images are not appended to the response. Currently this test only uses PNG images.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       if (strpos($generate_url, '.png') === FALSE) {
         $this->fail('Confirming that private image styles are not appended require PNG file.');
       }
       else {
+<<<<<<< HEAD
         // Check for PNG-Signature
         // (cf. http://www.libpng.org/pub/png/book/chapter08.html#png.ch08.div.2)
         // in the response body.
+=======
+        // Check for PNG-Signature (cf. http://www.libpng.org/pub/png/book/chapter08.html#png.ch08.div.2) in the
+        // response body.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
         $this->assertNoRaw(chr(137) . chr(80) . chr(78) . chr(71) . chr(13) . chr(10) . chr(26) . chr(10), 'No PNG signature found in the response body.');
       }
     }

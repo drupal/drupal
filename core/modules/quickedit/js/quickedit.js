@@ -44,6 +44,49 @@
     entityElement.setAttribute('data-quickedit-entity-instance-id', entityInstanceID);
   }
 
+<<<<<<< HEAD
+=======
+  function processField(fieldElement) {
+    var metadata = Drupal.quickedit.metadata;
+    var fieldID = fieldElement.getAttribute('data-quickedit-field-id');
+    var entityID = extractEntityID(fieldID);
+
+    var entityElementSelector = '[data-quickedit-entity-id="' + entityID + '"]';
+    var $entityElement = $(entityElementSelector);
+
+    if (!$entityElement.length) {
+      throw 'Quick Edit could not associate the rendered entity field markup (with [data-quickedit-field-id="' + fieldID + '"]) with the corresponding rendered entity markup: no parent DOM node found with [data-quickedit-entity-id="' + entityID + '"]. This is typically caused by the theme\'s template for this entity type forgetting to print the attributes.';
+    }
+    var entityElement = $(fieldElement).closest($entityElement);
+
+    if (entityElement.length === 0) {
+      var $lowestCommonParent = $entityElement.parents().has(fieldElement).first();
+      entityElement = $lowestCommonParent.find($entityElement);
+    }
+    var entityInstanceID = entityElement.get(0).getAttribute('data-quickedit-entity-instance-id');
+
+    if (!metadata.has(fieldID)) {
+      fieldsMetadataQueue.push({
+        el: fieldElement,
+        fieldID: fieldID,
+        entityID: entityID,
+        entityInstanceID: entityInstanceID
+      });
+      return;
+    }
+
+    if (metadata.get(fieldID, 'access') !== true) {
+      return;
+    }
+
+    if (Drupal.quickedit.collections.entities.findWhere({ entityID: entityID, entityInstanceID: entityInstanceID })) {
+      initializeField(fieldElement, fieldID, entityID, entityInstanceID);
+    } else {
+        fieldsAvailableQueue.push({ el: fieldElement, fieldID: fieldID, entityID: entityID, entityInstanceID: entityInstanceID });
+      }
+  }
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   function initializeField(fieldElement, fieldID, entityID, entityInstanceID) {
     var entity = Drupal.quickedit.collections.entities.findWhere({
       entityID: entityID,

@@ -282,7 +282,11 @@ class MediaSourceTest extends MediaKernelTestBase {
       'field_media_test' => 'some_value',
     ]);
     $media->save();
+<<<<<<< HEAD
     $this->assertEquals('Boxer', $media->getName(), 'Correct name was not set on the media item.');
+=======
+    $this->assertEquals('Boxer', $media->getName(), 'Correct name was not set on the media entity.');
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->assertEquals('This will be title.', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('This will be alt.', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
   }

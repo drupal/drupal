@@ -379,6 +379,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    */
   protected function assertResourceResponse($expected_status_code, $expected_body, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
     $this->assertSame($expected_status_code, $response->getStatusCode());
+<<<<<<< HEAD
     if ($expected_status_code === 204) {
       // DELETE responses should not include a Content-Type header. But Apache
       // sets it to 'text/html' by default. We also cannot detect the presence
@@ -422,6 +423,11 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
     else {
       $this->assertFalse($response->hasHeader('X-Drupal-Dynamic-Cache'));
+=======
+    $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
+    if ($expected_body !== FALSE) {
+      $this->assertSame($expected_body, (string) $response->getBody());
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     }
   }
 

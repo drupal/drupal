@@ -1752,7 +1752,17 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @see https://www.drupal.org/node/2907785
    */
   protected function storageDefinitionIsDeleted(FieldStorageDefinitionInterface $storage_definition) {
+<<<<<<< HEAD
     return $storage_definition->isDeleted();
+=======
+    // Configurable fields are marked for deletion.
+    if ($storage_definition instanceof FieldStorageConfigInterface) {
+      return $storage_definition->isDeleted();
+    }
+    // For non configurable fields check whether they are still in the last
+    // installed schema repository.
+    return !array_key_exists($storage_definition->getName(), $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityTypeId));
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
 }

@@ -50,7 +50,10 @@ class HalLinkManagerTest extends KernelTestBase {
   /**
    * @covers ::getTypeUri
    * @dataProvider providerTestGetTypeUri
+<<<<<<< HEAD
    * @expectedDeprecation The deprecated alter hook hook_rest_type_uri_alter() is implemented in these functions: hal_test_rest_type_uri_alter. This hook is deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Implement hook_hal_type_uri_alter() instead.
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    */
   public function testGetTypeUri($link_domain, $entity_type, $bundle, array $context, $expected_return, array $expected_context) {
     $hal_settings = \Drupal::configFactory()->getEditable('hal.settings');
@@ -71,6 +74,7 @@ class HalLinkManagerTest extends KernelTestBase {
   }
 
   public function providerTestGetTypeUri() {
+<<<<<<< HEAD
     $serialization_context_collecting_cacheability = [
       CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => new CacheableMetadata()
     ];
@@ -78,6 +82,8 @@ class HalLinkManagerTest extends KernelTestBase {
       CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheContexts(['url.site'])
     ];
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $base_test_case = [
       'link_domain' => NULL,
       'entity_type' => 'node',
@@ -91,35 +97,44 @@ class HalLinkManagerTest extends KernelTestBase {
         'expected return' => 'BASE_URL/rest/type/node/page',
         'expected context' => [],
       ],
+<<<<<<< HEAD
       'site URL, with optional context to collect cacheability metadata' => $base_test_case + [
         'context' => $serialization_context_collecting_cacheability,
         'expected return' => 'BASE_URL/rest/type/node/page',
         'expected context' => $expected_serialization_context_cacheability_url_site,
       ],
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       // Test hook_hal_type_uri_alter().
       'site URL, with optional context, to test hook_hal_type_uri_alter()' => $base_test_case + [
         'context' => ['hal_test' => TRUE],
         'expected return' => 'hal_test_type',
         'expected context' => ['hal_test' => TRUE],
       ],
+<<<<<<< HEAD
       'site URL, with optional context, to test hook_hal_type_uri_alter(), and collecting cacheability metadata' => $base_test_case + [
         'context' => ['hal_test' => TRUE] + $serialization_context_collecting_cacheability,
         'expected return' => 'hal_test_type',
         // No cacheability metadata bubbled.
         'expected context' => ['hal_test' => TRUE] + $serialization_context_collecting_cacheability,
       ],
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       // Test hook_rest_type_uri_alter() — for backwards compatibility.
       'site URL, with optional context, to test hook_rest_type_uri_alter()' => $base_test_case + [
         'context' => ['rest_test' => TRUE],
         'expected return' => 'rest_test_type',
         'expected context' => ['rest_test' => TRUE],
       ],
+<<<<<<< HEAD
       'site URL, with optional context, to test hook_rest_type_uri_alter(), and collecting cacheability metadata' => $base_test_case + [
         'context' => ['rest_test' => TRUE] + $serialization_context_collecting_cacheability,
         'expected return' => 'rest_test_type',
           // No cacheability metadata bubbled.
         'expected context' => ['rest_test' => TRUE] + $serialization_context_collecting_cacheability,
       ],
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       'configured URL' => [
         'link_domain' => 'http://llamas-rock.com/for-real/',
         'entity_type' => 'node',
@@ -128,6 +143,7 @@ class HalLinkManagerTest extends KernelTestBase {
         'expected return' => 'http://llamas-rock.com/for-real/rest/type/node/page',
         'expected context' => [],
       ],
+<<<<<<< HEAD
       'configured URL, with optional context to collect cacheability metadata' => [
         'link_domain' => 'http://llamas-rock.com/for-real/',
         'entity_type' => 'node',
@@ -138,13 +154,18 @@ class HalLinkManagerTest extends KernelTestBase {
           CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheTags(['config:hal.settings']),
         ],
       ],
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     ];
   }
 
   /**
    * @covers ::getRelationUri
    * @dataProvider providerTestGetRelationUri
+<<<<<<< HEAD
    * @expectedDeprecation The deprecated alter hook hook_rest_relation_uri_alter() is implemented in these functions: hal_test_rest_relation_uri_alter. This hook is deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Implement hook_hal_relation_uri_alter() instead.
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    */
   public function testGetRelationUri($link_domain, $entity_type, $bundle, $field_name, array $context, $expected_return, array $expected_context) {
     $hal_settings = \Drupal::configFactory()->getEditable('hal.settings');
@@ -165,6 +186,7 @@ class HalLinkManagerTest extends KernelTestBase {
   }
 
   public function providerTestGetRelationUri() {
+<<<<<<< HEAD
     $serialization_context_collecting_cacheability = [
       CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => new CacheableMetadata()
     ];
@@ -172,6 +194,8 @@ class HalLinkManagerTest extends KernelTestBase {
       CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheContexts(['url.site'])
     ];
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $field_name = $this->randomMachineName();
     $base_test_case = [
       'link_domain' => NULL,
@@ -187,35 +211,44 @@ class HalLinkManagerTest extends KernelTestBase {
         'expected return' => 'BASE_URL/rest/relation/node/page/' . $field_name,
         'expected context' => [],
       ],
+<<<<<<< HEAD
       'site URL, with optional context to collect cacheability metadata' => $base_test_case + [
         'context' => $serialization_context_collecting_cacheability,
         'expected return' => 'BASE_URL/rest/relation/node/page/' . $field_name,
         'expected context' => $expected_serialization_context_cacheability_url_site,
       ],
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       // Test hook_hal_relation_uri_alter().
       'site URL, with optional context, to test hook_hal_relation_uri_alter()' => $base_test_case + [
         'context' => ['hal_test' => TRUE],
         'expected return' => 'hal_test_relation',
         'expected context' => ['hal_test' => TRUE],
       ],
+<<<<<<< HEAD
       'site URL, with optional context, to test hook_hal_relation_uri_alter(), and collecting cacheability metadata' => $base_test_case + [
         'context' => ['hal_test' => TRUE] + $serialization_context_collecting_cacheability,
         'expected return' => 'hal_test_relation',
         // No cacheability metadata bubbled.
         'expected context' => ['hal_test' => TRUE] + $serialization_context_collecting_cacheability,
       ],
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       // Test hook_rest_relation_uri_alter() — for backwards compatibility.
       'site URL, with optional context, to test hook_rest_relation_uri_alter()' => $base_test_case + [
         'context' => ['rest_test' => TRUE],
         'expected return' => 'rest_test_relation',
         'expected context' => ['rest_test' => TRUE],
       ],
+<<<<<<< HEAD
       'site URL, with optional context, to test hook_rest_relation_uri_alter(), and collecting cacheability metadata' => $base_test_case + [
         'context' => ['rest_test' => TRUE] + $serialization_context_collecting_cacheability,
         'expected return' => 'rest_test_relation',
         // No cacheability metadata bubbled.
         'expected context' => ['rest_test' => TRUE] + $serialization_context_collecting_cacheability,
       ],
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       'configured URL' => [
         'link_domain' => 'http://llamas-rock.com/for-real/',
         'entity_type' => 'node',
@@ -225,6 +258,7 @@ class HalLinkManagerTest extends KernelTestBase {
         'expected return' => 'http://llamas-rock.com/for-real/rest/relation/node/page/' . $field_name,
         'expected context' => [],
       ],
+<<<<<<< HEAD
       'configured URL, with optional context to collect cacheability metadata' => [
         'link_domain' => 'http://llamas-rock.com/for-real/',
         'entity_type' => 'node',
@@ -236,6 +270,8 @@ class HalLinkManagerTest extends KernelTestBase {
           CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheTags(['config:hal.settings']),
         ],
       ],
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     ];
   }
 

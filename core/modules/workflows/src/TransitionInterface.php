@@ -19,6 +19,7 @@ interface TransitionInterface {
   const PLUGIN_FORM_KEY = 'transition';
 
   /**
+<<<<<<< HEAD
    * The transition direction from.
    */
   const DIRECTION_FROM = 'from';
@@ -29,6 +30,8 @@ interface TransitionInterface {
   const DIRECTION_TO = 'to';
 
   /**
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    * Gets the transition's ID.
    *
    * @return string

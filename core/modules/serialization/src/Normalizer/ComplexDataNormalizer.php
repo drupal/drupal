@@ -29,6 +29,7 @@ class ComplexDataNormalizer extends NormalizerBase {
    */
   public function normalize($object, $format = NULL, array $context = []) {
     $attributes = [];
+<<<<<<< HEAD
     // $object will not always match $supportedInterfaceOrClass.
     // @see \Drupal\serialization\Normalizer\EntityNormalizer
     // Other normalizers that extend this class may only provide $object that
@@ -36,6 +37,8 @@ class ComplexDataNormalizer extends NormalizerBase {
     if ($object instanceof ComplexDataInterface) {
       $object = TypedDataInternalPropertiesHelper::getNonInternalProperties($object);
     }
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     /** @var \Drupal\Core\TypedData\TypedDataInterface $property */
     foreach ($object as $name => $property) {
       $attributes[$name] = $this->serializer->normalize($property, $format, $context);

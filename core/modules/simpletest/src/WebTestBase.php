@@ -18,12 +18,20 @@ use Drupal\Core\Url;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\EntityViewTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait as BaseBlockCreationTrait;
+<<<<<<< HEAD
 use Drupal\Tests\Listeners\DeprecationListenerTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait as BaseContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait as BaseNodeCreationTrait;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait as BaseUserCreationTrait;
+=======
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\Tests\TestFileCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 use Drupal\Tests\XdebugRequestTrait;
 use Zend\Diactoros\Uri;
 

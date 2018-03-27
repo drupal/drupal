@@ -1,12 +1,22 @@
 services:
+<<<<<<< HEAD
   access_check.settings_tray.block.has_overrides:
     class: Drupal\settings_tray\Access\BlockHasOverridesAccessCheck
     tags:
       - { name: access_check, applies_to: _access_block_has_overrides_settings_tray_form }
+=======
+  main_content_renderer.off_canvas:
+    class: Drupal\settings_tray\Render\MainContent\OffCanvasRenderer
+    arguments: ['@title_resolver', '@renderer']
+    tags:
+      - { name: render.main_content_renderer, format: drupal_dialog.off_canvas }
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   access_check.settings_tray.block.settings_tray_form:
     class: Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck
     tags:
       - { name: access_check, applies_to: _access_block_plugin_has_settings_tray_form }
+<<<<<<< HEAD
 
   # BC layers.
   # @todo Remove in Drupal 9.0.0.
@@ -16,3 +26,5 @@ services:
     public: false
     tags:
       - { name: route_processor_outbound }
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd

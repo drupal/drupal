@@ -18,6 +18,9 @@
 .upgrade-analysis-report__status-icon--checked:before {
   background-image: url(../../../../misc/icons/73b355/check.svg);
 }
+<<<<<<< HEAD
 .upgrade-analysis-report__status-icon--error:before {
   background-image: url(../../../../misc/icons/e32700/error.svg);
 }
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd

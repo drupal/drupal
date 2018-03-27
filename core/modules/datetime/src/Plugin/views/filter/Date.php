@@ -105,10 +105,13 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
     $timezone = $this->getTimezone();
     $origin_offset = $this->getOffset($this->value['min'], $timezone);
 
+<<<<<<< HEAD
     // Although both 'min' and 'max' values are required, default empty 'min'
     // value as UNIX timestamp 0.
     $min = (!empty($this->value['min'])) ? $this->value['min'] : '@0';
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     // Convert to ISO format and format for query. UTC timezone is used since
     // dates are stored in UTC.
     $a = new DateTimePlus($min, new \DateTimeZone($timezone));

@@ -79,7 +79,11 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
       $response = new AjaxResponse(NULL, 200);
       $status_messages = ['#type' => 'status_messages'];
       $response->addCommand(new PrependCommand(NULL, $status_messages));
+<<<<<<< HEAD
       $event->allowCustomResponseCode();
+=======
+      $response->headers->set('X-Status-Code', 200);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       $event->setResponse($response);
       return;
     }

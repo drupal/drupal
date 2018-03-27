@@ -2,7 +2,10 @@ id: d7_field
 label: Field configuration
 migration_tags:
   - Drupal 7
+<<<<<<< HEAD:core/modules/field/migrations/d7_field.yml
   - Configuration
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/field/migration_templates/d7_field.yml
 class: Drupal\migrate_drupal\Plugin\migrate\FieldMigration
 field_plugin_method: processField
 source:

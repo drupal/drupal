@@ -10,7 +10,10 @@ use Prophecy\Argument;
 /**
  * @coversDefaultClass \Drupal\file\Plugin\migrate\field\d7\ImageField
  * @group file
+<<<<<<< HEAD
  * @group legacy
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  */
 class ImageFieldTest extends UnitTestCase {
 
@@ -45,7 +48,10 @@ class ImageFieldTest extends UnitTestCase {
 
   /**
    * @covers ::processFieldValues
+<<<<<<< HEAD
    * @expectedDeprecation ImageField is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.x. Use \Drupal\image\Plugin\migrate\field\d7\ImageField instead. See https://www.drupal.org/node/2936061.
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    */
   public function testProcessFieldValues() {
     $this->plugin->processFieldValues($this->migration, 'somefieldname', []);

@@ -9,9 +9,13 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 /**
  * @MigrateField(
  *   id = "filefield",
+<<<<<<< HEAD
  *   core = {6},
  *   source_module = "filefield",
  *   destination_module = "file"
+=======
+ *   core = {6}
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  * )
  */
 class FileField extends FieldPluginBase {

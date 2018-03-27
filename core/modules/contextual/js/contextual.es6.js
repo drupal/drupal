@@ -130,6 +130,49 @@
   }
 
   /**
+<<<<<<< HEAD
+=======
+   * Determines if a contextual link is nested & overlapping, if so: adjusts it.
+   *
+   * This only deals with two levels of nesting; deeper levels are not touched.
+   *
+   * @param {jQuery} $contextual
+   *   A contextual links placeholder DOM element, containing the actual
+   *   contextual links as rendered by the server.
+   */
+  function adjustIfNestedAndOverlapping($contextual) {
+    const $contextuals = $contextual
+      // @todo confirm that .closest() is not sufficient
+      .parents('.contextual-region').eq(-1)
+      .find('.contextual');
+
+    // Early-return when there's no nesting.
+    if ($contextuals.length <= 1) {
+      return;
+    }
+
+    // If the two contextual links overlap, then we move the second one.
+    const firstTop = $contextuals.eq(0).offset().top;
+    const secondTop = $contextuals.eq(1).offset().top;
+    if (firstTop === secondTop) {
+      const $nestedContextual = $contextuals.eq(1);
+
+      // Retrieve height of nested contextual link.
+      let height = 0;
+      const $trigger = $nestedContextual.find('.trigger');
+      // Elements with the .visually-hidden class have no dimensions, so this
+      // class must be temporarily removed to the calculate the height.
+      $trigger.removeClass('visually-hidden');
+      height = $nestedContextual.height();
+      $trigger.addClass('visually-hidden');
+
+      // Adjust nested contextual link's position.
+      $nestedContextual.css({ top: $nestedContextual.position().top + height });
+    }
+  }
+
+  /**
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    * Attaches outline behavior for regions associated with contextual links.
    *
    * Events

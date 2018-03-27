@@ -50,8 +50,13 @@ class EntityModerationForm extends FormBase {
    * @param \Drupal\Component\Datetime\Time $time
    *   The time service.
    */
+<<<<<<< HEAD
   public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidationInterface $validation, Time $time) {
+=======
+  public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidation $validation, Time $time) {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->moderationInfo = $moderation_info;
+    $this->time = $time;
     $this->validation = $validation;
     $this->time = $time;
   }

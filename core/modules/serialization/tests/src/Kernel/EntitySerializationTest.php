@@ -227,7 +227,10 @@ class EntitySerializationTest extends NormalizerTestBase {
       'revision_id' => '<revision_id><value>' . $this->entity->getRevisionId() . '</value></revision_id>',
       'default_langcode' => '<default_langcode><value>1</value></default_langcode>',
       'revision_translation_affected' => '<revision_translation_affected><value>1</value></revision_translation_affected>',
+<<<<<<< HEAD
       'non_mul_field' => '<non_mul_field/>',
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       'non_rev_field' => '<non_rev_field/>',
       'field_test_text' => '<field_test_text><value>' . $this->values['field_test_text']['value'] . '</value><format>' . $this->values['field_test_text']['format'] . '</format><processed><![CDATA[<p>' . $this->values['field_test_text']['value'] . '</p>]]></processed></field_test_text>',
     ];

@@ -6,5 +6,9 @@ dependencies:
 id: comment_delete_action
 label: 'Delete comment'
 type: comment
+<<<<<<< HEAD
 plugin: entity:delete_action:comment
+=======
+plugin: comment_delete_action
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 configuration: {  }

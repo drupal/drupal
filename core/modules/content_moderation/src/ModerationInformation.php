@@ -130,6 +130,16 @@ class ModerationInformation implements ModerationInformationInterface {
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
+=======
+  public function isPendingRevisionAllowed(ContentEntityInterface $entity) {
+    return !(!$entity->isRevisionTranslationAffected() && count($entity->getTranslationLanguages()) > 1 && $this->hasPendingRevision($entity));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   public function isLatestRevision(ContentEntityInterface $entity) {
     return $entity->getRevisionId() == $this->getLatestRevisionId($entity->getEntityTypeId(), $entity->id());
   }
@@ -138,6 +148,7 @@ class ModerationInformation implements ModerationInformationInterface {
    * {@inheritdoc}
    */
   public function hasPendingRevision(ContentEntityInterface $entity) {
+<<<<<<< HEAD
     $result = FALSE;
     if ($this->isModeratedEntity($entity)) {
       /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
@@ -152,6 +163,10 @@ class ModerationInformation implements ModerationInformationInterface {
       }
     }
     return $result;
+=======
+    return $this->isModeratedEntity($entity)
+      && !($this->getLatestRevisionId($entity->getEntityTypeId(), $entity->id()) == $this->getDefaultRevisionId($entity->getEntityTypeId(), $entity->id()));
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
   /**
@@ -185,7 +200,11 @@ class ModerationInformation implements ModerationInformationInterface {
           continue;
         }
         // Return TRUE if a translation with a published state is found.
+<<<<<<< HEAD
         if ($workflow->getTypePlugin()->getState($moderation_state)->isPublishedState()) {
+=======
+        if ($workflow->getTypePlugin()->getState($language_revision->moderation_state->value)->isPublishedState()) {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
           return TRUE;
         }
       }

@@ -88,7 +88,11 @@ class EntityModerationRouteProvider implements EntityRouteProviderInterface, Ent
         ->setOption('parameters', [
           $entity_type_id => [
             'type' => 'entity:' . $entity_type_id,
+<<<<<<< HEAD:core/modules/content_moderation/src/Entity/Routing/EntityModerationRouteProvider.php
             'load_latest_revision' => TRUE,
+=======
+            'load_pending_revision' => 1,
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/content_moderation/src/Entity/Routing/EntityModerationRouteProvider.php
           ],
         ]);
 

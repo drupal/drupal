@@ -9,7 +9,10 @@ namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Database\Query\SelectInterface;
+<<<<<<< HEAD
 use Drupal\Core\Database\StatementInterface;
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\Core\Database\Database;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
@@ -150,6 +153,7 @@ class SqlBaseTest extends MigrateTestBase {
       $source->getHighWaterStorage()->set($this->migration->id(), $high_water);
     }
 
+<<<<<<< HEAD
     $statement = $this->createMock(StatementInterface::class);
     $statement->expects($this->atLeastOnce())->method('setFetchMode')->with(\PDO::FETCH_ASSOC);
     $query = $this->createMock(SelectInterface::class);
@@ -176,6 +180,34 @@ class SqlBaseTest extends MigrateTestBase {
     ];
   }
 
+=======
+    $query_result = new \ArrayIterator($query_result);
+
+    $query = $this->getMock(SelectInterface::class);
+    $query->method('execute')->willReturn($query_result);
+    $query->expects($this->atLeastOnce())->method('orderBy')->with('order', 'ASC');
+
+    $condition_group = $this->getMock(ConditionInterface::class);
+    $query->method('orConditionGroup')->willReturn($condition_group);
+
+    $source->setQuery($query);
+    $source->rewind();
+  }
+
+  /**
+   * Data provider for ::testHighWater().
+   *
+   * @return array
+   *   The scenarios to test.
+   */
+  public function highWaterDataProvider() {
+    return [
+      'no high-water value set' => [],
+      'high-water value set' => [33],
+    ];
+  }
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }
 
 /**

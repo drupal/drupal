@@ -1,6 +1,10 @@
 settings_tray.block_configure:
   title: 'Quick edit'
+<<<<<<< HEAD
   route_name: 'entity.block.settings_tray_form'
+=======
+  route_name: 'entity.block.off_canvas_form'
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   group: 'block'
   options:
     attributes:

@@ -13,6 +13,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * @ContentEntityType(
  *   id = "contact_message",
  *   label = @Translation("Contact message"),
+<<<<<<< HEAD
  *   label_collection = @Translation("Contact messages"),
  *   label_singular = @Translation("contact message"),
  *   label_plural = @Translation("contact messages"),
@@ -20,6 +21,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     singular = "@count contact message",
  *     plural = "@count contact messages",
  *   ),
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  *   bundle_label = @Translation("Contact form"),
  *   handlers = {
  *     "access" = "Drupal\contact\ContactMessageAccessControlHandler",

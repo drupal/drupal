@@ -207,6 +207,7 @@ class StyleSerializerTest extends ViewTestBase {
     $expected = $serializer->serialize($entities, 'xml');
     $actual_xml = $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'xml']]);
     $this->assertSame(trim($expected), $actual_xml);
+<<<<<<< HEAD:core/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php
   }
 
   /**
@@ -229,6 +230,8 @@ class StyleSerializerTest extends ViewTestBase {
     $this->drupalGet('test/serialize/shared', ['query' => ['_format' => 'xml']]);
     $this->assertResponse(200);
     $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php
   }
 
   /**
@@ -396,11 +399,27 @@ class StyleSerializerTest extends ViewTestBase {
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]);
     $this->assertHeader('content-type', 'application/json');
     $this->assertResponse(200, 'A 200 response was returned when JSON was requested.');
+<<<<<<< HEAD:core/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php
 
+=======
+    $headers = $this->drupalGetHeaders();
+    $this->assertEqual($headers['Content-Type'], ['application/json'], 'The header Content-type is correct.');
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php
     // Should return a 200.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'xml']]);
     $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
     $this->assertResponse(200, 'A 200 response was returned when XML was requested');
+<<<<<<< HEAD:core/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php
+=======
+    $headers = $this->drupalGetHeaders();
+    $this->assertSame(['text/xml; charset=UTF-8'], $headers['Content-Type']);
+    // Should return a 406.
+    $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'html']]);
+    // We want to show the first format by default, see
+    // \Drupal\rest\Plugin\views\style\Serializer::render.
+    $this->assertHeader('content-type', 'application/json');
+    $this->assertResponse(200, 'A 200 response was returned when HTML was requested.');
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php
 
     // Now configure no format, so both serialization formats should be allowed.
     $this->drupalPostForm($style_options, ['style_options[formats][json]' => '0', 'style_options[formats][xml]' => '0'], t('Apply'));
@@ -413,11 +432,20 @@ class StyleSerializerTest extends ViewTestBase {
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'xml']]);
     $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
     $this->assertResponse(200, 'A 200 response was returned when XML was requested');
+<<<<<<< HEAD:core/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php
 
     // Should return a 406 for HTML still.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'html']]);
     $this->assertHeader('content-type', 'text/html; charset=UTF-8');
     $this->assertResponse(406, 'A 406 response was returned when HTML was requested.');
+=======
+    // Should return a 200.
+    $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'html']]);
+    // We want to show the first format by default, see
+    // \Drupal\rest\Plugin\views\style\Serializer::render.
+    $this->assertHeader('content-type', 'application/json');
+    $this->assertResponse(200, 'A 200 response was returned when HTML was requested.');
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php
   }
 
   /**
@@ -616,7 +644,11 @@ class StyleSerializerTest extends ViewTestBase {
     // Check if we receive the expected result.
     $result = $this->xpath('//div[@id="views-live-preview"]/pre');
     $json_preview = $result[0]->getText();
+<<<<<<< HEAD:core/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php
     $this->assertSame($json_preview, $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]), 'The expected JSON preview output was found.');
+=======
+    $this->assertSame($json_preview, $this->drupalGet('test/serialize/field'), 'The expected JSON preview output was found.');
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php
   }
 
   /**

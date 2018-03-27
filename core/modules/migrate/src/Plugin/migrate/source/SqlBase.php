@@ -24,11 +24,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * - target: (optional) The database target name. Defaults to 'default'.
  * - batch_size: (optional) Number of records to fetch from the database during
  *   each batch. If omitted, all records are fetched in a single query.
+<<<<<<< HEAD
  * - ignore_map: (optional) Source data is joined to the map table by default to
  *   improve migration performance. If set to TRUE, the map table will not be
  *   joined. Using expressions in the query may result in column aliases in the
  *   JOIN clause which would be invalid SQL. If you run into this, set
  *   ignore_map to TRUE.
+=======
+ * - ignore_map: (optional) Source data is joined to the map table by default.
+ *   If set to TRUE, the map table will not be joined.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  *
  * For other optional configuration keys inherited from the parent class, refer
  * to \Drupal\migrate\Plugin\migrate\source\SourcePluginBase.
@@ -384,7 +389,11 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    * {@inheritdoc}
    */
   public function count($refresh = FALSE) {
+<<<<<<< HEAD
     return (int) $this->query()->countQuery()->execute()->fetchField();
+=======
+    return $this->query()->countQuery()->execute()->fetchField();
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
   /**

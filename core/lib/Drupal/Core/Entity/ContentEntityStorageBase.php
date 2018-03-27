@@ -233,6 +233,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * {@inheritdoc}
    */
+<<<<<<< HEAD
   public function createRevision(RevisionableInterface $entity, $default = TRUE, $keep_untranslatable_fields = NULL) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $new_revision = clone $entity;
@@ -375,6 +376,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * {@inheritdoc}
    */
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition) {}
 
   /**

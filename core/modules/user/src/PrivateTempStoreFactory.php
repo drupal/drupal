@@ -15,7 +15,68 @@ use Drupal\Core\TempStore\PrivateTempStoreFactory as CorePrivateTempStoreFactory
  * @see \Drupal\Core\TempStore\PrivateTempStoreFactory
  * @see https://www.drupal.org/node/2935639
  */
+<<<<<<< HEAD
 class PrivateTempStoreFactory extends CorePrivateTempStoreFactory {
+=======
+class PrivateTempStoreFactory {
+
+  /**
+   * The storage factory creating the backend to store the data.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface
+   */
+  protected $storageFactory;
+
+  /**
+   * The lock object used for this data.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface
+   */
+  protected $lockBackend;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * The time to live for items in seconds.
+   *
+   * @var int
+   */
+  protected $expire;
+
+  /**
+   * Constructs a Drupal\user\PrivateTempStoreFactory object.
+   *
+   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $storage_factory
+   *   The key/value store factory.
+   * @param \Drupal\Core\Lock\LockBackendInterface $lock_backend
+   *   The lock object used for this data.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current account.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
+   * @param int $expire
+   *   The time to live for items, in seconds.
+   */
+  public function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lock_backend, AccountProxyInterface $current_user, RequestStack $request_stack, $expire = 604800) {
+    $this->storageFactory = $storage_factory;
+    $this->lockBackend = $lock_backend;
+    $this->currentUser = $current_user;
+    $this->requestStack = $request_stack;
+    $this->expire = $expire;
+  }
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
   /**
    * Creates a PrivateTempStore.

@@ -63,9 +63,15 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'contact_form' => 5,
       'configurable_language' => 5,
       'editor' => 2,
+<<<<<<< HEAD
       'field_config' => 86,
       'field_storage_config' => 60,
       'file' => 8,
+=======
+      'field_config' => 84,
+      'field_storage_config' => 58,
+      'file' => 7,
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       'filter_format' => 7,
       'image_style' => 5,
       'language_content_settings' => 2,
@@ -85,7 +91,11 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'tour' => 4,
       'user' => 7,
       'user_role' => 6,
+<<<<<<< HEAD
       'menu_link_content' => 5,
+=======
+      'menu_link_content' => 4,
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       'view' => 16,
       'date_format' => 11,
       'entity_form_display' => 29,

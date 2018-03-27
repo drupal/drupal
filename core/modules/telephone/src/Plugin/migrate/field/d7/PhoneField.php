@@ -10,6 +10,7 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *   type_map = {
  *     "phone" = "telephone",
  *   },
+<<<<<<< HEAD
  *   core = {7},
  *   source_module = "phone",
  *   destination_module = "telephone"
@@ -27,3 +28,9 @@ class PhoneField extends FieldPluginBase {
   }
 
 }
+=======
+ *   core = {7}
+ * )
+ */
+class PhoneField extends FieldPluginBase {}
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd

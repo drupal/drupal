@@ -245,7 +245,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
   /**
    * Tests legacy field asserts using textfields.
    */
+<<<<<<< HEAD
   public function testFieldAssertsForTextfields() {
+=======
+  public function testLegacyFieldAssertsForTextfields() {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->drupalGet('test-field-xpath');
 
     // *** 1. assertNoField().
@@ -387,7 +391,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
   /**
    * Tests legacy field asserts for options field type.
    */
+<<<<<<< HEAD
   public function testFieldAssertsForOptions() {
+=======
+  public function testLegacyFieldAssertsForOptions() {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->drupalGet('test-field-xpath');
 
     // Option field type.
@@ -443,7 +451,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
   /**
    * Tests legacy field asserts for button field type.
    */
+<<<<<<< HEAD
   public function testFieldAssertsForButton() {
+=======
+  public function testLegacyFieldAssertsForButton() {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->drupalGet('test-field-xpath');
 
     $this->assertFieldById('edit-save', NULL);
@@ -485,7 +497,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
   /**
    * Tests legacy field asserts for checkbox field type.
    */
+<<<<<<< HEAD
   public function testFieldAssertsForCheckbox() {
+=======
+  public function testLegacyFieldAssertsForCheckbox() {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $this->drupalGet('test-field-xpath');
 
     // Part 1 - Test by name.
@@ -639,6 +655,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertEquals([NULL, ['key1' => ['key2' => ['key3' => 3, 'key3.1' => 3.1]]]], $this->minkDefaultDriverArgs);
   }
 
+<<<<<<< HEAD
   /**
    * Ensures we can't access modules we shouldn't be able to after install.
    */
@@ -648,4 +665,6 @@ class BrowserTestBaseTest extends BrowserTestBase {
     \Drupal::service('extension.list.module')->getPathname('demo_umami_content');
   }
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

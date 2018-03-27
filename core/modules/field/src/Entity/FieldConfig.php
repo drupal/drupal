@@ -196,6 +196,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    * {@inheritdoc}
    */
   public static function preDelete(EntityStorageInterface $storage, array $fields) {
+<<<<<<< HEAD
     /** @var \Drupal\Core\Field\DeletedFieldsRepositoryInterface $deleted_fields_repository */
     $deleted_fields_repository = \Drupal::service('entity_field.deleted_fields_repository');
     $entity_type_manager = \Drupal::entityTypeManager();
@@ -204,16 +205,33 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
 
     // Keep the field definitions in the deleted fields repository so we can use
     // them later during field_purge_batch().
+=======
+    $state = \Drupal::state();
+    $entity_type_manager = \Drupal::entityTypeManager();
+
+    parent::preDelete($storage, $fields);
+    // Keep the field definitions in the state storage so we can use them
+    // later during field_purge_batch().
+    $deleted_fields = $state->get('field.field.deleted') ?: [];
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     /** @var \Drupal\field\FieldConfigInterface $field */
     foreach ($fields as $field) {
       // Only mark a field for purging if there is data. Otherwise, just remove
       // it.
       $target_entity_storage = $entity_type_manager->getStorage($field->getTargetEntityTypeId());
       if (!$field->deleted && $target_entity_storage instanceof FieldableEntityStorageInterface && $target_entity_storage->countFieldData($field->getFieldStorageDefinition(), TRUE)) {
+<<<<<<< HEAD
         $field = clone $field;
         $field->deleted = TRUE;
         $field->fieldStorage = NULL;
         $deleted_fields_repository->addFieldDefinition($field);
+=======
+        $config = $field->toArray();
+        $config['deleted'] = TRUE;
+        $config['field_storage_uuid'] = $field->getFieldStorageDefinition()->uuid();
+        $deleted_fields[$field->uuid()] = $config;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       }
     }
   }

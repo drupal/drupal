@@ -32,6 +32,9 @@ view all media revisions:
 access media overview:
   title: 'Access media overview'
   description: 'Users with this permission can access the media overview page.'
+<<<<<<< HEAD
 
 permission_callbacks:
   - \Drupal\media\MediaPermissions::mediaTypePermissions
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd

@@ -96,7 +96,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to run.
    * @param \Drupal\migrate\MigrateMessageInterface $message
+<<<<<<< HEAD
    *   (optional) The migrate message service.
+=======
+   *   The migrate message service.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   (optional) The event dispatcher.
    *

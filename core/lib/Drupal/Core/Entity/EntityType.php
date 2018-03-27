@@ -318,8 +318,13 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
       $this->checkStorageClass($this->handlers['storage']);
     }
 
+<<<<<<< HEAD
     // Automatically add the "EntityChanged" constraint if the entity type
     // tracks the changed time.
+=======
+    // Automatically add the EntityChanged constraint if the entity type tracks
+    // the changed time.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     if ($this->entityClassImplements(EntityChangedInterface::class)) {
       $this->addConstraint('EntityChanged');
     }

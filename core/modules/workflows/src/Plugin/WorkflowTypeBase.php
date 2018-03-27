@@ -7,7 +7,6 @@ use Drupal\Core\Plugin\PluginWithFormsTrait;
 use Drupal\workflows\State;
 use Drupal\workflows\StateInterface;
 use Drupal\workflows\Transition;
-use Drupal\workflows\TransitionInterface;
 use Drupal\workflows\WorkflowInterface;
 use Drupal\workflows\WorkflowTypeInterface;
 

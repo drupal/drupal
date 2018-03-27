@@ -14,9 +14,13 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *     "text_long" = "text_long",
  *     "text_with_summary" = "text_with_summary"
  *   },
+<<<<<<< HEAD
  *   core = {6},
  *   source_module = "text",
  *   destination_module = "text",
+=======
+ *   core = {6}
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  * )
  */
 class TextField extends FieldPluginBase {

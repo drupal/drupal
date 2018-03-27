@@ -1,7 +1,7 @@
 name: 'Settings Tray'
 type: module
-description: 'Provides a sidebar to configure blocks on the page.'
-package: Core
+description: 'Provides the ability to change the most common configuration from the Drupal front-end.'
+package: Core (Experimental)
 version: VERSION
 core: 8.x
 dependencies:

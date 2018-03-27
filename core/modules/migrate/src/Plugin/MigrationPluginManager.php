@@ -70,12 +70,15 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
       $directories = array_map(function ($directory) {
+<<<<<<< HEAD
         // Check for use of the @deprecated /migration_templates directory.
         // @todo Remove use of /migration_templates in Drupal 9.0.0.
         if (is_dir($directory . '/migration_templates')) {
           @trigger_error('Use of the /migration_templates directory to store migration configuration files is deprecated in Drupal 8.1.0 and will be removed before Drupal 9.0.0. See https://www.drupal.org/node/2920988.', E_USER_DEPRECATED);
         }
         // But still accept configurations found in /migration_templates.
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
         return [$directory . '/migration_templates', $directory . '/migrations'];
       }, $this->moduleHandler->getModuleDirectories());
 

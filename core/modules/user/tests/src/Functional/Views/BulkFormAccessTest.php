@@ -1,6 +1,10 @@
 <?php
 
+<<<<<<< HEAD:core/modules/user/tests/src/Functional/Views/BulkFormAccessTest.php
 namespace Drupal\Tests\user\Functional\Views;
+=======
+namespace Drupal\user\Tests\Views;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/user/src/Tests/Views/BulkFormAccessTest.php
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\user\Entity\User;

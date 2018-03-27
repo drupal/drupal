@@ -45,6 +45,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
         break;
 
       case 'POST':
+<<<<<<< HEAD
         $this->grantPermissionsToTestedRole(['create camelids media']);
         break;
 
@@ -56,6 +57,17 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
 
       case 'DELETE':
         $this->grantPermissionsToTestedRole(['delete any camelids media']);
+=======
+        $this->grantPermissionsToTestedRole(['create media']);
+        break;
+
+      case 'PATCH':
+        $this->grantPermissionsToTestedRole(['update any media']);
+        break;
+
+      case 'DELETE':
+        $this->grantPermissionsToTestedRole(['delete any media']);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
         break;
     }
   }
@@ -94,7 +106,11 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
     // Create a "Llama" media item.
     $media = Media::create([
       'bundle' => 'camelids',
+<<<<<<< HEAD
       'field_media_file' => [
+=======
+      'field_media_file_1' => [
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
         'target_id' => $file->id(),
       ],
     ]);
@@ -149,7 +165,11 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
           'value' => 'Llama',
         ],
       ],
+<<<<<<< HEAD
       'field_media_file' => [
+=======
+      'field_media_file_1' => [
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
         [
           'description' => NULL,
           'display' => NULL,
@@ -263,6 +283,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
     $this->markTestSkipped('POSTing File Media items is not supported until https://www.drupal.org/node/1927648 is solved.');
   }
 
+<<<<<<< HEAD
   /**
    * {@inheritdoc}
    */
@@ -272,4 +293,6 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
       ->addCacheTags(['media:1']);
   }
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

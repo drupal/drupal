@@ -85,6 +85,7 @@ class ModuleInstallerTest extends KernelTestBase {
     $this->assertFalse($schema->tableExists($table));
   }
 
+<<<<<<< HEAD
   /**
    * Ensure that rebuilding the container in hook_install() works.
    */
@@ -94,4 +95,6 @@ class ModuleInstallerTest extends KernelTestBase {
     $this->assertTrue($module_installer->install(['module_test']));
   }
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

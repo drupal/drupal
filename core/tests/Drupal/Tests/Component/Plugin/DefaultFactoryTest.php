@@ -5,9 +5,15 @@ namespace Drupal\Tests\Component\Plugin;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+<<<<<<< HEAD
 use Drupal\Tests\Component\Plugin\Fixtures\vegetable\Broccoli;
 use Drupal\Tests\Component\Plugin\Fixtures\vegetable\Corn;
 use Drupal\Tests\Component\Plugin\Fixtures\vegetable\VegetableInterface;
+=======
+use Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry;
+use Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface;
+use Drupal\plugin_test\Plugin\plugin_test\fruit\Kale;
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 use PHPUnit\Framework\TestCase;
 
 /**

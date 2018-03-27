@@ -373,6 +373,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     $this->assertTrue($unserialized->getStatus());
   }
 
+<<<<<<< HEAD
   /**
    * {@inheritdoc}
    */
@@ -382,4 +383,6 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
       ->addCacheTags(['comment:1']);
   }
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

@@ -23,8 +23,12 @@ class ContentEntityNormalizer extends EntityNormalizer {
     ];
 
     $attributes = [];
+<<<<<<< HEAD
     /** @var \Drupal\Core\Entity\Entity $entity */
     foreach (TypedDataInternalPropertiesHelper::getNonInternalProperties($entity->getTypedData()) as $name => $field_items) {
+=======
+    foreach ($entity as $name => $field_items) {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       if ($field_items->access('view', $context['account'])) {
         $attributes[$name] = $this->serializer->normalize($field_items, $format, $context);
       }

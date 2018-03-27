@@ -174,11 +174,19 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
+<<<<<<< HEAD
    * Tests removal of content moderation state entity.
+=======
+   * Tests removal of content moderation state entity field data.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    *
    * @dataProvider basicModerationTestCases
    */
   public function testContentModerationStateDataRemoval($entity_type_id) {
+<<<<<<< HEAD
+=======
+    // Test content moderation state deletion.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->createEntity($entity_type_id);
     $entity->save();
@@ -186,6 +194,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity->delete();
     $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
     $this->assertFalse($content_moderation_state);
+<<<<<<< HEAD
   }
 
   /**
@@ -204,10 +213,25 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity = $this->reloadEntity($entity);
     $entity->setNewRevision(TRUE);
     $entity->save();
+=======
+
+    // Test content moderation state revision deletion.
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity2 */
+    $entity2 = $this->createEntity($entity_type_id);
+    $entity2->save();
+    $revision = clone $entity2;
+    $revision->isDefaultRevision(FALSE);
+    $content_moderation_state = ContentModerationState::loadFromModeratedEntity($revision);
+    $this->assertTrue($content_moderation_state);
+    $entity2 = $this->reloadEntity($entity2);
+    $entity2->setNewRevision(TRUE);
+    $entity2->save();
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
     $entity_storage->deleteRevision($revision->getRevisionId());
     $content_moderation_state = ContentModerationState::loadFromModeratedEntity($revision);
     $this->assertFalse($content_moderation_state);
+<<<<<<< HEAD
     $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
     $this->assertTrue($content_moderation_state);
   }
@@ -250,16 +274,38 @@ class ContentModerationStateTest extends KernelTestBase {
         ->save();
       $entity->save();
       $translation = $entity->addTranslation($langcode, ['title' => 'Titolo test']);
+=======
+    $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity2);
+    $this->assertTrue($content_moderation_state);
+
+    // Test content moderation state translation deletion.
+    if ($this->entityTypeManager->getDefinition($entity_type_id)->isTranslatable()) {
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity3 */
+      $entity3 = $this->createEntity($entity_type_id);
+      $langcode = 'it';
+      ConfigurableLanguage::createFromLangcode($langcode)
+        ->save();
+      $entity3->save();
+      $translation = $entity3->addTranslation($langcode, ['title' => 'Titolo test']);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       // Make sure we add values for all of the required fields.
       if ($entity_type_id == 'block_content') {
         $translation->info = $this->randomString();
       }
       $translation->save();
+<<<<<<< HEAD
       $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
       $this->assertTrue($content_moderation_state->hasTranslation($langcode));
       $entity->removeTranslation($langcode);
       $entity->save();
       $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
+=======
+      $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity3);
+      $this->assertTrue($content_moderation_state->hasTranslation($langcode));
+      $entity3->removeTranslation($langcode);
+      $entity3->save();
+      $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity3);
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
       $this->assertFalse($content_moderation_state->hasTranslation($langcode));
     }
   }
@@ -572,6 +618,7 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
+<<<<<<< HEAD
    * Test the revision default state of the moderation state entity revisions.
    *
    * @param string $entity_type_id
@@ -614,6 +661,8 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
    * Creates an entity.
    *
    * The entity will have required fields populated and the corresponding bundle

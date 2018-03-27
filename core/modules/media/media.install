@@ -6,7 +6,10 @@
  */
 
 use Drupal\user\RoleInterface;
+<<<<<<< HEAD
 use Drupal\user\Entity\Role;
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 
 /**
  * Implements hook_install().

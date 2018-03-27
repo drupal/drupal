@@ -156,6 +156,32 @@ class ModerationStateFieldItemList extends FieldItemList {
    * @param string $moderation_state_id
    *   The ID of the new moderation state.
    */
+<<<<<<< HEAD
+=======
+  public function onChange($delta) {
+    $this->updateModeratedEntity($this->list[$delta]->value);
+
+    parent::onChange($delta);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValue($values, $notify = TRUE) {
+    parent::setValue($values, $notify);
+
+    if (isset($this->list[0])) {
+      $this->updateModeratedEntity($this->list[0]->value);
+    }
+  }
+
+  /**
+   * Updates the default revision flag and the publishing status of the entity.
+   *
+   * @param string $moderation_state_id
+   *   The ID of the new moderation state.
+   */
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   protected function updateModeratedEntity($moderation_state_id) {
     $entity = $this->getEntity();
 

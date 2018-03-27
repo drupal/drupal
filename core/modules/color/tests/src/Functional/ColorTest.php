@@ -141,7 +141,11 @@ class ColorTest extends BrowserTestBase {
     $stylesheets = \Drupal::state()->get('drupal_css_cache_files') ?: [];
     $stylesheet_content = '';
     foreach ($stylesheets as $uri) {
+<<<<<<< HEAD
       $stylesheet_content .= implode("\n", file(\Drupal::service('file_system')->realpath($uri)));
+=======
+      $stylesheet_content .= implode("\n", file(drupal_realpath($uri)));
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     }
     $this->assertTrue(strpos($stylesheet_content, 'public://') === FALSE, 'Make sure the color paths have been translated to local paths. (' . $theme . ')');
     $config->set('css.preprocess', 0);

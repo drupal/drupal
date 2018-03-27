@@ -189,6 +189,7 @@ class PathItemTest extends KernelTestBase {
     // Change the alias for the second node to a different one and try again.
     $second_node->get('path')->alias = '/foobar';
     $this->assertFalse($node->get('path')->equals($second_node->get('path')));
+<<<<<<< HEAD
 
     // Test the generateSampleValue() method.
     $node = Node::create([
@@ -201,6 +202,8 @@ class PathItemTest extends KernelTestBase {
     $path_field->generateSampleItems();
     $node->save();
     $this->assertStringStartsWith('/', $node->get('path')->alias);
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
 }

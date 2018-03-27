@@ -138,7 +138,11 @@ class ContentEntityFormFieldValidationFilteringTest extends BrowserTestBase {
     // \Drupal\file\Plugin\Field\FieldWidget\FileWidget::process().
     $text_file = current($this->getTestFiles('text'));
     $edit = [
+<<<<<<< HEAD
       'files[test_file_0]' => \Drupal::service('file_system')->realpath($text_file->uri)
+=======
+      'files[test_file_0]' => drupal_realpath($text_file->uri)
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     ];
     $assert_session->elementNotExists('css', 'input#edit-test-file-0-remove-button');
     $this->drupalPostForm(NULL, $edit, 'Upload');

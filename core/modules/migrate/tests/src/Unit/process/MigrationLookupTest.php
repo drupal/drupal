@@ -241,6 +241,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $migration->transform(1, $this->migrateExecutable, $this->row, '');
   }
 
+<<<<<<< HEAD
   /**
    * Tests processing multiple source IDs.
    */
@@ -298,4 +299,6 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $this->assertEquals(2, $result);
   }
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

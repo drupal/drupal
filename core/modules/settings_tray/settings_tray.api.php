@@ -10,6 +10,7 @@
  * @{
  * Settings Tray API
  *
+<<<<<<< HEAD
  * @section sec_overview Overview and terminology
  *
  * The Settings Tray module allows blocks to be configured in a sidebar form
@@ -32,6 +33,11 @@
  *
  * @see core/misc/dialog/off-canvas.es6.js
  *
+=======
+ * @section sec_api The API: the form in the Settings Tray
+ *
+ * By default, every block will show its built-in form in the Settings Tray.
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  * However, many blocks would benefit from a tailored form which either:
  * - limits the form items displayed in the Settings Tray to only items that
  *   affect the content of the rendered block
@@ -51,19 +57,32 @@
  * @endcode
  *
  * In some cases, a block's content is not configurable (for example, the title,
+<<<<<<< HEAD
  * main content, and help blocks). Such blocks can opt out of providing a
  * settings_tray form:
+=======
+ * main content, and help blocks). Such blocks can opt out of providing an
+ * off-canvas form:
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  * @code
  * forms = {
  *   "settings_tray" = FALSE,
  * },
  * @endcode
  *
+<<<<<<< HEAD
  * Finally, blocks that do not specify a settings_tray form using the annotation
  * above will automatically have it set to their plugin class. For example, the
  * "Powered by Drupal" block plugin
  * (\Drupal\system\Plugin\Block\SystemPoweredByBlock) automatically gets this
  * added to its annotation:
+=======
+ * Finally, blocks that do not specify an off-canvas form using the annotation
+ * above will automatically have it set to their plugin class. For example, the
+ * "Powered by Drupal" block plugin
+ * (\Drupal\system\Plugin\Block\SystemPoweredByBlock) automatically gets
+ * this added to its annotation:
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
  * @code
  * forms = {
  *   "settings_tray" = "\Drupal\system\Plugin\Block\SystemPoweredByBlock",

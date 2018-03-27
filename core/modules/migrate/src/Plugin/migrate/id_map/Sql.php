@@ -8,7 +8,10 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\MigrateMessage;
+<<<<<<< HEAD
 use Drupal\migrate\Audit\HighestIdInterface;
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Event\MigrateIdMapMessageEvent;
 use Drupal\migrate\MigrateException;
@@ -162,6 +165,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     $this->migration = $migration;
     $this->eventDispatcher = $event_dispatcher;
     $this->message = new MigrateMessage();
+<<<<<<< HEAD
 
     if (!isset($this->database)) {
       $this->database = \Drupal::database();
@@ -174,6 +178,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     $this->mapTableName = Unicode::substr($this->mapTableName, 0, 63 - $prefix_length);
     $this->messageTableName = 'migrate_message_' . Unicode::strtolower($machine_name);
     $this->messageTableName = Unicode::substr($this->messageTableName, 0, 63 - $prefix_length);
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
   }
 
   /**

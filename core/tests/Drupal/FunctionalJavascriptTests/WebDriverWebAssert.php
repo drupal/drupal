@@ -55,6 +55,7 @@ class WebDriverWebAssert extends JSWebAssert {
     parent::responseHeaderNotEquals($name, $value);
   }
 
+<<<<<<< HEAD
   /**
    * The use of responseHeaderContains() is not available.
    *
@@ -107,4 +108,6 @@ class WebDriverWebAssert extends JSWebAssert {
     parent::responseHeaderNotMatches($name, $regex);
   }
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
 }

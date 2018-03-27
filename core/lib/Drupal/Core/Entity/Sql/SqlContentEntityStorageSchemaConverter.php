@@ -245,7 +245,10 @@ class SqlContentEntityStorageSchemaConverter {
     $original_base_table = $original_entity_type->getBaseTable();
 
     $revision_id_key = $temporary_entity_type->getKey('revision');
+<<<<<<< HEAD
     $revision_default_key = $temporary_entity_type->getRevisionMetadataKey('revision_default');
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     $revision_translation_affected_key = $temporary_entity_type->getKey('revision_translation_affected');
 
     // If 'progress' is not set, then this will be the first run of the batch.
@@ -289,10 +292,13 @@ class SqlContentEntityStorageSchemaConverter {
         // Set the revision ID to be same as the entity ID.
         $entity->set($revision_id_key, $entity_id);
 
+<<<<<<< HEAD
         // We had no revisions so far, so the existing data belongs to the
         // default revision now.
         $entity->set($revision_default_key, TRUE);
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
         // Set the 'revision_translation_affected' flag to TRUE to match the
         // previous API return value: if the field was not defined the value
         // returned was always TRUE.
@@ -385,6 +391,7 @@ class SqlContentEntityStorageSchemaConverter {
     }
     $updated_storage_definitions[$entity_type->getKey('revision')] = $revision_field;
 
+<<<<<<< HEAD
     // Add the default revision flag field.
     $field_name = $entity_type->getRevisionMetadataKey('revision_default');
     $storage_definition = BaseFieldDefinition::create('boolean')
@@ -402,6 +409,8 @@ class SqlContentEntityStorageSchemaConverter {
     }
     $updated_storage_definitions[$field_name] = $storage_definition;
 
+=======
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd
     // Add the 'revision_translation_affected' field if needed.
     if ($entity_type->isTranslatable()) {
       $revision_translation_affected_field = BaseFieldDefinition::create('boolean')

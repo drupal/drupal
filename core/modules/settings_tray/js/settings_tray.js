@@ -93,6 +93,7 @@
     setEditModeState(!isInEditMode());
   }
 
+<<<<<<< HEAD:core/modules/settings_tray/js/settings_tray.js
   function prepareAjaxLinks() {
     Drupal.ajax.instances.filter(function (instance) {
       return instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
@@ -108,6 +109,9 @@
   $(document).on('drupalContextualLinkAdded', function (event, data) {
     prepareAjaxLinks();
 
+=======
+  $(document).on('drupalContextualLinkAdded', function (event, data) {
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/settings_tray/js/settings_tray.js
     $('body').once('settings_tray.edit_mode_init').each(function () {
       var editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
       if (editMode) {
@@ -115,6 +119,11 @@
       }
     });
 
+<<<<<<< HEAD:core/modules/settings_tray/js/settings_tray.js
+=======
+    Drupal.attachBehaviors(data.$el[0]);
+
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/settings_tray/js/settings_tray.js
     data.$el.find(blockConfigureSelector).on('click.settingstray', function () {
       if (!isInEditMode()) {
         $(toggleEditSelector).trigger('click').trigger('click.settings_tray');
@@ -134,6 +143,19 @@
   Drupal.behaviors.toggleEditMode = {
     attach: function attach() {
       $(toggleEditSelector).once('settingstray').on('click.settingstray', toggleEditMode);
+<<<<<<< HEAD:core/modules/settings_tray/js/settings_tray.js
+=======
+
+      Drupal.ajax.instances.filter(function (instance) {
+        return instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
+      }).forEach(function (instance) {
+        if (!('dialogOptions' in instance.options.data)) {
+          instance.options.data.dialogOptions = {};
+        }
+        instance.options.data.dialogOptions.settingsTrayActiveEditableId = $(instance.element).parents('.settings-tray-editable').attr('id');
+        instance.progress = { type: 'fullscreen' };
+      });
+>>>>>>> e6affc593631de76bc37f1e5340dde005ad9b0bd:core/modules/settings_tray/js/settings_tray.js
     }
   };
 
