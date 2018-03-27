@@ -9,6 +9,10 @@ Drupal 7.xx, xxxx-xx-xx (development version)
   Host header.
 - Allowed the + character to appear in usernames.
 
+Drupal 7.58, 2018-03-28
+-----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2018-002.
+
 Drupal 7.57, 2018-02-21
 -----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2018-001.
