@@ -429,6 +429,8 @@ function _update_equivalent_security_releases() {
   switch (\Drupal::VERSION) {
     case '8.3.8':
       return ['8.4.5', '8.5.0-rc1'];
+    case '8.3.9':
+      return ['8.4.6', '8.5.1'];
   }
 
   return [];
