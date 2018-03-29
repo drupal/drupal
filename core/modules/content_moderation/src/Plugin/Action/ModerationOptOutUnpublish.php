@@ -75,7 +75,7 @@ class ModerationOptOutUnpublish extends UnpublishAction implements ContainerFact
       $bundle_info = $this->bundleInfo->getBundleInfo($entity->getEntityTypeId());
       $bundle_label = $bundle_info[$entity->bundle()]['label'];
       drupal_set_message($this->t("@bundle @label were skipped as they are under moderation and may not be directly unpublished.", ['@bundle' => $bundle_label, '@label' => $entity->getEntityType()->getPluralLabel()]), 'warning');
-      $result = AccessResult::forbidden();
+      $result = AccessResult::forbidden('Cannot directly unpublish moderated entities.');
       return $return_as_object ? $result : $result->isAllowed();
     }
     return parent::access($entity, $account, $return_as_object);

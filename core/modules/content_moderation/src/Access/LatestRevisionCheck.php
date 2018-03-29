@@ -68,7 +68,7 @@ class LatestRevisionCheck implements AccessInterface {
       return $access_result->addCacheableDependency($entity);
     }
 
-    return AccessResult::forbidden()->addCacheableDependency($entity);
+    return AccessResult::forbidden('No pending revision for moderated entity.')->addCacheableDependency($entity);
   }
 
   /**

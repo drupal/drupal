@@ -196,7 +196,7 @@ function content_moderation_entity_access(EntityInterface $entity, $operation, A
     $transition_validation = \Drupal::service('content_moderation.state_transition_validation');
 
     $valid_transition_targets = $transition_validation->getValidTransitions($entity, $account);
-    $access_result = $valid_transition_targets ? AccessResult::neutral() : AccessResult::forbidden();
+    $access_result = $valid_transition_targets ? AccessResult::neutral() : AccessResult::forbidden('No valid transitions exist for given account.');
 
     $access_result->addCacheableDependency($entity);
     $access_result->addCacheableDependency($account);
@@ -224,7 +224,7 @@ function content_moderation_entity_field_access($operation, FieldDefinitionInter
 
     // Deny edit access to the published field if the entity is being moderated.
     if ($entity_type->hasKey('published') && $moderation_info->isModeratedEntity($entity) && $entity->moderation_state && $field_definition->getName() == $entity_type->getKey('published')) {
-      return AccessResult::forbidden();
+      return AccessResult::forbidden('Cannot edit the published field of moderated entities.');
     }
   }
 

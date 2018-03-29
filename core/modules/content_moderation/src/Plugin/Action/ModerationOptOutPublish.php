@@ -75,7 +75,7 @@ class ModerationOptOutPublish extends PublishAction implements ContainerFactoryP
       $bundle_info = $this->bundleInfo->getBundleInfo($entity->getEntityTypeId());
       $bundle_label = $bundle_info[$entity->bundle()]['label'];
       drupal_set_message($this->t("@bundle @label were skipped as they are under moderation and may not be directly published.", ['@bundle' => $bundle_label, '@label' => $entity->getEntityType()->getPluralLabel()]), 'warning');
-      $result = AccessResult::forbidden();
+      $result = AccessResult::forbidden('Cannot directly publish moderated entities.');
       return $return_as_object ? $result : $result->isAllowed();
     }
     return parent::access($entity, $account, $return_as_object);
