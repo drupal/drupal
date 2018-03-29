@@ -270,7 +270,7 @@ function file_url_transform_relative($file_url) {
     $http_host = $host . ':' . $port;
   }
 
-  return preg_replace('|^https?://' . $http_host . '|', '', $file_url);
+  return preg_replace('|^https?://' . preg_quote($http_host, '|') . '|', '', $file_url);
 }
 
 /**
