@@ -39,7 +39,7 @@
     attach: function attach(context) {
       $(context).find('input[type="file"]').once('auto-file-upload').on('change.autoFileUpload', Drupal.file.triggerUploadButton);
     },
-    detach: function detach(context, setting, trigger) {
+    detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
         $(context).find('input[type="file"]').removeOnce('auto-file-upload').off('.autoFileUpload');
       }
@@ -52,10 +52,12 @@
       $context.find('.js-form-submit').on('mousedown', Drupal.file.disableFields);
       $context.find('.js-form-managed-file .js-form-submit').on('mousedown', Drupal.file.progressBar);
     },
-    detach: function detach(context) {
-      var $context = $(context);
-      $context.find('.js-form-submit').off('mousedown', Drupal.file.disableFields);
-      $context.find('.js-form-managed-file .js-form-submit').off('mousedown', Drupal.file.progressBar);
+    detach: function detach(context, settings, trigger) {
+      if (trigger === 'unload') {
+        var $context = $(context);
+        $context.find('.js-form-submit').off('mousedown', Drupal.file.disableFields);
+        $context.find('.js-form-managed-file .js-form-submit').off('mousedown', Drupal.file.progressBar);
+      }
     }
   };
 
@@ -126,6 +128,7 @@
       setTimeout(function () {
         $clickedButton.closest('div.js-form-managed-file').find('div.ajax-progress-bar').slideDown();
       }, 500);
+      $clickedButton.trigger('fileUpload');
     },
     openInNewWindow: function openInNewWindow(event) {
       event.preventDefault();
