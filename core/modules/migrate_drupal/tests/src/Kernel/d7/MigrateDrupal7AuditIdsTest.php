@@ -136,6 +136,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
       'd7_node_revision',
       'd7_taxonomy_term',
       'd7_user',
+      'node_translation_menu_links',
     ];
     $this->assertEmpty(array_diff(array_filter($conflicts), $expected));
   }

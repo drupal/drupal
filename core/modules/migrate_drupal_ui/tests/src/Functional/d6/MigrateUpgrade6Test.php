@@ -85,7 +85,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'tour' => 4,
       'user' => 7,
       'user_role' => 6,
-      'menu_link_content' => 5,
+      'menu_link_content' => 9,
       'view' => 16,
       'date_format' => 11,
       'entity_form_display' => 29,
@@ -106,7 +106,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts['entity_view_display'] = 53;
     $counts['entity_view_mode'] = 14;
     $counts['file'] = 9;
-    $counts['menu_link_content'] = 6;
+    $counts['menu_link_content'] = 10;
     $counts['node'] = 18;
     $counts['taxonomy_term'] = 9;
     $counts['user'] = 8;
