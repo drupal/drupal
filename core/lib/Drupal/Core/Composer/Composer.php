@@ -182,7 +182,7 @@ EOT;
    *   TRUE if the PHPUnit needs to be upgraded, FALSE if not.
    */
   public static function upgradePHPUnitCheck($phpunit_version) {
-    return !(version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, '7.2') >= 0 && version_compare($phpunit_version, '6.1') < 0);
+    return !(version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, '7.0') >= 0 && version_compare($phpunit_version, '6.1') < 0);
   }
 
   /**
