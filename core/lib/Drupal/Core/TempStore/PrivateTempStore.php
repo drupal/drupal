@@ -117,6 +117,18 @@ class PrivateTempStore {
    *   Thrown when a lock for the backend storage could not be acquired.
    */
   public function set($key, $value) {
+    // Ensure that an anonymous user has a session created for them, as
+    // otherwise subsequent page loads will not be able to retrieve their
+    // tempstore data.
+    if ($this->currentUser->isAnonymous()) {
+      // @todo when https://www.drupal.org/node/2865991 is resolved, use force
+      //   start session API rather than setting an arbitrary value directly.
+      $this->requestStack
+        ->getCurrentRequest()
+        ->getSession()
+        ->set('core.tempstore.private', TRUE);
+    }
+
     $key = $this->createkey($key);
     if (!$this->lockBackend->acquire($key)) {
       $this->lockBackend->wait($key);
