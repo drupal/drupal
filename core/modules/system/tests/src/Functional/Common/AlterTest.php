@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\Tests\system\Functional\Common;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests alteration of arguments passed to \Drupal::moduleHandler->alter().
  *
  * @group Common
  */
-class AlterTest extends WebTestBase {
+class AlterTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

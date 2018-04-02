@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\Tests\system\Functional\Common;
 
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Verifies that bubbleable metadata of early rendering is not lost.
  *
  * @group Common
  */
-class EarlyRenderingControllerTest extends WebTestBase {
+class EarlyRenderingControllerTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
