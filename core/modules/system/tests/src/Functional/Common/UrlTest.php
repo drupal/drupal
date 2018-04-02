@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\Tests\system\Functional\Common;
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Confirm that \Drupal\Core\Url,
@@ -18,7 +18,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group Common
  */
-class UrlTest extends WebTestBase {
+class UrlTest extends BrowserTestBase {
 
   public static $modules = ['common_test', 'url_alter_test'];
 

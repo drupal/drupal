@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\Tests\system\Functional\Common;
 
-use Drupal\simpletest\WebTestBase;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that anonymous users are not served any JavaScript in the Standard
@@ -11,7 +11,7 @@ use Drupal\node\NodeInterface;
  *
  * @group Common
  */
-class NoJavaScriptAnonymousTest extends WebTestBase {
+class NoJavaScriptAnonymousTest extends BrowserTestBase {
 
   protected $profile = 'standard';
 
