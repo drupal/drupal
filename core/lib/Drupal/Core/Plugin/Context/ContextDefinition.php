@@ -282,7 +282,14 @@ class ContextDefinition implements ContextDefinitionInterface {
 
     $validator = $this->getTypedDataManager()->getValidator();
     foreach ($values as $value) {
-      $violations = $validator->validate($value, array_values($this->getConstraintObjects()));
+      $constraints = array_values($this->getConstraintObjects());
+      $violations = $validator->validate($value, $constraints);
+      foreach ($violations as $delta => $violation) {
+        // Remove any violation that does not correspond to the constraints.
+        if (!in_array($violation->getConstraint(), $constraints)) {
+          $violations->remove($delta);
+        }
+      }
       // If a value has no violations then the requirement is satisfied.
       if (!$violations->count()) {
         return TRUE;
