@@ -29,7 +29,7 @@ function simpletest_requirements($phase) {
   ];
   if (!$has_phpunit) {
     $requirements['phpunit']['severity'] = REQUIREMENT_ERROR;
-    $requirements['phpunit']['description'] = t("The testing framework requires the PHPUnit package. Please run 'composer install --dev' to ensure it is present.");
+    $requirements['phpunit']['description'] = t("The testing framework requires the PHPUnit package. Please run 'composer install' to ensure it is present.");
   }
 
   $requirements['curl'] = [
