@@ -846,8 +846,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
 
     // Populate entity translation object cache so it will be available for all
     // translation objects.
-    if ($langcode == $this->activeLangcode) {
-      $this->translations[$langcode]['entity'] = $this;
+    if (!isset($this->translations[$this->activeLangcode]['entity'])) {
+      $this->translations[$this->activeLangcode]['entity'] = $this;
     }
 
     // If we already have a translation object for the specified language we can

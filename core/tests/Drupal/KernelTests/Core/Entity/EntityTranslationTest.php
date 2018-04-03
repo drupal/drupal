@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Entity;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TranslationStatusInterface;
+use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -1011,6 +1012,33 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
       $this->assertEquals(TranslationStatusInterface::TRANSLATION_EXISTING, $entity->getTranslationStatus($langcode));
     }
+  }
+
+  /**
+   * Tests the translation object cache.
+   */
+  public function testTranslationObjectCache() {
+    $default_langcode = $this->langcodes[1];
+    $translation_langcode = $this->langcodes[2];
+
+    $entity = EntityTestMul::create([
+      'name' => 'test',
+      'langcode' => $default_langcode,
+    ]);
+    $entity->save();
+    $entity->addTranslation($translation_langcode)->save();
+
+    // Test that the default translation object is put into the translation
+    // object cache when a new translation object is initialized.
+    $entity = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
+    $default_translation_spl_object_hash = spl_object_hash($entity);
+    $this->assertEquals($default_translation_spl_object_hash, spl_object_hash($entity->getTranslation($translation_langcode)->getTranslation($default_langcode)));
+
+    // Test that non-default translations are always served from the translation
+    // object cache.
+    $entity = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
+    $this->assertEquals(spl_object_hash($entity->getTranslation($translation_langcode)), spl_object_hash($entity->getTranslation($translation_langcode)));
+    $this->assertEquals(spl_object_hash($entity->getTranslation($translation_langcode)), spl_object_hash($entity->getTranslation($translation_langcode)->getTranslation($default_langcode)->getTranslation($translation_langcode)));
   }
 
 }
