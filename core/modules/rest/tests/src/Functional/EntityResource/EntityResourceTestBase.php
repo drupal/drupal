@@ -537,13 +537,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Note: deserialization of the XML format is not supported, so only test
     // this for other formats.
     if (static::$format !== 'xml') {
-      // @todo Work-around for HAL's FileEntityNormalizer::denormalize() being
-      // broken, being fixed in https://www.drupal.org/node/1927648, where this
-      // if-test should be removed.
-      if (!(static::$entityTypeId === 'file' && static::$format === 'hal_json')) {
-        $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
-        $this->assertSame($unserialized->uuid(), $this->entity->uuid());
-      }
+      $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
+      $this->assertSame($unserialized->uuid(), $this->entity->uuid());
+
     }
     // Finally, assert that the expected 'Link' headers are present.
     if ($this->entity->getEntityType()->getLinkTemplates()) {
@@ -746,27 +742,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
-   * Recursively sorts an array by key.
-   *
-   * @param array $array
-   *   An array to sort.
-   *
-   * @return array
-   *   The sorted array.
-   */
-  protected static function recursiveKSort(array &$array) {
-    // First, sort the main array.
-    ksort($array);
-
-    // Then check for child arrays.
-    foreach ($array as $key => &$value) {
-      if (is_array($value)) {
-        static::recursiveKSort($value);
-      }
-    }
-  }
-
-  /**
    * Tests a POST request for an entity, plus edge cases to ensure good DX.
    */
   public function testPost() {
@@ -849,7 +824,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
+    // @todo Remove this if-test in https://www.drupal.org/project/drupal/issues/2820364
+    if (static::$entityTypeId === 'media' && !static::$auth) {
+      $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nname: Name: this field cannot hold more than 1 values.\nfield_media_file.0: You do not have access to the referenced entity (file: 3).\n", $response);
+    }
+    else {
+      $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
+    }
 
     $this->setUpAuthorization('POST');
 
