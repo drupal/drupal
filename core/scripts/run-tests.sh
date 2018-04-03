@@ -140,7 +140,7 @@ else {
   $phpunit_version = Version::id();
 }
 if (!Composer::upgradePHPUnitCheck($phpunit_version)) {
-  simpletest_script_print_error("PHPUnit testing framework version 6 or greater is required when running on PHP 7.2 or greater. Run the command 'composer run-script drupal-phpunit-upgrade' in order to fix this.");
+  simpletest_script_print_error("PHPUnit testing framework version 6 or greater is required when running on PHP 7.0 or greater. Run the command 'composer run-script drupal-phpunit-upgrade' in order to fix this.");
   exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
 }
 
