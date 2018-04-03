@@ -6,7 +6,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\hal\LinkManager\LinkManagerInterface;
-use GuzzleHttp\ClientInterface;
 
 /**
  * Converts the Drupal entity object structure to a HAL array structure.
@@ -41,8 +40,6 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \GuzzleHttp\ClientInterface $http_client
-   *   The HTTP Client.
    * @param \Drupal\hal\LinkManager\LinkManagerInterface $link_manager
    *   The hypermedia link manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -50,10 +47,9 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ClientInterface $http_client, LinkManagerInterface $link_manager, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, LinkManagerInterface $link_manager, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
     parent::__construct($link_manager, $entity_manager, $module_handler);
 
-    $this->httpClient = $http_client;
     $this->halSettings = $config_factory->get('hal.settings');
   }
 
@@ -71,18 +67,6 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
     }
 
     return $data;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
-    $file_data = (string) $this->httpClient->get($data['uri'][0]['value'])->getBody();
-
-    $path = 'temporary://' . drupal_basename($data['uri'][0]['value']);
-    $data['uri'] = file_unmanaged_save_data($file_data, $path);
-
-    return $this->entityManager->getStorage('file')->create($data);
   }
 
 }

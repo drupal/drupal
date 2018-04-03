@@ -2,12 +2,18 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\Media;
 
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
+use Drupal\rest\RestResourceConfigInterface;
 use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
+use GuzzleHttp\RequestOptions;
 
 abstract class MediaResourceTestBase extends EntityResourceTestBase {
 
@@ -45,7 +51,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
         break;
 
       case 'POST':
-        $this->grantPermissionsToTestedRole(['create camelids media']);
+        $this->grantPermissionsToTestedRole(['create camelids media', 'access content']);
         break;
 
       case 'PATCH':
@@ -230,7 +236,21 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
           'value' => 'Dramallama',
         ],
       ],
+      'field_media_file' => [
+        [
+          'description' => NULL,
+          'display' => NULL,
+          'target_id' => 3,
+        ],
+      ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getNormalizedPatchEntity() {
+    return array_diff_key($this->getNormalizedPostEntity(), ['field_media_file' => TRUE]);
   }
 
   /**
@@ -244,6 +264,9 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET';
         return "The 'view media' permission is required and the media item must be published.";
+
+      case 'POST':
+        return "The following permissions are required: 'administer media' OR 'create media' OR 'create camelids media'.";
 
       case 'PATCH':
         return 'You are not authorized to update this media entity of bundle camelids.';
@@ -260,7 +283,140 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   public function testPost() {
-    $this->markTestSkipped('POSTing File Media items is not supported until https://www.drupal.org/node/1927648 is solved.');
+    $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
+
+    // Step 1: upload file, results in File entity marked temporary.
+    $this->uploadFile();
+    $file = $file_storage->loadUnchanged(3);
+    $this->assertTrue($file->isTemporary());
+    $this->assertFalse($file->isPermanent());
+
+    // Step 2: create Media entity using the File, makes File entity permanent.
+    parent::testPost();
+    $file = $file_storage->loadUnchanged(3);
+    $this->assertFalse($file->isTemporary());
+    $this->assertTrue($file->isPermanent());
+  }
+
+  /**
+   * This duplicates some of the 'file_upload' REST resource plugin test
+   * coverage, to be able to test it on a concrete use case.
+   */
+  protected function uploadFile() {
+    // Enable the 'file_upload' REST resource for the current format + auth.
+    $this->resourceConfigStorage->create([
+      'id' => 'file.upload',
+      'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+      'configuration' => [
+        'methods' => ['POST'],
+        'formats' => [static::$format],
+        'authentication' => isset(static::$auth) ? [static::$auth] : [],
+      ],
+      'status' => TRUE,
+    ])->save();
+    $this->refreshTestStateAfterRestConfigChange();
+
+    $this->initAuthentication();
+
+    // POST to create a File entity.
+    $url = Url::fromUri('base:file/upload/media/camelids/field_media_file');
+    $url->setOption('query', ['_format' => static::$format]);
+    $request_options = [];
+    $request_options[RequestOptions::HEADERS] = [
+      // Set the required (and only accepted) content type for the request.
+      'Content-Type' => 'application/octet-stream',
+      // Set the required Content-Disposition header for the file name.
+      'Content-Disposition' => 'file; filename="drupal rocks 🤘.txt"',
+    ];
+    $request_options[RequestOptions::BODY] = 'Drupal is the best!';
+    $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('POST'));
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
+
+    // Grant necessary permission, retry.
+    $this->grantPermissionsToTestedRole(['create camelids media']);
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertSame(201, $response->getStatusCode());
+    $expected = $this->getExpectedNormalizedFileEntity();
+    static::recursiveKSort($expected);
+    $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
+    static::recursiveKSort($actual);
+    $this->assertSame($expected, $actual);
+
+    // To still run the complete test coverage for POSTing a Media entity, we
+    // must revoke the additional permissions that we granted.
+    $role = Role::load(static::$auth ? RoleInterface::AUTHENTICATED_ID : RoleInterface::AUTHENTICATED_ID);
+    $role->revokePermission('create camelids media');
+    $role->trustData()->save();
+  }
+
+  /**
+   * Gets the expected file entity.
+   *
+   * @return array
+   *   The expected normalized data array.
+   */
+  protected function getExpectedNormalizedFileEntity() {
+    $file = File::load(3);
+    $owner = static::$auth ? $this->account : User::load(0);
+
+    return [
+      'fid' => [
+        [
+          'value' => 3,
+        ],
+      ],
+      'uuid' => [
+        [
+          'value' => $file->uuid(),
+        ],
+      ],
+      'langcode' => [
+        [
+          'value' => 'en',
+        ],
+      ],
+      'uid' => [
+        [
+          'target_id' => (int) $owner->id(),
+          'target_type' => 'user',
+          'target_uuid' => $owner->uuid(),
+          'url' => base_path() . 'user/' . $owner->id(),
+        ],
+      ],
+      'filename' => [
+        [
+          'value' => 'drupal rocks 🤘.txt',
+        ],
+      ],
+      'uri' => [
+        [
+          'value' => 'public://' . date('Y-m') . '/drupal rocks 🤘.txt',
+          'url' => base_path() . $this->siteDirectory . '/files/' . date('Y-m') . '/drupal%20rocks%20%F0%9F%A4%98.txt',
+        ],
+      ],
+      'filemime' => [
+        [
+          'value' => 'text/plain',
+        ],
+      ],
+      'filesize' => [
+        [
+          'value' => 19,
+        ],
+      ],
+      'status' => [
+        [
+          'value' => FALSE,
+        ],
+      ],
+      'created' => [
+        $this->formatExpectedTimestampItemValues($file->getCreatedTime()),
+      ],
+      'changed' => [
+        $this->formatExpectedTimestampItemValues($file->getChangedTime()),
+      ],
+    ];
   }
 
   /**
