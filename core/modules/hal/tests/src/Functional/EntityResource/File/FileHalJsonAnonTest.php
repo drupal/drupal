@@ -136,4 +136,12 @@ class FileHalJsonAnonTest extends FileResourceTestBase {
     $this->assertSame($this->baseUrl . '/' . $this->siteDirectory . '/files/drupal.txt', $actual['uri'][0]['value']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function testPatch() {
+    // @todo https://www.drupal.org/node/1927648
+    $this->markTestSkipped();
+  }
+
 }

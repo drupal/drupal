@@ -19,11 +19,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Template\Attribute;
 
-/**
- * The regex pattern used when checking for insecure file types.
- */
-define('FILE_INSECURE_EXTENSION_REGEX', '/\.(php|pl|py|cgi|asp|js)(\.|$)/i');
-
 // Load all Field module hooks for File.
 require_once __DIR__ . '/file.field.inc';
 
@@ -959,7 +954,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     // rename filename.php.foo and filename.php to filename.php.foo.txt and
     // filename.php.txt, respectively). Don't rename if 'allow_insecure_uploads'
     // evaluates to TRUE.
-    if (!\Drupal::config('system.file')->get('allow_insecure_uploads') && preg_match(FILE_INSECURE_EXTENSION_REGEX, $file->getFilename()) && (substr($file->getFilename(), -4) != '.txt')) {
+    if (!\Drupal::config('system.file')->get('allow_insecure_uploads') && preg_match('/\.(php|pl|py|cgi|asp|js)(\.|$)/i', $file->getFilename()) && (substr($file->getFilename(), -4) != '.txt')) {
       $file->setMimeType('text/plain');
       // The destination filename will also later be used to create the URI.
       $file->setFilename($file->getFilename() . '.txt');

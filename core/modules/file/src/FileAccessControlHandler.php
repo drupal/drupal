@@ -127,6 +127,8 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
     // create file entities that are referenced from another entity
     // (e.g. an image for a article). A contributed module is free to alter
     // this to allow file entities to be created directly.
+    // @todo Update comment to mention REST module when
+    //   https://www.drupal.org/node/1927648 is fixed.
     return AccessResult::neutral();
   }
 

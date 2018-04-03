@@ -121,14 +121,14 @@ class ResourceRoutes implements EventSubscriberInterface {
 
         // The configuration has been validated, so we update the route to:
         // - set the allowed response body content types/formats for methods
-        //   that may send response bodies (unless hardcoded by the plugin)
+        //   that may send response bodies
         // - set the allowed request body content types/formats for methods that
-        //   allow request bodies to be sent (unless hardcoded by the plugin)
+        //   allow request bodies to be sent
         // - set the allowed authentication providers
-        if (in_array($method, ['GET', 'HEAD', 'POST', 'PUT', 'PATCH'], TRUE) && !$route->hasRequirement('_format')) {
+        if (in_array($method, ['GET', 'HEAD', 'POST', 'PUT', 'PATCH'], TRUE)) {
           $route->addRequirements(['_format' => implode('|', $rest_resource_config->getFormats($method))]);
         }
-        if (in_array($method, ['POST', 'PATCH', 'PUT'], TRUE) && !$route->hasRequirement('_content_type_format')) {
+        if (in_array($method, ['POST', 'PATCH', 'PUT'], TRUE)) {
           $route->addRequirements(['_content_type_format' => implode('|', $rest_resource_config->getFormats($method))]);
         }
         $route->setOption('_auth', $rest_resource_config->getAuthenticationProviders($method));
