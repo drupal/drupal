@@ -1049,31 +1049,78 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
 
   /**
    * Tests adding a base field with initial values inherited from another field.
+   *
+   * @dataProvider initialValueFromFieldTestCases
    */
-  public function testInitialValueFromField() {
+  public function testInitialValueFromField($default_initial_value, $expected_value) {
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
     $db_schema = $this->database->schema();
 
     // Create two entities before adding the base field.
-    /** @var \Drupal\entity_test\Entity\EntityTestUpdate $entity */
-    $storage->create(['name' => 'First entity'])->save();
-    $storage->create(['name' => 'Second entity'])->save();
+    /** @var \Drupal\entity_test_update\Entity\EntityTestUpdate $entity */
+    $storage->create([
+      'name' => 'First entity',
+      'test_single_property' => 'test existing value',
+    ])->save();
+
+    // The second entity does not have any value for the 'test_single_property'
+    // field, allowing us to test the 'default_value' parameter of
+    // \Drupal\Core\Field\BaseFieldDefinition::setInitialValueFromField().
+    $storage->create([
+      'name' => 'Second entity'
+    ])->save();
 
     // Add a base field with an initial value inherited from another field.
-    $this->addBaseField();
-    $storage_definition = BaseFieldDefinition::create('string')
-      ->setLabel(t('A new base field'))
+    $definitions['new_base_field'] = BaseFieldDefinition::create('string')
+      ->setName('new_base_field')
+      ->setLabel('A new base field')
       ->setInitialValueFromField('name');
+    $definitions['another_base_field'] = BaseFieldDefinition::create('string')
+      ->setName('another_base_field')
+      ->setLabel('Another base field')
+      ->setInitialValueFromField('test_single_property', $default_initial_value);
+
+    $this->state->set('entity_test_update.additional_base_field_definitions', $definitions);
 
     $this->assertFalse($db_schema->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' does not exist before applying the update.");
-    $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
+    $this->assertFalse($db_schema->fieldExists('entity_test_update', 'another_base_field'), "New field 'another_base_field' does not exist before applying the update.");
+    $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $definitions['new_base_field']);
+    $this->entityDefinitionUpdateManager->installFieldStorageDefinition('another_base_field', 'entity_test_update', 'entity_test', $definitions['another_base_field']);
     $this->assertTrue($db_schema->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' has been created on the 'entity_test_update' table.");
+    $this->assertTrue($db_schema->fieldExists('entity_test_update', 'another_base_field'), "New field 'another_base_field' has been created on the 'entity_test_update' table.");
 
     // Check that the initial values have been applied.
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
     $entities = $storage->loadMultiple();
     $this->assertEquals('First entity', $entities[1]->get('new_base_field')->value);
     $this->assertEquals('Second entity', $entities[2]->get('new_base_field')->value);
+
+    $this->assertEquals('test existing value', $entities[1]->get('another_base_field')->value);
+    $this->assertEquals($expected_value, $entities[2]->get('another_base_field')->value);
+  }
+
+  /**
+   * Test cases for ::testInitialValueFromField.
+   */
+  public function initialValueFromFieldTestCases() {
+    return [
+      'literal value' => [
+        'test initial value',
+        'test initial value',
+      ],
+      'indexed array' => [
+        ['value' => 'test initial value'],
+        'test initial value',
+      ],
+      'empty array' => [
+        [],
+        NULL,
+      ],
+      'null' => [
+        NULL,
+        NULL,
+      ],
+    ];
   }
 
   /**
