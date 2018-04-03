@@ -75,4 +75,25 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
     }
   }
 
+  /**
+   * Test translated user deletion.
+   */
+  public function testTranslatedUserDeletion() {
+    $this->drupalLogin($this->administrator);
+    $entity_id = $this->createEntity($this->getNewEntityValues('en'), 'en');
+
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityTypeId)
+      ->load($entity_id);
+    $translated_entity = $entity->addTranslation('fr');
+    $translated_entity->save();
+
+    $url = $entity->toUrl(
+      'edit-form',
+      ['language' => $this->container->get('language_manager')->getLanguage('en')]
+    );
+    $this->drupalPostForm($url, [], t('Cancel account'));
+    $this->assertSession()->statusCodeEquals(200);
+  }
+
 }
