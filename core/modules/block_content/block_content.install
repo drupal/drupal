@@ -112,7 +112,7 @@ function block_content_update_8400() {
 
   $has_content_translation_status_field = \Drupal::moduleHandler()->moduleExists('content_translation') && $definition_update_manager->getFieldStorageDefinition('content_translation_status', 'block_content');
   if ($has_content_translation_status_field) {
-    $status->setInitialValueFromField('content_translation_status');
+    $status->setInitialValueFromField('content_translation_status', TRUE);
   }
   else {
     $status->setInitialValue(TRUE);

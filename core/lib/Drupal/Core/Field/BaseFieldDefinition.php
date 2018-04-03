@@ -588,12 +588,24 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *
    * @param string $field_name
    *   The name of the field that will be used for getting initial values.
+   * @param mixed $default_value
+   *   (optional) The default value for the field, in case the inherited value
+   *   is NULL. This can be either:
+   *   - a literal, in which case it will be assigned to the first property of
+   *     the first item;
+   *   - a numerically indexed array of items, each item being a property/value
+   *     array;
+   *   - a non-numerically indexed array, in which case the array is assumed to
+   *     be a property/value array and used as the first item;
+   *   - an empty array for no initial value.
+   *   If the field being added is required or an entity key, it is recommended
+   *   to provide a default value.
    *
    * @return $this
    */
-  public function setInitialValueFromField($field_name) {
+  public function setInitialValueFromField($field_name, $default_value = NULL) {
     $this->definition['initial_value_from_field'] = $field_name;
-
+    $this->setInitialValue($default_value);
     return $this;
   }
 

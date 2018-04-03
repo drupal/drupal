@@ -1881,7 +1881,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       if ($initial_value && isset($initial_value[$field_column_name])) {
         $schema['fields'][$schema_field_name]['initial'] = drupal_schema_get_field_value($column_schema, $initial_value[$field_column_name]);
       }
-      elseif (!empty($initial_value_from_field)) {
+      if (!empty($initial_value_from_field)) {
         $schema['fields'][$schema_field_name]['initial_from_field'] = $initial_value_from_field[$field_column_name];
       }
     }
