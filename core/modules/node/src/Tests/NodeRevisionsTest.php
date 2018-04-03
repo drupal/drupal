@@ -109,8 +109,8 @@ class NodeRevisionsTest extends NodeTestBase {
       $node->untranslatable_string_field->value = $this->randomString();
       $node->setNewRevision();
 
-      // Edit the 2nd revision with a different user.
-      if ($i == 1) {
+      // Edit the 1st and 2nd revision with a different user.
+      if ($i < 2) {
         $editor = $this->drupalCreateUser();
         $node->setRevisionUserId($editor->id());
       }
@@ -179,6 +179,10 @@ class NodeRevisionsTest extends NodeTestBase {
     $node_storage->resetCache([$node->id()]);
     $reverted_node = $node_storage->load($node->id());
     $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
+    // Confirm the revision author is the user performing the revert.
+    $this->assertTrue($reverted_node->getRevisionUserId() == $this->loggedInUser->id(), 'Node revision author is user performing revert.');
+    // And that its not the revision author.
+    $this->assertTrue($reverted_node->getRevisionUserId() != $nodes[1]->getRevisionUserId(), 'Node revision author is not original revision author.');
 
     // Confirm that this is not the default version.
     $node = node_revision_load($node->getRevisionId());
