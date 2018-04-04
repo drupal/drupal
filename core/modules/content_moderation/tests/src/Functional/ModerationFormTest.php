@@ -107,6 +107,10 @@ class ModerationFormTest extends ModerationStateTestBase {
       'moderation_state[0][state]' => 'published',
     ], t('Save'));
 
+    // Check widget default value.
+    $this->drupalGet($edit_path);
+    $this->assertFieldByName('moderation_state[0][state]', 'published', 'The moderation default value is set correctly.');
+
     // The published view should not have a moderation form, because it is the
     // live revision.
     $this->drupalGet($canonical_path);
