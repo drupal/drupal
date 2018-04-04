@@ -73,6 +73,12 @@ class InstallerTest extends InstallerTestBase {
     // Assert that the expected title is present.
     $this->assertEqual('Configure site', $this->cssSelect('main h2')[0]->getText());
 
+    // Test that SiteConfigureForm::buildForm() has made the site directory and
+    // the settings file non-writable.
+    $site_directory = $this->container->get('app.root') . '/' . $this->siteDirectory;
+    $this->assertFalse(is_writable($site_directory));
+    $this->assertFalse(is_writable($site_directory . '/settings.php'));
+
     parent::setUpSite();
   }
 
