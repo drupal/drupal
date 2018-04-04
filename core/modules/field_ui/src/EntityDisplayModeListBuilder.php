@@ -36,6 +36,8 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
   public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, array $entity_types) {
     parent::__construct($entity_type, $storage);
 
+    // Override the default limit (50) in order to display all view modes.
+    $this->limit = FALSE;
     $this->entityTypes = $entity_types;
   }
 
