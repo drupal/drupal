@@ -31,16 +31,12 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
   public function testProvidersExist() {
     $this->enableAllModules();
 
-    /** @var \Drupal\migrate\Plugin\MigrationPluginManager $plugin_manager */
-    $plugin_manager = $this->container->get('plugin.manager.migration');
+    /** @var \Drupal\migrate\Plugin\MigrateSourcePluginManager $plugin_manager */
+    $plugin_manager = $this->container->get('plugin.manager.migrate.source');
 
-    // Instantiate all migrations.
-    $migrations = array_keys($plugin_manager->getDefinitions());
-    $migrations = $plugin_manager->createInstances($migrations);
-
-    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
-    foreach ($migrations as $migration) {
-      $this->assertInternalType('string', $migration->getSourcePlugin()->getSourceModule());
+    foreach ($plugin_manager->getDefinitions() as $definition) {
+      $id = $definition['id'];
+      $this->assertArrayHasKey('source_module', $definition, "No source_module property in '$id'");
     }
   }
 
