@@ -19,7 +19,8 @@ namespace Drupal\migrate\Plugin\migrate\source;
  * elements, with values of 'user' and 'image', respectively.
  *
  * @MigrateSource(
- *   id = "empty"
+ *   id = "empty",
+ *   source_module = "migrate"
  * )
  */
 class EmptySource extends SourcePluginBase {
