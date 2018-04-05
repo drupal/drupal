@@ -129,6 +129,7 @@ function drupal_phpunit_populate_class_loader() {
 
   // Start with classes in known locations.
   $loader->add('Drupal\\Tests', __DIR__);
+  $loader->add('Drupal\\TestSite', __DIR__);
   $loader->add('Drupal\\KernelTests', __DIR__);
   $loader->add('Drupal\\FunctionalTests', __DIR__);
   $loader->add('Drupal\\FunctionalJavascriptTests', __DIR__);
@@ -195,5 +196,5 @@ if (version_compare($phpunit_version, '6.1', '>=')) {
   class_alias('\PHPUnit\Framework\SkippedTestError', '\PHPUnit_Framework_SkippedTestError');
   class_alias('\PHPUnit\Framework\TestCase', '\PHPUnit_Framework_TestCase');
   class_alias('\PHPUnit\Util\Test', '\PHPUnit_Util_Test');
-  class_alias('\PHPUnit\Util\XML', '\PHPUnit_Util_XML');
+  class_alias('\PHPUnit\Util\Xml', '\PHPUnit_Util_XML');
 }

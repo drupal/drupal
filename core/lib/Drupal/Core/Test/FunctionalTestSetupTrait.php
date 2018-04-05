@@ -662,11 +662,11 @@ trait FunctionalTestSetupTrait {
    *   An array of available database driver installer objects.
    */
   protected function getDatabaseTypes() {
-    if ($this->originalContainer) {
+    if (isset($this->originalContainer) && $this->originalContainer) {
       \Drupal::setContainer($this->originalContainer);
     }
     $database_types = drupal_get_database_types();
-    if ($this->originalContainer) {
+    if (isset($this->originalContainer) && $this->originalContainer) {
       \Drupal::unsetContainer();
     }
     return $database_types;
