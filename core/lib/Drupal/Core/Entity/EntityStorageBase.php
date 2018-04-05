@@ -541,4 +541,16 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    */
   abstract protected function getQueryServiceName();
 
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep() {
+    // In case the storage is being serialized then we prevent from serializing
+    // the static cache of entities together with it, as this could lead to a
+    // memory leak.
+    $vars = parent::__sleep();
+    unset($vars['entities']);
+    return $vars;
+  }
+
 }
