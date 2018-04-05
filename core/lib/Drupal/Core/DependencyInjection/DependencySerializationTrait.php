@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\DependencyInjection;
 
+use Drupal\Core\Entity\EntityStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -15,6 +16,13 @@ trait DependencySerializationTrait {
    * @var array
    */
   protected $_serviceIds = [];
+
+  /**
+   * An array of entity type IDs keyed by the property name of their storages.
+   *
+   * @var array
+   */
+  protected $_entityStorages = [];
 
   /**
    * {@inheritdoc}
@@ -33,6 +41,17 @@ trait DependencySerializationTrait {
       // Special case the container, which might not have a service ID.
       elseif ($value instanceof ContainerInterface) {
         $this->_serviceIds[$key] = 'service_container';
+        unset($vars[$key]);
+      }
+      elseif ($value instanceof EntityStorageInterface) {
+        // If a class member is an entity storage, only store the entity type ID
+        // the storage is for so it can be used to get a fresh object on
+        // unserialization. By doing this we prevent possible memory leaks when
+        // the storage is serialized when it contains a static cache of entity
+        // objects and additionally we ensure that we'll not have multiple
+        // storage objects for the same entity type and therefore prevent
+        // returning different references for the same entity.
+        $this->_entityStorages[$key] = $value->getEntityTypeId();
         unset($vars[$key]);
       }
     }
@@ -61,6 +80,19 @@ trait DependencySerializationTrait {
       $this->$key = $container->get($service_id);
     }
     $this->_serviceIds = [];
+
+    // In rare cases, when test data is serialized in the parent process, there
+    // is a service container but it doesn't contain all expected services. To
+    // avoid fatal errors during the wrap-up of failing tests, we check for this
+    // case, too.
+    if ($this->_entityStorages && (!$phpunit_bootstrap || $container->has('entity_type.manager'))) {
+      /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+      $entity_type_manager = $container->get('entity_type.manager');
+      foreach ($this->_entityStorages as $key => $entity_type_id) {
+        $this->$key = $entity_type_manager->getStorage($entity_type_id);
+      }
+    }
+    $this->_entityStorages = [];
   }
 
 }
