@@ -155,11 +155,12 @@ class TypedConfigTest extends KernelTestBase {
     $value = $typed_config->getValue();
     unset($value['giraffe']);
     $value['elephant'] = 'foo';
+    $value['zebra'] = 'foo';
     $typed_config->setValue($value);
     $result = $typed_config->validate();
     $this->assertCount(1, $result);
     $this->assertEquals('', $result->get(0)->getPropertyPath());
-    $this->assertEquals('Missing giraffe.', $result->get(0)->getMessage());
+    $this->assertEquals('Unexpected keys: elephant, zebra', $result->get(0)->getMessage());
   }
 
 }
