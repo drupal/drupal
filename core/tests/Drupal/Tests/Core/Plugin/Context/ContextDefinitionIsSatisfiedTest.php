@@ -17,6 +17,7 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Validation\ConstraintManager;
+use Drupal\Tests\Core\Plugin\Fixtures\InheritedContextDefinition;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
@@ -194,6 +195,13 @@ class ContextDefinitionIsSatisfiedTest extends UnitTestCase {
       TRUE,
       new ContextDefinition('entity:test_config'),
       new ContextDefinition('entity:test_config'),
+    ];
+
+    // Inherited context definition class.
+    $data['both any, inherited context requirement definition'] = [
+      TRUE,
+      new InheritedContextDefinition('any'),
+      new ContextDefinition('any'),
     ];
 
     return $data;

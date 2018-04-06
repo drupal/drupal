@@ -273,7 +273,7 @@ class ContextDefinition implements ContextDefinitionInterface {
     if ($context->hasContextValue()) {
       $values = [$context->getContextData()];
     }
-    elseif ($definition instanceof static) {
+    elseif ($definition instanceof self) {
       $values = $definition->getSampleValues();
     }
     else {
