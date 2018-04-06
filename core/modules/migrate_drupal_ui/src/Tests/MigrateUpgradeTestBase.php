@@ -179,8 +179,8 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
     $this->drupalPostForm(NULL, [], t('Perform upgrade'));
     $this->assertText(t('Congratulations, you upgraded Drupal!'));
 
-    // Have to reset all the statics after migration to ensure entities are
-    // loadable.
+    // Have to reset all the static caches after migration to ensure entities
+    // are loadable.
     $this->resetAll();
 
     $expected_counts = $this->getEntityCounts();
