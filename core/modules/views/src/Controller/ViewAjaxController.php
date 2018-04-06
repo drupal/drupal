@@ -132,7 +132,20 @@ class ViewAjaxController implements ContainerInjectionInterface {
 
       // Remove all of this stuff from the query of the request so it doesn't
       // end up in pagers and tablesort URLs.
-      foreach (['view_name', 'view_display_id', 'view_args', 'view_path', 'view_dom_id', 'pager_element', 'view_base_path', AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER] as $key) {
+      // @todo Remove this parsing once these are removed from the request in
+      //   https://www.drupal.org/node/2504709.
+      foreach ([
+          'view_name',
+          'view_display_id',
+          'view_args',
+          'view_path',
+          'view_dom_id',
+          'pager_element',
+          'view_base_path',
+          AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER,
+          FormBuilderInterface::AJAX_FORM_REQUEST,
+          MainContentViewSubscriber::WRAPPER_FORMAT,
+        ] as $key) {
         $request->query->remove($key);
         $request->request->remove($key);
       }
@@ -152,6 +165,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         // Add all POST data, because AJAX is always a post and many things,
         // such as tablesorts, exposed filters and paging assume GET.
         $request_all = $request->request->all();
+        unset($request_all['ajax_page_state']);
         $query_all = $request->query->all();
         $request->query->replace($request_all + $query_all);
 
@@ -159,13 +173,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         // @see the redirect.destination service.
         $origin_destination = $path;
 
-        // Remove some special parameters you never want to have part of the
-        // destination query.
         $used_query_parameters = $request->query->all();
-        // @todo Remove this parsing once these are removed from the request in
-        //   https://www.drupal.org/node/2504709.
-        unset($used_query_parameters[FormBuilderInterface::AJAX_FORM_REQUEST], $used_query_parameters[MainContentViewSubscriber::WRAPPER_FORMAT], $used_query_parameters['ajax_page_state']);
-
         $query = UrlHelper::buildQuery($used_query_parameters);
         if ($query != '') {
           $origin_destination .= '?' . $query;

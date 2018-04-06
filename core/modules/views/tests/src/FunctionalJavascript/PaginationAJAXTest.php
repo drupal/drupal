@@ -86,6 +86,10 @@ class PaginationAJAXTest extends JavascriptTestBase {
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
     $this->assertContains('Node 6 content', $rows[0]->getHtml());
+    $link = $page->findLink('Go to page 3');
+    // Test that no unwanted parameters are added to the URL.
+    $this->assertEquals('?status=All&type=All&langcode=All&items_per_page=5&order=changed&sort=asc&title=&page=2', $link->getAttribute('href'));
+    $this->assertNoDuplicateAssetsOnPage();
 
     $this->clickLink('Go to page 3');
     $session_assert->assertWaitOnAjaxRequest();
@@ -113,6 +117,19 @@ class PaginationAJAXTest extends JavascriptTestBase {
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(1, $rows);
     $this->assertContains('Node 11 content', $rows[0]->getHtml());
+  }
+
+  /**
+   * Assert that assets are not loaded twice on a page.
+   */
+  protected function assertNoDuplicateAssetsOnPage() {
+    /** @var \Behat\Mink\Element\NodeElement[] $scripts */
+    $scripts = $this->getSession()->getPage()->findAll('xpath', '//script');
+    $script_src = [];
+    foreach ($scripts as $script) {
+      $this->assertFalse(in_array($script->getAttribute('src'), $script_src));
+      $script_src[] = $script->getAttribute('src');
+    }
   }
 
 }
