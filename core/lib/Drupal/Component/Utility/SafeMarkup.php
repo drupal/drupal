@@ -40,6 +40,7 @@ class SafeMarkup {
    * @see https://www.drupal.org/node/2549395
    */
   public static function isSafe($string, $strategy = 'html') {
+    @trigger_error('SafeMarkup::isSafe() is scheduled for removal in Drupal 9.0.0. Instead, you should just check if a variable is an instance of \Drupal\Component\Render\MarkupInterface. See https://www.drupal.org/node/2549395.', E_USER_DEPRECATED);
     return $string instanceof MarkupInterface;
   }
 
@@ -66,6 +67,7 @@ class SafeMarkup {
    * @see drupal_validate_utf8()
    */
   public static function checkPlain($text) {
+    @trigger_error('SafeMarkup::checkPlain() is scheduled for removal in Drupal 9.0.0. Rely on Twig\'s auto-escaping feature, or use the @link theme_render #plain_text @endlink key when constructing a render array that contains plain text in order to use the renderer\'s auto-escaping feature. If neither of these are possible, \Drupal\Component\Utility\Html::escape() can be used in places where explicit escaping is needed. See https://www.drupal.org/node/2549395.', E_USER_DEPRECATED);
     return new HtmlEscapedText($text);
   }
 

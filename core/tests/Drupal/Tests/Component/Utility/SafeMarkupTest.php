@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
  * Tests marking strings as safe.
  *
  * @group Utility
+ * @group legacy
  * @coversDefaultClass \Drupal\Component\Utility\SafeMarkup
  */
 class SafeMarkupTest extends TestCase {
@@ -35,6 +36,7 @@ class SafeMarkupTest extends TestCase {
    * Tests SafeMarkup::isSafe() with different objects.
    *
    * @covers ::isSafe
+   * @expectedDeprecation SafeMarkup::isSafe() is scheduled for removal in Drupal 9.0.0. Instead, you should just check if a variable is an instance of \Drupal\Component\Render\MarkupInterface. See https://www.drupal.org/node/2549395.
    */
   public function testIsSafe() {
     $safe_string = $this->getMockBuilder('\Drupal\Component\Render\MarkupInterface')->getMock();
@@ -48,6 +50,7 @@ class SafeMarkupTest extends TestCase {
    *
    * @dataProvider providerCheckPlain
    * @covers ::checkPlain
+   * @expectedDeprecation SafeMarkup::checkPlain() is scheduled for removal in Drupal 9.0.0. Rely on Twig's auto-escaping feature, or use the @link theme_render #plain_text @endlink key when constructing a render array that contains plain text in order to use the renderer's auto-escaping feature. If neither of these are possible, \Drupal\Component\Utility\Html::escape() can be used in places where explicit escaping is needed. See https://www.drupal.org/node/2549395.
    *
    * @param string $text
    *   The text to provide to SafeMarkup::checkPlain().
@@ -125,10 +128,6 @@ class SafeMarkupTest extends TestCase {
     $result = SafeMarkup::format($string, $args);
     $this->assertEquals($expected, (string) $result, $message);
     $this->assertEquals($expected_is_safe, $result instanceof MarkupInterface, 'SafeMarkup::format correctly sets the result as safe or not safe.');
-
-    foreach ($args as $arg) {
-      $this->assertSame($arg instanceof SafeMarkupTestMarkup, SafeMarkup::isSafe($arg));
-    }
   }
 
   /**

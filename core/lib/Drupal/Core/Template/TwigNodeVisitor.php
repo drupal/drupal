@@ -43,7 +43,7 @@ class TwigNodeVisitor extends \Twig_BaseNodeVisitor {
     elseif ($node instanceof \Twig_Node_Expression_Filter) {
       $name = $node->getNode('filter')->getAttribute('value');
       if ('escape' == $name || 'e' == $name) {
-        // Use our own escape filter that is SafeMarkup aware.
+        // Use our own escape filter that is MarkupInterface aware.
         $node->getNode('filter')->setAttribute('value', 'drupal_escape');
 
         // Store that we have a filter active already that knows

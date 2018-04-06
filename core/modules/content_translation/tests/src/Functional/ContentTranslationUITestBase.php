@@ -35,8 +35,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   protected $testLanguageSelector = TRUE;
 
   /**
-   * Flag that tells whether the HTML escaping of all languages works or not
-   * after SafeMarkup change.
+   * Flag to determine if "all languages" rendering is tested.
    *
    * @var bool
    */
@@ -115,8 +114,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     ], ['language' => $language]);
     $this->drupalPostForm($add_url, $this->getEditValues($values, $langcode), $this->getFormSubmitActionForNewTranslation($entity, $langcode));
 
-    // Assert that HTML is escaped in "all languages" in UI after SafeMarkup
-    // change.
+    // Assert that HTML is not escaped unexpectedly.
     if ($this->testHTMLEscapeForAllLanguages) {
       $this->assertNoRaw('&lt;span class=&quot;translation-entity-all-languages&quot;&gt;(all languages)&lt;/span&gt;');
       $this->assertRaw('<span class="translation-entity-all-languages">(all languages)</span>');
