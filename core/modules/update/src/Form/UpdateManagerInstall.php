@@ -135,6 +135,7 @@ class UpdateManagerInstall extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $local_cache = NULL;
+    $all_files = $this->getRequest()->files->get('files', []);
     if ($form_state->getValue('project_url')) {
       $local_cache = update_manager_file_get($form_state->getValue('project_url'));
       if (!$local_cache) {
@@ -142,7 +143,7 @@ class UpdateManagerInstall extends FormBase {
         return;
       }
     }
-    elseif ($_FILES['files']['name']['project_upload']) {
+    elseif (!empty($all_files['project_upload'])) {
       $validators = ['file_validate_extensions' => [archiver_get_extensions()]];
       if (!($finfo = file_save_upload('project_upload', $validators, NULL, 0, FILE_EXISTS_REPLACE))) {
         // Failed to upload the file. file_save_upload() calls

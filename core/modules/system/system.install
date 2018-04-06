@@ -77,14 +77,15 @@ function system_requirements($phase) {
   }
 
   // Web server information.
-  $software = \Drupal::request()->server->get('SERVER_SOFTWARE');
+  $request_object = \Drupal::request();
+  $software = $request_object->server->get('SERVER_SOFTWARE');
   $requirements['webserver'] = [
     'title' => t('Web server'),
     'value' => $software,
   ];
 
   // Tests clean URL support.
-  if ($phase == 'install' && $install_state['interactive'] && !isset($_GET['rewrite']) && strpos($software, 'Apache') !== FALSE) {
+  if ($phase == 'install' && $install_state['interactive'] && !$request_object->query->has('rewrite') && strpos($software, 'Apache') !== FALSE) {
     // If the Apache rewrite module is not enabled, Apache version must be >=
     // 2.2.16 because of the FallbackResource directive in the root .htaccess
     // file. Since the Apache version reported by the server is dependent on the
