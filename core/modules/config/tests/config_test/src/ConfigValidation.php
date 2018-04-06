@@ -74,8 +74,11 @@ class ConfigValidation {
    *   The validation execution context.
    */
   public static function validateMapping($mapping, ExecutionContextInterface $context) {
-    if ($diff = array_diff(array_keys($mapping), ['llama', 'cat', 'giraffe', 'uuid', '_core'])) {
-      $context->addViolation('Missing giraffe.');
+    // Ensure we are validating the entire mapping by diffing against all the
+    // keys.
+    $mapping_schema = \Drupal::service('config.typed')->get('config_test.validation')->getValue();
+    if ($diff = array_diff_key($mapping, $mapping_schema)) {
+      $context->addViolation('Unexpected keys: ' . implode(', ', array_keys($diff)));
     }
   }
 
