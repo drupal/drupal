@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 configure: statistics.settings
 dependencies:
-  - node
+  - drupal:node

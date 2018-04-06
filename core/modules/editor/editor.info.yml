@@ -5,6 +5,6 @@ package: Core
 version: VERSION
 core: 8.x
 dependencies:
-  - filter
-  - file
+  - drupal:filter
+  - drupal:file
 configure: filter.admin_overview

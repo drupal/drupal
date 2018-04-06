@@ -6,4 +6,4 @@ package: Core
 core: 8.x
 configure: update.settings
 dependencies:
-  - file
+  - drupal:file

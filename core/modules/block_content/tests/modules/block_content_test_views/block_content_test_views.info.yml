@@ -5,5 +5,5 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - block_content
-  - views
+  - drupal:block_content
+  - drupal:views

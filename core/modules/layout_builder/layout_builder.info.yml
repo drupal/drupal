@@ -5,7 +5,7 @@ package: Core (Experimental)
 version: VERSION
 core: 8.x
 dependencies:
-  - layout_discovery
-  - contextual
+  - drupal:layout_discovery
+  - drupal:contextual
   # @todo Discuss removing in https://www.drupal.org/project/drupal/issues/2935999.
-  - field_ui
+  - drupal:field_ui

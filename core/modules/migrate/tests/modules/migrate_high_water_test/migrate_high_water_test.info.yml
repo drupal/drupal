@@ -4,4 +4,4 @@ description: 'Provides test fixtures for testing high water marks.'
 package: Testing
 core: 8.x
 dependencies:
-  - migrate
+  - drupal:migrate

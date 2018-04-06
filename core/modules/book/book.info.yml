@@ -5,5 +5,5 @@ package: Core
 version: VERSION
 core: 8.x
 dependencies:
-  - node
+  - drupal:node
 configure: book.settings

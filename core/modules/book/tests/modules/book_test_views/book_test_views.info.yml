@@ -5,5 +5,5 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
- - book
- - views
+ - drupal:book
+ - drupal:views

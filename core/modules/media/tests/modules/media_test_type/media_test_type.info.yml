@@ -5,5 +5,5 @@ core: 8.x
 package: Testing
 version: VERSION
 dependencies:
-  - media
-  - media_test_source
+  - drupal:media
+  - drupal:media_test_source

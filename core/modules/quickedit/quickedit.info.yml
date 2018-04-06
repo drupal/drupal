@@ -5,6 +5,6 @@ package: Core
 core: 8.x
 version: VERSION
 dependencies:
-  - contextual
-  - field
-  - filter
+  - drupal:contextual
+  - drupal:field
+  - drupal:filter

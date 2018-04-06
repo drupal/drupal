@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 configure: filter.admin_overview
 dependencies:
-  - user
+  - drupal:user

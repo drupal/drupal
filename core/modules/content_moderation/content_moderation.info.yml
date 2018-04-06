@@ -6,4 +6,4 @@ core: 8.x
 package: Core
 configure: entity.workflow.collection
 dependencies:
-  - workflows
+  - drupal:workflows

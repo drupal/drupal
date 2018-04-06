@@ -5,7 +5,7 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - content_moderation
-  - node
-  - views
-  - entity_test
+  - drupal:content_moderation
+  - drupal:node
+  - drupal:views
+  - drupal:entity_test

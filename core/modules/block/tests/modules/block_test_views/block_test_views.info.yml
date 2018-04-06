@@ -5,5 +5,5 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - block
-  - views
+  - drupal:block
+  - drupal:views

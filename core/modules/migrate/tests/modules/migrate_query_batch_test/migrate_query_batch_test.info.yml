@@ -4,4 +4,4 @@ description: 'Provides a database table and records for SQL import with batch te
 package: Testing
 core: 8.x
 dependencies:
-  - migrate
+  - drupal:migrate

@@ -5,4 +5,4 @@ package: Field types
 version: VERSION
 core: 8.x
 dependencies:
-  - field
+  - drupal:field

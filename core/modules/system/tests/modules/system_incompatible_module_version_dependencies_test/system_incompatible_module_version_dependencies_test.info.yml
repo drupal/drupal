@@ -5,4 +5,4 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - 'system_incompatible_module_version_test (>2.0)'
+  - 'drupal:system_incompatible_module_version_test (>2.0)'

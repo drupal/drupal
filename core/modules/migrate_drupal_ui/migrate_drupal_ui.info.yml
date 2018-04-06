@@ -6,6 +6,6 @@ version: VERSION
 core: 8.x
 configure: migrate_drupal_ui.upgrade
 dependencies:
-  - migrate
-  - migrate_drupal
-  - dblog
+  - drupal:migrate
+  - drupal:migrate_drupal
+  - drupal:dblog

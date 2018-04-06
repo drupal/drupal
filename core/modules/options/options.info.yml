@@ -5,5 +5,5 @@ package: Field types
 version: VERSION
 core: 8.x
 dependencies:
-  - field
-  - text
+  - drupal:field
+  - drupal:text

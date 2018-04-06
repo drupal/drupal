@@ -4,5 +4,5 @@ type: module
 core: 8.x
 hidden: true
 dependencies:
-  - link
-  - entity_test
+  - drupal:link
+  - drupal:entity_test

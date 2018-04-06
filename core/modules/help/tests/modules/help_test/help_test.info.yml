@@ -3,4 +3,4 @@ type: module
 core: 8.x
 package: Testing
 dependencies:
-  - help
+  - drupal:help

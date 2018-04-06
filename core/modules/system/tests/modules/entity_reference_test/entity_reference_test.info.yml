@@ -5,7 +5,7 @@ core: 8.x
 package: Testing
 version: VERSION
 dependencies:
-  - node
-  - user
-  - views
-  - entity_test
+  - drupal:node
+  - drupal:user
+  - drupal:views
+  - drupal:entity_test

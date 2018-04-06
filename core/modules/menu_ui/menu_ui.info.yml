@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 configure: entity.menu.collection
 dependencies:
-  - menu_link_content
+  - drupal:menu_link_content

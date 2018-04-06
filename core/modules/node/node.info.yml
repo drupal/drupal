@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 configure: entity.node_type.collection
 dependencies:
-  - text
+  - drupal:text

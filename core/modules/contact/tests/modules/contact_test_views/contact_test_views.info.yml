@@ -5,6 +5,6 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - contact
-  - views
-  - user
+  - drupal:contact
+  - drupal:views
+  - drupal:user

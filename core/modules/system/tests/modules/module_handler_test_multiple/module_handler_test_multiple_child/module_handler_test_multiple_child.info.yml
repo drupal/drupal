@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 hidden: true
 dependencies:
-  - module_handler_test_multiple
+  - drupal:module_handler_test_multiple

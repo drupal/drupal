@@ -4,4 +4,4 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - settings_tray
+  - drupal:settings_tray

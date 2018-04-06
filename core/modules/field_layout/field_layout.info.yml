@@ -5,4 +5,4 @@ package: Core (Experimental)
 version: VERSION
 core: 8.x
 dependencies:
-  - layout_discovery
+  - drupal:layout_discovery

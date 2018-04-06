@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 configure: entity.view.collection
 dependencies:
-  - views
+  - drupal:views

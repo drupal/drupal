@@ -6,4 +6,4 @@ package: Testing
 version: VERSION
 hidden: true
 dependencies:
-  - entity_test
+  - drupal:entity_test

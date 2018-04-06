@@ -5,5 +5,5 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - comment
-  - views
+  - drupal:comment
+  - drupal:views

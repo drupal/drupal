@@ -5,6 +5,6 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - content_translation
-  - language
-  - entity_test
+  - drupal:content_translation
+  - drupal:language
+  - drupal:entity_test

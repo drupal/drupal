@@ -3,4 +3,4 @@ type: module
 core: 8.x
 hidden: true
 dependencies:
-  - menu_link_content
+  - drupal:menu_link_content

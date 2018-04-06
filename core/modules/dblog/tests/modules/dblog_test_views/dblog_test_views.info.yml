@@ -5,5 +5,5 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - dblog
-  - views
+  - drupal:dblog
+  - drupal:views

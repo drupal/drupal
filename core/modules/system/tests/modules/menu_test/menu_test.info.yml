@@ -5,5 +5,5 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - test_page_test
-  - menu_ui
+  - drupal:test_page_test
+  - drupal:menu_ui
