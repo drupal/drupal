@@ -3,12 +3,15 @@
 namespace Drupal\serialization\Normalizer;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer;
+use Symfony\Component\Serializer\SerializerAwareInterface;
+use Symfony\Component\Serializer\SerializerAwareTrait;
 
 /**
  * Base class for Normalizers.
  */
-abstract class NormalizerBase extends SerializerAwareNormalizer implements CacheableNormalizerInterface {
+abstract class NormalizerBase implements SerializerAwareInterface, CacheableNormalizerInterface {
+
+  use SerializerAwareTrait;
 
   /**
    * The interface or class that this Normalizer supports.
