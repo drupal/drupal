@@ -122,7 +122,7 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The event to process.
    */
-  public function onRouteMatch(GetResponseEvent $event) {
+  public function onRequest(GetResponseEvent $event) {
     // Don't cache the response if the Dynamic Page Cache request policies are
     // not met. Store the result in a static keyed by current request, so that
     // onResponse() does not have to redo the request policy check.
@@ -189,7 +189,7 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
 
     // Don't cache the response if the Dynamic Page Cache request & response
     // policies are not met.
-    // @see onRouteMatch()
+    // @see onRequest()
     if ($this->requestPolicyResults[$request] === RequestPolicyInterface::DENY || $this->responsePolicy->check($response, $request) === ResponsePolicyInterface::DENY) {
       return;
     }
@@ -312,7 +312,7 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
     // should not be polluted by maintenance mode-specific behavior; priority
     // 30), but before ContentControllerSubscriber (updates _controller, but
     // that is a no-op when Dynamic Page Cache runs; priority 25).
-    $events[KernelEvents::REQUEST][] = ['onRouteMatch', 27];
+    $events[KernelEvents::REQUEST][] = ['onRequest', 27];
 
     // Run before HtmlResponseSubscriber::onRespond(), which has priority 0.
     $events[KernelEvents::RESPONSE][] = ['onResponse', 100];
