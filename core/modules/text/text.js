@@ -13,7 +13,7 @@
 
         var $summary = $widget.find('.js-text-summary-wrapper');
         var $summaryLabel = $summary.find('label').eq(0);
-        var $full = $widget.find('.js-text-full').closest('.js-form-item');
+        var $full = $widget.children('.js-form-type-textarea');
         var $fullLabel = $full.find('label').eq(0);
 
         if ($fullLabel.length === 0) {

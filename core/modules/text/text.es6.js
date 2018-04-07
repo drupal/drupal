@@ -19,7 +19,7 @@
 
         const $summary = $widget.find('.js-text-summary-wrapper');
         const $summaryLabel = $summary.find('label').eq(0);
-        const $full = $widget.find('.js-text-full').closest('.js-form-item');
+        const $full = $widget.children('.js-form-type-textarea');
         let $fullLabel = $full.find('label').eq(0);
 
         // Create a placeholder label when the field cardinality is greater
