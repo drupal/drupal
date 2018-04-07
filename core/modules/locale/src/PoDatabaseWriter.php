@@ -16,7 +16,7 @@ class PoDatabaseWriter implements PoWriterInterface {
    * An associative array indicating what data should be overwritten, if any.
    *
    * Elements of the array:
-   * - override_options
+   * - overwrite_options
    *   - not_customized: boolean indicating that not customized strings should
    *     be overwritten.
    *   - customized: boolean indicating that customized strings should be
@@ -109,6 +109,16 @@ class PoDatabaseWriter implements PoWriterInterface {
 
   /**
    * Set the options for the current writer.
+   *
+   * @param array $options
+   *   An associative array containing:
+   *   - overwrite_options: An array of options. Each option contains:
+   *     - not_customized: Boolean indicating that not customized strings should
+   *       be overwritten.
+   *     - customized: Boolean indicating that customized strings should be
+   *       overwritten.
+   *   - customized: The strings being imported should be saved as customized.
+   *     One of LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED.
    */
   public function setOptions(array $options) {
     if (!isset($options['overwrite_options'])) {
