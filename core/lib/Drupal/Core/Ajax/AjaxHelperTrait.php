@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\layout_builder\Controller;
+namespace Drupal\Core\Ajax;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 
@@ -8,8 +8,6 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
  * Provides a helper to determine if the current request is via AJAX.
  *
  * @internal
- *
- * @todo Move to \Drupal\Core in https://www.drupal.org/node/2896535.
  */
 trait AjaxHelperTrait {
 
@@ -20,12 +18,12 @@ trait AjaxHelperTrait {
    *   TRUE if the current request is via AJAX, FALSE otherwise.
    */
   protected function isAjax() {
-    return in_array($this->getRequestWrapperFormat(), [
-      'drupal_ajax',
-      'drupal_dialog',
-      'drupal_dialog.off_canvas',
-      'drupal_modal',
-    ]);
+    foreach (['drupal_ajax', 'drupal_modal', 'drupal_dialog'] as $wrapper) {
+      if (strpos($this->getRequestWrapperFormat(), $wrapper) !== FALSE) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
   /**

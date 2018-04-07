@@ -1,18 +1,13 @@
 <?php
 
-namespace Drupal\layout_builder\Form;
+namespace Drupal\Core\Ajax;
 
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\layout_builder\Controller\AjaxHelperTrait;
 
 /**
  * Provides a helper to for submitting an AJAX form.
  *
  * @internal
- *
- * @todo Move to \Drupal\Core in https://www.drupal.org/node/2896535.
  */
 trait AjaxFormHelperTrait {
 
