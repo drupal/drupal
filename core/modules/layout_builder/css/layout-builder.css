@@ -1,4 +1,5 @@
 .add-section {
+  background-color: #f7f7f7;
   width: 100%;
   outline: 2px dashed #979797;
   padding: 1.5em 0;
@@ -7,17 +8,52 @@
   transition: visually-hidden 2s ease-out, height 2s ease-in;
 }
 
+.add-section__link,
+.add-block__link {
+  color: #787878;
+  border-bottom: none;
+  padding-left: 24px;
+  background: url(../../../misc/icons/787878/plus.svg) transparent top left / 16px 16px no-repeat;
+}
+
+.add-section__link:hover,
+.add-section__link:active,
+.add-section__link:focus,
+.add-block__link:hover,
+.add-block__link:active,
+.add-block__link:focus {
+  border-bottom-style: none;
+  color: #000;
+}
+
 .layout-section {
   margin-bottom: 1.5em;
 }
 
+.layout-section .ui-sortable-helper {
+  background-color: #fff;
+  outline: 2px solid #f7f7f7;
+}
+
+.layout-section .ui-state-drop {
+  background-color: #ffd;
+  outline: 2px dashed #fedb60;
+  margin: 20px;
+  padding: 30px;
+}
+
 .layout-section .layout-builder--layout__region {
   outline: 2px dashed #2f91da;
-  padding: 1.5em 0;
 }
 
 .layout-section .layout-builder--layout__region .add-block {
+  background-color: #eff6fc;
+  padding: 1.5em 0;
   text-align: center;
+}
+
+.layout-section .layout-builder--layout__region .block {
+  padding: 1.5em;
 }
 
 .layout-section .remove-section {
