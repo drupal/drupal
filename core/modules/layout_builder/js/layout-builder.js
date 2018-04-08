@@ -14,6 +14,7 @@
       $(context).find('.layout-builder--layout__region').sortable({
         items: '> .draggable',
         connectWith: '.layout-builder--layout__region',
+        placeholder: 'ui-state-drop',
 
         update: function update(event, ui) {
           var itemRegion = ui.item.closest('.layout-builder--layout__region');

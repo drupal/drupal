@@ -161,7 +161,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
           ],
           [
             'attributes' => [
-              'class' => ['use-ajax'],
+              'class' => ['use-ajax', 'add-section__link'],
               'data-dialog-type' => 'dialog',
               'data-dialog-renderer' => 'off_canvas',
             ],
@@ -226,7 +226,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
           ],
           [
             'attributes' => [
-              'class' => ['use-ajax'],
+              'class' => ['use-ajax', 'add-block__link'],
               'data-dialog-type' => 'dialog',
               'data-dialog-renderer' => 'off_canvas',
             ],
