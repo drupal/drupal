@@ -12,15 +12,15 @@ use Drupal\Core\Url as CoreUrl;
  *
  * Properties:
  * - #title: The link text.
- * - #url: \Drupal\Url object containing URL information pointing to a internal
- *   or external link . See \Drupal\Core\Utility\LinkGeneratorInterface.
+ * - #url: \Drupal\Core\Url object containing URL information pointing to a
+ *   internal or external link. See \Drupal\Core\Utility\LinkGeneratorInterface.
  *
  * Usage example:
  * @code
  * $build['examples_link'] = [
  *   '#title' => $this->t('Examples'),
  *   '#type' => 'link',
- *   '#url' => Url::fromRoute('examples.description')
+ *   '#url' => \Drupal\Core\Url::fromRoute('examples.description')
  * ];
  * @endcode
  *
