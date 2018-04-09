@@ -1252,9 +1252,11 @@
  *   using @link entity_api Entities @endlink.
  * - Session: Information about individual users' interactions with the site,
  *   such as whether they are logged in. This is really "state" information, but
- *   it is not stored the same way so it's a separate type here. Session
- *   information is available from the Request object. The session implements
+ *   it is not stored the same way so it's a separate type here. Session data is
+ *   accessed via \Symfony\Component\HttpFoundation\Request::getSession(), which
+ *   returns an instance of
  *   \Symfony\Component\HttpFoundation\Session\SessionInterface.
+ *   See the @link session Sessions topic @endlink for more information.
  * - State: Information of a temporary nature, generally machine-generated and
  *   not human-edited, about the current state of your site. Examples: the time
  *   when Cron was last run, whether node access permissions need rebuilding,
@@ -2583,5 +2585,66 @@ function hook_validation_constraint_alter(array &$definitions) {
  * definition order. If order matters defining a priority is strongly advised
  * instead of relying on these two tie breaker rules as they might change in a
  * minor release.
+ * @}
+ */
+
+/**
+ * @defgroup session Sessions
+ * @{
+ * Store and retrieve data associated with a user's browsing session.
+ *
+ * @section sec_intro Overview
+ * The Drupal session management subsystem is built on top of the Symfony
+ * session component. It is optimized in order to minimize the impact of
+ * anonymous sessions on caching proxies. A session is only started if necessary
+ * and the session cookie is removed from the browser as soon as the session
+ * has no data. For this reason it is important for contributed and custom
+ * code to remove session data if it is not used anymore.
+ *
+ * @section sec_usage Usage
+ * Session data is accessed via the
+ * \Symfony\Component\HttpFoundation\Request::getSession()
+ * method, which returns an instance of
+ * \Symfony\Component\HttpFoundation\Session\SessionInterface. The most
+ * important methods on SessionInterface are set(), get(), and remove().
+ *
+ * The following code fragment shows the implementation of a counter controller
+ * relying on the session:
+ * @code
+ * public function counter(Request $request) {
+ *   $session = $request->getSession();
+ *   $count = $session->get('mymodule.counter', 0) + 1;
+ *   $session->set('mymodule.counter', $count);
+ *
+ *   return [
+ *     '#markup' => $this->t('Page Views: @count', ['@count' => $count]),
+ *     '#cache' => [
+ *       'max-age' => 0,
+ *     ],
+ *   ];
+ * }
+ *
+ * public function reset(Request $request) {
+ *   $session = $request->getSession();
+ *   $session->remove('mymodule.counter');
+ * }
+ * @endcode
+ *
+ * It is important to keep the amount of data stored inside the session to a
+ * minimum, as the complete session is loaded on every request. Also third
+ * party session storage backends do not necessarily allow objects of unlimited
+ * size. If it is necessary to collect a non-trivial amount of data specific to
+ * a user's session, use the Key/Value store to save the serialized data and
+ * only store the key to the entry in the session.
+ *
+ * @section sec_reserved Reserved attributes and namespacing
+ * Contributed modules relying on the session are encouraged to namespace
+ * session attributes by prefixing them with their project name or an
+ * abbreviation thereof.
+ *
+ * Some attributes are reserved for Drupal core and must not be accessed from
+ * within contributed and custom code. Reserved attributes include:
+ * - uid: The user ID for an authenticated user. The value of this attribute
+ *   cannot be modified.
  * @}
  */
