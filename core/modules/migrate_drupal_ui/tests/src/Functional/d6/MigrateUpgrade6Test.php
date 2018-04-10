@@ -68,7 +68,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'file' => 8,
       'filter_format' => 7,
       'image_style' => 5,
-      'language_content_settings' => 3,
+      'language_content_settings' => 2,
       'migration' => 105,
       'node' => 17,
       // The 'book' module provides the 'book' node type, and the migration
@@ -85,7 +85,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'tour' => 4,
       'user' => 7,
       'user_role' => 6,
-      'menu_link_content' => 10,
+      'menu_link_content' => 9,
       'view' => 16,
       'date_format' => 11,
       'entity_form_display' => 29,
@@ -106,7 +106,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts['entity_view_display'] = 53;
     $counts['entity_view_mode'] = 14;
     $counts['file'] = 9;
-    $counts['menu_link_content'] = 11;
+    $counts['menu_link_content'] = 10;
     $counts['node'] = 18;
     $counts['taxonomy_term'] = 9;
     $counts['user'] = 8;
@@ -131,7 +131,6 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'filefield',
       'filter',
       'forum',
-      'i18nmenu',
       'i18ntaxonomy',
       'imagecache',
       'imagefield',
@@ -176,6 +175,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'i18nblocks',
       'i18ncck',
       'i18ncontent',
+      'i18nmenu',
       // This module is in the missing path list because it is installed on the
       // source site but it is not installed on the destination site.
       'i18nprofile',

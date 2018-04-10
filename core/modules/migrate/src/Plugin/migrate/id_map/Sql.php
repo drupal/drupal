@@ -562,13 +562,9 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     $conditions = [];
     foreach ($this->sourceIdFields() as $field_name => $db_field) {
       if ($is_associative) {
-        // Ensure to handle array elements with a NULL value.
-        if (array_key_exists($field_name, $source_id_values)) {
-          // Associative $source_id_values can have fields out of order.
-          if (isset($source_id_values[$field_name])) {
-            // Only add a condition if the value is not NULL.
-            $conditions[$db_field] = $source_id_values[$field_name];
-          }
+        // Associative $source_id_values can have fields out of order.
+        if (isset($source_id_values[$field_name])) {
+          $conditions[$db_field] = $source_id_values[$field_name];
           unset($source_id_values[$field_name]);
         }
       }
@@ -583,8 +579,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     }
 
     if (!empty($source_id_values)) {
-      $var_dump = var_export($source_id_values, TRUE);
-      throw new MigrateException(sprintf("Extra unknown items in source IDs: %s", $var_dump));
+      throw new MigrateException("Extra unknown items in source IDs");
     }
 
     $query = $this->getDatabase()->select($this->mapTableName(), 'map')
