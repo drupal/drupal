@@ -20,6 +20,7 @@ use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -82,6 +83,13 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
   protected $moduleHandler;
 
   /**
+   * The logger.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a new FieldBlock.
    *
    * @param array $configuration
@@ -96,11 +104,14 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
    *   The formatter manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, FormatterPluginManager $formatter_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, FormatterPluginManager $formatter_manager, ModuleHandlerInterface $module_handler, LoggerInterface $logger) {
     $this->entityFieldManager = $entity_field_manager;
     $this->formatterManager = $formatter_manager;
     $this->moduleHandler = $module_handler;
+    $this->logger = $logger;
 
     // Get the entity type and field name from the plugin ID.
     list (, $entity_type_id, $bundle, $field_name) = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 4);
@@ -121,7 +132,8 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
       $plugin_definition,
       $container->get('entity_field.manager'),
       $container->get('plugin.manager.field.formatter'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('logger.channel.layout_builder')
     );
   }
 
@@ -141,7 +153,13 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
   public function build() {
     $display_settings = $this->getConfiguration()['formatter'];
     $entity = $this->getEntity();
-    $build = $entity->get($this->fieldName)->view($display_settings);
+    try {
+      $build = $entity->get($this->fieldName)->view($display_settings);
+    }
+    catch (\Exception $e) {
+      $build = [];
+      $this->logger->warning('The field "%field" failed to render with the error of "%error".', ['%field' => $this->fieldName, '%error' => $e->getMessage()]);
+    }
     if (!empty($entity->in_preview) && !Element::getVisibleChildren($build)) {
       $build['content']['#markup'] = new TranslatableMarkup('Placeholder for the "@field" field', ['@field' => $this->getFieldDefinition()->getLabel()]);
     }
