@@ -46862,6 +46862,46 @@ $connection->insert('variable')
   'value' => 's:1:"1";',
 ))
 ->values(array(
+  'name' => 'color_bartik_files',
+  'value' => 'a:2:{i:0;s:39:"public://color/bartik-e0e23ad7/logo.png";i:1;s:41:"public://color/bartik-e0e23ad7/colors.css";}',
+))
+->values(array(
+  'name' => 'color_bartik_logo',
+  'value' => 's:39:"public://color/bartik-e0e23ad7/logo.png";',
+))
+->values(array(
+  'name' => 'color_bartik_palette',
+  'value' => 'a:9:{s:3:"top";s:7:"#d0d0d0";s:6:"bottom";s:7:"#c2c4c5";s:2:"bg";s:7:"#ffffff";s:7:"sidebar";s:7:"#ffffff";s:14:"sidebarborders";s:7:"#cccccc";s:6:"footer";s:7:"#24272c";s:11:"titleslogan";s:7:"#000000";s:4:"text";s:7:"#4a4a4a";s:4:"link";s:7:"#019dbf";}',
+))
+->values(array(
+  'name' => 'color_bartik_stylesheets',
+  'value' => 'a:1:{i:0;s:41:"public://color/bartik-e0e23ad7/colors.css";}',
+))
+->values(array(
+  'name' => 'color_bartik_screenshot',
+  'value' => 's:72:"/var/www/drupal/sites/default/files/color/bartik-b69cfcec/screenshot.png";'
+))
+->values(array(
+  'name' => 'color_garland_files',
+  'value' => 'a:19:{i:0;s:50:"public://color/garland-b69cfcec/menu-collapsed.gif";i:1;s:54:"public://color/garland-b69cfcec/menu-collapsed-rtl.gif";i:2;s:49:"public://color/garland-b69cfcec/menu-expanded.gif";i:3;s:45:"public://color/garland-b69cfcec/menu-leaf.gif";i:4;s:67:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/body.png";i:5;s:69:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/bg-bar.png";i:6;s:75:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/bg-bar-white.png";i:7;s:69:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/bg-tab.png";i:8;s:76:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/bg-navigation.png";i:9;s:78:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/bg-content-left.png";i:10;s:79:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/bg-content-right.png";i:11;s:73:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/bg-content.png";i:12;s:81:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/bg-navigation-item.png";i:13;s:87:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/bg-navigation-item-hover.png";i:14;s:77:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/gradient-inner.png";i:15;s:67:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/logo.png";i:16;s:73:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/screenshot.png";i:17;s:41:"public://color/garland-b69cfcec/style.css";i:18;s:45:"public://color/garland-b69cfcec/style-rtl.css";}',
+))
+->values(array(
+  'name' => 'color_garland_logo',
+  'value' => 's:40:"public://color/garland-b69cfcec/logo.png";'
+))
+->values(array(
+  'name' => 'color_garland_palette',
+  'value' => 'a:5:{s:4:"base";s:7:"#d0cb9a";s:4:"link";s:7:"#917803";s:3:"top";s:7:"#efde01";s:6:"bottom";s:7:"#e6fb2d";s:4:"text";s:7:"#494949";}',
+))
+->values(array(
+  'name' => 'color_garland_screenshot',
+  'value' => 's:73:"/var/www/drupal/sites/default/files/color/garland-b69cfcec/screenshot.png";'
+))
+->values(array(
+  'name' => 'color_garland_stylesheets',
+  'value' => 'a:2:{i:0;s:41:"public://color/garland-b69cfcec/style.css";i:1;s:45:"public://color/garland-b69cfcec/style-rtl.css";}',
+))
+->values(array(
   'name' => 'comment_anonymous_article',
   'value' => 'i:0;',
 ))
