@@ -36,3 +36,6 @@ services:
     arguments: ['@current_user']
     tags:
       - { name: event_subscriber }
+  logger.channel.layout_builder:
+    parent: logger.channel_base
+    arguments: ['layout_builder']

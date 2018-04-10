@@ -7,19 +7,49 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\layout_builder\Plugin\Block\FieldBlock;
+use Prophecy\Argument;
+use Prophecy\Promise\PromiseInterface;
+use Prophecy\Promise\ReturnPromise;
+use Prophecy\Promise\ThrowPromise;
 use Prophecy\Prophecy\ProphecyInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * @coversDefaultClass \Drupal\layout_builder\Plugin\Block\FieldBlock
  * @group Field
  */
 class FieldBlockTest extends EntityKernelTestBase {
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * The logger.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class);
+    $this->logger = $this->prophesize(LoggerInterface::class);
+  }
 
   /**
    * Tests entity access.
@@ -180,7 +210,6 @@ class FieldBlockTest extends EntityKernelTestBase {
         'entity' => new ContextDefinition('entity:entity_test', 'Test', TRUE),
       ],
     ];
-    $entity_field_manager = $this->prophesize(EntityFieldManagerInterface::class);
     $formatter_manager = $this->prophesize(FormatterPluginManager::class);
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
 
@@ -188,12 +217,93 @@ class FieldBlockTest extends EntityKernelTestBase {
       $configuration,
       'field_block:entity_test:entity_test:the_field_name',
       $plugin_definition,
-      $entity_field_manager->reveal(),
+      $this->entityFieldManager->reveal(),
       $formatter_manager->reveal(),
-      $module_handler->reveal()
+      $module_handler->reveal(),
+      $this->logger->reveal()
     );
     $block->setContextValue('entity', $entity_prophecy->reveal());
     return $block;
+  }
+
+  /**
+   * @covers ::build
+   * @dataProvider providerTestBuild
+   */
+  public function testBuild(PromiseInterface $promise, $in_preview, $expected_markup, $log_message = '', $log_arguments = []) {
+    $entity = $this->prophesize(FieldableEntityInterface::class);
+    $field = $this->prophesize(FieldItemListInterface::class);
+    $entity->get('the_field_name')->willReturn($field->reveal());
+    $entity->in_preview = $in_preview;
+    $field->view(Argument::type('array'))->will($promise);
+
+    $field_definition = $this->prophesize(FieldDefinitionInterface::class);
+    $field_definition->getLabel()->willReturn('The Field Label');
+    $this->entityFieldManager->getFieldDefinitions('entity_test', 'entity_test')->willReturn(['the_field_name' => $field_definition]);
+
+    if ($log_message) {
+      $this->logger->warning($log_message, $log_arguments)->shouldBeCalled();
+    }
+    else {
+      $this->logger->warning(Argument::cetera())->shouldNotBeCalled();
+    }
+
+    $block = $this->getTestBlock($entity);
+    $expected = [
+      '#cache' => [
+        'contexts' => [],
+        'tags' => [],
+        'max-age' => 0,
+      ],
+    ];
+    if ($expected_markup) {
+      $expected['content']['#markup'] = $expected_markup;
+    }
+
+    $actual = $block->build();
+    $this->assertEquals($expected, $actual);
+  }
+
+  /**
+   * Provides test data for ::testBuild().
+   */
+  public function providerTestBuild() {
+    $data = [];
+    $data['array, no preview'] = [
+      new ReturnPromise([['content' => ['#markup' => 'The field value']]]),
+      FALSE,
+      'The field value',
+    ];
+    $data['array, preview'] = [
+      new ReturnPromise([['content' => ['#markup' => 'The field value']]]),
+      TRUE,
+      'The field value',
+    ];
+    $data['empty array, no preview'] = [
+      new ReturnPromise([[]]),
+      FALSE,
+      '',
+    ];
+    $data['empty array, preview'] = [
+      new ReturnPromise([[]]),
+      TRUE,
+      'Placeholder for the "The Field Label" field',
+    ];
+    $data['exception, no preview'] = [
+      new ThrowPromise(new \Exception('The exception message')),
+      FALSE,
+      '',
+      'The field "%field" failed to render with the error of "%error".',
+      ['%field' => 'the_field_name', '%error' => 'The exception message'],
+    ];
+    $data['exception, preview'] = [
+      new ThrowPromise(new \Exception('The exception message')),
+      TRUE,
+      'Placeholder for the "The Field Label" field',
+      'The field "%field" failed to render with the error of "%error".',
+      ['%field' => 'the_field_name', '%error' => 'The exception message'],
+    ];
+    return $data;
   }
 
 }
