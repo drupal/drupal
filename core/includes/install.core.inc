@@ -1425,7 +1425,7 @@ function install_check_localization_server($uri) {
  *
  * @param string $version
  *   Version info string (e.g., 8.0.0, 8.1.0, 8.0.0-dev, 8.0.0-unstable1,
- *   8.0.0-alpha2, 8.0.0-beta3, and 8.0.0-rc4).
+ *   8.0.0-alpha2, 8.0.0-beta3, 8.6.x, and 8.0.0-rc4).
  *
  * @return array
  *   Associative array of version info:
@@ -1443,7 +1443,7 @@ function _install_get_version_info($version) {
       \.          # .
       (?P<minor>[0-9]+)    # Minor release number.
       \.          # .
-      (?P<patch>[0-9]+)    # Patch release number.
+      (?P<patch>[0-9]+|x)  # Patch release number.
     )             #
     (             #
       -           # - separator for "extra" version information.
@@ -1715,6 +1715,9 @@ function _install_prepare_import($langcodes, $server_pattern) {
           ];
           \Drupal::service('locale.project')->set($data['name'], $data);
           module_load_include('compare.inc', 'locale');
+          // Reset project information static cache so that it uses the data
+          // set above.
+          locale_translation_clear_cache_projects();
           locale_translation_check_projects_local(['drupal'], [$langcode]);
         }
       }
@@ -1850,10 +1853,19 @@ function install_check_translations($langcode, $server_pattern) {
     return;
   }
 
+  $version = \Drupal::VERSION;
+  // For dev releases, remove the '-dev' part and trust the translation server
+  // to fall back to the latest stable release for that branch.
+  // @see locale_translation_build_projects()
+  if (preg_match("/^(\d+\.\d+\.).*-dev$/", $version, $matches)) {
+    // Example match: 8.0.0-dev => 8.0.x (Drupal core)
+    $version = $matches[1] . 'x';
+  }
+
   // Build URL for the translation file and the translation server.
   $variables = [
     '%project' => 'drupal',
-    '%version' => \Drupal::VERSION,
+    '%version' => $version,
     '%core' => \Drupal::CORE_COMPATIBILITY,
     '%language' => $langcode,
   ];
