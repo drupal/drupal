@@ -715,4 +715,14 @@ class DateTimePlus {
     $this->dateTimeObject->setTime(12, 0, 0);
   }
 
+  /**
+   * Gets a clone of the proxied PHP \DateTime object wrapped by this class.
+   *
+   * @return \DateTime
+   *   A clone of the wrapped PHP \DateTime object.
+   */
+  public function getPhpDateTime() {
+    return clone $this->dateTimeObject;
+  }
+
 }

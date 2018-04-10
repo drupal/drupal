@@ -891,4 +891,29 @@ class DateTimePlusTest extends TestCase {
     $date->setTimezone(new \DateTimeZone('America/New_York'))->nonexistent();
   }
 
+  /**
+   * @covers ::getPhpDateTime
+   */
+  public function testGetPhpDateTime() {
+    $new_york = new \DateTimeZone('America/New_York');
+    $berlin = new \DateTimeZone('Europe/Berlin');
+
+    // Test retrieving a cloned copy of the wrapped \DateTime object, and that
+    // altering it does not change the DateTimePlus object.
+    $datetimeplus = DateTimePlus::createFromFormat('Y-m-d H:i:s', '2017-07-13 22:40:00', $new_york, ['langcode' => 'en']);
+    $this->assertEquals(1500000000, $datetimeplus->getTimestamp());
+    $this->assertEquals('America/New_York', $datetimeplus->getTimezone()->getName());
+
+    $datetime = $datetimeplus->getPhpDateTime();
+    $this->assertInstanceOf('DateTime', $datetime);
+    $this->assertEquals(1500000000, $datetime->getTimestamp());
+    $this->assertEquals('America/New_York', $datetime->getTimezone()->getName());
+
+    $datetime->setTimestamp(1400000000)->setTimezone($berlin);
+    $this->assertEquals(1400000000, $datetime->getTimestamp());
+    $this->assertEquals('Europe/Berlin', $datetime->getTimezone()->getName());
+    $this->assertEquals(1500000000, $datetimeplus->getTimestamp());
+    $this->assertEquals('America/New_York', $datetimeplus->getTimezone()->getName());
+  }
+
 }
