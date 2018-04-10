@@ -50,10 +50,32 @@ class MigrationTest extends KernelTestBase {
             ],
           ],
         ],
+        'f4' => [
+          'plugin' => 'migration_lookup',
+          'migration' => 'm3'
+        ],
+        'f5' => [
+          'plugin' => 'sub_process',
+          'process' => [
+            'target_id' => [
+              'plugin' => 'migration_lookup',
+              'migration' => 'm4',
+            ],
+          ],
+        ],
+        'f6' => [
+          'plugin' => 'iterator',
+          'process' => [
+            'target_id' => [
+              'plugin' => 'migration_lookup',
+              'migration' => 'm5',
+            ],
+          ],
+        ],
       ],
     ];
     $migration = $plugin_manager->createStubMigration($plugin_definition);
-    $this->assertSame(['required' => [], 'optional' => ['m1', 'm2']], $migration->getMigrationDependencies());
+    $this->assertSame(['required' => [], 'optional' => ['m1', 'm2', 'm3', 'm4', 'm5']], $migration->getMigrationDependencies());
   }
 
   /**
