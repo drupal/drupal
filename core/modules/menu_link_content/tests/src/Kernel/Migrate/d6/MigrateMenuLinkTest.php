@@ -84,7 +84,7 @@ class MigrateMenuLinkTest extends MigrateNodeTestBase {
    * Tests migration of menu links.
    */
   public function testMenuLinks() {
-    $this->assertEntity('138', 'Test 1', 'secondary-links', 'Test menu link 1', TRUE, FALSE, ['attributes' => ['title' => 'Test menu link 1']], 'internal:/user/login', -50);
+    $this->assertEntity('138', 'Test 1', 'secondary-links', 'Test menu link 1', TRUE, FALSE, ['attributes' => ['title' => 'Test menu link 1'], 'langcode' => 'en'], 'internal:/user/login', -50);
     $this->assertEntity('139', 'Test 2', 'secondary-links', 'Test menu link 2', TRUE, TRUE, ['query' => 'foo=bar', 'attributes' => ['title' => 'Test menu link 2']], 'internal:/admin', -49);
     $this->assertEntity('140', 'Drupal.org', 'secondary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'https://www.drupal.org', -50);
 
@@ -96,6 +96,9 @@ class MigrateMenuLinkTest extends MigrateNodeTestBase {
     $this->assertEntity('460', 'Le Vrai McCoy', 'primary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => ''], 'alter' => TRUE], 'entity:node/10', 0);
     $this->assertEntity('461', 'Abantu zulu', 'primary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => ''], 'alter' => TRUE], 'entity:node/12', 0);
     $this->assertEntity('462', 'The Zulu People', 'primary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => ''], 'alter' => TRUE], 'entity:node/12', 0);
+
+    // Test the migration of menu links translation.
+    $this->assertEntity('463', 'fr - Test 1', 'secondary-links', 'fr - Test menu link 1', TRUE, FALSE, ['attributes' => ['title' => 'fr - Test menu link 1'], 'langcode' => 'fr', 'alter' => TRUE], 'internal:/user/login', -49);
   }
 
 }
