@@ -517,8 +517,6 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $this->assertEquals([[101, 'en'], [101, 'fr'], [101, 'de']], $id_map->lookupDestinationIds(['nid' => 1]));
     $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds(['nid' => 2]));
     $this->assertEquals([], $id_map->lookupDestinationIds(['nid' => 99]));
-    $this->assertEquals([[101, 'en'], [101, 'fr'], [101, 'de']], $id_map->lookupDestinationIds(['nid' => 1, 'language' => NULL]));
-    $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds(['nid' => 2, 'language' => NULL]));
     // Out-of-order partial associative list.
     $this->assertEquals([[101, 'en'], [102, 'en']], $id_map->lookupDestinationIds(['language' => 'en']));
     $this->assertEquals([[101, 'fr']], $id_map->lookupDestinationIds(['language' => 'fr']));
@@ -529,14 +527,14 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       $this->fail('Too many source IDs should throw');
     }
     catch (MigrateException $e) {
-      $this->assertEquals("Extra unknown items in source IDs: array (\n  0 => 3,\n)", $e->getMessage());
+      $this->assertEquals("Extra unknown items in source IDs", $e->getMessage());
     }
     try {
       $id_map->lookupDestinationIds(['nid' => 1, 'aaa' => '2']);
       $this->fail('Unknown source ID key should throw');
     }
     catch (MigrateException $e) {
-      $this->assertEquals("Extra unknown items in source IDs: array (\n  'aaa' => '2',\n)", $e->getMessage());
+      $this->assertEquals("Extra unknown items in source IDs", $e->getMessage());
     }
 
     // Verify that we are looking up by source_id_hash when all source IDs are

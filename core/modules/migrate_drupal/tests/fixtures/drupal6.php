@@ -9710,38 +9710,6 @@ $connection->insert('i18n_strings')
   'objectindex' => '7',
   'format' => '0',
 ))
-->values(array(
-  'lid' => '1674',
-  'objectid' => '463',
-  'type' => 'item',
-  'property' => 'title',
-  'objectindex' => '463',
-  'format' => '0',
-))
-->values(array(
-  'lid' => '1675',
-  'objectid' => '463',
-  'type' => 'item',
-  'property' => 'description',
-  'objectindex' => '463',
-  'format' => '0',
-))
-->values(array(
-  'lid' => '1676',
-  'objectid' => '138',
-  'type' => 'item',
-  'property' => 'title',
-  'objectindex' => '138',
-  'format' => '0',
-))
-->values(array(
-  'lid' => '1677',
-  'objectid' => '138',
-  'type' => 'item',
-  'property' => 'description',
-  'objectindex' => '138',
-  'format' => '0',
-))
 ->execute();
 
 $connection->schema()->createTable('i18n_variable', array(
@@ -22208,34 +22176,6 @@ $connection->insert('locales_source')
   'source' => 'Forums',
   'version' => '1',
 ))
-->values(array(
-  'lid' => '1674',
-  'location' => 'item:463:title',
-  'textgroup' => 'menu',
-  'source' => 'fr - Test 1',
-  'version' => '1',
-))
-->values(array(
-  'lid' => '1675',
-  'location' => 'item:463:description',
-  'textgroup' => 'menu',
-  'source' => 'fr - Test menu link 1',
-  'version' => '1',
-))
-->values(array(
-  'lid' => '1676',
-  'location' => 'item:138:title',
-  'textgroup' => 'menu',
-  'source' => 'Test 1',
-  'version' => '1',
-))
-->values(array(
-  'lid' => '1677',
-  'location' => 'item:138:description',
-  'textgroup' => 'menu',
-  'source' => 'Test menu link 1',
-  'version' => '1',
-))
 ->execute();
 
 $connection->schema()->createTable('locales_target', array(
@@ -27765,7 +27705,7 @@ $connection->insert('menu_links')
   'link_path' => 'user/login',
   'router_path' => 'user/login',
   'link_title' => 'Test 1',
-  'options' => 'a:2:{s:10:"attributes";a:1:{s:5:"title";s:16:"Test menu link 1";}s:8:"langcode";s:2:"en";}',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:16:"Test menu link 1";}}',
   'module' => 'menu',
   'hidden' => '0',
   'external' => '0',
@@ -33878,33 +33818,6 @@ $connection->insert('menu_links')
   'customized' => '1',
   'p1' => '462',
   'p2' => '0',
-  'p3' => '0',
-  'p4' => '0',
-  'p5' => '0',
-  'p6' => '0',
-  'p7' => '0',
-  'p8' => '0',
-  'p9' => '0',
-  'updated' => '0',
-))
-->values(array(
-  'menu_name' => 'secondary-links',
-  'mlid' => '463',
-  'plid' => '139',
-  'link_path' => 'user/login',
-  'router_path' => 'user/login',
-  'link_title' => 'fr - Test 1',
-  'options' => 'a:3:{s:10:"attributes";a:1:{s:5:"title";s:21:"fr - Test menu link 1";}s:8:"langcode";s:2:"fr";s:5:"alter";b:1;}',
-  'module' => 'menu',
-  'hidden' => '0',
-  'external' => '0',
-  'has_children' => '0',
-  'expanded' => '0',
-  'weight' => '-49',
-  'depth' => '2',
-  'customized' => '1',
-  'p1' => '139',
-  'p2' => '459',
   'p3' => '0',
   'p4' => '0',
   'p5' => '0',
