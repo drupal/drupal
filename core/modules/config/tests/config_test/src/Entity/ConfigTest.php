@@ -116,6 +116,17 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
   /**
    * {@inheritdoc}
    */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    if ($module = \Drupal::state()->get('config_test_new_dependency', FALSE)) {
+      $this->addDependency('module', $module);
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function onDependencyRemoval(array $dependencies) {
     // Record which entities have this method called on and what dependencies
     // are passed.
