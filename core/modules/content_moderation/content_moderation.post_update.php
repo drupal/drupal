@@ -20,6 +20,7 @@ function content_moderation_post_update_update_cms_default_revisions(&$sandbox) 
   $entity_type_id = &$sandbox['entity_type_id'];
   if (!isset($entity_type_id)) {
     $sandbox['bundles'] = [];
+    $sandbox['entity_type_ids'] = [];
     /** @var \Drupal\workflows\WorkflowInterface $workflow */
     foreach (Workflow::loadMultipleByType('content_moderation') as $workflow) {
       /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $plugin */
