@@ -38,7 +38,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_destroy', 'test_executable_displays'];
+  public static $testViews = ['test_destroy', 'test_executable_displays', 'test_argument_dependency'];
 
   /**
    * Properties that should be stored in the configuration.
@@ -523,6 +523,21 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       ->getItemDefinition()
       ->getFieldDefinition();
     $this->assertEquals($nid_definition_before->getPropertyDefinitions(), $nid_definition_after->getPropertyDefinitions());
+  }
+
+  /**
+   * Tests if argument overrides by validators are propagated to tokens.
+   */
+  public function testArgumentValidatorValueOverride() {
+    $view = Views::getView('test_argument_dependency');
+    $view->setDisplay('page_1');
+    $view->setArguments(['1', 'this value should be replaced']);
+    $view->execute();
+    $expected = [
+      '{{ arguments.uid }}' => '1',
+      '{{ raw_arguments.uid }}' => '1',
+    ];
+    $this->assertEquals($expected, $view->build_info['substitutions']);
   }
 
 }
