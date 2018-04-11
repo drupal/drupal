@@ -1,18 +1,23 @@
 <?php
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\image\Functional;
 
+use Drupal\Component\Serialization\Json;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the endpoints used by the "image" in-place editor.
  *
  * @group image
  */
-class QuickEditImageControllerTest extends WebTestBase {
+class QuickEditImageControllerTest extends BrowserTestBase {
 
   use ImageFieldCreationTrait;
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
 
   /**
    * {@inheritdoc}
@@ -77,8 +82,11 @@ class QuickEditImageControllerTest extends WebTestBase {
     ]);
     $this->drupalGet('quickedit/image/info/node/' . $node->id() . '/' . $this->fieldName . '/' . $node->language()->getId() . '/default');
     $this->assertResponse('403');
-    $this->drupalPost('quickedit/image/upload/node/' . $node->id() . '/' . $this->fieldName . '/' . $node->language()->getId() . '/default', 'application/json', []);
-    $this->assertResponse('403');
+
+    /** @var \Symfony\Component\BrowserKit\Client $client */
+    $client = $this->getSession()->getDriver()->getClient();
+    $client->request('POST', '/quickedit/image/upload/node/' . $node->id() . '/' . $this->fieldName . '/' . $node->language()->getId() . '/default');
+    $this->assertEquals('403', $client->getResponse()->getStatus());
   }
 
   /**
@@ -90,7 +98,8 @@ class QuickEditImageControllerTest extends WebTestBase {
       'type' => 'article',
       'title' => t('Test Node'),
     ]);
-    $info = $this->drupalGetJSON('quickedit/image/info/node/' . $node->id() . '/' . $this->fieldName . '/' . $node->language()->getId() . '/default');
+    $json = $this->drupalGet('quickedit/image/info/node/' . $node->id() . '/' . $this->fieldName . '/' . $node->language()->getId() . '/default', ['query' => ['_format' => 'json']]);
+    $info = Json::decode($json);
     // Assert that the default settings for our field are respected by our JSON
     // endpoint.
     $this->assertTrue($info['alt_field']);
@@ -118,8 +127,10 @@ class QuickEditImageControllerTest extends WebTestBase {
       }
     }
     $this->assertTrue($valid_image);
+
+    $this->drupalLogin($this->contentAuthorUser);
     $this->uploadImage($valid_image, $node->id(), $this->fieldName, $node->language()->getId());
-    $this->assertText('fid', t('Valid upload completed successfully.'));
+    $this->assertContains('"fid":"1"', $this->getSession()->getPage()->getContent(), 'Valid upload completed successfully.');
   }
 
   /**
@@ -145,8 +156,10 @@ class QuickEditImageControllerTest extends WebTestBase {
       }
     }
     $this->assertTrue($invalid_image);
+
+    $this->drupalLogin($this->contentAuthorUser);
     $this->uploadImage($invalid_image, $node->id(), $this->fieldName, $node->language()->getId());
-    $this->assertText('main_error', t('Invalid upload returned errors.'));
+    $this->assertContains('"main_error":"The image failed validation."', $this->getSession()->getPage()->getContent(), 'Invalid upload returned errors.');
   }
 
   /**
@@ -160,27 +173,14 @@ class QuickEditImageControllerTest extends WebTestBase {
    *   The target field machine name.
    * @param string $langcode
    *   The langcode to use when setting the field's value.
-   *
-   * @return mixed
-   *   The content returned from the call to $this->curlExec().
    */
   public function uploadImage($image, $nid, $field_name, $langcode) {
     $filepath = $this->container->get('file_system')->realpath($image->uri);
-    $data = [
-      'files[image]' => curl_file_create($filepath),
-    ];
     $path = 'quickedit/image/upload/node/' . $nid . '/' . $field_name . '/' . $langcode . '/default';
-    // We assemble the curl request ourselves as drupalPost cannot process file
-    // uploads, and drupalPostForm only works with typical Drupal forms.
-    return $this->curlExec([
-      CURLOPT_URL => $this->buildUrl($path, []),
-      CURLOPT_POST => TRUE,
-      CURLOPT_POSTFIELDS => $data,
-      CURLOPT_HTTPHEADER => [
-        'Accept: application/json',
-        'Content-Type: multipart/form-data',
-      ],
-    ]);
+
+    $this->prepareRequest();
+    $client = $this->getSession()->getDriver()->getClient();
+    $client->request('POST', $this->buildUrl($path, []), [], ['files[image]' => $filepath]);
   }
 
 }

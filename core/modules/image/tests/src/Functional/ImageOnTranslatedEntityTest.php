@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\image\Functional;
 
 use Drupal\file\Entity\File;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Uploads images to translated nodes.
@@ -10,6 +11,11 @@ use Drupal\file\Entity\File;
  * @group image
  */
 class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+    compareFiles as drupalCompareFiles;
+  }
 
   /**
    * {@inheritdoc}

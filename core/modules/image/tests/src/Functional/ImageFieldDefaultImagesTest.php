@@ -1,12 +1,14 @@
 <?php
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\image\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\EntityViewTrait;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests setting up default images both to the field and field storage.
@@ -14,6 +16,14 @@ use Drupal\field\Entity\FieldStorageConfig;
  * @group image
  */
 class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+    compareFiles as drupalCompareFiles;
+  }
+  use EntityViewTrait {
+    buildEntityView as drupalBuildEntityView;
+  }
 
   /**
    * Modules to enable.

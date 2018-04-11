@@ -1,17 +1,23 @@
 <?php
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\image\Functional;
 
 use Drupal\file\Entity\File;
-use Drupal\simpletest\WebTestBase;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the file move function for images and image styles.
  *
  * @group image
  */
-class FileMoveTest extends WebTestBase {
+class FileMoveTest extends BrowserTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+    compareFiles as drupalCompareFiles;
+  }
 
   /**
    * Modules to enable.
