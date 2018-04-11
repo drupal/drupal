@@ -37,10 +37,6 @@ class ArgumentValidatorTest extends ArgumentValidatorPluginBase {
    * {@inheritdoc}
    */
   public function validateArgument($arg) {
-    if ($arg === 'this value should be replaced') {
-      $this->argument->argument = 'this value is replaced!';
-      return TRUE;
-    }
     return $arg == $this->options['test_value'];
   }
 

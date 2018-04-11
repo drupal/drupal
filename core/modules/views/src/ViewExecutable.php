@@ -1096,8 +1096,7 @@ class ViewExecutable {
           $argument->is_default = TRUE;
         }
 
-        // Set the argument, which ensures that the argument is valid and
-        // possibly transforms the value.
+        // Set the argument, which will also validate that the argument can be set.
         if (!$argument->setArgument($arg)) {
           $status = $argument->validateFail($arg);
           break;
@@ -1111,11 +1110,9 @@ class ViewExecutable {
           $argument->query($this->display_handler->useGroupBy());
         }
 
-        // Add this argument's substitution.
+        // Add this argument's substitution
         $substitutions["{{ arguments.$id }}"] = $arg_title;
-        // Since argument validator plugins can potentially transform the value,
-        // use whatever value the argument handler now has, not the raw value.
-        $substitutions["{{ raw_arguments.$id }}"] = strip_tags(Html::decodeEntities($argument->getValue()));
+        $substitutions["{{ raw_arguments.$id }}"] = strip_tags(Html::decodeEntities($arg));
 
         // Test to see if we should use this argument's title
         if (!empty($argument->options['title_enable']) && !empty($argument->options['title'])) {
