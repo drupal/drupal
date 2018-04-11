@@ -89,7 +89,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Use __FILE__ to test absolute paths.
     $command_line = $php_binary_path . ' core/scripts/test-site.php install --setup-file "' . __FILE__ . '" --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root);
+    $process = new Process($command_line, $this->root, ['COLUMNS' => PHP_INT_MAX]);
     $process->run();
 
     $this->assertContains('The class Drupal\Tests\Scripts\TestSiteApplicationTest contained in', $process->getErrorOutput());
