@@ -20,7 +20,6 @@ class DefaultContentModerationStateRevisionUpdateTest extends UpdatePathTestBase
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
       __DIR__ . '/../../fixtures/update/drupal-8.4.0-content_moderation_installed.php',
-      __DIR__ . '/../../fixtures/update/drupal-8.default-cms-entity-id-2941736.php',
     ];
   }
 
@@ -28,6 +27,11 @@ class DefaultContentModerationStateRevisionUpdateTest extends UpdatePathTestBase
    * Test updating the default revision.
    */
   public function testUpdateDefaultRevision() {
+    // Include the database fixture required to test updating the default
+    // revision. This is excluded from  ::setDatabaseDumpFiles so that we can
+    // test the same post_update hook with no test content enabled.
+    require __DIR__ . '/../../fixtures/update/drupal-8.default-cms-entity-id-2941736.php';
+
     $this->runUpdates();
 
     foreach (['node', 'block_content'] as $entity_type_id) {
@@ -43,6 +47,14 @@ class DefaultContentModerationStateRevisionUpdateTest extends UpdatePathTestBase
       $this->assertTrue($archived_default_revision->isLatestRevision());
       $this->assertCompositeEntityMatchesDefaultRevisionId($archived_default_revision);
     }
+  }
+
+  /**
+   * Test the post_update hook when no entity types are being moderated.
+   */
+  public function testNoEntitiesUnderModeration() {
+    // If any errors occur during the post_update hook, the test case will fail.
+    $this->runUpdates();
   }
 
   /**
