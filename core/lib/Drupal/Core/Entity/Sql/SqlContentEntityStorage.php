@@ -307,102 +307,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // case, we can statically cache the computed table mapping. If a new set
     // of field storage definitions is passed, for instance when comparing old
     // and new storage schema, we compute the table mapping without caching.
-    // @todo Clean-up this in https://www.drupal.org/node/2274017 so we can
-    //   easily instantiate a new table mapping whenever needed.
     if (!isset($this->tableMapping) || $storage_definitions) {
       $table_mapping_class = $this->temporary ? TemporaryTableMapping::class : DefaultTableMapping::class;
       $definitions = $storage_definitions ?: $this->entityManager->getFieldStorageDefinitions($this->entityTypeId);
+
       /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping|\Drupal\Core\Entity\Sql\TemporaryTableMapping $table_mapping */
-      $table_mapping = new $table_mapping_class($this->entityType, $definitions);
-
-      $shared_table_definitions = array_filter($definitions, function (FieldStorageDefinitionInterface $definition) use ($table_mapping) {
-        return $table_mapping->allowsSharedTableStorage($definition);
-      });
-
-      $key_fields = array_values(array_filter([$this->idKey, $this->revisionKey, $this->bundleKey, $this->uuidKey, $this->langcodeKey]));
-      $all_fields = array_keys($shared_table_definitions);
-      $revisionable_fields = array_keys(array_filter($shared_table_definitions, function (FieldStorageDefinitionInterface $definition) {
-        return $definition->isRevisionable();
-      }));
-      // Make sure the key fields come first in the list of fields.
-      $all_fields = array_merge($key_fields, array_diff($all_fields, $key_fields));
-
-      // If the entity is revisionable, gather the fields that need to be put
-      // in the revision table.
-      $revisionable = $this->entityType->isRevisionable();
-      $revision_metadata_fields = $revisionable ? array_values($this->entityType->getRevisionMetadataKeys()) : [];
-
-      $translatable = $this->entityType->isTranslatable();
-      if (!$revisionable && !$translatable) {
-        // The base layout stores all the base field values in the base table.
-        $table_mapping->setFieldNames($this->baseTable, $all_fields);
-      }
-      elseif ($revisionable && !$translatable) {
-        // The revisionable layout stores all the base field values in the base
-        // table, except for revision metadata fields. Revisionable fields
-        // denormalized in the base table but also stored in the revision table
-        // together with the entity ID and the revision ID as identifiers.
-        $table_mapping->setFieldNames($this->baseTable, array_diff($all_fields, $revision_metadata_fields));
-        $revision_key_fields = [$this->idKey, $this->revisionKey];
-        $table_mapping->setFieldNames($this->revisionTable, array_merge($revision_key_fields, $revisionable_fields));
-      }
-      elseif (!$revisionable && $translatable) {
-        // Multilingual layouts store key field values in the base table. The
-        // other base field values are stored in the data table, no matter
-        // whether they are translatable or not. The data table holds also a
-        // denormalized copy of the bundle field value to allow for more
-        // performant queries. This means that only the UUID is not stored on
-        // the data table.
-        $table_mapping
-          ->setFieldNames($this->baseTable, $key_fields)
-          ->setFieldNames($this->dataTable, array_values(array_diff($all_fields, [$this->uuidKey])));
-      }
-      elseif ($revisionable && $translatable) {
-        // The revisionable multilingual layout stores key field values in the
-        // base table, except for language, which is stored in the revision
-        // table along with revision metadata. The revision data table holds
-        // data field values for all the revisionable fields and the data table
-        // holds the data field values for all non-revisionable fields. The data
-        // field values of revisionable fields are denormalized in the data
-        // table, as well.
-        $table_mapping->setFieldNames($this->baseTable, array_values($key_fields));
-
-        // Like in the multilingual, non-revisionable case the UUID is not
-        // in the data table. Additionally, do not store revision metadata
-        // fields in the data table.
-        $data_fields = array_values(array_diff($all_fields, [$this->uuidKey], $revision_metadata_fields));
-        $table_mapping->setFieldNames($this->dataTable, $data_fields);
-
-        $revision_base_fields = array_merge([$this->idKey, $this->revisionKey, $this->langcodeKey], $revision_metadata_fields);
-        $table_mapping->setFieldNames($this->revisionTable, $revision_base_fields);
-
-        $revision_data_key_fields = [$this->idKey, $this->revisionKey, $this->langcodeKey];
-        $revision_data_fields = array_diff($revisionable_fields, $revision_metadata_fields, [$this->langcodeKey]);
-        $table_mapping->setFieldNames($this->revisionDataTable, array_merge($revision_data_key_fields, $revision_data_fields));
-      }
-
-      // Add dedicated tables.
-      $dedicated_table_definitions = array_filter($definitions, function (FieldStorageDefinitionInterface $definition) use ($table_mapping) {
-        return $table_mapping->requiresDedicatedTableStorage($definition);
-      });
-      $extra_columns = [
-        'bundle',
-        'deleted',
-        'entity_id',
-        'revision_id',
-        'langcode',
-        'delta',
-      ];
-      foreach ($dedicated_table_definitions as $field_name => $definition) {
-        $tables = [$table_mapping->getDedicatedDataTableName($definition)];
-        if ($revisionable && $definition->isRevisionable()) {
-          $tables[] = $table_mapping->getDedicatedRevisionTableName($definition);
-        }
-        foreach ($tables as $table_name) {
-          $table_mapping->setFieldNames($table_name, [$field_name]);
-          $table_mapping->setExtraColumns($table_name, $extra_columns);
-        }
-      }
+      $table_mapping = $table_mapping_class::create($this->entityType, $definitions);
 
       // Cache the computed table mapping only if we are using our internal
       // storage definitions.

@@ -25,6 +25,35 @@ class DefaultTableMapping implements TableMappingInterface {
   protected $fieldStorageDefinitions = [];
 
   /**
+   * The base table of the entity.
+   *
+   * @var string
+   */
+  protected $baseTable;
+
+  /**
+   * The table that stores revisions, if the entity supports revisions.
+   *
+   * @var string
+   */
+  protected $revisionTable;
+
+  /**
+   * The table that stores field data, if the entity has multilingual support.
+   *
+   * @var string
+   */
+  protected $dataTable;
+
+  /**
+   * The table that stores revision field data if the entity supports revisions
+   * and has multilingual support.
+   *
+   * @var string
+   */
+  protected $revisionDataTable;
+
+  /**
    * A list of field names per table.
    *
    * This corresponds to the return value of
@@ -87,6 +116,132 @@ class DefaultTableMapping implements TableMappingInterface {
   public function __construct(ContentEntityTypeInterface $entity_type, array $storage_definitions) {
     $this->entityType = $entity_type;
     $this->fieldStorageDefinitions = $storage_definitions;
+
+    // @todo Remove table names from the entity type definition in
+    //   https://www.drupal.org/node/2232465.
+    $this->baseTable = $entity_type->getBaseTable() ?: $entity_type->id();
+    if ($entity_type->isRevisionable()) {
+      $this->revisionTable = $entity_type->getRevisionTable() ?: $entity_type->id() . '_revision';
+    }
+    if ($entity_type->isTranslatable()) {
+      $this->dataTable = $entity_type->getDataTable() ?: $entity_type->id() . '_field_data';
+    }
+    if ($entity_type->isRevisionable() && $entity_type->isTranslatable()) {
+      $this->revisionDataTable = $entity_type->getRevisionDataTable() ?: $entity_type->id() . '_field_revision';
+    }
+  }
+
+  /**
+   * Initializes the table mapping.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $storage_definitions
+   *   A list of field storage definitions that should be available for the
+   *   field columns of this table mapping.
+   *
+   * @return static
+   *
+   * @internal
+   */
+  public static function create(ContentEntityTypeInterface $entity_type, array $storage_definitions) {
+    $table_mapping = new static($entity_type, $storage_definitions);
+
+    $revisionable = $entity_type->isRevisionable();
+    $translatable = $entity_type->isTranslatable();
+
+    $id_key = $entity_type->getKey('id');
+    $revision_key = $entity_type->getKey('revision');
+    $bundle_key = $entity_type->getKey('bundle');
+    $uuid_key = $entity_type->getKey('uuid');
+    $langcode_key = $entity_type->getKey('langcode');
+
+    $shared_table_definitions = array_filter($storage_definitions, function (FieldStorageDefinitionInterface $definition) use ($table_mapping) {
+      return $table_mapping->allowsSharedTableStorage($definition);
+    });
+
+    $key_fields = array_values(array_filter([$id_key, $revision_key, $bundle_key, $uuid_key, $langcode_key]));
+    $all_fields = array_keys($shared_table_definitions);
+    $revisionable_fields = array_keys(array_filter($shared_table_definitions, function (FieldStorageDefinitionInterface $definition) {
+      return $definition->isRevisionable();
+    }));
+    // Make sure the key fields come first in the list of fields.
+    $all_fields = array_merge($key_fields, array_diff($all_fields, $key_fields));
+
+    $revision_metadata_fields = $revisionable ? array_values($entity_type->getRevisionMetadataKeys()) : [];
+
+    if (!$revisionable && !$translatable) {
+      // The base layout stores all the base field values in the base table.
+      $table_mapping->setFieldNames($table_mapping->baseTable, $all_fields);
+    }
+    elseif ($revisionable && !$translatable) {
+      // The revisionable layout stores all the base field values in the base
+      // table, except for revision metadata fields. Revisionable fields
+      // denormalized in the base table but also stored in the revision table
+      // together with the entity ID and the revision ID as identifiers.
+      $table_mapping->setFieldNames($table_mapping->baseTable, array_diff($all_fields, $revision_metadata_fields));
+      $revision_key_fields = [$id_key, $revision_key];
+      $table_mapping->setFieldNames($table_mapping->revisionTable, array_merge($revision_key_fields, $revisionable_fields));
+    }
+    elseif (!$revisionable && $translatable) {
+      // Multilingual layouts store key field values in the base table. The
+      // other base field values are stored in the data table, no matter
+      // whether they are translatable or not. The data table holds also a
+      // denormalized copy of the bundle field value to allow for more
+      // performant queries. This means that only the UUID is not stored on
+      // the data table.
+      $table_mapping
+        ->setFieldNames($table_mapping->baseTable, $key_fields)
+        ->setFieldNames($table_mapping->dataTable, array_values(array_diff($all_fields, [$uuid_key])));
+    }
+    elseif ($revisionable && $translatable) {
+      // The revisionable multilingual layout stores key field values in the
+      // base table and the revision table holds the entity ID, revision ID and
+      // langcode ID along with revision metadata. The revision data table holds
+      // data field values for all the revisionable fields and the data table
+      // holds the data field values for all non-revisionable fields. The data
+      // field values of revisionable fields are denormalized in the data
+      // table, as well.
+      $table_mapping->setFieldNames($table_mapping->baseTable, $key_fields);
+
+      // Like in the multilingual, non-revisionable case the UUID is not
+      // in the data table. Additionally, do not store revision metadata
+      // fields in the data table.
+      $data_fields = array_values(array_diff($all_fields, [$uuid_key], $revision_metadata_fields));
+      $table_mapping->setFieldNames($table_mapping->dataTable, $data_fields);
+
+      $revision_base_fields = array_merge([$id_key, $revision_key, $langcode_key], $revision_metadata_fields);
+      $table_mapping->setFieldNames($table_mapping->revisionTable, $revision_base_fields);
+
+      $revision_data_key_fields = [$id_key, $revision_key, $langcode_key];
+      $revision_data_fields = array_diff($revisionable_fields, $revision_metadata_fields, [$langcode_key]);
+      $table_mapping->setFieldNames($table_mapping->revisionDataTable, array_merge($revision_data_key_fields, $revision_data_fields));
+    }
+
+    // Add dedicated tables.
+    $dedicated_table_definitions = array_filter($table_mapping->fieldStorageDefinitions, function (FieldStorageDefinitionInterface $definition) use ($table_mapping) {
+      return $table_mapping->requiresDedicatedTableStorage($definition);
+    });
+    $extra_columns = [
+      'bundle',
+      'deleted',
+      'entity_id',
+      'revision_id',
+      'langcode',
+      'delta',
+    ];
+    foreach ($dedicated_table_definitions as $field_name => $definition) {
+      $tables = [$table_mapping->getDedicatedDataTableName($definition)];
+      if ($revisionable && $definition->isRevisionable()) {
+        $tables[] = $table_mapping->getDedicatedRevisionTableName($definition);
+      }
+      foreach ($tables as $table_name) {
+        $table_mapping->setFieldNames($table_name, [$field_name]);
+        $table_mapping->setExtraColumns($table_name, $extra_columns);
+      }
+    }
+
+    return $table_mapping;
   }
 
   /**
@@ -143,17 +298,13 @@ class DefaultTableMapping implements TableMappingInterface {
       // where field data is stored, otherwise the base table is responsible for
       // storing field data. Revision metadata is an exception as it's stored
       // only in the revision table.
-      // @todo The table mapping itself should know about entity tables. See
-      //   https://www.drupal.org/node/2274017.
-      /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage */
-      $storage = \Drupal::entityManager()->getStorage($this->entityType->id());
       $storage_definition = $this->fieldStorageDefinitions[$field_name];
-      $table_names = [
-        $storage->getDataTable(),
-        $storage->getBaseTable(),
-        $storage->getRevisionTable(),
+      $table_names = array_filter([
+        $this->dataTable,
+        $this->baseTable,
+        $this->revisionTable,
         $this->getDedicatedDataTableName($storage_definition),
-      ];
+      ]);
 
       // Collect field columns.
       $field_columns = [];
@@ -161,7 +312,7 @@ class DefaultTableMapping implements TableMappingInterface {
         $field_columns[] = $this->getFieldColumnName($storage_definition, $property_name);
       }
 
-      foreach (array_filter($table_names) as $table_name) {
+      foreach ($table_names as $table_name) {
         $columns = $this->getAllColumns($table_name);
         // We assume finding one field column belonging to the mapping is enough
         // to identify the field table.
@@ -227,6 +378,10 @@ class DefaultTableMapping implements TableMappingInterface {
    *   A list of field names to add the columns for.
    *
    * @return $this
+   *
+   * @deprecated in Drupal 8.6.0 and will be changed to a protected method
+   *   before Drupal 9.0.0. There will be no replacement for it because the
+   *   default table mapping is now able to be initialized on its own.
    */
   public function setFieldNames($table_name, array $field_names) {
     $this->fieldNames[$table_name] = $field_names;
@@ -254,6 +409,10 @@ class DefaultTableMapping implements TableMappingInterface {
    *   The list of column names.
    *
    * @return $this
+   *
+   * @deprecated in Drupal 8.6.0 and will be changed to a protected method
+   *   before Drupal 9.0.0. There will be no replacement for it because the
+   *   default table mapping is now able to be initialized on its own.
    */
   public function setExtraColumns($table_name, array $column_names) {
     $this->extraColumns[$table_name] = $column_names;

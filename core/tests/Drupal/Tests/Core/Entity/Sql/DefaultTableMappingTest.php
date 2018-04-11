@@ -362,38 +362,35 @@ class DefaultTableMappingTest extends UnitTestCase {
       ->method('getColumns')
       ->willReturn($columns);
 
-    $storage = $this->getMockBuilder('\Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $storage
+    $this->entityType
       ->expects($this->any())
       ->method('getBaseTable')
-      ->willReturn(isset($table_names['base']) ? $table_names['base'] : 'base_table');
+      ->willReturn(isset($table_names['base']) ? $table_names['base'] : 'entity_test');
 
-    $storage
+    $this->entityType
       ->expects($this->any())
       ->method('getDataTable')
-      ->willReturn(isset($table_names['data']) ? $table_names['data'] : NULL);
+      ->willReturn(isset($table_names['data']) ? $table_names['data'] : FALSE);
 
-    $storage
+    $this->entityType
       ->expects($this->any())
       ->method('getRevisionTable')
-      ->willReturn(isset($table_names['revision']) ? $table_names['revision'] : NULL);
+      ->willReturn(isset($table_names['revision']) ? $table_names['revision'] : FALSE);
 
-    $entity_manager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
-    $entity_manager
+    $this->entityType
       ->expects($this->any())
-      ->method('getStorage')
-      ->willReturn($storage);
+      ->method('isTranslatable')
+      ->willReturn(isset($table_names['data']));
 
-    $container = $this->getMock('\Symfony\Component\DependencyInjection\ContainerInterface');
-    $container
+    $this->entityType
       ->expects($this->any())
-      ->method('get')
-      ->willReturn($entity_manager);
+      ->method('isRevisionable')
+      ->willReturn(isset($table_names['revision']));
 
-    \Drupal::setContainer($container);
+    $this->entityType
+      ->expects($this->any())
+      ->method('getRevisionMetadataKeys')
+      ->willReturn([]);
 
     $table_mapping = new DefaultTableMapping($this->entityType, [$field_name => $definition]);
 

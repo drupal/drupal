@@ -389,13 +389,22 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::processIdentifierSchema
    */
   public function testGetSchemaRevisionable() {
-    $this->entityType = new ContentEntityType([
-      'id' => 'entity_test',
-      'entity_keys' => [
-        'id' => 'id',
-        'revision' => 'revision_id',
-      ],
-    ]);
+    $this->entityType = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityType')
+      ->setConstructorArgs([
+        [
+          'id' => 'entity_test',
+          'entity_keys' => [
+            'id' => 'id',
+            'revision' => 'revision_id',
+          ],
+        ]
+      ])
+      ->setMethods(['getRevisionMetadataKeys'])
+      ->getMock();
+
+    $this->entityType->expects($this->any())
+      ->method('getRevisionMetadataKeys')
+      ->will($this->returnValue([]));
 
     $this->storage->expects($this->exactly(2))
       ->method('getRevisionTable')
@@ -595,14 +604,23 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::processRevisionDataTable
    */
   public function testGetSchemaRevisionableTranslatable() {
-    $this->entityType = new ContentEntityType([
-      'id' => 'entity_test',
-      'entity_keys' => [
-        'id' => 'id',
-        'revision' => 'revision_id',
-        'langcode' => 'langcode',
-      ],
-    ]);
+    $this->entityType = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityType')
+      ->setConstructorArgs([
+        [
+          'id' => 'entity_test',
+          'entity_keys' => [
+            'id' => 'id',
+            'revision' => 'revision_id',
+            'langcode' => 'langcode',
+          ],
+        ]
+      ])
+      ->setMethods(['getRevisionMetadataKeys'])
+      ->getMock();
+
+    $this->entityType->expects($this->any())
+      ->method('getRevisionMetadataKeys')
+      ->will($this->returnValue([]));
 
     $this->storage->expects($this->exactly(3))
       ->method('getRevisionTable')

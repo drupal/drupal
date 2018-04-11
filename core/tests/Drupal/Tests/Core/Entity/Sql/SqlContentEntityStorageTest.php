@@ -205,6 +205,9 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->entityType->expects($this->once())
       ->method('getRevisionTable')
       ->will($this->returnValue($revision_table));
+    $this->entityType->expects($this->any())
+      ->method('getRevisionMetadataKeys')
+      ->willReturn([]);
 
     $this->setUpEntityStorage();
 
@@ -243,6 +246,9 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->entityType->expects($this->exactly(1))
       ->method('getDataTable')
       ->will($this->returnValue('entity_test_field_data'));
+    $this->entityType->expects($this->any())
+      ->method('getRevisionMetadataKeys')
+      ->willReturn([]);
 
     $this->setUpEntityStorage();
 
@@ -276,6 +282,9 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->entityType->expects($this->once())
       ->method('getRevisionDataTable')
       ->will($this->returnValue($revision_data_table));
+    $this->entityType->expects($this->any())
+      ->method('getRevisionMetadataKeys')
+      ->willReturn([]);
 
     $this->setUpEntityStorage();
 
@@ -533,7 +542,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       'uuid' => $entity_keys['uuid'],
     ];
 
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->exactly(4))
       ->method('isRevisionable')
       ->will($this->returnValue(TRUE));
     $this->entityType->expects($this->any())
@@ -606,7 +615,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       $field_names = array_merge($field_names, $revisionable_field_names);
       $this->fieldDefinitions += $this->mockFieldDefinitions(array_merge($revisionable_field_names, array_values($revision_metadata_field_names)), ['isRevisionable' => TRUE]);
 
-      $this->entityType->expects($this->exactly(2))
+      $this->entityType->expects($this->exactly(4))
         ->method('isRevisionable')
         ->will($this->returnValue(TRUE));
       $this->entityType->expects($this->any())
