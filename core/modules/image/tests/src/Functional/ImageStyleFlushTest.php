@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\image\Functional;
 
 use Drupal\image\Entity\ImageStyle;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests flushing of image styles.
@@ -10,6 +11,11 @@ use Drupal\image\Entity\ImageStyle;
  * @group image
  */
 class ImageStyleFlushTest extends ImageFieldTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+    compareFiles as drupalCompareFiles;
+  }
 
   /**
    * Given an image style and a wrapper, generate an image.

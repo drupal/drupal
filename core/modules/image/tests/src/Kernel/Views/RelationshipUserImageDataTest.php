@@ -1,10 +1,11 @@
 <?php
 
-namespace Drupal\image\Tests\Views;
+namespace Drupal\Tests\image\Kernel\Views;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\user\Entity\User;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -14,14 +15,14 @@ use Drupal\field\Entity\FieldStorageConfig;
  *
  * @group image
  */
-class RelationshipUserImageDataTest extends ViewTestBase {
+class RelationshipUserImageDataTest extends ViewsKernelTestBase {
 
   /**
    * Modules to install.
    *
    * @var array
    */
-  public static $modules = ['image', 'image_test_views', 'user'];
+  public static $modules = ['file', 'field', 'image', 'image_test_views', 'system', 'user'];
 
   /**
    * Views used by this test.
@@ -32,6 +33,10 @@ class RelationshipUserImageDataTest extends ViewTestBase {
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
+
+    $this->installEntitySchema('file');
+    $this->installSchema('file', ['file_usage']);
+    $this->installEntitySchema('user');
 
     // Create the user profile field and instance.
     FieldStorageConfig::create([
@@ -70,7 +75,9 @@ class RelationshipUserImageDataTest extends ViewTestBase {
     file_put_contents($file->getFileUri(), file_get_contents('core/modules/simpletest/files/image-1.png'));
     $file->save();
 
-    $account = $this->drupalCreateUser();
+    $account = User::create([
+      'name' => 'foo',
+    ]);
     $account->user_picture->target_id = 2;
     $account->save();
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
@@ -8,22 +8,28 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\simpletest\WebTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests image theme functions.
  *
  * @group image
  */
-class ImageThemeFunctionTest extends WebTestBase {
+class ImageThemeFunctionTest extends KernelTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+    compareFiles as drupalCompareFiles;
+  }
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['image', 'entity_test'];
+  public static $modules = ['entity_test', 'field', 'file', 'image', 'system', 'simpletest', 'user'];
 
   /**
    * Created file entity.
@@ -39,6 +45,11 @@ class ImageThemeFunctionTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('file');
+    $this->installSchema('file', ['file_usage']);
+    $this->installEntitySchema('user');
 
     FieldStorageConfig::create([
       'entity_type' => 'entity_test',
@@ -96,7 +107,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     // Test using theme_image_formatter() with a NULL value for the alt option.
     $element = $base_element;
     $this->setRawContent($renderer->renderRoot($element));
-    $elements = $this->xpath('//a[@href=:path]/img[@class="image-style-test" and @src=:url and @width=:width and @height=:height]', [':path' => base_path() . $path, ':url' => $url, ':width' => $image->getWidth(), ':height' => $image->getHeight()]);
+    $elements = $this->xpath('//a[@href=:path]/img[@src=:url and @width=:width and @height=:height]', [':path' => base_path() . $path, ':url' => $url, ':width' => $image->getWidth(), ':height' => $image->getHeight()]);
     $this->assertEqual(count($elements), 1, 'theme_image_formatter() correctly renders with a NULL value for the alt option.');
 
     // Test using theme_image_formatter() without an image title, alt text, or
@@ -104,7 +115,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     $element = $base_element;
     $element['#item']->alt = '';
     $this->setRawContent($renderer->renderRoot($element));
-    $elements = $this->xpath('//a[@href=:path]/img[@class="image-style-test" and @src=:url and @width=:width and @height=:height and @alt=""]', [':path' => base_path() . $path, ':url' => $url, ':width' => $image->getWidth(), ':height' => $image->getHeight()]);
+    $elements = $this->xpath('//a[@href=:path]/img[@src=:url and @width=:width and @height=:height and @alt=""]', [':path' => base_path() . $path, ':url' => $url, ':width' => $image->getWidth(), ':height' => $image->getHeight()]);
     $this->assertEqual(count($elements), 1, 'theme_image_formatter() correctly renders without title, alt, or path options.');
 
     // Link the image to a fragment on the page, and not a full URL.
@@ -112,7 +123,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     $element = $base_element;
     $element['#url'] = Url::fromRoute('<none>', [], ['fragment' => $fragment]);
     $this->setRawContent($renderer->renderRoot($element));
-    $elements = $this->xpath('//a[@href=:fragment]/img[@class="image-style-test" and @src=:url and @width=:width and @height=:height and @alt=""]', [
+    $elements = $this->xpath('//a[@href=:fragment]/img[@src=:url and @width=:width and @height=:height and @alt=""]', [
       ':fragment' => '#' . $fragment,
       ':url' => $url,
       ':width' => $image->getWidth(),
@@ -147,14 +158,14 @@ class ImageThemeFunctionTest extends WebTestBase {
 
     $element = $base_element;
     $this->setRawContent($renderer->renderRoot($element));
-    $elements = $this->xpath('//img[@class="image-style-image-test" and @src=:url and @alt=""]', [':url' => $url]);
+    $elements = $this->xpath('//img[@src=:url and @alt=""]', [':url' => $url]);
     $this->assertEqual(count($elements), 1, 'theme_image_style() renders an image correctly.');
 
     // Test using theme_image_style() with a NULL value for the alt option.
     $element = $base_element;
     $element['#alt'] = NULL;
     $this->setRawContent($renderer->renderRoot($element));
-    $elements = $this->xpath('//img[@class="image-style-image-test" and @src=:url]', [':url' => $url]);
+    $elements = $this->xpath('//img[@src=:url]', [':url' => $url]);
     $this->assertEqual(count($elements), 1, 'theme_image_style() renders an image correctly with a NULL value for the alt option.');
   }
 

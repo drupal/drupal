@@ -1,9 +1,11 @@
 <?php
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\image\Functional;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\TestFileCreationTrait;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 use Drupal\image\Entity\ImageStyle;
 
@@ -13,6 +15,12 @@ use Drupal\image\Entity\ImageStyle;
  * @group image
  */
 class ImageFieldDisplayTest extends ImageFieldTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+    compareFiles as drupalCompareFiles;
+  }
 
   protected $dumpHeaders = TRUE;
 
@@ -54,7 +62,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet("admin/structure/types/manage/article/display");
 
     // Test for existence of link to image styles configuration.
-    $this->drupalPostAjaxForm(NULL, [], "{$field_name}_settings_edit");
+    $this->drupalPostForm(NULL, [], "{$field_name}_settings_edit");
     $this->assertLinkByHref(\Drupal::url('entity.image_style.collection'), 0, 'Link to image styles configuration is found');
 
     // Remove 'administer image styles' permission from testing admin user.
@@ -65,7 +73,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet("admin/structure/types/manage/article/display");
 
     // Test for absence of link to image styles configuration.
-    $this->drupalPostAjaxForm(NULL, [], "{$field_name}_settings_edit");
+    $this->drupalPostForm(NULL, [], "{$field_name}_settings_edit");
     $this->assertNoLinkByHref(\Drupal::url('entity.image_style.collection'), 'Link to image styles configuration is absent when permissions are insufficient');
 
     // Restore 'administer image styles' permission to testing admin user
@@ -258,8 +266,11 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $alt);
     $this->drupalGet('node/' . $nid . '/edit');
-    $this->assertFieldByName($field_name . '[0][alt]', '', 'Alt field displayed on article form.');
+
+    // Verify that the optional fields alt & title are saved & filled.
+    $this->assertFieldByName($field_name . '[0][alt]', $alt, 'Alt field displayed on article form.');
     $this->assertFieldByName($field_name . '[0][title]', '', 'Title field displayed on article form.');
+
     // Verify that the attached image is being previewed using the 'medium'
     // style.
     $node_storage->resetCache([$nid]);
@@ -324,9 +335,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = [
       'files[' . $field_name . '_2][]' => \Drupal::service('file_system')->realpath($test_image->uri),
     ];
-    $this->drupalPostAjaxForm(NULL, $edit, $field_name . '_2_upload_button');
-    $this->assertNoRaw('<input multiple type="file" id="edit-' . strtr($field_name, '_', '-') . '-2-upload" name="files[' . $field_name . '_2][]" size="22" class="js-form-file form-file">');
-    $this->assertRaw('<input multiple type="file" id="edit-' . strtr($field_name, '_', '-') . '-3-upload" name="files[' . $field_name . '_3][]" size="22" class="js-form-file form-file">');
+    $this->drupalPostForm(NULL, $edit, $field_name . '_2_upload_button');
+    $this->assertSession()->elementNotExists('css', 'input[name="files[' . $field_name . '_2][]"]');
+    $this->assertSession()->elementExists('css', 'input[name="files[' . $field_name . '_3][]"]');
   }
 
   /**
@@ -410,10 +421,11 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertRaw($image_output, 'User supplied image is displayed.');
 
     // Remove default image from the field and make sure it is no longer used.
-    $edit = [
-      'settings[default_image][uuid][fids]' => 0,
-    ];
-    $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/storage", $edit, t('Save field settings'));
+    // Can't use fillField cause Mink can't fill hidden fields.
+    $this->drupalGet("admin/structure/types/manage/article/fields/node.article.$field_name/storage");
+    $this->getSession()->getPage()->find('css', 'input[name="settings[default_image][uuid][fids]"]')->setValue(0);
+    $this->getSession()->getPage()->pressButton(t('Save field settings'));
+
     // Clear field definition cache so the new default image is detected.
     \Drupal::entityManager()->clearCachedFieldDefinitions();
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);

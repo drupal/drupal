@@ -1,16 +1,22 @@
 <?php
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\image\Functional;
 
 use Drupal\image\Entity\ImageStyle;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests that images have correct dimensions when styled.
  *
  * @group image
  */
-class ImageDimensionsTest extends WebTestBase {
+class ImageDimensionsTest extends BrowserTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+    compareFiles as drupalCompareFiles;
+  }
 
   /**
    * Modules to enable.
