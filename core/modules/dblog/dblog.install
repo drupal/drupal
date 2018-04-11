@@ -156,3 +156,42 @@ function dblog_update_8400() {
     }
   }
 }
+
+/**
+ * Change 'No logs message available.' area plugin type.
+ */
+function dblog_update_8600() {
+  $config_factory = \Drupal::configFactory();
+
+  $view = \Drupal::configFactory()->getEditable('views.view.watchdog');
+  if (empty($view)) {
+    return;
+  }
+
+  $empty_text = $view->get('display.default.display_options.empty');
+  if (!isset($empty_text['area']['content']['value'])) {
+    return;
+  }
+
+  // Only update the empty text if is untouched from the original version.
+  if ($empty_text['area']['id'] == 'area' &&
+      $empty_text['area']['plugin_id'] == 'text' &&
+      $empty_text['area']['field'] == 'area' &&
+      $empty_text['area']['content']['value'] == 'No log messages available.') {
+
+    $new_config = [
+      'id' => 'area_text_custom',
+      'table' => 'views',
+      'field' => 'area_text_custom',
+      'relationship' => 'none',
+      'group_type' => 'group',
+      'admin_label' => 'No log messages available.',
+      'empty' => TRUE,
+      'tokenize' => FALSE,
+      'content' => 'No log messages available.',
+      'plugin_id' => 'text_custom',
+    ];
+    $view->set('display.default.display_options.empty.area', $new_config);
+    $view->save();
+  }
+}
