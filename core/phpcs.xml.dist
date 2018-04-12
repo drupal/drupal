@@ -7,7 +7,7 @@
   <file>scripts/rebuild_token_calculator.sh</file>
   <file>scripts/run-tests.sh</file>
   <file>scripts/update-countries.sh</file>
-  <arg name="extensions" value="inc,install,module,php,profile,test,theme"/>
+  <arg name="extensions" value="inc,install,module,php,profile,test,theme,info.yml"/>
 
   <!--Exclude third party code.-->
   <exclude-pattern>./assets/vendor/*</exclude-pattern>
@@ -154,6 +154,12 @@
   <rule ref="Generic.PHP.LowerCaseKeyword"/>
   <rule ref="Generic.PHP.UpperCaseConstant"/>
   <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+
+  <!-- Internal sniffs -->
+  <rule ref="Internal.NoCodeFound">
+    <!-- No PHP code in *.info.yml -->
+    <exclude-pattern>*.info.yml</exclude-pattern>
+  </rule>
 
   <!-- MySource sniffs -->
   <rule ref="MySource.Debug.DebugCode"/>
