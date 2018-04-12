@@ -33,7 +33,6 @@ Framework managers
 
   Frontend
   - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
-  - Scott Reeves 'Cottser' https://www.drupal.org/u/cottser
 
 Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
@@ -354,7 +353,7 @@ Shortcut
 - Jibran Ijaz 'jibran' https://www.drupal.org/u/jibran
 
 Stable
-- Scott Reeves 'Cottser' https://www.drupal.org/u/cottser
+- ?
 
 Stark
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
