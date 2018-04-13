@@ -13,7 +13,7 @@ use Drupal\Component\Annotation\Plugin;
  * \Drupal\migrate\Plugin\migrate\destination\UrlAlias
  *
  * @see \Drupal\migrate\Plugin\MigrateDestinationInterface
- * @see \Drupal\migrate\Plugin\destination\DestinationBase
+ * @see \Drupal\migrate\Plugin\migrate\destination\DestinationBase
  * @see \Drupal\migrate\Plugin\MigrateDestinationPluginManager
  * @see \Drupal\migrate\Annotation\MigrateSource
  * @see \Drupal\migrate\Annotation\MigrateProcessPlugin
