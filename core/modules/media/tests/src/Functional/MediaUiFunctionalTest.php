@@ -173,6 +173,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/' . $first_media_item->id());
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains($first_media_item->getName());
+    $assert_session->elementsCount('css', '.media--view-mode-full', 1);
 
     // Go to second media item.
     $this->drupalGet('media/' . $second_media_item->id());
