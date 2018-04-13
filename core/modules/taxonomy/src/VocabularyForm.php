@@ -89,7 +89,7 @@ class VocabularyForm extends BundleEntityFormBase {
     if ($this->moduleHandler->moduleExists('language')) {
       $form['default_terms_language'] = [
         '#type' => 'details',
-        '#title' => $this->t('Terms language'),
+        '#title' => $this->t('Term language'),
         '#open' => TRUE,
       ];
       $form['default_terms_language']['default_language'] = [
