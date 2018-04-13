@@ -10,7 +10,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
  * Plugin manager for migrate destination plugins.
  *
  * @see \Drupal\migrate\Plugin\MigrateDestinationInterface
- * @see \Drupal\migrate\Plugin\destination\DestinationBase
+ * @see \Drupal\migrate\Plugin\migrate\destination\DestinationBase
  * @see \Drupal\migrate\Annotation\MigrateDestination
  * @see plugin_api
  *
