@@ -2,8 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\Database;
-
 /**
  * Tests delete and truncate queries.
  *
@@ -18,21 +16,6 @@ use Drupal\Core\Database\Database;
  * @group Database
  */
 class DeleteTruncateTest extends DatabaseTestBase {
-
-  /**
-   * The database connection for testing.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $this->connection = Database::getConnection();
-  }
 
   /**
    * Confirms that we can use a subselect in a delete successfully.
