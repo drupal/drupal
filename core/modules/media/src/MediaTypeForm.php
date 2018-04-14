@@ -144,10 +144,6 @@ class MediaTypeForm extends EntityForm {
       '#disabled' => !empty($source),
     ];
 
-    if (!$source) {
-      $form['type']['#empty_option'] = $this->t('- Select media source -');
-    }
-
     if ($source) {
       // Media source plugin configuration.
       $form['source_dependent']['source_configuration'] = [
