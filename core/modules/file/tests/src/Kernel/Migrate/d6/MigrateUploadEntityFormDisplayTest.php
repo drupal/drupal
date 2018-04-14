@@ -44,7 +44,7 @@ class MigrateUploadEntityFormDisplayTest extends MigrateDrupal6TestBase {
     $component = $display->getComponent('upload');
     $this->assertTrue(is_null($component));
 
-    $this->assertIdentical(['node', 'page', 'default', 'upload'], $this->getMigration('d6_upload_entity_form_display')->getIdMap()->lookupDestinationID(['page']));
+    $this->assertIdentical(['node', 'page', 'default', 'upload'], $this->getMigration('d6_upload_entity_form_display')->getIdMap()->lookupDestinationId(['page']));
   }
 
   /**

@@ -579,7 +579,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   }
 
   /**
-   * Data provider for testLookupSourceIDMapping().
+   * Data provider for testLookupSourceIdMapping().
    *
    * Scenarios to test (for both hits and misses) are:
    * - Single-value destination ID to single-value source ID.
@@ -590,7 +590,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public function lookupSourceIDMappingDataProvider() {
+  public function lookupSourceIdMappingDataProvider() {
     return [
       [1, 1],
       [2, 2],
@@ -607,9 +607,9 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @param int $num_destination_fields
    *   Number of destination fields to test.
    *
-   * @dataProvider lookupSourceIDMappingDataProvider
+   * @dataProvider lookupSourceIdMappingDataProvider
    */
-  public function testLookupSourceIDMapping($num_source_fields, $num_destination_fields) {
+  public function testLookupSourceIdMapping($num_source_fields, $num_destination_fields) {
     // Adjust the migration configuration according to the number of source and
     // destination fields.
     $this->sourceIds = [];
@@ -635,10 +635,10 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $this->saveMap($row);
     $id_map = $this->getIdMap();
     // Test for a valid hit.
-    $source_id = $id_map->lookupSourceID($destination_id_values);
+    $source_id = $id_map->lookupSourceId($destination_id_values);
     $this->assertSame($expected_result, $source_id);
     // Test for a miss.
-    $source_id = $id_map->lookupSourceID($nonexistent_id_values);
+    $source_id = $id_map->lookupSourceId($nonexistent_id_values);
     $this->assertSame(0, count($source_id));
   }
 

@@ -529,7 +529,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function lookupSourceID(array $destination_id_values) {
+  public function lookupSourceId(array $destination_id_values) {
     $source_id_fields = $this->sourceIdFields();
     $query = $this->getDatabase()->select($this->mapTableName(), 'map');
     foreach ($source_id_fields as $source_field_name => $idmap_field_name) {
@@ -789,7 +789,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   public function deleteDestination(array $destination_id_values) {
     $map_query = $this->getDatabase()->delete($this->mapTableName());
     $message_query = $this->getDatabase()->delete($this->messageTableName());
-    $source_id_values = $this->lookupSourceID($destination_id_values);
+    $source_id_values = $this->lookupSourceId($destination_id_values);
     if (!empty($source_id_values)) {
       foreach ($this->destinationIdFields() as $field_name => $destination_id) {
         $map_query->condition($destination_id, $destination_id_values[$field_name]);
