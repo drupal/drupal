@@ -134,7 +134,7 @@ class MakeUniqueEntityField extends MakeUniqueBase implements ContainerFactoryPl
       $idMap = $this->migration->getIdMap();
       foreach ($query->execute() as $id) {
         $dest_id_values[$this->configuration['field']] = $id;
-        if ($idMap->lookupSourceID($dest_id_values)) {
+        if ($idMap->lookupSourceId($dest_id_values)) {
           return TRUE;
         }
       }

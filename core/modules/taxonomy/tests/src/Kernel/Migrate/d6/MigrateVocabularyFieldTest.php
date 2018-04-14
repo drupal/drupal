@@ -39,7 +39,7 @@ class MigrateVocabularyFieldTest extends MigrateDrupal6TestBase {
     $this->assertSame('taxonomy_term', $settings['target_type'], "Target type is correct.");
     $this->assertSame(1, $field_storage->getCardinality(), "Field cardinality in 1.");
 
-    $this->assertSame(['node', 'field_tags'], $this->getMigration('d6_vocabulary_field')->getIdMap()->lookupDestinationID([4]), "Test IdMap");
+    $this->assertSame(['node', 'field_tags'], $this->getMigration('d6_vocabulary_field')->getIdMap()->lookupDestinationId([4]), "Test IdMap");
 
     // Tests that a vocabulary named like a D8 base field will be migrated and
     // prefixed with 'field_' to avoid conflicts.

@@ -48,7 +48,7 @@ class NullIdMap extends PluginBase implements MigrateIdMapInterface {
   /**
    * {@inheritdoc}
    */
-  public function lookupSourceID(array $destination_id_values) {
+  public function lookupSourceId(array $destination_id_values) {
     return [];
   }
 
