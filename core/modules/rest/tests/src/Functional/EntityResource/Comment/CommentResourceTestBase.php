@@ -335,6 +335,8 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
         return "The 'access comments' permission is required and the comment must be published.";
       case 'POST';
         return "The 'post comments' permission is required.";
+      case 'PATCH';
+        return "The 'edit own comments' permission is required, the user must be the comment author, and the comment must be published.";
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }
