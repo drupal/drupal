@@ -30,7 +30,7 @@
 
 /* Wrap the form that's inside the off-canvas dialog. */
 .ui-dialog-off-canvas #drupal-off-canvas {
-  padding: 0 20px;
+  padding: 0 20px 20px;
   /* Prevent horizontal scrollbar. */
   overflow-x: hidden;
   overflow-y: auto;
