@@ -24,7 +24,7 @@ classList:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor-dev
-  version: "4.8.0"
+  version: "4.8.0+2018-04-18-security-patch"
   license:
     name: GNU-GPL-2.0-or-later
     url: https://github.com/ckeditor/ckeditor-dev/blob/4.8.0/LICENSE.md
