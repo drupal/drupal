@@ -82,7 +82,7 @@ class Drupal {
   /**
    * The current system version.
    */
-  const VERSION = '8.5.1';
+  const VERSION = '8.5.2';
 
   /**
    * Core API compatibility.
