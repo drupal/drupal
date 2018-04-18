@@ -890,6 +890,7 @@ normalize:
   css:
     base:
       assets/vendor/normalize-css/normalize.css: { weight: -20 }
+      misc/normalize-fixes.css: { weight: -19 }
 
 picturefill:
   remote: https://github.com/scottjehl/picturefill
