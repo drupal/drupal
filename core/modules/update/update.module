@@ -449,6 +449,8 @@ function _update_equivalent_security_releases() {
       return ['8.5.0-rc1'];
     case '8.4.6':
       return ['8.5.1'];
+    case '8.4.7':
+      return ['8.5.2'];
   }
 
   return [];
