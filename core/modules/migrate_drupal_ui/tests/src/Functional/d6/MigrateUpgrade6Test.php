@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
+use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 use Drupal\user\Entity\User;
 
@@ -63,8 +64,8 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'contact_form' => 5,
       'configurable_language' => 5,
       'editor' => 2,
-      'field_config' => 86,
-      'field_storage_config' => 60,
+      'field_config' => 88,
+      'field_storage_config' => 62,
       'file' => 8,
       'filter_format' => 7,
       'image_style' => 5,
@@ -90,7 +91,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'date_format' => 11,
       'entity_form_display' => 29,
       'entity_form_mode' => 1,
-      'entity_view_display' => 53,
+      'entity_view_display' => 55,
       'entity_view_mode' => 14,
       'base_field_override' => 38,
     ];
@@ -103,7 +104,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts = $this->getEntityCounts();
     $counts['block_content'] = 3;
     $counts['comment'] = 7;
-    $counts['entity_view_display'] = 53;
+    $counts['entity_view_display'] = 55;
     $counts['entity_view_mode'] = 14;
     $counts['file'] = 9;
     $counts['menu_link_content'] = 11;
@@ -192,6 +193,26 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
     $user = User::load(2);
     $user->passRaw = 'john.doe_pass';
     $this->drupalLogin($user);
+    $this->assertFollowUpMigrationResults();
+  }
+
+  /**
+   * Tests that follow-up migrations have been run successfully.
+   */
+  protected function assertFollowUpMigrationResults() {
+    $node = Node::load(10);
+    $this->assertSame('12', $node->get('field_reference')->target_id);
+    $this->assertSame('12', $node->get('field_reference_2')->target_id);
+    $translation = $node->getTranslation('fr');
+    $this->assertSame('12', $translation->get('field_reference')->target_id);
+    $this->assertSame('12', $translation->get('field_reference_2')->target_id);
+
+    $node = Node::load(12)->getTranslation('en');
+    $this->assertSame('10', $node->get('field_reference')->target_id);
+    $this->assertSame('10', $node->get('field_reference_2')->target_id);
+    $translation = $node->getTranslation('fr');
+    $this->assertSame('10', $translation->get('field_reference')->target_id);
+    $this->assertSame('10', $translation->get('field_reference_2')->target_id);
   }
 
 }

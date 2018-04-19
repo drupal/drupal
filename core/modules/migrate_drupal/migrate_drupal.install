@@ -14,3 +14,13 @@ function migrate_drupal_update_8501() {
     ->set('enforce_source_module_tags', ['Drupal 6', 'Drupal 7'])
     ->save();
 }
+
+/**
+ * Sets the follow-up migration tags.
+ */
+function migrate_drupal_update_8502() {
+  \Drupal::configFactory()
+    ->getEditable('migrate_drupal.settings')
+    ->set('follow_up_migration_tags', ['Follow-up migration'])
+    ->save();
+}

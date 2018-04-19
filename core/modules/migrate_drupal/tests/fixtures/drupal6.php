@@ -2753,6 +2753,30 @@ $connection->insert('content_node_field')
   'locked' => '0',
 ))
 ->values(array(
+  'field_name' => 'field_reference',
+  'type' => 'nodereference',
+  'global_settings' => 'a:1:{s:19:"referenceable_types";a:11:{s:4:"page";s:4:"page";s:7:"article";i:0;s:7:"company";i:0;s:8:"employee";i:0;s:5:"forum";i:0;s:10:"test_event";i:0;s:9:"test_page";i:0;s:11:"test_planet";i:0;s:10:"test_story";i:0;s:7:"sponsor";i:0;s:5:"story";i:0;}}',
+  'required' => '0',
+  'multiple' => '0',
+  'db_storage' => '1',
+  'module' => 'nodereference',
+  'db_columns' => 'a:1:{s:3:"nid";a:4:{s:4:"type";s:3:"int";s:8:"unsigned";b:1;s:8:"not null";b:0;s:5:"index";b:1;}}',
+  'active' => '1',
+  'locked' => '0',
+))
+->values(array(
+  'field_name' => 'field_reference_2',
+  'type' => 'nodereference',
+  'global_settings' => 'a:1:{s:19:"referenceable_types";a:11:{s:4:"page";s:4:"page";s:7:"article";i:0;s:7:"company";i:0;s:8:"employee";i:0;s:5:"forum";i:0;s:10:"test_event";i:0;s:9:"test_page";i:0;s:11:"test_planet";i:0;s:10:"test_story";i:0;s:7:"sponsor";i:0;s:5:"story";i:0;}}',
+  'required' => '0',
+  'multiple' => '0',
+  'db_storage' => '1',
+  'module' => 'nodereference',
+  'db_columns' => 'a:1:{s:3:"nid";a:4:{s:4:"type";s:3:"int";s:8:"unsigned";b:1;s:8:"not null";b:0;s:5:"index";b:1;}}',
+  'active' => '1',
+  'locked' => '0',
+))
+->values(array(
   'field_name' => 'field_test',
   'type' => 'text',
   'global_settings' => 'a:4:{s:15:"text_processing";s:1:"1";s:10:"max_length";s:0:"";s:14:"allowed_values";s:0:"";s:18:"allowed_values_php";s:0:"";}',
@@ -3135,6 +3159,30 @@ $connection->insert('content_node_field_instance')
   'widget_active' => '1',
 ))
 ->values(array(
+  'field_name' => 'field_reference',
+  'type_name' => 'page',
+  'weight' => '31',
+  'label' => 'Reference',
+  'widget_type' => 'nodereference_select',
+  'widget_settings' => 'a:4:{s:18:"autocomplete_match";s:8:"contains";s:4:"size";i:60;s:13:"default_value";a:1:{i:0;a:1:{s:3:"nid";s:0:"";}}s:17:"default_value_php";N;}',
+  'display_settings' => 'a:5:{s:5:"label";a:2:{s:6:"format";s:5:"above";s:7:"exclude";i:0;}i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:6:"teaser";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
+  'description' => '',
+  'widget_module' => 'nodereference',
+  'widget_active' => '1',
+))
+->values(array(
+  'field_name' => 'field_reference_2',
+  'type_name' => 'page',
+  'weight' => '32',
+  'label' => 'Reference',
+  'widget_type' => 'nodereference_select',
+  'widget_settings' => 'a:4:{s:18:"autocomplete_match";s:8:"contains";s:4:"size";i:60;s:13:"default_value";a:1:{i:0;a:1:{s:3:"nid";s:0:"";}}s:17:"default_value_php";N;}',
+  'display_settings' => 'a:5:{s:5:"label";a:2:{s:6:"format";s:5:"above";s:7:"exclude";i:0;}i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:6:"teaser";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
+  'description' => '',
+  'widget_module' => 'nodereference',
+  'widget_active' => '1',
+))
+->values(array(
   'field_name' => 'field_test',
   'type_name' => 'story',
   'weight' => '1',
@@ -3493,12 +3541,70 @@ $connection->schema()->createTable('content_type_page', array(
       'not null' => FALSE,
       'size' => 'normal',
     ),
+    'field_reference_nid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_reference_2_nid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
   ),
   'primary key' => array(
     'vid',
   ),
+  'indexes' => array(
+    'field_reference_nid' => array(
+      'field_reference_nid',
+    ),
+    'field_reference_2_nid' => array(
+      'field_reference_2_nid',
+    ),
+  ),
   'mysql_character_set' => 'utf8',
 ));
+
+$connection->insert('content_type_page')
+->fields(array(
+  'vid',
+  'nid',
+  'field_text_field_value',
+  'field_reference_nid',
+  'field_reference_2_nid',
+))
+->values(array(
+  'vid' => '13',
+  'nid' => '10',
+  'field_text_field_value' => NULL,
+  'field_reference_nid' => '13',
+  'field_reference_2_nid' => '13',
+))
+->values(array(
+  'vid' => '14',
+  'nid' => '11',
+  'field_text_field_value' => NULL,
+  'field_reference_nid' => '20',
+  'field_reference_2_nid' => '20',
+))
+->values(array(
+  'vid' => '16',
+  'nid' => '13',
+  'field_text_field_value' => NULL,
+  'field_reference_nid' => '10',
+  'field_reference_2_nid' => '10',
+))
+->values(array(
+  'vid' => '23',
+  'nid' => '20',
+  'field_text_field_value' => NULL,
+  'field_reference_nid' => '11',
+  'field_reference_2_nid' => '11',
+))
+->execute();
 
 $connection->schema()->createTable('content_type_story', array(
   'fields' => array(
@@ -43548,6 +43654,23 @@ $connection->insert('node')
   'tnid' => '0',
   'translate' => '0',
 ))
+->values(array(
+  'nid' => '20',
+  'vid' => '23',
+  'type' => 'page',
+  'language' => 'fr',
+  'title' => 'Le peuple zoulou',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1520613038',
+  'changed' => '1520613305',
+  'comment' => '0',
+  'promote' => '1',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '12',
+  'translate' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('node_access', array(
@@ -44206,6 +44329,17 @@ $connection->insert('node_revisions')
   'timestamp' => '1501955771',
   'format' => '1',
 ))
+->values(array(
+  'nid' => '20',
+  'vid' => '23',
+  'uid' => '1',
+  'title' => 'Le peuple zoulou',
+  'body' => 'Le peuple zoulou.',
+  'teaser' => 'Le peuple zoulou.',
+  'log' => '',
+  'timestamp' => '1520613305',
+  'format' => '1',
+))
 ->execute();
 
 $connection->schema()->createTable('node_type', array(
@@ -44472,7 +44606,7 @@ $connection->insert('node_type')
   'custom' => '1',
   'modified' => '1',
   'locked' => '0',
-  'orig_type' => 'page',
+  'orig_type' => 'test_page',
 ))
 ->values(array(
   'type' => 'test_planet',

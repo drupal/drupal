@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
+use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 use Drupal\user\Entity\User;
 
@@ -65,8 +66,8 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
       'configurable_language' => 4,
       'contact_form' => 3,
       'editor' => 2,
-      'field_config' => 64,
-      'field_storage_config' => 47,
+      'field_config' => 66,
+      'field_storage_config' => 49,
       'file' => 3,
       'filter_format' => 7,
       'image_style' => 6,
@@ -190,6 +191,27 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
     $user = User::load(2);
     $user->passRaw = 'a password';
     $this->drupalLogin($user);
+    $this->assertFollowUpMigrationResults();
+  }
+
+  /**
+   * Tests that follow-up migrations have been run successfully.
+   */
+  protected function assertFollowUpMigrationResults() {
+    $node = Node::load(2);
+    $this->assertSame('4', $node->get('field_reference')->target_id);
+    $this->assertSame('4', $node->get('field_reference_2')->target_id);
+    $translation = $node->getTranslation('is');
+    $this->assertSame('4', $translation->get('field_reference')->target_id);
+    $this->assertSame('4', $translation->get('field_reference_2')->target_id);
+
+    $node = Node::load(4);
+    $this->assertSame('2', $node->get('field_reference')->target_id);
+    $this->assertSame('2', $node->get('field_reference_2')->target_id);
+    $translation = $node->getTranslation('en');
+    $this->assertSame('2', $translation->get('field_reference')->target_id);
+    $this->assertSame('2', $translation->get('field_reference_2')->target_id);
+
   }
 
 }

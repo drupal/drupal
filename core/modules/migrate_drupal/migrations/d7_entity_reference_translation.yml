@@ -1,0 +1,22 @@
+id: d7_entity_reference_translation
+label: Entity reference translations
+migration_tags:
+  - Drupal 7
+  - Follow-up migration
+deriver: Drupal\migrate_drupal\Plugin\migrate\EntityReferenceTranslationDeriver
+# Supported target types for entity reference translation migrations. The array
+# keys are the supported target types and the values are arrays of migrations
+# to lookup for the translated entity IDs.
+target_types:
+  node:
+    - d7_node_translation
+# The source plugin will be set by the deriver.
+source:
+  plugin: empty
+  key: default
+  target: default
+# The process pipeline will be set by the deriver.
+process: []
+# The destination plugin will be set by the deriver.
+destination:
+  plugin: null
