@@ -26,8 +26,7 @@ class NodeReference extends FieldPluginBase {
       'source' => $field_name,
       'process' => [
         'target_id' => [
-          'plugin' => 'migration_lookup',
-          'migration' => 'd6_node',
+          'plugin' => 'get',
           'source' => 'nid',
         ],
       ],

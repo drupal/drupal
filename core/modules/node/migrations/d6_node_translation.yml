@@ -2,7 +2,9 @@ id: d6_node_translation
 label: Node translations
 migration_tags:
   - Drupal 6
+  - translation
   - Content
+class: Drupal\node\Plugin\migrate\D6NodeTranslation
 deriver: Drupal\node\Plugin\migrate\D6NodeDeriver
 source:
   plugin: d6_node

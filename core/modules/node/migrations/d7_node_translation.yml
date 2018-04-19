@@ -4,6 +4,7 @@ migration_tags:
   - Drupal 7
   - translation
   - Content
+class: Drupal\node\Plugin\migrate\D7NodeTranslation
 deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
 source:
   plugin: d7_node

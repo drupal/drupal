@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
-use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
 /**
@@ -10,7 +9,6 @@ use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
  */
 abstract class MigrateUpgradeReviewPageTestBase extends MigrateUpgradeTestBase {
 
-  use MigrationConfigurationTrait;
   use CreateTestContentEntitiesTrait;
 
   /**
