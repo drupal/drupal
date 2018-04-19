@@ -179,12 +179,7 @@
      *   The event triggered, most likely a `mousedown` event.
      */
     disableFields(event) {
-      const $clickedButton = $(this).findOnce('ajax');
-
-      // Only disable upload fields for Ajax buttons.
-      if (!$clickedButton.length) {
-        return;
-      }
+      const $clickedButton = $(this);
 
       // Check if we're working with an "Upload" button.
       let $enabledFields = [];
