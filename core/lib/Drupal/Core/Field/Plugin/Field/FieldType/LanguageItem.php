@@ -6,8 +6,10 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataReferenceDefinition;
+use Drupal\Core\TypedData\OptionsProviderInterface;
 
 /**
  * Defines the 'language' entity field item.
@@ -22,17 +24,13 @@ use Drupal\Core\TypedData\DataReferenceDefinition;
  *   constraints = {
  *     "ComplexData" = {
  *       "value" = {
- *         "Length" = {"max" = 12},
- *         "AllowedValues" = {"callback" = "\Drupal\Core\Field\Plugin\Field\FieldType\LanguageItem::getAllowedLanguageCodes" }
+ *         "Length" = {"max" = 12}
  *       }
  *     }
  *   }
  * )
- *
- * @todo Define the AllowedValues constraint via an options provider once
- *   https://www.drupal.org/node/2329937 is completed.
  */
-class LanguageItem extends FieldItemBase {
+class LanguageItem extends FieldItemBase implements OptionsProviderInterface {
 
   /**
    * {@inheritdoc}
@@ -50,16 +48,6 @@ class LanguageItem extends FieldItemBase {
       ->setReadOnly(FALSE);
 
     return $properties;
-  }
-
-  /**
-   * Defines allowed language codes for the field's AllowedValues constraint.
-   *
-   * @return string[]
-   *   The allowed values.
-   */
-  public static function getAllowedLanguageCodes() {
-    return array_keys(\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL));
   }
 
   /**
@@ -128,10 +116,41 @@ class LanguageItem extends FieldItemBase {
       $languages = call_user_func($constraint['value']['AllowedValues']['callback']);
     }
     else {
-      $languages = static::getAllowedLanguageCodes();
+      $languages = array_keys(\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL));
     }
     $values['value'] = $languages[array_rand($languages)];
     return $values;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPossibleValues(AccountInterface $account = NULL) {
+    return array_keys(\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPossibleOptions(AccountInterface $account = NULL) {
+    $languages = \Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL);
+    return array_map(function (LanguageInterface $language) {
+      return $language->getName();
+    }, $languages);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSettableValues(AccountInterface $account = NULL) {
+    return $this->getPossibleValues($account);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSettableOptions(AccountInterface $account = NULL) {
+    return $this->getPossibleValues($account);
   }
 
 }

@@ -215,7 +215,7 @@ class UserValidationTest extends KernelTestBase {
   protected function assertAllowedValuesViolation(EntityInterface $entity, $field_name) {
     $violations = $entity->validate();
     $this->assertEqual(count($violations), 1, "Allowed values violation for $field_name found.");
-    $this->assertEqual($violations[0]->getPropertyPath(), "$field_name.0.value");
+    $this->assertEqual($violations[0]->getPropertyPath(), $field_name === 'langcode' ? "$field_name.0" : "$field_name.0.value");
     $this->assertEqual($violations[0]->getMessage(), t('The value you selected is not a valid choice.'));
   }
 

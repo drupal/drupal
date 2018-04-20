@@ -130,3 +130,12 @@ function system_post_update_change_delete_action_plugins() {
     }
   }
 }
+
+/**
+ * Force cache clear for language item callback.
+ *
+ * @see https://www.drupal.org/node/2851736
+ */
+function system_post_update_language_item_callback() {
+  // Empty post-update hook.
+}
