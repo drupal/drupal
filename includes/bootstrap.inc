@@ -8,7 +8,7 @@
 /**
  * The current system version.
  */
-define('VERSION', '7.59-dev');
+define('VERSION', '7.60-dev');
 
 /**
  * Core API compatibility.
@@ -2777,6 +2777,11 @@ function _drupal_bootstrap_variables() {
     if (isset($_GET['destination']) && url_is_external($_GET['destination'])) {
       unset($_GET['destination']);
       unset($_REQUEST['destination']);
+    }
+    // Use the DrupalRequestSanitizer to ensure that the destination's query
+    // parameters are not dangerous.
+    if (isset($_GET['destination'])) {
+      DrupalRequestSanitizer::cleanDestination();
     }
     // If there's still something in $_REQUEST['destination'] that didn't come
     // from $_GET, check it too.
