@@ -239,6 +239,9 @@ function file_ajax_upload() {
   $form_parents = func_get_args();
   $form_build_id = (string) array_pop($form_parents);
 
+  // Sanitize form parents before using them.
+  $form_parents = array_filter($form_parents, 'element_child');
+
   if (empty($_POST['form_build_id']) || $form_build_id != $_POST['form_build_id']) {
     // Invalid request.
     drupal_set_message(t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', array('@size' => format_size(file_upload_max_size()))), 'error');
