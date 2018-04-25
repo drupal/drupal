@@ -8,6 +8,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\FormElement;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
@@ -174,6 +175,9 @@ class ManagedFile extends FormElement {
     $renderer = \Drupal::service('renderer');
 
     $form_parents = explode('/', $request->query->get('element_parents'));
+
+    // Sanitize form parents before using them.
+    $form_parents = array_filter($form_parents, [Element::class, 'child']);
 
     // Retrieve the element to be rendered.
     $form = NestedArray::getValue($form, $form_parents);
