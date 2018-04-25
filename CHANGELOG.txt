@@ -1,4 +1,8 @@
 
+Drupal 7.59, 2018-04-25
+-----------------------
+- Fixed security issues (remote code execution). See SA-CORE-2018-004.
+
 Drupal 7.58, 2018-03-28
 -----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2018-002.
