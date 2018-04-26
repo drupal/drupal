@@ -2,6 +2,8 @@
 
 namespace Drupal\layout_builder;
 
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
+
 /**
  * Defines an interface for an object that stores layout sections for defaults.
  *
@@ -10,7 +12,7 @@ namespace Drupal\layout_builder;
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
  */
-interface DefaultsSectionStorageInterface extends SectionStorageInterface {
+interface DefaultsSectionStorageInterface extends SectionStorageInterface, ThirdPartySettingsInterface {
 
   /**
    * Determines if the defaults allow custom overrides.
