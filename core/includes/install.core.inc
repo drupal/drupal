@@ -160,7 +160,11 @@ function install_drupal($class_loader, $settings = []) {
     }
     elseif ($state['installation_finished']) {
       // Redirect to the newly installed site.
-      install_goto('');
+      $finish_url = '';
+      if (isset($install_state['profile_info']['distribution']['install']['finish_url'])) {
+        $finish_url = $install_state['profile_info']['distribution']['install']['finish_url'];
+      }
+      install_goto($finish_url);
     }
   }
 }

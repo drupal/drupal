@@ -29,6 +29,7 @@ class DistributionProfileTest extends InstallerTestBase {
         'name' => 'My Distribution',
         'install' => [
           'theme' => 'bartik',
+          'finish_url' => '/myrootuser',
         ],
       ],
     ];
@@ -36,6 +37,7 @@ class DistributionProfileTest extends InstallerTestBase {
     $path = $this->siteDirectory . '/profiles/mydistro';
     mkdir($path, 0777, TRUE);
     file_put_contents("$path/mydistro.info.yml", Yaml::encode($this->info));
+    file_put_contents("$path/mydistro.install", "<?php function mydistro_install() {\Drupal::service('path.alias_storage')->save('/user/1', '/myrootuser');}");
   }
 
   /**
@@ -65,7 +67,7 @@ class DistributionProfileTest extends InstallerTestBase {
    * Confirms that the installation succeeded.
    */
   public function testInstalled() {
-    $this->assertUrl('user/1');
+    $this->assertUrl('myrootuser');
     $this->assertResponse(200);
     // Confirm that we are logged-in after installation.
     $this->assertText($this->rootUser->getUsername());

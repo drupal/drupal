@@ -1056,6 +1056,8 @@ function drupal_check_module($module) {
  *   - install: Optional parameters to override the installer:
  *     - theme: The machine name of a theme to use in the installer instead of
  *       Drupal's default installer theme.
+ *     - finish_url: A destination to visit after the installation of the
+ *       distribution is finished
  *
  * Note that this function does an expensive file system scan to get info file
  * information for dependencies. If you only need information from the info
