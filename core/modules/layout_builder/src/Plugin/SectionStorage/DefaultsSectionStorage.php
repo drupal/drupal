@@ -293,4 +293,41 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setThirdPartySetting($module, $key, $value) {
+    $this->getDisplay()->setThirdPartySetting($module, $key, $value);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThirdPartySetting($module, $key, $default = NULL) {
+    return $this->getDisplay()->getThirdPartySetting($module, $key, $default);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThirdPartySettings($module) {
+    return $this->getDisplay()->getThirdPartySettings($module);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unsetThirdPartySetting($module, $key) {
+    $this->getDisplay()->unsetThirdPartySetting($module, $key);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThirdPartyProviders() {
+    return $this->getDisplay()->getThirdPartyProviders();
+  }
+
 }

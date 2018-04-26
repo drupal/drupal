@@ -15,7 +15,7 @@ interface OverridesSectionStorageInterface extends SectionStorageInterface {
   /**
    * Returns the corresponding defaults section storage for this override.
    *
-   * @return \Drupal\layout_builder\SectionStorageInterface
+   * @return \Drupal\layout_builder\DefaultsSectionStorageInterface
    *   The defaults section storage.
    *
    * @todo Determine if this method needs a parameter in
