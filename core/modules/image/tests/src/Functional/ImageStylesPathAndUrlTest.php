@@ -176,10 +176,10 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     }
     // Add some extra chars to the token.
     $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
-    $this->assertResponse(403, 'Image was inaccessible at the URL with an invalid token.');
+    $this->assertResponse(404, 'Image was inaccessible at the URL with an invalid token.');
     // Change the parameter name so the token is missing.
     $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrongparam=', $generate_url));
-    $this->assertResponse(403, 'Image was inaccessible at the URL with a missing token.');
+    $this->assertResponse(404, 'Image was inaccessible at the URL with a missing token.');
 
     // Check that the generated URL is the same when we pass in a relative path
     // rather than a URI. We need to temporarily switch the default scheme to
@@ -299,13 +299,13 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $this->assertTrue($matches_expected_url_format, "URL for a derivative of an image style matches expected format.");
     $nested_url_with_wrong_token = str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrongparam=', $nested_url);
     $this->drupalGet($nested_url_with_wrong_token);
-    $this->assertResponse(403, 'Image generated from an earlier derivative was inaccessible at the URL with a missing token.');
+    $this->assertResponse(404, 'Image generated from an earlier derivative was inaccessible at the URL with a missing token.');
     // Check that this restriction cannot be bypassed by adding extra slashes
     // to the URL.
     $this->drupalGet(substr_replace($nested_url_with_wrong_token, '//styles/', strrpos($nested_url_with_wrong_token, '/styles/'), strlen('/styles/')));
-    $this->assertResponse(403, 'Image generated from an earlier derivative was inaccessible at the URL with a missing token, even with an extra forward slash in the URL.');
+    $this->assertResponse(404, 'Image generated from an earlier derivative was inaccessible at the URL with a missing token, even with an extra forward slash in the URL.');
     $this->drupalGet(substr_replace($nested_url_with_wrong_token, '////styles/', strrpos($nested_url_with_wrong_token, '/styles/'), strlen('/styles/')));
-    $this->assertResponse(403, 'Image generated from an earlier derivative was inaccessible at the URL with a missing token, even with multiple forward slashes in the URL.');
+    $this->assertResponse(404, 'Image generated from an earlier derivative was inaccessible at the URL with a missing token, even with multiple forward slashes in the URL.');
     // Make sure the image can still be generated if a correct token is used.
     $this->drupalGet($nested_url);
     $this->assertResponse(200, 'Image was accessible when a correct token was provided in the URL.');
