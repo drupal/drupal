@@ -590,7 +590,7 @@ use Drupal\node\Entity\NodeType;
  * // rules will be used.
  * $build = $view_builder->view($entity, 'view_mode_name', $language->getId());
  * // $build is a render array.
- * $rendered = drupal_render($build);
+ * $rendered = \Drupal::service('renderer')->render($build);
  * @endcode
  *
  * @section sec_access Access checking on entities

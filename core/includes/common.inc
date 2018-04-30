@@ -608,7 +608,7 @@ function drupal_process_states(&$elements) {
  *     'id' => 'my-module-table',
  *   ),
  * );
- * return drupal_render($table);
+ * return \Drupal::service('renderer')->render($table);
  * @endcode
  *
  * In the theme function for the form, a special class must be added to each
