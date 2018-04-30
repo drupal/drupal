@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
@@ -79,6 +80,8 @@ class ImageStyleDownloadController extends FileDownloadController {
    * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
    *   The transferred file as response or some error response.
    *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   *   Thrown when the file request is invalid.
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when the user does not have access to the file.
    * @throws \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException
@@ -104,7 +107,11 @@ class ImageStyleDownloadController extends FileDownloadController {
       $valid &= $request->query->get(IMAGE_DERIVATIVE_TOKEN) === $image_style->getPathToken($image_uri);
     }
     if (!$valid) {
-      throw new AccessDeniedHttpException();
+      // Return a 404 (Page Not Found) rather than a 403 (Access Denied) as the
+      // image token is for DDoS protection rather than access checking. 404s
+      // are more likely to be cached (e.g. at a proxy) which enhances
+      // protection from DDoS.
+      throw new NotFoundHttpException();
     }
 
     $derivative_uri = $image_style->buildUri($image_uri);
