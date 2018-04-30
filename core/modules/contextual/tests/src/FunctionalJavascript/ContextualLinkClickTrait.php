@@ -18,6 +18,11 @@ trait ContextualLinkClickTrait {
    *   If true then the button will be forced to visible so it can be clicked.
    */
   protected function clickContextualLink($selector, $link_locator, $force_visible = TRUE) {
+    $page = $this->getSession()->getPage();
+    $page->waitFor(10, function () use ($page, $selector) {
+      return $page->find('css', "$selector .contextual-links");
+    });
+
     if ($force_visible) {
       $this->toggleContextualTriggerVisibility($selector);
     }

@@ -1,18 +1,18 @@
 <?php
 
-namespace Drupal\menu_ui\Tests;
+namespace Drupal\Tests\menu_ui\Functional;
 
-use Drupal\simpletest\WebTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Add, edit, and delete a node with menu link.
  *
  * @group menu_ui
  */
-class MenuNodeTest extends WebTestBase {
+class MenuUiNodeTest extends BrowserTestBase {
 
   /**
    * An editor user.
@@ -60,7 +60,7 @@ class MenuNodeTest extends WebTestBase {
     // item" options in menu_ui_form_node_type_form_alter(). The "log out" link
     // adds the "user.roles:authenticated" cache context.
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->assertCacheContext('user.roles:authenticated');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.roles:authenticated');
 
     // Verify that the menu link title has the correct maxlength.
     $max_length = \Drupal::entityManager()->getBaseFieldDefinitions('menu_link_content')['title']->getSetting('max_length');

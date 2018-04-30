@@ -2,10 +2,17 @@
 
 namespace Drupal\menu_ui\Tests;
 
+@trigger_error(__NAMESPACE__ . '\MenuWebTestBase is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.0. Use the \Drupal\Tests\BrowserTestBase base class and the \Drupal\Tests\menu_ui\Traits\MenuUiTrait trait instead. See https://www.drupal.org/node/2917910.', E_USER_DEPRECATED);
+
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Base class for menu web tests.
+ *
+ * @deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.x. Use
+ *   \Drupal\Tests\menu_ui\Traits\MenuUiTrait methods, instead.
+ *
+ * @see https://www.drupal.org/node/2917910
  */
 abstract class MenuWebTestBase extends WebTestBase {
 
