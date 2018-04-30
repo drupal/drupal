@@ -101,6 +101,9 @@ function entity_test_entity_type_alter(array &$entity_types) {
   if (!$state->get('entity_test_new')) {
     unset($entity_types['entity_test_new']);
   }
+
+  $entity_test_definition = $entity_types['entity_test'];
+  $entity_test_definition->set('entity_keys', $state->get('entity_test.entity_keys', []) + $entity_test_definition->getKeys());
 }
 
 /**

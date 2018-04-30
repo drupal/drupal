@@ -109,7 +109,7 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
         ],
       ]);
 
-    return $fields;
+    return $fields + \Drupal::state()->get($entity_type->id() . '.additional_base_field_definitions', []);
   }
 
   /**
@@ -162,6 +162,17 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
    */
   public function getName() {
     return $this->get('name')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntityKey($key) {
+    // Typically this protected method is used internally by entity classes and
+    // exposed publicly through more specific getter methods. So that test cases
+    // are able to set and access entity keys dynamically, update the visibility
+    // of this method to public.
+    return parent::getEntityKey($key);
   }
 
 }
