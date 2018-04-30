@@ -112,6 +112,7 @@ class WorkflowEditForm extends EntityForm {
       );
     }
 
+    $state_weight_delta = round(count($states) / 2);
     foreach ($states as $state) {
       $links = [
         'edit' => [
@@ -138,6 +139,7 @@ class WorkflowEditForm extends EntityForm {
           '#title_display' => 'invisible',
           '#default_value' => $state->weight(),
           '#attributes' => ['class' => ['state-weight']],
+          '#delta' => $state_weight_delta,
         ],
         'operations' => [
           '#type' => 'operations',
@@ -174,7 +176,10 @@ class WorkflowEditForm extends EntityForm {
         ],
       ],
     ];
-    foreach ($workflow->getTypePlugin()->getTransitions() as $transition) {
+
+    $transitions = $workflow->getTypePlugin()->getTransitions();
+    $transition_weight_delta = round(count($transitions) / 2);
+    foreach ($transitions as $transition) {
       $links['edit'] = [
         'title' => $this->t('Edit'),
         'url' => Url::fromRoute('entity.workflow.edit_transition_form', ['workflow' => $workflow->id(), 'workflow_transition' => $transition->id()]),
@@ -193,6 +198,7 @@ class WorkflowEditForm extends EntityForm {
           '#title_display' => 'invisible',
           '#default_value' => $transition->weight(),
           '#attributes' => ['class' => ['transition-weight']],
+          '#delta' => $transition_weight_delta,
         ],
         'from' => [
           '#theme' => 'item_list',

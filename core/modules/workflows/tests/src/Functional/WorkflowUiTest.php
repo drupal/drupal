@@ -389,6 +389,21 @@ class WorkflowUiTest extends BrowserTestBase {
     foreach ($elements as $key => $element) {
       $this->assertEquals($expected_transitions[$key], $element->find('xpath', 'td')->getText());
     }
+
+    // Ensure that there are enough weights to satisfy the potential number of
+    // states and transitions.
+    $this->assertSession()
+      ->selectExists('states[three][weight]')
+      ->selectOption('2');
+    $this->assertSession()
+      ->selectExists('states[three][weight]')
+      ->selectOption('-2');
+    $this->assertSession()
+      ->selectExists('transitions[three][weight]')
+      ->selectOption('2');
+    $this->assertSession()
+      ->selectExists('transitions[three][weight]')
+      ->selectOption('-2');
   }
 
 }
