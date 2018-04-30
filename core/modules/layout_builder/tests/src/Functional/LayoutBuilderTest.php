@@ -19,6 +19,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     'layout_test',
     'block',
     'node',
+    'layout_builder_test',
   ];
 
   /**
@@ -317,6 +318,35 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextContains('This is the default view mode');
     $this->clickLink('Cancel Layout');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testLayoutBuilderChooseBlocksAlter() {
+    // See layout_builder_test_plugin_filter_block__layout_builder_alter().
+    $assert_session = $this->assertSession();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+      'administer node fields',
+    ]));
+
+    // From the manage display page, go to manage the layout.
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->clickLink('Manage layout');
+
+    // Add a new block.
+    $this->clickLink('Add Block');
+
+    // Verify that blocks not modified are present.
+    $assert_session->linkExists('Powered by Drupal');
+    $assert_session->linkExists('Default revision');
+
+    // Verify that blocks explicitly removed are not present.
+    $assert_session->linkNotExists('Help');
+    $assert_session->linkNotExists('Sticky at top of lists');
   }
 
 }

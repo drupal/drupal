@@ -33,6 +33,8 @@ interface DiscoveryInterface {
    * @return mixed[]
    *   An array of plugin definitions (empty array if no definitions were
    *   found). Keys are plugin IDs.
+   *
+   * @see \Drupal\Core\Plugin\FilteredPluginManagerInterface::getFilteredDefinitions()
    */
   public function getDefinitions();
 

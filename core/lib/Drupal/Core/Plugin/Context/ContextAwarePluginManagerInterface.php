@@ -20,6 +20,8 @@ interface ContextAwarePluginManagerInterface extends PluginManagerInterface {
    *
    * @return array
    *   An array of plugin definitions.
+   *
+   * @see \Drupal\Core\Plugin\FilteredPluginManagerInterface::getFilteredDefinitions()
    */
   public function getDefinitionsForContexts(array $contexts = []);
 

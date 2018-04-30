@@ -6,8 +6,8 @@ use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
-use Drupal\Core\Plugin\Context\ContextAwarePluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\Plugin\FilteredPluginManagerTrait;
 
 /**
  * Manages discovery and instantiation of block plugins.
@@ -21,7 +21,7 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
   use CategorizingPluginManagerTrait {
     getSortedDefinitions as traitGetSortedDefinitions;
   }
-  use ContextAwarePluginManagerTrait;
+  use FilteredPluginManagerTrait;
 
   /**
    * Constructs a new \Drupal\Core\Block\BlockManager object.
@@ -37,8 +37,15 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
 
-    $this->alterInfo('block');
+    $this->alterInfo($this->getType());
     $this->setCacheBackend($cache_backend, 'block_plugins');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getType() {
+    return 'block';
   }
 
   /**

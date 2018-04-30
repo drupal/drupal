@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Provides hook implementations for Layout Builder tests.
+ */
+
+/**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ */
+function layout_builder_test_plugin_filter_block__layout_builder_alter(array &$definitions) {
+  // Explicitly remove the "Help" blocks from the list.
+  unset($definitions['help_block']);
+
+  // Explicitly remove the "Sticky at top of lists field_block".
+  $disallowed_fields = [
+    'sticky',
+  ];
+
+  foreach ($definitions as $plugin_id => $definition) {
+    // Field block IDs are in the form 'field_block:{entity}:{bundle}:{name}',
+    // for example 'field_block:node:article:revision_timestamp'.
+    preg_match('/field_block:.*:.*:(.*)/', $plugin_id, $parts);
+    if (isset($parts[1]) && in_array($parts[1], $disallowed_fields, TRUE)) {
+      // Unset any field blocks that match our predefined list.
+      unset($definitions[$plugin_id]);
+    }
+  }
+}

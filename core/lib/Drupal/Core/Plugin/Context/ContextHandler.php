@@ -17,7 +17,9 @@ class ContextHandler implements ContextHandlerInterface {
   public function filterPluginDefinitionsByContexts(array $contexts, array $definitions) {
     return array_filter($definitions, function ($plugin_definition) use ($contexts) {
       // If this plugin doesn't need any context, it is available to use.
-      if (!isset($plugin_definition['context'])) {
+      // @todo Support object-based plugin definitions in
+      //   https://www.drupal.org/project/drupal/issues/2961822.
+      if (!is_array($plugin_definition) || !isset($plugin_definition['context'])) {
         return TRUE;
       }
 
