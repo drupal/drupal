@@ -772,11 +772,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function onChange($name) {
-    // Check if the changed name is the value of an entity key and if the value
-    // of that is currently cached, if so, reset it. Exclude the bundle from
-    // that check, as it ready only and must not change, unsetting it could
+    // Check if the changed name is the value of any entity keys and if any of
+    // those values are currently cached, if so, reset it. Exclude the bundle
+    // from that check, as it ready only and must not change, unsetting it could
     // lead to recursions.
-    if ($key = array_search($name, $this->getEntityType()->getKeys())) {
+    foreach (array_keys($this->getEntityType()->getKeys(), $name, TRUE) as $key) {
       if ($key != 'bundle') {
         if (isset($this->entityKeys[$key])) {
           unset($this->entityKeys[$key]);
