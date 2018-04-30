@@ -47,7 +47,7 @@ class MediaAccessControlHandler extends EntityAccessControlHandler {
         if ($account->hasPermission('update media') && $is_owner) {
           return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
         }
-        return AccessResult::neutral()->cachePerPermissions();
+        return AccessResult::neutral("The following permissions are required: 'update any media' OR 'update own media' OR '$type: edit any media' OR '$type: edit own media'.")->cachePerPermissions();
 
       case 'delete':
         if ($account->hasPermission('delete any ' . $type . ' media')) {
@@ -64,7 +64,7 @@ class MediaAccessControlHandler extends EntityAccessControlHandler {
         if ($account->hasPermission('delete media') && $is_owner) {
           return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
         }
-        return AccessResult::neutral()->cachePerPermissions();
+        return AccessResult::neutral("The following permissions are required: 'delete any media' OR 'delete own media' OR '$type: delete any media' OR '$type: delete own media'.")->cachePerPermissions();
 
       default:
         return AccessResult::neutral()->cachePerPermissions();
