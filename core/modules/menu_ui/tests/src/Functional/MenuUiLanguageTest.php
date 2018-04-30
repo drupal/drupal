@@ -1,10 +1,12 @@
 <?php
 
-namespace Drupal\menu_ui\Tests;
+namespace Drupal\Tests\menu_ui\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
 
 /**
  * Tests for menu_ui language settings.
@@ -14,14 +16,20 @@ use Drupal\language\Entity\ContentLanguageSettings;
  *
  * @group menu_ui
  */
-class MenuLanguageTest extends MenuWebTestBase {
+class MenuUiLanguageTest extends BrowserTestBase {
+
+  use MenuUiTrait;
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['language'];
+  protected static $modules = [
+    'language',
+    'menu_link_content',
+    'menu_ui',
+  ];
 
   protected function setUp() {
     parent::setUp();
@@ -73,11 +81,11 @@ class MenuLanguageTest extends MenuWebTestBase {
     // Check the link was added with the correct menu link default language.
     $menu_links = entity_load_multiple_by_properties('menu_link_content', ['title' => $link_title]);
     $menu_link = reset($menu_links);
-    $this->assertMenuLink($menu_link->getPluginId(), [
+    $this->assertMenuLink([
       'menu_name' => $menu_name,
       'route_name' => '<front>',
       'langcode' => 'bb',
-    ]);
+    ], $menu_link->getPluginId());
 
     // Edit menu link default, changing it to cc.
     ContentLanguageSettings::loadByEntityTypeBundle('menu_link_content', 'menu_link_content')
@@ -95,22 +103,22 @@ class MenuLanguageTest extends MenuWebTestBase {
     // Check the link was added with the correct new menu link default language.
     $menu_links = entity_load_multiple_by_properties('menu_link_content', ['title' => $link_title]);
     $menu_link = reset($menu_links);
-    $this->assertMenuLink($menu_link->getPluginId(), [
+    $this->assertMenuLink([
       'menu_name' => $menu_name,
       'route_name' => '<front>',
       'langcode' => 'cc',
-    ]);
+    ], $menu_link->getPluginId());
 
     // Now change the language of the new link to 'bb'.
     $edit = [
       'langcode[0][value]' => 'bb',
     ];
     $this->drupalPostForm('admin/structure/menu/item/' . $menu_link->id() . '/edit', $edit, t('Save'));
-    $this->assertMenuLink($menu_link->getPluginId(), [
+    $this->assertMenuLink([
       'menu_name' => $menu_name,
       'route_name' => '<front>',
       'langcode' => 'bb',
-    ]);
+    ], $menu_link->getPluginId());
 
     // Saving menu link items ends up on the edit menu page. To check the menu
     // link has the correct language default on edit, go to the menu link edit

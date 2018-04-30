@@ -1,16 +1,18 @@
 <?php
 
-namespace Drupal\menu_ui\Tests;
+namespace Drupal\Tests\menu_ui\Functional;
 
 use Drupal\block\Entity\Block;
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\system\Entity\Menu;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
 
 /**
  * Add a custom menu, add menu links to the custom menu and Tools menu, check
@@ -18,14 +20,25 @@ use Drupal\node\NodeInterface;
  *
  * @group menu_ui
  */
-class MenuTest extends MenuWebTestBase {
+class MenuUiTest extends BrowserTestBase {
+
+  use MenuUiTrait;
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['node', 'block', 'contextual', 'help', 'path', 'test_page_test'];
+  protected static $modules = [
+    'block',
+    'contextual',
+    'help',
+    'menu_link_content',
+    'menu_ui',
+    'node',
+    'path',
+    'test_page_test',
+  ];
 
   /**
    * A user with administration rights.
@@ -216,7 +229,7 @@ class MenuTest extends MenuWebTestBase {
 
     // Confirm that the custom menu block is available.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
     $this->assertText($label);
 
     // Enable the block.
@@ -310,25 +323,25 @@ class MenuTest extends MenuWebTestBase {
     // -- item2
     // --- item3
 
-    $this->assertMenuLink($item1->getPluginId(), [
+    $this->assertMenuLink([
       'children' => [$item2->getPluginId(), $item3->getPluginId()],
       'parents' => [$item1->getPluginId()],
       // We assert the language code here to make sure that the language
       // selection element degrades gracefully without the Language module.
       'langcode' => 'en',
-    ]);
-    $this->assertMenuLink($item2->getPluginId(), [
+    ], $item1->getPluginId());
+    $this->assertMenuLink([
       'children' => [$item3->getPluginId()],
       'parents' => [$item2->getPluginId(), $item1->getPluginId()],
       // See above.
       'langcode' => 'en',
-    ]);
-    $this->assertMenuLink($item3->getPluginId(), [
+    ], $item2->getPluginId());
+    $this->assertMenuLink([
       'children' => [],
       'parents' => [$item3->getPluginId(), $item2->getPluginId(), $item1->getPluginId()],
       // See above.
       'langcode' => 'en',
-    ]);
+    ], $item3->getPluginId());
 
     // Verify menu links.
     $this->verifyMenuLink($item1, $node1);
@@ -350,18 +363,18 @@ class MenuTest extends MenuWebTestBase {
     // -- item5
     // -- item6
 
-    $this->assertMenuLink($item4->getPluginId(), [
+    $this->assertMenuLink([
       'children' => [$item5->getPluginId(), $item6->getPluginId()],
       'parents' => [$item4->getPluginId()],
       // See above.
       'langcode' => 'en',
-    ]);
-    $this->assertMenuLink($item5->getPluginId(), [
+    ], $item4->getPluginId());
+    $this->assertMenuLink([
       'children' => [],
       'parents' => [$item5->getPluginId(), $item4->getPluginId()],
       'langcode' => 'en',
-    ]);
-    $this->assertMenuLink($item6->getPluginId(), [
+    ], $item5->getPluginId());
+    $this->assertMenuLink([
       'children' => [],
       'parents' => [$item6->getPluginId(), $item4->getPluginId()],
       'route_name' => 'entity.node.canonical',
@@ -369,7 +382,7 @@ class MenuTest extends MenuWebTestBase {
       'url' => '',
       // See above.
       'langcode' => 'en',
-    ]);
+    ], $item6->getPluginId());
 
     // Modify menu links.
     $this->modifyMenuLink($item1);
@@ -390,37 +403,37 @@ class MenuTest extends MenuWebTestBase {
     // ---- item3
     // -- item6
 
-    $this->assertMenuLink($item1->getPluginId(), [
+    $this->assertMenuLink([
       'children' => [],
       'parents' => [$item1->getPluginId()],
       // See above.
       'langcode' => 'en',
-    ]);
-    $this->assertMenuLink($item4->getPluginId(), [
+    ], $item1->getPluginId());
+    $this->assertMenuLink([
       'children' => [$item5->getPluginId(), $item6->getPluginId(), $item2->getPluginId(), $item3->getPluginId()],
       'parents' => [$item4->getPluginId()],
       // See above.
       'langcode' => 'en',
-    ]);
+    ], $item4->getPluginId());
 
-    $this->assertMenuLink($item5->getPluginId(), [
+    $this->assertMenuLink([
       'children' => [$item2->getPluginId(), $item3->getPluginId()],
       'parents' => [$item5->getPluginId(), $item4->getPluginId()],
       // See above.
       'langcode' => 'en',
-    ]);
-    $this->assertMenuLink($item2->getPluginId(), [
+    ], $item5->getPluginId());
+    $this->assertMenuLink([
       'children' => [$item3->getPluginId()],
       'parents' => [$item2->getPluginId(), $item5->getPluginId(), $item4->getPluginId()],
       // See above.
       'langcode' => 'en',
-    ]);
-    $this->assertMenuLink($item3->getPluginId(), [
+    ], $item2->getPluginId());
+    $this->assertMenuLink([
       'children' => [],
       'parents' => [$item3->getPluginId(), $item2->getPluginId(), $item5->getPluginId(), $item4->getPluginId()],
       // See above.
       'langcode' => 'en',
-    ]);
+    ], $item3->getPluginId());
 
     // Add 102 menu links with increasing weights, then make sure the last-added
     // item's weight doesn't get changed because of the old hardcoded delta=50.
@@ -428,7 +441,7 @@ class MenuTest extends MenuWebTestBase {
     for ($i = -50; $i <= 51; $i++) {
       $items[$i] = $this->addMenuLink('', '/node/' . $node1->id(), $menu_name, TRUE, strval($i));
     }
-    $this->assertMenuLink($items[51]->getPluginId(), ['weight' => '51']);
+    $this->assertMenuLink(['weight' => '51'], $items[51]->getPluginId());
 
     // Disable a link and then re-enable the link via the overview form.
     $this->disableMenuLink($item1);
@@ -446,15 +459,15 @@ class MenuTest extends MenuWebTestBase {
     $item5->save();
 
     // Verify in the database.
-    $this->assertMenuLink($item1->getPluginId(), ['enabled' => 1]);
+    $this->assertMenuLink(['enabled' => 1], $item1->getPluginId());
 
     // Add an external link.
     $item7 = $this->addMenuLink('', 'https://www.drupal.org', $menu_name);
-    $this->assertMenuLink($item7->getPluginId(), ['url' => 'https://www.drupal.org']);
+    $this->assertMenuLink(['url' => 'https://www.drupal.org'], $item7->getPluginId());
 
     // Add <front> menu item.
     $item8 = $this->addMenuLink('', '/', $menu_name);
-    $this->assertMenuLink($item8->getPluginId(), ['route_name' => '<front>']);
+    $this->assertMenuLink(['route_name' => '<front>'], $item8->getPluginId());
     $this->drupalGet('');
     $this->assertResponse(200);
     // Make sure we get routed correctly.
@@ -531,7 +544,7 @@ class MenuTest extends MenuWebTestBase {
     // Make sure menu shows up with new name in block addition.
     $default_theme = $this->config('system.theme')->get('default');
     $this->drupalget('admin/structure/block/list/' . $default_theme);
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
     $this->assertText($edit['label']);
   }
 
@@ -557,30 +570,7 @@ class MenuTest extends MenuWebTestBase {
     $this->assertNoText($item->getTitle(), "Menu link pointing to unpublished node is only visible to users with 'bypass node access' permission");
     // The cache contexts associated with the (in)accessible menu links are
     // bubbled. See DefaultMenuLinkTreeManipulators::menuLinkCheckAccess().
-    $this->assertCacheContext('user.permissions');
-  }
-
-  /**
-   * Tests the contextual links on a menu block.
-   */
-  public function testBlockContextualLinks() {
-    $this->drupalLogin($this->drupalCreateUser(['administer menu', 'access contextual links', 'administer blocks']));
-    $custom_menu = $this->addCustomMenu();
-    $this->addMenuLink('', '/', $custom_menu->id());
-    $block = $this->drupalPlaceBlock('system_menu_block:' . $custom_menu->id(), ['label' => 'Custom menu', 'provider' => 'system']);
-    $this->drupalGet('test-page');
-
-    $id = 'block:block=' . $block->id() . ':langcode=en|menu:menu=' . $custom_menu->id() . ':langcode=en';
-    // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
-    $this->assertRaw('<div data-contextual-id="' . $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', ['@id' => $id]));
-
-    // Get server-rendered contextual links.
-    // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()
-    $post = ['ids[0]' => $id];
-    $response = $this->drupalPost('contextual/render', 'application/json', $post, ['query' => ['destination' => 'test-page']]);
-    $this->assertResponse(200);
-    $json = Json::decode($response);
-    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '">Configure block</a></li><li class="entitymenuedit-form"><a href="' . base_path() . 'admin/structure/menu/manage/' . $custom_menu->id() . '">Edit menu</a></li></ul>');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.permissions');
   }
 
   /**
@@ -627,7 +617,7 @@ class MenuTest extends MenuWebTestBase {
 
     $menu_link = reset($menu_links);
     $this->assertTrue($menu_link, 'Menu link was found in database.');
-    $this->assertMenuLink($menu_link->getPluginId(), ['menu_name' => $menu_name, 'children' => [], 'parent' => $parent]);
+    $this->assertMenuLink(['menu_name' => $menu_name, 'children' => [], 'parent' => $parent], $menu_link->getPluginId());
 
     return $menu_link;
   }
@@ -841,7 +831,7 @@ class MenuTest extends MenuWebTestBase {
 
     // Unlike most other modules, there is no confirmation message displayed.
     // Verify in the database.
-    $this->assertMenuLink($item->getPluginId(), ['enabled' => 0]);
+    $this->assertMenuLink(['enabled' => 0], $item->getPluginId());
   }
 
   /**
@@ -856,25 +846,23 @@ class MenuTest extends MenuWebTestBase {
     $this->drupalPostForm("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
 
     // Verify in the database.
-    $this->assertMenuLink($item->getPluginId(), ['enabled' => 1]);
+    $this->assertMenuLink(['enabled' => 1], $item->getPluginId());
   }
 
   /**
-   * Tests if administrative users other than user 1 can access the menu parents
-   * AJAX callback.
+   * Tests if admin users, other than UID1, can access parents AJAX callback.
    */
   public function testMenuParentsJsAccess() {
-    $admin = $this->drupalCreateUser(['administer menu']);
-    $this->drupalLogin($admin);
+    $this->drupalLogin($this->drupalCreateUser(['administer menu']));
     // Just check access to the callback overall, the POST data is irrelevant.
-    $this->drupalGetAjax('admin/structure/menu/parents');
-    $this->assertResponse(200);
+    $this->drupalGet('admin/structure/menu/parents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With: XMLHttpRequest']);
+    $this->assertSession()->statusCodeEquals(200);
 
-    // Do standard user tests.
-    // Log in the user.
-    $this->drupalLogin($this->authenticatedUser);
-    $this->drupalGetAjax('admin/structure/menu/parents');
-    $this->assertResponse(403);
+    // Log in as authenticated user.
+    $this->drupalLogin($this->drupalCreateUser());
+    // Check that a simple user is not able to access the menu.
+    $this->drupalGet('admin/structure/menu/parents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With: XMLHttpRequest']);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
