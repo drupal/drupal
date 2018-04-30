@@ -166,7 +166,15 @@ class EntityDisplayTest extends KernelTestBase {
 
     // Check that the default visibility taken into account for extra fields
     // unknown in the display.
-    $this->assertEqual($display->getComponent('display_extra_field'), ['weight' => 5, 'region' => 'content']);
+    $this->assertEqual(
+      $display->getComponent('display_extra_field'),
+      [
+        'weight' => 5,
+        'region' => 'content',
+        'settings' => [],
+        'third_party_settings' => [],
+      ]
+    );
     $this->assertNull($display->getComponent('display_extra_field_hidden'));
 
     // Check that setting explicit options overrides the defaults.

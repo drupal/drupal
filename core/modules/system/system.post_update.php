@@ -5,7 +5,9 @@
  * Post update functions for System.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
@@ -138,4 +140,33 @@ function system_post_update_change_delete_action_plugins() {
  */
 function system_post_update_language_item_callback() {
   // Empty post-update hook.
+}
+
+/**
+ * Update all entity displays that contain extra fields.
+ */
+function system_post_update_extra_fields(&$sandbox = NULL) {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+  $entity_field_manager = \Drupal::service('entity_field.manager');
+
+  $callback = function (EntityDisplayInterface $display) use ($entity_field_manager) {
+    $display_context = $display instanceof EntityViewDisplayInterface ? 'display' : 'form';
+    $extra_fields = $entity_field_manager->getExtraFields($display->getTargetEntityTypeId(), $display->getTargetBundle());
+
+    // If any extra fields are used as a component, resave the display with the
+    // updated component information.
+    $needs_save = FALSE;
+    if (!empty($extra_fields[$display_context])) {
+      foreach ($extra_fields[$display_context] as $name => $extra_field) {
+        if ($component = $display->getComponent($name)) {
+          $display->setComponent($name, $component);
+          $needs_save = TRUE;
+        }
+      }
+    }
+    return $needs_save;
+  };
+
+  $config_entity_updater->update($sandbox, 'entity_form_display', $callback);
+  $config_entity_updater->update($sandbox, 'entity_view_display', $callback);
 }

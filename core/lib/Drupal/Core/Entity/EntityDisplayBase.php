@@ -163,12 +163,12 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
         if (!isset($this->content[$name]) && !isset($this->hidden[$name])) {
           // Extra fields are visible by default unless they explicitly say so.
           if (!isset($definition['visible']) || $definition['visible'] == TRUE) {
-            $this->content[$name] = [
+            $this->setComponent($name, [
               'weight' => $definition['weight']
-            ];
+            ]);
           }
           else {
-            $this->hidden[$name] = TRUE;
+            $this->removeComponent($name);
           }
         }
         // Ensure extra fields have a 'region'.
