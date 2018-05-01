@@ -65,11 +65,11 @@ class MediaForm extends ContentEntityForm {
 
     if ($saved === SAVED_NEW) {
       $logger->notice('@type: added %label.', $context);
-      drupal_set_message($this->t('@type %label has been created.', $t_args));
+      $this->messenger()->addStatus($this->t('@type %label has been created.', $t_args));
     }
     else {
       $logger->notice('@type: updated %label.', $context);
-      drupal_set_message($this->t('@type %label has been updated.', $t_args));
+      $this->messenger()->addStatus($this->t('@type %label has been updated.', $t_args));
     }
 
     $form_state->setRedirectUrl($this->entity->toUrl('canonical'));

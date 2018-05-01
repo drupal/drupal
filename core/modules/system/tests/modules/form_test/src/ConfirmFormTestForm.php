@@ -68,7 +68,7 @@ class ConfirmFormTestForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message($this->t('The ConfirmFormTestForm::submitForm() method was used for this form.'));
+    $this->messenger()->addStatus($this->t('The ConfirmFormTestForm::submitForm() method was used for this form.'));
     $form_state->setRedirect('<front>');
   }
 

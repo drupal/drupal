@@ -103,7 +103,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
    */
   public function cacheSubmit() {
     views_invalidate_cache();
-    drupal_set_message($this->t('The cache has been cleared.'));
+    $this->messenger()->addStatus($this->t('The cache has been cleared.'));
   }
 
 }

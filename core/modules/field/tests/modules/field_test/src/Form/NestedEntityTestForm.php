@@ -92,7 +92,7 @@ class NestedEntityTestForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc]
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\EntityInterface $entity_1 */
@@ -103,7 +103,7 @@ class NestedEntityTestForm extends FormBase {
     $entity_2 = $form_state->get('entity_2');
     $entity_2->save();
 
-    drupal_set_message($this->t('test_entities @id_1 and @id_2 have been updated.', ['@id_1' => $entity_1->id(), '@id_2' => $entity_2->id()]));
+    $this->messenger()->addStatus($this->t('test_entities @id_1 and @id_2 have been updated.', ['@id_1' => $entity_1->id(), '@id_2' => $entity_2->id()]));
   }
 
 }

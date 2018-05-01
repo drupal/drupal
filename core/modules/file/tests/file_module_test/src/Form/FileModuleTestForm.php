@@ -85,7 +85,7 @@ class FileModuleTestForm extends FormBase {
       $fids[] = $fid;
     }
 
-    drupal_set_message($this->t('The file ids are %fids.', ['%fids' => implode(',', $fids)]));
+    \Drupal::messenger()->addStatus($this->t('The file ids are %fids.', ['%fids' => implode(',', $fids)]));
   }
 
 }

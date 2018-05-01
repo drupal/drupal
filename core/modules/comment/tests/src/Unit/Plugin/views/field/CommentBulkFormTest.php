@@ -54,6 +54,8 @@ class CommentBulkFormTest extends UnitTestCase {
 
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
 
+    $messenger = $this->getMock('Drupal\Core\Messenger\MessengerInterface');
+
     $views_data = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
@@ -84,7 +86,7 @@ class CommentBulkFormTest extends UnitTestCase {
     $definition['title'] = '';
     $options = [];
 
-    $comment_bulk_form = new CommentBulkForm([], 'comment_bulk_form', $definition, $entity_manager, $language_manager);
+    $comment_bulk_form = new CommentBulkForm([], 'comment_bulk_form', $definition, $entity_manager, $language_manager, $messenger);
     $comment_bulk_form->init($executable, $display, $options);
 
     $this->assertAttributeEquals(array_slice($actions, 0, -1, TRUE), 'actions', $comment_bulk_form);

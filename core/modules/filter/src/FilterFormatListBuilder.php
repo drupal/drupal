@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -30,6 +31,13 @@ class FilterFormatListBuilder extends DraggableListBuilder {
   protected $configFactory;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a new FilterFormatListBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -38,11 +46,14 @@ class FilterFormatListBuilder extends DraggableListBuilder {
    *   The entity storage class.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ConfigFactoryInterface $config_factory, MessengerInterface $messenger) {
     parent::__construct($entity_type, $storage);
 
     $this->configFactory = $config_factory;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -52,7 +63,8 @@ class FilterFormatListBuilder extends DraggableListBuilder {
     return new static(
       $entity_type,
       $container->get('entity.manager')->getStorage($entity_type->id()),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('messenger')
     );
   }
 
@@ -150,7 +162,7 @@ class FilterFormatListBuilder extends DraggableListBuilder {
     parent::submitForm($form, $form_state);
 
     filter_formats_reset();
-    drupal_set_message($this->t('The text format ordering has been saved.'));
+    $this->messenger->addStatus($this->t('The text format ordering has been saved.'));
   }
 
 }

@@ -157,7 +157,7 @@ class ContentLanguageSettingsForm extends FormBase {
           ->save();
       }
     }
-    drupal_set_message($this->t('Settings successfully updated.'));
+    $this->messenger()->addStatus($this->t('Settings successfully updated.'));
   }
 
 }

@@ -335,11 +335,11 @@ class DbUpdateController extends ControllerBase {
 
     // Warn the user if any updates were incompatible.
     if ($incompatible_updates_exist) {
-      drupal_set_message($this->t('Some of the pending updates cannot be applied because their dependencies were not met.'), 'warning');
+      $this->messenger()->addWarning($this->t('Some of the pending updates cannot be applied because their dependencies were not met.'));
     }
 
     if (empty($count)) {
-      drupal_set_message($this->t('No pending updates.'));
+      $this->messenger()->addStatus($this->t('No pending updates.'));
       unset($build);
       $build['links'] = [
         '#theme' => 'links',

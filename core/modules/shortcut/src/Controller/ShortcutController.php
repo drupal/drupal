@@ -40,10 +40,10 @@ class ShortcutController extends ControllerBase {
 
     try {
       $shortcut->delete();
-      drupal_set_message($this->t('The shortcut %title has been deleted.', ['%title' => $label]));
+      $this->messenger()->addStatus($this->t('The shortcut %title has been deleted.', ['%title' => $label]));
     }
     catch (\Exception $e) {
-      drupal_set_message($this->t('Unable to delete the shortcut for %title.', ['%title' => $label]), 'error');
+      $this->messenger()->addStatus($this->t('Unable to delete the shortcut for %title.', ['%title' => $label]), 'error');
     }
 
     return $this->redirect('<front>');

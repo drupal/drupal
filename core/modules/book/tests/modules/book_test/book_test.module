@@ -17,6 +17,6 @@
 function book_test_page_attachments(array &$page) {
   $page['#cache']['tags'][] = 'book_test.debug_book_navigation_cache_context';
   if (\Drupal::state()->get('book_test.debug_book_navigation_cache_context', FALSE)) {
-    drupal_set_message(\Drupal::service('cache_contexts_manager')->convertTokensToKeys(['route.book_navigation'])->getKeys()[0]);
+    \Drupal::messenger()->addStatus(\Drupal::service('cache_contexts_manager')->convertTokensToKeys(['route.book_navigation'])->getKeys()[0]);
   }
 }

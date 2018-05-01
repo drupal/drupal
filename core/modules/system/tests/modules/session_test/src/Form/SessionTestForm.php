@@ -43,7 +43,7 @@ class SessionTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message(SafeMarkup::format('Ok: @input', ['@input' => $form_state->getValue('input')]));
+    $this->messenger()->addStatus(SafeMarkup::format('Ok: @input', ['@input' => $form_state->getValue('input')]));
   }
 
 }

@@ -375,11 +375,11 @@ class CommentForm extends ContentEntityForm {
       // Explain the approval queue if necessary.
       if (!$comment->isPublished()) {
         if (!$this->currentUser->hasPermission('administer comments')) {
-          drupal_set_message($this->t('Your comment has been queued for review by site administrators and will be published after approval.'));
+          $this->messenger()->addStatus($this->t('Your comment has been queued for review by site administrators and will be published after approval.'));
         }
       }
       else {
-        drupal_set_message($this->t('Your comment has been posted.'));
+        $this->messenger()->addStatus($this->t('Your comment has been posted.'));
       }
       $query = [];
       // Find the current display page for this comment.
@@ -394,7 +394,7 @@ class CommentForm extends ContentEntityForm {
     }
     else {
       $logger->warning('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', ['%subject' => $comment->getSubject()]);
-      drupal_set_message($this->t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', ['%subject' => $comment->getSubject()]), 'error');
+      $this->messenger()->addError($this->t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', ['%subject' => $comment->getSubject()]));
       // Redirect the user to the entity they are commenting on.
     }
     $form_state->setRedirectUrl($uri);

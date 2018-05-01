@@ -23,14 +23,14 @@ function content_translation_install() {
       ':language_url' => Url::fromRoute('entity.configurable_language.collection')->toString()
     ];
     $message = t('This site has only a single language enabled. <a href=":language_url">Add at least one more language</a> in order to translate content.', $t_args);
-    drupal_set_message($message, 'warning');
+    \Drupal::messenger()->addWarning($message);
   }
   // Point the user to the content translation settings.
   $t_args = [
     ':settings_url' => Url::fromRoute('language.content_settings_page')->toString()
   ];
   $message = t('<a href=":settings_url">Enable translation</a> for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>accounts</em>, or any other element you wish to translate.', $t_args);
-  drupal_set_message($message, 'warning');
+  \Drupal::messenger()->addWarning($message);
 }
 
 /**

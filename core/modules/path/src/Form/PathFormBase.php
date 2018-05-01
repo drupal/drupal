@@ -212,7 +212,7 @@ abstract class PathFormBase extends FormBase {
 
     $this->aliasStorage->save($source, $alias, $langcode, $pid);
 
-    drupal_set_message($this->t('The alias has been saved.'));
+    $this->messenger()->addStatus($this->t('The alias has been saved.'));
     $form_state->setRedirect('path.admin_overview');
   }
 

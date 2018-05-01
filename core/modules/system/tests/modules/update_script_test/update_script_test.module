@@ -14,5 +14,5 @@
  * @see UpdateScriptFunctionalTest::testRequirements()
  */
 function update_script_test_cache_flush() {
-  drupal_set_message(t('hook_cache_flush() invoked for update_script_test.module.'));
+  \Drupal::messenger()->addStatus(t('hook_cache_flush() invoked for update_script_test.module.'));
 }

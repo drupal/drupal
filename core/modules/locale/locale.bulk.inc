@@ -372,7 +372,7 @@ function locale_translate_batch_finished($success, array $results) {
       else {
         $message = \Drupal::translation()->formatPlural(count($results['failed_files']), 'One translation file could not be imported. See the log for details.', '@count translation files could not be imported. See the log for details.');
       }
-      drupal_set_message($message, 'error');
+      \Drupal::messenger()->addError($message);
     }
     if (isset($results['files'])) {
       $skipped_files = [];
@@ -389,7 +389,7 @@ function locale_translate_batch_finished($success, array $results) {
           }
         }
       }
-      drupal_set_message(\Drupal::translation()->formatPlural(count($results['files']),
+      \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural(count($results['files']),
         'One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
         '@count translation files imported. %number translations were added, %update translations were updated and %delete translations were removed.',
         ['%number' => $additions, '%update' => $updates, '%delete' => $deletes]
@@ -403,7 +403,7 @@ function locale_translate_batch_finished($success, array $results) {
         else {
           $message = \Drupal::translation()->formatPlural($skips, 'One translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
         }
-        drupal_set_message($message, 'warning');
+        \Drupal::messenger()->addWarning($message);
         $logger->warning('@count disallowed HTML string(s) in files: @files.', ['@count' => $skips, '@files' => implode(',', $skipped_files)]);
       }
     }
@@ -630,11 +630,11 @@ function locale_config_batch_finished($success, array $results) {
   if ($success) {
     $configuration = isset($results['stats']['config']) ? $results['stats']['config'] : 0;
     if ($configuration) {
-      drupal_set_message(t('The configuration was successfully updated. There are %number configuration objects updated.', ['%number' => $configuration]));
+      \Drupal::messenger()->addStatus(t('The configuration was successfully updated. There are %number configuration objects updated.', ['%number' => $configuration]));
       \Drupal::logger('locale')->notice('The configuration was successfully updated. %number configuration objects updated.', ['%number' => $configuration]);
     }
     else {
-      drupal_set_message(t('No configuration objects have been updated.'));
+      \Drupal::messenger()->addStatus(t('No configuration objects have been updated.'));
       \Drupal::logger('locale')->warning('No configuration objects have been updated.');
     }
   }

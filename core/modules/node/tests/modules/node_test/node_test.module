@@ -182,10 +182,10 @@ function node_test_node_insert(NodeInterface $node) {
  */
 function node_test_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (!$form_state->get('node_test_form_alter')) {
-    drupal_set_message('Storage is not set');
+    \Drupal::messenger()->addStatus('Storage is not set');
     $form_state->set('node_test_form_alter', TRUE);
   }
   else {
-    drupal_set_message('Storage is set');
+    \Drupal::messenger()->addStatus('Storage is set');
   }
 }

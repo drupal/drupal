@@ -35,7 +35,7 @@ class FormTestValidateNoToken extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message('The form_test_validate_no_token form has been submitted successfully.');
+    $this->messenger()->addStatus('The form_test_validate_no_token form has been submitted successfully.');
   }
 
 }

@@ -369,10 +369,10 @@ class MediaTypeForm extends EntityForm {
 
     $t_args = ['%name' => $media_type->label()];
     if ($status === SAVED_UPDATED) {
-      drupal_set_message($this->t('The media type %name has been updated.', $t_args));
+      $this->messenger()->addStatus($this->t('The media type %name has been updated.', $t_args));
     }
     elseif ($status === SAVED_NEW) {
-      drupal_set_message($this->t('The media type %name has been added.', $t_args));
+      $this->messenger()->addStatus($this->t('The media type %name has been added.', $t_args));
       $this->logger('media')->notice('Added media type %name.', $t_args);
     }
 

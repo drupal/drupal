@@ -285,11 +285,11 @@ class NodeForm extends ContentEntityForm {
 
     if ($insert) {
       $this->logger('content')->notice('@type: added %title.', $context);
-      drupal_set_message(t('@type %title has been created.', $t_args));
+      $this->messenger()->addStatus($this->t('@type %title has been created.', $t_args));
     }
     else {
       $this->logger('content')->notice('@type: updated %title.', $context);
-      drupal_set_message(t('@type %title has been updated.', $t_args));
+      $this->messenger()->addStatus($this->t('@type %title has been updated.', $t_args));
     }
 
     if ($node->id()) {
@@ -312,7 +312,7 @@ class NodeForm extends ContentEntityForm {
     else {
       // In the unlikely case something went wrong on save, the node will be
       // rebuilt and node form redisplayed the same way as in preview.
-      drupal_set_message(t('The post could not be saved.'), 'error');
+      $this->messenger()->addError($this->t('The post could not be saved.'));
       $form_state->setRebuild();
     }
   }

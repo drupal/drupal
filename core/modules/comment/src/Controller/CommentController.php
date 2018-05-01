@@ -85,7 +85,7 @@ class CommentController extends ControllerBase {
     $comment->setPublished(TRUE);
     $comment->save();
 
-    drupal_set_message($this->t('Comment approved.'));
+    $this->messenger()->addStatus($this->t('Comment approved.'));
     $permalink_uri = $comment->permalink();
     $permalink_uri->setAbsolute();
     return new RedirectResponse($permalink_uri->toString());

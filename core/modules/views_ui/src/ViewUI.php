@@ -790,7 +790,7 @@ class ViewUI implements ViewEntityInterface {
     else {
       foreach ($errors as $display_errors) {
         foreach ($display_errors as $error) {
-          drupal_set_message($error, 'error');
+          \Drupal::messenger()->addError($error);
         }
       }
       $preview = ['#markup' => t('Unable to preview due to validation errors.')];
@@ -859,7 +859,7 @@ class ViewUI implements ViewEntityInterface {
    */
   public function cacheSet() {
     if ($this->isLocked()) {
-      drupal_set_message(t('Changes cannot be made to a locked view.'), 'error');
+      \Drupal::messenger()->addError(t('Changes cannot be made to a locked view.'));
       return;
     }
 

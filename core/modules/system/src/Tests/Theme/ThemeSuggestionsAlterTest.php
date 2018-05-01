@@ -166,7 +166,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
     $this->resetAll();
 
     // Send two requests so that we get all the messages we've set via
-    // drupal_set_message().
+    // \Drupal\Core\Messenger\MessengerInterface::addStatus().
     $this->drupalGet('theme-test/suggestion-alter');
     // Ensure that the order is first by extension, then for a given extension,
     // the hook-specific one after the generic one.

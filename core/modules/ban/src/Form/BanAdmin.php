@@ -120,7 +120,7 @@ class BanAdmin extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $ip = trim($form_state->getValue('ip'));
     $this->ipManager->banIp($ip);
-    drupal_set_message($this->t('The IP address %ip has been banned.', ['%ip' => $ip]));
+    $this->messenger()->addStatus($this->t('The IP address %ip has been banned.', ['%ip' => $ip]));
     $form_state->setRedirect('ban.admin_page');
   }
 

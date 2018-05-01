@@ -188,10 +188,10 @@ class SwitchShortcutSet extends FormBase {
       if ($account_is_user) {
         // Only administrators can create new shortcut sets, so we know they have
         // access to switch back.
-        drupal_set_message($this->t('You are now using the new %set_name shortcut set. You can edit it from this page or <a href=":switch-url">switch back to a different one.</a>', $replacements));
+        $this->messenger()->addStatus($this->t('You are now using the new %set_name shortcut set. You can edit it from this page or <a href=":switch-url">switch back to a different one.</a>', $replacements));
       }
       else {
-        drupal_set_message($this->t('%user is now using a new shortcut set called %set_name. You can edit it from this page.', $replacements));
+        $this->messenger()->addStatus($this->t('%user is now using a new shortcut set called %set_name. You can edit it from this page.', $replacements));
       }
       $form_state->setRedirect(
         'entity.shortcut_set.customize_form',
@@ -206,7 +206,7 @@ class SwitchShortcutSet extends FormBase {
         '%user' => $this->user->getDisplayName(),
         '%set_name' => $set->label(),
       ];
-      drupal_set_message($account_is_user ? $this->t('You are now using the %set_name shortcut set.', $replacements) : $this->t('%user is now using the %set_name shortcut set.', $replacements));
+      $this->messenger()->addStatus($account_is_user ? $this->t('You are now using the %set_name shortcut set.', $replacements) : $this->t('%user is now using the %set_name shortcut set.', $replacements));
     }
 
     // Assign the shortcut set to the provided user account.

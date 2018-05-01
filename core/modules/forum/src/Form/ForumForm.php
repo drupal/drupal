@@ -82,13 +82,13 @@ class ForumForm extends TermForm {
     $view_link = $term->link($term->getName());
     switch ($status) {
       case SAVED_NEW:
-        drupal_set_message($this->t('Created new @type %term.', ['%term' => $view_link, '@type' => $this->forumFormType]));
+        $this->messenger()->addStatus($this->t('Created new @type %term.', ['%term' => $view_link, '@type' => $this->forumFormType]));
         $this->logger('forum')->notice('Created new @type %term.', ['%term' => $term->getName(), '@type' => $this->forumFormType, 'link' => $link]);
         $form_state->setValue('tid', $term->id());
         break;
 
       case SAVED_UPDATED:
-        drupal_set_message($this->t('The @type %term has been updated.', ['%term' => $term->getName(), '@type' => $this->forumFormType]));
+        $this->messenger()->addStatus($this->t('The @type %term has been updated.', ['%term' => $term->getName(), '@type' => $this->forumFormType]));
         $this->logger('forum')->notice('Updated @type %term.', ['%term' => $term->getName(), '@type' => $this->forumFormType, 'link' => $link]);
         break;
     }

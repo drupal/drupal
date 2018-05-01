@@ -82,7 +82,7 @@ class VocabularyResetForm extends EntityConfirmFormBase {
     parent::submitForm($form, $form_state);
     $this->termStorage->resetWeights($this->entity->id());
 
-    drupal_set_message($this->t('Reset vocabulary %name to alphabetical order.', ['%name' => $this->entity->label()]));
+    $this->messenger()->addStatus($this->t('Reset vocabulary %name to alphabetical order.', ['%name' => $this->entity->label()]));
     $this->logger('taxonomy')->notice('Reset vocabulary %name to alphabetical order.', ['%name' => $this->entity->label()]);
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

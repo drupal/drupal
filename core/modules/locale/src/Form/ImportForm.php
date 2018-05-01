@@ -175,7 +175,7 @@ class ImportForm extends FormBase {
     if (empty($language)) {
       $language = ConfigurableLanguage::createFromLangcode($form_state->getValue('langcode'));
       $language->save();
-      drupal_set_message($this->t('The language %language has been created.', ['%language' => $this->t($language->label())]));
+      $this->messenger()->addStatus($this->t('The language %language has been created.', ['%language' => $this->t($language->label())]));
     }
     $options = array_merge(_locale_translation_default_update_options(), [
       'langcode' => $form_state->getValue('langcode'),

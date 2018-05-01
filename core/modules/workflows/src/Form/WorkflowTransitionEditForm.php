@@ -198,7 +198,7 @@ class WorkflowTransitionEditForm extends EntityForm {
     }
 
     $workflow->save();
-    drupal_set_message($this->t('Saved %label transition.', [
+    $this->messenger()->addStatus($this->t('Saved %label transition.', [
       '%label' => $workflow->getTypePlugin()->getTransition($this->transitionId)->label(),
     ]));
     $form_state->setRedirectUrl($workflow->toUrl('edit-form'));

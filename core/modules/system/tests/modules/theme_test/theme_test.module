@@ -178,14 +178,14 @@ function theme_test_theme_suggestions_theme_test_suggestion_provided(array $vari
  * Implements hook_theme_suggestions_alter().
  */
 function theme_test_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
-  drupal_set_message(__FUNCTION__ . '() executed.');
+  \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
 }
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
 function theme_test_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables) {
-  drupal_set_message(__FUNCTION__ . '() executed.');
+  \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
 }
 
 /**

@@ -153,7 +153,7 @@ class EntityModerationForm extends FormBase {
     }
     $entity->save();
 
-    drupal_set_message($this->t('The moderation state has been updated.'));
+    $this->messenger()->addStatus($this->t('The moderation state has been updated.'));
 
     $new_state = $this->moderationInfo->getWorkflowForEntity($entity)->getTypePlugin()->getState($new_state);
     // The page we're on likely won't be visible if we just set the entity to

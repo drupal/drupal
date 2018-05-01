@@ -65,7 +65,7 @@ class EntityTestForm extends ContentEntityForm {
       else {
         $message = t('%entity_type @id has been updated.', ['@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()]);
       }
-      drupal_set_message($message);
+      $this->messenger()->addStatus($message);
 
       if ($entity->id()) {
         $entity_type = $entity->getEntityTypeId();
@@ -76,7 +76,7 @@ class EntityTestForm extends ContentEntityForm {
       }
       else {
         // Error on save.
-        drupal_set_message(t('The entity could not be saved.'), 'error');
+        $this->messenger()->addError($this->t('The entity could not be saved.'));
         $form_state->setRebuild();
       }
     }

@@ -58,10 +58,10 @@ class CronController extends ControllerBase {
    */
   public function runManually() {
     if ($this->cron->run()) {
-      drupal_set_message($this->t('Cron ran successfully.'));
+      $this->messenger()->addStatus($this->t('Cron ran successfully.'));
     }
     else {
-      drupal_set_message($this->t('Cron run failed.'), 'error');
+      $this->messenger()->addError($this->t('Cron run failed.'));
     }
 
     return $this->redirect('system.status');

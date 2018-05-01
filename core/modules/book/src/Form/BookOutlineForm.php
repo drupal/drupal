@@ -113,7 +113,7 @@ class BookOutlineForm extends ContentEntityForm {
     );
     $book_link = $form_state->getValue('book');
     if (!$book_link['bid']) {
-      drupal_set_message($this->t('No changes were made'));
+      $this->messenger()->addStatus($this->t('No changes were made'));
       return;
     }
 
@@ -121,15 +121,15 @@ class BookOutlineForm extends ContentEntityForm {
     if ($this->bookManager->updateOutline($this->entity)) {
       if (isset($this->entity->book['parent_mismatch']) && $this->entity->book['parent_mismatch']) {
         // This will usually only happen when JS is disabled.
-        drupal_set_message($this->t('The post has been added to the selected book. You may now position it relative to other pages.'));
+        $this->messenger()->addStatus($this->t('The post has been added to the selected book. You may now position it relative to other pages.'));
         $form_state->setRedirectUrl($this->entity->urlInfo('book-outline-form'));
       }
       else {
-        drupal_set_message($this->t('The book outline has been updated.'));
+        $this->messenger()->addStatus($this->t('The book outline has been updated.'));
       }
     }
     else {
-      drupal_set_message($this->t('There was an error adding the post to the book.'), 'error');
+      $this->messenger()->addError($this->t('There was an error adding the post to the book.'));
     }
   }
 

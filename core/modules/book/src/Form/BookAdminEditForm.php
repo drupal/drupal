@@ -127,7 +127,7 @@ class BookAdminEditForm extends FormBase {
       }
     }
 
-    drupal_set_message($this->t('Updated book %title.', ['%title' => $form['#node']->label()]));
+    $this->messenger()->addStatus($this->t('Updated book %title.', ['%title' => $form['#node']->label()]));
   }
 
   /**

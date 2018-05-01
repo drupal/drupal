@@ -985,7 +985,7 @@ abstract class TestBase {
 
     TestServiceProvider::$currentTest = NULL;
     // Clear out the error messages and restore error handler.
-    drupal_get_messages();
+    \Drupal::messenger()->deleteAll();
     restore_error_handler();
   }
 

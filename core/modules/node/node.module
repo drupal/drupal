@@ -104,7 +104,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
     else {
       $message = t('The content access permissions need to be rebuilt. <a href=":node_access_rebuild">Rebuild permissions</a>.', [':node_access_rebuild' => \Drupal::url('node.configure_rebuild_confirm')]);
     }
-    drupal_set_message($message, 'error');
+    \Drupal::messenger()->addError($message);
   }
 
   switch ($route_name) {
@@ -1221,7 +1221,7 @@ function node_access_rebuild($batch_mode = FALSE) {
   }
 
   if (!isset($batch)) {
-    drupal_set_message(t('Content permissions have been rebuilt.'));
+    \Drupal::messenger()->addStatus(t('Content permissions have been rebuilt.'));
     node_access_needs_rebuild(FALSE);
   }
 }
@@ -1294,11 +1294,11 @@ function _node_access_rebuild_batch_operation(&$context) {
  */
 function _node_access_rebuild_batch_finished($success, $results, $operations) {
   if ($success) {
-    drupal_set_message(t('The content access permissions have been rebuilt.'));
+    \Drupal::messenger()->addStatus(t('The content access permissions have been rebuilt.'));
     node_access_needs_rebuild(FALSE);
   }
   else {
-    drupal_set_message(t('The content access permissions have not been properly rebuilt.'), 'error');
+    \Drupal::messenger()->addError(t('The content access permissions have not been properly rebuilt.'));
   }
 }
 

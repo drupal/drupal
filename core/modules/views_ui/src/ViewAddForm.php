@@ -184,12 +184,12 @@ class ViewAddForm extends ViewFormBase {
     }
     // @todo Figure out whether it really makes sense to throw and catch exceptions on the wizard.
     catch (WizardException $e) {
-      drupal_set_message($e->getMessage(), 'error');
+      $this->messenger()->addError($e->getMessage());
       $form_state->setRedirect('entity.view.collection');
       return;
     }
     $this->entity->save();
-    drupal_set_message($this->t('The view %name has been saved.', ['%name' => $form_state->getValue('label')]));
+    $this->messenger()->addStatus($this->t('The view %name has been saved.', ['%name' => $form_state->getValue('label')]));
     $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
   }
 

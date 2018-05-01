@@ -53,17 +53,17 @@ function update_manager_download_batch_finished($success, $results) {
       '#title' => t('Downloading updates failed:'),
       '#items' => $results['errors'],
     ];
-    drupal_set_message(\Drupal::service('renderer')->render($item_list), 'error');
+    \Drupal::messenger()->addError(\Drupal::service('renderer')->render($item_list));
   }
   elseif ($success) {
-    drupal_set_message(t('Updates downloaded successfully.'));
+    \Drupal::messenger()->addStatus(t('Updates downloaded successfully.'));
     $_SESSION['update_manager_update_projects'] = $results['projects'];
     return new RedirectResponse(\Drupal::url('update.confirmation_page', [], ['absolute' => TRUE]));
   }
   else {
     // Ideally we're catching all Exceptions, so they should never see this,
     // but just in case, we have to tell them something.
-    drupal_set_message(t('Fatal error trying to download.'), 'error');
+    \Drupal::messenger()->addError(t('Fatal error trying to download.'));
   }
 }
 

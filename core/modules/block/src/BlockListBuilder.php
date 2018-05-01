@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -57,6 +58,13 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   protected $limit = FALSE;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a new BlockListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -68,11 +76,12 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, MessengerInterface $messenger) {
     parent::__construct($entity_type, $storage);
 
     $this->themeManager = $theme_manager;
     $this->formBuilder = $form_builder;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -83,7 +92,8 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       $entity_type,
       $container->get('entity.manager')->getStorage($entity_type->id()),
       $container->get('theme.manager'),
-      $container->get('form_builder')
+      $container->get('form_builder'),
+      $container->get('messenger')
     );
   }
 
@@ -367,7 +377,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       $entity->setRegion($entity_values['region']);
       $entity->save();
     }
-    drupal_set_message(t('The block settings have been updated.'));
+    $this->messenger->addStatus($this->t('The block settings have been updated.'));
 
     // Remove any previously set block placement.
     $this->request->query->remove('block-placement');

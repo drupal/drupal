@@ -53,7 +53,7 @@ class BlockController extends ControllerBase {
    */
   public function performOperation(BlockInterface $block, $op) {
     $block->$op()->save();
-    drupal_set_message($this->t('The block settings have been updated.'));
+    $this->messenger()->addStatus($this->t('The block settings have been updated.'));
     return $this->redirect('block.admin_display');
   }
 

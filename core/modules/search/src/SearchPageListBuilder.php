@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -43,6 +44,13 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   protected $searchManager;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a new SearchPageListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -53,11 +61,14 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    *   The search plugin manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, SearchPluginManager $search_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, SearchPluginManager $search_manager, ConfigFactoryInterface $config_factory, MessengerInterface $messenger) {
     parent::__construct($entity_type, $storage);
     $this->configFactory = $config_factory;
     $this->searchManager = $search_manager;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -68,7 +79,8 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       $entity_type,
       $container->get('entity.manager')->getStorage($entity_type->id()),
       $container->get('plugin.manager.search'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('messenger')
     );
   }
 
@@ -333,7 +345,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       $search_settings->set('index.overlap_cjk', $form_state->getValue('overlap_cjk'));
       // Specifically mark items in the default index for reindexing, since
       // these settings are used in the search_index() function.
-      drupal_set_message($this->t('The default search index will be rebuilt.'));
+      $this->messenger->addStatus($this->t('The default search index will be rebuilt.'));
       search_mark_for_reindex();
     }
 
@@ -342,7 +354,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       ->set('logging', $form_state->getValue('logging'))
       ->save();
 
-    drupal_set_message($this->t('The configuration options have been saved.'));
+    $this->messenger->addStatus($this->t('The configuration options have been saved.'));
   }
 
   /**

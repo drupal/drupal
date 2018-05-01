@@ -370,7 +370,7 @@ class FieldStorageAddForm extends FormBase {
       }
       catch (\Exception $e) {
         $error = TRUE;
-        drupal_set_message($this->t('There was a problem creating field %label: @message', ['%label' => $values['label'], '@message' => $e->getMessage()]), 'error');
+        $this->messenger()->addError($this->t('There was a problem creating field %label: @message', ['%label' => $values['label'], '@message' => $e->getMessage()]));
       }
     }
 
@@ -401,7 +401,7 @@ class FieldStorageAddForm extends FormBase {
       }
       catch (\Exception $e) {
         $error = TRUE;
-        drupal_set_message($this->t('There was a problem creating field %label: @message', ['%label' => $values['label'], '@message' => $e->getMessage()]), 'error');
+        $this->messenger()->addError($this->t('There was a problem creating field %label: @message', ['%label' => $values['label'], '@message' => $e->getMessage()]));
       }
     }
 
@@ -411,7 +411,7 @@ class FieldStorageAddForm extends FormBase {
       $form_state->setRedirectUrl(FieldUI::getNextDestination($destinations, $form_state));
     }
     elseif (!$error) {
-      drupal_set_message($this->t('Your settings have been saved.'));
+      $this->messenger()->addStatus($this->t('Your settings have been saved.'));
     }
   }
 

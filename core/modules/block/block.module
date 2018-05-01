@@ -145,7 +145,11 @@ function block_rebuild() {
         // Disable blocks in invalid regions.
         if (!isset($regions[$block->getRegion()])) {
           if ($block->status()) {
-            drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block_id, '%region' => $block->getRegion()]), 'warning');
+            \Drupal::messenger()
+              ->addWarning(t('The block %info was assigned to the invalid region %region and has been disabled.', [
+                '%info' => $block_id,
+                '%region' => $block->getRegion(),
+              ]));
           }
           $block
             ->setRegion(system_default_region($theme))

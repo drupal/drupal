@@ -129,7 +129,7 @@ abstract class DateFormatFormBase extends EntityForm {
     $pattern = trim($form_state->getValue('date_format_pattern'));
     foreach ($this->dateFormatStorage->loadMultiple() as $format) {
       if ($format->getPattern() == $pattern && ($format->id() == $this->entity->id())) {
-        drupal_set_message(t('The existing format/name combination has not been altered.'));
+        $this->messenger()->addStatus($this->t('The existing format/name combination has not been altered.'));
         continue;
       }
     }
@@ -149,10 +149,10 @@ abstract class DateFormatFormBase extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $status = $this->entity->save();
     if ($status == SAVED_UPDATED) {
-      drupal_set_message(t('Custom date format updated.'));
+      $this->messenger()->addStatus($this->t('Custom date format updated.'));
     }
     else {
-      drupal_set_message(t('Custom date format added.'));
+      $this->messenger()->addStatus($this->t('Custom date format added.'));
     }
     $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
   }

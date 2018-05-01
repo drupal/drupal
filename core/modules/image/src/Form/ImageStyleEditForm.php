@@ -231,7 +231,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       $effect_id = $this->entity->addImageEffect($effect);
       $this->entity->save();
       if (!empty($effect_id)) {
-        drupal_set_message($this->t('The image effect was successfully applied.'));
+        $this->messenger()->addStatus($this->t('The image effect was successfully applied.'));
       }
     }
   }
@@ -254,7 +254,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
    */
   public function save(array $form, FormStateInterface $form_state) {
     parent::save($form, $form_state);
-    drupal_set_message($this->t('Changes to the style have been saved.'));
+    $this->messenger()->addStatus($this->t('Changes to the style have been saved.'));
   }
 
   /**

@@ -450,30 +450,28 @@ class ModulesListForm extends FormBase {
       try {
         $this->moduleInstaller->install(array_keys($modules['install']));
         $module_names = array_values($modules['install']);
-        drupal_set_message($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
+        $this->messenger()->addStatus($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
           '%name' => $module_names[0],
           '%names' => implode(', ', $module_names),
         ]));
       }
       catch (PreExistingConfigException $e) {
         $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
-        drupal_set_message(
+        $this->messenger()->addError(
           $this->formatPlural(
             count($config_objects),
             'Unable to install @extension, %config_names already exists in active configuration.',
             'Unable to install @extension, %config_names already exist in active configuration.',
             [
               '%config_names' => implode(', ', $config_objects),
-              '@extension' => $modules['install'][$e->getExtension()]
-            ]),
-          'error'
+              '@extension' => $modules['install'][$e->getExtension()],
+            ])
         );
         return;
       }
       catch (UnmetDependenciesException $e) {
-        drupal_set_message(
-          $e->getTranslatedMessage($this->getStringTranslation(), $modules['install'][$e->getExtension()]),
-          'error'
+        $this->messenger()->addError(
+          $e->getTranslatedMessage($this->getStringTranslation(), $modules['install'][$e->getExtension()])
         );
         return;
       }

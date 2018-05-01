@@ -5,6 +5,7 @@ namespace Drupal\action\Plugin\Action;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -37,6 +38,13 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
   protected $renderer;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a MessageAction object.
    *
    * @param array $configuration
@@ -49,19 +57,22 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
    *   The token service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, RendererInterface $renderer) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, RendererInterface $renderer, MessengerInterface $messenger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->token = $token;
     $this->renderer = $renderer;
+    $this->messenger = $messenger;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('token'), $container->get('renderer'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('token'), $container->get('renderer'), $container->get('messenger'));
   }
 
   /**
@@ -77,7 +88,7 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
     ];
 
     // @todo Fix in https://www.drupal.org/node/2577827
-    drupal_set_message($this->renderer->renderPlain($build));
+    $this->messenger->addStatus($this->renderer->renderPlain($build));
   }
 
   /**

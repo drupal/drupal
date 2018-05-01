@@ -27,7 +27,7 @@ class ModulesListExperimentalConfirmForm extends ModulesListConfirmForm {
    * {@inheritdoc}
    */
   protected function buildMessageList() {
-    drupal_set_message($this->t('<a href=":url">Experimental modules</a> are provided for testing purposes only. Use at your own risk.', [':url' => 'https://www.drupal.org/core/experimental']), 'warning');
+    $this->messenger()->addWarning($this->t('<a href=":url">Experimental modules</a> are provided for testing purposes only. Use at your own risk.', [':url' => 'https://www.drupal.org/core/experimental']));
 
     $items = parent::buildMessageList();
     // Add the list of experimental modules after any other messages.

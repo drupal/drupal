@@ -83,10 +83,10 @@ class FormTestClickedButtonForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($triggering_element = $form_state->getTriggeringElement()) {
-      drupal_set_message(t('The clicked button is %name.', ['%name' => $triggering_element['#name']]));
+      $this->messenger()->addStatus(t('The clicked button is %name.', ['%name' => $triggering_element['#name']]));
     }
     else {
-      drupal_set_message('There is no clicked button.');
+      $this->messenger()->addStatus('There is no clicked button.');
     }
   }
 
@@ -94,7 +94,7 @@ class FormTestClickedButtonForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message('Submit handler for form_test_clicked_button executed.');
+    $this->messenger()->addStatus('Submit handler for form_test_clicked_button executed.');
   }
 
 }

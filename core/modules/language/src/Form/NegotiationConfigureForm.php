@@ -204,7 +204,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
     $this->blockManager->clearCachedDefinitions();
 
     $form_state->setRedirect('language.negotiation');
-    drupal_set_message($this->t('Language detection configuration saved.'));
+    $this->messenger()->addStatus($this->t('Language detection configuration saved.'));
   }
 
   /**

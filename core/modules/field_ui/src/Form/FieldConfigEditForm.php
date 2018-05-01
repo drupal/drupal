@@ -177,7 +177,7 @@ class FieldConfigEditForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $this->entity->save();
 
-    drupal_set_message($this->t('Saved %label configuration.', ['%label' => $this->entity->getLabel()]));
+    $this->messenger()->addStatus($this->t('Saved %label configuration.', ['%label' => $this->entity->getLabel()]));
 
     $request = $this->getRequest();
     if (($destinations = $request->query->get('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {

@@ -151,7 +151,7 @@ class FormTest extends BrowserTestBase {
       }
     }
     // Clear the expected form error messages so they don't appear as exceptions.
-    drupal_get_messages();
+    \Drupal::messenger()->deleteAll();
   }
 
   /**

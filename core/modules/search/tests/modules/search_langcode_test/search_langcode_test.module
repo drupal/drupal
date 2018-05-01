@@ -19,13 +19,13 @@ function search_langcode_test_search_preprocess($text, $langcode = NULL) {
     // Prints the langcode for testPreprocessLangcode() and adds some
     // extra text.
     else {
-      drupal_set_message('Langcode Preprocess Test: ' . $langcode);
+      \Drupal::messenger()->addStatus('Langcode Preprocess Test: ' . $langcode);
       $text .= 'Additional text';
     }
   }
   // Prints the langcode for testPreprocessLangcode().
   elseif (isset($langcode)) {
-    drupal_set_message('Langcode Preprocess Test: ' . $langcode);
+    \Drupal::messenger()->addStatus('Langcode Preprocess Test: ' . $langcode);
 
     // Preprocessing for the excerpt test.
     if ($langcode == 'ex') {

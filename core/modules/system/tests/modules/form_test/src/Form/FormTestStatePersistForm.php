@@ -42,7 +42,7 @@ class FormTestStatePersistForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message($form_state->get('value'));
+    $this->messenger()->addStatus($form_state->get('value'));
     $form_state->setRebuild();
   }
 

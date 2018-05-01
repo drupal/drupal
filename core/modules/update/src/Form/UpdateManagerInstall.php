@@ -139,7 +139,7 @@ class UpdateManagerInstall extends FormBase {
     if ($form_state->getValue('project_url')) {
       $local_cache = update_manager_file_get($form_state->getValue('project_url'));
       if (!$local_cache) {
-        drupal_set_message($this->t('Unable to retrieve Drupal project from %url.', ['%url' => $form_state->getValue('project_url')]), 'error');
+        $this->messenger()->addError($this->t('Unable to retrieve Drupal project from %url.', ['%url' => $form_state->getValue('project_url')]));
         return;
       }
     }
@@ -147,7 +147,7 @@ class UpdateManagerInstall extends FormBase {
       $validators = ['file_validate_extensions' => [archiver_get_extensions()]];
       if (!($finfo = file_save_upload('project_upload', $validators, NULL, 0, FILE_EXISTS_REPLACE))) {
         // Failed to upload the file. file_save_upload() calls
-        // drupal_set_message() on failure.
+        // \Drupal\Core\Messenger\MessengerInterface::addError() on failure.
         return;
       }
       $local_cache = $finfo->getFileUri();
@@ -158,13 +158,13 @@ class UpdateManagerInstall extends FormBase {
       $archive = update_manager_archive_extract($local_cache, $directory);
     }
     catch (\Exception $e) {
-      drupal_set_message($e->getMessage(), 'error');
+      $this->messenger()->addError($e->getMessage());
       return;
     }
 
     $files = $archive->listContents();
     if (!$files) {
-      drupal_set_message($this->t('Provided archive contains no files.'), 'error');
+      $this->messenger()->addError($this->t('Provided archive contains no files.'));
       return;
     }
 
@@ -175,12 +175,12 @@ class UpdateManagerInstall extends FormBase {
 
     $archive_errors = $this->moduleHandler->invokeAll('verify_update_archive', [$project, $local_cache, $directory]);
     if (!empty($archive_errors)) {
-      drupal_set_message(array_shift($archive_errors), 'error');
+      $this->messenger()->addError(array_shift($archive_errors));
       // @todo: Fix me in D8: We need a way to set multiple errors on the same
       // form element and have all of them appear!
       if (!empty($archive_errors)) {
         foreach ($archive_errors as $error) {
-          drupal_set_message($error, 'error');
+          $this->messenger()->addError($error);
         }
       }
       return;
@@ -194,7 +194,7 @@ class UpdateManagerInstall extends FormBase {
       $updater = Updater::factory($project_location, $this->root);
     }
     catch (\Exception $e) {
-      drupal_set_message($e->getMessage(), 'error');
+      $this->messenger()->addError($e->getMessage());
       return;
     }
 
@@ -202,16 +202,16 @@ class UpdateManagerInstall extends FormBase {
       $project_title = Updater::getProjectTitle($project_location);
     }
     catch (\Exception $e) {
-      drupal_set_message($e->getMessage(), 'error');
+      $this->messenger()->addError($e->getMessage());
       return;
     }
 
     if (!$project_title) {
-      drupal_set_message($this->t('Unable to determine %project name.', ['%project' => $project]), 'error');
+      $this->messenger()->addError($this->t('Unable to determine %project name.', ['%project' => $project]));
     }
 
     if ($updater->isInstalled()) {
-      drupal_set_message($this->t('%project is already installed.', ['%project' => $project_title]), 'error');
+      $this->messenger()->addError($this->t('%project is already installed.', ['%project' => $project_title]));
       return;
     }
 

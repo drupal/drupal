@@ -3,12 +3,15 @@
 namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Render\Element;
 
 /**
  * Handles form errors.
  */
 class FormErrorHandler implements FormErrorHandlerInterface {
+
+  use MessengerTrait;
 
   /**
    * {@inheritdoc}
@@ -39,7 +42,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
 
     // Loop through all form errors and set an error message.
     foreach ($errors as $error) {
-      $this->drupalSetMessage($error, 'error');
+      $this->messenger()->addMessage($error, 'error');
     }
   }
 
@@ -54,6 +57,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
    * Grouping example:
    * Assume you have a 'street' element somewhere in a form, which is displayed
    * in a details element 'address'. It might be:
+   *
    * @code
    * $form['street'] = [
    *   '#type' => 'textfield',
@@ -158,15 +162,6 @@ class FormErrorHandler implements FormErrorHandlerInterface {
 
     // Store the errors for this element on the element directly.
     $elements['#errors'] = $form_state->getError($elements);
-  }
-
-  /**
-   * Wraps drupal_set_message().
-   *
-   * @codeCoverageIgnore
-   */
-  protected function drupalSetMessage($message = NULL, $type = 'status', $repeat = FALSE) {
-    drupal_set_message($message, $type, $repeat);
   }
 
 }

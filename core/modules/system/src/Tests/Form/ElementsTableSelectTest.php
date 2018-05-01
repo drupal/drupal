@@ -248,7 +248,7 @@ class ElementsTableSelectTest extends WebTestBase {
     $errors = $form_state->getErrors();
 
     // Clear errors and messages.
-    drupal_get_messages();
+    \Drupal::messenger()->deleteAll();
     $form_state->clearErrors();
 
     // Return the processed form together with form_state and errors

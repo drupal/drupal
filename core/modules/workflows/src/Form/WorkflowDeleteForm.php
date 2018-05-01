@@ -53,7 +53,7 @@ class WorkflowDeleteForm extends EntityConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
 
-    drupal_set_message($this->t(
+    $this->messenger()->addStatus($this->t(
       'Workflow %label deleted.',
       ['%label' => $this->entity->label()]
     ));

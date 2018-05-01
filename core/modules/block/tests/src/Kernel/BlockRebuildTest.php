@@ -47,7 +47,8 @@ class BlockRebuildTest extends KernelTestBase {
    */
   public function testRebuildNoBlocks() {
     block_rebuild();
-    $messages = drupal_get_messages();
+    $messages = \Drupal::messenger()->all();
+    \Drupal::messenger()->deleteAll();
     $this->assertEquals([], $messages);
   }
 
@@ -58,7 +59,8 @@ class BlockRebuildTest extends KernelTestBase {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
 
     block_rebuild();
-    $messages = drupal_get_messages();
+    $messages = \Drupal::messenger()->all();
+    \Drupal::messenger()->deleteAll();
     $this->assertEquals([], $messages);
   }
 
@@ -89,7 +91,8 @@ class BlockRebuildTest extends KernelTestBase {
     $block1 = Block::load($block1->id());
     $block2 = Block::load($block2->id());
 
-    $messages = drupal_get_messages();
+    $messages = \Drupal::messenger()->all();
+    \Drupal::messenger()->deleteAll();
     $expected = ['warning' => [new TranslatableMarkup('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block1->id(), '%region' => 'INVALID'])]];
     $this->assertEquals($expected, $messages);
 

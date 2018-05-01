@@ -8,6 +8,7 @@
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -161,7 +162,7 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
     else {
       \Drupal::logger('file')->notice('File %file could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', ['%file' => $source->getFileUri(), '%destination' => $destination]);
     }
-    drupal_set_message(t('The specified file %file could not be copied because the destination is invalid. More information is available in the system log.', ['%file' => $source->getFileUri()]), 'error');
+    \Drupal::messenger()->addError(t('The specified file %file could not be copied because the destination is invalid. More information is available in the system log.', ['%file' => $source->getFileUri()]));
     return FALSE;
   }
 
@@ -236,7 +237,7 @@ function file_move(FileInterface $source, $destination = NULL, $replace = FILE_E
     else {
       \Drupal::logger('file')->notice('File %file could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', ['%file' => $source->getFileUri(), '%destination' => $destination]);
     }
-    drupal_set_message(t('The specified file %file could not be moved because the destination is invalid. More information is available in the system log.', ['%file' => $source->getFileUri()]), 'error');
+    \Drupal::messenger()->addError(t('The specified file %file could not be moved because the destination is invalid. More information is available in the system log.', ['%file' => $source->getFileUri()]));
     return FALSE;
   }
 
@@ -484,7 +485,7 @@ function file_validate_image_resolution(FileInterface $file, $maximum_dimensions
                 '%new_height' => $image->getHeight(),
               ]);
           }
-          drupal_set_message($message);
+          \Drupal::messenger()->addStatus($message);
         }
         else {
           $errors[] = t('The image exceeds the maximum allowed dimensions and an attempt to resize it failed.');
@@ -552,7 +553,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
   }
   if (!file_valid_uri($destination)) {
     \Drupal::logger('file')->notice('The data could not be saved because the destination %destination is invalid. This may be caused by improper use of file_save_data() or a missing stream wrapper.', ['%destination' => $destination]);
-    drupal_set_message(t('The data could not be saved because the destination is invalid. More information is available in the system log.'), 'error');
+    \Drupal::messenger()->addError(t('The data could not be saved because the destination is invalid. More information is available in the system log.'));
     return FALSE;
   }
 
@@ -766,7 +767,7 @@ function file_cron() {
 function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, $replace = FILE_EXISTS_RENAME) {
   // Get all errors set before calling this method. This will also clear them
   // from $_SESSION.
-  $errors_before = drupal_get_messages('error');
+  $errors_before = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
 
   $upload_location = isset($element['#upload_location']) ? $element['#upload_location'] : FALSE;
   $upload_name = implode('_', $element['#parents']);
@@ -776,9 +777,8 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
 
   // Get new errors that are generated while trying to save the upload. This
   // will also clear them from $_SESSION.
-  $errors_new = drupal_get_messages('error');
-  if (!empty($errors_new['error'])) {
-    $errors_new = $errors_new['error'];
+  $errors_new = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
+  if (!empty($errors_new)) {
 
     if (count($errors_new) > 1) {
       // Render multiple errors into a single message.
@@ -803,9 +803,9 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
 
   // Ensure that errors set prior to calling this method are still shown to the
   // user.
-  if (!empty($errors_before['error'])) {
-    foreach ($errors_before['error'] as $error) {
-      drupal_set_message($error, 'error');
+  if (!empty($errors_before)) {
+    foreach ($errors_before as $error) {
+      \Drupal::messenger()->addError($error);
     }
   }
 
@@ -893,13 +893,13 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     switch ($file_info->getError()) {
       case UPLOAD_ERR_INI_SIZE:
       case UPLOAD_ERR_FORM_SIZE:
-        drupal_set_message(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', ['%file' => $file_info->getFilename(), '%maxsize' => format_size(file_upload_max_size())]), 'error');
+        \Drupal::messenger()->addError(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', ['%file' => $file_info->getFilename(), '%maxsize' => format_size(file_upload_max_size())]));
         $files[$i] = FALSE;
         continue;
 
       case UPLOAD_ERR_PARTIAL:
       case UPLOAD_ERR_NO_FILE:
-        drupal_set_message(t('The file %file could not be saved because the upload did not complete.', ['%file' => $file_info->getFilename()]), 'error');
+        \Drupal::messenger()->addError(t('The file %file could not be saved because the upload did not complete.', ['%file' => $file_info->getFilename()]));
         $files[$i] = FALSE;
         continue;
 
@@ -912,7 +912,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
 
         // Unknown error
       default:
-        drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', ['%file' => $file_info->getFilename()]), 'error');
+        \Drupal::messenger()->addError(t('The file %file could not be saved. An unknown error has occurred.', ['%file' => $file_info->getFilename()]));
         $files[$i] = FALSE;
         continue;
 
@@ -967,7 +967,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
       // to add it here or else the file upload will fail.
       if (!empty($extensions)) {
         $validators['file_validate_extensions'][0] .= ' txt';
-        drupal_set_message(t('For security reasons, your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]));
+        \Drupal::messenger()->addStatus(t('For security reasons, your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]));
       }
     }
 
@@ -979,7 +979,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     // Assert that the destination contains a valid stream.
     $destination_scheme = file_uri_scheme($destination);
     if (!file_stream_wrapper_valid_scheme($destination_scheme)) {
-      drupal_set_message(t('The file could not be uploaded because the destination %destination is invalid.', ['%destination' => $destination]), 'error');
+      \Drupal::messenger()->addError(t('The file could not be uploaded because the destination %destination is invalid.', ['%destination' => $destination]));
       $files[$i] = FALSE;
       continue;
     }
@@ -993,7 +993,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     // If file_destination() returns FALSE then $replace === FILE_EXISTS_ERROR and
     // there's an existing file so we need to bail.
     if ($file->destination === FALSE) {
-      drupal_set_message(t('The file %source could not be uploaded because a file by that name already exists in the destination %directory.', ['%source' => $form_field_name, '%directory' => $destination]), 'error');
+      \Drupal::messenger()->addError(t('The file %source could not be uploaded because a file by that name already exists in the destination %directory.', ['%source' => $form_field_name, '%directory' => $destination]));
       $files[$i] = FALSE;
       continue;
     }
@@ -1015,16 +1015,17 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
           '#items' => $errors,
         ],
       ];
-      // @todo Add support for render arrays in drupal_set_message()? See
-      //  https://www.drupal.org/node/2505497.
-      drupal_set_message(\Drupal::service('renderer')->renderPlain($message), 'error');
+      // @todo Add support for render arrays in
+      // \Drupal\Core\Messenger\MessengerInterface::addMessage()?
+      // @see https://www.drupal.org/node/2505497.
+      \Drupal::messenger()->addError(\Drupal::service('renderer')->renderPlain($message));
       $files[$i] = FALSE;
       continue;
     }
 
     $file->setFileUri($file->destination);
     if (!drupal_move_uploaded_file($file_info->getRealPath(), $file->getFileUri())) {
-      drupal_set_message(t('File upload error. Could not move uploaded file.'), 'error');
+      \Drupal::messenger()->addError(t('File upload error. Could not move uploaded file.'));
       \Drupal::logger('file')->notice('Upload error. Could not move uploaded file %file to destination %destination.', ['%file' => $file->getFilename(), '%destination' => $file->getFileUri()]);
       $files[$i] = FALSE;
       continue;

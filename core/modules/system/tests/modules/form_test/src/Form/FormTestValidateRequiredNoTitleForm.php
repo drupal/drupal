@@ -36,7 +36,7 @@ class FormTestValidateRequiredNoTitleForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message('The form_test_validate_required_form_no_title form was submitted successfully.');
+    $this->messenger()->addStatus('The form_test_validate_required_form_no_title form was submitted successfully.');
   }
 
 }

@@ -118,7 +118,12 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
 
     $this->logger('content')->notice('@type: deleted %title revision %revision.', ['@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()]);
     $node_type = $this->nodeTypeStorage->load($this->revision->bundle())->label();
-    drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', ['%revision-date' => format_date($this->revision->getRevisionCreationTime()), '@type' => $node_type, '%title' => $this->revision->label()]));
+    $this->messenger()
+      ->addStatus($this->t('Revision from %revision-date of @type %title has been deleted.', [
+        '%revision-date' => format_date($this->revision->getRevisionCreationTime()),
+        '@type' => $node_type,
+        '%title' => $this->revision->label(),
+      ]));
     $form_state->setRedirect(
       'entity.node.canonical',
       ['node' => $this->revision->id()]

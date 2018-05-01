@@ -3,6 +3,7 @@
 namespace Drupal\block_test\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserInterface;
 
@@ -18,6 +19,8 @@ use Drupal\user\UserInterface;
  * )
  */
 class TestContextAwareBlock extends BlockBase {
+
+  use MessengerTrait;
 
   /**
    * {@inheritdoc}
@@ -37,7 +40,7 @@ class TestContextAwareBlock extends BlockBase {
    */
   protected function blockAccess(AccountInterface $account) {
     if ($this->getContextValue('user') instanceof UserInterface) {
-      drupal_set_message('User context found.');
+      $this->messenger()->addStatus('User context found.');
     }
 
     return parent::blockAccess($account);

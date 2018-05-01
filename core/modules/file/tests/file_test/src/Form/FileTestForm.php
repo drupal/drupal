@@ -108,13 +108,13 @@ class FileTestForm implements FormInterface {
     $file = file_save_upload('file_test_upload', $validators, $destination, 0, $form_state->getValue('file_test_replace'));
     if ($file) {
       $form_state->setValue('file_test_upload', $file);
-      drupal_set_message(t('File @filepath was uploaded.', ['@filepath' => $file->getFileUri()]));
-      drupal_set_message(t('File name is @filename.', ['@filename' => $file->getFilename()]));
-      drupal_set_message(t('File MIME type is @mimetype.', ['@mimetype' => $file->getMimeType()]));
-      drupal_set_message(t('You WIN!'));
+      \Drupal::messenger()->addStatus(t('File @filepath was uploaded.', ['@filepath' => $file->getFileUri()]));
+      \Drupal::messenger()->addStatus(t('File name is @filename.', ['@filename' => $file->getFilename()]));
+      \Drupal::messenger()->addStatus(t('File MIME type is @mimetype.', ['@mimetype' => $file->getMimeType()]));
+      \Drupal::messenger()->addStatus(t('You WIN!'));
     }
     elseif ($file === FALSE) {
-      drupal_set_message(t('Epic upload FAIL!'), 'error');
+      \Drupal::messenger()->addError(t('Epic upload FAIL!'));
     }
   }
 

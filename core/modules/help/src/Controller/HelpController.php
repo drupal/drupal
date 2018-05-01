@@ -119,7 +119,7 @@ class HelpController extends ControllerBase {
 
       $info = system_get_info('module', $name);
       if ($info['package'] === 'Core (Experimental)') {
-        drupal_set_message($this->t('This module is experimental. <a href=":url">Experimental modules</a> are provided for testing purposes only. Use at your own risk.', [':url' => 'https://www.drupal.org/core/experimental']), 'warning');
+        $this->messenger()->addWarning($this->t('This module is experimental. <a href=":url">Experimental modules</a> are provided for testing purposes only. Use at your own risk.', [':url' => 'https://www.drupal.org/core/experimental']));
       }
 
       $temp = $this->moduleHandler()->invoke($name, 'help', ["help.page.$name", $this->routeMatch]);

@@ -21,7 +21,7 @@ function theme_suggestions_test_theme() {
  * Implements hook_theme_suggestions_alter().
  */
 function theme_suggestions_test_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
-  drupal_set_message(__FUNCTION__ . '() executed.');
+  \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
   if ($hook == 'theme_test_general_suggestions') {
     $suggestions[] = $hook . '__module_override';
   }
@@ -31,7 +31,7 @@ function theme_suggestions_test_theme_suggestions_alter(array &$suggestions, arr
  * Implements hook_theme_suggestions_HOOK_alter().
  */
 function theme_suggestions_test_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables) {
-  drupal_set_message(__FUNCTION__ . '() executed.');
+  \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
   $suggestions[] = 'theme_test_suggestions__' . 'module_override';
 }
 

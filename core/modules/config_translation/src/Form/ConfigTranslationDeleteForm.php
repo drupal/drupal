@@ -142,7 +142,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
       $cache_backend->deleteAll();
     }
 
-    drupal_set_message($this->t('@language translation of %label was deleted', ['%label' => $this->mapper->getTitle(), '@language' => $this->language->getName()]));
+    $this->messenger()->addStatus($this->t('@language translation of %label was deleted', ['%label' => $this->mapper->getTitle(), '@language' => $this->language->getName()]));
 
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

@@ -100,12 +100,12 @@ class BlockContentTypeForm extends BundleEntityFormBase {
     $edit_link = $this->entity->link($this->t('Edit'));
     $logger = $this->logger('block_content');
     if ($status == SAVED_UPDATED) {
-      drupal_set_message(t('Custom block type %label has been updated.', ['%label' => $block_type->label()]));
+      $this->messenger()->addStatus(t('Custom block type %label has been updated.', ['%label' => $block_type->label()]));
       $logger->notice('Custom block type %label has been updated.', ['%label' => $block_type->label(), 'link' => $edit_link]);
     }
     else {
       block_content_add_body_field($block_type->id());
-      drupal_set_message(t('Custom block type %label has been added.', ['%label' => $block_type->label()]));
+      $this->messenger()->addStatus(t('Custom block type %label has been added.', ['%label' => $block_type->label()]));
       $logger->notice('Custom block type %label has been added.', ['%label' => $block_type->label(), 'link' => $edit_link]);
     }
 

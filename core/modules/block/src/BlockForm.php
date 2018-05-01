@@ -360,7 +360,7 @@ class BlockForm extends EntityForm {
     // Save the settings of the plugin.
     $entity->save();
 
-    drupal_set_message($this->t('The block configuration has been saved.'));
+    $this->messenger()->addStatus($this->t('The block configuration has been saved.'));
     $form_state->setRedirect(
       'block.admin_display_theme',
       [

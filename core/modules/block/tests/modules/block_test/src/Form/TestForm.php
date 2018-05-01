@@ -49,7 +49,7 @@ class TestForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message($this->t('Your email address is @email', ['@email' => $form['email']['#value']]));
+    $this->messenger()->addStatus($this->t('Your email address is @email', ['@email' => $form['email']['#value']]));
   }
 
 }

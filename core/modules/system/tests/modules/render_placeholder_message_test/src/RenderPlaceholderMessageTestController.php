@@ -91,7 +91,7 @@ class RenderPlaceholderMessageTestController implements ContainerAwareInterface 
    */
   public static function setAndLogMessage($message) {
     // Set message.
-    drupal_set_message($message);
+    \Drupal::messenger()->addStatus($message);
 
     // Print which message is expected.
     return ['#markup' => '<p class="logged-message">Message: ' . $message . '</p>'];

@@ -52,7 +52,8 @@ class Analyzer {
   /**
    * Formats the analyze result into a message string.
    *
-   * This is based upon the format of drupal_set_message which uses separate
+   * This is based upon the format of
+   * \Drupal\Core\Messenger\MessengerInterface::addMessage() which uses separate
    * boxes for "ok", "warning" and "error".
    */
   public function formatMessages(array $messages) {

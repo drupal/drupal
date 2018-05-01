@@ -201,7 +201,7 @@ class WorkflowStateEditForm extends EntityForm {
     }
 
     $workflow->save();
-    drupal_set_message($this->t('Saved %label state.', [
+    $this->messenger()->addStatus($this->t('Saved %label state.', [
       '%label' => $workflow->getTypePlugin()->getState($this->stateId)->label(),
     ]));
     $form_state->setRedirectUrl($workflow->toUrl('edit-form'));

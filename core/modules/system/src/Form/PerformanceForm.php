@@ -190,7 +190,7 @@ class PerformanceForm extends ConfigFormBase {
    */
   public function submitCacheClear(array &$form, FormStateInterface $form_state) {
     drupal_flush_all_caches();
-    drupal_set_message(t('Caches cleared.'));
+    $this->messenger()->addStatus($this->t('Caches cleared.'));
   }
 
 }

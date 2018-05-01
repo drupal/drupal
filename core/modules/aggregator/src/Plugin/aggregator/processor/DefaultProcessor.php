@@ -3,15 +3,16 @@
 namespace Drupal\aggregator\Plugin\aggregator\processor;
 
 use Drupal\aggregator\Entity\Item;
+use Drupal\aggregator\FeedInterface;
 use Drupal\aggregator\ItemStorageInterface;
 use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
-use Drupal\aggregator\FeedInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -28,6 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class DefaultProcessor extends AggregatorPluginSettingsBase implements ProcessorInterface, ContainerFactoryPluginInterface {
+
   use ConfigFormBaseTrait;
   use UrlGeneratorTrait;
 
@@ -53,6 +55,13 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   protected $dateFormatter;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a DefaultProcessor object.
    *
    * @param array $configuration
@@ -67,11 +76,14 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
    *   The entity storage for feed items.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config, ItemStorageInterface $item_storage, DateFormatterInterface $date_formatter) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config, ItemStorageInterface $item_storage, DateFormatterInterface $date_formatter, MessengerInterface $messenger) {
     $this->configFactory = $config;
     $this->itemStorage = $item_storage;
     $this->dateFormatter = $date_formatter;
+    $this->messenger = $messenger;
     // @todo Refactor aggregator plugins to ConfigEntity so merging
     //   the configuration here is not needed.
     parent::__construct($configuration + $this->getConfiguration(), $plugin_id, $plugin_definition);
@@ -87,7 +99,8 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
       $plugin_definition,
       $container->get('config.factory'),
       $container->get('entity_type.manager')->getStorage('aggregator_item'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('messenger')
     );
   }
 
@@ -231,7 +244,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
       $this->itemStorage->delete($items);
     }
     // @todo This should be moved out to caller with a different message maybe.
-    drupal_set_message(t('The news items from %site have been deleted.', ['%site' => $feed->label()]));
+    $this->messenger->addStatus(t('The news items from %site have been deleted.', ['%site' => $feed->label()]));
   }
 
   /**

@@ -22,12 +22,12 @@ class FeedForm extends ContentEntityForm {
     $label = $feed->label();
     $view_link = $feed->link($label, 'canonical');
     if ($status == SAVED_UPDATED) {
-      drupal_set_message($this->t('The feed %feed has been updated.', ['%feed' => $view_link]));
+      $this->messenger()->addStatus($this->t('The feed %feed has been updated.', ['%feed' => $view_link]));
       $form_state->setRedirectUrl($feed->urlInfo('canonical'));
     }
     else {
       $this->logger('aggregator')->notice('Feed %feed added.', ['%feed' => $feed->label(), 'link' => $this->l($this->t('View'), new Url('aggregator.admin_overview'))]);
-      drupal_set_message($this->t('The feed %feed has been added.', ['%feed' => $view_link]));
+      $this->messenger()->addStatus($this->t('The feed %feed has been added.', ['%feed' => $view_link]));
     }
   }
 

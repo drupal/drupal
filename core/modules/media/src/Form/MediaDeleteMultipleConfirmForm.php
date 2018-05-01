@@ -202,7 +202,7 @@ class MediaDeleteMultipleConfirmForm extends ConfirmFormBase {
       }
 
       if ($total_count) {
-        drupal_set_message($this->formatPlural($total_count, 'Deleted 1 media item.', 'Deleted @count media items.'));
+        $this->messenger()->addStatus($this->formatPlural($total_count, 'Deleted 1 media item.', 'Deleted @count media items.'));
       }
 
       $this->tempStoreFactory->get('media_multiple_delete_confirm')->delete(\Drupal::currentUser()->id());

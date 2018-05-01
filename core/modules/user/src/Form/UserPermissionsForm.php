@@ -216,7 +216,7 @@ class UserPermissionsForm extends FormBase {
       user_role_change_permissions($role_name, (array) $form_state->getValue($role_name));
     }
 
-    drupal_set_message($this->t('The changes have been saved.'));
+    $this->messenger()->addStatus($this->t('The changes have been saved.'));
   }
 
 }

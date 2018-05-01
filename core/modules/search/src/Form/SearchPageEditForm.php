@@ -26,7 +26,7 @@ class SearchPageEditForm extends SearchPageFormBase {
   public function save(array $form, FormStateInterface $form_state) {
     parent::save($form, $form_state);
 
-    drupal_set_message($this->t('The %label search page has been updated.', ['%label' => $this->entity->label()]));
+    $this->messenger()->addStatus($this->t('The %label search page has been updated.', ['%label' => $this->entity->label()]));
   }
 
 }

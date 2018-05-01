@@ -325,7 +325,7 @@ class ViewEditForm extends ViewFormBase {
 
     $view->save();
 
-    drupal_set_message($this->t('The view %name has been saved.', ['%name' => $view->label()]));
+    $this->messenger()->addStatus($this->t('The view %name has been saved.', ['%name' => $view->label()]));
 
     // Remove this view from cache so we can edit it properly.
     $this->tempStore->delete($view->id());

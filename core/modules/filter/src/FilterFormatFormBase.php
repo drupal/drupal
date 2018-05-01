@@ -64,7 +64,7 @@ abstract class FilterFormatFormBase extends EntityForm {
       // When a filter is missing, it is replaced by the null filter. Remove it
       // here, so that saving the form will remove the missing filter.
       if ($filter instanceof FilterNull) {
-        drupal_set_message($this->t('The %filter filter is missing, and will be removed once this format is saved.', ['%filter' => $filter_id]), 'warning');
+        $this->messenger()->addWarning($this->t('The %filter filter is missing, and will be removed once this format is saved.', ['%filter' => $filter_id]));
         $filters->removeInstanceID($filter_id);
       }
     }

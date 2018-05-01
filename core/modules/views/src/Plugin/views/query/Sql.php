@@ -8,6 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
@@ -131,6 +132,13 @@ class Sql extends QueryPluginBase {
   protected $dateSql;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a Sql object.
    *
    * @param array $configuration
@@ -143,21 +151,28 @@ class Sql extends QueryPluginBase {
    *   The entity type manager.
    * @param \Drupal\views\Plugin\views\query\DateSqlInterface $date_sql
    *   The database-specific date handler.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, DateSqlInterface $date_sql) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, DateSqlInterface $date_sql, MessengerInterface $messenger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
     $this->dateSql = $date_sql;
+    $this->messenger = $messenger;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('views.date_sql')
+      $container->get('views.date_sql'),
+      $container->get('messenger')
     );
   }
 
@@ -1522,7 +1537,7 @@ class Sql extends QueryPluginBase {
       catch (DatabaseExceptionWrapper $e) {
         $view->result = [];
         if (!empty($view->live_preview)) {
-          drupal_set_message($e->getMessage(), 'error');
+          $this->messenger->addError($e->getMessage());
         }
         else {
           throw new DatabaseExceptionWrapper("Exception in {$view->storage->label()}[{$view->storage->id()}]: {$e->getMessage()}");

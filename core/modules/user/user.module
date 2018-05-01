@@ -690,7 +690,7 @@ function user_cancel($edit, $uid, $method) {
   $account = User::load($uid);
 
   if (!$account) {
-    drupal_set_message(t('The user account %id does not exist.', ['%id' => $uid]), 'error');
+    \Drupal::messenger()->addError(t('The user account %id does not exist.', ['%id' => $uid]));
     \Drupal::logger('user')->error('Attempted to cancel non-existing user account: %id.', ['%id' => $uid]);
     return;
   }
@@ -761,7 +761,7 @@ function _user_cancel($edit, $account, $method) {
       }
       $account->block();
       $account->save();
-      drupal_set_message(t('%name has been disabled.', ['%name' => $account->getDisplayName()]));
+      \Drupal::messenger()->addStatus(t('%name has been disabled.', ['%name' => $account->getDisplayName()]));
       $logger->notice('Blocked user: %name %email.', ['%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>']);
       break;
 
@@ -772,7 +772,7 @@ function _user_cancel($edit, $account, $method) {
         _user_mail_notify('status_canceled', $account);
       }
       $account->delete();
-      drupal_set_message(t('%name has been deleted.', ['%name' => $account->getDisplayName()]));
+      \Drupal::messenger()->addStatus(t('%name has been deleted.', ['%name' => $account->getDisplayName()]));
       $logger->notice('Deleted user: %name %email.', ['%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>']);
       break;
   }

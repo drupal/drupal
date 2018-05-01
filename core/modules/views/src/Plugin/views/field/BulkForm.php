@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
@@ -57,6 +58,13 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
   protected $languageManager;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a new BulkForm object.
    *
    * @param array $configuration
@@ -69,13 +77,18 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    *   The entity manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, MessengerInterface $messenger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityManager = $entity_manager;
     $this->actionStorage = $entity_manager->getStorage('action');
     $this->languageManager = $language_manager;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -87,7 +100,8 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
       $plugin_id,
       $plugin_definition,
       $container->get('entity.manager'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('messenger')
     );
   }
 
@@ -356,11 +370,11 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
 
         // Skip execution if the user did not have access.
         if (!$action->getPlugin()->access($entity, $this->view->getUser())) {
-          $this->drupalSetMessage($this->t('No access to execute %action on the @entity_type_label %entity_label.', [
+          $this->messenger->addError($this->t('No access to execute %action on the @entity_type_label %entity_label.', [
             '%action' => $action->label(),
             '@entity_type_label' => $entity->getEntityType()->getLabel(),
-            '%entity_label' => $entity->label()
-          ]), 'error');
+            '%entity_label' => $entity->label(),
+          ]));
           continue;
         }
 
@@ -382,7 +396,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
         // Don't display the message unless there are some elements affected and
         // there is no confirmation form.
         if ($count) {
-          drupal_set_message($this->formatPlural($count, '%action was applied to @count item.', '%action was applied to @count items.', [
+          $this->messenger->addStatus($this->formatPlural($count, '%action was applied to @count item.', '%action was applied to @count items.', [
             '%action' => $action->label(),
           ]));
         }
@@ -424,13 +438,6 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    */
   public function clickSortable() {
     return FALSE;
-  }
-
-  /**
-   * Wraps drupal_set_message().
-   */
-  protected function drupalSetMessage($message = NULL, $type = 'status', $repeat = FALSE) {
-    drupal_set_message($message, $type, $repeat);
   }
 
   /**

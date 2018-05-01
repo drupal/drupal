@@ -22,7 +22,8 @@ class InstallUninstallTest extends ModuleTestBase {
    */
   public function testInstallUninstall() {
     // Set a variable so that the hook implementations in system_test.module
-    // will display messages via drupal_set_message().
+    // will display messages via
+    // \Drupal\Core\Messenger\MessengerInterface::addStatus().
     $this->container->get('state')->set('system_test.verbose_module_hooks', TRUE);
 
     // Install and uninstall module_test to ensure hook_preinstall_module and

@@ -324,12 +324,12 @@ function field_form_config_admin_import_form_alter(&$form, FormStateInterface $f
       foreach ($field_storages as $field) {
         $field_labels[] = $field->label();
       }
-      drupal_set_message(\Drupal::translation()->formatPlural(
+      \Drupal::messenger()->addWarning(\Drupal::translation()->formatPlural(
         count($field_storages),
         'This synchronization will delete data from the field %fields.',
         'This synchronization will delete data from the fields: %fields.',
         ['%fields' => implode(', ', $field_labels)]
-      ), 'warning');
+      ));
     }
   }
 }

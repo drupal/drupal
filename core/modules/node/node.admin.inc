@@ -60,7 +60,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
       }
       _node_mass_update_helper($node, $updates, $langcode);
     }
-    drupal_set_message(t('The update has been performed.'));
+    \Drupal::messenger()->addStatus(t('The update has been performed.'));
   }
 }
 
@@ -164,16 +164,16 @@ function _node_mass_update_batch_process(array $nodes, array $updates, $langcode
  */
 function _node_mass_update_batch_finished($success, $results, $operations) {
   if ($success) {
-    drupal_set_message(t('The update has been performed.'));
+    \Drupal::messenger()->addStatus(t('The update has been performed.'));
   }
   else {
-    drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
+    \Drupal::messenger()->addError(t('An error occurred and processing did not complete.'));
     $message = \Drupal::translation()->formatPlural(count($results), '1 item successfully processed:', '@count items successfully processed:');
     $item_list = [
       '#theme' => 'item_list',
       '#items' => $results,
     ];
     $message .= \Drupal::service('renderer')->render($item_list);
-    drupal_set_message($message);
+    \Drupal::messenger()->addStatus($message);
   }
 }

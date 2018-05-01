@@ -15,7 +15,7 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 function language_test_page_top() {
   if (\Drupal::moduleHandler()->moduleExists('language')) {
     language_test_store_language_negotiation();
-    drupal_set_message(t('Language negotiation method: @name', ['@name' => \Drupal::languageManager()->getNegotiatedLanguageMethod()]));
+    \Drupal::messenger()->addStatus(t('Language negotiation method: @name', ['@name' => \Drupal::languageManager()->getNegotiatedLanguageMethod()]));
   }
 }
 

@@ -54,6 +54,8 @@ class NodeBulkFormTest extends UnitTestCase {
 
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
 
+    $messenger = $this->getMock('Drupal\Core\Messenger\MessengerInterface');
+
     $views_data = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
@@ -84,7 +86,7 @@ class NodeBulkFormTest extends UnitTestCase {
     $definition['title'] = '';
     $options = [];
 
-    $node_bulk_form = new NodeBulkForm([], 'node_bulk_form', $definition, $entity_manager, $language_manager);
+    $node_bulk_form = new NodeBulkForm([], 'node_bulk_form', $definition, $entity_manager, $language_manager, $messenger);
     $node_bulk_form->init($executable, $display, $options);
 
     $this->assertAttributeEquals(array_slice($actions, 0, -1, TRUE), 'actions', $node_bulk_form);

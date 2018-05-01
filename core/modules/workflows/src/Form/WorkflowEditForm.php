@@ -103,12 +103,11 @@ class WorkflowEditForm extends EntityForm {
 
     // Warn the user if there are no states.
     if (empty($states)) {
-      drupal_set_message(
+      $this->messenger()->addWarning(
         $this->t(
           'This workflow has no states and will be disabled until there is at least one, <a href=":add-state">add a new state.</a>',
           [':add-state' => $workflow->toUrl('add-state-form')->toString()]
-        ),
-        'warning'
+        )
       );
     }
 
@@ -261,7 +260,7 @@ class WorkflowEditForm extends EntityForm {
     }
 
     $workflow->save();
-    drupal_set_message($this->t('Saved the %label Workflow.', ['%label' => $workflow->label()]));
+    $this->messenger()->addStatus($this->t('Saved the %label Workflow.', ['%label' => $workflow->label()]));
   }
 
   /**

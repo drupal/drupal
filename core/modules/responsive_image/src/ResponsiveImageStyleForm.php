@@ -276,7 +276,7 @@ class ResponsiveImageStyleForm extends EntityForm {
     $responsive_image_style->save();
 
     $this->logger('responsive_image')->notice('Responsive image style @label saved.', ['@label' => $responsive_image_style->label()]);
-    drupal_set_message($this->t('Responsive image style %label saved.', ['%label' => $responsive_image_style->label()]));
+    $this->messenger()->addStatus($this->t('Responsive image style %label saved.', ['%label' => $responsive_image_style->label()]));
 
     // Redirect to edit form after creating a new responsive image style or
     // after selecting another breakpoint group.

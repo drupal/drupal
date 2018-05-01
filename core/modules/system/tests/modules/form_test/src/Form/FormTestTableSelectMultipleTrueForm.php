@@ -31,7 +31,7 @@ class FormTestTableSelectMultipleTrueForm extends FormTestTableSelectFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $selected = $form_state->getValue('tableselect');
     foreach ($selected as $key => $value) {
-      drupal_set_message(t('Submitted: @key = @value', ['@key' => $key, '@value' => $value]));
+      $this->messenger()->addStatus($this->t('Submitted: @key = @value', ['@key' => $key, '@value' => $value]));
     }
   }
 

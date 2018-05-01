@@ -54,6 +54,8 @@ class UserBulkFormTest extends UnitTestCase {
 
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
 
+    $messenger = $this->getMock('Drupal\Core\Messenger\MessengerInterface');
+
     $views_data = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
@@ -84,7 +86,7 @@ class UserBulkFormTest extends UnitTestCase {
     $definition['title'] = '';
     $options = [];
 
-    $user_bulk_form = new UserBulkForm([], 'user_bulk_form', $definition, $entity_manager, $language_manager);
+    $user_bulk_form = new UserBulkForm([], 'user_bulk_form', $definition, $entity_manager, $language_manager, $messenger);
     $user_bulk_form->init($executable, $display, $options);
 
     $this->assertAttributeEquals(array_slice($actions, 0, -1, TRUE), 'actions', $user_bulk_form);

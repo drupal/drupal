@@ -65,7 +65,7 @@ class ReindexConfirm extends ConfirmFormBase {
       foreach ($search_page_repository->getIndexableSearchPages() as $entity) {
         $entity->getPlugin()->markForReindex();
       }
-      drupal_set_message($this->t('All search indexes will be rebuilt.'));
+      $this->messenger()->addStatus($this->t('All search indexes will be rebuilt.'));
       $form_state->setRedirectUrl($this->getCancelUrl());
     }
   }

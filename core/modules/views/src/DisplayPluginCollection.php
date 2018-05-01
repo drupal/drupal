@@ -80,7 +80,7 @@ class DisplayPluginCollection extends DefaultLazyPluginCollection {
     // display plugin isn't found.
     catch (PluginException $e) {
       $message = $e->getMessage();
-      drupal_set_message(t('@message', ['@message' => $message]), 'warning');
+      \Drupal::messenger()->addWarning(t('@message', ['@message' => $message]));
     }
 
     // If no plugin instance has been created, return NULL.

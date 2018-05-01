@@ -42,7 +42,7 @@ class ShortcutForm extends ContentEntityForm {
     else {
       $message = $this->t('Added a shortcut for %title.', ['%title' => $view_link]);
     }
-    drupal_set_message($message);
+    $this->messenger()->addStatus($message);
 
     $form_state->setRedirect(
       'entity.shortcut_set.customize_form',

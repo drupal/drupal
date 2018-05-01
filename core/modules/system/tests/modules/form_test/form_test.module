@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Implements hook_form_FORM_ID_alter() on behalf of block.module.
  */
 function block_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state) {
-  drupal_set_message('block_form_form_test_alter_form_alter() executed.');
+  \Drupal::messenger()->addStatus('block_form_form_test_alter_form_alter() executed.');
 }
 
 /**
@@ -19,7 +19,7 @@ function block_form_form_test_alter_form_alter(&$form, FormStateInterface $form_
  */
 function form_test_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if ($form_id == 'form_test_alter_form') {
-    drupal_set_message('form_test_form_alter() executed.');
+    \Drupal::messenger()->addStatus('form_test_form_alter() executed.');
   }
 }
 
@@ -27,14 +27,14 @@ function form_test_form_alter(&$form, FormStateInterface $form_state, $form_id) 
  * Implements hook_form_FORM_ID_alter().
  */
 function form_test_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state) {
-  drupal_set_message('form_test_form_form_test_alter_form_alter() executed.');
+  \Drupal::messenger()->addStatus('form_test_form_form_test_alter_form_alter() executed.');
 }
 
 /**
  * Implements hook_form_FORM_ID_alter() on behalf of system.module.
  */
 function system_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state) {
-  drupal_set_message('system_form_form_test_alter_form_alter() executed.');
+  \Drupal::messenger()->addStatus('system_form_form_test_alter_form_alter() executed.');
 }
 
 /**
@@ -90,7 +90,7 @@ function form_test_form_user_register_form_alter(&$form, FormStateInterface $for
  * Submit callback that just lets the form rebuild.
  */
 function form_test_user_register_form_rebuild($form, FormStateInterface $form_state) {
-  drupal_set_message('Form rebuilt.');
+  \Drupal::messenger()->addStatus('Form rebuilt.');
   $form_state->setRebuild();
 }
 

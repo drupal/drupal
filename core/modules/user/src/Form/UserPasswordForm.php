@@ -140,7 +140,7 @@ class UserPasswordForm extends FormBase {
     $mail = _user_mail_notify('password_reset', $account, $langcode);
     if (!empty($mail)) {
       $this->logger('user')->notice('Password reset instructions mailed to %name at %email.', ['%name' => $account->getUsername(), '%email' => $account->getEmail()]);
-      drupal_set_message($this->t('Further instructions have been sent to your email address.'));
+      $this->messenger()->addStatus($this->t('Further instructions have been sent to your email address.'));
     }
 
     $form_state->setRedirect('user.page');

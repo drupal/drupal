@@ -104,7 +104,7 @@ class SearchController extends ControllerBase {
       else {
         // The search not being executable means that no keywords or other
         // conditions were entered.
-        drupal_set_message($this->t('Please enter some keywords.'), 'error');
+        $this->messenger()->addError($this->t('Please enter some keywords.'));
       }
     }
 
@@ -206,10 +206,10 @@ class SearchController extends ControllerBase {
     $search_page->$op()->save();
 
     if ($op == 'enable') {
-      drupal_set_message($this->t('The %label search page has been enabled.', ['%label' => $search_page->label()]));
+      $this->messenger()->addStatus($this->t('The %label search page has been enabled.', ['%label' => $search_page->label()]));
     }
     elseif ($op == 'disable') {
-      drupal_set_message($this->t('The %label search page has been disabled.', ['%label' => $search_page->label()]));
+      $this->messenger()->addStatus($this->t('The %label search page has been disabled.', ['%label' => $search_page->label()]));
     }
 
     $url = $search_page->urlInfo('collection');
@@ -229,7 +229,7 @@ class SearchController extends ControllerBase {
     // Set the default page to this search page.
     $this->searchPageRepository->setDefaultSearchPage($search_page);
 
-    drupal_set_message($this->t('The default search page is now %label. Be sure to check the ordering of your search pages.', ['%label' => $search_page->label()]));
+    $this->messenger()->addStatus($this->t('The default search page is now %label. Be sure to check the ordering of your search pages.', ['%label' => $search_page->label()]));
     return $this->redirect('entity.search_page.collection');
   }
 
