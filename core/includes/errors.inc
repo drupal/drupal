@@ -5,7 +5,7 @@
  * Functions for error handling.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Render\Markup;
@@ -178,7 +178,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     if ($fatal) {
       // When called from CLI, simply output a plain text message.
       // Should not translate the string to avoid errors producing more errors.
-      $response->setContent(html_entity_decode(strip_tags(SafeMarkup::format('%type: @message in %function (line %line of %file).', $error))) . "\n");
+      $response->setContent(html_entity_decode(strip_tags(new FormattableMarkup('%type: @message in %function (line %line of %file).', $error))) . "\n");
       $response->send();
       exit;
     }
@@ -189,7 +189,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       if (error_displayable($error)) {
         // When called from JavaScript, simply output the error message.
         // Should not translate the string to avoid errors producing more errors.
-        $response->setContent(SafeMarkup::format('%type: @message in %function (line %line of %file).', $error));
+        $response->setContent(new FormattableMarkup('%type: @message in %function (line %line of %file).', $error));
         $response->send();
       }
       exit;
@@ -226,10 +226,10 @@ function _drupal_log_error($error, $fatal = FALSE) {
       if ($error_level != ERROR_REPORTING_DISPLAY_VERBOSE) {
         // Without verbose logging, use a simple message.
 
-        // We call SafeMarkup::format() directly here, rather than use t() since
-        // we are in the middle of error handling, and we don't want t() to
-        // cause further errors.
-        $message = SafeMarkup::format('%type: @message in %function (line %line of %file).', $error);
+        // We use \Drupal\Component\Render\FormattableMarkup directly here,
+        // rather than use t() since we are in the middle of error handling, and
+        // we don't want t() to cause further errors.
+        $message = new FormattableMarkup('%type: @message in %function (line %line of %file).', $error);
       }
       else {
         // With verbose logging, we will also include a backtrace.
@@ -241,7 +241,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
         array_shift($backtrace);
         // Generate a backtrace containing only scalar argument values.
         $error['@backtrace'] = Error::formatBacktrace($backtrace);
-        $message = SafeMarkup::format('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $error);
+        $message = new FormattableMarkup('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $error);
       }
     }
 

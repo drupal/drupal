@@ -3,7 +3,7 @@
 namespace Drupal\search\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Defines the common search test code.
@@ -85,7 +85,7 @@ abstract class SearchTestBase extends WebTestBase {
       // We have not found a form which contained all fields of $edit and
       // the submit button.
       foreach ($edit as $name => $value) {
-        $this->fail(SafeMarkup::format('Failed to set field @name to @value', ['@name' => $name, '@value' => $value]));
+        $this->fail(new FormattableMarkup('Failed to set field @name to @value', ['@name' => $name, '@value' => $value]));
       }
       $this->assertTrue($submit_matches, format_string('Found the @submit button', ['@submit' => $submit]));
       $this->fail(format_string('Found the requested form fields at @path', ['@path' => $path]));

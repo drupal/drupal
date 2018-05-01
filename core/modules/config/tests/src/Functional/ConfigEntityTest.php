@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\config\Functional;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
@@ -147,7 +147,7 @@ class ConfigEntityTest extends BrowserTestBase {
     ]);
     try {
       $id_length_config_test->save();
-      $this->pass(SafeMarkup::format("config_test entity with ID length @length was saved.", [
+      $this->pass(new FormattableMarkup("config_test entity with ID length @length was saved.", [
         '@length' => strlen($id_length_config_test->id()),
       ]));
     }
@@ -161,7 +161,7 @@ class ConfigEntityTest extends BrowserTestBase {
     ]);
     try {
       $id_length_config_test->save();
-      $this->pass(SafeMarkup::format("config_test entity with ID length @length was saved.", [
+      $this->pass(new FormattableMarkup("config_test entity with ID length @length was saved.", [
         '@length' => strlen($id_length_config_test->id()),
       ]));
     }
@@ -175,13 +175,13 @@ class ConfigEntityTest extends BrowserTestBase {
     ]);
     try {
       $status = $id_length_config_test->save();
-      $this->fail(SafeMarkup::format("config_test entity with ID length @length exceeding the maximum allowed length of @max saved successfully", [
+      $this->fail(new FormattableMarkup("config_test entity with ID length @length exceeding the maximum allowed length of @max saved successfully", [
         '@length' => strlen($id_length_config_test->id()),
         '@max' => static::MAX_ID_LENGTH,
       ]));
     }
     catch (ConfigEntityIdLengthException $e) {
-      $this->pass(SafeMarkup::format("config_test entity with ID length @length exceeding the maximum allowed length of @max failed to save", [
+      $this->pass(new FormattableMarkup("config_test entity with ID length @length exceeding the maximum allowed length of @max failed to save", [
         '@length' => strlen($id_length_config_test->id()),
         '@max' => static::MAX_ID_LENGTH,
       ]));

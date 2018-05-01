@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\book\Functional;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -104,7 +104,7 @@ trait BookTestTrait {
       /** @var \Drupal\Core\Url $url */
       $url = $previous->urlInfo();
       $url->setOptions(['attributes' => ['rel' => ['prev'], 'title' => t('Go to previous page')]]);
-      $text = SafeMarkup::format('<b>‹</b> @label', ['@label' => $previous->label()]);
+      $text = new FormattableMarkup('<b>‹</b> @label', ['@label' => $previous->label()]);
       $this->assertRaw(\Drupal::l($text, $url), 'Previous page link found.');
     }
 
@@ -119,7 +119,7 @@ trait BookTestTrait {
       /** @var \Drupal\Core\Url $url */
       $url = $next->urlInfo();
       $url->setOptions(['attributes' => ['rel' => ['next'], 'title' => t('Go to next page')]]);
-      $text = SafeMarkup::format('@label <b>›</b>', ['@label' => $next->label()]);
+      $text = new FormattableMarkup('@label <b>›</b>', ['@label' => $next->label()]);
       $this->assertRaw(\Drupal::l($text, $url), 'Next page link found.');
     }
 

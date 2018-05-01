@@ -3,7 +3,7 @@
 namespace Drupal\field\Tests\Boolean;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
@@ -118,7 +118,7 @@ class BooleanFormatterSettingsTest extends WebTestBase {
       foreach ($options as $string) {
         $this->assertText($string);
       }
-      $this->assertText(SafeMarkup::format($default, ['@on' => $values[0], '@off' => $values[1]]));
+      $this->assertText(new FormattableMarkup($default, ['@on' => $values[0], '@off' => $values[1]]));
     }
 
     foreach ($settings as $values) {

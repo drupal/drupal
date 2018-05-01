@@ -5,7 +5,7 @@
  * Preprocessors and theme functions for the Views UI.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\Checkboxes;
@@ -158,7 +158,7 @@ function template_preprocess_views_ui_build_group_filter_form(&$variables) {
           'title' => t('Remove this item'),
         ],
       ]),
-      '#title' => SafeMarkup::format('<span>@text</span>', ['@text' => t('Remove')]),
+      '#title' => new FormattableMarkup('<span>@text</span>', ['@text' => t('Remove')]),
     ];
     $remove = [$form['group_items'][$group_id]['remove'], $link];
     $data = [
@@ -286,7 +286,7 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
         $remove_link = [
           '#type' => 'link',
           '#url' => Url::fromRoute('<none>'),
-          '#title' => SafeMarkup::format('<span>@text</span>', ['@text' => t('Remove')]),
+          '#title' => new FormattableMarkup('<span>@text</span>', ['@text' => t('Remove')]),
           '#weight' => '1',
           '#options' => [
             'attributes' => [

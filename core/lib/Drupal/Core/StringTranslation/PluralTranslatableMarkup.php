@@ -81,7 +81,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    *   An associative array of replacements to make after translation. Instances
    *   of any key in this array are replaced with the corresponding value.
    *   Based on the first character of the key, the value is escaped and/or
-   *   themed. See \Drupal\Component\Utility\SafeMarkup::format(). Note that you
+   *   themed. See \Drupal\Component\Render\FormattableMarkup. Note that you
    *   do not need to include @count in this array; this replacement is done
    *   automatically for the plural cases.
    * @param array $options

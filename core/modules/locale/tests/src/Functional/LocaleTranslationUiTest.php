@@ -5,7 +5,7 @@ namespace Drupal\Tests\locale\Functional;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Adds a new locale and translates its name. Checks the validation of
@@ -259,13 +259,13 @@ class LocaleTranslationUiTest extends BrowserTestBase {
 
     $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: [];
     $js_file = 'public://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
-    $this->assertTrue($result = file_exists($js_file), SafeMarkup::format('JavaScript file created: %file', ['%file' => $result ? $js_file : 'not found']));
+    $this->assertTrue($result = file_exists($js_file), new FormattableMarkup('JavaScript file created: %file', ['%file' => $result ? $js_file : 'not found']));
 
     // Test JavaScript translation rebuilding.
     file_unmanaged_delete($js_file);
-    $this->assertTrue($result = !file_exists($js_file), SafeMarkup::format('JavaScript file deleted: %file', ['%file' => $result ? $js_file : 'found']));
+    $this->assertTrue($result = !file_exists($js_file), new FormattableMarkup('JavaScript file deleted: %file', ['%file' => $result ? $js_file : 'found']));
     _locale_rebuild_js($langcode);
-    $this->assertTrue($result = file_exists($js_file), SafeMarkup::format('JavaScript file rebuilt: %file', ['%file' => $result ? $js_file : 'not found']));
+    $this->assertTrue($result = file_exists($js_file), new FormattableMarkup('JavaScript file rebuilt: %file', ['%file' => $result ? $js_file : 'not found']));
   }
 
   /**

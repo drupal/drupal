@@ -2,7 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Config;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Uuid\Php;
 use Drupal\Core\Config\ConfigImporter;
@@ -106,7 +106,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
     catch (ConfigImporterException $e) {
       $this->pass('Expected ConfigImporterException thrown when a renamed configuration entity does not match the existing entity type.');
       $expected = [
-        SafeMarkup::format('Entity type mismatch on rename. @old_type not equal to @new_type for existing configuration @old_name and staged configuration @new_name.', ['@old_type' => 'node_type', '@new_type' => 'config_test', '@old_name' => 'node.type.' . $content_type->id(), '@new_name' => 'config_test.dynamic.' . $test_entity_id])
+        new FormattableMarkup('Entity type mismatch on rename. @old_type not equal to @new_type for existing configuration @old_name and staged configuration @new_name.', ['@old_type' => 'node_type', '@new_type' => 'config_test', '@old_name' => 'node.type.' . $content_type->id(), '@new_name' => 'config_test.dynamic.' . $test_entity_id])
       ];
       $this->assertEqual($expected, $this->configImporter->getErrors());
     }
@@ -149,7 +149,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
     catch (ConfigImporterException $e) {
       $this->pass('Expected ConfigImporterException thrown when simple configuration is renamed.');
       $expected = [
-        SafeMarkup::format('Rename operation for simple configuration. Existing configuration @old_name and staged configuration @new_name.', ['@old_name' => 'config_test.old', '@new_name' => 'config_test.new'])
+        new FormattableMarkup('Rename operation for simple configuration. Existing configuration @old_name and staged configuration @new_name.', ['@old_name' => 'config_test.old', '@new_name' => 'config_test.new'])
       ];
       $this->assertEqual($expected, $this->configImporter->getErrors());
     }

@@ -2,7 +2,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
@@ -117,7 +117,7 @@ class ReorderDisplays extends ViewsFormBase {
         ],
         'link' => [
           '#type' => 'link',
-          '#title' => SafeMarkup::format('<span>@text</span>', ['@text' => $this->t('Remove')]),
+          '#title' => new FormattableMarkup('<span>@text</span>', ['@text' => $this->t('Remove')]),
           '#url' => Url::fromRoute('<none>'),
           '#attributes' => [
             'id' => 'display-remove-link-' . $id,

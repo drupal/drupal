@@ -5,7 +5,7 @@
  * Allows users to manage customizable lists of shortcut links.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -356,7 +356,7 @@ function shortcut_preprocess_page_title(&$variables) {
           ],
         ],
         '#type' => 'link',
-        '#title' => SafeMarkup::format('<span class="shortcut-action__icon"></span><span class="shortcut-action__message">@text</span>', ['@text' => $link_text]),
+        '#title' => new FormattableMarkup('<span class="shortcut-action__icon"></span><span class="shortcut-action__message">@text</span>', ['@text' => $link_text]),
         '#url' => Url::fromRoute($route_name, $route_parameters),
         '#options' => ['query' => $query],
         '#attributes' => [

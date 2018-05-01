@@ -2,7 +2,7 @@
 
 namespace Drupal\config_translation\FormElement;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Config\LanguageConfigOverride;
@@ -20,7 +20,7 @@ class PluralVariants extends FormElementBase {
     $values = explode(LOCALE_PLURAL_DELIMITER, $source_config);
     $element = [
       '#type' => 'fieldset',
-      '#title' => SafeMarkup::format('@label <span class="visually-hidden">(@source_language)</span>', [
+      '#title' => new FormattableMarkup('@label <span class="visually-hidden">(@source_language)</span>', [
         // Labels originate from configuration schema and are translatable.
         '@label' => $this->t($this->definition->getLabel()),
         '@source_language' => $source_language->getName(),
@@ -32,7 +32,7 @@ class PluralVariants extends FormElementBase {
         '#type' => 'item',
         // @todo Should use better labels https://www.drupal.org/node/2499639
         '#title' => $i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form'),
-        '#markup' => SafeMarkup::format('<span lang="@langcode">@value</span>', [
+        '#markup' => new FormattableMarkup('<span lang="@langcode">@value</span>', [
           '@langcode' => $source_language->getId(),
           '@value' => isset($values[$i]) ? $values[$i] : $this->t('(Empty)'),
         ]),
@@ -49,7 +49,7 @@ class PluralVariants extends FormElementBase {
     $values = explode(LOCALE_PLURAL_DELIMITER, $translation_config);
     $element = [
       '#type' => 'fieldset',
-      '#title' => SafeMarkup::format('@label <span class="visually-hidden">(@translation_language)</span>', [
+      '#title' => new FormattableMarkup('@label <span class="visually-hidden">(@translation_language)</span>', [
         // Labels originate from configuration schema and are translatable.
         '@label' => $this->t($this->definition->getLabel()),
         '@translation_language' => $translation_language->getName(),

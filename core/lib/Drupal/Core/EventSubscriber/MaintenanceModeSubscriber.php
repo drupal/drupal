@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -146,7 +146,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    *   The formatted site maintenance message.
    */
   protected function getSiteMaintenanceMessage() {
-    return SafeMarkup::format($this->config->get('system.maintenance')->get('message'), [
+    return new FormattableMarkup($this->config->get('system.maintenance')->get('message'), [
       '@site' => $this->config->get('system.site')->get('name'),
     ]);
   }

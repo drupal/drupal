@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\user\Kernel\Condition;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
@@ -151,7 +151,7 @@ class UserRoleConditionTest extends KernelTestBase {
     $condition->setConfig('roles', [$this->role->id() => $this->role->id()]);
     $condition->setConfig('negate', FALSE);
     $this->assertTrue($condition->execute(), 'Authenticated user is a member of the custom role.');
-    $this->assertEqual($condition->summary(), SafeMarkup::format('The user is a member of @roles', ['@roles' => $this->role->label()]));
+    $this->assertEqual($condition->summary(), new FormattableMarkup('The user is a member of @roles', ['@roles' => $this->role->label()]));
   }
 
 }

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\dblog\Kernel\Views;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
@@ -62,7 +62,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
       if (!isset($entry['variables'])) {
         continue;
       }
-      $this->assertEqual($view->style_plugin->getField($index, 'message'), SafeMarkup::format($entry['message'], $entry['variables']));
+      $this->assertEqual($view->style_plugin->getField($index, 'message'), new FormattableMarkup($entry['message'], $entry['variables']));
       $link_field = $view->style_plugin->getField($index, 'link');
       // The 3rd entry contains some unsafe markup that needs to get filtered.
       if ($index == 2) {

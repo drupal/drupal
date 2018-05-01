@@ -3,7 +3,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -273,11 +273,11 @@ class UserRegistrationTest extends WebTestBase {
 
     $edit = ['mail' => 'test@example.com', 'name' => $account->getUsername()];
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertRaw(SafeMarkup::format('The username %value is already taken.', ['%value' => $account->getUsername()]));
+    $this->assertRaw(new FormattableMarkup('The username %value is already taken.', ['%value' => $account->getUsername()]));
 
     $edit = ['mail' => $account->getEmail(), 'name' => $this->randomString()];
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertRaw(SafeMarkup::format('The email address %value is already taken.', ['%value' => $account->getEmail()]));
+    $this->assertRaw(new FormattableMarkup('The email address %value is already taken.', ['%value' => $account->getEmail()]));
   }
 
   /**

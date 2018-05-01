@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\ChangedFieldItemList;
@@ -799,7 +799,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
           // Update the default internal language cache.
           $this->setDefaultLangcode();
           if (isset($this->translations[$this->defaultLangcode])) {
-            $message = SafeMarkup::format('A translation already exists for the specified language (@langcode).', ['@langcode' => $this->defaultLangcode]);
+            $message = new FormattableMarkup('A translation already exists for the specified language (@langcode).', ['@langcode' => $this->defaultLangcode]);
             throw new \InvalidArgumentException($message);
           }
           $this->updateFieldLangcodes($this->defaultLangcode);
@@ -810,7 +810,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
           $items = $this->get($this->langcodeKey);
           if ($items->value != $this->activeLangcode) {
             $items->setValue($this->activeLangcode, FALSE);
-            $message = SafeMarkup::format('The translation language cannot be changed (@langcode).', ['@langcode' => $this->activeLangcode]);
+            $message = new FormattableMarkup('The translation language cannot be changed (@langcode).', ['@langcode' => $this->activeLangcode]);
             throw new \LogicException($message);
           }
         }
@@ -821,7 +821,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         //   read-only. See https://www.drupal.org/node/2443991.
         if (isset($this->values[$this->defaultLangcodeKey]) && $this->get($this->defaultLangcodeKey)->value != $this->isDefaultTranslation()) {
           $this->get($this->defaultLangcodeKey)->setValue($this->isDefaultTranslation(), FALSE);
-          $message = SafeMarkup::format('The default translation flag cannot be changed (@langcode).', ['@langcode' => $this->activeLangcode]);
+          $message = new FormattableMarkup('The default translation flag cannot be changed (@langcode).', ['@langcode' => $this->activeLangcode]);
           throw new \LogicException($message);
         }
         break;

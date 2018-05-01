@@ -5,7 +5,7 @@ namespace Drupal\system\Tests\Image;
 @trigger_error(__FILE__ . ' is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use Drupal\FunctionalTests\Image\ToolkitTestBase instead. See https://www.drupal.org/node/2862641.', E_USER_DEPRECATED);
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Base class for image manipulation testing.
@@ -106,10 +106,10 @@ abstract class ToolkitTestBase extends WebTestBase {
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
     if (count($uncalled)) {
-      $this->assertTrue(FALSE, SafeMarkup::format('Expected operations %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
+      $this->assertTrue(FALSE, new FormattableMarkup('Expected operations %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
     }
     else {
-      $this->assertTrue(TRUE, SafeMarkup::format('All the expected operations were called: %expected', ['%expected' => implode(', ', $expected)]));
+      $this->assertTrue(TRUE, new FormattableMarkup('All the expected operations were called: %expected', ['%expected' => implode(', ', $expected)]));
     }
 
     // Determine if there were any unexpected calls.
@@ -117,7 +117,7 @@ abstract class ToolkitTestBase extends WebTestBase {
     // count it as an error.
     $unexpected = array_diff($actual, $expected);
     if (count($unexpected) && (!in_array('apply', $expected) || count(array_intersect($unexpected, $operations)) !== count($unexpected))) {
-      $this->assertTrue(FALSE, SafeMarkup::format('Unexpected operations were called: %unexpected.', ['%unexpected' => implode(', ', $unexpected)]));
+      $this->assertTrue(FALSE, new FormattableMarkup('Unexpected operations were called: %unexpected.', ['%unexpected' => implode(', ', $unexpected)]));
     }
     else {
       $this->assertTrue(TRUE, 'No unexpected operations were called.');

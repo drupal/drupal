@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\contact\Functional;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Test\AssertMailTrait;
@@ -100,7 +100,7 @@ class ContactPersonalTest extends BrowserTestBase {
       '@sender_email' => $this->webUser->getEmail(),
       '@recipient_name' => $this->contactUser->getUsername()
     ];
-    $this->assertRaw(SafeMarkup::format('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
+    $this->assertRaw(new FormattableMarkup('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
     // Ensure an unescaped version of the email does not exist anywhere.
     $this->assertNoRaw($this->webUser->getEmail());
   }

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\views\Views;
 
 /**
@@ -97,8 +97,8 @@ class CustomBooleanTest extends UITestBase {
       $view = Views::getView('test_view');
       $output = $view->preview();
       $output = \Drupal::service('renderer')->renderRoot($output);
-      $this->{$values['test']}(strpos($output, $values['true']), SafeMarkup::format('Expected custom boolean TRUE value %value in output for %type', ['%value' => $values['true'], '%type' => $type]));
-      $this->{$values['test']}(strpos($output, $values['false']), SafeMarkup::format('Expected custom boolean FALSE value %value in output for %type', ['%value' => $values['false'], '%type' => $type]));
+      $this->{$values['test']}(strpos($output, $values['true']), new FormattableMarkup('Expected custom boolean TRUE value %value in output for %type', ['%value' => $values['true'], '%type' => $type]));
+      $this->{$values['test']}(strpos($output, $values['false']), new FormattableMarkup('Expected custom boolean FALSE value %value in output for %type', ['%value' => $values['false'], '%type' => $type]));
     }
   }
 
@@ -169,8 +169,8 @@ class CustomBooleanTest extends UITestBase {
       $view = Views::getView('test_view');
       $output = $view->preview();
       $output = \Drupal::service('renderer')->renderRoot($output);
-      $this->{$values['test']}(strpos($output, $values['true']), SafeMarkup::format('Expected custom boolean TRUE value %value in output for %type', ['%value' => $values['true'], '%type' => $type]));
-      $this->{$values['test']}(strpos($output, $values['false']), SafeMarkup::format('Expected custom boolean FALSE value %value in output for %type', ['%value' => $values['false'], '%type' => $type]));
+      $this->{$values['test']}(strpos($output, $values['true']), new FormattableMarkup('Expected custom boolean TRUE value %value in output for %type', ['%value' => $values['true'], '%type' => $type]));
+      $this->{$values['test']}(strpos($output, $values['false']), new FormattableMarkup('Expected custom boolean FALSE value %value in output for %type', ['%value' => $values['false'], '%type' => $type]));
 
       // Assert that we are using the correct template.
       $this->assertContains('llama', (string) $output);

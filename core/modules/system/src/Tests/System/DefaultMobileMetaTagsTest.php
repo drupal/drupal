@@ -2,7 +2,7 @@
 
 namespace Drupal\system\Tests\System;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -31,7 +31,7 @@ class DefaultMobileMetaTagsTest extends WebTestBase {
   public function testDefaultMetaTagsExist() {
     $this->drupalGet('');
     foreach ($this->defaultMetaTags as $name => $metatag) {
-      $this->assertRaw($metatag, SafeMarkup::format('Default Mobile meta tag "@name" displayed properly.', ['@name' => $name]), 'System');
+      $this->assertRaw($metatag, new FormattableMarkup('Default Mobile meta tag "@name" displayed properly.', ['@name' => $name]), 'System');
     }
   }
 
@@ -42,7 +42,7 @@ class DefaultMobileMetaTagsTest extends WebTestBase {
     \Drupal::service('module_installer')->install(['system_module_test']);
     $this->drupalGet('');
     foreach ($this->defaultMetaTags as $name => $metatag) {
-      $this->assertNoRaw($metatag, SafeMarkup::format('Default Mobile meta tag "@name" removed properly.', ['@name' => $name]), 'System');
+      $this->assertNoRaw($metatag, new FormattableMarkup('Default Mobile meta tag "@name" removed properly.', ['@name' => $name]), 'System');
     }
   }
 

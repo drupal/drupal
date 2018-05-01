@@ -93,7 +93,7 @@ interface TranslationInterface {
    *   An associative array of replacements to make after translation. Instances
    *   of any key in this array are replaced with the corresponding value.
    *   Based on the first character of the key, the value is escaped and/or
-   *   themed. See \Drupal\Component\Utility\SafeMarkup::format(). Note that you do
+   *   themed. See \Drupal\Component\Render\FormattableMarkup. Note that you do
    *   not need to include @count in this array; this replacement is done
    *   automatically for the plural cases.
    * @param array $options
@@ -104,7 +104,7 @@ interface TranslationInterface {
    *
    * @see \Drupal\Core\StringTranslation\TranslationInterface::translate()
    * @see t()
-   * @see \Drupal\Component\Utility\SafeMarkup::format()
+   * @see \Drupal\Component\Render\FormattableMarkup
    * @see \Drupal\Core\StringTranslation\PluralTranslatableMarkup::createFromTranslatedString()
    */
   public function formatPlural($count, $singular, $plural, array $args = [], array $options = []);

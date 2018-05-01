@@ -2,7 +2,7 @@
 
 namespace Drupal\field_ui\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
@@ -616,10 +616,10 @@ class ManageFieldsTest extends WebTestBase {
     $field_types = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
     foreach ($field_types as $field_type => $definition) {
       if (empty($definition['no_ui'])) {
-        $this->assertTrue($this->xpath('//select[@id="edit-new-storage-type"]//option[@value=:field_type]', [':field_type' => $field_type]), SafeMarkup::format('Configurable field type @field_type is available.', ['@field_type' => $field_type]));
+        $this->assertTrue($this->xpath('//select[@id="edit-new-storage-type"]//option[@value=:field_type]', [':field_type' => $field_type]), new FormattableMarkup('Configurable field type @field_type is available.', ['@field_type' => $field_type]));
       }
       else {
-        $this->assertFalse($this->xpath('//select[@id="edit-new-storage-type"]//option[@value=:field_type]', [':field_type' => $field_type]), SafeMarkup::format('Non-configurable field type @field_type is not available.', ['@field_type' => $field_type]));
+        $this->assertFalse($this->xpath('//select[@id="edit-new-storage-type"]//option[@value=:field_type]', [':field_type' => $field_type]), new FormattableMarkup('Non-configurable field type @field_type is not available.', ['@field_type' => $field_type]));
       }
     }
   }

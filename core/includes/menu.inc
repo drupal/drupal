@@ -10,7 +10,7 @@
  * @{
  */
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Render\Element;
 
 /**
@@ -36,7 +36,7 @@ function template_preprocess_menu_local_task(&$variables) {
     $variables['is_active'] = TRUE;
 
     // Add text to indicate active tab for non-visual users.
-    $active = SafeMarkup::format('<span class="visually-hidden">@label</span>', ['@label' => t('(active tab)')]);
+    $active = new FormattableMarkup('<span class="visually-hidden">@label</span>', ['@label' => t('(active tab)')]);
     $link_text = t('@local-task-title@active', ['@local-task-title' => $link_text, '@active' => $active]);
   }
 

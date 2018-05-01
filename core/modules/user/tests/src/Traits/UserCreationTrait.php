@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\user\Traits;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
@@ -69,7 +69,7 @@ trait UserCreationTrait {
     $account = User::create($edit);
     $account->save();
 
-    $this->assertTrue($account->id(), SafeMarkup::format('User created with name %name and pass %pass', ['%name' => $edit['name'], '%pass' => $edit['pass']]), 'User login');
+    $this->assertTrue($account->id(), new FormattableMarkup('User created with name %name and pass %pass', ['%name' => $edit['name'], '%pass' => $edit['pass']]), 'User login');
     if (!$account->id()) {
       return FALSE;
     }
@@ -149,7 +149,7 @@ trait UserCreationTrait {
     }
     $result = $role->save();
 
-    $this->assertIdentical($result, SAVED_NEW, SafeMarkup::format('Created role ID @rid with name @name.', [
+    $this->assertIdentical($result, SAVED_NEW, new FormattableMarkup('Created role ID @rid with name @name.', [
       '@name' => var_export($role->label(), TRUE),
       '@rid' => var_export($role->id(), TRUE),
     ]), 'Role');
@@ -161,10 +161,10 @@ trait UserCreationTrait {
         $assigned_permissions = Role::load($role->id())->getPermissions();
         $missing_permissions = array_diff($permissions, $assigned_permissions);
         if (!$missing_permissions) {
-          $this->pass(SafeMarkup::format('Created permissions: @perms', ['@perms' => implode(', ', $permissions)]), 'Role');
+          $this->pass(new FormattableMarkup('Created permissions: @perms', ['@perms' => implode(', ', $permissions)]), 'Role');
         }
         else {
-          $this->fail(SafeMarkup::format('Failed to create permissions: @perms', ['@perms' => implode(', ', $missing_permissions)]), 'Role');
+          $this->fail(new FormattableMarkup('Failed to create permissions: @perms', ['@perms' => implode(', ', $missing_permissions)]), 'Role');
         }
       }
       return $role->id();
@@ -188,7 +188,7 @@ trait UserCreationTrait {
     $valid = TRUE;
     foreach ($permissions as $permission) {
       if (!in_array($permission, $available)) {
-        $this->fail(SafeMarkup::format('Invalid permission %permission.', ['%permission' => $permission]), 'Role');
+        $this->fail(new FormattableMarkup('Invalid permission %permission.', ['%permission' => $permission]), 'Role');
         $valid = FALSE;
       }
     }

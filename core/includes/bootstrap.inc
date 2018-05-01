@@ -7,7 +7,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Logger\RfcLogLevel;
@@ -273,7 +273,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     }
   }
   // If the filename is still unknown, create a user-level error message.
-  trigger_error(SafeMarkup::format('The following @type is missing from the file system: @name', ['@type' => $type, '@name' => $name]), E_USER_WARNING);
+  trigger_error(new FormattableMarkup('The following @type is missing from the file system: @name', ['@type' => $type, '@name' => $name]), E_USER_WARNING);
 }
 
 /**
@@ -349,7 +349,7 @@ function t($string, array $args = [], array $options = []) {
  * @see https://www.drupal.org/node/2302363
  */
 function format_string($string, array $args) {
-  return SafeMarkup::format($string, $args);
+  return new FormattableMarkup($string, $args);
 }
 
 /**
@@ -981,10 +981,10 @@ function drupal_static_reset($name = NULL) {
  * Formats text for emphasized display in a placeholder inside a sentence.
  *
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0. Use
- *   \Drupal\Component\Utility\SafeMarkup::format() or Twig's "placeholder"
- *   filter instead. Note this method should not be used to simply emphasize a
- *   string and therefore has few valid use-cases. Note also, that this method
- *   does not mark the string as safe.
+ *   \Drupal\Component\Render\FormattableMarkup or Twig's "placeholder" filter
+ *   instead. Note this method should not be used to simply emphasize a string
+ *   and therefore has few valid use-cases. Note also, that this method does not
+ *   mark the string as safe.
  *
  * @see https://www.drupal.org/node/2302363
  */

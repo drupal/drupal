@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\aggregator\Functional;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\views\Entity\View;
 
 /**
@@ -114,7 +114,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     // Find the expected read_more link on the sources page.
     $href = $feed->url();
     $links = $this->xpath('//a[@href = :href]', [':href' => $href]);
-    $this->assertTrue(isset($links[0]), SafeMarkup::format('Link to href %href found.', ['%href' => $href]));
+    $this->assertTrue(isset($links[0]), new FormattableMarkup('Link to href %href found.', ['%href' => $href]));
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $cache_tags = explode(' ', $cache_tags_header);
     $this->assertTrue(in_array('aggregator_feed:' . $feed->id(), $cache_tags));

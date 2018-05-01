@@ -15,14 +15,15 @@ interface LogMessageParserInterface {
    *   - PSR3 format:
    *     @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md#12-message
    *   - Drupal specific string placeholder format:
-   *     @see \Drupal\Component\Utility\SafeMarkup::format()
+   *     @see \Drupal\Component\Render\FormattableMarkup
    *
-   * Values in PSR3 format will be transformed to SafeMarkup::format() format.
+   * Values in PSR3 format will be transformed to
+   * \Drupal\Component\Render\FormattableMarkup format.
    *
    * @param string $message
    *   The message that contains the placeholders.
    *   If the message is in PSR3 style, it will be transformed to
-   *   \Drupal\Component\Utility\SafeMarkup::format() style.
+   *   \Drupal\Component\Render\FormattableMarkup style.
    * @param array $context
    *   An array that may or may not contain placeholder variables.
    *

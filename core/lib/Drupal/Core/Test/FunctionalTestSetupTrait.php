@@ -3,7 +3,7 @@
 namespace Drupal\Core\Test;
 
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
@@ -435,7 +435,7 @@ trait FunctionalTestSetupTrait {
       $modules = array_unique($modules);
       try {
         $success = $container->get('module_installer')->install($modules, TRUE);
-        $this->assertTrue($success, SafeMarkup::format('Enabled modules: %modules', ['%modules' => implode(', ', $modules)]));
+        $this->assertTrue($success, new FormattableMarkup('Enabled modules: %modules', ['%modules' => implode(', ', $modules)]));
       }
       catch (MissingDependencyException $e) {
         // The exception message has all the details.

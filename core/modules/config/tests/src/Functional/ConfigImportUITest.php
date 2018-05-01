@@ -3,7 +3,7 @@
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -433,7 +433,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Attempt to import configuration and verify that an error message appears.
     $this->drupalPostForm(NULL, [], t('Import all'));
-    $this->assertText(SafeMarkup::format('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]));
+    $this->assertText(new FormattableMarkup('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]));
     $this->assertText(t('The configuration was imported with errors.'));
     $this->assertNoText(t('The configuration was imported successfully.'));
     $this->assertText(t('There are no configuration changes to import.'));

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
@@ -136,7 +136,7 @@ class DisplayTest extends UITestBase {
     // Assert that the expected text is found in each area category.
     foreach ($areas as $type) {
       $element = $this->xpath('//div[contains(@class, :class)]/div', [':class' => $type]);
-      $this->assertEqual($element[0]->getHtml(), SafeMarkup::format('The selected display type does not use @type plugins', ['@type' => $type]));
+      $this->assertEqual($element[0]->getHtml(), new FormattableMarkup('The selected display type does not use @type plugins', ['@type' => $type]));
     }
   }
 

@@ -3,7 +3,7 @@
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageComparer;
@@ -245,7 +245,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $this->configImporter->getErrors();
     $this->assertEqual(count($logs), 1);
-    $this->assertEqual($logs[0], SafeMarkup::format('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]));
+    $this->assertEqual($logs[0], new FormattableMarkup('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]));
   }
 
   /**
@@ -373,7 +373,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $this->configImporter->getErrors();
     $this->assertEqual(count($logs), 1);
-    $this->assertEqual($logs[0], SafeMarkup::format('Update target "@name" is missing.', ['@name' => $name_deletee]));
+    $this->assertEqual($logs[0], new FormattableMarkup('Update target "@name" is missing.', ['@name' => $name_deletee]));
   }
 
   /**

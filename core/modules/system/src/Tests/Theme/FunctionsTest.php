@@ -4,7 +4,7 @@ namespace Drupal\system\Tests\Theme;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
@@ -194,7 +194,7 @@ class FunctionsTest extends WebTestBase {
         'title' => 'Plain "text"',
       ],
       'html text' => [
-        'title' => SafeMarkup::format('<span class="unescaped">@text</span>', ['@text' => 'potentially unsafe text that <should> be escaped']),
+        'title' => new FormattableMarkup('<span class="unescaped">@text</span>', ['@text' => 'potentially unsafe text that <should> be escaped']),
       ],
       'front page' => [
         'title' => 'Front page',
@@ -315,7 +315,7 @@ class FunctionsTest extends WebTestBase {
         'title' => 'Plain "text"',
       ],
       [
-        'title' => SafeMarkup::format('<span class="unescaped">@text</span>', ['@text' => 'potentially unsafe text that <should> be escaped']),
+        'title' => new FormattableMarkup('<span class="unescaped">@text</span>', ['@text' => 'potentially unsafe text that <should> be escaped']),
       ],
       [
         'title' => 'Front page',

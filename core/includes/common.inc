@@ -215,7 +215,7 @@ function valid_email_address($mail) {
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
  *   Use UrlHelper::stripDangerousProtocols() or UrlHelper::filterBadProtocol()
  *   instead. UrlHelper::stripDangerousProtocols() can be used in conjunction
- *   with \Drupal\Component\Utility\SafeMarkup::format() and an @variable
+ *   with \Drupal\Component\Render\FormattableMarkup and an @variable
  *   placeholder which will perform the necessary escaping.
  *   UrlHelper::filterBadProtocol() is functionality equivalent to check_url()
  *   apart from the fact it is protected from double escaping bugs. Note that

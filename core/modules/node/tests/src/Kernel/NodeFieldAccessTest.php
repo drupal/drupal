@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\node\Kernel;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -101,35 +101,35 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
       // Checks on view operations.
       foreach ($test_users as $account) {
         $may_view = $node1->{$field}->access('view', $account);
-        $this->assertTrue($may_view, SafeMarkup::format('Any user may view the field @name.', ['@name' => $field]));
+        $this->assertTrue($may_view, new FormattableMarkup('Any user may view the field @name.', ['@name' => $field]));
       }
 
       // Checks on edit operations.
       $may_update = $node1->{$field}->access('edit', $page_creator_user);
-      $this->assertFalse($may_update, SafeMarkup::format('Users with permission "edit own page content" is not allowed to the field @name.', ['@name' => $field]));
+      $this->assertFalse($may_update, new FormattableMarkup('Users with permission "edit own page content" is not allowed to the field @name.', ['@name' => $field]));
       $may_update = $node2->{$field}->access('edit', $page_creator_user);
-      $this->assertFalse($may_update, SafeMarkup::format('Users with permission "edit own page content" is not allowed to the field @name.', ['@name' => $field]));
+      $this->assertFalse($may_update, new FormattableMarkup('Users with permission "edit own page content" is not allowed to the field @name.', ['@name' => $field]));
       $may_update = $node2->{$field}->access('edit', $page_manager_user);
-      $this->assertFalse($may_update, SafeMarkup::format('Users with permission "edit any page content" is not allowed to the field @name.', ['@name' => $field]));
+      $this->assertFalse($may_update, new FormattableMarkup('Users with permission "edit any page content" is not allowed to the field @name.', ['@name' => $field]));
       $may_update = $node1->{$field}->access('edit', $page_manager_user);
-      $this->assertFalse($may_update, SafeMarkup::format('Users with permission "edit any page content" is not allowed to the field @name.', ['@name' => $field]));
+      $this->assertFalse($may_update, new FormattableMarkup('Users with permission "edit any page content" is not allowed to the field @name.', ['@name' => $field]));
       $may_update = $node2->{$field}->access('edit', $page_unrelated_user);
-      $this->assertFalse($may_update, SafeMarkup::format('Users not having permission "edit any page content" is not allowed to the field @name.', ['@name' => $field]));
+      $this->assertFalse($may_update, new FormattableMarkup('Users not having permission "edit any page content" is not allowed to the field @name.', ['@name' => $field]));
       $may_update = $node1->{$field}->access('edit', $content_admin_user) && $node3->status->access('edit', $content_admin_user);
-      $this->assertTrue($may_update, SafeMarkup::format('Users with permission "administer nodes" may edit @name fields on all nodes.', ['@name' => $field]));
+      $this->assertTrue($may_update, new FormattableMarkup('Users with permission "administer nodes" may edit @name fields on all nodes.', ['@name' => $field]));
     }
 
     foreach ($this->readOnlyFields as $field) {
       // Check view operation.
       foreach ($test_users as $account) {
         $may_view = $node1->{$field}->access('view', $account);
-        $this->assertTrue($may_view, SafeMarkup::format('Any user may view the field @name.', ['@name' => $field]));
+        $this->assertTrue($may_view, new FormattableMarkup('Any user may view the field @name.', ['@name' => $field]));
       }
 
       // Check edit operation.
       foreach ($test_users as $account) {
         $may_view = $node1->{$field}->access('edit', $account);
-        $this->assertFalse($may_view, SafeMarkup::format('No user is not allowed to edit the field @name.', ['@name' => $field]));
+        $this->assertFalse($may_view, new FormattableMarkup('No user is not allowed to edit the field @name.', ['@name' => $field]));
       }
     }
 

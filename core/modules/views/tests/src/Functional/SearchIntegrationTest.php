@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views\Functional;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
@@ -145,7 +145,7 @@ class SearchIntegrationTest extends ViewTestBase {
    */
   protected function assertOneLink($label) {
     $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $label]);
-    $message = SafeMarkup::format('Link with label %label found once.', ['%label' => $label]);
+    $message = new FormattableMarkup('Link with label %label found once.', ['%label' => $label]);
     return $this->assert(isset($links[0]) && !isset($links[1]), $message);
   }
 

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\user\RoleInterface;
 
 /**
@@ -68,11 +68,11 @@ class CommentBlockTest extends CommentTestBase {
     // Test the only the 10 latest comments are shown and in the proper order.
     $this->assertNoText($comments[10]->getSubject(), 'Comment 11 not found in block.');
     for ($i = 0; $i < 10; $i++) {
-      $this->assertText($comments[$i]->getSubject(), SafeMarkup::format('Comment @number found in block.', ['@number' => 10 - $i]));
+      $this->assertText($comments[$i]->getSubject(), new FormattableMarkup('Comment @number found in block.', ['@number' => 10 - $i]));
       if ($i > 1) {
         $previous_position = $position;
         $position = strpos($this->getRawContent(), $comments[$i]->getSubject());
-        $this->assertTrue($position > $previous_position, SafeMarkup::format('Comment @a appears after comment @b', ['@a' => 10 - $i, '@b' => 11 - $i]));
+        $this->assertTrue($position > $previous_position, new FormattableMarkup('Comment @a appears after comment @b', ['@a' => 10 - $i, '@b' => 11 - $i]));
       }
       $position = strpos($this->getRawContent(), $comments[$i]->getSubject());
     }

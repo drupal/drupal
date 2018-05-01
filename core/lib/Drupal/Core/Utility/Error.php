@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Utility;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 
@@ -97,7 +97,7 @@ class Error {
     // no longer function correctly (as opposed to a user-triggered error), so
     // we assume that it is safe to include a verbose backtrace.
     $decode['@backtrace'] = Error::formatBacktrace($backtrace);
-    return SafeMarkup::format('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $decode);
+    return new FormattableMarkup('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $decode);
   }
 
   /**

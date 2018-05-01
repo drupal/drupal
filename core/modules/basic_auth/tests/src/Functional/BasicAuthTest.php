@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\basic_auth\Functional;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\Tests\basic_auth\Traits\BasicAuthTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -50,7 +50,7 @@ class BasicAuthTest extends BrowserTestBase {
     $this->mink->resetSessions();
 
     $this->drupalGet($url);
-    $this->assertEqual($this->drupalGetHeader('WWW-Authenticate'), SafeMarkup::format('Basic realm="@realm"', ['@realm' => \Drupal::config('system.site')->get('name')]));
+    $this->assertEqual($this->drupalGetHeader('WWW-Authenticate'), new FormattableMarkup('Basic realm="@realm"', ['@realm' => \Drupal::config('system.site')->get('name')]));
     $this->assertResponse('401', 'Not authenticated on the route that allows only basic_auth. Prompt to authenticate received.');
 
     $this->drupalGet('admin');

@@ -95,6 +95,7 @@ class SafeMarkup {
    * @see https://www.drupal.org/node/2549395
    */
   public static function format($string, array $args) {
+    @trigger_error('SafeMarkup::format() is scheduled for removal in Drupal 9.0.0. Use \Drupal\Component\Render\FormattableMarkup. See https://www.drupal.org/node/2549395.', E_USER_DEPRECATED);
     return new FormattableMarkup($string, $args);
   }
 

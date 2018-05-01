@@ -170,7 +170,7 @@ class ExceptionHandlingTest extends KernelTestBase {
     // Enable verbose error logging.
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
 
-    // Using SafeMarkup::format().
+    // Using \Drupal\Component\Render\FormattableMarkup.
     $request = Request::create('/router_test/test24');
     $request->setFormat('html', ['text/html']);
 

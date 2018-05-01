@@ -2,7 +2,7 @@
 
 namespace Drupal\FunctionalTests\Image;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
@@ -103,10 +103,10 @@ abstract class ToolkitTestBase extends BrowserTestBase {
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
     if (count($uncalled)) {
-      $this->assertTrue(FALSE, SafeMarkup::format('Expected operations %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
+      $this->assertTrue(FALSE, new FormattableMarkup('Expected operations %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
     }
     else {
-      $this->assertTrue(TRUE, SafeMarkup::format('All the expected operations were called: %expected', ['%expected' => implode(', ', $expected)]));
+      $this->assertTrue(TRUE, new FormattableMarkup('All the expected operations were called: %expected', ['%expected' => implode(', ', $expected)]));
     }
 
     // Determine if there were any unexpected calls.
@@ -114,7 +114,7 @@ abstract class ToolkitTestBase extends BrowserTestBase {
     // count it as an error.
     $unexpected = array_diff($actual, $expected);
     if (count($unexpected) && (!in_array('apply', $expected) || count(array_intersect($unexpected, $operations)) !== count($unexpected))) {
-      $this->assertTrue(FALSE, SafeMarkup::format('Unexpected operations were called: %unexpected.', ['%unexpected' => implode(', ', $unexpected)]));
+      $this->assertTrue(FALSE, new FormattableMarkup('Unexpected operations were called: %unexpected.', ['%unexpected' => implode(', ', $unexpected)]));
     }
     else {
       $this->assertTrue(TRUE, 'No unexpected operations were called.');

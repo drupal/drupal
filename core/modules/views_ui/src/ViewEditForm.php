@@ -3,7 +3,7 @@
 namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -1098,7 +1098,7 @@ class ViewEditForm extends ViewFormBase {
       $build['fields'][$id]['#class'][] = Html::cleanCssIdentifier($display['id'] . '-' . $type . '-' . $id);
 
       if ($executable->display_handler->useGroupBy() && $handler->usesGroupBy()) {
-        $build['fields'][$id]['#settings_links'][] = $this->l(SafeMarkup::format('<span class="label">@text</span>', ['@text' => $this->t('Aggregation settings')]), new Url('views_ui.form_handler_group', [
+        $build['fields'][$id]['#settings_links'][] = $this->l(new FormattableMarkup('<span class="label">@text</span>', ['@text' => $this->t('Aggregation settings')]), new Url('views_ui.form_handler_group', [
           'js' => 'nojs',
           'view' => $view->id(),
           'display_id' => $display['id'],
@@ -1108,7 +1108,7 @@ class ViewEditForm extends ViewFormBase {
       }
 
       if ($handler->hasExtraOptions()) {
-        $build['fields'][$id]['#settings_links'][] = $this->l(SafeMarkup::format('<span class="label">@text</span>', ['@text' => $this->t('Settings')]), new Url('views_ui.form_handler_extra', [
+        $build['fields'][$id]['#settings_links'][] = $this->l(new FormattableMarkup('<span class="label">@text</span>', ['@text' => $this->t('Settings')]), new Url('views_ui.form_handler_extra', [
           'js' => 'nojs',
           'view' => $view->id(),
           'display_id' => $display['id'],
@@ -1147,7 +1147,7 @@ class ViewEditForm extends ViewFormBase {
         foreach ($contents as $key => $pid) {
           if ($key != $last) {
             $operator = $group_info['groups'][$gid] == 'OR' ? $this->t('OR') : $this->t('AND');
-            $store[$pid]['#link'] = SafeMarkup::format('@link <span>@operator</span>', ['@link' => $store[$pid]['#link'], '@operator' => $operator]);
+            $store[$pid]['#link'] = new FormattableMarkup('@link <span>@operator</span>', ['@link' => $store[$pid]['#link'], '@operator' => $operator]);
           }
           $build['fields'][$pid] = $store[$pid];
         }

@@ -110,6 +110,7 @@ class SafeMarkupTest extends TestCase {
    *
    * @dataProvider providerFormat
    * @covers ::format
+   * @expectedDeprecation SafeMarkup::format() is scheduled for removal in Drupal 9.0.0. Use \Drupal\Component\Render\FormattableMarkup. See https://www.drupal.org/node/2549395.
    *
    * @param string $string
    *   The string to run through SafeMarkup::format().

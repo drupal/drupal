@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\node\Functional\Views;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
@@ -88,7 +88,7 @@ class BulkFormAccessTest extends NodeTestBase {
       'action' => 'node_unpublish_action',
     ];
     $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
-    $this->assertRaw(SafeMarkup::format('No access to execute %action on the @entity_type_label %entity_label.', [
+    $this->assertRaw(new FormattableMarkup('No access to execute %action on the @entity_type_label %entity_label.', [
       '%action' => 'Unpublish content',
       '@entity_type_label' => 'Content',
       '%entity_label' => $node->label(),
@@ -117,7 +117,7 @@ class BulkFormAccessTest extends NodeTestBase {
     ];
     $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
     // Test that the action message isn't shown.
-    $this->assertNoRaw(SafeMarkup::format('%action was applied to 1 item.', [
+    $this->assertNoRaw(new FormattableMarkup('%action was applied to 1 item.', [
       '%action' => 'Unpublish content',
     ]));
     // Re-load the node and check the status.

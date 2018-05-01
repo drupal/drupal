@@ -3,7 +3,7 @@
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\ConfigValueException;
 use Drupal\Core\Config\InstallStorage;
@@ -292,7 +292,7 @@ class ConfigCRUDTest extends KernelTestBase {
       $this->fail('No Exception thrown upon saving invalid data type.');
     }
     catch (UnsupportedDataTypeConfigException $e) {
-      $this->pass(SafeMarkup::format('%class thrown upon saving invalid data type.', [
+      $this->pass(new FormattableMarkup('%class thrown upon saving invalid data type.', [
         '%class' => get_class($e),
       ]));
     }
@@ -309,7 +309,7 @@ class ConfigCRUDTest extends KernelTestBase {
       $this->fail('No Exception thrown upon saving invalid data type.');
     }
     catch (UnsupportedDataTypeConfigException $e) {
-      $this->pass(SafeMarkup::format('%class thrown upon saving invalid data type.', [
+      $this->pass(new FormattableMarkup('%class thrown upon saving invalid data type.', [
         '%class' => get_class($e),
       ]));
     }

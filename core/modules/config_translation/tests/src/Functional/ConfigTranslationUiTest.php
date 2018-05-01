@@ -4,7 +4,7 @@ namespace Drupal\Tests\config_translation\Functional;
 
 use Behat\Mink\Element\NodeElement;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
@@ -1151,17 +1151,17 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       ':id' => $id,
     ]);
     $textarea = reset($textarea);
-    $this->assertTrue($textarea instanceof NodeElement, SafeMarkup::format('Disabled field @id exists.', [
+    $this->assertTrue($textarea instanceof NodeElement, new FormattableMarkup('Disabled field @id exists.', [
       '@id' => $id,
     ]));
     $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $this->assertEqual($textarea->getText(), $expected, SafeMarkup::format('Disabled textarea @id hides text in an inaccessible text format.', [
+    $this->assertEqual($textarea->getText(), $expected, new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', [
       '@id' => $id,
     ]));
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
     $select = $this->xpath('//select[@id=:id]', [':id' => $select_id]);
-    return $this->assertFalse($select, SafeMarkup::format('Field @id does not exist.', [
+    return $this->assertFalse($select, new FormattableMarkup('Field @id does not exist.', [
       '@id' => $id,
     ]));
   }

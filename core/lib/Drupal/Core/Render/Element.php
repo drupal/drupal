@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Render;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Access\AccessResultInterface;
 
 /**
@@ -94,7 +94,7 @@ class Element {
         // Only trigger an error if the value is not null.
         // @see https://www.drupal.org/node/1283892
         elseif (isset($value)) {
-          trigger_error(SafeMarkup::format('"@key" is an invalid render array key', ['@key' => $key]), E_USER_ERROR);
+          trigger_error(new FormattableMarkup('"@key" is an invalid render array key', ['@key' => $key]), E_USER_ERROR);
         }
       }
       $i++;

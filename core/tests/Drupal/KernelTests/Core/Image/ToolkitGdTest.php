@@ -3,7 +3,7 @@
 namespace Drupal\KernelTests\Core\Image;
 
 use Drupal\Core\Image\ImageInterface;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -282,14 +282,14 @@ class ToolkitGdTest extends KernelTestBase {
         $image = $this->imageFactory->get(drupal_get_path('module', 'simpletest') . '/files/' . $file);
         $toolkit = $image->getToolkit();
         if (!$image->isValid()) {
-          $this->fail(SafeMarkup::format('Could not load image %file.', ['%file' => $file]));
+          $this->fail(new FormattableMarkup('Could not load image %file.', ['%file' => $file]));
           continue 2;
         }
         $image_original_type = $image->getToolkit()->getType();
 
         // All images should be converted to truecolor when loaded.
         $image_truecolor = imageistruecolor($toolkit->getResource());
-        $this->assertTrue($image_truecolor, SafeMarkup::format('Image %file after load is a truecolor image.', ['%file' => $file]));
+        $this->assertTrue($image_truecolor, new FormattableMarkup('Image %file after load is a truecolor image.', ['%file' => $file]));
 
         // Store the original GD resource.
         $old_res = $toolkit->getResource();
@@ -301,7 +301,7 @@ class ToolkitGdTest extends KernelTestBase {
         // been destroyed.
         $new_res = $toolkit->getResource();
         if ($new_res !== $old_res) {
-          $this->assertFalse(is_resource($old_res), SafeMarkup::format("'%operation' destroyed the original resource.", ['%operation' => $values['function']]));
+          $this->assertFalse(is_resource($old_res), new FormattableMarkup("'%operation' destroyed the original resource.", ['%operation' => $values['function']]));
         }
 
         // To keep from flooding the test with assert values, make a general
@@ -321,8 +321,8 @@ class ToolkitGdTest extends KernelTestBase {
         $file_path = $directory . '/' . $op . image_type_to_extension($image->getToolkit()->getType());
         $image->save($file_path);
 
-        $this->assertTrue($correct_dimensions_real, SafeMarkup::format('Image %file after %action action has proper dimensions.', ['%file' => $file, '%action' => $op]));
-        $this->assertTrue($correct_dimensions_object, SafeMarkup::format('Image %file object after %action action is reporting the proper height and width values.', ['%file' => $file, '%action' => $op]));
+        $this->assertTrue($correct_dimensions_real, new FormattableMarkup('Image %file after %action action has proper dimensions.', ['%file' => $file, '%action' => $op]));
+        $this->assertTrue($correct_dimensions_object, new FormattableMarkup('Image %file object after %action action is reporting the proper height and width values.', ['%file' => $file, '%action' => $op]));
 
         // JPEG colors will always be messed up due to compression. So we skip
         // these tests if the original or the result is in jpeg format.
@@ -368,7 +368,7 @@ class ToolkitGdTest extends KernelTestBase {
             // conversion. The convert operation cannot handle that correctly.
             if ($image->getToolkit()->getType() == $image_original_type || $corner != $this->transparent) {
               $correct_colors = $this->colorsAreEqual($color, $corner);
-              $this->assertTrue($correct_colors, SafeMarkup::format('Image %file object after %action action has the correct color placement at corner %corner.',
+              $this->assertTrue($correct_colors, new FormattableMarkup('Image %file object after %action action has the correct color placement at corner %corner.',
                 ['%file' => $file, '%action' => $op, '%corner' => $key]));
             }
           }
@@ -386,25 +386,25 @@ class ToolkitGdTest extends KernelTestBase {
       $image->createNew(50, 20, image_type_to_extension($type, FALSE), '#ffff00');
       $file = 'from_null' . image_type_to_extension($type);
       $file_path = $directory . '/' . $file;
-      $this->assertEqual(50, $image->getWidth(), SafeMarkup::format('Image file %file has the correct width.', ['%file' => $file]));
-      $this->assertEqual(20, $image->getHeight(), SafeMarkup::format('Image file %file has the correct height.', ['%file' => $file]));
-      $this->assertEqual(image_type_to_mime_type($type), $image->getMimeType(), SafeMarkup::format('Image file %file has the correct MIME type.', ['%file' => $file]));
-      $this->assertTrue($image->save($file_path), SafeMarkup::format('Image %file created anew from a null image was saved.', ['%file' => $file]));
+      $this->assertEqual(50, $image->getWidth(), new FormattableMarkup('Image file %file has the correct width.', ['%file' => $file]));
+      $this->assertEqual(20, $image->getHeight(), new FormattableMarkup('Image file %file has the correct height.', ['%file' => $file]));
+      $this->assertEqual(image_type_to_mime_type($type), $image->getMimeType(), new FormattableMarkup('Image file %file has the correct MIME type.', ['%file' => $file]));
+      $this->assertTrue($image->save($file_path), new FormattableMarkup('Image %file created anew from a null image was saved.', ['%file' => $file]));
 
       // Reload saved image.
       $image_reloaded = $this->imageFactory->get($file_path);
       if (!$image_reloaded->isValid()) {
-        $this->fail(SafeMarkup::format('Could not load image %file.', ['%file' => $file]));
+        $this->fail(new FormattableMarkup('Could not load image %file.', ['%file' => $file]));
         continue;
       }
-      $this->assertEqual(50, $image_reloaded->getWidth(), SafeMarkup::format('Image file %file has the correct width.', ['%file' => $file]));
-      $this->assertEqual(20, $image_reloaded->getHeight(), SafeMarkup::format('Image file %file has the correct height.', ['%file' => $file]));
-      $this->assertEqual(image_type_to_mime_type($type), $image_reloaded->getMimeType(), SafeMarkup::format('Image file %file has the correct MIME type.', ['%file' => $file]));
+      $this->assertEqual(50, $image_reloaded->getWidth(), new FormattableMarkup('Image file %file has the correct width.', ['%file' => $file]));
+      $this->assertEqual(20, $image_reloaded->getHeight(), new FormattableMarkup('Image file %file has the correct height.', ['%file' => $file]));
+      $this->assertEqual(image_type_to_mime_type($type), $image_reloaded->getMimeType(), new FormattableMarkup('Image file %file has the correct MIME type.', ['%file' => $file]));
       if ($image_reloaded->getToolkit()->getType() == IMAGETYPE_GIF) {
-        $this->assertEqual('#ffff00', $image_reloaded->getToolkit()->getTransparentColor(), SafeMarkup::format('Image file %file has the correct transparent color channel set.', ['%file' => $file]));
+        $this->assertEqual('#ffff00', $image_reloaded->getToolkit()->getTransparentColor(), new FormattableMarkup('Image file %file has the correct transparent color channel set.', ['%file' => $file]));
       }
       else {
-        $this->assertEqual(NULL, $image_reloaded->getToolkit()->getTransparentColor(), SafeMarkup::format('Image file %file has no color channel set.', ['%file' => $file]));
+        $this->assertEqual(NULL, $image_reloaded->getToolkit()->getTransparentColor(), new FormattableMarkup('Image file %file has no color channel set.', ['%file' => $file]));
       }
     }
 
@@ -500,12 +500,12 @@ class ToolkitGdTest extends KernelTestBase {
     $toolkit = $image->getToolkit();
 
     if (!$image->isValid()) {
-      $this->fail(SafeMarkup::format('Could not load image %file.', ['%file' => $file]));
+      $this->fail(new FormattableMarkup('Could not load image %file.', ['%file' => $file]));
     }
     else {
       // All images should be converted to truecolor when loaded.
       $image_truecolor = imageistruecolor($toolkit->getResource());
-      $this->assertTrue($image_truecolor, SafeMarkup::format('Image %file after load is a truecolor image.', ['%file' => $file]));
+      $this->assertTrue($image_truecolor, new FormattableMarkup('Image %file after load is a truecolor image.', ['%file' => $file]));
     }
   }
 
@@ -523,7 +523,7 @@ class ToolkitGdTest extends KernelTestBase {
     // Load up a fresh image.
     $image = $this->imageFactory->get(drupal_get_path('module', 'simpletest') . '/files/' . $file);
     if (!$image->isValid()) {
-      $this->fail(SafeMarkup::format('Could not load image %file.', ['%file' => $file]));
+      $this->fail(new FormattableMarkup('Could not load image %file.', ['%file' => $file]));
     }
 
     // Try perform a missing toolkit operation.

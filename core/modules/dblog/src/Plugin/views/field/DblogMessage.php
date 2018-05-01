@@ -2,7 +2,7 @@
 
 namespace Drupal\dblog\Plugin\views\field;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
@@ -60,7 +60,7 @@ class DblogMessage extends FieldPluginBase {
 
     if ($this->options['replace_variables']) {
       $variables = unserialize($this->getvalue($values, 'variables'));
-      return SafeMarkup::format($value, (array) $variables);
+      return new FormattableMarkup($value, (array) $variables);
     }
     else {
       return $this->sanitizeValue($value);

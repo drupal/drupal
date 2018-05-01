@@ -4,7 +4,7 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Tests parsing js files for translatable strings.
@@ -92,10 +92,10 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
         $args = ['%source' => $str, '%context' => $context];
 
         // Make sure that the string was found in the file.
-        $this->assertTrue(isset($source_strings[$str]), SafeMarkup::format('Found source string: %source', $args));
+        $this->assertTrue(isset($source_strings[$str]), new FormattableMarkup('Found source string: %source', $args));
 
         // Make sure that the proper context was matched.
-        $message = $context ? SafeMarkup::format('Context for %source is %context', $args) : SafeMarkup::format('Context for %source is blank', $args);
+        $message = $context ? new FormattableMarkup('Context for %source is %context', $args) : new FormattableMarkup('Context for %source is blank', $args);
         $this->assertTrue(isset($source_strings[$str]) && $source_strings[$str] === $context, $message);
       }
 

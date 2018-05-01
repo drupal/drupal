@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Tests\ViewTestData;
@@ -206,7 +206,7 @@ class HandlerTest extends UITestBase {
       $href = "admin/structure/views/nojs/handler/test_view_broken/default/$type/id_broken";
 
       $result = $this->xpath('//a[contains(@href, :href)]', [':href' => $href]);
-      $this->assertEqual(count($result), 1, SafeMarkup::format('Handler (%type) edit link found.', ['%type' => $type]));
+      $this->assertEqual(count($result), 1, new FormattableMarkup('Handler (%type) edit link found.', ['%type' => $type]));
 
       $text = 'Broken/missing handler';
 
@@ -225,7 +225,7 @@ class HandlerTest extends UITestBase {
       ];
 
       foreach ($original_configuration as $key => $value) {
-        $this->assertText(SafeMarkup::format('@key: @value', ['@key' => $key, '@value' => $value]));
+        $this->assertText(new FormattableMarkup('@key: @value', ['@key' => $key, '@value' => $value]));
       }
     }
   }

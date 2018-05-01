@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
@@ -79,7 +79,7 @@ class ConfirmFormTest extends BrowserTestBase {
    */
   public function assertCancelLinkUrl(Url $url, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[@href=:url]', [':url' => $url->toString()]);
-    $message = ($message ? $message : SafeMarkup::format('Cancel link with URL %url found.', ['%url' => $url->toString()]));
+    $message = ($message ? $message : new FormattableMarkup('Cancel link with URL %url found.', ['%url' => $url->toString()]));
     return $this->assertTrue(isset($links[0]), $message, $group);
   }
 

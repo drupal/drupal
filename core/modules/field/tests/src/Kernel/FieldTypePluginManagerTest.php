@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\field\Kernel;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
@@ -48,8 +48,8 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
 
       $instance = $field_type_manager->createInstance($type, $configuration);
 
-      $this->assertTrue($instance instanceof $class, SafeMarkup::format('Created a @class instance', ['@class' => $class]));
-      $this->assertEqual($field_name, $instance->getName(), SafeMarkup::format('Instance name is @name', ['@name' => $field_name]));
+      $this->assertTrue($instance instanceof $class, new FormattableMarkup('Created a @class instance', ['@class' => $class]));
+      $this->assertEqual($field_name, $instance->getName(), new FormattableMarkup('Instance name is @name', ['@name' => $field_name]));
     }
   }
 
@@ -79,8 +79,8 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
 
     $instance = $field_type_manager->createInstance($type, $configuration);
 
-    $this->assertTrue($instance instanceof $class, SafeMarkup::format('Created a @class instance', ['@class' => $class]));
-    $this->assertEqual($field_name, $instance->getName(), SafeMarkup::format('Instance name is @name', ['@name' => $field_name]));
+    $this->assertTrue($instance instanceof $class, new FormattableMarkup('Created a @class instance', ['@class' => $class]));
+    $this->assertEqual($field_name, $instance->getName(), new FormattableMarkup('Instance name is @name', ['@name' => $field_name]));
     $this->assertEqual($instance->getFieldDefinition()->getLabel(), 'Jenny', 'Instance label is Jenny');
     $this->assertEqual($instance->getFieldDefinition()->getDefaultValue($entity), [['value' => 8675309]], 'Instance default_value is 8675309');
   }

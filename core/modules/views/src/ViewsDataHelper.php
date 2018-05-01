@@ -3,7 +3,7 @@
 namespace Drupal\views;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Defines a helper class for stuff related to views data.
@@ -120,7 +120,7 @@ class ViewsDataHelper {
                 }
                 else {
                   if ($string != 'base') {
-                    $strings[$field][$key][$string] = SafeMarkup::format("Error: missing @component", ['@component' => $string]);
+                    $strings[$field][$key][$string] = new FormattableMarkup("Error: missing @component", ['@component' => $string]);
                   }
                 }
               }

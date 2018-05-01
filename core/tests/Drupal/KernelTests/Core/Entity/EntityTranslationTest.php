@@ -2,7 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TranslationStatusInterface;
 use Drupal\entity_test\Entity\EntityTestMul;
@@ -807,7 +807,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     foreach ($langcodes as $langcode) {
       $adapter = $entity->getTranslation($langcode)->getTypedData();
       $name = $adapter->get('name')->value;
-      $this->assertEqual($name, $values[$langcode]['name'], SafeMarkup::format('Name correctly retrieved from "@langcode" adapter', ['@langcode' => $langcode]));
+      $this->assertEqual($name, $values[$langcode]['name'], new FormattableMarkup('Name correctly retrieved from "@langcode" adapter', ['@langcode' => $langcode]));
     }
   }
 
