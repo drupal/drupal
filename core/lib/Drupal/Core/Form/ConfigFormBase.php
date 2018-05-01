@@ -3,7 +3,6 @@
 namespace Drupal\Core\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Messenger\MessengerTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -11,7 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class ConfigFormBase extends FormBase {
   use ConfigFormBaseTrait;
-  use MessengerTrait;
 
   /**
    * Constructs a \Drupal\system\ConfigFormBase object.
