@@ -128,6 +128,7 @@ class EntityModerationForm extends FormBase {
     ];
 
     $form['#theme'] = ['entity_moderation_form'];
+    $form['#attached']['library'][] = 'content_moderation/content_moderation';
 
     return $form;
   }
