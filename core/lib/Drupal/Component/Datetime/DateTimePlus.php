@@ -671,7 +671,7 @@ class DateTimePlus {
    * Formats the date for display.
    *
    * @param string $format
-   *   A format string using either PHP's date().
+   *   Format accepted by date().
    * @param array $settings
    *   - timezone: (optional) String timezone name. Defaults to the timezone
    *     of the date object.
