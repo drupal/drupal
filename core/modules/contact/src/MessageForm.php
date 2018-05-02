@@ -5,7 +5,7 @@ namespace Drupal\contact;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -57,8 +57,8 @@ class MessageForm extends ContentEntityForm {
   /**
    * Constructs a MessageForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood control mechanism.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
@@ -72,8 +72,8 @@ class MessageForm extends ContentEntityForm {
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FloodInterface $flood, LanguageManagerInterface $language_manager, MailHandlerInterface $mail_handler, DateFormatterInterface $date_formatter, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
-    parent::__construct($entity_manager, $entity_type_bundle_info, $time);
+  public function __construct(EntityRepositoryInterface $entity_repository, FloodInterface $flood, LanguageManagerInterface $language_manager, MailHandlerInterface $mail_handler, DateFormatterInterface $date_formatter, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+    parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     $this->flood = $flood;
     $this->languageManager = $language_manager;
     $this->mailHandler = $mail_handler;
@@ -85,7 +85,7 @@ class MessageForm extends ContentEntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
+      $container->get('entity.repository'),
       $container->get('flood'),
       $container->get('language_manager'),
       $container->get('contact.mail_handler'),
@@ -109,7 +109,7 @@ class MessageForm extends ContentEntityForm {
         '#theme_wrappers' => ['container__preview'],
         '#attributes' => ['class' => ['preview']],
       ];
-      $form['preview']['message'] = $this->entityManager->getViewBuilder('contact_message')->view($message, 'full');
+      $form['preview']['message'] = $this->entityTypeManager->getViewBuilder('contact_message')->view($message, 'full');
     }
 
     $form['name'] = [
