@@ -766,10 +766,10 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
     }
     // Provide the page with information about the individual asset libraries
     // used, information not otherwise available when aggregation is enabled.
-    $minimal_libraries = $library_dependency_resolver->getMinimalRepresentativeSubset(array_merge(
+    $minimal_libraries = $library_dependency_resolver->getMinimalRepresentativeSubset(array_unique(array_merge(
       $assets->getLibraries(),
       $assets->getAlreadyLoadedLibraries()
-    ));
+    )));
     sort($minimal_libraries);
     $settings['ajaxPageState']['libraries'] = implode(',', $minimal_libraries);
   }
