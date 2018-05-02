@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\rdf\Functional;
 
-use Drupal\node\Tests\NodeTestBase;
+use Drupal\Tests\node\Functional\NodeTestBase;
 
 /**
  * Tests the RDFa markup of Nodes.
