@@ -266,7 +266,7 @@ INSTALLATION
    this optional security measure, from a Unix/Linux command line you can use
    the following command:
 
-     chmod a-r CHANGELOG.txt
+     chmod a-r core/CHANGELOG.txt
 
    Note that the example only affects CHANGELOG.txt. To completely hide all
    documentation files from public view, repeat this command for each of the
