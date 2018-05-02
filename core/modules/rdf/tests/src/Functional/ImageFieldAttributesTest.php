@@ -1,11 +1,12 @@
 <?php
 
-namespace Drupal\rdf\Tests;
+namespace Drupal\Tests\rdf\Functional;
 
 use Drupal\image\Entity\ImageStyle;
-use Drupal\image\Tests\ImageFieldTestBase;
+use Drupal\Tests\image\Functional\ImageFieldTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the RDFa markup of imagefields.
@@ -13,6 +14,10 @@ use Drupal\file\Entity\File;
  * @group rdf
  */
 class ImageFieldAttributesTest extends ImageFieldTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
 
   /**
    * Modules to enable.

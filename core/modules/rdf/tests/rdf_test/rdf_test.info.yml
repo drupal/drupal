@@ -1,0 +1,8 @@
+name: 'RDF test module'
+type: module
+description: 'Test functionality for the RDF module.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - rdf

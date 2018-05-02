@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\rdf\Tests\Field;
+namespace Drupal\rdf_test;
 
 /**
  * Contains methods for test data conversions.

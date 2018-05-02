@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\rdf\Tests;
+namespace Drupal\Tests\rdf\Functional;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
-use Drupal\comment\Tests\CommentTestBase;
+use Drupal\Tests\comment\Functional\CommentTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\comment\Entity\Comment;
 
