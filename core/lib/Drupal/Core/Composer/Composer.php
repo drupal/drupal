@@ -6,6 +6,7 @@ use Drupal\Component\PhpStorage\FileStorage;
 use Composer\Script\Event;
 use Composer\Installer\PackageEvent;
 use Composer\Semver\Constraint\Constraint;
+use Composer\Util\ProcessExecutor;
 
 /**
  * Provides static functions for composer script events.
@@ -267,6 +268,13 @@ EOT;
       }
     }
     return $package_key;
+  }
+
+  /**
+   * Removes Composer's timeout so that scripts can run indefinitely.
+   */
+  public static function removeTimeout() {
+    ProcessExecutor::setTimeout(0);
   }
 
   /**

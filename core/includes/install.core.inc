@@ -89,10 +89,13 @@ const INSTALL_TASK_RUN_IF_NOT_COMPLETED = 3;
  *   page request (optimized for the command line) and not send any output
  *   intended for the web browser. See install_state_defaults() for a list of
  *   elements that are allowed to appear in this array.
+ * @param callable $callback
+ *   (optional) A callback to allow command line processes to update a progress
+ *   bar. The callback is passed the $install_state variable.
  *
  * @see install_state_defaults()
  */
-function install_drupal($class_loader, $settings = []) {
+function install_drupal($class_loader, $settings = [], callable $callback = NULL) {
   // Support the old way of calling this function with just a settings array.
   // @todo Remove this when Drush is updated in the Drupal testing
   //   infrastructure in https://www.drupal.org/node/2389243
@@ -114,7 +117,7 @@ function install_drupal($class_loader, $settings = []) {
     install_begin_request($class_loader, $install_state);
     // Based on the installation state, run the remaining tasks for this page
     // request, and collect any output.
-    $output = install_run_tasks($install_state);
+    $output = install_run_tasks($install_state, $callback);
   }
   catch (InstallerException $e) {
     // In the non-interactive installer, exceptions are always thrown directly.
@@ -289,6 +292,8 @@ function install_state_defaults() {
  * @param $install_state
  *   An array of information about the current installation state. This is
  *   modified with information gleaned from the beginning of the page request.
+ *
+ * @see install_drupal()
  */
 function install_begin_request($class_loader, &$install_state) {
   $request = Request::createFromGlobals();
@@ -328,7 +333,7 @@ function install_begin_request($class_loader, &$install_state) {
     date_default_timezone_set('Australia/Sydney');
   }
 
-  $site_path = DrupalKernel::findSitePath($request, FALSE);
+  $site_path = empty($install_state['site_path']) ? DrupalKernel::findSitePath($request, FALSE) : $install_state['site_path'];
   Settings::initialize(dirname(dirname(__DIR__)), $site_path, $class_loader);
 
   // Ensure that procedural dependencies are loaded as early as possible,
@@ -539,11 +544,14 @@ function install_begin_request($class_loader, &$install_state) {
  * @param $install_state
  *   An array of information about the current installation state. This is
  *   passed along to each task, so it can be modified if necessary.
+ * @param callable $callback
+ *   (optional) A callback to allow command line processes to update a progress
+ *   bar. The callback is passed the $install_state variable.
  *
  * @return
  *   HTML output from the last completed task.
  */
-function install_run_tasks(&$install_state) {
+function install_run_tasks(&$install_state, callable $callback = NULL) {
   do {
     // Obtain a list of tasks to perform. The list of tasks itself can be
     // dynamic (e.g., some might be defined by the installation profile,
@@ -574,6 +582,9 @@ function install_run_tasks(&$install_state) {
       if ($task['run'] == INSTALL_TASK_RUN_IF_NOT_COMPLETED || $install_state['installation_finished']) {
         \Drupal::state()->set('install_task', $install_state['installation_finished'] ? 'done' : $task_name);
       }
+    }
+    if ($callback) {
+      $callback($install_state);
     }
     // Stop when there are no tasks left. In the case of an interactive
     // installation, also stop if we have some output to send to the browser,

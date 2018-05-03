@@ -2,6 +2,7 @@
 CONTENTS OF THIS FILE
 ---------------------
 
+ * Quickstart
  * Requirements and notes
  * Optional server requirements
  * Installation
@@ -9,6 +10,35 @@ CONTENTS OF THIS FILE
  * Building and customizing your site
  * Multisite configuration
  * Multilingual configuration
+
+QUICKSTART
+----------------------
+
+Prerequisites:
+- PHP 5.5.9 (or greater) (https://php.net).
+
+In the instructions below, replace the version x.y.z with the specific version
+you wish to download. Example: 8.6.0.zip. You can find the latest stable version
+at https://www.drupal.org/project/drupal.
+
+Download and extract the Drupal package:
+- curl -sS https://ftp.drupal.org/files/projects/drupal-x.y.z.zip --output drupal-x.y.z.zip
+- unzip drupal-x.y.z.zip
+- cd /path/to/drupal-x.y.z
+- php core/scripts/drupal quick-start
+
+Wait… installation can take a minute or two. A successful installation will
+result in opening the new site in your browser.
+
+Run the following command for a list of available options that you may need to
+configure quick-start:
+- php core/scripts/drupal quick-start --help
+
+Follow the instructions in the REINSTALL section below to start over.
+
+NOTE: This quick start solution uses PHP's built-in web server and is not
+intended for production use. Read more about how to run Drupal in a production
+environment below.
 
 REQUIREMENTS AND NOTES
 ----------------------
