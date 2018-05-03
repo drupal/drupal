@@ -703,7 +703,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    *
    * @return array
    *
-   * @see drupal_render()
+   * @see \Drupal\Core\Render\RendererInterface::render()
    * @see \Drupal\Core\Render\Element\Table::preRenderTable()
    *
    * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.

@@ -213,7 +213,8 @@ function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $c
  *   content language of the current request.
  *
  * @return array
- *   A $page element suitable for use by drupal_render().
+ *   A $page element suitable for use by
+ *   \Drupal\Core\Render\RendererInterface::render().
  */
 function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
   return entity_view($term, $view_mode, $langcode);
@@ -231,7 +232,8 @@ function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
  *   content language of the current request.
  *
  * @return array
- *   An array in the format expected by drupal_render().
+ *   An array in the format expected by
+ *   \Drupal\Core\Render\RendererInterface::render().
  */
 function taxonomy_term_view_multiple(array $terms, $view_mode = 'full', $langcode = NULL) {
   return entity_view_multiple($terms, $view_mode, $langcode);

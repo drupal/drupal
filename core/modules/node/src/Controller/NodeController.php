@@ -122,7 +122,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *   The node revision ID.
    *
    * @return array
-   *   An array suitable for drupal_render().
+   *   An array suitable for \Drupal\Core\Render\RendererInterface::render().
    */
   public function revisionShow($node_revision) {
     $node = $this->entityManager()->getStorage('node')->loadRevision($node_revision);
@@ -154,7 +154,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *   A node object.
    *
    * @return array
-   *   An array as expected by drupal_render().
+   *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
    */
   public function revisionOverview(NodeInterface $node) {
     $account = $this->currentUser();

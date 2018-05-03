@@ -44,7 +44,8 @@ class AggregatorController extends ControllerBase {
    * Presents the aggregator feed creation form.
    *
    * @return array
-   *   A form array as expected by drupal_render().
+   *   A form array as expected by
+   *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function feedAdd() {
     $feed = $this->entityManager()->getStorage('aggregator_feed')->create();
@@ -101,7 +102,8 @@ class AggregatorController extends ControllerBase {
    * Displays the aggregator administration page.
    *
    * @return array
-   *   A render array as expected by drupal_render().
+   *   A render array as expected by
+   *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function adminOverview() {
     $entity_manager = $this->entityManager();

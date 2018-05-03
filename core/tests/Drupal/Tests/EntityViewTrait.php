@@ -32,7 +32,7 @@ trait EntityViewTrait {
    *   (optional) Whether to clear the cache for this entity.
    * @return array
    *
-   * @see drupal_render()
+   * @see \Drupal\Core\Render\RendererInterface::render()
    */
   protected function buildEntityView(EntityInterface $entity, $view_mode = 'full', $langcode = NULL, $reset = FALSE) {
     $ensure_fully_built = function (&$elements) use (&$ensure_fully_built) {

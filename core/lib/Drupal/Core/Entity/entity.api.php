@@ -1359,7 +1359,8 @@ function hook_ENTITY_TYPE_revision_delete(Drupal\Core\Entity\EntityInterface $en
  * @param &$build
  *   A renderable array representing the entity content. The module may add
  *   elements to $build prior to rendering. The structure of $build is a
- *   renderable array as expected by drupal_render().
+ *   renderable array as expected by
+ *   \Drupal\Core\Render\RendererInterface::render().
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
@@ -1391,7 +1392,8 @@ function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $en
  * @param &$build
  *   A renderable array representing the entity content. The module may add
  *   elements to $build prior to rendering. The structure of $build is a
- *   renderable array as expected by drupal_render().
+ *   renderable array as expected by
+ *   \Drupal\Core\Render\RendererInterface::render().
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
@@ -1569,7 +1571,7 @@ function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInter
  * @param string $view_mode
  *   The view_mode that is to be used to display the entity.
  *
- * @see drupal_render()
+ * @see \Drupal\Core\Render\RendererInterface::render()
  * @see \Drupal\Core\Entity\EntityViewBuilder
  * @see hook_entity_build_defaults_alter()
  *
@@ -1593,7 +1595,7 @@ function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entit
  * @param string $view_mode
  *   The view_mode that is to be used to display the entity.
  *
- * @see drupal_render()
+ * @see \Drupal\Core\Render\RendererInterface::render()
  * @see \Drupal\Core\Entity\EntityViewBuilder
  * @see hook_ENTITY_TYPE_build_defaults_alter()
  *
