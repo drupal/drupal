@@ -42,7 +42,7 @@ trait DrupalStandardsListenerTrait {
    *   TRUE if the class exists, FALSE otherwise.
    */
   private function classExists($class) {
-    return class_exists($class, TRUE) || trait_exists($class, TRUE) || interface_exists($class, TRUE);
+    return class_exists($class, TRUE) || trait_exists($class, TRUE);
   }
 
   /**
@@ -71,7 +71,10 @@ trait DrupalStandardsListenerTrait {
       $default_class = reset($annotations['class']['coversDefaultClass']);
       // Check whether the default class exists.
       $valid_default_class = $this->classExists($default_class);
-      if (!$valid_default_class) {
+      if (!$valid_default_class && interface_exists($default_class)) {
+        $this->fail($test, "@coversDefaultClass refers to an interface '$default_class' and those can not be tested.");
+      }
+      elseif (!$valid_default_class) {
         $this->fail($test, "@coversDefaultClass does not exist '$default_class'");
       }
     }
@@ -104,6 +107,9 @@ trait DrupalStandardsListenerTrait {
             if (empty($method)) {
               $this->fail($test, "@covers invalid syntax: Needs '::' or class does not exist in $covers");
               return;
+            }
+            elseif (interface_exists($class)) {
+              $this->fail($test, "@covers refers to an interface '$class' and those can not be tested.");
             }
             else {
               $this->fail($test, '@covers class does not exist ' . $class);
