@@ -1,0 +1,12 @@
+name: 'Testing install profile all dependencies'
+type: profile
+description: 'Profile for testing that install profiles can require a module.'
+version: VERSION
+core: 8.x
+hidden: true
+dependencies:
+  - ban
+  - dblog
+install: []
+themes:
+  - classy

@@ -4,7 +4,7 @@ description: 'Minimal profile for running a test when dependencies are listed bu
 version: VERSION
 core: 8.x
 hidden: true
-dependencies:
+install:
   - missing_module1
   - missing_module2
 keep_english: true

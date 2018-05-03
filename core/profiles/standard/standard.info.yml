@@ -3,7 +3,7 @@ type: profile
 description: 'Install with commonly used features pre-configured.'
 version: VERSION
 core: 8.x
-dependencies:
+install:
   - node
   - history
   - block

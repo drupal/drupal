@@ -1,0 +1,11 @@
+name: 'Testing install profile dependencies BC layer'
+type: profile
+description: 'Profile for testing BC layer for profile dependencies.'
+version: VERSION
+core: 8.x
+hidden: true
+dependencies:
+  - dblog
+  - ban
+themes:
+  - classy

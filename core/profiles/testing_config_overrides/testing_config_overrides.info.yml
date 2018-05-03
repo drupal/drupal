@@ -4,7 +4,7 @@ description: 'Minimal profile for running tests with config overrides in a profi
 version: VERSION
 core: 8.x
 hidden: true
-dependencies:
+install:
   - action
   - language
   - tour

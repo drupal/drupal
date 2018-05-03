@@ -574,7 +574,7 @@ function drupal_verify_profile($install_state) {
   $present_modules[] = $profile;
 
   // Verify that all of the profile's required modules are present.
-  $missing_modules = array_diff($info['dependencies'], $present_modules);
+  $missing_modules = array_diff($info['install'], $present_modules);
 
   $requirements = [];
 
@@ -957,7 +957,7 @@ function drupal_check_profile($profile) {
   $drupal_root = \Drupal::root();
   $module_list = (new ExtensionDiscovery($drupal_root))->scan('module');
 
-  foreach ($info['dependencies'] as $module) {
+  foreach ($info['install'] as $module) {
     // If the module is in the module list we know it exists and we can continue
     // including and registering it.
     // @see \Drupal\Core\Extension\ExtensionDiscovery::scanDirectory()
@@ -1039,6 +1039,8 @@ function drupal_check_module($module) {
  * - description: A brief description of the profile.
  * - dependencies: An array of shortnames of other modules that this install
  *   profile requires.
+ * - install: An array of shortname of other modules to install that are not
+ *   required by this install profile.
  *
  * Additional, less commonly-used information that can appear in a
  * profile.info.yml file but not in a normal Drupal module .info.yml file
@@ -1067,7 +1069,7 @@ function drupal_check_module($module) {
  * @code
  *    name: Minimal
  *    description: Start fresh, with only a few modules enabled.
- *    dependencies:
+ *    install:
  *      - block
  *      - dblog
  * @endcode
@@ -1087,6 +1089,7 @@ function install_profile_info($profile, $langcode = 'en') {
     // Set defaults for module info.
     $defaults = [
       'dependencies' => [],
+      'install' => [],
       'themes' => ['stark'],
       'description' => '',
       'version' => NULL,
@@ -1103,7 +1106,9 @@ function install_profile_info($profile, $langcode = 'en') {
 
     $locale = !empty($langcode) && $langcode != 'en' ? ['locale'] : [];
 
-    $info['dependencies'] = array_unique(array_merge($required, $info['dependencies'], $locale));
+    // Merge dependencies, required modules and locale into install list and
+    // remove any duplicates.
+    $info['install'] = array_unique(array_merge($info['install'], $required, $info['dependencies'], $locale));
 
     $cache[$profile][$langcode] = $info;
   }

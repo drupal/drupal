@@ -170,20 +170,26 @@ class ModuleHandlerTest extends KernelTestBase {
 
   /**
    * Tests uninstalling a module that is a "dependency" of a profile.
+   *
+   * Note this test does not trigger the deprecation error because of static
+   * caching in \Drupal\Core\Extension\InfoParser::parse().
+   *
+   * @group legacy
    */
-  public function testUninstallProfileDependency() {
-    $profile = 'testing';
-    $dependency = 'page_cache';
+  public function testUninstallProfileDependencyBC() {
+    $profile = 'testing_install_profile_dependencies_bc';
+    $dependency = 'dblog';
     $this->setSetting('install_profile', $profile);
     // Prime the drupal_get_filename() static cache with the location of the
-    // minimal profile as it is not the currently active profile and we don't
+    // testing profile as it is not the currently active profile and we don't
     // yet have any cached way to retrieve its location.
     // @todo Remove as part of https://www.drupal.org/node/2186491
     drupal_get_filename('profile', $profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
     $this->enableModules(['module_test', $profile]);
 
     $data = \Drupal::service('extension.list.module')->reset()->getList();
-    $this->assertTrue(isset($data[$profile]->requires[$dependency]));
+    $this->assertFalse(isset($data[$profile]->requires[$dependency]));
+    $this->assertContains($dependency, $data[$profile]->info['install']);
 
     $this->moduleInstaller()->install([$dependency]);
     $this->assertTrue($this->moduleHandler()->moduleExists($dependency));
@@ -198,6 +204,76 @@ class ModuleHandlerTest extends KernelTestBase {
     $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order') ?: [];
     $this->assertTrue(in_array($dependency, $uninstalled_modules), "$dependency module is in the list of uninstalled modules.");
     $this->assertFalse(in_array($profile, $uninstalled_modules), 'The installation profile is not in the list of uninstalled modules.');
+  }
+
+  /**
+   * Tests uninstalling a module installed by a profile.
+   */
+  public function testUninstallProfileDependency() {
+    $profile = 'testing_install_profile_dependencies';
+    $dependency = 'dblog';
+    $non_dependency = 'ban';
+    $this->setSetting('install_profile', $profile);
+    // Prime the drupal_get_filename() static cache with the location of the
+    // testing_install_profile_dependencies profile as it is not the currently
+    // active profile and we don't yet have any cached way to retrieve its
+    // location.
+    // @todo Remove as part of https://www.drupal.org/node/2186491
+    drupal_get_filename('profile', $profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
+    $this->enableModules(['module_test', $profile]);
+
+    $data = \Drupal::service('extension.list.module')->reset()->getList();
+    $this->assertArrayHasKey($dependency, $data[$profile]->requires);
+    $this->assertArrayNotHasKey($non_dependency, $data[$profile]->requires);
+
+    $this->moduleInstaller()->install([$dependency, $non_dependency]);
+    $this->assertTrue($this->moduleHandler()->moduleExists($dependency));
+
+    // Uninstall the profile module that is not a dependent.
+    $result = $this->moduleInstaller()->uninstall([$non_dependency]);
+    $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
+    $this->assertFalse($this->moduleHandler()->moduleExists($non_dependency));
+    $this->assertEquals(drupal_get_installed_schema_version($non_dependency), SCHEMA_UNINSTALLED, "$dependency module was uninstalled.");
+
+    // Verify that the installation profile itself was not uninstalled.
+    $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order') ?: [];
+    $this->assertContains($non_dependency, $uninstalled_modules, "$dependency module is in the list of uninstalled modules.");
+    $this->assertNotContains($profile, $uninstalled_modules, 'The installation profile is not in the list of uninstalled modules.');
+
+    // Try uninstalling the required module.
+    $this->setExpectedException(ModuleUninstallValidatorException::class, 'The following reasons prevent the modules from being uninstalled: The Testing install profile dependencies module is required');
+    $this->moduleInstaller()->uninstall([$dependency]);
+  }
+
+  /**
+   * Tests that a profile can supply only real dependencies
+   */
+  public function testProfileAllDependencies() {
+    $profile = 'testing_install_profile_all_dependencies';
+    $dependencies = ['dblog', 'ban'];
+
+    $this->setSetting('install_profile', $profile);
+    // Prime the drupal_get_filename() static cache with the location of the
+    // testing_install_profile_dependencies profile as it is not the currently
+    // active profile and we don't yet have any cached way to retrieve its
+    // location.
+    // @todo Remove as part of https://www.drupal.org/node/2186491
+    drupal_get_filename('profile', $profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
+    $this->enableModules(['module_test', $profile]);
+
+    $data = \Drupal::service('extension.list.module')->reset()->getList();
+    foreach ($dependencies as $dependency) {
+      $this->assertArrayHasKey($dependency, $data[$profile]->requires);
+    }
+
+    $this->moduleInstaller()->install($dependencies);
+    foreach ($dependencies as $dependency) {
+      $this->assertTrue($this->moduleHandler()->moduleExists($dependency));
+    }
+
+    // Try uninstalling the dependencies.
+    $this->setExpectedException(ModuleUninstallValidatorException::class, 'The following reasons prevent the modules from being uninstalled: The Testing install profile all dependencies module is required');
+    $this->moduleInstaller()->uninstall($dependencies);
   }
 
   /**

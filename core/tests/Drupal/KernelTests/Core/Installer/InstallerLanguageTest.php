@@ -52,8 +52,8 @@ class InstallerLanguageTest extends KernelTestBase {
     $info_en = install_profile_info('testing', 'en');
     $info_nl = install_profile_info('testing', 'nl');
 
-    $this->assertFalse(in_array('locale', $info_en['dependencies']), 'Locale is not set when installing in English.');
-    $this->assertTrue(in_array('locale', $info_nl['dependencies']), 'Locale is set when installing in Dutch.');
+    $this->assertNotContains('locale', $info_en['install'], 'Locale is not set when installing in English.');
+    $this->assertContains('locale', $info_nl['install'], 'Locale is set when installing in Dutch.');
   }
 
 }

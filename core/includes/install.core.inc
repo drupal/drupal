@@ -1089,7 +1089,7 @@ function install_base_system(&$install_state) {
 
   // Save the list of other modules to install for the upcoming tasks.
   // State can be set to the database now that system.module is installed.
-  $modules = $install_state['profile_info']['dependencies'];
+  $modules = $install_state['profile_info']['install'];
 
   \Drupal::state()->set('install_profile_modules', array_diff($modules, ['system']));
   $install_state['base_system_verified'] = TRUE;

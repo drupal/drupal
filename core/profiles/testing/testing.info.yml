@@ -4,7 +4,7 @@ description: 'Minimal profile for running tests. Includes absolutely required mo
 version: VERSION
 core: 8.x
 hidden: true
-dependencies:
+install:
   # Enable page_cache and dynamic_page_cache in testing, to ensure that as many
   # tests as possible run with them enabled.
   - page_cache
