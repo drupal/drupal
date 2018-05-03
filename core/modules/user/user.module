@@ -900,7 +900,7 @@ function user_delete_multiple(array $uids) {
  *   content language of the current request.
  *
  * @return array
- *   An array as expected by drupal_render().
+ *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
  */
 function user_view($account, $view_mode = 'full', $langcode = NULL) {
   return entity_view($account, $view_mode, $langcode);
@@ -918,7 +918,8 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
  *   content language of the current request.
  *
  * @return array
- *   An array in the format expected by drupal_render().
+ *   An array in the format expected by
+ *   \Drupal\Core\Render\RendererInterface::render().
  */
 function user_view_multiple($accounts, $view_mode = 'full', $langcode = NULL) {
   return entity_view_multiple($accounts, $view_mode, $langcode);

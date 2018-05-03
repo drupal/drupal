@@ -14,7 +14,8 @@ class ModeratedContentController extends ControllerBase {
    * Provides the listing page for moderated nodes.
    *
    * @return array
-   *   A render array as expected by drupal_render().
+   *   A render array as expected by
+   *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function nodeListing() {
     $entity_type = $this->entityTypeManager()->getDefinition('node');

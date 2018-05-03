@@ -326,9 +326,10 @@ function views_theme_suggestions_container_alter(array &$suggestions, array $var
  *
  * @param $render_element
  *   The renderable array to which contextual links will be added. This array
- *   should be suitable for passing in to drupal_render() and will normally
- *   contain a representation of the view display whose contextual links are
- *   being requested.
+ *   should be suitable for passing in to
+ *   \Drupal\Core\Render\RendererInterface::render() and will normally contain a
+ *   representation of the view display whose contextual links are being
+ *   requested.
  * @param $location
  *   The location in which the calling function intends to render the view and
  *   its contextual links. The core system supports three options for this

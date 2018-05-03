@@ -16,7 +16,8 @@ class EntityListController extends ControllerBase {
    *   The entity type to render.
    *
    * @return array
-   *   A render array as expected by drupal_render().
+   *   A render array as expected by
+   *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function listing($entity_type) {
     return $this->entityManager()->getListBuilder($entity_type)->render();

@@ -806,7 +806,7 @@ function node_get_recent($number = 10) {
  *   the global content language of the current request.
  *
  * @return array
- *   An array as expected by drupal_render().
+ *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
  */
 function node_view(NodeInterface $node, $view_mode = 'full', $langcode = NULL) {
   return entity_view($node, $view_mode, $langcode);
@@ -824,7 +824,8 @@ function node_view(NodeInterface $node, $view_mode = 'full', $langcode = NULL) {
  *   content language of the current request.
  *
  * @return array
- *   An array in the format expected by drupal_render().
+ *   An array in the format expected by
+ *   \Drupal\Core\Render\RendererInterface::render().
  */
 function node_view_multiple($nodes, $view_mode = 'teaser', $langcode = NULL) {
   return entity_view_multiple($nodes, $view_mode, $langcode);

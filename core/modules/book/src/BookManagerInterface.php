@@ -246,7 +246,8 @@ interface BookManagerInterface {
    *   A data structure representing the tree as returned from buildBookOutlineData.
    *
    * @return array
-   *   A structured array to be rendered by drupal_render().
+   *   A structured array to be rendered by
+   *   \Drupal\Core\Render\RendererInterface::render().
    *
    * @see \Drupal\Core\Menu\MenuLinkTree::build
    */
