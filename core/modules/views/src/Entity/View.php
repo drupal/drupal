@@ -317,6 +317,8 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    *   An array containing display handlers of a view.
    *
    * @deprecated in Drupal 8.3.0, will be removed in Drupal 9.0.0.
+   *
+   * @see https://www.drupal.org/node/2831499
    */
   private function fixTableNames(array &$displays) {
     // Fix wrong table names for entity revision metadata fields.

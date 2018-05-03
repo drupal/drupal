@@ -206,6 +206,8 @@ function views_post_update_grouped_filters() {
 
 /**
  * Fix table names for revision metadata fields.
+ *
+ * @see https://www.drupal.org/node/2831499
  */
 function views_post_update_revision_metadata_fields() {
   // The table names are fixed automatically in
