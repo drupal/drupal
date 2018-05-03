@@ -20,7 +20,7 @@ class ImageStyleRoutes implements ContainerInjectionInterface {
   protected $streamWrapperManager;
 
   /**
-   * Constructs a new PathProcessorImageStyles object.
+   * Constructs a new ImageStyleRoutes object.
    *
    * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
    *   The stream wrapper manager service.
