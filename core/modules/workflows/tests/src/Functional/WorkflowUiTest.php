@@ -90,11 +90,18 @@ class WorkflowUiTest extends BrowserTestBase {
     ])->save();
 
     $this->drupalLogin($this->createUser(['administer workflows']));
+
     $this->drupalPostForm('admin/config/workflow/workflows/manage/test_workflow/add_state', [
       'label' => 'Test State',
       'id' => 'Invalid ID',
     ], 'Save');
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
+
+    $this->drupalPostForm('admin/config/workflow/workflows/manage/test_workflow/add_transition', [
+      'label' => 'Test Transition',
+      'id' => 'Invalid ID',
+    ], 'Save');
     $this->assertSession()->pageTextContains('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
   }
 

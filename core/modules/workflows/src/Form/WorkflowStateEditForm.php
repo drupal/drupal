@@ -161,6 +161,10 @@ class WorkflowStateEditForm extends EntityForm {
    *   The current state of the form.
    */
   protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+    if (!$form_state->isValidationComplete()) {
+      // Only do something once form validation is complete.
+      return;
+    }
     /** @var \Drupal\workflows\WorkflowInterface $entity */
     $values = $form_state->getValues();
     $entity->getTypePlugin()->setStateLabel($values['id'], $values['label']);
