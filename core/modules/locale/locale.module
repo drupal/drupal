@@ -261,13 +261,13 @@ function locale_translatable_language_list() {
  *
  * The index is computed from the formula of this language.
  *
- * @param $count
+ * @param int $count
  *   Number to return plural for.
- * @param $langcode
- *   Optional language code to translate to a language other than
- *   what is used to display the page.
+ * @param string|null $langcode
+ *   (optional) Language code to translate to a language other than what is used
+ *   to display the page, or NULL for current language. Defaults to NULL.
  *
- * @return
+ * @return int
  *   The numeric index of the plural variant to use for this $langcode and
  *   $count combination or -1 if the language was not found or does not have a
  *   plural formula.
@@ -1113,9 +1113,6 @@ function _locale_strip_quotes($string) {
  * @param string $filepath
  *   File name to parse.
  *
- * @return array
- *   Array of string objects to update indexed by context and source.
- *
  * @throws Exception
  *   If a non-local file is attempted to be parsed.
  */
@@ -1217,10 +1214,11 @@ function _locale_parse_js_file($filepath) {
  * files are rebuilt (with locale_update_js_files()) the next time a
  * request is served in that language.
  *
- * @param $langcode
- *   The language code for which the file needs to be refreshed.
+ * @param string|null $langcode
+ *   (optional) The language code for which the file needs to be refreshed, or
+ *   NULL to refresh all languages. Defaults to NULL.
  *
- * @return
+ * @return array
  *   New content of the 'system.javascript_parsed' variable.
  */
 function _locale_invalidate_js($langcode = NULL) {
@@ -1245,8 +1243,9 @@ function _locale_invalidate_js($langcode = NULL) {
 /**
  * (Re-)Creates the JavaScript translation file for a language.
  *
- * @param $langcode
- *   The language, the translation file should be (re)created for.
+ * @param string|null $langcode
+ *   (optional) The language that the translation file should be (re)created
+ *   for, or NULL for the current language. Defaults to NULL.
  *
  * @return bool
  *   TRUE if translation file exists, FALSE otherwise.
