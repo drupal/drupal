@@ -83,6 +83,13 @@ class ActiveTheme {
   protected $librariesOverride;
 
   /**
+   * The list of libraries-extend definitions.
+   *
+   * @var array
+   */
+  protected $librariesExtend;
+
+  /**
    * Constructs an ActiveTheme object.
    *
    * @param array $values
