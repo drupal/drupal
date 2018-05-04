@@ -30,7 +30,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
   /**
    * Gets the entity that field belongs to.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
+   * @return \Drupal\Core\Entity\FieldableEntityInterface
    *   The entity object.
    */
   public function getEntity();
