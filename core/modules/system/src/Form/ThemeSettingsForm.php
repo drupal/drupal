@@ -377,22 +377,23 @@ class ThemeSettingsForm extends ConfigFormBase {
     parent::validateForm($form, $form_state);
 
     if ($this->moduleHandler->moduleExists('file')) {
-      $validators = ['file_validate_is_image' => []];
 
       // Check for a new uploaded logo.
-      $file = _file_save_upload_from_form($form['logo']['settings']['logo_upload'], $form_state, 0);
-      if ($file) {
-        // Put the temporary file in form_values so we can save it on submit.
-        $form_state->setValue('logo_upload', $file);
+      if (isset($form['logo'])) {
+        $file = _file_save_upload_from_form($form['logo']['settings']['logo_upload'], $form_state, 0);
+        if ($file) {
+          // Put the temporary file in form_values so we can save it on submit.
+          $form_state->setValue('logo_upload', $file);
+        }
       }
 
-      $validators = ['file_validate_extensions' => ['ico png gif jpg jpeg apng svg']];
-
       // Check for a new uploaded favicon.
-      $file = _file_save_upload_from_form($form['favicon']['settings']['favicon_upload'], $form_state, 0);
-      if ($file) {
-        // Put the temporary file in form_values so we can save it on submit.
-        $form_state->setValue('favicon_upload', $file);
+      if (isset($form['favicon'])) {
+        $file = _file_save_upload_from_form($form['favicon']['settings']['favicon_upload'], $form_state, 0);
+        if ($file) {
+          // Put the temporary file in form_values so we can save it on submit.
+          $form_state->setValue('favicon_upload', $file);
+        }
       }
 
       // When intending to use the default logo, unset the logo_path.
