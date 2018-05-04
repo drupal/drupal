@@ -5,7 +5,6 @@
  * Miscellaneous functions.
  */
 
-use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +29,7 @@ function drupal_rebuild($class_loader, Request $request) {
   restore_exception_handler();
 
   // Force kernel to rebuild php cache.
-  PhpStorageFactory::get('twig')->deleteAll();
+  \Drupal::service('twig')->invalidate();
 
   // Bootstrap up to where caches exist and clear them.
   $kernel = new DrupalKernel('prod', $class_loader);
