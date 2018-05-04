@@ -428,4 +428,17 @@ class ThemeTest extends WebTestBase {
     $this->assertTextPattern('/Bartik ' . preg_quote($version) . '\s{2,}\(default theme\)/');
   }
 
+  /**
+   * Test the theme settings form when logo and favicon features are disabled.
+   */
+  public function testThemeSettingsNoLogoNoFavicon() {
+    // Install theme with no logo and no favicon feature.
+    $this->container->get('theme_handler')->install(['test_theme_settings_features']);
+    // Visit this theme's settings page.
+    $this->drupalGet('admin/appearance/settings/test_theme_settings_features');
+    $edit = [];
+    $this->drupalPostForm('admin/appearance/settings/test_theme_settings_features', $edit, t('Save configuration'));
+    $this->assertText('The configuration options have been saved.');
+  }
+
 }
