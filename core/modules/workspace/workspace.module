@@ -1,0 +1,251 @@
+<?php
+
+/**
+ * @file
+ * Provides full-site preview functionality for content staging.
+ */
+
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+use Drupal\workspace\EntityAccess;
+use Drupal\workspace\EntityOperations;
+use Drupal\workspace\EntityTypeInfo;
+use Drupal\workspace\ViewsQueryAlter;
+
+/**
+ * Implements hook_help().
+ */
+function workspace_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the workspace module.
+    case 'help.page.workspace':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Workspace module allows workspaces to be defined and switched between. Content is then assigned to the active workspace when created. For more information, see the <a href=":workspace">online documentation for the Workspace module</a>.', [':workspace' => 'https://www.drupal.org/node/2824024']) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function workspace_entity_type_build(array &$entity_types) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->entityTypeBuild($entity_types);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function workspace_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->formAlter($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_entity_load().
+ */
+function workspace_entity_load(array &$entities, $entity_type_id) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityLoad($entities, $entity_type_id);
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function workspace_entity_presave(EntityInterface $entity) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityPresave($entity);
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function workspace_entity_insert(EntityInterface $entity) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityInsert($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function workspace_entity_update(EntityInterface $entity) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityUpdate($entity);
+}
+
+/**
+ * Implements hook_entity_access().
+ *
+ * @see \Drupal\workspace\EntityAccess
+ */
+function workspace_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityAccess::class)
+    ->entityOperationAccess($entity, $operation, $account);
+}
+
+/**
+ * Implements hook_entity_create_access().
+ *
+ * @see \Drupal\workspace\EntityAccess
+ */
+function workspace_entity_create_access(AccountInterface $account, array $context, $entity_bundle) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityAccess::class)
+    ->entityCreateAccess($account, $context, $entity_bundle);
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function workspace_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(ViewsQueryAlter::class)
+    ->alterQuery($view, $query);
+}
+
+/**
+ * Implements hook_cron().
+ */
+function workspace_cron() {
+  \Drupal::service('workspace.manager')->purgeDeletedWorkspacesBatch();
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function workspace_toolbar() {
+  $items = [];
+  $items['workspace'] = [
+    '#cache' => [
+      'contexts' => [
+        'user.permissions',
+      ],
+    ],
+  ];
+
+  $current_user = \Drupal::currentUser();
+  if (!$current_user->hasPermission('administer workspaces')
+    || !$current_user->hasPermission('view own workspace')
+    || !$current_user->hasPermission('view any workspace')) {
+    return $items;
+  }
+
+  /** @var \Drupal\workspace\WorkspaceInterface $active_workspace */
+  $active_workspace = \Drupal::service('workspace.manager')->getActiveWorkspace();
+
+  $configure_link = NULL;
+  if ($current_user->hasPermission('administer workspaces')) {
+    $configure_link = [
+      '#type' => 'link',
+      '#title' => t('Manage workspaces'),
+      '#url' => $active_workspace->toUrl('collection'),
+      '#options' => ['attributes' => ['class' => ['manage-workspaces']]],
+    ];
+  }
+
+  $items['workspace'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => $active_workspace->label(),
+      '#url' => $active_workspace->toUrl('collection'),
+      '#attributes' => [
+        'title' => t('Switch workspace'),
+        'class' => ['toolbar-icon', 'toolbar-icon-workspace'],
+      ],
+    ],
+    'tray' => [
+      '#heading' => t('Workspaces'),
+      'workspaces' => workspace_build_renderable_links(),
+      'configure' => $configure_link,
+    ],
+    '#wrapper_attributes' => [
+      'class' => ['workspace-toolbar-tab'],
+    ],
+    '#attached' => [
+      'library' => ['workspace/drupal.workspace.toolbar'],
+    ],
+    '#weight' => 500,
+  ];
+
+  // Add a special class to the wrapper if we are in the default workspace so we
+  // can highlight it with a different color.
+  if ($active_workspace->isDefaultWorkspace()) {
+    $items['workspace']['#wrapper_attributes']['class'][] = 'workspace-toolbar-tab--is-default';
+  }
+
+  return $items;
+}
+
+/**
+ * Returns an array of workspace activation form links, suitable for rendering.
+ *
+ * @return array
+ *   A render array containing links to the workspace activation form.
+ */
+function workspace_build_renderable_links() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  /** @var \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository */
+  $entity_repository = \Drupal::service('entity.repository');
+  /** @var \Drupal\workspace\WorkspaceInterface $active_workspace */
+  $active_workspace = \Drupal::service('workspace.manager')->getActiveWorkspace();
+
+  $links = $cache_tags = [];
+  foreach ($entity_type_manager->getStorage('workspace')->loadMultiple() as $workspace) {
+    $workspace = $entity_repository->getTranslationFromContext($workspace);
+
+    // Add the 'is-active' class for the currently active workspace.
+    $options = [];
+    if ($workspace->id() === $active_workspace->id()) {
+      $options['attributes']['class'][] = 'is-active';
+    }
+
+    // Get the URL of the workspace activation form and display it in a modal.
+    $url = Url::fromRoute('entity.workspace.activate_form', ['workspace' => $workspace->id()], $options);
+    if ($url->access()) {
+      $links[$workspace->id()] = [
+        'type' => 'link',
+        'title' => $workspace->label(),
+        'url' => $url,
+        'attributes' => [
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => 500,
+          ]),
+        ],
+      ];
+      $cache_tags = Cache::mergeTags($cache_tags, $workspace->getCacheTags());
+    }
+  }
+
+  if (!empty($links)) {
+    $links = [
+      '#theme' => 'links__toolbar_workspaces',
+      '#links' => $links,
+      '#attributes' => [
+        'class' => ['toolbar-menu'],
+      ],
+      '#cache' => [
+        'tags' => $cache_tags,
+      ],
+    ];
+  }
+
+  return $links;
+}

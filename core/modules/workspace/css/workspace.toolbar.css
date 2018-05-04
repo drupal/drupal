@@ -1,0 +1,54 @@
+/**
+ * @file
+ * Styling for Workspace module's toolbar tab.
+ */
+
+/* Tab appearance. */
+.toolbar .toolbar-bar .workspace-toolbar-tab {
+  float: right; /* LTR */
+  background-color: #e09600;
+}
+[dir="rtl"] .toolbar .toolbar-bar .workspace-toolbar-tab {
+  float: left;
+}
+.toolbar .toolbar-bar .workspace-toolbar-tab--is-default {
+  background-color: #77b259;
+}
+
+.toolbar .toolbar-bar .workspace-toolbar-tab .toolbar-item {
+  margin: 0;
+}
+
+.toolbar .toolbar-icon-workspace:before {
+  background-image: url("../icons/ffffff/workspace.svg");
+}
+
+/* Manage workspaces link */
+.toolbar .toolbar-tray-vertical .manage-workspaces {
+  text-align: right; /* LTR */
+  padding: 1em;
+}
+[dir="rtl"] .toolbar .toolbar-tray-vertical .manage-workspaces {
+  text-align: left;
+}
+.toolbar .toolbar-tray-horizontal .manage-workspaces {
+  float: right; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-horizontal .manage-workspaces {
+  float: left;
+}
+
+/* Individual workspace links */
+.toolbar-horizontal .toolbar-tray .toolbar-menu li + li {
+  border-left: 1px solid #ddd; /* LTR */
+}
+[dir="rtl"] .toolbar-horizontal .toolbar-tray .toolbar-menu li + li {
+  border-left: 0 none;
+  border-right: 1px solid #ddd;
+}
+.toolbar-horizontal .toolbar-tray .toolbar-menu li:last-child {
+  border-right: 1px solid #ddd;
+}
+[dir="rtl"] .toolbar-horizontal .toolbar-tray .toolbar-menu li:last-child {
+  border-left: 1px solid #ddd;
+}

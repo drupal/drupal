@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\workspace\Entity\Workspace;
 
 /**
  * Install/uninstall core module and confirm table creation/deletion.
@@ -146,6 +147,12 @@ class InstallUninstallTest extends ModuleTestBase {
       if ($name == 'forum') {
         // Forum has an extra step to be able to uninstall it.
         $this->preUninstallForum();
+      }
+
+      // Delete all workspaces before uninstall.
+      if ($name == 'workspace') {
+        $workspaces = Workspace::loadMultiple();
+        \Drupal::entityTypeManager()->getStorage('workspace')->delete($workspaces);
       }
 
       $now_installed_list = \Drupal::moduleHandler()->getModuleList();

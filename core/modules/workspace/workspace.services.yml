@@ -1,0 +1,41 @@
+services:
+  workspace.manager:
+    class: Drupal\workspace\WorkspaceManager
+    arguments: ['@request_stack', '@entity_type.manager', '@current_user', '@state', '@logger.channel.workspace', '@class_resolver']
+    tags:
+      - { name: service_id_collector, tag: workspace_negotiator }
+  plugin.manager.workspace.repository_handler:
+    class: Drupal\workspace\RepositoryHandlerManager
+    parent: default_plugin_manager
+  workspace.negotiator.default:
+    class: Drupal\workspace\Negotiator\DefaultWorkspaceNegotiator
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: workspace_negotiator, priority: 0 }
+  workspace.negotiator.session:
+    class: Drupal\workspace\Negotiator\SessionWorkspaceNegotiator
+    arguments: ['@current_user', '@session', '@entity_type.manager']
+    tags:
+      - { name: workspace_negotiator, priority: 100 }
+  cache_context.workspace:
+    class: Drupal\workspace\WorkspaceCacheContext
+    arguments: ['@workspace.manager']
+    tags:
+      - { name: cache.context }
+  logger.channel.workspace:
+    parent: logger.channel_base
+    arguments: ['workspace']
+  workspace.entity.query.sql:
+    decorates: 'entity.query.sql'
+    class: Drupal\workspace\EntityQuery\QueryFactory
+    arguments: ['@database', '@workspace.manager']
+    public: false
+    decoration_priority: 50
+    tags:
+      - { name: backend_overridable }
+  pgsql.workspace.entity.query.sql:
+    decorates: 'pgsql.entity.query.sql'
+    class: Drupal\workspace\EntityQuery\PgsqlQueryFactory
+    arguments: ['@database', '@workspace.manager']
+    public: false
+    decoration_priority: 50

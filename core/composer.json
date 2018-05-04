@@ -167,7 +167,8 @@
         "drupal/user": "self.version",
         "drupal/views": "self.version",
         "drupal/views_ui": "self.version",
-        "drupal/workflows": "self.version"
+        "drupal/workflows": "self.version",
+        "drupal/workspace": "self.version"
     },
     "extra": {
         "merge-plugin": {
