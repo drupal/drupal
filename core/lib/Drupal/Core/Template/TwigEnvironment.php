@@ -3,6 +3,7 @@
 namespace Drupal\Core\Template;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\State\StateInterface;
 
@@ -15,6 +16,18 @@ use Drupal\Core\State\StateInterface;
  * @see core\vendor\twig\twig\lib\Twig\Environment.php
  */
 class TwigEnvironment extends \Twig_Environment {
+
+  /**
+   * Key name of the Twig cache prefix metadata key-value pair in State.
+   */
+  const CACHE_PREFIX_METADATA_KEY = 'twig_extension_hash_prefix';
+
+  /**
+   * The state service.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
 
   /**
    * Static cache of template classes.
@@ -43,6 +56,8 @@ class TwigEnvironment extends \Twig_Environment {
    *   The options for the Twig environment.
    */
   public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, StateInterface $state, \Twig_LoaderInterface $loader = NULL, $options = []) {
+    $this->state = $state;
+
     // Ensure that twig.engine is loaded, given that it is needed to render a
     // template because functions like TwigExtension::escapeFilter() are called.
     require_once $root . '/core/themes/engines/twig/twig.engine';
@@ -63,7 +78,7 @@ class TwigEnvironment extends \Twig_Environment {
     $this->addExtension($sandbox);
 
     if ($options['cache'] === TRUE) {
-      $current = $state->get('twig_extension_hash_prefix', ['twig_extension_hash' => '']);
+      $current = $state->get(static::CACHE_PREFIX_METADATA_KEY, ['twig_extension_hash' => '']);
       if ($current['twig_extension_hash'] !== $twig_extension_hash || empty($current['twig_cache_prefix'])) {
         $current = [
           'twig_extension_hash' => $twig_extension_hash,
@@ -71,7 +86,7 @@ class TwigEnvironment extends \Twig_Environment {
           'twig_cache_prefix' => uniqid(),
 
         ];
-        $state->set('twig_extension_hash_prefix', $current);
+        $state->set(static::CACHE_PREFIX_METADATA_KEY, $current);
       }
       $this->twigCachePrefix = $current['twig_cache_prefix'];
 
@@ -80,6 +95,18 @@ class TwigEnvironment extends \Twig_Environment {
 
     $this->loader = $loader;
     parent::__construct($this->loader, $options);
+  }
+
+  /**
+   * Invalidates all compiled Twig templates.
+   *
+   * @see \drupal_flush_all_caches
+   */
+  public function invalidate() {
+    PhpStorageFactory::get('twig')->deleteAll();
+    $this->templateClasses = [];
+    $this->loadedTemplates = [];
+    $this->state->delete(static::CACHE_PREFIX_METADATA_KEY);
   }
 
   /**
