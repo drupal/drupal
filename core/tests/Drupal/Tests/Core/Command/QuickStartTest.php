@@ -103,10 +103,10 @@ class QuickStartTest extends TestCase {
     // The progress bar uses STDERR to write messages.
     $this->assertContains('Congratulations, you installed Drupal!', $process->getErrorOutput());
     $this->assertNotFalse($port, "Web server running on port $port");
-    $this->assertContains("127.0.0.1:$port/user/reset/1/", $process->getOutput());
 
     // Give the server a couple of seconds to be ready.
     sleep(2);
+    $this->assertContains("127.0.0.1:$port/user/reset/1/", $process->getOutput());
 
     // Generate a cookie so we can make a request against the installed site.
     include $this->root . '/core/includes/bootstrap.inc';
