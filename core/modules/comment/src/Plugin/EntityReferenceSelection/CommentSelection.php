@@ -42,7 +42,7 @@ class CommentSelection extends DefaultSelection {
 
     // In order to create a referenceable comment, it needs to published.
     /** @var \Drupal\comment\CommentInterface $comment */
-    $comment->setPublished(TRUE);
+    $comment->setPublished();
 
     return $comment;
   }

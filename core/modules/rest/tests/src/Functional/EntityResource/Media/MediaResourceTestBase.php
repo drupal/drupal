@@ -106,7 +106,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
     ]);
     $media
       ->setName('Llama')
-      ->setPublished(TRUE)
+      ->setPublished()
       ->setCreatedTime(123456789)
       ->setOwnerId(static::$auth ? $this->account->id() : 0)
       ->setRevisionUserId(static::$auth ? $this->account->id() : 0)

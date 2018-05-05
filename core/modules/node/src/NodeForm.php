@@ -217,7 +217,7 @@ class NodeForm extends ContentEntityForm {
   public function updateStatus($entity_type_id, NodeInterface $node, array $form, FormStateInterface $form_state) {
     $element = $form_state->getTriggeringElement();
     if (isset($element['#published_status'])) {
-      $node->setPublished($element['#published_status']);
+      $element['#published_status'] ? $node->setPublished() : $node->setUnpublished();
     }
   }
 

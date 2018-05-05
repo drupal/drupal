@@ -30,7 +30,7 @@ class StandardJavascriptTest extends JavascriptTestBase {
     $node = Node::create(['type' => 'article'])
       ->setTitle($this->randomMachineName())
       ->setPromoted(TRUE)
-      ->setPublished(TRUE);
+      ->setPublished();
     $node->save();
 
     // Front page: one placeholder, for messages.

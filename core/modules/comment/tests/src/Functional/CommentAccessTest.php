@@ -78,7 +78,7 @@ class CommentAccessTest extends BrowserTestBase {
     $assert->statusCodeEquals(403);
 
     // Publishing the node grants access.
-    $this->unpublishedNode->setPublished(TRUE)->save();
+    $this->unpublishedNode->setPublished()->save();
     $this->drupalGet($comment_url);
     $assert->statusCodeEquals(200);
   }
@@ -112,7 +112,7 @@ class CommentAccessTest extends BrowserTestBase {
     $assert->statusCodeEquals(403);
 
     // Publishing the node grants access.
-    $this->unpublishedNode->setPublished(TRUE)->save();
+    $this->unpublishedNode->setPublished()->save();
     $this->drupalGet($comment_url);
     $assert->statusCodeEquals(200);
   }

@@ -123,7 +123,7 @@ class RssTest extends TaxonomyTestBase {
     $this->drupalGet('taxonomy/term/all/feed');
     $this->assertRaw($raw_xml, "Raw text '$raw_xml' is found.");
     // Unpublish the article and check that it is not shown in the feed.
-    $node->setPublished(FALSE)->save();
+    $node->setUnpublished()->save();
     $this->drupalGet('taxonomy/term/all/feed');
     $this->assertNoRaw($raw_xml);
   }

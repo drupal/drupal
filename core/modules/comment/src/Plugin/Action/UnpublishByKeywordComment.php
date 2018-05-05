@@ -78,7 +78,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase implements Contai
     $text = $this->renderer->renderPlain($build);
     foreach ($this->configuration['keywords'] as $keyword) {
       if (strpos($text, $keyword) !== FALSE) {
-        $comment->setPublished(FALSE);
+        $comment->setUnpublished();
         $comment->save();
         break;
       }

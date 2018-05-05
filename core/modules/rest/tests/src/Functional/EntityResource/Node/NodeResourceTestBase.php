@@ -81,7 +81,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
     $node = Node::create(['type' => 'camelids']);
     $node->setTitle('Llama')
       ->setOwnerId(static::$auth ? $this->account->id() : 0)
-      ->setPublished(TRUE)
+      ->setPublished()
       ->setCreatedTime(123456789)
       ->setChangedTime(123456789)
       ->setRevisionCreationTime(123456789)

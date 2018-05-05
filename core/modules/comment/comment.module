@@ -523,7 +523,7 @@ function comment_user_cancel($edit, $account, $method) {
     case 'user_cancel_block_unpublish':
       $comments = entity_load_multiple_by_properties('comment', ['uid' => $account->id()]);
       foreach ($comments as $comment) {
-        $comment->setPublished(CommentInterface::NOT_PUBLISHED);
+        $comment->setUnpublished();
         $comment->save();
       }
       break;

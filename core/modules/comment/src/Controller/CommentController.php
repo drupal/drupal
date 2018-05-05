@@ -82,7 +82,7 @@ class CommentController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    */
   public function commentApprove(CommentInterface $comment) {
-    $comment->setPublished(TRUE);
+    $comment->setPublished();
     $comment->save();
 
     $this->messenger()->addStatus($this->t('Comment approved.'));

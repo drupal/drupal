@@ -98,14 +98,14 @@ class ContentTranslationOperationsTest extends NodeTestBase {
         'access content' => TRUE,
       ]
     );
-    $node->setPublished(FALSE)->save();
+    $node->setUnpublished()->save();
     $this->drupalGet($node->urlInfo('drupal:content-translation-overview'));
     $this->assertResponse(403);
     $this->drupalLogout();
 
     // Ensure the 'Translate' local task does not show up anymore when disabling
     // translations for a content type.
-    $node->setPublished(TRUE)->save();
+    $node->setPublished()->save();
     user_role_change_permissions(
       Role::AUTHENTICATED_ID,
       [
@@ -136,7 +136,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     $this->assertFalse(content_translation_translate_access($node)->isAllowed());
     $access_control_handler->resetCache();
 
-    $node->setPublished(TRUE);
+    $node->setPublished();
     $node->save();
     $this->assertTrue(content_translation_translate_access($node)->isAllowed());
     $access_control_handler->resetCache();

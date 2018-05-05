@@ -32,7 +32,7 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     // Create a "Llama" node.
     $node = Node::create(['type' => 'camelids']);
     $node->setTitle('Llama')
-      ->setPublished(TRUE)
+      ->setPublished()
       ->save();
 
     return $node;

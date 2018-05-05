@@ -428,7 +428,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_node.0.entity');
 
     // Publish the node and try again.
-    $node->setPublished(TRUE);
+    $node->setPublished();
     $errors = $entity->validate();
     $this->assertEqual(0, count($errors));
 
@@ -478,7 +478,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertEqual($errors[1]->getPropertyPath(), 'field_test_node.1.target_id');
 
     // Publish one of the nodes and try again.
-    $saved_unpublished_node->setPublished(TRUE);
+    $saved_unpublished_node->setPublished();
     $saved_unpublished_node->save();
     $errors = $entity->validate();
     $this->assertEqual(1, count($errors));
@@ -486,7 +486,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_node.0.entity');
 
     // Publish the last invalid node and try again.
-    $unsaved_unpublished_node->setPublished(TRUE);
+    $unsaved_unpublished_node->setPublished();
     $errors = $entity->validate();
     $this->assertEqual(0, count($errors));
 
@@ -510,7 +510,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_comment.0.entity');
 
     // Publish the comment and try again.
-    $comment->setPublished(TRUE);
+    $comment->setPublished();
     $errors = $entity->validate();
     $this->assertEqual(0, count($errors));
 

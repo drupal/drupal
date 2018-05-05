@@ -36,7 +36,7 @@ class UnpublishedBlockTest extends BrowserTestBase {
     $page = $this->getSession()->getPage();
     $this->assertTrue($page->has('css', '.block-block-content' . $block_content->uuid()));
 
-    $block_content->setPublished(FALSE);
+    $block_content->setUnpublished();
     $block_content->save();
 
     $this->drupalGet('<front>');

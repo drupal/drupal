@@ -67,7 +67,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
         'format' => 'plain_text',
       ],
     ])
-      ->setPublished(FALSE);
+      ->setUnpublished();
     $block_content->save();
     return $block_content;
   }

@@ -284,7 +284,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
       $translation = $node->addTranslation($langcode, $values[$langcode]);
       // Publish and promote the translation to frontpage.
       $translation->setPromoted(TRUE);
-      $translation->setPublished(TRUE);
+      $translation->setPublished();
     }
     $node->save();
 

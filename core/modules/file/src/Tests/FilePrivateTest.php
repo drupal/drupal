@@ -214,7 +214,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $edit['files[' . $field_name . '_0]'] = $file_system->realpath($test_file->getFileUri());
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $new_node->setPublished(FALSE);
+    $new_node->setUnpublished();
     $new_node->save();
     $file = File::load($new_node->{$field_name}->target_id);
     $this->assertTrue($file->isPermanent(), 'File is permanent.');

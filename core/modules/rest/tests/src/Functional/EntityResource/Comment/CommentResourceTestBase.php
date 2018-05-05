@@ -107,7 +107,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     ]);
     $comment->setSubject('Llama')
       ->setOwnerId(static::$auth ? $this->account->id() : 0)
-      ->setPublished(TRUE)
+      ->setPublished()
       ->setCreatedTime(123456789)
       ->setChangedTime(123456789);
     $comment->save();
