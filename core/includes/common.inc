@@ -17,6 +17,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Element\Link;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
@@ -1116,7 +1117,7 @@ function drupal_flush_all_caches() {
   \Drupal::service('kernel')->invalidateContainer();
 
   // Wipe the Twig PHP Storage cache.
-  \Drupal::service('twig')->invalidate();
+  PhpStorageFactory::get('twig')->deleteAll();
 
   // Rebuild module and theme data.
   $module_data = system_rebuild_module_data();
