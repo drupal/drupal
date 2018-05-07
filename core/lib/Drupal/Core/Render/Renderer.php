@@ -649,8 +649,8 @@ class Renderer implements RendererInterface {
     // being rendered: any code can add messages to render.
     // This violates the principle that each lazy builder must be able to render
     // itself in isolation, and therefore in any order. However, we cannot
-    // change the way drupal_set_message() works in the Drupal 8 cycle. So we
-    // have to accommodate its special needs.
+    // change the way \Drupal\Core\Messenger\Messenger works in the Drupal 8
+    // cycle. So we have to accommodate its special needs.
     // Allowing placeholders to be rendered in a particular order (in this case:
     // last) would violate this isolation principle. Thus a monopoly is granted
     // to this one special case, with this hard-coded solution.

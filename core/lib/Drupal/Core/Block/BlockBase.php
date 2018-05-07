@@ -4,6 +4,7 @@ namespace Drupal\Core\Block;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginBase;
 use Drupal\Component\Utility\Unicode;
@@ -26,6 +27,7 @@ use Drupal\Component\Transliteration\TransliterationInterface;
 abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginInterface, PluginWithFormsInterface {
 
   use ContextAwarePluginAssignmentTrait;
+  use MessengerTrait;
   use PluginWithFormsTrait;
 
   /**

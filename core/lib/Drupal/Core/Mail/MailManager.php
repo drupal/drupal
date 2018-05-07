@@ -5,6 +5,7 @@ namespace Drupal\Core\Mail;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -23,6 +24,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  */
 class MailManager extends DefaultPluginManager implements MailManagerInterface {
 
+  use MessengerTrait;
   use StringTranslationTrait;
 
   /**
@@ -303,7 +305,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
             '%to' => $message['to'],
             '%reply' => $message['reply-to'] ? $message['reply-to'] : $this->t('not set'),
           ]);
-          drupal_set_message($this->t('Unable to send email. Contact the site administrator if the problem persists.'), 'error');
+          $this->messenger()->addError($this->t('Unable to send email. Contact the site administrator if the problem persists.'));
         }
       }
     }

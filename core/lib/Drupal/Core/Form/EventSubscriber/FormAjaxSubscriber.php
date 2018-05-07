@@ -9,6 +9,7 @@ use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Form\FormAjaxException;
 use Drupal\Core\Form\FormAjaxResponseBuilderInterface;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -31,16 +32,26 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
   protected $formAjaxResponseBuilder;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a new FormAjaxSubscriber.
    *
    * @param \Drupal\Core\Form\FormAjaxResponseBuilderInterface $form_ajax_response_builder
    *   The form AJAX response builder.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    */
-  public function __construct(FormAjaxResponseBuilderInterface $form_ajax_response_builder, TranslationInterface $string_translation) {
+  public function __construct(FormAjaxResponseBuilderInterface $form_ajax_response_builder, TranslationInterface $string_translation, MessengerInterface $messenger) {
     $this->formAjaxResponseBuilder = $form_ajax_response_builder;
     $this->stringTranslation = $string_translation;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -75,7 +86,7 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
     // Render a nice error message in case we have a file upload which exceeds
     // the configured upload limit.
     if ($exception instanceof BrokenPostRequestException && $request->query->has(FormBuilderInterface::AJAX_FORM_REQUEST)) {
-      $this->drupalSetMessage($this->t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', ['@size' => $this->formatSize($exception->getSize())]), 'error');
+      $this->messenger->addError($this->t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', ['@size' => $this->formatSize($exception->getSize())]));
       $response = new AjaxResponse(NULL, 200);
       $status_messages = ['#type' => 'status_messages'];
       $response->addCommand(new PrependCommand(NULL, $status_messages));
@@ -152,15 +163,6 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
     $events[KernelEvents::VIEW][] = ['onView', 1];
 
     return $events;
-  }
-
-  /**
-   * Wraps drupal_set_message().
-   *
-   * @codeCoverageIgnore
-   */
-  protected function drupalSetMessage($message = NULL, $type = 'status', $repeat = FALSE) {
-    drupal_set_message($message, $type, $repeat);
   }
 
 }

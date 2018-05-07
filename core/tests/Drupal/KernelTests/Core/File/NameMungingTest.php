@@ -38,7 +38,8 @@ class NameMungingTest extends FileTestBase {
     // Disable insecure uploads.
     $this->config('system.file')->set('allow_insecure_uploads', 0)->save();
     $munged_name = file_munge_filename($this->name, '', TRUE);
-    $messages = drupal_get_messages();
+    $messages = \Drupal::messenger()->all();
+    \Drupal::messenger()->deleteAll();
     $this->assertTrue(in_array(strtr('For security reasons, your upload has been renamed to <em class="placeholder">%filename</em>.', ['%filename' => $munged_name]), $messages['status']), 'Alert properly set when a file is renamed.');
     $this->assertNotEqual($munged_name, $this->name, format_string('The new filename (%munged) has been modified from the original (%original)', ['%munged' => $munged_name, '%original' => $this->name]));
   }

@@ -120,7 +120,7 @@ trait EntityDeleteFormTrait {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->getEntity()->delete();
-    drupal_set_message($this->getDeletionMessage());
+    $this->messenger()->addStatus($this->getDeletionMessage());
     $form_state->setRedirectUrl($this->getCancelUrl());
     $this->logDeletionMessage();
   }

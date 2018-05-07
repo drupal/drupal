@@ -2426,7 +2426,8 @@ function hook_validation_constraint_alter(array &$definitions) {
  * markup or a set of Ajax commands. If you choose to return HTML markup, you
  * can return it as a string or a renderable array, and it will be placed in
  * the defined 'wrapper' element (see documentation above in @ref sub_form).
- * In addition, any messages returned by drupal_get_messages(), themed as in
+ * In addition, any messages returned by
+ * \Drupal\Core\Messenger\Messenger::all(), themed as in
  * status-messages.html.twig, will be prepended.
  *
  * To return commands, you need to set up an object of class

@@ -24,8 +24,8 @@ class MessageTest extends KernelTestBase {
     \Drupal::service('theme_handler')->install(['classy']);
     $this->config('system.theme')->set('default', 'classy')->save();
 
-    drupal_set_message('An error occurred', 'error');
-    drupal_set_message('But then something nice happened');
+    \Drupal::messenger()->addError('An error occurred');
+    \Drupal::messenger()->addStatus('But then something nice happened');
     $messages = [
       '#type' => 'status_messages',
     ];

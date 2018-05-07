@@ -3,7 +3,6 @@
 namespace Drupal\block_test\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserInterface;
 
@@ -19,8 +18,6 @@ use Drupal\user\UserInterface;
  * )
  */
 class TestContextAwareBlock extends BlockBase {
-
-  use MessengerTrait;
 
   /**
    * {@inheritdoc}

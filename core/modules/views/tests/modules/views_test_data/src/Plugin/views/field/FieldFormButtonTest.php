@@ -3,7 +3,6 @@
 namespace Drupal\views_test_data\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\field\UncacheableFieldHandlerTrait;
 use Drupal\views\ResultRow;
@@ -17,7 +16,6 @@ use Drupal\views\ResultRow;
  */
 class FieldFormButtonTest extends FieldPluginBase {
 
-  use MessengerTrait;
   use UncacheableFieldHandlerTrait;
 
   /**

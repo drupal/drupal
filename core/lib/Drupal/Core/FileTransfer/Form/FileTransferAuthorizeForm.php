@@ -52,7 +52,7 @@ class FileTransferAuthorizeForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Get all the available ways to transfer files.
     if (empty($_SESSION['authorize_filetransfer_info'])) {
-      drupal_set_message($this->t('Unable to continue, no available methods of file transfer'), 'error');
+      $this->messenger()->addError($this->t('Unable to continue, no available methods of file transfer'));
       return [];
     }
     $available_backends = $_SESSION['authorize_filetransfer_info'];

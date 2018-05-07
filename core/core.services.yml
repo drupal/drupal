@@ -1004,7 +1004,7 @@ services:
       - { name: event_subscriber }
   form_ajax_subscriber:
     class: Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber
-    arguments: ['@form_ajax_response_builder', '@string_translation']
+    arguments: ['@form_ajax_response_builder', '@string_translation', '@messenger']
     tags:
       - { name: event_subscriber }
   route_enhancer.param_conversion:

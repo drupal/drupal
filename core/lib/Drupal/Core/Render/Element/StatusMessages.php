@@ -5,7 +5,7 @@ namespace Drupal\Core\Render\Element;
 /**
  * Provides a messages element.
  *
- * Used to display results of drupal_set_message() calls.
+ * Used to display results of \Drupal::messenger()->addMessage() calls.
  *
  * Usage example:
  * @code
@@ -61,7 +61,8 @@ class StatusMessages extends RenderElement {
    *
    * @param string|null $type
    *   Limit the messages returned by type. Defaults to NULL, meaning all types.
-   *   Passed on to drupal_get_messages(). These values are supported:
+   *   Passed on to \Drupal\Core\Messenger\Messenger::deleteByType(). These
+   *   values are supported:
    *   - NULL
    *   - 'status'
    *   - 'warning'
@@ -72,9 +73,15 @@ class StatusMessages extends RenderElement {
    *
    * @see drupal_get_messages()
    */
-  public static function renderMessages($type) {
+  public static function renderMessages($type = NULL) {
     $render = [];
-    $messages = drupal_get_messages($type);
+    if (isset($type)) {
+      $messages = \Drupal::messenger()->deleteByType($type);
+    }
+    else {
+      $messages = \Drupal::messenger()->deleteAll();
+    }
+
     if ($messages) {
       // Render the messages.
       $render = [

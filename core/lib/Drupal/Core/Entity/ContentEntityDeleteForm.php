@@ -73,7 +73,7 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
       $form_state->setRedirectUrl($this->getRedirectUrl());
     }
 
-    drupal_set_message($this->getDeletionMessage());
+    $this->messenger()->addStatus($this->getDeletionMessage());
     $this->logDeletionMessage();
   }
 

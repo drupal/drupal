@@ -80,7 +80,8 @@ class FormValidationMessageOrderTest extends KernelTestBase implements FormInter
     $form_builder = $this->container->get('form_builder');
     $form_builder->submitForm($this, $form_state);
 
-    $messages = drupal_get_messages();
+    $messages = \Drupal::messenger()->all();
+    \Drupal::messenger()->deleteAll();
     $this->assertTrue(isset($messages['error']));
     $error_messages = $messages['error'];
     $this->assertEqual($error_messages[0], 'Three field is required.');

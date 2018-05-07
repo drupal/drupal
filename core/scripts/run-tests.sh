@@ -125,8 +125,8 @@ if ($args['clean']) {
   echo "\nEnvironment cleaned.\n";
 
   // Get the status messages and print them.
-  $messages = drupal_get_messages('status');
-  foreach ($messages['status'] as $text) {
+  $messages = \Drupal::messenger()->messagesByType('status');
+  foreach ($messages as $text) {
     echo " - " . $text . "\n";
   }
   exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
