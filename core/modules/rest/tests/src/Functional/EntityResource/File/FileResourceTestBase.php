@@ -224,8 +224,8 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
     if ($method === 'GET') {
       return "The 'access content' permission is required.";
     }
-    if ($method === 'PATCH') {
-      return 'You are not authorized to update this file entity.';
+    if ($method === 'PATCH' || $method === 'DELETE') {
+      return 'Only the file owner can update or delete the file entity.';
     }
     return parent::getExpectedUnauthorizedAccessMessage($method);
   }

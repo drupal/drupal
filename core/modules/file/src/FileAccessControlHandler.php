@@ -64,11 +64,11 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
     if ($operation == 'delete' || $operation == 'update') {
       $account = $this->prepareUser($account);
       $file_uid = $entity->get('uid')->getValue();
-      // Only the file owner can delete and update the file entity.
+      // Only the file owner can update or delete the file entity.
       if ($account->id() == $file_uid[0]['target_id']) {
         return AccessResult::allowed();
       }
-      return AccessResult::forbidden();
+      return AccessResult::forbidden('Only the file owner can update or delete the file entity.');
     }
 
     // No opinion.
