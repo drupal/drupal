@@ -115,11 +115,13 @@ class Result extends AreaPluginBase {
     // Send the output.
     if (!empty($total) || !empty($this->options['empty'])) {
       $output .= Xss::filterAdmin(str_replace(array_keys($replacements), array_values($replacements), $format));
+      // Return as render array.
+      return [
+        '#markup' => $output,
+      ];
     }
-    // Return as render array.
-    return [
-      '#markup' => $output,
-    ];
+
+    return [];
   }
 
 }
