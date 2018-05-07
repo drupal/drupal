@@ -13,6 +13,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
@@ -342,6 +343,9 @@ abstract class Entity implements EntityInterface {
         $this->toUrl($link_relation_type)->toString(TRUE)->getGeneratedUrl();
       }
       catch (RouteNotFoundException $e) {
+        return FALSE;
+      }
+      catch (MissingMandatoryParametersException $e) {
         return FALSE;
       }
       return TRUE;
