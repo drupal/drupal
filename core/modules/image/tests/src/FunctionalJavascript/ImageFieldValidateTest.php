@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\image\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
@@ -23,11 +23,11 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     /** @var \Drupal\file\FileInterface[] $text_files */
     $text_files = $this->drupalGetTestFiles('text');
     $text_file = reset($text_files);
-    $edit = [
-      'files[' . $field_name . '_0][]' => $this->container->get('file_system')->realpath($text_file->uri),
-      'title[0][value]' => $this->randomMachineName(),
-    ];
-    $this->drupalPostAjaxForm(NULL, $edit, $field_name . '_0_upload_button');
+
+    $field = $this->getSession()->getPage()->findField('files[' . $field_name . '_0][]');
+    $field->attachFile($this->container->get('file_system')->realpath($text_file->uri));
+    $this->assertSession()->waitForElement('css', '.messages--error');
+
     $elements = $this->xpath('//div[contains(@class, :class)]', [
       ':class' => 'messages--error',
     ]);
@@ -72,10 +72,11 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
 
     // Open an article and trigger the AJAX handler.
     $this->drupalGet('node/add/article');
-    $edit = [
-      'field_dummy_select[select_widget]' => 'bam',
-    ];
-    $this->drupalPostAjaxForm(NULL, $edit, 'field_dummy_select[select_widget]');
+    $id = $this->getSession()->getPage()->find('css', '[name="form_build_id"]')->getValue();
+    $field = $this->getSession()->getPage()->findField('field_dummy_select[select_widget]');
+    $field->setValue('bam');
+    // Make sure that the operation did not end with an exception.
+    $this->assertSession()->waitForElement('css', "[name='form_build_id']:not([value='$id'])");
   }
 
 }
