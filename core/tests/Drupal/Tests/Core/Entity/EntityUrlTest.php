@@ -2,14 +2,18 @@
 
 namespace Drupal\Tests\Core\Entity;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Entity\RevisionableInterface;
+use Drupal\Core\GeneratedUrl;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * Tests URL handling of the \Drupal\Core\Entity\Entity class.
@@ -494,6 +498,38 @@ class EntityUrlTest extends UnitTestCase {
     $test_cases['option_override'] = ['canonical', ['absolute' => TRUE], ['absolute' => FALSE], ['absolute' => TRUE]];
 
     return $test_cases;
+  }
+
+  /**
+   * Tests the uriRelationships() method.
+   *
+   * @covers ::uriRelationships
+   */
+  public function testUriRelationships() {
+    $entity = $this->getEntity(Entity::class, ['id' => $this->entityId]);
+
+    $container_builder = new ContainerBuilder();
+    $url_generator = $this->createMock(UrlGeneratorInterface::class);
+    $container_builder->set('url_generator', $url_generator);
+    \Drupal::setContainer($container_builder);
+
+    // Test route with no mandatory parameters.
+    $this->registerLinkTemplate('canonical');
+    $route_name_0 = 'entity.' . $this->entityTypeId . '.canonical';
+    $url_generator->expects($this->at(0))
+      ->method('generateFromRoute')
+      ->with($route_name_0)
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/entity_test'));
+    $this->assertEquals(['canonical'], $entity->uriRelationships());
+
+    // Test route with non-default mandatory parameters.
+    $this->registerLinkTemplate('{non_default_parameter}');
+    $route_name_1 = 'entity.' . $this->entityTypeId . '.{non_default_parameter}';
+    $url_generator->expects($this->at(0))
+      ->method('generateFromRoute')
+      ->with($route_name_1)
+      ->willThrowException(new MissingMandatoryParametersException());
+    $this->assertEquals([], $entity->uriRelationships());
   }
 
   /**
