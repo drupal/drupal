@@ -65,6 +65,8 @@ class LibraryDependencyResolver implements LibraryDependencyResolverInterface {
    * {@inheritdoc}
    */
   public function getMinimalRepresentativeSubset(array $libraries) {
+    assert(count($libraries) === count(array_unique($libraries)), '$libraries can\'t contain duplicate items.');
+
     $minimal = [];
 
     // Determine each library's dependencies.
