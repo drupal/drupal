@@ -219,7 +219,7 @@ class ServerCommand extends Command {
     $io->writeln('<info>This server is not meant for production use.</info>');
     $one_time_login = "http://$host:$port{$this->getOneTimeLoginUrl()}/login";
     $io->writeln("<info>One time login url:</info> <$one_time_login>");
-    $io->writeln('Press Ctrl-C to quit.');
+    $io->writeln('Press Ctrl-C to quit the Drupal development server.');
 
     if (!$input->getOption('suppress-login')) {
       if ($this->openBrowser("$one_time_login?destination=" . urlencode("/"), $io) === 1) {
