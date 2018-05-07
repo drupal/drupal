@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\image\FunctionalJavascript;
 
 use Drupal\image\Entity\ImageStyle;
 
@@ -26,12 +26,14 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     ];
 
     // Add style form.
-    $edit = [
-      'name' => $style_name,
-      'label' => $style_label,
-    ];
-    $this->drupalPostForm($admin_path . '/add', $edit, t('Create new style'));
-    $this->assertRaw(t('Style %name was created.', ['%name' => $style_label]));
+    $page = $this->getSession()->getPage();
+    $assert = $this->assertSession();
+    $this->drupalGet($admin_path . '/add');
+    $page->findField('label')->setValue($style_label);
+    $assert->waitForElementVisible('named', ['button', 'Edit'])->press();
+    $assert->waitForElementVisible('named', ['id_or_name', 'name'])->setValue($style_name);
+    $page->pressButton('Create new style');
+    $assert->pageTextContains("Style $style_label was created.");
 
     // Add two Ajax-enabled test effects.
     $this->drupalPostForm($style_path, ['new' => 'image_module_test_ajax'], t('Add'));
@@ -46,8 +48,16 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     foreach ($style->getEffects() as $uuid => $effect) {
       $effect_path = $admin_path . '/manage/' . $style_name . '/effects/' . $uuid;
       $this->drupalGet($effect_path);
-      $this->drupalPostAjaxForm(NULL, $effect_edit, ['op' => t('Ajax refresh')]);
-      $this->drupalPostForm(NULL, $effect_edit, t('Update effect'));
+      $page->findField('data[test_parameter]')->setValue(111);
+      $ajax_value = $page->find('css', '#ajax-value')->getText();
+      $this->assertSame('Ajax value bar', $ajax_value);
+      $this->getSession()->getPage()->pressButton('Ajax refresh');
+      $this->assertTrue($page->waitFor(10, function ($page) {
+        $ajax_value = $page->find('css', '#ajax-value')->getText();
+        return preg_match('/^Ajax value [0-9.]+ [0-9.]+$/', $ajax_value);
+      }));
+      $page->pressButton('Update effect');
+      $assert->pageTextContains('The image effect was successfully applied.');
     }
   }
 
