@@ -130,22 +130,58 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
 
   /**
    * Tests that moderation state changes also change the related entity state.
+   *
+   * @dataProvider moderationStateChangesTestCases
    */
-  public function testModerationStateChanges() {
-    // Change the moderation state and check that the entity's
-    // 'isDefaultRevision' flag and the publishing status have also been
-    // updated.
-    $this->testNode->moderation_state->value = 'published';
-
-    $this->assertTrue($this->testNode->isPublished());
-    $this->assertTrue($this->testNode->isDefaultRevision());
-
+  public function testModerationStateChanges($initial_state, $final_state, $first_published, $first_is_default, $second_published, $second_is_default) {
+    $this->testNode->moderation_state->value = $initial_state;
+    $this->assertEquals($first_published, $this->testNode->isPublished());
+    $this->assertEquals($first_is_default, $this->testNode->isDefaultRevision());
     $this->testNode->save();
 
-    // Repeat the checks using an 'unpublished' state.
-    $this->testNode->moderation_state->value = 'draft';
-    $this->assertFalse($this->testNode->isPublished());
-    $this->assertFalse($this->testNode->isDefaultRevision());
+    $this->testNode->moderation_state->value = $final_state;
+    $this->assertEquals($second_published, $this->testNode->isPublished());
+    $this->assertEquals($second_is_default, $this->testNode->isDefaultRevision());
+  }
+
+  /**
+   * Data provider for ::testModerationStateChanges
+   */
+  public function moderationStateChangesTestCases() {
+    return [
+      'Draft to draft' => [
+        'draft',
+        'draft',
+        FALSE,
+        TRUE,
+        FALSE,
+        TRUE,
+      ],
+      'Draft to published' => [
+        'draft',
+        'published',
+        FALSE,
+        TRUE,
+        TRUE,
+        TRUE,
+      ],
+      'Published to published' => [
+        'published',
+        'published',
+        TRUE,
+        TRUE,
+        TRUE,
+        TRUE,
+      ],
+      'Published to draft' => [
+        'published',
+        'draft',
+        TRUE,
+        TRUE,
+        FALSE,
+        FALSE,
+      ],
+    ];
   }
 
   /**
