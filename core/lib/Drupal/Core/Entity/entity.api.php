@@ -1955,8 +1955,9 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user account to check.
  * @param \Drupal\Core\Field\FieldItemListInterface $items
- *   (optional) The entity field object on which the operation is to be
- *   performed.
+ *   (optional) The entity field object for which to check access, or NULL if
+ *   access is checked for the field definition, without any specific value
+ *   available. Defaults to NULL.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
  *   The access result.
