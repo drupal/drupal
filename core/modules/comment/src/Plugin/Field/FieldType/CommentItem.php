@@ -117,9 +117,8 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       '#title' => t('Comments per page'),
       '#default_value' => $settings['per_page'],
       '#required' => TRUE,
-      '#min' => 10,
+      '#min' => 1,
       '#max' => 1000,
-      '#step' => 10,
     ];
     $element['anonymous'] = [
       '#type' => 'select',
