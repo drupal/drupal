@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\Color;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Asset\CssOptimizer;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Environment;
@@ -514,7 +513,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   // Prepare color conversion table.
   $conversion = $palette;
   foreach ($conversion as $k => $v) {
-    $v = Unicode::strtolower($v);
+    $v = mb_strtolower($v);
     $conversion[$k] = Color::normalizeHexLength($v);
   }
   $default = color_get_palette($theme, TRUE);
@@ -534,7 +533,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   // Iterate over all the parts.
   foreach ($style as $chunk) {
     if ($is_color) {
-      $chunk = Unicode::strtolower($chunk);
+      $chunk = mb_strtolower($chunk);
       $chunk = Color::normalizeHexLength($chunk);
       // Check if this is one of the colors in the default palette.
       if ($key = array_search($chunk, $default)) {

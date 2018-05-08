@@ -2,7 +2,6 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -86,7 +85,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
 
     // Create a taxonomy_term_reference field on the article Content Type that
     // uses a taxonomy_autocomplete widget.
-    $this->fieldName = Unicode::strtolower($this->randomMachineName());
+    $this->fieldName = mb_strtolower($this->randomMachineName());
     FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',

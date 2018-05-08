@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -81,7 +80,7 @@ class UriItem extends StringItem {
     $values = parent::generateSampleValue($field_definition);
     $suffix_length = $field_definition->getSetting('max_length') - 7;
     foreach ($values as $key => $value) {
-      $values[$key] = 'http://' . Unicode::substr($value, 0, $suffix_length);
+      $values[$key] = 'http://' . mb_substr($value, 0, $suffix_length);
     }
     return $values;
   }

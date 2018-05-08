@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Updater;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\FileTransfer\FileTransferException;
 use Drupal\Core\FileTransfer\FileTransfer;
 
@@ -112,7 +111,7 @@ class Updater {
       return FALSE;
     }
     foreach ($info_files as $info_file) {
-      if (Unicode::substr($info_file->filename, 0, -9) == drupal_basename($directory)) {
+      if (mb_substr($info_file->filename, 0, -9) == drupal_basename($directory)) {
         // Info file Has the same name as the directory, return it.
         return $info_file->uri;
       }

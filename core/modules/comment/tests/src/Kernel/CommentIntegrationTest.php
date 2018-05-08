@@ -3,7 +3,6 @@
 namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\Entity\CommentType;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
@@ -47,7 +46,7 @@ class CommentIntegrationTest extends KernelTestBase {
    * @see CommentDefaultFormatter::calculateDependencies()
    */
   public function testViewMode() {
-    $mode = Unicode::strtolower($this->randomMachineName());
+    $mode = mb_strtolower($this->randomMachineName());
     // Create a new comment view mode and a view display entity.
     EntityViewMode::create([
       'id' => "comment.$mode",
@@ -64,7 +63,7 @@ class CommentIntegrationTest extends KernelTestBase {
     FieldStorageConfig::create([
       'entity_type' => 'entity_test',
       'type' => 'comment',
-      'field_name' => $field_name = Unicode::strtolower($this->randomMachineName()),
+      'field_name' => $field_name = mb_strtolower($this->randomMachineName()),
       'settings' => [
         'comment_type' => 'comment',
       ],

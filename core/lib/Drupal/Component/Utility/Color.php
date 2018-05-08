@@ -23,7 +23,7 @@ class Color {
     // Hash prefix is optional.
     $hex = ltrim($hex, '#');
     // Must be either RGB or RRGGBB.
-    $length = Unicode::strlen($hex);
+    $length = mb_strlen($hex);
     $valid = $valid && ($length === 3 || $length === 6);
     // Must be a valid hex value.
     $valid = $valid && ctype_xdigit($hex);

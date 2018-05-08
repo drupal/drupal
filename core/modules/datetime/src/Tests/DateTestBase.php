@@ -4,7 +4,6 @@ namespace Drupal\datetime\Tests;
 
 @trigger_error('\Drupal\datetime\Tests\DateTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use \Drupal\Tests\BrowserTestBase instead. See https://www.drupal.org/node/2780063.', E_USER_DEPRECATED);
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
@@ -111,7 +110,7 @@ abstract class DateTestBase extends WebTestBase {
    * Creates a date test field.
    */
   protected function createField() {
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $type = $this->getTestFieldType();
     $widget_type = $formatter_type = $type . '_default';
 

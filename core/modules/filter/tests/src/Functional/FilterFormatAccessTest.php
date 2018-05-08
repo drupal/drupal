@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\filter\Functional;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessResult;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
@@ -85,7 +84,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $formats = [];
     for ($i = 0; $i < 3; $i++) {
       $edit = [
-        'format' => Unicode::strtolower($this->randomMachineName()),
+        'format' => mb_strtolower($this->randomMachineName()),
         'name' => $this->randomMachineName(),
       ];
       $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));

@@ -4,7 +4,6 @@ namespace Drupal\Tests\field\Kernel\EntityReference;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -78,7 +77,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
 
     $this->vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
-      'vid' => Unicode::strtolower($this->randomMachineName()),
+      'vid' => mb_strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ]);
     $this->vocabulary->save();
@@ -259,7 +258,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     // Make sure the computed term reflects updates to the term id.
     $vocabulary2 = $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
-      'vid' => Unicode::strtolower($this->randomMachineName()),
+      'vid' => mb_strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ]);
     $vocabulary2->save();
@@ -330,7 +329,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
    * Tests that the 'handler' field setting stores the proper plugin ID.
    */
   public function testSelectionHandlerSettings() {
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

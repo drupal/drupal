@@ -265,7 +265,7 @@ function search_simplify($text, $langcode = NULL) {
   $text = Html::decodeEntities($text);
 
   // Lowercase
-  $text = Unicode::strtolower($text);
+  $text = mb_strtolower($text);
 
   // Remove diacritics.
   $text = \Drupal::service('transliteration')->removeDiacritics($text);
@@ -330,7 +330,7 @@ function search_simplify($text, $langcode = NULL) {
 function search_expand_cjk($matches) {
   $min = \Drupal::config('search.settings')->get('index.minimum_word_size');
   $str = $matches[0];
-  $length = Unicode::strlen($str);
+  $length = mb_strlen($str);
   // If the text is shorter than the minimum word size, don't tokenize it.
   if ($length <= $min) {
     return ' ' . $str . ' ';
@@ -340,7 +340,7 @@ function search_expand_cjk($matches) {
   $chars = [];
   for ($i = 0; $i < $length; $i++) {
     // Add the next character off the beginning of the string to the queue.
-    $current = Unicode::substr($str, 0, 1);
+    $current = mb_substr($str, 0, 1);
     $str = substr($str, strlen($current));
     $chars[] = $current;
     if ($i >= $min - 1) {
@@ -473,7 +473,7 @@ function search_index($type, $sid, $langcode, $text) {
     if ($tag) {
       // Increase or decrease score per word based on tag
       list($tagname) = explode(' ', $value, 2);
-      $tagname = Unicode::strtolower($tagname);
+      $tagname = mb_strtolower($tagname);
       // Closing or opening tag?
       if ($tagname[0] == '/') {
         $tagname = substr($tagname, 1);
@@ -511,7 +511,7 @@ function search_index($type, $sid, $langcode, $text) {
           // Add word to accumulator
           $accum .= $word . ' ';
           // Check wordlength
-          if (is_numeric($word) || Unicode::strlen($word) >= $minimum_word_size) {
+          if (is_numeric($word) || mb_strlen($word) >= $minimum_word_size) {
             if (!isset($scored_words[$word])) {
               $scored_words[$word] = 0;
             }
@@ -841,13 +841,13 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
 
   // See if there is a match after lower-casing and removing diacritics in
   // both, which should preserve the string length.
-  $new_text = Unicode::strtolower($text);
+  $new_text = mb_strtolower($text);
   $new_text = \Drupal::service('transliteration')->removeDiacritics($new_text);
-  $new_key = Unicode::strtolower($temp);
+  $new_key = mb_strtolower($temp);
   $new_key = \Drupal::service('transliteration')->removeDiacritics($new_key);
   if (preg_match('/' . $preceded_by_boundary . preg_quote($new_key, '/') . $followed_by_boundary . '/u', ' ' . $new_text . ' ')) {
-    $position = Unicode::strpos($new_text, $new_key);
-    return Unicode::substr($text, $position, Unicode::strlen($new_key));
+    $position = mb_strpos($new_text, $new_key);
+    return mb_substr($text, $position, mb_strlen($new_key));
   }
 
   // Run both text and key through search_simplify.
@@ -876,7 +876,7 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
     $proposed_end_index = floor(($max_end_index + $min_end_index) / 2);
     $proposed_end_pos = $words[$proposed_end_index][1];
     // Since the split was done with preg_split(), the positions are byte counts
-    // not character counts, so use substr() not Unicode::substr() here.
+    // not character counts, so use substr() not mb_substr() here.
     $trial_text = trim(search_simplify(substr($text, $start_pos, $proposed_end_pos - $start_pos), $langcode));
     if (strpos($trial_text, $simplified_key) !== FALSE) {
       // The proposed endpoint is fine, text still matches.
@@ -902,7 +902,7 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
     $proposed_start_index = ceil(($max_start_index + $min_start_index) / 2);
     $proposed_start_pos = $words[$proposed_start_index][1];
     // Since the split was done with preg_split(), the positions are byte counts
-    // not character counts, so use substr() not Unicode::substr() here.
+    // not character counts, so use substr() not mb_substr() here.
     $trial_text = trim(search_simplify(substr($text, $proposed_start_pos, $end_pos - $proposed_start_pos), $langcode));
     if (strpos($trial_text, $simplified_key) !== FALSE) {
       // The proposed start point is fine, text still matches.
@@ -917,9 +917,8 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
   $start_index = $max_start_index;
 
   // Return the matching text. We need to use substr() here and not the
-  // Unicode::substr() function, because the indices in $words came from
-  // preg_split(), so they are Unicode-safe byte positions, not character
-  // positions.
+  // mb_substr() function, because the indices in $words came from preg_split(),
+  // so they are Unicode-safe byte positions, not character positions.
   return trim(substr($text, $words[$start_index][1], $words[$end_index][1] - $words[$start_index][1]));
 }
 

@@ -2,7 +2,6 @@
 
 namespace Drupal\field\Tests\EntityReference;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
@@ -424,7 +423,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     /** @var \Drupal\taxonomy\Entity\Vocabulary[] $vocabularies */
     $vocabularies = [];
     for ($i = 0; $i < 2; $i++) {
-      $vid = Unicode::strtolower($this->randomMachineName());
+      $vid = mb_strtolower($this->randomMachineName());
       $vocabularies[$i] = Vocabulary::create([
         'name' => $this->randomString(),
         'vid' => $vid,

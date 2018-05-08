@@ -2,7 +2,6 @@
 
 namespace Drupal\field\Tests\Number;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\Node;
 use Drupal\simpletest\WebTestBase;
@@ -40,7 +39,7 @@ class NumberFieldTest extends WebTestBase {
    */
   public function testNumberDecimalField() {
     // Create a field with settings to validate.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -128,7 +127,7 @@ class NumberFieldTest extends WebTestBase {
     $maximum = rand(2000, 4000);
 
     // Create a field with settings to validate.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -273,7 +272,7 @@ class NumberFieldTest extends WebTestBase {
   */
   public function testNumberFloatField() {
     // Create a field with settings to validate.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -362,9 +361,9 @@ class NumberFieldTest extends WebTestBase {
    * Test default formatter behavior
    */
   public function testNumberFormatter() {
-    $type = Unicode::strtolower($this->randomMachineName());
-    $float_field = Unicode::strtolower($this->randomMachineName());
-    $integer_field = Unicode::strtolower($this->randomMachineName());
+    $type = mb_strtolower($this->randomMachineName());
+    $float_field = mb_strtolower($this->randomMachineName());
+    $integer_field = mb_strtolower($this->randomMachineName());
     $thousand_separators = ['', '.', ',', ' ', chr(8201), "'"];
     $decimal_separators = ['.', ','];
     $prefix = $this->randomMachineName();
@@ -494,7 +493,7 @@ class NumberFieldTest extends WebTestBase {
    */
   public function testCreateNumberFloatField() {
     // Create a float field.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -519,7 +518,7 @@ class NumberFieldTest extends WebTestBase {
    */
   public function testCreateNumberDecimalField() {
     // Create a decimal field.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

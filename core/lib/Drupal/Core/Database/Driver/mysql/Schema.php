@@ -212,7 +212,7 @@ class Schema extends DatabaseSchema {
     // Set the correct database-engine specific datatype.
     // In case one is already provided, force it to uppercase.
     if (isset($field['mysql_type'])) {
-      $field['mysql_type'] = Unicode::strtoupper($field['mysql_type']);
+      $field['mysql_type'] = mb_strtoupper($field['mysql_type']);
     }
     else {
       $map = $this->getFieldTypeMap();

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\views\Functional\Handler;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
@@ -556,7 +555,7 @@ class FieldWebTest extends ViewTestBase {
     // Tests for simple trimming by string length.
     $row->views_test_data_name = $this->randomMachineName(8);
     $name_field->options['alter']['max_length'] = 5;
-    $trimmed_name = Unicode::substr($row->views_test_data_name, 0, 5);
+    $trimmed_name = mb_substr($row->views_test_data_name, 0, 5);
 
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
       return $name_field->advancedRender($row);

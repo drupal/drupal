@@ -71,7 +71,7 @@ class Html {
   public static function getClass($class) {
     $class = (string) $class;
     if (!isset(static::$classes[$class])) {
-      static::$classes[$class] = static::cleanCssIdentifier(Unicode::strtolower($class));
+      static::$classes[$class] = static::cleanCssIdentifier(mb_strtolower($class));
     }
     return static::$classes[$class];
   }
@@ -215,7 +215,7 @@ class Html {
    * @see self::getUniqueId()
    */
   public static function getId($id) {
-    $id = str_replace([' ', '_', '[', ']'], ['-', '-', '-', ''], Unicode::strtolower($id));
+    $id = str_replace([' ', '_', '[', ']'], ['-', '-', '-', ''], mb_strtolower($id));
 
     // As defined in http://www.w3.org/TR/html4/types.html#type-name, HTML IDs can
     // only contain letters, digits ([0-9]), hyphens ("-"), underscores ("_"),

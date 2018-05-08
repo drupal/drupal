@@ -2,7 +2,6 @@
 
 namespace Drupal\editor\Tests;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -109,7 +108,7 @@ class EditorAdminTest extends WebTestBase {
     $this->container->get('module_installer')->install(['node']);
     $this->resetAll();
     // Create a new node type and attach the 'body' field to it.
-    $node_type = NodeType::create(['type' => Unicode::strtolower($this->randomMachineName())]);
+    $node_type = NodeType::create(['type' => mb_strtolower($this->randomMachineName())]);
     $node_type->save();
     node_add_body_field($node_type, $this->randomString());
 

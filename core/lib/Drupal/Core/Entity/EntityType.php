@@ -3,7 +3,6 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Plugin\Definition\PluginDefinition;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Exception\EntityTypeIdLengthException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -295,7 +294,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function __construct($definition) {
     // Throw an exception if the entity type ID is longer than 32 characters.
-    if (Unicode::strlen($definition['id']) > static::ID_MAX_LENGTH) {
+    if (mb_strlen($definition['id']) > static::ID_MAX_LENGTH) {
       throw new EntityTypeIdLengthException('Attempt to create an entity type with an ID longer than ' . static::ID_MAX_LENGTH . " characters: {$definition['id']}.");
     }
 
@@ -768,7 +767,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function getLowercaseLabel() {
-    return Unicode::strtolower($this->getLabel());
+    return mb_strtolower($this->getLabel());
   }
 
   /**

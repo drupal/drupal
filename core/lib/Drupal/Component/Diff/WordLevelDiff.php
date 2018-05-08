@@ -3,7 +3,6 @@
 namespace Drupal\Component\Diff;
 
 use Drupal\Component\Diff\Engine\HWLDFWordAccumulator;
-use Drupal\Component\Utility\Unicode;
 
 /**
  * @todo document
@@ -35,7 +34,7 @@ class WordLevelDiff extends MappedDiff {
         $words[] = "\n";
         $stripped[] = "\n";
       }
-      if (Unicode::strlen($line) > $this::MAX_LINE_LENGTH) {
+      if (mb_strlen($line) > $this::MAX_LINE_LENGTH) {
         $words[] = $line;
         $stripped[] = $line;
       }

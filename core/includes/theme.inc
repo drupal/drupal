@@ -12,7 +12,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\MarkupInterface;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
@@ -485,7 +484,7 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
       $config->set('favicon.mimetype', $value);
     }
     elseif (substr($key, 0, 7) == 'toggle_') {
-      $config->set('features.' . Unicode::substr($key, 7), $value);
+      $config->set('features.' . mb_substr($key, 7), $value);
     }
     elseif (!in_array($key, ['theme', 'logo_upload'])) {
       $config->set($key, $value);

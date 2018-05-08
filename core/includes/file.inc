@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\FileSystem\FileSystem as ComponentFileSystem;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Bytes;
@@ -202,7 +201,7 @@ function file_create_url($uri) {
     //   HTTP and to https://example.com/bar.jpg when viewing a HTTPS page)
     // Both types of relative URIs are characterized by a leading slash, hence
     // we can use a single check.
-    if (Unicode::substr($uri, 0, 1) == '/') {
+    if (mb_substr($uri, 0, 1) == '/') {
       return $uri;
     }
     else {

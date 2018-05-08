@@ -3,7 +3,6 @@
 namespace Drupal\Tests\system\Functional\Mail;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\BrowserTestBase;
@@ -48,7 +47,7 @@ class HtmlToTextTest extends BrowserTestBase {
    *   \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    */
   protected function assertHtmlToText($html, $text, $message, $allowed_tags = NULL) {
-    preg_match_all('/<([a-z0-6]+)/', Unicode::strtolower($html), $matches);
+    preg_match_all('/<([a-z0-6]+)/', mb_strtolower($html), $matches);
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
     $result = MailFormatHelper::htmlToText($html, $allowed_tags);
@@ -241,8 +240,8 @@ class HtmlToTextTest extends BrowserTestBase {
     if (!$pass) {
       $this->verbose($this->stringToHtml($output));
     }
-    $output_upper = Unicode::strtoupper($output);
-    $upper_input = Unicode::strtoupper($input);
+    $output_upper = mb_strtoupper($output);
+    $upper_input = mb_strtoupper($input);
     $upper_output = MailFormatHelper::htmlToText($upper_input);
     $pass = $this->assertEqual(
       $upper_output,
@@ -347,8 +346,8 @@ class HtmlToTextTest extends BrowserTestBase {
 
     $maximum_line_length = 0;
     foreach (explode($eol, $output) as $line) {
-      // We must use strlen() rather than Unicode::strlen() in order to count
-      // octets rather than characters.
+      // We must use strlen() rather than mb_strlen() in order to count octets
+      // rather than characters.
       $maximum_line_length = max($maximum_line_length, strlen($line . $eol));
     }
     $verbose = 'Maximum line length found was ' . $maximum_line_length . ' octets.';

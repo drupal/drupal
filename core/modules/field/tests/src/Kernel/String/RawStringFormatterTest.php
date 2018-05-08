@@ -3,7 +3,6 @@
 namespace Drupal\Tests\field\Kernel\String;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
@@ -58,7 +57,7 @@ class RawStringFormatterTest extends KernelTestBase {
 
     $this->entityType = 'entity_test';
     $this->bundle = $this->entityType;
-    $this->fieldName = Unicode::strtolower($this->randomMachineName());
+    $this->fieldName = mb_strtolower($this->randomMachineName());
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => $this->fieldName,

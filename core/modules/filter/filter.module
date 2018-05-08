@@ -773,7 +773,7 @@ function _filter_html_escape($text) {
 function _filter_html_image_secure_process($text) {
   // Find the path (e.g. '/') to Drupal root.
   $base_path = base_path();
-  $base_path_length = Unicode::strlen($base_path);
+  $base_path_length = mb_strlen($base_path);
 
   // Find the directory on the server where index.php resides.
   $local_dir = \Drupal::root() . '/';
@@ -789,11 +789,11 @@ function _filter_html_image_secure_process($text) {
     // Verify that $src starts with $base_path.
     // This also ensures that external images cannot be referenced.
     $src = $image->getAttribute('src');
-    if (Unicode::substr($src, 0, $base_path_length) === $base_path) {
+    if (mb_substr($src, 0, $base_path_length) === $base_path) {
       // Remove the $base_path to get the path relative to the Drupal root.
       // Ensure the path refers to an actual image by prefixing the image source
       // with the Drupal root and running getimagesize() on it.
-      $local_image_path = $local_dir . Unicode::substr($src, $base_path_length);
+      $local_image_path = $local_dir . mb_substr($src, $base_path_length);
       $local_image_path = rawurldecode($local_image_path);
       if (@getimagesize($local_image_path)) {
         // The image has the right path. Erroneous images are dealt with below.

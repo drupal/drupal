@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\field\Kernel\Uri;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -38,7 +37,7 @@ class UriItemTest extends FieldKernelTestBase {
     $label = $this->randomMachineName();
 
     // Create a field with settings to validate.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

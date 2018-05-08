@@ -2,7 +2,6 @@
 
 namespace Drupal\file\Plugin\migrate\destination;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\Plugin\Field\FieldType\UriItem;
 use Drupal\migrate\Row;
 use Drupal\migrate\MigrateException;
@@ -58,7 +57,7 @@ class EntityFile extends EntityContentBase {
       // Make it into a proper public file uri, stripping off the existing
       // scheme if present.
       $value = 'public://' . preg_replace('|^[a-z]+://|i', '', $value);
-      $value = Unicode::substr($value, 0, $field_definitions['uri']->getSetting('max_length'));
+      $value = mb_substr($value, 0, $field_definitions['uri']->getSetting('max_length'));
       // Create a real file, so File::preSave() can do filesize() on it.
       touch($value);
       $row->setDestinationProperty('uri', $value);

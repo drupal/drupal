@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\System;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -56,7 +55,7 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'), 'It is not possible to create a date format with the machine name "fallback". It is a built-in format that already exists.');
 
     // Create a date format with a machine name distinct from the previous two.
-    $id = Unicode::strtolower($this->randomMachineName(16));
+    $id = mb_strtolower($this->randomMachineName(16));
     $edit = [
       'label' => $this->randomMachineName(16),
       'id' => $id,

@@ -369,7 +369,7 @@ class InOperator extends FilterPluginBase {
           if ($values !== '') {
             $values .= ', ';
           }
-          if (Unicode::strlen($values) > 8) {
+          if (mb_strlen($values) > 8) {
             $values = Unicode::truncate($values, 8, FALSE, TRUE);
             break;
           }

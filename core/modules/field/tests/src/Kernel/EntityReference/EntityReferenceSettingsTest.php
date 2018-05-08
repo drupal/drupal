@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\field\Kernel\EntityReference;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\field\Entity\FieldConfig;
@@ -65,13 +64,13 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     $this->installEntitySchema('entity_test');
 
     $this->nodeType = NodeType::create([
-      'type' => Unicode::strtolower($this->randomMachineName()),
+      'type' => mb_strtolower($this->randomMachineName()),
       'name' => $this->randomString(),
     ]);
     $this->nodeType->save();
 
     // Create a custom bundle.
-    $this->customBundle = 'test_bundle_' . Unicode::strtolower($this->randomMachineName());
+    $this->customBundle = 'test_bundle_' . mb_strtolower($this->randomMachineName());
     entity_test_create_bundle($this->customBundle, NULL, 'entity_test');
 
     // Prepare the logger for collecting the expected critical error.
@@ -86,7 +85,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     /** @var \Drupal\taxonomy\Entity\Vocabulary[] $vocabularies */
     $vocabularies = [];
     for ($i = 0; $i < 2; $i++) {
-      $vid = Unicode::strtolower($this->randomMachineName());
+      $vid = mb_strtolower($this->randomMachineName());
       $vocabularies[$i] = Vocabulary::create([
         'name' => $this->randomString(),
         'vid' => $vid,
@@ -94,7 +93,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
       $vocabularies[$i]->save();
     }
     // Attach an entity reference field to $this->nodeType.
-    $name = Unicode::strtolower($this->randomMachineName());
+    $name = mb_strtolower($this->randomMachineName());
     $label = $this->randomString();
     $handler_settings = [
       'target_bundles' => [
@@ -143,7 +142,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
    */
   public function testCustomTargetBundleDeletion() {
     // Attach an entity reference field to $this->nodeType.
-    $name = Unicode::strtolower($this->randomMachineName());
+    $name = mb_strtolower($this->randomMachineName());
     $label = $this->randomString();
     $handler_settings = ['target_bundles' => [$this->customBundle => $this->customBundle]];
     $this->createEntityReferenceField('node', $this->nodeType->id(), $name, $label, 'entity_test', 'default', $handler_settings);

@@ -7,7 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginBase;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
@@ -246,7 +245,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     //   \Drupal\system\MachineNameController::transliterate(), so it might make
     //   sense to provide a common service for the two.
     $transliterated = $this->transliteration()->transliterate($admin_label, LanguageInterface::LANGCODE_DEFAULT, '_');
-    $transliterated = Unicode::strtolower($transliterated);
+    $transliterated = mb_strtolower($transliterated);
 
     $transliterated = preg_replace('@[^a-z0-9_.]+@', '', $transliterated);
 

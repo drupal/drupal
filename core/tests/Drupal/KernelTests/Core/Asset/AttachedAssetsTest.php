@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\Asset;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -205,7 +204,7 @@ class AttachedAssetsTest extends KernelTestBase {
     $end = strrpos($rendered_js, $endToken);
     // Convert to a string, as $renderer_js is a \Drupal\Core\Render\Markup
     // object.
-    $json  = Unicode::substr($rendered_js, $start, $end - $start + 1);
+    $json  = mb_substr($rendered_js, $start, $end - $start + 1);
     $parsed_settings = Json::decode($json);
 
     // Test whether the settings for core/drupalSettings are available.

@@ -4,7 +4,6 @@ namespace Drupal\system\Controller;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Tags;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityAutocompleteMatcher;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
@@ -81,7 +80,7 @@ class EntityAutocompleteController extends ControllerBase {
     // Get the typed string from the URL, if it exists.
     if ($input = $request->query->get('q')) {
       $typed_string = Tags::explode($input);
-      $typed_string = Unicode::strtolower(array_pop($typed_string));
+      $typed_string = mb_strtolower(array_pop($typed_string));
 
       // Selection settings are passed in as a hashed key of a serialized array
       // stored in the key/value store.

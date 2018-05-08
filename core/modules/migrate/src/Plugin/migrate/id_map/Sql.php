@@ -2,7 +2,6 @@
 
 namespace Drupal\migrate\Plugin\migrate\id_map;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -170,10 +169,10 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     // Default generated table names, limited to 63 characters.
     $machine_name = str_replace(':', '__', $this->migration->id());
     $prefix_length = strlen($this->database->tablePrefix());
-    $this->mapTableName = 'migrate_map_' . Unicode::strtolower($machine_name);
-    $this->mapTableName = Unicode::substr($this->mapTableName, 0, 63 - $prefix_length);
-    $this->messageTableName = 'migrate_message_' . Unicode::strtolower($machine_name);
-    $this->messageTableName = Unicode::substr($this->messageTableName, 0, 63 - $prefix_length);
+    $this->mapTableName = 'migrate_map_' . mb_strtolower($machine_name);
+    $this->mapTableName = mb_substr($this->mapTableName, 0, 63 - $prefix_length);
+    $this->messageTableName = 'migrate_message_' . mb_strtolower($machine_name);
+    $this->messageTableName = mb_substr($this->messageTableName, 0, 63 - $prefix_length);
   }
 
   /**

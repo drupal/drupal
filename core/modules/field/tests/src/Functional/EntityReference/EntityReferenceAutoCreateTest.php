@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\field\Functional\EntityReference;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\BrowserTestBase;
@@ -145,7 +144,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     /** @var \Drupal\taxonomy\Entity\Vocabulary[] $vocabularies */
     $vocabularies = [];
     for ($i = 0; $i < 2; $i++) {
-      $vid = Unicode::strtolower($this->randomMachineName());
+      $vid = mb_strtolower($this->randomMachineName());
       $vocabularies[$i] = Vocabulary::create([
         'name' => $this->randomMachineName(),
         'vid' => $vid,
@@ -156,7 +155,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     // Create a taxonomy term entity reference field that saves the auto-created
     // taxonomy terms in the second vocabulary from the two that were configured
     // as targets.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $handler_settings = [
       'target_bundles' => [
         $vocabularies[0]->id() => $vocabularies[0]->id(),

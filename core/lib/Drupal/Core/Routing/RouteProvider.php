@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Routing;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
@@ -345,7 +344,7 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
     // have a case-insensitive match from the incoming path to the lower case
     // pattern outlines from \Drupal\Core\Routing\RouteCompiler::compile().
     // @see \Drupal\Core\Routing\CompiledRoute::__construct()
-    $parts = preg_split('@/+@', Unicode::strtolower($path), NULL, PREG_SPLIT_NO_EMPTY);
+    $parts = preg_split('@/+@', mb_strtolower($path), NULL, PREG_SPLIT_NO_EMPTY);
 
     $collection = new RouteCollection();
 

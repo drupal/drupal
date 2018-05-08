@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Kernel\Entity;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
@@ -56,7 +55,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
     ]);
     $content_type->save();
     $field_storage = FieldStorageConfig::create([
-      'field_name' => Unicode::strtolower($this->randomMachineName()),
+      'field_name' => mb_strtolower($this->randomMachineName()),
       'entity_type' => 'node',
       'type' => 'comment',
     ]);

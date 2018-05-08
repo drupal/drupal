@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -64,10 +63,10 @@ abstract class EntityLanguageTestBase extends EntityKernelTestBase {
     $this->state->set('entity_test.translation', TRUE);
 
     // Create a translatable test field.
-    $this->fieldName = Unicode::strtolower($this->randomMachineName() . '_field_name');
+    $this->fieldName = mb_strtolower($this->randomMachineName() . '_field_name');
 
     // Create an untranslatable test field.
-    $this->untranslatableFieldName = Unicode::strtolower($this->randomMachineName() . '_field_name');
+    $this->untranslatableFieldName = mb_strtolower($this->randomMachineName() . '_field_name');
 
     // Create field fields in all entity variations.
     foreach (entity_test_entity_types() as $entity_type) {

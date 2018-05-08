@@ -170,6 +170,10 @@ if (!Composer::upgradePHPUnitCheck($phpunit_version)) {
 // @see \Drupal\Core\DrupalKernel::bootEnvironment()
 setlocale(LC_ALL, 'C');
 
+// Set appropriate configuration for multi-byte strings.
+mb_internal_encoding('utf-8');
+mb_language('uni');
+
 // Set the default timezone. While this doesn't cause any tests to fail, PHP
 // complains if 'date.timezone' is not set in php.ini. The Australia/Sydney
 // timezone is chosen so all tests are run using an edge case scenario (UTC+10

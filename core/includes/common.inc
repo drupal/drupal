@@ -46,7 +46,7 @@ use Drupal\Core\Render\Element;
  *
  * Correct:
  * @code
- *   $my_substring = Unicode::substr($original_string, 0, 5);
+ *   $my_substring = mb_substr($original_string, 0, 5);
  * @endcode
  *
  * @}

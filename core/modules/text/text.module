@@ -91,7 +91,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
   }
 
   // If we have a short body, the entire body is the summary.
-  if (Unicode::strlen($text) <= $size) {
+  if (mb_strlen($text) <= $size) {
     return $text;
   }
 

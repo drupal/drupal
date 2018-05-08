@@ -4,7 +4,6 @@ namespace Drupal\Core\StringTranslation;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\ToStringTrait;
-use Drupal\Component\Utility\Unicode;
 
 /**
  * Provides translatable markup class.
@@ -226,7 +225,7 @@ class TranslatableMarkup extends FormattableMarkup {
    *   The length of the string.
    */
   public function count() {
-    return Unicode::strlen($this->render());
+    return mb_strlen($this->render());
   }
 
 }

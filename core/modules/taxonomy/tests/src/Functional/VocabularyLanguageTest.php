@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\taxonomy\Functional;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 
@@ -43,7 +42,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->assertField('edit-langcode', 'The language selector field was found on the page.');
 
     // Create the vocabulary.
-    $vid = Unicode::strtolower($this->randomMachineName());
+    $vid = mb_strtolower($this->randomMachineName());
     $edit['name'] = $this->randomMachineName();
     $edit['description'] = $this->randomMachineName();
     $edit['langcode'] = 'aa';
@@ -72,7 +71,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     // the terms are saved.
     $edit = [
       'name' => $this->randomMachineName(),
-      'vid' => Unicode::strtolower($this->randomMachineName()),
+      'vid' => mb_strtolower($this->randomMachineName()),
       'default_language[langcode]' => 'bb',
       'default_language[language_alterable]' => TRUE,
     ];

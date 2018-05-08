@@ -2,7 +2,6 @@
 
 namespace Drupal\user\Plugin\migrate\destination;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -168,8 +167,8 @@ class EntityUser extends EntityContentBase {
     if (is_array($name)) {
       $name = reset($name);
     }
-    if (Unicode::strlen($name) > USERNAME_MAX_LENGTH) {
-      $row->setDestinationProperty('name', Unicode::substr($name, 0, USERNAME_MAX_LENGTH));
+    if (mb_strlen($name) > USERNAME_MAX_LENGTH) {
+      $row->setDestinationProperty('name', mb_substr($name, 0, USERNAME_MAX_LENGTH));
     }
   }
 

@@ -2,7 +2,6 @@
 
 namespace Drupal\config_translation\Controller;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -97,7 +96,7 @@ class ConfigTranslationFieldListBuilder extends ConfigTranslationEntityListBuild
   public function getFilterLabels() {
     $info = parent::getFilterLabels();
     $bundle = $this->baseEntityInfo->getBundleLabel() ?: $this->t('Bundle');
-    $bundle = Unicode::strtolower($bundle);
+    $bundle = mb_strtolower($bundle);
 
     $info['placeholder'] = $this->t('Enter field or @bundle', ['@bundle' => $bundle]);
     $info['description'] = $this->t('Enter a part of the field or @bundle to filter by.', ['@bundle' => $bundle]);

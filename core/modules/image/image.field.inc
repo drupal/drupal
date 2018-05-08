@@ -5,7 +5,6 @@
  * Implement an image field, based on the file module's file field.
  */
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
 
 /**
@@ -64,7 +63,7 @@ function template_preprocess_image_formatter(&$variables) {
   $item = $variables['item'];
 
   // Do not output an empty 'title' attribute.
-  if (Unicode::strlen($item->title) != 0) {
+  if (mb_strlen($item->title) != 0) {
     $variables['image']['#title'] = $item->title;
   }
 

@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Database\Driver\sqlite;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
@@ -131,7 +130,7 @@ class Schema extends DatabaseSchema {
     // Set the correct database-engine specific datatype.
     // In case one is already provided, force it to uppercase.
     if (isset($field['sqlite_type'])) {
-      $field['sqlite_type'] = Unicode::strtoupper($field['sqlite_type']);
+      $field['sqlite_type'] = mb_strtoupper($field['sqlite_type']);
     }
     else {
       $map = $this->getFieldTypeMap();

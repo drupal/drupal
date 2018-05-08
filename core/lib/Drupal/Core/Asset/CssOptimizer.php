@@ -119,7 +119,7 @@ class CssOptimizer implements AssetOptimizerInterface {
       // If a BOM is found, convert the file to UTF-8, then use substr() to
       // remove the BOM from the result.
       if ($encoding = (Unicode::encodingFromBOM($contents))) {
-        $contents = Unicode::substr(Unicode::convertToUtf8($contents, $encoding), 1);
+        $contents = mb_substr(Unicode::convertToUtf8($contents, $encoding), 1);
       }
       // If no BOM, check for fallback encoding. Per CSS spec the regex is very strict.
       elseif (preg_match('/^@charset "([^"]+)";/', $contents, $matches)) {

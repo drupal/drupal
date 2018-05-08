@@ -2,7 +2,6 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
@@ -214,7 +213,7 @@ class StringArgument extends ArgumentPluginBase {
     // converting the arguments to lowercase.
     if ($this->options['case'] != 'none' && Database::getConnection()->databaseType() == 'pgsql') {
       foreach ($this->value as $key => $value) {
-        $this->value[$key] = Unicode::strtolower($value);
+        $this->value[$key] = mb_strtolower($value);
       }
     }
 

@@ -100,7 +100,7 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
       $strings[] = $property->getString();
     }
     // Remove any empty strings resulting from empty items.
-    return implode(', ', array_filter($strings, '\Drupal\Component\Utility\Unicode::strlen'));
+    return implode(', ', array_filter($strings, 'mb_strlen'));
   }
 
   /**

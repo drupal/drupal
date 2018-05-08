@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\image\Kernel;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
@@ -58,7 +57,7 @@ class ImageFormatterTest extends FieldKernelTestBase {
 
     $this->entityType = 'entity_test';
     $this->bundle = $this->entityType;
-    $this->fieldName = Unicode::strtolower($this->randomMachineName());
+    $this->fieldName = mb_strtolower($this->randomMachineName());
 
     FieldStorageConfig::create([
       'entity_type' => $this->entityType,

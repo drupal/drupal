@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Component\Utility\Unicode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -73,7 +72,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
     // We want an entity reference field. It needs a vocabulary, terms, a field
     // storage and a field. First, create the vocabulary.
     $vocabulary = Vocabulary::create([
-      'vid' => Unicode::strtolower($this->randomMachineName()),
+      'vid' => mb_strtolower($this->randomMachineName()),
     ]);
     $vocabulary->save();
 

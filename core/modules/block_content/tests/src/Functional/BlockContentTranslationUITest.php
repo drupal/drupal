@@ -4,7 +4,6 @@ namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 
 /**
@@ -106,7 +105,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getNewEntityValues($langcode) {
-    return ['info' => Unicode::strtolower($this->randomMachineName())] + parent::getNewEntityValues($langcode);
+    return ['info' => mb_strtolower($this->randomMachineName())] + parent::getNewEntityValues($langcode);
   }
 
   /**

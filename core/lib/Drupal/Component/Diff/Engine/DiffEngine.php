@@ -2,8 +2,6 @@
 
 namespace Drupal\Component\Diff\Engine;
 
-use Drupal\Component\Utility\Unicode;
-
 /**
  * Class used internally by Diff to actually compute the diffs.
  *
@@ -134,7 +132,7 @@ class DiffEngine {
    * Returns the whole line if it's small enough, or the MD5 hash otherwise.
    */
   protected function _line_hash($line) {
-    if (Unicode::strlen($line) > $this::MAX_XREF_LENGTH) {
+    if (mb_strlen($line) > $this::MAX_XREF_LENGTH) {
       return md5($line);
     }
     else {

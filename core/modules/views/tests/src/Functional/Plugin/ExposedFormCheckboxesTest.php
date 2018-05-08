@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Functional\Plugin;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\taxonomy\Entity\Term;
@@ -123,7 +122,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
     }
 
     // Create a field.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $handler_settings = [
       'target_bundles' => [
         $this->vocabulary->id() => $this->vocabulary->id(),

@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
@@ -67,8 +66,8 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     $this->installConfig(['language']);
 
-    $figures = Unicode::strtolower($this->randomMachineName());
-    $greetings = Unicode::strtolower($this->randomMachineName());
+    $figures = mb_strtolower($this->randomMachineName());
+    $greetings = mb_strtolower($this->randomMachineName());
     foreach ([$figures => 'shape', $greetings => 'text'] as $field_name => $field_type) {
       $field_storage = FieldStorageConfig::create([
         'field_name' => $field_name,
@@ -720,8 +719,8 @@ class EntityQueryTest extends EntityKernelTestBase {
       $string = $this->randomMachineName(7) . 'a';
       $fixtures[] = [
         'original' => $string,
-        'uppercase' => Unicode::strtoupper($string),
-        'lowercase' => Unicode::strtolower($string),
+        'uppercase' => mb_strtoupper($string),
+        'lowercase' => mb_strtolower($string),
       ];
     }
 
@@ -844,23 +843,23 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case insensitive field, CONTAINS operator, use the inner 8
     // characters of the uppercase and lowercase strings.
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', Unicode::substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS'
+      'field_ci', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS'
     )->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
 
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', Unicode::strtolower(Unicode::substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS'
+      'field_ci', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS'
     )->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
 
     // Check the case sensitive field, CONTAINS operator.
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', Unicode::substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS'
+      'field_cs', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS'
     )->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
 
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', Unicode::strtolower(Unicode::substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS'
+      'field_cs', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS'
     )->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, exact match.');
 

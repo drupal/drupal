@@ -2,7 +2,6 @@
 
 namespace Drupal\field_ui\Tests;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityInterface;
@@ -48,7 +47,7 @@ class ManageDisplayTest extends WebTestBase {
     $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
-      'vid' => Unicode::strtolower($this->randomMachineName()),
+      'vid' => mb_strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'help' => '',
       'nodes' => ['article' => 'article'],

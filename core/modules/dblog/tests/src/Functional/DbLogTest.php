@@ -432,7 +432,7 @@ class DbLogTest extends BrowserTestBase {
       $value = $links->getAttribute('href');
 
       // Extract link to details page.
-      $link = Unicode::substr($value, strpos($value, 'admin/reports/dblog/event/'));
+      $link = mb_substr($value, strpos($value, 'admin/reports/dblog/event/'));
       $this->drupalGet($link);
       // Check for full message text on the details page.
       $this->assertRaw($message, 'DBLog event details was found: [delete user]');

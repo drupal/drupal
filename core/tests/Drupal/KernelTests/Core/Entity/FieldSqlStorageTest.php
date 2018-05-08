@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\field\Entity\FieldConfig;
@@ -278,7 +277,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $storage = $this->container->get('entity.manager')->getStorage($entity_type);
 
     // Create two fields and generate random values.
-    $name_base = Unicode::strtolower($this->randomMachineName(FieldStorageConfig::NAME_MAX_LENGTH - 1));
+    $name_base = mb_strtolower($this->randomMachineName(FieldStorageConfig::NAME_MAX_LENGTH - 1));
     $field_names = [];
     $values = [];
     for ($i = 0; $i < 2; $i++) {

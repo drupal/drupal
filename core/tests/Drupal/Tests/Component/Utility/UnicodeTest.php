@@ -15,56 +15,11 @@ use PHPUnit\Framework\TestCase;
 class UnicodeTest extends TestCase {
 
   /**
-   * {@inheritdoc}
-   *
-   * @covers ::check
+   * @group legacy
+   * @expectedDeprecation \Drupal\Component\Utility\Unicode::setStatus() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. In Drupal 9 there will be no way to set the status and in Drupal 8 this ability has been removed because mb_*() functions are supplied using Symfony's polyfill. See https://www.drupal.org/node/2850048.
    */
-  protected function setUp() {
-    // Initialize unicode component.
-    Unicode::check();
-  }
-
-  /**
-   * Getting and settings the multibyte environment status.
-   *
-   * @dataProvider providerTestStatus
-   * @covers ::getStatus
-   * @covers ::setStatus
-   */
-  public function testStatus($value, $expected, $invalid = FALSE) {
-    if ($invalid) {
-      if (method_exists($this, 'expectException')) {
-        $this->expectException('InvalidArgumentException');
-      }
-      else {
-        $this->setExpectedException('InvalidArgumentException');
-      }
-    }
-    Unicode::setStatus($value);
-    $this->assertEquals($expected, Unicode::getStatus());
-  }
-
-  /**
-   * Data provider for testStatus().
-   *
-   * @see testStatus()
-   *
-   * @return array
-   *   An array containing:
-   *     - The status value to set.
-   *     - The status value to expect after setting the new value.
-   *     - (optional) Boolean indicating invalid status. Defaults to FALSE.
-   */
-  public function providerTestStatus() {
-    return [
-      [Unicode::STATUS_SINGLEBYTE, Unicode::STATUS_SINGLEBYTE],
-      [rand(10, 100), Unicode::STATUS_SINGLEBYTE, TRUE],
-      [rand(10, 100), Unicode::STATUS_SINGLEBYTE, TRUE],
-      [Unicode::STATUS_MULTIBYTE, Unicode::STATUS_MULTIBYTE],
-      [rand(10, 100), Unicode::STATUS_MULTIBYTE, TRUE],
-      [Unicode::STATUS_ERROR, Unicode::STATUS_ERROR],
-      [Unicode::STATUS_MULTIBYTE, Unicode::STATUS_MULTIBYTE],
-    ];
+  public function testSetStatus() {
+    Unicode::setStatus(Unicode::STATUS_SINGLEBYTE);
   }
 
   /**
@@ -101,10 +56,10 @@ class UnicodeTest extends TestCase {
    * @dataProvider providerStrtolower
    * @covers ::strtolower
    * @covers ::caseFlip
+   * @group legacy
+   * @expectedDeprecation \Drupal\Component\Utility\Unicode::strtolower() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strtolower() instead. See https://www.drupal.org/node/2850048.
    */
-  public function testStrtolower($text, $expected, $multibyte = FALSE) {
-    $status = $multibyte ? Unicode::STATUS_MULTIBYTE : Unicode::STATUS_SINGLEBYTE;
-    Unicode::setStatus($status);
+  public function testStrtolower($text, $expected) {
     $this->assertEquals($expected, Unicode::strtolower($text));
   }
 
@@ -114,22 +69,14 @@ class UnicodeTest extends TestCase {
    * @see testStrtolower()
    *
    * @return array
-   *   An array containing a string, its lowercase version and whether it should
-   *   be processed as multibyte.
+   *   An array containing a string and its lowercase version.
    */
   public function providerStrtolower() {
-    $cases = [
+    return [
       ['tHe QUIcK bRoWn', 'the quick brown'],
       ['FrançAIS is ÜBER-åwesome', 'français is über-åwesome'],
+      ['ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', 'αβγδεζηθικλμνξοσὠ'],
     ];
-    foreach ($cases as $case) {
-      // Test the same string both in multibyte and singlebyte conditions.
-      array_push($case, TRUE);
-      $cases[] = $case;
-    }
-    // Add a multibyte string.
-    $cases[] = ['ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', 'αβγδεζηθικλμνξοσὠ', TRUE];
-    return $cases;
   }
 
   /**
@@ -138,10 +85,10 @@ class UnicodeTest extends TestCase {
    * @dataProvider providerStrtoupper
    * @covers ::strtoupper
    * @covers ::caseFlip
+   * @group legacy
+   * @expectedDeprecation \Drupal\Component\Utility\Unicode::strtoupper() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strtoupper() instead. See https://www.drupal.org/node/2850048.
    */
-  public function testStrtoupper($text, $expected, $multibyte = FALSE) {
-    $status = $multibyte ? Unicode::STATUS_MULTIBYTE : Unicode::STATUS_SINGLEBYTE;
-    Unicode::setStatus($status);
+  public function testStrtoupper($text, $expected) {
     $this->assertEquals($expected, Unicode::strtoupper($text));
   }
 
@@ -151,22 +98,14 @@ class UnicodeTest extends TestCase {
    * @see testStrtoupper()
    *
    * @return array
-   *   An array containing a string, its uppercase version and whether it should
-   *   be processed as multibyte.
+   *   An array containing a string and its uppercase version.
    */
   public function providerStrtoupper() {
-    $cases = [
+    return [
       ['tHe QUIcK bRoWn', 'THE QUICK BROWN'],
       ['FrançAIS is ÜBER-åwesome', 'FRANÇAIS IS ÜBER-ÅWESOME'],
+      ['αβγδεζηθικλμνξοσὠ', 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ'],
     ];
-    foreach ($cases as $case) {
-      // Test the same string both in multibyte and singlebyte conditions.
-      array_push($case, TRUE);
-      $cases[] = $case;
-    }
-    // Add a multibyte string.
-    $cases[] = ['αβγδεζηθικλμνξοσὠ', 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', TRUE];
-    return $cases;
   }
 
   /**
@@ -204,9 +143,7 @@ class UnicodeTest extends TestCase {
    * @dataProvider providerLcfirst
    * @covers ::lcfirst
    */
-  public function testLcfirst($text, $expected, $multibyte = FALSE) {
-    $status = $multibyte ? Unicode::STATUS_MULTIBYTE : Unicode::STATUS_SINGLEBYTE;
-    Unicode::setStatus($status);
+  public function testLcfirst($text, $expected) {
     $this->assertEquals($expected, Unicode::lcfirst($text));
   }
 
@@ -216,8 +153,7 @@ class UnicodeTest extends TestCase {
    * @see testLcfirst()
    *
    * @return array
-   *   An array containing a string, its lowercase version and whether it should
-   *   be processed as multibyte.
+   *   An array containing a string and its lowercase version.
    */
   public function providerLcfirst() {
     return [
@@ -226,7 +162,7 @@ class UnicodeTest extends TestCase {
       ['Über', 'über'],
       ['Åwesome', 'åwesome'],
       // Add a multibyte string.
-      ['ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', 'αΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', TRUE],
+      ['ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', 'αΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ'],
     ];
   }
 
@@ -236,9 +172,7 @@ class UnicodeTest extends TestCase {
    * @dataProvider providerUcwords
    * @covers ::ucwords
    */
-  public function testUcwords($text, $expected, $multibyte = FALSE) {
-    $status = $multibyte ? Unicode::STATUS_MULTIBYTE : Unicode::STATUS_SINGLEBYTE;
-    Unicode::setStatus($status);
+  public function testUcwords($text, $expected) {
     $this->assertEquals($expected, Unicode::ucwords($text));
   }
 
@@ -248,8 +182,7 @@ class UnicodeTest extends TestCase {
    * @see testUcwords()
    *
    * @return array
-   *   An array containing a string, its capitalized version and whether it should
-   *   be processed as multibyte.
+   *   An array containing a string and its capitalized version.
    */
   public function providerUcwords() {
     return [
@@ -260,7 +193,7 @@ class UnicodeTest extends TestCase {
       // Make sure we don't mangle extra spaces.
       ['frànçAIS is  über-åwesome', 'FrànçAIS Is  Über-Åwesome'],
       // Add a multibyte string.
-      ['σion', 'Σion', TRUE],
+      ['σion', 'Σion'],
     ];
   }
 
@@ -269,13 +202,10 @@ class UnicodeTest extends TestCase {
    *
    * @dataProvider providerStrlen
    * @covers ::strlen
+   * @group legacy
+   * @expectedDeprecation \Drupal\Component\Utility\Unicode::strlen() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strlen() instead. See https://www.drupal.org/node/2850048.
    */
   public function testStrlen($text, $expected) {
-    // Run through multibyte code path.
-    Unicode::setStatus(Unicode::STATUS_MULTIBYTE);
-    $this->assertEquals($expected, Unicode::strlen($text));
-    // Run through singlebyte code path.
-    Unicode::setStatus(Unicode::STATUS_SINGLEBYTE);
     $this->assertEquals($expected, Unicode::strlen($text));
   }
 
@@ -300,13 +230,10 @@ class UnicodeTest extends TestCase {
    *
    * @dataProvider providerSubstr
    * @covers ::substr
+   * @group legacy
+   * @expectedDeprecation \Drupal\Component\Utility\Unicode::substr() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_substr() instead. See https://www.drupal.org/node/2850048.
    */
   public function testSubstr($text, $start, $length, $expected) {
-    // Run through multibyte code path.
-    Unicode::setStatus(Unicode::STATUS_MULTIBYTE);
-    $this->assertEquals($expected, Unicode::substr($text, $start, $length));
-    // Run through singlebyte code path.
-    Unicode::setStatus(Unicode::STATUS_SINGLEBYTE);
     $this->assertEquals($expected, Unicode::substr($text, $start, $length));
   }
 
@@ -553,13 +480,10 @@ EOF;
    *
    * @dataProvider providerStrpos
    * @covers ::strpos
+   * @group legacy
+   * @expectedDeprecation \Drupal\Component\Utility\Unicode::strpos() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strpos() instead. See https://www.drupal.org/node/2850048.
    */
   public function testStrpos($haystack, $needle, $offset, $expected) {
-    // Run through multibyte code path.
-    Unicode::setStatus(Unicode::STATUS_MULTIBYTE);
-    $this->assertEquals($expected, Unicode::strpos($haystack, $needle, $offset));
-    // Run through singlebyte code path.
-    Unicode::setStatus(Unicode::STATUS_SINGLEBYTE);
     $this->assertEquals($expected, Unicode::strpos($haystack, $needle, $offset));
   }
 

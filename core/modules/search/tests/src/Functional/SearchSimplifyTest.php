@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\search\Functional;
 
-use Drupal\Component\Utility\Unicode;
-
 /**
  * Tests that the search_simply() function works as intended.
  *
@@ -35,8 +33,8 @@ class SearchSimplifyTest extends SearchTestBase {
         // Split this into 30-character chunks, so we don't run into limits
         // of truncation in search_simplify().
         $start = 0;
-        while ($start < Unicode::strlen($string)) {
-          $newstr = Unicode::substr($string, $start, 30);
+        while ($start < mb_strlen($string)) {
+          $newstr = mb_substr($string, $start, 30);
           // Special case: leading zeros are removed from numeric strings,
           // and there's one string in this file that is numbers starting with
           // zero, so prepend a 1 on that string.
@@ -50,7 +48,7 @@ class SearchSimplifyTest extends SearchTestBase {
     }
     foreach ($strings as $key => $string) {
       $simplified = search_simplify($string);
-      $this->assertTrue(Unicode::strlen($simplified) >= Unicode::strlen($string), "Nothing is removed from string $key.");
+      $this->assertTrue(mb_strlen($simplified) >= mb_strlen($string), "Nothing is removed from string $key.");
     }
 
     // Test the low-numbered ASCII control characters separately. They are not

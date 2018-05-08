@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\file\Functional\Formatter;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -47,7 +46,7 @@ abstract class FileMediaFormatterTestBase extends BrowserTestBase {
    */
   protected function createMediaField($formatter, $file_extensions, array $formatter_settings = []) {
     $entity_type = $bundle = 'entity_test';
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
 
     FieldStorageConfig::create([
       'entity_type' => $entity_type,

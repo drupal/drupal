@@ -88,13 +88,6 @@ EOD;
   const STATUS_ERROR = -1;
 
   /**
-   * Holds the multibyte capabilities of the current environment.
-   *
-   * @var int
-   */
-  protected static $status = 0;
-
-  /**
    * Gets the current status of unicode/multibyte support on this environment.
    *
    * @return int
@@ -107,7 +100,13 @@ EOD;
    *     An error occurred. No unicode support.
    */
   public static function getStatus() {
-    return static::$status;
+    switch (static::check()) {
+      case 'mb_strlen':
+        return Unicode::STATUS_SINGLEBYTE;
+      case '':
+        return Unicode::STATUS_MULTIBYTE;
+    }
+    return Unicode::STATUS_ERROR;
   }
 
   /**
@@ -123,12 +122,16 @@ EOD;
    *
    * @param int $status
    *   The new status of multibyte support.
+   *
+   * @deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. In
+   *   Drupal 9 there will be no way to set the status and in Drupal 8 this
+   *   ability has been removed because mb_*() functions are supplied using
+   *   Symfony's polyfill.
+   *
+   * @see https://www.drupal.org/node/2850048
    */
   public static function setStatus($status) {
-    if (!in_array($status, [static::STATUS_SINGLEBYTE, static::STATUS_MULTIBYTE, static::STATUS_ERROR])) {
-      throw new \InvalidArgumentException('Invalid status value for unicode support.');
-    }
-    static::$status = $status;
+    @trigger_error('\Drupal\Component\Utility\Unicode::setStatus() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. In Drupal 9 there will be no way to set the status and in Drupal 8 this ability has been removed because mb_*() functions are supplied using Symfony\'s polyfill. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
   }
 
   /**
@@ -143,38 +146,33 @@ EOD;
    *   Otherwise, an empty string.
    */
   public static function check() {
+    // Set appropriate configuration.
+    mb_internal_encoding('utf-8');
+    mb_language('uni');
+
     // Check for mbstring extension.
-    if (!function_exists('mb_strlen')) {
-      static::$status = static::STATUS_SINGLEBYTE;
+    if (!extension_loaded('mbstring')) {
       return 'mb_strlen';
     }
 
     // Check mbstring configuration.
     if (ini_get('mbstring.func_overload') != 0) {
-      static::$status = static::STATUS_ERROR;
       return 'mbstring.func_overload';
     }
     if (ini_get('mbstring.encoding_translation') != 0) {
-      static::$status = static::STATUS_ERROR;
       return 'mbstring.encoding_translation';
     }
     // mbstring.http_input and mbstring.http_output are deprecated and empty by
     // default in PHP 5.6.
     if (version_compare(PHP_VERSION, '5.6.0') == -1) {
       if (ini_get('mbstring.http_input') != 'pass') {
-        static::$status = static::STATUS_ERROR;
         return 'mbstring.http_input';
       }
       if (ini_get('mbstring.http_output') != 'pass') {
-        static::$status = static::STATUS_ERROR;
         return 'mbstring.http_output';
       }
     }
 
-    // Set appropriate configuration.
-    mb_internal_encoding('utf-8');
-    mb_language('uni');
-    static::$status = static::STATUS_MULTIBYTE;
     return '';
   }
 
@@ -224,17 +222,7 @@ EOD;
    *   Converted data or FALSE.
    */
   public static function convertToUtf8($data, $encoding) {
-    if (function_exists('iconv')) {
-      return @iconv($encoding, 'utf-8', $data);
-    }
-    elseif (function_exists('mb_convert_encoding')) {
-      return @mb_convert_encoding($data, 'utf-8', $encoding);
-    }
-    elseif (function_exists('recode_string')) {
-      return @recode_string($encoding . '..utf-8', $data);
-    }
-    // Cannot convert.
-    return FALSE;
+    return @iconv($encoding, 'utf-8', $data);
   }
 
   /**
@@ -281,15 +269,15 @@ EOD;
    *
    * @return int
    *   The length of the string.
+   *
+   * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+   *   mb_strlen() instead.
+   *
+   * @see https://www.drupal.org/node/2850048
    */
   public static function strlen($text) {
-    if (static::getStatus() == static::STATUS_MULTIBYTE) {
-      return mb_strlen($text);
-    }
-    else {
-      // Do not count UTF-8 continuation bytes.
-      return strlen(preg_replace("/[\x80-\xBF]/", '', $text));
-    }
+    @trigger_error('\Drupal\Component\Utility\Unicode::strlen() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strlen() instead. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
+    return mb_strlen($text);
   }
 
   /**
@@ -300,18 +288,15 @@ EOD;
    *
    * @return string
    *   The string in uppercase.
+   *
+   * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+   *   mb_strtoupper() instead.
+   *
+   * @see https://www.drupal.org/node/2850048
    */
   public static function strtoupper($text) {
-    if (static::getStatus() == static::STATUS_MULTIBYTE) {
-      return mb_strtoupper($text);
-    }
-    else {
-      // Use C-locale for ASCII-only uppercase.
-      $text = strtoupper($text);
-      // Case flip Latin-1 accented letters.
-      $text = preg_replace_callback('/\xC3[\xA0-\xB6\xB8-\xBE]/', '\Drupal\Component\Utility\Unicode::caseFlip', $text);
-      return $text;
-    }
+    @trigger_error('\Drupal\Component\Utility\Unicode::strtoupper() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strtoupper() instead. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
+    return mb_strtoupper($text);
   }
 
   /**
@@ -322,18 +307,15 @@ EOD;
    *
    * @return string
    *   The string in lowercase.
+   *
+   * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+   *   mb_strtolower() instead.
+   *
+   * @see https://www.drupal.org/node/2850048
    */
   public static function strtolower($text) {
-    if (static::getStatus() == static::STATUS_MULTIBYTE) {
-      return mb_strtolower($text);
-    }
-    else {
-      // Use C-locale for ASCII-only lowercase.
-      $text = strtolower($text);
-      // Case flip Latin-1 accented letters.
-      $text = preg_replace_callback('/\xC3[\x80-\x96\x98-\x9E]/', '\Drupal\Component\Utility\Unicode::caseFlip', $text);
-      return $text;
-    }
+    @trigger_error('\Drupal\Component\Utility\Unicode::strtolower() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strtolower() instead. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
+    return mb_strtolower($text);
   }
 
   /**
@@ -346,7 +328,7 @@ EOD;
    *   The string with the first character as uppercase.
    */
   public static function ucfirst($text) {
-    return static::strtoupper(static::substr($text, 0, 1)) . static::substr($text, 1);
+    return mb_strtoupper(mb_substr($text, 0, 1)) . mb_substr($text, 1);
   }
 
   /**
@@ -362,7 +344,7 @@ EOD;
    */
   public static function lcfirst($text) {
     // Note: no mbstring equivalent!
-    return static::strtolower(static::substr($text, 0, 1)) . static::substr($text, 1);
+    return mb_strtolower(mb_substr($text, 0, 1)) . mb_substr($text, 1);
   }
 
   /**
@@ -379,7 +361,7 @@ EOD;
   public static function ucwords($text) {
     $regex = '/(^|[' . static::PREG_CLASS_WORD_BOUNDARY . '])([^' . static::PREG_CLASS_WORD_BOUNDARY . '])/u';
     return preg_replace_callback($regex, function (array $matches) {
-      return $matches[1] . Unicode::strtoupper($matches[2]);
+      return $matches[1] . mb_strtoupper($matches[2]);
     }, $text);
   }
 
@@ -399,92 +381,15 @@ EOD;
    *
    * @return string
    *   The shortened string.
+   *
+   * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+   *   mb_substr() instead.
+   *
+   * @see https://www.drupal.org/node/2850048
    */
   public static function substr($text, $start, $length = NULL) {
-    if (static::getStatus() == static::STATUS_MULTIBYTE) {
-      return $length === NULL ? mb_substr($text, $start) : mb_substr($text, $start, $length);
-    }
-    else {
-      $strlen = strlen($text);
-      // Find the starting byte offset.
-      $bytes = 0;
-      if ($start > 0) {
-        // Count all the characters except continuation bytes from the start
-        // until we have found $start characters or the end of the string.
-        $bytes = -1; $chars = -1;
-        while ($bytes < $strlen - 1 && $chars < $start) {
-          $bytes++;
-          $c = ord($text[$bytes]);
-          if ($c < 0x80 || $c >= 0xC0) {
-            $chars++;
-          }
-        }
-      }
-      elseif ($start < 0) {
-        // Count all the characters except continuation bytes from the end
-        // until we have found abs($start) characters.
-        $start = abs($start);
-        $bytes = $strlen; $chars = 0;
-        while ($bytes > 0 && $chars < $start) {
-          $bytes--;
-          $c = ord($text[$bytes]);
-          if ($c < 0x80 || $c >= 0xC0) {
-            $chars++;
-          }
-        }
-      }
-      $istart = $bytes;
-
-      // Find the ending byte offset.
-      if ($length === NULL) {
-        $iend = $strlen;
-      }
-      elseif ($length > 0) {
-        // Count all the characters except continuation bytes from the starting
-        // index until we have found $length characters or reached the end of
-        // the string, then backtrace one byte.
-        $iend = $istart - 1;
-        $chars = -1;
-        $last_real = FALSE;
-        while ($iend < $strlen - 1 && $chars < $length) {
-          $iend++;
-          $c = ord($text[$iend]);
-          $last_real = FALSE;
-          if ($c < 0x80 || $c >= 0xC0) {
-            $chars++;
-            $last_real = TRUE;
-          }
-        }
-        // Backtrace one byte if the last character we found was a real
-        // character and we don't need it.
-        if ($last_real && $chars >= $length) {
-          $iend--;
-        }
-      }
-      elseif ($length < 0) {
-        // Count all the characters except continuation bytes from the end
-        // until we have found abs($start) characters, then backtrace one byte.
-        $length = abs($length);
-        $iend = $strlen; $chars = 0;
-        while ($iend > 0 && $chars < $length) {
-          $iend--;
-          $c = ord($text[$iend]);
-          if ($c < 0x80 || $c >= 0xC0) {
-            $chars++;
-          }
-        }
-        // Backtrace one byte if we are not at the beginning of the string.
-        if ($iend > 0) {
-          $iend--;
-        }
-      }
-      else {
-        // $length == 0, return an empty string.
-        return '';
-      }
-
-      return substr($text, $istart, max(0, $iend - $istart + 1));
-    }
+    @trigger_error('\Drupal\Component\Utility\Unicode::substr() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_substr() instead. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
+    return mb_substr($text, $start, $length);
   }
 
   /**
@@ -526,15 +431,15 @@ EOD;
     $max_length = max($max_length, 0);
     $min_wordsafe_length = max($min_wordsafe_length, 0);
 
-    if (static::strlen($string) <= $max_length) {
+    if (mb_strlen($string) <= $max_length) {
       // No truncation needed, so don't add ellipsis, just return.
       return $string;
     }
 
     if ($add_ellipsis) {
       // Truncate ellipsis in case $max_length is small.
-      $ellipsis = static::substr('…', 0, $max_length);
-      $max_length -= static::strlen($ellipsis);
+      $ellipsis = mb_substr('…', 0, $max_length);
+      $max_length -= mb_strlen($ellipsis);
       $max_length = max($max_length, 0);
     }
 
@@ -553,11 +458,11 @@ EOD;
         $string = $matches[1];
       }
       else {
-        $string = static::substr($string, 0, $max_length);
+        $string = mb_substr($string, 0, $max_length);
       }
     }
     else {
-      $string = static::substr($string, 0, $max_length);
+      $string = mb_substr($string, 0, $max_length);
     }
 
     if ($add_ellipsis) {
@@ -583,7 +488,7 @@ EOD;
    *   $str2, and 0 if they are equal.
    */
   public static function strcasecmp($str1, $str2) {
-    return strcmp(static::strtoupper($str1), static::strtoupper($str2));
+    return strcmp(mb_strtoupper($str1), mb_strtoupper($str2));
   }
 
   /**
@@ -715,18 +620,15 @@ EOD;
    *   The position where $needle occurs in $haystack, always relative to the
    *   beginning (independent of $offset), or FALSE if not found. Note that
    *   a return value of 0 is not the same as FALSE.
+   *
+   * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+   *   mb_strpos() instead.
+   *
+   * @see https://www.drupal.org/node/2850048
    */
   public static function strpos($haystack, $needle, $offset = 0) {
-    if (static::getStatus() == static::STATUS_MULTIBYTE) {
-      return mb_strpos($haystack, $needle, $offset);
-    }
-    else {
-      // Remove Unicode continuation characters, to be compatible with
-      // Unicode::strlen() and Unicode::substr().
-      $haystack = preg_replace("/[\x80-\xBF]/", '', $haystack);
-      $needle = preg_replace("/[\x80-\xBF]/", '', $needle);
-      return strpos($haystack, $needle, $offset);
-    }
+    @trigger_error('\Drupal\Component\Utility\Unicode::strpos() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strpos() instead. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
+    return mb_strpos($haystack, $needle, $offset);
   }
 
 }

@@ -3,7 +3,6 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
 use Drupal\Core\Config\Entity\ConfigEntityDependency;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -344,7 +343,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     // Only install configuration for enabled extensions.
     $enabled_extensions = $this->getEnabledExtensions();
     $config_to_install = array_filter($storage->listAll(), function ($config_name) use ($enabled_extensions) {
-      $provider = Unicode::substr($config_name, 0, strpos($config_name, '.'));
+      $provider = mb_substr($config_name, 0, strpos($config_name, '.'));
       return in_array($provider, $enabled_extensions);
     });
     if (!empty($config_to_install)) {

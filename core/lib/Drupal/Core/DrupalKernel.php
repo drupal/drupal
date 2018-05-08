@@ -5,7 +5,6 @@ namespace Drupal\Core;
 use Composer\Autoload\ClassLoader;
 use Drupal\Component\Assertion\Handle;
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
@@ -1000,8 +999,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // numbers handling.
     setlocale(LC_ALL, 'C');
 
-    // Detect string handling method.
-    Unicode::check();
+    // Set appropriate configuration for multi-byte strings.
+    mb_internal_encoding('utf-8');
+    mb_language('uni');
 
     // Indicate that code is operating in a test child site.
     if (!defined('DRUPAL_TEST_IN_CHILD_SITE')) {

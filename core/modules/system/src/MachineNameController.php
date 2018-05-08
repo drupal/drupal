@@ -3,7 +3,6 @@
 namespace Drupal\system;
 
 use Drupal\Component\Transliteration\TransliterationInterface;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -73,7 +72,7 @@ class MachineNameController implements ContainerInjectionInterface {
 
     $transliterated = $this->transliteration->transliterate($text, $langcode, '_');
     if ($lowercase) {
-      $transliterated = Unicode::strtolower($transliterated);
+      $transliterated = mb_strtolower($transliterated);
     }
 
     if (isset($replace_pattern) && isset($replace)) {

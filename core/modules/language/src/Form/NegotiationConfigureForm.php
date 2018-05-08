@@ -3,7 +3,6 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Block\BlockManagerInterface;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -276,7 +275,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
 
         $table_form['weight'][$method_id] = [
           '#type' => 'weight',
-          '#title' => $this->t('Weight for @title language detection method', ['@title' => Unicode::strtolower($method_name)]),
+          '#title' => $this->t('Weight for @title language detection method', ['@title' => mb_strtolower($method_name)]),
           '#title_display' => 'invisible',
           '#default_value' => $weight,
           '#attributes' => ['class' => ["language-method-weight-$type"]],
@@ -287,7 +286,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
 
         $table_form['enabled'][$method_id] = [
           '#type' => 'checkbox',
-          '#title' => $this->t('Enable @title language detection method', ['@title' => Unicode::strtolower($method_name)]),
+          '#title' => $this->t('Enable @title language detection method', ['@title' => mb_strtolower($method_name)]),
           '#title_display' => 'invisible',
           '#default_value' => $enabled,
         ];

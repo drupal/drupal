@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Module;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
 
@@ -162,14 +161,14 @@ class PrepareUninstallTest extends BrowserTestBase {
     $storage = $this->container->get('entity.manager')
       ->getStorage('entity_test_no_label');
     $storage->create([
-      'id' => Unicode::strtolower($this->randomMachineName()),
+      'id' => mb_strtolower($this->randomMachineName()),
       'name' => $this->randomMachineName(),
     ])->save();
     $this->drupalGet('admin/modules/uninstall/entity/entity_test_no_label');
     $this->assertText('This will delete 1 entity test without label.');
     $this->assertFieldByXPath($button_xpath, NULL, 'Button with value "Delete all entity test without label entities" found');
     $storage->create([
-      'id' => Unicode::strtolower($this->randomMachineName()),
+      'id' => mb_strtolower($this->randomMachineName()),
       'name' => $this->randomMachineName(),
     ])->save();
     $this->drupalGet('admin/modules/uninstall/entity/entity_test_no_label');

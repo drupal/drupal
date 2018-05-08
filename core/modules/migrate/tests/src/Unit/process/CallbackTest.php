@@ -29,7 +29,7 @@ class CallbackTest extends MigrateProcessTestCase {
   public function providerCallback() {
     return [
       'function' => ['strtolower'],
-      'class method' => [['\Drupal\Component\Utility\Unicode', 'strtolower']],
+      'class method' => [[self::class, 'strtolower']],
     ];
   }
 
@@ -57,6 +57,21 @@ class CallbackTest extends MigrateProcessTestCase {
         'configuration' => ['callable' => 'nonexistent_callable']
       ],
     ];
+  }
+
+  /**
+   * Makes a string lowercase for testing purposes.
+   *
+   * @param string $string
+   *   The input string.
+   *
+   * @return string
+   *   The lowercased string.
+   *
+   * @see \Drupal\Tests\migrate\Unit\process\CallbackTest::providerCallback()
+   */
+  public static function strToLower($string) {
+    return mb_strtolower($string);
   }
 
 }

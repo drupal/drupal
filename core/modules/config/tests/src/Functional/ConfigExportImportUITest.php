@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\config\Functional;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -102,7 +101,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->contentType = $this->drupalCreateContentType();
 
     // Create a field.
-    $this->fieldName = Unicode::strtolower($this->randomMachineName());
+    $this->fieldName = mb_strtolower($this->randomMachineName());
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',

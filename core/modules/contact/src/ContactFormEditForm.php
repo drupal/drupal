@@ -2,7 +2,6 @@
 
 namespace Drupal\contact;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityForm;
@@ -150,7 +149,7 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
     $form_state->setValue('recipients', $recipients);
     $redirect_url = $form_state->getValue('redirect');
     if ($redirect_url && $this->pathValidator->isValid($redirect_url)) {
-      if (Unicode::substr($redirect_url, 0, 1) !== '/') {
+      if (mb_substr($redirect_url, 0, 1) !== '/') {
         $form_state->setErrorByName('redirect', $this->t('The path should start with /.'));
       }
     }

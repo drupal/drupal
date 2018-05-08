@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Uuid\Php;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
@@ -82,7 +81,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
 
     // Create a content type with a matching UUID in the active storage.
     $content_type = NodeType::create([
-      'type' => Unicode::strtolower($this->randomMachineName(16)),
+      'type' => mb_strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
       'uuid' => $uuid,
     ]);

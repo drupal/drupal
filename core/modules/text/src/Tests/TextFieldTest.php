@@ -2,7 +2,6 @@
 
 namespace Drupal\text\Tests;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\String\StringFieldTest;
@@ -37,7 +36,7 @@ class TextFieldTest extends StringFieldTest {
   public function testTextFieldValidation() {
     // Create a field with settings to validate.
     $max_length = 3;
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -149,7 +148,7 @@ class TextFieldTest extends StringFieldTest {
     $renderer = $this->container->get('renderer');
 
     // Create a field.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -207,7 +206,7 @@ class TextFieldTest extends StringFieldTest {
     // access to it.
     $this->drupalLogin($this->adminUser);
     $edit = [
-      'format' => Unicode::strtolower($this->randomMachineName()),
+      'format' => mb_strtolower($this->randomMachineName()),
       'name' => $this->randomMachineName(),
     ];
     $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));

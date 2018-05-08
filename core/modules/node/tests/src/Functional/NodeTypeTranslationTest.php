@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\node\Functional;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -95,7 +94,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
    * Tests the node type translation.
    */
   public function testNodeTypeTranslation() {
-    $type = Unicode::strtolower($this->randomMachineName(16));
+    $type = mb_strtolower($this->randomMachineName(16));
     $name = $this->randomString();
     $this->drupalLogin($this->adminUser);
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
@@ -129,7 +128,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
    * Tests the node type title label translation.
    */
   public function testNodeTypeTitleLabelTranslation() {
-    $type = Unicode::strtolower($this->randomMachineName(16));
+    $type = mb_strtolower($this->randomMachineName(16));
     $name = $this->randomString();
     $this->drupalLogin($this->adminUser);
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
@@ -159,7 +158,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [], 'Save field settings');
     $this->drupalPostForm(NULL, [], 'Save settings');
 
-    $type = Unicode::strtolower($this->randomMachineName(16));
+    $type = mb_strtolower($this->randomMachineName(16));
     $name = $this->randomString();
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
 

@@ -2,7 +2,6 @@
 
 namespace Drupal\field\Tests\String;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
@@ -51,7 +50,7 @@ class StringFieldTest extends WebTestBase {
    */
   public function _testTextfieldWidgets($field_type, $widget_type) {
     // Create a field.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

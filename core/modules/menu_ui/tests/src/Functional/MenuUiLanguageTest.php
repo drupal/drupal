@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\menu_ui\Functional;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\BrowserTestBase;
@@ -51,7 +50,7 @@ class MenuUiLanguageTest extends BrowserTestBase {
   public function testMenuLanguage() {
     // Create a test menu to test the various language-related settings.
     // Machine name has to be lowercase.
-    $menu_name = Unicode::strtolower($this->randomMachineName(16));
+    $menu_name = mb_strtolower($this->randomMachineName(16));
     $label = $this->randomString();
     $edit = [
       'id' => $menu_name,

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\field\Functional\EntityReference;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -51,7 +50,7 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
     // Create a node to be referenced.
     $referenced_node = $this->drupalCreateNode(['type' => 'referenced_content']);
 
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',
@@ -114,7 +113,7 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
     $referenced_node_type = $this->drupalCreateContentType(['type' => 'referenced_config_to_delete']);
     $referenced_node_type2 = $this->drupalCreateContentType(['type' => 'referenced_config_to_preserve']);
 
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',

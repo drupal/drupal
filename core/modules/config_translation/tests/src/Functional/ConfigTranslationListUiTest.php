@@ -3,7 +3,6 @@
 namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -93,7 +92,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   protected function doBlockListTest() {
     // Add a test block, any block will do.
     // Set the machine name so the translate link can be built later.
-    $id = Unicode::strtolower($this->randomMachineName(16));
+    $id = mb_strtolower($this->randomMachineName(16));
     $this->drupalPlaceBlock('system_powered_by_block', ['id' => $id]);
 
     // Get the Block listing.
@@ -116,7 +115,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // this does not test more than necessary.
     $this->drupalGet('admin/structure/menu/add');
     // Lowercase the machine name.
-    $menu_name = Unicode::strtolower($this->randomMachineName(16));
+    $menu_name = mb_strtolower($this->randomMachineName(16));
     $label = $this->randomMachineName(16);
     $edit = [
       'id' => $menu_name,
@@ -164,7 +163,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
-      'vid' => Unicode::strtolower($this->randomMachineName()),
+      'vid' => mb_strtolower($this->randomMachineName()),
     ]);
     $vocabulary->save();
 
@@ -187,7 +186,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // Create a test custom block type to decouple looking for translate
     // operations link so this does not test more than necessary.
     $block_content_type = BlockContentType::create([
-      'id' => Unicode::strtolower($this->randomMachineName(16)),
+      'id' => mb_strtolower($this->randomMachineName(16)),
       'label' => $this->randomMachineName(),
       'revision' => FALSE
     ]);
@@ -212,7 +211,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // Create a test contact form to decouple looking for translate operations
     // link so this does not test more than necessary.
     $contact_form = ContactForm::create([
-      'id' => Unicode::strtolower($this->randomMachineName(16)),
+      'id' => mb_strtolower($this->randomMachineName(16)),
       'label' => $this->randomMachineName(),
     ]);
     $contact_form->save();
@@ -236,7 +235,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // Create a test content type to decouple looking for translate operations
     // link so this does not test more than necessary.
     $content_type = $this->drupalCreateContentType([
-      'type' => Unicode::strtolower($this->randomMachineName(16)),
+      'type' => mb_strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
     ]);
 
@@ -259,7 +258,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // Create a test format to decouple looking for translate operations
     // link so this does not test more than necessary.
     $filter_format = FilterFormat::create([
-      'format' => Unicode::strtolower($this->randomMachineName(16)),
+      'format' => mb_strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
     ]);
     $filter_format->save();
@@ -283,7 +282,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // Create a test shortcut to decouple looking for translate operations
     // link so this does not test more than necessary.
     $shortcut = ShortcutSet::create([
-      'id' => Unicode::strtolower($this->randomMachineName(16)),
+      'id' => mb_strtolower($this->randomMachineName(16)),
       'label' => $this->randomString(),
     ]);
     $shortcut->save();
@@ -306,7 +305,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   public function doUserRoleListTest() {
     // Create a test role to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $role_id = Unicode::strtolower($this->randomMachineName(16));
+    $role_id = mb_strtolower($this->randomMachineName(16));
     $this->drupalCreateRole([], $role_id);
 
     // Get the role listing.
@@ -387,7 +386,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   public function doFieldListTest() {
     // Create a base content type.
     $content_type = $this->drupalCreateContentType([
-      'type' => Unicode::strtolower($this->randomMachineName(16)),
+      'type' => mb_strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
     ]);
 

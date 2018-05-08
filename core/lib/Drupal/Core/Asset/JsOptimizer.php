@@ -24,7 +24,7 @@ class JsOptimizer implements AssetOptimizerInterface {
     // remove the BOM from the result.
     $data = file_get_contents($js_asset['data']);
     if ($encoding = (Unicode::encodingFromBOM($data))) {
-      $data = Unicode::substr(Unicode::convertToUtf8($data, $encoding), 1);
+      $data = mb_substr(Unicode::convertToUtf8($data, $encoding), 1);
     }
     // If no BOM is found, check for the charset attribute.
     elseif (isset($js_asset['attributes']['charset'])) {

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\editor\Kernel;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
@@ -25,7 +24,7 @@ class EditorFilterIntegrationTest extends KernelTestBase {
   public function testTextFormatIntegration() {
     // Create an arbitrary text format.
     $format = FilterFormat::create([
-      'format' => Unicode::strtolower($this->randomMachineName()),
+      'format' => mb_strtolower($this->randomMachineName()),
       'name' => $this->randomString(),
     ]);
     $format->save();

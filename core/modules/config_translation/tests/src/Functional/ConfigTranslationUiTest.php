@@ -5,7 +5,6 @@ namespace Drupal\Tests\config_translation\Functional;
 use Behat\Mink\Element\NodeElement;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Test\AssertMailTrait;
@@ -404,7 +403,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Test that delete links work and operations perform properly.
     foreach ($this->langcodes as $langcode) {
-      $replacements = ['%label' => t('@label @entity_type', ['@label' => $label, '@entity_type' => Unicode::strtolower(t('Contact form'))]), '@language' => \Drupal::languageManager()->getLanguage($langcode)->getName()];
+      $replacements = ['%label' => t('@label @entity_type', ['@label' => $label, '@entity_type' => mb_strtolower(t('Contact form'))]), '@language' => \Drupal::languageManager()->getLanguage($langcode)->getName()];
 
       $this->drupalGet("$translation_base_url/$langcode/delete");
       $this->assertRaw(t('Are you sure you want to delete the @language translation of %label?', $replacements));

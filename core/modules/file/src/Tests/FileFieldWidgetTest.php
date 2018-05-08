@@ -4,7 +4,6 @@ namespace Drupal\file\Tests;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -461,7 +460,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests file widget element.
    */
   public function testWidgetElement() {
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $html_name = str_replace('_', '-', $field_name);
     $this->createFileField($field_name, 'node', 'article', ['cardinality' => FieldStorageConfig::CARDINALITY_UNLIMITED]);
     $file = $this->getTestFile('text');

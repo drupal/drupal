@@ -3,7 +3,6 @@
 namespace Drupal\Tests\datetime_range\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
@@ -978,7 +977,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalCreateContentType(['type' => 'date_content']);
 
     // Create a field storage with settings to validate.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',
@@ -1344,7 +1343,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalCreateContentType(['type' => 'date_content']);
 
     // Create a field storage with settings to validate.
-    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\node\Functional;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -51,7 +50,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     $this->contentAdminUser = $this->drupalCreateUser(['access content', 'administer content types', 'administer node fields']);
 
     // Add a custom field to the page content type.
-    $this->fieldName = Unicode::strtolower($this->randomMachineName() . '_field_name');
+    $this->fieldName = mb_strtolower($this->randomMachineName() . '_field_name');
     FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',

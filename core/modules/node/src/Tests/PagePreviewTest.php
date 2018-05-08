@@ -4,7 +4,6 @@ namespace Drupal\node\Tests;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
@@ -88,7 +87,7 @@ class PagePreviewTest extends NodeTestBase {
     $field_config->save();
 
     // Create a field.
-    $this->fieldName = Unicode::strtolower($this->randomMachineName());
+    $this->fieldName = mb_strtolower($this->randomMachineName());
     $handler_settings = [
       'target_bundles' => [
         $this->vocabulary->id() => $this->vocabulary->id(),
