@@ -20,6 +20,7 @@ use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 
 /**
  * Provides the default local task manager using YML as primary definition.
@@ -51,9 +52,24 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   ];
 
   /**
+   * An argument resolver object.
+   *
+   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface
+   */
+  protected $argumentResolver;
+
+  /**
    * A controller resolver object.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   * @var \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface
+   *
+   * @deprecated
+   *   Using the 'controller_resolver' service as the first argument is
+   *   deprecated, use the 'http_kernel.controller.argument_resolver' instead.
+   *   If your subclass requires the 'controller_resolver' service add it as an
+   *   additional argument.
+   *
+   * @see https://www.drupal.org/node/2959408
    */
   protected $controllerResolver;
 
@@ -109,8 +125,8 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   /**
    * Constructs a \Drupal\Core\Menu\LocalTaskManager object.
    *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
-   *   An object to use in introspecting route methods.
+   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
+   *   An object to use in resolving route arguments.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request object to use for building titles and paths for plugin instances.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
@@ -128,9 +144,13 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
+  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
     $this->factory = new ContainerFactory($this, '\Drupal\Core\Menu\LocalTaskInterface');
-    $this->controllerResolver = $controller_resolver;
+    $this->argumentResolver = $argument_resolver;
+    if ($argument_resolver instanceof ControllerResolverInterface) {
+      @trigger_error("Using the 'controller_resolver' service as the first argument is deprecated, use the 'http_kernel.controller.argument_resolver' instead. If your subclass requires the 'controller_resolver' service add it as an additional argument. See https://www.drupal.org/node/2959408.", E_USER_DEPRECATED);
+      $this->controllerResolver = $argument_resolver;
+    }
     $this->requestStack = $request_stack;
     $this->routeMatch = $route_match;
     $this->routeProvider = $route_provider;
@@ -170,7 +190,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   public function getTitle(LocalTaskInterface $local_task) {
     $controller = [$local_task, 'getTitle'];
     $request = $this->requestStack->getCurrentRequest();
-    $arguments = $this->controllerResolver->getArguments($request, $controller);
+    $arguments = $this->argumentResolver->getArguments($request, $controller);
     return call_user_func_array($controller, $arguments);
   }
 

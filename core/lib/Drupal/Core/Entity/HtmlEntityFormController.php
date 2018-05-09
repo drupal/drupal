@@ -2,10 +2,10 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Controller\FormController;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 
 /**
  * Wrapping controller for entity forms that serve as the main page body.
@@ -22,15 +22,15 @@ class HtmlEntityFormController extends FormController {
   /**
    * Constructs a new \Drupal\Core\Routing\Enhancer\FormEnhancer object.
    *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $resolver
-   *   The controller resolver.
+   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
+   *   The argument resolver.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
    * @param \Drupal\Core\Entity\EntityManagerInterface $manager
    *   The entity manager.
    */
-  public function __construct(ControllerResolverInterface $resolver, FormBuilderInterface $form_builder, EntityManagerInterface $manager) {
-    parent::__construct($resolver, $form_builder);
+  public function __construct(ArgumentResolverInterface $argument_resolver, FormBuilderInterface $form_builder, EntityManagerInterface $manager) {
+    parent::__construct($argument_resolver, $form_builder);
     $this->entityManager = $manager;
   }
 

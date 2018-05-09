@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 
 /**
  * Common base class for form interstitial controllers.
@@ -17,9 +18,23 @@ abstract class FormController {
   use DependencySerializationTrait;
 
   /**
+   * The argument resolver.
+   *
+   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface
+   */
+  protected $argumentResolver;
+
+  /**
    * The controller resolver.
    *
    * @var \Drupal\Core\Controller\ControllerResolverInterface
+   *
+   * @deprecated
+   *   Deprecated property that is only assigned when the 'controller_resolver'
+   *   service is used as the first parameter to FormController::__construct().
+   *
+   * @see https://www.drupal.org/node/2959408
+   * @see \Drupal\Core\Controller\FormController::__construct()
    */
   protected $controllerResolver;
 
@@ -33,13 +48,17 @@ abstract class FormController {
   /**
    * Constructs a new \Drupal\Core\Controller\FormController object.
    *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
-   *   The controller resolver.
+   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
+   *   The argument resolver.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, FormBuilderInterface $form_builder) {
-    $this->controllerResolver = $controller_resolver;
+  public function __construct(ArgumentResolverInterface $argument_resolver, FormBuilderInterface $form_builder) {
+    $this->argumentResolver = $argument_resolver;
+    if ($argument_resolver instanceof ControllerResolverInterface) {
+      @trigger_error("Using the 'controller_resolver' service as the first argument is deprecated, use the 'http_kernel.controller.argument_resolver' instead. If your subclass requires the 'controller_resolver' service add it as an additional argument. See https://www.drupal.org/node/2959408.", E_USER_DEPRECATED);
+      $this->controllerResolver = $argument_resolver;
+    }
     $this->formBuilder = $form_builder;
   }
 
@@ -63,7 +82,7 @@ abstract class FormController {
     $form_state = new FormState();
     $request->attributes->set('form', []);
     $request->attributes->set('form_state', $form_state);
-    $args = $this->controllerResolver->getArguments($request, [$form_object, 'buildForm']);
+    $args = $this->argumentResolver->getArguments($request, [$form_object, 'buildForm']);
     $request->attributes->remove('form');
     $request->attributes->remove('form_state');
 

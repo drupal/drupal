@@ -35,6 +35,13 @@ class TitleResolverTest extends UnitTestCase {
   protected $translationManager;
 
   /**
+   * The mocked argument resolver.
+   *
+   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $argumentResolver;
+
+  /**
    * The actual tested title resolver.
    *
    * @var \Drupal\Core\Controller\TitleResolver
@@ -44,8 +51,9 @@ class TitleResolverTest extends UnitTestCase {
   protected function setUp() {
     $this->controllerResolver = $this->getMock('\Drupal\Core\Controller\ControllerResolverInterface');
     $this->translationManager = $this->getMock('\Drupal\Core\StringTranslation\TranslationInterface');
+    $this->argumentResolver = $this->getMock('\Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface');
 
-    $this->titleResolver = new TitleResolver($this->controllerResolver, $this->translationManager);
+    $this->titleResolver = new TitleResolver($this->controllerResolver, $this->translationManager, $this->argumentResolver);
   }
 
   /**
@@ -108,7 +116,7 @@ class TitleResolverTest extends UnitTestCase {
       ->method('getControllerFromDefinition')
       ->with('Drupal\Tests\Core\Controller\TitleCallback::example')
       ->will($this->returnValue($callable));
-    $this->controllerResolver->expects($this->once())
+    $this->argumentResolver->expects($this->once())
       ->method('getArguments')
       ->with($request, $callable)
       ->will($this->returnValue(['example']));

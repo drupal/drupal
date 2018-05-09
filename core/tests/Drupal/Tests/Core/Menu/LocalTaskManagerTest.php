@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\Controller\ControllerResolver;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Menu\LocalTaskInterface;
@@ -31,11 +32,11 @@ class LocalTaskManagerTest extends UnitTestCase {
   protected $manager;
 
   /**
-   * The mocked controller resolver.
+   * The mocked argument resolver.
    *
    * @var \PHPUnit_Framework_MockObject_MockObject
    */
-  protected $controllerResolver;
+  protected $argumentResolver;
 
   /**
    * The test request.
@@ -99,7 +100,7 @@ class LocalTaskManagerTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->controllerResolver = $this->getMock('Drupal\Core\Controller\ControllerResolverInterface');
+    $this->argumentResolver = $this->getMock('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface');
     $this->request = new Request();
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
     $this->pluginDiscovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
@@ -237,12 +238,32 @@ class LocalTaskManagerTest extends UnitTestCase {
     $menu_local_task->expects($this->once())
       ->method('getTitle');
 
-    $this->controllerResolver->expects($this->once())
+    $this->argumentResolver->expects($this->once())
       ->method('getArguments')
       ->with($this->request, [$menu_local_task, 'getTitle'])
       ->will($this->returnValue([]));
 
     $this->manager->getTitle($menu_local_task);
+  }
+
+  /**
+   * @expectedDeprecation Using the 'controller_resolver' service as the first argument is deprecated, use the 'http_kernel.controller.argument_resolver' instead. If your subclass requires the 'controller_resolver' service add it as an additional argument. See https://www.drupal.org/node/2959408.
+   * @group legacy
+   */
+  public function testControllerResolverDeprecation() {
+    $controller_resolver = $this->getMockBuilder(ControllerResolver::class)->disableOriginalConstructor()->getMock();
+    $request_stack = new RequestStack();
+    $request_stack->push($this->request);
+    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $module_handler->expects($this->any())
+      ->method('getModuleDirectories')
+      ->willReturn([]);
+    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+    $language_manager->expects($this->any())
+      ->method('getCurrentLanguage')
+      ->will($this->returnValue(new Language(['id' => 'en'])));
+
+    new LocalTaskManager($controller_resolver, $request_stack, $this->routeMatch, $this->routeProvider, $module_handler, $this->cacheBackend, $language_manager, $this->accessManager, $this->account);
   }
 
   /**
@@ -260,7 +281,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(['id' => 'en'])));
 
-    $this->manager = new LocalTaskManager($this->controllerResolver, $request_stack, $this->routeMatch, $this->routeProvider, $module_handler, $this->cacheBackend, $language_manager, $this->accessManager, $this->account);
+    $this->manager = new LocalTaskManager($this->argumentResolver, $request_stack, $this->routeMatch, $this->routeProvider, $module_handler, $this->cacheBackend, $language_manager, $this->accessManager, $this->account);
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'discovery');
     $property->setAccessible(TRUE);
@@ -424,7 +445,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->setupFactoryAndLocalTaskPlugins($definitions, 'menu_local_task_test_tasks_view');
     $this->setupLocalTaskManager();
 
-    $this->controllerResolver->expects($this->any())
+    $this->argumentResolver->expects($this->any())
       ->method('getArguments')
       ->willReturn([]);
 

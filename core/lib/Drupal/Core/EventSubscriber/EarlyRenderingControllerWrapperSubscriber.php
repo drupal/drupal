@@ -5,12 +5,12 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableResponseInterface;
-use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -55,11 +55,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class EarlyRenderingControllerWrapperSubscriber implements EventSubscriberInterface {
 
   /**
-   * The controller resolver.
+   * The argument resolver.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface
    */
-  protected $controllerResolver;
+  protected $argumentResolver;
 
   /**
    * The renderer.
@@ -71,13 +71,13 @@ class EarlyRenderingControllerWrapperSubscriber implements EventSubscriberInterf
   /**
    * Constructs a new EarlyRenderingControllerWrapperSubscriber instance.
    *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
-   *   The controller resolver.
+   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
+   *   The argument resolver.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, RendererInterface $renderer) {
-    $this->controllerResolver = $controller_resolver;
+  public function __construct(ArgumentResolverInterface $argument_resolver, RendererInterface $renderer) {
+    $this->argumentResolver = $argument_resolver;
     $this->renderer = $renderer;
   }
 
@@ -91,7 +91,7 @@ class EarlyRenderingControllerWrapperSubscriber implements EventSubscriberInterf
     $controller = $event->getController();
 
     // See \Symfony\Component\HttpKernel\HttpKernel::handleRaw().
-    $arguments = $this->controllerResolver->getArguments($event->getRequest(), $controller);
+    $arguments = $this->argumentResolver->getArguments($event->getRequest(), $controller);
 
     $event->setController(function () use ($controller, $arguments) {
       return $this->wrapControllerExecutionInRenderContext($controller, $arguments);

@@ -72,6 +72,7 @@ class ControllerResolverTest extends UnitTestCase {
    * @see \Drupal\Core\Controller\ControllerResolver::doGetArguments()
    *
    * @group legacy
+   * @expectedDeprecation Drupal\Core\Controller\ControllerResolver::doGetArguments is deprecated as of 8.6.0 and will be removed in 9.0. Inject the "http_kernel.controller.argument_resolver" service instead.
    */
   public function testGetArguments() {
     $controller = function (EntityInterface $entity, $user, RouteMatchInterface $route_match, ServerRequestInterface $psr_7) {

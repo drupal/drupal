@@ -640,10 +640,10 @@ services:
     arguments: ['@menu.link_tree', '@entity.manager', '@string_translation']
   plugin.manager.menu.local_action:
     class: Drupal\Core\Menu\LocalActionManager
-    arguments: ['@controller_resolver', '@request_stack', '@current_route_match', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
+    arguments: ['@http_kernel.controller.argument_resolver', '@request_stack', '@current_route_match', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
   plugin.manager.menu.local_task:
     class: Drupal\Core\Menu\LocalTaskManager
-    arguments: ['@controller_resolver', '@request_stack', '@current_route_match', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
+    arguments: ['@http_kernel.controller.argument_resolver', '@request_stack', '@current_route_match', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
   plugin.manager.menu.contextual_link:
     class: Drupal\Core\Menu\ContextualLinkManager
     arguments: ['@controller_resolver', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user', '@request_stack']
@@ -708,12 +708,37 @@ services:
       - [setContainer, ['@service_container']]
   title_resolver:
     class: Drupal\Core\Controller\TitleResolver
-    arguments: ['@controller_resolver', '@string_translation']
+    arguments: ['@controller_resolver', '@string_translation', '@http_kernel.controller.argument_resolver']
   http_kernel:
     class: Stack\StackedHttpKernel
   http_kernel.basic:
     class: Symfony\Component\HttpKernel\HttpKernel
-    arguments: ['@event_dispatcher', '@controller_resolver', '@request_stack']
+    arguments: ['@event_dispatcher', '@controller_resolver', '@request_stack', '@http_kernel.controller.argument_resolver']
+  http_kernel.controller.argument_resolver:
+    class: Symfony\Component\HttpKernel\Controller\ArgumentResolver
+    arguments: ['@http_kernel.controller.argument_metadata_factory', ['@argument_resolver.request_attribute', '@argument_resolver.raw_parameter', '@argument_resolver.request', '@argument_resolver.psr7_request', '@argument_resolver.route_match', '@argument_resolver.default']]
+  http_kernel.controller.argument_metadata_factory:
+    class: Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory
+    public: false
+  argument_resolver.request_attribute:
+    class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestAttributeValueResolver
+    public: false
+  argument_resolver.raw_parameter:
+    class: Drupal\Core\Controller\ArgumentResolver\RawParameterValueResolver
+    public: false
+  argument_resolver.request:
+    class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestValueResolver
+    public: false
+  argument_resolver.psr7_request:
+    class: Drupal\Core\Controller\ArgumentResolver\Psr7RequestValueResolver
+    arguments: ['@psr7.http_message_factory']
+    public: false
+  argument_resolver.route_match:
+    class: Drupal\Core\Controller\ArgumentResolver\RouteMatchValueResolver
+    public: false
+  argument_resolver.default:
+    class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver
+    public: false
   http_middleware.negotiation:
     class: Drupal\Core\StackMiddleware\NegotiationMiddleware
     tags:
@@ -1077,10 +1102,10 @@ services:
       - { name: render.main_content_renderer, format: drupal_modal }
   controller.form:
     class: Drupal\Core\Controller\HtmlFormController
-    arguments: ['@controller_resolver', '@form_builder', '@class_resolver']
+    arguments: ['@http_kernel.controller.argument_resolver', '@form_builder', '@class_resolver']
   controller.entity_form:
     class: Drupal\Core\Entity\HtmlEntityFormController
-    arguments: ['@controller_resolver', '@form_builder', '@entity.manager']
+    arguments: ['@http_kernel.controller.argument_resolver', '@form_builder', '@entity.manager']
   form_ajax_response_builder:
     class: Drupal\Core\Form\FormAjaxResponseBuilder
     arguments: ['@main_content_renderer.ajax', '@current_route_match']
@@ -1634,7 +1659,7 @@ services:
     arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@render_placeholder_generator', '@render_cache', '@request_stack', '%renderer.config%']
   early_rendering_controller_wrapper_subscriber:
     class: Drupal\Core\EventSubscriber\EarlyRenderingControllerWrapperSubscriber
-    arguments: ['@controller_resolver', '@renderer']
+    arguments: ['@http_kernel.controller.argument_resolver', '@renderer']
     tags:
       - { name: event_subscriber }
   # Placeholder strategies for rendering placeholders.

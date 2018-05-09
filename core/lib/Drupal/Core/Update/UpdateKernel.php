@@ -106,7 +106,9 @@ class UpdateKernel extends DrupalKernel {
 
     $this->setupRequestMatch($request);
 
-    $arguments = $controller_resolver->getArguments($request, $db_update_controller);
+    /** @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver */
+    $argument_resolver = $container->get('http_kernel.controller.argument_resolver');
+    $arguments = $argument_resolver->getArguments($request, $db_update_controller);
     return call_user_func_array($db_update_controller, $arguments);
   }
 

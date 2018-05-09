@@ -5,6 +5,7 @@ namespace Drupal\Core\Menu;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -15,7 +16,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -48,9 +49,24 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
   ];
 
   /**
+   * An argument resolver object.
+   *
+   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface
+   */
+  protected $argumentResolver;
+
+  /**
    * A controller resolver object.
    *
    * @var \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface
+   *
+   * @deprecated
+   *   Using the 'controller_resolver' service as the first argument is
+   *   deprecated, use the 'http_kernel.controller.argument_resolver' instead.
+   *   If your subclass requires the 'controller_resolver' service add it as an
+   *   additional argument.
+   *
+   * @see https://www.drupal.org/node/2959408
    */
   protected $controllerResolver;
 
@@ -99,8 +115,8 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
   /**
    * Constructs a LocalActionManager object.
    *
-   * @param \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface $controller_resolver
-   *   An object to use in introspecting route methods.
+   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
+   *   An object to use in resolving route arguments.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
@@ -118,11 +134,15 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
+  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
     // Skip calling the parent constructor, since that assumes annotation-based
     // discovery.
     $this->factory = new ContainerFactory($this, 'Drupal\Core\Menu\LocalActionInterface');
-    $this->controllerResolver = $controller_resolver;
+    $this->argumentResolver = $argument_resolver;
+    if ($argument_resolver instanceof ControllerResolverInterface) {
+      @trigger_error("Using the 'controller_resolver' service as the first argument is deprecated, use the 'http_kernel.controller.argument_resolver' instead. If your subclass requires the 'controller_resolver' service add it as an additional argument. See https://www.drupal.org/node/2959408.", E_USER_DEPRECATED);
+      $this->controllerResolver = $argument_resolver;
+    }
     $this->requestStack = $request_stack;
     $this->routeMatch = $route_match;
     $this->routeProvider = $route_provider;
@@ -150,7 +170,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    */
   public function getTitle(LocalActionInterface $local_action) {
     $controller = [$local_action, 'getTitle'];
-    $arguments = $this->controllerResolver->getArguments($this->requestStack->getCurrentRequest(), $controller);
+    $arguments = $this->argumentResolver->getArguments($this->requestStack->getCurrentRequest(), $controller);
     return call_user_func_array($controller, $arguments);
   }
 
