@@ -25,7 +25,7 @@
  */
 
 $url = parse_url($_SERVER['REQUEST_URI']);
-if (file_exists('.' . $url['path'])) {
+if (file_exists(__DIR__ . $url['path'])) {
   // Serve the requested resource as-is.
   return FALSE;
 }
@@ -38,7 +38,7 @@ if (strpos($path, '.php') !== FALSE) {
   // fallback to index.php.
   do {
     $path = dirname($path);
-    if (preg_match('/\.php$/', $path) && is_file('.' . $path)) {
+    if (preg_match('/\.php$/', $path) && is_file(__DIR__ . $path)) {
       // Discovered that the path contains an existing PHP file. Use that as the
       // script to include.
       $script = ltrim($path, '/');
