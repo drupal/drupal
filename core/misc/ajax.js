@@ -420,7 +420,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     if (!focusChanged && this.element && !$(this.element).data('disable-refocus')) {
       var target = false;
 
-      for (var n = elementParents.length - 1; !target && n > 0; n--) {
+      for (var n = elementParents.length - 1; !target && n >= 0; n--) {
         target = document.querySelector('[data-drupal-selector="' + elementParents[n].getAttribute('data-drupal-selector') + '"]');
       }
 

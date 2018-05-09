@@ -888,7 +888,7 @@
     if (!focusChanged && this.element && !$(this.element).data('disable-refocus')) {
       let target = false;
 
-      for (let n = elementParents.length - 1; !target && n > 0; n--) {
+      for (let n = elementParents.length - 1; !target && n >= 0; n--) {
         target = document.querySelector(`[data-drupal-selector="${elementParents[n].getAttribute('data-drupal-selector')}"]`);
       }
 

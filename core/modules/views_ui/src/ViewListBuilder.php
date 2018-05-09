@@ -178,6 +178,14 @@ class ViewListBuilder extends ConfigEntityListBuilder {
       }
     }
 
+    // ajax.js focuses automatically on the data-drupal-selector element. When
+    // enabling the view again, focusing on the disable link doesn't work, as it
+    // is hidden. We assign data-drupal-selector to every link, so it focuses
+    // on the edit link.
+    foreach ($operations as &$operation) {
+      $operation['attributes']['data-drupal-selector'] = 'views-listing-' . $entity->id();
+    }
+
     return $operations;
   }
 
