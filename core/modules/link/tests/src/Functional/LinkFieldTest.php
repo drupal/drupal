@@ -281,6 +281,14 @@ class LinkFieldTest extends BrowserTestBase {
         $this->assertRaw('placeholder="Enter the text for this link"');
 
         $this->assertFieldByName("{$field_name}[0][title]", '', 'Link text field found.');
+        if ($title_setting === DRUPAL_OPTIONAL) {
+          // Verify that the URL is required, if the link text is non-empty.
+          $edit = [
+            "{$field_name}[0][title]" => 'Example',
+          ];
+          $this->drupalPostForm(NULL, $edit, t('Save'));
+          $this->assertText(t('The URL field is required when the @title field is specified.', ['@title' => t('Link text')]));
+        }
         if ($title_setting === DRUPAL_REQUIRED) {
           // Verify that the link text is required, if the URL is non-empty.
           $edit = [
