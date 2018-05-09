@@ -238,6 +238,19 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['hreflang' => 'en', 'data-drupal-link-query' => ""]];
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['hreflang' => 'en', 'data-drupal-link-query' => TRUE]];
 
+    // Query with unsorted keys must match when the attribute is in sorted form.
+    $context = [
+      'path' => 'myfrontpage',
+      'front' => TRUE,
+      'language' => 'en',
+      'query' => ['foo' => 'bar', 'baz' => 'qux'],
+    ];
+    $attributes = [
+      'data-drupal-link-system-path' => 'myfrontpage',
+      'data-drupal-link-query' => Json::encode(['baz' => 'qux', 'foo' => 'bar']),
+    ];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes];
+
     // Loop over the surrounding HTML variations.
     $data = [];
     for ($h = 0; $h < count($html); $h++) {
