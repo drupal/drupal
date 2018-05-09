@@ -156,7 +156,7 @@ class BigPipeTest extends BrowserTestBase {
 
     $this->drupalGet(Url::fromRoute('big_pipe_test'));
     $this->assertBigPipeResponseHeadersPresent();
-    $this->assertNoCacheTag('cache_tag_set_in_lazy_builder');
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'cache_tag_set_in_lazy_builder');
 
     $this->setCsrfTokenSeedInTestEnvironment();
     $cases = $this->getTestCases();
@@ -236,7 +236,7 @@ class BigPipeTest extends BrowserTestBase {
 
     $this->drupalGet(Url::fromRoute('big_pipe_test'));
     $this->assertBigPipeResponseHeadersPresent();
-    $this->assertNoCacheTag('cache_tag_set_in_lazy_builder');
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'cache_tag_set_in_lazy_builder');
 
     $this->setCsrfTokenSeedInTestEnvironment();
     $cases = $this->getTestCases();

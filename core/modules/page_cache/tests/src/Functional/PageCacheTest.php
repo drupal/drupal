@@ -327,20 +327,20 @@ class PageCacheTest extends BrowserTestBase {
     $this->drupalGet($content_url);
     $this->assertText('Permission to pet llamas: no!');
     $this->assertCacheContext('user.permissions');
-    $this->assertNoCacheTag('config:user.role.authenticated');
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
     $this->drupalGet($route_access_url);
     $this->assertCacheContext('user.permissions');
-    $this->assertNoCacheTag('config:user.role.authenticated');
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
 
     // 4. authenticated user, with permission.
     user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['pet llamas']);
     $this->drupalGet($content_url);
     $this->assertText('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');
-    $this->assertNoCacheTag('config:user.role.authenticated');
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
     $this->drupalGet($route_access_url);
     $this->assertCacheContext('user.permissions');
-    $this->assertNoCacheTag('config:user.role.authenticated');
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
   }
 
   /**

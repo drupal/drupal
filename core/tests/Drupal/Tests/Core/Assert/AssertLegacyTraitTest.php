@@ -167,6 +167,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
 
   /**
    * @covers ::assertNoCacheTag
+   * @expectedDeprecation assertNoCacheTag() is deprecated and scheduled for removal in Drupal 9.0.0. Use $this->assertSession()->responseHeaderNotContains() instead. See https://www.drupal.org/node/2864029.
    */
   public function testAssertNoCacheTag() {
     $this->webAssert
