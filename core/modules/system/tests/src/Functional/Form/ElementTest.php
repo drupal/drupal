@@ -223,4 +223,12 @@ class ElementTest extends BrowserTestBase {
     $this->assertText('I am an error on the details element.');
   }
 
+  /**
+   * Tests summary attributes of details.
+   */
+  public function testDetailsSummaryAttributes() {
+    $this->drupalGet('form-test/group-details');
+    $this->assertTrue($this->cssSelect('summary[data-summary-attribute="test"]'));
+  }
+
 }

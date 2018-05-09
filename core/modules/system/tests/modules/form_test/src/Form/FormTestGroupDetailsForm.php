@@ -39,6 +39,13 @@ class FormTestGroupDetailsForm extends FormBase {
       '#type' => 'textfield',
       '#title' => 'Nest in details element',
     ];
+    $form['summary_attributes'] = [
+      '#type' => 'details',
+      '#title' => 'Details element with summary attributes',
+      '#summary_attributes' => [
+        'data-summary-attribute' => 'test',
+      ],
+    ];
     return $form;
   }
 

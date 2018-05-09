@@ -235,13 +235,13 @@ function template_preprocess_fieldset(&$variables) {
  * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #attributes, #children, #open,
- *     #description, #id, #title, #value, #optional.
+ *     Properties used: #attributes, #children, #description, #required,
+ *     #summary_attributes, #title, #value.
  */
 function template_preprocess_details(&$variables) {
   $element = $variables['element'];
   $variables['attributes'] = $element['#attributes'];
-  $variables['summary_attributes'] = new Attribute();
+  $variables['summary_attributes'] = new Attribute($element['#summary_attributes']);
   if (!empty($element['#title'])) {
     $variables['summary_attributes']['role'] = 'button';
     if (!empty($element['#attributes']['id'])) {
