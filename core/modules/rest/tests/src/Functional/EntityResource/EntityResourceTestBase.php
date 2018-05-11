@@ -156,12 +156,22 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
   /**
    * Provides an entity resource.
+   *
+   * @param bool $single_format
+   *   Provisions a single-format entity REST resource. Defaults to FALSE.
    */
-  protected function provisionEntityResource() {
+  protected function provisionEntityResource($single_format = FALSE) {
+    if ($existing = $this->resourceConfigStorage->load(static::$resourceConfigId)) {
+      $existing->delete();
+    }
+
+    $format = $single_format
+      ? [static::$format]
+      : [static::$format, 'foobar'];
     // It's possible to not have any authentication providers enabled, when
     // testing public (anonymous) usage of a REST resource.
     $auth = isset(static::$auth) ? [static::$auth] : [];
-    $this->provisionResource([static::$format], $auth);
+    $this->provisionResource($format, $auth);
   }
 
   /**
@@ -434,20 +444,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     }
 
     $this->provisionEntityResource();
-    // Simulate the developer again forgetting the ?_format query string.
-    $url->setOption('query', []);
-
-    // DX: 406 when ?_format is missing, except when requesting a canonical HTML
-    // route.
-    $response = $this->request('GET', $url, $request_options);
-    if ($has_canonical_url && (!static::$auth || static::$auth === 'cookie')) {
-      $this->assertSame(403, $response->getStatusCode());
-    }
-    else {
-      $this->assert406Response($response);
-    }
-
-    $url->setOption('query', ['_format' => static::$format]);
 
     // DX: forgetting authentication: authentication provider-specific error
     // response.
@@ -472,10 +468,44 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     unset($request_options[RequestOptions::HEADERS]['REST-test-auth-global']);
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('GET'));
 
-    // DX: 403 when unauthorized.
-    $response = $this->request('GET', $url, $request_options);
+    // First: single format. Drupal will automatically pick the only format.
+    $this->provisionEntityResource(TRUE);
     $expected_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability();
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
+    // DX: 403 because unauthorized single-format route, ?_format is omittable.
+    $url->setOption('query', []);
+    $response = $this->request('GET', $url, $request_options);
+    if ($has_canonical_url) {
+      $this->assertSame(403, $response->getStatusCode());
+      $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+    }
+    else {
+      $this->assertResourceErrorResponse(403, FALSE, $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
+    }
+    $this->assertSame(static::$auth ? [] : ['MISS'], $response->getHeader('X-Drupal-Cache'));
+    // DX: 403 because unauthorized.
+    $url->setOption('query', ['_format' => static::$format]);
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertResourceErrorResponse(403, FALSE, $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', $has_canonical_url ? 'MISS' : 'HIT');
+
+    // Then, what we'll use for the remainder of the test: multiple formats.
+    $this->provisionEntityResource();
+    // DX: 406 because despite unauthorized, ?_format is not omittable.
+    $url->setOption('query', []);
+    $response = $this->request('GET', $url, $request_options);
+    if ($has_canonical_url) {
+      $this->assertSame(403, $response->getStatusCode());
+      $this->assertSame(['HIT'], $response->getHeader('X-Drupal-Dynamic-Cache'));
+    }
+    else {
+      $this->assertSame(406, $response->getStatusCode());
+      $this->assertSame(['UNCACHEABLE'], $response->getHeader('X-Drupal-Dynamic-Cache'));
+    }
+    $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+    $this->assertSame(static::$auth ? [] : ['MISS'], $response->getHeader('X-Drupal-Cache'));
+    // DX: 403 because unauthorized.
+    $url->setOption('query', ['_format' => static::$format]);
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', 'HIT');
     $this->assertArrayNotHasKey('Link', $response->getHeaders());
 
     $this->setUpAuthorization('GET');

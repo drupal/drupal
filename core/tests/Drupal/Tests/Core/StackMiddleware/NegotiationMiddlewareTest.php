@@ -68,10 +68,10 @@ class NegotiationMiddlewareTest extends UnitTestCase {
    *
    * @covers ::getContentType
    */
-  public function testUnknowContentTypeReturnsHtmlByDefault() {
+  public function testUnknowContentTypeReturnsNull() {
     $request = new Request();
 
-    $this->assertSame('html', $this->contentNegotiation->getContentType($request));
+    $this->assertNull($this->contentNegotiation->getContentType($request));
   }
 
   /**
@@ -83,7 +83,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
     $request = new Request();
     $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 
-    $this->assertSame('html', $this->contentNegotiation->getContentType($request));
+    $this->assertNull($this->contentNegotiation->getContentType($request));
   }
 
   /**
@@ -98,7 +98,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
     $request->setFormat()->shouldNotBeCalled();
 
     // Request format will be set with default format.
-    $request->setRequestFormat('html')->shouldBeCalled();
+    $request->setRequestFormat()->shouldNotBeCalled();
 
     // Some getContentType calls we don't really care about but have to mock.
     $request_data = $this->prophesize(ParameterBag::class);
@@ -127,7 +127,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
     $request->setFormat('david', 'geeky/david')->shouldBeCalled();
 
     // Some calls we don't care about.
-    $request->setRequestFormat('html')->shouldBeCalled();
+    $request->setRequestFormat()->shouldNotBeCalled();
     $request_data = $this->prophesize(ParameterBag::class);
     $request_data->get('ajax_iframe_upload', FALSE)->shouldBeCalled();
     $request_mock = $request->reveal();

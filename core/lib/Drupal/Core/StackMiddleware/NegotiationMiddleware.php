@@ -46,7 +46,9 @@ class NegotiationMiddleware implements HttpKernelInterface {
     }
 
     // Determine the request format using the negotiator.
-    $request->setRequestFormat($this->getContentType($request));
+    if ($requested_format = $this->getContentType($request)) {
+      $request->setRequestFormat($requested_format);
+    }
     return $this->app->handle($request, $type, $catch);
   }
 
@@ -88,8 +90,8 @@ class NegotiationMiddleware implements HttpKernelInterface {
       return $request->query->get('_format');
     }
 
-    // Do HTML last so that it always wins.
-    return 'html';
+    // No format was specified in the request.
+    return NULL;
   }
 
 }
