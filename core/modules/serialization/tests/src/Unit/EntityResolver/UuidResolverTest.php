@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\serialization\Unit\EntityResolver;
 
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\EntityResolver\UuidResolver;
 
@@ -29,7 +30,7 @@ class UuidResolverTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->entityManager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')
+    $this->entityManager = $this->getMockBuilder(EntityRepositoryInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
 

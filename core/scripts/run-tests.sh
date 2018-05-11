@@ -310,7 +310,12 @@ All arguments are long options.
 
   --suppress-deprecations
 
-              Stops tests from failing if deprecation errors are triggered.
+              Stops tests from failing if deprecation errors are triggered. If
+              this is not set the value specified in the
+              SYMFONY_DEPRECATIONS_HELPER environment variable, or the value
+              specified in core/phpunit.xml (if it exists), or the default value
+              will be used. The default is that any unexpected silenced
+              deprecation error will fail tests.
 
   <test1>[,<test2>[,<test3> ...]]
 
@@ -824,13 +829,6 @@ function simpletest_script_run_one_test($test_id, $test_class) {
     $test = new $class_name($test_id);
     if ($args['suppress-deprecations']) {
       putenv('SYMFONY_DEPRECATIONS_HELPER=disabled');
-    }
-    else {
-      // Prevent deprecations caused by vendor code calling deprecated code.
-      // This also prevents mock objects in PHPUnit 6 triggering silenced
-      // deprecations from breaking the test suite. We should consider changing
-      // this to 'strict' once PHPUnit 4 is no longer used.
-      putenv('SYMFONY_DEPRECATIONS_HELPER=weak_vendors');
     }
     if (is_subclass_of($test_class, TestCase::class)) {
       $status = simpletest_script_run_phpunit($test_id, $test_class);

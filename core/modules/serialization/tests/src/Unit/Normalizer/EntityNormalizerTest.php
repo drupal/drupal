@@ -119,7 +119,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->with('bundle')
       ->will($this->returnValue('test_type'));
     $entity_type->expects($this->once())
-      ->method('isSubClassOf')
+      ->method('entityClassImplements')
       ->with(FieldableEntityInterface::class)
       ->willReturn(TRUE);
 
@@ -240,7 +240,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->with('bundle')
       ->will($this->returnValue('test_type'));
     $entity_type->expects($this->once())
-      ->method('isSubClassOf')
+      ->method('entityClassImplements')
       ->with(FieldableEntityInterface::class)
       ->willReturn(TRUE);
 
@@ -303,7 +303,7 @@ class EntityNormalizerTest extends UnitTestCase {
 
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity_type->expects($this->once())
-      ->method('isSubClassOf')
+      ->method('entityClassImplements')
       ->with(FieldableEntityInterface::class)
       ->willReturn(TRUE);
     $entity_type->expects($this->once())
@@ -376,7 +376,7 @@ class EntityNormalizerTest extends UnitTestCase {
 
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity_type->expects($this->once())
-      ->method('isSubClassOf')
+      ->method('entityClassImplements')
       ->with(FieldableEntityInterface::class)
       ->willReturn(FALSE);
 

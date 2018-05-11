@@ -4,6 +4,7 @@ namespace Drupal\Tests\forum\Unit\Breadcrumb;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Link;
+use Drupal\taxonomy\TermStorageInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -149,11 +150,12 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
     $forum_manager = $this->getMockBuilder('Drupal\forum\ForumManagerInterface')
       ->disableOriginalConstructor()
       ->getMock();
-    $forum_manager->expects($this->at(0))
-      ->method('getParents')
+    $term_storage = $this->getMockBuilder(TermStorageInterface::class)->getMock();
+    $term_storage->expects($this->at(0))
+      ->method('loadAllParents')
       ->will($this->returnValue([$term1]));
-    $forum_manager->expects($this->at(1))
-      ->method('getParents')
+    $term_storage->expects($this->at(1))
+      ->method('loadAllParents')
       ->will($this->returnValue([$term1, $term2]));
 
     $prophecy = $this->prophesize('Drupal\taxonomy\VocabularyInterface');
@@ -176,6 +178,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
       ->method('getStorage')
       ->will($this->returnValueMap([
         ['taxonomy_vocabulary', $vocab_storage],
+        ['taxonomy_term', $term_storage],
       ]));
 
     $config_factory = $this->getConfigFactoryStub(

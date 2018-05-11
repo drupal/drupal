@@ -95,9 +95,9 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->will($this->returnValue(['id' => 'test']));
 
     $this->idMap->expects($this->once())
-      ->method('lookupDestinationId')
+      ->method('lookupDestinationIds')
       ->with(['id' => 'test'])
-      ->will($this->returnValue(['test']));
+      ->will($this->returnValue([['test']]));
 
     $source->expects($this->once())
       ->method('current')
@@ -137,9 +137,9 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->will($this->returnValue(['id' => 'test']));
 
     $this->idMap->expects($this->once())
-      ->method('lookupDestinationId')
+      ->method('lookupDestinationIds')
       ->with(['id' => 'test'])
-      ->will($this->returnValue(['test']));
+      ->will($this->returnValue([['test']]));
 
     $source->expects($this->once())
       ->method('current')
@@ -213,9 +213,9 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->method('saveMessage');
 
     $this->idMap->expects($this->once())
-      ->method('lookupDestinationId')
+      ->method('lookupDestinationIds')
       ->with(['id' => 'test'])
-      ->will($this->returnValue(['test']));
+      ->will($this->returnValue([['test']]));
 
     $this->message->expects($this->once())
       ->method('display')
@@ -269,9 +269,9 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->method('saveMessage');
 
     $this->idMap->expects($this->once())
-      ->method('lookupDestinationId')
+      ->method('lookupDestinationIds')
       ->with(['id' => 'test'])
-      ->will($this->returnValue(['test']));
+      ->will($this->returnValue([['test']]));
 
     $this->assertSame(MigrationInterface::RESULT_COMPLETED, $this->executable->import());
   }
@@ -319,7 +319,7 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->method('saveMessage');
 
     $this->idMap->expects($this->never())
-      ->method('lookupDestinationId');
+      ->method('lookupDestinationIds');
 
     $this->assertSame(MigrationInterface::RESULT_COMPLETED, $this->executable->import());
   }
@@ -367,9 +367,9 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->method('saveMessage');
 
     $this->idMap->expects($this->once())
-      ->method('lookupDestinationId')
+      ->method('lookupDestinationIds')
       ->with(['id' => 'test'])
-      ->will($this->returnValue(['test']));
+      ->will($this->returnValue([['test']]));
 
     $this->message->expects($this->once())
       ->method('display')

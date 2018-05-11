@@ -107,7 +107,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
                 'title' => $this->formatPlural($entity->get($field_name)->comment_count, '1 comment', '@count comments'),
                 'attributes' => ['title' => $this->t('Jump to the first comment.')],
                 'fragment' => 'comments',
-                'url' => $entity->urlInfo(),
+                'url' => $entity->toUrl(),
               ];
               if ($this->moduleHandler->moduleExists('history')) {
                 $links['comment-new-comments'] = [
@@ -141,7 +141,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
                 ]);
               }
               else {
-                $links['comment-add'] += ['url' => $entity->urlInfo()];
+                $links['comment-add'] += ['url' => $entity->toUrl()];
               }
             }
             elseif ($this->currentUser->isAnonymous()) {
@@ -174,7 +174,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
                   ]);
                 }
                 else {
-                  $links['comment-add']['url'] = $entity->urlInfo();
+                  $links['comment-add']['url'] = $entity->toUrl();
                 }
               }
             }

@@ -85,7 +85,7 @@ services:
     class: Drupal\serialization\EntityResolver\UuidResolver
     tags:
       - { name: entity_resolver}
-    arguments: ['@entity.manager']
+    arguments: ['@entity.repository']
   serialization.entity_resolver.target_id:
     class: Drupal\serialization\EntityResolver\TargetIdResolver
     tags:

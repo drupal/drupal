@@ -62,7 +62,7 @@ class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
         if ($vocabulary->access('view')) {
           $reasons[] = $this->t('To uninstall Forum, first delete all <a href=":url">%vocabulary</a> terms', [
             '%vocabulary' => $vocabulary->label(),
-            ':url' => $vocabulary->url('overview-form'),
+            ':url' => $vocabulary->toUrl('overview-form')->toString(),
           ]);
         }
         else {

@@ -221,7 +221,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
       if ($save) {
         try {
           $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_ROW_SAVE, new MigratePreRowSaveEvent($this->migration, $this->message, $row));
-          $destination_id_values = $destination->import($row, $id_map->lookupDestinationId($this->sourceIdValues));
+          $destination_ids = $id_map->lookupDestinationIds($this->sourceIdValues);
+          $destination_id_values = $destination_ids ? reset($destination_ids) : [];
+          $destination_id_values = $destination->import($row, $destination_id_values);
           $this->getEventDispatcher()->dispatch(MigrateEvents::POST_ROW_SAVE, new MigratePostRowSaveEvent($this->migration, $this->message, $row, $destination_id_values));
           if ($destination_id_values) {
             // We do not save an idMap entry for config.

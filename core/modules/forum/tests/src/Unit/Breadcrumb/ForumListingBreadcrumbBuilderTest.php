@@ -4,6 +4,7 @@ namespace Drupal\Tests\forum\Unit\Breadcrumb;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Link;
+use Drupal\taxonomy\TermStorageInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -138,12 +139,12 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
     $prophecy->getCacheMaxAge()->willReturn(Cache::PERMANENT);
     $term2 = $prophecy->reveal();
 
-    $forum_manager = $this->getMock('Drupal\forum\ForumManagerInterface');
-    $forum_manager->expects($this->at(0))
-      ->method('getParents')
+    $term_storage = $this->getMockBuilder(TermStorageInterface::class)->getMock();
+    $term_storage->expects($this->at(0))
+      ->method('loadAllParents')
       ->will($this->returnValue([$term1]));
-    $forum_manager->expects($this->at(1))
-      ->method('getParents')
+    $term_storage->expects($this->at(1))
+      ->method('loadAllParents')
       ->will($this->returnValue([$term1, $term2]));
 
     // The root forum.
@@ -167,6 +168,7 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
       ->method('getStorage')
       ->will($this->returnValueMap([
         ['taxonomy_vocabulary', $vocab_storage],
+        ['taxonomy_term', $term_storage],
       ]));
 
     $config_factory = $this->getConfigFactoryStub(
@@ -176,6 +178,8 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
         ],
       ]
     );
+
+    $forum_manager = $this->getMock('Drupal\forum\ForumManagerInterface');
 
     // Build a breadcrumb builder to test.
     $breadcrumb_builder = $this->getMock(

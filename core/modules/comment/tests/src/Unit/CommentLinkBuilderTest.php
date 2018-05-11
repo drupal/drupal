@@ -310,7 +310,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
 
     $url = Url::fromRoute('node.view');
     $node->expects($this->any())
-      ->method('urlInfo')
+      ->method('toUrl')
       ->willReturn($url);
     $node->expects($this->any())
       ->method('url')

@@ -133,10 +133,8 @@ class ViewsData {
    *
    * @param string|null $key
    *   The key of the cache entry to retrieve. Defaults to NULL, this will
-   *   return all table data.
-   *
-   * @deprecated NULL $key deprecated in Drupal 8.2.x and will be removed in
-   * 9.0.0. Use getAll() instead.
+   *   return all table data. NULL $key deprecated in Drupal 8.2.x and will be
+   *   removed in 9.0.0. Use getAll() instead.
    *
    * @see https://www.drupal.org/node/2723553
    *
