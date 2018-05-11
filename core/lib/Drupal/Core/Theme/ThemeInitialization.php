@@ -173,6 +173,15 @@ class ThemeInitialization implements ThemeInitializationInterface {
     $values['path'] = $theme_path;
     $values['name'] = $theme->getName();
 
+    // Use the logo declared in this themes info file, otherwise use logo.svg
+    // from the themes root.
+    if (!empty($theme->info['logo'])) {
+      $values['logo'] = $theme->getPath() . '/' . $theme->info['logo'];
+    }
+    else {
+      $values['logo'] = $theme->getPath() . '/logo.svg';
+    }
+
     // @todo Remove in Drupal 9.0.x.
     $values['stylesheets_remove'] = $this->prepareStylesheetsRemove($theme, $base_themes);
 

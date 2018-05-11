@@ -60,4 +60,53 @@ class ThemeSettingsTest extends KernelTestBase {
     $this->assertNotNull(theme_get_setting('features.favicon', $name));
   }
 
+  /**
+   * Tests that the default logo config can be overridden.
+   */
+  public function testLogoConfig() {
+    /** @var \Drupal\Core\Extension\ThemeHandler $theme_handler */
+    $theme_handler = $this->container->get('theme_handler');
+    $theme_handler->install(['stark']);
+    $theme = $theme_handler->getTheme('stark');
+
+    // Tests default behaviour.
+    $expected = '/' . $theme->getPath() . '/logo.svg';
+    $this->assertEquals($expected, theme_get_setting('logo.url', 'stark'));
+
+    $config = $this->config('stark.settings');
+    drupal_static_reset('theme_get_setting');
+
+    $values = [
+      'default_logo' => FALSE,
+      'logo_path' => 'public://logo_with_scheme.png',
+    ];
+    theme_settings_convert_to_config($values, $config)->save();
+
+    // Tests logo path with scheme.
+    $expected = file_url_transform_relative(file_create_url('public://logo_with_scheme.png'));
+    $this->assertEquals($expected, theme_get_setting('logo.url', 'stark'));
+
+    $values = [
+      'default_logo' => FALSE,
+      'logo_path' => $theme->getPath() . '/logo_relative_path.gif',
+    ];
+    theme_settings_convert_to_config($values, $config)->save();
+
+    drupal_static_reset('theme_get_setting');
+
+    // Tests relative path.
+    $expected = '/' . $theme->getPath() . '/logo_relative_path.gif';
+    $this->assertEquals($expected, theme_get_setting('logo.url', 'stark'));
+
+    $theme_handler->install(['test_theme']);
+    $theme_handler->setDefault('test_theme');
+    $theme = $theme_handler->getTheme('test_theme');
+
+    drupal_static_reset('theme_get_setting');
+
+    // Tests logo set in test_theme.info.yml.
+    $expected = '/' . $theme->getPath() . '/images/logo2.svg';
+    $this->assertEquals($expected, theme_get_setting('logo.url', 'test_theme'));
+  }
+
 }

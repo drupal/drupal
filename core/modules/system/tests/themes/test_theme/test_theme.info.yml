@@ -14,6 +14,7 @@ description: 'Theme for testing the theme system'
 version: VERSION
 base theme: classy
 core: 8.x
+logo: images/logo2.svg
 stylesheets-remove:
   - '@system/css/js.module.css'
 libraries:
