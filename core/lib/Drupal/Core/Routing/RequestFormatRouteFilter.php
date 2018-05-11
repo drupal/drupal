@@ -85,7 +85,7 @@ class RequestFormatRouteFilter implements FilterInterface {
       $route_formats = !$route->hasRequirement('_format')
         ? ['html']
         : explode('|', $route->getRequirement('_format'));
-      return array_merge($carry,$route_formats);
+      return array_merge($carry, $route_formats);
     }, []);
     $formats = array_unique(array_filter($all_formats));
 
