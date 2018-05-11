@@ -2,6 +2,8 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
+use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\Block\ViewsBlock;
@@ -43,6 +45,13 @@ class Block extends DisplayPluginBase {
   protected $entityManager;
 
   /**
+   * The block manager.
+   *
+   * @var \Drupal\Core\Block\BlockManagerInterface
+   */
+  protected $blockManager;
+
+  /**
    * Constructs a new Block instance.
    *
    * @param array $configuration
@@ -53,11 +62,14 @@ class Block extends DisplayPluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
+   *   The block manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, BlockManagerInterface $block_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityManager = $entity_manager;
+    $this->blockManager = $block_manager;
   }
 
   /**
@@ -68,7 +80,8 @@ class Block extends DisplayPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')
+      $container->get('entity.manager'),
+      $container->get('plugin.manager.block')
     );
   }
 
@@ -363,6 +376,9 @@ class Block extends DisplayPluginBase {
       foreach ($this->entityManager->getStorage('block')->loadByProperties(['plugin' => $plugin_id]) as $block) {
         $block->delete();
       }
+    }
+    if ($this->blockManager instanceof CachedDiscoveryInterface) {
+      $this->blockManager->clearCachedDefinitions();
     }
   }
 
