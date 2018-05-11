@@ -108,7 +108,7 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalPostForm('admin/people', $edit, t('Apply to selected items'), [
       // Sort the table by username so that we know reliably which user will be
       // targeted with the blocking action.
-      'query' => ['order' => 'name', 'sort' => 'asc']
+      'query' => ['order' => 'name', 'sort' => 'asc'],
     ]);
     $site_name = $this->config('system.site')->get('name');
     $this->assertMailString('body', 'Your account on ' . $site_name . ' has been blocked.', 1, 'Blocked message found in the mail sent to user C.');
@@ -129,7 +129,7 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalPostForm('admin/people', $editunblock, t('Apply to selected items'), [
       // Sort the table by username so that we know reliably which user will be
       // targeted with the blocking action.
-      'query' => ['order' => 'name', 'sort' => 'asc']
+      'query' => ['order' => 'name', 'sort' => 'asc'],
     ]);
     $user_storage->resetCache([$user_c->id()]);
     $account = $user_storage->load($user_c->id());

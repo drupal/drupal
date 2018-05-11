@@ -35,10 +35,10 @@ abstract class FeedHalJsonTestBase extends FeedResourceTestBase {
     return $normalization + [
       '_links' => [
         'self' => [
-          'href' => $this->baseUrl . '/aggregator/sources/1?_format=hal_json'
+          'href' => $this->baseUrl . '/aggregator/sources/1?_format=hal_json',
         ],
         'type' => [
-          'href' => $this->baseUrl . '/rest/type/aggregator_feed/aggregator_feed'
+          'href' => $this->baseUrl . '/rest/type/aggregator_feed/aggregator_feed',
         ],
       ],
     ];
@@ -51,7 +51,7 @@ abstract class FeedHalJsonTestBase extends FeedResourceTestBase {
     return parent::getNormalizedPostEntity() + [
       '_links' => [
         'type' => [
-          'href' => $this->baseUrl . '/rest/type/aggregator_feed/aggregator_feed'
+          'href' => $this->baseUrl . '/rest/type/aggregator_feed/aggregator_feed',
         ],
       ],
     ];

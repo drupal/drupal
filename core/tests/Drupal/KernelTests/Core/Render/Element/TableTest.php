@@ -266,7 +266,7 @@ class TableTest extends KernelTestBase {
       [
         '1-one',
         [
-          'data' => '1-two'
+          'data' => '1-two',
         ],
         '1-three',
       ],

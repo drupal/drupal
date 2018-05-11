@@ -159,7 +159,7 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
             '@entity_type_singular' => $entity_type->getSingularLabel(),
             '@entity_type_plural' => $entity_type->getPluralLabel(),
           ]
-        )
+        ),
       ];
     }
 

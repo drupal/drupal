@@ -102,7 +102,7 @@ abstract class NodeTestBase extends BrowserTestBase {
       [
         '@result' => $result ? 'true' : 'false',
         '%op' => $operation,
-        '%langcode' => !empty($langcode) ? $langcode : 'empty'
+        '%langcode' => !empty($langcode) ? $langcode : 'empty',
       ]
     );
   }

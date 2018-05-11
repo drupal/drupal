@@ -114,7 +114,7 @@ class DialogTest extends AjaxTestBase {
       ], [], 'ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog']], [], NULL, [
       'submit' => [
         'dialogOptions[target]' => 'ajax-test-dialog-wrapper-1',
-      ]
+      ],
     ]);
     $this->assertEqual($normal_expected_response, $ajax_result[3], 'Normal dialog JSON response matches.');
 
@@ -126,7 +126,7 @@ class DialogTest extends AjaxTestBase {
         'textfield' => 'test',
       ], [], 'ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog']], [], NULL, [
       // Don't send a target.
-      'submit' => []
+      'submit' => [],
     ]);
     // Make sure the selector ID starts with the right string.
     $this->assert(strpos($ajax_result[3]['selector'], $no_target_expected_response['selector']) === 0, 'Selector starts with right string.');

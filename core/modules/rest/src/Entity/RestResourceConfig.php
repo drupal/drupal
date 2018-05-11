@@ -210,7 +210,7 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    */
   public function getPluginCollections() {
     return [
-      'resource' => new DefaultSingleLazyPluginCollection($this->getResourcePluginManager(), $this->plugin_id, [])
+      'resource' => new DefaultSingleLazyPluginCollection($this->getResourcePluginManager(), $this->plugin_id, []),
     ];
   }
 

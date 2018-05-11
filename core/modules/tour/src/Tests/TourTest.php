@@ -66,7 +66,7 @@ class TourTest extends TourTestBase {
 
     $this->drupalPlaceBlock('local_actions_block', [
       'theme' => 'seven',
-      'region' => 'content'
+      'region' => 'content',
     ]);
   }
 

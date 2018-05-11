@@ -157,7 +157,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
       ]);
 
     $expected = [
-      'Provides a filter plugin that is in use in the following filter formats: <em class="placeholder">Filter Format 1 Label, Filter Format 2 Label</em>'
+      'Provides a filter plugin that is in use in the following filter formats: <em class="placeholder">Filter Format 1 Label, Filter Format 2 Label</em>',
     ];
     $reasons = $this->filterUninstallValidator->validate($this->randomMachineName());
     $this->assertSame($expected, $this->castSafeStrings($reasons));

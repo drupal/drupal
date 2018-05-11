@@ -94,7 +94,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
         '#tag' => 'style',
         '#value' => $value,
         '#attributes' => [
-          'media' => $media
+          'media' => $media,
         ],
         '#browsers' => $browsers,
       ];
@@ -461,7 +461,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       'media' => 'all',
       'preprocess' => TRUE,
       'browsers' => [],
-      'data' => 'http://example.com/popular.js'
+      'data' => 'http://example.com/popular.js',
     ];
     $this->renderer->render($css_group);
   }

@@ -116,7 +116,7 @@ RSS;
       Request::create('/'),
       'foo',
       new Response($content, 200, [
-        'Content-Type' => 'application/rss+xml'
+        'Content-Type' => 'application/rss+xml',
       ])
     );
 

@@ -164,7 +164,7 @@ class BlockLanguageTest extends BrowserTestBase {
 
     // Change visibility to now depend on content language for this block.
     $edit = [
-      'visibility[language][context_mapping][language]' => '@language.current_language_context:language_content'
+      'visibility[language][context_mapping][language]' => '@language.current_language_context:language_content',
     ];
     $this->drupalPostForm('admin/structure/block/manage/' . $block_id, $edit, t('Save block'));
 

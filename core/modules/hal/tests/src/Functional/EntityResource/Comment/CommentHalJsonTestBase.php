@@ -90,7 +90,7 @@ abstract class CommentHalJsonTestBase extends CommentResourceTestBase {
               ],
             ],
             'uuid' => [
-              ['value' => $commented_entity->uuid()]
+              ['value' => $commented_entity->uuid()],
             ],
           ],
         ],
@@ -105,7 +105,7 @@ abstract class CommentHalJsonTestBase extends CommentResourceTestBase {
               ],
             ],
             'uuid' => [
-              ['value' => $author->uuid()]
+              ['value' => $author->uuid()],
             ],
             'lang' => 'en',
           ],

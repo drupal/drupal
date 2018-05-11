@@ -43,7 +43,7 @@ class VariableTranslationTest extends MigrateSqlSourceTestCase {
       'language' => 'mi',
       'site_slogan' => 'Ko whakamataku heke',
       'site_name' => 'ingoa_pae',
-    ]
+    ],
   ];
 
   /**

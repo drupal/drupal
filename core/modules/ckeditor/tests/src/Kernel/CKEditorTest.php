@@ -50,7 +50,7 @@ class CKEditorTest extends KernelTestBase {
           'status' => 1,
           'settings' => [
             'allowed_html' => '<h2 id> <h3> <h4> <h5> <h6> <p> <br> <strong> <a href hreflang>',
-          ]
+          ],
         ],
       ],
     ]);

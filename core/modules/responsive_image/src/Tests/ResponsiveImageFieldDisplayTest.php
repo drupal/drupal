@@ -51,7 +51,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       'create article content',
       'edit any article content',
       'delete any article content',
-      'administer image styles'
+      'administer image styles',
     ]);
     $this->drupalLogin($this->adminUser);
     // Add responsive image style.

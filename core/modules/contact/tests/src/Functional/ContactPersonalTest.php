@@ -98,7 +98,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $placeholders = [
       '@sender_name' => $this->webUser->username,
       '@sender_email' => $this->webUser->getEmail(),
-      '@recipient_name' => $this->contactUser->getUsername()
+      '@recipient_name' => $this->contactUser->getUsername(),
     ];
     $this->assertRaw(new FormattableMarkup('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
     // Ensure an unescaped version of the email does not exist anywhere.

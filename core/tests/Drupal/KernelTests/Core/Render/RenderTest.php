@@ -36,7 +36,7 @@ class RenderTest extends KernelTestBase {
       'library' => [
         'test/generic_preprocess',
         'test/specific_preprocess',
-      ]
+      ],
     ];
     $this->assertEqual($expected_attached, $test_element['#attached'], 'All expected assets from theme preprocess hooks attached.');
 

@@ -51,7 +51,7 @@ class DateHelperTest extends UnitTestCase {
         5 => 'Friday',
         6 => 'Saturday',
         0 => 'Sunday',
-      ]
+      ],
     ];
     $data[] = [
       2,

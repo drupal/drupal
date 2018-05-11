@@ -221,7 +221,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
       [
         'command' => 'editorGetUntransformedText',
         'data' => 'Test',
-      ]
+      ],
     ];
 
     $ajax_response_attachments_processor = \Drupal::service('ajax_response.attachments_processor');

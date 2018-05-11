@@ -141,7 +141,7 @@ abstract class PluginSettingsBase extends PluginBase implements PluginSettingsIn
     if (!empty($this->thirdPartySettings)) {
       // Create dependencies on any modules providing third party settings.
       return [
-        'module' => array_keys($this->thirdPartySettings)
+        'module' => array_keys($this->thirdPartySettings),
       ];
     }
     return [];

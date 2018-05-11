@@ -54,7 +54,7 @@ abstract class FileUploadHalJsonTestBase extends FileUploadResourceTestBase {
           'href' => $this->baseUrl . '/rest/type/file/file',
         ],
         $this->baseUrl . '/rest/relation/file/file/uid' => [
-          ['href' => $this->baseUrl . '/user/' . $this->account->id() . '?_format=hal_json']
+          ['href' => $this->baseUrl . '/user/' . $this->account->id() . '?_format=hal_json'],
         ],
       ],
       '_embedded' => [

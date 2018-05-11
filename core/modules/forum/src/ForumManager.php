@@ -184,7 +184,7 @@ class ForumManager implements ForumManagerInterface {
         'cid',
         'last_comment_uid',
         'last_comment_timestamp',
-        'comment_count'
+        'comment_count',
       ]);
 
       $query->join('forum_index', 'f', 'f.nid = n.nid');
@@ -435,7 +435,7 @@ class ForumManager implements ForumManagerInterface {
       'container' => 1,
       'parents' => [],
       'isIndex' => TRUE,
-      'vid' => $vid
+      'vid' => $vid,
     ]);
 
     // Load the tree below.

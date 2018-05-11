@@ -54,7 +54,7 @@ class ViewTest extends UnitTestCase {
       ->method('load')
       ->willReturnMap([
         ['this', $view_this],
-        ['other', $view_other]
+        ['other', $view_other],
     ]);
     $this->viewHandler->view->storage = $view_this;
 

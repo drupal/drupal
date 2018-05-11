@@ -29,7 +29,7 @@ class TestItemWithPreconfiguredOptions extends TestItem implements Preconfigured
         'field_storage_config' => [
           'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
           'settings' => [
-            'test_field_storage_setting' => 'preconfigured_storage_setting'
+            'test_field_storage_setting' => 'preconfigured_storage_setting',
           ],
         ],
         'field_config' => [

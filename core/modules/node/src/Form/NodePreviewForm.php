@@ -107,7 +107,7 @@ class NodePreviewForm extends FormBase {
       '#default_value' => $view_mode,
       '#attributes' => [
         'data-drupal-autosubmit' => TRUE,
-      ]
+      ],
     ];
 
     $form['submit'] = [

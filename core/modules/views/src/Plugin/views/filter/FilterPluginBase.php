@@ -1103,7 +1103,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#required' => TRUE,
       '#attributes' => [
         'class' => ['default-radios'],
-      ]
+      ],
     ];
     // From all groups, let chose which is the default.
     $form['group_info']['default_group_multiple'] = [
@@ -1112,7 +1112,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#default_value' => $this->options['group_info']['default_group_multiple'],
       '#attributes' => [
         'class' => ['default-checkboxes'],
-      ]
+      ],
     ];
 
     $form['group_info']['add_group'] = [

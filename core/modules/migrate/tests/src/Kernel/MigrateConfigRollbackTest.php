@@ -34,7 +34,7 @@ class MigrateConfigRollbackTest extends MigrateTestBase {
     $ids = [
       'id' =>
         [
-          'type' => 'string'
+          'type' => 'string',
         ],
     ];
     $definition = [
@@ -100,12 +100,12 @@ class MigrateConfigRollbackTest extends MigrateTestBase {
     $ids = [
       'id' =>
         [
-          'type' => 'string'
+          'type' => 'string',
         ],
       'language' =>
         [
-          'type' => 'string'
-        ]
+          'type' => 'string',
+        ],
     ];
     $definition = [
       'id' => 'i18n_config',

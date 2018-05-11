@@ -59,7 +59,7 @@ class MachineNameTest extends UnitTestCase {
         'maxlength' => 32,
         'additional_property' => TRUE,
         '#additional_property_with_hash' => TRUE,
-      ]
+      ],
     ];
 
     $complete_form = [
@@ -67,7 +67,7 @@ class MachineNameTest extends UnitTestCase {
         '#type' => 'textfield',
         '#id' => 'source',
       ],
-      'test_machine_name' => $element
+      'test_machine_name' => $element,
     ];
 
     $form_state->setCompleteForm($complete_form);

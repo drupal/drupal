@@ -31,7 +31,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    * @var array
    */
   protected $permissions = [
-    'administer blocks'
+    'administer blocks',
   ];
 
   /**
@@ -80,7 +80,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
     $block_content = BlockContent::create([
       'info' => $title,
       'type' => $bundle,
-      'langcode' => 'en'
+      'langcode' => 'en',
     ]);
     if ($block_content && $save === TRUE) {
       $block_content->save();

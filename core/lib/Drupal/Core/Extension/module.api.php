@@ -933,7 +933,7 @@ function hook_requirements($phase) {
     $requirements['drupal'] = [
       'title' => t('Drupal'),
       'value' => \Drupal::VERSION,
-      'severity' => REQUIREMENT_INFO
+      'severity' => REQUIREMENT_INFO,
     ];
   }
 

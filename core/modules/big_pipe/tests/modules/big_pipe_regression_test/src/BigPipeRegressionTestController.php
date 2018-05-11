@@ -39,7 +39,7 @@ class BigPipeRegressionTestController {
   public static function currentTime() {
     return [
       '#markup' => '<time datetime="' . date('Y-m-d', time()) . '"></time>',
-      '#cache' => ['max-age' => 0]
+      '#cache' => ['max-age' => 0],
     ];
   }
 

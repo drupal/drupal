@@ -46,7 +46,7 @@ class StatisticsAttachedTest extends BrowserTestBase {
     $node = Node::create([
       'type' => 'page',
       'title' => 'Page node',
-      'body' => 'body text'
+      'body' => 'body text',
     ]);
     $node->save();
     $this->drupalGet('node/' . $node->id());

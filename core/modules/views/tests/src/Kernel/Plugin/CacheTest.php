@@ -74,7 +74,7 @@ class CacheTest extends ViewsKernelTestBase {
       'options' => [
         'results_lifespan' => '3600',
         'output_lifespan' => '3600',
-      ]
+      ],
     ]);
 
     // Test the default (non-paged) display.
@@ -188,7 +188,7 @@ class CacheTest extends ViewsKernelTestBase {
       'options' => [
         'results_lifespan' => '3600',
         'output_lifespan' => '3600',
-      ]
+      ],
     ]);
 
     $mapping = ['views_test_data_name' => 'name'];
@@ -271,7 +271,7 @@ class CacheTest extends ViewsKernelTestBase {
       'type' => 'time',
       'options' => [
         'output_lifespan' => '3600',
-      ]
+      ],
     ]);
 
     $output = $view->buildRenderable();
@@ -330,7 +330,7 @@ class CacheTest extends ViewsKernelTestBase {
       'options' => [
         'results_lifespan' => '3600',
         'output_lifespan' => '3600',
-      ]
+      ],
     ]);
     $this->executeView($view);
 
@@ -392,9 +392,9 @@ class CacheTest extends ViewsKernelTestBase {
     $options = [
       'default_argument_type' => 'argument_default_test',
       'default_argument_options' => [
-        'value' => 'John'
+        'value' => 'John',
       ],
-      'default_action' => 'default'
+      'default_action' => 'default',
     ];
     $view->addHandler('default', 'argument', 'views_test_data', 'name', $options);
     $view->initHandlers();

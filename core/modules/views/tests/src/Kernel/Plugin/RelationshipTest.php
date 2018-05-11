@@ -78,8 +78,8 @@ class RelationshipTest extends RelationshipJoinTestBase {
     $expected_result = [
       [
         'name' => 'John',
-        'uid' => 1
-      ]
+        'uid' => 1,
+      ],
     ];
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
     $view->destroy();
@@ -101,8 +101,8 @@ class RelationshipTest extends RelationshipJoinTestBase {
     $expected_result = [
       [
         'name' => 'John',
-        'uid' => 1
-      ]
+        'uid' => 1,
+      ],
     ];
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
     $view->destroy();

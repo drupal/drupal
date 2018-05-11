@@ -119,7 +119,7 @@ class ToolkitGdTest extends KernelTestBase {
       'gif' => IMAGETYPE_GIF,
       'jpeg' => IMAGETYPE_JPEG,
       'jpg' => IMAGETYPE_JPEG,
-      'jpe' => IMAGETYPE_JPEG
+      'jpe' => IMAGETYPE_JPEG,
     ];
     $image = $this->imageFactory->get();
     foreach ($expected_image_types as $extension => $expected_image_type) {
@@ -266,7 +266,7 @@ class ToolkitGdTest extends KernelTestBase {
             array_fill(0, 3, 76) + [3 => 0],
             array_fill(0, 3, 149) + [3 => 0],
             array_fill(0, 3, 29) + [3 => 0],
-            array_fill(0, 3, 225) + [3 => 127]
+            array_fill(0, 3, 225) + [3 => 127],
           ],
         ],
       ];

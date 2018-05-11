@@ -102,7 +102,7 @@ class NodeForm extends ContentEntityForm {
     if ($this->operation == 'edit') {
       $form['#title'] = $this->t('<em>Edit @type</em> @title', [
         '@type' => node_get_type_label($node),
-        '@title' => $node->label()
+        '@title' => $node->label(),
       ]);
     }
 

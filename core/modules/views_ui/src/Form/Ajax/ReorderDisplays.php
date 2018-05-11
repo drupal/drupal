@@ -44,7 +44,7 @@ class ReorderDisplays extends ViewsFormBase {
     ]);
     $form['view'] = [
       '#type' => 'value',
-      '#value' => $view
+      '#value' => $view,
     ];
 
     $displays = $view->get('display');
@@ -68,7 +68,7 @@ class ReorderDisplays extends ViewsFormBase {
           'action' => 'order',
           'relationship' => 'sibling',
           'group' => 'weight',
-        ]
+        ],
       ],
       '#tree' => TRUE,
       '#prefix' => '<div class="scroll" data-drupal-views-scroll>',

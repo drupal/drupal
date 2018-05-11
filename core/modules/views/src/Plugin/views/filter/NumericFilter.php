@@ -300,7 +300,7 @@ class NumericFilter extends FilterPluginBase {
         // Ensure there is something in the 'value'.
         $form['value'] = [
           '#type' => 'value',
-          '#value' => NULL
+          '#value' => NULL,
         ];
       }
     }

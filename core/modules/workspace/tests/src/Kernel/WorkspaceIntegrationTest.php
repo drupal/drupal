@@ -381,7 +381,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     $this->switchToWorkspace('live');
     $node_1 = $this->createNode([
-      'title' => 'live node 1'
+      'title' => 'live node 1',
     ]);
     $entity_test = EntityTestMulRev::create([
       'name' => 'live entity_test_mulrev',

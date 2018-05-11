@@ -99,7 +99,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     $node = $this->drupalCreateNode([
       'type' => $node_type,
       $field_name => [
-        ['status' => CommentItemInterface::OPEN]
+        ['status' => CommentItemInterface::OPEN],
       ],
     ]);
     $values['entity_id'] = $node->id();

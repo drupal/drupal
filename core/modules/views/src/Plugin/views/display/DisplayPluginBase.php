@@ -1032,13 +1032,13 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         'js' => 'nojs',
         'view' => $this->view->storage->id(),
         'display_id' => $this->display['id'],
-        'type' => $section
+        'type' => $section,
       ], [
         'attributes' => [
           'class' => ['views-ajax-link', $class],
           'title' => $title,
-          'id' => Html::getUniqueId('views-' . $this->display['id'] . '-' . $section)
-        ]
+          'id' => Html::getUniqueId('views-' . $this->display['id'] . '-' . $section),
+        ],
     ]));
   }
 
@@ -2586,7 +2586,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   public function getPagerText() {
     return [
       'items per page title' => $this->t('Items to display'),
-      'items per page description' => $this->t('Enter 0 for no limit.')
+      'items per page description' => $this->t('Enter 0 for no limit.'),
     ];
   }
 

@@ -100,7 +100,7 @@ class TwigThemeTestController {
   public function renderable() {
     return [
       '#theme' => 'twig_theme_test_renderable',
-      '#renderable' => new ExampleRenderable()
+      '#renderable' => new ExampleRenderable(),
     ];
   }
 

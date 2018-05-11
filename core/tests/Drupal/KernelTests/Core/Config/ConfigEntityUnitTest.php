@@ -97,7 +97,7 @@ class ConfigEntityUnitTest extends KernelTestBase {
     $entity = $this->storage->create([
       'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
-      'style' => 999
+      'style' => 999,
     ]);
     $entity->save();
     $this->assertSame('999', $entity->style);

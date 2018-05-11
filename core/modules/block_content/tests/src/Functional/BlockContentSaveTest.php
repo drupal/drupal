@@ -39,7 +39,7 @@ class BlockContentSaveTest extends BlockContentTestBase {
       'info' => $info,
       'body' => ['value' => $this->randomMachineName(32)],
       'type' => 'basic',
-      'id' => $test_id
+      'id' => $test_id,
     ];
     $block = BlockContent::create($block_array);
     $block->enforceIsNew(TRUE);

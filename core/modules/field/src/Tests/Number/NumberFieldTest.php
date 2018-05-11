@@ -56,7 +56,7 @@ class NumberFieldTest extends WebTestBase {
       ->setComponent($field_name, [
         'type' => 'number',
         'settings' => [
-          'placeholder' => '0.00'
+          'placeholder' => '0.00',
         ],
       ])
       ->save();
@@ -150,7 +150,7 @@ class NumberFieldTest extends WebTestBase {
       ->setComponent($field_name, [
         'type' => 'number',
         'settings' => [
-          'placeholder' => '4'
+          'placeholder' => '4',
         ],
       ])
       ->save();
@@ -169,12 +169,12 @@ class NumberFieldTest extends WebTestBase {
         'value' => [
           'type' => 'int',
           'unsigned' => '',
-          'size' => 'normal'
+          'size' => 'normal',
         ],
       ],
       'unique keys' => [],
       'indexes' => [],
-      'foreign keys' => []
+      'foreign keys' => [],
     ];
     $this->assertEqual($storage->getSchema(), $expected);
 
@@ -289,7 +289,7 @@ class NumberFieldTest extends WebTestBase {
       ->setComponent($field_name, [
         'type' => 'number',
         'settings' => [
-          'placeholder' => '0.00'
+          'placeholder' => '0.00',
         ],
       ])
       ->save();
@@ -392,7 +392,7 @@ class NumberFieldTest extends WebTestBase {
       'bundle' => $type,
       'settings' => [
         'prefix' => $prefix,
-        'suffix' => $suffix
+        'suffix' => $suffix,
       ],
     ])->save();
 
@@ -402,7 +402,7 @@ class NumberFieldTest extends WebTestBase {
       'bundle' => $type,
       'settings' => [
         'prefix' => $prefix,
-        'suffix' => $suffix
+        'suffix' => $suffix,
       ],
     ])->save();
 
@@ -410,13 +410,13 @@ class NumberFieldTest extends WebTestBase {
       ->setComponent($float_field, [
         'type' => 'number',
         'settings' => [
-          'placeholder' => '0.00'
+          'placeholder' => '0.00',
         ],
       ])
       ->setComponent($integer_field, [
         'type' => 'number',
         'settings' => [
-          'placeholder' => '0.00'
+          'placeholder' => '0.00',
         ],
       ])
       ->save();

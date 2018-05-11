@@ -84,7 +84,7 @@ class NodeHalJsonAnonTest extends NodeResourceTestBase {
               ],
             ],
             'uuid' => [
-              ['value' => $author->uuid()]
+              ['value' => $author->uuid()],
             ],
           ],
         ],
@@ -99,7 +99,7 @@ class NodeHalJsonAnonTest extends NodeResourceTestBase {
               ],
             ],
             'uuid' => [
-              ['value' => $author->uuid()]
+              ['value' => $author->uuid()],
             ],
             'lang' => 'en',
           ],

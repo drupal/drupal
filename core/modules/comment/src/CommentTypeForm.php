@@ -111,7 +111,7 @@ class CommentTypeForm extends EntityForm {
         '#default_value' => $comment_type->getTargetEntityTypeId(),
         '#title' => t('Target entity type'),
         '#options' => $options,
-        '#description' => t('The target entity type can not be changed after the comment type has been created.')
+        '#description' => t('The target entity type can not be changed after the comment type has been created.'),
       ];
     }
     else {

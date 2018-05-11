@@ -55,7 +55,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
-      'type' => 'test_field'
+      'type' => 'test_field',
     ]);
     $field_storage->save();
     $field = FieldConfig::create([
@@ -185,7 +185,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
-      'type' => 'test_field'
+      'type' => 'test_field',
     ]);
     $field_storage->save();
     $field = FieldConfig::create([
@@ -234,7 +234,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
-      'type' => 'text'
+      'type' => 'text',
     ]);
     $field_storage->save();
     $field = FieldConfig::create([

@@ -30,7 +30,7 @@ class TableSelectTest extends UnitTestCase {
     $element['#value'] = 0;
 
     $element['#options'][] = [
-      'title' => new Link('my-text', Url::fromRoute('<front>'))
+      'title' => new Link('my-text', Url::fromRoute('<front>')),
     ];
 
     $element['#attributes'] = [];

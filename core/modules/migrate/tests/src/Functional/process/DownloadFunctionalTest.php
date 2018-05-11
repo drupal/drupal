@@ -41,7 +41,7 @@ class DownloadFunctionalTest extends BrowserTestBase {
         'uri' => [
           'plugin' => 'download',
           'source' => ['url', 'uri'],
-        ]
+        ],
       ],
       'destination' => [
         'plugin' => 'entity:file',

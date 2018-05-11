@@ -116,7 +116,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
 
     $expected_build = [
       '#type' => 'operations',
-      '#links' => $operations
+      '#links' => $operations,
     ];
     $expected_build['#links']['foo']['query'] = ['destination' => 'foobar'];
     $build = $this->plugin->render($result);
@@ -158,7 +158,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
 
     $expected_build = [
       '#type' => 'operations',
-      '#links' => $operations
+      '#links' => $operations,
     ];
     $build = $this->plugin->render($result);
     $this->assertSame($expected_build, $build);

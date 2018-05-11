@@ -177,7 +177,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
       $this->renderer->addCacheableDependency($build['table'], $create_access);
       if ($create_access->isAllowed()) {
         $build['table']['#empty'] = t('No vocabularies available. <a href=":link">Add vocabulary</a>.', [
-          ':link' => Url::fromRoute('entity.taxonomy_vocabulary.add_form')->toString()
+          ':link' => Url::fromRoute('entity.taxonomy_vocabulary.add_form')->toString(),
         ]);
       }
       else {

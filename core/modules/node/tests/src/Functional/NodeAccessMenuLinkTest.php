@@ -33,7 +33,7 @@ class NodeAccessMenuLinkTest extends NodeTestBase {
     $this->contentAdminUser = $this->drupalCreateUser([
       'access content',
       'administer content types',
-      'administer menu'
+      'administer menu',
     ]);
 
     $this->config('user.role.' . RoleInterface::ANONYMOUS_ID)->set('permissions', [])->save();

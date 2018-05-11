@@ -34,13 +34,13 @@ class RowUITest extends UITestBase {
     $this->assertFieldByName('row[type]', 'fields', 'The default row plugin selected in the UI should be fields.');
 
     $edit = [
-      'row[type]' => 'test_row'
+      'row[type]' => 'test_row',
     ];
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->assertFieldByName('row_options[test_option]', NULL, 'Make sure the custom settings form from the test plugin appears.');
     $random_name = $this->randomMachineName();
     $edit = [
-      'row_options[test_option]' => $random_name
+      'row_options[test_option]' => $random_name,
     ];
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->drupalGet($row_options_url);

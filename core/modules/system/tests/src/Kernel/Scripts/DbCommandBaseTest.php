@@ -35,7 +35,7 @@ class DbCommandBaseTest extends KernelTestBase {
     Database::addConnectionInfo('magic_db', 'default', Database::getConnectionInfo('default')['default']);
 
     $command_tester->execute([
-      '--database' => 'magic_db'
+      '--database' => 'magic_db',
     ]);
     $this->assertEquals('magic_db', $command->getDatabaseConnection($command_tester->getInput())->getKey(),
        'Special db key is returned');
@@ -48,7 +48,7 @@ class DbCommandBaseTest extends KernelTestBase {
     $command = new DbCommandBaseTester();
     $command_tester = new CommandTester($command);
     $command_tester->execute([
-      '--database' => 'dne'
+      '--database' => 'dne',
     ]);
     $this->setExpectedException(ConnectionNotDefinedException::class);
     $command->getDatabaseConnection($command_tester->getInput());
@@ -63,13 +63,13 @@ class DbCommandBaseTest extends KernelTestBase {
     $command = new DbCommandBaseTester();
     $command_tester = new CommandTester($command);
     $command_tester->execute([
-      '-db-url' => $connection_info['driver'] . '://' . $connection_info['username'] . ':' . $connection_info['password'] . '@' . $connection_info['host'] . '/' . $connection_info['database']
+      '-db-url' => $connection_info['driver'] . '://' . $connection_info['username'] . ':' . $connection_info['password'] . '@' . $connection_info['host'] . '/' . $connection_info['database'],
     ]);
     $this->assertEquals('db-tools', $command->getDatabaseConnection($command_tester->getInput())->getKey());
 
     Database::removeConnection('db-tools');
     $command_tester->execute([
-      '--database-url' => $connection_info['driver'] . '://' . $connection_info['username'] . ':' . $connection_info['password'] . '@' . $connection_info['host'] . '/' . $connection_info['database']
+      '--database-url' => $connection_info['driver'] . '://' . $connection_info['username'] . ':' . $connection_info['password'] . '@' . $connection_info['host'] . '/' . $connection_info['database'],
     ]);
     $this->assertEquals('db-tools', $command->getDatabaseConnection($command_tester->getInput())->getKey());
   }

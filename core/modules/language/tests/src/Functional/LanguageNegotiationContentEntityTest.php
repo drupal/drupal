@@ -90,7 +90,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
     $config->set('configurable', [LanguageInterface::TYPE_INTERFACE, LanguageInterface::TYPE_CONTENT]);
     $config->set('negotiation.language_content.enabled', [
       LanguageNegotiationUrl::METHOD_ID => 0,
-      LanguageNegotiationContentEntity::METHOD_ID => 1
+      LanguageNegotiationContentEntity::METHOD_ID => 1,
     ]);
     $config->save();
 
@@ -105,7 +105,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
     // language-url.
     $config->set('negotiation.language_content.enabled', [
       LanguageNegotiationContentEntity::METHOD_ID => 0,
-      LanguageNegotiationUrl::METHOD_ID => 1
+      LanguageNegotiationUrl::METHOD_ID => 1,
     ]);
     $config->save();
 

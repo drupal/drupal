@@ -72,7 +72,7 @@ class ActionAdminManageForm extends FormBase {
       '#empty_option' => $this->t('- Select -'),
     ];
     $form['parent']['actions'] = [
-      '#type' => 'actions'
+      '#type' => 'actions',
     ];
     $form['parent']['actions']['submit'] = [
       '#type' => 'submit',

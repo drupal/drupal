@@ -97,7 +97,7 @@ class EntityDeriver implements ContainerDeriverInterface {
         if ($bundle !== $entity_type_id) {
           $this->derivatives[$entity_type_id . ':' . $bundle] = [
             'label' => $bundle_info['label'],
-            'constraints' => $this->derivatives[$entity_type_id]['constraints']
+            'constraints' => $this->derivatives[$entity_type_id]['constraints'],
           ] + $base_plugin_definition;
         }
       }

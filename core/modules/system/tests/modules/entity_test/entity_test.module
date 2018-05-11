@@ -306,7 +306,7 @@ function entity_test_entity_extra_field_info() {
         'description' => t('An extra field on the display side, hidden by default.'),
         'visible' => FALSE,
       ],
-    ]
+    ],
   ];
 
   return $extra;

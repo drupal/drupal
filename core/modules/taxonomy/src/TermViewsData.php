@@ -61,7 +61,7 @@ class TermViewsData extends EntityViewsData {
         'argument field' => 'tid',
         'base'   => 'node_field_data',
         'field'  => 'nid',
-        'relationship' => 'node_field_data:term_node_tid'
+        'relationship' => 'node_field_data:term_node_tid',
       ],
     ];
 
@@ -216,7 +216,7 @@ class TermViewsData extends EntityViewsData {
       'title' => $this->t('Post date'),
       'help' => $this->t('The date the content related to a term was posted.'),
       'sort' => [
-        'id' => 'date'
+        'id' => 'date',
       ],
       'filter' => [
         'id' => 'date',

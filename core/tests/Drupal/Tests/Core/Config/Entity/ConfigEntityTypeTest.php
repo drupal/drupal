@@ -85,7 +85,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
     $this->setExpectedException(ConfigEntityStorageClassException::class, '\Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage is not \Drupal\Core\Config\Entity\ConfigEntityStorage or it does not extend it');
     new ConfigEntityType([
       'id' => 'example_config_entity_type',
-      'handlers' => ['storage' => '\Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage']
+      'handlers' => ['storage' => '\Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage'],
     ]);
   }
 

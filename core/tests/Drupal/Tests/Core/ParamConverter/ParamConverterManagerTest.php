@@ -80,7 +80,7 @@ class ParamConverterManagerTest extends UnitTestCase {
 
     $converters[0]['sorted'] = [
       'strawberry', 'raspberry', 'pear', 'peach',
-      'pineapple', 'banana', 'apple'
+      'pineapple', 'banana', 'apple',
     ];
 
     $converters[1]['unsorted'] = [
@@ -95,7 +95,7 @@ class ParamConverterManagerTest extends UnitTestCase {
 
     $converters[1]['sorted'] = [
       'giraffe', 'zebra', 'eagle', 'ape',
-      'cat', 'puppy', 'llama'
+      'cat', 'puppy', 'llama',
     ];
 
     return $converters;

@@ -32,7 +32,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
   public static function defaultFieldSettings() {
     return [
       'title' => DRUPAL_OPTIONAL,
-      'link_type' => LinkItemInterface::LINK_GENERIC
+      'link_type' => LinkItemInterface::LINK_GENERIC,
     ] + parent::defaultFieldSettings();
   }
 

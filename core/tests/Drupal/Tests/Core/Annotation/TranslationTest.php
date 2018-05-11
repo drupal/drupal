@@ -55,7 +55,7 @@ class TranslationTest extends UnitTestCase {
       [
         'value' => 'Foo',
       ],
-      'Foo'
+      'Foo',
     ];
     $random = $this->randomMachineName();
     $random_html_entity = '&' . $random;

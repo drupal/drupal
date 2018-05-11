@@ -50,9 +50,9 @@ class ConfigDependencyTest extends EntityKernelTestBase {
         'id' => 'entity1',
         'dependencies' => [
           'enforced' => [
-            'module' => ['node']
-          ]
-        ]
+            'module' => ['node'],
+          ],
+        ],
       ]
     );
     $entity1->save();
@@ -200,7 +200,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
         'id' => 'entity1',
         'dependencies' => [
           'enforced' => [
-            'module' => ['node', 'config_test']
+            'module' => ['node', 'config_test'],
           ],
         ],
       ]
@@ -264,7 +264,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
         'id' => 'entity_' . $entity_id_suffixes[0],
         'dependencies' => [
           'enforced' => [
-            'module' => ['node', 'config_test']
+            'module' => ['node', 'config_test'],
           ],
         ],
       ]
@@ -309,7 +309,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
         'dependencies' => [
           'enforced' => [
             'config' => [$entity_1->getConfigDependencyName()],
-            'module' => ['node', 'config_test']
+            'module' => ['node', 'config_test'],
           ],
         ],
       ]
@@ -508,7 +508,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     // Test dependencies between configuration entities.
     $entity1 = $storage->create(
       [
-        'id' => 'entity1'
+        'id' => 'entity1',
       ]
     );
     $entity1->save();
@@ -621,7 +621,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
         'id' => 'entity1',
         'dependencies' => [
           'enforced' => [
-            'content' => [$content_entity->getConfigDependencyName()]
+            'content' => [$content_entity->getConfigDependencyName()],
           ],
         ],
       ]
@@ -632,7 +632,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
         'id' => 'entity2',
         'dependencies' => [
           'enforced' => [
-            'config' => [$entity1->getConfigDependencyName()]
+            'config' => [$entity1->getConfigDependencyName()],
           ],
         ],
       ]

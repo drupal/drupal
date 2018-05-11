@@ -91,7 +91,7 @@ class RegexDirectoryIteratorTest extends TestCase {
         [
           '1.yml',
           '2.yml',
-          '3.txt'
+          '3.txt',
         ],
       ],
       [

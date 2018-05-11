@@ -31,7 +31,7 @@ class TrackerUserUidTest extends TrackerTestBase {
       [
         'nid' => $this->node->id(),
         'title' => $this->node->label(),
-      ]
+      ],
     ];
 
     $view = Views::getView('test_tracker_user_uid');

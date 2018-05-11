@@ -31,7 +31,7 @@ class TrackerUserTest extends MigrateSqlSourceTestBase {
         'uid' => '2',
         'published' => '1',
         'changed' => '1421727536',
-      ]
+      ],
     ];
 
     // The expected results are identical to the source data.

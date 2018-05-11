@@ -134,7 +134,7 @@ function views_ui_preprocess_views_view(&$variables) {
   // Render title for the admin preview.
   if (!empty($view->live_preview)) {
     $variables['title'] = [
-      '#markup' => $view->getTitle()
+      '#markup' => $view->getTitle(),
     ];
   }
 

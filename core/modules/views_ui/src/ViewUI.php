@@ -713,7 +713,7 @@ class ViewUI implements ViewEntityInterface {
                 'data' => [
                   '#markup' => $path,
                 ],
-              ]
+              ],
             ];
           }
           if ($show_stats) {

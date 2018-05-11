@@ -98,7 +98,7 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
       if (!$original_state->canTransitionTo($new_state->id())) {
         $this->context->addViolation($constraint->message, [
           '%from' => $original_state->label(),
-          '%to' => $new_state->label()
+          '%to' => $new_state->label(),
         ]);
       }
     }

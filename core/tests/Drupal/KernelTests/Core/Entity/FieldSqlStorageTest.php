@@ -88,7 +88,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $this->fieldStorage->save();
     $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
-      'bundle' => $entity_type
+      'bundle' => $entity_type,
     ]);
     $this->field->save();
 

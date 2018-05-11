@@ -77,7 +77,7 @@ class WorkflowEditForm extends EntityForm {
     $header = [
       'state' => $this->t('State'),
       'weight' => $this->t('Weight'),
-      'operations' => $this->t('Operations')
+      'operations' => $this->t('Operations'),
     ];
     $form['states_container'] = [
       '#type' => 'details',
@@ -117,14 +117,14 @@ class WorkflowEditForm extends EntityForm {
         'edit' => [
           'title' => $this->t('Edit'),
           'url' => Url::fromRoute('entity.workflow.edit_state_form', ['workflow' => $workflow->id(), 'workflow_state' => $state->id()]),
-        ]
+        ],
       ];
       if ($this->entity->access('delete-state:' . $state->id())) {
         $links['delete'] = [
           'title' => t('Delete'),
           'url' => Url::fromRoute('entity.workflow.delete_state_form', [
             'workflow' => $workflow->id(),
-            'workflow_state' => $state->id()
+            'workflow_state' => $state->id(),
           ]),
         ];
       }
@@ -155,7 +155,7 @@ class WorkflowEditForm extends EntityForm {
       'weight' => $this->t('Weight'),
       'from' => $this->t('From'),
       'to' => $this->t('To'),
-      'operations' => $this->t('Operations')
+      'operations' => $this->t('Operations'),
     ];
     $form['transitions_container'] = [
       '#type' => 'details',

@@ -61,7 +61,7 @@ class ColorTest extends TestCase {
     // Add invalid data types (hex value must be a string).
     foreach ([
       1, 12, 1234, 12345, 123456, 1234567, 12345678, 123456789, 123456789,
-      -1, PHP_INT_MAX, PHP_INT_MAX + 1, -PHP_INT_MAX, 0x0, 0x010
+      -1, PHP_INT_MAX, PHP_INT_MAX + 1, -PHP_INT_MAX, 0x0, 0x010,
     ] as $value) {
       $invalid[] = [$value, '', TRUE];
     }

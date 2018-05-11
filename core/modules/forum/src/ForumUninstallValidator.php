@@ -67,7 +67,7 @@ class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
         }
         else {
           $reasons[] = $this->t('To uninstall Forum, first delete all %vocabulary terms', [
-            '%vocabulary' => $vocabulary->label()
+            '%vocabulary' => $vocabulary->label(),
           ]);
         }
       }

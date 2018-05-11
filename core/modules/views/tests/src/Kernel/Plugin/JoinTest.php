@@ -129,12 +129,12 @@ class JoinTest extends RelationshipJoinTestBase {
     $configuration['extra'] = [
       [
         'field' => 'name',
-        'value' => $random_name_1
+        'value' => $random_name_1,
       ],
       [
         'field' => 'name',
         'value' => $random_name_2,
-        'operator' => '<>'
+        'operator' => '<>',
       ],
     ];
     $join = $this->manager->createInstance('standard', $configuration);
@@ -156,7 +156,7 @@ class JoinTest extends RelationshipJoinTestBase {
     $configuration['extra'] = [
       [
         'field' => 'name',
-        'value' => $random_name_1
+        'value' => $random_name_1,
       ],
       [
         'field' => 'name',
@@ -178,7 +178,7 @@ class JoinTest extends RelationshipJoinTestBase {
     $configuration['extra'] = [
       [
         'field' => 'langcode',
-        'value' => 'en'
+        'value' => 'en',
       ],
       [
         'left_field' => 'status',
@@ -187,7 +187,7 @@ class JoinTest extends RelationshipJoinTestBase {
       ],
       [
         'field' => 'name',
-        'left_field' => 'name'
+        'left_field' => 'name',
       ],
     ];
     $join = $this->manager->createInstance('standard', $configuration);

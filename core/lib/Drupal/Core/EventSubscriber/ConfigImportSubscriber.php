@@ -214,19 +214,19 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
         if (!isset($core_extension['module'][$owner]) && isset($module_data[$owner])) {
           $message = $this->t('Configuration %name depends on the %owner module that will not be installed after import.', [
             '%name' => $name,
-            '%owner' => $module_data[$owner]->info['name']
+            '%owner' => $module_data[$owner]->info['name'],
           ]);
         }
         elseif (!isset($core_extension['theme'][$owner]) && isset($theme_data[$owner])) {
           $message = $this->t('Configuration %name depends on the %owner theme that will not be installed after import.', [
             '%name' => $name,
-            '%owner' => $theme_data[$owner]->info['name']
+            '%owner' => $theme_data[$owner]->info['name'],
           ]);
         }
         elseif (!isset($core_extension['module'][$owner]) && !isset($core_extension['theme'][$owner])) {
           $message = $this->t('Configuration %name depends on the %owner extension that will not be installed after import.', [
             '%name' => $name,
-            '%owner' => $owner
+            '%owner' => $owner,
           ]);
         }
 

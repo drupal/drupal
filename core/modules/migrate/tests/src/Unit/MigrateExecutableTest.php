@@ -384,7 +384,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   public function testProcessRow() {
     $expected = [
       'test' => 'test destination',
-      'test1' => 'test1 destination'
+      'test1' => 'test1 destination',
     ];
     foreach ($expected as $key => $value) {
       $plugins[$key][0] = $this->getMock('Drupal\migrate\Plugin\MigrateProcessInterface');

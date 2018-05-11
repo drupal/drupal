@@ -79,7 +79,7 @@ class PermissionAccessCheckTest extends UnitTestCase {
       ->will($this->returnValueMap([
           ['allowed', TRUE],
           ['denied', FALSE],
-          ['other', FALSE]
+          ['other', FALSE],
         ]
       ));
     $route = new Route('', [], $requirements);

@@ -161,7 +161,7 @@ class ControllerResolverTest extends UnitTestCase {
       // Tests passing a controller via the request.
       [['_controller' => 'Drupal\Tests\Core\Controller\MockContainerAware::getResult'], 'Drupal\Tests\Core\Controller\MockContainerAware', 'This is container aware.'],
       // Tests a request with no controller specified.
-      [[], FALSE]
+      [[], FALSE],
     ];
   }
 

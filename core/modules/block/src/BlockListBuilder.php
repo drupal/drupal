@@ -222,7 +222,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         '#theme_wrappers' => [
           'container' => [
             '#attributes' => ['class' => 'region-title__action'],
-          ]
+          ],
         ],
         '#prefix' => $title,
         '#type' => 'link',

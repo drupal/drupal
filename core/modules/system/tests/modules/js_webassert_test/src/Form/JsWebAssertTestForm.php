@@ -135,7 +135,7 @@ class JsWebAssertTestForm extends FormBase {
     $form['added_link'] = [
       '#title' => 'Added link',
       '#type' => 'link',
-      '#url' => Url::fromRoute('js_webassert_test.js_webassert_test_form')
+      '#url' => Url::fromRoute('js_webassert_test.js_webassert_test_form'),
     ];
     return $form;
   }

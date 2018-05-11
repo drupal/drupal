@@ -33,13 +33,13 @@ class StyleUITest extends UITestBase {
     $this->assertFieldByName('style[type]', 'default', 'The default style plugin selected in the UI should be unformatted list.');
 
     $edit = [
-      'style[type]' => 'test_style'
+      'style[type]' => 'test_style',
     ];
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->assertFieldByName('style_options[test_option]', NULL, 'Make sure the custom settings form from the test plugin appears.');
     $random_name = $this->randomMachineName();
     $edit = [
-      'style_options[test_option]' => $random_name
+      'style_options[test_option]' => $random_name,
     ];
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->drupalGet($style_options_url);

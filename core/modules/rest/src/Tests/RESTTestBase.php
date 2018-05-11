@@ -383,7 +383,7 @@ abstract class RESTTestBase extends WebTestBase {
         $resource_config = $this->resourceConfigStorage->create([
           'id' => $resource_config_id,
           'granularity' => RestResourceConfigInterface::METHOD_GRANULARITY,
-          'configuration' => []
+          'configuration' => [],
         ]);
       }
       $configuration = $resource_config->get('configuration');

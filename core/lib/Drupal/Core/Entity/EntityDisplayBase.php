@@ -164,7 +164,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
           // Extra fields are visible by default unless they explicitly say so.
           if (!isset($definition['visible']) || $definition['visible'] == TRUE) {
             $this->setComponent($name, [
-              'weight' => $definition['weight']
+              'weight' => $definition['weight'],
             ]);
           }
           else {

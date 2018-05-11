@@ -50,11 +50,11 @@ abstract class LanguageFormBase extends EntityForm {
       $form['langcode_view'] = [
         '#type' => 'item',
         '#title' => $this->t('Language code'),
-        '#markup' => $language->id()
+        '#markup' => $language->id(),
       ];
       $form['langcode'] = [
         '#type' => 'value',
-        '#value' => $language->id()
+        '#value' => $language->id(),
       ];
     }
     else {

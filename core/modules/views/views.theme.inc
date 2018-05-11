@@ -575,12 +575,12 @@ function template_preprocess_views_view_table(&$variables) {
           if (!empty($column_reference['content']) && !empty($options['info'][$column]['separator'])) {
             $column_reference['content'][] = [
               'separator' => ['#markup' => $options['info'][$column]['separator']],
-              'field_output' => ['#markup' => $field_output]
+              'field_output' => ['#markup' => $field_output],
             ];
           }
           else {
             $column_reference['content'][] = [
-              'field_output' => ['#markup' => $field_output]
+              'field_output' => ['#markup' => $field_output],
             ];
           }
         }

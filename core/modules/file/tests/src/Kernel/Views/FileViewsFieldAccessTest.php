@@ -48,7 +48,7 @@ class FileViewsFieldAccessTest extends FieldFieldAccessTestBase {
       'uri' => 'public://test.txt',
       'status' => TRUE,
       'langcode' => 'fr',
-      'uid' => $user->id()
+      'uid' => $user->id(),
     ]);
     $file->save();
 

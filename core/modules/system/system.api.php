@@ -27,7 +27,7 @@ function hook_system_themes_page_alter(&$theme_groups) {
       $theme->operations[] = [
         'title' => t('Foo'),
         'url' => Url::fromRoute('system.themes_page'),
-        'query' => ['theme' => $theme->getName()]
+        'query' => ['theme' => $theme->getName()],
       ];
     }
   }

@@ -177,7 +177,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
           'plugin_id' => 'boolean',
           'entity_type' => $this->entityTypeId,
           'entity_field' => $field_name,
-        ]
+        ],
       ] + $this->filters;
     }
 

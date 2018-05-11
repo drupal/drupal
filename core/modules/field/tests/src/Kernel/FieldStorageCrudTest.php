@@ -113,7 +113,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     try {
       $field_storage_definition = [
         'field_name' => 'test_field',
-        'type' => 'test_field'
+        'type' => 'test_field',
       ];
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail('Cannot create a field without an entity type.');
@@ -188,7 +188,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
    */
   public function testCreateWithExplicitSchema() {
     $schema = [
-      'dummy' => 'foobar'
+      'dummy' => 'foobar',
     ];
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_2',

@@ -46,7 +46,7 @@ class MenuLinkDefaultFormTest extends UnitTestCase {
       'weight' => 5,
       'expanded' => 1,
       'parent' => 'bar',
-      'menu_name' => 'foo'
+      'menu_name' => 'foo',
     ], $result);
   }
 

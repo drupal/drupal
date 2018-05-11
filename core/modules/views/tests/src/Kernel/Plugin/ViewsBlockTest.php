@@ -103,7 +103,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
         'title' => 'Overridden title',
         'default_argument_type' => 'fixed',
         'default_argument_options' => [
-          'argument' => 'fixed'
+          'argument' => 'fixed',
         ],
         'validate' => [
           'type' => 'none',
@@ -113,7 +113,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
         'table' => 'views_test_data',
         'field' => 'name',
         'plugin_id' => 'string',
-      ]
+      ],
     ]);
     $view->save();
 

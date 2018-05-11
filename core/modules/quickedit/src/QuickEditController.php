@@ -221,7 +221,7 @@ class QuickEditController extends ControllerBase {
       $errors = $form_state->getErrors();
       if (count($errors)) {
         $status_messages = [
-          '#type' => 'status_messages'
+          '#type' => 'status_messages',
         ];
         $response->addCommand(new FieldFormValidationErrorsCommand($this->renderer->renderRoot($status_messages)));
       }
@@ -293,7 +293,7 @@ class QuickEditController extends ControllerBase {
     // to identify it.
     $output = [
       'entity_type' => $entity->getEntityTypeId(),
-      'entity_id' => $entity->id()
+      'entity_id' => $entity->id(),
     ];
 
     // Respond to client that the entity was saved properly.

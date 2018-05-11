@@ -141,7 +141,7 @@ class MoveRevisionMetadataFieldsUpdateTest extends UpdatePathTestBase {
     $revision_metadata_keys = [
       'revision_user' => 'revision_user',
       'revision_created' => 'revision_created',
-      'revision_log_message' => 'revision_log_message'
+      'revision_log_message' => 'revision_log_message',
     ];
     $this->assertEquals($revision_metadata_keys, $entity_type->getRevisionMetadataKeys(TRUE));
 
@@ -167,7 +167,7 @@ class MoveRevisionMetadataFieldsUpdateTest extends UpdatePathTestBase {
     $definition = [
       'id' => 'entity_test_mul_revlog',
       'revision_metadata_keys' => [
-        'revision_default' => 'revision_default'
+        'revision_default' => 'revision_default',
       ],
     ];
     $entity_type = new ContentEntityType($definition);

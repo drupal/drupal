@@ -226,7 +226,7 @@ class ConfigImporterTest extends KernelTestBase {
       // Add a dependency on primary, to ensure that is synced first.
       'dependencies' => [
         'config' => [$name_primary],
-      ]
+      ],
     ];
     $sync->write($name_secondary, $values_secondary);
 
@@ -265,7 +265,7 @@ class ConfigImporterTest extends KernelTestBase {
       // Add a dependency on secondary, so that is synced first.
       'dependencies' => [
         'config' => [$name_secondary],
-      ]
+      ],
     ];
     $sync->write($name_primary, $values_primary);
     $values_secondary = [
@@ -322,7 +322,7 @@ class ConfigImporterTest extends KernelTestBase {
       // Add a dependency on deleter, to make sure that is synced first.
       'dependencies' => [
         'config' => [$name_deleter],
-      ]
+      ],
     ];
     $storage->write($name_deletee, $values_deletee);
     $values_deletee['label'] = 'Updated Deletee';
@@ -338,7 +338,7 @@ class ConfigImporterTest extends KernelTestBase {
       // will also be synced after the deletee due to alphabetical ordering.
       'dependencies' => [
         'config' => [$name_deleter],
-      ]
+      ],
     ];
     $storage->write($name_other, $values_other);
     $values_other['label'] = 'Updated other';

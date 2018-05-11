@@ -49,7 +49,7 @@ class NodePreviewAnonymousTest extends BrowserTestBase {
     // Fill in node creation form and preview node.
     $edit = [
       $title_key => $this->randomMachineName(),
-      $body_key => $this->randomMachineName()
+      $body_key => $this->randomMachineName(),
     ];
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
 

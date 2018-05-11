@@ -21,7 +21,7 @@ db_insert('contact')->fields([
   'recipients',
   'reply',
   'weight',
-  'selected'
+  'selected',
 ])
   ->values([
   'category' => 'Upgrade test',

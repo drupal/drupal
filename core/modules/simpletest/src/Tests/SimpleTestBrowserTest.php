@@ -59,7 +59,7 @@ class SimpleTestBrowserTest extends WebTestBase {
     $this->maximumRedirects = 1;
     $edit = [
       'name' => $user->getUsername(),
-      'pass' => $user->pass_raw
+      'pass' => $user->pass_raw,
     ];
     $this->drupalPostForm('user/login', $edit, t('Log in'), [
       'query' => ['destination' => 'user/logout'],

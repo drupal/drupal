@@ -129,7 +129,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
         ->addConstraint('Callback', [
           'callback' => function ($value, ExecutionContextInterface $context) {
             $context->addViolation('test violation: ' . $value);
-          }
+          },
         ])
     );
     $typed_data->setValue('foo');
@@ -147,7 +147,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
     $options = [
       'callback' => function ($value, ExecutionContextInterface $context) {
         $context->addViolation('test violation');
-      }
+      },
     ];
     $typed_data = $this->typedDataManager->create(
       DataDefinition::create('string')
@@ -320,7 +320,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
       'value' => [
         'key1' => 'value1',
         'key2' => 'value2',
-        'key_with_properties' => $subkey_value
+        'key_with_properties' => $subkey_value,
       ],
     ];
     $tree['properties'] = [

@@ -418,7 +418,7 @@ class PagerTest extends ViewTestBase {
       // Create source string.
       $source = $this->localeStorage->createString(
         [
-          'source' => $label
+          'source' => $label,
         ]
       );
       $source->save();

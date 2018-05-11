@@ -261,7 +261,7 @@ function update_authorize_update_batch_finished($success, $results) {
       'absolute' => TRUE,
       'base_url' => $GLOBALS['base_url'],
     ],
-    '#access' => $url->access(\Drupal::currentUser())
+    '#access' => $url->access(\Drupal::currentUser()),
   ];
 
   // Unset the variable since it is no longer needed.

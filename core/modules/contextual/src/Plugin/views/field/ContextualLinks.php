@@ -130,8 +130,8 @@ class ContextualLinks extends FieldPluginBase {
           [],
           [
             'contextual-views-field-links' => UrlHelper::encodePath(Json::encode($links)),
-          ]
-        ]
+          ],
+        ],
       ];
 
       $element = [

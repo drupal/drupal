@@ -169,7 +169,7 @@ function hook_node_access_records(\Drupal\node\NodeInterface $node) {
         'grant_view' => 1,
         'grant_update' => 0,
         'grant_delete' => 0,
-        'langcode' => 'ca'
+        'langcode' => 'ca',
       ];
     }
     // For the example_author array, the GID is equivalent to a UID, which
@@ -183,7 +183,7 @@ function hook_node_access_records(\Drupal\node\NodeInterface $node) {
         'grant_view' => 1,
         'grant_update' => 1,
         'grant_delete' => 1,
-        'langcode' => 'ca'
+        'langcode' => 'ca',
       ];
     }
 

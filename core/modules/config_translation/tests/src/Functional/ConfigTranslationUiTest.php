@@ -907,7 +907,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $expected = [
       'kitten',
       'llama',
-      'elephant'
+      'elephant',
     ];
     $actual = $config_factory
       ->getEditable('config_translation_test.content')

@@ -115,7 +115,7 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
       '#empty_option' => t('None (original image)'),
       '#options' => $image_styles,
       '#description' => $description_link->toRenderable() + [
-        '#access' => $this->currentUser->hasPermission('administer image styles')
+        '#access' => $this->currentUser->hasPermission('administer image styles'),
       ],
     ];
     $link_types = [

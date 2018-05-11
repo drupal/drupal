@@ -54,7 +54,7 @@ class StringFieldTest extends WebTestBase {
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
-      'type' => $field_type
+      'type' => $field_type,
     ]);
     $field_storage->save();
     FieldConfig::create([

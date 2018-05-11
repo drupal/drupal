@@ -60,7 +60,7 @@ class QueryTest extends QueryPluginBase {
     $this->conditions[] = [
       'field' => $field,
       'value' => $value,
-      'operator' => $operator
+      'operator' => $operator,
     ];
 
   }

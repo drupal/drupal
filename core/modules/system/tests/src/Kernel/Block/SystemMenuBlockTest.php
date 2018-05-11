@@ -162,13 +162,13 @@ class SystemMenuBlockTest extends KernelTestBase {
     $dependencies = $block->calculateDependencies()->getDependencies();
     $expected = [
       'config' => [
-        'system.menu.' . $this->menu->id()
+        'system.menu.' . $this->menu->id(),
       ],
       'module' => [
-        'system'
+        'system',
       ],
       'theme' => [
-        'stark'
+        'stark',
       ],
     ];
     $this->assertIdentical($expected, $dependencies);
@@ -247,7 +247,7 @@ class SystemMenuBlockTest extends KernelTestBase {
       'test.example2' => [
         'test.example3' => [
           'test.example4' => [],
-        ]
+        ],
       ],
       'test.example5' => [
         'test.example7' => [],

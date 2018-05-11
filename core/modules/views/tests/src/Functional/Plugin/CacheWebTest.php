@@ -51,8 +51,8 @@ class CacheWebTest extends ViewTestBase {
       'type' => 'time',
       'options' => [
         'results_lifespan' => '3600',
-        'output_lifespan' => '3600'
-      ]
+        'output_lifespan' => '3600',
+      ],
     ]);
     $view->save();
     $this->container->get('router.builder')->rebuildIfNeeded();
@@ -70,7 +70,7 @@ class CacheWebTest extends ViewTestBase {
       'config:user.role.anonymous',
       'config:views.view.test_display',
       'node_list',
-      'rendered'
+      'rendered',
     ];
     $this->assertCacheTags($cache_tags);
 

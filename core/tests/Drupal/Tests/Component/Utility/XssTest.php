@@ -503,31 +503,31 @@ class XssTest extends TestCase {
         '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt">',
         '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt">',
         'Image tag with alt and title attribute',
-        ['img']
+        ['img'],
       ],
       [
         '<a href="https://www.drupal.org/" rel="dc:publisher">Drupal</a>',
         '<a href="https://www.drupal.org/" rel="dc:publisher">Drupal</a>',
         'Link tag with rel attribute',
-        ['a']
+        ['a'],
       ],
       [
         '<span property="dc:subject">Drupal 8: The best release ever.</span>',
         '<span property="dc:subject">Drupal 8: The best release ever.</span>',
         'Span tag with property attribute',
-        ['span']
+        ['span'],
       ],
       [
         '<img src="http://example.com/foo.jpg" data-caption="Drupal 8: The best release ever.">',
         '<img src="http://example.com/foo.jpg" data-caption="Drupal 8: The best release ever.">',
         'Image tag with data attribute',
-        ['img']
+        ['img'],
       ],
       [
         '<a data-a2a-url="foo"></a>',
         '<a data-a2a-url="foo"></a>',
         'Link tag with numeric data attribute',
-        ['a']
+        ['a'],
       ],
     ];
   }

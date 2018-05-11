@@ -105,7 +105,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       'field_name' => 'bf_1',
       'entity_type' => $this->entityTypeId,
       'type' => 'test_field',
-      'cardinality' => 1
+      'cardinality' => 1,
     ]);
     $field_storage->save();
     $this->fieldStorages[] = $field_storage;
@@ -113,7 +113,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       'field_name' => 'bf_2',
       'entity_type' => $this->entityTypeId,
       'type' => 'test_field',
-      'cardinality' => 4
+      'cardinality' => 4,
     ]);
     $field_storage->save();
     $this->fieldStorages[] = $field_storage;
@@ -222,7 +222,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       'field_name' => $field_name,
       'entity_type' => $this->entityTypeId,
       'type' => 'test_field',
-      'cardinality' => 1
+      'cardinality' => 1,
     ]);
     $deleted_field_storage->save();
     // Create the field.
@@ -253,7 +253,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       'field_name' => $field_name,
       'entity_type' => $this->entityTypeId,
       'type' => 'test_field',
-      'cardinality' => 1
+      'cardinality' => 1,
     ]);
     $field_storage->save();
     FieldConfig::create([

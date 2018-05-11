@@ -63,7 +63,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
       'SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND expire > :now',
       [
         ':collection' => $this->collection,
-        ':now' => REQUEST_TIME
+        ':now' => REQUEST_TIME,
       ])->fetchAllKeyed();
     return array_map([$this->serializer, 'decode'], $values);
   }

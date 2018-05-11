@@ -313,7 +313,7 @@ abstract class BrowserTestBase extends TestCase {
     }
 
     $selectors_handler = new SelectorsHandler([
-      'hidden_field_selector' => new HiddenFieldSelector()
+      'hidden_field_selector' => new HiddenFieldSelector(),
     ]);
     $session = new Session($driver, $selectors_handler);
     $this->mink = new Mink();

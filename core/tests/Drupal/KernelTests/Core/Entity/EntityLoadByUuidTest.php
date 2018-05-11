@@ -35,12 +35,12 @@ class EntityLoadByUuidTest extends KernelTestBase {
     // Create two test entities.
     $entity_0 = EntityTest::create([
       'type' => 'entity_test',
-      'name' => 'published entity'
+      'name' => 'published entity',
     ]);
     $entity_0->save();
     $entity_1 = EntityTest::create([
       'type' => 'entity_test',
-      'name' => 'unpublished entity'
+      'name' => 'unpublished entity',
     ]);
     $entity_1->save();
 

@@ -258,7 +258,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       $route
         ->setDefaults([
           '_entity_form' => "{$entity_type_id}.{$operation}",
-          '_title_callback' => '\Drupal\Core\Entity\Controller\EntityController::editTitle'
+          '_title_callback' => '\Drupal\Core\Entity\Controller\EntityController::editTitle',
         ])
         ->setRequirement('_entity_access', "{$entity_type_id}.update")
         ->setOption('parameters', [

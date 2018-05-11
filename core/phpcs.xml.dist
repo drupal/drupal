@@ -21,6 +21,12 @@
 
   <!-- Only include specific sniffs that pass. This ensures that, if new sniffs are added, HEAD does not fail.-->
   <!-- Drupal sniffs -->
+  <rule ref="Drupal.Array.Array">
+    <!-- Sniff for these errors: CommaLastItem -->
+    <exclude name="Drupal.Array.Array.ArrayClosingIndentation"/>
+    <exclude name="Drupal.Array.Array.ArrayIndentation"/>
+    <exclude name="Drupal.Array.Array.LongLineDeclaration"/>
+  </rule>
   <rule ref="Drupal.Classes.ClassCreateInstance"/>
   <rule ref="Drupal.Classes.ClassDeclaration"/>
   <rule ref="Drupal.Classes.FullyQualifiedNamespace"/>

@@ -297,7 +297,7 @@ class RendererBubblingTest extends RendererTestBase {
     $test_element = [
       '#cache' => [
         'keys' => ['parent'],
-        'tags' => ['yar', 'har']
+        'tags' => ['yar', 'har'],
       ],
       '#markup' => 'parent',
       'child' => [
@@ -308,10 +308,10 @@ class RendererBubblingTest extends RendererTestBase {
             'tags' => ['fiddle', 'dee'],
           ],
           '#attached' => [
-            'library' => ['foo/bar']
+            'library' => ['foo/bar'],
           ],
           '#markup' => '',
-        ]
+        ],
       ],
     ];
     $expected_cache_items = [

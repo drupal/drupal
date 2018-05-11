@@ -52,7 +52,7 @@ class DecimalItem extends NumericItemBase {
           'type' => 'numeric',
           'precision' => $field_definition->getSetting('precision'),
           'scale' => $field_definition->getSetting('scale'),
-        ]
+        ],
       ],
     ];
   }
@@ -98,7 +98,7 @@ class DecimalItem extends NumericItemBase {
       'value' => [
         'Regex' => [
           'pattern' => '/^[+-]?((\d+(\.\d*)?)|(\.\d+))$/i',
-        ]
+        ],
       ],
     ]);
 

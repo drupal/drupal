@@ -20,8 +20,8 @@ class TwigExtensionTestController {
       '#safe_join_items' => [
         '<em>will be escaped</em>',
         $this->t('<em>will be markup</em>'),
-        ['#markup' => '<strong>will be rendered</strong>']
-      ]
+        ['#markup' => '<strong>will be rendered</strong>'],
+      ],
     ];
   }
 

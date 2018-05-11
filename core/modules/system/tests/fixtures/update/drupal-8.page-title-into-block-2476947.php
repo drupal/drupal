@@ -40,7 +40,7 @@ $existing_blocks = unserialize($existing_blocks);
 
 $connection->update('key_value')
   ->fields([
-    'value' => serialize(array_merge($existing_blocks, ['block.block.bartik_page_title']))
+    'value' => serialize(array_merge($existing_blocks, ['block.block.bartik_page_title'])),
   ])
   ->condition('collection', 'config.entity.key_store.block')
   ->condition('name', 'theme:bartik')
@@ -55,7 +55,7 @@ $extensions = $connection->select('config')
 $extensions = unserialize($extensions);
 $connection->update('config')
   ->fields([
-    'data' => serialize(array_merge_recursive($extensions, ['theme' => ['test_theme' => 0]]))
+    'data' => serialize(array_merge_recursive($extensions, ['theme' => ['test_theme' => 0]])),
   ])
   ->condition('name', 'core.extension')
   ->execute();

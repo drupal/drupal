@@ -57,7 +57,7 @@ class FilterPermissions implements ContainerInjectionInterface {
           'description' => [
             '#prefix' => '<em>',
             '#markup' => $this->t('Warning: This permission may have security implications depending on how the text format is configured.'),
-            '#suffix' => '</em>'
+            '#suffix' => '</em>',
           ],
         ];
       }

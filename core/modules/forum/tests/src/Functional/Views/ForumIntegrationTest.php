@@ -71,17 +71,17 @@ class ForumIntegrationTest extends ViewTestBase {
     $expected_result[] = [
       'nid' => $nodes[0]->id(),
       'sticky' => NodeInterface::STICKY,
-      'comment_count' => 1.
+      'comment_count' => 1.,
     ];
     $expected_result[] = [
       'nid' => $nodes[1]->id(),
       'sticky' => NodeInterface::NOT_STICKY,
-      'comment_count' => 2.
+      'comment_count' => 2.,
     ];
     $expected_result[] = [
       'nid' => $nodes[2]->id(),
       'sticky' => NodeInterface::NOT_STICKY,
-      'comment_count' => 3.
+      'comment_count' => 3.,
     ];
     $column_map = [
       'nid' => 'nid',

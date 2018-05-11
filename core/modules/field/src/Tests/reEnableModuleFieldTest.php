@@ -23,7 +23,7 @@ class reEnableModuleFieldTest extends WebTestBase {
     'node',
     // We use telephone module instead of test_field because test_field is
     // hidden and does not display on the admin/modules page.
-    'telephone'
+    'telephone',
   ];
 
   protected function setUp() {

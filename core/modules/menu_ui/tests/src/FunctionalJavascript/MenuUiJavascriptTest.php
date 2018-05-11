@@ -41,7 +41,7 @@ class MenuUiJavascriptTest extends JavascriptTestBase {
 
     $block = $this->drupalPlaceBlock('system_menu_block:' . $menu->id(), [
       'label' => 'Custom menu',
-      'provider' => 'system'
+      'provider' => 'system',
     ]);
     $this->addMenuLink('', '/', $menu->id());
 
@@ -150,7 +150,7 @@ class MenuUiJavascriptTest extends JavascriptTestBase {
     $this->assertMenuLink([
       'menu_name' => $menu_id,
       'children' => [],
-      'parent' => $parent
+      'parent' => $parent,
     ], $menu_link->getPluginId());
 
     return $menu_link;

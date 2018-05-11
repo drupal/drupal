@@ -189,7 +189,7 @@ class DateTimeFieldTest extends DateTestBase {
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = new FormattableMarkup($this->displayOptions['settings']['past_format'], [
-        '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
+        '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
       ]);
       $output = $this->renderTestEntity($id);
       $this->assertContains((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected in %timezone.', [
@@ -213,7 +213,7 @@ class DateTimeFieldTest extends DateTestBase {
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = new FormattableMarkup($this->displayOptions['settings']['future_format'], [
-        '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
+        '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
       ]);
       $output = $this->renderTestEntity($id);
       $this->assertContains((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected in %timezone.', [
@@ -341,7 +341,7 @@ class DateTimeFieldTest extends DateTestBase {
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = new FormattableMarkup($this->displayOptions['settings']['past_format'], [
-      '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
+      '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
     ]);
     $output = $this->renderTestEntity($id);
     $this->assertContains((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
@@ -362,7 +362,7 @@ class DateTimeFieldTest extends DateTestBase {
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = new FormattableMarkup($this->displayOptions['settings']['future_format'], [
-      '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
+      '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
     ]);
     $output = $this->renderTestEntity($id);
     $this->assertContains((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));

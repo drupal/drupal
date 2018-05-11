@@ -1168,7 +1168,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         $entity_type_id . '__revision' => [
           'table' => $this->storage->getRevisionTable(),
           'columns' => [$revision_key => $revision_key],
-        ]
+        ],
       ],
     ];
 
@@ -2043,7 +2043,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           'size' => 'tiny',
           'not null' => TRUE,
           'default' => 0,
-          'description' => 'A boolean indicating whether this data item has been deleted'
+          'description' => 'A boolean indicating whether this data item has been deleted',
         ],
         'entity_id' => $id_schema,
         'revision_id' => $revision_id_schema,

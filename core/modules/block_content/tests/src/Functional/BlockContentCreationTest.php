@@ -29,7 +29,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
    */
   protected $permissions = [
     'administer blocks',
-    'administer block_content display'
+    'administer block_content display',
   ];
 
   /**
@@ -55,7 +55,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Check that the Basic block has been created.
     $this->assertRaw(format_string('@block %name has been created.', [
       '@block' => 'basic',
-      '%name' => $edit['info[0][value]']
+      '%name' => $edit['info[0][value]'],
     ]), 'Basic block created.');
 
     // Check that the view mode setting is hidden because only one exists.
@@ -74,7 +74,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that the Basic block has been created.
     $this->assertRaw(format_string('A custom block with block description %value already exists.', [
-      '%value' => $edit['info[0][value]']
+      '%value' => $edit['info[0][value]'],
     ]));
     $this->assertResponse(200);
   }
@@ -104,7 +104,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Check that the Basic block has been created.
     $this->assertRaw(format_string('@block %name has been created.', [
       '@block' => 'basic',
-      '%name' => $edit['info[0][value]']
+      '%name' => $edit['info[0][value]'],
     ]), 'Basic block created.');
 
     // Save our block permanently
@@ -156,7 +156,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that the Basic block has been created.
     $this->assertRaw(format_string('A custom block with block description %value already exists.', [
-      '%value' => $edit['info[0][value]']
+      '%value' => $edit['info[0][value]'],
     ]));
     $this->assertResponse(200);
   }

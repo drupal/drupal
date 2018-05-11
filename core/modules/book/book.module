@@ -111,7 +111,7 @@ function book_node_links_alter(array &$links, NodeInterface $node, array &$conte
               'type' => 'html',
               'node' => $node->id(),
             ]),
-            'attributes' => ['title' => t('Show a printer-friendly version of this book page and its sub-pages.')]
+            'attributes' => ['title' => t('Show a printer-friendly version of this book page and its sub-pages.')],
           ];
         }
       }

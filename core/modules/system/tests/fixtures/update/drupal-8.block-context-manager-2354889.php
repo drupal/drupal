@@ -47,7 +47,7 @@ $existing_blocks = unserialize($existing_blocks);
 
 $connection->update('key_value')
   ->fields([
-    'value' => serialize(array_merge($existing_blocks, ['block.block.testfor2354889', 'block.block.secondtestfor2354889', 'block.block.thirdtestfor2354889']))
+    'value' => serialize(array_merge($existing_blocks, ['block.block.testfor2354889', 'block.block.secondtestfor2354889', 'block.block.thirdtestfor2354889'])),
   ])
   ->condition('collection', 'config.entity.key_store.block')
   ->condition('name', 'theme:bartik')

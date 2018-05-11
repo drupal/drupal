@@ -27,7 +27,7 @@ class BlockedIpsTest extends MigrateSqlSourceTestBase {
       [
         'iid' => 1,
         'ip' => '127.0.0.1',
-      ]
+      ],
     ];
     $tests[0]['expected_data'] = [
       [

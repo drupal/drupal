@@ -59,7 +59,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $add_url = Url::fromRoute("entity.{$this->entityTypeId}.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => 'en',
-      'target' => 'it'
+      'target' => 'it',
     ]);
     $this->drupalGet($add_url);
     $this->assertNotEmpty($this->xpath($field_xpath));

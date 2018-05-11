@@ -311,7 +311,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // @todo Add possible html5 elements.
       $elements = [
         '' => $this->t('- Use default -'),
-        '0' => $this->t('- None -')
+        '0' => $this->t('- None -'),
       ];
       $elements += \Drupal::config('views.settings')->get('field_rewrite_elements');
     }
@@ -1387,7 +1387,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     ];
 
     $alter += [
-      'path' => NULL
+      'path' => NULL,
     ];
 
     $path = $alter['path'];

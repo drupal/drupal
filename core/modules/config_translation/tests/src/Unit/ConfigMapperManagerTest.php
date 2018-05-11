@@ -118,7 +118,7 @@ class ConfigMapperManagerTest extends UnitTestCase {
             $this->getElement(['iii' => 'jjj']),
           ]),
         ]),
-        FALSE
+        FALSE,
       ],
       [
         $this->getNestedElement([

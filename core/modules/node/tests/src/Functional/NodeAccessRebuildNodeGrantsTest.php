@@ -52,7 +52,7 @@ class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
     for ($i = 0; $i < 30; $i++) {
       $nodes[] = $this->drupalCreateNode([
         'uid' => $this->webUser->id(),
-        'private' => [['value' => 1]]
+        'private' => [['value' => 1]],
       ]);
     }
 

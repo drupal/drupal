@@ -37,7 +37,7 @@ abstract class YamlTestBase extends TestCase {
         [10],
         [0 => '123456'],
       ],
-      [NULL]
+      [NULL],
     ];
   }
 

@@ -37,7 +37,7 @@ class Users extends WizardPluginBase {
       'plugin_id' => 'boolean',
       'entity_type' => 'user',
       'entity_field' => 'status',
-    ]
+    ],
   ];
 
   /**

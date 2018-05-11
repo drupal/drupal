@@ -118,7 +118,7 @@ class ManageDisplayTest extends WebTestBase {
     $edit = [
       'fields[field_test][type]' => 'field_test_multiple',
       'fields[field_test][region]' => 'content',
-      'refresh_rows' => 'field_test'
+      'refresh_rows' => 'field_test',
     ];
     $this->drupalPostAjaxForm(NULL, $edit, ['op' => t('Refresh')]);
     $format = 'field_test_multiple';

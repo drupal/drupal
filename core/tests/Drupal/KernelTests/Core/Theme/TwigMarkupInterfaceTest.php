@@ -30,7 +30,7 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
    * @var array
    */
   public static $modules = [
-    'language'
+    'language',
   ];
 
   /**

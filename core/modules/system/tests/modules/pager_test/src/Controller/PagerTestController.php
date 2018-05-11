@@ -69,7 +69,7 @@ class PagerTestController extends ControllerBase {
       ],
       '#pre_render' => [
         'Drupal\pager_test\Controller\PagerTestController::showPagerCacheContext',
-      ]
+      ],
     ];
 
     return $build;

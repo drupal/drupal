@@ -31,7 +31,7 @@ class CommentVariablePerCommentType extends CommentVariable {
         $return['comment'] = [
           'comment_type' => 'comment',
           'label' => $this->t('Default comments'),
-          'description' => $this->t('Allows commenting on content')
+          'description' => $this->t('Allows commenting on content'),
         ];
       }
       else {
@@ -39,7 +39,7 @@ class CommentVariablePerCommentType extends CommentVariable {
         $return['comment_no_subject'] = [
           'comment_type' => 'comment_no_subject',
           'label' => $this->t('Comments without subject field'),
-          'description' => $this->t('Allows commenting on content, comments without subject field')
+          'description' => $this->t('Allows commenting on content, comments without subject field'),
         ];
       }
     }

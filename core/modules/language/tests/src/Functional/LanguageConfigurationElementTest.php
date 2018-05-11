@@ -170,7 +170,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $this->assertTrue($configuration->isLanguageAlterable(), 'The alterable language configuration has been saved on the Article content type.');
     // Update the article content type by changing the title label.
     $edit = [
-      'title_label' => 'Name'
+      'title_label' => 'Name',
     ];
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     // Check that we still have the settings for the updated node type.
@@ -189,7 +189,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     if ($this->profile != 'standard') {
       $this->drupalCreateContentType([
         'type' => 'article',
-        'name' => 'Article'
+        'name' => 'Article',
       ]);
     }
     $admin_user = $this->drupalCreateUser(['administer content types']);
@@ -240,7 +240,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $this->assertTrue($configuration->isLanguageAlterable(), 'The alterable language configuration has been saved on the Country vocabulary.');
     // Update the vocabulary.
     $edit = [
-      'name' => 'Nation'
+      'name' => 'Nation',
     ];
     $this->drupalPostForm('admin/structure/taxonomy/manage/country', $edit, t('Save'));
     // Check that we still have the settings for the updated vocabulary.

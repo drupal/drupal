@@ -53,7 +53,7 @@ function rest_post_update_resource_granularity() {
         $resource_config_entity->set('configuration', [
           'methods' => array_keys($configuration),
           'formats' => $configuration[$first_method]['supported_formats'],
-          'authentication' => $configuration[$first_method]['supported_auth']
+          'authentication' => $configuration[$first_method]['supported_auth'],
         ]);
         $resource_config_entity->set('granularity', RestResourceConfigInterface::RESOURCE_GRANULARITY);
         $resource_config_entity->save();

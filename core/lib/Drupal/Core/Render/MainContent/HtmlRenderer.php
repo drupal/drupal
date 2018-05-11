@@ -226,7 +226,7 @@ class HtmlRenderer implements MainContentRendererInterface {
           return $this->renderer->render($main_content, FALSE);
         });
         $main_content = $this->renderCache->getCacheableRenderArray($main_content) + [
-          '#title' => isset($main_content['#title']) ? $main_content['#title'] : NULL
+          '#title' => isset($main_content['#title']) ? $main_content['#title'] : NULL,
         ];
       }
 

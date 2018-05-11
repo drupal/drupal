@@ -253,7 +253,7 @@ class CommentNonNodeTest extends BrowserTestBase {
    */
   public function testCommentFunctionality() {
     $limited_user = $this->drupalCreateUser([
-      'administer entity_test fields'
+      'administer entity_test fields',
     ]);
     $this->drupalLogin($limited_user);
     // Test that default field exists.

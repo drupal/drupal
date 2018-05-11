@@ -57,7 +57,7 @@ abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
     // Add a date field to page nodes.
     $node_type = NodeType::create([
       'type' => 'page',
-      'name' => 'page'
+      'name' => 'page',
     ]);
     $node_type->save();
     $fieldStorage = FieldStorageConfig::create([

@@ -290,7 +290,7 @@ class SimpletestResultsForm extends FormBase {
       'Filename',
       'Line',
       'Function',
-      ['colspan' => 2, 'data' => 'Status']
+      ['colspan' => 2, 'data' => 'Status'],
     ];
     $form['result']['results'] = [];
     foreach ($test_results as $group => $assertions) {

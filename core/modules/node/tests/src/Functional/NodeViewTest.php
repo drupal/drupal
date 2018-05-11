@@ -47,7 +47,7 @@ class NodeViewTest extends NodeTestBase {
     // ensure caches are handled properly.
     $this->drupalLogin($this->rootUser);
     $edit = [
-      'anonymous[edit own ' . $node->bundle() . ' content]' => TRUE
+      'anonymous[edit own ' . $node->bundle() . ' content]' => TRUE,
     ];
     $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
     $this->drupalLogout();

@@ -74,7 +74,7 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
       'langcode' => 'en',
       'status' => TRUE,
       'dependencies' => [
-        'module' => ['content_translation']
+        'module' => ['content_translation'],
       ],
       'id' => $config_id,
       'target_entity_type_id' => 'entity_test_mul',

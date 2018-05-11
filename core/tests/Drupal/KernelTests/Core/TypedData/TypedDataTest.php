@@ -470,7 +470,7 @@ class TypedDataTest extends KernelTestBase {
     $this->assertEqual($value, [
       'one' => 'uno',
       'two' => 'zwei',
-      'three' => 'drei'
+      'three' => 'drei',
     ]);
 
     $properties = $typed_data->getProperties();

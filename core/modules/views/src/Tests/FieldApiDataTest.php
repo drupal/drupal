@@ -45,7 +45,7 @@ class FieldApiDataTest extends FieldTestBase {
       'field_name' => $field_names[0],
       'entity_type' => 'node',
       'bundle' => 'page',
-      'label' => 'GiraffeA" label'
+      'label' => 'GiraffeA" label',
     ];
     FieldConfig::create($field)->save();
 
@@ -55,7 +55,7 @@ class FieldApiDataTest extends FieldTestBase {
       'field_name' => $field_names[0],
       'entity_type' => 'node',
       'bundle' => 'article',
-      'label' => 'GiraffeB" label'
+      'label' => 'GiraffeB" label',
     ])->save();
 
     // Now create some example nodes/users for the view result.
@@ -230,7 +230,7 @@ class FieldApiDataTest extends FieldTestBase {
       'field_name' => $this->fieldStorages[0]->getName(),
       'entity_type' => 'node',
       'bundle' => 'news',
-      'label' => 'GiraffeB" label'
+      'label' => 'GiraffeB" label',
     ])->save();
     $this->container->get('views.views_data')->clear();
     $data = $this->getViewsData();

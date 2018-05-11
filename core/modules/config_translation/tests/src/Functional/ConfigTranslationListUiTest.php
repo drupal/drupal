@@ -189,7 +189,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $block_content_type = BlockContentType::create([
       'id' => mb_strtolower($this->randomMachineName(16)),
       'label' => $this->randomMachineName(),
-      'revision' => FALSE
+      'revision' => FALSE,
     ]);
     $block_content_type->save();
 
@@ -395,7 +395,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $block_content_type = BlockContentType::create([
       'id' => 'basic',
       'label' => 'Basic',
-      'revision' => FALSE
+      'revision' => FALSE,
     ]);
     $block_content_type->save();
     $field = FieldConfig::create([

@@ -21,7 +21,7 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
     'config',
     'config_override_test',
     'system',
-    'user'
+    'user',
   ];
 
   /**

@@ -86,7 +86,7 @@ abstract class NumericItemBase extends FieldItemBase {
           'Range' => [
             'min' => $min,
             'minMessage' => t('%name: the value may be no less than %min.', ['%name' => $label, '%min' => $min]),
-          ]
+          ],
         ],
       ]);
     }
@@ -98,7 +98,7 @@ abstract class NumericItemBase extends FieldItemBase {
           'Range' => [
             'max' => $max,
             'maxMessage' => t('%name: the value may be no greater than %max.', ['%name' => $label, '%max' => $max]),
-          ]
+          ],
         ],
       ]);
     }

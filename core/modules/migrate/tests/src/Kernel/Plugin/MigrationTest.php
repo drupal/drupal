@@ -39,7 +39,7 @@ class MigrationTest extends KernelTestBase {
         'f1' => 'bar',
         'f2' => [
           'plugin' => 'migration',
-          'migration' => 'm1'
+          'migration' => 'm1',
         ],
         'f3' => [
           'plugin' => 'sub_process',
@@ -52,7 +52,7 @@ class MigrationTest extends KernelTestBase {
         ],
         'f4' => [
           'plugin' => 'migration_lookup',
-          'migration' => 'm3'
+          'migration' => 'm3',
         ],
         'f5' => [
           'plugin' => 'sub_process',

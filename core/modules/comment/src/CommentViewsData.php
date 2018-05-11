@@ -214,7 +214,7 @@ class CommentViewsData extends EntityViewsData {
               [
                 'field' => 'entity_type',
                 'value' => $type,
-                'table' => 'comment_field_data'
+                'table' => 'comment_field_data',
               ],
             ],
           ],

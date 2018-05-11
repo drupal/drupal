@@ -40,7 +40,7 @@ class MigrateActionsTest extends MigrateDrupal6TestBase {
     $this->assertEntity('send_e_mail', 'Send e-mail', 'system', [
       "recipient" => "test@example.com",
       "subject" => "Drupal migration test",
-      "message" => "Drupal migration test"
+      "message" => "Drupal migration test",
     ]);
     $this->assertEntity('redirect_to_url', 'Redirect to URL', 'system', ["url" => "https://www.drupal.org"]);
 

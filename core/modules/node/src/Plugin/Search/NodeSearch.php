@@ -487,7 +487,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         '#prefix' => '<h1>',
         '#plain_text' => $node->label(),
         '#suffix' => '</h1>',
-        '#weight' => -1000
+        '#weight' => -1000,
       ];
       $text = $this->renderer->renderPlain($build);
 
@@ -793,7 +793,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       '#open' => TRUE,
     ];
     $form['content_ranking']['info'] = [
-      '#markup' => '<p><em>' . $this->t('Influence is a numeric multiplier used in ordering search results. A higher number means the corresponding factor has more influence on search results; zero means the factor is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') . '</em></p>'
+      '#markup' => '<p><em>' . $this->t('Influence is a numeric multiplier used in ordering search results. A higher number means the corresponding factor has more influence on search results; zero means the factor is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') . '</em></p>',
     ];
     // Prepare table.
     $header = [$this->t('Factor'), $this->t('Influence')];

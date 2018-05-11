@@ -59,7 +59,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
         'type' => 'page',
         'field_date' => [
           'value' => $date,
-        ]
+        ],
       ]);
       $node->save();
       $this->nodes[] = $node;

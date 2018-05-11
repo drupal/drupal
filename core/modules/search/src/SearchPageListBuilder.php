@@ -157,7 +157,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       $status = $entity->getPlugin()->indexStatus();
       $row['progress']['#markup'] = $this->t('%num_indexed of %num_total indexed', [
         '%num_indexed' => $status['total'] - $status['remaining'],
-        '%num_total' => $status['total']
+        '%num_total' => $status['total'],
       ]);
     }
     else {
@@ -227,7 +227,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#open' => TRUE,
     ];
     $form['indexing_settings']['info'] = [
-      '#markup' => $this->t("<p>Search pages that use an index may use the default index provided by the Search module, or they may use a different indexing mechanism. These settings are for the default index. <em>Changing these settings will cause the default search index to be rebuilt to reflect the new settings. Searching will continue to work, based on the existing index, but new content won't be indexed until all existing content has been re-indexed.</em></p><p><em>The default settings should be appropriate for the majority of sites.</em></p>")
+      '#markup' => $this->t("<p>Search pages that use an index may use the default index provided by the Search module, or they may use a different indexing mechanism. These settings are for the default index. <em>Changing these settings will cause the default search index to be rebuilt to reflect the new settings. Searching will continue to work, based on the existing index, but new content won't be indexed until all existing content has been re-indexed.</em></p><p><em>The default settings should be appropriate for the majority of sites.</em></p>"),
     ];
     $form['indexing_settings']['minimum_word_size'] = [
       '#type' => 'number',
@@ -241,7 +241,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#type' => 'checkbox',
       '#title' => $this->t('Simple CJK handling'),
       '#default_value' => $search_settings->get('index.overlap_cjk'),
-      '#description' => $this->t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.')
+      '#description' => $this->t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.'),
     ];
 
     // Indexing settings:

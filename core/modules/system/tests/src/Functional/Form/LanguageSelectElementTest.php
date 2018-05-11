@@ -45,7 +45,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
         'edit-languages-all' => LanguageInterface::STATE_ALL,
         'edit-languages-configurable' => LanguageInterface::STATE_CONFIGURABLE,
         'edit-languages-locked' => LanguageInterface::STATE_LOCKED,
-        'edit-languages-config-and-locked' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_LOCKED
+        'edit-languages-config-and-locked' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_LOCKED,
     ];
     foreach ($ids as $id => $flags) {
       $this->assertField($id, format_string('The @id field was found on the page.', ['@id' => $id]));

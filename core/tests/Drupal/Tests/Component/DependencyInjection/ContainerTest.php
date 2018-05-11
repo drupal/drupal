@@ -993,7 +993,7 @@ class ContainerTest extends TestCase {
       'arguments' => [],
       'configurator' => [
         $this->getServiceCall('configurator'),
-        'configureService'
+        'configureService',
       ],
     ];
     $services['configurable_service_exception'] = [

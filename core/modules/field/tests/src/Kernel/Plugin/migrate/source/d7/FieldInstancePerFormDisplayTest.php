@@ -265,7 +265,7 @@ class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestBase {
             'data' => 'a:7:{s:5:"label";s:7:"Integer";s:6:"widget";a:5:{s:6:"weight";s:1:"2";s:4:"type";s:6:"number";s:6:"module";s:6:"number";s:6:"active";i:0;s:8:"settings";a:0:{}}s:8:"settings";a:5:{s:3:"min";s:0:"";s:3:"max";s:0:"";s:6:"prefix";s:0:"";s:6:"suffix";s:0:"";s:18:"user_register_form";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:14:"number_integer";s:8:"settings";a:4:{s:18:"thousand_separator";s:1:" ";s:17:"decimal_separator";s:1:".";s:5:"scale";i:0;s:13:"prefix_suffix";b:1;}s:6:"module";s:6:"number";s:6:"weight";i:1;}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
             'deleted' => '0',
             'type' => 'number_integer',
-          ]
+          ],
         ],
       ],
       [

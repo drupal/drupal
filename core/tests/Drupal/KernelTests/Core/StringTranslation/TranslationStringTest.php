@@ -19,7 +19,7 @@ class TranslationStringTest extends KernelTestBase {
    * @var array
    */
   public static $modules = [
-    'language'
+    'language',
   ];
 
   /**

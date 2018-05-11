@@ -86,7 +86,7 @@ class QuickEditLoadingTest extends WebTestBase {
         0 => [
           'value' => '<p>How are you?</p>',
           'format' => 'filtered_html',
-        ]
+        ],
       ],
       'revision_log' => $this->randomString(),
     ]);
@@ -187,7 +187,7 @@ class QuickEditLoadingTest extends WebTestBase {
         'label' => 'Body',
         'access' => TRUE,
         'editor' => 'form',
-      ]
+      ],
     ];
     $this->assertIdentical(Json::decode($response), $expected, 'The metadata HTTP request answers with the correct JSON response.');
     // Restore drupalSettings to build the next requests; simpletest wipes them
@@ -373,7 +373,7 @@ class QuickEditLoadingTest extends WebTestBase {
         'label' => 'Title',
         'access' => TRUE,
         'editor' => 'plain_text',
-      ]
+      ],
     ];
     $this->assertIdentical(Json::decode($response), $expected, 'The metadata HTTP request answers with the correct JSON response.');
     // Restore drupalSettings to build the next requests; simpletest wipes them

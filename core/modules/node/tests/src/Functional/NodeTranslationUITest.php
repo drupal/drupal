@@ -99,7 +99,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $add_url = Url::fromRoute("entity.$entity_type_id.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => $default_langcode,
-      'target' => $langcode
+      'target' => $langcode,
     ], ['language' => $language]);
     $edit = $this->getEditValues($values, $langcode);
     $edit['status[value]'] = FALSE;

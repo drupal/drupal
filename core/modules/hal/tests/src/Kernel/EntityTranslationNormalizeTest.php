@@ -51,7 +51,7 @@ class EntityTranslationNormalizeTest extends NormalizerTestBase {
       'sticky' => 0,
       'body' => [
         'value' => $this->randomMachineName(),
-        'format' => $this->randomMachineName()
+        'format' => $this->randomMachineName(),
       ],
       'revision_log' => $this->randomString(),
     ]);
@@ -59,7 +59,7 @@ class EntityTranslationNormalizeTest extends NormalizerTestBase {
       'title' => 'German title',
       'body' => [
         'value' => $this->randomMachineName(),
-        'format' => $this->randomMachineName()
+        'format' => $this->randomMachineName(),
       ],
     ]);
     $node->save();

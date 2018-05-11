@@ -205,7 +205,7 @@ class RegistryTest extends KernelTestBase {
     $expected = [
       'template_preprocess',
       'template_preprocess_container',
-      'template_preprocess_theme_test_registered_by_module'
+      'template_preprocess_theme_test_registered_by_module',
     ];
     $registry = $registry_theme->get();
     $this->assertEquals($expected, array_values($registry['theme_test_registered_by_module']['preprocess functions']));

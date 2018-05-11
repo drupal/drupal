@@ -148,7 +148,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
       'field_name' => $field_name,
       'entity_type' => 'taxonomy_term',
       'type' => 'text',
-      'cardinality' => 4
+      'cardinality' => 4,
     ];
     FieldStorageConfig::create($storage_definition)->save();
     $field_definition = [

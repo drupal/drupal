@@ -58,7 +58,7 @@ class RecalculatedDependencyTest extends UpdatePathTestBase {
     $this->assertEqual([
       'field.storage.node.field_tags',
       'node.type.article',
-      'taxonomy.vocabulary.tags'
+      'taxonomy.vocabulary.tags',
     ], $data['dependencies']['config']);
 
     $data = \Drupal::config('field.field.user.user.user_picture')->get();

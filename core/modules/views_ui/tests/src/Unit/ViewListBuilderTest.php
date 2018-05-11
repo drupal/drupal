@@ -48,7 +48,7 @@ class ViewListBuilderTest extends UnitTestCase {
             'theme' => 'views_view',
             'no_ui' => TRUE,
             'admin' => '',
-          ]
+          ],
         ],
         [
           'page',
@@ -61,7 +61,7 @@ class ViewListBuilderTest extends UnitTestCase {
             'contextual_links_locations' => ['page'],
             'theme' => 'views_view',
             'admin' => 'Page admin label',
-          ]
+          ],
         ],
         [
           'embed',
@@ -71,7 +71,7 @@ class ViewListBuilderTest extends UnitTestCase {
             'title' => 'embed',
             'theme' => 'views_view',
             'admin' => 'Embed admin label',
-          ]
+          ],
         ],
       ]));
 

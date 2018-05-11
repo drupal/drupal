@@ -335,7 +335,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
       'entity_type' => 'entity_test',
       'type' => 'entity_reference',
       'settings' => [
-        'target_type' => 'entity_test'
+        'target_type' => 'entity_test',
       ],
     ]);
     $field_storage->save();

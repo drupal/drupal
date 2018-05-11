@@ -26,7 +26,7 @@ class DefaultWizardDeriver extends DeriverBase {
           'id' => 'standard',
           'base_table' => $table,
           'title' => $views_info['table']['base']['title'],
-          'class' => 'Drupal\views\Plugin\views\wizard\Standard'
+          'class' => 'Drupal\views\Plugin\views\wizard\Standard',
         ];
       }
     }

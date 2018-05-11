@@ -51,9 +51,9 @@ class EditorUploadImageScaleTest extends WebTestBase {
         'max_size' => '',
         'max_dimensions' => [
           'width' => NULL,
-          'height' => NULL
+          'height' => NULL,
         ],
-      ]
+      ],
     ])->save();
 
     // Create admin user.

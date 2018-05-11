@@ -111,7 +111,7 @@ class ExtensionListTest extends UnitTestCase {
         'core' => '8.x',
         'name' => 'test name',
         'mtime' => 123456789,
-      ]
+      ],
     ], $infos);
   }
 
@@ -129,7 +129,7 @@ class ExtensionListTest extends UnitTestCase {
         'core' => '8.x',
         'name' => 'test name',
         'mtime' => 123456789,
-      ]
+      ],
     ], $infos);
   }
 

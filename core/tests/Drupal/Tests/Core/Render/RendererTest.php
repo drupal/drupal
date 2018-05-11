@@ -180,7 +180,7 @@ class RendererTest extends RendererTestBase {
         '#pre_render' => [function ($elements) {
           $elements['#markup'] .= '<script>alert("bar");</script>';
           return $elements;
-        }
+        },
         ],
       ],
       'fooalert("bar");',
@@ -193,7 +193,7 @@ class RendererTest extends RendererTestBase {
         '#pre_render' => [function ($elements) {
           $elements['#markup'] .= '<script>alert("bar");</script>';
           return $elements;
-        }
+        },
         ],
       ],
       'foo<script>alert("bar");</script>',
@@ -206,7 +206,7 @@ class RendererTest extends RendererTestBase {
         '#pre_render' => [function ($elements) {
           $elements['#plain_text'] .= '<script>alert("bar");</script>';
           return $elements;
-        }
+        },
         ],
       ],
       'foo&lt;script&gt;alert(&quot;bar&quot;);&lt;/script&gt;',
@@ -508,7 +508,7 @@ class RendererTest extends RendererTestBase {
     $build = [
       '#access_callback' => function () use ($access) {
         return $access;
-      }
+      },
     ];
 
     $this->assertAccess($build, $access);
@@ -527,7 +527,7 @@ class RendererTest extends RendererTestBase {
       '#access' => $access,
       '#access_callback' => function () {
         return TRUE;
-      }
+      },
     ];
 
     $this->assertAccess($build, $access);
@@ -613,7 +613,7 @@ class RendererTest extends RendererTestBase {
         [
           '#markup' => 'kittens',
           '#cache' => [
-            'tags' => ['kittens-147']
+            'tags' => ['kittens-147'],
           ],
         ],
       ],
@@ -961,7 +961,7 @@ class RendererTest extends RendererTestBase {
             'contexts' => ['theme'],
             'tags' => ['bar'],
             'max-age' => 600,
-          ]
+          ],
         ],
         new TestCacheableDependency(['user.roles'], ['foo'], Cache::PERMANENT),
         [
@@ -979,7 +979,7 @@ class RendererTest extends RendererTestBase {
             'contexts' => ['theme'],
             'tags' => ['bar'],
             'max-age' => 600,
-          ]
+          ],
         ],
         new \stdClass(),
         [

@@ -62,7 +62,7 @@ class TextItem extends TextItemBase {
           'Length' => [
             'max' => $max_length,
             'maxMessage' => t('%name: the text may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length]),
-          ]
+          ],
         ],
       ]);
     }

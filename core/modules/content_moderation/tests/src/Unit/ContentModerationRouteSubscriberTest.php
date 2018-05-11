@@ -78,7 +78,7 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
       ],
       'Entity parameter on an entity form' => [
         [
-          '_entity_form' => 'entity_test_rev.edit'
+          '_entity_form' => 'entity_test_rev.edit',
         ],
         [
           'entity_test_rev' => [
@@ -94,7 +94,7 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
       ],
       'Entity form with no operation' => [
         [
-          '_entity_form' => 'entity_test_rev'
+          '_entity_form' => 'entity_test_rev',
         ],
         [
           'entity_test_rev' => [
@@ -110,7 +110,7 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
       ],
       'Non-moderated entity form' => [
         [
-          '_entity_form' => 'entity_test_mulrev'
+          '_entity_form' => 'entity_test_mulrev',
         ],
         [
           'entity_test_mulrev' => [
@@ -120,7 +120,7 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
       ],
       'Multiple entity parameters on an entity form' => [
         [
-          '_entity_form' => 'entity_test_rev.edit'
+          '_entity_form' => 'entity_test_rev.edit',
         ],
         [
           'entity_test_rev' => [
@@ -142,7 +142,7 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
       ],
       'Overridden load_latest_revision flag does not change' => [
         [
-          '_entity_form' => 'entity_test_rev.edit'
+          '_entity_form' => 'entity_test_rev.edit',
         ],
         [
           'entity_test_rev' => [
@@ -153,7 +153,7 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
       ],
       'Non-revisionable entity type will not change' => [
         [
-          '_entity_form' => 'entity_test.edit'
+          '_entity_form' => 'entity_test.edit',
         ],
         [
           'entity_test' => [
@@ -165,7 +165,7 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
       ],
       'Overridden load_latest_revision flag does not change with multiple parameters' => [
         [
-          '_entity_form' => 'entity_test_rev.edit'
+          '_entity_form' => 'entity_test_rev.edit',
         ],
         [
           'entity_test_rev' => [

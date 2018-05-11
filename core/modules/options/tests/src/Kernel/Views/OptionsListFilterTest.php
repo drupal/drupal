@@ -78,20 +78,20 @@ class OptionsListFilterTest extends OptionsTestBase {
               'operator' => 'or',
               'value' => [
                 $this->fieldValues[0] => $this->fieldValues[0],
-              ]
+              ],
             ],
             2 => [
               'title' => 'Second',
               'operator' => 'or',
               'value' => [
                 $this->fieldValues[1] => $this->fieldValues[1],
-              ]
+              ],
             ],
           ],
         ],
         'reduce_duplicates' => '',
         'plugin_id' => 'list_field',
-      ]
+      ],
     ];
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('filters', $filters);

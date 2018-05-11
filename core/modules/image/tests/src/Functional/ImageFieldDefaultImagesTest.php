@@ -374,7 +374,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       'settings' => [
         'default_image' => [
           'uuid' => 100000,
-        ]
+        ],
       ],
     ]);
     $field_storage->save();
@@ -389,7 +389,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       'settings' => [
         'default_image' => [
           'uuid' => 100000,
-        ]
+        ],
       ],
     ]);
     $field->save();

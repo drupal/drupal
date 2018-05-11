@@ -40,8 +40,8 @@ class TestSuiteBaseTest extends TestCase {
                 'Listener.php' => '<?php',
                 'Legacy' => [
                   'Listener.php' => '<?php',
-                ]
-              ]
+                ],
+              ],
             ],
           ],
         ],

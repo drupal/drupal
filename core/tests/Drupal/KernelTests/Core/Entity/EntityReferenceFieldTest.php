@@ -212,7 +212,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     // Create the default target entity.
     $target_entity = EntityTestStringId::create([
       'id' => $this->randomString(),
-      'type' => $this->bundle
+      'type' => $this->bundle,
     ]);
     $target_entity->save();
 
@@ -381,7 +381,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $definitions = [
       'target_reference' => BaseFieldDefinition::create('entity_reference')
         ->setSetting('target_type', $entity_type->id())
-        ->setSetting('handler', 'default')
+        ->setSetting('handler', 'default'),
     ];
     $this->state->set('entity_test_update.additional_base_field_definitions', $definitions);
     $this->entityManager->clearCachedDefinitions();

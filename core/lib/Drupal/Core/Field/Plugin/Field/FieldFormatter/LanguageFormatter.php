@@ -118,7 +118,7 @@ class LanguageFormatter extends StringFormatter {
     // name. That only depends on formatter settings and no language condition.
     $languages = $this->getSetting('native_language') ? $this->languageManager->getNativeLanguages(LanguageInterface::STATE_ALL) : $this->languageManager->getLanguages(LanguageInterface::STATE_ALL);
     return [
-      '#plain_text' => $item->language && isset($languages[$item->language->getId()]) ? $languages[$item->language->getId()]->getName() : ''
+      '#plain_text' => $item->language && isset($languages[$item->language->getId()]) ? $languages[$item->language->getId()]->getName() : '',
     ];
   }
 

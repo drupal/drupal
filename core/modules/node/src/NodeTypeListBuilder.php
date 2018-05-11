@@ -56,7 +56,7 @@ class NodeTypeListBuilder extends ConfigEntityListBuilder {
   public function render() {
     $build = parent::render();
     $build['table']['#empty'] = $this->t('No content types available. <a href=":link">Add content type</a>.', [
-        ':link' => Url::fromRoute('node.type_add')->toString()
+        ':link' => Url::fromRoute('node.type_add')->toString(),
       ]);
     return $build;
   }

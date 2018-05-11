@@ -94,11 +94,11 @@ abstract class EntityDisplayFormBase extends EntityForm {
       'content' => [
         'title' => $this->t('Content'),
         'invisible' => TRUE,
-        'message' => $this->t('No field is displayed.')
+        'message' => $this->t('No field is displayed.'),
       ],
       'hidden' => [
         'title' => $this->t('Disabled', [], ['context' => 'Plural']),
-        'message' => $this->t('No field is hidden.')
+        'message' => $this->t('No field is hidden.'),
       ],
     ];
   }
@@ -242,7 +242,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
         // spinners will be added manually by the client-side script.
         'progress' => 'none',
       ],
-      '#attributes' => ['class' => ['visually-hidden']]
+      '#attributes' => ['class' => ['visually-hidden']],
     ];
 
     $form['actions'] = ['#type' => 'actions'];

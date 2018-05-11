@@ -259,7 +259,7 @@ class ResponsiveImageStyleForm extends EntityForm {
               'image_mapping' => [
                 'sizes' => $image_style_mapping['sizes'],
                 'sizes_image_styles' => array_keys(array_filter($image_style_mapping['sizes_image_styles'])),
-              ]
+              ],
             ];
             $responsive_image_style->addImageStyleMapping($breakpoint_id, $multiplier, $mapping);
           }

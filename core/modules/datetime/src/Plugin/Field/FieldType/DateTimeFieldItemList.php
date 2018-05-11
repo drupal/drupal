@@ -51,9 +51,9 @@ class DateTimeFieldItemList extends FieldItemList {
           '#states' => [
             'visible' => [
               ':input[id="edit-default-value-input-default-date-type"]' => ['value' => static::DEFAULT_VALUE_CUSTOM],
-            ]
-          ]
-        ]
+            ],
+          ],
+        ],
       ];
 
       return $element;
@@ -112,7 +112,7 @@ class DateTimeFieldItemList extends FieldItemList {
         [
           'value' => $value,
           'date' => $date,
-        ]
+        ],
       ];
     }
     return $default_value;

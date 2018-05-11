@@ -259,7 +259,7 @@ class RenderCache implements RenderCacheInterface {
           '#cache' => [
             'keys' => $elements['#cache']['keys'],
             'contexts' => $redirect_cacheability_updated->getCacheContexts(),
-          ]
+          ],
         ];
         $cid = $this->createCacheID($recalculated_cid_pseudo_element);
         // Ensure the about-to-be-cached data uses the merged cache contexts.

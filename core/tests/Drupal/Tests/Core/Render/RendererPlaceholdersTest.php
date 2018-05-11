@@ -1125,7 +1125,7 @@ HTML;
 EOS;
         $output = str_replace([
           '{{ title }}',
-          '{{ children }}'
+          '{{ children }}',
         ], [$vars['#title'], $vars['#children']], $output);
         return $output;
       });

@@ -790,7 +790,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $revision_metadata_keys = [
       'revision_created' => 'revision_timestamp',
       'revision_user' => 'revision_uid',
-      'revision_log_message' => 'revision_log'
+      'revision_log_message' => 'revision_log',
     ];
 
     $this->entityType->expects($this->atLeastOnce())
@@ -1389,7 +1389,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getImplementations')
       ->will($this->returnValueMap([
         ['entity_load', []],
-        [$this->entityTypeId . '_load', []]
+        [$this->entityTypeId . '_load', []],
       ]));
 
     $this->container->set('module_handler', $this->moduleHandler);

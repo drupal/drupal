@@ -75,7 +75,7 @@ class TextFieldTest extends UnitTestCase {
       'widget_type' => 'optionwidgets_onoff',
       'global_settings' => [
         'allowed_values' => "foo\nbar",
-      ]
+      ],
     ];
     $this->plugin->processFieldValues($this->migration, 'field', $info);
 
@@ -100,7 +100,7 @@ class TextFieldTest extends UnitTestCase {
       'widget_type' => 'optionwidgets_onoff',
       'global_settings' => [
         'allowed_values' => "foo|Foo\nbaz|Baz",
-      ]
+      ],
     ];
     $this->plugin->processFieldValues($this->migration, 'field', $info);
 

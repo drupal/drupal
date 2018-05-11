@@ -173,7 +173,7 @@ function tracker_views_data_alter(&$data) {
       'field' => 'uid',
       'name table' => 'users_field_data',
       'name field' => 'name',
-      'id' => 'tracker_user_uid'
+      'id' => 'tracker_user_uid',
     ],
   ];
 }

@@ -43,11 +43,11 @@ class ExceptionJsonSubscriberTest extends UnitTestCase {
     return [
       'uncacheable exception' => [
         new MethodNotAllowedHttpException(['POST', 'PUT'], 'test message'),
-        JsonResponse::class
+        JsonResponse::class,
       ],
       'cacheable exception' => [
         new CacheableMethodNotAllowedHttpException((new CacheableMetadata())->setCacheContexts(['route']), ['POST', 'PUT'], 'test message'),
-        CacheableJsonResponse::class
+        CacheableJsonResponse::class,
       ],
     ];
   }

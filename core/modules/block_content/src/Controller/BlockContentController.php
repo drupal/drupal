@@ -103,7 +103,7 @@ class BlockContentController extends ControllerBase {
    */
   public function addForm(BlockContentTypeInterface $block_content_type, Request $request) {
     $block = $this->blockContentStorage->create([
-      'type' => $block_content_type->id()
+      'type' => $block_content_type->id(),
     ]);
     if (($theme = $request->query->get('theme')) && in_array($theme, array_keys($this->themeHandler->listInfo()))) {
       // We have navigated to this page from the block library and will keep track

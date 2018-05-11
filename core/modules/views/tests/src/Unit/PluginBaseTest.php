@@ -101,7 +101,7 @@ class PluginBaseTest extends UnitTestCase {
       'expected' => [
         'key' => 'value2',
       ],
-      ''
+      '',
     ];
     // Set no storage but an options value, so the options value should be kept.
     $test_parameters[] = [

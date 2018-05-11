@@ -210,8 +210,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
              0 => [
                'name' => 'All existing buttons',
                'items' => $all_buttons,
-             ]
-           ]
+             ],
+           ],
          ],
         ],
         'plugins' => $settings['plugins'],

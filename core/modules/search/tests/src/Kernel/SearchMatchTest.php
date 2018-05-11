@@ -156,7 +156,7 @@ class SearchMatchTest extends KernelTestBase {
       '"am minim veniam" -"cillum dolore"' => [5, 6],
       '"am minim veniam" -"dolore cillum"' => [5, 6, 7],
       'xxxxx "minim am veniam es" OR dolore' => [],
-      'xx "minim am veniam es" OR dolore' => []
+      'xx "minim am veniam es" OR dolore' => [],
     ];
     foreach ($queries as $query => $results) {
       $result = db_select('search_index', 'i')

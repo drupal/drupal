@@ -104,9 +104,9 @@ class ExposedFormTest extends ViewTestBase {
           'label' => 'Content: Type',
           'operator_id' => 'type_op',
           'reduce' => FALSE,
-          'description' => 'Exposed overridden description'
+          'description' => 'Exposed overridden description',
         ],
-      ]
+      ],
     ]);
     $view->save();
     $this->drupalGet('test_exposed_form_buttons', ['query' => [$identifier => 'article']]);
@@ -131,9 +131,9 @@ class ExposedFormTest extends ViewTestBase {
           'label' => 'Content: Type',
           'operator_id' => 'type_op',
           'reduce' => FALSE,
-          'description' => 'Exposed overridden description'
+          'description' => 'Exposed overridden description',
         ],
-      ]
+      ],
     ]);
     $this->executeView($view);
 
@@ -286,7 +286,7 @@ class ExposedFormTest extends ViewTestBase {
       'entity_test_view_grants',
       'theme',
       'url.query_args',
-      'languages:language_content'
+      'languages:language_content',
     ];
 
     $this->drupalGet('test_exposed_form_sort_items_per_page');

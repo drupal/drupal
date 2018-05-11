@@ -45,7 +45,7 @@ class UpdateController extends ControllerBase {
    */
   public function updateStatus() {
     $build = [
-      '#theme' => 'update_report'
+      '#theme' => 'update_report',
     ];
     if ($available = update_get_available(TRUE)) {
       $this->moduleHandler()->loadInclude('update', 'compare.inc');

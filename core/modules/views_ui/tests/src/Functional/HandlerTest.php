@@ -53,7 +53,7 @@ class HandlerTest extends UITestBase {
       'type' => 'int',
       'unsigned' => TRUE,
       'not null' => TRUE,
-      'default' => 0
+      'default' => 0,
     ];
 
     return $schema;
@@ -74,8 +74,8 @@ class HandlerTest extends UITestBase {
       'relationship' => [
         'id' => 'standard',
         'base' => 'users_field_data',
-        'base field' => 'uid'
-      ]
+        'base field' => 'uid',
+      ],
     ];
 
     // Create a dummy field with no help text.
@@ -180,14 +180,14 @@ class HandlerTest extends UITestBase {
       'field_name' => 'field_test',
       'entity_type' => 'node',
       'bundle' => 'page',
-      'label' => 'The giraffe" label'
+      'label' => 'The giraffe" label',
     ])->save();
 
     FieldConfig::create([
       'field_name' => 'field_test',
       'entity_type' => 'node',
       'bundle' => 'article',
-      'label' => 'The <em>giraffe"</em> label <script>alert("the return of the xss")</script>'
+      'label' => 'The <em>giraffe"</em> label <script>alert("the return of the xss")</script>',
     ])->save();
 
     $this->drupalGet('admin/structure/views/nojs/add-handler/content/default/field');

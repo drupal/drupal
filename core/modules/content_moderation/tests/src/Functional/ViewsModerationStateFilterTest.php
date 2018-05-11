@@ -201,11 +201,11 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
     return [
       'view on base table, filter on base table' => [
         'test_content_moderation_state_filter_base_table',
-        'Content: Moderation state'
+        'Content: Moderation state',
       ],
       'view on base table, filter on revision table' => [
         'test_content_moderation_state_filter_base_table_filter_on_revision',
-        'Content revision: Moderation state'
+        'Content revision: Moderation state',
       ],
     ];
   }

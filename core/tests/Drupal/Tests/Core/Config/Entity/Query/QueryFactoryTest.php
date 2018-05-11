@@ -37,42 +37,42 @@ class QueryFactoryTest extends UnitTestCase {
     $tests[] = [
       ['uuid:abc'],
       'uuid',
-      $this->getConfigObject('test')->set('uuid', 'abc')
+      $this->getConfigObject('test')->set('uuid', 'abc'),
     ];
 
     // Tests a lookup being set to a top level key when sub-keys exist.
     $tests[] = [
       [],
       'uuid',
-      $this->getConfigObject('test')->set('uuid.blah', 'abc')
+      $this->getConfigObject('test')->set('uuid.blah', 'abc'),
     ];
 
     // Tests a non existent key.
     $tests[] = [
       [],
       'uuid',
-      $this->getConfigObject('test')
+      $this->getConfigObject('test'),
     ];
 
     // Tests a non existent sub key.
     $tests[] = [
       [],
       'uuid.blah',
-      $this->getConfigObject('test')->set('uuid', 'abc')
+      $this->getConfigObject('test')->set('uuid', 'abc'),
     ];
 
     // Tests a existent sub key.
     $tests[] = [
       ['uuid.blah:abc'],
       'uuid.blah',
-      $this->getConfigObject('test')->set('uuid.blah', 'abc')
+      $this->getConfigObject('test')->set('uuid.blah', 'abc'),
     ];
 
     // One wildcard.
     $tests[] = [
       ['test.*.value:a', 'test.*.value:b'],
       'test.*.value',
-      $this->getConfigObject('test')->set('test.a.value', 'a')->set('test.b.value', 'b')
+      $this->getConfigObject('test')->set('test.a.value', 'a')->set('test.b.value', 'b'),
     ];
 
     // Three wildcards.
@@ -82,14 +82,14 @@ class QueryFactoryTest extends UnitTestCase {
       $this->getConfigObject('test')
         ->set('test.a.sub2.a.sub4.a.value', 'aaa')
         ->set('test.a.sub2.a.sub4.b.value', 'aab')
-        ->set('test.b.sub2.a.sub4.b.value', 'bab')
+        ->set('test.b.sub2.a.sub4.b.value', 'bab'),
     ];
 
     // Three wildcards in a row.
     $tests[] = [
       ['test.*.*.*.value:abc', 'test.*.*.*.value:abd'],
       'test.*.*.*.value',
-      $this->getConfigObject('test')->set('test.a.b.c.value', 'abc')->set('test.a.b.d.value', 'abd')
+      $this->getConfigObject('test')->set('test.a.b.c.value', 'abc')->set('test.a.b.d.value', 'abd'),
     ];
 
     return $tests;

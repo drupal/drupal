@@ -40,7 +40,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
     $this->fieldTypeDefinition = [
       'id' => $this->fieldType,
       'storage_settings' => [
-        'some_setting' => 'value 1'
+        'some_setting' => 'value 1',
       ],
       'field_settings' => [
         'some_instance_setting' => 'value 2',

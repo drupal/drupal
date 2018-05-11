@@ -286,7 +286,7 @@ abstract class WebTestBase extends TestBase {
 
     $edit = [
       'name' => $account->getUsername(),
-      'pass' => $account->pass_raw
+      'pass' => $account->pass_raw,
     ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
 
@@ -660,7 +660,7 @@ abstract class WebTestBase extends TestBase {
       '@method' => !empty($curl_options[CURLOPT_NOBODY]) ? 'HEAD' : (empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST'),
       '@url' => isset($original_url) ? $original_url : $url,
       '@status' => $status,
-      '@length' => format_size(strlen($this->getRawContent()))
+      '@length' => format_size(strlen($this->getRawContent())),
     ];
     $message = new FormattableMarkup('@method @url returned @status (@length).', $message_vars);
     $this->assertTrue($this->getRawContent() !== FALSE, $message, 'Browser');

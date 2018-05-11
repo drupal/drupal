@@ -72,7 +72,7 @@ class ConfigTest extends MigrateSqlSourceTestBase {
       ],
       'collections' => [
         'language.af',
-      ]
+      ],
     ];
 
     // Test with name and no collection in configuration.

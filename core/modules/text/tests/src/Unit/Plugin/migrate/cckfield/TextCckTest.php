@@ -76,7 +76,7 @@ class TextCckTest extends UnitTestCase {
       'widget_type' => 'optionwidgets_onoff',
       'global_settings' => [
         'allowed_values' => "foo\nbar",
-      ]
+      ],
     ];
     $this->plugin->processCckFieldValues($this->migration, 'field', $info);
 
@@ -101,7 +101,7 @@ class TextCckTest extends UnitTestCase {
       'widget_type' => 'optionwidgets_onoff',
       'global_settings' => [
         'allowed_values' => "foo|Foo\nbaz|Baz",
-      ]
+      ],
     ];
     $this->plugin->processCckFieldValues($this->migration, 'field', $info);
 

@@ -57,8 +57,8 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
         0 => [
           'value' => '<p>Do you also love Drupal?</p><img src="druplicon.png" data-caption="Druplicon" />',
           'format' => 'filtered_html',
-        ]
-      ]
+        ],
+      ],
     ]);
   }
 
@@ -73,7 +73,7 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
     $users = [
       $this->drupalCreateUser(static::$basicPermissions),
       $this->drupalCreateUser(array_merge(static::$basicPermissions, ['edit any article content'])),
-      $this->drupalCreateUser(array_merge(static::$basicPermissions, ['access in-place editing']))
+      $this->drupalCreateUser(array_merge(static::$basicPermissions, ['access in-place editing'])),
     ];
 
     // Now test with each of the 3 users with insufficient permissions.

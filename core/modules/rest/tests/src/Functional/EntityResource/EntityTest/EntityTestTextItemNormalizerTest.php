@@ -123,7 +123,7 @@ class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
       'foo:bar',
       'foo:baz',
       // The cache tags set by the filter_test_cache_merge filter.
-      'merge:tag'
+      'merge:tag',
     ], parent::getExpectedCacheTags());
   }
 

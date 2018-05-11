@@ -51,10 +51,10 @@ function system_requirements($phase) {
         'value' => t('%profile_name (%profile-%version)', [
           '%profile_name' => $info['name'],
           '%profile' => $profile,
-          '%version' => $info['version']
+          '%version' => $info['version'],
         ]),
         'severity' => REQUIREMENT_INFO,
-        'weight' => -9
+        'weight' => -9,
       ];
     }
 

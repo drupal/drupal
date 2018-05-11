@@ -118,7 +118,7 @@ class EditorLoadingTest extends WebTestBase {
         'directory' => 'inline-images',
         'max_size' => '',
         'max_dimensions' => ['width' => '', 'height' => ''],
-      ]
+      ],
     ]);
     $editor->save();
 
@@ -202,7 +202,7 @@ class EditorLoadingTest extends WebTestBase {
     $this->drupalCreateNode([
       'type' => 'article',
       'body' => [
-        ['value' => $this->randomMachineName(32), 'format' => 'full_html']
+        ['value' => $this->randomMachineName(32), 'format' => 'full_html'],
       ],
     ]);
 
@@ -234,7 +234,7 @@ class EditorLoadingTest extends WebTestBase {
         'directory' => 'inline-images',
         'max_size' => '',
         'max_dimensions' => ['width' => '', 'height' => ''],
-      ]
+      ],
     ]);
     $editor->save();
 
@@ -242,7 +242,7 @@ class EditorLoadingTest extends WebTestBase {
     $this->drupalCreateNode([
       'type' => 'page',
       'field_text' => [
-        ['value' => $this->randomMachineName(32), 'format' => 'full_html']
+        ['value' => $this->randomMachineName(32), 'format' => 'full_html'],
       ],
     ]);
 

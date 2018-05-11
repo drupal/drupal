@@ -18,7 +18,7 @@ class ConfigOverrider implements ConfigFactoryOverrideInterface {
     return [
       'config_test.dynamic.test_1' => [
         'label' => 'Overridden label',
-      ]
+      ],
     ];
   }
 

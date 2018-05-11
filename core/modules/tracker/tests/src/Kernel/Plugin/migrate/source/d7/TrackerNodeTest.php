@@ -30,7 +30,7 @@ class TrackerNodeTest extends MigrateSqlSourceTestBase {
         'nid' => '2',
         'published' => '1',
         'changed' => '1421727536',
-      ]
+      ],
     ];
 
     // The expected results are identical to the source data.

@@ -112,7 +112,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
         'type' => 'test_field_widget',
         'settings' => [
           'test_widget_setting' => $this->randomMachineName(),
-        ]
+        ],
       ])
       ->save();
   }

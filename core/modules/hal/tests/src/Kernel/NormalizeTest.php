@@ -70,7 +70,7 @@ class NormalizeTest extends NormalizerTestBase {
       'name' => $this->randomMachineName(),
       'field_test_entity_reference' => [
         'target_id' => $target_entity_en->id(),
-      ]
+      ],
     ];
 
     $entity = EntityTest::create($values);

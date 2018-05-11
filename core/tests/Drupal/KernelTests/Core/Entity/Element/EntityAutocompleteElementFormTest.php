@@ -65,7 +65,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
 
     for ($i = 1; $i < 3; $i++) {
       $entity = EntityTest::create([
-        'name' => $this->randomMachineName()
+        'name' => $this->randomMachineName(),
       ]);
       $entity->save();
       $this->referencedEntities[] = $entity;
@@ -297,7 +297,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     $form_state = (new FormState())
       ->setValues([
         'single_no_validate' => 'single - non-existent label',
-        'single_autocreate_no_validate' => 'single - autocreate non-existent label'
+        'single_autocreate_no_validate' => 'single - autocreate non-existent label',
       ]);
     $form_builder->submitForm($this, $form_state);
 
@@ -309,7 +309,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     $form_state = (new FormState())
       ->setValues([
         'single_no_validate' => 'single - non-existent label (42)',
-        'single_autocreate_no_validate' => 'single - autocreate non-existent label (43)'
+        'single_autocreate_no_validate' => 'single - autocreate non-existent label (43)',
       ]);
     $form_builder->submitForm($this, $form_state);
 

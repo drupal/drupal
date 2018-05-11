@@ -131,7 +131,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $expected = [
       'translatable_no_default' => 'This translation is preserved',
       'translatable_default_with_translation' => 'This translation is preserved',
-      'translatable_default_with_no_translation' => 'This translation is preserved'
+      'translatable_default_with_no_translation' => 'This translation is preserved',
     ];
     $this->assertEqual($expected, $override->get());
   }
@@ -204,7 +204,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $expected = [
       'translatable_default_with_translation' => 'Locale can translate Afrikaans',
       'translatable_no_default' => 'This translation is preserved',
-      'translatable_default_with_no_translation' => 'This translation is preserved'
+      'translatable_default_with_no_translation' => 'This translation is preserved',
     ];
     $this->assertEqual($expected, $override->get());
 
@@ -226,7 +226,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');
     $expected = [
       'translatable_no_default' => 'This translation is preserved',
-      'translatable_default_with_no_translation' => 'This translation is preserved'
+      'translatable_default_with_no_translation' => 'This translation is preserved',
     ];
     $this->assertEqual($expected, $override->get());
   }

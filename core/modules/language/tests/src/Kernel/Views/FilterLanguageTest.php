@@ -48,7 +48,7 @@ class FilterLanguageTest extends LanguageTestBase {
         'en',
         'xx-lolspeak',
         'und',
-        'zxx'
+        'zxx',
       ];
       $this->assertIdentical(array_keys($view->filter['langcode']->getValueOptions()), $expected);
 

@@ -408,10 +408,10 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     ];
 
     $options['multi_type'] = [
-      'default' => 'separator'
+      'default' => 'separator',
     ];
     $options['separator'] = [
-      'default' => ', '
+      'default' => ', ',
     ];
 
     $options['field_api_classes'] = [

@@ -57,7 +57,7 @@ class CommentAdminTest extends CommentTestBase {
       'comment_body' => $body,
       'entity_id' => $this->node->id(),
       'entity_type' => 'node',
-      'field_name' => 'comment'
+      'field_name' => 'comment',
     ]);
     $this->drupalLogout();
 
@@ -145,7 +145,7 @@ class CommentAdminTest extends CommentTestBase {
       'comment_body' => $body,
       'entity_id' => $this->node->id(),
       'entity_type' => 'node',
-      'field_name' => 'comment'
+      'field_name' => 'comment',
     ]);
     $this->drupalLogout();
 

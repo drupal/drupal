@@ -59,7 +59,7 @@ class PreExistingConfigException extends ConfigException {
     $message = new FormattableMarkup('Configuration objects (@config_names) provided by @extension already exist in active configuration',
       [
         '@config_names' => implode(', ', static::flattenConfigObjects($config_objects)),
-        '@extension' => $extension
+        '@extension' => $extension,
       ]
     );
     $e = new static($message);

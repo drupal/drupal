@@ -83,7 +83,7 @@ class CorsIntegrationTest extends BrowserTestBase {
     $response = $httpClient->request('POST', $url->setAbsolute()->toString(), [
       'headers' => [
         'Origin' => $origin,
-      ]
+      ],
     ]);
     $this->assertEquals(200, $response->getStatusCode());
   }

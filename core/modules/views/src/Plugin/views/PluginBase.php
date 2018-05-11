@@ -400,7 +400,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
         '#post_render' => [
           function ($children, $elements) {
             return Xss::filterAdmin($children);
-          }
+          },
         ],
       ];
 

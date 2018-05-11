@@ -64,7 +64,7 @@ class FileCckTest extends UnitTestCase {
     return [
       ['image', 'imagefield_widget'],
       ['file', 'filefield_widget'],
-      ['file', 'x_widget']
+      ['file', 'x_widget'],
     ];
   }
 

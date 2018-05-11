@@ -41,8 +41,8 @@ class ArgumentValidatorTest extends ViewsKernelTestBase {
     $options = [
       'specify_validation' => TRUE,
       'validate' => [
-        'type' => 'argument_validator_test'
-      ]
+        'type' => 'argument_validator_test',
+      ],
     ];
     $id = $view->addHandler('default', 'argument', 'views_test_data', 'name', $options);
     $view->initHandlers();

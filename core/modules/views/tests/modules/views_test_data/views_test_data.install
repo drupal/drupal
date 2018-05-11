@@ -29,7 +29,7 @@ function views_test_data_install() {
     'p' => 'P',
     'strong' => 'STRONG',
     'em' => 'EM',
-    'marquee' => 'MARQUEE'
+    'marquee' => 'MARQUEE',
   ];
   \Drupal::configFactory()->getEditable('views.settings')->set('field_rewrite_elements', $values)->save();
 }

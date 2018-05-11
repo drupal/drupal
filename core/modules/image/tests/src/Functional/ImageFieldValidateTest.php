@@ -81,27 +81,27 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     ];
     $min_resolution = [
       'width' => 50,
-      'height' => 50
+      'height' => 50,
     ];
     $max_resolution = [
       'width' => 100,
-      'height' => 100
+      'height' => 100,
     ];
     $no_height_min_resolution = [
       'width' => 50,
-      'height' => NULL
+      'height' => NULL,
     ];
     $no_height_max_resolution = [
       'width' => 100,
-      'height' => NULL
+      'height' => NULL,
     ];
     $no_width_min_resolution = [
       'width' => NULL,
-      'height' => 50
+      'height' => 50,
     ];
     $no_width_max_resolution = [
       'width' => NULL,
-      'height' => 100
+      'height' => 100,
     ];
     $field_settings = [
       0 => $this->getFieldSettings($min_resolution, $max_resolution),

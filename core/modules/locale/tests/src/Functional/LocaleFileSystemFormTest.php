@@ -45,7 +45,7 @@ class LocaleFileSystemFormTest extends BrowserTestBase {
     // The setting should persist.
     $translation_path = $this->publicFilesDirectory . '/translations_changed';
     $fields = [
-      'translation_path' => $translation_path
+      'translation_path' => $translation_path,
     ];
     $this->drupalPostForm(NULL, $fields, t('Save configuration'));
     $this->drupalGet('admin/config/media/file-system');

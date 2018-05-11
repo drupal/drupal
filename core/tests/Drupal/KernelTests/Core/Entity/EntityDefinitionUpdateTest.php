@@ -1067,7 +1067,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // field, allowing us to test the 'default_value' parameter of
     // \Drupal\Core\Field\BaseFieldDefinition::setInitialValueFromField().
     $storage->create([
-      'name' => 'Second entity'
+      'name' => 'Second entity',
     ])->save();
 
     // Add a base field with an initial value inherited from another field.

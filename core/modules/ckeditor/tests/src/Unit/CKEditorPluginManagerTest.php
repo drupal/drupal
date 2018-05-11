@@ -20,7 +20,7 @@ class CKEditorPluginManagerTest extends UnitTestCase {
     return [
       'empty' => [
         [],
-        []
+        [],
       ],
       '1 row, 1 group' => [
         [
@@ -28,9 +28,9 @@ class CKEditorPluginManagerTest extends UnitTestCase {
           [
             // Group 1.
             ['name' => 'Formatting', 'items' => ['Bold', 'Italic']],
-          ]
+          ],
         ],
-        ['Bold', 'Italic']
+        ['Bold', 'Italic'],
       ],
       '1 row, >1 groups' => [
         [
@@ -42,7 +42,7 @@ class CKEditorPluginManagerTest extends UnitTestCase {
             ['name' => 'Linking', 'items' => ['Link']],
           ],
         ],
-        ['Bold', 'Italic', 'Link']
+        ['Bold', 'Italic', 'Link'],
       ],
       '2 rows, 1 group each' => [
         [
@@ -76,7 +76,7 @@ class CKEditorPluginManagerTest extends UnitTestCase {
             ['name' => 'Advanced', 'items' => ['Llama']],
           ],
         ],
-        ['Bold', 'Italic', 'Link', 'Source', 'Llama']
+        ['Bold', 'Italic', 'Link', 'Source', 'Llama'],
       ],
     ];
   }

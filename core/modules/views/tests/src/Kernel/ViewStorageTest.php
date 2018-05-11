@@ -183,22 +183,22 @@ class ViewStorageTest extends ViewsKernelTestBase {
         'display_plugin' => 'page',
         'id' => 'page_2',
         'display_title' => 'Page 1',
-        'position' => 1
+        'position' => 1,
       ],
       'feed_1' => [
         'display_options' => ['path' => 'test.xml'],
         'display_plugin' => 'feed',
         'id' => 'feed',
         'display_title' => 'Feed',
-        'position' => 2
+        'position' => 2,
       ],
       'page_2' => [
         'display_options' => ['path' => 'test/%/extra'],
         'display_plugin' => 'page',
         'id' => 'page_2',
         'display_title' => 'Page 2',
-        'position' => 3
-      ]
+        'position' => 3,
+      ],
     ];
     $view = $this->controller->create($config);
 
@@ -275,8 +275,8 @@ class ViewStorageTest extends ViewsKernelTestBase {
 
     $options = [
       'alter' => [
-        'text' => $this->randomMachineName()
-      ]
+        'text' => $this->randomMachineName(),
+      ],
     ];
     $id2 = $view->addHandler($display_id, 'field', 'views_test_data', 'name', $options);
     $item2 = $view->getHandler($display_id, 'field', 'name');
@@ -296,7 +296,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $item = [
       'alter' => [
         'text' => $this->randomMachineName(),
-      ]
+      ],
     ] + $item1;
     $expected_items[$id1] = $item;
     $view->setHandler($display_id, 'field', $id1, $item);

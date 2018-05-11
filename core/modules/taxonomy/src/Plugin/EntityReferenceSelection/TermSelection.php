@@ -28,7 +28,7 @@ class TermSelection extends DefaultSelection {
       'sort' => [
         'field' => 'name',
         'direction' => 'asc',
-      ]
+      ],
     ] + parent::defaultConfiguration();
   }
 

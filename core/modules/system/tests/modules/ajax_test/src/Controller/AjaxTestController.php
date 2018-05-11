@@ -139,7 +139,7 @@ class AjaxTestController {
             'data-dialog-type' => 'modal',
             'data-dialog-options' => json_encode([
               'width' => 400,
-            ])
+            ]),
           ],
         ],
         'link3' => [
@@ -151,7 +151,7 @@ class AjaxTestController {
             'data-dialog-options' => json_encode([
               'target' => 'ajax-test-dialog-wrapper-1',
               'width' => 800,
-            ])
+            ]),
           ],
         ],
         'link4' => [
@@ -179,7 +179,7 @@ class AjaxTestController {
             'data-dialog-options' => json_encode([
               'width' => 800,
               'height' => 500,
-            ])
+            ]),
           ],
         ],
         'link7' => [
@@ -190,7 +190,7 @@ class AjaxTestController {
             'data-dialog-type' => 'dialog',
             'data-dialog-options' => json_encode([
               'width' => 800,
-            ])
+            ]),
           ],
         ],
         'link8' => [

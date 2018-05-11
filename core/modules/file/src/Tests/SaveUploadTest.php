@@ -280,7 +280,7 @@ class SaveUploadTest extends FileManagedTestBase {
   public function testExistingRename() {
     $edit = [
       'file_test_replace' => FILE_EXISTS_RENAME,
-      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri())
+      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
     ];
     $this->drupalPostForm('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
@@ -296,7 +296,7 @@ class SaveUploadTest extends FileManagedTestBase {
   public function testExistingReplace() {
     $edit = [
       'file_test_replace' => FILE_EXISTS_REPLACE,
-      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri())
+      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
     ];
     $this->drupalPostForm('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
@@ -312,7 +312,7 @@ class SaveUploadTest extends FileManagedTestBase {
   public function testExistingError() {
     $edit = [
       'file_test_replace' => FILE_EXISTS_ERROR,
-      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri())
+      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
     ];
     $this->drupalPostForm('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
@@ -341,7 +341,7 @@ class SaveUploadTest extends FileManagedTestBase {
 
     $edit = [
       'file_subdir' => $test_directory,
-      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri())
+      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
     ];
 
     \Drupal::state()->set('file_test.disable_error_collection', TRUE);
@@ -355,7 +355,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->assertResponse(200);
     $this->assertRaw(t('Upload error. Could not move uploaded file @file to destination @destination.', [
       '@file' => $this->image->getFilename(),
-      '@destination' => 'temporary://' . $test_directory . '/' . $this->image->getFilename()
+      '@destination' => 'temporary://' . $test_directory . '/' . $this->image->getFilename(),
     ]), 'Found upload error log entry.');
   }
 

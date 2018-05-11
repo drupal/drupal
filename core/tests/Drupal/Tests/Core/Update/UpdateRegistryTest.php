@@ -79,14 +79,14 @@ EOS;
           'modules' => [
             'module_a' => [
               'module_a.post_update.php' => $module_a,
-              'module_a.info.yml' => $info_a
+              'module_a.info.yml' => $info_a,
             ],
             'module_b' => [
               'module_b.post_update.php' => $module_b,
-              'module_b.info.yml' => $info_b
+              'module_b.info.yml' => $info_b,
             ],
-          ]
-        ]
+          ],
+        ],
       ],
     ]);
   }
@@ -103,13 +103,13 @@ EOS;
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a',
-      'module_b'
+      'module_b',
     ], $key_value, FALSE);
 
     $this->assertEquals([
       'module_a_post_update_a',
       'module_a_post_update_b',
-      'module_b_post_update_a'
+      'module_b_post_update_a',
     ], $update_registry->getPendingUpdateFunctions());
   }
 
@@ -150,12 +150,12 @@ EOS;
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a',
-      'module_b'
+      'module_b',
     ], $key_value, FALSE);
 
     $this->assertEquals(array_values([
       'module_a_post_update_b',
-      'module_b_post_update_a'
+      'module_b_post_update_a',
     ]), array_values($update_registry->getPendingUpdateFunctions()));
 
   }
@@ -172,7 +172,7 @@ EOS;
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a',
-      'module_b'
+      'module_b',
     ], $key_value, FALSE);
 
     $expected = [];
@@ -197,7 +197,7 @@ EOS;
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a',
-      'module_b'
+      'module_b',
     ], $key_value, FALSE);
 
     $expected = [];
@@ -218,7 +218,7 @@ EOS;
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a',
-      'module_b'
+      'module_b',
     ], $key_value, FALSE);
 
     $this->assertEquals(['module_a_post_update_a', 'module_a_post_update_b'], array_values($update_registry->getModuleUpdateFunctions('module_a')));
@@ -241,7 +241,7 @@ EOS;
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a',
-      'module_b'
+      'module_b',
     ], $key_value, FALSE);
     $update_registry->registerInvokedUpdates(['module_a_post_update_a']);
   }
@@ -262,7 +262,7 @@ EOS;
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a',
-      'module_b'
+      'module_b',
     ], $key_value, FALSE);
     $update_registry->registerInvokedUpdates(['module_a_post_update_a', 'module_a_post_update_b']);
   }
@@ -283,7 +283,7 @@ EOS;
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a',
-      'module_b'
+      'module_b',
     ], $key_value, FALSE);
     $update_registry->registerInvokedUpdates(['module_a_post_update_a']);
   }
@@ -304,7 +304,7 @@ EOS;
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a',
-      'module_b'
+      'module_b',
     ], $key_value, FALSE);
 
     $update_registry->filterOutInvokedUpdatesByModule('module_a');

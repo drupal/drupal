@@ -25,7 +25,7 @@ class ContentTranslationUISkipTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser([
       'translate any entity',
       'administer content translation',
-      'administer languages'
+      'administer languages',
     ]);
     $this->drupalLogin($admin_user);
     // Visit the content translation.

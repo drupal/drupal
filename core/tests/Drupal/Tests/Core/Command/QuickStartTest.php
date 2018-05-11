@@ -72,7 +72,7 @@ class QuickStartTest extends TestCase {
         // Delete test site directory.
         $this->fileUnmanagedDeleteRecursive($test_site_directory, [
           BrowserTestBase::class,
-          'filePreDeleteCallback'
+          'filePreDeleteCallback',
         ]);
       }
     }
@@ -113,7 +113,7 @@ class QuickStartTest extends TestCase {
     define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
     chmod($this->testDb->getTestSitePath(), 0755);
     $cookieJar = CookieJar::fromArray([
-      'SIMPLETEST_USER_AGENT' => drupal_generate_test_ua($this->testDb->getDatabasePrefix())
+      'SIMPLETEST_USER_AGENT' => drupal_generate_test_ua($this->testDb->getDatabasePrefix()),
     ], '127.0.0.1');
 
     $response = $guzzle->get('http://127.0.0.1:' . $port, ['cookies' => $cookieJar]);
@@ -165,7 +165,7 @@ class QuickStartTest extends TestCase {
     define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
     chmod($this->testDb->getTestSitePath(), 0755);
     $cookieJar = CookieJar::fromArray([
-      'SIMPLETEST_USER_AGENT' => drupal_generate_test_ua($this->testDb->getDatabasePrefix())
+      'SIMPLETEST_USER_AGENT' => drupal_generate_test_ua($this->testDb->getDatabasePrefix()),
     ], '127.0.0.1');
 
     $response = $guzzle->get('http://127.0.0.1:' . $port, ['cookies' => $cookieJar]);

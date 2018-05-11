@@ -23,7 +23,7 @@ class CommentCSSTest extends CommentTestBase {
     // Allow anonymous users to see comments.
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments',
-      'access content'
+      'access content',
     ]);
   }
 

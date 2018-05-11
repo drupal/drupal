@@ -114,12 +114,12 @@ class TwigExtensionTest extends UnitTestCase {
       ['{{ path(name = "foo", parameters = foo) }}', TRUE],
       [
         '{{ path(name = "foo", parameters = { foo: ["foo", "bar"] }) }}',
-        TRUE
+        TRUE,
       ],
       ['{{ path(name = "foo", parameters = { foo: foo }) }}', TRUE],
       [
         '{{ path(name = "foo", parameters = { foo: "foo", bar: "bar" }) }}',
-        TRUE
+        TRUE,
       ],
     ];
   }

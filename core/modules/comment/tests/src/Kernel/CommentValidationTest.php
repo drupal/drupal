@@ -51,7 +51,7 @@ class CommentValidationTest extends EntityKernelTestBase {
       'type' => 'comment',
       'settings' => [
         'comment_type' => 'comment',
-      ]
+      ],
     ])->save();
 
     // Create a page node type.

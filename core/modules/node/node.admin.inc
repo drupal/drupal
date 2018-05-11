@@ -35,7 +35,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
   if (count($nodes) > 10) {
     $batch = [
       'operations' => [
-        ['_node_mass_update_batch_process', [$nodes, $updates, $langcode, $load, $revisions]]
+        ['_node_mass_update_batch_process', [$nodes, $updates, $langcode, $load, $revisions]],
       ],
       'finished' => '_node_mass_update_batch_finished',
       'title' => t('Processing'),

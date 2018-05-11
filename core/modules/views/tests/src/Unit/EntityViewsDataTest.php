@@ -457,7 +457,7 @@ class EntityViewsDataTest extends UnitTestCase {
         ->setLabel('ID')
         ->setDescription('The ID of the user entity.')
         ->setReadOnly(TRUE)
-        ->setSetting('unsigned', TRUE)
+        ->setSetting('unsigned', TRUE),
     ];
     $this->entityManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
@@ -578,7 +578,7 @@ class EntityViewsDataTest extends UnitTestCase {
         ->setLabel('ID')
         ->setDescription('The ID of the user entity.')
         ->setReadOnly(TRUE)
-        ->setSetting('unsigned', TRUE)
+        ->setSetting('unsigned', TRUE),
     ];
     $entity_test_type = new ConfigEntityType(['id' => 'entity_test_bundle']);
 
@@ -730,7 +730,7 @@ class EntityViewsDataTest extends UnitTestCase {
         ->setLabel('ID')
         ->setDescription('The ID of the user entity.')
         ->setReadOnly(TRUE)
-        ->setSetting('unsigned', TRUE)
+        ->setSetting('unsigned', TRUE),
     ];
     $this->entityManager->expects($this->any())
       ->method('getBaseFieldDefinitions')

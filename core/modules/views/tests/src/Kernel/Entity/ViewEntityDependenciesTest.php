@@ -89,7 +89,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
         'comment',
         'node',
         'user',
-      ]
+      ],
     ];
     // Tests dependencies of relationships.
     $expected['test_relationship_dependency'] = [
@@ -97,7 +97,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
         'comment',
         'node',
         'user',
-      ]
+      ],
     ];
     $expected['test_plugin_dependencies'] = [
       'module' => [
@@ -108,24 +108,24 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
         'RowTest',
         'StaticTest',
         'StyleTest',
-      ]
+      ],
     ];
 
     $expected['test_argument_dependency'] = [
       'config' => [
         'core.entity_view_mode.node.teaser',
-        'field.storage.node.body'
+        'field.storage.node.body',
       ],
       'content' => [
         'ArgumentDefaultTest',
-        'ArgumentValidatorTest'
+        'ArgumentValidatorTest',
       ],
       'module' => [
         'node',
         // The argument handler is provided by the search module.
         'search',
         'text',
-        'user'
+        'user',
       ],
     ];
 
@@ -145,25 +145,25 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
       ],
       'content' => [
         'ArgumentDefaultTest',
-        'ArgumentValidatorTest'
+        'ArgumentValidatorTest',
       ],
       'module' => [
         'core',
         'node',
         'search',
         'user',
-        'views'
+        'views',
       ],
     ];
     $expected_display['page'] = [
       'config' => [
-        'field.storage.node.body'
+        'field.storage.node.body',
       ],
       'module' => [
         'core',
         'node',
         'text',
-        'views'
+        'views',
       ],
     ];
 

@@ -121,14 +121,14 @@ class WorkflowStateEditForm extends EntityForm {
         'title' => $this->t('Edit'),
         'url' => Url::fromRoute('entity.workflow.edit_transition_form', [
           'workflow' => $workflow->id(),
-          'workflow_transition' => $transition->id()
+          'workflow_transition' => $transition->id(),
         ]),
       ];
       $links['delete'] = [
         'title' => t('Delete'),
         'url' => Url::fromRoute('entity.workflow.delete_transition_form', [
           'workflow' => $workflow->id(),
-          'workflow_transition' => $transition->id()
+          'workflow_transition' => $transition->id(),
         ]),
       ];
       $form['transitions'][$transition->id()] = [
@@ -230,8 +230,8 @@ class WorkflowStateEditForm extends EntityForm {
       ],
       '#url' => Url::fromRoute('entity.workflow.delete_state_form', [
         'workflow' => $this->entity->id(),
-        'workflow_state' => $this->stateId
-      ])
+        'workflow_state' => $this->stateId,
+      ]),
     ];
 
     return $actions;

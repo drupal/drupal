@@ -41,7 +41,7 @@ class ViewsBulkTest extends ViewTestBase {
     $node_1 = $this->drupalCreateNode([
       'type' => 'page',
       'title' => 'The first node',
-      'changed' => \Drupal::time()->getRequestTime() - 180
+      'changed' => \Drupal::time()->getRequestTime() - 180,
     ]);
 
     // Login as administrator and go to admin/content.
@@ -53,7 +53,7 @@ class ViewsBulkTest extends ViewTestBase {
     $node_2 = $this->drupalCreateNode([
       'type' => 'page',
       'title' => 'The second node',
-      'changed' => \Drupal::time()->getRequestTime() - 120
+      'changed' => \Drupal::time()->getRequestTime() - 120,
     ]);
 
     // Now click 'Apply to selected items' and assert the first node is selected

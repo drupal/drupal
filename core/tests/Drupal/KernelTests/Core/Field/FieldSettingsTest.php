@@ -82,7 +82,7 @@ class FieldSettingsTest extends EntityKernelTestBase {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',
-      'type' => 'test_field'
+      'type' => 'test_field',
     ]);
 
     // Check that the default settings have been populated.
@@ -109,11 +109,11 @@ class FieldSettingsTest extends EntityKernelTestBase {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',
-      'type' => 'test_field'
+      'type' => 'test_field',
     ]);
     $field = FieldConfig::create([
       'field_storage' => $field_storage,
-      'bundle' => 'entity_test'
+      'bundle' => 'entity_test',
     ]);
     // Note: FieldConfig does not populate default settings until the config
     // is saved.

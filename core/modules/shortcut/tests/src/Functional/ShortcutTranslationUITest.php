@@ -28,7 +28,7 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
     'content_translation',
     'link',
     'shortcut',
-    'toolbar'
+    'toolbar',
   ];
 
   /**

@@ -54,7 +54,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
-      'type' => 'text'
+      'type' => 'text',
     ])->save();
     FieldConfig::create([
       'field_name' => $this->fieldName,

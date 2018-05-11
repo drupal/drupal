@@ -174,7 +174,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', [
       '@type' => 'Basic page',
       '%title' => $nodes[1]->label(),
-      '%revision-date' => format_date($nodes[1]->getRevisionCreationTime())
+      '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
     ]), 'Revision reverted.');
     $node_storage->resetCache([$node->id()]);
     $reverted_node = $node_storage->load($node->id());

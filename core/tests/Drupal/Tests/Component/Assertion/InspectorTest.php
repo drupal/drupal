@@ -159,7 +159,7 @@ class InspectorTest extends TestCase {
       [__CLASS__, 'callMeStatic'],
       function () {
         return TRUE;
-      }
+      },
     ]));
 
     $this->assertFalse(Inspector::assertAllCallable([
@@ -169,7 +169,7 @@ class InspectorTest extends TestCase {
       function () {
         return TRUE;
       },
-      "I'm not callable"
+      "I'm not callable",
     ]));
   }
 

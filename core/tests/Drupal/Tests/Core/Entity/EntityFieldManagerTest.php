@@ -676,7 +676,7 @@ class EntityFieldManagerTest extends UnitTestCase {
           'type' => 'string',
           'bundles' => ['second_bundle' => 'second_bundle'],
         ],
-      ]
+      ],
     ];
     $this->assertEquals($expected, $this->entityFieldManager->getFieldMap());
   }
@@ -695,7 +695,7 @@ class EntityFieldManagerTest extends UnitTestCase {
           'type' => 'string',
           'bundles' => ['second_bundle' => 'second_bundle'],
         ],
-      ]
+      ],
     ];
     $this->setUpEntityTypeDefinitions();
     $this->cacheBackend->get('entity_field_map')->willReturn((object) ['data' => $expected]);

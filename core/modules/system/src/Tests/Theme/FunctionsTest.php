@@ -209,7 +209,7 @@ class FunctionsTest extends WebTestBase {
         'url' => Url::fromRoute('router_test.1'),
         'query' => [
           'key' => 'value',
-        ]
+        ],
       ],
     ];
 
@@ -330,7 +330,7 @@ class FunctionsTest extends WebTestBase {
         'url' => Url::fromRoute('router_test.1'),
         'query' => [
           'key' => 'value',
-        ]
+        ],
       ],
     ];
 

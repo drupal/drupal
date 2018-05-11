@@ -73,7 +73,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
       'type markup with EM tags is rendered' => [['#markup' => '<em>hi</em>'], '<em>hi</em>'],
       'SCRIPT tag in string is escaped' => [
         '<script>alert(123)</script>',
-        Html::escape('<script>alert(123)</script>')
+        Html::escape('<script>alert(123)</script>'),
       ],
       'type plain_text render array EM tag is escaped' => [['#plain_text' => '<em>hi</em>'], Html::escape('<em>hi</em>')],
       'type hidden render array is rendered' => [['#type' => 'hidden', '#name' => 'foo', '#value' => 'bar'], "<input type=\"hidden\" name=\"foo\" value=\"bar\" />\n"],

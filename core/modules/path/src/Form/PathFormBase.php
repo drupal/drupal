@@ -138,7 +138,7 @@ abstract class PathFormBase extends FormBase {
     else {
       $form['langcode'] = [
         '#type' => 'value',
-        '#value' => $this->path['langcode']
+        '#value' => $this->path['langcode'],
       ];
     }
 

@@ -60,7 +60,7 @@ class UserViewsData extends EntityViewsData {
         'argument field' => 'uid',
         'base' => 'node_field_data',
         'field' => 'nid',
-        'relationship' => 'node_field_data:uid'
+        'relationship' => 'node_field_data:uid',
       ],
     ];
 

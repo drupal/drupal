@@ -136,11 +136,11 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     $form['var'] = [
       '#type' => 'hidden',
-      '#value' => $var
+      '#value' => $var,
     ];
     $form['config_key'] = [
       '#type' => 'hidden',
-      '#value' => $config_key
+      '#value' => $config_key,
     ];
 
     // Toggle settings

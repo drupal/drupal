@@ -86,7 +86,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {
           return $form['test'];
-        }
+        },
       ],
     ];
     $request = new Request();
@@ -117,7 +117,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {
           return new AjaxResponse([]);
-        }
+        },
       ],
     ];
     $request = new Request();
@@ -142,7 +142,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {
           return new AjaxResponse([]);
-        }
+        },
       ],
     ];
     $request = new Request();
@@ -175,7 +175,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {
           return new AjaxResponse([]);
-        }
+        },
       ],
     ];
     $request = new Request();

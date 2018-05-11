@@ -841,7 +841,7 @@ function node_page_top(array &$page) {
     $page['page_top']['node_preview'] = [
       '#type' => 'container',
       '#attributes' => [
-        'class' => ['node-preview-container', 'container-inline']
+        'class' => ['node-preview-container', 'container-inline'],
       ],
     ];
 
@@ -1185,7 +1185,7 @@ function node_access_rebuild($batch_mode = FALSE) {
         'operations' => [
           ['_node_access_rebuild_batch_operation', []],
         ],
-        'finished' => '_node_access_rebuild_batch_finished'
+        'finished' => '_node_access_rebuild_batch_finished',
       ];
       batch_set($batch);
     }

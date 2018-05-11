@@ -91,8 +91,8 @@ class ViewsExposedFilterBlock implements ContainerDeriverInterface {
               'config_dependencies' => [
                 'config' => [
                   $view->getConfigDependencyName(),
-                ]
-              ]
+                ],
+              ],
             ];
             $this->derivatives[$delta] += $base_plugin_definition;
           }

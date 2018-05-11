@@ -88,12 +88,12 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     $configuration['extra'] = [
       [
         'field' => 'name',
-        'value' => $random_name_1
+        'value' => $random_name_1,
       ],
       [
         'field' => 'name',
         'value' => $random_name_2,
-        'operator' => '<>'
+        'operator' => '<>',
       ],
     ];
     $join_info = $this->buildJoin($view, $configuration, 'users3');
@@ -110,7 +110,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     $configuration['extra'] = [
       [
         'field' => 'name',
-        'value' => $random_name_1
+        'value' => $random_name_1,
       ],
       [
         'field' => 'name',

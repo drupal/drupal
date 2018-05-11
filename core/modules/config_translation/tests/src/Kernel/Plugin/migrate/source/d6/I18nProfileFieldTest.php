@@ -42,8 +42,8 @@ class I18nProfileFieldTest extends MigrateSqlSourceTestBase {
           'lid' => 11,
           'objectid' => 'profile_love_migrations',
           'type' => 'field',
-          'property' => 'explanation'
-        ]
+          'property' => 'explanation',
+        ],
       ],
       'locales_target' => [
         [

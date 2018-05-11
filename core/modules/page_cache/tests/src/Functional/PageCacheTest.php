@@ -370,7 +370,7 @@ class PageCacheTest extends BrowserTestBase {
           0 => [
             'value' => $this->randomString(),
             'format' => 'plain_text',
-          ]
+          ],
         ],
       ];
       $entity = EntityTest::create($entity_values);

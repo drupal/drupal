@@ -70,7 +70,7 @@ class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, 
    */
   public function getCssFiles(Editor $editor) {
     return [
-      drupal_get_path('module', 'ckeditor') . '/css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css'
+      drupal_get_path('module', 'ckeditor') . '/css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css',
     ];
   }
 

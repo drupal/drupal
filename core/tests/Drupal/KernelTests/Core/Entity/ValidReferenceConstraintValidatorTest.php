@@ -150,7 +150,7 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
         ['entity' => $unpublished_node],
         ['entity' => $different_bundle_node],
         ['entity' => $deleted_node],
-      ]
+      ],
     ]);
 
     // Check that users with access are able pass the validation for fields

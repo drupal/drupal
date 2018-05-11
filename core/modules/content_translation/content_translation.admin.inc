@@ -65,7 +65,7 @@ function content_translation_field_sync_widget(FieldDefinitionInterface $field, 
       // does not get lost.
       $element[key($options)]['#attached']['drupalSettings']['contentTranslationDependentOptions'] = [
         'dependent_selectors' => [
-          $element_name => $require_all_groups_for_translation
+          $element_name => $require_all_groups_for_translation,
         ],
       ];
       $element[key($options)]['#attached']['library'][] = 'content_translation/drupal.content_translation.admin';

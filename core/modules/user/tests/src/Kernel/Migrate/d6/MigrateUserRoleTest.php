@@ -60,7 +60,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
       'access content',
       'migrate test anonymous permission',
       // From filter_format tables.
-      'use text format filtered_html'
+      'use text format filtered_html',
     ];
     $this->assertRole('anonymous', $permissions, 1, $id_map);
 
@@ -81,7 +81,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
       'migrate test role 1 test permission',
       // From filter format.
       'use text format full_html',
-      'use text format php_code'
+      'use text format php_code',
     ];
     $this->assertRole('migrate_test_role_1', $permissions, 3, $id_map);
 
@@ -126,7 +126,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
       'administrator1',
       'migrate_test_role_11',
       'migrate_test_role_21',
-      'migrate_test_role_3_that_is_longer_than_thirty_two_characters1'
+      'migrate_test_role_3_that_is_longer_than_thirty_two_characters1',
     ];
     $this->assertEmpty(Role::loadMultiple($roles));
 

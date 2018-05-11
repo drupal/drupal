@@ -797,7 +797,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   $text = trim(preg_replace('/' . $preceded_by_boundary . '(?:' . implode('|', $keys) . ')' . $followed_by_boundary . '/iu', '<strong>\0</strong>', ' ' . $text . ' '));
   return [
     '#markup' => $text,
-    '#allowed_tags' => ['strong']
+    '#allowed_tags' => ['strong'],
   ];
 }
 

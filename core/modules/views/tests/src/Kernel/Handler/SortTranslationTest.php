@@ -59,7 +59,7 @@ class SortTranslationTest extends ViewsKernelTestBase {
       'entity_type' => 'node',
       'bundle' => 'article',
       'label' => 'Translated text',
-      'translatable' => TRUE
+      'translatable' => TRUE,
     ])->save();
 
     FieldStorageConfig::create([

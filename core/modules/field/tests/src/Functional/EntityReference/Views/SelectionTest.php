@@ -127,7 +127,7 @@ class SelectionTest extends BrowserTestBase {
         'table' => 'users_field_data',
         'field' => 'uid',
         'relationship' => 'test_relationship',
-      ]
+      ],
     ]);
 
     // Set view to distinct so only one row per node is returned.

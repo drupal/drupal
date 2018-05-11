@@ -21,7 +21,7 @@ class TelephoneFieldTest extends BrowserTestBase {
   public static $modules = [
     'field',
     'node',
-    'telephone'
+    'telephone',
   ];
 
   /**

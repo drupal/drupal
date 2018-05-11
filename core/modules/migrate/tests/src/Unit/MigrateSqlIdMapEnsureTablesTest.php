@@ -28,7 +28,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'type' => 'varchar',
       'length' => 64,
       'not null' => 1,
-      'description' => 'Hash of source ids. Used as primary key'
+      'description' => 'Hash of source ids. Used as primary key',
     ];
     $fields['sourceid1'] = [
       'type' => 'int',
@@ -101,7 +101,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'type' => 'varchar',
       'length' => 64,
       'not null' => 1,
-      'description' => 'Hash of source ids. Used as primary key'
+      'description' => 'Hash of source ids. Used as primary key',
     ];
     $fields['level'] = [
       'type' => 'int',

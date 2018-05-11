@@ -85,7 +85,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $release_details = new FormattableMarkup('@module (@version). @info', [
       '@module' => 'Locale test translate',
       '@version' => '1.3-dev',
-      '@info' => t('File not found at %local_path', ['%local_path' => 'core/modules/locale/tests/test.de.po'])
+      '@info' => t('File not found at %local_path', ['%local_path' => 'core/modules/locale/tests/test.de.po']),
     ]);
     $this->assertRaw($release_details->__toString(), 'Release details');
 

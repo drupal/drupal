@@ -154,7 +154,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'settings[node][article][settings][language][langcode]' => 'current_interface',
       'settings[node][article][settings][language][language_alterable]' => TRUE,
       'settings[node][article][translatable]' => TRUE,
-      'settings[node][article][fields][title]' => TRUE
+      'settings[node][article][fields][title]' => TRUE,
     ];
     $this->assertSettings('node', NULL, TRUE, $edit);
 

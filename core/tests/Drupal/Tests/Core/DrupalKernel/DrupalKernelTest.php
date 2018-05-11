@@ -116,7 +116,7 @@ namespace Drupal\Tests\Core\DrupalKernel {
         'www.example.com',
         'www.example.com',
         'canonical URL is trusted',
-        TRUE
+        TRUE,
       ];
 
       // Tests missing hostname for HTTP/1.0 compatibility where the Host
@@ -128,25 +128,25 @@ namespace Drupal\Tests\Core\DrupalKernel {
         'example.com',
         'www.example.com',
         'host from settings is trusted',
-        TRUE
+        TRUE,
       ];
       $data[] = [
         'subdomain.example.com',
         'www.example.com',
         'host from settings is trusted',
-        TRUE
+        TRUE,
       ];
       $data[] = [
         'www.example.org',
         'www.example.com',
         'host from settings is trusted',
-        TRUE
+        TRUE,
       ];
       $data[] = [
         'example.org',
         'www.example.com',
         'host from settings is trusted',
-        TRUE
+        TRUE,
       ];
 
       // Tests mismatch.
@@ -154,7 +154,7 @@ namespace Drupal\Tests\Core\DrupalKernel {
         'www.blackhat.com',
         'www.example.com',
         'unspecified host is untrusted',
-        FALSE
+        FALSE,
       ];
 
       return $data;

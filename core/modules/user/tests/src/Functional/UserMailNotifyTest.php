@@ -30,7 +30,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
       ['status_canceled', ['status_canceled']],
       ['register_admin_created', ['register_admin_created']],
       ['register_no_approval_required', ['register_no_approval_required']],
-      ['register_pending_approval', ['register_pending_approval', 'register_pending_approval_admin']]
+      ['register_pending_approval', ['register_pending_approval', 'register_pending_approval_admin']],
     ];
   }
 

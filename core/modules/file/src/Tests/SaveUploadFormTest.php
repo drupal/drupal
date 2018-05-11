@@ -298,7 +298,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $file_system = \Drupal::service('file_system');
     $edit = [
       'file_test_replace' => FILE_EXISTS_RENAME,
-      'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri())
+      'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
@@ -316,7 +316,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $file_system = \Drupal::service('file_system');
     $edit = [
       'file_test_replace' => FILE_EXISTS_REPLACE,
-      'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri())
+      'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
@@ -334,7 +334,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $file_system = \Drupal::service('file_system');
     $edit = [
       'file_test_replace' => FILE_EXISTS_ERROR,
-      'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri())
+      'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
@@ -365,7 +365,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $file_system = \Drupal::service('file_system');
     $edit = [
       'file_subdir' => $test_directory,
-      'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri())
+      'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
 
     \Drupal::state()->set('file_test.disable_error_collection', TRUE);
@@ -379,7 +379,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->assertResponse(200);
     $this->assertRaw(t('Upload error. Could not move uploaded file @file to destination @destination.', [
       '@file' => $this->image->getFilename(),
-      '@destination' => 'temporary://' . $test_directory . '/' . $this->image->getFilename()
+      '@destination' => 'temporary://' . $test_directory . '/' . $this->image->getFilename(),
     ]), 'Found upload error log entry.');
   }
 
@@ -409,7 +409,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $edit = [
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
       'error_message' => $error,
-      'extensions' => 'foo'
+      'extensions' => 'foo',
     ];
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
@@ -473,7 +473,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $file_system = \Drupal::service('file_system');
     $edit = [
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
-      'extensions' => 'foo'
+      'extensions' => 'foo',
     ];
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');

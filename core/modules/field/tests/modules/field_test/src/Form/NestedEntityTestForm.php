@@ -42,7 +42,7 @@ class NestedEntityTestForm extends FormBase {
       '#tree' => TRUE,
       '#parents' => ['entity_2'],
       '#weight' => 50,
-      '#attributes' => ['class' => ['entity-2']]
+      '#attributes' => ['class' => ['entity-2']],
     ];
 
     $form_display_2->buildForm($entity_2, $form['entity_2'], $form_state);

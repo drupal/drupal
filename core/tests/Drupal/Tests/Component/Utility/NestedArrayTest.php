@@ -265,7 +265,7 @@ class NestedArrayTest extends TestCase {
   public function providerTestFilter() {
     $data = [];
     $data['1d-array'] = [
-      [0, 1, '', TRUE], NULL, [1 => 1, 3 => TRUE]
+      [0, 1, '', TRUE], NULL, [1 => 1, 3 => TRUE],
     ];
     $data['1d-array-callable'] = [
       [0, 1, '', TRUE],

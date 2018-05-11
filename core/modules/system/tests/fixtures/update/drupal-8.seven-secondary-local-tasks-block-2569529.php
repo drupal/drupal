@@ -40,7 +40,7 @@ $existing_blocks = unserialize($existing_blocks);
 
 $connection->update('key_value')
   ->fields([
-    'value' => serialize(array_merge($existing_blocks, ['block.block.seven_secondary_local_tasks']))
+    'value' => serialize(array_merge($existing_blocks, ['block.block.seven_secondary_local_tasks'])),
   ])
   ->condition('collection', 'config.entity.key_store.block')
   ->condition('name', 'theme:seven')

@@ -331,7 +331,7 @@ class FormCacheTest extends UnitTestCase {
   public function testSetCacheWithForm() {
     $form_build_id = 'the_form_build_id';
     $form = [
-      '#form_id' => 'the_form_id'
+      '#form_id' => 'the_form_id',
     ];
     $form_state = new FormState();
 

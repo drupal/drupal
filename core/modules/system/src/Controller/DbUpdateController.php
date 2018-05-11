@@ -524,7 +524,7 @@ class DbUpdateController extends ControllerBase {
     $build['status_report'] = [
       '#type' => 'status_report',
       '#requirements' => $requirements,
-      '#suffix' => $this->t('Check the messages and <a href=":url">try again</a>.', [':url' => $try_again_url])
+      '#suffix' => $this->t('Check the messages and <a href=":url">try again</a>.', [':url' => $try_again_url]),
     ];
 
     $build['#title'] = $this->t('Requirements problem');

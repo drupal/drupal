@@ -119,7 +119,7 @@ class FileSystemTest extends UnitTestCase {
     $data[] = [
       'public://dir/test.txt',
       'test',
-      '.txt'
+      '.txt',
     ];
     return $data;
   }

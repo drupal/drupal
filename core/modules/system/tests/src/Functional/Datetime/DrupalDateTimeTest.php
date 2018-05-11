@@ -33,7 +33,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
     $options = [
       'query' => [
         'date' => 'Tue+Sep+17+2013+21%3A35%3A31+GMT%2B0100+(BST)#',
-      ]
+      ],
     ];
     // Query the AJAX Timezone Callback with a long-format date.
     $response = $this->drupalGet('system/timezone/BST/3600/1', $options);

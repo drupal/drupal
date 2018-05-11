@@ -351,7 +351,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
           'name' => 'A test entity',
           'uuid' => '60e3a179-79ed-4653-ad52-5e614c8e8fbe',
         ],
-        FALSE
+        FALSE,
       ],
       'string ID entity' => [
         EntityTestStringId::class,
@@ -360,7 +360,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
           'name' => 'A test entity',
           'uuid' => '60e3a179-79ed-4653-ad52-5e614c8e8fbe',
         ],
-        TRUE
+        TRUE,
       ],
     ];
   }

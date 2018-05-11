@@ -97,7 +97,7 @@ abstract class QuickEditTestBase extends KernelTestBase {
       ->setComponent($field_name, [
         'label' => 'above',
         'type' => $formatter_type,
-        'settings' => $formatter_settings
+        'settings' => $formatter_settings,
       ])
       ->save();
   }

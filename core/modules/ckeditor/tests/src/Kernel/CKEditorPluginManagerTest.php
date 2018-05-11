@@ -151,7 +151,7 @@ class CKEditorPluginManagerTest extends KernelTestBase {
 
     // Case 2: CKEditor iframe instance CSS file.
     $expected = [
-      'llama_css' => [drupal_get_path('module', 'ckeditor_test') . '/css/llama.css']
+      'llama_css' => [drupal_get_path('module', 'ckeditor_test') . '/css/llama.css'],
     ];
     $this->assertIdentical($expected, $this->manager->getCssFiles($editor), 'Iframe instance CSS file found.');
   }

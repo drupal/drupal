@@ -77,7 +77,7 @@ class FieldConfigEditForm extends EntityForm {
     $ids = (object) [
       'entity_type' => $this->entity->getTargetEntityTypeId(),
       'bundle' => $this->entity->getTargetBundle(),
-      'entity_id' => NULL
+      'entity_id' => NULL,
     ];
     $form['#entity'] = _field_create_entity_from_ids($ids);
     $items = $form['#entity']->get($this->entity->getName());

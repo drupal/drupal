@@ -36,7 +36,7 @@ class EmailActionTest extends KernelTestBase {
     $configuration = [
       'recipient' => 'test@example.com',
       'subject' => 'Test subject',
-      'message' => 'Test message'
+      'message' => 'Test message',
     ];
     $plugin_manager
       ->createInstance('action_send_email_action', $configuration)

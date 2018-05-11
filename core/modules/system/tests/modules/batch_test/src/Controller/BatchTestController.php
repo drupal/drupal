@@ -19,7 +19,7 @@ class BatchTestController {
     return [
       'success' => [
         '#markup' => 'Redirection successful.',
-      ]
+      ],
     ];
   }
 
@@ -103,7 +103,7 @@ class BatchTestController {
     return [
       'success' => [
         '#markup' => 'Got out of a programmatic batched form.',
-      ]
+      ],
     ];
   }
 

@@ -201,7 +201,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
         'view_mode' => $this->originalMode,
         // No need to prepare, defaults have been merged in setComponent().
         'prepare' => FALSE,
-        'configuration' => $configuration
+        'configuration' => $configuration,
       ]);
     }
     else {
@@ -301,7 +301,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
     }
 
     return [
-      'formatters' => new EntityDisplayPluginCollection($this->pluginManager, $configurations)
+      'formatters' => new EntityDisplayPluginCollection($this->pluginManager, $configurations),
     ];
   }
 

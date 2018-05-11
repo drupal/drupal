@@ -153,7 +153,7 @@ class SearchPageCacheTagsTest extends SearchTestBase {
     // reference field.
     $edit = [
       'title[0][value]' => 'Llama shop',
-      'field_test__ref[0][target_id]' => $this->node->getTitle()
+      'field_test__ref[0][target_id]' => $this->node->getTitle(),
     ];
     $this->drupalPostForm('node/add/' . $type->id(), $edit, t('Save'));
 

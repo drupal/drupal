@@ -108,7 +108,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
     $edit = [
       'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
       'domain[en]' => $base_url_host,
-      'domain[fr]' => $language_domain
+      'domain[fr]' => $language_domain,
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
     // Rebuild the container so that the new language gets picked up by services

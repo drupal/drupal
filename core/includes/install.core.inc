@@ -2050,7 +2050,7 @@ function install_check_requirements($install_state) {
         'severity' => REQUIREMENT_ERROR,
         'description' => t('The @drupal installer requires that the %default-file file not be modified in any way from the original download.', [
             '@drupal' => drupal_install_profile_distribution_name(),
-            '%default-file' => $default_file
+            '%default-file' => $default_file,
           ]),
       ];
     }
@@ -2111,7 +2111,7 @@ function install_check_requirements($install_state) {
             '@drupal' => drupal_install_profile_distribution_name(),
             '%file' => $file,
             '%default_file' => $default_file,
-            ':install_txt' => base_path() . 'core/INSTALL.txt'
+            ':install_txt' => base_path() . 'core/INSTALL.txt',
           ]),
       ];
     }
@@ -2129,7 +2129,7 @@ function install_check_requirements($install_state) {
           'description' => t('@drupal requires read permissions to %file at all times. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', [
               '@drupal' => drupal_install_profile_distribution_name(),
               '%file' => $file,
-              ':handbook_url' => 'https://www.drupal.org/server-permissions'
+              ':handbook_url' => 'https://www.drupal.org/server-permissions',
             ]),
         ];
       }
@@ -2142,7 +2142,7 @@ function install_check_requirements($install_state) {
           'description' => t('The @drupal installer requires write permissions to %file during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', [
               '@drupal' => drupal_install_profile_distribution_name(),
               '%file' => $file,
-              ':handbook_url' => 'https://www.drupal.org/server-permissions'
+              ':handbook_url' => 'https://www.drupal.org/server-permissions',
             ]),
         ];
       }
@@ -2162,7 +2162,7 @@ function install_check_requirements($install_state) {
               '%file' => $file,
               '%default_file' => $default_file,
               ':install_txt' => base_path() . 'core/INSTALL.txt',
-              ':handbook_url' => 'https://www.drupal.org/server-permissions'
+              ':handbook_url' => 'https://www.drupal.org/server-permissions',
             ]),
         ];
       }

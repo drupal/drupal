@@ -120,7 +120,7 @@ class TestItem extends FieldItemBase {
         'TestField' => [
           'value' => -1,
           'message' => t('%name does not accept the value @value.', ['%name' => $this->getFieldDefinition()->getLabel(), '@value' => -1]),
-        ]
+        ],
       ],
     ]);
 

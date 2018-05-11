@@ -144,7 +144,7 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
    */
   public function testEntityLevelConstraintValidation() {
     $entity = EntityTestCompositeConstraint::create([
-      'name' => 'entity-level-violation'
+      'name' => 'entity-level-violation',
     ]);
     $entity->save();
 

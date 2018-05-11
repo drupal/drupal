@@ -391,7 +391,7 @@ class FilterHtml extends FilterBase {
       'h3' => [$this->t('Heading'), '<h3>' . $this->t('Subtitle three') . '</h3>'],
       'h4' => [$this->t('Heading'), '<h4>' . $this->t('Subtitle four') . '</h4>'],
       'h5' => [$this->t('Heading'), '<h5>' . $this->t('Subtitle five') . '</h5>'],
-      'h6' => [$this->t('Heading'), '<h6>' . $this->t('Subtitle six') . '</h6>']
+      'h6' => [$this->t('Heading'), '<h6>' . $this->t('Subtitle six') . '</h6>'],
     ];
     $header = [$this->t('Tag Description'), $this->t('You Type'), $this->t('You Get')];
     preg_match_all('/<([a-z0-9]+)[^a-z0-9]/i', $allowed_html, $out);

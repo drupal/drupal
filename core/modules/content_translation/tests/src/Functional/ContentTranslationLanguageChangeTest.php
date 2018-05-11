@@ -140,7 +140,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
     $this->assertRaw('<title>Edit Article english_title | Drupal</title>');
     $edit = [
       'langcode[0][value]' => 'en',
-      'field_image_field[0][alt]' => 'alternative_text'
+      'field_image_field[0][alt]' => 'alternative_text',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
 

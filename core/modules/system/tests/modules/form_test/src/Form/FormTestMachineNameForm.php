@@ -33,7 +33,7 @@ class FormTestMachineNameForm extends FormBase {
       '#title' => 'Machine name 1',
       '#description' => 'A machine name.',
       '#machine_name' => [
-        'source' => ['machine_name_1_label']
+        'source' => ['machine_name_1_label'],
       ],
     ];
     $form['machine_name_2_label'] = [
@@ -45,7 +45,7 @@ class FormTestMachineNameForm extends FormBase {
       '#title' => 'Machine name 2',
       '#description' => 'Another machine name.',
       '#machine_name' => [
-        'source' => ['machine_name_2_label']
+        'source' => ['machine_name_2_label'],
       ],
     ];
     $form['submit'] = [

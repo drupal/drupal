@@ -63,7 +63,7 @@ class StorageComparerTest extends UnitTestCase {
         'uuid' => $uuid->generate(),
         'dependencies' => [
           'config' => [
-            'field.storage.node.body'
+            'field.storage.node.body',
           ],
         ],
       ],
@@ -89,7 +89,7 @@ class StorageComparerTest extends UnitTestCase {
       ],
       // Simple config.
       'system.performance' => [
-        'stale_file_threshold' => 2592000
+        'stale_file_threshold' => 2592000,
       ],
 
     ];

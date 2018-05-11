@@ -105,7 +105,7 @@ abstract class NodeTestBase extends WebTestBase {
       [
         '@result' => $result ? 'true' : 'false',
         '%op' => $operation,
-        '%langcode' => !empty($langcode) ? $langcode : 'empty'
+        '%langcode' => !empty($langcode) ? $langcode : 'empty',
       ]
     );
   }

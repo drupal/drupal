@@ -85,7 +85,7 @@ class FormatDateTest extends MigrateProcessTestCase {
           'timezone' => 'America/Managua',
         ],
         'value' => '2004-12-19T10:19:42-0600',
-        'expected' => '2004-12-19T10:19:42-06:00 -06:00'
+        'expected' => '2004-12-19T10:19:42-06:00 -06:00',
       ],
     ];
   }

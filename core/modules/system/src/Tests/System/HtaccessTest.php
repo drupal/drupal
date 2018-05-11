@@ -75,7 +75,7 @@ class HtaccessTest extends WebTestBase {
 
     // Test extensions that should be permitted.
     $file_exts_to_allow = [
-      'php-info.txt'
+      'php-info.txt',
     ];
 
     foreach ($file_exts_to_allow as $file_ext) {
@@ -108,7 +108,7 @@ class HtaccessTest extends WebTestBase {
     $node = $this->drupalCreateNode([
       'title' => 'This is a node',
       'type' => $type->id(),
-      'path' => '/test.php'
+      'path' => '/test.php',
     ]);
     $node->save();
     $this->drupalGet('test.php');

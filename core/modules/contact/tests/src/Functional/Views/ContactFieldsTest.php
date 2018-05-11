@@ -34,7 +34,7 @@ class ContactFieldsTest extends ViewTestBase {
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => strtolower($this->randomMachineName()),
       'entity_type' => 'contact_message',
-      'type' => 'text'
+      'type' => 'text',
     ]);
     $this->fieldStorage->save();
 

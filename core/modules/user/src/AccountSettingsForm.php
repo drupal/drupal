@@ -154,13 +154,13 @@ class AccountSettingsForm extends ConfigFormBase {
         USER_REGISTER_ADMINISTRATORS_ONLY => $this->t('Administrators only'),
         USER_REGISTER_VISITORS => $this->t('Visitors'),
         USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL => $this->t('Visitors, but administrator approval is required'),
-      ]
+      ],
     ];
     $form['registration_cancellation']['user_email_verification'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Require email verification when a visitor creates an account'),
       '#default_value' => $config->get('verify_mail'),
-      '#description' => $this->t('New users will be required to validate their email address prior to logging into the site, and will be assigned a system-generated password. With this setting disabled, users will be logged in immediately upon registering, and may select their own passwords during registration.')
+      '#description' => $this->t('New users will be required to validate their email address prior to logging into the site, and will be assigned a system-generated password. With this setting disabled, users will be logged in immediately upon registering, and may select their own passwords during registration.'),
     ];
     $form['registration_cancellation']['user_password_strength'] = [
       '#type' => 'checkbox',

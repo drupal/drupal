@@ -329,7 +329,7 @@ class CommentPagerTest extends CommentTestBase {
         'settings' => [
           'pager_id' => 1,
           'view_mode' => 'default',
-        ]
+        ],
       ])
       ->save();
 

@@ -184,7 +184,7 @@ function template_preprocess_views_ui_build_group_filter_form(&$variables) {
         'action' => 'order',
         'relationship' => 'sibling',
         'group' => 'weight',
-      ]
+      ],
     ],
   ];
 
@@ -353,7 +353,7 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
           'action' => 'order',
           'relationship' => 'sibling',
           'group' => 'weight',
-        ]
+        ],
       ],
     ];
   }

@@ -114,7 +114,7 @@ class BooleanFormatterTest extends KernelTestBase {
     $format = [
       'format' => 'custom',
       'format_custom_false' => 'FALSE',
-      'format_custom_true' => 'TRUE'
+      'format_custom_true' => 'TRUE',
     ];
     $data[] = [0, $format, 'FALSE'];
     $data[] = [1, $format, 'TRUE'];

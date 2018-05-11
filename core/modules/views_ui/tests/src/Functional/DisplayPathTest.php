@@ -208,7 +208,7 @@ class DisplayPathTest extends UITestBase {
     $edit = [
       'title[0][value]' => 'Menu title',
       'link[0][uri]' => '/admin/foo',
-      'menu_parent' => 'admin:system.admin'
+      'menu_parent' => 'admin:system.admin',
     ];
     $this->drupalPostForm('admin/structure/menu/manage/admin/add', $edit, t('Save'));
 

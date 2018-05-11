@@ -248,7 +248,7 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
           'image_mapping_type' => 'image_style',
           'image_mapping' => '_original image_',
         ],
-      ]
+      ],
     ];
     $this->assertEquals($expected, $entity->getKeyedImageStyleMappings());
 

@@ -45,7 +45,7 @@ class UserAttributesTest extends BrowserTestBase {
     $authors = [
       $this->drupalCreateUser([], $this->randomMachineName(30)),
       $this->drupalCreateUser([], $this->randomMachineName(20)),
-      $this->drupalCreateUser([], $this->randomMachineName(5))
+      $this->drupalCreateUser([], $this->randomMachineName(5)),
     ];
 
     $this->drupalLogin($user1);

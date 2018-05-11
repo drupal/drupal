@@ -130,7 +130,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected['weight'] = 8;
     $expected['type'] = 'file_default';
     $expected['settings'] = [
-      'use_description_as_link_text' => TRUE
+      'use_description_as_link_text' => TRUE,
     ];
     $component = $display->getComponent('field_test_filefield');
     $this->assertIdentical($expected, $component);

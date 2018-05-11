@@ -60,7 +60,7 @@ function block_post_update_disable_blocks_with_missing_contexts() {
     foreach ($blocks as $disabled_block_id => $disabled_block) {
       $message .= '<li>' . t('@label (Visibility: @plugin_ids)', [
           '@label' => $disabled_block->get('settings')['label'],
-          '@plugin_ids' => implode(', ', array_intersect_key($condition_plugin_id_label_map, array_flip(array_keys($block_update_8001[$disabled_block_id]['missing_context_ids']))))
+          '@plugin_ids' => implode(', ', array_intersect_key($condition_plugin_id_label_map, array_flip(array_keys($block_update_8001[$disabled_block_id]['missing_context_ids'])))),
         ]) . '</li>';
     }
     $message .= '</ul>';

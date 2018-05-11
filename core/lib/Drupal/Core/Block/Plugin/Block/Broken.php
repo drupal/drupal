@@ -38,7 +38,7 @@ class Broken extends BlockBase {
    */
   protected function brokenMessage() {
     $build['message'] = [
-      '#markup' => $this->t('This block is broken or missing. You may be missing content or you might need to enable the original module.')
+      '#markup' => $this->t('This block is broken or missing. You may be missing content or you might need to enable the original module.'),
     ];
 
     return $build;

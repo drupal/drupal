@@ -21,7 +21,7 @@ class TwigTransTest extends WebTestBase {
     'theme_test',
     'twig_theme_test',
     'locale',
-    'language'
+    'language',
   ];
 
   /**
@@ -56,7 +56,7 @@ class TwigTransTest extends WebTestBase {
       'administer languages',
       'access administration pages',
       'administer site configuration',
-      'translate interface'
+      'translate interface',
     ]);
     $this->drupalLogin($this->adminUser);
 

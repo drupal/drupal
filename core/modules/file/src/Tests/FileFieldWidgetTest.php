@@ -269,7 +269,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Try to upload exactly the allowed number of files on revision. Create an
     // empty node first, to fill it in its first revision.
     $node = $this->drupalCreateNode([
-      'type' => $type_name
+      'type' => $type_name,
     ]);
     $this->uploadNodeFile($test_file, $field_name, $node->id(), 1);
     $node_storage->resetCache([$nid]);

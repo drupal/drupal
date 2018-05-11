@@ -180,7 +180,7 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
           'href' => $this->baseUrl . '/rest/type/file/file',
         ],
         $this->baseUrl . '/rest/relation/file/file/uid' => [
-          ['href' => $this->baseUrl . '/user/' . $owner->id() . '?_format=hal_json']
+          ['href' => $this->baseUrl . '/user/' . $owner->id() . '?_format=hal_json'],
         ],
       ],
       '_embedded' => [

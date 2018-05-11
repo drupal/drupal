@@ -95,7 +95,7 @@ class ProgrammaticTest extends KernelTestBase {
   public function testProgrammaticAccessBypass() {
     $form_state = (new FormState())->setValues([
       'textfield' => 'dummy value',
-      'field_restricted' => 'dummy value'
+      'field_restricted' => 'dummy value',
     ]);
 
     // Programmatically submit the form with a value for the restricted field.

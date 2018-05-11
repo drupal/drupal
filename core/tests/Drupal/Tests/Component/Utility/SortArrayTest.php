@@ -49,42 +49,42 @@ class SortArrayTest extends TestCase {
     $tests[] = [
       ['weight' => 1],
       ['weight' => 1],
-      0
+      0,
     ];
 
     // Weights set and $a is less (lighter) than $b.
     $tests[] = [
       ['weight' => 1],
       ['weight' => 2],
-      -1
+      -1,
     ];
 
     // Weights set and $a is greater (heavier) than $b.
     $tests[] = [
       ['weight' => 2],
       ['weight' => 1],
-      1
+      1,
     ];
 
     // Weights not set.
     $tests[] = [
       [],
       [],
-      0
+      0,
     ];
 
     // Weights for $b not set.
     $tests[] = [
       ['weight' => 1],
       [],
-      1
+      1,
     ];
 
     // Weights for $a not set.
     $tests[] = [
       [],
       ['weight' => 1],
-      -1
+      -1,
     ];
 
     return $tests;
@@ -125,42 +125,42 @@ class SortArrayTest extends TestCase {
     $tests[] = [
       ['#weight' => 1],
       ['#weight' => 1],
-      0
+      0,
     ];
 
     // Weights set and $a is less (lighter) than $b.
     $tests[] = [
       ['#weight' => 1],
       ['#weight' => 2],
-      -1
+      -1,
     ];
 
     // Weights set and $a is greater (heavier) than $b.
     $tests[] = [
       ['#weight' => 2],
       ['#weight' => 1],
-      1
+      1,
     ];
 
     // Weights not set.
     $tests[] = [
       [],
       [],
-      0
+      0,
     ];
 
     // Weights for $b not set.
     $tests[] = [
       ['#weight' => 1],
       [],
-      1
+      1,
     ];
 
     // Weights for $a not set.
     $tests[] = [
       [],
       ['#weight' => 1],
-      -1
+      -1,
     ];
 
     return $tests;
@@ -201,35 +201,35 @@ class SortArrayTest extends TestCase {
     $tests[] = [
       ['title' => 'test'],
       ['title' => 'test'],
-      0
+      0,
     ];
 
     // Title $a not set.
     $tests[] = [
       [],
       ['title' => 'test'],
-      -4
+      -4,
     ];
 
     // Title $b not set.
     $tests[] = [
       ['title' => 'test'],
       [],
-      4
+      4,
     ];
 
     // Titles set but not equal.
     $tests[] = [
       ['title' => 'test'],
       ['title' => 'testing'],
-      -1
+      -1,
     ];
 
     // Titles set but not equal.
     $tests[] = [
       ['title' => 'testing'],
       ['title' => 'test'],
-      1
+      1,
     ];
 
     return $tests;
@@ -270,35 +270,35 @@ class SortArrayTest extends TestCase {
     $tests[] = [
       ['#title' => 'test'],
       ['#title' => 'test'],
-      0
+      0,
     ];
 
     // Title $a not set.
     $tests[] = [
       [],
       ['#title' => 'test'],
-      -4
+      -4,
     ];
 
     // Title $b not set.
     $tests[] = [
       ['#title' => 'test'],
       [],
-      4
+      4,
     ];
 
     // Titles set but not equal.
     $tests[] = [
       ['#title' => 'test'],
       ['#title' => 'testing'],
-      -1
+      -1,
     ];
 
     // Titles set but not equal.
     $tests[] = [
       ['#title' => 'testing'],
       ['#title' => 'test'],
-      1
+      1,
     ];
 
     return $tests;

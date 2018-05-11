@@ -55,9 +55,9 @@ class ArgumentDefaultTest extends ViewTestBase {
     $options = [
       'default_argument_type' => 'argument_default_test',
       'default_argument_options' => [
-        'value' => 'John'
+        'value' => 'John',
       ],
-      'default_action' => 'default'
+      'default_action' => 'default',
     ];
     $id = $view->addHandler('default', 'argument', 'views_test_data', 'name', $options);
     $view->initHandlers();

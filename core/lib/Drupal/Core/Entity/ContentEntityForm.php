@@ -133,7 +133,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
       '#type' => 'container',
       '#weight' => 99,
       '#attributes' => [
-        'class' => ['entity-content-form-footer']
+        'class' => ['entity-content-form-footer'],
       ],
       '#optional' => TRUE,
     ];

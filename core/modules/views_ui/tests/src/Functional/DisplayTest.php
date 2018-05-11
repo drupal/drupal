@@ -45,7 +45,7 @@ class DisplayTest extends UITestBase {
    */
   public function testReorderDisplay() {
     $view = [
-      'block[create]' => TRUE
+      'block[create]' => TRUE,
     ];
     $view = $this->randomView($view);
 
@@ -60,7 +60,7 @@ class DisplayTest extends UITestBase {
     // Put the block display in front of the page display.
     $edit = [
       'displays[page_1][weight]' => 2,
-      'displays[block_1][weight]' => 1
+      'displays[block_1][weight]' => 1,
     ];
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->drupalPostForm(NULL, [], t('Save'));

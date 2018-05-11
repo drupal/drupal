@@ -122,7 +122,7 @@ class BooleanFieldTest extends BrowserTestBase {
         'type' => 'boolean_checkbox',
         'settings' => [
           'display_label' => FALSE,
-        ]
+        ],
       ])
       ->save();
 

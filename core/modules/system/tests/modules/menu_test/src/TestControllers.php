@@ -77,9 +77,9 @@ class TestControllers {
         '#contextual_links' => [
           'menu_test_menu' => [
             'route_parameters' => ['bar' => 1],
-          ]
-        ]
-      ]
+          ],
+        ],
+      ],
     ];
   }
 

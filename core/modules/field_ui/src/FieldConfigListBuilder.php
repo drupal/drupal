@@ -162,7 +162,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
         'weight' => 10,
         'url' => $entity->urlInfo("{$entity->getTargetEntityTypeId()}-field-edit-form"),
         'attributes' => [
-          'title' => $this->t('Edit field settings.')
+          'title' => $this->t('Edit field settings.'),
         ],
       ];
     }
@@ -172,7 +172,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
         'weight' => 100,
         'url' => $entity->urlInfo("{$entity->getTargetEntityTypeId()}-field-delete-form"),
         'attributes' => [
-          'title' => $this->t('Delete field.')
+          'title' => $this->t('Delete field.'),
         ],
       ];
     }

@@ -118,7 +118,7 @@ class FieldTest extends UnitTestCase {
   public function testDefineOptionsWithNoOptions() {
     $definition = [
       'entity_type' => 'test_entity',
-      'field_name' => 'title'
+      'field_name' => 'title',
     ];
     $handler = new EntityField([], 'field', $definition, $this->entityManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer);
 
@@ -147,7 +147,7 @@ class FieldTest extends UnitTestCase {
       'entity_type' => 'test_entity',
       'field_name' => 'title',
       'default_formatter' => 'test_example',
-      'default_formatter_settings' => ['link_to_entity' => TRUE]
+      'default_formatter_settings' => ['link_to_entity' => TRUE],
     ];
     $handler = new EntityField([], 'field', $definition, $this->entityManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer);
 
@@ -174,7 +174,7 @@ class FieldTest extends UnitTestCase {
     $definition = [
       'entity_type' => 'test_entity',
       'field_name' => 'title',
-      'default_formatter_settings' => ['link_to_entity' => TRUE]
+      'default_formatter_settings' => ['link_to_entity' => TRUE],
     ];
     $handler = new EntityField([], 'field', $definition, $this->entityManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer);
 
@@ -200,7 +200,7 @@ class FieldTest extends UnitTestCase {
   public function testCalculateDependenciesWithBaseField() {
     $definition = [
       'entity_type' => 'test_entity',
-      'field_name' => 'title'
+      'field_name' => 'title',
     ];
     $handler = new EntityField([], 'field', $definition, $this->entityManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer);
 
@@ -222,7 +222,7 @@ class FieldTest extends UnitTestCase {
   public function testCalculateDependenciesWithConfiguredField() {
     $definition = [
       'entity_type' => 'test_entity',
-      'field_name' => 'body'
+      'field_name' => 'body',
     ];
     $handler = new EntityField([], 'field', $definition, $this->entityManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer);
 
@@ -263,7 +263,7 @@ class FieldTest extends UnitTestCase {
       ->method('get')
       ->with('test_entity_table')
       ->willReturn([
-        'table' => ['entity type' => 'test_entity']
+        'table' => ['entity type' => 'test_entity'],
       ]);
 
     $access_control_handler = $this->getMock('Drupal\Core\Entity\EntityAccessControlHandlerInterface');

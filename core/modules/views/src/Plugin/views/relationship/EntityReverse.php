@@ -53,7 +53,7 @@ class EntityReverse extends RelationshipPluginBase {
       'left_field' => $left_field,
       'table' => $this->definition['field table'],
       'field' => $this->definition['field field'],
-      'adjusted' => TRUE
+      'adjusted' => TRUE,
     ];
     if (!empty($this->options['required'])) {
       $first['type'] = 'INNER';
@@ -80,7 +80,7 @@ class EntityReverse extends RelationshipPluginBase {
       'left_field' => 'entity_id',
       'table' => $this->definition['base'],
       'field' => $this->definition['base field'],
-      'adjusted' => TRUE
+      'adjusted' => TRUE,
     ];
 
     if (!empty($this->options['required'])) {

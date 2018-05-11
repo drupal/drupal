@@ -52,7 +52,7 @@ class BigPipePlaceholderTestCases {
       [
         '#lazy_builder' => [
           'Drupal\Core\Render\Element\StatusMessages::renderMessages',
-          [NULL]
+          [NULL],
         ],
       ]
     );
@@ -129,7 +129,7 @@ class BigPipePlaceholderTestCases {
       [
         '#lazy_builder' => [
           'route_processor_csrf:renderPlaceholderCsrfToken',
-          ['admin/config/user-interface/shortcut/manage/default/add-link-inline']
+          ['admin/config/user-interface/shortcut/manage/default/add-link-inline'],
         ],
       ]
     );
@@ -155,14 +155,14 @@ class BigPipePlaceholderTestCases {
         '#attached' => [
           'placeholders' => [
             '<hello' => ['#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::helloOrYarhar', []]],
-          ]
+          ],
         ],
       ],
       '<hello',
       [
         '#lazy_builder' => [
           'hello_or_yarhar',
-          []
+          [],
         ],
       ]
     );
@@ -188,9 +188,9 @@ class BigPipePlaceholderTestCases {
               '#pre_render' => [
                 '\Drupal\big_pipe_test\BigPipeTestController::currentTime',
               ],
-            ]
-          ]
-        ]
+            ],
+          ],
+        ],
       ],
       '<time>CURRENT TIME</time>',
       [

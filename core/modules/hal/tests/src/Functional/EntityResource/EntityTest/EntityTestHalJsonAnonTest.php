@@ -68,7 +68,7 @@ class EntityTestHalJsonAnonTest extends EntityTestResourceTestBase {
               ],
             ],
             'uuid' => [
-              ['value' => $author->uuid()]
+              ['value' => $author->uuid()],
             ],
             'lang' => 'en',
           ],

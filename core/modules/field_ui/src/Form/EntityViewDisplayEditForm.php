@@ -73,8 +73,8 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
     // Insert an empty placeholder for the label column.
     $label = [
       'empty_cell' => [
-        '#markup' => '&nbsp;'
-      ]
+        '#markup' => '&nbsp;',
+      ],
     ];
     $label_position = array_search('plugin', array_keys($extra_field_row));
     $extra_field_row = array_slice($extra_field_row, 0, $label_position, TRUE) + $label + array_slice($extra_field_row, $label_position, count($extra_field_row) - 1, TRUE);

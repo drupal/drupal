@@ -15,7 +15,7 @@ class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
   public static $modules = [
     'language',
     'config_translation',
-    'system'
+    'system',
   ];
 
   protected function setUp() {

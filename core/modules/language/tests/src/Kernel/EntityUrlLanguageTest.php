@@ -74,7 +74,7 @@ class EntityUrlLanguageTest extends LanguageTestBase {
     $config->set('configurable', [LanguageInterface::TYPE_INTERFACE, LanguageInterface::TYPE_CONTENT]);
     $config->set('negotiation.language_content.enabled', [
       LanguageNegotiationContentEntity::METHOD_ID => 0,
-      LanguageNegotiationUrl::METHOD_ID => 1
+      LanguageNegotiationUrl::METHOD_ID => 1,
     ]);
     $config->save();
 
@@ -98,7 +98,7 @@ class EntityUrlLanguageTest extends LanguageTestBase {
     // where the language-content-entity is turned off.
     $config->set('negotiation.language_content.enabled', [
       LanguageNegotiationUrl::METHOD_ID => 0,
-      LanguageNegotiationContentEntity::METHOD_ID => 1
+      LanguageNegotiationContentEntity::METHOD_ID => 1,
     ]);
     $config->save();
 

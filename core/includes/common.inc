@@ -715,7 +715,7 @@ function drupal_attach_tabledrag(&$element, array $options) {
     'subgroup' => NULL,
     'source' => NULL,
     'hidden' => TRUE,
-    'limit' => 0
+    'limit' => 0,
   ];
 
   $group = $options['group'];

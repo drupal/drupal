@@ -159,7 +159,7 @@ class FieldUiTable extends Table {
         $elements['#rows'][] = [
           'class' => [
             'region-title',
-            'region-' . $region_name_class . '-title'
+            'region-' . $region_name_class . '-title',
           ],
           'no_striping' => TRUE,
           'data' => [

@@ -50,11 +50,11 @@ class CallbackTest extends MigrateProcessTestCase {
     return [
       'not set' => [
         'message' => 'The "callable" must be set.',
-        'configuration' => []
+        'configuration' => [],
       ],
       'invalid method' => [
         'message' => 'The "callable" must be a valid function or method.',
-        'configuration' => ['callable' => 'nonexistent_callable']
+        'configuration' => ['callable' => 'nonexistent_callable'],
       ],
     ];
   }

@@ -473,7 +473,7 @@ class ModerationFormTest extends ModerationStateTestBase {
       'edit own moderated_content content',
       'use editorial transition create_new_draft',
       'use editorial transition publish',
-      'use editorial transition archive'
+      'use editorial transition archive',
     ]);
     $this->drupalLogin($user);
     $paths = [

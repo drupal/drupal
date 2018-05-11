@@ -284,7 +284,7 @@ class FrontPageTest extends ViewTestBase {
           [
             'value' => $this->randomMachineName(32),
             'format' => filter_default_format(),
-          ]
+          ],
         ],
         'type' => 'article',
         'created' => $i,

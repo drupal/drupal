@@ -123,7 +123,7 @@ class ViewsTest extends UnitTestCase {
         'type_a' => [
           'display_plugin' => 'type_a',
           'display_options' => [
-            'enabled' => FALSE
+            'enabled' => FALSE,
           ],
         ],
         // Type D intentionally doesn't exist.

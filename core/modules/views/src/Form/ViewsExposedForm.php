@@ -103,7 +103,7 @@ class ViewsExposedForm extends FormBase {
     }
 
     $form['actions'] = [
-      '#type' => 'actions'
+      '#type' => 'actions',
     ];
     $form['actions']['submit'] = [
       // Prevent from showing up in \Drupal::request()->query.

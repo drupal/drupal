@@ -100,7 +100,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // field_ui enabled admin/structure/contact/manage/personal/fields exists.
     // @todo: See https://www.drupal.org/node/2031223 for the above.
     $edit_link = $this->xpath('//a[@href=:href]', [
-      ':href' => \Drupal::url('entity.contact_form.edit_form', ['contact_form' => 'personal'])
+      ':href' => \Drupal::url('entity.contact_form.edit_form', ['contact_form' => 'personal']),
     ]);
     $this->assertTrue(empty($edit_link), format_string('No link containing href %href found.',
       ['%href' => 'admin/structure/contact/manage/personal']
@@ -405,7 +405,7 @@ class ContactSitewideTest extends BrowserTestBase {
       'administer contact forms',
       'administer permissions',
       'administer users',
-      'access site reports'
+      'access site reports',
     ]);
     $this->drupalLogin($admin_user);
 

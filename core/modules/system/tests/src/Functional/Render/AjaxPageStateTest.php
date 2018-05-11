@@ -67,9 +67,9 @@ class AjaxPageStateTest extends BrowserTestBase {
         "query" =>
           [
             'ajax_page_state' => [
-              'libraries' => 'core/html5shiv'
-            ]
-          ]
+              'libraries' => 'core/html5shiv',
+            ],
+          ],
       ]
     );
     $this->assertNoRaw(

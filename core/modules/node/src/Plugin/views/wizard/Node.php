@@ -37,7 +37,7 @@ class Node extends WizardPluginBase {
   public function getAvailableSorts() {
     // You can't execute functions in properties, so override the method
     return [
-      'node_field_data-title:ASC' => $this->t('Title')
+      'node_field_data-title:ASC' => $this->t('Title'),
     ];
   }
 

@@ -177,7 +177,7 @@ EOD;
       // object.
       $this->assertRaw(t('Are you sure you want to update the %name @type?', [
         '%name' => 'second',
-        '@type' => 'test configuration'
+        '@type' => 'test configuration',
       ]));
       $this->drupalPostForm(NULL, [], t('Confirm'));
       $entity = $storage->load('second');

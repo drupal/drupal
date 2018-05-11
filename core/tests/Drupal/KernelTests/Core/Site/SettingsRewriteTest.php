@@ -111,7 +111,7 @@ EXPECTED
           'required' => TRUE,
         ],
       ],
-      'expected' => '$no_index = true;'
+      'expected' => '$no_index = true;',
     ];
     // Make an empty file.
     $filename = Settings::get('file_public_path', $site_path . '/files') . '/mock_settings.php';

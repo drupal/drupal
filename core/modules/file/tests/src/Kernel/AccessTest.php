@@ -93,7 +93,7 @@ class AccessTest extends KernelTestBase {
     \Drupal::currentUser()->setAccount($this->user1);
     /** @var \Drupal\file\FileInterface $file */
     $file = File::create([
-      'uri' => 'public://test.png'
+      'uri' => 'public://test.png',
     ]);
     // While creating a file entity access will be allowed for create-only
     // fields.

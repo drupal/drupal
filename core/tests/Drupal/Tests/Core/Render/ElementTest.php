@@ -28,7 +28,7 @@ class ElementTest extends UnitTestCase {
     $element = [
       '#property1' => 'property1',
       '#property2' => 'property2',
-      'property3' => 'property3'
+      'property3' => 'property3',
     ];
 
     $properties = Element::properties($element);

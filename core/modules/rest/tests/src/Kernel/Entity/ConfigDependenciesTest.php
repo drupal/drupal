@@ -239,7 +239,7 @@ class ConfigDependenciesTest extends KernelTestBase {
           'methods' => ['GET', 'POST'],
           'formats' => ['json'],
           'authentication' => ['cookie', 'basic_auth'],
-        ]
+        ],
       ],
       'resource with only HAL+JSON format' => [
         [
@@ -252,7 +252,7 @@ class ConfigDependenciesTest extends KernelTestBase {
           ],
         ],
         'hal',
-        FALSE
+        FALSE,
       ],
       'resource with multiple authentication providers' => [
         [
@@ -269,7 +269,7 @@ class ConfigDependenciesTest extends KernelTestBase {
           'methods' => ['GET', 'POST'],
           'formats' => ['json', 'hal_json'],
           'authentication' => ['cookie'],
-        ]
+        ],
       ],
       'resource with only basic_auth authentication' => [
         [

@@ -66,7 +66,7 @@ $connection->update('key_value')
   ->condition('collection', 'entity.definitions.installed')
   ->condition('name', 'node.field_storage_definitions')
   ->fields([
-    'value' => serialize($installed)
+    'value' => serialize($installed),
   ])
   ->execute();
 

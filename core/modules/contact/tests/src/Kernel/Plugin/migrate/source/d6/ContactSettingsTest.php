@@ -37,7 +37,7 @@ class ContactSettingsTest extends MigrateSqlSourceTestBase {
         'reply' => '',
         'weight' => '0',
         'selected' => '1',
-      ]
+      ],
     ];
     $tests[0]['expected_data'] = [
       [

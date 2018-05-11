@@ -77,7 +77,7 @@ class ViewPreviewForm extends ViewFormBase {
     return [
       '#attributes' => [
         'id' => 'preview-submit-wrapper',
-        'class' => ['preview-submit-wrapper']
+        'class' => ['preview-submit-wrapper'],
       ],
       'button' => [
         '#type' => 'submit',

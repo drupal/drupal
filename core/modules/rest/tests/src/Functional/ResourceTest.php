@@ -121,7 +121,7 @@ class ResourceTest extends BrowserTestBase {
           ],
           'supported_auth' => [
             'cookie',
-          ]
+          ],
         ],
       ],
     ])->save();

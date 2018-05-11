@@ -283,13 +283,13 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
           'config_dependencies' => [
             'config' => [$instance_dependency_1],
             'module' => [$instance_dependency_2],
-          ]
+          ],
         ],
         [
           'config' => [$instance_dependency_1],
-          'module' => [$instance_dependency_2, 'test']
-        ]
-      ]
+          'module' => [$instance_dependency_2, 'test'],
+        ],
+      ],
     ];
   }
 

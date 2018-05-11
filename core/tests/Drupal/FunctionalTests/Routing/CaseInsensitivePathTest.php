@@ -63,8 +63,8 @@ class CaseInsensitivePathTest extends BrowserTestBase {
 
     $this->drupalGet('admin/content', [
       'query' => [
-        'title' => 'FooBarBaz'
-      ]
+        'title' => 'FooBarBaz',
+      ],
     ]);
 
     $this->assertSession()->linkExists('FooBarBaz');
@@ -74,8 +74,8 @@ class CaseInsensitivePathTest extends BrowserTestBase {
 
     $this->drupalGet('Admin/Content', [
       'query' => [
-        'title' => 'FooBarBaz'
-      ]
+        'title' => 'FooBarBaz',
+      ],
     ]);
 
     $this->assertSession()->linkExists('FooBarBaz');

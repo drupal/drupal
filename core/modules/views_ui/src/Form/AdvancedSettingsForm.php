@@ -78,7 +78,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
         '#default_value' => array_filter($config->get('display_extenders')),
         '#options' => $options,
         '#type' => 'checkboxes',
-        '#description' => $this->t('Select extensions of the views interface.')
+        '#description' => $this->t('Select extensions of the views interface.'),
       ];
     }
 

@@ -431,7 +431,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
           'position' => 0,
           'display_options' => [],
         ],
-      ]
+      ],
     ];
   }
 

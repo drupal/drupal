@@ -83,7 +83,7 @@ class EntityReferenceSelectionUnitTest extends UnitTestCase {
               'bar' => 'bar value',
               'baz' => 'baz value',
             ],
-          ]
+          ],
         ],
       ],
       [
@@ -96,7 +96,7 @@ class EntityReferenceSelectionUnitTest extends UnitTestCase {
           'handler_settings' => [
             // Same setting from root level takes precedence.
             'setting2' => 'this will be overwritten',
-          ]
+          ],
         ],
       ],
     ];

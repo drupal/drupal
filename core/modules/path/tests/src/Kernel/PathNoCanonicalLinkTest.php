@@ -42,7 +42,7 @@ class PathNoCanonicalLinkTest extends KernelTestBase {
   public function testNoCanonicalLinkTemplate() {
     $entity_type = EntityTestTranslatableUISkip::create([
       'name' => 'name english',
-      'language' => 'en'
+      'language' => 'en',
     ]);
     $entity_type->save();
 

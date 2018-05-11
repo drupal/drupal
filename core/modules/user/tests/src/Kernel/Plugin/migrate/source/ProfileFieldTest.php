@@ -99,7 +99,7 @@ class ProfileFieldTest extends MigrateSqlSourceTestBase {
         'fid' => 4,
         'uid' => 1,
         'value' => 'yellow',
-      ]
+      ],
     ];
 
     // Expected options are:
@@ -114,7 +114,7 @@ class ProfileFieldTest extends MigrateSqlSourceTestBase {
         'blue' => 'blue',
         'green' => 'green',
         'yellow' => 'yellow',
-      ]
+      ],
     ];
 
     $tests[0]['expected_data'] = $profile_fields;

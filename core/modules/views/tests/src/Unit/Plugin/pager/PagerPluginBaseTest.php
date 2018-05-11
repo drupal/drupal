@@ -196,7 +196,7 @@ class PagerPluginBaseTest extends UnitTestCase {
       // Now we are on the second page, which has just a single one left.
       [5, 6, 1, FALSE],
       // Increase the total items, so we have some available on the third page.
-      [5, 12, 1, TRUE]
+      [5, 12, 1, TRUE],
     ];
   }
 

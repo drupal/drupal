@@ -108,7 +108,7 @@ class ViewTestData {
       ],
       'primary key' => ['id'],
       'unique keys' => [
-        'name' => ['name']
+        'name' => ['name'],
       ],
       'indexes' => [
         'ages' => ['age'],

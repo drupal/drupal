@@ -334,16 +334,16 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
   public function providerTestGetTermWithParent() {
     return [
       'root parent: [0] (= no parent)' => [
-        [0]
+        [0],
       ],
       'non-root parent: [2]' => [
-        [2]
+        [2],
       ],
       'multiple parents: [0,2] (root + non-root parent)' => [
-        [0, 2]
+        [0, 2],
       ],
       'multiple parents: [3,2] (both non-root parents)' => [
-        [3, 2]
+        [3, 2],
       ],
     ];
   }

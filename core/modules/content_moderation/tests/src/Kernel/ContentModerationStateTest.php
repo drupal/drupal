@@ -520,7 +520,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->assertEquals([
       'entity_test_no_bundle',
       'entity_test_rev',
-      'node'
+      'node',
     ], $workflow->getTypePlugin()->getEntityTypes());
 
     // Delete the node type and ensure it is removed from the workflow.

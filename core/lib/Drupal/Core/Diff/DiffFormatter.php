@@ -57,7 +57,7 @@ class DiffFormatter extends DiffFormatterBase {
       [
         'data' => $ybeg + $this->line_stats['offset']['y'],
         'colspan' => 2,
-      ]
+      ],
     ];
   }
 
@@ -94,7 +94,7 @@ class DiffFormatter extends DiffFormatterBase {
       [
         'data' => ['#markup' => $line],
         'class' => 'diff-context diff-addedline',
-      ]
+      ],
     ];
   }
 
@@ -116,7 +116,7 @@ class DiffFormatter extends DiffFormatterBase {
       [
         'data' => ['#markup' => $line],
         'class' => 'diff-context diff-deletedline',
-      ]
+      ],
     ];
   }
 
@@ -135,7 +135,7 @@ class DiffFormatter extends DiffFormatterBase {
       [
         'data' => ['#markup' => $line],
         'class' => 'diff-context',
-      ]
+      ],
     ];
   }
 

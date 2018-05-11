@@ -47,7 +47,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
       'd7_field',
       'd7_taxonomy_vocabulary',
       'd7_field_instance',
-      'd7_taxonomy_term'
+      'd7_taxonomy_term',
     ]);
   }
 

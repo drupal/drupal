@@ -96,7 +96,7 @@ class DefaultViewsTest extends ViewTestBase {
         'status' => CommentInterface::PUBLISHED,
         'entity_id' => $node->id(),
         'entity_type' => 'node',
-        'field_name' => 'comment'
+        'field_name' => 'comment',
       ];
       Comment::create($comment)->save();
 

@@ -583,20 +583,20 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
         '<unknown style="visibility:hidden">Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
         '<unknown>Pink Fairy Armadillo</unknown><video src="gerenuk.mp4">alert(0)',
         'Disallow only the script tag',
-        ['script']
+        ['script'],
       ],
       [
         '<unknown style="visibility:hidden">Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
         '<unknown>Pink Fairy Armadillo</unknown>alert(0)',
         'Disallow both the script and video tags',
-        ['script', 'video']
+        ['script', 'video'],
       ],
       // No real use case for this, but it is an edge case we must ensure works.
       [
         '<unknown style="visibility:hidden">Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
         '<unknown>Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
         'Disallow no tags',
-        []
+        [],
       ],
     ];
   }

@@ -35,8 +35,8 @@ class AreaEmptyTest extends ViewsKernelTestBase {
       'title' => 'Test Example area',
       'help' => 'A area handler which just exists for tests.',
       'area' => [
-        'id' => 'test_example'
-      ]
+        'id' => 'test_example',
+      ],
     ];
 
     return $data;

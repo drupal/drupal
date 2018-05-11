@@ -118,7 +118,7 @@ class CommentUserNameTest extends ViewsKernelTestBase {
                 'field' => 'name',
                 'id' => 'name',
                 'plugin_id' => 'field',
-                'type' => 'comment_username'
+                'type' => 'comment_username',
               ],
               'subject' => [
                 'table' => 'comment_field_data',

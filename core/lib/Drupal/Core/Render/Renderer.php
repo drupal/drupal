@@ -326,7 +326,7 @@ class Renderer implements RendererInterface {
         // automatically by the Renderer. Adding them as though they are
         // supported allows us to avoid throwing an exception 100% of the time.
         '#weight',
-        '#printed'
+        '#printed',
       ];
       $unsupported_keys = array_diff(array_keys($elements), $supported_keys);
       if (count($unsupported_keys)) {

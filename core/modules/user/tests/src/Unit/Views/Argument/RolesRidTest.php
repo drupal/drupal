@@ -23,7 +23,7 @@ class RolesRidTest extends UnitTestCase {
   public function testTitleQuery() {
     $role1 = new Role([
       'id' => 'test_rid_1',
-      'label' => 'test rid 1'
+      'label' => 'test rid 1',
     ], 'user_role');
     $role2 = new Role([
       'id' => 'test_rid_2',

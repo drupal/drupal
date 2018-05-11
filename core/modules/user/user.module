@@ -609,7 +609,7 @@ function user_pass_reset_url($account, $options = []) {
     ],
     [
       'absolute' => TRUE,
-      'language' => \Drupal::languageManager()->getLanguage($langcode)
+      'language' => \Drupal::languageManager()->getLanguage($langcode),
     ]
   );
 }
@@ -638,7 +638,7 @@ function user_cancel_url(UserInterface $account, $options = []) {
   return \Drupal::url('user.cancel_confirm', [
     'user' => $account->id(),
     'timestamp' => $timestamp,
-    'hashed_pass' => user_pass_rehash($account, $timestamp)
+    'hashed_pass' => user_pass_rehash($account, $timestamp),
   ], $url_options);
 }
 

@@ -285,7 +285,7 @@ class DisplayTest extends ViewTestBase {
       'table' => 'views_test_data',
       'field' => 'id',
       'id' => 'id',
-      'value' => ['value' => 7297]
+      'value' => ['value' => 7297],
     ];
     $view->setHandler('default', 'filter', 'id', $item);
     $this->executeView($view);

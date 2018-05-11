@@ -84,8 +84,8 @@ abstract class EntityTestResourceTestBase extends EntityResourceTestBase {
     $normalization = [
       'uuid' => [
         [
-          'value' => $this->entity->uuid()
-        ]
+          'value' => $this->entity->uuid(),
+        ],
       ],
       'id' => [
         [
@@ -100,15 +100,15 @@ abstract class EntityTestResourceTestBase extends EntityResourceTestBase {
       'type' => [
         [
           'value' => 'entity_test',
-        ]
+        ],
       ],
       'name' => [
         [
           'value' => 'Llama',
-        ]
+        ],
       ],
       'created' => [
-        $this->formatExpectedTimestampItemValues((int) $this->entity->get('created')->value)
+        $this->formatExpectedTimestampItemValues((int) $this->entity->get('created')->value),
       ],
       'user_id' => [
         [
@@ -116,7 +116,7 @@ abstract class EntityTestResourceTestBase extends EntityResourceTestBase {
           'target_type' => 'user',
           'target_uuid' => $author->uuid(),
           'url' => $author->toUrl()->toString(),
-        ]
+        ],
       ],
       'field_test_text' => [],
     ];

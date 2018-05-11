@@ -38,7 +38,7 @@ class MigrateBookTest extends MigrateDrupal7TestBase {
       'd7_user',
       'd7_node_type',
       'd7_node',
-      'd7_book'
+      'd7_book',
     ]);
   }
 

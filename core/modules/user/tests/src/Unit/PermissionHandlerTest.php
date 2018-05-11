@@ -400,7 +400,7 @@ class TestPermissionCallbacks {
 
   public function singleDescription() {
     return [
-      'access_module_a' => 'single_description'
+      'access_module_a' => 'single_description',
     ];
   }
 

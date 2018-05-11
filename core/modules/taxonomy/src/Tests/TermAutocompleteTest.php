@@ -188,7 +188,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
     foreach ($expectedResults as $termName) {
       $expected[] = [
         'value' => $termName . ' (' . $this->termIds[$termName] . ')',
-        'label' => $termName
+        'label' => $termName,
       ];
     }
 

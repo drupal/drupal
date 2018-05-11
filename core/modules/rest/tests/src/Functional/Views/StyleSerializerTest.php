@@ -296,7 +296,7 @@ class StyleSerializerTest extends ViewTestBase {
       'entity_test:7',
       'entity_test:8',
       'entity_test:9',
-      'entity_test_list'
+      'entity_test_list',
     ];
     $cache_contexts = [
       'entity_test_view_grants',

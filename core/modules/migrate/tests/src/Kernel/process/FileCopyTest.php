@@ -50,17 +50,17 @@ class FileCopyTest extends FileTestBase {
       // Test a local to local copy.
       [
         $this->root . '/core/modules/simpletest/files/image-test.jpg',
-        'public://file1.jpg'
+        'public://file1.jpg',
       ],
       // Test a temporary file using an absolute path.
       [
         $file_absolute,
-        'temporary://test.jpg'
+        'temporary://test.jpg',
       ],
       // Test a temporary file using a relative path.
       [
         $file_absolute,
-        'temporary://core/modules/simpletest/files/test.jpg'
+        'temporary://core/modules/simpletest/files/test.jpg',
       ],
     ];
     foreach ($data_sets as $data) {
@@ -113,17 +113,17 @@ class FileCopyTest extends FileTestBase {
       // Test a local to local copy.
       [
         $local_file,
-        'public://file1.jpg'
+        'public://file1.jpg',
       ],
       // Test a temporary file using an absolute path.
       [
         $file_1_absolute,
-        'temporary://test.jpg'
+        'temporary://test.jpg',
       ],
       // Test a temporary file using a relative path.
       [
         $file_2_absolute,
-        'temporary://core/modules/simpletest/files/test.jpg'
+        'temporary://core/modules/simpletest/files/test.jpg',
       ],
     ];
     foreach ($data_sets as $data) {

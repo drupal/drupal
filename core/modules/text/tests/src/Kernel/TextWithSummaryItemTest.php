@@ -105,7 +105,7 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
       'type' => 'text_with_summary',
       'settings' => [
         'max_length' => 10,
-      ]
+      ],
     ]);
     $this->fieldStorage->save();
     $this->field = FieldConfig::create([

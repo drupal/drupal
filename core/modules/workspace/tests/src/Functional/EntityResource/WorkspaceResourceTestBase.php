@@ -125,7 +125,7 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
       ],
       'uuid' => [
         [
-          'value' => $this->entity->uuid()
+          'value' => $this->entity->uuid(),
         ],
       ],
     ];

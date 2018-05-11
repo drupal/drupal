@@ -45,7 +45,7 @@ class LinkViewsTokensTest extends ViewTestBase {
     // Create Basic page node type.
     $this->drupalCreateContentType([
       'type' => 'page',
-      'name' => 'Basic page'
+      'name' => 'Basic page',
     ]);
 
     // Create a field.

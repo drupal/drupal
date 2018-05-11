@@ -19,7 +19,7 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
     // Set up some configuration in a mocked config factory.
     $trait->configFactory = $this->getConfigFactoryStub([
       'editable.config' => [],
-      'immutable.config' => []
+      'immutable.config' => [],
     ]);
 
     $trait->expects($this->any())

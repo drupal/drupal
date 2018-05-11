@@ -124,7 +124,7 @@ class Html {
     // Identifiers cannot start with a digit, two hyphens, or a hyphen followed by a digit.
     $identifier = preg_replace([
       '/^[0-9]/',
-      '/^(-[0-9])|^(--)/'
+      '/^(-[0-9])|^(--)/',
     ], ['_', '__'], $identifier);
     return $identifier;
   }

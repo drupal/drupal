@@ -62,7 +62,7 @@ class FieldCounterTest extends ViewsKernelTestBase {
         'table' => 'views',
         'field' => 'counter',
         'relationship' => 'none',
-        'counter_start' => $rand_start
+        'counter_start' => $rand_start,
       ],
       'name' => [
         'id' => 'name',

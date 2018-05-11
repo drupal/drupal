@@ -93,7 +93,7 @@ class EditorSecurityTest extends WebTestBase {
           'status' => 1,
           'settings' => [
             'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a>',
-          ]
+          ],
         ],
       ],
     ]);
@@ -108,7 +108,7 @@ class EditorSecurityTest extends WebTestBase {
           'status' => 1,
           'settings' => [
             'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a>',
-          ]
+          ],
         ],
       ],
     ]);
@@ -128,7 +128,7 @@ class EditorSecurityTest extends WebTestBase {
           'status' => 1,
           'settings' => [
             'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a> <embed>',
-          ]
+          ],
         ],
       ],
     ]);
@@ -209,9 +209,9 @@ class EditorSecurityTest extends WebTestBase {
       $this->drupalCreateNode([
         'type' => 'article',
         'body' => [
-          ['value' => self::$sampleContent, 'format' => $sample['format']]
+          ['value' => self::$sampleContent, 'format' => $sample['format']],
         ],
-        'uid' => $sample['author']
+        'uid' => $sample['author'],
       ]);
     }
   }

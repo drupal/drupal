@@ -45,7 +45,7 @@ class TourTest extends TourTestBasic {
 
     $this->drupalPlaceBlock('local_actions_block', [
       'theme' => 'seven',
-      'region' => 'content'
+      'region' => 'content',
     ]);
   }
 
@@ -130,7 +130,7 @@ class TourTest extends TourTestBasic {
           'url' => 'http://local/image.png',
           'weight' => 1,
           'attributes' => [
-            'data-id' => 'tour-code-test-2'
+            'data-id' => 'tour-code-test-2',
           ],
         ],
       ],

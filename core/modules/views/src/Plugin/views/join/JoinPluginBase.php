@@ -226,7 +226,7 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
     // Merge in some default values.
     $configuration += [
       'type' => 'LEFT',
-      'extra_operator' => 'AND'
+      'extra_operator' => 'AND',
     ];
     $this->configuration = $configuration;
 

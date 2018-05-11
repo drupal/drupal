@@ -62,7 +62,7 @@ class MimeTypeTest extends FileTestBase {
       'extensions' => [
          'jar' => 0,
          'jpg' => 1,
-      ]
+      ],
     ];
 
     $test_case = [

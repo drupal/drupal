@@ -93,7 +93,7 @@ function forum_views_data() {
       'id' => 'date',
     ],
     'sort' => [
-      'id' => 'date'
+      'id' => 'date',
     ],
     'filter' => [
       'id' => 'date',

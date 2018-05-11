@@ -81,7 +81,7 @@ class FilterEntityBundleTest extends ViewTestBase {
         'node.type.test_bundle_2',
       ],
       'module' => [
-        'node'
+        'node',
       ],
     ];
     $this->assertIdentical($expected, $view->getDependencies());

@@ -21,7 +21,7 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
   public function testDiscoverServiceCustom() {
     new Settings([
       'container_yamls' => [
-        __DIR__ . '/fixtures/custom.yml'
+        __DIR__ . '/fixtures/custom.yml',
       ],
     ]);
 

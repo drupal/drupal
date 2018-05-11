@@ -235,7 +235,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
         '#attributes' => ['class' => ['language-customization-checkbox']],
         '#attached' => [
           'library' => [
-            'language/drupal.language.admin'
+            'language/drupal.language.admin',
           ],
         ],
       ];

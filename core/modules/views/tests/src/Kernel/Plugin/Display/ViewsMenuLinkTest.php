@@ -17,7 +17,7 @@ class ViewsMenuLinkTest extends ViewsKernelTestBase {
   public static $modules = [
     'menu_ui',
     'user',
-    'views'
+    'views',
   ];
 
   /**

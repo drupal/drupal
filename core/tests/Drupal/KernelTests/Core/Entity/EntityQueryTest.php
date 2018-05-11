@@ -683,7 +683,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       'translatable' => FALSE,
       'settings' => [
         'case_sensitive' => FALSE,
-      ]
+      ],
     ]);
     $field_storage->save();
 
@@ -729,7 +729,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       'name' => $this->randomMachineName(),
       'langcode' => 'en',
       'field_ci' => $fixtures[0]['uppercase'] . $fixtures[1]['lowercase'],
-      'field_cs' => $fixtures[0]['uppercase'] . $fixtures[1]['lowercase']
+      'field_cs' => $fixtures[0]['uppercase'] . $fixtures[1]['lowercase'],
     ])->save();
 
     // Check the case insensitive field, = operator.
@@ -920,7 +920,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $entity->isDefaultRevision(FALSE);
     $entity->{$this->figures}->setValue([
       'color' => 'red',
-      'shape' => 'square'
+      'shape' => 'square',
     ]);
     $entity->save();
 
@@ -949,7 +949,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $entity->isDefaultRevision(FALSE);
     $entity->{$this->figures}->setValue([
       'color' => 'red',
-      'shape' => 'square'
+      'shape' => 'square',
     ]);
     $entity->save();
 

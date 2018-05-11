@@ -38,7 +38,7 @@ class AttributesTest extends UnitTestCase {
           'alt' => 'Alternate',
         ],
         ' id="id-test" class="first last" alt="Alternate"',
-        'Multiple attributes.'
+        'Multiple attributes.',
       ],
       // Verify empty attributes array is rendered.
       [[], '', 'Empty attributes array.'],

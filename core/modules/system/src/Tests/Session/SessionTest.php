@@ -57,7 +57,7 @@ class SessionTest extends WebTestBase {
     // session_test_user_login() which breaks a normal assertion.
     $edit = [
       'name' => $user->getUsername(),
-      'pass' => $user->pass_raw
+      'pass' => $user->pass_raw,
     ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
     $this->drupalGet('user');

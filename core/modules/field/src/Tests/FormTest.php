@@ -119,7 +119,7 @@ class FormTest extends FieldTestBase {
 
     // Submit with invalid value (field-level validation).
     $edit = [
-      "{$field_name}[0][value]" => -1
+      "{$field_name}[0][value]" => -1,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $this->field['label']]), 'Field validation fails with invalid input.');
@@ -156,7 +156,7 @@ class FormTest extends FieldTestBase {
     // Empty the field.
     $value = '';
     $edit = [
-      "{$field_name}[0][value]" => $value
+      "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', ['@id' => $id]), 'Entity was updated');

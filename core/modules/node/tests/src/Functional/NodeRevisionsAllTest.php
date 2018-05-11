@@ -46,7 +46,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
         'revert page revisions',
         'delete page revisions',
         'edit any page content',
-        'delete any page content'
+        'delete any page content',
       ]
     );
     $this->drupalLogin($web_user);
@@ -122,7 +122,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
         'revert all revisions',
         'delete all revisions',
         'edit any page content',
-        'delete any page content'
+        'delete any page content',
       ]
     );
     $this->drupalLogin($content_admin);
@@ -147,7 +147,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
       [
         '@type' => 'Basic page',
         '%title' => $nodes[1]->getTitle(),
-        '%revision-date' => format_date($nodes[1]->getRevisionCreationTime())
+        '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
       ]),
       'Revision reverted.');
     $node_storage->resetCache([$node->id()]);

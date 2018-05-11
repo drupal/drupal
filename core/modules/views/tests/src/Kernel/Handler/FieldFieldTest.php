@@ -82,7 +82,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
       $this->testUsers[$i] = User::create([
         'name' => 'test ' . $i,
         'timezone' => User::getAllowedTimezones()[$i],
-        'created' => REQUEST_TIME - rand(0, 3600)
+        'created' => REQUEST_TIME - rand(0, 3600),
       ]);
       $this->testUsers[$i]->save();
     }
@@ -279,8 +279,8 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $render = $executable->display_handler->render();
     $expected_attachments = [
       'library' => [
-        'views/views.module'
-      ]
+        'views/views.module',
+      ],
     ];
     foreach ($this->entities as $entity) {
       $expected_attachments['library'][] = 'foo/fake_library';

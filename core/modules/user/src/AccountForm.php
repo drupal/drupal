@@ -347,7 +347,7 @@ abstract class AccountForm extends ContentEntityForm {
       'timezone',
       'langcode',
       'preferred_langcode',
-      'preferred_admin_langcode'
+      'preferred_admin_langcode',
     ], parent::getEditedFieldNames($form_state));
   }
 
@@ -365,7 +365,7 @@ abstract class AccountForm extends ContentEntityForm {
       'timezone',
       'langcode',
       'preferred_langcode',
-      'preferred_admin_langcode'
+      'preferred_admin_langcode',
     ];
     foreach ($violations->getByFields($field_names) as $violation) {
       list($field_name) = explode('.', $violation->getPropertyPath(), 2);

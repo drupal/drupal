@@ -242,7 +242,7 @@ function locale_translation_http_check($uri) {
       'allow_redirects' => [
         'on_redirect' => function (RequestInterface $request, ResponseInterface $response, UriInterface $request_uri) use (&$actual_uri) {
           $actual_uri = (string) $request_uri;
-        }
+        },
       ],
     ])->head($uri);
     $result = [];

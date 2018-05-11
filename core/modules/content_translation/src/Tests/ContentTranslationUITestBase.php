@@ -112,7 +112,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $add_url = Url::fromRoute("entity.$entity_type_id.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => $default_langcode,
-      'target' => $langcode
+      'target' => $langcode,
     ], ['language' => $language]);
     $this->drupalPostForm($add_url, $this->getEditValues($values, $langcode), $this->getFormSubmitActionForNewTranslation($entity, $langcode));
 
@@ -176,7 +176,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $add_url = Url::fromRoute("entity.$entity_type_id.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => $default_langcode,
-      'target' => $langcode
+      'target' => $langcode,
     ], ['language' => $language]);
     // This does not save anything, it merely reloads the form and fills in the
     // fields with the values from the different source language.
@@ -190,7 +190,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $add_url = Url::fromRoute("entity.$entity_type_id.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => $source_langcode,
-      'target' => $langcode
+      'target' => $langcode,
     ], ['language' => $language]);
     $this->drupalPostForm($add_url, $edit, $this->getFormSubmitActionForNewTranslation($entity, $langcode));
     $storage->resetCache([$this->entityId]);

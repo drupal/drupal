@@ -809,7 +809,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
       'khoảng cách từ đại lí đến',
       'của hãng bao gồm ba dòng',
       'сд асд асд ас',
-      'асд асд асд ас'
+      'асд асд асд ас',
     ];
     // Just test maxlength without word boundary.
     $alter = [

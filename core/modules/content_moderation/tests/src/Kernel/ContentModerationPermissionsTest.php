@@ -89,7 +89,7 @@ class ContentModerationPermissionsTest extends KernelTestBase {
             ],
           ],
         ],
-        []
+        [],
       ],
     ];
   }

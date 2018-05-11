@@ -39,7 +39,7 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
         $form['deleted_translations'] = [
           '#theme' => 'item_list',
           '#title' => $this->t('The following @entity-type translations will be deleted:', [
-            '@entity-type' => $entity->getEntityType()->getLowercaseLabel()
+            '@entity-type' => $entity->getEntityType()->getLowercaseLabel(),
           ]),
           '#items' => $languages,
         ];

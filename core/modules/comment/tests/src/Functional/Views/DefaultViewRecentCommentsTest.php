@@ -119,7 +119,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
     $map = [
       'subject' => 'subject',
       'cid' => 'cid',
-      'comment_field_data_created' => 'created'
+      'comment_field_data_created' => 'created',
     ];
     $expected_result = [];
     foreach (array_values($this->commentsCreated) as $key => $comment) {

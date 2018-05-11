@@ -30,7 +30,7 @@ function template_preprocess_update_report(&$variables) {
       'library' => [
         'update/drupal.update.admin',
       ],
-    ]
+    ],
   ];
 
   // For no project update data, populate no data message.
@@ -230,7 +230,7 @@ function template_preprocess_update_project_status(&$variables) {
       $extra_item['data'] = [
         '#prefix' => '<em>',
         '#markup' => $value['data'],
-        '#suffix' => '</em>'
+        '#suffix' => '</em>',
       ];
       $variables['extras'][] = $extra_item;
     }

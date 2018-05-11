@@ -73,7 +73,7 @@ function block_update_8001() {
         // their own updates.
         $update_backup[$block->get('id')] = [
           'missing_context_ids' => $backup_values,
-          'status' => $block->get('status')
+          'status' => $block->get('status'),
         ];
       }
     }

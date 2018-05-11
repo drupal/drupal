@@ -43,7 +43,7 @@ class TextFieldTest extends StringFieldTest {
       'type' => 'text',
       'settings' => [
         'max_length' => $max_length,
-      ]
+      ],
     ]);
     $field_storage->save();
     FieldConfig::create([
@@ -89,7 +89,7 @@ class TextFieldTest extends StringFieldTest {
     $field_storage = FieldStorageConfig::create([
       'field_name' => $file_field_name,
       'entity_type' => 'entity_test',
-      'type' => 'file'
+      'type' => 'file',
     ]);
     $field_storage->save();
     FieldConfig::create([
@@ -116,7 +116,7 @@ class TextFieldTest extends StringFieldTest {
     $this->drupalPostForm('entity_test/add', $edit, 'Upload');
     $this->assertResponse(200);
     $edit = [
-      'text_long[0][value]' => 'Long text'
+      'text_long[0][value]' => 'Long text',
     ];
     $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertResponse(200);
@@ -152,7 +152,7 @@ class TextFieldTest extends StringFieldTest {
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
-      'type' => $field_type
+      'type' => $field_type,
     ]);
     $field_storage->save();
     FieldConfig::create([

@@ -48,7 +48,7 @@ class FilterAPITest extends EntityKernelTestBase {
             'allowed_html' => '<p>',
           ],
         ],
-      ]
+      ],
     ]);
     $crazy_format->save();
 
@@ -183,10 +183,10 @@ class FilterAPITest extends EntityKernelTestBase {
                 'a' => ['href' => TRUE],
                 'em' => TRUE,
               ],
-            ]
+            ],
           ],
         ],
-      ]
+      ],
     ]);
     $very_restricted_html_format->save();
     $this->assertIdentical(
@@ -220,7 +220,7 @@ class FilterAPITest extends EntityKernelTestBase {
             'allowed_html' => '<a> <b class> <c class="*"> <d class="foo bar-* *">',
           ],
         ],
-      ]
+      ],
     ]);
     $nonsensical_restricted_html->save();
     $this->assertIdentical(
@@ -416,7 +416,7 @@ class FilterAPITest extends EntityKernelTestBase {
             'allowed_html' => '<p>',
           ],
         ],
-      ]
+      ],
     ]);
     $crazy_format->save();
     // Use config to directly load the configuration and check that only enabled

@@ -25,7 +25,7 @@ class TestForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['email'] = [
       '#type' => 'email',
-      '#title' => $this->t('Your .com email address.')
+      '#title' => $this->t('Your .com email address.'),
     ];
 
     $form['show'] = [

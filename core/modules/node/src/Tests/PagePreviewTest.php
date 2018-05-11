@@ -133,7 +133,7 @@ class PagePreviewTest extends NodeTestBase {
       'type' => 'text',
       'settings' => [
         'max_length' => 50,
-      ]
+      ],
     ]);
     $field_storage->save();
     FieldConfig::create([

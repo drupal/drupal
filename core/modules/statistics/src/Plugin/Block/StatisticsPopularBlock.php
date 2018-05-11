@@ -95,7 +95,7 @@ class StatisticsPopularBlock extends BlockBase implements ContainerFactoryPlugin
     return [
       'top_day_num' => 0,
       'top_all_num' => 0,
-      'top_last_num' => 0
+      'top_last_num' => 0,
     ];
   }
 

@@ -278,7 +278,7 @@ EOS;
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',
-      'type' => 'test_field'
+      'type' => 'test_field',
     ]);
     $field_storage->save();
     FieldConfig::create([
@@ -354,7 +354,7 @@ EOS;
       $info = Database::getConnectionInfo();
       $connection->query('ATTACH DATABASE :database AS :prefix', [
         ':database' => $info['default']['database'] . '-' . $this->databasePrefix,
-        ':prefix' => $this->databasePrefix
+        ':prefix' => $this->databasePrefix,
       ]);
 
       $result = $connection->query("SELECT name FROM " . $this->databasePrefix . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [

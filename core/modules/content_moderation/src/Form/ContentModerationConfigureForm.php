@@ -68,7 +68,7 @@ class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase imple
 
     $header = [
       'type' => $this->t('Items'),
-      'operations' => $this->t('Operations')
+      'operations' => $this->t('Operations'),
     ];
     $form['entity_types_container'] = [
       '#type' => 'details',
@@ -108,7 +108,7 @@ class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase imple
             'label' => $this->t('@bundle types', ['@bundle' => $entity_type->getLabel()]),
             'entity_type_id' => $entity_type->id(),
             'selected_bundles' => $selected_bundles_list,
-          ]
+          ],
         ],
         'operations' => [
           '#type' => 'operations',

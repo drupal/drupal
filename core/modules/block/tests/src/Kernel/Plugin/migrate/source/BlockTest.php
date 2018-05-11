@@ -87,7 +87,7 @@ class BlockTest extends MigrateSqlSourceTestBase {
         'schema_version' => '6055',
         'weight' => '0',
         'info' => 'a:0:{}',
-      ]
+      ],
     ];
 
     // The expected results.
@@ -104,7 +104,7 @@ class BlockTest extends MigrateSqlSourceTestBase {
         'pages' => '',
         'title' => 'Test Title 01',
         'cache' => -1,
-        'roles' => [2]
+        'roles' => [2],
       ],
       [
         'bid' => 2,
@@ -118,7 +118,7 @@ class BlockTest extends MigrateSqlSourceTestBase {
         'pages' => '<front>',
         'title' => 'Test Title 02',
         'cache' => -1,
-        'roles' => [2]
+        'roles' => [2],
       ],
     ];
     return $tests;

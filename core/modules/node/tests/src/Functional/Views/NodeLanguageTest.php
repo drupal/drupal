@@ -75,7 +75,7 @@ class NodeLanguageTest extends NodeTestBase {
       ],
       'fr' => [
         'Premier nœud fr',
-      ]
+      ],
     ];
 
     // Create nodes with translations.

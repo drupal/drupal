@@ -251,13 +251,13 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       'dependencies' => [
         'module' => [
           'fruiter',
-        ]
+        ],
       ],
       'third_party_settings' => [
         'fruiter' => [
           'fruit' => 'apple',
-        ]
-      ]
+        ],
+      ],
     ]);
     $changed = $field->onDependencyRemoval(['module' => ['fruiter']]);
     $this->assertTrue($changed);

@@ -74,7 +74,7 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
       $this->collectedErrors[] = [
         'message' => $message,
         'group' => $group,
-        'caller' => $caller
+        'caller' => $caller,
       ];
     }
   }

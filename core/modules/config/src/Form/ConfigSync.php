@@ -214,12 +214,12 @@ class ConfigSync extends FormBase {
         sort($change_list);
         $message = [
           [
-            '#markup' => $this->t('The following items in your active configuration have changes since the last import that may be lost on the next import.')
+            '#markup' => $this->t('The following items in your active configuration have changes since the last import that may be lost on the next import.'),
           ],
           [
             '#theme' => 'item_list',
             '#items' => $change_list,
-          ]
+          ],
         ];
         $this->messenger()->addWarning($this->renderer->renderPlain($message));
       }
@@ -295,7 +295,7 @@ class ConfigSync extends FormBase {
               'class' => ['use-ajax'],
               'data-dialog-type' => 'modal',
               'data-dialog-options' => json_encode([
-                'width' => 700
+                'width' => 700,
               ]),
             ],
           ];

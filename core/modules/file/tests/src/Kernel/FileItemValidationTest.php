@@ -78,9 +78,9 @@ class FileItemValidationTest extends KernelTestBase {
         'default' => [
           'files' => [
             'test.txt' => str_repeat('a', 3000),
-          ]
-        ]
-      ]
+          ],
+        ],
+      ],
     ]);
 
     // Test for max filesize.
@@ -95,7 +95,7 @@ class FileItemValidationTest extends KernelTestBase {
       'uid' => $this->user->id(),
       'field_test_file' => [
         'target_id' => $file->id(),
-      ]
+      ],
     ]);
     $result = $entity_test->validate();
     $this->assertCount(2, $result);

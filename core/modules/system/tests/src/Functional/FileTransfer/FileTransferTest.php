@@ -28,11 +28,11 @@ class FileTransferTest extends BrowserTestBase {
       'fake.module',
       'fake.info.yml',
       'theme' => [
-        'fake.html.twig'
+        'fake.html.twig',
       ],
       'inc' => [
-        'fake.inc'
-      ]
+        'fake.inc',
+      ],
     ];
     return $files;
   }

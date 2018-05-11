@@ -322,7 +322,7 @@ class NodeViewsData extends EntityViewsData {
             'field' => 'sid',
             'table' => 'search_index',
             'extra' => "node_search_index.type = 'node_search' AND node_search_index.langcode = node_field_data.langcode",
-          ]
+          ],
         ];
 
         $data['node_search_total']['table']['join'] = [

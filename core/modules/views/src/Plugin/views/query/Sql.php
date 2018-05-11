@@ -188,7 +188,7 @@ class Sql extends QueryPluginBase {
       'link' => NULL,
       'table' => $base_table,
       'alias' => $base_table,
-      'base' => $base_table
+      'base' => $base_table,
     ];
 
     // init the table queue with our primary table.
@@ -1045,7 +1045,7 @@ class Sql extends QueryPluginBase {
 
     $this->orderby[] = [
       'field' => $as,
-      'direction' => strtoupper($order)
+      'direction' => strtoupper($order),
     ];
   }
 
@@ -1793,7 +1793,7 @@ class Sql extends QueryPluginBase {
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
-      ]
+      ],
     ];
   }
 

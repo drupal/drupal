@@ -31,7 +31,7 @@ class AjaxTestDialogForm extends FormBase {
     // to have a dummy field we can set in WebTestBase::drupalPostForm() else it won't
     // submit anything.
     $form['textfield'] = [
-      '#type' => 'hidden'
+      '#type' => 'hidden',
     ];
     $form['button1'] = [
       '#type' => 'submit',

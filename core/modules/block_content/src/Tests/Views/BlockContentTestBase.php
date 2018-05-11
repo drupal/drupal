@@ -99,7 +99,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
     $values += [
       'id' => $id,
       'label' => $id,
-      'revision' => FALSE
+      'revision' => FALSE,
     ];
     $bundle = BlockContentType::create($values);
     $status = $bundle->save();

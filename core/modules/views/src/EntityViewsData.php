@@ -207,7 +207,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       $data[$base_table]['table']['join'][$data_table] = [
         'left_field' => $base_field,
         'field' => $base_field,
-        'type' => 'INNER'
+        'type' => 'INNER',
       ];
       $data[$data_table]['table']['group'] = $this->entityType->getLabel();
       $data[$data_table]['table']['provider'] = $this->entityType->getProvider();

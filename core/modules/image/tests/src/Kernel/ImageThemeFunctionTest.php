@@ -127,7 +127,7 @@ class ImageThemeFunctionTest extends KernelTestBase {
       ':fragment' => '#' . $fragment,
       ':url' => $url,
       ':width' => $image->getWidth(),
-      ':height' => $image->getHeight()
+      ':height' => $image->getHeight(),
     ]);
     $this->assertEqual(count($elements), 1, 'theme_image_formatter() correctly renders a link fragment.');
   }

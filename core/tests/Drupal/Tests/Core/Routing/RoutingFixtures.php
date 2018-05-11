@@ -60,7 +60,7 @@ class RoutingFixtures {
       'path' => '/path/two',
       'methods' => ['GET'],
       'requirements' => [
-        '_format' => 'json'
+        '_format' => 'json',
       ],
     ];
     $routes['route_d'] = [
@@ -70,7 +70,7 @@ class RoutingFixtures {
       'path' => '/path/two',
       'methods' => ['GET', 'HEAD'],
       'requirements' => [
-        '_format' => 'html'
+        '_format' => 'html',
       ],
     ];
 

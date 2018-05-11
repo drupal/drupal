@@ -65,7 +65,7 @@ class FieldEntityTest extends ViewTestBase {
       'uid' => $account->id(),
       'entity_id' => $node->id(),
       'entity_type' => 'node',
-      'field_name' => 'comment'
+      'field_name' => 'comment',
     ]);
     $comment->save();
 

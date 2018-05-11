@@ -155,7 +155,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         ],
         'domain' => [
           'type' => 'varchar',
-        ]
+        ],
       ],
       'unique keys' => [
         'email' => ['username', 'hostname', ['domain', 3]],
@@ -194,7 +194,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         ],
         'city' => [
           'type' => 'varchar',
-        ]
+        ],
       ],
       'indexes' => [
         'country_state_city' => ['country', 'state', ['city', 10]],
@@ -397,7 +397,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             'id' => 'id',
             'revision' => 'revision_id',
           ],
-        ]
+        ],
       ])
       ->setMethods(['getRevisionMetadataKeys'])
       ->getMock();
@@ -429,7 +429,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
           'revision_id' => [
             'type' => 'int',
             'not null' => FALSE,
-          ]
+          ],
         ],
         'primary key' => ['id'],
         'unique keys' => [
@@ -440,7 +440,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
           'entity_test__revision' => [
             'table' => 'entity_test_revision',
             'columns' => ['revision_id' => 'revision_id'],
-          ]
+          ],
         ],
       ],
       'entity_test_revision' => [
@@ -533,7 +533,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
           'langcode' => [
             'type' => 'varchar',
             'not null' => TRUE,
-          ]
+          ],
         ],
         'primary key' => ['id'],
         'unique keys' => [],
@@ -613,7 +613,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             'revision' => 'revision_id',
             'langcode' => 'langcode',
           ],
-        ]
+        ],
       ])
       ->setMethods(['getRevisionMetadataKeys'])
       ->getMock();
@@ -670,7 +670,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
           'langcode' => [
             'type' => 'varchar',
             'not null' => TRUE,
-          ]
+          ],
         ],
         'primary key' => ['id'],
         'unique keys' => [
@@ -853,7 +853,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'color' => [
           'table' => 'color',
           'columns' => [
-            'color' => 'id'
+            'color' => 'id',
           ],
         ],
       ],
@@ -1020,7 +1020,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'color' => [
           'table' => 'color',
           'columns' => [
-            'color' => 'id'
+            'color' => 'id',
           ],
         ],
       ],

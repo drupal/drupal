@@ -409,7 +409,7 @@ class ManageFieldsTest extends WebTestBase {
     FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',
-      'type' => 'test_field'
+      'type' => 'test_field',
     ])->save();
     $field = FieldConfig::create([
       'field_name' => $field_name,
@@ -548,7 +548,7 @@ class ManageFieldsTest extends WebTestBase {
       'entity_type' => 'node',
       'type' => 'test_field',
       'cardinality' => 1,
-      'locked' => TRUE
+      'locked' => TRUE,
     ]);
     $field_storage->save();
     FieldConfig::create([

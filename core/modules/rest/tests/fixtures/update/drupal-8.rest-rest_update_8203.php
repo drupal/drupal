@@ -53,6 +53,6 @@ $data = $connection->insert('config')
   ->fields([
     'name' => 'rest.settings',
     'data' => serialize($config),
-    'collection' => ''
+    'collection' => '',
   ])
   ->execute();

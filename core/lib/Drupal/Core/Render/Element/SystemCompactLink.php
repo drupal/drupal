@@ -65,7 +65,7 @@ class SystemCompactLink extends Link {
       $element['#url'] = BaseUrl::fromRoute('system.admin_compact_page', ['mode' => 'off']);
       $element['#options'] = [
         'attributes' => ['title' => t('Expand layout to include descriptions.')],
-        'query' => \Drupal::destination()->getAsArray()
+        'query' => \Drupal::destination()->getAsArray(),
       ];
     }
     else {

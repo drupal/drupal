@@ -263,7 +263,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
     $parameters += [
       $this->entityType => [
         'type' => 'entity:' . $this->entityType,
-      ]
+      ],
     ];
     $route->setOption('parameters', $parameters);
   }

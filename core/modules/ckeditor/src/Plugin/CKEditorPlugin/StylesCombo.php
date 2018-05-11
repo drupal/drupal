@@ -157,7 +157,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
       ];
       if (!empty($classes)) {
         $configured_style['attributes'] = [
-          'class' => implode(' ', array_map('trim', $classes))
+          'class' => implode(' ', array_map('trim', $classes)),
         ];
       }
       $styles_set[] = $configured_style;

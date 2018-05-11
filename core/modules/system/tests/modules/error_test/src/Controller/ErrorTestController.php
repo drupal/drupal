@@ -88,7 +88,7 @@ class ErrorTestController extends ControllerBase {
       '#post_render' => [
         function () {
           throw new \Exception('This is an exception that occurs during rendering');
-        }
+        },
       ],
     ];
   }
