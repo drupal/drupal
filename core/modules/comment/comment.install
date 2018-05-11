@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the Comment module.
  */
 
+use Drupal\comment\Entity\Comment;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -194,4 +195,15 @@ function comment_update_8400() {
   // definition needs to be updated as well.
   $entity_definition_update_manager = \Drupal::service('entity.definition_update_manager');
   $entity_definition_update_manager->updateFieldStorageDefinition($entity_definition_update_manager->getFieldStorageDefinition('status', 'comment'));
+}
+
+/**
+ * Configure the comment hostname base field to use a default value callback.
+ */
+function comment_update_8600() {
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  /** @var \Drupal\Core\Field\BaseFieldDefinition $field_storage_definition */
+  $field_storage_definition = $entity_definition_update_manager->getFieldStorageDefinition('hostname', 'comment');
+  $field_storage_definition->setDefaultValueCallback(Comment::class . '::getDefaultHostname');
+  $entity_definition_update_manager->updateFieldStorageDefinition($field_storage_definition);
 }
