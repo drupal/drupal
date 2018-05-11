@@ -8,8 +8,8 @@
 /**
  * Implements hook_cron().
  *
- * common_test_cron() throws an exception, but the execution should reach this
- * function as well.
+ * Function common_test_cron() throws an exception, but the execution should
+ * reach this function as well.
  *
  * @see common_test_cron()
  */

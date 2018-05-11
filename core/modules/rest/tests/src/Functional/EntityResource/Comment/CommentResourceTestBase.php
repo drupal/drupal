@@ -267,8 +267,8 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
   /**
    * Tests POSTing a comment without critical base fields.
    *
-   * testPost() is testing with the most minimal normalization possible: the one
-   * returned by ::getNormalizedPostEntity().
+   * Tests with the most minimal normalization possible: the one returned by
+   * ::getNormalizedPostEntity().
    *
    * But Comment entities have some very special edge cases:
    * - base fields that are not marked as required in

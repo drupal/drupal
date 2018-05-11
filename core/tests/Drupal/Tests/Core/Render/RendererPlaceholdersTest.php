@@ -35,7 +35,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
   /**
    * Provides the two classes of placeholders: cacheable and uncacheable.
    *
-   * i.e. with or without #cache[keys].
+   * I.e. with or without #cache[keys].
    *
    * Also, different types:
    * - A) automatically generated placeholder

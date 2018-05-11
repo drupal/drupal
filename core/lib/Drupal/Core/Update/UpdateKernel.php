@@ -115,7 +115,7 @@ class UpdateKernel extends DrupalKernel {
   /**
    * Boots up the session.
    *
-   * bootSession() + shutdownSession() basically simulates what
+   * This method + shutdownSession() basically simulates what
    * \Drupal\Core\StackMiddleware\Session does.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

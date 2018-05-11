@@ -123,9 +123,9 @@ class SearchTokenizerTest extends SearchTestBase {
   /**
    * Like PHP chr() function, but for unicode characters.
    *
-   * chr() only works for ASCII characters up to character 255. This function
-   * converts a number to the corresponding unicode character. Adapted from
-   * functions supplied in comments on several functions on php.net.
+   * Function chr() only works for ASCII characters up to character 255. This
+   * function converts a number to the corresponding unicode character. Adapted
+   * from functions supplied in comments on several functions on php.net.
    */
   public function code2utf($num) {
     if ($num < 128) {

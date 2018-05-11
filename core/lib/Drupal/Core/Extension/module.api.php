@@ -479,7 +479,7 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
 /**
  * Perform a single update between minor versions.
  *
- * hook_update_N() can only be used to update between minor versions of a
+ * Hook hook_update_N() can only be used to update between minor versions of a
  * module. To upgrade between major versions of Drupal (for example, between
  * Drupal 7 and 8), use the @link migrate Migrate API @endlink instead.
  *

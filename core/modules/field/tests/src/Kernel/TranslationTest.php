@@ -18,7 +18,7 @@ class TranslationTest extends FieldKernelTestBase {
   /**
    * Modules to enable.
    *
-   * node is required because the tests alter the node entity type.
+   * The node module is required because the tests alter the node entity type.
    *
    * @var array
    */

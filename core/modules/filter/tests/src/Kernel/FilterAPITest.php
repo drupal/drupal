@@ -246,9 +246,9 @@ class FilterAPITest extends EntityKernelTestBase {
   /**
    * Tests the 'processed_text' element.
    *
-   * check_markup() is a wrapper for the 'processed_text' element, for use in
-   * simple scenarios; the 'processed_text' element has more advanced features:
-   * it lets filters attach assets, associate cache tags and define
+   * Function check_markup() is a wrapper for the 'processed_text' element, for
+   * use in simple scenarios; the 'processed_text' element has more advanced
+   * features: it lets filters attach assets, associate cache tags and define
    * #lazy_builder callbacks.
    * This test focuses solely on those advanced features.
    */

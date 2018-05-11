@@ -46,7 +46,7 @@ class DateTimePlus {
   /**
    * A RFC7231 Compliant date.
    *
-   * http://tools.ietf.org/html/rfc7231#section-7.1.1.1
+   * @see http://tools.ietf.org/html/rfc7231#section-7.1.1.1
    *
    * Example: Sun, 06 Nov 1994 08:49:37 GMT
    */

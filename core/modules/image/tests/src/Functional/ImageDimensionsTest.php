@@ -286,9 +286,9 @@ class ImageDimensionsTest extends BrowserTestBase {
   /**
    * Render an image style element.
    *
-   * drupal_render() alters the passed $variables array by adding a new key
-   * '#printed' => TRUE. This prevents next call to re-render the element. We
-   * wrap drupal_render() in a helper protected method and pass each time a
+   * Function drupal_render() alters the passed $variables array by adding a new
+   * key '#printed' => TRUE. This prevents next call to re-render the element.
+   * We wrap drupal_render() in a helper protected method and pass each time a
    * fresh array so that $variables won't get altered and the element is
    * re-rendered each time.
    */

@@ -609,13 +609,13 @@ class FormState implements FormStateInterface {
   /**
    * Checks whether the request method is a "safe" HTTP method.
    *
-   * http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.1.1 defines
-   * GET and HEAD as "safe" methods, meaning they SHOULD NOT have side-effects,
-   * such as persisting $form_state changes.
+   * Link below defines GET and HEAD as "safe" methods, meaning they SHOULD NOT
+   * have side-effects, such as persisting $form_state changes.
    *
    * @return bool
    *
    * @see \Symfony\Component\HttpFoundation\Request::isMethodSafe()
+   * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.1.1
    */
   protected function isRequestMethodSafe() {
     return in_array($this->requestMethod, ['GET', 'HEAD']);

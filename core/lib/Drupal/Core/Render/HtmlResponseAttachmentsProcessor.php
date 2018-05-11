@@ -384,8 +384,8 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   /**
    * Transform a html_head_link array into html_head and http_header arrays.
    *
-   * html_head_link is a special case of html_head which can be present as
-   * a link item in the HTML head section, and also as a Link: HTTP header,
+   * Variable html_head_link is a special case of html_head which can be present
+   * as a link item in the HTML head section, and also as a Link: HTTP header,
    * depending on options in the render array. Processing it can add to both the
    * html_head and http_header sections.
    *

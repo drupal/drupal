@@ -8,11 +8,12 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * TODO: Test the following functions.
  *
- * image.effects.inc:
+ * In file:
+ * - image.effects.inc:
  *   image_style_generate()
  *   \Drupal\image\ImageStyleInterface::createDerivative()
  *
- * image.module:
+ * - image.module:
  *   image_style_options()
  *   \Drupal\image\ImageStyleInterface::flush()
  *   image_filter_keyword()

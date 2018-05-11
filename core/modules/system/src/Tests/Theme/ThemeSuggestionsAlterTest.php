@@ -154,7 +154,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
   /**
    * Tests execution order of theme suggestion alter hooks.
    *
-   * hook_theme_suggestions_alter() should fire before
+   * Hook hook_theme_suggestions_alter() should fire before
    * hook_theme_suggestions_HOOK_alter() within an extension (module or theme).
    */
   public function testExecutionOrder() {

@@ -9,8 +9,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * Adds the twig_extension_hash parameter to the container.
  *
- * twig_extension_hash is a hash of all extension mtimes for Twig template
- * invalidation.
+ * Parameter twig_extension_hash is a hash of all extension mtimes for Twig
+ * template invalidation.
  */
 class TwigExtensionPass implements CompilerPassInterface {
 

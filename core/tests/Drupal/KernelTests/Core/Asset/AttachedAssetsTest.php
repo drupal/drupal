@@ -9,7 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests #attached assets: attached asset libraries and JavaScript settings.
  *
- * i.e. tests:
+ * I.e. tests:
  *
  * @code
  * $build['#attached']['library'] = …

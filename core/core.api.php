@@ -2021,7 +2021,7 @@ function hook_queue_info_alter(&$queues) {
 /**
  * Alter an email message created with MailManagerInterface->mail().
  *
- * hook_mail_alter() allows modification of email messages created and sent
+ * Hook hook_mail_alter() allows modification of email messages created and sent
  * with MailManagerInterface->mail(). Usage examples include adding and/or
  * changing message text, message fields, and message headers.
  *

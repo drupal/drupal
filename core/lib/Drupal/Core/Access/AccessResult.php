@@ -426,9 +426,9 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
   /**
    * Inherits the cacheability of the other access result, if any.
    *
-   * inheritCacheability() differs from addCacheableDependency() in how it
-   * handles max-age, because it is designed to inherit the cacheability of the
-   * second operand in the andIf() and orIf() operations. There, the situation
+   * This method differs from addCacheableDependency() in how it handles
+   * max-age, because it is designed to inherit the cacheability of the second
+   * operand in the andIf() and orIf() operations. There, the situation
    * "allowed, max-age=0 OR allowed, max-age=1000" needs to yield max-age 1000
    * as the end result.
    *

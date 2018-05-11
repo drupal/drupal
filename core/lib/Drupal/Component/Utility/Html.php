@@ -79,9 +79,10 @@ class Html {
   /**
    * Prepares a string for use as a CSS identifier (element, class, or ID name).
    *
-   * http://www.w3.org/TR/CSS21/syndata.html#characters shows the syntax for
-   * valid CSS identifiers (including element names, classes, and IDs in
-   * selectors.)
+   * Link below shows the syntax for valid CSS identifiers (including element
+   * names, classes, and IDs in selectors).
+   *
+   * @see http://www.w3.org/TR/CSS21/syndata.html#characters
    *
    * @param string $identifier
    *   The identifier to clean.

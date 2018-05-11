@@ -31,7 +31,7 @@ trait AssertContentTrait {
   /**
    * The drupalSettings value from the current raw $content.
    *
-   * drupalSettings refers to the drupalSettings JavaScript variable.
+   * Variable drupalSettings refers to the drupalSettings JavaScript variable.
    *
    * @var array
    */
@@ -99,7 +99,7 @@ trait AssertContentTrait {
   /**
    * Gets the value of drupalSettings for the currently-loaded page.
    *
-   * drupalSettings refers to the drupalSettings JavaScript variable.
+   * Variable drupalSettings refers to the drupalSettings JavaScript variable.
    */
   protected function getDrupalSettings() {
     return $this->drupalSettings;
@@ -108,7 +108,7 @@ trait AssertContentTrait {
   /**
    * Sets the value of drupalSettings for the currently-loaded page.
    *
-   * drupalSettings refers to the drupalSettings JavaScript variable.
+   * Variable drupalSettings refers to the drupalSettings JavaScript variable.
    */
   protected function setDrupalSettings($settings) {
     $this->drupalSettings = $settings;
