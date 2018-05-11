@@ -12,3 +12,7 @@ services:
       public: false
       tags:
         - { name: page_cache_request_policy }
+  rest_test.encoder.foobar:
+    class: Drupal\serialization\Encoder\JsonEncoder
+    tags:
+      - { name: encoder, format: foobar }
