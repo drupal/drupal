@@ -17,7 +17,6 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
  */
 interface HelpSectionPluginInterface extends PluginInspectionInterface, CacheableDependencyInterface {
 
-
   /**
    * Returns the title of the help section.
    *

@@ -8,6 +8,7 @@ namespace Drupal\Component\Uuid;
  * @see http://php.net/com_create_guid
  */
 class Com implements UuidInterface {
+
   /**
    * {@inheritdoc}
    */

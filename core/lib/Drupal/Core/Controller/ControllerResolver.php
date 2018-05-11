@@ -80,7 +80,6 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
     return $callable;
   }
 
-
   /**
    * {@inheritdoc}
    */

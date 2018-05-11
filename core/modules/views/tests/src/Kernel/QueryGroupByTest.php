@@ -51,7 +51,6 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     ConfigurableLanguage::createFromLangcode('it')->save();
   }
 
-
   /**
    * Tests aggregate count feature.
    */

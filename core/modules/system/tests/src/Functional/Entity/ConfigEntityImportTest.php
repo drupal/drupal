@@ -42,6 +42,7 @@ class ConfigEntityImportTest extends BrowserTestBase {
     $this->doImageStyleUpdate();
     $this->doSearchPageUpdate();
   }
+
   /**
    * Tests updating a action during import.
    */

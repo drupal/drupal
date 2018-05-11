@@ -155,7 +155,6 @@ class TwigEnvironmentTest extends KernelTestBase {
       ->addTag('twig.loader');
   }
 
-
   /**
    * Test template invalidation.
    */

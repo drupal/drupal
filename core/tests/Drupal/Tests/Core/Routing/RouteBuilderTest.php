@@ -311,11 +311,13 @@ class TestRouteBuilder extends RouteBuilder {
  * Provides a callback for route definition.
  */
 class TestRouteSubscriber {
+
   public function routesFromArray() {
     return [
       'test_route.1' => new Route('/test-route/1'),
     ];
   }
+
   public function routesFromCollection() {
     $collection = new RouteCollection();
     $collection->add('test_route.2', new Route('/test-route/2'));

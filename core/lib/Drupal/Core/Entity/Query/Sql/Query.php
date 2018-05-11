@@ -64,7 +64,6 @@ class Query extends QueryBase implements QueryInterface {
     $this->connection = $connection;
   }
 
-
   /**
    * {@inheritdoc}
    */

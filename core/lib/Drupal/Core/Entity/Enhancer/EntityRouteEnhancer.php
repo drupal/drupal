@@ -68,7 +68,6 @@ class EntityRouteEnhancer implements EnhancerInterface {
     return $defaults;
   }
 
-
   /**
    * Update defaults for an entity list.
    *

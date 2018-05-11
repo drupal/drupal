@@ -567,6 +567,7 @@ class AccessManagerTest extends UnitTestCase {
  * Defines an interface with a defined access() method for mocking.
  */
 interface TestAccessCheckInterface extends AccessCheckInterface {
+
   public function access();
 
 }

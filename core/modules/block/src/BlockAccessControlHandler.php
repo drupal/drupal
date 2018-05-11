@@ -67,7 +67,6 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
     $this->contextRepository = $context_repository;
   }
 
-
   /**
    * {@inheritdoc}
    */

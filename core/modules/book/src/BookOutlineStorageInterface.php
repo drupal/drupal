@@ -110,7 +110,6 @@ interface BookOutlineStorageInterface {
    */
   public function insert($link, $parents);
 
-
   /**
    * Updates book reference for links that were moved between books.
    *

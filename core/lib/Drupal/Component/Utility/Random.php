@@ -259,7 +259,6 @@ class Random {
     return $output;
   }
 
-
   /**
    * Create a placeholder image.
    *

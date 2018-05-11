@@ -31,6 +31,7 @@ function update_test_schema_schema() {
 $schema_version = \Drupal::state()->get('update_test_schema_version', 8000);
 
 if ($schema_version >= 8001) {
+
   /**
    * Schema version 8001.
    */
@@ -45,4 +46,5 @@ if ($schema_version >= 8001) {
     // Add a column.
     db_add_index('update_test_schema_table', 'test', ['a'], $table);
   }
+
 }

@@ -145,7 +145,6 @@ class AliasManagerTest extends UnitTestCase {
     $this->assertEquals($path, $this->aliasManager->getPathByAlias($alias, 'de'));
   }
 
-
   /**
    * Tests the getAliasByPath method for a path that is not in the whitelist.
    *

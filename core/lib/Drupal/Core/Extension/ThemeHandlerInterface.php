@@ -92,7 +92,6 @@ interface ThemeHandlerInterface {
    */
   public function listInfo();
 
-
   /**
    * Adds a theme extension to the internal listing.
    *

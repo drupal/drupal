@@ -13,6 +13,7 @@ use Drupal\file\Entity\File;
  * @group file
  */
 class FileTokenReplaceTest extends FileFieldTestBase {
+
   /**
    * Creates a file, then tests the tokens generated from it.
    */

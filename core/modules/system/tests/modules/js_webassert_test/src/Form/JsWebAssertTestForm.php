@@ -139,6 +139,7 @@ class JsWebAssertTestForm extends FormBase {
     ];
     return $form;
   }
+
   /**
    * Ajax callback for the "Add field" button.
    */
@@ -178,7 +179,6 @@ class JsWebAssertTestForm extends FormBase {
 
     return $form;
   }
-
 
   /**
    * Ajax callback for the "Test waitForElementVisible" button.

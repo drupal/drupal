@@ -187,7 +187,6 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
     $this->assertNoTranslation($config_name, $langcode);
   }
 
-
   /**
    * Sets up a configuration string with a translation.
    *

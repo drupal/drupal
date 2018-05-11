@@ -211,7 +211,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->assertEquals(\Drupal::VERSION, $libraries['core-versioned']['js'][0]['version']);
   }
 
-
   /**
    * Tests that the version property of external libraries is handled.
    *
@@ -399,6 +398,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->assertEquals(FALSE, $library['js'][0]['minified']);
     $this->assertEquals(TRUE, $library['js'][1]['minified']);
   }
+
   /**
    * Tests that an exception is thrown when license is missing when 3rd party.
    *

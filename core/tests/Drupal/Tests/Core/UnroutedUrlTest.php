@@ -73,7 +73,6 @@ class UnroutedUrlTest extends UnitTestCase {
     $this->assertInstanceOf('Drupal\Core\Url', $url);
   }
 
-
   /**
    * Data provider for testFromUri().
    */

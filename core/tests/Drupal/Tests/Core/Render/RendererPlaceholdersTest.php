@@ -574,6 +574,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $this->assertEquals($expected_data, $cached_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by the placeholder being replaced.');
     }
   }
+
   /**
    * @covers ::render
    * @covers ::doRender

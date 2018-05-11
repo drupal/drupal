@@ -190,6 +190,7 @@ class NumericFilter extends FilterPluginBase {
 
     return $options;
   }
+
   /**
    * Provide a simple textfield for equality
    */

@@ -165,7 +165,6 @@ class Connection extends DatabaseConnection {
     return $pdo;
   }
 
-
   /**
    * Destructor for the SQLite connection.
    *

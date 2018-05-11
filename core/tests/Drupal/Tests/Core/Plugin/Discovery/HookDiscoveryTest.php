@@ -135,6 +135,7 @@ class HookDiscoveryTest extends UnitTestCase {
       'test_id_2' => ['class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Orange'],
     ];
   }
+
   protected function hookDiscoveryTest2TestPlugin() {
     return [
       'test_id_3' => ['class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry'],

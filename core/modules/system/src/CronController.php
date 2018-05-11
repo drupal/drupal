@@ -36,7 +36,6 @@ class CronController extends ControllerBase {
     return new static($container->get('cron'));
   }
 
-
   /**
    * Run Cron once.
    *

@@ -355,6 +355,7 @@ class User extends ContentEntityBase implements UserInterface {
   public function isAuthenticated() {
     return $this->id() > 0;
   }
+
   /**
    * {@inheritdoc}
    */

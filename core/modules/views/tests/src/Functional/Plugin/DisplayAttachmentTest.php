@@ -36,7 +36,6 @@ class DisplayAttachmentTest extends ViewTestBase {
     $this->drupalLogin($admin_user);
   }
 
-
   /**
    * Tests the attachment plugin.
    */

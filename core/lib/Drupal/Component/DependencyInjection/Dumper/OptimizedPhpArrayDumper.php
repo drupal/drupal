@@ -282,7 +282,6 @@ class OptimizedPhpArrayDumper extends Dumper {
     return $code;
   }
 
-
   /**
    * Dumps a collection to a PHP array.
    *

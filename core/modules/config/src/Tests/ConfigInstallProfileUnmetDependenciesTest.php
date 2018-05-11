@@ -79,7 +79,6 @@ class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
     // This step is not reached due to the exception.
   }
 
-
   /**
    * Confirms that the installation succeeded.
    */

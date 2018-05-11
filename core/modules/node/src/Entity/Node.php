@@ -212,7 +212,6 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
     return $this->get('created')->value;
   }
 
-
   /**
    * {@inheritdoc}
    */

@@ -32,7 +32,6 @@ class JsonTest extends TestCase {
    */
   protected $htmlUnsafeEscaped;
 
-
   /**
    * {@inheritdoc}
    */

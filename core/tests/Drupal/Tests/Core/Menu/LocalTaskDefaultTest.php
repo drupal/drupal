@@ -317,6 +317,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
 }
 
 class TestLocalTaskDefault extends LocalTaskDefault {
+
   public function setRouteProvider(RouteProviderInterface $route_provider) {
     $this->routeProvider = $route_provider;
     return $this;

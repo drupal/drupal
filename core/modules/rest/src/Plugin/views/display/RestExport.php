@@ -166,6 +166,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
       $container->getParameter('serializer.format_providers')
     );
   }
+
   /**
    * {@inheritdoc}
    */

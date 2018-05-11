@@ -10,6 +10,7 @@ namespace Drupal\file\Tests;
  *   that aren't related to fields into it.
  */
 class FileManagedFileElementTest extends FileFieldTestBase {
+
   /**
    * Tests the managed_file element type.
    */

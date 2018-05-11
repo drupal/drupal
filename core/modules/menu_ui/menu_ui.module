@@ -496,7 +496,6 @@ function menu_ui_preprocess_block(&$variables) {
   }
 }
 
-
 /**
  * Implements hook_system_breadcrumb_alter().
  */

@@ -160,7 +160,6 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
     return $plugin_ids;
   }
 
-
   /**
    * {@inheritdoc}
    */

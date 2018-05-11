@@ -1119,6 +1119,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
 
     $this->assertSame($values, $this->formStateDecoratorBase->getValues());
   }
+
   /**
    * @covers ::getValue
    */

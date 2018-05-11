@@ -8,6 +8,7 @@ namespace Drupal\Tests\system\Functional\Module;
  * @group Module
  */
 class HookRequirementsTest extends ModuleTestBase {
+
   /**
    * Assert that a module cannot be installed if it fails hook_requirements().
    */

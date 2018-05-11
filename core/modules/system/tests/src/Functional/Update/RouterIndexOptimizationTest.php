@@ -10,6 +10,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @group Update
  */
 class RouterIndexOptimizationTest extends UpdatePathTestBase {
+
   /**
    * {@inheritdoc}
    */

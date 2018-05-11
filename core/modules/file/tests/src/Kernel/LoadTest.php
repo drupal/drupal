@@ -10,6 +10,7 @@ use Drupal\file\Entity\File;
  * @group file
  */
 class LoadTest extends FileManagedUnitTestBase {
+
   /**
    * Try to load a non-existent file by fid.
    */

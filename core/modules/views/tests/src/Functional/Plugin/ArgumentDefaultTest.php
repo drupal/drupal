@@ -81,7 +81,6 @@ class ArgumentDefaultTest extends ViewTestBase {
     $this->assertIdenticalResultset($view, $expected_result, ['views_test_data_name' => 'name']);
   }
 
-
   /**
    * Tests the use of a default argument plugin that provides no options.
    */

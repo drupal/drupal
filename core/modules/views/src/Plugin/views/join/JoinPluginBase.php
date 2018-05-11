@@ -281,6 +281,7 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
 
     $select_query->addJoin($this->type, $right_table, $table['alias'], $condition, $arguments);
   }
+
   /**
    * Adds the extras to the join condition.
    *

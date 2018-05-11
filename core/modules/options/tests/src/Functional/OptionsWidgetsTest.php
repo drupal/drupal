@@ -35,7 +35,6 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   protected $card2;
 
-
   protected function setUp() {
     parent::setUp();
 

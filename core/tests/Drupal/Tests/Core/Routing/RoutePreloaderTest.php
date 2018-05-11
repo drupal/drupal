@@ -97,7 +97,6 @@ class RoutePreloaderTest extends UnitTestCase {
     $this->preloader->onFinishedRoutes(new Event());
   }
 
-
   /**
    * Tests onAlterRoutes with admin routes and non admin routes.
    */

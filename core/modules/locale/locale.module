@@ -308,7 +308,6 @@ function locale_get_plural($count, $langcode = NULL) {
   return $plural_indexes[$langcode][$count];
 }
 
-
 /**
  * Implements hook_modules_installed().
  */
@@ -1372,6 +1371,7 @@ function _locale_rebuild_js($langcode = NULL) {
       return TRUE;
   }
 }
+
 /**
  * Form element callback: After build changes to the language update table.
  *

@@ -57,7 +57,6 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->itemStorage = $item_storage;
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -70,7 +69,6 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
       $container->get('entity_type.manager')->getStorage('aggregator_item')
     );
   }
-
 
   /**
    * {@inheritdoc}

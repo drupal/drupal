@@ -8,6 +8,7 @@ namespace Drupal\KernelTests\Core\Database;
  * @group Database
  */
 class SerializeQueryTest extends DatabaseTestBase {
+
   /**
    * Confirms that a query can be serialized and unserialized.
    */

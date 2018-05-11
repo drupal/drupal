@@ -34,7 +34,6 @@ class ForumIntegrationTest extends ViewTestBase {
     ViewTestData::createTestViews(get_class($this), ['forum_test_views']);
   }
 
-
   /**
    * Tests the integration.
    */

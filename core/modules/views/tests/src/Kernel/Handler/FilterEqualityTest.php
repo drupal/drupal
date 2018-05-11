@@ -146,7 +146,6 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-
   protected function getGroupedExposedFilters() {
     $filters = [
       'name' => [

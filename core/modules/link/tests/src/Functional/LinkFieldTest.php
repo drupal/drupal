@@ -662,7 +662,6 @@ class LinkFieldTest extends BrowserTestBase {
     $this->assertEqual($form[$field_name]['widget'][0]['uri']['#link_type'], $link_type);
   }
 
-
   /**
    * Tests editing a link to a non-node entity.
    */

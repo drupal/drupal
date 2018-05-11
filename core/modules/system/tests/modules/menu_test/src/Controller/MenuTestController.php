@@ -71,7 +71,6 @@ class MenuTestController extends ControllerBase {
     return ['#markup' => 'This is the menuTestCallback content.'];
   }
 
-
   /**
    * A title callback method for test routes.
    *

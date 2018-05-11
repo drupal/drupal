@@ -43,7 +43,6 @@
  * @see plugin_api
  */
 
-
 /**
  * Perform alterations on Field API field types.
  *

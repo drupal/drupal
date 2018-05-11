@@ -85,7 +85,6 @@ class FieldUninstallValidator implements ModuleUninstallValidatorInterface {
     return $this->fieldStorageConfigStorage->loadByProperties(['module' => $module, 'include_deleted' => TRUE]);
   }
 
-
   /**
    * Returns the label for a specified field type.
    *

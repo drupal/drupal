@@ -31,7 +31,6 @@ class Analyzer {
     $this->moduleHandler = $module_handler;
   }
 
-
   /**
    * Analyzes a review and return the results.
    *

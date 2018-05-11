@@ -388,7 +388,6 @@ class FilterKernelTest extends KernelTestBase {
     }
   }
 
-
   /**
    * Tests filter settings, defaults, access restrictions and similar.
    *

@@ -51,7 +51,6 @@ function system_post_update_add_region_to_entity_displays() {
   array_map($entity_save, EntityFormDisplay::loadMultiple());
 }
 
-
 /**
  * Force caches using hashes to be cleared (Twig, render cache, etc.).
  */

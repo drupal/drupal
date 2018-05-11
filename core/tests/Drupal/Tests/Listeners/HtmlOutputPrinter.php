@@ -20,6 +20,7 @@ else {
    */
   class HtmlOutputPrinter extends ResultPrinter {
     use HtmlOutputPrinterTrait;
+
     /**
      * {@inheritdoc}
      */

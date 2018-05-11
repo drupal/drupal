@@ -8,6 +8,7 @@ namespace Drupal\Tests\search\Functional;
  * @group search
  */
 class SearchSimplifyTest extends SearchTestBase {
+
   /**
    * Tests that all Unicode characters simplify correctly.
    */

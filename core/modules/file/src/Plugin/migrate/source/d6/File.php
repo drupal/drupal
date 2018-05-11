@@ -88,6 +88,7 @@ class File extends DrupalSqlBase {
       'is_public' => $this->t('TRUE if the files directory is public otherwise FALSE.'),
     ];
   }
+
   /**
    * {@inheritdoc}
    */

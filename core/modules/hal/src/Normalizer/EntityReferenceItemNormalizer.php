@@ -169,7 +169,6 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
     return $normalized;
   }
 
-
   /**
    * {@inheritdoc}
    */

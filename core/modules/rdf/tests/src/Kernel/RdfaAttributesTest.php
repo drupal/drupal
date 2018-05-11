@@ -73,7 +73,6 @@ class RdfaAttributesTest extends KernelTestBase {
     $this->_testAttributes($expected_attributes, $mapping, $date);
   }
 
-
   /**
    * Test attribute creation for mappings which use data converters.
    */

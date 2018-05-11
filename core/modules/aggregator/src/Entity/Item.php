@@ -239,7 +239,6 @@ class Item extends ContentEntityBase implements ItemInterface {
     return Feed::load($this->getFeedId())->getCacheTags();
   }
 
-
   /**
    * Entity URI callback.
    */

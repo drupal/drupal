@@ -10,6 +10,7 @@ use Drupal\file\Entity\File;
  * @group file
  */
 class FileFieldPathTest extends FileFieldTestBase {
+
   /**
    * Tests the normal formatter display on node display.
    */

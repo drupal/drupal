@@ -162,6 +162,7 @@ if (!defined('JS_DEFAULT')) {
 }
 
 class TestMemoryBackend extends MemoryBackend {
+
   public function getAllCids() {
     return array_keys($this->cache);
   }

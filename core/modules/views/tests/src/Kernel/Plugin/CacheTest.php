@@ -61,7 +61,6 @@ class CacheTest extends ViewsKernelTestBase {
     return $data;
   }
 
-
   /**
    * Tests time based caching.
    *

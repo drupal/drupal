@@ -86,7 +86,6 @@ class PathProcessorManager implements InboundPathProcessorInterface, OutboundPat
     return $this->sortedInbound;
   }
 
-
   /**
    * Adds an outbound processor object to the $outboundProcessors property.
    *

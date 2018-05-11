@@ -429,7 +429,6 @@ class ModuleHandler implements ModuleHandlerInterface {
     return $result;
   }
 
-
   /**
    * Triggers an E_USER_DEPRECATED error if any module implements the hook.
    *

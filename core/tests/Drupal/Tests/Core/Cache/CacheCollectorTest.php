@@ -59,7 +59,6 @@ class CacheCollectorTest extends UnitTestCase {
     $this->getContainerWithCacheTagsInvalidator($this->cacheTagsInvalidator);
   }
 
-
   /**
    * Tests the resolve cache miss function.
    */
@@ -84,7 +83,6 @@ class CacheCollectorTest extends UnitTestCase {
     $this->assertTrue($this->collector->has($key));
     $this->assertEquals($value, $this->collector->get($key));
   }
-
 
   /**
    * Makes sure that NULL is a valid value and is collected.
@@ -191,7 +189,6 @@ class CacheCollectorTest extends UnitTestCase {
     // Destruct the object to trigger the update data process.
     $this->collector->destruct();
   }
-
 
   /**
    * Tests updating the cache when the lock acquire fails.

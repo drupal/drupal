@@ -332,7 +332,6 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $this->assertEquals($expected_occurrences, $actual_occurrences);
   }
 
-
   /**
    * Tests the label formatter.
    */

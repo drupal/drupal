@@ -193,6 +193,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       $this->setRequiresRediscovery(FALSE);
     }
   }
+
   /**
    * {@inheritdoc}
    */

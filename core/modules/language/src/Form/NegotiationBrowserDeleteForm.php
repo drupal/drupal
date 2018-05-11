@@ -29,7 +29,6 @@ class NegotiationBrowserDeleteForm extends ConfirmFormBase {
     return ['language.mappings'];
   }
 
-
   /**
    * {@inheritdoc}
    */

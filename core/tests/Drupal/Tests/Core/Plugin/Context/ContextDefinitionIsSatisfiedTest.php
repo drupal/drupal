@@ -346,7 +346,9 @@ class ContextDefinitionIsSatisfiedTest extends UnitTestCase {
 namespace Drupal\Core\Validation;
 
 if (!function_exists('t')) {
+
   function t($string, array $args = []) {
     return strtr($string, $args);
   }
+
 }

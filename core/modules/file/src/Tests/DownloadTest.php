@@ -8,6 +8,7 @@ namespace Drupal\file\Tests;
  * @group file
  */
 class DownloadTest extends FileManagedTestBase {
+
   protected function setUp() {
     parent::setUp();
     // Clear out any hook calls.

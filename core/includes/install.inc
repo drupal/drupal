@@ -380,7 +380,6 @@ function _drupal_rewrite_settings_is_simple($type, $value) {
   return $is_integer || $is_float || $is_string || $is_boolean_or_null;
 }
 
-
 /**
  * Helper for drupal_rewrite_settings().
  *
@@ -450,7 +449,6 @@ function _drupal_rewrite_settings_dump($variable, $variable_name) {
   }
   return $return;
 }
-
 
 /**
  * Helper for drupal_rewrite_settings().

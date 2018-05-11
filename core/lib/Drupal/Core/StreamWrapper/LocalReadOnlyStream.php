@@ -69,7 +69,6 @@ abstract class LocalReadOnlyStream extends LocalStream {
     return TRUE;
   }
 
-
   /**
    * Support for fwrite(), file_put_contents() etc.
    *

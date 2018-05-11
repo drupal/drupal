@@ -71,7 +71,6 @@ class UrlAliasFixtures {
     ];
   }
 
-
   /**
    * Returns the table definition for the URL alias fixtures.
    *

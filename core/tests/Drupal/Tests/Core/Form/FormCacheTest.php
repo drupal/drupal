@@ -417,7 +417,6 @@ class FormCacheTest extends UnitTestCase {
     $this->formCache->setCache($form_build_id, $form, $form_state);
   }
 
-
   /**
    * @covers ::deleteCache
    */

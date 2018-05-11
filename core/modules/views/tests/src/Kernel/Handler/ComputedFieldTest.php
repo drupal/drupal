@@ -28,7 +28,6 @@ class ComputedFieldTest extends ViewsKernelTestBase {
    */
   public static $modules = ['entity_test'];
 
-
   /**
    * {@inheritdoc}
    */

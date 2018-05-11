@@ -48,7 +48,6 @@ class AreaTest extends ViewTestBase {
     return $data;
   }
 
-
   /**
    * Tests the generic UI of a area handler.
    */

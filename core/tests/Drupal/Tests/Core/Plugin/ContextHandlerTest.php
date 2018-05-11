@@ -408,7 +408,6 @@ class ContextHandlerTest extends UnitTestCase {
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
 
-
   /**
    * @covers ::applyContextMapping
    */

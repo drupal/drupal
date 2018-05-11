@@ -37,7 +37,6 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
    */
   protected $field;
 
-
   protected function setUp() {
     parent::setUp();
 

@@ -256,6 +256,7 @@ class InspectorTest extends TestCase {
  * Quick class for testing for objects with __toString.
  */
 class StringObject {
+
   /**
    * {@inheritdoc}
    */

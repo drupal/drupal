@@ -36,7 +36,6 @@ class File extends MediaSourceBase {
    */
   const METADATA_ATTRIBUTE_SIZE = 'filesize';
 
-
   /**
    * {@inheritdoc}
    */

@@ -125,7 +125,6 @@ class WidgetPluginManager extends DefaultPluginManager {
     return new $plugin_class($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings'], $configuration['third_party_settings']);
   }
 
-
   /**
    * Merges default values for widget configuration.
    *

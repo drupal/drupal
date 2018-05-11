@@ -25,6 +25,7 @@ class ImageStyleDeleteForm extends EntityDeleteForm {
   public function getQuestion() {
     return $this->t('Optionally select a style before deleting %style', ['%style' => $this->entity->label()]);
   }
+
   /**
    * {@inheritdoc}
    */

@@ -69,7 +69,6 @@ class InaccessibleMenuLink extends MenuLinkBase {
     return $this->wrappedLink->getCacheMaxAge();
   }
 
-
   /**
    * {@inheritdoc}
    */

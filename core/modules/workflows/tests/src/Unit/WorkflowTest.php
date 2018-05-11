@@ -417,7 +417,6 @@ class WorkflowTest extends UnitTestCase {
     $this->assertArrayEquals([], array_keys($workflow->getTypePlugin()->getTransitions([])));
   }
 
-
   /**
    * @covers ::getTransition
    */
@@ -473,7 +472,6 @@ class WorkflowTest extends UnitTestCase {
     $this->assertEquals(['create_new_draft'], array_keys($workflow->getTypePlugin()->getTransitionsForState('archived', 'from')));
     $this->assertEquals(['archive'], array_keys($workflow->getTypePlugin()->getTransitionsForState('archived', 'to')));
   }
-
 
   /**
    * @covers ::getTransitionFromStateToState

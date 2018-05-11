@@ -68,6 +68,7 @@ class UserPictureFile extends DrupalSqlBase {
       'filename' => 'The picture filename.',
     ];
   }
+
   /**
    * {@inheritdoc}
    */

@@ -48,6 +48,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
       ViewTestData::createTestViews(get_class($this), ['views_test_config']);
     }
   }
+
   /**
    * Sets up the configuration and schema of views and views_test_data modules.
    *

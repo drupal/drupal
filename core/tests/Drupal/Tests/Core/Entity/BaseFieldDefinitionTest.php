@@ -29,7 +29,6 @@ class BaseFieldDefinitionTest extends UnitTestCase {
    */
   protected $fieldTypeDefinition;
 
-
   /**
    * {@inheritdoc}
    */

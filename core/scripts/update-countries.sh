@@ -37,9 +37,11 @@ USAGE;
 // Fake the t() function used in CountryManager.php instead of attempting a full
 // Drupal bootstrap of core/includes/bootstrap.inc (where t() is declared).
 if (!function_exists('t')) {
+
   function t($string) {
     return $string;
   }
+
 }
 
 // Read in existing codes.

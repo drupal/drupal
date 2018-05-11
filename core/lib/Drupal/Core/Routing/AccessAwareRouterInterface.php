@@ -24,7 +24,6 @@ interface AccessAwareRouterInterface extends RouterInterface, RequestMatcherInte
    */
   public function matchRequest(Request $request);
 
-
   /**
    * {@inheritdoc}
    *

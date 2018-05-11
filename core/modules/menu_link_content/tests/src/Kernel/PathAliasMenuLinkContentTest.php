@@ -44,7 +44,6 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
       ->addTag('path_processor_inbound', ['priority' => 100]);
   }
 
-
   /**
    * Tests the path aliasing changing.
    */

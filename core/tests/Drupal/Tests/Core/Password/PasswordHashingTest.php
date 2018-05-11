@@ -76,7 +76,6 @@ class PasswordHashingTest extends UnitTestCase {
     $this->assertEquals(PhpassHashedPassword::MAX_HASH_COUNT, $hasher->enforceLog2Boundaries(100), "Max hash count enforced");
   }
 
-
   /**
    * Test a password needs update.
    *

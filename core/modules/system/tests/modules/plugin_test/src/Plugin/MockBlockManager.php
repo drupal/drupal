@@ -12,6 +12,7 @@ use Drupal\Core\Plugin\Context\ContextDefinition;
  * Defines a plugin manager used by Plugin API derivative unit tests.
  */
 class MockBlockManager extends PluginManagerBase {
+
   public function __construct() {
 
     // Create the object that can be used to return definitions for all the

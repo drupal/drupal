@@ -15,6 +15,7 @@ use Drupal\node\Entity\NodeType;
  * @group file
  */
 class UsageTest extends FileManagedUnitTestBase {
+
   /**
    * Tests \Drupal\file\FileUsage\DatabaseFileUsageBackend::listUsage().
    */

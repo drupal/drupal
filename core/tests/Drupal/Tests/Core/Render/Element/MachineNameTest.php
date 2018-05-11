@@ -42,7 +42,6 @@ class MachineNameTest extends UnitTestCase {
     return $data;
   }
 
-
   /**
    * @covers ::processMachineName
    */
@@ -112,7 +111,9 @@ class MachineNameTest extends UnitTestCase {
 namespace Drupal\Core\Render\Element;
 
 if (!function_exists('t')) {
+
   function t($string, array $args = []) {
     return strtr($string, $args);
   }
+
 }

@@ -41,7 +41,6 @@ interface ThirdPartySettingsInterface {
    */
   public function getThirdPartySetting($module, $key, $default = NULL);
 
-
   /**
    * Gets all third-party settings of a given module.
    *

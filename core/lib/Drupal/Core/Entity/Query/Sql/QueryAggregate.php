@@ -65,7 +65,6 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
     return $this->conditionAggregate->notExists($field, $function, $langcode);
   }
 
-
   /**
    * Adds the aggregations to the query.
    *
@@ -125,7 +124,6 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
     }
     return $this;
   }
-
 
   /**
    * Overrides \Drupal\Core\Entity\Query\Sql\Query::finish().

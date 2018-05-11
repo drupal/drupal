@@ -126,7 +126,6 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
     return (bool) $this->loadView()->display_handler->getOption('menu')['expanded'];
   }
 
-
   /**
    * {@inheritdoc}
    */

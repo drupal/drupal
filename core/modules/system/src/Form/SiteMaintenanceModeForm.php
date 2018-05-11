@@ -56,6 +56,7 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
       $container->get('user.permissions')
     );
   }
+
   /**
    * {@inheritdoc}
    */

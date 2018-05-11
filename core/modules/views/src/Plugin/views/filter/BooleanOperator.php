@@ -48,7 +48,6 @@ class BooleanOperator extends FilterPluginBase {
   // Whether to accept NULL as a false value or not
   public $accept_null = FALSE;
 
-
   /**
    * {@inheritdoc}
    */

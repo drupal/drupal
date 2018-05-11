@@ -8,6 +8,7 @@ namespace Drupal\FunctionalTests\Image;
  * @group Image
  */
 class ToolkitTest extends ToolkitTestBase {
+
   /**
    * Check that ImageToolkitManager::getAvailableToolkits() only returns
    * available toolkits.

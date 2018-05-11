@@ -273,11 +273,13 @@ class SearchPageRepositoryTest extends UnitTestCase {
 }
 
 class TestSearchPage extends SearchPage {
+
   public function __construct(array $values) {
     foreach ($values as $key => $value) {
       $this->$key = $value;
     }
   }
+
   public function label($langcode = NULL) {
     return $this->label;
   }

@@ -151,6 +151,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
         ->save();
     }
   }
+
   /**
    * Test responsive image formatters on node display.
    *

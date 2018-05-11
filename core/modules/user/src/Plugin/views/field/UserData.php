@@ -34,7 +34,6 @@ class UserData extends FieldPluginBase {
    */
   protected $moduleHandler;
 
-
   /**
    * {@inheritdoc}
    */

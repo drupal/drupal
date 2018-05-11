@@ -10,6 +10,7 @@ use Drupal\comment\CommentManagerInterface;
  * @group comment
  */
 class CommentThreadingTest extends CommentTestBase {
+
   /**
    * Tests the comment threading.
    */

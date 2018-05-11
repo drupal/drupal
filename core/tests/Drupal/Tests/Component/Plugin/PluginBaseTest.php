@@ -63,7 +63,6 @@ class PluginBaseTest extends TestCase {
     ];
   }
 
-
   /**
    * @dataProvider providerTestGetDerivativeId
    * @covers ::getDerivativeId

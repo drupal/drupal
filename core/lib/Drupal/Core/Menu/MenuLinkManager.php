@@ -93,7 +93,6 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    */
   protected $moduleHandler;
 
-
   /**
    * Constructs a \Drupal\Core\Menu\MenuLinkManager object.
    *

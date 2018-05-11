@@ -398,7 +398,6 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     return $output;
   }
 
-
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     $option_values = &$form_state->getValue('options');
     if (empty($option_values)) {
@@ -721,6 +720,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     $info = $this->defaultActions($this->options['validate']['fail']);
     return $this->defaultAction($info);
   }
+
   /**
    * Default action: ignore.
    *

@@ -46,7 +46,6 @@ class CommentRestExportTest extends CommentTestBase {
     $this->drupalLogin($user);
   }
 
-
   /**
    * Test comment row.
    */

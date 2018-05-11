@@ -13,6 +13,7 @@ use Drupal\Tests\BrowserTestBase;
  * @group Mail
  */
 class HtmlToTextTest extends BrowserTestBase {
+
   /**
    * Converts a string to its PHP source equivalent for display in test messages.
    *

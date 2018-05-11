@@ -307,6 +307,11 @@
       <property name="ignoreNewlines" value="true"/>
     </properties>
   </rule>
+  <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+    <properties>
+      <property name="spacing" value="1"/>
+    </properties>
+  </rule>
   <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing" />
   <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
   <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>

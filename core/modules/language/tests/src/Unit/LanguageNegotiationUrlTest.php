@@ -256,7 +256,9 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
 if (!function_exists('base_path')) {
+
   function base_path() {
     return '/';
   }
+
 }

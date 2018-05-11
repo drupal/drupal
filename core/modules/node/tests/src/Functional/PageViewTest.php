@@ -10,6 +10,7 @@ use Drupal\node\Entity\Node;
  * @group node
  */
 class PageViewTest extends NodeTestBase {
+
   /**
    * Tests an anonymous and unpermissioned user attempting to edit the node.
    */

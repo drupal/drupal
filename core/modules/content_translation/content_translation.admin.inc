@@ -164,6 +164,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
   $form['#validate'][] = 'content_translation_form_language_content_settings_validate';
   $form['#submit'][] = 'content_translation_form_language_content_settings_submit';
 }
+
 /**
  * Checks whether translatability should be configurable for a field.
  *

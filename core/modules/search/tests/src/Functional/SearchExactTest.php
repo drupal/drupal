@@ -8,6 +8,7 @@ namespace Drupal\Tests\search\Functional;
  * @group search
  */
 class SearchExactTest extends SearchTestBase {
+
   /**
    * Tests that the correct number of pager links are found for both keywords and phrases.
    */

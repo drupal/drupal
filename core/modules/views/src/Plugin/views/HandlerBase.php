@@ -313,6 +313,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   public function usesGroupBy() {
     return TRUE;
   }
+
   /**
    * Provide a form for aggregation settings.
    */

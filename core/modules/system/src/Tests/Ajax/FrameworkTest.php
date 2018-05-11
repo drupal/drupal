@@ -16,6 +16,7 @@ use Drupal\Core\Asset\AttachedAssets;
  * @group Ajax
  */
 class FrameworkTest extends AjaxTestBase {
+
   /**
    * Verifies the Ajax rendering of a command in the settings.
    */

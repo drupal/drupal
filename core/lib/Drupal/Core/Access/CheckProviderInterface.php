@@ -15,7 +15,6 @@ use Symfony\Component\Routing\RouteCollection;
  */
 interface CheckProviderInterface {
 
-
   /**
    * For each route, saves a list of applicable access checks to the route.
    *

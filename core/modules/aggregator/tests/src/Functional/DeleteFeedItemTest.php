@@ -8,6 +8,7 @@ namespace Drupal\Tests\aggregator\Functional;
  * @group aggregator
  */
 class DeleteFeedItemTest extends AggregatorTestBase {
+
   /**
    * Tests running "delete items" from 'admin/config/services/aggregator' page.
    */

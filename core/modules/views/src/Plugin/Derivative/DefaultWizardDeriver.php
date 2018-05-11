@@ -11,6 +11,7 @@ use Drupal\views\Views;
  * The derivatives store all base table plugin information.
  */
 class DefaultWizardDeriver extends DeriverBase {
+
   /**
    * {@inheritdoc}
    */

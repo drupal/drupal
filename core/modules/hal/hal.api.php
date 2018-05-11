@@ -33,7 +33,6 @@ function hook_hal_type_uri_alter(&$uri, $context = []) {
   }
 }
 
-
 /**
  * Alter the HAL relation URI.
  *

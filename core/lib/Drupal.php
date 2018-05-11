@@ -141,7 +141,6 @@ class Drupal {
     return static::$container !== NULL;
   }
 
-
   /**
    * Retrieves a service from the container.
    *

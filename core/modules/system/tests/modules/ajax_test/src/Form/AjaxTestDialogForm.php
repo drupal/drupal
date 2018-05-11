@@ -67,7 +67,6 @@ class AjaxTestDialogForm extends FormBase {
     $form_state->setRedirect('ajax_test.dialog_contents');
   }
 
-
   /**
    * AJAX callback handler for AjaxTestDialogForm.
    */
@@ -81,7 +80,6 @@ class AjaxTestDialogForm extends FormBase {
   public function nonModal(&$form, FormStateInterface $form_state) {
     return $this->dialog(FALSE);
   }
-
 
   /**
    * Util to render dialog in ajax callback.

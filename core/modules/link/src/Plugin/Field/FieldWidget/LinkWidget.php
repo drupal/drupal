@@ -398,7 +398,6 @@ class LinkWidget extends WidgetBase {
     return $values;
   }
 
-
   /**
    * {@inheritdoc}
    *

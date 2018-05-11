@@ -114,8 +114,10 @@ class GetTest extends MigrateProcessTestCase {
 namespace Drupal\migrate\Plugin\migrate\process;
 
 class TestGet extends Get {
+
   public function __construct() {
   }
+
   public function setSource($source) {
     $this->configuration['source'] = $source;
   }

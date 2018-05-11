@@ -12,6 +12,7 @@ namespace Drupal\KernelTests\Core\Database;
  * @group Database
  */
 class BasicSyntaxTest extends DatabaseTestBase {
+
   /**
    * Tests string concatenation.
    */

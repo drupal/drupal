@@ -206,6 +206,7 @@ class ArgumentsResolverTest extends TestCase {
  * Provides a test class.
  */
 class TestClass {
+
   public function access($foo) {
   }
 

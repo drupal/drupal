@@ -245,7 +245,6 @@ class SelectComplexTest extends DatabaseTestBase {
     $this->assertEqual($count, 4, 'Counted the correct number of records.');
   }
 
-
   /**
    * Tests that countQuery properly removes fields and expressions.
    */

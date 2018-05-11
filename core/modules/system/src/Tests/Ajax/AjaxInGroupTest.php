@@ -8,6 +8,7 @@ namespace Drupal\system\Tests\Ajax;
  * @group Ajax
  */
 class AjaxInGroupTest extends AjaxTestBase {
+
   protected function setUp() {
     parent::setUp();
 

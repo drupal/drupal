@@ -161,7 +161,6 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
     ];
   }
 
-
   /**
    * {@inheritdoc}
    */

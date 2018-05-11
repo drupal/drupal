@@ -263,7 +263,6 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     return $changed;
   }
 
-
   /**
    * {@inheritdoc}
    */

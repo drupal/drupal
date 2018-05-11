@@ -130,7 +130,6 @@ function field_test_field_widget_multivalue_test_field_widget_multiple_single_va
   _field_test_alter_widget("hook_field_widget_multivalue_WIDGET_TYPE_form_alter", $elements, $form_state, $context);
 }
 
-
 /**
  * Sets up alterations for widget alter tests.
  *
@@ -163,7 +162,6 @@ function field_test_query_efq_table_prefixing_test_alter(&$query) {
   // exception if the EFQ does not properly prefix the base table.
   $query->join('entity_test', 'et2', '%alias.id = entity_test.id');
 }
-
 
 /**
  * Implements hook_query_TAG_alter() for tag 'efq_metadata_test'.

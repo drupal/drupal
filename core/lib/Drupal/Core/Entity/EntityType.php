@@ -836,7 +836,6 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
     return $this->group;
   }
 
-
   /**
    * {@inheritdoc}
    */

@@ -27,7 +27,6 @@ class QueueFactory implements ContainerAwareInterface {
    */
   protected $settings;
 
-
   /**
    * Constructs a queue factory.
    */

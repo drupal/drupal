@@ -554,7 +554,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
     return $this;
   }
 
-
   /**
    * {@inheritdoc}
    */

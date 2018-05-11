@@ -641,7 +641,6 @@ class BubbleableMetadataTest extends UnitTestCase {
     ];
   }
 
-
   /**
    * @covers ::addCacheableDependency
    * @dataProvider providerTestMerge

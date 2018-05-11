@@ -23,7 +23,6 @@ class NodeListBuilderTest extends KernelTestBase {
     $this->installEntitySchema('node');
   }
 
-
   /**
    * Tests that the correct cache contexts are set.
    */

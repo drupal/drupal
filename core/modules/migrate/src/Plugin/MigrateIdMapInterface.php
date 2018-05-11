@@ -103,7 +103,6 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    */
   public function importedCount();
 
-
   /**
    * Returns a count of items which are marked as needing update.
    *

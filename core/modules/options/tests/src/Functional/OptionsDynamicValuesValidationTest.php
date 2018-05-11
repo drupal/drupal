@@ -8,6 +8,7 @@ namespace Drupal\Tests\options\Functional;
  * @group options
  */
 class OptionsDynamicValuesValidationTest extends OptionsDynamicValuesTestBase {
+
   /**
    * Test that allowed values function gets the entity.
    */

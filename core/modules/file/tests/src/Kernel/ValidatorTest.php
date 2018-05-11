@@ -137,7 +137,6 @@ class ValidatorTest extends FileManagedUnitTestBase {
     $this->assertEqual(count($errors), 1, 'An error reported for 0 length filename.', 'File');
   }
 
-
   /**
    * Test file_validate_size().
    */

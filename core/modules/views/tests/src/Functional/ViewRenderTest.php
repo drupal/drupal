@@ -24,7 +24,6 @@ class ViewRenderTest extends ViewTestBase {
     $this->enableViewsTestModule();
   }
 
-
   /**
    * Tests render functionality.
    */

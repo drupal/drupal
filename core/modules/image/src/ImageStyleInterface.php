@@ -42,7 +42,6 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    */
   public function setName($name);
 
-
   /**
    * Returns the URI of this image when using this style.
    *

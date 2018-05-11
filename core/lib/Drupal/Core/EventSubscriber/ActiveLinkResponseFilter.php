@@ -97,7 +97,6 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
     ));
   }
 
-
   /**
    * Sets the "is-active" class on relevant links.
    *

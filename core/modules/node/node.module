@@ -1035,7 +1035,6 @@ function node_access_view_all_nodes($account = NULL) {
   return $access[$account->id()];
 }
 
-
 /**
  * Implements hook_query_TAG_alter().
  *

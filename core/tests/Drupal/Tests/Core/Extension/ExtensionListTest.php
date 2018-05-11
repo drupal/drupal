@@ -155,7 +155,6 @@ class ExtensionListTest extends UnitTestCase {
     $this->assertEquals('vfs://drupal_root/example/test_name/test_name.info.yml', $pathname);
   }
 
-
   /**
    * @covers ::setPathname
    * @covers ::getPathname

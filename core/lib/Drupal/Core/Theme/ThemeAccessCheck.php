@@ -27,6 +27,7 @@ class ThemeAccessCheck implements AccessInterface {
   public function __construct(ThemeHandlerInterface $theme_handler) {
     $this->themeHandler = $theme_handler;
   }
+
   /**
    * Checks access to the theme for routing.
    *

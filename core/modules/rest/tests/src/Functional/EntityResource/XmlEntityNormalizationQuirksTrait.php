@@ -107,7 +107,6 @@ trait XmlEntityNormalizationQuirksTrait {
     return $normalization;
   }
 
-
   /**
    * Applies the XML config entity encoding quirks that remain after decoding.
    *

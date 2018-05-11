@@ -12,6 +12,7 @@ use Drupal\node\Entity\Node;
  * @group comment
  */
 class CommentPagerTest extends CommentTestBase {
+
   /**
    * Confirms comment paging works correctly with flat and threaded comments.
    */

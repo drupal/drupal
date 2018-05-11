@@ -64,7 +64,6 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
     );
   }
 
-
   /**
    * {@inheritdoc}
    */

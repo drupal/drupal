@@ -10,6 +10,7 @@ use Drupal\file\Entity\File;
  * @group file
  */
 class CopyTest extends FileManagedUnitTestBase {
+
   /**
    * Test file copying in the normal, base case.
    */

@@ -8,6 +8,7 @@ namespace Drupal\KernelTests\Core\Database;
  * @group Database
  */
 class CaseSensitivityTest extends DatabaseTestBase {
+
   /**
    * Tests BINARY collation in MySQL.
    */

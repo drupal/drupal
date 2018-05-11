@@ -962,7 +962,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     return $this->dependencies;
   }
 
-
   /**
    * {@inheritdoc}
    */

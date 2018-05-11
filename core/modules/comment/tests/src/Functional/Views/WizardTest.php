@@ -23,7 +23,6 @@ class WizardTest extends WizardTestBase {
    */
   public static $modules = ['node', 'comment'];
 
-
   /**
    * {@inheritdoc}
    */

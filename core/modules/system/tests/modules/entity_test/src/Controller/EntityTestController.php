@@ -95,7 +95,6 @@ class EntityTestController extends ControllerBase {
     ];
   }
 
-
   /**
    * Empty list of entities of the given entity type.
    *

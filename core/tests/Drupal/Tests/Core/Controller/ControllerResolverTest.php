@@ -190,6 +190,7 @@ class ControllerResolverTest extends UnitTestCase {
       ['Drupal\Tests\Core\Controller\MockInvokeController', 'This used __invoke().'],
     ];
   }
+
   /**
    * Tests getControllerFromDefinition() without a callable.
    */
@@ -252,6 +253,7 @@ class ControllerResolverTest extends UnitTestCase {
 }
 
 class MockController {
+
   public function getResult() {
     return 'This is a regular controller.';
   }
@@ -262,6 +264,7 @@ class MockController {
 
 }
 class MockControllerPsr7 {
+
   public function getResult() {
     return ['#markup' => 'This is a regular controller'];
   }
@@ -274,12 +277,15 @@ class MockControllerPsr7 {
 
 class MockContainerInjection implements ContainerInjectionInterface {
   protected $result;
+
   public function __construct($result) {
     $this->result = $result;
   }
+
   public static function create(ContainerInterface $container) {
     return new static('This used injection.');
   }
+
   public function getResult() {
     return $this->result;
   }
@@ -287,12 +293,14 @@ class MockContainerInjection implements ContainerInjectionInterface {
 }
 class MockContainerAware implements ContainerAwareInterface {
   use ContainerAwareTrait;
+
   public function getResult() {
     return 'This is container aware.';
   }
 
 }
 class MockInvokeController {
+
   public function __invoke() {
     return 'This used __invoke().';
   }

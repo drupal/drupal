@@ -269,9 +269,11 @@ class CssOptimizerUnitTest extends UnitTestCase {
  * Component/Utility.
  */
 if (!function_exists('Drupal\Tests\Core\Asset\file_create_url')) {
+
   function file_create_url($uri) {
     return 'file_create_url:' . $uri;
   }
+
 }
 
 /**
@@ -279,9 +281,11 @@ if (!function_exists('Drupal\Tests\Core\Asset\file_create_url')) {
  * Component/Utility.
  */
 if (!function_exists('Drupal\Tests\Core\Asset\file_url_transform_relative')) {
+
   function file_url_transform_relative($uri) {
     return 'file_url_transform_relative:' . $uri;
   }
+
 }
 
 /**

@@ -250,6 +250,7 @@ namespace Drupal\Core\Session;
 
 // @todo remove once user_role_permissions() can be injected.
 if (!function_exists('user_role_permissions')) {
+
   function user_role_permissions(array $roles) {
     $role_permissions = [];
     foreach ($roles as $rid) {
@@ -257,4 +258,5 @@ if (!function_exists('user_role_permissions')) {
     }
     return $role_permissions;
   }
+
 }

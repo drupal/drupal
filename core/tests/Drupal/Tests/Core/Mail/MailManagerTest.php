@@ -135,7 +135,6 @@ class MailManagerTest extends UnitTestCase {
     $this->assertInstanceOf('Drupal\Core\Mail\Plugin\Mail\TestMailCollector', $instance);
   }
 
-
   /**
    * Tests that mails are sent in a separate render context.
    *
@@ -163,6 +162,7 @@ class MailManagerTest extends UnitTestCase {
  * Provides a testing version of MailManager with an empty constructor.
  */
 class TestMailManager extends MailManager {
+
   /**
    * Sets the discovery for the manager.
    *

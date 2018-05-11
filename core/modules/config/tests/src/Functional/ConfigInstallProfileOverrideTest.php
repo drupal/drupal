@@ -24,7 +24,6 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
    */
   protected $profile = 'testing_config_overrides';
 
-
   /**
    * Tests install profile config changes.
    */

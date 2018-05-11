@@ -73,7 +73,6 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
     return $response;
   }
 
-
   /**
    * {@inheritdoc}
    */

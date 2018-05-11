@@ -99,7 +99,6 @@ function file_stream_wrapper_valid_scheme($scheme) {
   return \Drupal::service('file_system')->validScheme($scheme);
 }
 
-
 /**
  * Returns the part of a URI after the schema.
  *
@@ -925,7 +924,6 @@ function file_unmanaged_delete_recursive($path, $callback = NULL) {
   }
   return file_unmanaged_delete($path);
 }
-
 
 /**
  * Moves an uploaded file to a new location.

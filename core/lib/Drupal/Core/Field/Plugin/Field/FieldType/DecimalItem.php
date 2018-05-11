@@ -105,7 +105,6 @@ class DecimalItem extends NumericItemBase {
     return $constraints;
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -153,7 +152,6 @@ class DecimalItem extends NumericItemBase {
     $values['value'] = self::truncateDecimal($random_decimal, $scale);
     return $values;
   }
-
 
   /**
    * Helper method to get the number of decimal digits out of a decimal number.

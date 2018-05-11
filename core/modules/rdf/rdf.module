@@ -38,6 +38,7 @@ function rdf_help($route_name, RouteMatchInterface $route_match) {
  * into variables available to theme functions and templates. All Drupal core
  * themes are coded to be RDFa compatible.
  */
+
 /**
  * Returns the RDF mapping object associated with a bundle.
  *
@@ -292,7 +293,6 @@ function _rdf_set_field_rel_attribute(&$variables) {
     unset($variables['attributes']['property']);
   }
 }
-
 
 /**
  * Implements hook_preprocess_HOOK() for node templates.

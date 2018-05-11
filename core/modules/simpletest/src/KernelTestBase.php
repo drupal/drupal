@@ -478,7 +478,6 @@ EOD;
     ]));
   }
 
-
   /**
    * Installs the storage schema for a specific entity type.
    *

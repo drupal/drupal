@@ -64,7 +64,6 @@ class LibraryDependencyResolverTest extends UnitTestCase {
     $this->libraryDependencyResolver = new LibraryDependencyResolver($this->libraryDiscovery);
   }
 
-
   /**
    * Provides test data for ::testGetLibrariesWithDependencies().
    */

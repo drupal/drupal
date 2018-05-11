@@ -66,7 +66,6 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     }
   }
 
-
   /**
    * Tests just using the filter.
    */

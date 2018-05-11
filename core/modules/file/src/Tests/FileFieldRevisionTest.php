@@ -10,6 +10,7 @@ use Drupal\file\Entity\File;
  * @group file
  */
 class FileFieldRevisionTest extends FileFieldTestBase {
+
   /**
    * Tests creating multiple revisions of a node and managing attached files.
    *

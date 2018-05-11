@@ -50,7 +50,6 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     );
   }
 
-
   /**
    * {@inheritdoc}
    */

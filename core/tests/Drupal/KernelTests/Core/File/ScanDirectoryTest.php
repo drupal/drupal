@@ -129,7 +129,6 @@ class ScanDirectoryTest extends FileTestBase {
     $this->assertEqual(2, count($files), 'With recursion we found the expected javascript files.');
   }
 
-
   /**
    * Check that the min_depth options lets us ignore files in the starting
    * directory.

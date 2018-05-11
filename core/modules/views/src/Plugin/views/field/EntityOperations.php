@@ -158,6 +158,7 @@ class EntityOperations extends FieldPluginBase {
   protected function getLanguageManager() {
     return $this->languageManager;
   }
+
   /**
    * {@inheritdoc}
    */

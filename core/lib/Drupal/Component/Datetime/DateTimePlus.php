@@ -477,7 +477,6 @@ class DateTimePlus {
     return $format;
   }
 
-
   /**
    * Examines getLastErrors() to see what errors to report.
    *

@@ -228,7 +228,6 @@ class DatabaseStorage implements StorageInterface {
       ->execute();
   }
 
-
   /**
    * Implements Drupal\Core\Config\StorageInterface::rename().
    *

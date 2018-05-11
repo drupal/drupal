@@ -27,7 +27,6 @@ function contact_storage_test_entity_base_field_info(EntityTypeInterface $entity
   }
 }
 
-
 /**
  * Implements hook_entity_type_alter().
  */
@@ -56,6 +55,7 @@ function contact_storage_test_form_contact_form_form_alter(&$form, FormStateInte
   ];
   $form['#entity_builders'][] = 'contact_storage_test_contact_form_form_builder';
 }
+
 /**
  * Entity builder for the contact form edit form with third party options.
  *

@@ -37,7 +37,6 @@ class StatisticsViewsResult {
     return $this->totalCount;
   }
 
-
   /**
    * Total number of times the entity has been viewed "today".
    *
@@ -46,7 +45,6 @@ class StatisticsViewsResult {
   public function getDayCount() {
     return $this->dayCount;
   }
-
 
   /**
    * Timestamp of when the entity was last viewed.

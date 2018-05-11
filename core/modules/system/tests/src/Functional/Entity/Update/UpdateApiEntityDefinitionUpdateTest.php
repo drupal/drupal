@@ -34,7 +34,6 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
    */
   protected $updatesManager;
 
-
   /**
    * {@inheritdoc}
    */

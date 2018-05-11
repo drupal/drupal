@@ -8,6 +8,7 @@ namespace Drupal\Tests\options\Functional;
  * @group options
  */
 class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTestBase {
+
   /**
    * Tests the 'options_select' widget (single select).
    */
