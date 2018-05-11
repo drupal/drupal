@@ -17,19 +17,25 @@ class TwigSandboxPolicy implements \Twig_Sandbox_SecurityPolicyInterface {
 
   /**
    * An array of whitelisted methods in the form of methodName => TRUE.
+   *
+   * @var array
    */
-  protected $whitelisted_methods = NULL;
+  protected $whitelisted_methods;
 
   /**
    * An array of whitelisted method prefixes -- any method starting with one of
    * these prefixes will be allowed.
+   *
+   * @var array
    */
-  protected $whitelisted_prefixes = NULL;
+  protected $whitelisted_prefixes;
 
   /**
    * An array of class names for which any method calls are allowed.
+   *
+   * @var array
    */
-  protected $whitelisted_classes = NULL;
+  protected $whitelisted_classes;
 
   /**
    * Constructs a new TwigSandboxPolicy object.
