@@ -3,6 +3,7 @@
 namespace Drupal\Tests\field\Kernel\EntityReference;
 
 use Drupal\comment\Entity\Comment;
+use Drupal\comment\Entity\CommentType;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -15,6 +16,7 @@ use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
@@ -90,6 +92,14 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     ]);
     $this->term->save();
 
+    NodeType::create([
+      'type' => $this->randomMachineName(),
+    ])->save();
+    CommentType::create([
+      'id' => $this->randomMachineName(),
+      'target_entity_type_id' => 'node',
+    ])->save();
+
     $this->entityStringId = EntityTestStringId::create([
       'id' => $this->randomMachineName(),
     ]);
@@ -103,6 +113,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_user', 'Test user entity reference', 'user');
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_comment', 'Test comment entity reference', 'comment');
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_file', 'Test file entity reference', 'file');
+    $this->createEntityReferenceField('entity_test_string_id', 'entity_test_string_id', 'field_test_entity_test', 'Test content entity reference with string ID', 'entity_test');
   }
 
   /**
@@ -210,6 +221,19 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity->field_test_taxonomy_term->generateSampleItems();
     $this->assertInstanceOf(TermInterface::class, $entity->field_test_taxonomy_term->entity);
     $this->entityValidateAndSave($entity);
+  }
+
+  /**
+   * Tests the ::generateSampleValue() method when it has a circular reference.
+   */
+  public function testGenerateSampleValueCircularReference() {
+    // Delete the existing entity.
+    $this->entityStringId->delete();
+
+    $entity_storage = \Drupal::entityTypeManager()->getStorage('entity_test');
+    $entity = $entity_storage->createWithSampleValues('entity_test');
+    $this->assertInstanceOf(EntityTestStringId::class, $entity->field_test_entity_test_string_id->entity);
+    $this->assertInstanceOf(EntityTest::class, $entity->field_test_entity_test_string_id->entity->field_test_entity_test->entity);
   }
 
   /**
