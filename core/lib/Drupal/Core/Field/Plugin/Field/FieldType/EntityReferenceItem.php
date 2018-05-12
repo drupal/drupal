@@ -272,6 +272,10 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    * {@inheritdoc}
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    // An associative array keyed by the reference type, target type, and
+    // bundle.
+    static $recursion_tracker = [];
+
     $manager = \Drupal::service('plugin.manager.entity_reference_selection');
 
     // Instead of calling $manager->getSelectionHandler($field_definition)
@@ -300,9 +304,25 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
 
     // Attempt to create a sample entity, avoiding recursion.
     $entity_storage = \Drupal::entityTypeManager()->getStorage($options['target_type']);
-    if ($options['target_type'] !== $field_definition->getTargetEntityTypeId() && $entity_storage instanceof ContentEntityStorageInterface) {
+    if ($entity_storage instanceof ContentEntityStorageInterface) {
       $bundle = static::getRandomBundle($entity_type, $options['handler_settings']);
-      $values['entity'] = $entity_storage->createWithSampleValues($bundle);
+
+      // Track the generated entity by reference type, target type, and bundle.
+      $key = $field_definition->getTargetEntityTypeId() . ':' . $options['target_type'] . ':' . $bundle;
+
+      // If entity generation was attempted but did not finish, do not continue.
+      if (isset($recursion_tracker[$key])) {
+        return [];
+      }
+
+      // Mark this as an attempt at generation.
+      $recursion_tracker[$key] = TRUE;
+
+      // Mark the sample entity as being a preview.
+      $values['entity'] = $entity_storage->createWithSampleValues($bundle, ['in_preview' => TRUE]);
+
+      // Remove the indicator once the entity is successfully generated.
+      unset($recursion_tracker[$key]);
       return $values;
     }
   }
