@@ -15,10 +15,13 @@ class TipPluginTextTest extends UnitTestCase {
    * Tests that getAriaId returns unique id per plugin instance.
    *
    * @see \Drupal\tour\Plugin\tour\tip\TipPluginText::getAriaId()
+   * @runTestsInSeparateProcesses
+   * This test calls \Drupal\Component\Utility\Html::getUniqueId() which uses a
+   * static list. Run this test in a separate process to prevent side effects.
    */
   public function testGetAriaId() {
-    $id_instance_one = $this->getRandomGenerator()->word(4, TRUE);
-    $id_instance_two = $this->getRandomGenerator()->word(4, TRUE);
+    $id_instance_one = 'one';
+    $id_instance_two = 'two';
     $config_instance_one = [
       'id' => $id_instance_one,
     ];
