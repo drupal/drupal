@@ -315,10 +315,11 @@ class ConfigInstaller implements ConfigInstallerInterface {
         $entity_storage = $this->configManager
           ->getEntityManager()
           ->getStorage($entity_type);
+
+        $id = $entity_storage->getIDFromConfigName($name, $entity_storage->getEntityType()->getConfigPrefix());
         // It is possible that secondary writes can occur during configuration
         // creation. Updates of such configuration are allowed.
         if ($this->getActiveStorages($collection)->exists($name)) {
-          $id = $entity_storage->getIDFromConfigName($name, $entity_storage->getEntityType()->getConfigPrefix());
           $entity = $entity_storage->load($id);
           $entity = $entity_storage->updateFromStorageRecord($entity, $new_config->get());
         }
@@ -327,6 +328,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
         }
         if ($entity->isInstallable()) {
           $entity->trustData()->save();
+          if ($id !== $entity->id()) {
+            trigger_error(sprintf('The configuration name "%s" does not match the ID "%s"', $name, $entity->id()), E_USER_WARNING);
+          }
         }
       }
       else {
