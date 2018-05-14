@@ -413,7 +413,7 @@
  * \Drupal\Core\Cache\CacheBackendInterface.
  *
  * The Cache API is used to store data that takes a long time to compute.
- * Caching can either be permanent or valid only for a certain timespan, and
+ * Caching can either be permanent or valid only for a certain time span, and
  * the cache can contain any type of data.
  *
  * To use the Cache API:
@@ -558,7 +558,7 @@
  * This also is the case when you define your own entity types: you'll get the
  * exact same cache tag invalidation as any of the built-in entity types, with
  * the ability to override any of the default behavior if needed.
- * See \Drupal\Core\Cache\CacheableDepenencyInterface::getCacheTags(),
+ * See \Drupal\Core\Cache\CacheableDependencyInterface::getCacheTags(),
  * \Drupal\Core\Entity\EntityTypeInterface::getListCacheTags(),
  * \Drupal\Core\Entity\Entity::invalidateTagsOnSave() and
  * \Drupal\Core\Entity\Entity::invalidateTagsOnDelete().
@@ -569,7 +569,7 @@
  * logged-in user who is viewing a page, the language the page is being rendered
  * in, the theme being used, etc. When caching the output of such a calculation,
  * you must cache each variation separately, along with information about which
- * variation of the contextual data was used in the calculatation. The next time
+ * variation of the contextual data was used in the calculation. The next time
  * the computed data is needed, if the context matches that for an existing
  * cached data set, the cached data can be reused; if no context matches, a new
  * data set can be calculated and cached for later use.
@@ -2003,12 +2003,12 @@ function hook_data_type_info_alter(&$data_types) {
  * Alter cron queue information before cron runs.
  *
  * Called by \Drupal\Core\Cron to allow modules to alter cron queue settings
- * before any jobs are processesed.
+ * before any jobs are processed.
  *
  * @param array $queues
  *   An array of cron queue information.
  *
- * @see \Drupal\Core\QueueWorker\QueueWorkerInterface
+ * @see \Drupal\Core\Queue\QueueWorkerInterface
  * @see \Drupal\Core\Annotation\QueueWorker
  * @see \Drupal\Core\Cron
  */
