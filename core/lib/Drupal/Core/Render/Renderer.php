@@ -380,7 +380,7 @@ class Renderer implements RendererInterface {
     }
 
     // All render elements support #markup and #plain_text.
-    if (!empty($elements['#markup']) || !empty($elements['#plain_text'])) {
+    if (isset($elements['#markup']) || isset($elements['#plain_text'])) {
       $elements = $this->ensureMarkupIsSafe($elements);
     }
 
@@ -744,11 +744,7 @@ class Renderer implements RendererInterface {
    * @see \Drupal\Component\Utility\Xss::filterAdmin()
    */
   protected function ensureMarkupIsSafe(array $elements) {
-    if (empty($elements['#markup']) && empty($elements['#plain_text'])) {
-      return $elements;
-    }
-
-    if (!empty($elements['#plain_text'])) {
+    if (isset($elements['#plain_text'])) {
       $elements['#markup'] = Markup::create(Html::escape($elements['#plain_text']));
     }
     elseif (!($elements['#markup'] instanceof MarkupInterface)) {
