@@ -112,6 +112,35 @@ class TwigEnvironmentTest extends KernelTestBase {
   }
 
   /**
+   * Ensures that templates resolve to the same class name and cache file.
+   */
+  public function testTemplateClassname() {
+    /** @var \Drupal\Core\Template\TwigEnvironment $environment */
+    $environment = \Drupal::service('twig');
+
+    // Test using an include template path.
+    $name_include = 'container.html.twig';
+    $class_include = $environment->getTemplateClass($name_include);
+    $key_include = $environment->getCache()->generateKey($name_include, $class_include);
+
+    // Test using a namespaced template path.
+    $name_namespaced = '@system/container.html.twig';
+    $class_namespaced = $environment->getTemplateClass($name_namespaced);
+    $key_namespaced = $environment->getCache()->generateKey($name_namespaced, $class_namespaced);
+
+    // Test using a direct filesystem template path.
+    $name_direct = 'core/modules/system/templates/container.html.twig';
+    $class_direct = $environment->getTemplateClass($name_direct);
+    $key_direct = $environment->getCache()->generateKey($name_direct, $class_direct);
+
+    // All three should be equal for both cases.
+    $this->assertEqual($class_include, $class_namespaced);
+    $this->assertEqual($class_namespaced, $class_direct);
+    $this->assertEqual($key_include, $key_namespaced);
+    $this->assertEqual($key_namespaced, $key_direct);
+  }
+
+  /**
    * Ensures that cacheFilename() varies by extensions + deployment identifier.
    */
   public function testCacheFilename() {

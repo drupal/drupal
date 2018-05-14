@@ -1618,7 +1618,10 @@ services:
       - { name: service_collector, tag: twig.loader, call: addLoader, required: TRUE }
   twig.loader.filesystem:
     class: Drupal\Core\Template\Loader\FilesystemLoader
-    arguments: ['@app.root', '@module_handler', '@theme_handler']
+    # We use '.' instead of '@app.root' as the path for non-namespaced template
+    # files so that they match the relative paths of templates loaded via the
+    # theme registry or via Twig namespaces.
+    arguments: ['.', '@module_handler', '@theme_handler']
     tags:
       - { name: twig.loader, priority: 100 }
   twig.loader.theme_registry:
