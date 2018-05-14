@@ -430,7 +430,7 @@
      *
      * @type {string}
      */
-    this.url = this.url.replace(/\/nojs(\/|$|\?|#)/g, '/ajax$1');
+    this.url = this.url.replace(/\/nojs(\/|$|\?|#)/, '/ajax$1');
     // If the 'nojs' version of the URL is trusted, also trust the 'ajax'
     // version.
     if (drupalSettings.ajaxTrustedUrl[originalUrl]) {

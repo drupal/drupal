@@ -189,7 +189,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     var originalUrl = this.url;
 
-    this.url = this.url.replace(/\/nojs(\/|$|\?|#)/g, '/ajax$1');
+    this.url = this.url.replace(/\/nojs(\/|$|\?|#)/, '/ajax$1');
 
     if (drupalSettings.ajaxTrustedUrl[originalUrl]) {
       drupalSettings.ajaxTrustedUrl[this.url] = true;
