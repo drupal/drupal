@@ -30,7 +30,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user', 'field'];
+  public static $modules = ['system', 'user', 'field', 'views_test_data'];
 
   /**
    * The router dumper to get all routes.
@@ -218,6 +218,42 @@ class DisplayPageTest extends ViewsKernelTestBase {
     // Test the default value of use_more_always.
     $view = View::create()->getExecutable();
     $this->assertTrue($view->getDisplay()->getOption('use_more_always'), 'Always display the more link by default.');
+  }
+
+  /**
+   * Tests the templates with empty rows.
+   */
+  public function testEmptyRow() {
+    $view = Views::getView('test_page_display');
+    $view->initDisplay();
+    $view->newDisplay('page', 'Page', 'empty_row');
+    $view->save();
+
+    $styles = [
+      'default' => '//div[@class="views-row"]',
+      'grid' => '//div[contains(@class, "views-col")]',
+      'html_list' => '//div[@class="item-list"]//li',
+    ];
+
+    $themes = ['bartik', 'classy', 'seven', 'stable', 'stark'];
+
+    foreach ($themes as $theme) {
+      \Drupal::service('theme_handler')->install([$theme]);
+      \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme($theme));
+      foreach ($styles as $type => $xpath) {
+        $view = Views::getView('test_page_display');
+        $view->storage->invalidateCaches();
+        $view->initDisplay();
+        $view->setDisplay('empty_row');
+        $view->displayHandlers->get('empty_row')->default_display->options['style']['type'] = $type;
+        $view->initStyle();
+        $this->executeView($view);
+        $output = $view->preview();
+        $output = \Drupal::service('renderer')->renderRoot($output);
+        $this->setRawContent($output);
+        $this->assertCount(5, $this->xpath("{$xpath}[not(text()) and not(node())]"), "Empty rows in theme '$theme', type '$type'.");
+      }
+    }
   }
 
 }
