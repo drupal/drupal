@@ -34,14 +34,14 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
   /**
    * A normal authenticated user.
    *
-   * @var \Drupal\user\UserInterface.
+   * @var \Drupal\user\UserInterface
    */
   protected $webUser;
 
   /**
    * User 1.
    *
-   * @var \Drupal\user\UserInterface.
+   * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
 

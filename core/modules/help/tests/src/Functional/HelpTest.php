@@ -18,7 +18,7 @@ class HelpTest extends BrowserTestBase {
    * overview page. The help_page_test module has a page section plugin that
    * returns no links.
    *
-   * @var array.
+   * @var array
    */
   public static $modules = ['help_test', 'help_page_test'];
 

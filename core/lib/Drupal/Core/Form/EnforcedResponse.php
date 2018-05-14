@@ -23,7 +23,7 @@ class EnforcedResponse extends Response {
   /**
    * The wrapped response object.
    *
-   * @var \Symfony\Component\HttpFoundation\Response;
+   * @var \Symfony\Component\HttpFoundation\Response
    */
   protected $response;
 

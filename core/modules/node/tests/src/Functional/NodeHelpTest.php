@@ -14,7 +14,7 @@ class NodeHelpTest extends BrowserTestBase {
   /**
    * Modules to enable.
    *
-   * @var array.
+   * @var array
    */
   public static $modules = ['block', 'node', 'help'];
 

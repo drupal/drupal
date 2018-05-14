@@ -140,7 +140,7 @@ abstract class BrowserTestBase extends TestCase {
    *
    * Value can be overridden using the environment variable MINK_DRIVER_CLASS.
    *
-   * @var string.
+   * @var string
    */
   protected $minkDefaultDriverClass = GoutteDriver::class;
 

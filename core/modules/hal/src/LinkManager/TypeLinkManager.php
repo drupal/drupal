@@ -14,7 +14,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
   /**
    * Injected cache backend.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface;
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
 

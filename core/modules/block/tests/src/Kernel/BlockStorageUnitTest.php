@@ -26,7 +26,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   /**
    * The block storage.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface.
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
    */
   protected $controller;
 

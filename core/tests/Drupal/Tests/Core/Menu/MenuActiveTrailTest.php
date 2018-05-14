@@ -38,7 +38,7 @@ class MenuActiveTrailTest extends UnitTestCase {
   /**
    * The current route match service.
    *
-   * @var \Drupal\Core\Routing\CurrentRouteMatch;
+   * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
   protected $currentRouteMatch;
 

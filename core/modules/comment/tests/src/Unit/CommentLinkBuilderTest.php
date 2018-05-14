@@ -60,7 +60,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
   protected $timestamp;
 
   /**
-   * @var \Drupal\comment\CommentLinkBuilderInterface;
+   * @var \Drupal\comment\CommentLinkBuilderInterface
    */
   protected $commentLinkBuilder;
 

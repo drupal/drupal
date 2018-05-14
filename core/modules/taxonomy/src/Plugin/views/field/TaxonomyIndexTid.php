@@ -21,7 +21,7 @@ class TaxonomyIndexTid extends PrerenderList {
   /**
    * The vocabulary storage.
    *
-   * @var \Drupal\taxonomy\VocabularyStorageInterface.
+   * @var \Drupal\taxonomy\VocabularyStorageInterface
    */
   protected $vocabularyStorage;
 

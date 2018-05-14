@@ -15,7 +15,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
   /**
    * A JS asset optimizer.
    *
-   * @var \Drupal\Core\Asset\JsOptimizer object.
+   * @var \Drupal\Core\Asset\JsOptimizer
    */
   protected $optimizer;
 

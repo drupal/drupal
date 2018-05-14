@@ -24,7 +24,7 @@ class ContactPageAccess implements AccessInterface {
   /**
    * The user data service.
    *
-   * @var \Drupal\user\UserDataInterface;
+   * @var \Drupal\user\UserDataInterface
    */
   protected $userData;
 

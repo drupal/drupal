@@ -34,7 +34,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
   /**
    * The account to use in access checks.
    *
-   * @var \Drupal\Core\Session\AccountInterface;
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $account;
 

@@ -15,7 +15,7 @@ class ConfigFieldDefinitionTest extends FieldKernelTestBase {
   /**
    * The entity manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface;
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 

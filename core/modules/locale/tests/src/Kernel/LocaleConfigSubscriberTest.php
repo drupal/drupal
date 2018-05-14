@@ -37,7 +37,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   /**
    * The string storage used in this test.
    *
-   * @var \Drupal\locale\StringStorageInterface;
+   * @var \Drupal\locale\StringStorageInterface
    */
   protected $stringStorage;
 

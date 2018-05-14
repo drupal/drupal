@@ -102,7 +102,7 @@ abstract class KernelTestBase extends TestBase {
   /**
    * A KeyValueMemoryFactory instance to use when building the container.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory.
+   * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory
    */
   protected $keyValueFactory;
 

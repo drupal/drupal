@@ -14,7 +14,7 @@ abstract class ConfigFormTestBase extends KernelTestBase {
   /**
    * Form ID to use for testing.
    *
-   * @var \Drupal\Core\Form\FormInterface.
+   * @var \Drupal\Core\Form\FormInterface
    */
   protected $form;
 

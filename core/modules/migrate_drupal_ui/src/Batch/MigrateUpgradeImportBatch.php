@@ -60,7 +60,7 @@ class MigrateUpgradeImportBatch {
   /**
    * The follow-up migrations.
    *
-   * @var \Drupal\migrate\Plugin\MigrationInterface[];
+   * @var \Drupal\migrate\Plugin\MigrationInterface[]
    */
   protected static $followUpMigrations;
 

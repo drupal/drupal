@@ -28,7 +28,7 @@ class UserSession implements AccountInterface {
   /**
    * The Unix timestamp when the user last accessed the site.
    *
-   * @var string.
+   * @var string
    */
   protected $access;
 

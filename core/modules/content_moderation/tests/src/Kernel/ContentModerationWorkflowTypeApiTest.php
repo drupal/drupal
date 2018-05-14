@@ -17,7 +17,7 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
   /**
    * A workflow for testing.
    *
-   * @var \Drupal\workflows\Entity\Workflow;
+   * @var \Drupal\workflows\Entity\Workflow
    */
   protected $workflow;
 

@@ -15,7 +15,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
   /**
    * A CSS asset renderer.
    *
-   * @var \Drupal\Core\Asset\CssRenderer object.
+   * @var \Drupal\Core\Asset\CssCollectionRenderer
    */
   protected $renderer;
 

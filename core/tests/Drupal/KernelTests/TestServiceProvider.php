@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Definition;
 class TestServiceProvider implements ServiceProviderInterface, ServiceModifierInterface {
 
   /**
-   * @var \Drupal\simpletest\TestBase;
+   * @var \Drupal\simpletest\TestBase
    */
   public static $currentTest;
 

@@ -34,7 +34,7 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
   /**
    * The vocabulary storage.
    *
-   * @var \Drupal\taxonomy\VocabularyStorageInterface.
+   * @var \Drupal\taxonomy\VocabularyStorageInterface
    */
   protected $vocabularyStorage;
 

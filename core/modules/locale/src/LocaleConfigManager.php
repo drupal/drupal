@@ -43,7 +43,7 @@ class LocaleConfigManager {
   /**
    * The string storage for reading and writing translations.
    *
-   * @var \Drupal\locale\StringStorageInterface;
+   * @var \Drupal\locale\StringStorageInterface
    */
   protected $localeStorage;
 

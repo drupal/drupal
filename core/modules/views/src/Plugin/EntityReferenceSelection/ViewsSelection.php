@@ -26,7 +26,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
   /**
    * The loaded View object.
    *
-   * @var \Drupal\views\ViewExecutable;
+   * @var \Drupal\views\ViewExecutable
    */
   protected $view;
 

@@ -29,7 +29,7 @@ class PageCache implements HttpKernelInterface {
   /**
    * The cache bin.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface.
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
 

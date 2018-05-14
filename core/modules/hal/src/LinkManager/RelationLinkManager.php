@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class RelationLinkManager extends LinkManagerBase implements RelationLinkManagerInterface {
 
   /**
-   * @var \Drupal\Core\Cache\CacheBackendInterface;
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
 

@@ -19,7 +19,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
   /**
    * The tested source plugin.
    *
-   * @var \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase.
+   * @var \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase
    */
   protected $source;
 

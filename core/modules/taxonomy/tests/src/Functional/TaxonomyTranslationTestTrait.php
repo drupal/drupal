@@ -17,7 +17,7 @@ trait TaxonomyTranslationTestTrait {
   /**
    * The vocabulary.
    *
-   * @var \Drupal\taxonomy\Entity\Vocabulary;
+   * @var \Drupal\taxonomy\Entity\Vocabulary
    */
   protected $vocabulary;
 

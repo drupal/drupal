@@ -41,14 +41,14 @@ class HistoryTest extends BrowserTestBase {
   /**
    * The cookie jar holding the testing session cookies for Guzzle requests.
    *
-   * @var \GuzzleHttp\Client;
+   * @var \GuzzleHttp\Client
    */
   protected $client;
 
   /**
    * The Guzzle HTTP client.
    *
-   * @var \GuzzleHttp\Cookie\CookieJar;
+   * @var \GuzzleHttp\Cookie\CookieJar
    */
   protected $cookies;
 

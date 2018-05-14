@@ -36,7 +36,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
   /**
    * The service container.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface;
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
 

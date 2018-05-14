@@ -16,7 +16,7 @@ class NoHelpTest extends BrowserTestBase {
    *
    * Use one of the test modules that do not implement hook_help().
    *
-   * @var array.
+   * @var array
    */
   public static $modules = ['help', 'menu_test'];
 

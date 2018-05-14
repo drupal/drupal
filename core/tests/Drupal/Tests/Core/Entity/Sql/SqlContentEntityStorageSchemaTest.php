@@ -51,7 +51,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * The storage schema handler used in this test.
    *
-   * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema|\PHPUnit_Framework_MockObject_MockObject.
+   * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $storageSchema;
 

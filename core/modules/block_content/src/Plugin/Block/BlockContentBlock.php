@@ -29,7 +29,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   /**
    * The Plugin Block Manager.
    *
-   * @var \Drupal\Core\Block\BlockManagerInterface.
+   * @var \Drupal\Core\Block\BlockManagerInterface
    */
   protected $blockManager;
 
@@ -43,7 +43,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   /**
    * The Drupal account to use for checking for access to block.
    *
-   * @var \Drupal\Core\Session\AccountInterface.
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $account;
 

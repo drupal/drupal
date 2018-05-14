@@ -34,7 +34,7 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
   /**
    * The selection handler.
    *
-   * @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface.
+   * @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
    */
   protected $selectionHandler;
 

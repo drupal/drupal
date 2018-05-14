@@ -20,7 +20,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
   /**
    * A CSS asset optimizer.
    *
-   * @var \Drupal\Core\Asset\CssOptimizer object.
+   * @var \Drupal\Core\Asset\CssOptimizer
    */
   protected $optimizer;
 

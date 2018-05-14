@@ -22,7 +22,7 @@ class EditorSelector implements EditorSelectorInterface {
   /**
    * The manager for formatter plugins.
    *
-   * @var \Drupal\Core\Field\FormatterPluginManager.
+   * @var \Drupal\Core\Field\FormatterPluginManager
    */
   protected $formatterManager;
 

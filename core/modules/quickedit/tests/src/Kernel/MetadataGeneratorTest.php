@@ -30,7 +30,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
   /**
    * The metadata generator object to be tested.
    *
-   * @var \Drupal\quickedit\MetadataGeneratorInterface.php
+   * @var \Drupal\quickedit\MetadataGeneratorInterface
    */
   protected $metadataGenerator;
 

@@ -24,7 +24,7 @@ class CKEditorTest extends KernelTestBase {
   /**
    * An instance of the "CKEditor" text editor plugin.
    *
-   * @var \Drupal\ckeditor\Plugin\Editor\CKEditor;
+   * @var \Drupal\ckeditor\Plugin\Editor\CKEditor
    */
   protected $ckeditor;
 

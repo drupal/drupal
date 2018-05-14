@@ -39,7 +39,7 @@ class StatisticsLoggingTest extends BrowserTestBase {
   /**
    * The Guzzle HTTP client.
    *
-   * @var \GuzzleHttp\Client;
+   * @var \GuzzleHttp\Client
    */
   protected $client;
 

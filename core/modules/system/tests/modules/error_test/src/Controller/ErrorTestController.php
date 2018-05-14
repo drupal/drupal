@@ -14,7 +14,7 @@ class ErrorTestController extends ControllerBase {
   /**
    * The database connection.
    *
-   * @var \Drupal\Core\Database\Connection;
+   * @var \Drupal\Core\Database\Connection
    */
   protected $database;
 

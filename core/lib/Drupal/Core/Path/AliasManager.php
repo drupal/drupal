@@ -22,7 +22,7 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
   /**
    * Cache backend service.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface;
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
 

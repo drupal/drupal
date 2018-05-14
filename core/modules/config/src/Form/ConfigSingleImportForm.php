@@ -62,7 +62,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   /**
    * The configuration manager.
    *
-   * @var \Drupal\Core\Config\ConfigManagerInterface;
+   * @var \Drupal\Core\Config\ConfigManagerInterface
    */
   protected $configManager;
 
