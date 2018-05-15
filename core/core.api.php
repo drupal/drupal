@@ -1226,7 +1226,7 @@
  * under development. While PHP type hinting does this for objects and arrays,
  * runtime assertions do this for scalars (strings, integers, floats, etc.) and
  * complex data structures such as cache and render arrays. They ensure that
- * methods' return values are the documented datatypes. They also verify that
+ * methods' return values are the documented data types. They also verify that
  * objects have been properly configured and set up by the service container.
  * They supplement unit tests by checking scenarios that do not have unit tests
  * written for them.
