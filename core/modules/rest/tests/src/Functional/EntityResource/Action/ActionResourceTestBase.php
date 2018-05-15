@@ -2,88 +2,12 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\Action;
 
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
-use Drupal\system\Entity\Action;
-use Drupal\user\RoleInterface;
+use Drupal\Tests\system\Functional\Rest\ActionResourceTestBase as ActionResourceTestBaseReal;
 
-abstract class ActionResourceTestBase extends EntityResourceTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['user'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $entityTypeId = 'action';
-
-  /**
-   * @var \Drupal\system\ActionConfigEntityInterface
-   */
-  protected $entity;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer actions']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function createEntity() {
-    $action = Action::create([
-      'id' => 'user_add_role_action.' . RoleInterface::ANONYMOUS_ID,
-      'type' => 'user',
-      'label' => t('Add the anonymous role to the selected users'),
-      'configuration' => [
-        'rid' => RoleInterface::ANONYMOUS_ID,
-      ],
-      'plugin' => 'user_add_role_action',
-    ]);
-    $action->save();
-
-    return $action;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedNormalizedEntity() {
-    return [
-      'configuration' => [
-        'rid' => 'anonymous',
-      ],
-      'dependencies' => [
-        'config' => ['user.role.anonymous'],
-        'module' => ['user'],
-      ],
-      'id' => 'user_add_role_action.anonymous',
-      'label' => 'Add the anonymous role to the selected users',
-      'langcode' => 'en',
-      'plugin' => 'user_add_role_action',
-      'status' => TRUE,
-      'type' => 'user',
-      'uuid' => $this->entity->uuid(),
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedCacheContexts() {
-    return [
-      'user.permissions',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getNormalizedPostEntity() {
-    // @todo Update in https://www.drupal.org/node/2300677.
-  }
-
+/**
+ * Class for backward compatibility. It is deprecated in Drupal 8.6.x.
+ *
+ * @see https://www.drupal.org/node/2971931
+ */
+abstract class ActionResourceTestBase extends ActionResourceTestBaseReal {
 }

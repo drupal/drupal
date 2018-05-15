@@ -5,6 +5,7 @@ namespace Drupal\Tests\rest\Functional\EntityResource\EntityTest;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\entity_test\Functional\Rest\EntityTestResourceTestBase;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
