@@ -123,4 +123,28 @@ class AccessTest extends KernelTestBase {
     $this->assertFalse($this->file->access('create'));
   }
 
+  /**
+   * Tests cacheability metadata.
+   */
+  public function testFileCacheability() {
+    $file = File::create([
+      'filename' => 'green-scarf',
+      'uri' => 'private://green-scarf',
+      'filemime' => 'text/plain',
+      'status' => FILE_STATUS_PERMANENT,
+    ]);
+    $file->save();
+    \Drupal::service('session')->set('anonymous_allowed_file_ids', [$file->id() => $file->id()]);
+
+    $account = User::getAnonymousUser();
+    $file->setOwnerId($account->id())->save();
+    $this->assertSame(['session', 'user'], $file->access('view', $account, TRUE)->getCacheContexts());
+    $this->assertSame(['session', 'user'], $file->access('download', $account, TRUE)->getCacheContexts());
+
+    $account = $this->user1;
+    $file->setOwnerId($account->id())->save();
+    $this->assertSame(['user'], $file->access('view', $account, TRUE)->getCacheContexts());
+    $this->assertSame(['user'], $file->access('download', $account, TRUE)->getCacheContexts());
+  }
+
 }
