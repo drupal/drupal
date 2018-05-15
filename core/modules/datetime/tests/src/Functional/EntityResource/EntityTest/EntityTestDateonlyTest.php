@@ -7,8 +7,8 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\entity_test\Functional\Rest\EntityTestResourceTestBase;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
-use Drupal\Tests\rest\Functional\EntityResource\EntityTest\EntityTestResourceTestBase;
 use GuzzleHttp\RequestOptions;
 
 /**

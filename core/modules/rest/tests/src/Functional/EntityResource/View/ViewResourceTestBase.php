@@ -2,98 +2,15 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\View;
 
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
-use Drupal\views\Entity\View;
+@trigger_error('The ' . __NAMESPACE__ . '\ViewResourceTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use Drupal\Tests\views\Functional\Rest\ViewResourceTestBase. See https://www.drupal.org/node/2971931.', E_USER_DEPRECATED);
 
-abstract class ViewResourceTestBase extends EntityResourceTestBase {
+use Drupal\Tests\views\Functional\Rest\ViewResourceTestBase as ViewResourceTestBaseReal;
 
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['views'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $entityTypeId = 'view';
-
-  /**
-   * @var \Drupal\views\ViewEntityInterface
-   */
-  protected $entity;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer views']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function createEntity() {
-    $view = View::create([
-      'id' => 'test_rest',
-      'label' => 'Test REST',
-    ]);
-    $view->save();
-    return $view;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedNormalizedEntity() {
-    return [
-      'base_field' => 'nid',
-      'base_table' => 'node',
-      'core' => '8.x',
-      'dependencies' => [],
-      'description' => '',
-      'display' => [
-        'default' => [
-          'display_plugin' => 'default',
-          'id' => 'default',
-          'display_title' => 'Master',
-          'position' => 0,
-          'display_options' => [
-            'display_extenders' => [],
-          ],
-          'cache_metadata' => [
-            'max-age' => -1,
-            'contexts' => [
-              'languages:language_interface',
-              'url.query_args',
-            ],
-            'tags' => [],
-          ],
-        ],
-      ],
-      'id' => 'test_rest',
-      'label' => 'Test REST',
-      'langcode' => 'en',
-      'module' => 'views',
-      'status' => TRUE,
-      'tag' => '',
-      'uuid' => $this->entity->uuid(),
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getNormalizedPostEntity() {
-    // @todo Update in https://www.drupal.org/node/2300677.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedCacheContexts() {
-    return [
-      'user.permissions',
-    ];
-  }
-
+/**
+ * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ *   Drupal\Tests\views\Functional\Rest\ViewResourceTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2971931
+ */
+abstract class ViewResourceTestBase extends ViewResourceTestBaseReal {
 }

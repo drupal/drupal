@@ -2,73 +2,15 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\EntityFormMode;
 
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
-use Drupal\Core\Entity\Entity\EntityFormMode;
+@trigger_error('The ' . __NAMESPACE__ . '\EntityFormModeResourceTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use Drupal\FunctionalTests\Rest\EntityFormModeResourceTestBase. See https://www.drupal.org/node/2971931.', E_USER_DEPRECATED);
 
-abstract class EntityFormModeResourceTestBase extends EntityResourceTestBase {
+use Drupal\FunctionalTests\Rest\EntityFormModeResourceTestBase as EntityFormModeResourceTestBaseReal;
 
-  /**
-   * {@inheritdoc}
-   *
-   * @todo: Remove 'field_ui' when https://www.drupal.org/node/2867266.
-   */
-  public static $modules = ['user', 'field_ui'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $entityTypeId = 'entity_form_mode';
-
-  /**
-   * @var \Drupal\Core\Entity\EntityFormModeInterface
-   */
-  protected $entity;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer display modes']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function createEntity() {
-    $entity_form_mode = EntityFormMode::create([
-      'id' => 'user.test',
-      'label' => 'Test',
-      'targetEntityType' => 'user',
-    ]);
-    $entity_form_mode->save();
-    return $entity_form_mode;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedNormalizedEntity() {
-    return [
-      'cache' => TRUE,
-      'dependencies' => [
-        'module' => [
-          'user',
-        ],
-      ],
-      'id' => 'user.test',
-      'label' => 'Test',
-      'langcode' => 'en',
-      'status' => TRUE,
-      'targetEntityType' => 'user',
-      'uuid' => $this->entity->uuid(),
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getNormalizedPostEntity() {
-    // @todo Update in https://www.drupal.org/node/2300677.
-  }
-
+/**
+ * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ *   Drupal\FunctionalTests\Rest\EntityFormModeResourceTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2971931
+ */
+abstract class EntityFormModeResourceTestBase extends EntityFormModeResourceTestBaseReal {
 }

@@ -2,103 +2,15 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\ContactForm;
 
-use Drupal\contact\Entity\ContactForm;
-use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+@trigger_error('The ' . __NAMESPACE__ . '\ContactFormResourceTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use Drupal\Tests\contact\Functional\Rest\ContactFormResourceTestBase. See https://www.drupal.org/node/2971931.', E_USER_DEPRECATED);
 
-abstract class ContactFormResourceTestBase extends EntityResourceTestBase {
+use Drupal\Tests\contact\Functional\Rest\ContactFormResourceTestBase as ContactFormResourceTestBaseReal;
 
-  use BcTimestampNormalizerUnixTestTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['contact'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $entityTypeId = 'contact_form';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $patchProtectedFieldNames = [];
-
-  /**
-   * @var \Drupal\contact\Entity\ContactForm
-   */
-  protected $entity;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpAuthorization($method) {
-    switch ($method) {
-      case 'GET':
-        $this->grantPermissionsToTestedRole(['access site-wide contact form']);
-      default:
-        $this->grantPermissionsToTestedRole(['administer contact forms']);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function createEntity() {
-    $contact_form = ContactForm::create([
-      'id' => 'llama',
-      'label' => 'Llama',
-      'message' => 'Let us know what you think about llamas',
-      'reply' => 'Llamas are indeed awesome!',
-      'recipients' => [
-        'llama@example.com',
-        'contact@example.com',
-      ],
-    ]);
-    $contact_form->save();
-
-    return $contact_form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedNormalizedEntity() {
-    return [
-      'dependencies' => [],
-      'id' => 'llama',
-      'label' => 'Llama',
-      'langcode' => 'en',
-      'message' => 'Let us know what you think about llamas',
-      'recipients' => [
-        'llama@example.com',
-        'contact@example.com',
-      ],
-      'redirect' => NULL,
-      'reply' => 'Llamas are indeed awesome!',
-      'status' => TRUE,
-      'uuid' => $this->entity->uuid(),
-      'weight' => 0,
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getNormalizedPostEntity() {
-    // @todo Update in https://www.drupal.org/node/2300677.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedUnauthorizedAccessMessage($method) {
-    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
-      return parent::getExpectedUnauthorizedAccessMessage($method);
-    }
-
-    return "The 'access site-wide contact form' permission is required.";
-  }
-
+/**
+ * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ *   Drupal\Tests\contact\Functional\Rest\ContactFormResourceTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2971931
+ */
+abstract class ContactFormResourceTestBase extends ContactFormResourceTestBaseReal {
 }

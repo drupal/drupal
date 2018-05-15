@@ -2,76 +2,15 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\CommentType;
 
-use Drupal\comment\Entity\CommentType;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+@trigger_error('The ' . __NAMESPACE__ . '\CommentTypeResourceTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use Drupal\Tests\comment\Functional\Rest\CommentTypeResourceTestBase. See https://www.drupal.org/node/2971931.', E_USER_DEPRECATED);
+
+use Drupal\Tests\comment\Functional\Rest\CommentTypeResourceTestBase as CommentTypeResourceTestBaseReal;
 
 /**
- * ResourceTestBase for CommentType entity.
+ * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ *   Drupal\Tests\comment\Functional\Rest\CommentTypeResourceTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2971931
  */
-abstract class CommentTypeResourceTestBase extends EntityResourceTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['node', 'comment'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $entityTypeId = 'comment_type';
-
-  /**
-   * The CommentType entity.
-   *
-   * @var \Drupal\comment\CommentTypeInterface
-   */
-  protected $entity;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer comment types']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function createEntity() {
-    // Create a "Camelids" comment type.
-    $camelids = CommentType::create([
-      'id' => 'camelids',
-      'label' => 'Camelids',
-      'description' => 'Camelids are large, strictly herbivorous animals with slender necks and long legs.',
-      'target_entity_type_id' => 'node',
-    ]);
-
-    $camelids->save();
-
-    return $camelids;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedNormalizedEntity() {
-    return [
-      'dependencies' => [],
-      'description' => 'Camelids are large, strictly herbivorous animals with slender necks and long legs.',
-      'id' => 'camelids',
-      'label' => 'Camelids',
-      'langcode' => 'en',
-      'status' => TRUE,
-      'target_entity_type_id' => 'node',
-      'uuid' => $this->entity->uuid(),
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getNormalizedPostEntity() {
-    // @todo Update in https://www.drupal.org/node/2300677.
-  }
-
+abstract class CommentTypeResourceTestBase extends CommentTypeResourceTestBaseReal {
 }

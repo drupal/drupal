@@ -2,68 +2,15 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\Role;
 
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
-use Drupal\user\Entity\Role;
+@trigger_error('The ' . __NAMESPACE__ . '\RoleResourceTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use Drupal\Tests\user\Functional\Rest\RoleResourceTestBase. See https://www.drupal.org/node/2971931.', E_USER_DEPRECATED);
 
-abstract class RoleResourceTestBase extends EntityResourceTestBase {
+use Drupal\Tests\user\Functional\Rest\RoleResourceTestBase as RoleResourceTestBaseReal;
 
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['user'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $entityTypeId = 'user_role';
-
-  /**
-   * @var \Drupal\user\RoleInterface
-   */
-  protected $entity;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer permissions']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function createEntity() {
-    $role = Role::create([
-      'id' => 'llama',
-      'name' => $this->randomString(),
-    ]);
-    $role->save();
-
-    return $role;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedNormalizedEntity() {
-    return [
-      'uuid' => $this->entity->uuid(),
-      'weight' => 2,
-      'langcode' => 'en',
-      'status' => TRUE,
-      'dependencies' => [],
-      'id' => 'llama',
-      'label' => NULL,
-      'is_admin' => NULL,
-      'permissions' => [],
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getNormalizedPostEntity() {
-    // @todo Update in https://www.drupal.org/node/2300677.
-  }
-
+/**
+ * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ *   Drupal\Tests\user\Functional\Rest\RoleResourceTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2971931
+ */
+abstract class RoleResourceTestBase extends RoleResourceTestBaseReal {
 }

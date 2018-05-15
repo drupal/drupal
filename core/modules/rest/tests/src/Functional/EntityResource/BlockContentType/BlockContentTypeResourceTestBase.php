@@ -2,70 +2,15 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\BlockContentType;
 
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
-use Drupal\block_content\Entity\BlockContentType;
+@trigger_error('The ' . __NAMESPACE__ . '\BlockContentTypeResourceTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use Drupal\Tests\block_content\Functional\Rest\BlockContentTypeResourceTestBase. See https://www.drupal.org/node/2971931.', E_USER_DEPRECATED);
 
-abstract class BlockContentTypeResourceTestBase extends EntityResourceTestBase {
+use Drupal\Tests\block_content\Functional\Rest\BlockContentTypeResourceTestBase as BlockContentTypeResourceTestBaseReal;
 
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['block_content'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $entityTypeId = 'block_content_type';
-
-  /**
-   * @var \Drupal\block_content\Entity\BlockContentTypeInterface
-   */
-  protected $entity;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer blocks']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function createEntity() {
-    $block_content_type = BlockContentType::create([
-      'id' => 'pascal',
-      'label' => 'Pascal',
-      'revision' => FALSE,
-      'description' => 'Provides a competitive alternative to the "basic" type',
-    ]);
-
-    $block_content_type->save();
-
-    return $block_content_type;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedNormalizedEntity() {
-    return [
-      'dependencies' => [],
-      'description' => 'Provides a competitive alternative to the "basic" type',
-      'id' => 'pascal',
-      'label' => 'Pascal',
-      'langcode' => 'en',
-      'revision' => 0,
-      'status' => TRUE,
-      'uuid' => $this->entity->uuid(),
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getNormalizedPostEntity() {
-    // @todo Update in https://www.drupal.org/node/2300677.
-  }
-
+/**
+ * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ *   Drupal\Tests\block_content\Functional\Rest\BlockContentTypeResourceTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2971931
+ */
+abstract class BlockContentTypeResourceTestBase extends BlockContentTypeResourceTestBaseReal {
 }

@@ -2,75 +2,15 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\EntityTestBundle;
 
-use Drupal\entity_test\Entity\EntityTestBundle;
-use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+@trigger_error('The ' . __NAMESPACE__ . '\EntityTestBundleResourceTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use Drupal\Tests\entity_test\Functional\Rest\EntityTestBundleResourceTestBase. See https://www.drupal.org/node/2971931.', E_USER_DEPRECATED);
 
-abstract class EntityTestBundleResourceTestBase extends EntityResourceTestBase {
+use Drupal\Tests\entity_test\Functional\Rest\EntityTestBundleResourceTestBase as EntityTestBundleResourceTestBaseReal;
 
-  use BcTimestampNormalizerUnixTestTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['entity_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $entityTypeId = 'entity_test_bundle';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $patchProtectedFieldNames = [];
-
-  /**
-   * @var \Drupal\entity_test\Entity\EntityTestBundle
-   */
-  protected $entity;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer entity_test_bundle content']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function createEntity() {
-    $entity_test_bundle = EntityTestBundle::create([
-      'id' => 'camelids',
-      'label' => 'Camelids',
-      'description' => 'Camelids are large, strictly herbivorous animals with slender necks and long legs.',
-    ]);
-    $entity_test_bundle->save();
-
-    return $entity_test_bundle;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedNormalizedEntity() {
-    return [
-      'dependencies' => [],
-      'description' => 'Camelids are large, strictly herbivorous animals with slender necks and long legs.',
-      'id' => 'camelids',
-      'label' => 'Camelids',
-      'langcode' => 'en',
-      'status' => TRUE,
-      'uuid' => $this->entity->uuid(),
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getNormalizedPostEntity() {
-    // @todo Update in https://www.drupal.org/node/2300677.
-  }
-
+/**
+ * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ *   Drupal\Tests\entity_test\Functional\Rest\EntityTestBundleResourceTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2971931
+ */
+abstract class EntityTestBundleResourceTestBase extends EntityTestBundleResourceTestBaseReal {
 }

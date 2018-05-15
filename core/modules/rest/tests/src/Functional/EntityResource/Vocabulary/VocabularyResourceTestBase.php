@@ -2,82 +2,15 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\Vocabulary;
 
-use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+@trigger_error('The ' . __NAMESPACE__ . '\VocabularyResourceTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use Drupal\Tests\taxonomy\Functional\Rest\VocabularyResourceTestBase. See https://www.drupal.org/node/2971931.', E_USER_DEPRECATED);
 
-abstract class VocabularyResourceTestBase extends EntityResourceTestBase {
+use Drupal\Tests\taxonomy\Functional\Rest\VocabularyResourceTestBase as VocabularyResourceTestBaseReal;
 
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['taxonomy'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $entityTypeId = 'taxonomy_vocabulary';
-
-  /**
-   * @var \Drupal\taxonomy\VocabularyInterface
-   */
-  protected $entity;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer taxonomy']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function createEntity() {
-    $vocabulary = Vocabulary::create([
-      'name' => 'Llama',
-      'vid' => 'llama',
-    ]);
-    $vocabulary->save();
-
-    return $vocabulary;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedNormalizedEntity() {
-    return [
-      'uuid' => $this->entity->uuid(),
-      'vid' => 'llama',
-      'langcode' => 'en',
-      'status' => TRUE,
-      'dependencies' => [],
-      'name' => 'Llama',
-      'description' => NULL,
-      'hierarchy' => 0,
-      'weight' => 0,
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getNormalizedPostEntity() {
-    // @todo Update in https://www.drupal.org/node/2300677.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedUnauthorizedAccessMessage($method) {
-    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
-      return parent::getExpectedUnauthorizedAccessMessage($method);
-    }
-
-    if ($method === 'GET') {
-      return "The following permissions are required: 'access taxonomy overview' OR 'administer taxonomy'.";
-    }
-    return parent::getExpectedUnauthorizedAccessMessage($method);
-  }
-
+/**
+ * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ *   Drupal\Tests\taxonomy\Functional\Rest\VocabularyResourceTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2971931
+ */
+abstract class VocabularyResourceTestBase extends VocabularyResourceTestBaseReal {
 }

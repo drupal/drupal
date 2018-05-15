@@ -2,77 +2,15 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\Menu;
 
-use Drupal\system\Entity\Menu;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+@trigger_error('The ' . __NAMESPACE__ . '\MenuResourceTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use Drupal\Tests\system\Functional\Rest\MenuResourceTestBase. See https://www.drupal.org/node/2971931.', E_USER_DEPRECATED);
 
-abstract class MenuResourceTestBase extends EntityResourceTestBase {
+use Drupal\Tests\system\Functional\Rest\MenuResourceTestBase as MenuResourceTestBaseReal;
 
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = [];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $entityTypeId = 'menu';
-
-  /**
-   * @var \Drupal\system\MenuInterface
-   */
-  protected $entity;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer menu']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function createEntity() {
-    $menu = Menu::create([
-      'id' => 'menu',
-      'label' => 'Menu',
-      'description' => 'Menu',
-    ]);
-    $menu->save();
-
-    return $menu;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedNormalizedEntity() {
-    return [
-      'dependencies' => [],
-      'description' => 'Menu',
-      'id' => 'menu',
-      'label' => 'Menu',
-      'langcode' => 'en',
-      'locked' => FALSE,
-      'status' => TRUE,
-      'uuid' => $this->entity->uuid(),
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getNormalizedPostEntity() {
-    // @todo Update in https://www.drupal.org/node/2300677.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedCacheContexts() {
-    return [
-      'user.permissions',
-    ];
-  }
-
+/**
+ * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ *   Drupal\Tests\system\Functional\Rest\MenuResourceTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2971931
+ */
+abstract class MenuResourceTestBase extends MenuResourceTestBaseReal {
 }
