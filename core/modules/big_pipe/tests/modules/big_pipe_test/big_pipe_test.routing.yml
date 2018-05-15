@@ -23,4 +23,3 @@ big_pipe_test_multi_occurrence:
     _title: 'BigPipe test multiple occurrences of the same placeholder'
   requirements:
     _access: 'TRUE'
-

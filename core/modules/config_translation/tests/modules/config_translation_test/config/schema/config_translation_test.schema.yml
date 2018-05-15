@@ -18,4 +18,3 @@ config_translation_test.content:
       label: 'Animals'
       sequence:
         type: label
-

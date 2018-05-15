@@ -220,4 +220,3 @@ display:
         - user.permissions
       tags:
         - 'config:workflow_list'
-

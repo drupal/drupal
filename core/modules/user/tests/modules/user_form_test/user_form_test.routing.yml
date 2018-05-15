@@ -4,4 +4,3 @@ user_form_test.cancel:
     _entity_form: 'user.cancel'
   requirements:
     _permission: 'cancel other accounts'
-

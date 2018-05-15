@@ -4,4 +4,3 @@ services:
     arguments: ['@state']
     tags:
       - { name: path_processor_inbound, priority: 1000 }
-

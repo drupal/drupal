@@ -7,10 +7,13 @@
   <file>scripts/rebuild_token_calculator.sh</file>
   <file>scripts/run-tests.sh</file>
   <file>scripts/update-countries.sh</file>
-  <arg name="extensions" value="inc,install,module,php,profile,test,theme,info.yml"/>
+  <arg name="extensions" value="inc,install,module,php,profile,test,theme,yml"/>
 
   <!--Exclude third party code.-->
   <exclude-pattern>./assets/vendor/*</exclude-pattern>
+  <!--Exclude folders used by common frontend tools. These folders match the file_scan_ignore_directories setting in default.settings.php-->
+  <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>*/bower_components/*</exclude-pattern>
 
   <!--Exclude test files that are intentionally empty, or intentionally violate coding standards.-->
   <exclude-pattern>./modules/system/tests/fixtures/HtaccessTest</exclude-pattern>
@@ -162,8 +165,8 @@
 
   <!-- Internal sniffs -->
   <rule ref="Internal.NoCodeFound">
-    <!-- No PHP code in *.info.yml -->
-    <exclude-pattern>*.info.yml</exclude-pattern>
+    <!-- No PHP code in *.yml -->
+    <exclude-pattern>*.yml</exclude-pattern>
   </rule>
 
   <!-- MySource sniffs -->

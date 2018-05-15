@@ -35,4 +35,3 @@ migration_dependencies:
 provider:
   - block_content
   - migrate_drupal
-
