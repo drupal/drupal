@@ -131,7 +131,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   public function entityTypeAlter(array &$entity_types) {
     foreach ($entity_types as $entity_type_id => $entity_type) {
       // The ContentModerationState entity type should never be moderated.
-      if ($entity_type->isRevisionable() && $entity_type_id != 'content_moderation_state') {
+      if ($entity_type->isRevisionable() && !$entity_type->isInternal()) {
         $entity_types[$entity_type_id] = $this->addModerationToEntityType($entity_type);
       }
     }
