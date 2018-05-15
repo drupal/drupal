@@ -256,7 +256,7 @@ use Drupal\Core\Database\Query\Condition;
  *       recent) {node_field_revision}.vid value for this nid."
  *     - 'type': The generic datatype: 'char', 'varchar', 'text', 'blob', 'int',
  *       'float', 'numeric', or 'serial'. Most types just map to the according
- *       database engine specific datatypes. Use 'serial' for auto incrementing
+ *       database engine specific data types. Use 'serial' for auto incrementing
  *       fields. This will expand to 'INT auto_increment' on MySQL.
  *       A special 'varchar_ascii' type is also available for limiting machine
  *       name field to US ASCII characters.
@@ -272,7 +272,7 @@ use Drupal\Core\Database\Query\Condition;
  *     - 'size': The data size: 'tiny', 'small', 'medium', 'normal',
  *       'big'. This is a hint about the largest value the field will
  *       store and determines which of the database engine specific
- *       datatypes will be used (e.g. on MySQL, TINYINT vs. INT vs. BIGINT).
+ *       data types will be used (e.g. on MySQL, TINYINT vs. INT vs. BIGINT).
  *       'normal', the default, selects the base type (e.g. on MySQL,
  *       INT, VARCHAR, BLOB, etc.).
  *       Not all sizes are available for all data types. See
