@@ -33,3 +33,6 @@
   text-decoration: none;
   background-color: inherit;
 }
+.menu-account__link:hover {
+  text-decoration: underline;
+}
