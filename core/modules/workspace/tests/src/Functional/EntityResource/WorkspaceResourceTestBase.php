@@ -27,7 +27,9 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $patchProtectedFieldNames = ['changed'];
+  protected static $patchProtectedFieldNames = [
+    'changed' => NULL,
+  ];
 
   /**
    * {@inheritdoc}

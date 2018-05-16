@@ -30,17 +30,17 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
-    'status',
-    'pid',
-    'entity_id',
-    'uid',
-    'name',
-    'homepage',
-    'created',
-    'changed',
-    'thread',
-    'entity_type',
-    'field_name',
+    'status' => "The 'administer comments' permission is required.",
+    'pid' => NULL,
+    'entity_id' => NULL,
+    'uid' => "The 'administer comments' permission is required.",
+    'name' => "The 'administer comments' permission is required.",
+    'homepage' => "The 'administer comments' permission is required.",
+    'created' => "The 'administer comments' permission is required.",
+    'changed' => NULL,
+    'thread' => NULL,
+    'entity_type' => NULL,
+    'field_name' => NULL,
   ];
 
   /**

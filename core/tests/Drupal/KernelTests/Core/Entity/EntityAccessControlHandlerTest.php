@@ -334,13 +334,13 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
     $this->assertFalse($entity->get('uuid')->access('edit'));
     $access_result = $entity->get('uuid')->access('edit', NULL, TRUE);
     $this->assertTrue($access_result->isForbidden());
-    $this->assertEquals('The entity UUID cannot be changed', $access_result->getReason());
+    $this->assertEquals('The entity UUID cannot be changed.', $access_result->getReason());
 
     // Ensure the ID is still not allowed to be edited.
     $this->assertFalse($entity->get('id')->access('edit'));
     $access_result = $entity->get('id')->access('edit', NULL, TRUE);
     $this->assertTrue($access_result->isForbidden());
-    $this->assertEquals('The entity ID cannot be changed', $access_result->getReason());
+    $this->assertEquals('The entity ID cannot be changed.', $access_result->getReason());
   }
 
   public function providerTestFieldAccess() {

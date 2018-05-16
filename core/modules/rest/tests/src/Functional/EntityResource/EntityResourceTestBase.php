@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource;
 
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Cache\Cache;
@@ -81,6 +82,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
   /**
    * The fields that are protected against modification during PATCH requests.
+   *
+   * Keys are field names, values are expected access denied reasons.
    *
    * @var string[]
    */
@@ -1118,13 +1121,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 403 when entity trying to update an entity's ID field.
     $request_options[RequestOptions::BODY] = $this->serializer->encode($this->makeNormalizationInvalid($this->getNormalizedPatchEntity(), 'id'), static::$format);;
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, "Access denied on updating field '{$this->entity->getEntityType()->getKey('id')}'.", $response);
+    $this->assertResourceErrorResponse(403, "Access denied on updating field '{$this->entity->getEntityType()->getKey('id')}'. The entity ID cannot be changed.", $response);
 
     if ($this->entity->getEntityType()->hasKey('uuid')) {
       // DX: 403 when entity trying to update an entity's UUID field.
       $request_options[RequestOptions::BODY] = $this->serializer->encode($this->makeNormalizationInvalid($this->getNormalizedPatchEntity(), 'uuid'), static::$format);;
       $response = $this->request('PATCH', $url, $request_options);
-      $this->assertResourceErrorResponse(403, "Access denied on updating field '{$this->entity->getEntityType()->getKey('uuid')}'.", $response);
+      $this->assertResourceErrorResponse(403, "Access denied on updating field '{$this->entity->getEntityType()->getKey('uuid')}'. The entity UUID cannot be changed.", $response);
     }
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_3;
@@ -1136,15 +1139,15 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assertResourceErrorResponse(403, "Access denied on updating field 'field_rest_test'.", $response);
 
     // DX: 403 when sending PATCH request with updated read-only fields.
+    $this->assertPatchProtectedFieldNamesStructure();
     list($modified_entity, $original_values) = static::getModifiedEntityForPatchTesting($this->entity);
     // Send PATCH request by serializing the modified entity, assert the error
     // response, change the modified entity field that caused the error response
     // back to its original value, repeat.
-    for ($i = 0; $i < count(static::$patchProtectedFieldNames); $i++) {
-      $patch_protected_field_name = static::$patchProtectedFieldNames[$i];
+    foreach (static::$patchProtectedFieldNames as $patch_protected_field_name => $reason) {
       $request_options[RequestOptions::BODY] = $this->serializer->serialize($modified_entity, static::$format);
       $response = $this->request('PATCH', $url, $request_options);
-      $this->assertResourceErrorResponse(403, "Access denied on updating field '" . $patch_protected_field_name . "'.", $response);
+      $this->assertResourceErrorResponse(403, "Access denied on updating field '" . $patch_protected_field_name . "'." . ($reason !== NULL ? ' ' . $reason : ''), $response);
       $modified_entity->get($patch_protected_field_name)->setValue($original_values[$patch_protected_field_name]);
     }
 
@@ -1349,6 +1352,18 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
+   * Asserts structure of $patchProtectedFieldNames.
+   */
+  protected function assertPatchProtectedFieldNamesStructure() {
+    $is_null_or_string = function ($value) {
+      return is_null($value) || is_string($value);
+    };
+    $keys_are_field_names = Inspector::assertAllStrings(array_keys(static::$patchProtectedFieldNames));
+    $values_are_expected_access_denied_reasons = Inspector::assertAll($is_null_or_string, static::$patchProtectedFieldNames);
+    $this->assertTrue($keys_are_field_names && $values_are_expected_access_denied_reasons, 'In Drupal 8.6, the structure of $patchProtectectedFieldNames changed. It used to be an array with field names as values. Now those values are the keys, and their values should be either NULL or a string: a string containing the reason for why the field cannot be PATCHed, or NULL otherwise.');
+  }
+
+  /**
    * Gets an entity resource's GET/PATCH/DELETE URL.
    *
    * @return \Drupal\Core\Url
@@ -1389,7 +1404,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected static function getModifiedEntityForPatchTesting(EntityInterface $entity) {
     $modified_entity = clone $entity;
     $original_values = [];
-    foreach (static::$patchProtectedFieldNames as $field_name) {
+    foreach (array_keys(static::$patchProtectedFieldNames) as $field_name) {
       $field = $modified_entity->get($field_name);
       $original_values[$field_name] = $field->getValue();
       switch ($field->getItemDefinition()->getClass()) {

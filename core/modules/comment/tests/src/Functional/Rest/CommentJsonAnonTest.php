@@ -34,12 +34,12 @@ class CommentJsonAnonTest extends CommentResourceTestBase {
    * @see ::setUpAuthorization
    */
   protected static $patchProtectedFieldNames = [
-    'pid',
-    'entity_id',
-    'changed',
-    'thread',
-    'entity_type',
-    'field_name',
+    'pid' => NULL,
+    'entity_id' => NULL,
+    'changed' => NULL,
+    'thread' => NULL,
+    'entity_type' => NULL,
+    'field_name' => NULL,
   ];
 
 }

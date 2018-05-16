@@ -29,7 +29,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
-    'changed',
+    'changed' => NULL,
   ];
 
   /**

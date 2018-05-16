@@ -30,11 +30,11 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
-    'uri',
-    'filemime',
-    'filesize',
-    'status',
-    'changed',
+    'uri' => NULL,
+    'filemime' => NULL,
+    'filesize' => NULL,
+    'status' => NULL,
+    'changed' => NULL,
   ];
 
   /**

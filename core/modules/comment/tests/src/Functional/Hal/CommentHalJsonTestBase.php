@@ -36,14 +36,14 @@ abstract class CommentHalJsonTestBase extends CommentResourceTestBase {
    * @todo fix in https://www.drupal.org/node/2824271
    */
   protected static $patchProtectedFieldNames = [
-    'status',
-    'created',
-    'changed',
-    'thread',
-    'entity_type',
-    'field_name',
-    'entity_id',
-    'uid',
+    'status' => "The 'administer comments' permission is required.",
+    'created' => "The 'administer comments' permission is required.",
+    'changed' => NULL,
+    'thread' => NULL,
+    'entity_type' => NULL,
+    'field_name' => NULL,
+    'entity_id' => NULL,
+    'uid' => "The 'administer comments' permission is required.",
   ];
 
   /**

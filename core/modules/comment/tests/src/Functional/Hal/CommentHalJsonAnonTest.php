@@ -25,11 +25,11 @@ class CommentHalJsonAnonTest extends CommentHalJsonTestBase {
    * @see ::setUpAuthorization
    */
   protected static $patchProtectedFieldNames = [
-    'changed',
-    'thread',
-    'entity_type',
-    'field_name',
-    'entity_id',
+    'changed' => NULL,
+    'thread' => NULL,
+    'entity_type' => NULL,
+    'field_name' => NULL,
+    'entity_id' => NULL,
   ];
 
 }

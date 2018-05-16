@@ -27,7 +27,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
-    'changed',
+    'changed' => NULL,
   ];
 
   /**

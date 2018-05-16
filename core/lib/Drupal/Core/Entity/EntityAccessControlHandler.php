@@ -321,13 +321,13 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
       if ($field_definition->getName() === $this->entityType->getKey('id')) {
         // String IDs can be set when creating the entity.
         if (!($entity->isNew() && $field_definition->getType() === 'string')) {
-          return $return_as_object ? AccessResult::forbidden('The entity ID cannot be changed')->addCacheableDependency($entity) : FALSE;
+          return $return_as_object ? AccessResult::forbidden('The entity ID cannot be changed.')->addCacheableDependency($entity) : FALSE;
         }
       }
       elseif ($field_definition->getName() === $this->entityType->getKey('uuid')) {
         // UUIDs can be set when creating an entity.
         if (!$entity->isNew()) {
-          return $return_as_object ? AccessResult::forbidden('The entity UUID cannot be changed')->addCacheableDependency($entity) : FALSE;
+          return $return_as_object ? AccessResult::forbidden('The entity UUID cannot be changed.')->addCacheableDependency($entity) : FALSE;
         }
       }
     }

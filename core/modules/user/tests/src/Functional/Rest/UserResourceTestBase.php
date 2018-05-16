@@ -26,7 +26,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
-    'changed',
+    'changed' => NULL,
   ];
 
   /**
@@ -294,7 +294,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     // Ensure the email address has not changed.
     $this->assertEquals('admin@example.com', $this->entityStorage->loadUnchanged(1)->getEmail());
-    $this->assertResourceErrorResponse(403, "Access denied on updating field 'uid'.", $response);
+    $this->assertResourceErrorResponse(403, "Access denied on updating field 'uid'. The entity ID cannot be changed.", $response);
   }
 
   /**
