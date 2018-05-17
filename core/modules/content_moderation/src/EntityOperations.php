@@ -203,7 +203,6 @@ class EntityOperations implements ContainerInjectionInterface {
       $moderation_state = $workflow->getTypePlugin()->getInitialState($entity)->id();
     }
 
-    // @todo what if $entity->moderation_state is null at this point?
     $content_moderation_state->set('content_entity_revision_id', $entity_revision_id);
     $content_moderation_state->set('moderation_state', $moderation_state);
     ContentModerationStateEntity::updateOrCreateFromEntity($content_moderation_state);
