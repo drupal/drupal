@@ -17,7 +17,18 @@ process:
   entity_type: 'constants/entity_type'
   bundle: 'constants/bundle'
   view_mode: 'constants/view_mode'
-  field_name: name
+  field_name:
+    -
+      plugin: migration_lookup
+      migration: user_profile_field
+      source: fid
+    -
+      plugin: skip_on_empty
+      method: row
+    -
+      plugin: extract
+      index:
+        - 1
   type:
     plugin: static_map
     source: type

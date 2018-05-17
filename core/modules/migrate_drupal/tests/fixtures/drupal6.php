@@ -8802,7 +8802,7 @@ $connection->insert('i18n_strings')
 ))
 ->values(array(
   'lid' => '509',
-  'objectid' => 'profile_sell_address',
+  'objectid' => 'profile_sell_Address',
   'type' => 'field',
   'property' => 'title',
   'objectindex' => '0',
@@ -8810,7 +8810,7 @@ $connection->insert('i18n_strings')
 ))
 ->values(array(
   'lid' => '510',
-  'objectid' => 'profile_sell_address',
+  'objectid' => 'profile_sell_Address',
   'type' => 'field',
   'property' => 'explanation',
   'objectindex' => '0',
@@ -8890,7 +8890,7 @@ $connection->insert('i18n_strings')
 ))
 ->values(array(
   'lid' => '520',
-  'objectid' => 'profile_love_migrations',
+  'objectid' => 'profile_really_really_love_migrations',
   'type' => 'field',
   'property' => 'title',
   'objectindex' => '0',
@@ -8898,7 +8898,7 @@ $connection->insert('i18n_strings')
 ))
 ->values(array(
   'lid' => '521',
-  'objectid' => 'profile_love_migrations',
+  'objectid' => 'profile_really_really_love_migrations',
   'type' => 'field',
   'property' => 'explanation',
   'objectindex' => '0',
@@ -9846,6 +9846,14 @@ $connection->insert('i18n_strings')
   'type' => 'item',
   'property' => 'description',
   'objectindex' => '138',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1678',
+  'objectid' => 'profile_really_really_love_migrating',
+  'type' => 'field',
+  'property' => 'title',
+  'objectindex' => '0',
   'format' => '0',
 ))
 ->execute();
@@ -14168,14 +14176,14 @@ $connection->insert('locales_source')
 ))
 ->values(array(
   'lid' => '509',
-  'location' => 'field:profile_sell_address:title',
+  'location' => 'field:profile_sell_Address:title',
   'textgroup' => 'profile',
   'source' => 'Sell your email address?',
   'version' => '1',
 ))
 ->values(array(
   'lid' => '510',
-  'location' => 'field:profile_sell_address:explanation',
+  'location' => 'field:profile_sell_Address:explanation',
   'textgroup' => 'profile',
   'source' => "If you check this box, we'll sell your address to spammers to help line the pockets of our shareholders. Thanks!",
   'version' => '1',
@@ -14245,14 +14253,14 @@ $connection->insert('locales_source')
 ))
 ->values(array(
   'lid' => '520',
-  'location' => 'field:profile_love_migrations:title',
+  'location' => 'field:profile_really_really_love_migrations:title',
   'textgroup' => 'profile',
-  'source' => 'I love migrations',
+  'source' => 'I really, really, really love migrations',
   'version' => '1',
 ))
 ->values(array(
   'lid' => '521',
-  'location' => 'field:profile_love_migrations:explanation',
+  'location' => 'field:profile_really_really_love_migrations:explanation',
   'textgroup' => 'profile',
   'source' => 'If you check this box, you love migrations.',
   'version' => '1',
@@ -22342,6 +22350,13 @@ $connection->insert('locales_source')
   'source' => 'Test menu link 1',
   'version' => '1',
 ))
+->values(array(
+  'lid' => '1678',
+  'location' => 'field:profile_really_really_love_migrating:title',
+  'textgroup' => 'profile',
+  'source' => 'I really, really, really love migrating',
+  'version' => '1',
+))
 ->execute();
 
 $connection->schema()->createTable('locales_target', array(
@@ -26520,7 +26535,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
-  'i18n_status' => '0',
+  'i18n_status' => '1',
 ))
 ->values(array(
   'lid' => '521',
@@ -27381,6 +27396,14 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '1671',
   'translation' => "Champ '%name' : incohérence au niveau du titre. Merci de vérifier votre sélection.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1678',
+  'translation' => 'fr - I really, really, really love migrating ',
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -44837,7 +44860,7 @@ $connection->insert('profile_fields')
 ->values(array(
   'fid' => '10',
   'title' => 'Sell your email address?',
-  'name' => 'profile_sell_address',
+  'name' => 'profile_sell_Address',
   'explanation' => "If you check this box, we'll sell your address to spammers to help line the pockets of our shareholders. Thanks!",
   'category' => 'Communication preferences',
   'page' => 'People who want us to sell their address',
@@ -44911,13 +44934,28 @@ $connection->insert('profile_fields')
 ))
 ->values(array(
   'fid' => '15',
-  'title' => 'I love migrations',
-  'name' => 'profile_love_migrations',
+  'title' => 'I really, really, really love migrations',
+  'name' => 'profile_really_really_love_migrations',
   'explanation' => 'If you check this box, you love migrations.',
   'category' => 'Personal information',
   'page' => 'People who love migrations',
   'type' => 'checkbox',
   'weight' => '-15',
+  'required' => '0',
+  'register' => '0',
+  'visibility' => '2',
+  'autocomplete' => '0',
+  'options' => '',
+))
+->values(array(
+  'fid' => '16',
+  'title' => 'I really, really, really love migrating',
+  'name' => 'profile_really_really_love_migrating',
+  'explanation' => '',
+  'category' => 'Personal information',
+  'page' => '',
+  'type' => 'checkbox',
+  'weight' => '0',
   'required' => '0',
   'register' => '0',
   'visibility' => '2',
@@ -45135,6 +45173,11 @@ $connection->insert('profile_values')
   'fid' => '14',
   'uid' => '17',
   'value' => 'a:3:{s:5:"month";s:2:"12";s:3:"day";s:2:"18";s:4:"year";s:4:"1942";}',
+))
+->values(array(
+  'fid' => '15',
+  'uid' => '2',
+  'value' => '1',
 ))
 ->execute();
 

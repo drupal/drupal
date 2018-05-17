@@ -47,6 +47,10 @@ class MigrateUserProfileEntityDisplayTest extends MigrateDrupal6TestBase {
 
     // Test PROFILE_HIDDEN field is hidden.
     $this->assertNull($display->getComponent('profile_sold_to'));
+
+    // Test a checkbox field.
+    $component = $display->getComponent('profile_really_really_love_mig');
+    $this->assertIdentical('list_default', $component['type']);
   }
 
 }

@@ -14,7 +14,18 @@ source:
 process:
   entity_type: 'constants/entity_type'
   bundle: 'constants/bundle'
-  field_name: name
+  field_name:
+    -
+      plugin: migration_lookup
+      migration: user_profile_field
+      source: fid
+    -
+      plugin: skip_on_empty
+      method: row
+    -
+      plugin: extract
+      index:
+        - 1
   form_mode: 'constants/form_mode'
   type:
     plugin: static_map

@@ -68,8 +68,8 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertIdentical("Enter your birth date and we'll send you a coupon.", $field->getDescription());
 
     // Another migrated checkbox field, with a different source visibility setting.
-    $field = FieldConfig::load('user.user.profile_love_migrations');
-    $this->assertIdentical('I love migrations', $field->label());
+    $field = FieldConfig::load('user.user.profile_really_really_love_mig');
+    $this->assertIdentical('I really, really, really love migrations', $field->label());
     $this->assertIdentical("If you check this box, you love migrations.", $field->getDescription());
   }
 

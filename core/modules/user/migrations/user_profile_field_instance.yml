@@ -14,7 +14,18 @@ process:
   bundle: 'constants/bundle'
   label: title
   description: explanation
-  field_name: name
+  field_name:
+    -
+      plugin: migration_lookup
+      migration: user_profile_field
+      source: fid
+    -
+      plugin: skip_on_empty
+      method: row
+    -
+      plugin: extract
+      index:
+        - 1
   required: required
 destination:
   plugin: entity:field_config
