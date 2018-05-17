@@ -211,13 +211,39 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
 
   /**
    * Test the moderation_state field after an entity has been serialized.
+   *
+   * @dataProvider entityUnserializeTestCases
    */
-  public function testEntityUnserialize() {
-    $this->testNode->moderation_state->value = 'draft';
+  public function testEntityUnserialize($state, $default, $published) {
+    $this->testNode->moderation_state->value = $state;
+
+    $this->assertEquals($state, $this->testNode->moderation_state->value);
+    $this->assertEquals($default, $this->testNode->isDefaultRevision());
+    $this->assertEquals($published, $this->testNode->isPublished());
+
     $unserialized = unserialize(serialize($this->testNode));
 
-    $this->assertEquals('Test title', $unserialized->title->value);
-    $this->assertEquals('draft', $unserialized->moderation_state->value);
+    $this->assertEquals($state, $unserialized->moderation_state->value);
+    $this->assertEquals($default, $unserialized->isDefaultRevision());
+    $this->assertEquals($published, $unserialized->isPublished());
+  }
+
+  /**
+   * Test cases for ::testEntityUnserialize.
+   */
+  public function entityUnserializeTestCases() {
+    return [
+      'Default draft state' => [
+        'draft',
+        TRUE,
+        FALSE,
+      ],
+      'Non-default published state' => [
+        'published',
+        TRUE,
+        TRUE,
+      ],
+    ];
   }
 
 }
