@@ -28,17 +28,7 @@ class FieldInstanceDefaults extends ProcessPluginBase {
       unset($default_value[0]['email']);
     }
 
-    $default = [];
-
-    foreach ($default_value as $item) {
-      switch ($widget_type) {
-        // Add special processing here if needed.
-        default:
-          $default[] = $item;
-      }
-    }
-
-    return $default;
+    return $default_value;
   }
 
 }
