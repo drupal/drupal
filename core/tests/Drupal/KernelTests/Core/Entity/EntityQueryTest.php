@@ -34,11 +34,6 @@ class EntityQueryTest extends EntityKernelTestBase {
   protected $queryResults;
 
   /**
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $factory;
-
-  /**
    * A list of bundle machine names created for this test.
    *
    * @var string[]
@@ -58,6 +53,13 @@ class EntityQueryTest extends EntityKernelTestBase {
    * @var string
    */
   public $figures;
+
+  /**
+   * The entity_test_mulrev entity storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $storage;
 
   protected function setUp() {
     parent::setUp();
@@ -145,7 +147,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->bundles = $bundles;
     $this->figures = $figures;
     $this->greetings = $greetings;
-    $this->factory = \Drupal::service('entity.query');
+    $this->storage = $this->container->get('entity_type.manager')->getStorage('entity_test_mulrev');
   }
 
   /**
@@ -154,7 +156,8 @@ class EntityQueryTest extends EntityKernelTestBase {
   public function testEntityQuery() {
     $greetings = $this->greetings;
     $figures = $this->figures;
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->exists($greetings, 'tr')
       ->condition("$figures.color", 'red')
       ->sort('id')
@@ -163,7 +166,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     // bit 0 and bit 2 needs to be set.
     $this->assertResult(5, 7, 13, 15);
 
-    $query = $this->factory->get('entity_test_mulrev', 'OR')
+    $query = $this->storage
+      ->getQuery('OR')
       ->exists($greetings, 'tr')
       ->condition("$figures.color", 'red')
       ->sort('id');
@@ -175,7 +179,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult(1, 3, 4, 5, 6, 7, 9, 11, 12, 13, 14, 15);
 
     // Test cloning of query conditions.
-    $query = $this->factory->get('entity_test_mulrev')
+    $query = $this->storage
+      ->getQuery()
       ->condition("$figures.color", 'red')
       ->sort('id');
     $cloned_query = clone $query;
@@ -188,7 +193,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->queryResults = $cloned_query->execute();
     $this->assertResult();
 
-    $query = $this->factory->get('entity_test_mulrev');
+    $query = $this->storage->getQuery();
     $group = $query->orConditionGroup()
       ->exists($greetings, 'tr')
       ->condition("$figures.color", 'red');
@@ -201,7 +206,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult(9, 11, 12, 13, 14, 15);
 
     // No figure has both the colors blue and red at the same time.
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("$figures.color", 'blue')
       ->condition("$figures.color", 'red')
       ->sort('id')
@@ -209,7 +215,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult();
 
     // But an entity might have a red and a blue figure both.
-    $query = $this->factory->get('entity_test_mulrev');
+    $query = $this->storage->getQuery();
     $group_blue = $query->andConditionGroup()->condition("$figures.color", 'blue');
     $group_red = $query->andConditionGroup()->condition("$figures.color", 'red');
     $this->queryResults = $query
@@ -221,7 +227,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult(3, 7, 11, 15);
 
     // Do the same test but with IN operator.
-    $query = $this->factory->get('entity_test_mulrev');
+    $query = $this->storage->getQuery();
     $group_blue = $query->andConditionGroup()->condition("$figures.color", ['blue'], 'IN');
     $group_red = $query->andConditionGroup()->condition("$figures.color", ['red'], 'IN');
     $this->queryResults = $query
@@ -233,14 +239,16 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult(3, 7, 11, 15);
 
     // An entity might have either red or blue figure.
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("$figures.color", ['blue', 'red'], 'IN')
       ->sort('id')
       ->execute();
     // Bit 0 or 1 is on.
     $this->assertResult(1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15);
 
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->exists("$figures.color")
       ->notExists("$greetings.value")
       ->sort('id')
@@ -249,7 +257,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult(1, 2, 3);
     // Now update the 'merhaba' string to xsiemax which is not a meaningful
     // word but allows us to test revisions and string operations.
-    $ids = $this->factory->get('entity_test_mulrev')
+    $ids = $this->storage
+      ->getQuery()
       ->condition("$greetings.value", 'merhaba')
       ->sort('id')
       ->execute();
@@ -263,30 +272,35 @@ class EntityQueryTest extends EntityKernelTestBase {
       $entity->save();
     }
     // We changed the entity names, so the current revision should not match.
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition('name.value', $old_name)
       ->execute();
     $this->assertResult();
     // Only if all revisions are queried, we find the old revision.
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition('name.value', $old_name)
       ->allRevisions()
       ->sort('revision_id')
       ->execute();
     $this->assertRevisionResult([$first_entity->id()], [$first_entity->id()]);
     // When querying current revisions, this string is no longer found.
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("$greetings.value", 'merhaba')
       ->execute();
     $this->assertResult();
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("$greetings.value", 'merhaba')
       ->allRevisions()
       ->sort('revision_id')
       ->execute();
     // The query only matches the original revisions.
     $this->assertRevisionResult([4, 5, 6, 7, 12, 13, 14, 15], [4, 5, 6, 7, 12, 13, 14, 15]);
-    $results = $this->factory->get('entity_test_mulrev')
+    $results = $this->storage
+      ->getQuery()
       ->condition("$greetings.value", 'siema', 'CONTAINS')
       ->sort('id')
       ->execute();
@@ -294,21 +308,24 @@ class EntityQueryTest extends EntityKernelTestBase {
     // revisions are returned for some entities.
     $assert = [16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15'];
     $this->assertIdentical($results, $assert);
-    $results = $this->factory->get('entity_test_mulrev')
+    $results = $this->storage
+      ->getQuery()
       ->condition("$greetings.value", 'siema', 'STARTS_WITH')
       ->sort('revision_id')
       ->execute();
     // Now we only get the ones that originally were siema, entity id 8 and
     // above.
     $this->assertIdentical($results, array_slice($assert, 4, 8, TRUE));
-    $results = $this->factory->get('entity_test_mulrev')
+    $results = $this->storage
+      ->getQuery()
       ->condition("$greetings.value", 'a', 'ENDS_WITH')
       ->sort('revision_id')
       ->execute();
     // It is very important that we do not get the ones which only have
     // xsiemax despite originally they were merhaba, ie. ended with a.
     $this->assertIdentical($results, array_slice($assert, 4, 8, TRUE));
-    $results = $this->factory->get('entity_test_mulrev')
+    $results = $this->storage
+      ->getQuery()
       ->condition("$greetings.value", 'a', 'ENDS_WITH')
       ->allRevisions()
       ->sort('id')
@@ -320,7 +337,8 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Check that a query on the latest revisions without any condition returns
     // the correct results.
-    $results = $this->factory->get('entity_test_mulrev')
+    $results = $this->storage
+      ->getQuery()
       ->latestRevision()
       ->sort('id')
       ->sort('revision_id')
@@ -338,15 +356,18 @@ class EntityQueryTest extends EntityKernelTestBase {
     $greetings = $this->greetings;
     $figures = $this->figures;
     // Order up and down on a number.
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->sort('id')
       ->execute();
     $this->assertResult(range(1, 15));
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->sort('id', 'DESC')
       ->execute();
     $this->assertResult(range(15, 1));
-    $query = $this->factory->get('entity_test_mulrev')
+    $query = $this->storage
+      ->getQuery()
       ->sort("$figures.color")
       ->sort("$greetings.format")
       ->sort('id');
@@ -396,7 +417,8 @@ class EntityQueryTest extends EntityKernelTestBase {
       'page' => '0,2',
     ]);
     \Drupal::getContainer()->get('request_stack')->push($request);
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->sort("$figures.color")
       ->sort("$greetings.format")
       ->sort('id')
@@ -405,7 +427,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult(15, 6, 7, 1);
 
     // Now test the reversed order.
-    $query = $this->factory->get('entity_test_mulrev')
+    $query = $this->storage
+      ->getQuery()
       ->sort("$figures.color", 'DESC')
       ->sort("$greetings.format", 'DESC')
       ->sort('id', 'DESC');
@@ -434,7 +457,8 @@ class EntityQueryTest extends EntityKernelTestBase {
       'type' => ['data' => 'Type', 'specifier' => 'type'],
     ];
 
-    $this->queryResults = array_values($this->factory->get('entity_test_mulrev')
+    $this->queryResults = array_values($this->storage
+      ->getQuery()
       ->tableSort($header)
       ->execute());
     $this->assertBundleOrder('asc');
@@ -448,7 +472,8 @@ class EntityQueryTest extends EntityKernelTestBase {
       'id' => ['data' => 'Id', 'specifier' => 'id'],
       'type' => ['data' => 'Type', 'specifier' => 'type'],
     ];
-    $this->queryResults = array_values($this->factory->get('entity_test_mulrev')
+    $this->queryResults = array_values($this->storage
+      ->getQuery()
       ->tableSort($header)
       ->execute());
     $this->assertBundleOrder('desc');
@@ -458,7 +483,8 @@ class EntityQueryTest extends EntityKernelTestBase {
       'order' => 'Id',
     ]);
     \Drupal::getContainer()->get('request_stack')->push($request);
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->tableSort($header)
       ->execute();
     $this->assertResult(range(15, 1));
@@ -493,7 +519,9 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // As the single entity of this type we just saved does not have a value
     // in the color field, the result should be 0.
-    $count = $this->factory->get('entity_test')
+    $count = $this->container->get('entity_type.manager')
+      ->getStorage('entity_test')
+      ->getQuery()
       ->exists("$field_name.color")
       ->count()
       ->execute();
@@ -506,7 +534,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   public function testNestedConditionGroups() {
     // Query for all entities of the first bundle that have either a red
     // triangle as a figure or the Turkish greeting as a greeting.
-    $query = $this->factory->get('entity_test_mulrev');
+    $query = $this->storage->getQuery();
 
     $first_and = $query->andConditionGroup()
       ->condition($this->figures . '.color', 'red')
@@ -534,14 +562,16 @@ class EntityQueryTest extends EntityKernelTestBase {
   public function testDelta() {
     $figures = $this->figures;
     // Test numeric delta value in field condition.
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("$figures.0.color", 'red')
       ->sort('id')
       ->execute();
     // As unit 0 at delta 0 was the red triangle bit 0 needs to be set.
     $this->assertResult(1, 3, 5, 7, 9, 11, 13, 15);
 
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("$figures.1.color", 'red')
       ->sort('id')
       ->execute();
@@ -549,7 +579,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult();
 
     // Test on two different deltas.
-    $query = $this->factory->get('entity_test_mulrev');
+    $query = $this->storage->getQuery();
     $or = $query->andConditionGroup()
       ->condition("$figures.0.color", 'red')
       ->condition("$figures.1.color", 'blue');
@@ -560,7 +590,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult(3, 7, 11, 15);
 
     // Test the delta range condition.
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("$figures.%delta.color", ['blue', 'red'], 'IN')
       ->condition("$figures.%delta", [0, 1], 'IN')
       ->sort('id')
@@ -569,7 +600,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult(1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15);
 
     // Test the delta range condition without conditions on the value.
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("$figures.%delta", 1)
       ->sort('id')
       ->execute();
@@ -578,12 +610,14 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Numeric delta on single value base field should return results only if
     // the first item is being targeted.
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("id.0.value", [1, 3, 5], 'IN')
       ->sort('id')
       ->execute();
     $this->assertResult(1, 3, 5);
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("id.1.value", [1, 3, 5], 'IN')
       ->sort('id')
       ->execute();
@@ -591,18 +625,21 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Delta range condition on single value base field should return results
     // only if just the field value is targeted.
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("id.%delta.value", [1, 3, 5], 'IN')
       ->sort('id')
       ->execute();
     $this->assertResult(1, 3, 5);
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("id.%delta.value", [1, 3, 5], 'IN')
       ->condition("id.%delta", 0, '=')
       ->sort('id')
       ->execute();
     $this->assertResult(1, 3, 5);
-    $this->queryResults = $this->factory->get('entity_test_mulrev')
+    $this->queryResults = $this->storage
+      ->getQuery()
       ->condition("id.%delta.value", [1, 3, 5], 'IN')
       ->condition("id.%delta", 1, '=')
       ->sort('id')
@@ -659,7 +696,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    * The tags and metadata should propagate to the SQL query object.
    */
   public function testMetaData() {
-    $query = \Drupal::entityQuery('entity_test_mulrev');
+    $query = $this->storage->getQuery();
     $query
       ->addTag('efq_metadata_test')
       ->addMetaData('foo', 'bar')
@@ -733,134 +770,157 @@ class EntityQueryTest extends EntityKernelTestBase {
     ])->save();
 
     // Check the case insensitive field, = operator.
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', $fixtures[0]['lowercase'] . $fixtures[1]['lowercase']
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', $fixtures[0]['lowercase'] . $fixtures[1]['lowercase'])
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case insensitive, lowercase');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', $fixtures[0]['uppercase'] . $fixtures[1]['uppercase']
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', $fixtures[0]['uppercase'] . $fixtures[1]['uppercase'])
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case insensitive, uppercase');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', $fixtures[0]['uppercase'] . $fixtures[1]['lowercase']
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', $fixtures[0]['uppercase'] . $fixtures[1]['lowercase'])
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case insensitive, mixed.');
 
     // Check the case sensitive field, = operator.
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', $fixtures[0]['lowercase'] . $fixtures[1]['lowercase']
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', $fixtures[0]['lowercase'] . $fixtures[1]['lowercase'])
+      ->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, lowercase.');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', $fixtures[0]['uppercase'] . $fixtures[1]['uppercase']
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', $fixtures[0]['uppercase'] . $fixtures[1]['uppercase'])
+      ->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, uppercase.');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', $fixtures[0]['uppercase'] . $fixtures[1]['lowercase']
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', $fixtures[0]['uppercase'] . $fixtures[1]['lowercase'])
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
 
     // Check the case insensitive field, IN operator.
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', [$fixtures[0]['lowercase'] . $fixtures[1]['lowercase']], 'IN'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', [$fixtures[0]['lowercase'] . $fixtures[1]['lowercase']], 'IN')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case insensitive, lowercase');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', [$fixtures[0]['uppercase'] . $fixtures[1]['uppercase']], 'IN'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', [$fixtures[0]['uppercase'] . $fixtures[1]['uppercase']], 'IN')->execute();
     $this->assertIdentical(count($result), 1, 'Case insensitive, uppercase');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', [$fixtures[0]['uppercase'] . $fixtures[1]['lowercase']], 'IN'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', [$fixtures[0]['uppercase'] . $fixtures[1]['lowercase']], 'IN')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case insensitive, mixed');
 
     // Check the case sensitive field, IN operator.
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', [$fixtures[0]['lowercase'] . $fixtures[1]['lowercase']], 'IN'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', [$fixtures[0]['lowercase'] . $fixtures[1]['lowercase']], 'IN')
+      ->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, lowercase');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['uppercase']], 'IN'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['uppercase']], 'IN')
+      ->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, uppercase');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['lowercase']], 'IN'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['lowercase']], 'IN')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, mixed');
 
     // Check the case insensitive field, STARTS_WITH operator.
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', $fixtures[0]['lowercase'], 'STARTS_WITH'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', $fixtures[0]['lowercase'], 'STARTS_WITH')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', $fixtures[0]['uppercase'], 'STARTS_WITH'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', $fixtures[0]['uppercase'], 'STARTS_WITH')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
 
     // Check the case sensitive field, STARTS_WITH operator.
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', $fixtures[0]['lowercase'], 'STARTS_WITH'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', $fixtures[0]['lowercase'], 'STARTS_WITH')
+      ->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, lowercase.');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', $fixtures[0]['uppercase'], 'STARTS_WITH'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', $fixtures[0]['uppercase'], 'STARTS_WITH')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
 
     // Check the case insensitive field, ENDS_WITH operator.
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', $fixtures[1]['lowercase'], 'ENDS_WITH'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', $fixtures[1]['lowercase'], 'ENDS_WITH')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', $fixtures[1]['uppercase'], 'ENDS_WITH'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', $fixtures[1]['uppercase'], 'ENDS_WITH')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
 
     // Check the case sensitive field, ENDS_WITH operator.
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', $fixtures[1]['lowercase'], 'ENDS_WITH'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', $fixtures[1]['lowercase'], 'ENDS_WITH')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', $fixtures[1]['uppercase'], 'ENDS_WITH'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', $fixtures[1]['uppercase'], 'ENDS_WITH')
+      ->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, exact match.');
 
     // Check the case insensitive field, CONTAINS operator, use the inner 8
     // characters of the uppercase and lowercase strings.
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_ci', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
 
     // Check the case sensitive field, CONTAINS operator.
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
+      ->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
 
-    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS'
-    )->execute();
+    $result = $this->storage
+      ->getQuery()
+      ->condition('field_cs', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
+      ->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, exact match.');
 
   }
@@ -894,7 +954,9 @@ class EntityQueryTest extends EntityKernelTestBase {
     ]);
     $term2->save();
 
-    $ids = \Drupal::entityQuery('taxonomy_term')
+    $ids = $this->container->get('entity_type.manager')
+      ->getStorage('taxonomy_term')
+      ->getQuery()
       ->condition('description.format', 'format1')
       ->execute();
 
@@ -907,7 +969,8 @@ class EntityQueryTest extends EntityKernelTestBase {
    */
   public function testPendingRevisions() {
     // Ensure entity 14 is returned.
-    $result = \Drupal::entityQuery('entity_test_mulrev')
+    $result = $this->storage
+      ->getQuery()
       ->condition('id', [14], 'IN')
       ->execute();
     $this->assertEqual(count($result), 1);
@@ -925,19 +988,22 @@ class EntityQueryTest extends EntityKernelTestBase {
     $entity->save();
 
     // Entity query should still return entity 14.
-    $result = \Drupal::entityQuery('entity_test_mulrev')
+    $result = $this->storage
+      ->getQuery()
       ->condition('id', [14], 'IN')
       ->execute();
     $this->assertEqual(count($result), 1);
 
     // Verify that field conditions on the default and pending revision are
     // work as expected.
-    $result = \Drupal::entityQuery('entity_test_mulrev')
+    $result = $this->storage
+      ->getQuery()
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", $current_values[0]['color'])
       ->execute();
     $this->assertEqual($result, [14 => '14']);
-    $result = $this->factory->get('entity_test_mulrev')
+    $result = $this->storage
+      ->getQuery()
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", 'red')
       ->allRevisions()
@@ -954,14 +1020,16 @@ class EntityQueryTest extends EntityKernelTestBase {
     $entity->save();
 
     // A non-revisioned entity query should still return entity 14.
-    $result = $this->factory->get('entity_test_mulrev')
+    $result = $this->storage
+      ->getQuery()
       ->condition('id', [14], 'IN')
       ->execute();
     $this->assertCount(1, $result);
     $this->assertSame([14 => '14'], $result);
 
     // Now check an entity query on the latest revision.
-    $result = $this->factory->get('entity_test_mulrev')
+    $result = $this->storage
+      ->getQuery()
       ->condition('id', [14], 'IN')
       ->latestRevision()
       ->execute();
@@ -970,14 +1038,16 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Verify that field conditions on the default and pending revision still
     // work as expected.
-    $result = $this->factory->get('entity_test_mulrev')
+    $result = $this->storage
+      ->getQuery()
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", $current_values[0]['color'])
       ->execute();
     $this->assertSame([14 => '14'], $result);
 
     // Now there are two revisions with same value for the figure color.
-    $result = $this->factory->get('entity_test_mulrev')
+    $result = $this->storage
+      ->getQuery()
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", 'red')
       ->allRevisions()
@@ -985,7 +1055,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertSame([16 => '14', 17 => '14'], $result);
 
     // Check that querying for the latest revision returns the correct one.
-    $result = $this->factory->get('entity_test_mulrev')
+    $result = $this->storage
+      ->getQuery()
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", 'red')
       ->latestRevision()
@@ -999,7 +1070,8 @@ class EntityQueryTest extends EntityKernelTestBase {
    */
   public function testInjectionInCondition() {
     try {
-      $this->queryResults = $this->factory->get('entity_test_mulrev')
+      $this->queryResults = $this->storage
+        ->getQuery()
         ->condition('1 ; -- ', [0, 1], 'IN')
         ->sort('id')
         ->execute();
@@ -1018,6 +1090,9 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->createEntityReferenceField('entity_test', 'entity_test', 'ref1', $this->randomMachineName(), 'entity_test');
     $this->createEntityReferenceField('entity_test', 'entity_test', 'ref2', $this->randomMachineName(), 'entity_test');
 
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage('entity_test');
+
     // Create two entities to be referred.
     $ref1 = EntityTest::create(['type' => 'entity_test']);
     $ref1->save();
@@ -1033,7 +1108,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $entity->save();
 
     // Check that works when referring with "{$field_name}".
-    $result = $this->factory->get('entity_test')
+    $result = $storage->getQuery()
       ->condition('type', 'entity_test')
       ->condition('ref1', $ref1->id())
       ->condition('ref2', $ref2->id())
@@ -1042,7 +1117,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertEquals($entity->id(), reset($result));
 
     // Check that works when referring with "{$field_name}.target_id".
-    $result = $this->factory->get('entity_test')
+    $result = $storage->getQuery()
       ->condition('type', 'entity_test')
       ->condition('ref1.target_id', $ref1->id())
       ->condition('ref2.target_id', $ref2->id())
@@ -1051,7 +1126,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertEquals($entity->id(), reset($result));
 
     // Check that works when referring with "{$field_name}.entity.id".
-    $result = $this->factory->get('entity_test')
+    $result = $storage->getQuery()
       ->condition('type', 'entity_test')
       ->condition('ref1.entity.id', $ref1->id())
       ->condition('ref2.entity.id', $ref2->id())

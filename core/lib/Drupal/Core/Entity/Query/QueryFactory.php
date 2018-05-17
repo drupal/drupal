@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Entity\Query;
 
+@trigger_error('The ' . __NAMESPACE__ . '\QueryFactory class is deprecated in Drupal 8.3.0, will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::getQuery() or \Drupal\Core\Entity\EntityStorageInterface::getAggregateQuery() instead. See https://www.drupal.org/node/2849874.', E_USER_DEPRECATED);
+
 use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -12,11 +14,12 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  * Any implementation of this service must call getQuery()/getAggregateQuery()
  * of the corresponding entity storage.
  *
- * @see \Drupal\Core\Entity\EntityStorageBase::getQuery()
- *
  * @deprecated in Drupal 8.3.0, will be removed before Drupal 9.0.0. Use
  *   \Drupal\Core\Entity\EntityStorageInterface::getQuery() or
  *   \Drupal\Core\Entity\EntityStorageInterface::getAggregateQuery() instead.
+ *
+ * @see https://www.drupal.org/node/2849874
+ * @see \Drupal\Core\Entity\EntityStorageBase::getQuery()
  */
 class QueryFactory implements ContainerAwareInterface {
 

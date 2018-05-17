@@ -73,7 +73,10 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($result);
     $page->fillField('field_media_image[0][alt]', 'Image Alt Text 1');
     $page->pressButton('Save');
-    $image_media_id = $this->container->get('entity.query')->get('media')
+    $image_media_id = $this->container
+      ->get('entity_type.manager')
+      ->getStorage('media')
+      ->getQuery()
       ->sort('mid', 'DESC')
       ->execute();
     $image_media_id = reset($image_media_id);

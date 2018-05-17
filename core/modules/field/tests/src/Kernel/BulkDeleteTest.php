@@ -162,10 +162,11 @@ class BulkDeleteTest extends FieldKernelTestBase {
     $bundle = reset($this->bundles);
     $field_storage = reset($this->fieldStorages);
     $field_name = $field_storage->getName();
-    $factory = \Drupal::service('entity.query');
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test');
 
     // There are 10 entities of this bundle.
-    $found = $factory->get('entity_test')
+    $found = $storage
+      ->getQuery()
       ->condition('type', $bundle)
       ->execute();
     $this->assertEqual(count($found), 10, 'Correct number of entities found before deleting');
@@ -181,7 +182,6 @@ class BulkDeleteTest extends FieldKernelTestBase {
     $this->assertEqual($field->getTargetBundle(), $bundle, 'The deleted field is for the correct bundle');
 
     // Check that the actual stored content did not change during delete.
-    $storage = \Drupal::entityManager()->getStorage($this->entityTypeId);
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $storage->getTableMapping();
     $table = $table_mapping->getDedicatedDataTableName($field_storage);
@@ -194,7 +194,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
     }
 
     // There are 0 entities of this bundle with non-deleted data.
-    $found = $factory->get('entity_test')
+    $found = $storage
+      ->getQuery()
       ->condition('type', $bundle)
       ->condition("$field_name.deleted", 0)
       ->execute();
@@ -202,7 +203,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
 
     // There are 10 entities of this bundle when deleted fields are allowed, and
     // their values are correct.
-    $found = $factory->get('entity_test')
+    $found = $storage
+      ->getQuery()
       ->condition('type', $bundle)
       ->condition("$field_name.deleted", 1)
       ->sort('id')

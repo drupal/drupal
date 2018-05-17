@@ -105,7 +105,6 @@ trait DeprecationListenerTrait {
       'The revision_user revision metadata key is not set.',
       'The revision_created revision metadata key is not set.',
       'The revision_log_message revision metadata key is not set.',
-      'The "entity.query" service relies on the deprecated "Drupal\Core\Entity\Query\QueryFactory" class. It should either be deprecated or its implementation upgraded.',
       'MigrateCckField is deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.x. Use \Drupal\migrate_drupal\Annotation\MigrateField instead.',
       'MigrateCckFieldPluginManager is deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.x. Use \Drupal\migrate_drupal\Annotation\MigrateFieldPluginManager instead.',
       'MigrateCckFieldPluginManagerInterface is deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.x. Use \Drupal\migrate_drupal\Annotation\MigrateFieldPluginManagerInterface instead.',

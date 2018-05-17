@@ -904,6 +904,7 @@ services:
     arguments: ['@entity.manager']
     calls:
       - [setContainer, ['@service_container']]
+    deprecated: The "%service_id%" service is deprecated. Use the 'entity_type.manager' service to get an entity type's storage object and then call \Drupal\Core\Entity\EntityStorageInterface::getQuery() or \Drupal\Core\Entity\EntityStorageInterface::getAggregateQuery() instead. See https://www.drupal.org/node/2849874
   entity.query.config:
     class: Drupal\Core\Config\Entity\Query\QueryFactory
     arguments: ['@config.factory', '@keyvalue', '@config.manager']

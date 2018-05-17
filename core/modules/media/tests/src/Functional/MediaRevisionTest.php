@@ -190,8 +190,9 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $entity_type = $entity->getEntityType();
 
     $count = $this->container
-      ->get('entity.query')
-      ->get($entity_type->id())
+      ->get('entity_type.manager')
+      ->getStorage($entity_type->id())
+      ->getQuery()
       ->count()
       ->allRevisions()
       ->condition($entity_type->getKey('id'), $entity->id())

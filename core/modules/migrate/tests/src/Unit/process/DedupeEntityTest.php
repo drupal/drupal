@@ -17,7 +17,7 @@ class DedupeEntityTest extends MigrateProcessTestCase {
   /**
    * The mock entity query.
    *
-   * @var \Drupal\Core\Entity\Query\QueryInterface|\Drupal\Core\Entity\Query\QueryFactory
+   * @var \Drupal\Core\Entity\Query\QueryInterface
    */
   protected $entityQuery;
 

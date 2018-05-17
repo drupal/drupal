@@ -61,7 +61,10 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $source_field = $this->randomString();
     $page->fillField('field_media_test[0][value]', $source_field);
     $page->pressButton('Save');
-    $media_id = $this->container->get('entity.query')->get('media')->execute();
+    $media_id = $this->container->get('entity_type.manager')
+      ->getStorage('media')
+      ->getQuery()
+      ->execute();
     $media_id = reset($media_id);
     /** @var \Drupal\media\MediaInterface $media */
     $media = $this->container->get('entity_type.manager')
