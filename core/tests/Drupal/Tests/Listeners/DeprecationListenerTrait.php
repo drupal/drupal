@@ -114,8 +114,6 @@ trait DeprecationListenerTrait {
       'Using "null" for the value of node "count" of "Drupal\Core\Template\TwigNodeTrans" is deprecated since version 1.25 and will be removed in 2.0.',
       'Using "null" for the value of node "options" of "Drupal\Core\Template\TwigNodeTrans" is deprecated since version 1.25 and will be removed in 2.0.',
       'Using "null" for the value of node "plural" of "Drupal\Core\Template\TwigNodeTrans" is deprecated since version 1.25 and will be removed in 2.0.',
-      'The Behat\Mink\Selector\SelectorsHandler::xpathLiteral method is deprecated as of 1.7 and will be removed in 2.0. Use \Behat\Mink\Selector\Xpath\Escaper::escapeLiteral instead when building Xpath or pass the unescaped value when using the named selector.',
-      'Passing an escaped locator to the named selector is deprecated as of 1.7 and will be removed in 2.0. Pass the raw value instead.',
       'Providing settings under \'handler_settings\' is deprecated and will be removed before 9.0.0. Move the settings in the root of the configuration array. See https://www.drupal.org/node/2870971.',
       'AssertLegacyTrait::getRawContent() is scheduled for removal in Drupal 9.0.0. Use $this->getSession()->getPage()->getContent() instead.',
       'AssertLegacyTrait::getAllOptions() is scheduled for removal in Drupal 9.0.0. Use $element->findAll(\'xpath\', \'option\') instead.',

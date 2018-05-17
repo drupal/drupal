@@ -115,7 +115,7 @@ class WebAssert extends MinkWebAssert {
     $container = $container ?: $this->session->getPage();
     $node = $container->find('named', [
       'select',
-      $this->session->getSelectorsHandler()->xpathLiteral($select),
+      $select,
     ]);
 
     if ($node === NULL) {
@@ -145,7 +145,7 @@ class WebAssert extends MinkWebAssert {
     $container = $container ?: $this->session->getPage();
     $select_field = $container->find('named', [
       'select',
-      $this->session->getSelectorsHandler()->xpathLiteral($select),
+      $select,
     ]);
 
     if ($select_field === NULL) {
@@ -178,7 +178,7 @@ class WebAssert extends MinkWebAssert {
     $container = $container ?: $this->session->getPage();
     $select_field = $container->find('named', [
       'select',
-      $this->session->getSelectorsHandler()->xpathLiteral($select),
+      $select,
     ]);
 
     if ($select_field === NULL) {
