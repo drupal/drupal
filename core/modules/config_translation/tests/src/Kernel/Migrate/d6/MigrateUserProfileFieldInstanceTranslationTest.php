@@ -28,7 +28,7 @@ class MigrateUserProfileFieldInstanceTranslationTest extends MigrateDrupal6TestB
     ]);
     $language_manager = $this->container->get('language_manager');
 
-    $config_translation = $language_manager->getLanguageConfigOverride('fr', 'field.field.user.user.profile_love_migrations');
+    $config_translation = $language_manager->getLanguageConfigOverride('fr', 'field.field.user.user.profile_really_really_love_mig');
     $this->assertSame("J'aime les migrations", $config_translation->get('label'));
     $this->assertSame("Si vous cochez cette case, vous aimez les migrations.", $config_translation->get('description'));
 

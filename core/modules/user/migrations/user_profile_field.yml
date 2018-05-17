@@ -10,7 +10,15 @@ source:
     entity_type: user
 process:
   entity_type: 'constants/entity_type'
-  field_name: name
+  field_name:
+    -
+      plugin: machine_name
+      source: name
+    -
+      plugin: make_unique_entity_field
+      length: 30
+      entity_type: field_storage_config
+      field: field_name
   type:
     plugin: static_map
     source: type
