@@ -40,14 +40,25 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
 
   /**
    * Tests opening off-canvas dialog by click blocks and elements in the blocks.
-   *
-   * @dataProvider providerTestBlocks
    */
-  public function testBlocks($theme, $block_plugin, $new_page_text, $element_selector, $label_selector, $button_text, $toolbar_item, $permissions) {
+  public function testBlocks() {
+    foreach ($this->getBlockTests() as $test) {
+      call_user_func_array([$this, 'doTestBlocks'], $test);
+    }
+  }
+
+  /**
+   * Tests opening off-canvas dialog by click blocks and elements in the blocks.
+   */
+  protected function doTestBlocks($theme, $block_plugin, $new_page_text, $element_selector, $label_selector, $button_text, $toolbar_item, $permissions) {
     if ($permissions) {
       $this->grantPermissions(Role::load(Role::AUTHENTICATED_ID), $permissions);
     }
-
+    if ($new_page_text) {
+      // Some asserts can be based on this value, so it should not be the same
+      // for different blocks, because it can be saved in the site config.
+      $new_page_text = $new_page_text . ' ' . $theme . ' ' . $block_plugin;
+    }
     $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->enableTheme($theme);
@@ -131,12 +142,18 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     $web_assert->elementTextContains('css', '#drupal-live-announce', 'Exited edit mode.');
     $web_assert->elementTextNotContains('css', '.contextual-toolbar-tab button', 'Editing');
     $web_assert->elementAttributeNotContains('css', '.dialog-off-canvas-main-canvas', 'class', 'js-settings-tray-edit-mode');
+
+    // Clean up test data so each test does not impact the next.
+    $block->delete();
+    if ($permissions) {
+      user_role_revoke_permissions(Role::AUTHENTICATED_ID, $permissions);
+    }
   }
 
   /**
-   * Dataprovider for testBlocks().
+   * Creates tests for ::testBlocks().
    */
-  public function providerTestBlocks() {
+  public function getBlockTests() {
     $blocks = [];
     foreach ($this->getTestThemes() as $theme) {
       $blocks += [
