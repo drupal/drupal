@@ -50,7 +50,7 @@ class EntityTestMul extends EntityTest {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    return parent::baseFieldDefinitions($entity_type) + \Drupal::state()->get($entity_type->id() . '.additional_base_field_definitions', []);
+    return parent::baseFieldDefinitions($entity_type);
   }
 
 }

@@ -54,7 +54,7 @@ class EntityTestMulRev extends EntityTestRev {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields = parent::baseFieldDefinitions($entity_type) + \Drupal::state()->get($entity_type->id() . '.additional_base_field_definitions', []);
+    $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['non_mul_field'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Non translatable'))
