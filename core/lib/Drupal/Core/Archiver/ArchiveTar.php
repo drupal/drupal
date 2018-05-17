@@ -577,7 +577,7 @@ class ArchiveTar
      * indicated by $p_path. When relevant the memorized path of the
      * files/dir can be modified by removing the $p_remove_path path at the
      * beginning of the file/dir path.
-     * While extracting a file, if the directory path does not exists it is
+     * While extracting a file, if the directory path does not exist it is
      * created.
      * While extracting a file, if the file already exists it is replaced
      * without looking for last modification date.

@@ -74,7 +74,7 @@ class UserLangcode extends ProcessPluginBase implements ContainerFactoryPluginIn
         return 'en';
       }
     }
-    // If the user's language does not exists, use the default language.
+    // If the user's language does not exist, use the default language.
     elseif ($this->languageManager->getLanguage($value) === NULL) {
       return $this->languageManager->getDefaultLanguage()->getId();
     }

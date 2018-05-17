@@ -488,7 +488,7 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
-   * Checks that specific hidden field does not exists.
+   * Checks that specific hidden field does not exist.
    *
    * @param string $field
    *   One of id|name|value for the hidden field.

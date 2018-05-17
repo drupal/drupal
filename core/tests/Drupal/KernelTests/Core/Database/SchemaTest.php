@@ -93,7 +93,7 @@ class SchemaTest extends KernelTestBase {
 
     // Test for fake index and test for the boolean result of indexExists().
     $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
-    $this->assertIdentical($index_exists, FALSE, 'Fake index does not exists');
+    $this->assertIdentical($index_exists, FALSE, 'Fake index does not exist');
     // Add index.
     db_add_index('test_table', 'test_field', ['test_field'], $table_specification);
     // Test for created index and test for the boolean result of indexExists().

@@ -918,7 +918,7 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
 
   $logger = \Drupal::logger('file system');
   if (!is_dir($directory) && !drupal_mkdir($directory, NULL, TRUE)) {
-    // If the directory does not exists and cannot be created.
+    // If the directory does not exist and cannot be created.
     $form_state->setErrorByName($form_element['#parents'][0], t('The directory %directory does not exist and could not be created.', ['%directory' => $directory]));
     $logger->error('The directory %directory does not exist and could not be created.', ['%directory' => $directory]);
   }

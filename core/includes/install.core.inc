@@ -1912,7 +1912,7 @@ function install_check_translations($langcode, $server_pattern) {
     }
   }
 
-  // If the translations directory does not exists, throw an error.
+  // If the translations directory does not exist, throw an error.
   if (!$translations_directory_exists) {
     $requirements['translations directory exists'] = [
       'title'       => t('Translations directory'),
