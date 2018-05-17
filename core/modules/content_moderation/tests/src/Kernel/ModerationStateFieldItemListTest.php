@@ -111,6 +111,9 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
 
     unset($this->testNode->moderation_state);
     $this->assertEquals('draft', $this->testNode->moderation_state->value);
+
+    $this->testNode->moderation_state = NULL;
+    $this->assertEquals('draft', $this->testNode->moderation_state->value);
   }
 
   /**
