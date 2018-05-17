@@ -13,6 +13,13 @@ use Drupal\Core\Entity\Query\ConditionInterface;
 class Condition extends ConditionBase {
 
   /**
+   * Whether this condition is nested inside an OR condition.
+   *
+   * @var bool
+   */
+  protected $nestedInsideOrCondition = FALSE;
+
+  /**
    * The SQL entity query object this condition belongs to.
    *
    * @var \Drupal\Core\Entity\Query\Sql\Query
@@ -36,11 +43,12 @@ class Condition extends ConditionBase {
         $sql_condition = new SqlCondition($condition['field']->getConjunction());
         // Add the SQL query to the object before calling this method again.
         $sql_condition->sqlQuery = $sql_query;
+        $condition['field']->nestedInsideOrCondition = $this->nestedInsideOrCondition || strtoupper($this->conjunction) === 'OR';
         $condition['field']->compile($sql_condition);
         $conditionContainer->condition($sql_condition);
       }
       else {
-        $type = strtoupper($this->conjunction) == 'OR' || $condition['operator'] == 'IS NULL' ? 'LEFT' : 'INNER';
+        $type = $this->nestedInsideOrCondition || strtoupper($this->conjunction) === 'OR' || $condition['operator'] === 'IS NULL' ? 'LEFT' : 'INNER';
         $field = $tables->addField($condition['field'], $type, $condition['langcode']);
         $condition['real_field'] = $field;
         static::translateCondition($condition, $sql_query, $tables->isFieldCaseSensitive($condition['field']));

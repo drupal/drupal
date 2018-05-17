@@ -526,7 +526,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->sort('id')
       ->execute();
 
-    $this->assertResult(6, 14);
+    $this->assertResult(4, 6, 12, 14);
   }
 
   /**
