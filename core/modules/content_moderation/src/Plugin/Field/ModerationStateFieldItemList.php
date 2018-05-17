@@ -141,11 +141,13 @@ class ModerationStateFieldItemList extends FieldItemList {
   public function setValue($values, $notify = TRUE) {
     parent::setValue($values, $notify);
 
+    if (isset($this->list[0])) {
+      $this->valueComputed = TRUE;
+    }
     // If the parent created a field item and if the parent should be notified
     // about the change (e.g. this is not initialized with the current value),
     // update the moderated entity.
     if (isset($this->list[0]) && $notify) {
-      $this->valueComputed = TRUE;
       $this->updateModeratedEntity($this->list[0]->value);
     }
   }
