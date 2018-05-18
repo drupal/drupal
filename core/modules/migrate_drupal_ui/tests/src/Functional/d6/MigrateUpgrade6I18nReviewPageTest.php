@@ -2,22 +2,21 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
-use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeReviewPageTestBase;
+use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeI18nReviewPageTestBase;
 
 /**
- * Tests migrate upgrade review page for Drupal 6.
+ * Tests migrate upgrade review page for Drupal 6 without translations.
  *
  * @group migrate_drupal_6
  * @group migrate_drupal_ui
  */
-class MigrateUpgrade6ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
+class MigrateUpgrade6I18nReviewPageTest extends MigrateUpgradeI18nReviewPageTestBase {
 
   /**
    * {@inheritdoc}
    */
   public static $modules = [
     'language',
-    'content_translation',
     'telephone',
     'aggregator',
     'book',
@@ -105,7 +104,6 @@ class MigrateUpgrade6ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'filefield_meta',
       'help',
       'i18n',
-      'i18nmenu',
       'i18nstrings',
       'imageapi',
       'imageapi_gd',
@@ -140,6 +138,7 @@ class MigrateUpgrade6ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'i18nblocks',
       'i18ncck',
       'i18ncontent',
+      'i18nmenu',
       'i18npoll',
       'i18nprofile',
       'i18nsync',
