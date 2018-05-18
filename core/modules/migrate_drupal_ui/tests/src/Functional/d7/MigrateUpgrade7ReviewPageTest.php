@@ -15,22 +15,6 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
-    'language',
-    'content_translation',
-    'telephone',
-    'aggregator',
-    'book',
-    'forum',
-    'statistics',
-    'syslog',
-    'tracker',
-    'update',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
     $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal7.php');
