@@ -1621,7 +1621,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
                 }
                 $column_schema = $original_schema[$table_name]['fields'][$column_name];
                 $column_schema['not null'] = $not_null;
-                $schema_handler->changeField($table_name, $field_name, $field_name, $column_schema);
+                $schema_handler->changeField($table_name, $column_name, $column_name, $column_schema);
               }
             }
 
