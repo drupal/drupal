@@ -76,6 +76,10 @@ image.effect.image_desaturate:
 image.effect.image_scale_and_crop:
   type: image_size
   label: 'Image scale and crop'
+  mapping:
+    anchor:
+      label: 'Anchor'
+      type: string
 
 image.settings:
   type: config_object

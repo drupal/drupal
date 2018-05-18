@@ -152,6 +152,9 @@ function image_theme() {
     'image_crop_summary' => [
       'variables' => ['data' => NULL, 'effect' => []],
     ],
+    'image_scale_and_crop_summary' => [
+      'variables' => ['data' => NULL, 'effect' => []],
+    ],
     'image_rotate_summary' => [
       'variables' => ['data' => NULL, 'effect' => []],
     ],

@@ -55,6 +55,7 @@ abstract class ImageStyleResourceTestBase extends EntityResourceTestBase {
     $effect = [
       'id' => 'image_scale_and_crop',
       'data' => [
+        'anchor' => 'center-center',
         'width' => 120,
         'height' => 121,
       ],
@@ -79,6 +80,7 @@ abstract class ImageStyleResourceTestBase extends EntityResourceTestBase {
           'id' => 'image_scale_and_crop',
           'weight' => 0,
           'data' => [
+            'anchor' => 'center-center',
             'width' => 120,
             'height' => 121,
           ],
