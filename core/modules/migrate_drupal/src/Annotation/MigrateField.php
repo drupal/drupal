@@ -55,7 +55,7 @@ class MigrateField extends Plugin {
    * Identifies the system providing the data the field plugin will read.
    *
    * The source_module is expected to be the name of a Drupal module that must
-   * must be installed in the source database.
+   * be installed in the source database.
    *
    * @var string
    */
