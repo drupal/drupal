@@ -35,6 +35,19 @@ trait SchemaConfigListenerTestTrait {
       $this->fail($message);
     }
 
+    // Test a valid schema, where the value is accessed before saving. Ensures
+    // that overridden data is correctly reset after casting.
+    $message = 'Unexpected SchemaIncompleteException thrown';
+    $config = $this->config('config_test.types')->set('int', '10');
+    $config->get('int');
+    try {
+      $config->save();
+      $this->pass($message);
+    }
+    catch (SchemaIncompleteException $e) {
+      $this->fail($message);
+    }
+
     // Test an invalid schema.
     $message = 'Expected SchemaIncompleteException thrown';
     $config = $this->config('config_test.types')
