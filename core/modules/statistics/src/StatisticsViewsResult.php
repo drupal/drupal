@@ -23,9 +23,9 @@ class StatisticsViewsResult {
   protected $timestamp;
 
   public function __construct($total_count, $day_count, $timestamp) {
-    $this->totalCount = $total_count;
-    $this->dayCount = $day_count;
-    $this->timestamp = $timestamp;
+    $this->totalCount = (int) $total_count;
+    $this->dayCount = (int) $day_count;
+    $this->timestamp = (int) $timestamp;
   }
 
   /**
