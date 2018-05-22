@@ -281,6 +281,9 @@ EOF;
               ],
               'Kernel' => [
                 'KernelExampleTest3.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTest3', '@group example2'], $test_file),
+                'KernelExampleTestBase.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTestBase', '@group example2'], $test_file),
+                'KernelExampleTrait.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTrait', '@group example2'], $test_file),
+                'KernelExampleInterface.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleInterface', '@group example2'], $test_file),
               ],
             ],
           ],
@@ -398,6 +401,21 @@ EOF;
     // MissingGroupException because the annotation is empty.
     $this->setExpectedException(MissingGroupException::class);
     TestDiscovery::getTestInfo('Drupal\Tests\simpletest\ThisTestDoesNotExistTest', '');
+  }
+
+  /**
+   * Ensure TestDiscovery::scanDirectory() ignores certain abstract file types.
+   *
+   * @covers ::scanDirectory
+   */
+  public function testScanDirectoryNoAbstract() {
+    $this->setupVfsWithTestClasses();
+    $files = TestDiscovery::scanDirectory('Drupal\\Tests\\test_module\\Kernel\\', vfsStream::url('drupal/modules/test_module/tests/src/Kernel'));
+    $this->assertNotEmpty($files);
+    $this->assertArrayNotHasKey('Drupal\Tests\test_module\Kernel\KernelExampleTestBase', $files);
+    $this->assertArrayNotHasKey('Drupal\Tests\test_module\Kernel\KernelExampleTrait', $files);
+    $this->assertArrayNotHasKey('Drupal\Tests\test_module\Kernel\KernelExampleInterface', $files);
+    $this->assertArrayHasKey('Drupal\Tests\test_module\Kernel\KernelExampleTest3', $files);
   }
 
 }

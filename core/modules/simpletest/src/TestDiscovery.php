@@ -282,13 +282,21 @@ class TestDiscovery {
     $flags |= \FilesystemIterator::SKIP_DOTS;
     $flags |= \FilesystemIterator::FOLLOW_SYMLINKS;
     $flags |= \FilesystemIterator::CURRENT_AS_SELF;
+    $flags |= \FilesystemIterator::KEY_AS_FILENAME;
 
     $iterator = new \RecursiveDirectoryIterator($path, $flags);
-    $filter = new \RecursiveCallbackFilterIterator($iterator, function ($current, $key, $iterator) {
+    $filter = new \RecursiveCallbackFilterIterator($iterator, function ($current, $file_name, $iterator) {
       if ($iterator->hasChildren()) {
         return TRUE;
       }
-      return $current->isFile() && $current->getExtension() === 'php';
+      // We don't want to discover abstract TestBase classes, traits or
+      // interfaces. They can be deprecated and will call @trigger_error()
+      // during discovery.
+      return
+        substr($file_name, -4) === '.php' &&
+        substr($file_name, -12) !== 'TestBase.php' &&
+        substr($file_name, -9) !== 'Trait.php' &&
+        substr($file_name, -13) !== 'Interface.php';
     });
     $files = new \RecursiveIteratorIterator($filter);
     $classes = [];
