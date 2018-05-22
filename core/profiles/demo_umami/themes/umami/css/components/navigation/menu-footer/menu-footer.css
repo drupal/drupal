@@ -18,7 +18,6 @@
 
 .menu-footer .menu-footer__link {
   background-color: transparent;
-  text-decoration: none;
   font-weight: bold;
   color: #fff;
 }
@@ -27,7 +26,6 @@
 .menu-footer .menu-footer__link:focus,
 .menu-footer .menu-footer__link:hover {
   background-color: transparent;
-  text-decoration: underline;
 }
 
 @media screen and (min-width: 60rem) {

@@ -20,14 +20,12 @@
   background-color: inherit;
   color: #fff;
   font-weight: bold;
-  text-decoration: none;
 }
 
 .block-type-footer-promo-block .footer-promo-content a:active,
 .block-type-footer-promo-block .footer-promo-content a:focus,
 .block-type-footer-promo-block .footer-promo-content a:hover {
   background-color: transparent;
-  text-decoration: underline;
 }
 
 .block-type-footer-promo-block .footer-promo-content a:after {
