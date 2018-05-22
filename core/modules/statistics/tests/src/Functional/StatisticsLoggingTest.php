@@ -125,7 +125,7 @@ class StatisticsLoggingTest extends BrowserTestBase {
     $post = ['nid' => $this->node->id()];
     $this->client->post($base_root . $stats_path, ['form_params' => $post]);
     $node_counter = statistics_get($this->node->id());
-    $this->assertIdentical($node_counter['totalcount'], '1');
+    $this->assertIdentical($node_counter['totalcount'], 1);
 
     // Try fetching statistics for an invalid node ID and verify it returns
     // FALSE.
