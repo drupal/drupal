@@ -37,7 +37,7 @@ class FilterIdTest extends KernelTestBase {
   }
 
   /**
-   * Tests the filter_id plugin.
+   * Tests transformation of filter_id plugin.
    *
    * @param mixed $value
    *   The input value to the plugin.
@@ -47,11 +47,11 @@ class FilterIdTest extends KernelTestBase {
    *   (optional) The invalid plugin ID which is expected to be logged by the
    *   MigrateExecutable object.
    *
-   * @dataProvider testProvider
+   * @dataProvider provideFilters
    *
    * @covers ::transform
    */
-  public function test($value, $expected_value, $invalid_id = NULL) {
+  public function testTransform($value, $expected_value, $invalid_id = NULL) {
     $configuration = [
       'bypass' => TRUE,
       'map' => [
@@ -78,11 +78,14 @@ class FilterIdTest extends KernelTestBase {
   }
 
   /**
-   * The test data provider.
+   * Provides filter ids for testing transformations.
    *
    * @return array
+   *   Formatted as $source_id, $tranformed_id, $invalid_id.
+   *   When $invalid_id is provided the transformation should fail with the
+   *   supplied id.
    */
-  public function testProvider() {
+  public function provideFilters() {
     return [
       // The filter ID is mapped, and the plugin exists.
       [
