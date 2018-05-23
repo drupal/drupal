@@ -10,6 +10,9 @@
     "no-descending-specificity": null,
     "no-duplicate-selectors": null,
     "no-unknown-animations": true,
+    "media-feature-name-no-unknown": [true, {
+      "ignoreMediaFeatureNames": ["prefers-reduced-motion"]
+    }],
     "number-leading-zero": "always",
     "plugin/no-browser-hacks": [true, {
       "browsers": [

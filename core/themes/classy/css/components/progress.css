@@ -41,6 +41,15 @@
   -moz-animation-direction: reverse;
 }
 
+@media screen and (prefers-reduced-motion: reduce) {
+  .progress__bar {
+    -webkit-animation: none;
+    -moz-animation: none;
+    -webkit-transition: none;
+    transition: none;
+  }
+}
+
 /**
  * Progress bar animations.
  */
