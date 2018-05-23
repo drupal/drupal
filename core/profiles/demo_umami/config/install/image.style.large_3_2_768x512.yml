@@ -5,7 +5,7 @@ name: large_3_2_768x512
 label: 'Large 3:2 (768x512)'
 effects:
   36c9f14a-8f5e-4794-92ea-bffab074f52e:
-    uuid: c7627da6-934e-47e2-a795-f10a424bda34
+    uuid: 36c9f14a-8f5e-4794-92ea-bffab074f52e
     id: image_scale_and_crop
     weight: 1
     data:
