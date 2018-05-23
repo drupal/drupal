@@ -22,6 +22,7 @@ a:focus {
   background-color: #e6eee0;
   color: #444;
   text-decoration: none;
+  outline-offset: 1px;
 }
 
 body {
