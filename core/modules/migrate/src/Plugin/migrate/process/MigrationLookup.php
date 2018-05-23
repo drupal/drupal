@@ -3,7 +3,6 @@
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\Plugin\MigratePluginManagerInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
@@ -156,17 +155,10 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       $migration_ids = [$migration_ids];
     }
     $self = FALSE;
+    /** @var \Drupal\migrate\Plugin\MigrationInterface[] $migrations */
     $destination_ids = NULL;
     $source_id_values = [];
-
-    /** @var \Drupal\migrate\Plugin\MigrationInterface[] $migrations */
     $migrations = $this->migrationPluginManager->createInstances($migration_ids);
-
-    // If no migrations are loaded it means either the migration is unavailable
-    // (perhaps in a disabled module) or doesn't exist (probably mis-typed).
-    if (empty($migrations)) {
-      throw new MigrateException(sprintf("The '%s' plugin failed because at least one of the migrations with the following ID(s) does not exist: %s.", $this->getPluginId(), implode(', ', $migration_ids)));
-    }
     foreach ($migrations as $migration_id => $migration) {
       if ($migration_id == $this->migration->id()) {
         $self = TRUE;

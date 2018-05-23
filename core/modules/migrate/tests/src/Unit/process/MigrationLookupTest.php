@@ -3,7 +3,6 @@
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\MigrationLookup;
@@ -297,51 +296,6 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $migration = new MigrationLookup($configuration, 'migration', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
     $result = $migration->transform(NULL, $this->migrateExecutable, $this->row, 'foo');
     $this->assertEquals(2, $result);
-  }
-
-  /**
-   * Tests that invalid migrations trigger the exception in transform().
-   *
-   * @covers ::transform
-   *
-   * @dataProvider transformWithInvalidMigrationsDataProvider
-   *
-   * @param string|string[] $migration_ids
-   *   The ID(s) of migration(s) including at least one invalid ID.
-   * @param string $invalid_migrations
-   *   The list of migration IDs containing at least one invalid ID.
-   */
-  public function testTransformWithInvalidMigrations($migration_ids, $invalid_migrations) {
-    $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
-    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
-    $migration_plugin_manager->createInstances(Argument::any())->willReturn([]);
-
-    $migration = new MigrationLookup(['migration' => $migration_ids], 'migration_lookup', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
-    $this->setExpectedException(MigrateException::class, "The 'migration_lookup' plugin failed because at least one of the migrations with the following ID(s) does not exist: $invalid_migrations.");
-    $migration->transform(1, $this->migrateExecutable, $this->row, '');
-  }
-
-  /**
-   * Provides data for the invalid migrations test.
-   *
-   * @return array
-   */
-  public function transformWithInvalidMigrationsDataProvider() {
-    return [
-      'migration_id_string' => [
-        'migration_ids' => 'invalid_migration',
-        'invalid_migrations' => 'invalid_migration',
-      ],
-      'migration_id_array_single' => [
-        'migration_ids' => ['invalid_migration'],
-        'invalid_migrations' => 'invalid_migration',
-      ],
-      'migration_id_array_multiple' => [
-        'migration_ids' => ['invalid_migration_1', 'invalid_migration_2'],
-        'invalid_migrations' => 'invalid_migration_1, invalid_migration_2',
-      ],
-    ];
   }
 
 }
