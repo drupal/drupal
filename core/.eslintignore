@@ -4,5 +4,4 @@ node_modules/**/*
 *.js
 !*.es6.js
 modules/locale/tests/locale_test.es6.js
-!nightwatch.conf.js
 !tests/Drupal/Nightwatch/**/*.js

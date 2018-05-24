@@ -31,12 +31,11 @@ module.exports = {
       browser.drupalLogConsole &&
       (!browser.drupalLogConsoleOnlyOnError || browser.currentTest.results.errors > 0 || browser.currentTest.results.failed > 0)
     ) {
-      let testName = browser.currentTest.name || browser.currentTest.module;
-      testName = testName.split(' ').join('-');
       const resultPath = path.join(__dirname, `../../../${nightwatchSettings.output_folder}/consoleLogs/${browser.currentTest.module}`);
       const status = browser.currentTest.results.errors > 0 || browser.currentTest.results.failed > 0 ? 'FAILED' : 'PASSED';
       mkdirp.sync(resultPath);
-      const now = new Date().toString().split(' ').join('-');
+      const now = new Date().toString().replace(/[\s]+/g, '-');
+      const testName = (browser.currentTest.name || browser.currentTest.module).replace(/[\s/]+/g, '-');
       browser
         .getLog('browser', (logEntries) => {
           const browserLog = JSON.stringify(logEntries, null, '  ');
