@@ -158,4 +158,8 @@ function _update_requirement_check($project, $type) {
 function update_update_8001() {
   // Empty update forces a call to drupal_flush_all_caches() which rebuilds the
   // router.
+
+  // Use hook_post_update_NAME() instead to clear the cache.The use
+  // of hook_update_N to clear the cache has been deprecated see
+  // https://www.drupal.org/node/2960601 for more details.
 }
