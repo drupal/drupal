@@ -67,9 +67,9 @@ function entity_get_bundles($entity_type = NULL) {
  *   \Drupal\node\Entity\Node::load() if the entity type is known. If the
  *   entity type is variable, use the entity manager service to load the entity
  *   from the entity storage:
- * @code
- * \Drupal::entityTypeManager()->getStorage($entity_type)->load($id);
- * @endcode
+ *   @code
+ *     \Drupal::entityTypeManager()->getStorage($entity_type)->load($id);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityInterface::load()
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
@@ -100,11 +100,11 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
  *   the entity storage's loadRevision() method to load a specific entity
  *   revision:
- * @code
- * \Drupal::entityTypeManager()
- *   ->getStorage($entity_type)
- *   ->loadRevision($revision_id);
- * @endcode
+ *   @code
+ *     \Drupal::entityTypeManager()
+ *       ->getStorage($entity_type)
+ *       ->loadRevision($revision_id);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
  * @see \Drupal\Core\Entity\EntityStorageInterface::loadRevision()
@@ -127,11 +127,11 @@ function entity_revision_load($entity_type, $revision_id) {
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
  *   the entity storage's deleteRevision() method to delete a specific entity
  *   revision:
- * @code
- * \Drupal::entityTypeManager()
- *   ->getStorage($entity_type)
- *   ->deleteRevision($revision_id);
- * @endcode
+ *   @code
+ *     \Drupal::entityTypeManager()
+ *       ->getStorage($entity_type)
+ *       ->deleteRevision($revision_id);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
  * @see \Drupal\Core\Entity\EntityStorageInterface::deleteRevision()
@@ -175,9 +175,9 @@ function entity_revision_delete($entity_type, $revision_id) {
  *   \Drupal\node\Entity\Node::loadMultiple() if the entity type is known. If
  *   the entity type is variable, use the entity manager service to load the
  *   entity from the entity storage:
- * @code
- * \Drupal::entityTypeManager()->getStorage($entity_type)->loadMultiple($id);
- * @endcode
+ *   @code
+ *     \Drupal::entityTypeManager()->getStorage($entity_type)->loadMultiple($id);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityInterface::loadMultiple()
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
@@ -209,11 +209,11 @@ function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
  *   the entity storage's loadByProperties() method to load an entity by their
  *   property values:
- * @code
- * \Drupal::entityTypeManager()
- *   ->getStorage($entity_type)
- *   ->loadByProperties($values);
- * @endcode
+ *   @code
+ *     \Drupal::entityTypeManager()
+ *       ->getStorage($entity_type)
+ *       ->loadByProperties($values);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
  * @see \Drupal\Core\Entity\EntityStorageInterface::loadByProperties()
@@ -242,9 +242,9 @@ function entity_load_multiple_by_properties($entity_type, array $values) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
  *   the entity storage's loadUnchanged() method to load an unchanged entity:
- * @code
- * \Drupal::entityTypeManager()->getStorage($entity_type)->loadUnchanged($id);
- * @endcode
+ *   @code
+ *     \Drupal::entityTypeManager()->getStorage($entity_type)->loadUnchanged($id);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
  * @see \Drupal\Core\Entity\EntityStorageInterface::loadUnchanged()
@@ -265,11 +265,11 @@ function entity_load_unchanged($entity_type, $id) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
  *   the entity storage's delete() method to delete multiple entities:
- * @code
- * $storage_handler = \Drupal::entityTypeManager()->getStorage($entity_type);
- * $entities = $storage_handler->loadMultiple($ids);
- * $storage_handler->delete($entities);
- * @endcode
+ *   @code
+ *     $storage_handler = \Drupal::entityTypeManager()->getStorage($entity_type);
+ *     $entities = $storage_handler->loadMultiple($ids);
+ *     $storage_handler->delete($entities);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
  * @see \Drupal\Core\Entity\EntityStorageInterface::loadMultiple()
@@ -298,9 +298,9 @@ function entity_delete_multiple($entity_type, array $ids) {
  *   \Drupal\node\Entity\Node::create() if the entity type is known. If the
  *   entity type is variable, use the entity storage's create() method to
  *   construct a new entity:
- * @code
- * \Drupal::entityTypeManager()->getStorage($entity_type)->create($values);
- * @endcode
+ *   @code
+ *     \Drupal::entityTypeManager()->getStorage($entity_type)->create($values);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
  * @see \Drupal\Core\Entity\EntityStorageInterface::create()
@@ -326,9 +326,9 @@ function entity_create($entity_type, array $values = []) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
  *   the entity's label() method to get the label of the entity:
- * @code
- * $entity->label($langcode);
- * @endcode
+ *   @code
+ *     $entity->label($langcode);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityInterface::label()
  */
@@ -355,11 +355,11 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
  *   Use the entity view builder's view() method for creating a render array:
- * @code
- * $view_builder = \Drupal::entityTypeManager()
- *   ->getViewBuilder($entity->getEntityTypeId());
- * return $view_builder->view($entity, $view_mode, $langcode);
- * @endcode
+ *   @code
+ *     $view_builder = \Drupal::entityTypeManager()
+ *       ->getViewBuilder($entity->getEntityTypeId());
+ *     return $view_builder->view($entity, $view_mode, $langcode);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getViewBuilder()
  * @see \Drupal\Core\Entity\EntityViewBuilderInterface::view()
@@ -393,11 +393,11 @@ function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $res
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
  *   Use the entity view builder's viewMultiple() method for creating a render
  *   array for the provided entities:
- * @code
- * $view_builder = \Drupal::entityTypeManager()
- *   ->getViewBuilder($entity->getEntityTypeId());
- * return $view_builder->viewMultiple($entities, $view_mode, $langcode);
- * @endcode
+ *   @code
+ *     $view_builder = \Drupal::entityTypeManager()
+ *       ->getViewBuilder($entity->getEntityTypeId());
+ *     return $view_builder->viewMultiple($entities, $view_mode, $langcode);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getViewBuilder()
  * @see \Drupal\Core\Entity\EntityViewBuilderInterface::viewMultiple()
