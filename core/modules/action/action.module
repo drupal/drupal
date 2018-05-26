@@ -29,8 +29,9 @@ function action_help($route_name, RouteMatchInterface $route_match) {
       $output = '<p>' . t('There are two types of actions: simple and advanced. Simple actions do not require any additional configuration and are listed here automatically. Advanced actions need to be created and configured before they can be used because they have options that need to be specified; for example, sending an email to a specified address or unpublishing content containing certain words. To create an advanced action, select the action from the drop-down list in the advanced action section below and click the <em>Create</em> button.') . '</p>';
       return $output;
 
+    case 'action.admin_add':
     case 'entity.action.edit_form':
-      return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended in order to better identify the precise action taking place.');
+      return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Label</em> field is recommended in order to better identify the precise action taking place.');
   }
 }
 
