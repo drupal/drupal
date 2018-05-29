@@ -34,19 +34,22 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
    *   (optional) Custom settings that will be passed to the Drupal behaviors
    *   on the content of the dialog. If left empty, the settings will be
    *   populated automatically from the current request.
+   * @param string $position
+   *   (optional) The position to render the off-canvas dialog.
    */
-  public function __construct($title, $content, array $dialog_options = [], $settings = NULL) {
+  public function __construct($title, $content, array $dialog_options = [], $settings = NULL, $position = 'side') {
     parent::__construct('#drupal-off-canvas', $title, $content, $dialog_options, $settings);
     $this->dialogOptions['modal'] = FALSE;
     $this->dialogOptions['autoResize'] = FALSE;
     $this->dialogOptions['resizable'] = 'w';
     $this->dialogOptions['draggable'] = FALSE;
     $this->dialogOptions['drupalAutoButtons'] = FALSE;
+    $this->dialogOptions['drupalOffCanvasPosition'] = $position;
     // @todo drupal.ajax.js does not respect drupalAutoButtons properly, pass an
     //   empty set of buttons until https://www.drupal.org/node/2793343 is in.
     $this->dialogOptions['buttons'] = [];
     if (empty($dialog_options['dialogClass'])) {
-      $this->dialogOptions['dialogClass'] = 'ui-dialog-off-canvas';
+      $this->dialogOptions['dialogClass'] = "ui-dialog-off-canvas ui-dialog-position-$position";
     }
     // If no width option is provided then use the default width to avoid the
     // dialog staying at the width of the previous instance when opened

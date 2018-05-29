@@ -7,5 +7,5 @@
  */
 
 .dialog-off-canvas-main-canvas {
-  transition: all 0.7s ease;
+  transition: padding-right 0.7s ease, padding-left 0.7s ease, padding-top 0.3s ease;
 }

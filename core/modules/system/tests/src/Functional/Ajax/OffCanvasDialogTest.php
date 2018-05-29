@@ -23,8 +23,10 @@ class OffCanvasDialogTest extends BrowserTestBase {
 
   /**
    * Test sending AJAX requests to open and manipulate off-canvas dialog.
+   *
+   * @dataProvider dialogPosition
    */
-  public function testDialog() {
+  public function testDialog($position) {
     // Ensure the elements render without notices or exceptions.
     $this->drupalGet('ajax-test/dialog');
 
@@ -45,8 +47,9 @@ class OffCanvasDialogTest extends BrowserTestBase {
           'resizable' => 'w',
           'draggable' => FALSE,
           'drupalAutoButtons' => FALSE,
+          'drupalOffCanvasPosition' => $position ?: 'side',
           'buttons' => [],
-          'dialogClass' => 'ui-dialog-off-canvas',
+          'dialogClass' => 'ui-dialog-off-canvas ui-dialog-position-' . ($position ?: 'side'),
           'width' => 300,
         ],
       'effect' => 'fade',
@@ -54,9 +57,23 @@ class OffCanvasDialogTest extends BrowserTestBase {
     ];
 
     // Emulate going to the JS version of the page and check the JSON response.
-    $ajax_result = $this->drupalGet('ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog.off_canvas']]);
+    $wrapper_format = $position && ($position !== 'side') ? 'drupal_dialog.off_canvas_' . $position : 'drupal_dialog.off_canvas';
+    $ajax_result = $this->drupalGet('ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => $wrapper_format]]);
     $ajax_result = Json::decode($ajax_result);
-    $this->assertEqual($off_canvas_expected_response, $ajax_result[3], 'off-canvas dialog JSON response matches.');
+    $this->assertEquals($off_canvas_expected_response, $ajax_result[3], 'off-canvas dialog JSON response matches.');
+  }
+
+  /**
+   * The data provider for potential dialog positions.
+   *
+   * @return array
+   */
+  public static function dialogPosition() {
+    return [
+      [NULL],
+      ['side'],
+      ['top'],
+    ];
   }
 
 }

@@ -97,6 +97,26 @@
             activeTab: $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0)
           });
         }
+
+        $(window).on({
+          'dialog:aftercreate': function dialogAftercreate(event, dialog, $element, settings) {
+            var $toolbar = $('#toolbar-bar');
+            $toolbar.css('margin-top', '0');
+
+            if (settings.drupalOffCanvasPosition === 'top') {
+              var height = Drupal.offCanvas.getContainer($element).outerHeight();
+              $toolbar.css('margin-top', height + 'px');
+
+              $element.on('dialogContentResize.off-canvas', function () {
+                var newHeight = Drupal.offCanvas.getContainer($element).outerHeight();
+                $toolbar.css('margin-top', newHeight + 'px');
+              });
+            }
+          },
+          'dialog:beforeclose': function dialogBeforeclose() {
+            $('#toolbar-bar').css('margin-top', '0');
+          }
+        });
       });
     }
   };

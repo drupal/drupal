@@ -60,14 +60,21 @@ abstract class OffCanvasTestBase extends JavascriptTestBase {
 
   /**
    * Waits for off-canvas dialog to open.
+   *
+   * @param string $position
+   *   The position of the dialog.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
-  protected function waitForOffCanvasToOpen() {
+  protected function waitForOffCanvasToOpen($position = 'side') {
     $web_assert = $this->assertSession();
     // Wait just slightly longer than the off-canvas dialog CSS animation.
     // @see core/misc/dialog/off-canvas.motion.css
     $this->getSession()->wait(800);
     $web_assert->assertWaitOnAjaxRequest();
     $this->assertElementVisibleAfterWait('css', '#drupal-off-canvas');
+    // Check that the canvas is positioned on the side.
+    $web_assert->elementExists('css', '.ui-dialog-position-' . $position);
   }
 
   /**
@@ -126,6 +133,20 @@ abstract class OffCanvasTestBase extends JavascriptTestBase {
    */
   protected function assertElementVisibleAfterWait($selector, $locator, $timeout = 10000) {
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible($selector, $locator, $timeout));
+  }
+
+  /**
+   * Dataprovider that returns theme name as the sole argument.
+   */
+  public function themeDataProvider() {
+    $themes = $this->getTestThemes();
+    $data = [];
+    foreach ($themes as $theme) {
+      $data[$theme] = [
+        $theme,
+      ];
+    }
+    return $data;
   }
 
 }

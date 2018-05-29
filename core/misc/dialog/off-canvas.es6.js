@@ -13,6 +13,19 @@
    * @namespace
    */
   Drupal.offCanvas = {
+    /**
+     * Storage for position information about the tray.
+     *
+     * @type {?String}
+     */
+    position: null,
+
+    /**
+     * The minimum height of the tray when opened at the top of the page.
+     *
+     * @type {Number}
+     */
+    minimumHeight: 30,
 
     /**
      * The minimum width to use body displace needs to match the width at which
@@ -75,10 +88,14 @@
       };
 
       /**
-       * Applies initial height to dialog based on window height.
+       * Applies initial height and with to dialog based depending on position.
        * @see http://api.jqueryui.com/dialog for all dialog options.
        */
-      settings.height = $(window).height();
+      const position = settings.drupalOffCanvasPosition;
+      const height = position === 'side' ? $(window).height() : settings.height;
+      const width = position === 'side' ? settings.width : '100%';
+      settings.height = height;
+      settings.width = width;
     },
 
     /**
@@ -90,8 +107,7 @@
       $('body').removeClass('js-off-canvas-dialog-open');
       // Remove all *.off-canvas events
       Drupal.offCanvas.removeOffCanvasEvents($element);
-
-      Drupal.offCanvas.$mainCanvasWrapper.css(`padding-${Drupal.offCanvas.getEdge()}`, 0);
+      Drupal.offCanvas.resetPadding();
     },
 
     /**
@@ -168,11 +184,27 @@
      *   Data attached to the event.
      */
     resetSize(event) {
-      const offsets = displace.offsets;
       const $element = event.data.$element;
       const container = Drupal.offCanvas.getContainer($element);
+      const position = event.data.settings.drupalOffCanvasPosition;
 
-      const topPosition = (offsets.top !== 0 ? `+${offsets.top}` : '');
+      // Only remove the `data-offset-*` attribute if the value previously
+      // exists and the orientation is changing.
+      if (
+        Drupal.offCanvas.position &&
+        Drupal.offCanvas.position !== position) {
+        container.removeAttr(`data-offset-${Drupal.offCanvas.position}`);
+      }
+      // Set a minimum height on $element
+      if (position === 'top') {
+        $element.css('min-height', `${Drupal.offCanvas.minimumHeight}px`);
+      }
+
+      displace();
+
+      const offsets = displace.offsets;
+
+      const topPosition = position === 'side' && offsets.top !== 0 ? `+${offsets.top}` : '';
       const adjustedOptions = {
         // @see http://api.jqueryui.com/position/
         position: {
@@ -182,14 +214,17 @@
         },
       };
 
+      const height = position === 'side' ? `${$(window).height() - (offsets.top + offsets.bottom)}px` : event.data.settings.height;
       container.css({
         position: 'fixed',
-        height: `${$(window).height() - (offsets.top + offsets.bottom)}px`,
+        height,
       });
 
       $element
         .dialog('option', adjustedOptions)
         .trigger('dialogContentResize.off-canvas');
+
+      Drupal.offCanvas.position = position;
     },
 
     /**
@@ -201,18 +236,27 @@
      *   Data attached to the event.
      */
     bodyPadding(event) {
-      if ($('body').outerWidth() < Drupal.offCanvas.minDisplaceWidth) {
+      const position = event.data.settings.drupalOffCanvasPosition;
+      if (position === 'side' && $('body').outerWidth() < Drupal.offCanvas.minDisplaceWidth) {
         return;
       }
+      Drupal.offCanvas.resetPadding();
       const $element = event.data.$element;
       const $container = Drupal.offCanvas.getContainer($element);
       const $mainCanvasWrapper = Drupal.offCanvas.$mainCanvasWrapper;
 
       const width = $container.outerWidth();
       const mainCanvasPadding = $mainCanvasWrapper.css(`padding-${Drupal.offCanvas.getEdge()}`);
-      if (width !== mainCanvasPadding) {
+      if (position === 'side' && width !== mainCanvasPadding) {
         $mainCanvasWrapper.css(`padding-${Drupal.offCanvas.getEdge()}`, `${width}px`);
         $container.attr(`data-offset-${Drupal.offCanvas.getEdge()}`, width);
+        displace();
+      }
+
+      const height = $container.outerHeight();
+      if (position === 'top') {
+        $mainCanvasWrapper.css('padding-top', `${height}px`);
+        $container.attr('data-offset-top', height);
         displace();
       }
     },
@@ -237,6 +281,15 @@
      */
     getEdge() {
       return document.documentElement.dir === 'rtl' ? 'left' : 'right';
+    },
+
+    /**
+     * Resets main canvas wrapper and toolbar padding / margin.
+     */
+    resetPadding() {
+      Drupal.offCanvas.$mainCanvasWrapper.css(`padding-${Drupal.offCanvas.getEdge()}`, 0);
+      Drupal.offCanvas.$mainCanvasWrapper.css('padding-top', 0);
+      displace();
     },
   };
 

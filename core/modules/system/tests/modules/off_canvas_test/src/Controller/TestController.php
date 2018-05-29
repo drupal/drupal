@@ -45,17 +45,22 @@ class TestController {
   public function linksDisplay() {
     return [
       'off_canvas_link_1' => [
-        '#title' => 'Click Me 1!',
+        '#title' => 'Open side panel 1',
         '#type' => 'link',
         '#url' => Url::fromRoute('off_canvas_test.thing1'),
         '#attributes' => [
           'class' => ['use-ajax'],
           'data-dialog-type' => 'dialog',
           'data-dialog-renderer' => 'off_canvas',
+          'data-dialog-options' => Json::encode([
+            'classes' => [
+              "ui-dialog" => "ui-corner-all side-1",
+            ],
+          ]),
         ],
       ],
       'off_canvas_link_2' => [
-        '#title' => 'Click Me 2!',
+        '#title' => 'Open side panel 2',
         '#type' => 'link',
         '#url' => Url::fromRoute('off_canvas_test.thing2'),
         '#attributes' => [
@@ -64,6 +69,43 @@ class TestController {
           'data-dialog-renderer' => 'off_canvas',
           'data-dialog-options' => Json::encode([
             'width' => 555,
+            'classes' => [
+              "ui-dialog" => "ui-corner-all side-2",
+            ],
+          ]),
+        ],
+      ],
+      'off_canvas_top_link_1' => [
+        '#title' => 'Open top panel 1',
+        '#type' => 'link',
+        '#url' => Url::fromRoute('off_canvas_test.thing1'),
+        '#attributes' => [
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'dialog',
+          'data-dialog-renderer' => 'off_canvas_top',
+          'data-dialog-options' => Json::encode([
+            'width' => 555,
+            'classes' => [
+              "ui-dialog" => "ui-corner-all top-1",
+            ],
+          ]),
+        ],
+
+      ],
+      'off_canvas_top_link_2' => [
+        '#title' => 'Open top panel 2',
+        '#type' => 'link',
+        '#url' => Url::fromRoute('off_canvas_test.thing2'),
+        '#attributes' => [
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'dialog',
+          'data-dialog-renderer' => 'off_canvas_top',
+          'data-dialog-options' => Json::encode([
+            'height' => 421,
+            'classes' => [
+              "ui-dialog" => "ui-corner-all top-2",
+            ],
+
           ]),
         ],
       ],
