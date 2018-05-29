@@ -3,6 +3,8 @@
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Core\Url;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
@@ -11,6 +13,11 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * @group content_translation
  */
 class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendingRevisionTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['field_test'];
 
   /**
    * {@inheritdoc}
@@ -33,6 +40,32 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setupTestFields() {
+    parent::setupTestFields();
+
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'field_multilingual',
+      'type' => 'test_field',
+      'entity_type' => $this->entityTypeId,
+      'cardinality' => 1,
+    ]);
+    $field_storage->save();
+    FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => $this->bundle,
+      'label' => 'Untranslatable-but-visible test field',
+      'translatable' => FALSE,
+    ])->save();
+    entity_get_form_display($this->entityTypeId, $this->bundle, 'default')
+      ->setComponent('field_multilingual', [
+        'type' => 'test_field_widget_multilingual',
+      ])
+      ->save();
+  }
+
+  /**
    * Tests that hiding untranslatable field widgets works correctly.
    */
   public function testHiddenWidgets() {
@@ -52,6 +85,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $this->assertNotEmpty($this->xpath($field_xpath));
     $clue_xpath = '//label[@for="edit-' . strtr($this->fieldName, '_', '-') . '-0-value"]/span[text()="(all languages)"]';
     $this->assertEmpty($this->xpath($clue_xpath));
+    $this->assertSession()->pageTextContains('Untranslatable-but-visible test field');
 
     // Add a translation and check that the untranslatable field widget is
     // displayed on the translation and edit forms along with translatability
@@ -64,6 +98,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $this->drupalGet($add_url);
     $this->assertNotEmpty($this->xpath($field_xpath));
     $this->assertNotEmpty($this->xpath($clue_xpath));
+    $this->assertSession()->pageTextContains('Untranslatable-but-visible test field');
     $this->drupalPostForm(NULL, [], 'Save');
 
     // Check that the widget is displayed along with its clue in the edit form
@@ -88,11 +123,13 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $field_xpath = '//input[@name="' . $this->fieldName . '[0][value]"]';
     $this->assertNotEmpty($this->xpath($field_xpath));
     $this->assertEmpty($this->xpath($clue_xpath));
+    $this->assertSession()->pageTextContains('Untranslatable-but-visible test field');
 
     // Verify no widget is displayed on the non-default language edit form.
     $this->drupalGet($it_edit_url);
     $this->assertEmpty($this->xpath($field_xpath));
     $this->assertEmpty($this->xpath($clue_xpath));
+    $this->assertSession()->pageTextContains('Untranslatable-but-visible test field');
 
     // Verify a warning is displayed.
     $this->assertSession()->pageTextContains('Fields that apply to all languages are hidden to avoid conflicting changes.');

@@ -512,10 +512,6 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         '#default_value' => $new_translation || !$date ? '' : format_date($date, 'custom', 'Y-m-d H:i:s O'),
       ];
 
-      if (isset($language_widget)) {
-        $language_widget['#multilingual'] = TRUE;
-      }
-
       $form['#process'][] = [$this, 'entityFormSharedElements'];
     }
 

@@ -333,9 +333,11 @@ function content_translation_form_alter(array &$form, FormStateInterface $form_s
     // Handle fields shared between translations when there is at least one
     // translation available or a new one is being created.
     if (!$entity->isNew() && (!isset($translations[$form_langcode]) || count($translations) > 1)) {
-      $langcode_key = $entity->getEntityType()->getKey('langcode');
       foreach ($entity->getFieldDefinitions() as $field_name => $definition) {
-        if (isset($form[$field_name]) && $field_name != $langcode_key) {
+
+        // Allow the widget to define if it should be treated as multilingual
+        // by respecting an already set #multilingual key.
+        if (isset($form[$field_name]) && !isset($form[$field_name]['#multilingual'])) {
           $form[$field_name]['#multilingual'] = $definition->isTranslatable();
         }
       }
