@@ -3,9 +3,9 @@
 namespace Drupal\Tests\options\Functional;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Tests\FieldTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\entity_test\Entity\EntityTestRev;
+use Drupal\Tests\field\Functional\FieldTestBase;
 
 /**
  * Base class for testing allowed values of options fields.
