@@ -2259,12 +2259,12 @@ function hook_rebuild() {
  *   they will be processed. Each callable item defined in $sync_steps should
  *   either be a global function or a public static method. The callable should
  *   accept a $context array by reference. For example:
- *   <code>
+ *   @code
  *     function _additional_configuration_step(&$context) {
  *       // Do stuff.
  *       // If finished set $context['finished'] = 1.
  *     }
- *   </code>
+ *   @endcode
  *   For more information on creating batches, see the
  *   @link batch Batch operations @endlink documentation.
  *
