@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
@@ -132,7 +133,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $container->get('database'),
       $container->get('entity.manager'),
       $container->get('cache.entity'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('entity.memory_cache')
     );
   }
 
@@ -160,9 +162,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The cache backend to be used.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface|null $memory_cache
+   *   The memory cache backend to be used.
    */
-  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager) {
-    parent::__construct($entity_type, $entity_manager, $cache);
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache = NULL) {
+    parent::__construct($entity_type, $entity_manager, $cache, $memory_cache);
     $this->database = $database;
     $this->languageManager = $language_manager;
     $this->initTableLayout();

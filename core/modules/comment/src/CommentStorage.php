@@ -3,6 +3,7 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -43,9 +44,11 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
    *   Cache backend instance to use.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
+   *   The memory cache.
    */
-  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityManagerInterface $entity_manager, AccountInterface $current_user, CacheBackendInterface $cache, LanguageManagerInterface $language_manager) {
-    parent::__construct($entity_info, $database, $entity_manager, $cache, $language_manager);
+  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityManagerInterface $entity_manager, AccountInterface $current_user, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache) {
+    parent::__construct($entity_info, $database, $entity_manager, $cache, $language_manager, $memory_cache);
     $this->currentUser = $current_user;
   }
 
@@ -59,7 +62,8 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       $container->get('entity.manager'),
       $container->get('current_user'),
       $container->get('cache.entity'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('entity.memory_cache')
     );
   }
 

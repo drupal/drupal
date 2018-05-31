@@ -3,18 +3,12 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 
 /**
  * A base entity storage class.
  */
 abstract class EntityStorageBase extends EntityHandlerBase implements EntityStorageInterface, EntityHandlerInterface {
-
-  /**
-   * Static cache of entities, keyed by entity ID.
-   *
-   * @var array
-   */
-  protected $entities = [];
 
   /**
    * Entity type ID for this storage.
@@ -73,18 +67,41 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected $entityClass;
 
   /**
+   * The memory cache.
+   *
+   * @var \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface
+   */
+  protected $memoryCache;
+
+  /**
+   * The memory cache cache tag.
+   *
+   * @var string
+   */
+  protected $memoryCacheTag;
+
+  /**
    * Constructs an EntityStorageBase instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface|null $memory_cache
+   *   The memory cache.
    */
-  public function __construct(EntityTypeInterface $entity_type) {
+  public function __construct(EntityTypeInterface $entity_type, MemoryCacheInterface $memory_cache = NULL) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->idKey = $this->entityType->getKey('id');
     $this->uuidKey = $this->entityType->getKey('uuid');
     $this->langcodeKey = $this->entityType->getKey('langcode');
     $this->entityClass = $this->entityType->getClass();
+
+    if (!isset($memory_cache)) {
+      @trigger_error('The $memory_cache parameter was added in Drupal 8.6.x and will be required in 9.0.0. See https://www.drupal.org/node/2973262', E_USER_DEPRECATED);
+      $memory_cache = \Drupal::service('entity.memory_cache');
+    }
+    $this->memoryCache = $memory_cache;
+    $this->memoryCacheTag = 'entity.memory_cache:' . $this->entityTypeId;
   }
 
   /**
@@ -102,6 +119,19 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   }
 
   /**
+   * Builds the cache ID for the passed in entity ID.
+   *
+   * @param int $id
+   *   Entity ID for which the cache ID should be built.
+   *
+   * @return string
+   *   Cache ID that can be passed to the cache backend.
+   */
+  protected function buildCacheId($id) {
+    return "values:{$this->entityTypeId}:$id";
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function loadUnchanged($id) {
@@ -115,11 +145,12 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   public function resetCache(array $ids = NULL) {
     if ($this->entityType->isStaticallyCacheable() && isset($ids)) {
       foreach ($ids as $id) {
-        unset($this->entities[$id]);
+        $this->memoryCache->delete($this->buildCacheId($id));
       }
     }
     else {
-      $this->entities = [];
+      // Call the backend method directly.
+      $this->memoryCache->invalidateTags([$this->memoryCacheTag]);
     }
   }
 
@@ -135,8 +166,12 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected function getFromStaticCache(array $ids) {
     $entities = [];
     // Load any available entities from the internal cache.
-    if ($this->entityType->isStaticallyCacheable() && !empty($this->entities)) {
-      $entities += array_intersect_key($this->entities, array_flip($ids));
+    if ($this->entityType->isStaticallyCacheable()) {
+      foreach ($ids as $id) {
+        if ($cached = $this->memoryCache->get($this->buildCacheId($id))) {
+          $entities[$id] = $cached->data;
+        }
+      }
     }
     return $entities;
   }
@@ -149,7 +184,9 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    */
   protected function setStaticCache(array $entities) {
     if ($this->entityType->isStaticallyCacheable()) {
-      $this->entities += $entities;
+      foreach ($entities as $id => $entity) {
+        $this->memoryCache->set($this->buildCacheId($entity->id()), $entity, MemoryCacheInterface::CACHE_PERMANENT, [$this->memoryCacheTag]);
+      }
     }
   }
 
@@ -540,17 +577,5 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *   The name of the service for the query for this entity storage.
    */
   abstract protected function getQueryServiceName();
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __sleep() {
-    // In case the storage is being serialized then we prevent from serializing
-    // the static cache of entities together with it, as this could lead to a
-    // memory leak.
-    $vars = parent::__sleep();
-    unset($vars['entities']);
-    return $vars;
-  }
 
 }

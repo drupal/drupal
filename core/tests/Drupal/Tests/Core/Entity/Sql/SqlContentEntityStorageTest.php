@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
@@ -378,7 +379,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue($schema_handler));
 
     $storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager, new MemoryCache()])
       ->setMethods(['getStorageSchema'])
       ->getMock();
 
@@ -1123,7 +1124,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager);
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager, new MemoryCache());
   }
 
   /**
@@ -1198,7 +1199,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('set');
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager, new MemoryCache()])
       ->setMethods(['getFromStorage', 'invokeStorageLoadHook'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')
@@ -1250,7 +1251,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->with($key, $entity, CacheBackendInterface::CACHE_PERMANENT, [$this->entityTypeId . '_values', 'entity_field_info']);
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager, new MemoryCache()])
       ->setMethods(['getFromStorage', 'invokeStorageLoadHook'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')
@@ -1305,7 +1306,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityManager, $this->cache, $this->languageManager);
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityManager, $this->cache, $this->languageManager, new MemoryCache());
 
     $result = $this->entityStorage->hasData();
 

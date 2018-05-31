@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config\Entity;
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Entity\EntityInterface;
@@ -104,9 +105,11 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    *   The UUID service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface|null $memory_cache
+   *   The memory cache backend.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager) {
-    parent::__construct($entity_type);
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache = NULL) {
+    parent::__construct($entity_type, $memory_cache);
 
     $this->configFactory = $config_factory;
     $this->uuidService = $uuid_service;
@@ -121,7 +124,8 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       $entity_type,
       $container->get('config.factory'),
       $container->get('uuid'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('entity.memory_cache')
     );
   }
 
@@ -324,43 +328,10 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   }
 
   /**
-   * Gets entities from the static cache.
-   *
-   * @param array $ids
-   *   If not empty, return entities that match these IDs.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface[]
-   *   Array of entities from the entity cache.
+   * {@inheritdoc}
    */
-  protected function getFromStaticCache(array $ids) {
-    $entities = [];
-    // Load any available entities from the internal cache.
-    if ($this->entityType->isStaticallyCacheable() && !empty($this->entities)) {
-      $config_overrides_key = $this->overrideFree ? '' : implode(':', $this->configFactory->getCacheKeys());
-      foreach ($ids as $id) {
-        if (!empty($this->entities[$id])) {
-          if (isset($this->entities[$id][$config_overrides_key])) {
-            $entities[$id] = $this->entities[$id][$config_overrides_key];
-          }
-        }
-      }
-    }
-    return $entities;
-  }
-
-  /**
-   * Stores entities in the static entity cache.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface[] $entities
-   *   Entities to store in the cache.
-   */
-  protected function setStaticCache(array $entities) {
-    if ($this->entityType->isStaticallyCacheable()) {
-      $config_overrides_key = $this->overrideFree ? '' : implode(':', $this->configFactory->getCacheKeys());
-      foreach ($entities as $id => $entity) {
-        $this->entities[$id][$config_overrides_key] = $entity;
-      }
-    }
+  protected function buildCacheId($id) {
+    return parent::buildCacheId($id) . ':' . ($this->overrideFree ? '' : implode(':', $this->configFactory->getCacheKeys()));
   }
 
   /**

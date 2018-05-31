@@ -3,6 +3,7 @@
 namespace Drupal\field;
 
 use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -66,9 +67,11 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
    *   The field type plugin manager.
    * @param \Drupal\Core\Field\DeletedFieldsRepositoryInterface $deleted_fields_repository
    *   The deleted fields repository.
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
+   *   The memory cache.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, FieldTypePluginManagerInterface $field_type_manager, DeletedFieldsRepositoryInterface $deleted_fields_repository) {
-    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager);
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, FieldTypePluginManagerInterface $field_type_manager, DeletedFieldsRepositoryInterface $deleted_fields_repository, MemoryCacheInterface $memory_cache) {
+    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager, $memory_cache);
     $this->entityManager = $entity_manager;
     $this->moduleHandler = $module_handler;
     $this->fieldTypeManager = $field_type_manager;
@@ -87,7 +90,8 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
       $container->get('entity.manager'),
       $container->get('module_handler'),
       $container->get('plugin.manager.field.field_type'),
-      $container->get('entity_field.deleted_fields_repository')
+      $container->get('entity_field.deleted_fields_repository'),
+      $container->get('entity.memory_cache')
     );
   }
 

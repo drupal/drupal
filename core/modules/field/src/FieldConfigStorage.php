@@ -2,6 +2,7 @@
 
 namespace Drupal\field;
 
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -56,9 +57,11 @@ class FieldConfigStorage extends FieldConfigStorageBase {
    *   The field type plugin manager.
    * @param \Drupal\Core\Field\DeletedFieldsRepositoryInterface $deleted_fields_repository
    *   The deleted fields repository.
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
+   *   The memory cache.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager, DeletedFieldsRepositoryInterface $deleted_fields_repository) {
-    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager);
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager, DeletedFieldsRepositoryInterface $deleted_fields_repository, MemoryCacheInterface $memory_cache) {
+    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager, $memory_cache);
     $this->entityManager = $entity_manager;
     $this->fieldTypeManager = $field_type_manager;
     $this->deletedFieldsRepository = $deleted_fields_repository;
@@ -75,7 +78,8 @@ class FieldConfigStorage extends FieldConfigStorageBase {
       $container->get('language_manager'),
       $container->get('entity.manager'),
       $container->get('plugin.manager.field.field_type'),
-      $container->get('entity_field.deleted_fields_repository')
+      $container->get('entity_field.deleted_fields_repository'),
+      $container->get('entity.memory_cache')
     );
   }
 

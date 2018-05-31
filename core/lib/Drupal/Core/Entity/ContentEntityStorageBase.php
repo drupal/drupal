@@ -4,6 +4,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\TranslationStatusInterface;
@@ -44,9 +45,11 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   The entity manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend to be used.
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface|null $memory_cache
+   *   The memory cache backend.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, CacheBackendInterface $cache) {
-    parent::__construct($entity_type);
+  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, MemoryCacheInterface $memory_cache = NULL) {
+    parent::__construct($entity_type, $memory_cache);
     $this->bundleKey = $this->entityType->getKey('bundle');
     $this->entityManager = $entity_manager;
     $this->cacheBackend = $cache;
@@ -59,7 +62,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     return new static(
       $entity_type,
       $container->get('entity.manager'),
-      $container->get('cache.entity')
+      $container->get('cache.entity'),
+      $container->get('entity.memory_cache')
     );
   }
 
@@ -990,34 +994,21 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    */
   public function resetCache(array $ids = NULL) {
     if ($ids) {
-      $cids = [];
-      foreach ($ids as $id) {
-        unset($this->entities[$id]);
-        $cids[] = $this->buildCacheId($id);
-      }
+      parent::resetCache($ids);
       if ($this->entityType->isPersistentlyCacheable()) {
+        $cids = [];
+        foreach ($ids as $id) {
+          $cids[] = $this->buildCacheId($id);
+        }
         $this->cacheBackend->deleteMultiple($cids);
       }
     }
     else {
-      $this->entities = [];
+      parent::resetCache();
       if ($this->entityType->isPersistentlyCacheable()) {
         Cache::invalidateTags([$this->entityTypeId . '_values']);
       }
     }
-  }
-
-  /**
-   * Builds the cache ID for the passed in entity ID.
-   *
-   * @param int $id
-   *   Entity ID for which the cache ID should be built.
-   *
-   * @return string
-   *   Cache ID that can be passed to the cache backend.
-   */
-  protected function buildCacheId($id) {
-    return "values:{$this->entityTypeId}:$id";
   }
 
 }
