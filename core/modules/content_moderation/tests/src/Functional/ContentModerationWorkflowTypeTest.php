@@ -19,6 +19,7 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
   public static $modules = [
     'content_moderation',
     'node',
+    'entity_test',
   ];
 
   /**
@@ -96,6 +97,10 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
     foreach ($types as $type) {
       $session->pageTextContains($type->label());
     }
+
+    // Ensure warning message are displayed for unsupported features.
+    $this->drupalGet('admin/config/workflow/workflows/manage/test/type/entity_test_rev');
+    $this->assertSession()->pageTextContains('Test entity - revisions entities do not support publishing statuses. For example, even after transitioning from a published workflow state to an unpublished workflow state they will still be visible to site visitors.');
   }
 
 }

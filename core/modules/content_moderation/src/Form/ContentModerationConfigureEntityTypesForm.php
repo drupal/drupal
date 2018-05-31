@@ -9,8 +9,10 @@ use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\workflows\WorkflowInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -58,23 +60,32 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
   protected $entityType;
 
   /**
+   * The Messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info'),
-      $container->get('content_moderation.moderation_information')
+      $container->get('content_moderation.moderation_information'),
+      $container->get('messenger')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info, ModerationInformationInterface $moderation_information) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info, ModerationInformationInterface $moderation_information, MessengerInterface $messenger) {
     $this->entityTypeManager = $entity_type_manager;
     $this->bundleInfo = $bundle_info;
     $this->moderationInformation = $moderation_information;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -130,6 +141,17 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
         '#default_value' => $defaults,
         '#attributes' => ['class' => ['no-highlight']],
       ];
+    }
+
+    // Get unsupported features for this entity type.
+    $warnings = $this->moderationInformation->getUnsupportedFeatures($this->entityType);
+    // Display message into the Ajax form returned.
+    if ($this->getRequest()->get(MainContentViewSubscriber::WRAPPER_FORMAT) == 'drupal_modal' && !empty($warnings)) {
+      $form['warnings'] = ['#type' => 'status_messages', '#weight' => -1];
+    }
+    // Set warning message.
+    foreach ($warnings as $warning) {
+      $this->messenger->addWarning($warning);
     }
 
     $form['actions'] = ['#type' => 'actions'];

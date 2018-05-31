@@ -4,15 +4,19 @@ namespace Drupal\content_moderation;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * General service for moderation-related questions about Entity API.
  */
 class ModerationInformation implements ModerationInformationInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The entity type manager.
@@ -203,6 +207,18 @@ class ModerationInformation implements ModerationInformationInterface {
       return $this->entityTypeManager->getStorage('workflow')->load($bundles[$entity->bundle()]['workflow']);
     };
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUnsupportedFeatures(EntityTypeInterface $entity_type) {
+    $features = [];
+    // Test if entity is publishable.
+    if (!$entity_type->entityClassImplements(EntityPublishedInterface::class)) {
+      $features['publishing'] = $this->t("@entity_type_plural_label do not support publishing statuses. For example, even after transitioning from a published workflow state to an unpublished workflow state they will still be visible to site visitors.", ['@entity_type_plural_label' => $entity_type->getCollectionLabel()]);
+    }
+    return $features;
   }
 
 }

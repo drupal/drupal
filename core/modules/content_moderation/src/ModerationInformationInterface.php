@@ -163,4 +163,15 @@ interface ModerationInformationInterface {
    */
   public function getWorkflowForEntity(ContentEntityInterface $entity);
 
+  /**
+   * Gets unsupported features for a given entity type.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type to get the unsupported features for.
+   *
+   * @return array
+   *   An array of unsupported features for this entity type.
+   */
+  public function getUnsupportedFeatures(EntityTypeInterface $entity_type);
+
 }
