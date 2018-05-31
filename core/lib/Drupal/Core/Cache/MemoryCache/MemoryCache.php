@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Cache\MemoryCache;
 
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Cache\MemoryBackend;
 
 /**
@@ -47,7 +48,7 @@ class MemoryCache extends MemoryBackend implements MemoryCacheInterface {
    * {@inheritdoc}
    */
   public function set($cid, $data, $expire = MemoryCacheInterface::CACHE_PERMANENT, array $tags = []) {
-    assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($tags)', 'Cache Tags must be strings.');
+    assert(Inspector::assertAllStrings($tags), 'Cache tags must be strings.');
     $tags = array_unique($tags);
 
     $this->cache[$cid] = (object) [
