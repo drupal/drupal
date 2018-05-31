@@ -471,8 +471,9 @@ API-first Initiative
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 - Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
 
-JavaScript Modernization Initiative
+Admin UI & JavaScript Modernisation Initiative
 - Angela Byron 'webchick' https://www.drupal.org/u/webchick
+- Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
 - Matthew Grill 'drpal' https://www.drupal.org/u/drpal
 - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
