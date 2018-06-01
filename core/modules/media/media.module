@@ -15,7 +15,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
-use Drupal\media\Plugin\media\Source\OEmbedInterface;
 
 /**
  * Implements hook_help().
@@ -73,11 +72,6 @@ function media_theme() {
       'render element' => 'element',
       'base hook' => 'field_multiple_value_form',
     ],
-    'media_oembed' => [
-      'variables' => [
-        'post' => NULL,
-      ],
-    ],
   ];
 }
 
@@ -98,25 +92,12 @@ function media_entity_access(EntityInterface $entity, $operation, AccountInterfa
  */
 function media_theme_suggestions_media(array $variables) {
   $suggestions = [];
-  /** @var \Drupal\media\MediaInterface $media */
   $media = $variables['elements']['#media'];
   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
 
   $suggestions[] = 'media__' . $sanitized_view_mode;
   $suggestions[] = 'media__' . $media->bundle();
   $suggestions[] = 'media__' . $media->bundle() . '__' . $sanitized_view_mode;
-
-  $source = $media->getSource();
-  if ($source instanceof OEmbedInterface) {
-    $suggestions[] = 'media__oembed';
-
-    $provider_id = $source->getMetadata($media, 'provider_name');
-    if ($provider_id) {
-      $provider_id = \Drupal::transliteration()->transliterate($provider_id);
-      $provider_id = preg_replace('/[^a-z0-9_]+/', '_', mb_strtolower($provider_id));
-      $suggestions[] = "media__oembed__$provider_id";
-    }
-  }
 
   return $suggestions;
 }

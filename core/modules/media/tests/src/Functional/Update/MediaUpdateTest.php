@@ -53,23 +53,4 @@ class MediaUpdateTest extends UpdatePathTestBase {
     }
   }
 
-  /**
-   * Tests that the oembed_providers key is added to the media.settings config.
-   *
-   * @see media_update_8600()
-   */
-  public function testOEmbedProvidersConfig() {
-    // The drupal-8.media-enabled.php fixture installs Media and all its config,
-    // which includes the oembed_providers key in media.settings. So, in order
-    // to prove that the update actually works, delete the value from config
-    // before running the update.
-    $this->config('media.settings')->clear('oembed_providers')->save(TRUE);
-
-    $this->runUpdates();
-    $this->assertSame(
-      'https://oembed.com/providers.json',
-      $this->config('media.settings')->get('oembed_providers')
-    );
-  }
-
 }

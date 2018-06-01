@@ -1,6 +1,0 @@
-media_test_oembed.resource.get:
-  path: '/media_test_oembed/resource'
-  defaults:
-    _controller: '\Drupal\media_test_oembed\Controller\ResourceController::get'
-  requirements:
-    _access: 'TRUE'
