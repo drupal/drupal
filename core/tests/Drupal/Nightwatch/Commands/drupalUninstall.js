@@ -9,7 +9,7 @@ import { commandAsWebserver } from '../globals';
  * @return {object}
  *   The 'browser' object.
  */
-exports.command = function uninstallDrupal(callback) {
+exports.command = function drupalUninstal(callback) {
   const self = this;
   const prefix = self.drupalDbPrefix;
 

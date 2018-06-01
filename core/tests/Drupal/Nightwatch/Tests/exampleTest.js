@@ -2,18 +2,18 @@ module.exports = {
   '@tags': ['core'],
   before(browser) {
     browser
-      .installDrupal({ setupFile: 'core/tests/Drupal/TestSite/TestSiteInstallTestScript.php' });
+      .drupalInstall({ setupFile: 'core/tests/Drupal/TestSite/TestSiteInstallTestScript.php' });
   },
   after(browser) {
     browser
-      .uninstallDrupal();
+      .drupalUninstall();
   },
   'Test page': (browser) => {
     browser
-      .relativeURL('/test-page')
+      .drupalRelativeURL('/test-page')
       .waitForElementVisible('body', 1000)
       .assert.containsText('body', 'Test page text')
-      .logAndEnd({ onlyOnError: false });
+      .drupalLogAndEnd({ onlyOnError: false });
   },
   /**
   'Example failing test': (browser) => {
@@ -25,7 +25,7 @@ module.exports = {
       // Wait for some errors to build up.
       .pause(5000)
       .assert.containsText('h1', 'I\'m the operator with my pocket calculator')
-      .logAndEnd();
+      .drupalLogAndEnd();
   },
   **/
 };

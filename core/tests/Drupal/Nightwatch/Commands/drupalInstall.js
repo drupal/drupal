@@ -14,7 +14,7 @@ import { commandAsWebserver } from '../globals';
  * @return {object}
  *   The 'browser' object.
  */
-exports.command = function installDrupal({ setupFile = '' }, callback) {
+exports.command = function drupalInstall({ setupFile = '' }, callback) {
   const self = this;
 
   try {

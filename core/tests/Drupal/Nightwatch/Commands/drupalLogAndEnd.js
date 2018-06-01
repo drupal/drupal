@@ -11,7 +11,7 @@
  * @return {object}
  *   The 'browser' object.
  */
-exports.command = function logAndEnd({ onlyOnError = true }, callback) {
+exports.command = function drupalLogAndEnd({ onlyOnError = true }, callback) {
   const self = this;
   this.drupalLogConsole = true;
   this.drupalLogConsoleOnlyOnError = onlyOnError;
