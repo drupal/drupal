@@ -68,15 +68,34 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     // Ensure submitting the form with invalid database credentials gives us a
     // nice warning.
     $this->drupalPostForm(NULL, [$driver . '[database]' => 'wrong'] + $edits, t('Review upgrade'));
-    $session->pageTextContains('Resolve the issue below to continue the upgrade.');
+    $session->pageTextContains('Resolve all issues below to continue the upgrade.');
 
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
     // Ensure we get errors about missing modules.
-    $session->pageTextContains(t('Resolve the issue below to continue the upgrade'));
+    $session->pageTextContains(t('Resolve all issues below to continue the upgrade.'));
     $session->pageTextContains(t('The no_source_module plugin must define the source_module property.'));
 
     // Uninstall the module causing the missing module error messages.
     $this->container->get('module_installer')->uninstall(['migration_provider_test'], TRUE);
+
+    // Test the file sources.
+    $this->drupalGet('/upgrade');
+    $this->drupalPostForm(NULL, [], t('Continue'));
+    if ($version == 6) {
+      $paths['d6_source_base_path'] = DRUPAL_ROOT . '/wrong-path';
+    }
+    else {
+      $paths['source_base_path'] = 'https://example.com/wrong-path';
+      $paths['source_private_file_path'] = DRUPAL_ROOT . '/wrong-path';
+    }
+    $this->drupalPostForm(NULL, $paths + $edits, t('Review upgrade'));
+    if ($version == 6) {
+      $session->responseContains('Unable to read from Files directory.');
+    }
+    else {
+      $session->responseContains('Unable to read from Public files directory.');
+      $session->responseContains('Unable to read from Private file directory.');
+    }
 
     // Restart the upgrade process.
     $this->drupalGet('/upgrade');
