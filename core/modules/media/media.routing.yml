@@ -24,3 +24,19 @@ entity.media.revision:
   requirements:
     _access_media_revision: 'view'
     media: \d+
+
+media.oembed_iframe:
+  path: '/media/oembed'
+  defaults:
+    _controller: '\Drupal\media\Controller\OEmbedIframeController::render'
+  requirements:
+    _permission: 'access content'
+    _csrf_token: 'TRUE'
+
+media.settings:
+  path: '/admin/config/media/media-settings'
+  defaults:
+    _form: '\Drupal\media\Form\MediaSettingsForm'
+    _title: 'Media settings'
+  requirements:
+    _permission: 'administer media'

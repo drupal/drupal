@@ -301,7 +301,9 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
    *   returned. Otherwise, a new, unused one is generated.
    */
   protected function getSourceFieldName() {
-    $base_id = 'field_media_' . $this->getPluginId();
+    // Some media sources are using a deriver, so their plugin IDs may contain
+    // a separator (usually ':') which is not allowed in field names.
+    $base_id = 'field_media_' . str_replace(static::DERIVATIVE_SEPARATOR, '_', $this->getPluginId());
     $tries = 0;
     $storage = $this->entityTypeManager->getStorage('field_storage_config');
 

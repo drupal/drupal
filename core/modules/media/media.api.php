@@ -21,5 +21,22 @@ function hook_media_source_info_alter(array &$sources) {
 }
 
 /**
+ * Alters an oEmbed resource URL before it is fetched.
+ *
+ * @param array $parsed_url
+ *   A parsed URL, as returned by \Drupal\Component\Utility\UrlHelper::parse().
+ * @param \Drupal\media\OEmbed\Provider $provider
+ *   The oEmbed provider for the resource.
+ *
+ * @see \Drupal\media\OEmbed\UrlResolverInterface::getResourceUrl()
+ */
+function hook_oembed_resource_url_alter(array &$parsed_url, \Drupal\media\OEmbed\Provider $provider) {
+  // Always serve YouTube videos from youtube-nocookie.com.
+  if ($provider->getName() === 'YouTube') {
+    $parsed_url['path'] = str_replace('://youtube.com/', '://youtube-nocookie.com/', $parsed_url['path']);
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
