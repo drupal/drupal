@@ -348,7 +348,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $request_options[RequestOptions::HTTP_ERRORS] = FALSE;
     $request_options[RequestOptions::ALLOW_REDIRECTS] = FALSE;
     $request_options = $this->decorateWithXdebugCookie($request_options);
-    $client = $this->getSession()->getDriver()->getClient()->getClient();
+    $client = $this->getHttpClient();
     return $client->request($method, $url->setAbsolute(TRUE)->toString(), $request_options);
   }
 
