@@ -1492,6 +1492,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     else {
       // This is the desired response.
       $this->assertSame(406, $response->getStatusCode());
+      $this->stringContains('?_format=' . static::$format . '>; rel="alternate"; type="' . static::$mimeType . '"', $response->getHeader('Link'));
+      $this->stringContains('?_format=foobar>; rel="alternate"', $response->getHeader('Link'));
     }
   }
 
