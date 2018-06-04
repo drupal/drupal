@@ -185,7 +185,13 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
           }
 
           if (empty($table_alias)) {
-            debug(t('Handler @handler tried to add additional_field @identifier but @table could not be added!', ['@handler' => $this->definition['id'], '@identifier' => $identifier, '@table' => $info['table']]));
+            trigger_error(sprintf(
+              "Handler % tried to add additional_field %s but % could not be added!",
+              $this->definition['id'],
+              $identifier,
+              $info['table']
+            ), E_USER_WARNING);
+
             $this->aliases[$identifier] = 'broken';
             continue;
           }

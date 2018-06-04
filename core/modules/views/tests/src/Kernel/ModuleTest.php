@@ -28,7 +28,7 @@ class ModuleTest extends ViewsKernelTestBase {
   public static $modules = ['field', 'user', 'block'];
 
   /**
-   * Stores the last triggered error, for example via debug().
+   * Stores the last triggered error.
    *
    * @var string
    *
