@@ -37,7 +37,7 @@ use Drupal\comment\CommentTypeInterface;
  *     "delete-form" = "/admin/structure/comment/manage/{comment_type}/delete",
  *     "edit-form" = "/admin/structure/comment/manage/{comment_type}",
  *     "add-form" = "/admin/structure/comment/types/add",
- *     "collection" = "/admin/structure/comment/types",
+ *     "collection" = "/admin/structure/comment",
  *   },
  *   config_export = {
  *     "id",
