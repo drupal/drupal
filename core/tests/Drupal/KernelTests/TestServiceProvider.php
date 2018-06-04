@@ -44,9 +44,9 @@ class TestServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $route_provider_service_name = 'router.route_provider';
     // While $container->get() does a recursive resolve, getDefinition() does
     // not, so do it ourselves.
-    // @todo Make the code more readable in
-    //   https://www.drupal.org/node/2911498.
-    for ($id = $route_provider_service_name; $container->hasAlias($id); $id = (string) $container->getAlias($id)) {
+    $id = $route_provider_service_name;
+    while ($container->hasAlias($id)) {
+      $id = (string) $container->getAlias($id);
     }
     $definition = $container->getDefinition($id);
     $definition->clearTag('needs_destruction');
