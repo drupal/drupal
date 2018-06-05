@@ -501,14 +501,21 @@ class Schema extends DatabaseSchema {
         if ($length) {
           $schema['fields'][$row->name]['length'] = $length;
         }
+        // $row->pk contains a number that reflects the primary key order. We
+        // use that as the key and sort (by key) below to return the primary key
+        // in the same order that it is stored in.
         if ($row->pk) {
-          $schema['primary key'][] = $row->name;
+          $schema['primary key'][$row->pk] = $row->name;
         }
       }
       else {
         throw new \Exception("Unable to parse the column type " . $row->type);
       }
     }
+    ksort($schema['primary key']);
+    // Re-key the array because $row->pk starts counting at 1.
+    $schema['primary key'] = array_values($schema['primary key']);
+
     $indexes = [];
     $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.index_list(' . $info['table'] . ')');
     foreach ($result as $row) {
@@ -739,6 +746,17 @@ class Schema extends DatabaseSchema {
     unset($new_schema['primary key']);
     $this->alterTable($table, $old_schema, $new_schema);
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function findPrimaryKeyColumns($table) {
+    if (!$this->tableExists($table)) {
+      return FALSE;
+    }
+    $schema = $this->introspectSchema($table);
+    return $schema['primary key'];
   }
 
   /**

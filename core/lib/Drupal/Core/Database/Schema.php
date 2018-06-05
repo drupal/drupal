@@ -409,6 +409,26 @@ abstract class Schema implements PlaceholderInterface {
   abstract public function dropPrimaryKey($table);
 
   /**
+   * Finds the primary key columns of a table, from the database.
+   *
+   * @param string $table
+   *   The name of the table.
+   *
+   * @return string[]|false
+   *   A simple array with the names of the columns composing the table's
+   *   primary key, or FALSE if the table does not exist.
+   *
+   * @throws \RuntimeException
+   *   If the driver does not override this method.
+   */
+  protected function findPrimaryKeyColumns($table) {
+    if (!$this->tableExists($table)) {
+      return FALSE;
+    }
+    throw new \RuntimeException("The '" . $this->connection->driver() . "' database driver does not implement " . __METHOD__);
+  }
+
+  /**
    * Add a unique key.
    *
    * @param $table

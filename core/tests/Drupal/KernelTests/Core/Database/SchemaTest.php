@@ -12,6 +12,8 @@ use Drupal\Component\Utility\Unicode;
 /**
  * Tests table creation and modification via the schema API.
  *
+ * @coversDefaultClass \Drupal\Core\Database\Schema
+ *
  * @group Database
  */
 class SchemaTest extends KernelTestBase {
@@ -25,6 +27,8 @@ class SchemaTest extends KernelTestBase {
    * Tests database interactions.
    */
   public function testSchema() {
+    $schema = Database::getConnection()->schema();
+
     // Try creating a table.
     $table_specification = [
       'description' => 'Schema table description may contain "quotes" and could be long—very long indeed.',
@@ -92,19 +96,19 @@ class SchemaTest extends KernelTestBase {
     $this->assertFalse($this->tryInsert(), 'Insert without a default failed.');
 
     // Test for fake index and test for the boolean result of indexExists().
-    $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
+    $index_exists = $schema->indexExists('test_table', 'test_field');
     $this->assertIdentical($index_exists, FALSE, 'Fake index does not exist');
     // Add index.
     db_add_index('test_table', 'test_field', ['test_field'], $table_specification);
     // Test for created index and test for the boolean result of indexExists().
-    $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
+    $index_exists = $schema->indexExists('test_table', 'test_field');
     $this->assertIdentical($index_exists, TRUE, 'Index created.');
 
     // Rename the table.
     db_rename_table('test_table', 'test_table2');
 
     // Index should be renamed.
-    $index_exists = Database::getConnection()->schema()->indexExists('test_table2', 'test_field');
+    $index_exists = $schema->indexExists('test_table2', 'test_field');
     $this->assertTrue($index_exists, 'Index was renamed.');
 
     // We need the default so that we can insert after the rename.
@@ -149,7 +153,10 @@ class SchemaTest extends KernelTestBase {
     db_field_set_default('test_table', 'test_field', 0);
     db_add_field('test_table', 'test_serial', ['type' => 'serial', 'not null' => TRUE], ['primary key' => ['test_serial']]);
 
-    $this->assertPrimaryKeyColumns('test_table', ['test_serial']);
+    // Test the primary key columns.
+    $method = new \ReflectionMethod(get_class($schema), 'findPrimaryKeyColumns');
+    $method->setAccessible(TRUE);
+    $this->assertSame(['test_serial'], $method->invoke($schema, 'test_table'));
 
     $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
     $max1 = db_query('SELECT MAX(test_serial) FROM {test_table}')->fetchField();
@@ -163,7 +170,8 @@ class SchemaTest extends KernelTestBase {
     // Test adding a new column and form a composite primary key with it.
     db_add_field('test_table', 'test_composite_primary_key', ['type' => 'int', 'not null' => TRUE, 'default' => 0], ['primary key' => ['test_serial', 'test_composite_primary_key']]);
 
-    $this->assertPrimaryKeyColumns('test_table', ['test_serial', 'test_composite_primary_key']);
+    // Test the primary key columns.
+    $this->assertSame(['test_serial', 'test_composite_primary_key'], $method->invoke($schema, 'test_table'));
 
     // Test renaming of keys and constraints.
     db_drop_table('test_table');
@@ -191,17 +199,17 @@ class SchemaTest extends KernelTestBase {
     // Test for existing primary and unique keys.
     switch ($db_type) {
       case 'pgsql':
-        $primary_key_exists = Database::getConnection()->schema()->constraintExists('test_table', '__pkey');
-        $unique_key_exists = Database::getConnection()->schema()->constraintExists('test_table', 'test_field' . '__key');
+        $primary_key_exists = $schema->constraintExists('test_table', '__pkey');
+        $unique_key_exists = $schema->constraintExists('test_table', 'test_field' . '__key');
         break;
       case 'sqlite':
         // SQLite does not create a standalone index for primary keys.
         $primary_key_exists = TRUE;
-        $unique_key_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
+        $unique_key_exists = $schema->indexExists('test_table', 'test_field');
         break;
       default:
-        $primary_key_exists = Database::getConnection()->schema()->indexExists('test_table', 'PRIMARY');
-        $unique_key_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
+        $primary_key_exists = $schema->indexExists('test_table', 'PRIMARY');
+        $unique_key_exists = $schema->indexExists('test_table', 'test_field');
         break;
     }
     $this->assertIdentical($primary_key_exists, TRUE, 'Primary key created.');
@@ -212,17 +220,17 @@ class SchemaTest extends KernelTestBase {
     // Test for renamed primary and unique keys.
     switch ($db_type) {
       case 'pgsql':
-        $renamed_primary_key_exists = Database::getConnection()->schema()->constraintExists('test_table2', '__pkey');
-        $renamed_unique_key_exists = Database::getConnection()->schema()->constraintExists('test_table2', 'test_field' . '__key');
+        $renamed_primary_key_exists = $schema->constraintExists('test_table2', '__pkey');
+        $renamed_unique_key_exists = $schema->constraintExists('test_table2', 'test_field' . '__key');
         break;
       case 'sqlite':
         // SQLite does not create a standalone index for primary keys.
         $renamed_primary_key_exists = TRUE;
-        $renamed_unique_key_exists = Database::getConnection()->schema()->indexExists('test_table2', 'test_field');
+        $renamed_unique_key_exists = $schema->indexExists('test_table2', 'test_field');
         break;
       default:
-        $renamed_primary_key_exists = Database::getConnection()->schema()->indexExists('test_table2', 'PRIMARY');
-        $renamed_unique_key_exists = Database::getConnection()->schema()->indexExists('test_table2', 'test_field');
+        $renamed_primary_key_exists = $schema->indexExists('test_table2', 'PRIMARY');
+        $renamed_unique_key_exists = $schema->indexExists('test_table2', 'test_field');
         break;
     }
     $this->assertIdentical($renamed_primary_key_exists, TRUE, 'Primary key was renamed.');
@@ -231,8 +239,8 @@ class SchemaTest extends KernelTestBase {
     // For PostgreSQL check in addition that sequence was renamed.
     if ($db_type == 'pgsql') {
       // Get information about new table.
-      $info = Database::getConnection()->schema()->queryTableInformation('test_table2');
-      $sequence_name = Database::getConnection()->schema()->prefixNonTable('test_table2', 'id', 'seq');
+      $info = $schema->queryTableInformation('test_table2');
+      $sequence_name = $schema->prefixNonTable('test_table2', 'id', 'seq');
       $this->assertEqual($sequence_name, current($info->sequences), 'Sequence was renamed.');
     }
 
@@ -792,6 +800,125 @@ class SchemaTest extends KernelTestBase {
   }
 
   /**
+   * @covers ::findPrimaryKeyColumns
+   */
+  public function testFindPrimaryKeyColumns() {
+    $schema = Database::getConnection()->schema();
+    $method = new \ReflectionMethod(get_class($schema), 'findPrimaryKeyColumns');
+    $method->setAccessible(TRUE);
+
+    // Test with single column primary key.
+    $schema->createTable('table_with_pk_0', [
+      'description' => 'Table with primary key.',
+      'fields' => [
+        'id'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'test_field'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['id'],
+    ]);
+    $this->assertSame(['id'], $method->invoke($schema, 'table_with_pk_0'));
+
+    // Test with multiple column primary key.
+    $schema->createTable('table_with_pk_1', [
+      'description' => 'Table with primary key with multiple columns.',
+      'fields' => [
+        'id0'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'id1'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'test_field'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['id0', 'id1'],
+    ]);
+    $this->assertSame(['id0', 'id1'], $method->invoke($schema, 'table_with_pk_1'));
+
+    // Test with multiple column primary key and not being the first column of
+    // the table definition.
+    $schema->createTable('table_with_pk_2', [
+      'description' => 'Table with primary key with multiple columns at the end and in reverted sequence.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'test_field_2'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'id3'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'id4'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['id4', 'id3'],
+    ]);
+    $this->assertSame(['id4', 'id3'], $method->invoke($schema, 'table_with_pk_2'));
+
+    // Test with multiple column primary key in a different order. For the
+    // PostgreSQL and the SQLite drivers is sorting used to get the primary key
+    // columns in the right order.
+    $schema->createTable('table_with_pk_3', [
+      'description' => 'Table with primary key with multiple columns at the end and in reverted sequence.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'test_field_2'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'id3'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'id4'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['id3', 'test_field_2', 'id4'],
+    ]);
+    $this->assertSame(['id3', 'test_field_2', 'id4'], $method->invoke($schema, 'table_with_pk_3'));
+
+    // Test with table without a primary key.
+    $schema->createTable('table_without_pk', [
+      'description' => 'Table without primary key.',
+      'fields' => [
+        'id'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'test_field'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+      ],
+    ]);
+    $this->assertSame([], $method->invoke($schema, 'table_without_pk'));
+
+    // Test with non existing table.
+    $this->assertFalse($method->invoke($schema, 'non_existing_table'));
+  }
+
+  /**
    * Tests the findTables() method.
    */
   public function testFindTables() {
@@ -847,48 +974,6 @@ class SchemaTest extends KernelTestBase {
 
     // Go back to the initial connection.
     Database::setActiveConnection('default');
-  }
-
-  /**
-   * Tests the primary keys of a table.
-   *
-   * @param string $table_name
-   *   The name of the table to check.
-   * @param array $primary_key
-   *   The expected key column specifier for a table's primary key.
-   */
-  protected function assertPrimaryKeyColumns($table_name, array $primary_key = []) {
-    $db_type = Database::getConnection()->databaseType();
-
-    switch ($db_type) {
-      case 'mysql':
-        $result = Database::getConnection()->query("SHOW KEYS FROM {" . $table_name . "} WHERE Key_name = 'PRIMARY'")->fetchAllAssoc('Column_name');
-        $this->assertSame($primary_key, array_keys($result));
-
-        break;
-      case 'pgsql':
-        $result = Database::getConnection()->query("SELECT a.attname, format_type(a.atttypid, a.atttypmod) AS data_type
-          FROM pg_index i
-          JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
-          WHERE i.indrelid = '{" . $table_name . "}'::regclass AND i.indisprimary")
-          ->fetchAllAssoc('attname');
-        $this->assertSame($primary_key, array_keys($result));
-
-        break;
-      case 'sqlite':
-        // For SQLite we need access to the protected
-        // \Drupal\Core\Database\Driver\sqlite\Schema::introspectSchema() method
-        // because we have no other way of getting the table prefixes needed for
-        // running a straight PRAGMA query.
-        $schema_object = Database::getConnection()->schema();
-        $reflection = new \ReflectionMethod($schema_object, 'introspectSchema');
-        $reflection->setAccessible(TRUE);
-
-        $table_info = $reflection->invoke($schema_object, $table_name);
-        $this->assertSame($primary_key, $table_info['primary key']);
-
-        break;
-    }
   }
 
 }

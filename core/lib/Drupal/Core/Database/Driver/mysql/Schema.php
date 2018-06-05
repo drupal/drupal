@@ -525,6 +525,17 @@ class Schema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
+  protected function findPrimaryKeyColumns($table) {
+    if (!$this->tableExists($table)) {
+      return FALSE;
+    }
+    $result = $this->connection->query("SHOW KEYS FROM {" . $table . "} WHERE Key_name = 'PRIMARY'")->fetchAllAssoc('Column_name');
+    return array_keys($result);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function addUniqueKey($table, $name, $fields) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot add unique key @name to table @table: table doesn't exist.", ['@table' => $table, '@name' => $name]));
