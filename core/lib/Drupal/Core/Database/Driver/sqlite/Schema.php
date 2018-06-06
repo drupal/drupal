@@ -551,9 +551,11 @@ class Schema extends DatabaseSchema {
 
     unset($new_schema['fields'][$field]);
 
-    // Handle possible primary key changes.
-    if (isset($new_schema['primary key']) && ($key = array_search($field, $new_schema['primary key'])) !== FALSE) {
-      unset($new_schema['primary key'][$key]);
+    // Drop the primary key if the field to drop is part of it. This is
+    // consistent with the behavior on PostgreSQL.
+    // @see \Drupal\Core\Database\Driver\mysql\Schema::dropField()
+    if (isset($new_schema['primary key']) && in_array($field, $new_schema['primary key'], TRUE)) {
+      unset($new_schema['primary key']);
     }
 
     // Handle possible index changes.
@@ -633,8 +635,10 @@ class Schema extends DatabaseSchema {
       if (is_array($field)) {
         $field = &$field[0];
       }
-      if (isset($mapping[$field])) {
-        $field = $mapping[$field];
+
+      $mapped_field = array_search($field, $mapping, TRUE);
+      if ($mapped_field !== FALSE) {
+        $field = $mapped_field;
       }
     }
     return $key_definition;

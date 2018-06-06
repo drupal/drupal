@@ -498,9 +498,9 @@ class SchemaTest extends KernelTestBase {
   }
 
   /**
-   * Tests adding columns to an existing table.
+   * Tests adding columns to an existing table with default and initial value.
    */
-  public function testSchemaAddField() {
+  public function testSchemaAddFieldDefaultInitial() {
     // Test varchar types.
     foreach ([1, 32, 128, 256, 512] as $length) {
       $base_field_spec = [
@@ -704,9 +704,119 @@ class SchemaTest extends KernelTestBase {
   }
 
   /**
-   * Tests changing columns between types.
+   * Tests various schema changes' effect on the table's primary key.
+   *
+   * @param array $initial_primary_key
+   *   The initial primary key of the test table.
+   * @param array $renamed_primary_key
+   *   The primary key of the test table after renaming the test field.
+   *
+   * @dataProvider providerTestSchemaCreateTablePrimaryKey
+   *
+   * @covers ::addField
+   * @covers ::changeField
+   * @covers ::dropField
+   * @covers ::findPrimaryKeyColumns
    */
-  public function testSchemaChangeField() {
+  public function testSchemaChangePrimaryKey(array $initial_primary_key, array $renamed_primary_key) {
+    $connection = Database::getConnection();
+    $schema = $connection->schema();
+    $find_primary_key_columns = new \ReflectionMethod(get_class($schema), 'findPrimaryKeyColumns');
+    $find_primary_key_columns->setAccessible(TRUE);
+
+    // Test making the field the primary key of the table upon creation.
+    $table_name = 'test_table';
+    $table_spec = [
+      'fields' => [
+        'test_field' => ['type' => 'int'],
+        'other_test_field' => ['type' => 'int'],
+      ],
+      'primary key' => $initial_primary_key,
+    ];
+    $schema->createTable($table_name, $table_spec);
+    $this->assertTrue($schema->fieldExists($table_name, 'test_field'));
+    $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
+
+    // Change the field type and make sure the primary key stays in place.
+    $schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'varchar', 'length' => 32]);
+    $this->assertTrue($schema->fieldExists($table_name, 'test_field'));
+    $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
+
+    // Add some data and change the field type back, to make sure that changing
+    // the type leaves the primary key in place even with existing data.
+    $connection->insert($table_name)
+      ->fields(['test_field' => 1, 'other_test_field' => 2])
+      ->execute();
+    $schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'int']);
+    $this->assertTrue($schema->fieldExists($table_name, 'test_field'));
+    $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
+
+    // Make sure that adding the primary key can be done as part of changing
+    // a field, as well.
+    $schema->dropPrimaryKey($table_name);
+    $this->assertEquals([], $find_primary_key_columns->invoke($schema, $table_name));
+    $schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'int'], ['primary key' => $initial_primary_key]);
+    $this->assertTrue($schema->fieldExists($table_name, 'test_field'));
+    $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
+
+    // Rename the field and make sure the primary key was updated.
+    $schema->changeField($table_name, 'test_field', 'test_field_renamed', ['type' => 'int']);
+    $this->assertTrue($schema->fieldExists($table_name, 'test_field_renamed'));
+    $this->assertEquals($renamed_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
+
+    // Drop the field and make sure the primary key was dropped, as well.
+    $schema->dropField($table_name, 'test_field_renamed');
+    $this->assertFalse($schema->fieldExists($table_name, 'test_field_renamed'));
+    $this->assertEquals([], $find_primary_key_columns->invoke($schema, $table_name));
+
+    // Add the field again and make sure adding the primary key can be done at
+    // the same time.
+    $schema->addField($table_name, 'test_field', ['type' => 'int', 'default' => 0], ['primary key' => $initial_primary_key]);
+    $this->assertTrue($schema->fieldExists($table_name, 'test_field'));
+    $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
+
+    // Drop the field again and explicitly add a primary key.
+    $schema->dropField($table_name, 'test_field');
+    $schema->addPrimaryKey($table_name, ['other_test_field']);
+    $this->assertFalse($schema->fieldExists($table_name, 'test_field'));
+    $this->assertEquals(['other_test_field'], $find_primary_key_columns->invoke($schema, $table_name));
+
+    // Test that adding a field with a primary key will work even with a
+    // pre-existing primary key.
+    $schema->addField($table_name, 'test_field', ['type' => 'int', 'default' => 0], ['primary key' => $initial_primary_key]);
+    $this->assertTrue($schema->fieldExists($table_name, 'test_field'));
+    $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
+  }
+
+  /**
+   * Provides test cases for SchemaTest::testSchemaCreateTablePrimaryKey().
+   *
+   * @return array
+   *   An array of test cases for SchemaTest::testSchemaCreateTablePrimaryKey().
+   */
+  public function providerTestSchemaCreateTablePrimaryKey() {
+    $tests = [];
+
+    $tests['simple_primary_key'] = [
+      'initial_primary_key' => ['test_field'],
+      'renamed_primary_key' => ['test_field_renamed'],
+    ];
+    $tests['composite_primary_key'] = [
+      'initial_primary_key' => ['test_field', 'other_test_field'],
+      'renamed_primary_key' => ['test_field_renamed', 'other_test_field'],
+    ];
+    $tests['composite_primary_key_different_order'] = [
+      'initial_primary_key' => ['other_test_field', 'test_field'],
+      'renamed_primary_key' => ['other_test_field', 'test_field_renamed'],
+    ];
+
+    return $tests;
+  }
+
+  /**
+   * Tests changing columns between types with default and initial values.
+   */
+  public function testSchemaChangeFieldDefaultInitial() {
     $field_specs = [
       ['type' => 'int', 'size' => 'normal', 'not null' => FALSE],
       ['type' => 'int', 'size' => 'normal', 'not null' => TRUE, 'initial' => 1, 'default' => 17],

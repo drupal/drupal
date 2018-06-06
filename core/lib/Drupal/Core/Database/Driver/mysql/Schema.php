@@ -460,6 +460,18 @@ class Schema extends DatabaseSchema {
       return FALSE;
     }
 
+    // When dropping a field that is part of a composite primary key MySQL
+    // automatically removes the field from the primary key, which can leave the
+    // table in an invalid state. MariaDB 10.2.8 requires explicitly dropping
+    // the primary key first for this reason. We perform this deletion
+    // explicitly which also makes the behavior on both MySQL and MariaDB
+    // consistent with PostgreSQL.
+    // @see https://mariadb.com/kb/en/library/alter-table
+    $primary_key = $this->findPrimaryKeyColumns($table);
+    if ((count($primary_key) > 1) && in_array($field, $primary_key, TRUE)) {
+      $this->dropPrimaryKey($table);
+    }
+
     $this->connection->query('ALTER TABLE {' . $table . '} DROP `' . $field . '`');
     return TRUE;
   }
