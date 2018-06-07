@@ -98,6 +98,6 @@
   };
 
   Drupal.theme.toolbarMenuItemToggle = function (options) {
-    return '<button class="' + options.class + '"><span class="action">' + options.action + '</span><span class="label">' + options.text + '</span></button>';
+    return '<button class="' + options.class + '"><span class="action">' + options.action + '</span> <span class="label">' + options.text + '</span></button>';
   };
 })(jQuery, Drupal, drupalSettings);
