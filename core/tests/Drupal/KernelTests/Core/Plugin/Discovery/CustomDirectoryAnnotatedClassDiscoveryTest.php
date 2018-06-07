@@ -80,7 +80,7 @@ class CustomDirectoryAnnotatedClassDiscoveryTest extends DiscoveryTestBase {
       ],
     ];
 
-    $base_directory = \Drupal::root() . '/core/modules/system/tests/modules/plugin_test/src';
+    $base_directory = $this->root . '/core/modules/system/tests/modules/plugin_test/src';
     $namespaces = new \ArrayObject(['Drupal\plugin_test' => $base_directory]);
 
     $this->discovery = new AnnotatedClassDiscovery('', $namespaces);

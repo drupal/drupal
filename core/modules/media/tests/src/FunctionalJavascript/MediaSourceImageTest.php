@@ -46,7 +46,7 @@ class MediaSourceImageTest extends MediaSourceTestBase {
 
     // Create a media item.
     $this->drupalGet("media/add/{$media_type_id}");
-    $page->attachFileToField("files[{$source_field_id}_0]", \Drupal::root() . '/core/modules/media/tests/fixtures/example_1.jpeg');
+    $page->attachFileToField("files[{$source_field_id}_0]", $this->root . '/core/modules/media/tests/fixtures/example_1.jpeg');
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->fillField("{$source_field_id}[0][alt]", 'Image Alt Text 1');

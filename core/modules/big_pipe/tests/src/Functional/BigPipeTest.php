@@ -205,7 +205,7 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertNoRaw(BigPipe::STOP_SIGNAL, 'BigPipe stop signal absent: error occurred before then.');
     $this->assertNoRaw('</body>', 'Closing body tag absent: error occurred before then.');
     // The exception is expected. Do not interpret it as a test failure.
-    unlink(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
+    unlink($this->root . '/' . $this->siteDirectory . '/error.log');
   }
 
   /**
@@ -273,7 +273,7 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertRaw('You are not allowed to say llamas are not cool!');
     $this->assertNoRaw('</body>', 'Closing body tag absent: error occurred before then.');
     // The exception is expected. Do not interpret it as a test failure.
-    unlink(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
+    unlink($this->root . '/' . $this->siteDirectory . '/error.log');
   }
 
   /**

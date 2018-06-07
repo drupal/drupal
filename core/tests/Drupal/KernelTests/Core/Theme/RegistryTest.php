@@ -69,11 +69,11 @@ class RegistryTest extends KernelTestBase {
     $theme_handler = \Drupal::service('theme_handler');
     $theme_handler->install(['test_basetheme', 'test_subtheme', 'test_subsubtheme']);
 
-    $registry_subsub_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_subsubtheme');
+    $registry_subsub_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_subsubtheme');
     $registry_subsub_theme->setThemeManager(\Drupal::theme());
-    $registry_sub_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_subtheme');
+    $registry_sub_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_subtheme');
     $registry_sub_theme->setThemeManager(\Drupal::theme());
-    $registry_base_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_basetheme');
+    $registry_base_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_basetheme');
     $registry_base_theme->setThemeManager(\Drupal::theme());
 
     $preprocess_functions = $registry_subsub_theme->get()['theme_test_template_test']['preprocess functions'];
@@ -111,7 +111,7 @@ class RegistryTest extends KernelTestBase {
     $theme_handler = \Drupal::service('theme_handler');
     $theme_handler->install(['test_theme']);
 
-    $registry_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
+    $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
     $registry_theme->setThemeManager(\Drupal::theme());
 
     $suggestions = ['__kitten', '__flamingo'];
@@ -154,7 +154,7 @@ class RegistryTest extends KernelTestBase {
     $theme_handler->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
 
-    $registry = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
+    $registry = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
     $registry->setThemeManager(\Drupal::theme());
     $this->assertEqual('value', $registry->get()['theme_test_template_test']['variables']['additional']);
   }
@@ -199,7 +199,7 @@ class RegistryTest extends KernelTestBase {
     $theme_handler = \Drupal::service('theme_handler');
     $theme_handler->install(['test_theme']);
 
-    $registry_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
+    $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
     $registry_theme->setThemeManager(\Drupal::theme());
 
     $expected = [

@@ -24,8 +24,8 @@ class UserAccountFormFieldsTest extends KernelTestBase {
    * Tests the root user account form section in the "Configure site" form.
    */
   public function testInstallConfigureForm() {
-    require_once \Drupal::root() . '/core/includes/install.core.inc';
-    require_once \Drupal::root() . '/core/includes/install.inc';
+    require_once $this->root . '/core/includes/install.core.inc';
+    require_once $this->root . '/core/includes/install.inc';
     $install_state = install_state_defaults();
     $form_state = new FormState();
     $form_state->addBuildInfo('args', [&$install_state]);

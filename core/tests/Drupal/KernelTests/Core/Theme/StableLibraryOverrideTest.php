@@ -94,7 +94,6 @@ class StableLibraryOverrideTest extends KernelTestBase {
     $libraries_after = $this->getAllLibraries();
     $libraries_after = $this->removeVendorAssets($libraries_after);
 
-    $root = \Drupal::root();
     foreach ($libraries_before as $extension => $libraries) {
       foreach ($libraries as $library_name => $library) {
         // Allow skipping libraries.
@@ -173,10 +172,9 @@ class StableLibraryOverrideTest extends KernelTestBase {
 
     $libraries['core'] = $this->libraryDiscovery->getLibrariesByExtension('core');
 
-    $root = \Drupal::root();
     foreach ($modules as $module_name => $module) {
       $library_file = $module->getPath() . '/' . $module_name . '.libraries.yml';
-      if (is_file($root . '/' . $library_file)) {
+      if (is_file($this->root . '/' . $library_file)) {
         $libraries[$module_name] = $this->libraryDiscovery->getLibrariesByExtension($module_name);
       }
     }

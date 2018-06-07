@@ -164,7 +164,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     // installed for testing below.
     $this->vocabulary->unsetThirdPartySetting('taxonomy_crud', 'foo');
 
-    require_once \Drupal::root() . '/core/includes/install.inc';
+    require_once $this->root . '/core/includes/install.inc';
     $this->container->get('module_installer')->uninstall(['taxonomy']);
     $this->container->get('module_installer')->install(['taxonomy']);
 

@@ -24,7 +24,7 @@ class UpdaterTest extends KernelTestBase {
   public function testGetProjectTitleWithChild() {
     // Get the project title from its directory. If it can't find the title
     // it will choose the first project title in the directory.
-    $directory = \Drupal::root() . '/core/modules/system/tests/modules/module_handler_test_multiple';
+    $directory = $this->root . '/core/modules/system/tests/modules/module_handler_test_multiple';
     $title = Updater::getProjectTitle($directory);
     $this->assertEqual('module handler test multiple', $title);
   }

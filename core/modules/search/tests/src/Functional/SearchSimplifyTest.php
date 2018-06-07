@@ -20,7 +20,7 @@ class SearchSimplifyTest extends SearchTestBase {
     // their own lines).  So the even-numbered lines should simplify to nothing,
     // and the odd-numbered lines we need to split into shorter chunks and
     // verify that simplification doesn't lose any characters.
-    $input = file_get_contents(\Drupal::root() . '/core/modules/search/tests/UnicodeTest.txt');
+    $input = file_get_contents($this->root . '/core/modules/search/tests/UnicodeTest.txt');
     $basestrings = explode(chr(10), $input);
     $strings = [];
     foreach ($basestrings as $key => $string) {

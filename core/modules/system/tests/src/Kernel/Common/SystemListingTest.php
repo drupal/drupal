@@ -33,13 +33,13 @@ class SystemListingTest extends KernelTestBase {
     foreach ($expected_directories as $module => $directories) {
       foreach ($directories as $directory) {
         $filename = "$directory/$module/$module.info.yml";
-        $this->assertTrue(file_exists(\Drupal::root() . '/' . $filename), format_string('@filename exists.', ['@filename' => $filename]));
+        $this->assertTrue(file_exists($this->root . '/' . $filename), format_string('@filename exists.', ['@filename' => $filename]));
       }
     }
 
     // Now scan the directories and check that the files take precedence as
     // expected.
-    $listing = new ExtensionDiscovery(\Drupal::root());
+    $listing = new ExtensionDiscovery($this->root);
     $listing->setProfileDirectories(['core/profiles/testing']);
     $files = $listing->scan('module');
     foreach ($expected_directories as $module => $directories) {
@@ -56,7 +56,7 @@ class SystemListingTest extends KernelTestBase {
    * Tests that directories matching file_scan_ignore_directories are ignored
    */
   public function testFileScanIgnoreDirectory() {
-    $listing = new ExtensionDiscovery(\Drupal::root(), FALSE);
+    $listing = new ExtensionDiscovery($this->root, FALSE);
     $listing->setProfileDirectories(['core/profiles/testing']);
     $files = $listing->scan('module');
     $this->assertArrayHasKey('drupal_system_listing_compatible_test', $files);
@@ -68,7 +68,7 @@ class SystemListingTest extends KernelTestBase {
     $reflected_property->setValue($reflected_class, []);
 
     $this->setSetting('file_scan_ignore_directories', ['drupal_system_listing_compatible_test']);
-    $listing = new ExtensionDiscovery(\Drupal::root(), FALSE);
+    $listing = new ExtensionDiscovery($this->root, FALSE);
     $listing->setProfileDirectories(['core/profiles/testing']);
     $files = $listing->scan('module');
     $this->assertArrayNotHasKey('drupal_system_listing_compatible_test', $files);

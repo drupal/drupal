@@ -33,7 +33,7 @@ class ThemeSettingsTest extends KernelTestBase {
     $this->installConfig(['system']);
 
     if (!isset($this->availableThemes)) {
-      $discovery = new ExtensionDiscovery(\Drupal::root());
+      $discovery = new ExtensionDiscovery($this->root);
       $this->availableThemes = $discovery->scan('theme');
     }
   }

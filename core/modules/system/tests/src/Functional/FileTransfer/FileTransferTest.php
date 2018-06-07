@@ -20,7 +20,7 @@ class FileTransferTest extends BrowserTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->testConnection = TestFileTransfer::factory(\Drupal::root(), ['hostname' => $this->hostname, 'username' => $this->username, 'password' => $this->password, 'port' => $this->port]);
+    $this->testConnection = TestFileTransfer::factory($this->root, ['hostname' => $this->hostname, 'username' => $this->username, 'password' => $this->password, 'port' => $this->port]);
   }
 
   public function _getFakeModuleFiles() {
@@ -82,7 +82,7 @@ class FileTransferTest extends BrowserTestBase {
 
     $gotit = TRUE;
     try {
-      $this->testConnection->copyDirectory($source, \Drupal::root() . '/' . PublicStream::basePath());
+      $this->testConnection->copyDirectory($source, $this->root . '/' . PublicStream::basePath());
     }
     catch (FileTransferException $e) {
       $gotit = FALSE;

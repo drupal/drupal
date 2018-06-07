@@ -135,7 +135,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $this->drupalGet('/media/add/image');
     $page = $this->getSession()->getPage();
     $page->fillField('Name', 'Foobar');
-    $page->attachFileToField('Image', \Drupal::root() . '/core/modules/media/tests/fixtures/example_1.jpeg');
+    $page->attachFileToField('Image', $this->root . '/core/modules/media/tests/fixtures/example_1.jpeg');
     $page->pressButton('Save');
     $assert->addressMatches('/^\/media\/[0-9]+$/');
 

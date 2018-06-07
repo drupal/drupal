@@ -23,8 +23,8 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
    */
   protected function visitInstaller() {
     // Place a custom local translation in the translations directory.
-    mkdir(\Drupal::root() . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
-    file_put_contents(\Drupal::root() . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', $this->getPo('de'));
+    mkdir($this->root . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
+    file_put_contents($this->root . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', $this->getPo('de'));
 
     // The unrouted URL assembler does not exist at this point, so we build the
     // URL ourselves.

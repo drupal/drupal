@@ -54,7 +54,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
     // Test request with subdir on homepage.
     $server = [
       'SCRIPT_NAME' => '/subdir/index.php',
-      'SCRIPT_FILENAME' => \Drupal::root() . '/index.php',
+      'SCRIPT_FILENAME' => $this->root . '/index.php',
       'SERVER_NAME' => 'http://www.example.com',
     ];
     $request = Request::create('/subdir/', 'GET', [], [], [], $server);
@@ -69,7 +69,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
     // Test request with subdir on other page.
     $server = [
       'SCRIPT_NAME' => '/subdir/index.php',
-      'SCRIPT_FILENAME' => \Drupal::root() . '/index.php',
+      'SCRIPT_FILENAME' => $this->root . '/index.php',
       'SERVER_NAME' => 'http://www.example.com',
     ];
     $request = Request::create('/subdir/node/add', 'GET', [], [], [], $server);
@@ -84,7 +84,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
     // Test request without subdir on the homepage.
     $server = [
       'SCRIPT_NAME' => '/index.php',
-      'SCRIPT_FILENAME' => \Drupal::root() . '/index.php',
+      'SCRIPT_FILENAME' => $this->root . '/index.php',
       'SERVER_NAME' => 'http://www.example.com',
     ];
     $request = Request::create('/', 'GET', [], [], [], $server);
@@ -99,7 +99,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
     // Test request without subdir on other page.
     $server = [
       'SCRIPT_NAME' => '/index.php',
-      'SCRIPT_FILENAME' => \Drupal::root() . '/index.php',
+      'SCRIPT_FILENAME' => $this->root . '/index.php',
       'SERVER_NAME' => 'http://www.example.com',
     ];
     $request = Request::create('/node/add', 'GET', [], [], [], $server);
@@ -115,7 +115,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
     // not found exception page.
     $server = [
       'SCRIPT_NAME' => '/index.php',
-      'SCRIPT_FILENAME' => \Drupal::root() . '/index.php',
+      'SCRIPT_FILENAME' => $this->root . '/index.php',
       'SERVER_NAME' => 'http://www.example.com',
     ];
     $request = Request::create('/invalid-path', 'GET', [], [], [], $server);

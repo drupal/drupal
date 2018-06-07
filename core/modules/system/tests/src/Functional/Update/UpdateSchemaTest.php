@@ -35,7 +35,7 @@ class UpdateSchemaTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    require_once \Drupal::root() . '/core/includes/update.inc';
+    require_once $this->root . '/core/includes/update.inc';
     $this->user = $this->drupalCreateUser(['administer software updates', 'access site in maintenance mode']);
     $this->updateUrl = Url::fromRoute('system.db_update');
   }

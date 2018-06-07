@@ -193,7 +193,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     $this->replaceUser1();
 
-    require_once \Drupal::root() . '/core/includes/update.inc';
+    require_once $this->root . '/core/includes/update.inc';
 
     // Setup Mink.
     $session = $this->initMink();

@@ -190,10 +190,10 @@ class UpdateUploadTest extends UpdateTestBase {
    * Tests only an *.info.yml file are detected without supporting files.
    */
   public function testUpdateDirectory() {
-    $type = Updater::getUpdaterFromDirectory(\Drupal::root() . '/core/modules/update/tests/modules/aaa_update_test');
+    $type = Updater::getUpdaterFromDirectory($this->root . '/core/modules/update/tests/modules/aaa_update_test');
     $this->assertEqual($type, 'Drupal\\Core\\Updater\\Module', 'Detected a Module');
 
-    $type = Updater::getUpdaterFromDirectory(\Drupal::root() . '/core/modules/update/tests/themes/update_test_basetheme');
+    $type = Updater::getUpdaterFromDirectory($this->root . '/core/modules/update/tests/themes/update_test_basetheme');
     $this->assertEqual($type, 'Drupal\\Core\\Updater\\Theme', 'Detected a Theme.');
   }
 

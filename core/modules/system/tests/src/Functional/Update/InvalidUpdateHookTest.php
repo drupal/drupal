@@ -35,7 +35,7 @@ class InvalidUpdateHookTest extends BrowserTestBase {
 
   protected function setUp() {
     parent::setUp();
-    require_once \Drupal::root() . '/core/includes/update.inc';
+    require_once $this->root . '/core/includes/update.inc';
 
     $this->updateUrl = $GLOBALS['base_url'] . '/update.php';
     $this->updateUser = $this->drupalCreateUser(['administer software updates']);

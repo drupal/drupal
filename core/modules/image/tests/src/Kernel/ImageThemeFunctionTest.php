@@ -62,7 +62,7 @@ class ImageThemeFunctionTest extends KernelTestBase {
       'field_name' => 'image_test',
       'bundle' => 'entity_test',
     ])->save();
-    file_unmanaged_copy(\Drupal::root() . '/core/misc/druplicon.png', 'public://example.jpg');
+    file_unmanaged_copy($this->root . '/core/misc/druplicon.png', 'public://example.jpg');
     $this->image = File::create([
       'uri' => 'public://example.jpg',
     ]);
