@@ -70,8 +70,8 @@ use Drupal\migrate\Row;
  * property bar. foo configuration is included for illustration purposes.
  *
  * Because of this, if the source or destination property actually starts with a
- * @, that character must be escaped with @@.
- * The referenced property becomes, for example, @@@foo.
+ * "@", that character must be escaped with "@@". The referenced property
+ * becomes, for example, "@@@foo".
  *
  * @code
  * process:
