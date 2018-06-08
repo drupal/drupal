@@ -2,14 +2,15 @@
 
 namespace Drupal\Tests\system\Functional\Bootstrap;
 
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests drupal_set_message() and related functions.
+ * Tests the Messenger service.
  *
  * @group Bootstrap
  */
-class DrupalSetMessageTest extends BrowserTestBase {
+class DrupalMessengerServiceTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -19,12 +20,12 @@ class DrupalSetMessageTest extends BrowserTestBase {
   public static $modules = ['system_test'];
 
   /**
-   * Tests drupal_set_message().
+   * Tests Messenger service.
    */
-  public function testDrupalSetMessage() {
-    // The page at system-test/drupal-set-message sets two messages and then
-    // removes the first before it is displayed.
-    $this->drupalGet('system-test/drupal-set-message');
+  public function testDrupalMessengerService() {
+    // The page at system_test.messenger_service route sets two messages and
+    // then removes the first before it is displayed.
+    $this->drupalGet(Url::fromRoute('system_test.messenger_service'));
     $this->assertNoText('First message (removed).');
     $this->assertRaw(t('Second message with <em>markup!</em> (not removed).'));
 

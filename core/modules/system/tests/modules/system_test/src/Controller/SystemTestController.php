@@ -107,7 +107,7 @@ class SystemTestController extends ControllerBase {
    * @return string
    *   Empty string, we just test the setting of messages.
    */
-  public function drupalSetMessageTest() {
+  public function messengerServiceTest() {
     // Set two messages.
     $this->messenger->addStatus('First message (removed).');
     $this->messenger->addStatus($this->t('Second message with <em>markup!</em> (not removed).'));

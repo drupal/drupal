@@ -13,11 +13,11 @@ system_test.main_content_handling:
   requirements:
     _access: 'TRUE'
 
-system_test.drupal_set_message:
-  path: '/system-test/drupal-set-message'
+system_test.messenger_service:
+  path: '/system-test/messenger-service'
   defaults:
-    _title: 'Set messages with drupal_set_message()'
-    _controller: '\Drupal\system_test\Controller\SystemTestController::drupalSetMessageTest'
+    _title: 'Set messages with Messenger service'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::messengerServiceTest'
   requirements:
     _access: 'TRUE'
 
