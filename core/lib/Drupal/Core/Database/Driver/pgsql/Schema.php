@@ -249,7 +249,7 @@ EOD;
     }
 
     $sql_keys = [];
-    if (isset($table['primary key']) && is_array($table['primary key'])) {
+    if (!empty($table['primary key']) && is_array($table['primary key'])) {
       $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, '', 'pkey') . ' PRIMARY KEY (' . $this->createPrimaryKeySql($table['primary key']) . ')';
     }
     if (isset($table['unique keys']) && is_array($table['unique keys'])) {

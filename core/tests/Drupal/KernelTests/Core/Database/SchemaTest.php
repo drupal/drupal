@@ -1009,7 +1009,7 @@ class SchemaTest extends KernelTestBase {
     $this->assertSame(['id3', 'test_field_2', 'id4'], $method->invoke($schema, 'table_with_pk_3'));
 
     // Test with table without a primary key.
-    $schema->createTable('table_without_pk', [
+    $schema->createTable('table_without_pk_1', [
       'description' => 'Table without primary key.',
       'fields' => [
         'id'  => [
@@ -1022,7 +1022,24 @@ class SchemaTest extends KernelTestBase {
         ],
       ],
     ]);
-    $this->assertSame([], $method->invoke($schema, 'table_without_pk'));
+    $this->assertSame([], $method->invoke($schema, 'table_without_pk_1'));
+
+    // Test with table with an empty primary key.
+    $schema->createTable('table_without_pk_2', [
+      'description' => 'Table without primary key.',
+      'fields' => [
+        'id'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'test_field'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => [],
+    ]);
+    $this->assertSame([], $method->invoke($schema, 'table_without_pk_2'));
 
     // Test with non existing table.
     $this->assertFalse($method->invoke($schema, 'non_existing_table'));
