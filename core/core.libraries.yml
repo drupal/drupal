@@ -24,10 +24,10 @@ classList:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor-dev
-  version: "4.8.0+2018-04-18-security-patch"
+  version: "4.9.2"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor-dev/blob/4.8.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor-dev/blob/4.9.2/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
