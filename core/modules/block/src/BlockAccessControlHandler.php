@@ -3,6 +3,7 @@
 namespace Drupal\block;
 
 use Drupal\Component\Plugin\Exception\ContextException;
+use Drupal\Component\Plugin\Exception\MissingValueContextException;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
@@ -83,11 +84,15 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
     else {
       $conditions = [];
       $missing_context = FALSE;
+      $missing_value = FALSE;
       foreach ($entity->getVisibilityConditions() as $condition_id => $condition) {
         if ($condition instanceof ContextAwarePluginInterface) {
           try {
             $contexts = $this->contextRepository->getRuntimeContexts(array_values($condition->getContextMapping()));
             $this->contextHandler->applyContextMapping($condition, $contexts);
+          }
+          catch (MissingValueContextException $e) {
+            $missing_value = TRUE;
           }
           catch (ContextException $e) {
             $missing_context = TRUE;
@@ -99,13 +104,14 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
       if ($missing_context) {
         // If any context is missing then we might be missing cacheable
         // metadata, and don't know based on what conditions the block is
-        // accessible or not. For example, blocks that have a node type
-        // condition will have a missing context on any non-node route like the
-        // frontpage.
-        // @todo Avoid setting max-age 0 for some or all cases, for example by
-        //   treating available contexts without value differently in
-        //   https://www.drupal.org/node/2521956.
+        // accessible or not. Make sure the result cannot be cached.
         $access = AccessResult::forbidden()->setCacheMaxAge(0);
+      }
+      elseif ($missing_value) {
+        // The contexts exist but have no value. Deny access without
+        // disabling caching. For example the node type condition will have a
+        // missing context on any non-node route like the frontpage.
+        $access = AccessResult::forbidden();
       }
       elseif ($this->resolveConditions($conditions, 'and') !== FALSE) {
         // Delegate to the plugin.
@@ -117,12 +123,15 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
           }
           $access = $block_plugin->access($account, TRUE);
         }
+        catch (MissingValueContextException $e) {
+          // The contexts exist but have no value. Deny access without
+          // disabling caching.
+          $access = AccessResult::forbidden();
+        }
         catch (ContextException $e) {
-          // Setting access to forbidden if any context is missing for the same
-          // reasons as with conditions (described in the comment above).
-          // @todo Avoid setting max-age 0 for some or all cases, for example by
-          //   treating available contexts without value differently in
-          //   https://www.drupal.org/node/2521956.
+          // If any context is missing then we might be missing cacheable
+          // metadata, and don't know based on what conditions the block is
+          // accessible or not. Make sure the result cannot be cached.
           $access = AccessResult::forbidden()->setCacheMaxAge(0);
         }
       }

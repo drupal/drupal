@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\Exception\ContextException;
+use Drupal\Component\Plugin\Exception\MissingValueContextException;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -336,7 +337,7 @@ class ContextHandlerTest extends UnitTestCase {
     $plugin->expects($this->never())
       ->method('getContext');
 
-    $this->setExpectedException(ContextException::class, 'Required contexts without a value: hit.');
+    $this->setExpectedException(MissingValueContextException::class, 'Required contexts without a value: hit');
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
 
@@ -404,7 +405,7 @@ class ContextHandlerTest extends UnitTestCase {
     $plugin->expects($this->never())
       ->method('setContextValue');
 
-    $this->setExpectedException(ContextException::class, 'Required contexts without a value: hit.');
+    $this->setExpectedException(MissingValueContextException::class, 'Required contexts without a value: hit');
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
 

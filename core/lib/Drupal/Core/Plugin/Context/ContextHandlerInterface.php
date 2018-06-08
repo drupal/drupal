@@ -74,6 +74,9 @@ interface ContextHandlerInterface {
    *
    * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   Thrown when a context assignment was not satisfied.
+   * @throws \Drupal\Component\Plugin\Exception\MissingValueContextException
+   *   Thrown when a context is provided but has no value. Only thrown if
+   *   no contexts are missing.
    */
   public function applyContextMapping(ContextAwarePluginInterface $plugin, $contexts, $mappings = []);
 

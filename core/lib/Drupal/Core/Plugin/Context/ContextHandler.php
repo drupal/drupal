@@ -3,6 +3,7 @@
 namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Exception\ContextException;
+use Drupal\Component\Plugin\Exception\MissingValueContextException;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 
@@ -93,14 +94,16 @@ class ContextHandler implements ContextHandlerInterface {
       }
     }
 
-    // If there are any required contexts without a value, throw an exception.
-    if ($missing_value) {
-      throw new ContextException(sprintf('Required contexts without a value: %s.', implode(', ', $missing_value)));
-    }
-
     // If there are any mappings that were not satisfied, throw an exception.
+    // This is a more severe problem than missing values, so check and throw
+    // this first.
     if (!empty($mappings)) {
       throw new ContextException('Assigned contexts were not satisfied: ' . implode(',', array_keys($mappings)));
+    }
+
+    // If there are any required contexts without a value, throw an exception.
+    if ($missing_value) {
+      throw new MissingValueContextException($missing_value);
     }
   }
 

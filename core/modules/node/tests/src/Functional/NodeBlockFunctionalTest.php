@@ -141,15 +141,32 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $label = $block->label();
     $this->assertNoText($label, 'Block was not displayed on the front page.');
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user', 'route']);
+
+    // Ensure that a page that does not have a node context can still be cached,
+    // the front page is the user page which is already cached from the login
+    // request above.
+    $this->assertSame('HIT', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
+
     $this->drupalGet('node/add/article');
     $this->assertText($label, 'Block was displayed on the node/add/article page.');
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'session', 'theme', 'url.path', 'url.query_args', 'user', 'route']);
+
+    // The node/add/article page is an admin path and currently uncacheable.
+    $this->assertSame('UNCACHEABLE', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
+
     $this->drupalGet('node/' . $node1->id());
     $this->assertText($label, 'Block was displayed on the node/N when node is of type article.');
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user', 'route', 'timezone']);
+    $this->assertSame('MISS', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
+    $this->drupalGet('node/' . $node1->id());
+    $this->assertSame('HIT', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
+
     $this->drupalGet('node/' . $node5->id());
     $this->assertNoText($label, 'Block was not displayed on nodes of type page.');
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user', 'route', 'timezone']);
+    $this->assertSame('MISS', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
+    $this->drupalGet('node/' . $node5->id());
+    $this->assertSame('HIT', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/block');
