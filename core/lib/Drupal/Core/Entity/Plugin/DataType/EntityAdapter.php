@@ -78,8 +78,6 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
       throw new MissingDataException("Unable to get property $property_name as no entity has been provided.");
     }
     if (!$this->entity instanceof FieldableEntityInterface) {
-      // @todo: Add support for config entities in
-      // https://www.drupal.org/node/1818574.
       throw new \InvalidArgumentException("Unable to get unknown property $property_name.");
     }
     // This will throw an exception for unknown fields.
@@ -94,8 +92,6 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
       throw new MissingDataException("Unable to set property $property_name as no entity has been provided.");
     }
     if (!$this->entity instanceof FieldableEntityInterface) {
-      // @todo: Add support for config entities in
-      // https://www.drupal.org/node/1818574.
       throw new \InvalidArgumentException("Unable to set unknown property $property_name.");
     }
     // This will throw an exception for unknown fields.
@@ -111,8 +107,6 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
       throw new MissingDataException('Unable to get properties as no entity has been provided.');
     }
     if (!$this->entity instanceof FieldableEntityInterface) {
-      // @todo: Add support for config entities in
-      // https://www.drupal.org/node/1818574.
       return [];
     }
     return $this->entity->getFields($include_computed);

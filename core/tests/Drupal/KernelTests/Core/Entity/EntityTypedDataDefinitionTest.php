@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
@@ -149,6 +150,7 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
     $entity_type_id = $this->randomMachineName();
 
     $entity_type = $this->prophesize(EntityTypeInterface::class);
+    $entity_type->entityClassImplements(ConfigEntityInterface::class)->willReturn(FALSE);
     $entity_type->getLabel()->willReturn($this->randomString());
     $entity_type->getConstraints()->willReturn([]);
     $entity_type->isInternal()->willReturn($internal);
