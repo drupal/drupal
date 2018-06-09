@@ -3,6 +3,7 @@
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Variable;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -140,7 +141,7 @@ class StaticMap extends ProcessPluginBase {
         return $this->configuration['default_value'];
       }
       if (empty($this->configuration['bypass'])) {
-        throw new MigrateSkipRowException();
+        throw new MigrateSkipRowException(sprintf("No static mapping found for '%s' and no default value provided for destination '%s'.", Variable::export($value), $destination_property));
       }
       else {
         return $value;
