@@ -27,7 +27,7 @@ class Statement extends StatementPrefetch implements StatementInterface {
    * See http://bugs.php.net/bug.php?id=45259 for more details.
    */
   protected function getStatement($query, &$args = []) {
-    if (count($args)) {
+    if (is_array($args) && !empty($args)) {
       // Check if $args is a simple numeric array.
       if (range(0, count($args) - 1) === array_keys($args)) {
         // In that case, we have unnamed placeholders.
