@@ -57,6 +57,7 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'date',
       'dblog',
       'email',
+      'entity_translation',
       'field',
       'field_sql_storage',
       'file',

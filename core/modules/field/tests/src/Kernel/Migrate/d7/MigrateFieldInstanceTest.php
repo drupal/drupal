@@ -118,7 +118,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.test_content_type.field_file', 'File', 'file', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_float', 'Float', 'float', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_images', 'Images', 'image', TRUE, FALSE);
-    $this->assertEntity('node.test_content_type.field_integer', 'Integer', 'integer', TRUE, FALSE);
+    $this->assertEntity('node.test_content_type.field_integer', 'Integer', 'integer', TRUE, TRUE);
     $this->assertEntity('node.test_content_type.field_link', 'Link', 'link', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_text_list', 'Text List', 'list_string', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_integer_list', 'Integer List', 'list_integer', FALSE, FALSE);
@@ -126,7 +126,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.test_content_type.field_long_text', 'Long text', 'text_with_summary', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_term_reference', 'Term Reference', 'entity_reference', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_text', 'Text', 'string', FALSE, FALSE);
-    $this->assertEntity('comment.comment_node_test_content_type.field_integer', 'Integer', 'integer', FALSE, FALSE);
+    $this->assertEntity('comment.comment_node_test_content_type.field_integer', 'Integer', 'integer', FALSE, TRUE);
     $this->assertEntity('user.user.field_file', 'File', 'file', FALSE, FALSE);
 
     $this->assertLinkFields('node.test_content_type.field_link', DRUPAL_OPTIONAL);

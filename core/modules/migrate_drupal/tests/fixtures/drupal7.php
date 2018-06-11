@@ -3011,6 +3011,180 @@ $connection->insert('date_formats')
 ))
 ->execute();
 
+$connection->schema()->createTable('entity_translation', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'source' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'uid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'status' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '1',
+    ),
+    'translate' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'created' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'changed' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'language',
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('entity_translation')
+->fields(array(
+  'entity_type',
+  'entity_id',
+  'revision_id',
+  'language',
+  'source',
+  'uid',
+  'status',
+  'translate',
+  'created',
+  'changed',
+))
+->values(array(
+  'entity_type' => 'user',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'en',
+  'source' => '',
+  'uid' => '1',
+  'status' => '1',
+  'translate' => '0',
+  'created' => '1527594929',
+  'changed' => '1527594929',
+))
+->execute();
+
+$connection->schema()->createTable('entity_translation_revision', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'source' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'uid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'status' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '1',
+    ),
+    'translate' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'created' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'changed' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'revision_id',
+    'language',
+  ),
+  'indexes' => array(
+    'revision_id' => array(
+      'revision_id',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
 $connection->schema()->createTable('field_config', array(
   'fields' => array(
     'id' => array(
@@ -3314,9 +3488,9 @@ $connection->insert('field_config')
   'storage_module' => 'field_sql_storage',
   'storage_active' => '1',
   'locked' => '0',
-  'data' => 'a:7:{s:12:"translatable";s:1:"0";s:12:"entity_types";a:0:{}s:8:"settings";a:0:{}s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:24:"field_data_field_integer";a:1:{s:5:"value";s:19:"field_integer_value";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:28:"field_revision_field_integer";a:1:{s:5:"value";s:19:"field_integer_value";}}}}}s:12:"foreign keys";a:0:{}s:7:"indexes";a:0:{}s:2:"id";s:2:"14";}',
+  'data' => 'a:7:{s:12:"translatable";b:1;s:12:"entity_types";a:0:{}s:8:"settings";a:1:{s:23:"entity_translation_sync";b:0;}s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:24:"field_data_field_integer";a:1:{s:5:"value";s:19:"field_integer_value";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:28:"field_revision_field_integer";a:1:{s:5:"value";s:19:"field_integer_value";}}}}}s:12:"foreign keys";a:0:{}s:7:"indexes";a:0:{}s:2:"id";s:2:"14";}',
   'cardinality' => '1',
-  'translatable' => '0',
+  'translatable' => '1',
   'deleted' => '0',
 ))
 ->values(array(
@@ -5600,7 +5774,7 @@ $connection->insert('field_data_field_integer')
   'deleted' => '0',
   'entity_id' => '1',
   'revision_id' => '1',
-  'language' => 'und',
+  'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '5',
 ))
@@ -5610,7 +5784,7 @@ $connection->insert('field_data_field_integer')
   'deleted' => '0',
   'entity_id' => '2',
   'revision_id' => '2',
-  'language' => 'und',
+  'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '99',
 ))
@@ -5620,7 +5794,7 @@ $connection->insert('field_data_field_integer')
   'deleted' => '0',
   'entity_id' => '4',
   'revision_id' => '4',
-  'language' => 'und',
+  'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '6',
 ))
@@ -9343,7 +9517,7 @@ $connection->insert('field_revision_field_integer')
   'deleted' => '0',
   'entity_id' => '1',
   'revision_id' => '1',
-  'language' => 'und',
+  'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '5',
 ))
@@ -9353,7 +9527,7 @@ $connection->insert('field_revision_field_integer')
   'deleted' => '0',
   'entity_id' => '2',
   'revision_id' => '2',
-  'language' => 'und',
+  'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '99',
 ))
@@ -9363,7 +9537,7 @@ $connection->insert('field_revision_field_integer')
   'deleted' => '0',
   'entity_id' => '4',
   'revision_id' => '4',
-  'language' => 'und',
+  'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '6',
 ))
@@ -24036,6 +24210,33 @@ $connection->insert('menu_links')
   'p9' => '0',
   'updated' => '0',
 ))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '491',
+  'plid' => '48',
+  'link_path' => 'admin/config/regional/entity_translation',
+  'router_path' => 'admin/config/regional/entity_translation',
+  'link_title' => 'Entity translation',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:83:"Configure which entities can be translated and enable or disable language fallback.";}}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '1',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '4',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '8',
+  'p3' => '48',
+  'p4' => '491',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('menu_router', array(
@@ -25979,6 +26180,31 @@ $connection->insert('menu_router')
   'position' => '',
   'weight' => '-10',
   'include_file' => 'modules/system/system.admin.inc',
+))
+->values(array(
+  'path' => 'admin/config/regional/entity_translation',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:29:"administer entity translation";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:1:{i:0;s:29:"entity_translation_admin_form";}',
+  'delivery_callback' => '',
+  'fit' => '15',
+  'number_parts' => '4',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'admin/config/regional/entity_translation',
+  'title' => 'Entity translation',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '6',
+  'description' => 'Configure which entities can be translated and enable or disable language fallback.',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/entity_translation/entity_translation.admin.inc',
 ))
 ->values(array(
   'path' => 'admin/config/regional/language',
@@ -37698,6 +37924,55 @@ $connection->insert('registry')
   'weight' => '0',
 ))
 ->values(array(
+  'name' => 'EntityTranslationCommentHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.comment.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'EntityTranslationDefaultHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'EntityTranslationHandlerFactory',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler_factory.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'EntityTranslationHandlerInterface',
+  'type' => 'interface',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'EntityTranslationNodeHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.node.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'EntityTranslationTaxonomyTermHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.taxonomy_term.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'EntityTranslationUserHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.user.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
   'name' => 'EntityValueWrapper',
   'type' => 'class',
   'filename' => 'sites/all/modules/entity/includes/entity.wrapper.inc',
@@ -37710,6 +37985,55 @@ $connection->insert('registry')
   'filename' => 'sites/all/modules/entity/entity.test',
   'module' => 'entity',
   'weight' => '0',
+))
+->values(array(
+  'name' => 'entity_translation_handler_field_field',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_field_field.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'entity_translation_handler_field_label',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_field_label.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'entity_translation_handler_field_translate_link',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_field_translate_link.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'entity_translation_handler_filter_entity_type',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_filter_entity_type.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'entity_translation_handler_filter_language',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_filter_language.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'entity_translation_handler_filter_translation_exists',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_filter_translation_exists.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
+))
+->values(array(
+  'name' => 'entity_translation_handler_relationship',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_relationship.inc',
+  'module' => 'entity_translation',
+  'weight' => '11',
 ))
 ->values(array(
   'name' => 'entity_views_handler_area_entity',
@@ -45917,7 +46241,7 @@ $connection->insert('system')
   'name' => 'ctools',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'bootstrap' => '0',
   'schema_version' => '6008',
   'weight' => '0',
@@ -46252,6 +46576,17 @@ $connection->insert('system')
   'schema_version' => '-1',
   'weight' => '0',
   'info' => 'a:13:{s:4:"name";s:41:"Entityreference - Feeds integration tests";s:11:"description";s:65:"Support module for the Entityreference - Feeds integration tests.";s:7:"package";s:7:"Testing";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:12:"dependencies";a:3:{i:0;s:5:"feeds";i:1;s:8:"feeds_ui";i:2;s:15:"entityreference";}s:7:"version";s:7:"7.x-1.1";s:7:"project";s:15:"entityreference";s:9:"datestamp";s:10:"1384973110";s:5:"mtime";i:1384973110;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/entity_translation.module',
+  'name' => 'entity_translation',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '0',
+  'schema_version' => '7009',
+  'weight' => '11',
+  'info' => 'a:14:{s:4:"name";s:18:"Entity Translation";s:11:"description";s:58:"Allows entities to be translated into different languages.";s:7:"package";s:33:"Multilingual - Entity Translation";s:4:"core";s:3:"7.x";s:9:"configure";s:40:"admin/config/regional/entity_translation";s:12:"dependencies";a:1:{i:0;s:14:"locale (>7.14)";}s:17:"test_dependencies";a:2:{i:0;s:17:"pathauto:pathauto";i:1;s:5:"title";}s:5:"files";a:15:{i:0;s:40:"includes/translation.handler_factory.inc";i:1;s:32:"includes/translation.handler.inc";i:2;s:40:"includes/translation.handler.comment.inc";i:3;s:37:"includes/translation.handler.node.inc";i:4;s:46:"includes/translation.handler.taxonomy_term.inc";i:5;s:37:"includes/translation.handler.user.inc";i:6;s:32:"includes/translation.migrate.inc";i:7;s:29:"tests/entity_translation.test";i:8;s:49:"views/entity_translation_handler_relationship.inc";i:9;s:57:"views/entity_translation_handler_field_translate_link.inc";i:10;s:48:"views/entity_translation_handler_field_label.inc";i:11;s:55:"views/entity_translation_handler_filter_entity_type.inc";i:12;s:52:"views/entity_translation_handler_filter_language.inc";i:13;s:62:"views/entity_translation_handler_filter_translation_exists.inc";i:14;s:48:"views/entity_translation_handler_field_field.inc";}s:7:"version";s:7:"7.x-1.0";s:7:"project";s:18:"entity_translation";s:9:"datestamp";s:10:"1522600694";s:5:"mtime";i:1522600694;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/link/link.module',
@@ -47756,6 +48091,30 @@ $connection->insert('variable')
   'value' => 'b:1;',
 ))
 ->values(array(
+  'name' => 'entity_translation_entity_types',
+  'value' => 'a:4:{s:7:"comment";s:7:"comment";s:4:"node";s:4:"node";s:13:"taxonomy_term";s:13:"taxonomy_term";s:4:"user";s:4:"user";}',
+))
+->values(array(
+  'name' => 'entity_translation_settings_comment__comment_node_test_content_type',
+  'value' => 'a:5:{s:16:"default_language";s:13:"xx-et-current";s:22:"hide_language_selector";i:1;s:21:"exclude_language_none";i:0;s:13:"lock_language";i:0;s:27:"shared_fields_original_only";i:0;}',
+))
+->values(array(
+  'name' => 'entity_translation_settings_node__test_content_type',
+  'value' => 'a:5:{s:16:"default_language";s:3:"und";s:22:"hide_language_selector";i:0;s:21:"exclude_language_none";i:0;s:13:"lock_language";i:0;s:27:"shared_fields_original_only";i:0;}',
+))
+->values(array(
+  'name' => 'entity_translation_settings_taxonomy_term__test_vocabulary',
+  'value' => 'a:5:{s:16:"default_language";s:13:"xx-et-default";s:22:"hide_language_selector";i:1;s:21:"exclude_language_none";i:0;s:13:"lock_language";i:0;s:27:"shared_fields_original_only";i:0;}',
+))
+->values(array(
+  'name' => 'entity_translation_settings_user__user',
+  'value' => 'a:5:{s:16:"default_language";s:13:"xx-et-default";s:22:"hide_language_selector";i:1;s:21:"exclude_language_none";i:0;s:13:"lock_language";i:0;s:27:"shared_fields_original_only";i:0;}',
+))
+->values(array(
+  'name' => 'entity_translation_taxonomy',
+  'value' => 'a:1:{s:15:"test_vocabulary";b:1;}',
+))
+->values(array(
   'name' => 'error_level',
   'value' => 'i:1;',
 ))
@@ -47897,7 +48256,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'language_content_type_test_content_type',
-  'value' => 's:1:"0";',
+  'value' => 's:1:"4";',
 ))
 ->values(array(
   'name' => 'i18n_node_options_blog',
