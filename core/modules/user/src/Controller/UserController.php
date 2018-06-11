@@ -317,7 +317,7 @@ class UserController extends ControllerBase {
         // Since user_cancel() is not invoked via Form API, batch processing
         // needs to be invoked manually and should redirect to the front page
         // after completion.
-        return batch_process('');
+        return batch_process('<front>');
       }
       else {
         $this->messenger()->addError($this->t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'));
