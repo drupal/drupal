@@ -94,7 +94,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     }
     else {
       $session->responseContains('Unable to read from Public files directory.');
-      $session->responseContains('Unable to read from Private file directory.');
+      $session->responseContains('Unable to read from Private files directory.');
     }
 
     // Restart the upgrade process.
