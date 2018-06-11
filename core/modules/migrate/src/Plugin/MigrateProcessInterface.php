@@ -9,11 +9,16 @@ use Drupal\migrate\Row;
 /**
  * An interface for migrate process plugins.
  *
- * A process plugin can use any number of methods instead of (but not in
- * addition to) transform with the same arguments and then the plugin
- * configuration needs to provide the name of the method to be called via the
- * "method" key. See \Drupal\migrate\Plugin\migrate\process\SkipOnEmpty and
- * migrate.migration.d6_field_instance_widget_settings.yml for examples.
+ * A process plugin will typically implement the transform() method to perform
+ * its work. However, it is possible instead for a process plugin to use any
+ * number of methods, thus offering different alternatives ways of processing.
+ * In this case, the transform() method should not be implemented, and the
+ * plugin configuration must provide the name of the method to be called via the
+ * "method" key. Each method must have the same signature as transform().
+ * The base class \Drupal\migrate\ProcessPluginBase takes care of implementing
+ * transform() and calling the configured method. See
+ * \Drupal\migrate\Plugin\migrate\process\SkipOnEmpty and
+ * d6_field_instance_widget_settings.yml for examples.
  *
  * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\ProcessPluginBase
