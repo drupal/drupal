@@ -221,6 +221,17 @@ class EntityForm extends FormBase implements EntityFormInterface {
   /**
    * Returns an array of supported actions for the current entity form.
    *
+   * This function generates a list of Form API elements which represent
+   * actions supported by the current entity form.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return array
+   *   An array of supported Form API action elements keyed by name.
+   *
    * @todo Consider introducing a 'preview' action here, since it is used by
    *   many entity types.
    */
