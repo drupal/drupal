@@ -4,6 +4,7 @@ namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\entity_test\Plugin\Field\ComputedReferenceTestFieldItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
 
 /**
@@ -38,6 +39,12 @@ class EntityTestComputedField extends EntityTest {
       ->setLabel('Computed Field Test')
       ->setComputed(TRUE)
       ->setClass(ComputedTestFieldItemList::class);
+
+    $fields['computed_reference_field'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel('Computed Reference Field Test')
+      ->setComputed(TRUE)
+      ->setSetting('target_type', 'entity_test')
+      ->setClass(ComputedReferenceTestFieldItemList::class);
 
     return $fields;
   }
