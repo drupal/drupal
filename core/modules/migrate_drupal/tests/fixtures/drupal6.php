@@ -9856,6 +9856,30 @@ $connection->insert('i18n_strings')
   'objectindex' => '0',
   'format' => '0',
 ))
+->values(array(
+  'lid' => '1679',
+  'objectid' => '14',
+  'type' => 'term',
+  'property' => 'name',
+  'objectindex' => '14',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1680',
+  'objectid' => '15',
+  'type' => 'term',
+  'property' => 'name',
+  'objectindex' => '15',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1681',
+  'objectid' => '14',
+  'type' => 'term',
+  'property' => 'description',
+  'objectindex' => '14',
+  'format' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('i18n_variable', array(
@@ -22357,6 +22381,27 @@ $connection->insert('locales_source')
   'source' => 'I really, really, really love migrating',
   'version' => '1',
 ))
+->values(array(
+  'lid' => '1679',
+  'location' => 'term:14:name',
+  'textgroup' => 'taxonomy',
+  'source' => 'Talos IV',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1680',
+  'location' => 'term:15:name',
+  'textgroup' => 'taxonomy',
+  'source' => 'Vulcan',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1681',
+  'location' => 'term:14:description',
+  'textgroup' => 'taxonomy',
+  'source' => 'The home of Captain Christopher Pike.',
+  'version' => '1',
+))
 ->execute();
 
 $connection->schema()->createTable('locales_target', array(
@@ -27410,6 +27455,30 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
+  'lid' => '1672',
+  'translation' => 'fr - Type',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1679',
+  'translation' => 'fr - Talos IV',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1681',
+  'translation' => 'fr - The home of Captain Christopher Pike.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
   'lid' => '66',
   'translation' => 'zu - CCK - Aucune Intégration aux Vues',
   'language' => 'zu',
@@ -27500,6 +27569,30 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '635',
   'translation' => 'zu - Test menu link 2',
+  'language' => 'zu',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1672',
+  'translation' => 'zu - Type',
+  'language' => 'zu',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1680',
+  'translation' => 'zu - Vulcan',
+  'language' => 'zu',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1681',
+  'translation' => 'zu - The home of Captain Christopher Pike.',
   'language' => 'zu',
   'plid' => '0',
   'plural' => '0',
@@ -40594,6 +40687,28 @@ $connection->insert('menu_router')
   'file' => 'sites/all/modules/i18n/i18n.admin.inc',
 ))
 ->values(array(
+  'path' => 'admin/settings/language/i18n/variables',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:29:"administer site configuration";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:1:{i:0;s:25:"i18n_admin_variables_form";}',
+  'fit' => '31',
+  'number_parts' => '5',
+  'tab_parent' => 'admin/settings/language/i18n',
+  'tab_root' => 'admin/settings/language',
+  'title' => 'Variables',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => 'Multilingual variables.',
+  'position' => '',
+  'weight' => '0',
+  'file' => 'sites/all/modules/i18n/i18n.admin.inc',
+))
+->values(array(
   'path' => 'admin/settings/language/overview',
   'load_functions' => '',
   'to_arg_functions' => '',
@@ -46668,6 +46783,69 @@ $connection->insert('term_data')
   'language' => '',
   'trid' => '0',
 ))
+->values(array(
+  'tid' => '9',
+  'vid' => '3',
+  'name' => 'fr - term 4 of vocabulary 3',
+  'description' => '',
+  'weight' => '0',
+  'language' => 'fr',
+  'trid' => '1',
+))
+->values(array(
+  'tid' => '10',
+  'vid' => '3',
+  'name' => 'zu - term 4 of vocabulary 3',
+  'description' => '',
+  'weight' => '0',
+  'language' => 'zu',
+  'trid' => '1',
+))
+->values(array(
+  'tid' => '11',
+  'vid' => '3',
+  'name' => 'term 7 of vocabulary 3',
+  'description' => '',
+  'weight' => '0',
+  'language' => 'en',
+  'trid' => '2',
+))
+->values(array(
+  'tid' => '12',
+  'vid' => '3',
+  'name' => 'fr - term 7 of vocabulary 3',
+  'description' => '',
+  'weight' => '0',
+  'language' => 'fr',
+  'trid' => '2',
+))
+->values(array(
+  'tid' => '13',
+  'vid' => '3',
+  'name' => 'zu - term 7 of vocabulary 3',
+  'description' => '',
+  'weight' => '0',
+  'language' => 'zu',
+  'trid' => '2',
+))
+->values(array(
+  'tid' => '14',
+  'vid' => '5',
+  'name' => 'Talos IV',
+  'description' => 'The home of Captain Christopher Pike.',
+  'weight' => '0',
+  'language' => '',
+  'trid' => '0',
+))
+->values(array(
+  'tid' => '15',
+  'vid' => '5',
+  'name' => 'Vulcan',
+  'description' => '',
+  'weight' => '0',
+  'language' => '',
+  'trid' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('term_hierarchy', array(
@@ -46717,6 +46895,34 @@ $connection->insert('term_hierarchy')
 ))
 ->values(array(
   'tid' => '8',
+  'parent' => '0',
+))
+->values(array(
+  'tid' => '9',
+  'parent' => '0',
+))
+->values(array(
+  'tid' => '10',
+  'parent' => '0',
+))
+->values(array(
+  'tid' => '11',
+  'parent' => '0',
+))
+->values(array(
+  'tid' => '12',
+  'parent' => '0',
+))
+->values(array(
+  'tid' => '13',
+  'parent' => '0',
+))
+->values(array(
+  'tid' => '14',
+  'parent' => '0',
+))
+->values(array(
+  'tid' => '15',
   'parent' => '0',
 ))
 ->values(array(
@@ -47247,8 +47453,8 @@ $connection->insert('users')
   'signature' => '',
   'signature_format' => '0',
   'created' => '0',
-  'access' => '1494966478',
-  'login' => '1494966280',
+  'access' => '1521962400',
+  'login' => '1521961881',
   'status' => '1',
   'timezone' => NULL,
   'language' => '',
@@ -48317,7 +48523,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'i18ntaxonomy_vocabulary',
-  'value' => 'a:2:{i:1;s:1:"3";i:2;s:1:"2";}',
+  'value' => 'a:4:{i:1;s:1:"3";i:2;s:1:"2";i:3;s:1:"3";i:5;s:1:"1";}',
 ))
 ->values(array(
   'name' => 'i18n_lock_node_article',
