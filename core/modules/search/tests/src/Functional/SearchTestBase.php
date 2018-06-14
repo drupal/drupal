@@ -3,7 +3,6 @@
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Defines the common search test code.
@@ -28,17 +27,7 @@ abstract class SearchTestBase extends BrowserTestBase {
   }
 
   /**
-   * Simulates submission of a form using GET instead of POST.
-   *
-   * Forms that use the GET method cannot be submitted with
-   * WebTestBase::drupalPostForm(), which explicitly uses POST to submit the
-   * form. So this method finds the form, verifies that it has input fields and
-   * a submit button matching the inputs to this method, and then calls
-   * WebTestBase::drupalGet() to simulate the form submission to the 'action'
-   * URL of the form (if set, or the current URL if not).
-   *
-   * See WebTestBase::drupalPostForm() for more detailed documentation of the
-   * function parameters.
+   * Submission of a form via press submit button.
    *
    * @param string $path
    *   Location of the form to be submitted: either a Drupal path, absolute
@@ -51,42 +40,27 @@ abstract class SearchTestBase extends BrowserTestBase {
    *   this does not support AJAX.
    * @param string $form_html_id
    *   (optional) HTML ID of the form, to disambiguate.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   *
+   * @todo: Replace after https://www.drupal.org/project/drupal/issues/2887411
    */
   protected function submitGetForm($path, $edit, $submit, $form_html_id = NULL) {
     if (isset($path)) {
       $this->drupalGet($path);
     }
 
-    if ($this->parse()) {
-      // Iterate over forms to find one that matches $edit and $submit.
-      $edit_save = $edit;
-      $xpath = '//form';
-      if (!empty($form_html_id)) {
-        $xpath .= "[@id='" . $form_html_id . "']";
-      }
-      $forms = $this->xpath($xpath);
-      foreach ($forms as $form) {
-        // Try to set the fields of this form as specified in $edit.
-        $edit = $edit_save;
-        $post = [];
-        $upload = [];
-        $submit_matches = $this->handleForm($post, $edit, $upload, $submit, $form);
-        if (!$edit && $submit_matches) {
-          // Everything matched, so "submit" the form.
-          $action = isset($form['action']) ? $this->getAbsoluteUrl((string) $form['action']) : NULL;
-          $this->drupalGet($action, ['query' => $post]);
-          return;
-        }
-      }
-
-      // We have not found a form which contained all fields of $edit and
-      // the submit button.
-      foreach ($edit as $name => $value) {
-        $this->fail(new FormattableMarkup('Failed to set field @name to @value', ['@name' => $name, '@value' => $value]));
-      }
-      $this->assertTrue($submit_matches, format_string('Found the @submit button', ['@submit' => $submit]));
-      $this->fail(format_string('Found the requested form fields at @path', ['@path' => $path]));
+    $page = $this->getSession()->getPage();
+    $wrapper = $page;
+    if ($form_html_id) {
+      $wrapper = $page->find('css', '#' . $form_html_id);
     }
+    $button = $wrapper->findButton($submit);
+    $form = $this->assertSession()->elementExists('xpath', './ancestor::form', $button);
+    foreach ($edit as $selector => $value) {
+      $form->fillField($selector, $value);
+    }
+    $button->press();
   }
 
 }

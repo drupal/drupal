@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\search\Tests;
+namespace Drupal\Tests\search\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Tests that numbers can be searched with more complex matching.
@@ -10,6 +11,9 @@ use Drupal\Core\Language\LanguageInterface;
  * @group search
  */
 class SearchNumberMatchingTest extends SearchTestBase {
+
+  use CronRunTrait;
+
   /**
    * A user with permission to administer nodes.
    *

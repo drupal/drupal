@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search\Tests;
+namespace Drupal\Tests\search\Functional;
 
 /**
  * Verifies that a form embedded in search results works.

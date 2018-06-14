@@ -1,10 +1,12 @@
 <?php
 
-namespace Drupal\search\Tests;
+namespace Drupal\Tests\search\Functional;
 
+use Behat\Mink\Exception\ResponseTextException;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\user\RoleInterface;
 use Drupal\filter\Entity\FilterFormat;
 
@@ -16,6 +18,7 @@ use Drupal\filter\Entity\FilterFormat;
 class SearchCommentTest extends SearchTestBase {
 
   use CommentTestTrait;
+  use CronRunTrait;
 
   /**
    * Modules to enable.
@@ -298,15 +301,18 @@ class SearchCommentTest extends SearchTestBase {
     ];
     $this->drupalPostForm('search/node', $edit, t('Search'));
 
-    if ($assume_access) {
-      $expected_node_result = $this->assertText($this->node->label());
-      $expected_comment_result = $this->assertText($this->commentSubject);
+    try {
+      if ($assume_access) {
+        $this->assertSession()->pageTextContains($this->node->label());
+        $this->assertSession()->pageTextContains($this->commentSubject);
+      }
+      else {
+        $this->assertSession()->pageTextContains(t('Your search yielded no results.'));
+      }
     }
-    else {
-      $expected_node_result = $this->assertText(t('Your search yielded no results.'));
-      $expected_comment_result = $this->assertText(t('Your search yielded no results.'));
+    catch (ResponseTextException $exception) {
+      $this->fail($message);
     }
-    $this->assertTrue($expected_node_result && $expected_comment_result, $message);
   }
 
   /**

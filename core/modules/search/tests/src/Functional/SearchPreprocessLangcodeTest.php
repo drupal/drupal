@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search\Tests;
+namespace Drupal\Tests\search\Functional;
 
 /**
  * Tests that the search preprocessing uses the correct language code.
@@ -54,7 +54,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
     // function. If you search for text that is in the node, preprocess is
     // not invoked on the node during the search excerpt generation.
     $edit = ['or' => 'Additional text'];
-    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
 
     // Checks if the langcode message has been set by hook_search_preprocess().
     $this->assertText('Langcode Preprocess Test: en');
@@ -81,7 +81,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
 
     // Search for the title of the node with a POST query.
     $edit = ['or' => 'testing'];
-    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
 
     // Check if the node has been found.
     $this->assertText('Search results');
@@ -89,7 +89,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
 
     // Search for the same node using a different query.
     $edit = ['or' => 'test'];
-    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
 
     // Check if the node has been found.
     $this->assertText('Search results');

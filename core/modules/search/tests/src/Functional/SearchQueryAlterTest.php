@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search\Tests;
+namespace Drupal\Tests\search\Functional;
 
 /**
  * Tests that the node search query can be altered via the query alter hook.

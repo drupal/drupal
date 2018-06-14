@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search\Tests;
+namespace Drupal\Tests\search\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
@@ -90,7 +90,7 @@ class SearchPageTextTest extends SearchTestBase {
     $search_terms = 'Hear nothing > "see nothing" `feel' . " '1982.";
     $edit['keys'] = $search_terms;
     $this->drupalPostForm('search/node', $edit, t('Search'));
-    $actual_title = (string) current($this->xpath('//title'));
+    $actual_title = $this->xpath('//title')[0]->getText();
     $this->assertEqual($actual_title, Html::decodeEntities(t($title_source, ['@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)])), 'Search page title is correct');
 
     $edit['keys'] = $this->searchingUser->getUsername();
@@ -133,9 +133,9 @@ class SearchPageTextTest extends SearchTestBase {
 
     // Make sure the "Please enter some keywords" message is NOT displayed if
     // you use "or" words or phrases in Advanced Search.
-    $this->drupalPostForm('search/node', ['or' => $this->randomMachineName() . ' ' . $this->randomMachineName()], t('Advanced search'));
+    $this->drupalPostForm('search/node', ['or' => $this->randomMachineName() . ' ' . $this->randomMachineName()], 'edit-submit--2');
     $this->assertNoText(t('Please enter some keywords'), 'With advanced OR keywords entered, no keywords message is not displayed on node page');
-    $this->drupalPostForm('search/node', ['phrase' => '"' . $this->randomMachineName() . '" "' . $this->randomMachineName() . '"'], t('Advanced search'));
+    $this->drupalPostForm('search/node', ['phrase' => '"' . $this->randomMachineName() . '" "' . $this->randomMachineName() . '"'], 'edit-submit--2');
     $this->assertNoText(t('Please enter some keywords'), 'With advanced phrase entered, no keywords message is not displayed on node page');
 
     // Verify that if you search for a too-short keyword, you get the right

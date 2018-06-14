@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search\Tests;
+namespace Drupal\Tests\search\Functional;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -99,12 +99,12 @@ class SearchLanguageTest extends SearchTestBase {
     $this->assertText(t('French'), 'French is a possible choice.');
 
     // Ensure selecting no language does not make the query different.
-    $this->drupalPostForm('search/node', [], t('Advanced search'));
+    $this->drupalPostForm('search/node', [], 'edit-submit--2');
     $this->assertUrl(\Drupal::url('search.view_node_search', [], ['query' => ['keys' => ''], 'absolute' => TRUE]), [], 'Correct page redirection, no language filtering.');
 
     // Pick French and ensure it is selected.
     $edit = ['language[fr]' => TRUE];
-    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
     // Get the redirected URL.
     $url = $this->getUrl();
     $parts = parse_url($url);
@@ -113,7 +113,7 @@ class SearchLanguageTest extends SearchTestBase {
 
     // Search for keyword node and language filter as Spanish.
     $edit = ['keys' => 'node', 'language[es]' => TRUE];
-    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
     // Check for Spanish results.
     $this->assertLink('Second node this is the Spanish title', 0, 'Second node Spanish title found in search results');
     $this->assertLink('Third node es', 0, 'Third node Spanish found in search results');

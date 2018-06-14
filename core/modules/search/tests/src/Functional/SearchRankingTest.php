@@ -1,12 +1,13 @@
 <?php
 
-namespace Drupal\search\Tests;
+namespace Drupal\Tests\search\Functional;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Url;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\search\Entity\SearchPage;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Indexes content and tests ranking factors.
@@ -16,6 +17,7 @@ use Drupal\search\Entity\SearchPage;
 class SearchRankingTest extends SearchTestBase {
 
   use CommentTestTrait;
+  use CronRunTrait;
 
   /**
    * The node search page.

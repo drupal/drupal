@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\search\Tests;
+namespace Drupal\Tests\search\Functional;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests the search_page entity cache tags on the search results pages.
@@ -10,6 +11,8 @@ use Drupal\Core\Cache\Cache;
  * @group search
  */
 class SearchPageCacheTagsTest extends SearchTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * {@inheritdoc}
@@ -100,8 +103,8 @@ class SearchPageCacheTagsTest extends SearchTestBase {
     $this->drupalGet('search/user');
     $this->assertCacheTag('config:search.page.user_search');
     $this->assertCacheTag('user_list');
-    $this->assertNoCacheTag('search_index');
-    $this->assertNoCacheTag('search_index:user_search');
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'search_index');
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'search_index:user_search');
 
     // User search results.
     $edit['keys'] = $this->searchingUser->getUsername();
@@ -109,8 +112,8 @@ class SearchPageCacheTagsTest extends SearchTestBase {
     $this->assertCacheTag('config:search.page.user_search');
     $this->assertCacheTag('user_list');
     $this->assertCacheTag('user:2');
-    $this->assertNoCacheTag('search_index');
-    $this->assertNoCacheTag('search_index:user_search');
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'search_index');
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'search_index:user_search');
   }
 
   /**

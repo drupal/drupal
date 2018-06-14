@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search\Tests;
+namespace Drupal\Tests\search\Functional;
 
 /**
  * Tests search index is updated properly when nodes are removed or updated.

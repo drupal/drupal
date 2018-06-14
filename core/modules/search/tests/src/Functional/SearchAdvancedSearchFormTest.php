@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\search\Tests;
+namespace Drupal\Tests\search\Functional;
 
 /**
  * Indexes content and tests the advanced search form.
@@ -53,14 +53,14 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
 
     // Search for the title of the node with a POST query.
     $edit = ['or' => $this->node->label()];
-    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
     $this->assertText($this->node->label(), 'Basic page node is found with POST query.');
 
     // Search by node type.
-    $this->drupalPostForm('search/node', array_merge($edit, ['type[page]' => 'page']), t('Advanced search'));
+    $this->drupalPostForm('search/node', array_merge($edit, ['type[page]' => 'page']), 'edit-submit--2');
     $this->assertText($this->node->label(), 'Basic page node is found with POST query and type:page.');
 
-    $this->drupalPostForm('search/node', array_merge($edit, ['type[article]' => 'article']), t('Advanced search'));
+    $this->drupalPostForm('search/node', array_merge($edit, ['type[article]' => 'article']), 'edit-submit--2');
     $this->assertText('search yielded no results', 'Article node is not found with POST query and type:article.');
   }
 
@@ -75,7 +75,7 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
       'negative' => 'fish snake',
       'type[page]' => 'page',
     ];
-    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
 
     // Test that the encoded query appears in the page title. Only test the
     // part not including the quote, because assertText() cannot seem to find
@@ -86,11 +86,11 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
     foreach ($edit as $key => $value) {
       if ($key != 'type[page]') {
         $elements = $this->xpath('//input[@name=:name]', [':name' => $key]);
-        $this->assertTrue(isset($elements[0]) && $elements[0]['value'] == $value, "Field $key is set to $value");
+        $this->assertTrue(isset($elements[0]) && $elements[0]->getValue() == $value, "Field $key is set to $value");
       }
       else {
         $elements = $this->xpath('//input[@name=:name]', [':name' => $key]);
-        $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), "Field $key is checked");
+        $this->assertTrue(isset($elements[0]) && !empty($elements[0]->getAttribute('checked')), "Field $key is checked");
       }
     }
 
@@ -98,12 +98,12 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
     // search box, and verify that the advanced form is not filled out.
     // (It shouldn't be filled out unless you submit values in those fields.)
     $edit2 = ['keys' => 'cat dog OR gerbil -fish -snake'];
-    $this->drupalPostForm('search/node', $edit2, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit2, 'edit-submit--2');
     $this->assertText('Search for cat dog OR gerbil -fish -snake');
     foreach ($edit as $key => $value) {
       if ($key != 'type[page]') {
         $elements = $this->xpath('//input[@name=:name]', [':name' => $key]);
-        $this->assertFalse(isset($elements[0]) && $elements[0]['value'] == $value, "Field $key is not set to $value");
+        $this->assertFalse(isset($elements[0]) && $elements[0]->getValue() == $value, "Field $key is not set to $value");
       }
     }
   }
