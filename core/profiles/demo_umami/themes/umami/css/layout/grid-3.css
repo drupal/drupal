@@ -19,7 +19,9 @@
   }
   .grid--3 .views-row {
     display: flex;
-    flex: 0 0 calc(50% - 28px);
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(50% - 28px);
     margin: 0 14px 28px;
     padding: 0;
   }
@@ -27,7 +29,9 @@
 
 @media screen and (min-width: 60em) {
   .grid--3 .views-row {
-    flex: 0 0 calc(33% - 28px);
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(33% - 28px);
   }
 }
 

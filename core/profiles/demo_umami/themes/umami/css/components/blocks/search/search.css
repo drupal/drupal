@@ -67,6 +67,7 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+
 .form-search {
   width: 20em;
   max-width: calc(100vw - 6.25em);
@@ -79,9 +80,9 @@
   font-size: 0.875rem;
   line-height: normal;
   background: url(../../../../images/svg/search.svg) no-repeat 0.5em center #fff;
-  background-size: 1.5em;
   color: #464646;
 }
+
 .form-search:focus {
   outline: none;
   margin: 0 0 -2px -2px;

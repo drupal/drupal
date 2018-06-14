@@ -75,7 +75,7 @@
     display: flex;
     justify-content: flex-end;
     flex-wrap: wrap;
-    max-height: initial;
+    max-height: none;
     overflow: auto;
   }
   .menu-main-toggle {
@@ -111,7 +111,9 @@
 @media screen and (min-width: 48em) {
   .menu-main__wrapper {
     order: 4;
-    flex: 0 1 calc(100% - 220px);
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: calc(100% - 220px);
     text-align: right;
   }
 }
