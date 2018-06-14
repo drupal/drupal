@@ -36,7 +36,8 @@
 
 .node--type-recipe.node--view-mode-full .layout__region--top-first,
 .node--type-recipe.node--view-mode-full .layout__region--top-second {
-  flex: 0 0 calc(50% - 1rem);
+  flex: 0 0;
+  flex-basis: calc(50% - 1rem); /* fixed IE11 bug calc in shorthand */
 }
 
 /* Recipe meta */
@@ -98,13 +99,13 @@
   }
 }
 
-.node--type-recipe.node--view-mode-full .layout__region--top-second .field {
+.node--type-recipe.node--view-mode-full .layout__region--top-second .recipe-meta .field {
   flex: 1 0 auto;
 }
 /* Large */
 @media screen and (min-width: 60rem) { /* 960px */
-  .node--type-recipe.node--view-mode-full .layout__region--top-second .field {
-    flex: 0 0 100%;
+  .node--type-recipe.node--view-mode-full .layout__region--top-second .recipe-meta .field {
+    width: 100%;
   }
 }
 .node--type-recipe.node--view-mode-full .layout__region--top-second .field .field__label,
@@ -143,7 +144,7 @@
   }
 }
 .node--type-recipe.node--view-mode-full .layout__region--bottom > h2 {
-  flex: 0 0 100%;
+  flex: 0 1 100%;
   font-family: 'Scope One', Georgia, serif;
   font-size: 1.424em;
   font-weight: 400;
@@ -169,6 +170,7 @@
   .node--type-recipe.node--view-mode-full .layout__region--bottom-first {
     flex: 0 0 33%;
     padding: 0 2.369em 2.369em 2.369em;
+    max-width: 33%; /* fixed IE11 bug */
   }
 }
 
@@ -180,6 +182,7 @@
   .node--type-recipe.node--view-mode-full .layout__region--bottom-second {
     flex: 0 0 67%;
     padding: 0 2.369em 2.369em 2.369em;
+    max-width: 67%; /* fixed IE11 bug */
   }
 }
 
