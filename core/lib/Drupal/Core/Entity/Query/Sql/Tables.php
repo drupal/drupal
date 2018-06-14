@@ -414,8 +414,10 @@ class Tables implements TablesInterface {
    * @param string $table
    *   The table name.
    *
-   * @return array|bool
-   *   The table field mapping for the given table or FALSE if not available.
+   * @return array|false
+   *   An associative array of table field mapping for the given table, keyed by
+   *   columns name and values are just incrementing integers. If the table
+   *   mapping is not available, FALSE is returned.
    */
   protected function getTableMapping($table, $entity_type_id) {
     $storage = $this->entityManager->getStorage($entity_type_id);
