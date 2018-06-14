@@ -121,6 +121,10 @@ class LinkFieldTest extends BrowserTestBase {
       '/?example=llama' => '&lt;front&gt;?example=llama',
       '/#example' => '&lt;front&gt;#example',
 
+      // Trailing spaces should be ignored.
+      '/ ' => '&lt;front&gt;',
+      '/path with spaces ' => '/path with spaces',
+
       // @todo '<front>' is valid input for BC reasons, may be removed by
       //   https://www.drupal.org/node/2421941
       '<front>' => '&lt;front&gt;',
@@ -200,7 +204,7 @@ class LinkFieldTest extends BrowserTestBase {
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
       $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
-      $this->assertRaw($string);
+      $this->assertRaw('"' . $string . '"');
     }
   }
 

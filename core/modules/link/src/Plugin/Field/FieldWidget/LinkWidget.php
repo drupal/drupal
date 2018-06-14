@@ -101,7 +101,7 @@ class LinkWidget extends WidgetBase {
    */
   protected static function getUserEnteredStringAsUri($string) {
     // By default, assume the entered string is an URI.
-    $uri = $string;
+    $uri = trim($string);
 
     // Detect entity autocomplete string, map to 'entity:' URI.
     $entity_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput($string);
