@@ -3,7 +3,6 @@
 namespace Drupal\Core\Installer;
 
 use Drupal\Core\DrupalKernel;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Extend DrupalKernel to handle force some kernel behaviors.
@@ -65,17 +64,6 @@ class InstallerKernel extends DrupalKernel {
       $profile = parent::getInstallProfile();
     }
     return $profile;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function createFromRequest(Request $request, $class_loader, $environment, $allow_dumping = TRUE, $app_root = NULL) {
-    // This override exists because we don't need to initialize the settings
-    // again as they already are in install_begin_request().
-    $kernel = new static($environment, $class_loader, $allow_dumping, $app_root);
-    static::bootEnvironment($app_root);
-    return $kernel;
   }
 
 }
