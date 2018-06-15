@@ -81,7 +81,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'shortcut_set' => 1,
       'action' => 23,
       'menu' => 8,
-      'taxonomy_term' => 15,
+      'taxonomy_term' => 8,
       'taxonomy_vocabulary' => 7,
       'tour' => 4,
       'user' => 7,
@@ -109,7 +109,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts['file'] = 9;
     $counts['menu_link_content'] = 11;
     $counts['node'] = 18;
-    $counts['taxonomy_term'] = 16;
+    $counts['taxonomy_term'] = 9;
     $counts['user'] = 8;
     $counts['view'] = 16;
     return $counts;
