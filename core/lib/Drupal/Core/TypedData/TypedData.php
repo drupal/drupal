@@ -59,12 +59,8 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    *   root of a typed data tree. Defaults to NULL.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
-   *
-   * @todo When \Drupal\Core\Config\TypedConfigManager has been fixed to use
-   *   class-based definitions, type-hint $definition to
-   *   DataDefinitionInterface. https://www.drupal.org/node/1928868
    */
-  public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     $this->definition = $definition;
     $this->parent = $parent;
     $this->name = $name;
