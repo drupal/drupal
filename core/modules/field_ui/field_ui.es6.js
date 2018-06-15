@@ -219,7 +219,7 @@
 
       if (rowNames.length) {
         // Add a throbber next each of the ajaxElements.
-        $(ajaxElements).after('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
+        $(ajaxElements).after(Drupal.theme.ajaxProgressThrobber());
 
         // Fire the Ajax update.
         $('input[name=refresh_rows]').val(rowNames.join(' '));

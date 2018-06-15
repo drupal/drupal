@@ -126,7 +126,7 @@
       });
 
       if (rowNames.length) {
-        $(ajaxElements).after('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
+        $(ajaxElements).after(Drupal.theme.ajaxProgressThrobber());
 
         $('input[name=refresh_rows]').val(rowNames.join(' '));
         $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');

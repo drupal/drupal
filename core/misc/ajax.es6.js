@@ -812,6 +812,40 @@
   };
 
   /**
+   * An animated progress throbber and container element for AJAX operations.
+   *
+   * @param {string} [message]
+   *   (optional) The message shown on the UI.
+   * @return {string}
+   *   The HTML markup for the throbber.
+   */
+  Drupal.theme.ajaxProgressThrobber = (message) => {
+    // Build markup without adding extra white space since it affects rendering.
+    const messageMarkup = typeof message === 'string' ? Drupal.theme('ajaxProgressMessage', message) : '';
+    const throbber = '<div class="throbber">&nbsp;</div>';
+
+    return `<div class="ajax-progress ajax-progress-throbber">${throbber}${messageMarkup}</div>`;
+  };
+
+  /**
+   * An animated progress throbber and container element for AJAX operations.
+   *
+   * @return {string}
+   *   The HTML markup for the throbber.
+   */
+  Drupal.theme.ajaxProgressIndicatorFullscreen = () => '<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>';
+
+  /**
+   * Formats text accompanying the AJAX progress throbber.
+   *
+   * @param {string} message
+   *   The message shown on the UI.
+   * @return {string}
+   *   The HTML markup for the throbber.
+   */
+  Drupal.theme.ajaxProgressMessage = message => `<div class="message">${message}</div>`;
+
+  /**
    * Sets the progress bar progress indicator.
    */
   Drupal.Ajax.prototype.setProgressIndicatorBar = function () {
@@ -831,10 +865,7 @@
    * Sets the throbber progress indicator.
    */
   Drupal.Ajax.prototype.setProgressIndicatorThrobber = function () {
-    this.progress.element = $('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
-    if (this.progress.message) {
-      this.progress.element.find('.throbber').after(`<div class="message">${this.progress.message}</div>`);
-    }
+    this.progress.element = $(Drupal.theme('ajaxProgressThrobber', this.progress.message));
     $(this.element).after(this.progress.element);
   };
 
@@ -842,7 +873,7 @@
    * Sets the fullscreen progress indicator.
    */
   Drupal.Ajax.prototype.setProgressIndicatorFullscreen = function () {
-    this.progress.element = $('<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>');
+    this.progress.element = $(Drupal.theme('ajaxProgressIndicatorFullscreen'));
     $('body').after(this.progress.element);
   };
 

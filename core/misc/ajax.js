@@ -368,6 +368,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
   };
 
+  Drupal.theme.ajaxProgressThrobber = function (message) {
+    var messageMarkup = typeof message === 'string' ? Drupal.theme('ajaxProgressMessage', message) : '';
+    var throbber = '<div class="throbber">&nbsp;</div>';
+
+    return '<div class="ajax-progress ajax-progress-throbber">' + throbber + messageMarkup + '</div>';
+  };
+
+  Drupal.theme.ajaxProgressIndicatorFullscreen = function () {
+    return '<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>';
+  };
+
+  Drupal.theme.ajaxProgressMessage = function (message) {
+    return '<div class="message">' + message + '</div>';
+  };
+
   Drupal.Ajax.prototype.setProgressIndicatorBar = function () {
     var progressBar = new Drupal.ProgressBar('ajax-progress-' + this.element.id, $.noop, this.progress.method, $.noop);
     if (this.progress.message) {
@@ -382,15 +397,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   };
 
   Drupal.Ajax.prototype.setProgressIndicatorThrobber = function () {
-    this.progress.element = $('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
-    if (this.progress.message) {
-      this.progress.element.find('.throbber').after('<div class="message">' + this.progress.message + '</div>');
-    }
+    this.progress.element = $(Drupal.theme('ajaxProgressThrobber', this.progress.message));
     $(this.element).after(this.progress.element);
   };
 
   Drupal.Ajax.prototype.setProgressIndicatorFullscreen = function () {
-    this.progress.element = $('<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>');
+    this.progress.element = $(Drupal.theme('ajaxProgressIndicatorFullscreen'));
     $('body').after(this.progress.element);
   };
 

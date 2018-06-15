@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the hold_test module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function hold_test_install() {
+  hold_test_request(FALSE);
+  hold_test_response(FALSE);
+}
