@@ -6,13 +6,15 @@
 /* Style the dialog-off-canvas container. */
 .ui-dialog.ui-dialog-off-canvas {
   background: #444;
-  border: 0 solid transparent;
   border-radius: 0;
   box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.3333);
   padding: 0;
   color: #ddd;
   /* Layer the dialog just under the toolbar. */
   z-index: 501;
+}
+.ui-widget.ui-dialog.ui-dialog-off-canvas {
+  border: 1px solid transparent;
 }
 
 /* Style the off-canvas dialog header. */
