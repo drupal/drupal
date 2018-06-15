@@ -547,9 +547,12 @@ function template_preprocess_node_add_list(&$variables) {
  * Implements hook_preprocess_HOOK() for HTML document templates.
  */
 function node_preprocess_html(&$variables) {
-  // If on an individual node page, add the node type to body classes.
-  if (($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
-    $variables['node_type'] = $node->getType();
+  // If on an individual node page or node preview page, add the node type to
+  // the body classes.
+  if (($node = \Drupal::routeMatch()->getParameter('node')) || ($node = \Drupal::routeMatch()->getParameter('node_preview'))) {
+    if ($node instanceof NodeInterface) {
+      $variables['node_type'] = $node->getType();
+    }
   }
 }
 
