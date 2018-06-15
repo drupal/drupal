@@ -6,6 +6,9 @@
  */
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\user\Entity\User;
 
 /**
@@ -19,6 +22,19 @@ function user_access_test_user_access(User $entity, $operation, $account) {
   if ($entity->getUsername() == "no_delete" && $operation == "delete") {
     // Deny delete access.
     return AccessResult::forbidden();
+  }
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function user_access_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  // Account with role sub-admin can view the status, init and mail fields for user with no roles.
+  if ($operation === 'view' && in_array($field_definition->getName(), ['status', 'init', 'mail'])) {
+    if (($items == NULL) || (count($items->getEntity()->getRoles()) == 1)) {
+      return AccessResult::allowedIfHasPermission($account, 'sub-admin');
+    }
   }
   return AccessResult::neutral();
 }
