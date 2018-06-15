@@ -49,13 +49,16 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
     $settings = Settings::getAll();
     $settings['skip_permissions_hardening'] = TRUE;
     new Settings($settings);
-    $this->assertTrue(Settings::get('skip_permissions_hardening'), 'Able to set hardening to true');
+    $this->assertTrue(Settings::get('skip_permissions_hardening'), 'Able to set skip permissions hardening to true.');
     $this->makeWritable($site_path);
 
     // Manually trigger the requirements check.
     $requirements = $this->checkSystemRequirements();
     $this->assertEqual(REQUIREMENT_WARNING, $requirements['configuration_files']['severity'], 'Warning severity is properly set.');
-    $this->assertEqual($this->t('Protection disabled'), (string) $requirements['configuration_files']['description']['#context']['configuration_error_list']['#items'][0], 'Description is properly set.');
+    $this->assertEquals('Protection disabled', (string) $requirements['configuration_files']['value']);
+    $description = strip_tags(\Drupal::service('renderer')->renderPlain($requirements['configuration_files']['description']));
+    $this->assertContains('settings.php is not protected from modifications and poses a security risk.', $description);
+    $this->assertContains('services.yml is not protected from modifications and poses a security risk.', $description);
 
     $this->assertTrue(is_writable($site_path), 'Site directory remains writable when automatically fixing permissions is disabled.');
     $this->assertTrue(is_writable($settings_file), 'settings.php remains writable when automatically fixing permissions is disabled.');
@@ -66,7 +69,8 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
     new Settings($settings);
 
     // Manually trigger the requirements check.
-    $this->checkSystemRequirements();
+    $requirements = $this->checkSystemRequirements();
+    $this->assertEquals('Protected', (string) $requirements['configuration_files']['value']);
 
     $this->assertFalse(is_writable($site_path), 'Site directory is protected when automatically fixing permissions is enabled.');
     $this->assertFalse(is_writable($settings_file), 'settings.php is protected when automatically fixing permissions is enabled.');
