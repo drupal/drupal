@@ -7,10 +7,19 @@ use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 /**
  * Provides an interface for an entity type and its metadata.
  *
- * Additional information can be provided by modules: hook_entity_type_build() can be
- * implemented to define new properties, while hook_entity_type_alter() can be
- * implemented to alter existing data and fill-in defaults. Module-specific
- * properties should be documented in the hook implementations defining them.
+ * Entity type classes can provide docblock annotations. The entity type manager
+ * will use these annotations to populate the entity type object with
+ * properties.
+ *
+ * Additional properties can be defined by module implementations of
+ * hook_entity_type_build(). Existing data can be altered in implementations of
+ * hook_entity_type_alter(), which can also be used to fill in defaults.
+ * Module-specific properties should be documented in the hook implementations
+ * defining them.
+ *
+ * @see \Drupal\Core\Entity\EntityTypeManagerInterface
+ * @see hook_entity_type_build()
+ * @see hook_entity_type_alter()
  */
 interface EntityTypeInterface extends PluginDefinitionInterface {
 

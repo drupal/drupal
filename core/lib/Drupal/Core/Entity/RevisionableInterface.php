@@ -4,6 +4,21 @@ namespace Drupal\Core\Entity;
 
 /**
  * Provides methods for an entity to support revisions.
+ *
+ * Classes implementing this interface do not necessarily support revisions.
+ *
+ * To detect whether an entity type supports revisions, call
+ * EntityTypeInterface::isRevisionable().
+ *
+ * Many entity interfaces are composed of numerous other interfaces such as this
+ * one, which allow implementations to pick and choose which features to.
+ * support through stub implementations of various interface methods. This means
+ * that even if an entity class implements RevisionableInterface, it might only
+ * have a stub implementation and not a functional one.
+ *
+ * @see \Drupal\Core\Entity\EntityTypeInterface::isRevisionable()
+ * @see https://www.drupal.org/docs/8/api/entity-api/structure-of-an-entity-annotation
+ * @see https://www.drupal.org/docs/8/api/entity-api/making-an-entity-revisionable
  */
 interface RevisionableInterface {
 
