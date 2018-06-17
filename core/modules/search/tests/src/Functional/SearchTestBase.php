@@ -41,26 +41,14 @@ abstract class SearchTestBase extends BrowserTestBase {
    * @param string $form_html_id
    *   (optional) HTML ID of the form, to disambiguate.
    *
-   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @deprecated in Drupal 8.6.x, to be removed before Drupal 9.0.x. Use
+   *   \Drupal\Tests\BrowserTestBase::drupalPostForm() instead.
    *
-   * @todo: Replace after https://www.drupal.org/project/drupal/issues/2887411
+   * @see https://www.drupal.org/node/2979950
    */
   protected function submitGetForm($path, $edit, $submit, $form_html_id = NULL) {
-    if (isset($path)) {
-      $this->drupalGet($path);
-    }
-
-    $page = $this->getSession()->getPage();
-    $wrapper = $page;
-    if ($form_html_id) {
-      $wrapper = $page->find('css', '#' . $form_html_id);
-    }
-    $button = $wrapper->findButton($submit);
-    $form = $this->assertSession()->elementExists('xpath', './ancestor::form', $button);
-    foreach ($edit as $selector => $value) {
-      $form->fillField($selector, $value);
-    }
-    $button->press();
+    @trigger_error(__CLASS__ . '::' . __FUNCTION__ . '() is deprecated in Drupal 8.6.x, for removal before the Drupal 9.0.0 release. Use \Drupal\Tests\BrowserTestBase::drupalPostForm() instead. See https://www.drupal.org/node/2979950.', E_USER_DEPRECATED);
+    $this->drupalPostForm($path, $edit, $submit, [], $form_html_id);
   }
 
 }

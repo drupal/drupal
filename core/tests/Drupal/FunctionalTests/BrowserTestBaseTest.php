@@ -23,7 +23,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['test_page_test', 'form_test', 'system_test'];
+  public static $modules = ['test_page_test', 'form_test', 'system_test', 'node'];
 
   /**
    * Tests basic page test.
@@ -111,6 +111,15 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // Test drupalPostForm() with no-html response.
     $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
     $this->assertTrue(1000, $values['beer']);
+
+    // Test drupalPostForm() with form by HTML id.
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->drupalLogin($this->drupalCreateUser(['create page content']));
+    $this->drupalGet('form-test/two-instances-of-same-form');
+    $this->getSession()->getPage()->fillField('edit-title-0-value', 'form1');
+    $this->getSession()->getPage()->fillField('edit-title-0-value--2', 'form2');
+    $this->drupalPostForm(NULL, [], 'Save', [], 'node-page-form--2');
+    $this->assertSession()->pageTextContains('Page form2 has been created.');
   }
 
   /**

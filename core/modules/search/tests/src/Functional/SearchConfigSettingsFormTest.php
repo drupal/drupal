@@ -174,7 +174,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
       // Run a search from the search block on the node page. Verify you get
       // to this plugin's search results page.
       $terms = ['keys' => $info['keys']];
-      $this->submitGetForm('node', $terms, t('Search'));
+      $this->drupalPostForm('node', $terms, t('Search'));
       $current = $this->getURL();
       $expected = \Drupal::url('search.view_' . $entity->id(), [], ['query' => ['keys' => $info['keys']], 'absolute' => TRUE]);
       $this->assertEqual($current, $expected, 'Block redirected to right search page');
