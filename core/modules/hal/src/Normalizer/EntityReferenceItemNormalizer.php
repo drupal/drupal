@@ -149,7 +149,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
     $target_type = $field_definition->getSetting('target_type');
     $id = $this->entityResolver->resolve($this, $data, $target_type);
     if (isset($id)) {
-      return ['target_id' => $id];
+      return ['target_id' => $id] + array_intersect_key($data, $field_item->getProperties());
     }
     return NULL;
   }

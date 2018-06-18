@@ -4,12 +4,14 @@ namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\locale\StringInterface;
 use Drupal\serialization\Normalizer\EntityReferenceFieldItemNormalizer;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
@@ -237,6 +239,9 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
       ->willReturn($entity)
       ->shouldBeCalled();
 
+    $this->fieldItem->getProperties()->willReturn([
+      'target_id' => $this->prophesize(IntegerInterface::class),
+    ]);
     $this->fieldItem->setValue(['target_id' => 'test'])->shouldBeCalled();
 
     $this->assertDenormalize($data);
@@ -260,6 +265,9 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
       ->willReturn($entity)
       ->shouldBeCalled();
 
+    $this->fieldItem->getProperties()->willReturn([
+      'target_id' => $this->prophesize(IntegerInterface::class),
+    ]);
     $this->fieldItem->setValue(['target_id' => 'test'])->shouldBeCalled();
 
     $this->assertDenormalize($data);
@@ -359,6 +367,38 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
     $context = ['target_instance' => $this->fieldItem->reveal()];
     $denormalized = $this->normalizer->denormalize($data, EntityReferenceItem::class, 'json', $context);
     $this->assertSame($context['target_instance'], $denormalized);
+  }
+
+  /**
+   * @covers ::constructValue
+   */
+  public function testConstructValueProperties() {
+    $data = [
+      'target_id' => 'test',
+      'target_type' => 'test_type',
+      'target_uuid' => '080e3add-f9d5-41ac-9821-eea55b7b42fb',
+      'extra_property' => 'extra_value',
+    ];
+
+    $entity = $this->prophesize(FieldableEntityInterface::class);
+    $entity->id()
+      ->willReturn('test')
+      ->shouldBeCalled();
+    $this->entityRepository
+      ->loadEntityByUuid($data['target_type'], $data['target_uuid'])
+      ->willReturn($entity)
+      ->shouldBeCalled();
+
+    $this->fieldItem->getProperties()->willReturn([
+      'target_id' => $this->prophesize(IntegerInterface::class),
+      'extra_property' => $this->prophesize(StringInterface::class),
+    ]);
+    $this->fieldItem->setValue([
+      'target_id' => 'test',
+      'extra_property' => 'extra_value',
+    ])->shouldBeCalled();
+
+    $this->assertDenormalize($data);
   }
 
 }

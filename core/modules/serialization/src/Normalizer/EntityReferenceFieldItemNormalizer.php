@@ -78,7 +78,7 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
         throw new UnexpectedValueException(sprintf('The field "%s" property "target_type" must be set to "%s" or omitted.', $field_item->getFieldDefinition()->getName(), $target_type));
       }
       if ($entity = $this->entityRepository->loadEntityByUuid($target_type, $data['target_uuid'])) {
-        return ['target_id' => $entity->id()];
+        return ['target_id' => $entity->id()] + array_intersect_key($data, $field_item->getProperties());
       }
       else {
         // Unable to load entity by uuid.

@@ -199,10 +199,6 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $response = $this->request('POST', $entity_test_post_url, $request_options);
     $this->assertResourceResponse(201, FALSE, $response);
     $this->assertTrue($this->fileStorage->loadUnchanged(1)->isPermanent());
-    // @todo Remove this early return in https://www.drupal.org/project/drupal/issues/2935738.
-    if (static::$format === 'hal_json') {
-      return;
-    }
     $this->assertSame([
       [
         'target_id' => '1',
