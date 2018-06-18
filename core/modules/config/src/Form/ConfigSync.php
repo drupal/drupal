@@ -380,7 +380,7 @@ class ConfigSync extends FormBase {
       if (!isset($context['results']['errors'])) {
         $context['results']['errors'] = [];
       }
-      $context['results']['errors'] += $errors;
+      $context['results']['errors'] = array_merge($context['results']['errors'], $errors);
     }
   }
 

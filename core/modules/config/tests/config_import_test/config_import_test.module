@@ -5,6 +5,8 @@
  * Provides configuration import test helpers.
  */
 
+use Drupal\Core\Config\ConfigImporter;
+
 /**
  * Implements hook_config_import_steps_alter().
  */
@@ -17,9 +19,15 @@ function config_import_test_config_import_steps_alter(&$sync_steps) {
  *
  * @param array $context
  *   The batch context.
+ * @param \Drupal\Core\Config\ConfigImporter $config_importer
+ *   The configuration importer.
  */
-function _config_import_test_config_import_steps_alter(&$context) {
+function _config_import_test_config_import_steps_alter(&$context, ConfigImporter $config_importer) {
   $GLOBALS['hook_config_test']['config_import_steps_alter'] = TRUE;
+  if (\Drupal::state()->get('config_import_steps_alter.error', FALSE)) {
+    $context['results']['errors'][] = '_config_import_test_config_import_steps_alter batch error';
+    $config_importer->logError('_config_import_test_config_import_steps_alter ConfigImporter error');
+  }
   $context['finished'] = 1;
   return;
 }
