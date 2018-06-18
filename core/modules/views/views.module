@@ -359,7 +359,6 @@ function views_theme_suggestions_container_alter(array &$suggestions, array $var
  *     - #view_display_plugin_id: The plugin ID of the display.
  *
  * @see \Drupal\views\Plugin\Block\ViewsBlock::addContextualLinks()
- * @see views_preprocess_page()
  * @see template_preprocess_views_view()
  */
 function views_add_contextual_links(&$render_element, $location, $display_id, array $view_element = NULL) {
