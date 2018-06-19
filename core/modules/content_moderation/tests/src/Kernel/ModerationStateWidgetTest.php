@@ -8,13 +8,15 @@ use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\workflows\Entity\Workflow;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\Plugin\Field\FieldWidget\ModerationStateWidget
  * @group content_moderation
  */
 class ModerationStateWidgetTest extends KernelTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * Modules to install.
@@ -46,7 +48,7 @@ class ModerationStateWidgetTest extends KernelTestBase {
       'type' => 'unmoderated',
     ])->save();
 
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'moderated');
     $workflow->save();
   }

@@ -4,7 +4,7 @@ namespace Drupal\Tests\path\Functional;
 
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\workflows\Entity\Workflow;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
 /**
  * Tests path aliases with Content Moderation.
@@ -13,6 +13,8 @@ use Drupal\workflows\Entity\Workflow;
  * @group path
  */
 class PathContentModerationTest extends BrowserTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * Modules to install.
@@ -32,7 +34,7 @@ class PathContentModerationTest extends BrowserTestBase {
     $node_type->save();
 
     // Set the content type as moderated.
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'moderated');
     $workflow->save();
 

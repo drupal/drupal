@@ -6,7 +6,7 @@ use Drupal\Core\Config\ConfigImporterException;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\workflows\Entity\Workflow;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
 /**
  * Tests how Content Moderation handles workflow config changes.
@@ -14,6 +14,8 @@ use Drupal\workflows\Entity\Workflow;
  * @group content_moderation
  */
 class ContentModerationWorkflowConfigTest extends KernelTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -63,7 +65,7 @@ class ContentModerationWorkflowConfigTest extends KernelTestBase {
       'type' => 'example',
     ])->save();
 
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()
       ->addState('test1', 'Test one')
       ->addState('test2', 'Test two')

@@ -5,7 +5,7 @@ namespace Drupal\Tests\content_moderation\Kernel;
 use Drupal\Core\Render\RenderContext;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\workflows\Entity\Workflow;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
 /**
  * Test the state field formatter.
@@ -13,6 +13,8 @@ use Drupal\workflows\Entity\Workflow;
  * @group content_moderation
  */
 class StateFormatterTest extends KernelTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * Modules to enable.
@@ -36,7 +38,7 @@ class StateFormatterTest extends KernelTestBase {
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
 
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
     $workflow->save();
   }

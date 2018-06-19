@@ -3,6 +3,7 @@
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
@@ -11,6 +12,7 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslationTestBase {
 
   use ContentTypeCreationTrait;
+  use ContentModerationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -110,6 +112,7 @@ abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslat
   protected function setupBundle() {
     parent::setupBundle();
     $this->createContentType(['type' => $this->bundle]);
+    $this->createEditorialWorkflow();
   }
 
   /**

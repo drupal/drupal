@@ -197,6 +197,28 @@ class StandardTest extends BrowserTestBase {
     $this->drupalGet($url);
     $this->drupalGet($url);
     $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'User profile page is cached by Dynamic Page Cache.');
+
+    // Make sure the editorial workflow is installed after enabling the
+    // content_moderation module.
+    \Drupal::service('module_installer')->install(['content_moderation']);
+    $role = Role::create([
+      'id' => 'admin_workflows',
+      'label' => 'Admin workflow',
+    ]);
+    $role->grantPermission('administer workflows');
+    $role->save();
+    $this->adminUser->addRole($role->id());
+    $this->adminUser->save();
+    $this->rebuildContainer();
+    $this->drupalGet('admin/config/workflow/workflows/manage/editorial');
+    $this->assertText('Draft');
+    $this->assertText('Published');
+    $this->assertText('Archived');
+    $this->assertText('Create New Draft');
+    $this->assertText('Publish');
+    $this->assertText('Archive');
+    $this->assertText('Restore to Draft');
+    $this->assertText('Restore');
   }
 
 }

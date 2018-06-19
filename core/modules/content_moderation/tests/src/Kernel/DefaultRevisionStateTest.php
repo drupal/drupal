@@ -6,7 +6,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\workflows\Entity\Workflow;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
 /**
  * Tests the correct default revision is set.
@@ -14,6 +14,8 @@ use Drupal\workflows\Entity\Workflow;
  * @group content_moderation
  */
 class DefaultRevisionStateTest extends KernelTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -68,7 +70,7 @@ class DefaultRevisionStateTest extends KernelTestBase {
 
     $this->container->get('content_translation.manager')->setEnabled('node', 'example', TRUE);
 
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->save();
 

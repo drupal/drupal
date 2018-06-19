@@ -7,8 +7,8 @@ use Drupal\migrate\Audit\AuditResult;
 use Drupal\migrate\Audit\IdAuditor;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
-use Drupal\workflows\Entity\Workflow;
 
 /**
  * Tests the migration auditor for ID conflicts.
@@ -19,6 +19,7 @@ class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;
   use CreateTestContentEntitiesTrait;
+  use ContentModerationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -44,7 +45,7 @@ class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
     NodeType::create(['type' => 'page'])->save();
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'page');
     $workflow->save();
   }

@@ -4,9 +4,9 @@ namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use Drupal\workflows\Entity\Workflow;
 
 /**
  * Tests with node access enabled.
@@ -17,6 +17,7 @@ class NodeAccessTest extends KernelTestBase {
 
   use NodeCreationTrait;
   use UserCreationTrait;
+  use ContentModerationTestTrait;
 
   /**
    * The moderation information service.
@@ -58,7 +59,7 @@ class NodeAccessTest extends KernelTestBase {
       'label' => 'Page',
     ]);
     $node_type->save();
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'page');
     $workflow->save();
 

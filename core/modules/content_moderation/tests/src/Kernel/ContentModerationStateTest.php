@@ -12,6 +12,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\workflows\Entity\Workflow;
 
 /**
@@ -20,6 +21,8 @@ use Drupal\workflows\Entity\Workflow;
  * @group content_moderation
  */
 class ContentModerationStateTest extends KernelTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -275,7 +278,7 @@ class ContentModerationStateTest extends KernelTestBase {
     ]);
     $node_type->save();
 
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->save();
 
@@ -388,7 +391,7 @@ class ContentModerationStateTest extends KernelTestBase {
       'type' => 'test_type',
     ])->save();
 
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'test_type');
     $workflow->save();
 
@@ -415,7 +418,7 @@ class ContentModerationStateTest extends KernelTestBase {
    * Tests that entities with special languages can be moderated.
    */
   public function testModerationWithSpecialLanguages() {
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
     $workflow->save();
 
@@ -436,7 +439,7 @@ class ContentModerationStateTest extends KernelTestBase {
    * Tests that a non-translatable entity type with a langcode can be moderated.
    */
   public function testNonTranslatableEntityTypeModeration() {
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
     $workflow->save();
 
@@ -470,7 +473,7 @@ class ContentModerationStateTest extends KernelTestBase {
     // Update the entity type in order to remove the 'langcode' field.
     \Drupal::entityDefinitionUpdateManager()->applyUpdates();
 
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
     $workflow->save();
 
@@ -500,7 +503,7 @@ class ContentModerationStateTest extends KernelTestBase {
     ]);
     $node_type->save();
 
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     // Test both a config and non-config based bundle and entity type.
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
@@ -543,7 +546,7 @@ class ContentModerationStateTest extends KernelTestBase {
     // Create a bundle not based on any particular configuration.
     entity_test_create_bundle('test_bundle');
 
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test', 'test_bundle');
     $workflow->save();
 
@@ -653,7 +656,7 @@ class ContentModerationStateTest extends KernelTestBase {
       }
     }
 
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle($entity_type_id, $bundle_id);
     $workflow->save();
 

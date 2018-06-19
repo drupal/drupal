@@ -3,6 +3,7 @@
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
@@ -16,6 +17,8 @@ use Drupal\workflows\Entity\Workflow;
  * @group content_moderation
  */
 class ViewsModerationStateFilterTest extends ViewTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -44,6 +47,8 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
     NodeType::create([
       'type' => 'example_b',
     ])->save();
+
+    $this->createEditorialWorkflow();
 
     $new_workflow = Workflow::create([
       'type' => 'content_moderation',

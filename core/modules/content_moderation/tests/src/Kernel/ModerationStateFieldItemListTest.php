@@ -5,7 +5,7 @@ namespace Drupal\Tests\content_moderation\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\workflows\Entity\Workflow;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList
@@ -13,6 +13,8 @@ use Drupal\workflows\Entity\Workflow;
  * @group content_moderation
  */
 class ModerationStateFieldItemListTest extends KernelTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -51,7 +53,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
       'type' => 'example',
     ]);
     $node_type->save();
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->save();
 

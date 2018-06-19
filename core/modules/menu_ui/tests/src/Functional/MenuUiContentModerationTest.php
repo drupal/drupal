@@ -3,7 +3,7 @@
 namespace Drupal\Tests\menu_ui\Functional;
 
 use Drupal\Tests\BrowserTestBase;
-use Drupal\workflows\Entity\Workflow;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
 /**
  * Tests Menu UI and Content Moderation integration.
@@ -11,6 +11,8 @@ use Drupal\workflows\Entity\Workflow;
  * @group menu_ui
  */
 class MenuUiContentModerationTest extends BrowserTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * Modules to install.
@@ -34,7 +36,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
       'display_submitted' => FALSE,
     ]);
 
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'page');
     $workflow->save();
   }

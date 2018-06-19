@@ -5,12 +5,15 @@ namespace Drupal\Tests\content_moderation\Functional;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\user\Entity\Role;
 
 /**
  * Defines a base class for moderation state tests.
  */
 abstract class ModerationStateTestBase extends BrowserTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * Profile to use.
@@ -47,6 +50,13 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
   ];
 
   /**
+   * The editorial workflow entity.
+   *
+   * @var \Drupal\workflows\Entity\Workflow
+   */
+  protected $workflow;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -64,6 +74,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    */
   protected function setUp() {
     parent::setUp();
+    $this->workflow = $this->createEditorialWorkflow();
     $this->adminUser = $this->drupalCreateUser($this->permissions);
     $this->drupalPlaceBlock('local_tasks_block', ['id' => 'tabs_block']);
     $this->drupalPlaceBlock('page_title_block');

@@ -6,6 +6,7 @@ use Drupal\entity_test\Entity\EntityTestNoBundle;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use Drupal\workflows\Entity\Workflow;
@@ -18,6 +19,8 @@ use Drupal\workflows\Entity\Workflow;
  * @group content_moderation
  */
 class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -69,7 +72,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
    * Tests the content moderation state filter.
    */
   public function testStateFilterViewsRelationship() {
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->getTypePlugin()->addState('translated_draft', 'Bar');
     $configuration = $workflow->getTypePlugin()->getConfiguration();
@@ -156,7 +159,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
    * Test the moderation filter with a non-translatable entity type.
    */
   public function testNonTranslatableEntityType() {
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_no_bundle', 'entity_test_no_bundle');
     $workflow->save();
 
@@ -182,7 +185,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
 
     // Adding a content type to the editorial workflow will enable all of the
     // editorial states.
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->save();
     $this->assertPluginStates([

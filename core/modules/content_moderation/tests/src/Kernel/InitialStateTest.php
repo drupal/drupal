@@ -6,7 +6,7 @@ use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\workflows\Entity\Workflow;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
 /**
  * Tests the correct initial states are set on install.
@@ -14,6 +14,8 @@ use Drupal\workflows\Entity\Workflow;
  * @group content_moderation
  */
 class InitialStateTest extends KernelTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -66,7 +68,7 @@ class InitialStateTest extends KernelTestBase {
     $entity_test->save();
 
     \Drupal::service('module_installer')->install(['content_moderation'], TRUE);
-    $workflow = Workflow::load('editorial');
+    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
     $workflow->save();
