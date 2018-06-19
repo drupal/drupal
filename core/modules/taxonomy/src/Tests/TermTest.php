@@ -73,6 +73,15 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
+   * The "parent" field must restrict references to the same vocabulary.
+   */
+  public function testParentHandlerSettings() {
+    $vocabulary_fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('taxonomy_term', $this->vocabulary->id());
+    $parent_target_bundles = $vocabulary_fields['parent']->getSetting('handler_settings')['target_bundles'];
+    $this->assertIdentical([$this->vocabulary->id() => $this->vocabulary->id()], $parent_target_bundles);
+  }
+
+  /**
    * Test terms in a single and multiple hierarchy.
    */
   public function testTaxonomyTermHierarchy() {

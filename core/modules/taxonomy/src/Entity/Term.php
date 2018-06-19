@@ -179,6 +179,16 @@ class Term extends ContentEntityBase implements TermInterface {
   /**
    * {@inheritdoc}
    */
+  public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+    // Only terms in the same bundle can be a parent.
+    $fields['parent'] = clone $base_field_definitions['parent'];
+    $fields['parent']->setSetting('handler_settings', ['target_bundles' => [$bundle => $bundle]]);
+    return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDescription() {
     return $this->get('description')->value;
   }
