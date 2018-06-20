@@ -33,7 +33,7 @@ class ConfigImporterTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installConfig(['config_test']);
+    $this->installConfig(['system', 'config_test']);
     // Installing config_test's default configuration pollutes the global
     // variable being used for recording hook invocations by this test already,
     // so it has to be cleared out manually.

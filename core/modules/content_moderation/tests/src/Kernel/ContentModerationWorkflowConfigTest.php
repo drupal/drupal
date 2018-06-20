@@ -59,7 +59,7 @@ class ContentModerationWorkflowConfigTest extends KernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     $this->installEntitySchema('content_moderation_state');
-    $this->installConfig('content_moderation');
+    $this->installConfig(['system', 'content_moderation']);
 
     NodeType::create([
       'type' => 'example',

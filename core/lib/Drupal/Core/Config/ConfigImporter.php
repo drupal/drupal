@@ -405,6 +405,14 @@ class ConfigImporter {
     $module_list = array_reverse($module_list);
     $this->extensionChangelist['module']['install'] = array_intersect(array_keys($module_list), $install);
 
+    // If we're installing the install profile ensure it comes last. This will
+    // occur when installing a site from configuration.
+    $install_profile_key = array_search($new_extensions['profile'], $this->extensionChangelist['module']['install'], TRUE);
+    if ($install_profile_key !== FALSE) {
+      unset($this->extensionChangelist['module']['install'][$install_profile_key]);
+      $this->extensionChangelist['module']['install'][] = $new_extensions['profile'];
+    }
+
     // Work out what themes to install and to uninstall.
     $this->extensionChangelist['theme']['install'] = array_keys(array_diff_key($new_extensions['theme'], $current_extensions['theme']));
     $this->extensionChangelist['theme']['uninstall'] = array_keys(array_diff_key($current_extensions['theme'], $new_extensions['theme']));

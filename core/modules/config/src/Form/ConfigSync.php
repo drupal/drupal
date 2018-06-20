@@ -4,6 +4,7 @@ namespace Drupal\config\Form;
 
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\ConfigImporter;
+use Drupal\Core\Config\Importer\ConfigImporterBatch;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
@@ -337,14 +338,14 @@ class ConfigSync extends FormBase {
         $sync_steps = $config_importer->initialize();
         $batch = [
           'operations' => [],
-          'finished' => [get_class($this), 'finishBatch'],
+          'finished' => [ConfigImporterBatch::class, 'finish'],
           'title' => t('Synchronizing configuration'),
           'init_message' => t('Starting configuration synchronization.'),
           'progress_message' => t('Completed step @current of @total.'),
           'error_message' => t('Configuration synchronization has encountered an error.'),
         ];
         foreach ($sync_steps as $sync_step) {
-          $batch['operations'][] = [[get_class($this), 'processBatch'], [$config_importer, $sync_step]];
+          $batch['operations'][] = [[ConfigImporterBatch::class, 'process'], [$config_importer, $sync_step]];
         }
 
         batch_set($batch);
@@ -368,20 +369,15 @@ class ConfigSync extends FormBase {
    *   The synchronization step to do.
    * @param array $context
    *   The batch context.
+   *
+   * @deprecated in Drupal 8.6.0 and will be removed before 9.0.0. Use
+   *   \Drupal\Core\Config\Importer\ConfigImporterBatch::process() instead.
+   *
+   * @see https://www.drupal.org/node/2897299
    */
   public static function processBatch(ConfigImporter $config_importer, $sync_step, &$context) {
-    if (!isset($context['sandbox']['config_importer'])) {
-      $context['sandbox']['config_importer'] = $config_importer;
-    }
-
-    $config_importer = $context['sandbox']['config_importer'];
-    $config_importer->doSyncStep($sync_step, $context);
-    if ($errors = $config_importer->getErrors()) {
-      if (!isset($context['results']['errors'])) {
-        $context['results']['errors'] = [];
-      }
-      $context['results']['errors'] = array_merge($context['results']['errors'], $errors);
-    }
+    @trigger_error('\Drupal\config\Form\ConfigSync::processBatch() deprecated in Drupal 8.6.0 and will be removed before 9.0.0. Use \Drupal\Core\Config\Importer\ConfigImporterBatch::process() instead. See https://www.drupal.org/node/2897299');
+    ConfigImporterBatch::process($config_importer, $sync_step, $context);
   }
 
   /**
@@ -389,27 +385,15 @@ class ConfigSync extends FormBase {
    *
    * This function is a static function to avoid serializing the ConfigSync
    * object unnecessarily.
+   *
+   * @deprecated in Drupal 8.6.0 and will be removed before 9.0.0. Use
+   *   \Drupal\Core\Config\Importer\ConfigImporterBatch::finish() instead.
+   *
+   * @see https://www.drupal.org/node/2897299
    */
   public static function finishBatch($success, $results, $operations) {
-    if ($success) {
-      if (!empty($results['errors'])) {
-        foreach ($results['errors'] as $error) {
-          \Drupal::messenger()->addError($error);
-          \Drupal::logger('config_sync')->error($error);
-        }
-        \Drupal::messenger()->addWarning(\Drupal::translation()->translate('The configuration was imported with errors.'));
-      }
-      else {
-        \Drupal::messenger()->addStatus(\Drupal::translation()->translate('The configuration was imported successfully.'));
-      }
-    }
-    else {
-      // An error occurred.
-      // $operations contains the operations that remained unprocessed.
-      $error_operation = reset($operations);
-      $message = \Drupal::translation()->translate('An error occurred while processing %error_operation with arguments: @arguments', ['%error_operation' => $error_operation[0], '@arguments' => print_r($error_operation[1], TRUE)]);
-      \Drupal::messenger()->addError($message);
-    }
+    @trigger_error('\Drupal\config\Form\ConfigSync::finishBatch() deprecated in Drupal 8.6.0 and will be removed before 9.0.0. Use \Drupal\Core\Config\Importer\ConfigImporterBatch::finish() instead. See https://www.drupal.org/node/2897299');
+    ConfigImporterBatch::finish($success, $results, $operations);
   }
 
 }

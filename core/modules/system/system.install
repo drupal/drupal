@@ -1002,6 +1002,19 @@ function system_requirements($phase) {
     ];
   }
 
+  // During installs from configuration don't support install profiles that
+  // implement hook_install.
+  if ($phase == 'install' && !empty($install_state['config_install_path'])) {
+    $install_hook = $install_state['parameters']['profile'] . '_install';
+    if (function_exists($install_hook)) {
+      $requirements['config_install'] = [
+        'title' => t('Configuration install'),
+        'value' => $install_state['parameters']['profile'],
+        'description' => t('The selected profile has a hook_install() implementation and therefore can not be installed from configuration.'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
   return $requirements;
 }
 

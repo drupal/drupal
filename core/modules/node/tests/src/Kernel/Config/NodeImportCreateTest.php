@@ -28,7 +28,7 @@ class NodeImportCreateTest extends KernelTestBase {
     $this->installEntitySchema('user');
 
     // Set default storage backend.
-    $this->installConfig(['field']);
+    $this->installConfig(['system', 'field']);
   }
 
   /**

@@ -72,6 +72,9 @@ class SystemConfigSubscriber implements EventSubscriberInterface {
    *   The config import event.
    */
   public function onConfigImporterValidateSiteUUID(ConfigImporterEvent $event) {
+    if (!$event->getConfigImporter()->getStorageComparer()->getSourceStorage()->exists('system.site')) {
+      $event->getConfigImporter()->logError($this->t('This import does not contain system.site configuration, so has been rejected.'));
+    }
     if (!$event->getConfigImporter()->getStorageComparer()->validateSiteUuid()) {
       $event->getConfigImporter()->logError($this->t('Site UUID in source storage does not match the target storage.'));
     }

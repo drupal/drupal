@@ -32,7 +32,7 @@ class ConfigImportRecreateTest extends KernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('node');
-    $this->installConfig(['field', 'node']);
+    $this->installConfig(['system', 'field', 'node']);
 
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
 

@@ -39,7 +39,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-    $this->installConfig(['field']);
+    $this->installConfig(['system', 'field']);
 
     // Set up the ConfigImporter object for testing.
     $storage_comparer = new StorageComparer(

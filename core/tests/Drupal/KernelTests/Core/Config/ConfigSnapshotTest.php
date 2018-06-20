@@ -24,6 +24,7 @@ class ConfigSnapshotTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
+    $this->installConfig(['system']);
     // Update the config snapshot. This allows the parent::setUp() to write
     // configuration files.
     \Drupal::service('config.manager')->createSnapshot(\Drupal::service('config.storage'), \Drupal::service('config.storage.snapshot'));

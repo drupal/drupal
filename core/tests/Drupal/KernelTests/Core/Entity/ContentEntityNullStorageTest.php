@@ -43,6 +43,7 @@ class ContentEntityNullStorageTest extends KernelTestBase {
    * @see \Drupal\Core\Entity\Event\BundleConfigImportValidate
    */
   public function testDeleteThroughImport() {
+    $this->installConfig(['system']);
     $contact_form = ContactForm::create(['id' => 'test']);
     $contact_form->save();
 

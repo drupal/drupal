@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Site\Settings;
 
@@ -481,12 +482,20 @@ function _drupal_rewrite_settings_dump_one(\stdClass $variable, $prefix = '', $s
  * @see update_prepare_d8_bootstrap()
  */
 function drupal_install_config_directories() {
-  global $config_directories;
+  global $config_directories, $install_state;
 
-  // Add a randomized config directory name to settings.php, unless it was
-  // manually defined in the existing already.
+  // If settings.php does not contain a config sync directory name we need to
+  // configure one.
   if (empty($config_directories[CONFIG_SYNC_DIRECTORY])) {
-    $config_directories[CONFIG_SYNC_DIRECTORY] = \Drupal::service('site.path') . '/files/config_' . Crypt::randomBytesBase64(55) . '/sync';
+    if (empty($install_state['config_install_path'])) {
+      // Add a randomized config directory name to settings.php
+      $config_directories[CONFIG_SYNC_DIRECTORY] = \Drupal::service('site.path') . '/files/config_' . Crypt::randomBytesBase64(55) . '/sync';
+    }
+    else {
+      // Install profiles can contain a config sync directory. If they do,
+      // 'config_install_path' is a path to the directory.
+      $config_directories[CONFIG_SYNC_DIRECTORY] = $install_state['config_install_path'];
+    }
     $settings['config_directories'][CONFIG_SYNC_DIRECTORY] = (object) [
       'value' => $config_directories[CONFIG_SYNC_DIRECTORY],
       'required' => TRUE,
@@ -1099,9 +1108,10 @@ function install_profile_info($profile, $langcode = 'en') {
       'version' => NULL,
       'hidden' => FALSE,
       'php' => DRUPAL_MINIMUM_PHP,
+      'config_install_path' => NULL,
     ];
-    $profile_file = drupal_get_path('profile', $profile) . "/$profile.info.yml";
-    $info = \Drupal::service('info_parser')->parse($profile_file);
+    $profile_path = drupal_get_path('profile', $profile);
+    $info = \Drupal::service('info_parser')->parse("$profile_path/$profile.info.yml");
     $info += $defaults;
 
     // drupal_required_modules() includes the current profile as a dependency.
@@ -1114,6 +1124,12 @@ function install_profile_info($profile, $langcode = 'en') {
     // remove any duplicates.
     $info['install'] = array_unique(array_merge($info['install'], $required, $info['dependencies'], $locale));
 
+    // If the profile has a config/sync directory use that to install drupal.
+    if (is_dir($profile_path . '/config/sync')) {
+      $info['config_install_path'] = $profile_path . '/config/sync';
+      $sync = new FileStorage($profile_path . '/config/sync');
+      $info['config']['system.site'] = $sync->read('system.site');
+    }
     $cache[$profile][$langcode] = $info;
   }
   return $cache[$profile][$langcode];

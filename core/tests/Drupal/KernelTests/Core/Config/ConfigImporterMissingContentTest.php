@@ -33,7 +33,7 @@ class ConfigImporterMissingContentTest extends KernelTestBase {
     $this->installSchema('system', 'sequences');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
-    $this->installConfig(['config_test']);
+    $this->installConfig(['system', 'config_test']);
     // Installing config_test's default configuration pollutes the global
     // variable being used for recording hook invocations by this test already,
     // so it has to be cleared out manually.

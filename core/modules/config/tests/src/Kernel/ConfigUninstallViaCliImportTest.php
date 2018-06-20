@@ -32,6 +32,7 @@ class ConfigUninstallViaCliImportTest extends KernelTestBase {
       $this->markTestSkipped('This test has to be run from the CLI');
     }
 
+    $this->installConfig(['system']);
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
 
     // Set up the ConfigImporter object for testing.

@@ -26,7 +26,7 @@ class NodeImportChangeTest extends KernelTestBase {
     parent::setUp();
 
     // Set default storage backend.
-    $this->installConfig(['field', 'node_test_config']);
+    $this->installConfig(['system', 'field', 'node_test_config']);
   }
 
   /**
