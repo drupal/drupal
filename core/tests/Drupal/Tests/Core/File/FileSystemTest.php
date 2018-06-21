@@ -15,7 +15,7 @@ use org\bovigo\vfs\vfsStream;
 class FileSystemTest extends UnitTestCase {
 
   /**
-   * @var \Drupal\Core\File\FileSystem
+   * @var \Drupal\Core\File\FileSystemInterface
    */
   protected $fileSystem;
 
