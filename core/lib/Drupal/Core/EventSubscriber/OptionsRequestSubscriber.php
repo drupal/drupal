@@ -46,11 +46,11 @@ class OptionsRequestSubscriber implements EventSubscriberInterface {
       // In case we don't have any routes, a 403 should be thrown by the normal
       // request handling.
       if (count($routes) > 0) {
-        $methods = array_map(function (Route $route) {
-          return $route->getMethods();
-        }, $routes->all());
         // Flatten and unique the available methods.
-        $methods = array_unique(call_user_func_array('array_merge', $methods));
+        $methods = array_reduce($routes->all(), function ($methods, Route $route) {
+          return array_merge($methods, $route->getMethods());
+        }, []);
+        $methods = array_unique($methods);
         $response = new Response('', 200, ['Allow' => implode(', ', $methods)]);
         $event->setResponse($response);
       }
