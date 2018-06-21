@@ -5,6 +5,12 @@ media.settings:
     icon_base_uri:
       type: string
       label: 'Full URI to a folder where the media icons will be installed'
+    iframe_domain:
+      type: uri
+      label: 'Domain from which to serve oEmbed content in an iframe'
+    oembed_providers_url:
+      type: uri
+      label: 'The URL of the oEmbed providers database in JSON format'
 
 media.type.*:
   type: config_entity
@@ -40,6 +46,21 @@ field.formatter.settings.media_thumbnail:
   type: field.formatter.settings.image
   label: 'Media thumbnail field display format settings'
 
+field.formatter.settings.oembed:
+  type: mapping
+  label: 'oEmbed display format settings'
+  mapping:
+    max_width:
+      type: integer
+      label: 'Maximum width'
+    max_height:
+      type: integer
+      label: 'Maximum height'
+
+field.widget.settings.oembed_textfield:
+  type: field.widget.settings.string_textfield
+  label: 'oEmbed widget format settings'
+
 media.source.*:
   type: mapping
   label: 'Media source settings'
@@ -59,6 +80,20 @@ media.source.audio_file:
 media.source.video_file:
   type: media.source.field_aware
   label: '"Video" media source configuration'
+
+media.source.oembed:*:
+  type: media.source.field_aware
+  label: 'oEmbed media source configuration'
+  mapping:
+    thumbnails_directory:
+      type: uri
+      label: 'URI of thumbnail storage directory'
+    providers:
+      type: sequence
+      label: 'Allowed oEmbed providers'
+      sequence:
+        type: string
+        label: 'Provider name'
 
 media.source.field_aware:
   type: mapping

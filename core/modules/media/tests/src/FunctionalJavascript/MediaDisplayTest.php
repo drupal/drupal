@@ -54,6 +54,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
 
     // Enable the field on the display and verify it becomes visible on the UI.
     $this->drupalGet("/admin/structure/media/manage/{$media_type->id()}/display");
+    $assert_session->buttonExists('Show row weights')->press();
     $page->selectFieldOption('fields[name][region]', 'content');
     $assert_session->waitForElementVisible('css', '#edit-fields-name-settings-edit');
     $page->pressButton('Save');

@@ -5,6 +5,9 @@
  * Install, uninstall and update hooks for Media module.
  */
 
+use Drupal\Core\Url;
+use Drupal\media\MediaTypeInterface;
+use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\user\RoleInterface;
 use Drupal\user\Entity\Role;
 
@@ -75,6 +78,36 @@ function media_requirements($phase) {
       }
     }
   }
+  elseif ($phase === 'runtime') {
+    // Check that oEmbed content is served in an iframe on a different domain,
+    // and complain if it isn't.
+    $domain = \Drupal::config('media.settings')->get('iframe_domain');
+
+    if (!\Drupal::service('media.oembed.iframe_url_helper')->isSecure($domain)) {
+      // Find all media types which use a source plugin that implements
+      // OEmbedInterface.
+      $media_types = \Drupal::entityTypeManager()
+        ->getStorage('media_type')
+        ->loadMultiple();
+
+      $oembed_types = array_filter($media_types, function (MediaTypeInterface $media_type) {
+        return $media_type->getSource() instanceof OEmbedInterface;
+      });
+
+      if ($oembed_types) {
+        // @todo Potentially allow site administrators to suppress this warning
+        // permanently. See https://www.drupal.org/project/drupal/issues/2962753
+        // for more information.
+        $requirements['media_insecure_iframe'] = [
+          'title' => t('Media'),
+          'description' => t('It is potentially insecure to display oEmbed content in a frame that is served from the same domain as your main Drupal site, as this may allow execution of third-party code. <a href=":url">You can specify a different domain for serving oEmbed content here</a>.', [
+            ':url' => Url::fromRoute('media.settings')->setAbsolute()->toString(),
+          ]),
+          'severity' => REQUIREMENT_WARNING,
+        ];
+      }
+    }
+  }
 
   return $requirements;
 }
@@ -119,4 +152,14 @@ function media_update_8500() {
 
     $role->save();
   }
+}
+
+/**
+ * Updates media.settings to support OEmbed.
+ */
+function media_update_8600() {
+  \Drupal::configFactory()->getEditable('media.settings')
+    ->set('iframe_domain', '')
+    ->set('oembed_providers_url', 'https://oembed.com/providers.json')
+    ->save(TRUE);
 }

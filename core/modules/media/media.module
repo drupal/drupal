@@ -5,6 +5,7 @@
  * Provides media items.
  */
 
+use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -15,6 +16,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
+use Drupal\media\Plugin\media\Source\OEmbedInterface;
 
 /**
  * Implements hook_help().
@@ -72,6 +74,11 @@ function media_theme() {
       'render element' => 'element',
       'base hook' => 'field_multiple_value_form',
     ],
+    'media_oembed_iframe' => [
+      'variables' => [
+        'media' => NULL,
+      ],
+    ],
   ];
 }
 
@@ -92,12 +99,38 @@ function media_entity_access(EntityInterface $entity, $operation, AccountInterfa
  */
 function media_theme_suggestions_media(array $variables) {
   $suggestions = [];
+  /** @var \Drupal\media\MediaInterface $media */
   $media = $variables['elements']['#media'];
   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
 
   $suggestions[] = 'media__' . $sanitized_view_mode;
   $suggestions[] = 'media__' . $media->bundle();
   $suggestions[] = 'media__' . $media->bundle() . '__' . $sanitized_view_mode;
+
+  // Add suggestions based on the source plugin ID.
+  $source = $media->getSource();
+  if ($source instanceof DerivativeInspectionInterface) {
+    $source_id = $source->getBaseId();
+    $derivative_id = $source->getDerivativeId();
+    if ($derivative_id) {
+      $source_id .= '__derivative_' . $derivative_id;
+    }
+  }
+  else {
+    $source_id = $source->getPluginId();
+  }
+  $suggestions[] = "media__source_$source_id";
+
+  // If the source plugin uses oEmbed, add a suggestion based on the provider
+  // name, if available.
+  if ($source instanceof OEmbedInterface) {
+    $provider_id = $source->getMetadata($media, 'provider_name');
+    if ($provider_id) {
+      $provider_id = \Drupal::transliteration()->transliterate($provider_id);
+      $provider_id = preg_replace('/[^a-z0-9_]+/', '_', mb_strtolower($provider_id));
+      $suggestions[] = end($suggestions) . "__provider_$provider_id";
+    }
+  }
 
   return $suggestions;
 }
