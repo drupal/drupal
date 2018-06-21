@@ -62,12 +62,29 @@ class ConfigOtherModuleTest extends BrowserTestBase {
     $this->assertNull(entity_load('config_test', 'other_module_test_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_unmet whose dependencies are not met is not created.');
     $this->assertNull(entity_load('config_test', 'other_module_test_optional_entity_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are not met is not created.');
     $this->installModule('config_test_language');
+    $this->assertNull(entity_load('config_test', 'other_module_test_optional_entity_unmet2', TRUE), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet2 whose dependencies are not met is not created.');
     $this->installModule('config_install_dependency_test');
     $this->assertTrue(entity_load('config_test', 'other_module_test_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_unmet whose dependencies are met is now created.');
-    // Although the following configuration entity's are now met it is not
-    // installed because it does not have a direct dependency on the
-    // config_install_dependency_test module.
-    $this->assertNull(entity_load('config_test', 'other_module_test_optional_entity_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are met is not created.');
+    // The following configuration entity's dependencies are now met. It is
+    // indirectly dependent on the config_install_dependency_test module because
+    // it has a dependency on the config_test.dynamic.dependency_for_unmet2
+    // configuration provided by that module and, therefore, should be created.
+    $this->assertTrue(entity_load('config_test', 'other_module_test_optional_entity_unmet2', TRUE), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet2 whose dependencies are met is now created.');
+
+    // The following configuration entity's dependencies are now met even though
+    // it has no direct dependency on the module. It is indirectly dependent on
+    // the config_install_dependency_test module because it has a dependency on
+    // the config_test.dynamic.other_module_test_unmet configuration that is
+    // dependent on the config_install_dependency_test module and, therefore,
+    // should be created.
+    $entity = entity_load('config_test', 'other_module_test_optional_entity_unmet', TRUE);
+    $this->assertTrue($entity, 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are met is created.');
+    $entity->delete();
+
+    // Install another module to ensure the configuration just deleted is not
+    // recreated.
+    $this->installModule('config');
+    $this->assertFalse(entity_load('config_test', 'other_module_test_optional_entity_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are met is not installed when an unrelated module is installed.');
   }
 
   /**

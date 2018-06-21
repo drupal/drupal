@@ -4,7 +4,6 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
-use Drupal\Core\Config\Entity\ConfigEntityDependency;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ConfigInstaller implements ConfigInstallerInterface {
@@ -204,16 +203,19 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $dependency_manager = new ConfigDependencyManager();
     $dependency_manager->setData($config_to_create);
     $config_to_create = array_merge(array_flip($dependency_manager->sortAll()), $config_to_create);
+    if (!empty($dependency)) {
+      // In order to work out dependencies we need the full config graph.
+      $dependency_manager->setData($this->getActiveStorages()->readMultiple($existing_config) + $config_to_create);
+      $dependencies = $dependency_manager->getDependentEntities(key($dependency), reset($dependency));
+    }
 
     foreach ($config_to_create as $config_name => $data) {
       // Remove configuration where its dependencies cannot be met.
       $remove = !$this->validateDependencies($config_name, $data, $enabled_extensions, $all_config);
-      // If $dependency is defined, remove configuration that does not have a
-      // matching dependency.
+      // Remove configuration that is not dependent on $dependency, if it is
+      // defined.
       if (!$remove && !empty($dependency)) {
-        // Create a light weight dependency object to check dependencies.
-        $config_entity = new ConfigEntityDependency($config_name, $data);
-        $remove = !$config_entity->hasDependency(key($dependency), reset($dependency));
+        $remove = !isset($dependencies[$config_name]);
       }
 
       if ($remove) {
