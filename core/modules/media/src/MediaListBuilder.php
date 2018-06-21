@@ -115,11 +115,11 @@ class MediaListBuilder extends EntityListBuilder {
     /** @var \Drupal\media\MediaInterface $entity */
     if ($this->thumbnailStyleExists) {
       $row['thumbnail'] = [];
-      if ($thumbnail_url = $entity->getSource()->getMetadata($entity, 'thumbnail_uri')) {
+      if ($thumbnail_uri = $entity->getSource()->getMetadata($entity, 'thumbnail_uri')) {
         $row['thumbnail']['data'] = [
           '#theme' => 'image_style',
           '#style_name' => 'thumbnail',
-          '#uri' => $thumbnail_url,
+          '#uri' => $thumbnail_uri,
           '#height' => 50,
         ];
       }
