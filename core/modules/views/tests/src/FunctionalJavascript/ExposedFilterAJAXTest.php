@@ -40,6 +40,7 @@ class ExposedFilterAJAXTest extends JavascriptTestBase {
       'administer site configuration',
       'access content',
       'access content overview',
+      'edit any page content',
     ]);
     $this->drupalLogin($user);
 
@@ -70,6 +71,16 @@ class ExposedFilterAJAXTest extends JavascriptTestBase {
     $html = $session->getPage()->getHtml();
     $this->assertContains('Page Two', $html);
     $this->assertNotContains('Page One', $html);
+
+    // Submit bulk actions form to ensure that the previous AJAX submit does not
+    // break it.
+    $this->submitForm([
+      'action' => 'node_make_sticky_action',
+      'node_bulk_form[0]' => TRUE,
+    ], t('Apply to selected items'));
+
+    // Verify that the action was performed.
+    $this->assertSession()->pageTextContains('Make content sticky was applied to 1 item.');
 
     // Reset the form.
     $this->submitForm([], t('Reset'));
