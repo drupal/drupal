@@ -4,6 +4,7 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\State\StateInterface;
 
 /**
@@ -227,7 +228,7 @@ abstract class ExtensionList {
    * @return string
    *   The human-readable name of the extension.
    *
-   * @throws \InvalidArgumentException
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   If there is no extension with the supplied machine name.
    */
   public function getName($extension_name) {
@@ -244,7 +245,7 @@ abstract class ExtensionList {
    *   A processed extension object for the extension with the specified machine
    *   name.
    *
-   * @throws \InvalidArgumentException
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   If there is no extension with the supplied name.
    */
   public function get($extension_name) {
@@ -253,7 +254,7 @@ abstract class ExtensionList {
       return $extensions[$extension_name];
     }
 
-    throw new \InvalidArgumentException("The {$this->type} $extension_name does not exist.");
+    throw new UnknownExtensionException("The {$this->type} $extension_name does not exist.");
   }
 
   /**
@@ -334,7 +335,7 @@ abstract class ExtensionList {
    * @return mixed[]
    *   An associative array of extension information.
    *
-   * @throws \InvalidArgumentException
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   If there is no extension with the supplied name.
    */
   public function getExtensionInfo($extension_name) {
@@ -342,7 +343,7 @@ abstract class ExtensionList {
     if (isset($all_info[$extension_name])) {
       return $all_info[$extension_name];
     }
-    throw new \InvalidArgumentException("The {$this->type} $extension_name does not exist or is not installed.");
+    throw new UnknownExtensionException("The {$this->type} $extension_name does not exist or is not installed.");
   }
 
   /**
@@ -505,7 +506,7 @@ abstract class ExtensionList {
    *   The drupal-root relative filename and path of the requested extension's
    *   .info.yml file.
    *
-   * @throws \InvalidArgumentException
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   If there is no extension with the supplied machine name.
    */
   public function getPathname($extension_name) {
@@ -518,7 +519,7 @@ abstract class ExtensionList {
     elseif (($path_names = $this->getPathnames()) && isset($path_names[$extension_name])) {
       return $path_names[$extension_name];
     }
-    throw new \InvalidArgumentException("The {$this->type} $extension_name does not exist.");
+    throw new UnknownExtensionException("The {$this->type} $extension_name does not exist.");
   }
 
   /**
@@ -533,7 +534,7 @@ abstract class ExtensionList {
    * @return string
    *   The Drupal-root-relative path to the specified extension.
    *
-   * @throws \InvalidArgumentException
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   If there is no extension with the supplied name.
    */
   public function getPath($extension_name) {

@@ -39,8 +39,8 @@ interface ThemeHandlerInterface {
    * @param array $theme_list
    *   The themes to uninstall.
    *
-   * @throws \InvalidArgumentException
-   *   Thrown when you uninstall an not installed theme.
+   * @throws \Drupal\Core\Extension\Exception\UninstalledExtensionException
+   *   Thrown when you try to uninstall a theme that wasn't installed.
    *
    * @see hook_themes_uninstalled()
    *
@@ -146,6 +146,9 @@ interface ThemeHandlerInterface {
    *
    * @return string
    *   Returns the human readable name of the theme.
+   *
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
+   *   When the specified theme does not exist.
    */
   public function getName($theme);
 
@@ -206,7 +209,7 @@ interface ThemeHandlerInterface {
    * @return \Drupal\Core\Extension\Extension
    *   An extension object.
    *
-   * @throws \InvalidArgumentException
+   * @throws \Drupal\Core\Extension\Extension\UnknownExtensionException
    *   Thrown when the requested theme does not exist.
    */
   public function getTheme($name);

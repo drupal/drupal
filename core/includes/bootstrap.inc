@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Session\AccountInterface;
@@ -246,7 +247,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     try {
       return $extension_list->getPathname($name);
     }
-    catch (\InvalidArgumentException $e) {
+    catch (UnknownExtensionException $e) {
       // Catch the exception. This will result in triggering an error.
     }
   }

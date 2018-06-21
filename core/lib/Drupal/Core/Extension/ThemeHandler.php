@@ -3,6 +3,8 @@
 namespace Drupal\Core\Extension;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\Exception\UninstalledExtensionException;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\State\StateInterface;
 
 /**
@@ -147,7 +149,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function setDefault($name) {
     $list = $this->listInfo();
     if (!isset($list[$name])) {
-      throw new \InvalidArgumentException("$name theme is not installed.");
+      throw new UninstalledExtensionException("$name theme is not installed.");
     }
     $this->configFactory->getEditable('system.theme')
       ->set('default', $name)
@@ -437,7 +439,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function getName($theme) {
     $themes = $this->listInfo();
     if (!isset($themes[$theme])) {
-      throw new \InvalidArgumentException("Requested the name of a non-existing theme $theme");
+      throw new UnknownExtensionException("Requested the name of a non-existing theme $theme");
     }
     return $themes[$theme]->info['name'];
   }
@@ -486,7 +488,7 @@ class ThemeHandler implements ThemeHandlerInterface {
     if (isset($themes[$name])) {
       return $themes[$name];
     }
-    throw new \InvalidArgumentException(sprintf('The theme %s does not exist.', $name));
+    throw new UnknownExtensionException(sprintf('The theme %s does not exist.', $name));
   }
 
   /**

@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\Config\ConfigManagerInterface;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\State\StateInterface;
 use Psr\Log\LoggerInterface;
@@ -111,7 +112,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
 
       if ($missing = array_diff_key($theme_list, $theme_data)) {
         // One or more of the given themes doesn't exist.
-        throw new \InvalidArgumentException('Unknown themes: ' . implode(', ', $missing) . '.');
+        throw new UnknownExtensionException('Unknown themes: ' . implode(', ', $missing) . '.');
       }
 
       // Only process themes that are not installed currently.
@@ -221,7 +222,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
     $list = $this->themeHandler->listInfo();
     foreach ($theme_list as $key) {
       if (!isset($list[$key])) {
-        throw new \InvalidArgumentException("Unknown theme: $key.");
+        throw new UnknownExtensionException("Unknown theme: $key.");
       }
       if ($key === $theme_config->get('default')) {
         throw new \InvalidArgumentException("The current default theme $key cannot be uninstalled.");

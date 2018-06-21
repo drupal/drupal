@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Extension;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -164,7 +165,7 @@ class ModuleHandlerTest extends UnitTestCase {
    * @covers ::getModule
    */
   public function testGetModuleWithNonExistingModule() {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->setExpectedException(UnknownExtensionException::class);
     $this->getModuleHandler()->getModule('claire_alice_watch_my_little_pony_module_that_does_not_exist');
   }
 
