@@ -3,24 +3,24 @@
 namespace Drupal\Tests\image\FunctionalJavascript;
 
 use Drupal\file\Entity\File;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
+use Drupal\Tests\quickedit\FunctionalJavascript\QuickEditJavascriptTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Tests the JavaScript functionality of the "image" in-place editor.
- *
+ * @coversDefaultClass \Drupal\image\Plugin\InPlaceEditor\Image
  * @group image
  */
-class QuickEditImageTest extends JavascriptTestBase {
+class QuickEditImageTest extends QuickEditJavascriptTestBase {
 
   use ImageFieldCreationTrait;
   use TestFileCreationTrait;
+  use QuickEditImageEditorTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'image', 'field_ui', 'contextual', 'quickedit', 'toolbar'];
+  public static $modules = ['node', 'image', 'field_ui'];
 
   /**
    * A user with permissions to edit Articles and use Quick Edit.
@@ -52,9 +52,12 @@ class QuickEditImageTest extends JavascriptTestBase {
   }
 
   /**
-   * Tests if an image can be uploaded inline with Quick Edit.
+   * Test that quick editor works correctly with images.
+   *
+   * @covers ::isCompatible
+   * @covers ::getAttachments
    */
-  public function testUpload() {
+  public function testImageInPlaceEditor() {
     // Create a field with a basic filetype restriction.
     $field_name = strtolower($this->randomMachineName());
     $field_settings = [
@@ -114,52 +117,82 @@ class QuickEditImageTest extends JavascriptTestBase {
     // Assert that the initial image is present.
     $this->assertSession()->elementExists('css', $entity_selector . ' ' . $field_selector . ' ' . $original_image_selector);
 
-    // Wait until Quick Edit loads.
-    $condition = "jQuery('" . $entity_selector . " .quickedit').length > 0";
-    $this->assertJsCondition($condition, 10000);
+    // Initial state.
+    $this->awaitQuickEditForEntity('node', 1);
+    $this->assertEntityInstanceStates([
+      'node/1[0]' => 'closed',
+    ]);
+    $this->assertEntityInstanceFieldStates('node', 1, 0, [
+      'node/1/title/en/full'               => 'inactive',
+      'node/1/uid/en/full'                 => 'inactive',
+      'node/1/created/en/full'             => 'inactive',
+      'node/1/body/en/full'                => 'inactive',
+      'node/1/' . $field_name . '/en/full' => 'inactive',
+    ]);
 
-    // Initiate Quick Editing.
-    $this->click('.contextual-toolbar-tab button');
-    $this->click($entity_selector . ' [data-contextual-id] > button');
-    $this->click($entity_selector . ' [data-contextual-id] .quickedit > a');
+    // Start in-place editing of the article node.
+    $this->startQuickEditViaToolbar('node', 1, 0);
+    $this->assertEntityInstanceStates([
+      'node/1[0]' => 'opened',
+    ]);
+    $this->assertQuickEditEntityToolbar((string) $node->label(), NULL);
+    $this->assertEntityInstanceFieldStates('node', 1, 0, [
+      'node/1/title/en/full'               => 'candidate',
+      'node/1/uid/en/full'                 => 'candidate',
+      'node/1/created/en/full'             => 'candidate',
+      'node/1/body/en/full'                => 'candidate',
+      'node/1/' . $field_name . '/en/full' => 'candidate',
+    ]);
+
+    // Click the image field.
     $this->click($field_selector);
-
-    // Wait for the field info to load and set new alt text.
-    $condition = "jQuery('.quickedit-image-field-info').length > 0";
-    $this->assertJsCondition($condition, 10000);
-    $input = $this->assertSession()->elementExists('css', '.quickedit-image-field-info input[name="alt"]');
-    $input->setValue('New text');
-
-    // Check that our Dropzone element exists.
+    $this->awaitImageEditor();
     $this->assertSession()->elementExists('css', $field_selector . ' .quickedit-image-dropzone');
+    $this->assertEntityInstanceFieldStates('node', 1, 0, [
+      'node/1/title/en/full'               => 'candidate',
+      'node/1/uid/en/full'                 => 'candidate',
+      'node/1/created/en/full'             => 'candidate',
+      'node/1/body/en/full'                => 'candidate',
+      'node/1/' . $field_name . '/en/full' => 'active',
+    ]);
 
-    // Our headless browser can't drag+drop files, but we can mock the event.
-    // Append a hidden upload element to the DOM.
-    $script = 'jQuery("<input id=\"quickedit-image-test-input\" type=\"file\" />").appendTo("body")';
-    $this->getSession()->executeScript($script);
+    // Type new 'alt' text.
+    $this->typeInImageEditorAltTextInput('New text');
+    $this->assertEntityInstanceFieldStates('node', 1, 0, [
+      'node/1/title/en/full'               => 'candidate',
+      'node/1/uid/en/full'                 => 'candidate',
+      'node/1/created/en/full'             => 'candidate',
+      'node/1/body/en/full'                => 'candidate',
+      'node/1/' . $field_name . '/en/full' => 'changed',
+    ]);
 
-    // Find the element, and set its value to our new image.
-    $input = $this->assertSession()->elementExists('css', '#quickedit-image-test-input');
-    $filepath = $this->container->get('file_system')->realpath($valid_images[1]->uri);
-    $input->attachFile($filepath);
-
-    // Trigger the upload logic with a mock "drop" event.
-    $script = 'var e = jQuery.Event("drop");'
-      . 'e.originalEvent = {dataTransfer: {files: jQuery("#quickedit-image-test-input").get(0).files}};'
-      . 'e.preventDefault = e.stopPropagation = function () {};'
-      . 'jQuery(".quickedit-image-dropzone").trigger(e);';
-    $this->getSession()->executeScript($script);
-
-    // Wait for the dropzone element to be removed (i.e. loading is done).
-    $condition = "jQuery('" . $field_selector . " .quickedit-image-dropzone').length == 0";
-    $this->assertJsCondition($condition, 20000);
+    // Drag and drop an image.
+    $this->dropImageOnImageEditor($valid_images[1]->uri);
 
     // To prevent 403s on save, we re-set our request (cookie) state.
     $this->prepareRequest();
 
-    // Save the change.
-    $this->click('.quickedit-button.action-save');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    // Click 'Save'.
+    $this->saveQuickEdit();
+    $this->assertEntityInstanceStates([
+      'node/1[0]' => 'committing',
+    ]);
+    $this->assertEntityInstanceFieldStates('node', 1, 0, [
+      'node/1/title/en/full'               => 'candidate',
+      'node/1/uid/en/full'                 => 'candidate',
+      'node/1/created/en/full'             => 'candidate',
+      'node/1/body/en/full'                => 'candidate',
+      'node/1/' . $field_name . '/en/full' => 'saving',
+    ]);
+    $this->assertEntityInstanceFieldMarkup('node', 1, 0, [
+      'node/1/' . $field_name . '/en/full' => '.quickedit-changed',
+    ]);
+
+    // Wait for the saving of the image field to complete.
+    $this->assertJsCondition("Drupal.quickedit.collections.entities.get('node/1[0]').get('state') === 'closed'");
+    $this->assertEntityInstanceStates([
+      'node/1[0]' => 'closed',
+    ]);
 
     // Re-visit the page to make sure the edit worked.
     $this->drupalGet('node/' . $node->id());
