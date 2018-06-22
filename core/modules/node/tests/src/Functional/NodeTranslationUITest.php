@@ -501,4 +501,28 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertNoText('First rev en title');
   }
 
+  /**
+   * Test that title is not escaped (but XSS-filtered) for details form element.
+   */
+  public function testDetailsTitleIsNotEscaped() {
+    $this->drupalLogin($this->administrator);
+    // Make the image field a multi-value field in order to display a
+    // details form element.
+    $edit = ['cardinality_number' => 2];
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_image/storage', $edit, t('Save field settings'));
+
+    // Make the image field non-translatable.
+    $edit = ['settings[node][article][fields][field_image]' => FALSE];
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
+
+    // Create a node.
+    $nid = $this->createEntity(['title' => 'Node with multi-value image field en title'], 'en');
+
+    // Add a French translation and assert the title markup is not escaped.
+    $this->drupalGet("node/$nid/translations/add/en/fr");
+    $markup = 'Image <span class="translation-entity-all-languages">(all languages)</span>';
+    $this->assertSession()->assertNoEscaped($markup);
+    $this->assertSession()->responseContains($markup);
+  }
+
 }

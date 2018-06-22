@@ -251,6 +251,11 @@ function template_preprocess_details(&$variables) {
     $variables['summary_attributes']['aria-pressed'] = $variables['summary_attributes']['aria-expanded'];
   }
   $variables['title'] = (!empty($element['#title'])) ? $element['#title'] : '';
+  // If the element title is a string, wrap it a render array so that markup
+  // will not be escaped (but XSS-filtered).
+  if (is_string($variables['title']) && $variables['title'] !== '') {
+    $variables['title'] = ['#markup' => $variables['title']];
+  }
   $variables['description'] = (!empty($element['#description'])) ? $element['#description'] : '';
   $variables['children'] = (isset($element['#children'])) ? $element['#children'] : '';
   $variables['value'] = (isset($element['#value'])) ? $element['#value'] : '';

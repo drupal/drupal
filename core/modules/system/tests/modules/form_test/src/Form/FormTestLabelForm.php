@@ -13,6 +13,40 @@ use Drupal\Core\Form\FormStateInterface;
 class FormTestLabelForm extends FormBase {
 
   /**
+   * An array of elements that render a title.
+   *
+   * @var array
+   */
+  public static $typesWithTitle = [
+    'checkbox',
+    'checkboxes',
+    'color',
+    'date',
+    'datelist',
+    'datetime',
+    'details',
+    'email',
+    'fieldset',
+    'file',
+    'item',
+    'managed_file',
+    'number',
+    'password',
+    'password_confirm',
+    'radio',
+    'radios',
+    'range',
+    'search',
+    'select',
+    'tel',
+    'textarea',
+    'textfield',
+    'text_format',
+    'url',
+    'weight',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public function getFormId() {
@@ -125,6 +159,21 @@ class FormTestLabelForm extends FormBase {
       ],
       '#required' => TRUE,
     ];
+
+    foreach (static::$typesWithTitle as $type) {
+      $form['form_' . $type . '_title_no_xss'] = [
+        '#type' => $type,
+        '#title' => "$type <script>alert('XSS')</script> is XSS filtered!",
+      ];
+      // Add keys that are required for some elements to be processed correctly.
+      if (in_array($type, ['checkboxes', 'radios'], TRUE)) {
+        $form['form_' . $type . '_title_no_xss']['#options'] = [];
+      }
+      if ($type === 'datetime') {
+        $form['form_' . $type . '_title_no_xss']['#default_value'] = NULL;
+      }
+    }
+
     return $form;
   }
 

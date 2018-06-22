@@ -570,6 +570,11 @@ function template_preprocess_datetime_wrapper(&$variables) {
 
   if (!empty($element['#title'])) {
     $variables['title'] = $element['#title'];
+    // If the element title is a string, wrap it a render array so that markup
+    // will not be escaped (but XSS-filtered).
+    if (is_string($variables['title']) && $variables['title'] !== '') {
+      $variables['title'] = ['#markup' => $variables['title']];
+    }
   }
 
   // Suppress error messages.

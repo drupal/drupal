@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
+use Drupal\form_test\Form\FormTestLabelForm;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -94,6 +95,17 @@ class ElementsLabelsTest extends BrowserTestBase {
 
     $elements = $this->xpath('//fieldset[@id="edit-form-radios-title-invisible--wrapper"]/legend/span[contains(@class, "visually-hidden")]');
     $this->assertTrue(!empty($elements), "Title/Label not displayed when 'visually-hidden' attribute is set in radios.");
+  }
+
+  /**
+   * Tests XSS-protection of element labels.
+   */
+  public function testTitleEscaping() {
+    $this->drupalGet('form_test/form-labels');
+    foreach (FormTestLabelForm::$typesWithTitle as $type) {
+      $this->assertSession()->responseContains("$type alert('XSS') is XSS filtered!");
+      $this->assertSession()->responseNotContains("$type <script>alert('XSS')</script> is XSS filtered!");
+    }
   }
 
   /**
