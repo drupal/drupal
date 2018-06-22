@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_test
+    - media.type.type_one
+id: media.type_one.field_media_test
+field_name: field_media_test
+entity_type: media
+bundle: type_one
+label: field_media_test
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,10 @@
+name: 'Media library'
+type: module
+description: 'Provides a library for re-using Media Items.'
+package: Core (Experimental)
+version: VERSION
+core: 8.x
+dependencies:
+  - drupal:media
+  - drupal:views
+  - drupal:user
