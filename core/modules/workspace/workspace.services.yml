@@ -16,6 +16,11 @@ services:
     class: Drupal\workspace\Negotiator\SessionWorkspaceNegotiator
     arguments: ['@current_user', '@session', '@entity_type.manager']
     tags:
+      - { name: workspace_negotiator, priority: 50 }
+  workspace.negotiator.query_parameter:
+    class: Drupal\workspace\Negotiator\QueryParameterWorkspaceNegotiator
+    parent: workspace.negotiator.session
+    tags:
       - { name: workspace_negotiator, priority: 100 }
   cache_context.workspace:
     class: Drupal\workspace\WorkspaceCacheContext

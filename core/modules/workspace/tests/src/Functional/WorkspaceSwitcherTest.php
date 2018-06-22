@@ -19,9 +19,11 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
   public static $modules = ['block', 'workspace'];
 
   /**
-   * Test switching workspace via the switcher block and admin page.
+   * {@inheritdoc}
    */
-  public function testSwitchingWorkspaces() {
+  protected function setUp() {
+    parent::setUp();
+
     $permissions = [
       'create workspace',
       'edit own workspace',
@@ -33,7 +35,12 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
 
     $mayer = $this->drupalCreateUser($permissions);
     $this->drupalLogin($mayer);
+  }
 
+  /**
+   * Test switching workspace via the switcher block and admin page.
+   */
+  public function testSwitchingWorkspaces() {
     $vultures = $this->createWorkspaceThroughUi('Vultures', 'vultures');
     $this->switchToWorkspace($vultures);
 
@@ -46,6 +53,23 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
     $page->findButton('Confirm')->click();
 
     $page->findLink($gravity->label());
+  }
+
+  /**
+   * Test switching workspace via a query parameter.
+   */
+  public function testQueryParameterNegotiator() {
+    $web_assert = $this->assertSession();
+    // Initially the default workspace should be active.
+    $web_assert->elementContains('css', '.block-workspace-switcher', 'Live');
+
+    // When adding a query parameter the workspace will be switched.
+    $this->drupalGet('<front>', ['query' => ['workspace' => 'stage']]);
+    $web_assert->elementContains('css', '.block-workspace-switcher', 'Stage');
+
+    // The workspace switching via query parameter should persist.
+    $this->drupalGet('<front>');
+    $web_assert->elementContains('css', '.block-workspace-switcher', 'Stage');
   }
 
 }
