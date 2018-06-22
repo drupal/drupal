@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\standard\Functional;
 
+use Drupal\Component\Utility\Html;
+use Drupal\media\Entity\MediaType;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Url;
@@ -219,6 +221,38 @@ class StandardTest extends BrowserTestBase {
     $this->assertText('Archive');
     $this->assertText('Restore to Draft');
     $this->assertText('Restore');
+
+    \Drupal::service('module_installer')->install(['media']);
+    $role = Role::create([
+      'id' => 'admin_media',
+      'label' => 'Admin media',
+    ]);
+    $role->grantPermission('administer media');
+    $role->save();
+    $this->adminUser->addRole($role->id());
+    $this->adminUser->save();
+    $assert_session = $this->assertSession();
+    /** @var \Drupal\media\Entity\MediaType $media_type */
+    foreach (MediaType::loadMultiple() as $media_type) {
+      $media_type_machine_name = $media_type->id();
+      $this->drupalGet('media/add/' . $media_type_machine_name);
+      // Get the form element, and its HTML representation.
+      $form_selector = '#media-' . Html::cleanCssIdentifier($media_type_machine_name) . '-add-form';
+      $form = $assert_session->elementExists('css', $form_selector);
+      $form_html = $form->getOuterHtml();
+
+      // The name field should come before the source field, which should itself
+      // come before the vertical tabs.
+      $name_field = $assert_session->fieldExists('Name', $form)->getOuterHtml();
+      $test_source_field = $assert_session->fieldExists($media_type->getSource()->getSourceFieldDefinition($media_type)->getLabel(), $form)->getOuterHtml();
+      $vertical_tabs = $assert_session->elementExists('css', '.form-type-vertical-tabs', $form)->getOuterHtml();
+      $date_field = $assert_session->fieldExists('Date', $form)->getOuterHtml();
+      $published_checkbox = $assert_session->fieldExists('Published', $form)->getOuterHtml();
+      $this->assertTrue(strpos($form_html, $test_source_field) > strpos($form_html, $name_field));
+      $this->assertTrue(strpos($form_html, $vertical_tabs) > strpos($form_html, $test_source_field));
+      // The "Published" checkbox should be the last element.
+      $this->assertTrue(strpos($form_html, $published_checkbox) > strpos($form_html, $date_field));
+    }
   }
 
 }
