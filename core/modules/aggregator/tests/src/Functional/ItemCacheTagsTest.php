@@ -5,7 +5,7 @@ namespace Drupal\Tests\aggregator\Functional;
 use Drupal\aggregator\Entity\Feed;
 use Drupal\aggregator\Entity\Item;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
+use Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 

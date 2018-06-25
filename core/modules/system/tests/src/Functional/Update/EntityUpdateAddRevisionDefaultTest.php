@@ -3,7 +3,7 @@
 namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
-use Drupal\system\Tests\Entity\EntityDefinitionTestTrait;
+use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 
 /**
  * Tests the upgrade path for adding the 'revision_default' field.

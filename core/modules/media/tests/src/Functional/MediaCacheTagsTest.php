@@ -4,7 +4,7 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\media\Entity\Media;
-use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
+use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
 
 /**
  * Tests the media items cache tags.

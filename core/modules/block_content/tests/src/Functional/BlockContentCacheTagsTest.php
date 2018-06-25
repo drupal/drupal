@@ -7,7 +7,7 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
+use Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

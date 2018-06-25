@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\taxonomy\Functional;
 
-use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
 
 /**
  * Tests the Taxonomy term entity's cache tags.

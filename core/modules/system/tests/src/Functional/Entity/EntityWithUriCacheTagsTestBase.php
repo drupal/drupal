@@ -1,21 +1,14 @@
 <?php
 
-namespace Drupal\system\Tests\Entity;
+namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 
-@trigger_error(__NAMESPACE__ . '\EntityWithUriCacheTagsTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase. See https://www.drupal.org/node/2946549.', E_USER_DEPRECATED);
-
 /**
  * Provides helper methods for Entity cache tags tests; for entities with URIs.
- *
- * @deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0.
- * Use \Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase.
- *
- * @see https://www.drupal.org/node/2946549
  */
 abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
 

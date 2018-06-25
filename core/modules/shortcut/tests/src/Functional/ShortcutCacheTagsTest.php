@@ -4,7 +4,7 @@ namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\shortcut\Entity\Shortcut;
-use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
+use Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 

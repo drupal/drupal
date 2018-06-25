@@ -1,18 +1,18 @@
 <?php
 
-namespace Drupal\system\Tests\Entity;
+namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests entity translation form.
  *
  * @group Entity
  */
-class EntityTranslationFormTest extends WebTestBase {
+class EntityTranslationFormTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

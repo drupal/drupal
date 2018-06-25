@@ -4,7 +4,7 @@ namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
-use Drupal\system\Tests\Entity\EntityDefinitionTestTrait;
+use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 
 /**
  * Tests the upgrade path for making an entity revisionable and publishable.

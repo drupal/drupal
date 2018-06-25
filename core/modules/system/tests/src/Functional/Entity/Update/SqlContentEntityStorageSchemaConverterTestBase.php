@@ -4,7 +4,7 @@ namespace Drupal\Tests\system\Functional\Entity\Update;
 
 use Drupal\Core\Entity\Sql\TemporaryTableMapping;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
-use Drupal\system\Tests\Entity\EntityDefinitionTestTrait;
+use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 
 /**
  * Defines a class for testing the conversion of entity types to revisionable.

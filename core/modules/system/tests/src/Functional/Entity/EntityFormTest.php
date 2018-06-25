@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Entity;
+namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the entity form.
  *
  * @group Entity
  */
-class EntityFormTest extends WebTestBase {
+class EntityFormTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
