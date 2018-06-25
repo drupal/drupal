@@ -8,6 +8,9 @@
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\Definition\ContextAwarePluginDefinitionInterface;
+use Drupal\Component\Plugin\Definition\ContextAwarePluginDefinitionTrait;
+use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Plugin\Exception\MissingValueContextException;
 use Drupal\Core\Cache\NullBackend;
@@ -209,49 +212,100 @@ class ContextHandlerTest extends UnitTestCase {
     // No context and no plugins, no plugins available.
     $data[] = [FALSE, $plugins, []];
 
-    $plugins = ['expected_plugin' => []];
+    $plugins = [
+      'expected_array_plugin' => [],
+      'expected_object_plugin' => new ContextAwarePluginDefinition(),
+    ];
     // No context, all plugins available.
     $data[] = [FALSE, $plugins, $plugins];
 
-    $plugins = ['expected_plugin' => ['context' => []]];
+    $plugins = [
+      'expected_array_plugin' => ['context' => []],
+      'expected_object_plugin' => new ContextAwarePluginDefinition(),
+    ];
     // No context, all plugins available.
     $data[] = [FALSE, $plugins, $plugins];
 
-    $plugins = ['expected_plugin' => ['context' => ['context1' => new ContextDefinition('string')]]];
+    $plugins = [
+      'expected_array_plugin' => [
+        'context' => ['context1' => new ContextDefinition('string')],
+      ],
+      'expected_object_plugin' => (new ContextAwarePluginDefinition())
+        ->addContextDefinition('context1', new ContextDefinition('string')),
+    ];
     // Missing context, no plugins available.
     $data[] = [FALSE, $plugins, []];
     // Satisfied context, all plugins available.
     $data[] = [TRUE, $plugins, $plugins];
 
     $mismatched_context_definition = (new ContextDefinition('expected_data_type'))->setConstraints(['mismatched_constraint_name' => 'mismatched_constraint_value']);
-    $plugins = ['expected_plugin' => ['context' => ['context1' => $mismatched_context_definition]]];
+    $plugins = [
+      'expected_array_plugin' => [
+        'context' => ['context1' => $mismatched_context_definition],
+      ],
+      'expected_object_plugin' => (new ContextAwarePluginDefinition())
+        ->addContextDefinition('context1', $mismatched_context_definition),
+    ];
     // Mismatched constraints, no plugins available.
     $data[] = [TRUE, $plugins, []];
 
     $optional_mismatched_context_definition = clone $mismatched_context_definition;
     $optional_mismatched_context_definition->setRequired(FALSE);
-    $plugins = ['expected_plugin' => ['context' => ['context1' => $optional_mismatched_context_definition]]];
+    $plugins = [
+      'expected_array_plugin' => [
+        'context' => ['context1' => $optional_mismatched_context_definition],
+      ],
+      'expected_object_plugin' => (new ContextAwarePluginDefinition())
+        ->addContextDefinition('context1', $optional_mismatched_context_definition),
+    ];
     // Optional mismatched constraint, all plugins available.
     $data[] = [FALSE, $plugins, $plugins];
 
     $expected_context_definition = (new ContextDefinition('string'))->setConstraints(['Blank' => []]);
-    $plugins = ['expected_plugin' => ['context' => ['context1' => $expected_context_definition]]];
+    $plugins = [
+      'expected_array_plugin' => [
+        'context' => ['context1' => $expected_context_definition],
+      ],
+      'expected_object_plugin' => (new ContextAwarePluginDefinition())
+        ->addContextDefinition('context1', $expected_context_definition),
+    ];
     // Satisfied context with constraint, all plugins available.
     $data[] = [TRUE, $plugins, $plugins];
 
     $optional_expected_context_definition = clone $expected_context_definition;
     $optional_expected_context_definition->setRequired(FALSE);
-    $plugins = ['expected_plugin' => ['context' => ['context1' => $optional_expected_context_definition]]];
+    $plugins = [
+      'expected_array_plugin' => [
+        'context' => ['context1' => $optional_expected_context_definition],
+      ],
+      'expected_object_plugin' => (new ContextAwarePluginDefinition())
+        ->addContextDefinition('context1', $optional_expected_context_definition),
+    ];
     // Optional unsatisfied context, all plugins available.
     $data[] = [FALSE, $plugins, $plugins];
 
     $unexpected_context_definition = (new ContextDefinition('unexpected_data_type'))->setConstraints(['mismatched_constraint_name' => 'mismatched_constraint_value']);
     $plugins = [
-      'unexpected_plugin' => ['context' => ['context1' => $unexpected_context_definition]],
-      'expected_plugin' => ['context' => ['context2' => new ContextDefinition('string')]],
+      'unexpected_array_plugin' => [
+        'context' => ['context1' => $unexpected_context_definition],
+      ],
+      'expected_array_plugin' => [
+        'context' => ['context2' => new ContextDefinition('string')],
+      ],
+      'unexpected_object_plugin' => (new ContextAwarePluginDefinition())
+        ->addContextDefinition('context1', $unexpected_context_definition),
+      'expected_object_plugin' => (new ContextAwarePluginDefinition())
+        ->addContextDefinition('context2', new ContextDefinition('string')),
     ];
-    // Context only satisfies one plugin.
-    $data[] = [TRUE, $plugins, ['expected_plugin' => $plugins['expected_plugin']]];
+    // Context only satisfies two plugins.
+    $data[] = [
+      TRUE,
+      $plugins,
+      [
+        'expected_array_plugin' => $plugins['expected_array_plugin'],
+        'expected_object_plugin' => $plugins['expected_object_plugin'],
+      ],
+    ];
 
     return $data;
   }
@@ -517,4 +571,10 @@ class ContextHandlerTest extends UnitTestCase {
 }
 
 interface TestConfigurableContextAwarePluginInterface extends ContextAwarePluginInterface, ConfigurablePluginInterface {
+
+}
+
+class ContextAwarePluginDefinition extends PluginDefinition implements ContextAwarePluginDefinitionInterface {
+  use ContextAwarePluginDefinitionTrait;
+
 }
