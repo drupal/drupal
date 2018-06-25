@@ -72,7 +72,6 @@ button,
   font-family: 'Scope One', Georgia, serif;
   font-size: 1.2rem;
   font-weight: 400;
-  font-weight: normal;
   transition: background-color 0.5s ease;
 }
 button:hover,
@@ -219,7 +218,7 @@ label {
   color: #464646;
   display: block;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 700;
   margin: 0.25rem 0;
 }
 

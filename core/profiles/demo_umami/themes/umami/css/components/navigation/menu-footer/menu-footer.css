@@ -9,7 +9,7 @@
 
 .menu-footer__title {
   font-size: 1.5rem;
-  font-weight: normal;
+  font-weight: 400;
 }
 
 .menu-footer__item {
@@ -18,7 +18,7 @@
 
 .menu-footer .menu-footer__link {
   background-color: transparent;
-  font-weight: bold;
+  font-weight: 700;
   color: #fff;
 }
 
