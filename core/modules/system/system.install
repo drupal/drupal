@@ -1015,6 +1015,21 @@ function system_requirements($phase) {
       ];
     }
   }
+
+  if ($phase === 'runtime') {
+    $settings = Settings::getAll();
+    if (array_key_exists('install_profile', $settings)) {
+      // The following message is only informational because not all site owners
+      // have access to edit their settings.php as it may be controlled by their
+      // hosting provider.
+      $requirements['install_profile_in_settings'] = [
+        'title' => t('Install profile in settings'),
+        'value' => t("Drupal 8 no longer uses the \$settings['install_profile'] value in settings.php and it can be removed."),
+        'severity' => REQUIREMENT_INFO,
+      ];
+    }
+  }
+
   return $requirements;
 }
 

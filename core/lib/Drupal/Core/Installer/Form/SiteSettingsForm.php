@@ -225,11 +225,6 @@ class SiteSettingsForm extends FormBase {
       'value'    => Crypt::randomBytesBase64(55),
       'required' => TRUE,
     ];
-    // Remember the profile which was used.
-    $settings['settings']['install_profile'] = (object) [
-      'value' => $install_state['parameters']['profile'],
-      'required' => TRUE,
-    ];
 
     drupal_rewrite_settings($settings);
 

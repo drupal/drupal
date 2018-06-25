@@ -84,6 +84,9 @@ final class Settings {
    *   The value of the setting, the provided default if not set.
    */
   public static function get($name, $default = NULL) {
+    if ($name === 'install_profile' && isset(self::$instance->storage[$name])) {
+      @trigger_error('To access the install profile in Drupal 8 use \Drupal::installProfile() or inject the install_profile container parameter into your service. See https://www.drupal.org/node/2538996', E_USER_DEPRECATED);
+    }
     return isset(self::$instance->storage[$name]) ? self::$instance->storage[$name] : $default;
   }
 

@@ -9,6 +9,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests system_update_8300().
  *
  * @group Update
+ * @group legacy
  */
 class InstallProfileSystemInstall8300Test extends UpdatePathTestBase {
 
@@ -23,6 +24,8 @@ class InstallProfileSystemInstall8300Test extends UpdatePathTestBase {
 
   /**
    * Ensures that the system_update_8300() runs as expected.
+   *
+   * @expectedDeprecation To access the install profile in Drupal 8 use \Drupal::installProfile() or inject the install_profile container parameter into your service. See https://www.drupal.org/node/2538996
    */
   public function testUpdate() {
     // Ensure the BC layers work and settings.php and configuration is in the

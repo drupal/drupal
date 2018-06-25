@@ -2,7 +2,6 @@
 
 namespace Drupal\FunctionalTests\Installer;
 
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,13 +25,6 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
     // Any string is valid, so simply use the class name of this test.
     $this->settings['settings']['hash_salt'] = (object) [
       'value' => __CLASS__,
-      'required' => TRUE,
-    ];
-
-    // During interactive install we'll change this to a different profile and
-    // this test will ensure that the new value is written to settings.php.
-    $this->settings['settings']['install_profile'] = (object) [
-      'value' => 'minimal',
       'required' => TRUE,
     ];
 
@@ -73,8 +65,7 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
   public function testInstaller() {
     $this->assertUrl('user/1');
     $this->assertResponse(200);
-    $this->assertEqual('testing', \Drupal::installProfile(), 'Profile was changed from minimal to testing during interactive install.');
-    $this->assertEqual('testing', Settings::get('install_profile'), 'Profile was correctly changed to testing in Settings.php');
+    $this->assertEqual('testing', \Drupal::installProfile());
   }
 
 }

@@ -119,7 +119,7 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
 
     // Confirm that Drupal recognizes this distribution as the current profile.
     $this->assertEqual(\Drupal::installProfile(), 'mydistro');
-    $this->assertNull(Settings::get('install_profile'), 'The install profile has not been written to settings.php.');
+    $this->assertArrayNotHasKey('install_profile', Settings::getAll(), 'The install profile has not been written to settings.php.');
     $this->assertEqual($this->config('core.extension')->get('profile'), 'mydistro', 'The install profile has been written to core.extension configuration.');
 
     $this->rebuildContainer();

@@ -4,14 +4,16 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests installer breaks with a profile mismatch and a read-only settings.php.
  *
  * @group Installer
+ * @group legacy
  */
-class InstallerExistingSettingsMismatchProfileBrokenTest extends InstallerTestBase {
+class InstallerExistingSettingsReadOnlyMismatchProfileTest extends InstallerTestBase {
 
   /**
    * {@inheritdoc}
@@ -91,16 +93,18 @@ class InstallerExistingSettingsMismatchProfileBrokenTest extends InstallerTestBa
     // already.
   }
 
-  protected function setUpSite() {
-    // This step should not appear, since settings.php could not be written.
-  }
-
   /**
-   * Verifies that installation did not succeed.
+   * Verifies that installation succeeded.
+   *
+   * @expectedDeprecation To access the install profile in Drupal 8 use \Drupal::installProfile() or inject the install_profile container parameter into your service. See https://www.drupal.org/node/2538996
    */
-  public function testBrokenInstaller() {
-    $this->assertTitle('Install profile mismatch | Drupal');
-    $this->assertText("The selected profile testing does not match the install_profile setting, which is minimal. Cannot write updated setting to {$this->siteDirectory}/settings.php.");
+  public function testInstalled() {
+    $this->initBrowserOutputFile();
+    $this->htmlOutput(NULL);
+    $this->assertEquals('testing', \Drupal::installProfile());
+    $this->assertEquals('minimal', Settings::get('install_profile'));
+    $this->drupalGet('admin/reports/status');
+    $this->assertSession()->pageTextContains("Drupal 8 no longer uses the \$settings['install_profile'] value in settings.php and it can be removed.");
   }
 
 }

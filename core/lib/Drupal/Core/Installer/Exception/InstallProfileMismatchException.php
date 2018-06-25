@@ -4,6 +4,8 @@ namespace Drupal\Core\Installer\Exception;
 
 use Drupal\Core\StringTranslation\TranslationInterface;
 
+@trigger_error(__NAMESPACE__ . '/InstallProfileMismatchException is deprecated in Drupal 8.6.0 and will be removed before Drupal 9. See https://www.drupal.org/node/2538996', E_USER_DEPRECATED);
+
 /**
  * Exception thrown if settings.php cannot be written and the chosen profile does not match.
  */

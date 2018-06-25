@@ -1604,13 +1604,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function getInstallProfile() {
     $config = $this->getConfigStorage()->read('core.extension');
-    if (!empty($config['profile'])) {
+    if (isset($config['profile'])) {
       $install_profile = $config['profile'];
     }
     // @todo https://www.drupal.org/node/2831065 remove the BC layer.
     else {
       // If system_update_8300() has not yet run fallback to using settings.
-      $install_profile = Settings::get('install_profile');
+      $settings = Settings::getAll();
+      $install_profile = isset($settings['install_profile']) ? $settings['install_profile'] : NULL;
     }
 
     // Normalize an empty string to a NULL value.

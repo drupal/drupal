@@ -179,7 +179,7 @@ class ModuleHandlerTest extends KernelTestBase {
   public function testUninstallProfileDependencyBC() {
     $profile = 'testing_install_profile_dependencies_bc';
     $dependency = 'dblog';
-    $this->setSetting('install_profile', $profile);
+    $this->setInstallProfile($profile);
     // Prime the drupal_get_filename() static cache with the location of the
     // testing profile as it is not the currently active profile and we don't
     // yet have any cached way to retrieve its location.
@@ -213,7 +213,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $profile = 'testing_install_profile_dependencies';
     $dependency = 'dblog';
     $non_dependency = 'ban';
-    $this->setSetting('install_profile', $profile);
+    $this->setInstallProfile($profile);
     // Prime the drupal_get_filename() static cache with the location of the
     // testing_install_profile_dependencies profile as it is not the currently
     // active profile and we don't yet have any cached way to retrieve its
@@ -252,7 +252,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $profile = 'testing_install_profile_all_dependencies';
     $dependencies = ['dblog', 'ban'];
 
-    $this->setSetting('install_profile', $profile);
+    $this->setInstallProfile($profile);
     // Prime the drupal_get_filename() static cache with the location of the
     // testing_install_profile_dependencies profile as it is not the currently
     // active profile and we don't yet have any cached way to retrieve its
