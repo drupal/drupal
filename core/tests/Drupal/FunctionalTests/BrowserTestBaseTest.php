@@ -68,6 +68,21 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests drupalGet().
+   */
+  public function testDrupalGet() {
+    $this->drupalGet('test-page');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('test-page');
+    $this->drupalGet('/test-page');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('test-page');
+    $this->drupalGet('/test-page/');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('/test-page/');
+  }
+
+  /**
    * Tests basic form functionality.
    */
   public function testForm() {
