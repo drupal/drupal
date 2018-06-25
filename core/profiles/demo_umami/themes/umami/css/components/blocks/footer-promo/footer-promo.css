@@ -9,7 +9,7 @@
 
 .block-type-footer-promo-block .block__title {
   font-size: 1.5rem;
-  font-weight: normal;
+  font-weight: 400;
 }
 
 .block-type-footer-promo-block .footer-promo-content {
@@ -19,7 +19,7 @@
 .block-type-footer-promo-block .footer-promo-content a {
   background-color: inherit;
   color: #fff;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .block-type-footer-promo-block .footer-promo-content a:active,
