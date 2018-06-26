@@ -61,7 +61,7 @@ function list_update_7001() {
 
       // Additionally, float keys need to be disambiguated ('.5' is '0.5').
       if ($field['type'] == 'list_number' && !empty($allowed_values)) {
-        $keys = array_map(create_function('$a', 'return (string) (float) $a;'), array_keys($allowed_values));
+        $keys = array_map('_list_update_7001_float_string_cast', array_keys($allowed_values));
         $allowed_values = array_combine($keys, array_values($allowed_values));
       }
 
@@ -86,6 +86,13 @@ function list_update_7001() {
         ->execute();
     }
   }
+}
+
+/**
+ * Helper callback function to cast the array element.
+ */
+function _list_update_7001_float_string_cast($element) {
+  return (string) (float) $element;
 }
 
 /**
