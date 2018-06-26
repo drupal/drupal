@@ -251,4 +251,34 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     ];
   }
 
+  /**
+   * Test saving a moderated node with an existing ID.
+   *
+   * @dataProvider moderatedEntityWithExistingIdTestCases
+   */
+  public function testModeratedEntityWithExistingId($state) {
+    $node = Node::create([
+      'title' => 'Test title',
+      'type' => 'example',
+      'nid' => 999,
+      'moderation_state' => $state,
+    ]);
+    $node->save();
+    $this->assertEquals($state, $node->moderation_state->value);
+  }
+
+  /**
+   * Test cases for ::testModeratedEntityWithExistingId.
+   */
+  public function moderatedEntityWithExistingIdTestCases() {
+    return [
+      'Draft non-default state' => [
+        'draft',
+      ],
+      'Published default state' => [
+        'published',
+      ],
+    ];
+  }
+
 }
