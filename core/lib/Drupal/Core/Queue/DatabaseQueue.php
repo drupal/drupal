@@ -100,7 +100,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
    */
   public function numberOfItems() {
     try {
-      return $this->connection->query('SELECT COUNT(item_id) FROM {' . static::TABLE_NAME . '} WHERE name = :name', [':name' => $this->name])
+      return (int) $this->connection->query('SELECT COUNT(item_id) FROM {' . static::TABLE_NAME . '} WHERE name = :name', [':name' => $this->name])
         ->fetchField();
     }
     catch (\Exception $e) {

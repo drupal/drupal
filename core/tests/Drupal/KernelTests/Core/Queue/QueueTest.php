@@ -76,8 +76,8 @@ class QueueTest extends KernelTestBase {
     $queue1->createItem($data[2]);
     $queue1->createItem($data[3]);
 
-    $this->assertTrue($queue1->numberOfItems(), 'Queue 1 is not empty after adding items.');
-    $this->assertFalse($queue2->numberOfItems(), 'Queue 2 is empty while Queue 1 has items');
+    $this->assertSame(4, $queue1->numberOfItems(), 'Queue 1 is not empty after adding items.');
+    $this->assertSame(0, $queue2->numberOfItems(), 'Queue 2 is empty while Queue 1 has items');
 
     $items[] = $item = $queue1->claimItem();
     $new_items[] = $item->data;
@@ -98,8 +98,8 @@ class QueueTest extends KernelTestBase {
     }
 
     // Check that both queues are empty.
-    $this->assertFalse($queue1->numberOfItems(), 'Queue 1 is empty');
-    $this->assertFalse($queue2->numberOfItems(), 'Queue 2 is empty');
+    $this->assertSame(0, $queue1->numberOfItems(), 'Queue 1 is empty');
+    $this->assertSame(0, $queue2->numberOfItems(), 'Queue 2 is empty');
   }
 
   /**

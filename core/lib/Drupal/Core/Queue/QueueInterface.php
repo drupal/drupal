@@ -37,7 +37,7 @@ interface QueueInterface {
    * result might only be valid for a fraction of a second and not provide an
    * accurate representation.
    *
-   * @return
+   * @return int
    *   An integer estimate of the number of items in the queue.
    */
   public function numberOfItems();
