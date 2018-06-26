@@ -3188,11 +3188,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     foreach (language_types_info() as $type => $info) {
       if (isset($info['fixed'])) {
         $negotiation = variable_get("language_negotiation_$type", array());
-        $equal = count($info['fixed']) == count($negotiation);
-        while ($equal && list($id) = each($negotiation)) {
-          list(, $info_id) = each($info['fixed']);
-          $equal = $info_id == $id;
-        }
+        $equal = array_keys($negotiation) === array_values($info['fixed']);
         $this->assertTrue($equal, format_string('language negotiation for %type is properly set up', array('%type' => $type)));
       }
     }

@@ -768,11 +768,13 @@ function book_prev($book_link) {
     return NULL;
   }
   $flat = book_get_flat_menu($book_link);
-  // Assigning the array to $flat resets the array pointer for use with each().
+  reset($flat);
   $curr = NULL;
   do {
     $prev = $curr;
-    list($key, $curr) = each($flat);
+    $curr = current($flat);
+    $key = key($flat);
+    next($flat);
   } while ($key && $key != $book_link['mlid']);
 
   if ($key == $book_link['mlid']) {
@@ -806,9 +808,10 @@ function book_prev($book_link) {
  */
 function book_next($book_link) {
   $flat = book_get_flat_menu($book_link);
-  // Assigning the array to $flat resets the array pointer for use with each().
+  reset($flat);
   do {
-    list($key, $curr) = each($flat);
+    $key = key($flat);
+    next($flat);
   }
   while ($key && $key != $book_link['mlid']);
 

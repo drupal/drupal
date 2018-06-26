@@ -8,7 +8,8 @@ Drupal 7.xx, xxxx-xx-xx (development version)
 - Allowed callers of drupal_http_request() to optionally specify an explicit
   Host header.
 - Allowed the + character to appear in usernames.
-- Fixed Archive_Tar incompatibility with PHP 7.2.
+- PHP 7.2: Fixed Archive_Tar incompatibility
+- PHP 7.2: Removed deprecated function each()
 
 Drupal 7.59, 2018-04-25
 -----------------------
