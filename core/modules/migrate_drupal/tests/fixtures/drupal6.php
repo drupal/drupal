@@ -746,7 +746,7 @@ $connection->insert('blocks')
   'throttle' => '0',
   'visibility' => '0',
   'pages' => '',
-  'title' => '',
+  'title' => 'zu - Navigation',
   'cache' => '-1',
 ))
 ->values(array(
@@ -8706,6 +8706,30 @@ $connection->schema()->createTable('i18n_blocks', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('i18n_blocks')
+->fields(array(
+  'ibid',
+  'module',
+  'delta',
+  'type',
+  'language',
+))
+->values(array(
+  'ibid' => '1',
+  'module' => 'user',
+  'delta' => '1',
+  'type' => '0',
+  'language' => 'zu',
+))
+->values(array(
+  'ibid' => '2',
+  'module' => 'menu',
+  'delta' => 'menu-translation-test',
+  'type' => '0',
+  'language' => 'zu',
+))
+->execute();
+
 $connection->schema()->createTable('i18n_strings', array(
   'fields' => array(
     'lid' => array(
@@ -9852,6 +9876,14 @@ $connection->insert('i18n_strings')
   'lid' => '1678',
   'objectid' => 'profile_really_really_love_migrating',
   'type' => 'field',
+  'property' => 'title',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1679',
+  'objectid' => 'menu-translation-test',
+  'type' => 'menu',
   'property' => 'title',
   'objectindex' => '0',
   'format' => '0',
@@ -22355,6 +22387,13 @@ $connection->insert('locales_source')
   'location' => 'field:profile_really_really_love_migrating:title',
   'textgroup' => 'profile',
   'source' => 'I really, really, really love migrating',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1679',
+  'location' => 'menu:menu-translation-test:title',
+  'textgroup' => 'menu',
+  'source' => 'Translation test',
   'version' => '1',
 ))
 ->execute();
