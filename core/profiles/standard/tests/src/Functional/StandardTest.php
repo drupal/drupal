@@ -232,6 +232,7 @@ class StandardTest extends BrowserTestBase {
     $this->adminUser->addRole($role->id());
     $this->adminUser->save();
     $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
     /** @var \Drupal\media\Entity\MediaType $media_type */
     foreach (MediaType::loadMultiple() as $media_type) {
       $media_type_machine_name = $media_type->id();
@@ -241,14 +242,16 @@ class StandardTest extends BrowserTestBase {
       $form = $assert_session->elementExists('css', $form_selector);
       $form_html = $form->getOuterHtml();
 
-      // The name field should come before the source field, which should itself
-      // come before the vertical tabs.
-      $name_field = $assert_session->fieldExists('Name', $form)->getOuterHtml();
+      // The name field (if it exists) should come before the source field,
+      // which should itself come before the vertical tabs.
       $test_source_field = $assert_session->fieldExists($media_type->getSource()->getSourceFieldDefinition($media_type)->getLabel(), $form)->getOuterHtml();
       $vertical_tabs = $assert_session->elementExists('css', '.form-type-vertical-tabs', $form)->getOuterHtml();
       $date_field = $assert_session->fieldExists('Date', $form)->getOuterHtml();
       $published_checkbox = $assert_session->fieldExists('Published', $form)->getOuterHtml();
-      $this->assertTrue(strpos($form_html, $test_source_field) > strpos($form_html, $name_field));
+      if ($page->findField('Name')) {
+        $name_field = $assert_session->fieldExists('Name', $form)->getOuterHtml();
+        $this->assertTrue(strpos($form_html, $test_source_field) > strpos($form_html, $name_field));
+      }
       $this->assertTrue(strpos($form_html, $vertical_tabs) > strpos($form_html, $test_source_field));
       // The "Published" checkbox should be the last element.
       $this->assertTrue(strpos($form_html, $published_checkbox) > strpos($form_html, $date_field));
