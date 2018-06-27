@@ -12,6 +12,7 @@ global-styling:
       css/components/container-inline.module.css: {}
       css/components/breadcrumb.css: {}
       css/components/buttons.css: {}
+      css/components/details.css: {}
       css/components/messages.css: {}
       css/components/dropbutton.component.css: {}
       css/components/entity-meta.css: {}

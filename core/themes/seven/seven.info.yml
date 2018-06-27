@@ -42,6 +42,11 @@ libraries-override:
         assets/vendor/jquery.ui/themes/base/dialog.css: false
   classy/dialog:
     seven/seven.drupal.dialog
+  classy/base:
+    css:
+      component:
+        css/components/details.css: false
+
 libraries-extend:
   core/ckeditor:
     - seven/ckeditor-dialog

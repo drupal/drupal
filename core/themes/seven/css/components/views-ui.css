@@ -21,12 +21,12 @@ details.fieldset-no-legend {
  * a layout problem occurs for the Display format details if we don't fix its
  * padding), but it's probably safe to just let it apply everywhere.
  */
-#views-ui-add-form details details .details-wrapper {
+#views-ui-add-form details details .seven-details__wrapper {
   padding-left: 0;
   padding-right: 0;
 }
 
-.views-display-tab details.box-padding .details-wrapper {
+.views-display-tab details.box-padding .seven-details__wrapper {
   padding: 0;
 }
 

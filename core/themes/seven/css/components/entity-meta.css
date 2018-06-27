@@ -2,19 +2,21 @@
  * Entity meta settings.
  */
 .entity-meta {
-  background-color: #ececec;
+  background-color: #edede8;
   border-left: 1px solid #bfbfbf;
   border-right: 1px solid #bfbfbf;
+  border-radius: 3px;
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.15);
 }
 .entity-meta__header,
-.entity-meta details {
-  background-color: #f7f7f7;
+.entity-meta .seven-details {
+  background-color: #fcfcfa;
   border-top: 1px solid #bfbfbf;
   border-bottom: 1px solid #bfbfbf;
 }
 .entity-meta__header {
   padding: 1em 1.5em;
+  border-radius: 3px 3px 0 0;
 }
 .entity-meta__title {
   font-size: 1.231em;
@@ -28,34 +30,43 @@
 .entity-meta__last-saved {
   font-style: italic; /* As-designed, but really: why is this italic? */
 }
-.entity-meta details {
+.entity-meta .seven-details {
   border-left: 0;
   border-right: 0;
   border-top: 1px solid #fff;
   margin: 0;
+  border-radius: 0;
 }
-.entity-meta details:first-child {
-  border-top-color: #bfbfbf;
+.entity-meta .seven-details:last-child {
+  border-radius: 0 0 3px 3px;
 }
-.entity-meta details[open] {
+.entity-meta .seven-details[open] {
   background-color: transparent;
   background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.125), transparent 4px);
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.125), transparent 4px);
   border-top-width: 0;
   padding-top: 1px;
 }
-.entity-meta details[open] + details[open] {
+.entity-meta .seven-details[open] + .seven-details[open] {
   background-image: none;
   border-top-width: 1px;
   padding-top: 0;
 }
-.entity-meta details > .details-wrapper {
+.entity-meta .seven-details > .seven-details__wrapper {
   padding-top: 0;
 }
-.entity-meta details > summary {
+.entity-meta .seven-details > summary {
   padding: 0.85em 1.25em;
   text-shadow: 0 1px 0 white;
 }
-.entity-meta details .summary {
-  display: none; /* Hide JS summaries. @todo Rethink summaries. */
+
+/**
+ * Hide JS summary from the details polyfill to make it consistent with native
+ * details elements.
+ *
+ * @todo Consider removing this after https://www.drupal.org/node/2493957 has
+ *   been solved.
+ */
+.entity-meta .seven-details .summary {
+  display: none;
 }

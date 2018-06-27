@@ -3,18 +3,20 @@
   border: 0;
   border-top: 1px solid #ccc;
 }
-.system-modules details {
+.system-modules .seven-details {
+  background: none;
   border: 0;
   margin: 0;
   padding: 0;
 }
-.system-modules summary {
+.system-modules .seven-details__summary {
   border-bottom: 1px solid #ccc;
+  padding: 0.95em 0.5em;
 }
-.system-modules [open] summary {
+.system-modules [open] .seven-details__summary {
   border-bottom: none;
 }
-.system-modules .details-wrapper {
+.system-modules .seven-details__wrapper {
   padding: 0 0 0.5em 0;
 }
 .system-modules .fieldset-wrapper {

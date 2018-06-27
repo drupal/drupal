@@ -1,0 +1,27 @@
+/**
+ * @file
+ * Collapsible details.
+ *
+ * @see collapse.js
+ */
+.seven-details {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  background-color: #fcfcfa;
+  border: 1px solid #bfbfbf;
+  border-radius: 3px;
+}
+.seven-details__summary {
+  cursor: pointer;
+  text-shadow: 0 1px 0 white;
+  color: #0074bd;
+}
+.seven-details__summary:hover,
+.seven-details__summary:focus,
+.seven-details[open] > .seven-details__summary {
+  color: #004f80;
+}
+.seven-details__wrapper {
+  padding: 0 1.5em 1em 1.5em;
+}
+
