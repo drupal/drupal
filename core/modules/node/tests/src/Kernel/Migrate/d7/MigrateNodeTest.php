@@ -72,6 +72,18 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getFileMigrationInfo() {
+    return [
+      'path' => 'public://sites/default/files/cube.jpeg',
+      'size' => '3620',
+      'base_path' => 'public://',
+      'plugin_id' => 'd7_file',
+    ];
+  }
+
+  /**
    * Asserts various aspects of a node.
    *
    * @param string $id
