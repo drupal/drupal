@@ -20,6 +20,8 @@ use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 /**
  * Tests EntityDefinitionUpdateManager functionality.
  *
+ * @coversDefaultClass \Drupal\Core\Entity\EntityDefinitionUpdateManager
+ *
  * @group Entity
  */
 class EntityDefinitionUpdateTest extends EntityKernelTestBase {
@@ -1177,6 +1179,20 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     catch (FieldException $e) {
       $this->assertEquals('Illegal initial value definition on new_base_field: Both fields have to be stored in the shared entity tables.', $e->getMessage());
       $this->pass('Using a field that is not stored in the shared tables as initial value does not work.');
+    }
+  }
+
+  /**
+   * @covers ::getEntityTypes
+   */
+  public function testGetEntityTypes() {
+    $entity_type_definitions = $this->entityDefinitionUpdateManager->getEntityTypes();
+
+    // Ensure that we have at least one entity type to check below.
+    $this->assertGreaterThanOrEqual(1, count($entity_type_definitions));
+
+    foreach ($entity_type_definitions as $entity_type_id => $entity_type) {
+      $this->assertEquals($this->entityDefinitionUpdateManager->getEntityType($entity_type_id), $entity_type);
     }
   }
 

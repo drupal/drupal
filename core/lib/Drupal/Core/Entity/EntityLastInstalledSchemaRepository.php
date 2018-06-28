@@ -37,6 +37,27 @@ class EntityLastInstalledSchemaRepository implements EntityLastInstalledSchemaRe
   /**
    * {@inheritdoc}
    */
+  public function getLastInstalledDefinitions() {
+    $all_definitions = $this->keyValueFactory->get('entity.definitions.installed')->getAll();
+
+    // Filter out field storage definitions.
+    $entity_type_definitions = array_filter($all_definitions, function ($key) {
+      return substr($key, -12) === '.entity_type';
+    }, ARRAY_FILTER_USE_KEY);
+
+    // Ensure that the returned array is keyed by the entity type ID.
+    $keys = array_keys($entity_type_definitions);
+    $keys = array_map(function ($key) {
+      $parts = explode('.', $key);
+      return $parts[0];
+    }, $keys);
+
+    return array_combine($keys, $entity_type_definitions);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setLastInstalledDefinition(EntityTypeInterface $entity_type) {
     $entity_type_id = $entity_type->id();
     $this->keyValueFactory->get('entity.definitions.installed')->set($entity_type_id . '.entity_type', $entity_type);

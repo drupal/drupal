@@ -42,6 +42,34 @@ interface EntityLastInstalledSchemaRepositoryInterface {
   public function getLastInstalledDefinition($entity_type_id);
 
   /**
+   * Gets the entity type definitions in their most recently installed state.
+   *
+   * During the application lifetime, entity type definitions can change. For
+   * example, updated code can be deployed. The
+   * \Drupal\Core\Entity\EntityTypeManagerInterface::getDefinitions() method
+   * will always return the definitions as determined by the current codebase.
+   * This method returns the definitions from the last time that a
+   * \Drupal\Core\Entity\EntityTypeListener event was completed. In other words,
+   * the definitions that the entity type's handlers have incorporated into the
+   * application state. For example, if the entity type's storage handler is
+   * SQL-based, the definition for which database tables were created.
+   *
+   * Application management code can check if
+   * \Drupal\Core\Entity\EntityTypeManagerInterface::getDefinitions() differs
+   * from getLastInstalledDefinitions() and decide whether to:
+   * - Invoke the appropriate \Drupal\Core\Entity\EntityTypeListenerInterface
+   *   event so that handlers react to the new definitions.
+   * - Raise a warning that the application state is incompatible with the
+   *   codebase.
+   * - Perform some other action.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeInterface[]
+   *   An array containing the installed definition for all entity types, keyed
+   *   by the entity type ID.
+   */
+  public function getLastInstalledDefinitions();
+
+  /**
    * Stores the entity type definition in the application state.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
