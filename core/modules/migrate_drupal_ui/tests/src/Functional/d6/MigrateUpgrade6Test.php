@@ -132,6 +132,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'filefield',
       'filter',
       'forum',
+      'i18nblocks',
       'i18nmenu',
       'i18nblocks',
       'i18ntaxonomy',
