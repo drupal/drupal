@@ -107,6 +107,7 @@ Cache
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 
 CKEditor
+- Henrik Danielsson 'TwoD' https://www.drupal.org/u/TwoD
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 - Marek 'mlewand' Lewandowski https://www.drupal.org/u/mlewand
 
@@ -188,6 +189,7 @@ Dynamic Page Cache
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Editor
+- Henrik Danielsson 'TwoD' https://www.drupal.org/u/TwoD
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Entity API
