@@ -16,3 +16,29 @@ function menu_link_content_install() {
   //   https://www.drupal.org/node/1965074
   module_set_weight('menu_link_content', 1);
 }
+
+/**
+ * Add the publishing status entity key to custom menu links.
+ */
+function menu_link_content_update_8601() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $definition_update_manager->getEntityType('menu_link_content');
+
+  // Add the published entity key to the menu_link_content entity type.
+  $entity_keys = $entity_type->getKeys();
+  $entity_keys['published'] = 'enabled';
+  $entity_type->set('entity_keys', $entity_keys);
+  $definition_update_manager->updateEntityType($entity_type);
+
+  // @todo The above should be enough, since that is the only definition that
+  //   changed. But \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema varies
+  //   field schema by whether a field is an entity key, so invoke
+  //   EntityDefinitionUpdateManagerInterface::updateFieldStorageDefinition()
+  //   with an unmodified field storage definition to trigger the necessary
+  //   changes. SqlContentEntityStorageSchema::onEntityTypeUpdate() should be
+  //   fixed to automatically handle this.
+  //   @see https://www.drupal.org/node/2554245
+  $definition_update_manager->updateFieldStorageDefinition($definition_update_manager->getFieldStorageDefinition('enabled', 'menu_link_content'));
+
+  return t('The publishing status entity key has been added to custom menu links.');
+}
