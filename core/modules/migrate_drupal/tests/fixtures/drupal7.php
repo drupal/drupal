@@ -3096,6 +3096,18 @@ $connection->insert('entity_translation')
   'changed',
 ))
 ->values(array(
+  'entity_type' => 'comment',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'und',
+  'source' => '',
+  'uid' => '1',
+  'status' => '1',
+  'translate' => '0',
+  'created' => '1421727536',
+  'changed' => '1421727536',
+))
+->values(array(
   'entity_type' => 'user',
   'entity_id' => '2',
   'revision_id' => '2',
@@ -5767,6 +5779,16 @@ $connection->insert('field_data_field_integer')
   'language',
   'delta',
   'field_integer_value',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'und',
+  'delta' => '0',
+  'field_integer_value' => '1000000',
 ))
 ->values(array(
   'entity_type' => 'node',
@@ -9510,6 +9532,16 @@ $connection->insert('field_revision_field_integer')
   'language',
   'delta',
   'field_integer_value',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'und',
+  'delta' => '0',
+  'field_integer_value' => '1000000',
 ))
 ->values(array(
   'entity_type' => 'node',

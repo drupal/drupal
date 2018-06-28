@@ -4,6 +4,7 @@ audit: true
 migration_tags:
   - Drupal 7
   - Content
+class: Drupal\comment\Plugin\migrate\D7Comment
 source:
   plugin: d7_comment
   constants:

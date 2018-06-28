@@ -17,7 +17,18 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['filter', 'node', 'comment', 'text', 'menu_ui'];
+  public static $modules = [
+    'comment',
+    'datetime',
+    'filter',
+    'image',
+    'link',
+    'menu_ui',
+    'node',
+    'taxonomy',
+    'telephone',
+    'text',
+  ];
 
   /**
    * {@inheritdoc}
@@ -40,6 +51,9 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
       'd7_comment_field_instance',
       'd7_comment_entity_display',
       'd7_comment_entity_form_display',
+      'd7_taxonomy_vocabulary',
+      'd7_field',
+      'd7_field_instance',
       'd7_comment',
     ]);
   }
@@ -59,6 +73,7 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $this->assertSame('This is a comment', $comment->comment_body->value);
     $this->assertSame('filtered_html', $comment->comment_body->format);
     $this->assertSame('2001:db8:ffff:ffff:ffff:ffff:ffff:ffff', $comment->getHostname());
+    $this->assertSame('1000000', $comment->field_integer->value);
 
     $node = $comment->getCommentedEntity();
     $this->assertInstanceOf(NodeInterface::class, $node);
