@@ -25,7 +25,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $media_storage = $this->container->get('entity.manager')->getStorage('media');
 
     // Create a media type and media item.
-    $media_type = $this->createMediaType('test');
+    $media_type = $this->createMediaType();
     $media = $media_storage->create([
       'bundle' => $media_type->id(),
       'name' => 'Unnamed',
@@ -80,7 +80,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $uri = 'temporary://foo.txt';
     file_put_contents($uri, $this->randomString(128));
 
-    $this->createMediaType('file', ['bundle' => 'file', 'new_revision' => TRUE]);
+    $this->createMediaType(['bundle' => 'file', 'new_revision' => TRUE], 'file');
 
     // Create a media item.
     $this->drupalGet('/media/add/file');
@@ -119,7 +119,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
   public function testImageMediaRevision() {
     $assert = $this->assertSession();
 
-    $this->createMediaType('image', ['bundle' => 'image', 'new_revision' => TRUE]);
+    $this->createMediaType(['bundle' => 'image', 'new_revision' => TRUE], 'image');
 
     /** @var \Drupal\field\FieldConfigInterface $field */
     // Disable the alt text field, because this is not a JavaScript test and

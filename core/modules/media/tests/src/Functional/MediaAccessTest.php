@@ -39,7 +39,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   public function testMediaAccess() {
     $assert_session = $this->assertSession();
 
-    $media_type = $this->createMediaType('test');
+    $media_type = $this->createMediaType();
 
     // Create media.
     $media = Media::create([

@@ -22,7 +22,7 @@ class MediaViewsWizardTest extends MediaJavascriptTestBase {
     $page = $session->getPage();
     $assert_session = $this->assertSession();
 
-    $this->createMediaType('test');
+    $this->createMediaType();
 
     $view_id = strtolower($this->randomMachineName(16));
     $this->drupalGet('admin/structure/views/add');

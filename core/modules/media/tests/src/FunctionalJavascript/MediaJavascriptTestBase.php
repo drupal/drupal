@@ -3,8 +3,8 @@
 namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\Tests\media\Functional\MediaFunctionalTestCreateMediaTypeTrait;
 use Drupal\Tests\media\Functional\MediaFunctionalTestTrait;
-use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 
 /**
  * Base class for Media functional JavaScript tests.
@@ -12,7 +12,7 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 abstract class MediaJavascriptTestBase extends JavascriptTestBase {
 
   use MediaFunctionalTestTrait;
-  use MediaTypeCreationTrait;
+  use MediaFunctionalTestCreateMediaTypeTrait;
 
   /**
    * Modules to enable.

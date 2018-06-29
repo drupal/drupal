@@ -39,7 +39,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $media_type = $this->createMediaType('test');
+    $media_type = $this->createMediaType();
 
     // Create a media item.
     $media = Media::create([

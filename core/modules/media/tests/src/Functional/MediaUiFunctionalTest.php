@@ -43,7 +43,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $page = $session->getPage();
     $assert_session = $this->assertSession();
 
-    $media_type = $this->createMediaType('test', [
+    $media_type = $this->createMediaType([
       'new_revision' => FALSE,
       'queue_thumbnail_downloads' => FALSE,
     ]);
@@ -151,10 +151,10 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $assert_session = $this->assertSession();
 
     // Tests and creates the first media type.
-    $first_media_type = $this->createMediaType('test', ['description' => $this->randomMachineName(32)]);
+    $first_media_type = $this->createMediaType(['description' => $this->randomMachineName(32)]);
 
     // Test and create a second media type.
-    $second_media_type = $this->createMediaType('test', ['description' => $this->randomMachineName(32)]);
+    $second_media_type = $this->createMediaType(['description' => $this->randomMachineName(32)]);
 
     // Test if media/add displays two media type options.
     $this->drupalGet('media/add');
@@ -284,10 +284,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
         $create_media_types[] = "media_type_$id";
         $permissions[] = "create media_type_$id media";
       }
-      $this->createMediaType('test', [
-        'bundle' => "media_type_$id",
-        'label' => "media_type_$id",
-      ]);
+      $this->createMediaType(['bundle' => "media_type_$id"]);
       $media_types["media_type_$id"] = "media_type_$id";
     }
 
@@ -516,7 +513,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $this->container->get('module_installer')->uninstall(['views']);
 
     // Create a media type and media item.
-    $media_type = $this->createMediaType('test');
+    $media_type = $this->createMediaType();
     $media = $media_storage->create([
       'bundle' => $media_type->id(),
       'name' => 'Unnamed',

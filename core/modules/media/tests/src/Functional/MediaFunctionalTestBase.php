@@ -3,7 +3,6 @@
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 
 /**
  * Base class for Media functional tests.
@@ -11,7 +10,7 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 abstract class MediaFunctionalTestBase extends BrowserTestBase {
 
   use MediaFunctionalTestTrait;
-  use MediaTypeCreationTrait;
+  use MediaFunctionalTestCreateMediaTypeTrait;
 
   /**
    * Modules to enable.

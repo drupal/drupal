@@ -26,7 +26,7 @@ class MediaSettingsTest extends MediaFunctionalTestBase {
     $this->drupalGet('admin/reports/status');
     $assert_session->pageTextNotContains('It is potentially insecure to display oEmbed content in a frame');
 
-    $this->createMediaType('oembed:video');
+    $this->createMediaType([], 'oembed:video');
 
     $this->drupalGet('admin/reports/status');
     $assert_session->pageTextContains('It is potentially insecure to display oEmbed content in a frame');
