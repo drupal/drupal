@@ -57,8 +57,8 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
     $assert_session->pageTextContains('No content available.');
 
     // Create some content for the view.
-    $media_type1 = $this->createMediaType();
-    $media_type2 = $this->createMediaType();
+    $media_type1 = $this->createMediaType('test');
+    $media_type2 = $this->createMediaType('test');
     $media1 = Media::create([
       'bundle' => $media_type1->id(),
       'name' => 'Media 1',

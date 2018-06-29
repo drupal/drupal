@@ -102,7 +102,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
     $account = $this->drupalCreateUser(['administer media display']);
     $this->drupalLogin($account);
 
-    $media_type = $this->createMediaType([], 'oembed:video');
+    $media_type = $this->createMediaType('oembed:video');
     $this->drupalGet('/admin/structure/media/manage/' . $media_type->id() . '/display');
     $assert = $this->assertSession();
     $assert->statusCodeEquals(200);
@@ -132,7 +132,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
     $account = $this->drupalCreateUser(['view media']);
     $this->drupalLogin($account);
 
-    $media_type = $this->createMediaType([], 'oembed:video');
+    $media_type = $this->createMediaType('oembed:video');
 
     $source = $media_type->getSource();
     $source_field = $source->getSourceFieldDefinition($media_type);

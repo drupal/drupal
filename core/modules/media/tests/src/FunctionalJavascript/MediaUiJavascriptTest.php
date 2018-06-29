@@ -191,7 +191,7 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
 
     // Test that the system for preventing the deletion of media types works
     // (they cannot be deleted if there is media content of that type/bundle).
-    $media_type2 = $this->createMediaType();
+    $media_type2 = $this->createMediaType('test');
     $label2 = $media_type2->label();
     $media = Media::create(['name' => 'lorem ipsum', 'bundle' => $media_type2->id()]);
     $media->save();

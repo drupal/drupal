@@ -2,12 +2,23 @@
 
 namespace Drupal\Tests\media\Functional;
 
-use Drupal\media\Entity\MediaType;
+@trigger_error(__NAMESPACE__ . '\MediaFunctionalTestCreateMediaTypeTrait is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use \Drupal\Tests\media\Traits\MediaTypeCreationTrait instead. See https://www.drupal.org/node/2981614.', E_USER_DEPRECATED);
+
+use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 
 /**
  * Trait with helpers for Media functional tests.
+ *
+ * @deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\Tests\media\Traits\MediaTypeCreationTrait instead.
+ *
+ * @see https://www.drupal.org/node/2981614
  */
 trait MediaFunctionalTestCreateMediaTypeTrait {
+
+  use MediaTypeCreationTrait {
+    createMediaType as traitCreateMediaType;
+  }
 
   /**
    * Creates a media type.
@@ -22,52 +33,7 @@ trait MediaFunctionalTestCreateMediaTypeTrait {
    *   A newly created media type.
    */
   protected function createMediaType(array $values = [], $source = 'test') {
-    if (empty($values['bundle'])) {
-      $id = strtolower($this->randomMachineName());
-    }
-    else {
-      $id = $values['bundle'];
-    }
-    $values += [
-      'id' => $id,
-      'label' => $id,
-      'source' => $source,
-      'source_configuration' => [],
-      'field_map' => [],
-      'new_revision' => FALSE,
-    ];
-
-    $media_type = MediaType::create($values);
-    $status = $media_type->save();
-
-    // @todo Rename to assertSame() when #1945040 is done.
-    // @see https://www.drupal.org/node/1945040
-    $this->assertIdentical(SAVED_NEW, $status, 'Media type was created successfully.');
-
-    // Ensure that the source field exists.
-    /** @var \Drupal\media\MediaSourceInterface $source */
-    $source = $media_type->getSource();
-    $source_field = $source->getSourceFieldDefinition($media_type);
-    if (!$source_field) {
-      $source_field = $source->createSourceField($media_type);
-      /** @var \Drupal\field\FieldStorageConfigInterface $storage */
-      $storage = $source_field->getFieldStorageDefinition();
-      $storage->save();
-      $source_field->save();
-
-      $media_type
-        ->set('source_configuration', [
-          'source_field' => $source_field->getName(),
-        ])
-        ->save();
-    }
-
-    // Move source field in form display.
-    entity_get_form_display('media', $id, 'default')
-      ->setComponent($source_field->getName())
-      ->save();
-
-    return $media_type;
+    return $this->traitCreateMediaType($source, $values);
   }
 
 }
