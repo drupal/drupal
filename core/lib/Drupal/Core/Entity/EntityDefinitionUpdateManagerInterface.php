@@ -109,6 +109,18 @@ interface EntityDefinitionUpdateManagerInterface {
   public function getEntityType($entity_type_id);
 
   /**
+   * Returns all the entity type definitions, ready to be manipulated.
+   *
+   * When needing to apply updates to existing entity type definitions, this
+   * method should always be used to retrieve all the definitions ready to be
+   * manipulated.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeInterface[]
+   *   The last installed entity type definitions, keyed by the entity type ID.
+   */
+  public function getEntityTypes();
+
+  /**
    * Installs a new entity type definition.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
