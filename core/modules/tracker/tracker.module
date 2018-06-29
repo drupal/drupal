@@ -72,7 +72,7 @@ function tracker_cron() {
       db_insert('tracker_node')
         ->fields([
           'nid' => $nid,
-          'published' => $node->isPublished(),
+          'published' => (int) $node->isPublished(),
           'changed' => $changed,
         ])
         ->execute();
@@ -81,7 +81,7 @@ function tracker_cron() {
       db_insert('tracker_user')
         ->fields([
           'nid' => $nid,
-          'published' => $node->isPublished(),
+          'published' => (int) $node->isPublished(),
           'changed' => $changed,
           'uid' => $node->getOwnerId(),
         ])
