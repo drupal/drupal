@@ -575,7 +575,7 @@ services:
       - { name: event_subscriber }
   entity.definition_update_manager:
     class: Drupal\Core\Entity\EntityDefinitionUpdateManager
-    arguments: ['@entity.manager', '@entity.last_installed_schema.repository']
+    arguments: ['@entity.manager']
   entity.last_installed_schema.repository:
     class: Drupal\Core\Entity\EntityLastInstalledSchemaRepository
     arguments: ['@keyvalue']
