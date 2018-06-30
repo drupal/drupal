@@ -4,7 +4,6 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\migrate\MigrateSkipProcessException;
-use Drupal\migrate\Plugin\migrate\process\Get;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\MigrationLookup;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
@@ -250,7 +249,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
     $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
     $foobaz_migration = $this->prophesize(MigrationInterface::class);
-    $get_migration = $this->prophesize(Get::class);
+    $get_migration = $this->prophesize(MigrationLookup::class);
     $id_map = $this->prophesize(MigrateIdMapInterface::class);
     $destination_plugin = $this->prophesize(MigrateDestinationInterface::class);
     $source_plugin = $this->prophesize(MigrateSourceInterface::class);
