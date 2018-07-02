@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\file\Tests;
+namespace Drupal\Tests\file\Functional;
 
 /**
  * Tests for download/file transfer functions.
@@ -26,16 +26,17 @@ class DownloadTest extends FileManagedTestBase {
     // encoded.
     $filename = $GLOBALS['base_url'] . '/' . \Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath() . '/' . rawurlencode($file->getFilename());
     $this->assertEqual($filename, $url, 'Correctly generated a URL for a created file.');
-    $this->drupalHead($url);
-    $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the created file.');
+    $http_client = $this->getHttpClient();
+    $response = $http_client->head($url);
+    $this->assertEquals(200, $response->getStatusCode(), 'Confirmed that the generated URL is correct by downloading the created file.');
 
     // Test generating a URL to a shipped file (i.e. a file that is part of
     // Drupal core, a module or a theme, for example a JavaScript file).
     $filepath = 'core/assets/vendor/jquery/jquery.min.js';
     $url = file_create_url($filepath);
     $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath, $url, 'Correctly generated a URL for a shipped file.');
-    $this->drupalHead($url);
-    $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the shipped file.');
+    $response = $http_client->head($url);
+    $this->assertEquals(200, $response->getStatusCode(), 'Confirmed that the generated URL is correct by downloading the shipped file.');
   }
 
   /**
@@ -71,17 +72,18 @@ class DownloadTest extends FileManagedTestBase {
     $this->assertResponse(200, 'Correctly allowed access to a file when file_test provides headers.');
 
     // Test that the file transferred correctly.
-    $this->assertEqual($contents, $this->content, 'Contents of the file are correct.');
+    $this->assertSame($contents, $this->getSession()->getPage()->getContent(), 'Contents of the file are correct.');
+    $http_client = $this->getHttpClient();
 
     // Deny access to all downloads via a -1 header.
     file_test_set_return('download', -1);
-    $this->drupalHead($url);
-    $this->assertResponse(403, 'Correctly denied access to a file when file_test sets the header to -1.');
+    $response = $http_client->head($url, ['http_errors' => FALSE]);
+    $this->assertSame(403, $response->getStatusCode(), 'Correctly denied access to a file when file_test sets the header to -1.');
 
     // Try non-existent file.
     $url = file_create_url('private://' . $this->randomMachineName());
-    $this->drupalHead($url);
-    $this->assertResponse(404, 'Correctly returned 404 response for a non-existent file.');
+    $response = $http_client->head($url, ['http_errors' => FALSE]);
+    $this->assertSame(404, $response->getStatusCode(), 'Correctly returned 404 response for a non-existent file.');
   }
 
   /**

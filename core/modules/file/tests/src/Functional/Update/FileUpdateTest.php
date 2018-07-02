@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\file\Tests\Update;
+namespace Drupal\Tests\file\Functional\Update;
 
-use Drupal\system\Tests\Update\UpdatePathTestBase;
+use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
  * Tests File update path.
@@ -21,8 +21,8 @@ class FileUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
-      __DIR__ . '/../../../tests/fixtures/update/drupal-8.file_formatters_update_2677990.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
+      __DIR__ . '/../../../../tests/fixtures/update/drupal-8.file_formatters_update_2677990.php',
     ];
   }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\file\Tests;
+namespace Drupal\Tests\file\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;

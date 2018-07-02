@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\file\Tests;
+namespace Drupal\Tests\file\Functional;
 
 use Drupal\Core\Entity\Plugin\Validation\Constraint\ReferenceAccessConstraint;
 use Drupal\Component\Render\FormattableMarkup;
@@ -81,8 +81,11 @@ class FilePrivateTest extends FileFieldTestBase {
     $edit['title[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $edit[$field_name . '[0][fids]'] = $node_file->id();
-    $this->drupalPostForm('node/' . $new_node->id() . '/edit', $edit, t('Save'));
+
+    // Can't use drupalPostForm() to set hidden fields.
+    $this->drupalGet('node/' . $new_node->id() . '/edit');
+    $this->getSession()->getPage()->find('css', 'input[name="' . $field_name . '[0][fids]"]')->setValue($node_file->id());
+    $this->getSession()->getPage()->pressButton(t('Save'));
     // Make sure the form submit failed - we stayed on the edit form.
     $this->assertUrl('node/' . $new_node->id() . '/edit');
     // Check that we got the expected constraint form error.
@@ -92,8 +95,11 @@ class FilePrivateTest extends FileFieldTestBase {
     // that access is still denied.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $edit[$field_name . '[0][fids]'] = $node_file->id();
-    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
+    // Can't use drupalPostForm() to set hidden fields.
+    $this->drupalGet('node/add/' . $type_name);
+    $this->getSession()->getPage()->find('css', 'input[name="title[0][value]"]')->setValue($edit['title[0][value]']);
+    $this->getSession()->getPage()->find('css', 'input[name="' . $field_name . '[0][fids]"]')->setValue($node_file->id());
+    $this->getSession()->getPage()->pressButton(t('Save'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertTrue(empty($new_node), 'Node was not created.');
     $this->assertUrl('node/add/' . $type_name);
@@ -144,9 +150,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalGet($file_url);
     $this->assertResponse(200, 'Confirmed that the anonymous uploader has access to the temporary file.');
     // Close the prior connection and remove the session cookie.
-    $this->curlClose();
-    $this->curlCookies = [];
-    $this->cookies = [];
+    $this->getSession()->reset();
     $this->drupalGet($file_url);
     $this->assertResponse(403, 'Confirmed that another anonymous user cannot access the temporary file.');
 
@@ -174,9 +178,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalGet($file_url);
     $this->assertResponse(200, 'Confirmed that the anonymous uploader has access to the file whose references were removed.');
     // Close the prior connection and remove the session cookie.
-    $this->curlClose();
-    $this->curlCookies = [];
-    $this->cookies = [];
+    $this->getSession()->reset();
     $this->drupalGet($file_url);
     $this->assertResponse(403, 'Confirmed that another anonymous user cannot access the file whose references were removed.');
 
@@ -197,9 +199,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalGet($file_url);
     $this->assertResponse(200, 'Confirmed that the anonymous uploader has access to the permanent file that is referenced by a published node.');
     // Close the prior connection and remove the session cookie.
-    $this->curlClose();
-    $this->curlCookies = [];
-    $this->cookies = [];
+    $this->getSession()->reset();
     $this->drupalGet($file_url);
     $this->assertResponse(200, 'Confirmed that another anonymous user also has access to the permanent file that is referenced by a published node.');
 
@@ -224,9 +224,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalGet($file_url);
     $this->assertResponse(403, 'Confirmed that the anonymous uploader cannot access the permanent file when it is referenced by an unpublished node.');
     // Close the prior connection and remove the session cookie.
-    $this->curlClose();
-    $this->curlCookies = [];
-    $this->cookies = [];
+    $this->getSession()->reset();
     $this->drupalGet($file_url);
     $this->assertResponse(403, 'Confirmed that another anonymous user cannot access the permanent file when it is referenced by an unpublished node.');
   }

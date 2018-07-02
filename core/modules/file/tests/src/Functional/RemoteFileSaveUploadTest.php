@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\file\Tests;
+namespace Drupal\Tests\file\Functional;
 
 /**
  * Tests the file uploading functions.

@@ -2,6 +2,8 @@
 
 namespace Drupal\file\Tests;
 
+@trigger_error('The ' . __NAMESPACE__ . '\FileManagedTestBase is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\file\Functional\FileManagedTestBase. See https://www.drupal.org/node/2969361.', E_USER_DEPRECATED);
+
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\simpletest\WebTestBase;

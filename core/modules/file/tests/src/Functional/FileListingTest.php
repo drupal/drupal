@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\file\Tests;
+namespace Drupal\Tests\file\Functional;
 
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
@@ -127,7 +127,7 @@ class FileListingTest extends FileFieldTestBase {
     $usage = $this->sumUsages($file_usage->listUsage($file));
     $this->assertRaw('admin/content/files/usage/' . $file->id() . '">' . $usage);
 
-    $result = $this->xpath("//td[contains(@class, 'views-field-status') and contains(text(), :value)]", [':value' => t('Temporary')]);
+    $result = $this->xpath("//td[contains(@class, 'views-field-status') and contains(text(), :value)]", [':value' => 'Temporary']);
     $this->assertEqual(1, count($result), 'Unused file marked as temporary.');
 
     // Test file usage page.

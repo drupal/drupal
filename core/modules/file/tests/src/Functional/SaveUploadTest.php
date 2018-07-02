@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\file\Tests;
+namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the file_save_upload() function.
@@ -10,6 +11,11 @@ use Drupal\file\Entity\File;
  * @group file
  */
 class SaveUploadTest extends FileManagedTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
+
   /**
    * Modules to enable.
    *

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\file\Tests;
+namespace Drupal\Tests\file\Functional;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\file\Entity\File;
@@ -97,15 +97,17 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     // Test that fields appear as expected after during the preview.
     // Add a second file.
     $name = 'files[' . $field_name . '_1][]';
-    $edit[$name] = \Drupal::service('file_system')->realpath($test_file->getFileUri());
+    $edit_upload[$name] = \Drupal::service('file_system')->realpath($test_file->getFileUri());
+    $this->drupalPostForm("node/$nid/edit", $edit_upload, t('Upload'));
 
     // Uncheck the display checkboxes and go to the preview.
     $edit[$field_name . '[0][display]'] = FALSE;
     $edit[$field_name . '[1][display]'] = FALSE;
-    $this->drupalPostForm("node/$nid/edit", $edit, t('Preview'));
+    $this->drupalPostForm(NULL, $edit, t('Preview'));
     $this->clickLink(t('Back to content editing'));
     $this->assertRaw($field_name . '[0][display]', 'First file appears as expected.');
     $this->assertRaw($field_name . '[1][display]', 'Second file appears as expected.');
+    $this->assertSession()->responseContains($field_name . '[1][description]', 'Description of second file appears as expected.');
   }
 
   /**

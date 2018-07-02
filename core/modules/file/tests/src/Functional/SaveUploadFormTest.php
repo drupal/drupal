@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\file\Tests;
+namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the _file_save_upload_from_form() function.
@@ -12,6 +13,10 @@ use Drupal\file\Entity\File;
  * @see _file_save_upload_from_form()
  */
 class SaveUploadFormTest extends FileManagedTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
 
   /**
    * Modules to enable.
@@ -445,17 +450,22 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
+
+    // Can't use drupalPostForm() for set nonexistent fields.
+    $this->drupalGet('file-test/save_upload_from_form_test');
+    $client = $this->getSession()->getDriver()->getClient();
+    $submit_xpath = $this->assertSession()->buttonExists('Submit')->getXpath();
+    $form = $client->getCrawler()->filterXPath($submit_xpath)->form();
     $edit = [
-      'files[file_test_upload][]' => [
-        $file_system->realpath($this->phpfile->uri),
-        $file_system->realpath($textfile->uri),
-      ],
       'allow_all_extensions' => FALSE,
       'is_image_file' => TRUE,
       'extensions' => 'jpeg',
     ];
+    $edit += $form->getPhpValues();
+    $files['files']['file_test_upload'][0] = $file_system->realpath($this->phpfile->uri);
+    $files['files']['file_test_upload'][1] = $file_system->realpath($textfile->uri);
+    $client->request($form->getMethod(), $form->getUri(), $edit, $files);
 
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
     $this->assertRaw(t('Epic upload FAIL!'), 'Found the failure message.');
 

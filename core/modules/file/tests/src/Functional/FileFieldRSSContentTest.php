@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\file\Tests;
+namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
 
@@ -60,12 +60,12 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
     $this->drupalGet('rss.xml');
     $uploaded_filename = str_replace('public://', '', $node_file->getFileUri());
     $selector = sprintf(
-      'enclosure[url="%s"][length="%s"][type="%s"]',
+      'enclosure[@url="%s"][@length="%s"][@type="%s"]',
       file_create_url("public://$uploaded_filename", ['absolute' => TRUE]),
       $node_file->getSize(),
       $node_file->getMimeType()
     );
-    $this->assertTrue(!empty($this->cssSelect($selector)), 'File field RSS enclosure is displayed when viewing the RSS feed.');
+    $this->assertNotNull($this->getSession()->getDriver()->find('xpath', $selector), 'File field RSS enclosure is displayed when viewing the RSS feed.');
   }
 
 }
