@@ -39,7 +39,7 @@ class MediaBulkFormTest extends MediaFunctionalTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->testMediaType = $this->createMediaType();
+    $this->testMediaType = $this->createMediaType('test');
 
     // Create some test media items.
     $this->mediaItems = [];

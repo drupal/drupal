@@ -22,8 +22,7 @@ class MediaTemplateSuggestionsTest extends MediaFunctionalTestBase {
    * Tests template suggestions from media_theme_suggestions_media().
    */
   public function testMediaThemeHookSuggestions() {
-    $media_type = $this->createMediaType([
-      'new_revision' => FALSE,
+    $media_type = $this->createMediaType('test', [
       'queue_thumbnail_downloads' => FALSE,
     ]);
 

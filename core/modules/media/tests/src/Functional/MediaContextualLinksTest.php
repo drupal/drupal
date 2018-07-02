@@ -23,7 +23,7 @@ class MediaContextualLinksTest extends MediaFunctionalTestBase {
    */
   public function testMediaContextualLinks() {
     // Create a media type.
-    $mediaType = $this->createMediaType();
+    $mediaType = $this->createMediaType('test');
 
     // Create a media item.
     $media = Media::create([

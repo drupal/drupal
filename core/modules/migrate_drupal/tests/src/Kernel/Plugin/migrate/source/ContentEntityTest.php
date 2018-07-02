@@ -16,7 +16,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\media\Functional\MediaFunctionalTestCreateMediaTypeTrait;
+use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\user\Entity\User;
 
 /**
@@ -27,7 +27,7 @@ use Drupal\user\Entity\User;
 class ContentEntityTest extends KernelTestBase {
 
   use EntityReferenceTestTrait;
-  use MediaFunctionalTestCreateMediaTypeTrait;
+  use MediaTypeCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -339,12 +339,11 @@ class ContentEntityTest extends KernelTestBase {
   public function testMediaSource() {
     $values = [
       'id' => 'image',
-      'bundle' => 'image',
       'label' => 'Image',
       'source' => 'test',
       'new_revision' => FALSE,
     ];
-    $media_type = $this->createMediaType($values);
+    $media_type = $this->createMediaType('test', $values);
     $media = Media::create([
       'name' => 'Foo media',
       'uid' => $this->user->id(),
