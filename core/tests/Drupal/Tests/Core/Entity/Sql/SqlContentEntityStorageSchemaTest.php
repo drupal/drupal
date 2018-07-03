@@ -370,6 +370,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storage->expects($this->any())
       ->method('getTableMapping')
       ->will($this->returnValue($table_mapping));
+    $this->storage->expects($this->any())
+      ->method('getCustomTableMapping')
+      ->will($this->returnValue($table_mapping));
 
     $this->assertNull(
       $this->storageSchema->onEntityTypeCreate($this->entityType)
@@ -478,6 +481,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storage->expects($this->any())
       ->method('getTableMapping')
       ->will($this->returnValue($table_mapping));
+    $this->storage->expects($this->any())
+      ->method('getCustomTableMapping')
+      ->will($this->returnValue($table_mapping));
 
     $this->storageSchema->onEntityTypeCreate($this->entityType);
   }
@@ -585,6 +591,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storage->expects($this->any())
       ->method('getTableMapping')
+      ->will($this->returnValue($table_mapping));
+    $this->storage->expects($this->any())
+      ->method('getCustomTableMapping')
       ->will($this->returnValue($table_mapping));
 
     $this->assertNull(
@@ -805,6 +814,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storage->expects($this->any())
       ->method('getTableMapping')
+      ->will($this->returnValue($table_mapping));
+    $this->storage->expects($this->any())
+      ->method('getCustomTableMapping')
       ->will($this->returnValue($table_mapping));
 
     $this->storageSchema->onEntityTypeCreate($this->entityType);
@@ -1303,6 +1315,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storage->expects($this->any())
       ->method('getTableMapping')
       ->will($this->returnValue($table_mapping));
+    $this->storage->expects($this->any())
+      ->method('getCustomTableMapping')
+      ->will($this->returnValue($table_mapping));
 
     // Setup storage schema.
     if ($change_schema) {
@@ -1486,6 +1501,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storage->expects($this->any())
       ->method('getTableMapping')
+      ->will($this->returnValue($table_mapping));
+    $this->storage->expects($this->any())
+      ->method('getCustomTableMapping')
       ->will($this->returnValue($table_mapping));
 
     $this->storageSchema->expects($this->any())

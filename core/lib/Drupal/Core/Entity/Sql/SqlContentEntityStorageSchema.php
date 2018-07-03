@@ -388,36 +388,21 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   public function onEntityTypeDelete(EntityTypeInterface $entity_type) {
     $this->checkEntityType($entity_type);
     $schema_handler = $this->database->schema();
-    $actual_definition = $this->entityManager->getDefinition($entity_type->id());
-    // @todo Instead of switching the wrapped entity type, we should be able to
-    //   instantiate a new table mapping for each entity type definition. See
-    //   https://www.drupal.org/node/2274017.
-    $this->storage->setEntityType($entity_type);
 
-    // Delete entity tables.
-    foreach ($this->getEntitySchemaTables() as $table_name) {
+    $field_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type->id());
+    $table_mapping = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions);
+
+    // Delete entity and field tables.
+    foreach ($table_mapping->getTableNames() as $table_name) {
       if ($schema_handler->tableExists($table_name)) {
         $schema_handler->dropTable($table_name);
       }
     }
 
-    // Delete dedicated field tables.
-    $field_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type->id());
-    $this->originalDefinitions = $field_storage_definitions;
-    $table_mapping = $this->storage->getTableMapping($field_storage_definitions);
+    // Delete the field schema data.
     foreach ($field_storage_definitions as $field_storage_definition) {
-      // If we have a field having dedicated storage we need to drop it,
-      // otherwise we just remove the related schema data.
-      if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
-        $this->deleteDedicatedTableSchema($field_storage_definition);
-      }
-      elseif ($table_mapping->allowsSharedTableStorage($field_storage_definition)) {
-        $this->deleteFieldSchemaData($field_storage_definition);
-      }
+      $this->deleteFieldSchemaData($field_storage_definition);
     }
-    $this->originalDefinitions = NULL;
-
-    $this->storage->setEntityType($actual_definition);
 
     // Delete the entity schema.
     $this->deleteEntitySchemaData($entity_type);
@@ -680,13 +665,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $entity_type_id = $entity_type->id();
 
     if (!isset($this->schema[$entity_type_id]) || $reset) {
-      // Back up the storage definition and replace it with the passed one.
-      // @todo Instead of switching the wrapped entity type, we should be able
-      //   to instantiate a new table mapping for each entity type definition.
-      //   See https://www.drupal.org/node/2274017.
-      $actual_definition = $this->entityManager->getDefinition($entity_type_id);
-      $this->storage->setEntityType($entity_type);
-
       // Prepare basic information about the entity type.
       $tables = $this->getEntitySchemaTables();
 
@@ -703,7 +681,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
 
       // We need to act only on shared entity schema tables.
-      $table_mapping = $this->storage->getTableMapping();
+      $table_mapping = $this->storage->getCustomTableMapping($entity_type, $this->fieldStorageDefinitions);
       $table_names = array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames());
       foreach ($table_names as $table_name) {
         if (!isset($schema[$table_name])) {
@@ -753,9 +731,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
 
       $this->schema[$entity_type_id] = $schema;
-
-      // Restore the actual definition.
-      $this->storage->setEntityType($actual_definition);
     }
 
     return $this->schema[$entity_type_id];
