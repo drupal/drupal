@@ -245,6 +245,54 @@ class DefaultTableMapping implements TableMappingInterface {
   }
 
   /**
+   * Gets the base table name.
+   *
+   * @return string
+   *   The base table name.
+   *
+   * @internal
+   */
+  public function getBaseTable() {
+    return $this->baseTable;
+  }
+
+  /**
+   * Gets the revision table name.
+   *
+   * @return string|null
+   *   The revision table name.
+   *
+   * @internal
+   */
+  public function getRevisionTable() {
+    return $this->revisionTable;
+  }
+
+  /**
+   * Gets the data table name.
+   *
+   * @return string|null
+   *   The data table name.
+   *
+   * @internal
+   */
+  public function getDataTable() {
+    return $this->dataTable;
+  }
+
+  /**
+   * Gets the revision data table name.
+   *
+   * @return string|null
+   *   The revision data table name.
+   *
+   * @internal
+   */
+  public function getRevisionDataTable() {
+    return $this->revisionDataTable;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getTableNames() {

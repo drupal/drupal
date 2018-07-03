@@ -40,11 +40,6 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
   protected function setUp() {
     parent::setup();
 
-    NodeType::create([
-      'type' => 'article',
-      'name' => 'Article',
-    ])->save();
-
     $this->typedDataManager = $this->container->get('typed_data_manager');
   }
 
@@ -91,6 +86,11 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
    * Tests deriving metadata about entities.
    */
   public function testEntities() {
+    NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ])->save();
+
     $entity_definition = EntityDataDefinition::create('node');
     $bundle_definition = EntityDataDefinition::create('node', 'article');
     // Entities are complex data.

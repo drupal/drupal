@@ -185,22 +185,21 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $this->dataTable = NULL;
     $this->revisionDataTable = NULL;
 
-    // @todo Remove table names from the entity type definition in
-    //   https://www.drupal.org/node/2232465.
-    $this->baseTable = $this->entityType->getBaseTable() ?: $this->entityTypeId;
+    $table_mapping = $this->getTableMapping();
+    $this->baseTable = $table_mapping->getBaseTable();
     $revisionable = $this->entityType->isRevisionable();
     if ($revisionable) {
       $this->revisionKey = $this->entityType->getKey('revision') ?: 'revision_id';
-      $this->revisionTable = $this->entityType->getRevisionTable() ?: $this->entityTypeId . '_revision';
+      $this->revisionTable = $table_mapping->getRevisionTable();
     }
     $translatable = $this->entityType->isTranslatable();
     if ($translatable) {
-      $this->dataTable = $this->entityType->getDataTable() ?: $this->entityTypeId . '_field_data';
+      $this->dataTable = $table_mapping->getDataTable();
       $this->langcodeKey = $this->entityType->getKey('langcode');
       $this->defaultLangcodeKey = $this->entityType->getKey('default_langcode');
     }
     if ($revisionable && $translatable) {
-      $this->revisionDataTable = $this->entityType->getRevisionDataTable() ?: $this->entityTypeId . '_field_revision';
+      $this->revisionDataTable = $table_mapping->getRevisionDataTable();
     }
   }
 
@@ -288,6 +287,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   public function setTableMapping(TableMappingInterface $table_mapping) {
     $this->tableMapping = $table_mapping;
+
+    $this->baseTable = $table_mapping->getBaseTable();
+    $this->revisionTable = $table_mapping->getRevisionTable();
+    $this->dataTable = $table_mapping->getDataTable();
+    $this->revisionDataTable = $table_mapping->getRevisionDataTable();
   }
 
   /**
@@ -656,7 +660,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   A SelectQuery object for loading the entity.
    */
   protected function buildQuery($ids, $revision_ids = FALSE) {
-    $query = $this->database->select($this->entityType->getBaseTable(), 'base');
+    $query = $this->database->select($this->baseTable, 'base');
 
     $query->addTag($this->entityTypeId . '_load_multiple');
 
@@ -734,7 +738,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   protected function doDeleteFieldItems($entities) {
     $ids = array_keys($entities);
 
-    $this->database->delete($this->entityType->getBaseTable())
+    $this->database->delete($this->baseTable)
       ->condition($this->idKey, $ids, 'IN')
       ->execute();
 
@@ -1055,7 +1059,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $record->{$this->revisionKey} = $insert_id;
       }
       if ($entity->isDefaultRevision()) {
-        $this->database->update($this->entityType->getBaseTable())
+        $this->database->update($this->baseTable)
           ->fields([$this->revisionKey => $record->{$this->revisionKey}])
           ->condition($this->idKey, $record->{$this->idKey})
           ->execute();
