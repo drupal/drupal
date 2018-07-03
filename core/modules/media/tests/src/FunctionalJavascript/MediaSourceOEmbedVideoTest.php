@@ -7,6 +7,7 @@ use Drupal\media\Entity\Media;
 use Drupal\media_test_oembed\Controller\ResourceController;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 use Drupal\user\Entity\Role;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the oembed:video media source.
@@ -28,6 +29,18 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
   protected function setUp() {
     parent::setUp();
     $this->lockHttpClientToFixtures();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function initConfig(ContainerInterface $container) {
+    parent::initConfig($container);
+
+    // Enable twig debugging to make testing template usage easy.
+    $parameters = $container->getParameter('twig.config');
+    $parameters['debug'] = TRUE;
+    $this->setContainerParameter('twig.config', $parameters);
   }
 
   /**
@@ -135,6 +148,16 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     // 'view media' permission.
     $this->drupalGet('media/oembed', ['query' => $query]);
     $assert_session->pageTextContains('By the power of Greyskull, Vimeo works!');
+    $this->assertRaw('core/themes/stable/templates/content/media-oembed-iframe.html.twig');
+    $this->assertNoRaw('core/modules/media/templates/media-oembed-iframe.html.twig');
+
+    // Test themes not inheriting from stable.
+    \Drupal::service('theme_handler')->install(['stark']);
+    $this->config('system.theme')->set('default', 'stark')->save();
+    $this->drupalGet('media/oembed', ['query' => $query]);
+    $assert_session->pageTextContains('By the power of Greyskull, Vimeo works!');
+    $this->assertNoRaw('core/themes/stable/templates/content/media-oembed-iframe.html.twig');
+    $this->assertRaw('core/modules/media/templates/media-oembed-iframe.html.twig');
 
     // Remove the 'view media' permission to test that this restricts access.
     $role = Role::load(AccountInterface::ANONYMOUS_ROLE);

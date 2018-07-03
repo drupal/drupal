@@ -3,6 +3,7 @@
 namespace Drupal\media\Controller;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
@@ -140,19 +141,26 @@ class OEmbedIframeController implements ContainerInjectionInterface {
 
       // Render the content in a new render context so that the cacheability
       // metadata of the rendered HTML will be captured correctly.
-      $content = $this->renderer->executeInRenderContext(new RenderContext(), function () use ($resource) {
-        $element = [
-          '#theme' => 'media_oembed_iframe',
-          // Even though the resource HTML is untrusted, IFrameMarkup::create()
-          // will create a trusted string. The only reason this is okay is
-          // because we are serving it in an iframe, which will mitigate the
-          // potential dangers of displaying third-party markup.
-          '#media' => IFrameMarkup::create($resource->getHtml()),
-        ];
+      $element = [
+        '#theme' => 'media_oembed_iframe',
+        // Even though the resource HTML is untrusted, IFrameMarkup::create()
+        // will create a trusted string. The only reason this is okay is
+        // because we are serving it in an iframe, which will mitigate the
+        // potential dangers of displaying third-party markup.
+        '#media' => IFrameMarkup::create($resource->getHtml()),
+        '#cache' => [
+          // Add the 'rendered' cache tag as this response is not processed by
+          // \Drupal\Core\Render\MainContent\HtmlRenderer::renderResponse().
+          'tags' => ['rendered'],
+        ],
+      ];
+      $content = $this->renderer->executeInRenderContext(new RenderContext(), function () use ($resource, $element) {
         return $this->renderer->render($element);
       });
-
-      $response->setContent($content)->addCacheableDependency($resource);
+      $response
+        ->setContent($content)
+        ->addCacheableDependency($resource)
+        ->addCacheableDependency(CacheableMetadata::createFromRenderArray($element));
     }
     catch (ResourceException $e) {
       // Prevent the response from being cached.
