@@ -202,7 +202,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          text: 'Link to delete revision'
+          text: 'Link to revert revision'
           entity_type: node
           plugin_id: node_revision_link_revert
       filters: {  }
