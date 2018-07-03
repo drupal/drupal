@@ -6,6 +6,19 @@
     "no-continue": "off",
     "new-cap": "off",
     "max-len": "off",
-    "default-case": "off"
+    "default-case": "off",
+    "indent": "off",
+    "prefer-destructuring": "off",
+    "object-curly-newline": "off",
+    "operator-linebreak": "off",
+    "no-empty": "off",
+    "no-else-return": "off",
+    "no-restricted-globals": "off",
+    "react/no-this-in-sfc": "off",
+    "react/destructuring-assignment": "off",
+    "function-paren-newline": "off",
+    "implicit-arrow-linebreak": "off",
+    "import/named": "off",
+    "spaced-comment": "off"
   }
 }
