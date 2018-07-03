@@ -3,6 +3,7 @@
 namespace Drupal\Tests\workspace\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests workspace switching functionality.
@@ -11,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class WorkspaceSwitcherTest extends BrowserTestBase {
 
+  use AssertPageCacheContextsAndTagsTrait;
   use WorkspaceTestUtilities;
 
   /**
@@ -52,6 +54,10 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
     $page = $this->getSession()->getPage();
     $page->findButton('Confirm')->click();
 
+    // Check that WorkspaceCacheContext provides the cache context used to
+    // support its functionality.
+    $this->assertCacheContext('session');
+
     $page->findLink($gravity->label());
   }
 
@@ -70,6 +76,10 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
     // The workspace switching via query parameter should persist.
     $this->drupalGet('<front>');
     $web_assert->elementContains('css', '.block-workspace-switcher', 'Stage');
+
+    // Check that WorkspaceCacheContext provides the cache context used to
+    // support its functionality.
+    $this->assertCacheContext('session');
   }
 
 }

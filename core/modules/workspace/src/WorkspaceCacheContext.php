@@ -47,7 +47,11 @@ class WorkspaceCacheContext implements CacheContextInterface {
    * {@inheritdoc}
    */
   public function getCacheableMetadata($type = NULL) {
-    return new CacheableMetadata();
+    // The active workspace will always be stored in the user's session.
+    $cacheability = new CacheableMetadata();
+    $cacheability->addCacheContexts(['session']);
+
+    return $cacheability;
   }
 
 }
