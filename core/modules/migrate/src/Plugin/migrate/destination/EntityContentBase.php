@@ -148,7 +148,7 @@ class EntityContentBase extends Entity implements HighestIdInterface {
     }
 
     $ids = $this->save($entity, $old_destination_id_values);
-    if (!empty($this->configuration['translations'])) {
+    if ($this->isTranslationDestination()) {
       $ids[] = $entity->language()->getId();
     }
     return $ids;
@@ -181,12 +181,15 @@ class EntityContentBase extends Entity implements HighestIdInterface {
    * {@inheritdoc}
    */
   public function getIds() {
+    $ids = [];
+
     $id_key = $this->getKey('id');
     $ids[$id_key] = $this->getDefinitionFromEntity($id_key);
 
     if ($this->isTranslationDestination()) {
-      if (!$langcode_key = $this->getKey('langcode')) {
-        throw new MigrateException('This entity type does not support translation.');
+      $langcode_key = $this->getKey('langcode');
+      if (!$langcode_key) {
+        throw new MigrateException(sprintf('The "%s" entity type does not support translations.', $this->storage->getEntityTypeId()));
       }
       $ids[$langcode_key] = $this->getDefinitionFromEntity($langcode_key);
     }
@@ -202,8 +205,8 @@ class EntityContentBase extends Entity implements HighestIdInterface {
    * @param \Drupal\migrate\Row $row
    *   The row object to update from.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|null
-   *   An updated entity, or NULL if it's the same as the one passed in.
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   An updated entity from row values.
    */
   protected function updateEntity(EntityInterface $entity, Row $row) {
     $empty_destinations = $row->getEmptyDestinationProperties();
