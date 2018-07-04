@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\menu_ui\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
@@ -12,7 +12,7 @@ use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
  *
  * @group menu_ui
  */
-class MenuUiJavascriptTest extends JavascriptTestBase {
+class MenuUiJavascriptTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;
   use MenuUiTrait;
@@ -123,7 +123,6 @@ class MenuUiJavascriptTest extends JavascriptTestBase {
   protected function addMenuLink($parent = '', $path = '/', $menu_id = 'tools', $expanded = FALSE, $weight = '0') {
     // View add menu link page.
     $this->drupalGet("admin/structure/menu/manage/$menu_id/add");
-    $this->assertSession()->statusCodeEquals(200);
 
     $title = '!link_' . $this->randomMachineName(16);
     $edit = [
@@ -138,7 +137,6 @@ class MenuUiJavascriptTest extends JavascriptTestBase {
 
     // Add menu link.
     $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('The menu link has been saved.');
 
     $storage = $this->container->get('entity_type.manager')->getStorage('menu_link_content');

@@ -49,7 +49,9 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
     $this->assertElementVisibleAfterWait('css', '.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode');
     // Ensure that all other Ajax activity is completed.
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->click($block_selector);
+    $block = $this->getSession()->getPage()->find('css', $block_selector);
+    $block->mouseOver();
+    $block->click();
     $this->waitForOffCanvasToOpen();
     $this->assertOffCanvasBlockFormIsValid();
   }
@@ -79,6 +81,8 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
     $edit_button = $this->getSession()
       ->getPage()
       ->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR);
+    $this->getSession()->executeScript("jQuery('[data-quickedit-entity-id]').trigger('mouseleave')");
+    $edit_button->mouseOver();
     $edit_button->press();
   }
 
@@ -87,6 +91,12 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
    */
   protected function assertEditModeDisabled() {
     $web_assert = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $this->getSession()->executeScript("jQuery('[data-quickedit-entity-id]').trigger('mouseleave')");
+    $page->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR)->mouseOver();
+    $this->assertTrue($page->waitFor(10, function ($page) {
+      return !$page->find('css', '.contextual .trigger:not(.visually-hidden)');
+    }));
     // Contextual triggers should be hidden.
     $web_assert->elementExists('css', '.contextual .trigger.visually-hidden');
     // No contextual triggers should be not hidden.
@@ -103,6 +113,13 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
    */
   protected function assertEditModeEnabled() {
     $web_assert = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    // Move the mouse over the toolbar button so that isn't over a contextual
+    // links area which cause the contextual link to be shown.
+    $page->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR)->mouseOver();
+    $this->assertTrue($page->waitFor(10, function ($page) {
+      return !$page->find('css', '.contextual .trigger.visually-hidden');
+    }));
     // No contextual triggers should be hidden.
     $web_assert->elementNotExists('css', '.contextual .trigger.visually-hidden');
     // The toolbar edit button should read "Editing".

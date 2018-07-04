@@ -3,14 +3,14 @@
 namespace Drupal\Tests\block\FunctionalJavascript;
 
 use Behat\Mink\Element\NodeElement;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests the JavaScript functionality of the block add filter.
  *
  * @group block
  */
-class BlockFilterTest extends JavascriptTestBase {
+class BlockFilterTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

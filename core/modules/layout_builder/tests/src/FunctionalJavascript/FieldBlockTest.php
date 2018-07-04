@@ -4,14 +4,14 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * @coversDefaultClass \Drupal\layout_builder\Plugin\Block\FieldBlock
  *
  * @group field
  */
-class FieldBlockTest extends JavascriptTestBase {
+class FieldBlockTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

@@ -2,7 +2,7 @@
 
 namespace Drupal\FunctionalJavascriptTests\Core\Session;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
  *
  * @group session
  */
-class SessionTest extends JavascriptTestBase {
+class SessionTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

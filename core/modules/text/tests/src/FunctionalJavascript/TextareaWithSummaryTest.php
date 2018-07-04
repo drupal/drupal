@@ -3,14 +3,14 @@
 namespace Drupal\Tests\text\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests the JavaScript functionality of the text_textarea_with_summary widget.
  *
  * @group text
  */
-class TextareaWithSummaryTest extends JavascriptTestBase {
+class TextareaWithSummaryTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

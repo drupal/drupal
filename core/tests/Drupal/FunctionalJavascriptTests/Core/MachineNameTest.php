@@ -2,14 +2,14 @@
 
 namespace Drupal\FunctionalJavascriptTests\Core;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests for the machine name field.
  *
  * @group field
  */
-class MachineNameTest extends JavascriptTestBase {
+class MachineNameTest extends WebDriverTestBase {
 
   /**
    * Required modules.

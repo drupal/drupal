@@ -2,14 +2,14 @@
 
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests the compatibility of the ajax.es6.js file.
  *
  * @group Ajax
  */
-class BackwardCompatibilityTest extends JavascriptTestBase {
+class BackwardCompatibilityTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\simpletest\ContentTypeCreationTrait;
 use Drupal\simpletest\NodeCreationTrait;
 
@@ -11,7 +11,7 @@ use Drupal\simpletest\NodeCreationTrait;
  *
  * @group views
  */
-class ExposedFilterAJAXTest extends JavascriptTestBase {
+class ExposedFilterAJAXTest extends WebDriverTestBase {
 
   use ContentTypeCreationTrait;
   use NodeCreationTrait;

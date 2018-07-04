@@ -6,7 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use GuzzleHttp\HandlerStack;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @group Installer
  */
-class SelectProfileFormTest extends JavascriptTestBase {
+class SelectProfileFormTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

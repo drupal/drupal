@@ -3,14 +3,14 @@
 namespace Drupal\Tests\field_ui\FunctionalJavascript;
 
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests the UI for entity displays.
  *
  * @group field_ui
  */
-class EntityDisplayTest extends JavascriptTestBase {
+class EntityDisplayTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
@@ -50,7 +50,8 @@ class EntityDisplayTest extends JavascriptTestBase {
 
     $this->drupalGet('entity_test/structure/entity_test/form-display');
     $this->assertTrue($this->assertSession()->optionExists('fields[field_test_text][region]', 'content')->isSelected());
-
+    $this->getSession()->getPage()->pressButton('Show row weights');
+    $this->assertSession()->waitForElementVisible('css', '[name="fields[field_test_text][region]"]');
     $this->getSession()->getPage()->selectFieldOption('fields[field_test_text][region]', 'hidden');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertTrue($this->assertSession()->optionExists('fields[field_test_text][region]', 'hidden')->isSelected());
@@ -72,6 +73,8 @@ class EntityDisplayTest extends JavascriptTestBase {
 
     $this->drupalGet('entity_test/structure/entity_test/display');
     $this->assertSession()->elementExists('css', '.region-content-message.region-empty');
+    $this->getSession()->getPage()->pressButton('Show row weights');
+    $this->assertSession()->waitForElementVisible('css', '[name="fields[field_test_text][region]"]');
     $this->assertTrue($this->assertSession()->optionExists('fields[field_test_text][region]', 'hidden')->isSelected());
 
     $this->getSession()->getPage()->selectFieldOption('fields[field_test_text][region]', 'content');
@@ -92,12 +95,16 @@ class EntityDisplayTest extends JavascriptTestBase {
   public function testExtraFields() {
     entity_test_create_bundle('bundle_with_extra_fields');
     $this->drupalGet('entity_test/structure/bundle_with_extra_fields/display');
+    $this->assertSession()->waitForElement('css', '.tabledrag-handle');
+    $id = $this->getSession()->getPage()->find('css', '[name="form_build_id"]')->getValue();
 
     $extra_field_row = $this->getSession()->getPage()->find('css', '#display-extra-field');
     $disabled_region_row = $this->getSession()->getPage()->find('css', '.region-hidden-title');
 
     $extra_field_row->find('css', '.handle')->dragTo($disabled_region_row);
     $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()
+      ->waitForElement('css', "[name='form_build_id']:not([value='$id'])");
 
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Your settings have been saved.');

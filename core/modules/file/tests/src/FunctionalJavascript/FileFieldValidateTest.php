@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\file\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
@@ -12,7 +12,7 @@ use Drupal\Tests\TestFileCreationTrait;
  *
  * @group file
  */
-class FileFieldValidateTest extends JavascriptTestBase {
+class FileFieldValidateTest extends WebDriverTestBase {
 
   use FileFieldCreationTrait;
   use TestFileCreationTrait;

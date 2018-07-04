@@ -2,21 +2,13 @@
 
 namespace Drupal\Tests\quickedit\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use WebDriver\Key;
 
 /**
  * Base class for testing the QuickEdit.
  */
-class QuickEditJavascriptTestBase extends JavascriptTestBase {
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo: Remove after https://www.drupal.org/project/drupal/issues/2942900
-   */
-  protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
+class QuickEditJavascriptTestBase extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

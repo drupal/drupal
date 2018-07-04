@@ -4,7 +4,7 @@ namespace Drupal\Tests\book\FunctionalJavascript;
 
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\Node;
 
 /**
@@ -12,7 +12,7 @@ use Drupal\node\Entity\Node;
  *
  * @group book
  */
-class BookJavascriptTest extends JavascriptTestBase {
+class BookJavascriptTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

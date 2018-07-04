@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\simpletest\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests Drupal settings retrieval in JavascriptTestBase tests.
  *
  * @group javascript
  */
-class JavascriptGetDrupalSettingsTest extends JavascriptTestBase {
+class JavascriptGetDrupalSettingsTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
@@ -19,7 +19,7 @@ class JavascriptGetDrupalSettingsTest extends JavascriptTestBase {
   /**
    * Tests retrieval of Drupal settings.
    *
-   * @see \Drupal\FunctionalJavascriptTests\JavascriptTestBase::getDrupalSettings()
+   * @see \Drupal\FunctionalJavascriptTests\WebDriverTestBase::getDrupalSettings()
    */
   public function testGetDrupalSettings() {
     $this->drupalLogin($this->drupalCreateUser());

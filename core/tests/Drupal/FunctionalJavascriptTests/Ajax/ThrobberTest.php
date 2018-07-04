@@ -2,20 +2,14 @@
 
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
-use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests the throbber.
  *
  * @group Ajax
  */
-class ThrobberTest extends JavascriptTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
+class ThrobberTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
