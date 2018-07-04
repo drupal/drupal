@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\content_translation\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  *
  * @group content_translation
  */
-class ContentTranslationContextualLinksTest extends JavascriptTestBase {
+class ContentTranslationContextualLinksTest extends WebDriverTestBase {
 
   /**
    * The 'translator' user to use during testing.

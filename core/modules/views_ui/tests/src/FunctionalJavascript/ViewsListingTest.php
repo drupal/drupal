@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests the JavaScript filtering on the Views listing page.
@@ -10,7 +10,7 @@ use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
  * @see core/modules/views_ui/js/views_ui.listing.js
  * @group views_ui
  */
-class ViewsListingTest extends JavascriptTestBase {
+class ViewsListingTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

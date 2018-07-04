@@ -2,14 +2,14 @@
 
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Performs tests on AJAX forms in cached pages.
  *
  * @group Ajax
  */
-class AjaxFormPageCacheTest extends JavascriptTestBase {
+class AjaxFormPageCacheTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
@@ -41,7 +41,6 @@ class AjaxFormPageCacheTest extends JavascriptTestBase {
    */
   public function testSimpleAJAXFormValue() {
     $this->drupalGet('ajax_forms_test_get_form');
-    $this->assertEquals($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
     $build_id_initial = $this->getFormBuildId();
 
     // Changing the value of a select input element, triggers a AJAX
@@ -77,7 +76,6 @@ class AjaxFormPageCacheTest extends JavascriptTestBase {
     // Emulate a push of the reload button and then repeat the test sequence
     // this time with a page loaded from the cache.
     $session->reload();
-    $this->assertEquals($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
     $build_id_from_cache_initial = $this->getFormBuildId();
     $this->assertEquals($build_id_initial, $build_id_from_cache_initial, 'Build id is the same as on the first request');
 
@@ -115,7 +113,9 @@ class AjaxFormPageCacheTest extends JavascriptTestBase {
     $this->drupalGet('ajax_validation_test');
     // Changing the value of the textfield will trigger an AJAX
     // request/response.
-    $this->getSession()->getPage()->fillField('drivertext', 'some dumb text');
+    $field = $this->getSession()->getPage()->findField('drivertext');
+    $field->setValue('some dumb text');
+    $field->blur();
 
     // When the AJAX command updates the DOM a <ul> unsorted list
     // "message__list" structure will appear on the page echoing back the

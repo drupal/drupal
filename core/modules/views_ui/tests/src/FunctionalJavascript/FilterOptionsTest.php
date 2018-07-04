@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests the JavaScript filtering of options in add handler form.
  *
  * @group views_ui
  */
-class FilterOptionsTest extends JavascriptTestBase {
+class FilterOptionsTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

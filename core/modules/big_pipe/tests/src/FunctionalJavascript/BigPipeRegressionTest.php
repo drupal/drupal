@@ -11,7 +11,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Url;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\simpletest\ContentTypeCreationTrait;
 use Drupal\simpletest\NodeCreationTrait;
 
@@ -20,7 +20,7 @@ use Drupal\simpletest\NodeCreationTrait;
  *
  * @group big_pipe
  */
-class BigPipeRegressionTest extends JavascriptTestBase {
+class BigPipeRegressionTest extends WebDriverTestBase {
 
   use CommentTestTrait;
   use ContentTypeCreationTrait;

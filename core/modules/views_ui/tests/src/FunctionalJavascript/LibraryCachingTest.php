@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests the JavaScript library caching on consecutive requests.
  *
  * @group views_ui
  */
-class LibraryCachingTest extends JavascriptTestBase {
+class LibraryCachingTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

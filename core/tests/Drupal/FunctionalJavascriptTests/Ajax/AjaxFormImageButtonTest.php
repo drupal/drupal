@@ -2,14 +2,14 @@
 
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests the Ajax image buttons work with key press events.
  *
  * @group Ajax
  */
-class AjaxFormImageButtonTest extends JavascriptTestBase {
+class AjaxFormImageButtonTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

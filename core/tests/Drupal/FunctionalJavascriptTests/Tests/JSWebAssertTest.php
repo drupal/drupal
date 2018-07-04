@@ -3,14 +3,14 @@
 namespace Drupal\FunctionalJavascriptTests\Tests;
 
 use Behat\Mink\Element\NodeElement;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests for the JSWebAssert class.
  *
  * @group javascript
  */
-class JSWebAssertTest extends JavascriptTestBase {
+class JSWebAssertTest extends WebDriverTestBase {
 
   /**
    * Required modules.

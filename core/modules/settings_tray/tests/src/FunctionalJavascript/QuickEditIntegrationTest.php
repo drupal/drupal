@@ -134,6 +134,8 @@ class QuickEditIntegrationTest extends SettingsTrayTestBase {
     $this->placeBlock('block_content:' . $block_content->uuid(), ['id' => 'custom']);
     $this->drupalGet('user');
     $page = $this->getSession()->getPage();
+    $this->toggleContextualTriggerVisibility('#block-custom');
+    $page->find('css', '#block-custom .contextual button')->press();
     $links = $page->findAll('css', "#block-custom .contextual-links li a");
     $link_labels = [];
     /** @var \Behat\Mink\Element\NodeElement $link */

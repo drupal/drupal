@@ -3,14 +3,14 @@
 namespace Drupal\Tests\node\FunctionalJavascript;
 
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests the JavaScript prevention of navigation away from node previews.
  *
  * @group node
  */
-class NodePreviewLinkTest extends JavascriptTestBase {
+class NodePreviewLinkTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

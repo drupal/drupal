@@ -3,7 +3,7 @@
 namespace Drupal\Tests\views\FunctionalJavascript;
 
 use Drupal\Core\Url;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\ContentTypeCreationTrait;
 use Drupal\simpletest\NodeCreationTrait;
@@ -14,7 +14,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @group node
  */
-class GlossaryViewTest extends JavascriptTestBase {
+class GlossaryViewTest extends WebDriverTestBase {
 
   use ContentTypeCreationTrait;
   use NodeCreationTrait;

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\simpletest\NodeCreationTrait;
 use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestData;
@@ -12,7 +12,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @group views_ui
  */
-class DisplayTest extends JavascriptTestBase {
+class DisplayTest extends WebDriverTestBase {
 
   use NodeCreationTrait;
 

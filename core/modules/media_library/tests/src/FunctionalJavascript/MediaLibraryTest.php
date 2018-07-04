@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\media\Entity\Media;
  *
  * @group media_library
  */
-class MediaLibraryTest extends JavascriptTestBase {
+class MediaLibraryTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}

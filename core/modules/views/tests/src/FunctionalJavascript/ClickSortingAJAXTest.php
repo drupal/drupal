@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\simpletest\ContentTypeCreationTrait;
 use Drupal\simpletest\NodeCreationTrait;
 use Drupal\views\Tests\ViewTestData;
@@ -12,7 +12,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @group views
  */
-class ClickSortingAJAXTest extends JavascriptTestBase {
+class ClickSortingAJAXTest extends WebDriverTestBase {
 
   use ContentTypeCreationTrait;
   use NodeCreationTrait;
