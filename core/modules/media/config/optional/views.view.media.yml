@@ -811,7 +811,7 @@ display:
           admin_label: ''
           empty: true
           tokenize: false
-          content: 'No content available.'
+          content: 'No media available.'
           plugin_id: text_custom
       relationships: {  }
       arguments: {  }

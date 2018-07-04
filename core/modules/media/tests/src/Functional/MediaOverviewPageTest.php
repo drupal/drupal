@@ -54,7 +54,7 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
     $this->assertEquals('Updated Sort ascending', $header->getText());
     $header = $assert_session->elementExists('css', 'th#view-operations-table-column');
     $this->assertEquals('Operations', $header->getText());
-    $assert_session->pageTextContains('No content available.');
+    $assert_session->pageTextContains('No media available.');
 
     // Create some content for the view.
     $media_type1 = $this->createMediaType('test');

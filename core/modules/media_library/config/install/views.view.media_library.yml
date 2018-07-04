@@ -363,7 +363,18 @@ display:
       title: Media
       header: {  }
       footer: {  }
-      empty: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content: 'No media available.'
+          plugin_id: text_custom
       relationships: {  }
       arguments:
         bundle:

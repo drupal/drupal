@@ -97,6 +97,19 @@ class MediaLibraryTest extends JavascriptTestBase {
     $this->submitForm([], 'Delete');
     $assert_session->pageTextNotContains('media_1');
     $assert_session->pageTextContains('media_2');
+
+    // Test 'Select all media'.
+    $this->getSession()->getPage()->checkField('Select all media');
+    $this->getSession()->getPage()->selectFieldOption('Action', 'media_delete_action');
+    $this->submitForm([], 'Apply to selected items');
+    $this->getSession()->getPage()->pressButton('Delete');
+
+    $assert_session->pageTextNotContains('media_2');
+    $assert_session->pageTextNotContains('media_3');
+    $assert_session->pageTextNotContains('media_4');
+
+    // Test empty text.
+    $assert_session->pageTextContains('No media available.');
   }
 
 }
