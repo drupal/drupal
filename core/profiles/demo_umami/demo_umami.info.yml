@@ -21,6 +21,7 @@ install:
   - editor
   - help
   - image
+  - media
   - menu_ui
   - options
   - path
