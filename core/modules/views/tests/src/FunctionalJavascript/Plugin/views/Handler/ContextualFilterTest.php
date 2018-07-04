@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views\FunctionalJavascript\Plugin\views\Handler;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @group views
  */
-class ContextualFilterTest extends WebDriverTestBase {
+class ContextualFilterTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}

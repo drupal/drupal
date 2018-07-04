@@ -2,14 +2,14 @@
 
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests AJAX responses.
  *
  * @group Ajax
  */
-class AjaxTest extends WebDriverTestBase {
+class AjaxTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}

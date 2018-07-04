@@ -3,7 +3,7 @@
 namespace Drupal\Tests\file\FunctionalJavascript;
 
 use Drupal\Component\Utility\Bytes;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
 
@@ -12,7 +12,7 @@ use Drupal\Tests\file\Functional\FileFieldCreationTrait;
  *
  * @group file
  */
-class MaximumFileSizeExceededUploadTest extends WebDriverTestBase {
+class MaximumFileSizeExceededUploadTest extends JavascriptTestBase {
 
   use FileFieldCreationTrait;
   use TestFileCreationTrait;

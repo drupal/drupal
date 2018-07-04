@@ -3,7 +3,7 @@
 namespace Drupal\Tests\views\FunctionalJavascript\Plugin\views\Handler;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\views\Tests\ViewTestData;
 
@@ -12,7 +12,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @group views
  */
-class GroupedExposedFilterTest extends WebDriverTestBase {
+class GroupedExposedFilterTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}

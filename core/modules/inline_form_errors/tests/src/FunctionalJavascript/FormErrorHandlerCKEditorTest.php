@@ -7,7 +7,7 @@ use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\node\Entity\NodeType;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @group ckeditor
  */
-class FormErrorHandlerCKEditorTest extends WebDriverTestBase {
+class FormErrorHandlerCKEditorTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}
@@ -87,10 +87,9 @@ class FormErrorHandlerCKEditorTest extends WebDriverTestBase {
 
     $this->submitForm($edit, 'Save');
 
-    $this->assertSession()->waitForElement('css', '#cke_edit-body-0-value');
     // Add a bottom margin to the title field to be sure the body field is not
-    // visible.
-    $session->executeScript("document.getElementById('edit-title-0-value').style.marginBottom = window.innerHeight*2 + 'px';");
+    // visible. PhantomJS runs with a resolution of 1024x768px.
+    $session->executeScript("document.getElementById('edit-title-0-value').style.marginBottom = '800px';");
 
     // Check that the CKEditor-enabled body field is currently not visible in
     // the viewport.

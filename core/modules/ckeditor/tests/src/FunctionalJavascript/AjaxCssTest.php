@@ -4,14 +4,14 @@ namespace Drupal\Tests\ckeditor\FunctionalJavascript;
 
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests delivery of CSS to CKEditor via AJAX.
  *
  * @group ckeditor
  */
-class AjaxCssTest extends WebDriverTestBase {
+class AjaxCssTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}

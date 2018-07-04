@@ -3,7 +3,7 @@
 namespace Drupal\Tests\action\FunctionalJavascript;
 
 use Drupal\Core\Url;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\system\Entity\Action;
 
 /**
@@ -11,7 +11,7 @@ use Drupal\system\Entity\Action;
  *
  * @group action
  */
-class ActionFormAjaxTest extends WebDriverTestBase {
+class ActionFormAjaxTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}
@@ -33,15 +33,16 @@ class ActionFormAjaxTest extends WebDriverTestBase {
   public function testActionConfigurationWithAjax() {
     $url = Url::fromRoute('action.admin_add', ['action_id' => 'action_form_ajax_test']);
     $this->drupalGet($url);
+    $this->assertSession()->statusCodeEquals(200);
     $page = $this->getSession()->getPage();
 
     $id = 'test_plugin';
-    $this->assertSession()->waitForElementVisible('named', ['button', 'Edit'])->press();
-    $this->assertSession()->waitForElementVisible('css', '[name="id"]')->setValue($id);
+    $page->find('css', '[name="id"]')
+      ->setValue($id);
 
     $page->find('css', '[name="having_a_party"]')
       ->check();
-    $this->assertSession()->waitForElementVisible('css', '[name="party_time"]');
+    $this->assertSession()->waitForElement('css', '[name="party_time"]');
 
     $party_time = 'Evening';
     $page->find('css', '[name="party_time"]')
@@ -53,6 +54,7 @@ class ActionFormAjaxTest extends WebDriverTestBase {
     $url = Url::fromRoute('entity.action.collection');
     $this->assertSession()->pageTextContains('The action has been successfully saved.');
     $this->assertSession()->addressEquals($url);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check storage.
     $instance = Action::load($id);

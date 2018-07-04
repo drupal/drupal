@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\system\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests that dialog links use different renderer services.
  *
  * @group system
  */
-class ModalRendererTest extends WebDriverTestBase {
+class ModalRendererTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}

@@ -2,12 +2,12 @@
 
 namespace Drupal\Tests\system\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Base class contains common test functionality for the Off-canvas dialog.
  */
-abstract class OffCanvasTestBase extends WebDriverTestBase {
+abstract class OffCanvasTestBase extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}
@@ -106,22 +106,8 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    * @todo Remove in https://www.drupal.org/node/2892440.
    */
   protected function waitForNoElement($selector, $timeout = 10000) {
-
-    $start = microtime(TRUE);
-    $end = $start + ($timeout / 1000);
-    $page = $this->getSession()->getPage();
-
-    do {
-      $result = $page->find('css', $selector);
-
-      if (empty($result)) {
-        return;
-      }
-
-      usleep(100000);
-    } while (microtime(TRUE) < $end);
-
-    $this->assertEmpty($result, 'Element was not on the page after wait.');
+    $condition = "(typeof jQuery !== 'undefined' && jQuery('$selector').length === 0)";
+    $this->assertJsCondition($condition, $timeout);
   }
 
   /**
@@ -146,7 +132,6 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    *   (Optional) Timeout in milliseconds, defaults to 10000.
    */
   protected function assertElementVisibleAfterWait($selector, $locator, $timeout = 10000) {
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible($selector, $locator, $timeout));
   }
 

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\inline_form_errors\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\node\Entity\NodeType;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @group inline_form_errors
  */
-class FormErrorHandlerQuickEditTest extends WebDriverTestBase {
+class FormErrorHandlerQuickEditTest extends JavascriptTestBase {
 
   /**
    * Modules to enable.

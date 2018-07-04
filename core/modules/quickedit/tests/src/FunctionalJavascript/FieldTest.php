@@ -4,7 +4,7 @@ namespace Drupal\Tests\quickedit\FunctionalJavascript;
 
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
@@ -14,7 +14,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
  *
  * @group quickedit
  */
-class FieldTest extends WebDriverTestBase {
+class FieldTest extends JavascriptTestBase {
 
   use ContextualLinkClickTrait;
 

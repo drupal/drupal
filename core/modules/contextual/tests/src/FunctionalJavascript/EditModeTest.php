@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\contextual\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests edit mode.
  *
  * @group contextual
  */
-class EditModeTest extends WebDriverTestBase {
+class EditModeTest extends JavascriptTestBase {
 
   /**
    * CSS selector for Drupal's announce element.

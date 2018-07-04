@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\simpletest\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests if we can execute JavaScript in the browser.
  *
  * @group javascript
  */
-class BrowserWithJavascriptTest extends WebDriverTestBase {
+class BrowserWithJavascriptTest extends JavascriptTestBase {
 
   public function testJavascript() {
     $this->drupalGet('<front>');

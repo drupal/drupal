@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\config_translation\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Translate settings and entities to various languages.
  *
  * @group config_translation
  */
-class ConfigTranslationUiTest extends WebDriverTestBase {
+class ConfigTranslationUiTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}

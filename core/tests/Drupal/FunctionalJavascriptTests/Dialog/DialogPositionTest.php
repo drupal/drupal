@@ -2,14 +2,14 @@
 
 namespace Drupal\FunctionalJavascriptTests\Dialog;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests the JavaScript functionality of the dialog position.
  *
  * @group dialog
  */
-class DialogPositionTest extends WebDriverTestBase {
+class DialogPositionTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}

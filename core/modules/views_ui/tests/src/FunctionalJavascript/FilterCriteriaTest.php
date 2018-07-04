@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests the View UI filter criteria group dialog.
  *
  * @group views_ui
  */
-class FilterCriteriaTest extends WebDriverTestBase {
+class FilterCriteriaTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}

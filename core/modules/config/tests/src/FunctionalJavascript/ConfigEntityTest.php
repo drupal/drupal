@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\config\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests the Config operations through the UI.
  *
  * @group config
  */
-class ConfigEntityTest extends WebDriverTestBase {
+class ConfigEntityTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}

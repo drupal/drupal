@@ -2,14 +2,14 @@
 
 namespace Drupal\FunctionalJavascriptTests\Core\Form;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests for form grouping elements.
  *
  * @group form
  */
-class FormGroupingElementsTest extends WebDriverTestBase {
+class FormGroupingElementsTest extends JavascriptTestBase {
 
   /**
    * Required modules.

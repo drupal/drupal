@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\contextual\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\user\Entity\Role;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\user\Entity\Role;
  *
  * @group contextual
  */
-class ContextualLinksTest extends WebDriverTestBase {
+class ContextualLinksTest extends JavascriptTestBase {
 
   use ContextualLinkClickTrait;
 

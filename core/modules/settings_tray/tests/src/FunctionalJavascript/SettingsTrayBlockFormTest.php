@@ -67,8 +67,8 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     $block_id = $block->id();
     $this->drupalGet('user');
 
-    $link = $web_assert->waitForElement('css', "$block_selector .contextual-links li a");
-    $this->assertEquals('Quick edit', $link->getHtml(), "'Quick edit' is the first contextual link for the block.");
+    $link = $page->find('css', "$block_selector .contextual-links li a");
+    $this->assertEquals('Quick edit', $link->getText(), "'Quick edit' is the first contextual link for the block.");
     $this->assertContains("/admin/structure/block/manage/$block_id/settings-tray?destination=user/2", $link->getAttribute('href'));
 
     if (isset($toolbar_item)) {
@@ -138,11 +138,9 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     $this->getSession()->executeScript('jQuery("body").trigger(jQuery.Event("keyup", { keyCode: 27 }));');
     $this->waitForOffCanvasToClose();
     $this->getSession()->wait(100);
-    $this->getSession()->executeScript("jQuery('[data-quickedit-entity-id]').trigger('mouseleave')");
-    $this->getSession()->getPage()->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR)->mouseOver();
     $this->assertEditModeDisabled();
-    $this->assertNotEmpty($web_assert->waitForElement('css', '#drupal-live-announce:contains(Exited edit mode)'));
-    $this->waitForNoElement('.contextual-toolbar-tab button:contains(Editing)');
+    $web_assert->elementTextContains('css', '#drupal-live-announce', 'Exited edit mode.');
+    $web_assert->elementTextNotContains('css', '.contextual-toolbar-tab button', 'Editing');
     $web_assert->elementAttributeNotContains('css', '.dialog-off-canvas-main-canvas', 'class', 'js-settings-tray-edit-mode');
 
     // Clean up test data so each test does not impact the next.

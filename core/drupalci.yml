@@ -47,7 +47,7 @@ build:
       # Functional JavaScript tests require a concurrency of 1 because there is
       # only one instance of PhantomJS on the testbot machine.
       run_tests.javascript:
-        concurrency: 15
+        concurrency: 1
         types: 'PHPUnit-FunctionalJavascript'
         testgroups: '--all'
         suppress-deprecations: false

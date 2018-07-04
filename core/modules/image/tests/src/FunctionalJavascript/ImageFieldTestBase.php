@@ -2,14 +2,15 @@
 
 namespace Drupal\Tests\image\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * This class provides methods specifically for testing Image's field handling.
  */
-abstract class ImageFieldTestBase extends WebDriverTestBase {
+abstract class ImageFieldTestBase extends JavascriptTestBase {
 
   use ImageFieldCreationTrait;
   use TestFileCreationTrait {
@@ -27,6 +28,11 @@ abstract class ImageFieldTestBase extends WebDriverTestBase {
     'field_ui',
     'image_module_test',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
 
   /**
    * An user with permissions to administer content types and image styles.

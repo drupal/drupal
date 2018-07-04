@@ -3,14 +3,14 @@
 namespace Drupal\Tests\field_layout\FunctionalJavascript;
 
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests using field layout for entity displays.
  *
  * @group field_layout
  */
-class FieldLayoutTest extends WebDriverTestBase {
+class FieldLayoutTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}
@@ -100,15 +100,12 @@ class FieldLayoutTest extends WebDriverTestBase {
     // After a refresh the new regions are still there.
     $this->drupalGet('entity_test/structure/entity_test/form-display');
     $this->assertEquals(['Top', 'First', 'Second', 'Bottom', 'Disabled'], $this->getRegionTitles());
-    $this->assertSession()->waitForElement('css', '.tabledrag-handle');
-    $id = $this->getSession()->getPage()->find('css', '[name="form_build_id"]')->getValue();
 
     // Drag the field to the second region.
     $field_test_text_row = $this->getSession()->getPage()->find('css', '#field-test-text');
     $second_region_row = $this->getSession()->getPage()->find('css', '.region-second-message');
     $field_test_text_row->find('css', '.handle')->dragTo($second_region_row);
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->waitForElement('css', "[name='form_build_id']:not([value='$id'])");
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Your settings have been saved.');
 
@@ -161,8 +158,6 @@ class FieldLayoutTest extends WebDriverTestBase {
     // After a refresh the new regions are still there.
     $this->drupalGet('entity_test/structure/entity_test/display');
     $this->assertEquals(['Top', 'First', 'Second', 'Bottom', 'Disabled'], $this->getRegionTitles());
-    $this->assertSession()->waitForElement('css', '.tabledrag-handle');
-    $id = $this->getSession()->getPage()->find('css', '[name="form_build_id"]')->getValue();
 
     // Drag the field to the first region.
     $this->assertTrue($this->assertSession()->optionExists('fields[field_test_text][region]', 'hidden')->isSelected());
@@ -171,7 +166,6 @@ class FieldLayoutTest extends WebDriverTestBase {
     $field_test_text_row->find('css', '.handle')->dragTo($first_region_row);
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertFalse($this->assertSession()->optionExists('fields[field_test_text][region]', 'hidden')->isSelected());
-    $this->assertSession()->waitForElement('css', "[name='form_build_id']:not([value='$id'])");
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Your settings have been saved.');
 

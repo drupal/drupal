@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests views creation wizard.
@@ -10,7 +10,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * @see core/modules/views_ui/js/views-admin.js
  * @group views_ui
  */
-class ViewsWizardTest extends WebDriverTestBase {
+class ViewsWizardTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}

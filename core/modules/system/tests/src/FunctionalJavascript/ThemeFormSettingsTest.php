@@ -3,7 +3,7 @@
 namespace Drupal\Tests\system\FunctionalJavascript;
 
 use Drupal\file\Entity\File;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -11,7 +11,7 @@ use Drupal\Tests\TestFileCreationTrait;
  *
  * @group system
  */
-class ThemeFormSettingsTest extends WebDriverTestBase {
+class ThemeFormSettingsTest extends JavascriptTestBase {
 
   use TestFileCreationTrait;
 

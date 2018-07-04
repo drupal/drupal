@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\node\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests the JavaScript updating of summaries on content type form.
  *
  * @group node
  */
-class TestSettingSummariesContentType extends WebDriverTestBase {
+class TestSettingSummariesContentType extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}
@@ -33,8 +33,6 @@ class TestSettingSummariesContentType extends WebDriverTestBase {
   public function testWorkflowSummary() {
     $this->drupalGet('admin/structure/types/manage/test');
     $page = $this->getSession()->getPage();
-    $page->find('css', 'a[href="#edit-workflow"]')->click();
-    $this->assertSession()->waitForElementVisible('css', '[name="options[status]"]');
     $page->findField('options[status]')->uncheck();
     $page->findField('options[sticky]')->check();
     $page->findField('options[promote]')->check();

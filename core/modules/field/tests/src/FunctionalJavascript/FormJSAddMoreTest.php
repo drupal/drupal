@@ -6,14 +6,14 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 
 /**
  * Tests add more behavior for a multiple value field.
  *
  * @group field
  */
-class FormJSAddMoreTest extends WebDriverTestBase {
+class FormJSAddMoreTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}

@@ -50,7 +50,7 @@ class OffCanvasTest extends OffCanvasTestBase {
       if ($link_index == '2') {
         // Check no title behavior.
         $web_assert->elementExists('css', '.ui-dialog-empty-title');
-        $this->assertEquals(' ', $header_text);
+        $this->assertEquals("\xc2\xa0", $header_text);
 
         $style = $page->find('css', '.ui-dialog-off-canvas')->getAttribute('style');
         $this->assertTrue(strstr($style, 'width: 555px;') !== FALSE, 'Dialog width respected.');
@@ -127,9 +127,6 @@ class OffCanvasTest extends OffCanvasTestBase {
       $this->waitForOffCanvasToOpen();
       // Check that the main canvas is padded when page is not narrow width and
       // tray is open.
-      $page->waitFor(10, function ($page) {
-        return $page->find('css', '.dialog-off-canvas-main-canvas')->hasAttribute('style');
-      });
       $web_assert->elementAttributeContains('css', '.dialog-off-canvas-main-canvas', 'style', 'padding-right');
 
       // Testing at the narrower width.
