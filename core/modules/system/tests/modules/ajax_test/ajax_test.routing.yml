@@ -6,6 +6,14 @@ ajax_test.dialog_contents:
   requirements:
     _access: 'TRUE'
 
+ajax_test.ajax_render_types:
+  path: '/ajax-test/dialog-contents-types/{type}'
+  defaults:
+    _title: 'AJAX Dialog contents routing'
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::renderTypes'
+  requirements:
+    _access: 'TRUE'
+
 ajax_test.dialog_form:
   path: '/ajax-test/dialog-form'
   defaults:
@@ -18,6 +26,20 @@ ajax_test.dialog:
   path: '/ajax-test/dialog'
   defaults:
     _controller: '\Drupal\ajax_test\Controller\AjaxTestController::dialog'
+  requirements:
+    _access: 'TRUE'
+
+ajax_test.insert_links_block_wrapper:
+  path: '/ajax-test/insert-block-wrapper'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::insertLinksBlockWrapper'
+  requirements:
+    _access: 'TRUE'
+
+ajax_test.insert_links_inline_wrapper:
+  path: '/ajax-test/insert-inline-wrapper'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::insertLinksInlineWrapper'
   requirements:
     _access: 'TRUE'
 

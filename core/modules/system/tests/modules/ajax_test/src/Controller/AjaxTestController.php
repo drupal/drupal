@@ -43,6 +43,101 @@ class AjaxTestController {
   }
 
   /**
+   * Example content for testing the wrapper of the response.
+   *
+   * @param string $type
+   *   Type of response.
+   *
+   * @return array
+   *   Renderable array of AJAX response contents.
+   */
+  public function renderTypes($type) {
+    return [
+      '#title' => '<em>AJAX Dialog & contents</em>',
+      'content' => [
+        '#type' => 'inline_template',
+        '#template' => $this->getRenderTypes()[$type]['render'],
+      ],
+    ];
+  }
+
+  /**
+   * Returns a render array of links that directly Drupal.ajax().
+   *
+   * @return array
+   *   Renderable array of AJAX response contents.
+   */
+  public function insertLinksBlockWrapper() {
+    $methods = [
+      'html',
+      'replaceWith',
+    ];
+
+    $build['links'] = [
+      'ajax_target' => [
+        '#markup' => '<div class="ajax-target-wrapper"><div id="ajax-target">Target</div></div>',
+      ],
+      'links' => [
+        '#theme' => 'links',
+        '#attached' => ['library' => ['ajax_test/ajax_insert']],
+      ],
+    ];
+    foreach ($methods as $method) {
+      foreach ($this->getRenderTypes() as $type => $item) {
+        $class = 'ajax-insert';
+        $build['links']['links']['#links']["$method-$type"] = [
+          'title' => "Link $method $type",
+          'url' => Url::fromRoute('ajax_test.ajax_render_types', ['type' => $type]),
+          'attributes' => [
+            'class' => [$class],
+            'data-method' => $method,
+            'data-effect' => $item['effect'],
+          ],
+        ];
+      }
+    }
+    return $build;
+  }
+
+  /**
+   * Returns a render array of links that directly Drupal.ajax().
+   *
+   * @return array
+   *   Renderable array of AJAX response contents.
+   */
+  public function insertLinksInlineWrapper() {
+    $methods = [
+      'html',
+      'replaceWith',
+    ];
+
+    $build['links'] = [
+      'ajax_target' => [
+        '#markup' => '<div class="ajax-target-wrapper"><span id="ajax-target-inline">Target inline</span></div>',
+      ],
+      'links' => [
+        '#theme' => 'links',
+        '#attached' => ['library' => ['ajax_test/ajax_insert']],
+      ],
+    ];
+    foreach ($methods as $method) {
+      foreach ($this->getRenderTypes() as $type => $item) {
+        $class = 'ajax-insert-inline';
+        $build['links']['links']['#links']["$method-$type"] = [
+          'title' => "Link $method $type",
+          'url' => Url::fromRoute('ajax_test.ajax_render_types', ['type' => $type]),
+          'attributes' => [
+            'class' => [$class],
+            'data-method' => $method,
+            'data-effect' => $item['effect'],
+          ],
+        ];
+      }
+    }
+    return $build;
+  }
+
+  /**
    * Returns a render array that will be rendered by AjaxRenderer.
    *
    * Verifies that the response incorporates JavaScript settings generated
@@ -220,6 +315,43 @@ class AjaxTestController {
     $response = new AjaxResponse();
     $response->addCommand(new CloseDialogCommand('#ajax-test-dialog-wrapper-1'));
     return $response;
+  }
+
+  /**
+   * Render types.
+   *
+   * @return array
+   *   Render types.
+   */
+  protected function getRenderTypes() {
+    $render_single_root = [
+      'pre-wrapped-div' => '<div class="pre-wrapped">pre-wrapped<script> var test;</script></div>',
+      'pre-wrapped-span' => '<span class="pre-wrapped">pre-wrapped<script> var test;</script></span>',
+      'pre-wrapped-whitespace' => ' <div class="pre-wrapped-whitespace">pre-wrapped-whitespace</div>' . "\r\n",
+      'not-wrapped' => 'not-wrapped',
+      'comment-string-not-wrapped' => '<!-- COMMENT -->comment-string-not-wrapped',
+      'comment-not-wrapped' => '<!-- COMMENT --><div class="comment-not-wrapped">comment-not-wrapped</div>',
+      'svg' => '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect x="0" y="0" height="10" width="10" fill="green"/></svg>',
+      'empty' => '',
+    ];
+    $render_multiple_root = [
+      'mixed' => ' foo <!-- COMMENT -->  foo bar<div class="a class"><p>some string</p></div> additional not wrapped strings, <!-- ANOTHER COMMENT --> <p>final string</p>',
+      'top-level-only' => '<div>element #1</div><div>element #2</div>',
+      'top-level-only-pre-whitespace' => ' <div>element #1</div><div>element #2</div> ',
+      'top-level-only-middle-whitespace-span' => '<span>element #1</span> <span>element #2</span>',
+      'top-level-only-middle-whitespace-div' => '<div>element #1</div> <div>element #2</div>',
+    ];
+
+    $render_info = [];
+    foreach ($render_single_root as $key => $render) {
+      $render_info[$key] = ['render' => $render, 'effect' => 'fade'];
+    }
+    foreach ($render_multiple_root as $key => $render) {
+      $render_info[$key] = ['render' => $render, 'effect' => 'none'];
+      $render_info["$key--effect"] = ['render' => $render, 'effect' => 'fade'];
+    }
+
+    return $render_info;
   }
 
 }

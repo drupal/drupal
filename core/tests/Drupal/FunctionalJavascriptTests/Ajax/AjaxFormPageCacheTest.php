@@ -54,8 +54,8 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
 
     // Wait for the DOM to update. The HtmlCommand will update
     // #ajax_selected_color to reflect the color change.
-    $green_div = $this->assertSession()->waitForElement('css', "#ajax_selected_color div:contains('green')");
-    $this->assertNotNull($green_div, 'DOM update: The selected color DIV is green.');
+    $green_span = $this->assertSession()->waitForElement('css', "#ajax_selected_color:contains('green')");
+    $this->assertNotNull($green_span, 'DOM update: The selected color SPAN is green.');
 
     // Confirm the operation of the UpdateBuildIdCommand.
     $build_id_first_ajax = $this->getFormBuildId();
@@ -66,8 +66,8 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
     $session->getPage()->selectFieldOption('select', 'red');
 
     // Wait for the DOM to update.
-    $red_div = $this->assertSession()->waitForElement('css', "#ajax_selected_color div:contains('red')");
-    $this->assertNotNull($red_div, 'DOM update: The selected color DIV is red.');
+    $red_span = $this->assertSession()->waitForElement('css', "#ajax_selected_color:contains('red')");
+    $this->assertNotNull($red_span, 'DOM update: The selected color SPAN is red.');
 
     // Confirm the operation of the UpdateBuildIdCommand.
     $build_id_second_ajax = $this->getFormBuildId();
@@ -84,8 +84,8 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
     $session->getPage()->selectFieldOption('select', 'green');
 
     // Wait for the DOM to update.
-    $green_div2 = $this->assertSession()->waitForElement('css', "#ajax_selected_color div:contains('green')");
-    $this->assertNotNull($green_div2, 'DOM update: After reload - the selected color DIV is green.');
+    $green_span2 = $this->assertSession()->waitForElement('css', "#ajax_selected_color:contains('green')");
+    $this->assertNotNull($green_span2, 'DOM update: After reload - the selected color SPAN is green.');
 
     $build_id_from_cache_first_ajax = $this->getFormBuildId();
     $this->assertNotEquals($build_id_from_cache_initial, $build_id_from_cache_first_ajax, 'Build id is changed in the simpletest-DOM on first AJAX submission');
@@ -96,8 +96,8 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
     $session->getPage()->selectFieldOption('select', 'red');
 
     // Wait for the DOM to update.
-    $red_div2 = $this->assertSession()->waitForElement('css', "#ajax_selected_color div:contains('red')");
-    $this->assertNotNull($red_div2, 'DOM update: After reload - the selected color DIV is red.');
+    $red_span2 = $this->assertSession()->waitForElement('css', "#ajax_selected_color:contains('red')");
+    $this->assertNotNull($red_span2, 'DOM update: After reload - the selected color SPAN is red.');
 
     $build_id_from_cache_second_ajax = $this->getFormBuildId();
     $this->assertNotEquals($build_id_from_cache_first_ajax, $build_id_from_cache_second_ajax, 'Build id changes on subsequent AJAX submissions');
