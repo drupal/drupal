@@ -498,6 +498,14 @@ form_test.get_form:
   requirements:
     _access: 'TRUE'
 
+form_test.machine_name_validation:
+  path: '/form-test/form-test-machine-name-validation'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestMachineNameValidationForm'
+    _title: 'Form machine name validation test'
+  requirements:
+    _access: 'TRUE'
+
 form_test.optional_container:
   path: '/form-test/optional-container'
   defaults:

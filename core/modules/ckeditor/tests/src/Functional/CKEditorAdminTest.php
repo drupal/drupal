@@ -216,6 +216,19 @@ class CKEditorAdminTest extends BrowserTestBase {
     $editor = Editor::load('filtered_html');
     $this->assertTrue($editor instanceof Editor, 'An Editor config entity exists.');
     $this->assertEqual($expected_settings, $editor->getSettings());
+
+    $this->drupalGet('admin/config/content/formats/add');
+    // Now attempt to add another filter format with the same editor and same
+    // machine name.
+    $edit = [
+      'format' => 'filtered_html',
+      'name' => 'Filtered HTML',
+      'editor[editor]' => 'ckeditor',
+    ];
+    $this->submitForm($edit, 'editor_configure');
+    $this->submitForm($edit, 'Save configuration');
+    $this->assertResponse(200);
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
   }
 
   /**

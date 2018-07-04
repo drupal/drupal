@@ -59,7 +59,6 @@ class MachineNameTest extends JavascriptTestBase {
 
     // Get page and session.
     $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
 
     // Get elements from the page.
     $title_1 = $page->findField('machine_name_1_label');
@@ -111,6 +110,36 @@ class MachineNameTest extends JavascriptTestBase {
 
     // Validate if the element contains the correct value.
     $this->assertEquals($test_values[1]['expected'], $machine_name_1_field->getValue(), 'The ID field value must be equal to the php generated machine name');
+
+    $assert = $this->assertSession();
+    $this->drupalGet('/form-test/form-test-machine-name-validation');
+
+    // Test errors after with no AJAX.
+    $assert->buttonExists('Save')->press();
+    $assert->pageTextContains('Machine-readable name field is required.');
+    // Ensure only the first machine name field has an error.
+    $this->assertTrue($assert->fieldExists('id')->hasClass('error'));
+    $this->assertFalse($assert->fieldExists('id2')->hasClass('error'));
+
+    // Test a successful submit after using AJAX.
+    $assert->fieldExists('Name')->setValue('test 1');
+    $assert->fieldExists('id')->setValue('test_1');
+    $assert->selectExists('snack')->selectOption('apple');
+    $assert->assertWaitOnAjaxRequest();
+    $assert->buttonExists('Save')->press();
+    $assert->pageTextContains('The form_test_machine_name_validation_form form has been submitted successfully.');
+
+    // Test errors after using AJAX.
+    $assert->fieldExists('Name')->setValue('duplicate');
+    $this->assertJsCondition('document.forms[0].id.value === "duplicate"');
+    $assert->fieldExists('id2')->setValue('duplicate2');
+    $assert->selectExists('snack')->selectOption('potato');
+    $assert->assertWaitOnAjaxRequest();
+    $assert->buttonExists('Save')->press();
+    $assert->pageTextContains('The machine-readable name is already in use. It must be unique.');
+    // Ensure both machine name fields both have errors.
+    $this->assertTrue($assert->fieldExists('id')->hasClass('error'));
+    $this->assertTrue($assert->fieldExists('id2')->hasClass('error'));
   }
 
 }

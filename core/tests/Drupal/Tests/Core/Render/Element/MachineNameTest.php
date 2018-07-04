@@ -60,6 +60,10 @@ class MachineNameTest extends UnitTestCase {
         'additional_property' => TRUE,
         '#additional_property_with_hash' => TRUE,
       ],
+      // The process function requires these to be set. During regular form
+      // building they are always set.
+      '#name' => 'test_machine_name',
+      '#default_value' => NULL,
     ];
 
     $complete_form = [

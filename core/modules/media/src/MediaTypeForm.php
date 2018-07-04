@@ -131,13 +131,6 @@ class MediaTypeForm extends EntityForm {
       '#options' => $options,
       '#description' => $source_description,
       '#ajax' => ['callback' => '::ajaxHandlerData'],
-      // Rebuilding the form as part of the AJAX request is a workaround to
-      // enforce machine_name validation.
-      // @todo This was added as part of #2932226 and it should be removed once
-      //   https://www.drupal.org/project/drupal/issues/2557299 solves it in a
-      //   more generic way.
-      '#executes_submit_callback' => TRUE,
-      '#submit' => [[static::class, 'rebuildSubmit']],
       '#required' => TRUE,
       // Once the media type is created, its source plugin cannot be changed
       // anymore.
@@ -234,18 +227,6 @@ class MediaTypeForm extends EntityForm {
     }
 
     return $form;
-  }
-
-  /**
-   * Form submission handler to rebuild the form on select submit.
-   *
-   * @param array $form
-   *   Full form array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Current form state.
-   */
-  public static function rebuildSubmit(array &$form, FormStateInterface $form_state) {
-    $form_state->setRebuild();
   }
 
   /**
