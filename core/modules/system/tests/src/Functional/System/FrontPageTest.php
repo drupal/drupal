@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests front page functionality and administration.
  *
  * @group system
  */
-class FrontPageTest extends WebTestBase {
+class FrontPageTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

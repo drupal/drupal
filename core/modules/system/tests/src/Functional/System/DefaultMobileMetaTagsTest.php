@@ -1,16 +1,17 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Confirm that the default mobile meta tags appear as expected.
  *
  * @group system
  */
-class DefaultMobileMetaTagsTest extends WebTestBase {
+class DefaultMobileMetaTagsTest extends BrowserTestBase {
+
   /**
    * Array of default meta tags to insert into the page.
    *

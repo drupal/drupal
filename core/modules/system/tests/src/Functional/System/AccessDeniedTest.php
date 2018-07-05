@@ -1,9 +1,10 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 
 /**
@@ -11,7 +12,9 @@ use Drupal\user\RoleInterface;
  *
  * @group system
  */
-class AccessDeniedTest extends WebTestBase {
+class AccessDeniedTest extends BrowserTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Modules to enable.
@@ -45,9 +48,11 @@ class AccessDeniedTest extends WebTestBase {
     // correct path information in drupalSettings.
     $this->drupalLogin($this->createUser([]));
     $this->drupalGet('admin', ['query' => ['foo' => 'bar']]);
-    $this->assertEqual($this->drupalSettings['path']['currentPath'], 'admin');
-    $this->assertEqual($this->drupalSettings['path']['currentPathIsAdmin'], TRUE);
-    $this->assertEqual($this->drupalSettings['path']['currentQuery'], ['foo' => 'bar']);
+
+    $settings = $this->getDrupalSettings();
+    $this->assertEqual($settings['path']['currentPath'], 'admin');
+    $this->assertEqual($settings['path']['currentPathIsAdmin'], TRUE);
+    $this->assertEqual($settings['path']['currentQuery'], ['foo' => 'bar']);
 
     $this->drupalLogin($this->adminUser);
 

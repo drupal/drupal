@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
-use Drupal\simpletest\WebTestBase;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests the token system integration.
  *
  * @group system
  */
-class TokenReplaceWebTest extends WebTestBase {
+class TokenReplaceWebTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
 

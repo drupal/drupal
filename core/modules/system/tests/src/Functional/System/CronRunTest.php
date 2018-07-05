@@ -1,15 +1,18 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Tests cron runs.
  *
  * @group system
  */
-class CronRunTest extends WebTestBase {
+class CronRunTest extends BrowserTestBase {
+
+  use CronRunTrait;
 
   /**
    * Modules to enable.

@@ -1,17 +1,18 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Site\Settings;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests HTML output escaping of page title, site name, and slogan.
  *
  * @group system
  */
-class PageTitleTest extends WebTestBase {
+class PageTitleTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -103,34 +104,46 @@ class PageTitleTest extends WebTestBase {
 
     $this->assertTitle('Foo | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEqual('Foo', (string) $result[0]);
+    $this->assertEqual('Foo', $result[0]->getText());
 
     // Test forms
     $this->drupalGet('form-test/object-builder');
 
     $this->assertTitle('Test dynamic title | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEqual('Test dynamic title', (string) $result[0]);
+    $this->assertEqual('Test dynamic title', $result[0]->getText());
 
     // Set some custom translated strings.
-    $this->addCustomTranslations('en', [
-      '' => ['Static title' => 'Static title translated'],
+    $settings_key = 'locale_custom_strings_en';
+
+    // Update in-memory settings directly.
+    $settings = Settings::getAll();
+    $settings[$settings_key] = ['' => ['Static title' => 'Static title translated']];
+    new Settings($settings);
+
+    // Rewrites the settings.php.
+    $this->writeSettings([
+      'settings' => [
+        $settings_key => (object) [
+          'value' => $settings[$settings_key],
+          'required' => TRUE,
+        ],
+      ],
     ]);
-    $this->writeCustomTranslations();
 
     // Ensure that the title got translated.
     $this->drupalGet('test-page-static-title');
 
     $this->assertTitle('Static title translated | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEqual('Static title translated', (string) $result[0]);
+    $this->assertEqual('Static title translated', $result[0]->getText());
 
     // Test the dynamic '_title_callback' route option.
     $this->drupalGet('test-page-dynamic-title');
 
     $this->assertTitle('Dynamic title | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEqual('Dynamic title', (string) $result[0]);
+    $this->assertEqual('Dynamic title', $result[0]->getText());
 
     // Ensure that titles are cacheable and are escaped normally if the
     // controller does not escape them.

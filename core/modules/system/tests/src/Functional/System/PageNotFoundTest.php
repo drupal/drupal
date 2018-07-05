@@ -1,9 +1,10 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 
 /**
@@ -11,7 +12,9 @@ use Drupal\user\RoleInterface;
  *
  * @group system
  */
-class PageNotFoundTest extends WebTestBase {
+class PageNotFoundTest extends BrowserTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Modules to enable.

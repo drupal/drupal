@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the System test module.
+ */
+
+use Drupal\Core\Cache\Cache;
+
+/**
+ * Implements hook_install().
+ */
+function system_module_test_install() {
+  Cache::invalidateTags(['rendered']);
+}

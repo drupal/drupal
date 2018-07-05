@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Functional tests shutdown functions.
  *
  * @group system
  */
-class ShutdownFunctionsTest extends WebTestBase {
+class ShutdownFunctionsTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

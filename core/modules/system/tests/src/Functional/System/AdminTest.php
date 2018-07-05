@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Core\Menu\MenuTreeParameters;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests output on administrative pages and compact mode functionality.
  *
  * @group system
  */
-class AdminTest extends WebTestBase {
+class AdminTest extends BrowserTestBase {
 
   /**
    * User account with all available permissions
@@ -144,6 +144,8 @@ class AdminTest extends WebTestBase {
    * Test compact mode.
    */
   public function testCompactMode() {
+    $session = $this->getSession();
+
     // The front page defaults to 'user/login', which redirects to 'user/{user}'
     // for authenticated users. We cannot use '<front>', since this does not
     // match the redirected url.
@@ -152,20 +154,20 @@ class AdminTest extends WebTestBase {
     $this->drupalGet('admin/compact/on');
     $this->assertResponse(200, 'A valid page is returned after turning on compact mode.');
     $this->assertUrl($frontpage_url, [], 'The user is redirected to the front page after turning on compact mode.');
-    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode turns on.');
+    $this->assertTrue($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode turns on.');
     $this->drupalGet('admin/compact/on');
-    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode remains on after a repeat call.');
+    $this->assertTrue($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode remains on after a repeat call.');
     $this->drupalGet('');
-    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode persists on new requests.');
+    $this->assertTrue($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode persists on new requests.');
 
     $this->drupalGet('admin/compact/off');
     $this->assertResponse(200, 'A valid page is returned after turning off compact mode.');
     $this->assertUrl($frontpage_url, [], 'The user is redirected to the front page after turning off compact mode.');
-    $this->assertEqual($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'deleted', 'Compact mode turns off.');
+    $this->assertNull($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode turns off.');
     $this->drupalGet('admin/compact/off');
-    $this->assertEqual($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'deleted', 'Compact mode remains off after a repeat call.');
+    $this->assertNull($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode remains off after a repeat call.');
     $this->drupalGet('');
-    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode persists on new requests.');
+    $this->assertNull($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode persists off new requests.');
   }
 
 }

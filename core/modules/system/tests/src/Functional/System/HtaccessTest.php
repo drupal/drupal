@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests .htaccess is working correctly.
  *
  * @group system
  */
-class HtaccessTest extends WebTestBase {
+class HtaccessTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -130,15 +130,11 @@ class HtaccessTest extends WebTestBase {
    *   Path to file. Without leading slash.
    * @param int $response_code
    *   The expected response code. For example: 200, 403 or 404.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertFileAccess($path, $response_code) {
-    $result = $this->assertTrue(file_exists(\Drupal::root() . '/' . $path), "The file $path exists.");
+    $this->assertTrue(file_exists(\Drupal::root() . '/' . $path), "The file $path exists.");
     $this->drupalGet($path);
-    $result = $result && $this->assertResponse($response_code, "Response code to $path is $response_code.");
-    return $result;
+    $this->assertResponse($response_code, "Response code to $path is $response_code.");
   }
 
   /**
@@ -147,7 +143,10 @@ class HtaccessTest extends WebTestBase {
   public function testSvgzContentEncoding() {
     $this->drupalGet('core/modules/system/tests/logo.svgz');
     $this->assertResponse(200);
-    $header = $this->drupalGetHeader('Content-Encoding');
+
+    // Use x-encoded-content-encoding because of Content-Encoding responses
+    // (gzip, deflate, etc.) are automatically decoded by Guzzle.
+    $header = $this->drupalGetHeader('x-encoded-content-encoding');
     $this->assertEqual($header, 'gzip');
   }
 

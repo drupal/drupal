@@ -1,9 +1,10 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the theme interface functionality by enabling and switching themes, and
@@ -11,7 +12,11 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group system
  */
-class ThemeTest extends WebTestBase {
+class ThemeTest extends BrowserTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
 
   /**
    * A user with administrative permissions.
@@ -117,9 +122,9 @@ class ThemeTest extends WebTestBase {
         $explicit_file = 'public://' . $input;
         $local_file = PublicStream::basePath() . '/' . $input;
       }
-      $this->assertEqual((string) $elements[0], $implicit_public_file);
-      $this->assertEqual((string) $elements[1], $explicit_file);
-      $this->assertEqual((string) $elements[2], $local_file);
+      $this->assertEqual($elements[0]->getText(), $implicit_public_file);
+      $this->assertEqual($elements[1]->getText(), $explicit_file);
+      $this->assertEqual($elements[2]->getText(), $local_file);
 
       // Verify the actual 'src' attribute of the logo being output in a site
       // branding block.
@@ -129,7 +134,7 @@ class ThemeTest extends WebTestBase {
           ':rel' => 'home',
         ]
       );
-      $this->assertEqual((string) $elements[0]['src'], $expected['src']);
+      $this->assertEqual($elements[0]->getAttribute('src'), $expected['src']);
     }
     $unsupported_paths = [
       // Stream wrapper URI to non-existing file.
@@ -173,7 +178,7 @@ class ThemeTest extends WebTestBase {
     $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
 
     $fields = $this->xpath($this->constructFieldXpath('name', 'logo_path'));
-    $uploaded_filename = 'public://' . $fields[0]['value'];
+    $uploaded_filename = 'public://' . $fields[0]->getValue();
 
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     $this->drupalGet('');
@@ -181,7 +186,7 @@ class ThemeTest extends WebTestBase {
         ':rel' => 'home',
       ]
     );
-    $this->assertEqual($elements[0]['src'], file_url_transform_relative(file_create_url($uploaded_filename)));
+    $this->assertEqual($elements[0]->getAttribute('src'), file_url_transform_relative(file_create_url($uploaded_filename)));
 
     $this->container->get('theme_handler')->install(['bartik']);
 
@@ -425,7 +430,8 @@ class ThemeTest extends WebTestBase {
     $version = $themes['bartik']->info['version'];
 
     // Confirm Bartik is indicated as the default theme.
-    $this->assertTextPattern('/Bartik ' . preg_quote($version) . '\s{2,}\(default theme\)/');
+    $out = $this->getSession()->getPage()->getContent();
+    $this->assertTrue((bool) preg_match('/Bartik ' . preg_quote($version) . '\s{2,}\(default theme\)/', $out));
   }
 
   /**

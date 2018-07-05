@@ -1,30 +1,22 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Kernel\System;
 
 use Drupal\Core\Flood\DatabaseBackend;
 use Drupal\Core\Flood\MemoryBackend;
-use Drupal\simpletest\WebTestBase;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Functional tests for the flood control mechanism.
  *
  * @group system
  */
-class FloodTest extends WebTestBase {
+class FloodTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
-
-    // Flood backends need a request object. Create a dummy one and insert it
-    // to the container.
-    $request = Request::createFromGlobals();
-    $this->container->get('request_stack')->push($request);
-  }
+  protected static $modules = ['system'];
 
   /**
    * Test flood control mechanism clean-up.
@@ -33,6 +25,7 @@ class FloodTest extends WebTestBase {
     $threshold = 1;
     $window_expired = -1;
     $name = 'flood_test_cleanup';
+    $cron = $this->container->get('cron');
 
     $flood = \Drupal::flood();
     $this->assertTrue($flood->isAllowed($name, $threshold));
@@ -41,7 +34,7 @@ class FloodTest extends WebTestBase {
     // Verify event is not allowed.
     $this->assertFalse($flood->isAllowed($name, $threshold));
     // Run cron and verify event is now allowed.
-    $this->cronRun();
+    $cron->run();
     $this->assertTrue($flood->isAllowed($name, $threshold));
 
     // Register unexpired event.
@@ -49,7 +42,7 @@ class FloodTest extends WebTestBase {
     // Verify event is not allowed.
     $this->assertFalse($flood->isAllowed($name, $threshold));
     // Run cron and verify event is still not allowed.
-    $this->cronRun();
+    $cron->run();
     $this->assertFalse($flood->isAllowed($name, $threshold));
   }
 

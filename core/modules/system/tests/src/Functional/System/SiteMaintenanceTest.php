@@ -1,16 +1,21 @@
 <?php
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\system\Functional\System;
 
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests access to site while in maintenance mode.
  *
  * @group system
  */
-class SiteMaintenanceTest extends WebTestBase {
+class SiteMaintenanceTest extends BrowserTestBase {
+
+  use AssertMailTrait {
+    getMails as drupalGetMails;
+  }
 
   /**
    * Modules to enable.
@@ -71,13 +76,13 @@ class SiteMaintenanceTest extends WebTestBase {
     // Logout and verify that offline message is displayed.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]);
+    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]->getText());
     $this->assertText($offline_message);
     $this->drupalGet('node');
-    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]);
+    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]->getText());
     $this->assertText($offline_message);
     $this->drupalGet('user/register');
-    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]);
+    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]->getText());
     $this->assertText($offline_message);
 
     // Verify that user is able to log in.
@@ -110,7 +115,7 @@ class SiteMaintenanceTest extends WebTestBase {
     // Logout and verify that custom site offline message is displayed.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]);
+    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]->getText());
     $this->assertRaw($offline_message, 'Found the site offline message.');
 
     // Verify that custom site offline message is not displayed on user/password.
@@ -137,7 +142,7 @@ class SiteMaintenanceTest extends WebTestBase {
     // Logout and verify that offline message is displayed in Bartik.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]);
+    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]->getText());
   }
 
   /**
