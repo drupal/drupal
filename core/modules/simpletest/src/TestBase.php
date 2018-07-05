@@ -249,6 +249,20 @@ abstract class TestBase {
   }
 
   /**
+   * Fail the test if it belongs to a PHPUnit-based framework.
+   *
+   * This would probably be caused by automated test conversions such as those
+   * in https://www.drupal.org/project/drupal/issues/2770921.
+   */
+  public function checkTestHierarchyMismatch() {
+    // We can use getPhpunitTestSuite() because it uses a regex on the class'
+    // namespace to deduce the PHPUnit test suite.
+    if (TestDiscovery::getPhpunitTestSuite(get_class($this)) !== FALSE) {
+      $this->fail(get_class($this) . ' incorrectly subclasses ' . __CLASS__ . ', it should probably extend \Drupal\Tests\BrowserTestBase instead.');
+    }
+  }
+
+  /**
    * Performs setup tasks before each individual test method is run.
    */
   abstract protected function setUp();
@@ -864,6 +878,7 @@ abstract class TestBase {
    *   methods during debugging.
    */
   public function run(array $methods = []) {
+    $this->checkTestHierarchyMismatch();
     $class = get_class($this);
 
     if ($missing_requirements = $this->checkRequirements()) {
