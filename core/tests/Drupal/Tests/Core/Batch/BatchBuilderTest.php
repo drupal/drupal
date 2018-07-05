@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Unit\Batch;
+namespace Drupal\Tests\Core\Batch;
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -64,10 +64,10 @@ class BatchBuilderTest extends UnitTestCase {
    */
   public function testSetFinishCallback() {
     $batch = (new BatchBuilder())
-      ->setFinishCallback('\Drupal\Tests\system\Unit\Batch\BatchBuilderTest::finishedCallback')
+      ->setFinishCallback('\Drupal\Tests\Core\Batch\BatchBuilderTest::finishedCallback')
       ->toArray();
 
-    $this->assertEquals('\Drupal\Tests\system\Unit\Batch\BatchBuilderTest::finishedCallback', $batch['finished']);
+    $this->assertEquals('\Drupal\Tests\Core\Batch\BatchBuilderTest::finishedCallback', $batch['finished']);
   }
 
   /**
@@ -216,22 +216,22 @@ class BatchBuilderTest extends UnitTestCase {
   public function testAddOperation() {
     $batch_builder = new BatchBuilder();
     $batch = $batch_builder
-      ->addOperation('\Drupal\Tests\system\Unit\Batch\BatchBuilderTest::operationCallback')
+      ->addOperation('\Drupal\Tests\Core\Batch\BatchBuilderTest::operationCallback')
       ->toArray();
 
     $this->assertEquals([
-      ['\Drupal\Tests\system\Unit\Batch\BatchBuilderTest::operationCallback', []],
+      ['\Drupal\Tests\Core\Batch\BatchBuilderTest::operationCallback', []],
     ], $batch['operations']);
 
     $batch = $batch_builder
-      ->addOperation('\Drupal\Tests\system\Unit\Batch\BatchBuilderTest::operationCallback', [2])
-      ->addOperation('\Drupal\Tests\system\Unit\Batch\BatchBuilderTest::operationCallback', [3])
+      ->addOperation('\Drupal\Tests\Core\Batch\BatchBuilderTest::operationCallback', [2])
+      ->addOperation('\Drupal\Tests\Core\Batch\BatchBuilderTest::operationCallback', [3])
       ->toArray();
 
     $this->assertEquals([
-      ['\Drupal\Tests\system\Unit\Batch\BatchBuilderTest::operationCallback', []],
-      ['\Drupal\Tests\system\Unit\Batch\BatchBuilderTest::operationCallback', [2]],
-      ['\Drupal\Tests\system\Unit\Batch\BatchBuilderTest::operationCallback', [3]],
+      ['\Drupal\Tests\Core\Batch\BatchBuilderTest::operationCallback', []],
+      ['\Drupal\Tests\Core\Batch\BatchBuilderTest::operationCallback', [2]],
+      ['\Drupal\Tests\Core\Batch\BatchBuilderTest::operationCallback', [3]],
     ], $batch['operations']);
   }
 
