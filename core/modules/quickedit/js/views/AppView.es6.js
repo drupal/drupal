@@ -520,9 +520,8 @@
         // different view mode).
         .where({ logicalFieldID: updatedField.get('logicalFieldID') })
         .forEach((field) => {
-          // Ignore the field that was already updated.
           if (field === updatedField) {
-
+            // Ignore the field that was already updated.
           }
           // If this other instance of the field has the same view mode, we can
           // update it easily.
