@@ -1000,7 +1000,7 @@
       const $checkboxes = $selectAll.closest('.form-checkboxes').find('.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]');
 
       if ($selectAll.length) {
-         // Show the select all checkbox.
+        // Show the select all checkbox.
         $selectAll.show();
         $selectAllCheckbox.on('click', function () {
           // Update all checkbox beside the select all checkbox.

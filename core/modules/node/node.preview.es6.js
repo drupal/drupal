@@ -88,7 +88,7 @@
   Drupal.theme.nodePreviewModal = function () {
     return `<p>${
       Drupal.t('Leaving the preview will cause unsaved changes to be lost. Are you sure you want to leave the preview?')
-      }</p><small class="description">${
+    }</p><small class="description">${
       Drupal.t('CTRL+Left click will prevent this dialog from showing and proceed to the clicked link.')}</small>`;
   };
 }(jQuery, Drupal));

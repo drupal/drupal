@@ -142,7 +142,7 @@
             // absolute minimum available weight. This way we always have an
             // unused upper and lower bound, which makes manually setting the
             // weights easier for users who prefer to do it that way.
-             ++weight);
+            ++weight);
       }
 
       const table = $('#blocks');

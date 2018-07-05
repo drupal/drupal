@@ -157,8 +157,8 @@
             return true;
           }
 
-            // Remove this placeholder link from the DOM because we won't need
-            // it.
+          // Remove this placeholder link from the DOM because we won't need
+          // it.
           remove($placeholder);
           return false;
         });

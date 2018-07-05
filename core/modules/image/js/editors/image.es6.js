@@ -283,7 +283,7 @@
           .removeClass('upload error hover loading')
           .addClass(`.quickedit-image-dropzone ${state}`)
           .children('.quickedit-image-text')
-            .html(text);
+          .html(text);
       }
       else {
         $dropzone = $(Drupal.theme('quickeditImageDropzone', {

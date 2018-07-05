@@ -31,8 +31,8 @@
                 ui.item.data('layout-block-uuid'),
                 ui.item.prev('[data-layout-block-uuid]').data('layout-block-uuid'),
               ]
-              .filter(element => element !== undefined)
-              .join('/'),
+                .filter(element => element !== undefined)
+                .join('/'),
             }).execute();
           }
         },

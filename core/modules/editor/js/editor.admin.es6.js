@@ -532,23 +532,23 @@
           }
           // Otherwise, it is still possible that this feature is allowed.
 
-            // Every tag must be explicitly allowed if there are filter rules
-            // doing tag whitelisting.
+          // Every tag must be explicitly allowed if there are filter rules
+          // doing tag whitelisting.
           if (!_.every(_.pluck(universe, 'tag'))) {
             return false;
           }
-            // Every tag was explicitly allowed, but since the universe is not
-            // empty, one or more tag properties are disallowed. However, if
-            // only blacklisting of tag properties was applied to these tags,
-            // and no whitelisting was ever applied, then it's still fine:
-            // since none of the tag properties were blacklisted, we got to
-            // this point, and since no whitelisting was applied, it doesn't
-            // matter that the properties: this could never have happened
-            // anyway. It's only this late that we can know this for certain.
+          // Every tag was explicitly allowed, but since the universe is not
+          // empty, one or more tag properties are disallowed. However, if
+          // only blacklisting of tag properties was applied to these tags,
+          // and no whitelisting was ever applied, then it's still fine:
+          // since none of the tag properties were blacklisted, we got to
+          // this point, and since no whitelisting was applied, it doesn't
+          // matter that the properties: this could never have happened
+          // anyway. It's only this late that we can know this for certain.
 
           const tags = _.keys(universe);
-              // Figure out if there was any rule applying whitelisting tag
-              // restrictions to each of the remaining tags.
+          // Figure out if there was any rule applying whitelisting tag
+          // restrictions to each of the remaining tags.
           for (let i = 0; i < tags.length; i++) {
             const tag = tags[i];
             if (_.has(universe, tag)) {

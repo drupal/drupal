@@ -206,7 +206,7 @@
         return states.Dependent.comparisons[reference.constructor.name](reference, value);
       }
 
-        // Do a plain comparison otherwise.
+      // Do a plain comparison otherwise.
       return compare(reference, value);
     },
 
@@ -348,7 +348,7 @@
         return invert(this.compare(value, selector, state), state.invert);
       }
 
-        // Resolve this constraint as an AND/OR operator.
+      // Resolve this constraint as an AND/OR operator.
       return this.verifyConstraints(value, selector);
     },
 

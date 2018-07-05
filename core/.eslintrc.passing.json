@@ -7,7 +7,6 @@
     "new-cap": "off",
     "max-len": "off",
     "default-case": "off",
-    "indent": "off",
     "prefer-destructuring": "off",
     "object-curly-newline": "off",
     "operator-linebreak": "off",
