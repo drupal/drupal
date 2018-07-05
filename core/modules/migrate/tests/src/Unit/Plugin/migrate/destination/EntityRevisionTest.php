@@ -5,13 +5,11 @@ namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityRevision;
 use Drupal\migrate\Row;
-use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests entity revision destination functionality.
@@ -19,35 +17,7 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\migrate\Plugin\migrate\destination\EntityRevision
  * @group migrate
  */
-class EntityRevisionTest extends UnitTestCase {
-
-  /**
-   * The migration.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
-   * The entity storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $storage;
-
-  /**
-   * The entity type.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
-   */
-  protected $entityType;
-
-  /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
+class EntityRevisionTest extends EntityTestBase {
 
   /**
    * {@inheritdoc}
@@ -138,25 +108,6 @@ class EntityRevisionTestDestination extends EntityRevision {
 
   public static function getEntityTypeId($plugin_id) {
     return 'foo';
-  }
-
-}
-
-/**
- * Stub class for BaseFieldDefinition.
- */
-class BaseFieldDefinitionTest extends BaseFieldDefinition {
-
-  public static function create($type) {
-    return new static([]);
-  }
-
-  public function getSettings() {
-    return [];
-  }
-
-  public function getType() {
-    return 'integer';
   }
 
 }

@@ -8,17 +8,11 @@
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\migrate\MigrateException;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
-use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests base entity migration destination functionality.
@@ -26,44 +20,7 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\migrate\Plugin\migrate\destination\EntityContentBase
  * @group migrate
  */
-class EntityContentBaseTest extends UnitTestCase {
-
-  /**
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $storage;
-
-  /**
-   * @var \Drupal\Core\Entity\EntityTypeInterface
-   */
-  protected $entityType;
-
-  /**
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    $this->migration = $this->prophesize(MigrationInterface::class);
-    $this->storage = $this->prophesize(EntityStorageInterface::class);
-
-    $this->entityType = $this->prophesize(EntityTypeInterface::class);
-    $this->entityType->getPluralLabel()->willReturn('wonkiness');
-    $this->storage->getEntityType()->willReturn($this->entityType->reveal());
-    $this->storage->getEntityTypeId()->willReturn('foo');
-
-    $this->entityManager = $this->prophesize(EntityManagerInterface::class);
-  }
+class EntityContentBaseTest extends EntityTestBase {
 
   /**
    * Test basic entity save.
@@ -155,25 +112,6 @@ class EntityTestDestination extends EntityContentBase {
 
   public static function getEntityTypeId($plugin_id) {
     return 'foo';
-  }
-
-}
-
-/**
- * Stub class for BaseFieldDefinition.
- */
-class BaseFieldDefinitionTest extends BaseFieldDefinition {
-
-  public static function create($type) {
-    return new static([]);
-  }
-
-  public function getSettings() {
-    return [];
-  }
-
-  public function getType() {
-    return 'integer';
   }
 
 }
