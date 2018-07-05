@@ -61,6 +61,8 @@ class MediaLibraryTest extends WebDriverTestBase {
    * Tests that the Media library's administration page works as expected.
    */
   public function testAdministrationPage() {
+    $session = $this->getSession();
+    $page = $session->getPage();
     $assert_session = $this->assertSession();
 
     // Visit the administration page.
@@ -74,20 +76,20 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextContains('media_3');
 
     // Test that users can filter by type.
-    $this->getSession()->getPage()->selectFieldOption('Media type', 'Type One');
-    $this->getSession()->getPage()->pressButton('Apply Filters');
+    $page->selectFieldOption('Media type', 'Type One');
+    $page->pressButton('Apply Filters');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('media_2');
     $assert_session->pageTextNotContains('media_4');
-    $this->getSession()->getPage()->selectFieldOption('Media type', 'Type Two');
-    $this->getSession()->getPage()->pressButton('Apply Filters');
+    $page->selectFieldOption('Media type', 'Type Two');
+    $page->pressButton('Apply Filters');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('media_2');
     $assert_session->pageTextContains('media_4');
 
     // Test that selecting elements as a part of bulk operations works.
-    $this->getSession()->getPage()->selectFieldOption('Media type', '- Any -');
-    $this->getSession()->getPage()->pressButton('Apply Filters');
+    $page->selectFieldOption('Media type', '- Any -');
+    $page->pressButton('Apply Filters');
     $assert_session->assertWaitOnAjaxRequest();
     // This tests that anchor tags clicked inside the preview are suppressed.
     $this->getSession()->executeScript('jQuery(".js-click-to-select__trigger a")[0].click()');
@@ -110,6 +112,13 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     // Test empty text.
     $assert_session->pageTextContains('No media available.');
+
+    // Verify that the "Table" link is present, click it and check address.
+    $assert_session->linkExists('Table');
+    $page->clickLink('Table');
+    $assert_session->addressEquals('admin/content/media-table');
+    // Verify that the "Add media" link is present.
+    $assert_session->linkExists('Add media');
   }
 
 }
