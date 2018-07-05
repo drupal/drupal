@@ -121,7 +121,12 @@
      *   A settings object for the quick edit UI.
      */
     getQuickEditUISettings() {
-      return { padding: true, unifiedToolbar: false, fullWidthToolbar: false, popup: false };
+      return {
+        padding: true,
+        unifiedToolbar: false,
+        fullWidthToolbar: false,
+        popup: false,
+      };
     },
 
     /**

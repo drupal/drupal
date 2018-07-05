@@ -83,7 +83,12 @@
      *    rather than being just long enough to accommodate a label.
      */
     getQuickEditUISettings() {
-      return { padding: false, unifiedToolbar: false, fullWidthToolbar: false, popup: false };
+      return {
+        padding: false,
+        unifiedToolbar: false,
+        fullWidthToolbar: false,
+        popup: false,
+      };
     },
 
     /**

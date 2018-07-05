@@ -180,10 +180,15 @@
      * @inheritdoc
      *
      * @return {object}
-     *   The sttings for the quick edit UI.
+     *   The settings for the quick edit UI.
      */
     getQuickEditUISettings() {
-      return { padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: false };
+      return {
+        padding: true,
+        unifiedToolbar: true,
+        fullWidthToolbar: true,
+        popup: false,
+      };
     },
 
     /**

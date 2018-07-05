@@ -201,7 +201,12 @@
     if (Drupal.quickedit.collections.entities.findWhere({ entityID: entityID, entityInstanceID: entityInstanceID })) {
       initializeField(fieldElement, fieldID, entityID, entityInstanceID);
     } else {
-        fieldsAvailableQueue.push({ el: fieldElement, fieldID: fieldID, entityID: entityID, entityInstanceID: entityInstanceID });
+        fieldsAvailableQueue.push({
+          el: fieldElement,
+          fieldID: fieldID,
+          entityID: entityID,
+          entityInstanceID: entityInstanceID
+        });
       }
   }
 

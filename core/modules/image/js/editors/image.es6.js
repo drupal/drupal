@@ -307,7 +307,12 @@
      * @inheritdoc
      */
     getQuickEditUISettings() {
-      return { padding: false, unifiedToolbar: true, fullWidthToolbar: true, popup: false };
+      return {
+        padding: false,
+        unifiedToolbar: true,
+        fullWidthToolbar: true,
+        popup: false,
+      };
     },
 
     /**

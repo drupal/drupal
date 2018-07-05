@@ -203,7 +203,12 @@
       this.$el.html(this.model.get('originalValue'));
     },
     getQuickEditUISettings: function getQuickEditUISettings() {
-      return { padding: false, unifiedToolbar: true, fullWidthToolbar: true, popup: false };
+      return {
+        padding: false,
+        unifiedToolbar: true,
+        fullWidthToolbar: true,
+        popup: false
+      };
     },
     showValidationErrors: function showValidationErrors() {
       var errors = Drupal.theme('quickeditImageErrors', {

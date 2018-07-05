@@ -358,7 +358,12 @@
     // Otherwise: queue the field. It is now available to be set up when its
     // corresponding entity becomes in-place editable.
     else {
-      fieldsAvailableQueue.push({ el: fieldElement, fieldID, entityID, entityInstanceID });
+      fieldsAvailableQueue.push({
+        el: fieldElement,
+        fieldID,
+        entityID,
+        entityInstanceID,
+      });
     }
   }
 

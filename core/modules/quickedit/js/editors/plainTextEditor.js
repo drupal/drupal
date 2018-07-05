@@ -81,7 +81,12 @@
       }
     },
     getQuickEditUISettings: function getQuickEditUISettings() {
-      return { padding: true, unifiedToolbar: false, fullWidthToolbar: false, popup: false };
+      return {
+        padding: true,
+        unifiedToolbar: false,
+        fullWidthToolbar: false,
+        popup: false
+      };
     },
     revert: function revert() {
       this.$textElement.html(this.model.get('originalValue'));

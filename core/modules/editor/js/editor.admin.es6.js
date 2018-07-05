@@ -610,25 +610,35 @@
   Drupal.EditorFeatureHTMLRule = function () {
     /**
      *
-     * @type {object}
+     * @type {Object}
      *
      * @prop {Array} tags
      * @prop {Array} attributes
      * @prop {Array} styles
      * @prop {Array} classes
      */
-    this.required = { tags: [], attributes: [], styles: [], classes: [] };
+    this.required = {
+      tags: [],
+      attributes: [],
+      styles: [],
+      classes: [],
+    };
 
     /**
      *
-     * @type {object}
+     * @type {Object}
      *
      * @prop {Array} tags
      * @prop {Array} attributes
      * @prop {Array} styles
      * @prop {Array} classes
      */
-    this.allowed = { tags: [], attributes: [], styles: [], classes: [] };
+    this.allowed = {
+      tags: [],
+      attributes: [],
+      styles: [],
+      classes: [],
+    };
 
     /**
      *
