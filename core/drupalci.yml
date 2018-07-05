@@ -14,7 +14,7 @@ build:
         halt-on-fail: false
       eslint:
         # A test must pass eslinting standards check in order to continue processing.
-        halt-on-fail: true
+        halt-on-fail: false
       phpcs:
         # phpcs will use core's specified version of Coder.
         sniff-all-files: false
