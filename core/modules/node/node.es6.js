@@ -24,10 +24,10 @@
         if (name && date) {
           return Drupal.t('By @name on @date', { '@name': name, '@date': date });
         }
-        else if (name) {
+        if (name) {
           return Drupal.t('By @name', { '@name': name });
         }
-        else if (date) {
+        if (date) {
           return Drupal.t('Authored on @date', { '@date': date });
         }
       });

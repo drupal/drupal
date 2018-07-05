@@ -9,7 +9,6 @@
     "default-case": "off",
     "prefer-destructuring": "off",
     "operator-linebreak": "off",
-    "no-else-return": "off",
     "no-restricted-globals": "off",
     "react/no-this-in-sfc": "off",
     "react/destructuring-assignment": "off",

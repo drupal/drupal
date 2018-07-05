@@ -120,43 +120,47 @@
 
     if (fieldIDs.length === 0) {
       return false;
-    } else if (hasFieldWithPermission(fieldIDs)) {
-        var entityModel = new Drupal.quickedit.EntityModel({
-          el: contextualLink.region,
-          entityID: contextualLink.entityID,
-          entityInstanceID: contextualLink.entityInstanceID,
-          id: contextualLink.entityID + '[' + contextualLink.entityInstanceID + ']',
-          label: Drupal.quickedit.metadata.get(contextualLink.entityID, 'label')
-        });
-        Drupal.quickedit.collections.entities.add(entityModel);
+    }
 
-        var entityDecorationView = new Drupal.quickedit.EntityDecorationView({
-          el: contextualLink.region,
-          model: entityModel
-        });
-        entityModel.set('entityDecorationView', entityDecorationView);
+    if (hasFieldWithPermission(fieldIDs)) {
+      var entityModel = new Drupal.quickedit.EntityModel({
+        el: contextualLink.region,
+        entityID: contextualLink.entityID,
+        entityInstanceID: contextualLink.entityInstanceID,
+        id: contextualLink.entityID + '[' + contextualLink.entityInstanceID + ']',
+        label: Drupal.quickedit.metadata.get(contextualLink.entityID, 'label')
+      });
+      Drupal.quickedit.collections.entities.add(entityModel);
 
-        _.each(fields, function (field) {
-          initializeField(field.el, field.fieldID, contextualLink.entityID, contextualLink.entityInstanceID);
-        });
-        fieldsAvailableQueue = _.difference(fieldsAvailableQueue, fields);
+      var entityDecorationView = new Drupal.quickedit.EntityDecorationView({
+        el: contextualLink.region,
+        model: entityModel
+      });
+      entityModel.set('entityDecorationView', entityDecorationView);
 
-        var initContextualLink = _.once(function () {
-          var $links = $(contextualLink.el).find('.contextual-links');
-          var contextualLinkView = new Drupal.quickedit.ContextualLinkView($.extend({
-            el: $('<li class="quickedit"><a href="" role="button" aria-pressed="false"></a></li>').prependTo($links),
-            model: entityModel,
-            appModel: Drupal.quickedit.app.model
-          }, options));
-          entityModel.set('contextualLinkView', contextualLinkView);
-        });
+      _.each(fields, function (field) {
+        initializeField(field.el, field.fieldID, contextualLink.entityID, contextualLink.entityInstanceID);
+      });
+      fieldsAvailableQueue = _.difference(fieldsAvailableQueue, fields);
 
-        loadMissingEditors(initContextualLink);
+      var initContextualLink = _.once(function () {
+        var $links = $(contextualLink.el).find('.contextual-links');
+        var contextualLinkView = new Drupal.quickedit.ContextualLinkView($.extend({
+          el: $('<li class="quickedit"><a href="" role="button" aria-pressed="false"></a></li>').prependTo($links),
+          model: entityModel,
+          appModel: Drupal.quickedit.app.model
+        }, options));
+        entityModel.set('contextualLinkView', contextualLinkView);
+      });
 
-        return true;
-      } else if (allMetadataExists(fieldIDs)) {
-          return true;
-        }
+      loadMissingEditors(initContextualLink);
+
+      return true;
+    }
+
+    if (allMetadataExists(fieldIDs)) {
+      return true;
+    }
 
     return false;
   }

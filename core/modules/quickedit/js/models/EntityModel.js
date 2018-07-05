@@ -256,9 +256,11 @@
 
         if (!this._acceptStateChange(currentState, nextState, options)) {
           return 'state change not accepted';
-        } else if (!this._fieldsHaveAcceptableStates(acceptedFieldStates)) {
-            return 'state change not accepted because fields are not in acceptable state';
-          }
+        }
+
+        if (!this._fieldsHaveAcceptableStates(acceptedFieldStates)) {
+          return 'state change not accepted because fields are not in acceptable state';
+        }
       }
 
       var currentIsCommitting = this.get('isCommitting');

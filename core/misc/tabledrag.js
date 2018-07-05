@@ -725,7 +725,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       delta = trigger / (windowHeight + scrollY - cursorY);
       delta = delta > 0 && delta < trigger ? delta : trigger;
       return delta * this.scrollSettings.amount;
-    } else if (cursorY - scrollY < trigger) {
+    }
+    if (cursorY - scrollY < trigger) {
       delta = trigger / (cursorY - scrollY);
       delta = delta > 0 && delta < trigger ? delta : trigger;
       return -delta * this.scrollSettings.amount;

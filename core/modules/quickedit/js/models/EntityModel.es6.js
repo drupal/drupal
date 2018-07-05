@@ -514,7 +514,7 @@
         }
         // If that function accepts it, then ensure all fields are also in an
         // acceptable state.
-        else if (!this._fieldsHaveAcceptableStates(acceptedFieldStates)) {
+        if (!this._fieldsHaveAcceptableStates(acceptedFieldStates)) {
           return 'state change not accepted because fields are not in acceptable state';
         }
       }

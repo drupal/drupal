@@ -139,7 +139,7 @@
             return;
           }
           // Don't initialize on pasted fake objects.
-          else if (element.attributes['data-cke-realelement']) {
+          if (element.attributes['data-cke-realelement']) {
             return;
           }
 
