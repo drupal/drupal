@@ -1,18 +1,19 @@
 <?php
 
-namespace Drupal\editor\Tests;
+namespace Drupal\Tests\editor\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests administration of text editors.
  *
  * @group editor
  */
-class EditorAdminTest extends WebTestBase {
+class EditorAdminTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -64,8 +65,8 @@ class EditorAdminTest extends WebTestBase {
     $this->assertTrue(count($select) === 1, 'The Text Editor select exists.');
     $this->assertTrue(count($select_is_disabled) === 1, 'The Text Editor select is disabled.');
     $this->assertTrue(count($options) === 1, 'The Text Editor select has only one option.');
-    $this->assertTrue(((string) $options[0]) === 'None', 'Option 1 in the Text Editor select is "None".');
-    $this->assertRaw(t('This option is disabled because no modules that provide a text editor are currently enabled.'), 'Description for select present that tells users to install a text editor module.');
+    $this->assertTrue(($options[0]->getText()) === 'None', 'Option 1 in the Text Editor select is "None".');
+    $this->assertRaw('This option is disabled because no modules that provide a text editor are currently enabled.', 'Description for select present that tells users to install a text editor module.');
   }
 
   /**
@@ -85,7 +86,7 @@ class EditorAdminTest extends WebTestBase {
     $edit = [
       'editor[editor]' => '',
     ];
-    $this->drupalPostAjaxForm(NULL, $edit, 'editor_configure');
+    $this->drupalPostForm(NULL, $edit, 'Configure');
     $unicorn_setting = $this->xpath('//input[@name="editor[settings][ponies_too]" and @type="checkbox" and @checked]');
     $this->assertTrue(count($unicorn_setting) === 0, "Unicorn Editor's settings form is no longer present.");
   }
@@ -134,7 +135,7 @@ class EditorAdminTest extends WebTestBase {
     $this->drupalLogin($account);
 
     // The node edit page header.
-    $text = t('<em>Edit @type</em> @title', ['@type' => $node_type->label(), '@title' => $node->label()]);
+    $text = (string) new FormattableMarkup('<em>Edit @type</em> @title', ['@type' => $node_type->label(), '@title' => $node->label()]);
 
     // Go to node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -192,17 +193,17 @@ class EditorAdminTest extends WebTestBase {
     $this->assertTrue(count($select) === 1, 'The Text Editor select exists.');
     $this->assertTrue(count($select_is_disabled) === 0, 'The Text Editor select is not disabled.');
     $this->assertTrue(count($options) === 2, 'The Text Editor select has two options.');
-    $this->assertTrue(((string) $options[0]) === 'None', 'Option 1 in the Text Editor select is "None".');
-    $this->assertTrue(((string) $options[1]) === 'Unicorn Editor', 'Option 2 in the Text Editor select is "Unicorn Editor".');
-    $this->assertTrue(((string) $options[0]['selected']) === 'selected', 'Option 1 ("None") is selected.');
+    $this->assertTrue(($options[0]->getText()) === 'None', 'Option 1 in the Text Editor select is "None".');
+    $this->assertTrue(($options[1]->getText()) === 'Unicorn Editor', 'Option 2 in the Text Editor select is "Unicorn Editor".');
+    $this->assertTrue($options[0]->hasAttribute('selected'), 'Option 1 ("None") is selected.');
     // Ensure the none option is selected.
-    $this->assertNoRaw(t('This option is disabled because no modules that provide a text editor are currently enabled.'), 'Description for select absent that tells users to install a text editor module.');
+    $this->assertNoRaw('This option is disabled because no modules that provide a text editor are currently enabled.', 'Description for select absent that tells users to install a text editor module.');
 
     // Select the "Unicorn Editor" editor and click the "Configure" button.
     $edit = [
       'editor[editor]' => 'unicorn',
     ];
-    $this->drupalPostAjaxForm(NULL, $edit, 'editor_configure');
+    $this->drupalPostForm(NULL, $edit, 'Configure');
     $unicorn_setting = $this->xpath('//input[@name="editor[settings][ponies_too]" and @type="checkbox" and @checked]');
     $this->assertTrue(count($unicorn_setting), "Unicorn Editor's settings form is present.");
 
@@ -229,7 +230,7 @@ class EditorAdminTest extends WebTestBase {
     $this->assertTrue(count($select) === 1, 'The Text Editor select exists.');
     $this->assertTrue(count($select_is_disabled) === 0, 'The Text Editor select is not disabled.');
     $this->assertTrue(count($options) === 2, 'The Text Editor select has two options.');
-    $this->assertTrue(((string) $options[1]['selected']) === 'selected', 'Option 2 ("Unicorn Editor") is selected.');
+    $this->assertTrue($options[1]->hasAttribute('selected'), 'Option 2 ("Unicorn Editor") is selected.');
   }
 
 }

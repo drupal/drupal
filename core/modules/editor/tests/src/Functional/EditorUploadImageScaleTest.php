@@ -1,17 +1,21 @@
 <?php
 
-namespace Drupal\editor\Tests;
+namespace Drupal\Tests\editor\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests scaling of inline images.
  *
  * @group editor
  */
-class EditorUploadImageScaleTest extends WebTestBase {
+class EditorUploadImageScaleTest extends BrowserTestBase {
+
+  use TestFileCreationTrait;
 
   /**
    * Modules to enable.
@@ -66,7 +70,7 @@ class EditorUploadImageScaleTest extends WebTestBase {
    */
   public function testEditorUploadImageScale() {
     // Generate testing images.
-    $testing_image_list = $this->drupalGetTestFiles('image');
+    $testing_image_list = $this->getTestFiles('image');
 
     // Case 1: no max dimensions set: uploaded image not scaled.
     $test_image = $testing_image_list[0];
@@ -78,7 +82,7 @@ class EditorUploadImageScaleTest extends WebTestBase {
     list($uploaded_image_file_width, $uploaded_image_file_height) = $this->uploadImage($test_image->uri);
     $this->assertEqual($uploaded_image_file_width, $image_file_width);
     $this->assertEqual($uploaded_image_file_height, $image_file_height);
-    $this->assertNoRaw(t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', ['%dimensions' => $max_width . 'x' . $max_height]));
+    $this->assertNoRaw((string) new FormattableMarkup('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', ['%dimensions' => $max_width . 'x' . $max_height]));
 
     // Case 2: max width smaller than uploaded image: image scaled down.
     $test_image = $testing_image_list[1];
@@ -90,7 +94,7 @@ class EditorUploadImageScaleTest extends WebTestBase {
     list($uploaded_image_file_width, $uploaded_image_file_height) = $this->uploadImage($test_image->uri);
     $this->assertEqual($uploaded_image_file_width, $max_width);
     $this->assertEqual($uploaded_image_file_height, $uploaded_image_file_height * ($uploaded_image_file_width / $max_width));
-    $this->assertRaw(t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', ['%dimensions' => $max_width . 'x' . $max_height]));
+    $this->assertRaw((string) new FormattableMarkup('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', ['%dimensions' => $max_width . 'x' . $max_height]));
 
     // Case 3: max height smaller than uploaded image: image scaled down.
     $test_image = $testing_image_list[2];
@@ -102,7 +106,7 @@ class EditorUploadImageScaleTest extends WebTestBase {
     list($uploaded_image_file_width, $uploaded_image_file_height) = $this->uploadImage($test_image->uri);
     $this->assertEqual($uploaded_image_file_width, $uploaded_image_file_width * ($uploaded_image_file_height / $max_height));
     $this->assertEqual($uploaded_image_file_height, $max_height);
-    $this->assertRaw(t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', ['%dimensions' => $max_width . 'x' . $max_height]));
+    $this->assertRaw((string) new FormattableMarkup('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', ['%dimensions' => $max_width . 'x' . $max_height]));
 
     // Case 4: max dimensions greater than uploaded image: image not scaled.
     $test_image = $testing_image_list[3];
@@ -114,7 +118,7 @@ class EditorUploadImageScaleTest extends WebTestBase {
     list($uploaded_image_file_width, $uploaded_image_file_height) = $this->uploadImage($test_image->uri);
     $this->assertEqual($uploaded_image_file_width, $image_file_width);
     $this->assertEqual($uploaded_image_file_height, $image_file_height);
-    $this->assertNoRaw(t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', ['%dimensions' => $max_width . 'x' . $max_height]));
+    $this->assertNoRaw((string) new FormattableMarkup('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', ['%dimensions' => $max_width . 'x' . $max_height]));
 
     // Case 5: only max width dimension was provided and it was smaller than
     // uploaded image: image scaled down.
@@ -127,7 +131,7 @@ class EditorUploadImageScaleTest extends WebTestBase {
     list($uploaded_image_file_width, $uploaded_image_file_height) = $this->uploadImage($test_image->uri);
     $this->assertEqual($uploaded_image_file_width, $max_width);
     $this->assertEqual($uploaded_image_file_height, $uploaded_image_file_height * ($uploaded_image_file_width / $max_width));
-    $this->assertRaw(t('The image was resized to fit within the maximum allowed width of %width pixels.', ['%width' => $max_width]));
+    $this->assertRaw((string) new FormattableMarkup('The image was resized to fit within the maximum allowed width of %width pixels.', ['%width' => $max_width]));
 
     // Case 6: only max height dimension was provided and it was smaller than
     // uploaded image: image scaled down.
@@ -140,7 +144,7 @@ class EditorUploadImageScaleTest extends WebTestBase {
     list($uploaded_image_file_width, $uploaded_image_file_height) = $this->uploadImage($test_image->uri);
     $this->assertEqual($uploaded_image_file_width, $uploaded_image_file_width * ($uploaded_image_file_height / $max_height));
     $this->assertEqual($uploaded_image_file_height, $max_height);
-    $this->assertRaw(t('The image was resized to fit within the maximum allowed height of %height pixels.', ['%height' => $max_height]));
+    $this->assertRaw((string) new FormattableMarkup('The image was resized to fit within the maximum allowed height of %height pixels.', ['%height' => $max_height]));
   }
 
   /**

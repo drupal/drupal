@@ -1,18 +1,19 @@
 <?php
 
-namespace Drupal\editor\Tests;
+namespace Drupal\Tests\editor\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
-use Drupal\simpletest\WebTestBase;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\BrowserTestBase;
+use GuzzleHttp\Cookie\CookieJar;
 
 /**
  * Tests Quick Edit module integration endpoints.
  *
  * @group editor
  */
-class QuickEditIntegrationLoadingTest extends WebTestBase {
+class QuickEditIntegrationLoadingTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -84,17 +85,30 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
       // Ensure the text is transformed.
       $this->assertRaw('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
 
+      $client = $this->getHttpClient();
+
       // Retrieving the untransformed text should result in an 403 response and
       // return a different error message depending of the missing permission.
-      $response = $this->drupalPost('editor/' . 'node/1/body/en/full', '', [], ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
-      $this->assertResponse(403);
+      $response = $client->post($this->buildUrl('editor/node/1/body/en/full'), [
+        'query' => http_build_query([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']),
+        'cookies' => $this->getCookies(),
+        'headers' => [
+          'Accept' => 'application/json',
+          'Content-Type' => 'application/x-www-form-urlencoded',
+        ],
+        'http_errors' => FALSE,
+      ]);
+
+      $this->assertEquals(403, $response->getStatusCode());
       if (!$user->hasPermission('access in-place editing')) {
         $message = "The 'access in-place editing' permission is required.";
       }
       else {
         $message = '';
       }
-      $this->assertIdentical(Json::encode(['message' => $message]), $response);
+
+      $body = Json::decode($response->getBody());
+      $this->assertIdentical($message, $body['message']);
     }
   }
 
@@ -108,13 +122,35 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
 
     // Ensure the text is transformed.
     $this->assertRaw('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
+    $client = $this->getHttpClient();
+    $response = $client->post($this->buildUrl('editor/node/1/body/en/full'), [
+      'query' => http_build_query([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']),
+      'cookies' => $this->getCookies(),
+      'headers' => [
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/x-www-form-urlencoded',
+      ],
+      'http_errors' => FALSE,
+    ]);
 
-    $response = $this->drupalPost('editor/' . 'node/1/body/en/full', '', [], ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
-    $this->assertResponse(200);
-    $ajax_commands = Json::decode($response);
+    $this->assertEquals(200, $response->getStatusCode());
+    $ajax_commands = Json::decode($response->getBody());
     $this->assertIdentical(1, count($ajax_commands), 'The untransformed text POST request results in one AJAX command.');
     $this->assertIdentical('editorGetUntransformedText', $ajax_commands[0]['command'], 'The first AJAX command is an editorGetUntransformedText command.');
     $this->assertIdentical('<p>Do you also love Drupal?</p><img src="druplicon.png" data-caption="Druplicon" />', $ajax_commands[0]['data'], 'The editorGetUntransformedText command contains the expected data.');
+  }
+
+  /**
+   * Get session cookies from current session.
+   *
+   * @return \GuzzleHttp\Cookie\CookieJar
+   */
+  protected function getCookies() {
+    $domain = parse_url($this->getUrl(), PHP_URL_HOST);
+    $session_id = $this->getSession()->getCookie($this->getSessionName());
+    $cookies = CookieJar::fromArray([$this->getSessionName() => $session_id], $domain);
+
+    return $cookies;
   }
 
 }

@@ -1,18 +1,19 @@
 <?php
 
-namespace Drupal\editor\Tests;
+namespace Drupal\Tests\editor\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\editor\Entity\Editor;
-use Drupal\simpletest\WebTestBase;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\BrowserTestBase;
+use GuzzleHttp\Cookie\CookieJar;
 
 /**
  * Tests XSS protection for content creators when using text editors.
  *
  * @group editor
  */
-class EditorSecurityTest extends WebTestBase {
+class EditorSecurityTest extends BrowserTestBase {
 
   /**
    * The sample content to use in all tests.
@@ -283,7 +284,7 @@ class EditorSecurityTest extends WebTestBase {
         $this->drupalLogin($account);
         $this->drupalGet('node/' . $case['node_id'] . '/edit');
         $dom_node = $this->xpath('//textarea[@id="edit-body-0-value"]');
-        $this->assertIdentical($case['value'], (string) $dom_node[0], 'The value was correctly filtered for XSS attack vectors.');
+        $this->assertIdentical($case['value'], $dom_node[0]->getText(), 'The value was correctly filtered for XSS attack vectors.');
       }
     }
   }
@@ -389,13 +390,15 @@ class EditorSecurityTest extends WebTestBase {
     //  - switch to every other text format/editor
     //  - assert the XSS-filtered values that we get from the server
     $this->drupalLogin($this->privilegedUser);
+    $cookies = $this->getCookies();
+
     foreach ($expected as $case) {
       $this->drupalGet('node/' . $case['node_id'] . '/edit');
 
       // Verify data- attributes.
       $dom_node = $this->xpath('//textarea[@id="edit-body-0-value"]');
-      $this->assertIdentical(self::$sampleContent, (string) $dom_node[0]['data-editor-value-original'], 'The data-editor-value-original attribute is correctly set.');
-      $this->assertIdentical('false', (string) $dom_node[0]['data-editor-value-is-changed'], 'The data-editor-value-is-changed attribute is correctly set.');
+      $this->assertIdentical(self::$sampleContent, $dom_node[0]->getAttribute('data-editor-value-original'), 'The data-editor-value-original attribute is correctly set.');
+      $this->assertIdentical('false', (string) $dom_node[0]->getAttribute('data-editor-value-is-changed'), 'The data-editor-value-is-changed attribute is correctly set.');
 
       // Switch to every other text format/editor and verify the results.
       foreach ($case['switch_to'] as $format => $expected_filtered_value) {
@@ -404,13 +407,25 @@ class EditorSecurityTest extends WebTestBase {
           '%original_format' => $case['format'],
           '%format' => $format,
         ]));
+
         $post = [
           'value' => self::$sampleContent,
           'original_format_id' => $case['format'],
         ];
-        $response = $this->drupalPostWithFormat('editor/filter_xss/' . $format, 'json', $post);
-        $this->assertResponse(200);
-        $json = Json::decode($response);
+        $client = $this->getHttpClient();
+        $response = $client->post($this->buildUrl('/editor/filter_xss/' . $format), [
+          'body' => http_build_query($post),
+          'cookies' => $cookies,
+          'headers' => [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/x-www-form-urlencoded',
+          ],
+          'http_errors' => FALSE,
+        ]);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $json = Json::decode($response->getBody());
         $this->assertIdentical($json, $expected_filtered_value, 'The value was correctly filtered for XSS attack vectors.');
       }
     }
@@ -424,7 +439,7 @@ class EditorSecurityTest extends WebTestBase {
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('node/2/edit');
     $dom_node = $this->xpath('//textarea[@id="edit-body-0-value"]');
-    $this->assertIdentical(self::$sampleContentSecured, (string) $dom_node[0], 'The value was filtered by the Standard text editor XSS filter.');
+    $this->assertIdentical(self::$sampleContentSecured, $dom_node[0]->getText(), 'The value was filtered by the Standard text editor XSS filter.');
 
     // Enable editor_test.module's hook_editor_xss_filter_alter() implementation
     // to alter the text editor XSS filter class being used.
@@ -433,7 +448,21 @@ class EditorSecurityTest extends WebTestBase {
     // First: the Insecure text editor XSS filter.
     $this->drupalGet('node/2/edit');
     $dom_node = $this->xpath('//textarea[@id="edit-body-0-value"]');
-    $this->assertIdentical(self::$sampleContent, (string) $dom_node[0], 'The value was filtered by the Insecure text editor XSS filter.');
+    $this->assertIdentical(self::$sampleContent, $dom_node[0]->getText(), 'The value was filtered by the Insecure text editor XSS filter.');
+  }
+
+  /**
+   * Get session cookies from current session.
+   *
+   * @return \GuzzleHttp\Cookie\CookieJar
+   *   A cookie jar with the current session.
+   */
+  protected function getCookies() {
+    $domain = parse_url($this->getUrl(), PHP_URL_HOST);
+    $session_id = $this->getSession()->getCookie($this->getSessionName());
+    $cookies = CookieJar::fromArray([$this->getSessionName() => $session_id], $domain);
+
+    return $cookies;
   }
 
 }

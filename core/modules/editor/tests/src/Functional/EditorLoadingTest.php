@@ -1,19 +1,19 @@
 <?php
 
-namespace Drupal\editor\Tests;
+namespace Drupal\Tests\editor\Functional;
 
 use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\simpletest\WebTestBase;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests loading of text editors.
  *
  * @group editor
  */
-class EditorLoadingTest extends WebTestBase {
+class EditorLoadingTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
