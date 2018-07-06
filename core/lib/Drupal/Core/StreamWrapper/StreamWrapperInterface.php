@@ -6,7 +6,7 @@ namespace Drupal\Core\StreamWrapper;
  * Defines a Drupal stream wrapper extension.
  *
  * Provides a Drupal interface and classes to implement PHP stream wrappers for
- * public, private, and temporary files. Extends the StreamWrapperInterface
+ * public, private, and temporary files. Extends the PhpStreamWrapperInterface
  * with methods expected by Drupal stream wrapper classes.
  *
  * A stream wrapper is an abstraction of a file system that allows Drupal to
