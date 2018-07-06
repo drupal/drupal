@@ -69,8 +69,8 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $media = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged($media_id);
-    $this->assertEquals($media->getRevisionLogMessage(), $revision_log_message);
-    $this->assertEquals($media->getName(), $media_name);
+    $this->assertSame($media->getRevisionLogMessage(), $revision_log_message);
+    $this->assertSame($media->getName(), $media_name);
     $assert_session->titleEquals($media_name . ' | Drupal');
 
     // Tests media edit form.
@@ -86,7 +86,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $media = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged($media_id);
-    $this->assertEquals($media->getName(), $media_name2);
+    $this->assertSame($media->getName(), $media_name2);
     $assert_session->titleEquals($media_name2 . ' | Drupal');
 
     // Test that there is no empty vertical tabs element, if the container is
@@ -118,7 +118,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $media = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged($media_id);
-    $this->assertEquals($media->getRevisionLogMessage(), $revision_log_message);
+    $this->assertSame($media->getRevisionLogMessage(), $revision_log_message);
     $this->assertNotEquals($previous_revision_id, $media->getRevisionId());
 
     // Test the status checkbox.
@@ -486,7 +486,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
 
     $this->assertNotEmpty($link);
     foreach ($attributes as $attribute => $value) {
-      $this->assertEquals($link->getAttribute($attribute), $value);
+      $this->assertSame($link->getAttribute($attribute), $value);
     }
   }
 

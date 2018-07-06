@@ -31,7 +31,7 @@ class MediaTest extends MediaKernelTestBase {
     // Ensure media name is configurable on manage display.
     $this->assertTrue($field_definitions['name']->isDisplayConfigurable('view'));
     // Ensure it is not visible by default.
-    $this->assertEquals($field_definitions['name']->getDisplayOptions('view'), ['region' => 'hidden']);
+    $this->assertSame($field_definitions['name']->getDisplayOptions('view'), ['region' => 'hidden']);
   }
 
 }

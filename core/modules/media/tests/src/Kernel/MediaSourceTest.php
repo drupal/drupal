@@ -23,13 +23,13 @@ class MediaSourceTest extends MediaKernelTestBase {
     /** @var \Drupal\media\MediaInterface $media */
     $media = Media::create(['bundle' => $this->testMediaType->id()]);
     $media_source = $media->getSource();
-    $this->assertEquals('default_name', $media_source->getPluginDefinition()['default_name_metadata_attribute'], 'Default metadata attribute is not used for the default name.');
-    $this->assertEquals('media:' . $media->bundle() . ':' . $media->uuid(), $media_source->getMetadata($media, 'default_name'), 'Value of the default name metadata attribute does not look correct.');
-    $this->assertEquals('media:' . $media->bundle() . ':' . $media->uuid(), $media->getName(), 'Default name was not used correctly by getName().');
-    $this->assertEquals($media->getName(), $media->label(), 'Default name and label are not the same.');
+    $this->assertSame('default_name', $media_source->getPluginDefinition()['default_name_metadata_attribute'], 'Default metadata attribute is not used for the default name.');
+    $this->assertSame('media:' . $media->bundle() . ':' . $media->uuid(), $media_source->getMetadata($media, 'default_name'), 'Value of the default name metadata attribute does not look correct.');
+    $this->assertSame('media:' . $media->bundle() . ':' . $media->uuid(), $media->getName(), 'Default name was not used correctly by getName().');
+    $this->assertSame($media->getName(), $media->label(), 'Default name and label are not the same.');
     $media->save();
-    $this->assertEquals('media:' . $media->bundle() . ':' . $media->uuid(), $media->getName(), 'Default name was not saved correctly.');
-    $this->assertEquals($media->getName(), $media->label(), 'The label changed during save.');
+    $this->assertSame('media:' . $media->bundle() . ':' . $media->uuid(), $media->getName(), 'Default name was not saved correctly.');
+    $this->assertSame($media->getName(), $media->label(), 'The label changed during save.');
 
     // Make sure that the user-supplied name is used.
     /** @var \Drupal\media\MediaInterface $media */
@@ -39,11 +39,11 @@ class MediaSourceTest extends MediaKernelTestBase {
       'name' => $name,
     ]);
     $media_source = $media->getSource();
-    $this->assertEquals('default_name', $media_source->getPluginDefinition()['default_name_metadata_attribute'], 'Default metadata attribute is not used for the default name.');
-    $this->assertEquals('media:' . $media->bundle() . ':' . $media->uuid(), $media_source->getMetadata($media, 'default_name'), 'Value of the default name metadata attribute does not look correct.');
+    $this->assertSame('default_name', $media_source->getPluginDefinition()['default_name_metadata_attribute'], 'Default metadata attribute is not used for the default name.');
+    $this->assertSame('media:' . $media->bundle() . ':' . $media->uuid(), $media_source->getMetadata($media, 'default_name'), 'Value of the default name metadata attribute does not look correct.');
     $media->save();
-    $this->assertEquals($name, $media->getName(), 'User-supplied name was not set correctly.');
-    $this->assertEquals($media->getName(), $media->label(), 'The user-supplied name does not match the label.');
+    $this->assertSame($name, $media->getName(), 'User-supplied name was not set correctly.');
+    $this->assertSame($media->getName(), $media->label(), 'The user-supplied name does not match the label.');
 
     // Change the default name attribute and see if it is used to set the name.
     $name = 'Old Major';
@@ -52,11 +52,11 @@ class MediaSourceTest extends MediaKernelTestBase {
     /** @var \Drupal\media\MediaInterface $media */
     $media = Media::create(['bundle' => $this->testMediaType->id()]);
     $media_source = $media->getSource();
-    $this->assertEquals('alternative_name', $media_source->getPluginDefinition()['default_name_metadata_attribute'], 'Correct metadata attribute is not used for the default name.');
-    $this->assertEquals($name, $media_source->getMetadata($media, 'alternative_name'), 'Value of the default name metadata attribute does not look correct.');
+    $this->assertSame('alternative_name', $media_source->getPluginDefinition()['default_name_metadata_attribute'], 'Correct metadata attribute is not used for the default name.');
+    $this->assertSame($name, $media_source->getMetadata($media, 'alternative_name'), 'Value of the default name metadata attribute does not look correct.');
     $media->save();
-    $this->assertEquals($name, $media->getName(), 'Default name was not set correctly.');
-    $this->assertEquals($media->getName(), $media->label(), 'The default name does not match the label.');
+    $this->assertSame($name, $media->getName(), 'Default name was not set correctly.');
+    $this->assertSame($media->getName(), $media->label(), 'The default name does not match the label.');
   }
 
   /**
@@ -109,25 +109,25 @@ class MediaSourceTest extends MediaKernelTestBase {
       'field_media_test' => 'some_value',
     ]);
     $media_source = $media->getSource();
-    $this->assertEquals('Snowball', $media_source->getMetadata($media, $attribute_name), 'Value of the metadata attribute is not correct.');
+    $this->assertSame('Snowball', $media_source->getMetadata($media, $attribute_name), 'Value of the metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('Snowball', $media->get($field_name)->value, 'Metadata attribute was not mapped to the field.');
+    $this->assertSame('Snowball', $media->get($field_name)->value, 'Metadata attribute was not mapped to the field.');
 
     // Change the metadata attribute value and re-save the entity. Field value
     // should stay the same.
     \Drupal::state()->set('media_source_test_attributes', [
       $attribute_name => ['title' => 'Attribute to map', 'value' => 'Pinkeye'],
     ]);
-    $this->assertEquals('Pinkeye', $media_source->getMetadata($media, $attribute_name), 'Value of the metadata attribute is not correct.');
+    $this->assertSame('Pinkeye', $media_source->getMetadata($media, $attribute_name), 'Value of the metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('Snowball', $media->get($field_name)->value, 'Metadata attribute was not mapped to the field.');
+    $this->assertSame('Snowball', $media->get($field_name)->value, 'Metadata attribute was not mapped to the field.');
 
     // Now change the value of the source field and make sure that the mapped
     // values update too.
-    $this->assertEquals('Pinkeye', $media_source->getMetadata($media, $attribute_name), 'Value of the metadata attribute is not correct.');
+    $this->assertSame('Pinkeye', $media_source->getMetadata($media, $attribute_name), 'Value of the metadata attribute is not correct.');
     $media->set('field_media_test', 'some_new_value');
     $media->save();
-    $this->assertEquals('Pinkeye', $media->get($field_name)->value, 'Metadata attribute was not mapped to the field.');
+    $this->assertSame('Pinkeye', $media->get($field_name)->value, 'Metadata attribute was not mapped to the field.');
 
     // Remove the value of the mapped field and make sure that it is re-mapped
     // on save.
@@ -135,9 +135,9 @@ class MediaSourceTest extends MediaKernelTestBase {
       $attribute_name => ['title' => 'Attribute to map', 'value' => 'Snowball'],
     ]);
     $media->{$field_name}->value = NULL;
-    $this->assertEquals('Snowball', $media_source->getMetadata($media, $attribute_name), 'Value of the metadata attribute is not correct.');
+    $this->assertSame('Snowball', $media_source->getMetadata($media, $attribute_name), 'Value of the metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('Snowball', $media->get($field_name)->value, 'Metadata attribute was not mapped to the field.');
+    $this->assertSame('Snowball', $media->get($field_name)->value, 'Metadata attribute was not mapped to the field.');
   }
 
   /**
@@ -172,10 +172,10 @@ class MediaSourceTest extends MediaKernelTestBase {
       'field_media_test' => 'some_value',
     ]);
     $media_source = $media->getSource();
-    $this->assertEquals('public://thumbnail1.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
+    $this->assertSame('public://thumbnail1.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'Thumbnail was not added to the media item.');
-    $this->assertEquals('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
+    $this->assertSame('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'Thumbnail was not added to the media item.');
+    $this->assertSame('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('Thumbnail', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
 
     // Now change the metadata attribute and make sure that the thumbnail stays
@@ -183,18 +183,18 @@ class MediaSourceTest extends MediaKernelTestBase {
     \Drupal::state()->set('media_source_test_attributes', [
       'thumbnail_uri' => ['title' => 'Thumbnail', 'value' => 'public://thumbnail2.jpg'],
     ]);
-    $this->assertEquals('public://thumbnail2.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
+    $this->assertSame('public://thumbnail2.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'Thumbnail was not preserved.');
-    $this->assertEquals('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
+    $this->assertSame('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'Thumbnail was not preserved.');
+    $this->assertSame('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('Thumbnail', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
 
     // Remove the thumbnail and make sure that it is auto-updated on save.
     $media->thumbnail->target_id = NULL;
-    $this->assertEquals('public://thumbnail2.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
+    $this->assertSame('public://thumbnail2.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('public://thumbnail2.jpg', $media->thumbnail->entity->getFileUri(), 'New thumbnail was not added to the media item.');
-    $this->assertEquals('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
+    $this->assertSame('public://thumbnail2.jpg', $media->thumbnail->entity->getFileUri(), 'New thumbnail was not added to the media item.');
+    $this->assertSame('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('Thumbnail', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
 
     // Change the metadata attribute again, change the source field value too
@@ -203,10 +203,10 @@ class MediaSourceTest extends MediaKernelTestBase {
       'thumbnail_uri' => ['title' => 'Thumbnail', 'value' => 'public://thumbnail1.jpg'],
     ]);
     $media->field_media_test->value = 'some_new_value';
-    $this->assertEquals('public://thumbnail1.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
+    $this->assertSame('public://thumbnail1.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'New thumbnail was not added to the media item.');
-    $this->assertEquals('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
+    $this->assertSame('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'New thumbnail was not added to the media item.');
+    $this->assertSame('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('Thumbnail', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
 
     // Change the thumbnail metadata attribute and make sure that the thumbnail
@@ -222,11 +222,11 @@ class MediaSourceTest extends MediaKernelTestBase {
       'field_media_test' => 'some_value',
     ]);
     $media_source = $media->getSource();
-    $this->assertEquals('public://thumbnail1.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the metadata attribute is not correct.');
-    $this->assertEquals('public://thumbnail2.jpg', $media_source->getMetadata($media, 'alternative_thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
+    $this->assertSame('public://thumbnail1.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the metadata attribute is not correct.');
+    $this->assertSame('public://thumbnail2.jpg', $media_source->getMetadata($media, 'alternative_thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('public://thumbnail2.jpg', $media->thumbnail->entity->getFileUri(), 'Correct metadata attribute was not used for the thumbnail.');
-    $this->assertEquals('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
+    $this->assertSame('public://thumbnail2.jpg', $media->thumbnail->entity->getFileUri(), 'Correct metadata attribute was not used for the thumbnail.');
+    $this->assertSame('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('Thumbnail', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
 
     // Enable queued thumbnails and make sure that the entity gets the default
@@ -241,10 +241,10 @@ class MediaSourceTest extends MediaKernelTestBase {
       'name' => 'Mr. Jones',
       'field_media_test' => 'some_value',
     ]);
-    $this->assertEquals('public://thumbnail1.jpg', $media->getSource()->getMetadata($media, 'thumbnail_uri'), 'Value of the metadata attribute is not correct.');
+    $this->assertSame('public://thumbnail1.jpg', $media->getSource()->getMetadata($media, 'thumbnail_uri'), 'Value of the metadata attribute is not correct.');
     $media->save();
-    $this->assertEquals('public://media-icons/generic/generic.png', $media->thumbnail->entity->getFileUri(), 'Default thumbnail was not set initially.');
-    $this->assertEquals('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
+    $this->assertSame('public://media-icons/generic/generic.png', $media->thumbnail->entity->getFileUri(), 'Default thumbnail was not set initially.');
+    $this->assertSame('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('Thumbnail', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
 
     // Process the queue item and make sure that the thumbnail was updated too.
@@ -252,19 +252,19 @@ class MediaSourceTest extends MediaKernelTestBase {
     /** @var \Drupal\Core\Queue\QueueWorkerInterface $queue_worker */
     $queue_worker = \Drupal::service('plugin.manager.queue_worker')->createInstance($queue_name);
     $queue = \Drupal::queue($queue_name);
-    $this->assertEquals(1, $queue->numberOfItems(), 'Item was not added to the queue.');
+    $this->assertSame(1, $queue->numberOfItems(), 'Item was not added to the queue.');
 
     $item = $queue->claimItem();
-    $this->assertEquals($media->id(), $item->data['id'], 'Queue item that was created does not belong to the correct entity.');
+    $this->assertSame($media->id(), $item->data['id'], 'Queue item that was created does not belong to the correct entity.');
 
     $queue_worker->processItem($item->data);
     $queue->deleteItem($item);
-    $this->assertEquals(0, $queue->numberOfItems(), 'Item was not removed from the queue.');
+    $this->assertSame(0, $queue->numberOfItems(), 'Item was not removed from the queue.');
 
     $media = Media::load($media->id());
-    $this->assertEquals('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'Thumbnail was not updated by the queue.');
-    $this->assertEquals('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
-    $this->assertEquals('Thumbnail', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
+    $this->assertSame('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'Thumbnail was not updated by the queue.');
+    $this->assertSame('Mr. Jones', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
+    $this->assertSame('Thumbnail', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
 
     // Set alt and title metadata attributes and make sure they are used for the
     // thumbnail.
@@ -282,9 +282,9 @@ class MediaSourceTest extends MediaKernelTestBase {
       'field_media_test' => 'some_value',
     ]);
     $media->save();
-    $this->assertEquals('Boxer', $media->getName(), 'Correct name was not set on the media item.');
-    $this->assertEquals('This will be title.', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
-    $this->assertEquals('This will be alt.', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
+    $this->assertSame('Boxer', $media->getName(), 'Correct name was not set on the media item.');
+    $this->assertSame('This will be title.', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
+    $this->assertSame('This will be alt.', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
   }
 
   /**
@@ -373,17 +373,17 @@ class MediaSourceTest extends MediaKernelTestBase {
     // Test field storage.
     $this->assertTrue($field_storage->isNew(), 'Field storage is saved automatically.');
     $this->assertFalse($field_storage->isLocked(), 'Field storage is not locked.');
-    $this->assertEquals('string', $field_storage->getType(), 'Field is not of correct type.');
-    $this->assertEquals('field_media_test_1', $field_storage->getName(), 'Incorrect field name is used.');
-    $this->assertEquals('media', $field_storage->getTargetEntityTypeId(), 'Field is not targeting media entities.');
+    $this->assertSame('string', $field_storage->getType(), 'Field is not of correct type.');
+    $this->assertSame('field_media_test_1', $field_storage->getName(), 'Incorrect field name is used.');
+    $this->assertSame('media', $field_storage->getTargetEntityTypeId(), 'Field is not targeting media entities.');
 
     // Test field.
     $this->assertTrue($field->isNew(), 'Field is saved automatically.');
-    $this->assertEquals('field_media_test_1', $field->getName(), 'Incorrect field name is used.');
-    $this->assertEquals('string', $field->getType(), 'Field is of incorrect type.');
+    $this->assertSame('field_media_test_1', $field->getName(), 'Incorrect field name is used.');
+    $this->assertSame('string', $field->getType(), 'Field is of incorrect type.');
     $this->assertTrue($field->isRequired(), 'Field is not required.');
     $this->assertEquals('Test source', $field->label(), 'Incorrect label is used.');
-    $this->assertEquals('test_type', $field->getTargetBundle(), 'Field is not targeting correct bundle.');
+    $this->assertSame('test_type', $field->getTargetBundle(), 'Field is not targeting correct bundle.');
 
     // Fields should be automatically saved only when creating the media type
     // using the media type creation form. Make sure that they are not saved
@@ -408,17 +408,17 @@ class MediaSourceTest extends MediaKernelTestBase {
     // Test field storage.
     $this->assertTrue($field_storage->isNew(), 'Field storage is saved automatically.');
     $this->assertFalse($field_storage->isLocked(), 'Field storage is not locked.');
-    $this->assertEquals('string_long', $field_storage->getType(), 'Field is of incorrect type.');
-    $this->assertEquals('field_media_test_constraints_1', $field_storage->getName(), 'Incorrect field name is used.');
-    $this->assertEquals('media', $field_storage->getTargetEntityTypeId(), 'Field is not targeting media entities.');
+    $this->assertSame('string_long', $field_storage->getType(), 'Field is of incorrect type.');
+    $this->assertSame('field_media_test_constraints_1', $field_storage->getName(), 'Incorrect field name is used.');
+    $this->assertSame('media', $field_storage->getTargetEntityTypeId(), 'Field is not targeting media entities.');
 
     // Test field.
     $this->assertTrue($field->isNew(), 'Field is saved automatically.');
-    $this->assertEquals('field_media_test_constraints_1', $field->getName(), 'Incorrect field name is used.');
-    $this->assertEquals('string_long', $field->getType(), 'Field is of incorrect type.');
+    $this->assertSame('field_media_test_constraints_1', $field->getName(), 'Incorrect field name is used.');
+    $this->assertSame('string_long', $field->getType(), 'Field is of incorrect type.');
     $this->assertTrue($field->isRequired(), 'Field is not required.');
     $this->assertEquals('Test source with constraints', $field->label(), 'Incorrect label is used.');
-    $this->assertEquals('test_constraints_type', $field->getTargetBundle(), 'Field is not targeting correct bundle.');
+    $this->assertSame('test_constraints_type', $field->getTargetBundle(), 'Field is not targeting correct bundle.');
   }
 
   /**
@@ -434,26 +434,26 @@ class MediaSourceTest extends MediaKernelTestBase {
     /** @var \Drupal\media\MediaSourceInterface $source */
     $source = $manager->createInstance('test', []);
     $source->submitConfigurationForm($form, $form_state);
-    $expected = ['test_config_value' => 'Somewhere over the rainbow.', 'source_field' => 'field_media_test_1'];
-    $this->assertEquals($expected, $source->getConfiguration(), 'Submitted values were saved correctly.');
+    $expected = ['source_field' => 'field_media_test_1', 'test_config_value' => 'Somewhere over the rainbow.'];
+    $this->assertSame($expected, $source->getConfiguration(), 'Submitted values were saved correctly.');
 
     // Try to save a NULL value.
     $form_state->setValue('test_config_value', NULL);
     $source->submitConfigurationForm($form, $form_state);
     $expected['test_config_value'] = NULL;
-    $this->assertEquals($expected, $source->getConfiguration(), 'Submitted values were saved correctly.');
+    $this->assertSame($expected, $source->getConfiguration(), 'Submitted values were saved correctly.');
 
     // Make sure that the config keys are determined correctly even if the
     // existing value is NULL.
     $form_state->setValue('test_config_value', 'Somewhere over the rainbow.');
     $source->submitConfigurationForm($form, $form_state);
     $expected['test_config_value'] = 'Somewhere over the rainbow.';
-    $this->assertEquals($expected, $source->getConfiguration(), 'Submitted values were saved correctly.');
+    $this->assertSame($expected, $source->getConfiguration(), 'Submitted values were saved correctly.');
 
     // Make sure that a non-relevant value will be skipped.
     $form_state->setValue('not_relevant', 'Should not be saved in the plugin.');
     $source->submitConfigurationForm($form, $form_state);
-    $this->assertEquals($expected, $source->getConfiguration(), 'Submitted values were saved correctly.');
+    $this->assertSame($expected, $source->getConfiguration(), 'Submitted values were saved correctly.');
   }
 
   /**

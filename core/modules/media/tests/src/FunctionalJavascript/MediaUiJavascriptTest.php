@@ -160,15 +160,15 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     $loaded_media_type = $this->container->get('entity_type.manager')
       ->getStorage('media_type')
       ->load($this->testMediaType->id());
-    $this->assertEquals($loaded_media_type->id(), $this->testMediaType->id());
-    $this->assertEquals($loaded_media_type->label(), $new_name);
-    $this->assertEquals($loaded_media_type->getDescription(), $new_description);
-    $this->assertEquals($loaded_media_type->getSource()->getPluginId(), 'test');
-    $this->assertEquals($loaded_media_type->getSource()->getConfiguration()['test_config_value'], 'This is new config value.');
+    $this->assertSame($loaded_media_type->id(), $this->testMediaType->id());
+    $this->assertSame($loaded_media_type->label(), $new_name);
+    $this->assertSame($loaded_media_type->getDescription(), $new_description);
+    $this->assertSame($loaded_media_type->getSource()->getPluginId(), 'test');
+    $this->assertSame($loaded_media_type->getSource()->getConfiguration()['test_config_value'], 'This is new config value.');
     $this->assertTrue($loaded_media_type->shouldCreateNewRevision());
     $this->assertTrue($loaded_media_type->thumbnailDownloadsAreQueued());
     $this->assertFalse($loaded_media_type->getStatus());
-    $this->assertEquals($loaded_media_type->getFieldMap(), ['attribute_1' => 'name']);
+    $this->assertSame($loaded_media_type->getFieldMap(), ['attribute_1' => 'name']);
 
     // We need to clear the statically cached field definitions to account for
     // fields that have been created by API calls in this test, since they exist

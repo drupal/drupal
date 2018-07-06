@@ -59,9 +59,9 @@ class MediaSourceImageTest extends MediaSourceTestBase {
 
     // Load the media and check that all fields are properly populated.
     $media = Media::load(1);
-    $this->assertEquals('example_1.jpeg', $media->getName());
-    $this->assertEquals('200', $media->get('field_string_width')->value);
-    $this->assertEquals('89', $media->get('field_string_height')->value);
+    $this->assertSame('example_1.jpeg', $media->getName());
+    $this->assertSame('200', $media->get('field_string_width')->value);
+    $this->assertSame('89', $media->get('field_string_height')->value);
   }
 
 }

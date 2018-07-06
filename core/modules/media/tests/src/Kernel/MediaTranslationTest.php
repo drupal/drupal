@@ -93,10 +93,10 @@ class MediaTranslationTest extends MediaKernelTestBase {
         $result = $result && $item['value'] == $media_translation->{$source_field_definition->getName()}[$delta]->value;
       }
       $this->assertTrue($result, new FormattableMarkup('%language translation field value not correct.', ['%language' => $langcode]));
-      $this->assertEquals('public://' . $langcode . '.png', $media_translation->getSource()->getMetadata($media_translation, 'thumbnail_uri'), new FormattableMarkup('%language translation thumbnail metadata attribute is not correct.', ['%language' => $langcode]));
-      $this->assertEquals('public://' . $langcode . '.png', $media_translation->get('thumbnail')->entity->getFileUri(), new FormattableMarkup('%language translation thumbnail value is not correct.', ['%language' => $langcode]));
+      $this->assertSame('public://' . $langcode . '.png', $media_translation->getSource()->getMetadata($media_translation, 'thumbnail_uri'), new FormattableMarkup('%language translation thumbnail metadata attribute is not correct.', ['%language' => $langcode]));
+      $this->assertSame('public://' . $langcode . '.png', $media_translation->get('thumbnail')->entity->getFileUri(), new FormattableMarkup('%language translation thumbnail value is not correct.', ['%language' => $langcode]));
       $this->assertEquals('Test Thumbnail ' . $langcode, $media_translation->getSource()->getMetadata($media_translation, 'test_thumbnail_alt'), new FormattableMarkup('%language translation thumbnail alt metadata attribute is not correct.', ['%language' => $langcode]));
-      $this->assertEquals('Test Thumbnail ' . $langcode, $media_translation->get('thumbnail')->alt, new FormattableMarkup('%language translation thumbnail alt value is not correct.', ['%language' => $langcode]));
+      $this->assertSame('Test Thumbnail ' . $langcode, $media_translation->get('thumbnail')->alt, new FormattableMarkup('%language translation thumbnail alt value is not correct.', ['%language' => $langcode]));
     }
   }
 

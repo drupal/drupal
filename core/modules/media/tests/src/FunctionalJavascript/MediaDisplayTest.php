@@ -63,7 +63,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     // Verify the name is present, and its text matches what is expected.
     $assert_session->elementExists('css', '.field--name-name');
     $name_field = $page->find('css', '.field--name-name .field__item');
-    $this->assertEquals($media->label(), $name_field->getText());
+    $this->assertSame($media->label(), $name_field->getText());
 
     // In the standard profile, there are some pre-cooked types. Make sure the
     // elements configured on their displays are the expected ones.
@@ -85,14 +85,14 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
 
     // Here we expect to see only the image, nothing else.
     // Assert only one element in the content region.
-    $this->assertEquals(1, count($page->findAll('css', '.media--type-image > div')));
+    $this->assertSame(1, count($page->findAll('css', '.media--type-image > div')));
     // Assert the image is present inside the media element.
     $media_item = $assert_session->elementExists('css', '.media--type-image > div');
     $assert_session->elementExists('css', 'img', $media_item);
     // Assert that the image src is the original image and not an image style.
     $media_image = $assert_session->elementExists('css', '.media--type-image img');
     $expected_image_src = file_url_transform_relative(file_create_url(\Drupal::token()->replace('public://[date:custom:Y]-[date:custom:m]/example_1.jpeg')));
-    $this->assertEquals($expected_image_src, $media_image->getAttribute('src'));
+    $this->assertSame($expected_image_src, $media_image->getAttribute('src'));
 
     $test_filename = $this->randomMachineName() . '.txt';
     $test_filepath = 'public://' . $test_filename;
@@ -106,11 +106,11 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
 
     // Here we expect to see only the linked filename.
     // Assert only one element in the content region.
-    $this->assertEquals(1, count($page->findAll('css', 'article.media--type-file > div')));
+    $this->assertSame(1, count($page->findAll('css', 'article.media--type-file > div')));
     // Assert the file link is present, and its text matches the filename.
     $assert_session->elementExists('css', 'article.media--type-file .field--name-field-media-file a');
     $link = $page->find('css', 'article.media--type-file .field--name-field-media-file a');
-    $this->assertEquals($test_filename, $link->getText());
+    $this->assertSame($test_filename, $link->getText());
 
     // Create a node type "page" to use as host entity.
     $node_type = NodeType::create([
@@ -170,7 +170,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $assert_session->elementNotExists('css', '.field--name-name');
     $assert_session->pageTextNotContains($image_media_name);
     // Only one element is present inside the media container.
-    $this->assertEquals(1, count($page->findAll('css', '.field--name-field-related-media article.media--type-image > div')));
+    $this->assertSame(1, count($page->findAll('css', '.field--name-field-related-media article.media--type-image > div')));
     // Assert the image is present.
     $assert_session->elementExists('css', '.field--name-field-related-media article.media--type-image img');
   }

@@ -49,7 +49,7 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
       $page->selectFieldOption('edit-new-storage-type', $field_name);
       $field_description_element = $assert_session->elementExists('css', '#edit-description-' . Html::cleanCssIdentifier($field_name));
       $this->assertTrue($field_description_element->isVisible());
-      $this->assertEquals($help_text, $field_description_element->getText());
+      $this->assertSame($help_text, $field_description_element->getText());
     }
   }
 

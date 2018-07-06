@@ -41,19 +41,19 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
     $assert_session->selectExists('langcode');
     $assert_session->buttonExists('Filter');
     $header = $assert_session->elementExists('css', 'th#view-thumbnail-target-id-table-column');
-    $this->assertEquals('Thumbnail', $header->getText());
+    $this->assertSame('Thumbnail', $header->getText());
     $header = $assert_session->elementExists('css', 'th#view-name-table-column');
-    $this->assertEquals('Media name', $header->getText());
+    $this->assertSame('Media name', $header->getText());
     $header = $assert_session->elementExists('css', 'th#view-bundle-table-column');
-    $this->assertEquals('Type', $header->getText());
+    $this->assertSame('Type', $header->getText());
     $header = $assert_session->elementExists('css', 'th#view-uid-table-column');
-    $this->assertEquals('Author', $header->getText());
+    $this->assertSame('Author', $header->getText());
     $header = $assert_session->elementExists('css', 'th#view-status-table-column');
-    $this->assertEquals('Status', $header->getText());
+    $this->assertSame('Status', $header->getText());
     $header = $assert_session->elementExists('css', 'th#view-changed-table-column');
-    $this->assertEquals('Updated Sort ascending', $header->getText());
+    $this->assertSame('Updated Sort ascending', $header->getText());
     $header = $assert_session->elementExists('css', 'th#view-operations-table-column');
-    $this->assertEquals('Operations', $header->getText());
+    $this->assertSame('Operations', $header->getText());
     $assert_session->pageTextContains('No media available.');
 
     // Create some content for the view.
@@ -97,50 +97,50 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
 
     // Media names.
     $name1 = $assert_session->elementExists('css', 'td.views-field-name a', $row1);
-    $this->assertEquals($media1->label(), $name1->getText());
+    $this->assertSame($media1->label(), $name1->getText());
     $name2 = $assert_session->elementExists('css', 'td.views-field-name a', $row2);
-    $this->assertEquals($media2->label(), $name2->getText());
+    $this->assertSame($media2->label(), $name2->getText());
     $name3 = $assert_session->elementExists('css', 'td.views-field-name a', $row3);
-    $this->assertEquals($media3->label(), $name3->getText());
+    $this->assertSame($media3->label(), $name3->getText());
     $assert_session->linkByHrefExists('/media/' . $media1->id());
     $assert_session->linkByHrefExists('/media/' . $media2->id());
     $assert_session->linkByHrefExists('/media/' . $media3->id());
 
     // Media types.
     $type_element1 = $assert_session->elementExists('css', 'td.views-field-bundle', $row1);
-    $this->assertEquals($media_type1->label(), $type_element1->getText());
+    $this->assertSame($media_type1->label(), $type_element1->getText());
     $type_element2 = $assert_session->elementExists('css', 'td.views-field-bundle', $row2);
-    $this->assertEquals($media_type2->label(), $type_element2->getText());
+    $this->assertSame($media_type2->label(), $type_element2->getText());
     $type_element3 = $assert_session->elementExists('css', 'td.views-field-bundle', $row3);
-    $this->assertEquals($media_type1->label(), $type_element3->getText());
+    $this->assertSame($media_type1->label(), $type_element3->getText());
 
     // Media authors.
     $author_element1 = $assert_session->elementExists('css', 'td.views-field-uid', $row1);
-    $this->assertEquals($this->adminUser->getDisplayName(), $author_element1->getText());
+    $this->assertSame($this->adminUser->getDisplayName(), $author_element1->getText());
     $author_element2 = $assert_session->elementExists('css', 'td.views-field-uid', $row2);
-    $this->assertEquals($this->adminUser->getDisplayName(), $author_element2->getText());
+    $this->assertSame($this->adminUser->getDisplayName(), $author_element2->getText());
     $author_element3 = $assert_session->elementExists('css', 'td.views-field-uid', $row3);
-    $this->assertEquals($this->nonAdminUser->getDisplayName(), $author_element3->getText());
+    $this->assertSame($this->nonAdminUser->getDisplayName(), $author_element3->getText());
 
     // Media publishing status.
     $status_element1 = $assert_session->elementExists('css', 'td.views-field-status', $row1);
-    $this->assertEquals('Published', $status_element1->getText());
+    $this->assertSame('Published', $status_element1->getText());
     $status_element2 = $assert_session->elementExists('css', 'td.views-field-status', $row2);
-    $this->assertEquals('Unpublished', $status_element2->getText());
+    $this->assertSame('Unpublished', $status_element2->getText());
     $status_element3 = $assert_session->elementExists('css', 'td.views-field-status', $row3);
-    $this->assertEquals('Published', $status_element3->getText());
+    $this->assertSame('Published', $status_element3->getText());
 
     // Timestamp.
     $expected = \Drupal::service('date.formatter')->format($media1->getChangedTime(), 'short');
     $changed_element1 = $assert_session->elementExists('css', 'td.views-field-changed', $row1);
-    $this->assertEquals($expected, $changed_element1->getText());
+    $this->assertSame($expected, $changed_element1->getText());
 
     // Operations.
     $edit_link1 = $assert_session->elementExists('css', 'td.views-field-operations li.edit a', $row1);
-    $this->assertEquals('Edit', $edit_link1->getText());
+    $this->assertSame('Edit', $edit_link1->getText());
     $assert_session->linkByHrefExists('/media/' . $media1->id() . '/edit');
     $delete_link1 = $assert_session->elementExists('css', 'td.views-field-operations li.delete a', $row1);
-    $this->assertEquals('Delete', $delete_link1->getText());
+    $this->assertSame('Delete', $delete_link1->getText());
     $assert_session->linkByHrefExists('/media/' . $media1->id() . '/delete');
   }
 

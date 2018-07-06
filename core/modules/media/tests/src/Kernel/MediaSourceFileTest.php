@@ -18,7 +18,7 @@ class MediaSourceFileTest extends MediaKernelTestBase {
     $media = $this->generateMedia('test.patch', $mediaType);
     $result = $media->validate();
     $this->assertCount(1, $result);
-    $this->assertEquals('field_media_file.0', $result->get(0)->getPropertyPath());
+    $this->assertSame('field_media_file.0', $result->get(0)->getPropertyPath());
     $this->assertContains('Only files with the following extensions are allowed:', (string) $result->get(0)->getMessage());
 
     // Create a random file that should pass.

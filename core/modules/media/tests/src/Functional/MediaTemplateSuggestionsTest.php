@@ -39,7 +39,7 @@ class MediaTemplateSuggestionsTest extends MediaFunctionalTestBase {
 
     $variables['elements'] = $build;
     $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_media', [$variables]);
-    $this->assertEquals($suggestions, ['media__full', 'media__' . $media_type->id(), 'media__' . $media_type->id() . '__full', 'media__source_' . $media_type->getSource()->getPluginId()], 'Found expected media suggestions.');
+    $this->assertSame($suggestions, ['media__full', 'media__' . $media_type->id(), 'media__' . $media_type->id() . '__full', 'media__source_' . $media_type->getSource()->getPluginId()], 'Found expected media suggestions.');
   }
 
 }
