@@ -8,7 +8,6 @@ use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestSetupTrait;
 use Drupal\TestSite\TestSetupInterface;
 use Drupal\Tests\RandomGeneratorTrait;
-use Drupal\Tests\SessionTestTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -26,7 +25,6 @@ class TestSiteInstallCommand extends Command {
     installParameters as protected installParametersTrait;
   }
   use RandomGeneratorTrait;
-  use SessionTestTrait;
   use TestSetupTrait {
     changeDatabasePrefix as protected changeDatabasePrefixTrait;
   }

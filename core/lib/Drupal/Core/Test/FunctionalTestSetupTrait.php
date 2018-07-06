@@ -4,7 +4,6 @@ namespace Drupal\Core\Test;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
@@ -13,6 +12,7 @@ use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\Tests\SessionTestTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
@@ -21,6 +21,9 @@ use Symfony\Component\Yaml\Yaml as SymfonyYaml;
  * Defines a trait for shared functional test setup functionality.
  */
 trait FunctionalTestSetupTrait {
+
+  use SessionTestTrait;
+  use RefreshVariablesTrait;
 
   /**
    * The "#1" admin user.
@@ -217,32 +220,6 @@ trait FunctionalTestSetupTrait {
 
     // Reset static variables and reload permissions.
     $this->refreshVariables();
-  }
-
-  /**
-   * Refreshes in-memory configuration and state information.
-   *
-   * Useful after a page request is made that changes configuration or state in
-   * a different thread.
-   *
-   * In other words calling a settings page with $this->drupalPostForm() with a
-   * changed value would update configuration to reflect that change, but in the
-   * thread that made the call (thread running the test) the changed values
-   * would not be picked up.
-   *
-   * This method clears the cache and loads a fresh copy.
-   */
-  protected function refreshVariables() {
-    // Clear the tag cache.
-    \Drupal::service('cache_tags.invalidator')->resetChecksums();
-    foreach (Cache::getBins() as $backend) {
-      if (is_callable([$backend, 'reset'])) {
-        $backend->reset();
-      }
-    }
-
-    $this->container->get('config.factory')->reset();
-    $this->container->get('state')->resetCache();
   }
 
   /**
