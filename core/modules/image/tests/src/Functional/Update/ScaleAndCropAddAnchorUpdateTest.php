@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\image\Tests\Update;
+namespace Drupal\Tests\image\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
@@ -18,8 +18,8 @@ class ScaleAndCropAddAnchorUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
-      __DIR__ . '/../../../tests/fixtures/update/test_scale_and_crop_add_anchor.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
+      __DIR__ . '/../../../fixtures/update/test_scale_and_crop_add_anchor.php',
     ];
   }
 
