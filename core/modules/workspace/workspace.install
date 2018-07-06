@@ -8,6 +8,21 @@
 use Drupal\workspace\Entity\Workspace;
 
 /**
+ * Implements hook_requirements().
+ */
+function workspace_requirements($phase) {
+  $requirements = [];
+  if ($phase === 'install' && \Drupal::moduleHandler()->moduleExists('content_moderation')) {
+    $requirements['workspace_incompatibility'] = [
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('Workspace can not be installed when Content Moderation is also installed.'),
+    ];
+  }
+
+  return $requirements;
+}
+
+/**
  * Implements hook_install().
  */
 function workspace_install() {
