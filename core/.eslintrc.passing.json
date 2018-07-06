@@ -13,7 +13,6 @@
     "react/no-this-in-sfc": "off",
     "react/destructuring-assignment": "off",
     "implicit-arrow-linebreak": "off",
-    "import/named": "off",
-    "spaced-comment": "off"
+    "import/named": "off"
   }
 }
