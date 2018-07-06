@@ -70,7 +70,7 @@ class StatusMessages extends RenderElement {
    * @return array
    *   A renderable array containing the messages.
    *
-   * @see drupal_get_messages()
+   * @see \Drupal\Core\Messenger\Messenger::deleteByType()
    */
   public static function renderMessages($type) {
     $render = [];
