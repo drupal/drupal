@@ -270,10 +270,10 @@
   Drupal.theme.verticalTab = function (settings) {
     const tab = {};
     tab.item = $('<li class="vertical-tabs__menu-item" tabindex="-1"></li>')
-      .append(tab.link = $('<a href="#"></a>')
-        .append(tab.title = $('<strong class="vertical-tabs__menu-item-title"></strong>').text(settings.title))
-        .append(tab.summary = $('<span class="vertical-tabs__menu-item-summary"></span>'),
-        ),
+      .append(
+        tab.link = $('<a href="#"></a>')
+          .append(tab.title = $('<strong class="vertical-tabs__menu-item-title"></strong>').text(settings.title))
+          .append(tab.summary = $('<span class="vertical-tabs__menu-item-summary"></span>')),
       );
     return tab;
   };

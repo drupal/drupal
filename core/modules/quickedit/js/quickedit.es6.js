@@ -18,7 +18,8 @@
  */
 
 (function ($, _, Backbone, Drupal, drupalSettings, JSON, storage) {
-  const options = $.extend(drupalSettings.quickedit,
+  const options = $.extend(
+    drupalSettings.quickedit,
     // Merge strings on top of drupalSettings so that they are not mutable.
     {
       strings: {

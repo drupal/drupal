@@ -4,7 +4,8 @@
  */
 
 (function ($, Drupal, drupalSettings, _, Backbone, JSON, storage) {
-  const options = $.extend(drupalSettings.contextual,
+  const options = $.extend(
+    drupalSettings.contextual,
     // Merge strings on top of drupalSettings so that they are not mutable.
     {
       strings: {
@@ -109,8 +110,8 @@
       aural: new contextual.AuralView(viewOptions),
       keyboard: new contextual.KeyboardView(viewOptions),
     });
-    contextual.regionViews.push(new contextual.RegionView(
-      $.extend({ el: $region, model }, options)),
+    contextual.regionViews.push(
+      new contextual.RegionView($.extend({ el: $region, model }, options)),
     );
 
     // Add the model to the collection. This must happen after the views have

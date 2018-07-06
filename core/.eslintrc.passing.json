@@ -12,7 +12,6 @@
     "no-restricted-globals": "off",
     "react/no-this-in-sfc": "off",
     "react/destructuring-assignment": "off",
-    "function-paren-newline": "off",
     "implicit-arrow-linebreak": "off",
     "import/named": "off",
     "spaced-comment": "off"

@@ -22,7 +22,8 @@
         $form.find(
           '.js-form-item-label label,' +
           '.js-form-item-field-name label,' +
-          '.js-form-item-existing-storage-label label')
+          '.js-form-item-existing-storage-label label',
+        )
           .addClass('js-form-required form-required');
 
         const $newFieldType = $form.find('select[name="new_storage_type"]');
