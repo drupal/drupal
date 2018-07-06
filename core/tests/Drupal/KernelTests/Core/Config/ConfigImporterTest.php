@@ -17,6 +17,11 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigImporterTest extends KernelTestBase {
 
   /**
+   * The beginning of an import validation error.
+   */
+  const FAIL_MESSAGE = 'There were errors validating the config synchronization.';
+
+  /**
    * Config Importer object used for testing.
    *
    * @var \Drupal\Core\Config\ConfigImporter
@@ -104,10 +109,17 @@ class ConfigImporterTest extends KernelTestBase {
       $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to mis-matching site UUID.');
     }
     catch (ConfigImporterException $e) {
-      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
-      $error_log = $this->configImporter->getErrors();
-      $expected = ['Site UUID in source storage does not match the target storage.'];
-      $this->assertEqual($expected, $error_log);
+      $actual_message = $e->getMessage();
+
+      $actual_error_log = $this->configImporter->getErrors();
+      $expected_error_log = ['Site UUID in source storage does not match the target storage.'];
+      $this->assertEqual($actual_error_log, $expected_error_log);
+
+      $expected = static::FAIL_MESSAGE . PHP_EOL . 'Site UUID in source storage does not match the target storage.';
+      $this->assertEquals($expected, $actual_message);
+      foreach ($expected_error_log as $log_row) {
+        $this->assertTrue(preg_match("/$log_row/", $actual_message));
+      }
     }
   }
 
@@ -580,7 +592,20 @@ class ConfigImporterTest extends KernelTestBase {
       $this->fail('ConfigImporterException not thrown; an invalid import was not stopped due to missing dependencies.');
     }
     catch (ConfigImporterException $e) {
-      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
+      $expected = [
+        static::FAIL_MESSAGE,
+        'Unable to install the <em class="placeholder">unknown_module</em> module since it does not exist.',
+        'Unable to install the <em class="placeholder">Book</em> module since it requires the <em class="placeholder">Node, Text, Field, Filter, User</em> modules.',
+        'Unable to install the <em class="placeholder">unknown_theme</em> theme since it does not exist.',
+        'Unable to install the <em class="placeholder">Bartik</em> theme since it requires the <em class="placeholder">Classy</em> theme.',
+        'Unable to install the <em class="placeholder">Bartik</em> theme since it requires the <em class="placeholder">Stable</em> theme.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.config</em> depends on the <em class="placeholder">unknown</em> configuration that will not exist after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.existing</em> depends on the <em class="placeholder">config_test.dynamic.dotted.deleted</em> configuration that will not exist after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.module</em> depends on the <em class="placeholder">unknown</em> module that will not be installed after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.theme</em> depends on the <em class="placeholder">unknown</em> theme that will not be installed after import.',
+        'Configuration <em class="placeholder">unknown.config</em> depends on the <em class="placeholder">unknown</em> extension that will not be installed after import.',
+      ];
+      $this->assertEquals(implode(PHP_EOL, $expected), $e->getMessage());
       $error_log = $this->configImporter->getErrors();
       $expected = [
         'Unable to install the <em class="placeholder">unknown_module</em> module since it does not exist.',
@@ -611,7 +636,30 @@ class ConfigImporterTest extends KernelTestBase {
       $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to missing dependencies.');
     }
     catch (ConfigImporterException $e) {
-      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
+      $expected = [
+        static::FAIL_MESSAGE,
+        'Unable to install the <em class="placeholder">unknown_module</em> module since it does not exist.',
+        'Unable to install the <em class="placeholder">Book</em> module since it requires the <em class="placeholder">Node, Text, Field, Filter, User</em> modules.',
+        'Unable to install the <em class="placeholder">unknown_theme</em> theme since it does not exist.',
+        'Unable to install the <em class="placeholder">Bartik</em> theme since it requires the <em class="placeholder">Classy</em> theme.',
+        'Unable to install the <em class="placeholder">Bartik</em> theme since it requires the <em class="placeholder">Stable</em> theme.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.config</em> depends on the <em class="placeholder">unknown</em> configuration that will not exist after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.existing</em> depends on the <em class="placeholder">config_test.dynamic.dotted.deleted</em> configuration that will not exist after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.module</em> depends on the <em class="placeholder">unknown</em> module that will not be installed after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.theme</em> depends on the <em class="placeholder">unknown</em> theme that will not be installed after import.',
+        'Configuration <em class="placeholder">unknown.config</em> depends on the <em class="placeholder">unknown</em> extension that will not be installed after import.',
+        'Unable to install the <em class="placeholder">unknown_module</em> module since it does not exist.',
+        'Unable to install the <em class="placeholder">Book</em> module since it requires the <em class="placeholder">Node, Text, Field, Filter, User</em> modules.',
+        'Unable to install the <em class="placeholder">unknown_theme</em> theme since it does not exist.',
+        'Unable to install the <em class="placeholder">Bartik</em> theme since it requires the <em class="placeholder">Classy</em> theme.',
+        'Unable to install the <em class="placeholder">Bartik</em> theme since it requires the <em class="placeholder">Stable</em> theme.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.config</em> depends on configuration (<em class="placeholder">unknown, unknown2</em>) that will not exist after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.existing</em> depends on the <em class="placeholder">config_test.dynamic.dotted.deleted</em> configuration that will not exist after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.module</em> depends on modules (<em class="placeholder">unknown, Database Logging</em>) that will not be installed after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.theme</em> depends on themes (<em class="placeholder">unknown, Seven</em>) that will not be installed after import.',
+        'Configuration <em class="placeholder">unknown.config</em> depends on the <em class="placeholder">unknown</em> extension that will not be installed after import.',
+      ];
+      $this->assertEquals(implode(PHP_EOL, $expected), $e->getMessage());
       $error_log = $this->configImporter->getErrors();
       $expected = [
         'Configuration <em class="placeholder">config_test.dynamic.dotted.config</em> depends on configuration (<em class="placeholder">unknown, unknown2</em>) that will not exist after import.',
@@ -637,7 +685,8 @@ class ConfigImporterTest extends KernelTestBase {
       $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to missing dependencies.');
     }
     catch (ConfigImporterException $e) {
-      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
+      $expected = static::FAIL_MESSAGE . PHP_EOL . 'The core.extension configuration does not exist.';
+      $this->assertEquals($expected, $e->getMessage());
       $error_log = $this->configImporter->getErrors();
       $this->assertEqual(['The core.extension configuration does not exist.'], $error_log);
     }
@@ -661,7 +710,8 @@ class ConfigImporterTest extends KernelTestBase {
       $this->fail('ConfigImporterException not thrown; an invalid import was not stopped due to missing dependencies.');
     }
     catch (ConfigImporterException $e) {
-      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
+      $expected = static::FAIL_MESSAGE . PHP_EOL . 'Unable to install the <em class="placeholder">standard</em> module since it does not exist.';
+      $this->assertEquals($expected, $e->getMessage(), 'There were errors validating the config synchronization.');
       $error_log = $this->configImporter->getErrors();
       // Install profiles should not even be scanned at this point.
       $this->assertEqual(['Unable to install the <em class="placeholder">standard</em> module since it does not exist.'], $error_log);
@@ -686,7 +736,8 @@ class ConfigImporterTest extends KernelTestBase {
       $this->fail('ConfigImporterException not thrown; an invalid import was not stopped due to missing dependencies.');
     }
     catch (ConfigImporterException $e) {
-      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
+      $expected = static::FAIL_MESSAGE . PHP_EOL . 'Cannot change the install profile from <em class="placeholder"></em> to <em class="placeholder">this_will_not_work</em> once Drupal is installed.';
+      $this->assertEquals($expected, $e->getMessage(), 'There were errors validating the config synchronization.');
       $error_log = $this->configImporter->getErrors();
       // Install profiles can not be changed. Note that KernelTestBase currently
       // does not use an install profile. This situation should be impossible

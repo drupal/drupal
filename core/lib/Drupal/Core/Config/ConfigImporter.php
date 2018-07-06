@@ -733,7 +733,8 @@ class ConfigImporter {
       }
       $this->eventDispatcher->dispatch(ConfigEvents::IMPORT_VALIDATE, new ConfigImporterEvent($this));
       if (count($this->getErrors())) {
-        throw new ConfigImporterException('There were errors validating the config synchronization.');
+        $errors = array_merge(['There were errors validating the config synchronization.'], $this->getErrors());
+        throw new ConfigImporterException(implode(PHP_EOL, $errors));
       }
       else {
         $this->validated = TRUE;
