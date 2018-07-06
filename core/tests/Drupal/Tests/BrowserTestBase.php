@@ -393,7 +393,12 @@ abstract class BrowserTestBase extends TestCase {
       $this->htmlOutputFile = $browser_output_file;
       $this->htmlOutputClassName = str_replace("\\", "_", get_called_class());
       $this->htmlOutputDirectory = DRUPAL_ROOT . '/sites/simpletest/browser_output';
-      if (file_prepare_directory($this->htmlOutputDirectory, FILE_CREATE_DIRECTORY) && !file_exists($this->htmlOutputDirectory . '/.htaccess')) {
+      // Do not use the file_system service so this method can be called before
+      // it is available.
+      if (!is_dir($this->htmlOutputDirectory)) {
+        mkdir($this->htmlOutputDirectory, 0775, TRUE);
+      }
+      if (!file_exists($this->htmlOutputDirectory . '/.htaccess')) {
         file_put_contents($this->htmlOutputDirectory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
       }
       $this->htmlOutputCounterStorage = $this->htmlOutputDirectory . '/' . $this->htmlOutputClassName . '.counter';
@@ -1144,7 +1149,10 @@ abstract class BrowserTestBase extends TestCase {
     $html_output_filename = $this->htmlOutputClassName . '-' . $this->htmlOutputCounter . '-' . $this->htmlOutputTestId . '.html';
     file_put_contents($this->htmlOutputDirectory . '/' . $html_output_filename, $message);
     file_put_contents($this->htmlOutputCounterStorage, $this->htmlOutputCounter++);
-    file_put_contents($this->htmlOutputFile, file_create_url('sites/simpletest/browser_output/' . $html_output_filename) . "\n", FILE_APPEND);
+    // Do not use file_create_url() as the module_handler service might not be
+    // available.
+    $uri = $GLOBALS['base_url'] . '/sites/simpletest/browser_output/' . $html_output_filename;
+    file_put_contents($this->htmlOutputFile, $uri . "\n", FILE_APPEND);
   }
 
   /**
