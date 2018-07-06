@@ -8,7 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Verifies that tests in other installation profiles are found.
  *
  * @group simpletest
- * @see SimpleTestInstallationProfileModuleTestsTestCase
+ * @see \Drupal\simpletest\Tests\InstallationProfileModuleTestsTest
  */
 class OtherInstallationProfileTestsTest extends BrowserTestBase {
 
@@ -31,7 +31,7 @@ class OtherInstallationProfileTestsTest extends BrowserTestBase {
    * @var string
    *
    * @see \Drupal\simpletest\Tests\InstallationProfileModuleTestsTest
-   * @see \Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest
+   * @see \Drupal\Tests\drupal_system_listing_compatible_test\Kernel\SystemListingCompatibleTest
    */
   protected $profile = 'minimal';
 
@@ -60,7 +60,7 @@ class OtherInstallationProfileTestsTest extends BrowserTestBase {
 
     // Assert the existence of a test for a module in a different installation
     // profile than the current.
-    $this->assertText('Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest');
+    $this->assertText('Drupal\Tests\drupal_system_listing_compatible_test\Kernel\SystemListingCompatibleTest');
   }
 
 }

@@ -35,7 +35,7 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
    * - but still install the drupal_system_listing_compatible_test.module
    *   contained in the Testing profile.
    *
-   * @see \Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest
+   * @see \Drupal\Tests\drupal_system_listing_compatible_test\Kernel\SystemListingCompatibleTest
    *
    * @var string
    */
@@ -53,12 +53,18 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
    */
   public function testInstallationProfileTests() {
     $this->drupalGet('admin/config/development/testing');
-    $this->assertText('Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest');
+    $this->assertText('Drupal\Tests\drupal_system_listing_compatible_test\Kernel\SystemListingCompatibleTest');
     $edit = [
-      'tests[Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest]' => TRUE,
+      'tests[Drupal\Tests\drupal_system_listing_compatible_test\Kernel\SystemListingCompatibleTest]' => TRUE,
     ];
     $this->drupalPostForm(NULL, $edit, t('Run tests'));
-    $this->assertText('SystemListingCompatibleTest test executed.');
+
+    // Verifies that tests in installation profile modules are passed.
+    $element = $this->xpath('//tr[contains(@class, :class)]/td[contains(text(), :value)]', [
+      ':class' => 'simpletest-pass',
+      ':value' => 'Drupal\Tests\drupal_system_listing_compatible_test\Kernel\SystemListingCompatibleTest',
+    ]);
+    $this->assertTrue(!empty($element));
   }
 
 }

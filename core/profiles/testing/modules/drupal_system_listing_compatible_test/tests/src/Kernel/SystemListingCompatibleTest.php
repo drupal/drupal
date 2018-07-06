@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\drupal_system_listing_compatible_test\Tests;
+namespace Drupal\Tests\drupal_system_listing_compatible_test\Kernel;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Verifies that tests in installation profile modules are found and may use
@@ -10,7 +10,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group drupal_system_listing_compatible_test
  */
-class SystemListingCompatibleTest extends WebTestBase {
+class SystemListingCompatibleTest extends KernelTestBase {
 
   /**
    * Attempt to enable a module from the Testing profile.
@@ -28,17 +28,26 @@ class SystemListingCompatibleTest extends WebTestBase {
    * This test needs to use a different installation profile than the test which
    * asserts that this test is found.
    *
-   * @see SimpleTestInstallationProfileModuleTestsTestCase
+   * @see \Drupal\simpletest\Tests\InstallationProfileModuleTestsTest
    *
    * @var string
    */
   protected $profile = 'minimal';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->setInstallProfile($this->profile);
+  }
+
+  /**
    * Non-empty test* method required to executed the test case class.
    */
   public function testSystemListing() {
-    $this->pass(__CLASS__ . ' test executed.');
+    $this->assertTrue(TRUE, __CLASS__ . ' test executed.');
   }
 
 }
