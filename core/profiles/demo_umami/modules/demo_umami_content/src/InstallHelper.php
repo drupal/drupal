@@ -405,6 +405,7 @@ class InstallHelper implements ContainerInjectionInterface {
       $user = $user_storage->create([
         'name' => $name,
         'status' => 1,
+        'mail' => mb_strtolower(str_replace(' ', '.', $name)) . '@example.com',
       ]);
       $user->enforceIsNew();
       $user->save();
