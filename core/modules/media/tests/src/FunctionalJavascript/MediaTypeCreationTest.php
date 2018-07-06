@@ -12,6 +12,45 @@ use Drupal\Component\Utility\Html;
 class MediaTypeCreationTest extends MediaJavascriptTestBase {
 
   /**
+   * Tests the source field behavior on the add media type form.
+   */
+  public function testSourceChangeOnMediaTypeCreationForm() {
+    $session = $this->getSession();
+    $page = $session->getPage();
+    $assert_session = $this->assertSession();
+
+    $label = 'Type with Default Field';
+    $mediaTypeMachineName = str_replace(' ', '_', strtolower($label));
+
+    $this->drupalGet('admin/structure/media/add');
+
+    // Fill in a label to the media type.
+    $page->fillField('label', $label);
+    $this->assertNotEmpty(
+      $assert_session->waitForElementVisible('css', '.machine-name-value')
+    );
+
+    // Select the media source used by our media type.
+    $assert_session->selectExists('Media source')->selectOption('test_different_displays');
+    $this->assertNotEmpty(
+      $assert_session->waitForElementVisible('css', 'fieldset[data-drupal-selector="edit-source-configuration"]')
+    );
+
+    // Change the media source.
+    $assert_session->selectExists('Media source')->selectOption('test');
+    $this->assertNotEmpty(
+      $assert_session->waitForElement('css', 'fieldset[data-drupal-selector="edit-source-configuration"] .fieldset-wrapper .placeholder:contains("Text (plain)")')
+    );
+
+    $page->pressButton('Save');
+
+    // Check that source can not be changed anymore.
+    $this->drupalGet("admin/structure/media/manage/{$mediaTypeMachineName}");
+    $assert_session->pageTextContains('The media source cannot be changed after the media type is created');
+    $assert_session->fieldDisabled('Media source');
+  }
+
+  /**
    * Tests the media type creation form.
    */
   public function testMediaTypeCreationFormWithDefaultField() {

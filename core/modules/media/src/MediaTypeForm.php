@@ -118,7 +118,7 @@ class MediaTypeForm extends EntityForm {
       '#attributes' => ['id' => 'source-dependent'],
     ];
 
-    if ($source) {
+    if (!$this->entity->isNew()) {
       $source_description = $this->t('<em>The media source cannot be changed after the media type is created.</em>');
     }
     else {
@@ -134,7 +134,7 @@ class MediaTypeForm extends EntityForm {
       '#required' => TRUE,
       // Once the media type is created, its source plugin cannot be changed
       // anymore.
-      '#disabled' => !empty($source),
+      '#disabled' => !$this->entity->isNew(),
     ];
 
     if ($source) {
