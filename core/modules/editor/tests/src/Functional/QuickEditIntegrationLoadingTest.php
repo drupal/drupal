@@ -6,7 +6,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
-use GuzzleHttp\Cookie\CookieJar;
 
 /**
  * Tests Quick Edit module integration endpoints.
@@ -91,7 +90,7 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
       // return a different error message depending of the missing permission.
       $response = $client->post($this->buildUrl('editor/node/1/body/en/full'), [
         'query' => http_build_query([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']),
-        'cookies' => $this->getCookies(),
+        'cookies' => $this->getSessionCookies(),
         'headers' => [
           'Accept' => 'application/json',
           'Content-Type' => 'application/x-www-form-urlencoded',
@@ -125,7 +124,7 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
     $client = $this->getHttpClient();
     $response = $client->post($this->buildUrl('editor/node/1/body/en/full'), [
       'query' => http_build_query([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']),
-      'cookies' => $this->getCookies(),
+      'cookies' => $this->getSessionCookies(),
       'headers' => [
         'Accept' => 'application/json',
         'Content-Type' => 'application/x-www-form-urlencoded',
@@ -138,19 +137,6 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
     $this->assertIdentical(1, count($ajax_commands), 'The untransformed text POST request results in one AJAX command.');
     $this->assertIdentical('editorGetUntransformedText', $ajax_commands[0]['command'], 'The first AJAX command is an editorGetUntransformedText command.');
     $this->assertIdentical('<p>Do you also love Drupal?</p><img src="druplicon.png" data-caption="Druplicon" />', $ajax_commands[0]['data'], 'The editorGetUntransformedText command contains the expected data.');
-  }
-
-  /**
-   * Get session cookies from current session.
-   *
-   * @return \GuzzleHttp\Cookie\CookieJar
-   */
-  protected function getCookies() {
-    $domain = parse_url($this->getUrl(), PHP_URL_HOST);
-    $session_id = $this->getSession()->getCookie($this->getSessionName());
-    $cookies = CookieJar::fromArray([$this->getSessionName() => $session_id], $domain);
-
-    return $cookies;
   }
 
 }

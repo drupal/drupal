@@ -6,7 +6,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
-use GuzzleHttp\Cookie\CookieJar;
 
 /**
  * Tests XSS protection for content creators when using text editors.
@@ -390,7 +389,7 @@ class EditorSecurityTest extends BrowserTestBase {
     //  - switch to every other text format/editor
     //  - assert the XSS-filtered values that we get from the server
     $this->drupalLogin($this->privilegedUser);
-    $cookies = $this->getCookies();
+    $cookies = $this->getSessionCookies();
 
     foreach ($expected as $case) {
       $this->drupalGet('node/' . $case['node_id'] . '/edit');
@@ -449,20 +448,6 @@ class EditorSecurityTest extends BrowserTestBase {
     $this->drupalGet('node/2/edit');
     $dom_node = $this->xpath('//textarea[@id="edit-body-0-value"]');
     $this->assertIdentical(self::$sampleContent, $dom_node[0]->getText(), 'The value was filtered by the Insecure text editor XSS filter.');
-  }
-
-  /**
-   * Get session cookies from current session.
-   *
-   * @return \GuzzleHttp\Cookie\CookieJar
-   *   A cookie jar with the current session.
-   */
-  protected function getCookies() {
-    $domain = parse_url($this->getUrl(), PHP_URL_HOST);
-    $session_id = $this->getSession()->getCookie($this->getSessionName());
-    $cookies = CookieJar::fromArray([$this->getSessionName() => $session_id], $domain);
-
-    return $cookies;
   }
 
 }

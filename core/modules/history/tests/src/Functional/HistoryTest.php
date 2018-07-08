@@ -6,7 +6,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
-use GuzzleHttp\Cookie\CookieJar;
 
 /**
  * Tests the History endpoints.
@@ -38,20 +37,6 @@ class HistoryTest extends BrowserTestBase {
    */
   protected $testNode;
 
-  /**
-   * The cookie jar holding the testing session cookies for Guzzle requests.
-   *
-   * @var \GuzzleHttp\Client
-   */
-  protected $client;
-
-  /**
-   * The Guzzle HTTP client.
-   *
-   * @var \GuzzleHttp\Cookie\CookieJar
-   */
-  protected $cookies;
-
   protected function setUp() {
     parent::setUp();
 
@@ -60,8 +45,6 @@ class HistoryTest extends BrowserTestBase {
     $this->user = $this->drupalCreateUser(['create page content', 'access content']);
     $this->drupalLogin($this->user);
     $this->testNode = $this->drupalCreateNode(['type' => 'page', 'uid' => $this->user->id()]);
-
-    $this->client = $this->getHttpClient();
   }
 
   /**
@@ -75,16 +58,14 @@ class HistoryTest extends BrowserTestBase {
    */
   protected function getNodeReadTimestamps(array $node_ids) {
     // Perform HTTP request.
+    $http_client = $this->getHttpClient();
     $url = Url::fromRoute('history.get_last_node_view')
       ->setAbsolute()
       ->toString();
-    return $this->client->post($url, [
-      'body' => http_build_query(['node_ids' => $node_ids]),
-      'cookies' => $this->cookies,
-      'headers' => [
-        'Accept' => 'application/json',
-        'Content-Type' => 'application/x-www-form-urlencoded',
-      ],
+
+    return $http_client->request('POST', $url, [
+      'form_params' => ['node_ids' => $node_ids],
+      'cookies' => $this->getSessionCookies(),
       'http_errors' => FALSE,
     ]);
   }
@@ -99,12 +80,11 @@ class HistoryTest extends BrowserTestBase {
    *   The response body.
    */
   protected function markNodeAsRead($node_id) {
+    $http_client = $this->getHttpClient();
     $url = Url::fromRoute('history.read_node', ['node' => $node_id], ['absolute' => TRUE])->toString();
-    return $this->client->post($url, [
-      'cookies' => $this->cookies,
-      'headers' => [
-        'Accept' => 'application/json',
-      ],
+
+    return $http_client->request('POST', $url, [
+      'cookies' => $this->getSessionCookies(),
       'http_errors' => FALSE,
     ]);
   }
@@ -154,21 +134,6 @@ class HistoryTest extends BrowserTestBase {
     $this->assertEquals(403, $response->getStatusCode());
     $response = $this->markNodeAsRead($nid);
     $this->assertEquals(403, $response->getStatusCode());
-  }
-
-  /**
-   * Obtain the HTTP client and set the cookies.
-   *
-   * @return \GuzzleHttp\Client
-   *   The client with BrowserTestBase configuration.
-   */
-  protected function getHttpClient() {
-    // Similar code is also employed to test CSRF tokens.
-    // @see \Drupal\Tests\system\Functional\CsrfRequestHeaderTest::testRouteAccess()
-    $domain = parse_url($this->getUrl(), PHP_URL_HOST);
-    $session_id = $this->getSession()->getCookie($this->getSessionName());
-    $this->cookies = CookieJar::fromArray([$this->getSessionName() => $session_id], $domain);
-    return $this->getSession()->getDriver()->getClient()->getClient();
   }
 
 }

@@ -17,6 +17,7 @@ use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -487,6 +488,20 @@ abstract class BrowserTestBase extends TestCase {
    */
   public function getSession($name = NULL) {
     return $this->mink->getSession($name);
+  }
+
+  /**
+   * Get session cookies from current session.
+   *
+   * @return \GuzzleHttp\Cookie\CookieJar
+   *   A cookie jar with the current session.
+   */
+  protected function getSessionCookies() {
+    $domain = parse_url($this->getUrl(), PHP_URL_HOST);
+    $session_id = $this->getSession()->getCookie($this->getSessionName());
+    $cookies = CookieJar::fromArray([$this->getSessionName() => $session_id], $domain);
+
+    return $cookies;
   }
 
   /**

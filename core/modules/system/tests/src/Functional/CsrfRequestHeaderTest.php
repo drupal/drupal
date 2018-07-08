@@ -4,7 +4,6 @@ namespace Drupal\Tests\system\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use GuzzleHttp\Cookie\CookieJar;
 
 /**
  * Tests protecting routes by requiring CSRF token in the request header.
@@ -27,7 +26,7 @@ class CsrfRequestHeaderTest extends BrowserTestBase {
    * uses the deprecated _access_rest_csrf.
    */
   public function testRouteAccess() {
-    $client = \Drupal::httpClient();
+    $client = $this->getHttpClient();
     $csrf_token_paths = ['deprecated/session/token', 'session/token'];
     // Test using the both the current path and a test path that returns
     // a token using the deprecated 'rest' value.
@@ -44,11 +43,6 @@ class CsrfRequestHeaderTest extends BrowserTestBase {
         $url = Url::fromRoute($route_name)
           ->setAbsolute(TRUE)
           ->toString();
-        $domain = parse_url($url, PHP_URL_HOST);
-
-        $session_id = $this->getSession()->getCookie($this->getSessionName());
-        /** @var \GuzzleHttp\Cookie\CookieJar $cookies */
-        $cookies = CookieJar::fromArray([$this->getSessionName() => $session_id], $domain);
         $post_options = [
           'headers' => ['Accept' => 'text/plain'],
           'http_errors' => FALSE,
@@ -60,7 +54,7 @@ class CsrfRequestHeaderTest extends BrowserTestBase {
 
         // Add cookies to POST options so that all other requests are for the
         // authenticated user.
-        $post_options['cookies'] = $cookies;
+        $post_options['cookies'] = $this->getSessionCookies();
 
         // Test that access is denied with no token in header.
         $result = $client->post($url, $post_options);
