@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\simpletest\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests SimpleTest error and exception collector.
  *
- * @group Common
+ * @group WebTestBase
  */
 class SimpleTestErrorCollectorTest extends WebTestBase {
 

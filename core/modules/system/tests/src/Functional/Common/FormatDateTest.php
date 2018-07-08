@@ -1,51 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\Tests\system\Functional\Common;
 
-use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the format_date() function.
  *
  * @group Common
  */
-class FormatDateTest extends WebTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = ['language'];
-
-  /**
-   * Arbitrary langcode for a custom language.
-   */
-  const LANGCODE = 'xx';
-
-  protected function setUp() {
-    parent::setUp('language');
-
-    $this->config('system.date')
-      ->set('timezone.user.configurable', 1)
-      ->save();
-    $formats = $this->container->get('entity.manager')
-      ->getStorage('date_format')
-      ->loadMultiple(['long', 'medium', 'short']);
-    $formats['long']->setPattern('l, j. F Y - G:i')->save();
-    $formats['medium']->setPattern('j. F Y - G:i')->save();
-    $formats['short']->setPattern('Y M j - g:ia')->save();
-    $this->refreshVariables();
-
-    $this->settingsSet('locale_custom_strings_' . self::LANGCODE, [
-      '' => ['Sunday' => 'domingo'],
-      'Long month name' => ['March' => 'marzo'],
-    ]);
-
-    ConfigurableLanguage::createFromLangcode(static::LANGCODE)->save();
-    $this->resetAll();
-  }
+class FormatDateTest extends BrowserTestBase {
 
   /**
    * Tests admin-defined formats in format_date().

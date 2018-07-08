@@ -1,16 +1,21 @@
 <?php
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\Tests\system\Kernel\Common;
 
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Make sure that attaching feeds works correctly with various constructs.
  *
  * @group Common
  */
-class AddFeedTest extends WebTestBase {
+class AddFeedTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['system'];
 
   /**
    * Tests attaching feeds with paths, URLs, and titles.

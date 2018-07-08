@@ -1,43 +1,21 @@
 <?php
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\Tests\system\Kernel\Common;
 
-use Drupal\Component\Serialization\Json;
-use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Performs integration tests on drupal_render().
  *
- * @group Common
+ * @group system
  */
-class RenderWebTest extends WebTestBase {
+class FormElementsRenderTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['common_test'];
-
-  /**
-   * Asserts the cache context for the wrapper format is always present.
-   */
-  public function testWrapperFormatCacheContext() {
-    $this->drupalGet('common-test/type-link-active-class');
-    $this->assertIdentical(0, strpos($this->getRawContent(), "<!DOCTYPE html>\n<html"));
-    $this->assertIdentical('text/html; charset=UTF-8', $this->drupalGetHeader('Content-Type'));
-    $this->assertTitle('Test active link class | Drupal');
-    $this->assertCacheContext('url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT);
-
-    $this->drupalGet('common-test/type-link-active-class', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'json']]);
-    $this->assertIdentical('application/json', $this->drupalGetHeader('Content-Type'));
-    $json = Json::decode($this->getRawContent());
-    $this->assertEqual(['content', 'title'], array_keys($json));
-    $this->assertIdentical('Test active link class', $json['title']);
-    $this->assertCacheContext('url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT);
-  }
+  protected static $modules = ['common_test', 'system'];
 
   /**
    * Tests rendering form elements without passing through
@@ -152,7 +130,7 @@ class RenderWebTest extends WebTestBase {
       '#title' => $this->randomMachineName(),
       '#markup' => $this->randomMachineName(),
     ];
-    $this->assertRenderedElement($element, '//details/div/div[contains(@class, :class) and contains(., :markup)]', [
+    $this->assertRenderedElement($element, '//details/div[contains(@class, :class) and contains(., :markup)]', [
       ':class' => 'js-form-type-item',
       ':markup' => $element['item']['#markup'],
     ]);
@@ -162,9 +140,7 @@ class RenderWebTest extends WebTestBase {
    * Tests that elements are rendered properly.
    */
   protected function assertRenderedElement(array $element, $xpath, array $xpath_args = []) {
-    $original_element = $element;
-    $this->setRawContent(drupal_render_root($element));
-    $this->verbose('<hr />' . $this->getRawContent());
+    $this->render($element);
 
     // @see \Drupal\simpletest\WebTestBase::xpath()
     $xpath = $this->buildXPathQuery($xpath, $xpath_args);
