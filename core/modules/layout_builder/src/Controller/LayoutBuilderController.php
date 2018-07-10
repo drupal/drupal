@@ -161,7 +161,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
           ],
           [
             'attributes' => [
-              'class' => ['use-ajax', 'add-section__link'],
+              'class' => ['use-ajax', 'new-section__link'],
               'data-dialog-type' => 'dialog',
               'data-dialog-renderer' => 'off_canvas',
             ],
@@ -170,7 +170,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
       ],
       '#type' => 'container',
       '#attributes' => [
-        'class' => ['add-section'],
+        'class' => ['new-section'],
       ],
     ];
   }
@@ -226,7 +226,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
           ],
           [
             'attributes' => [
-              'class' => ['use-ajax', 'add-block__link'],
+              'class' => ['use-ajax', 'new-block__link'],
               'data-dialog-type' => 'dialog',
               'data-dialog-renderer' => 'off_canvas',
             ],
@@ -234,7 +234,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
         ),
       ];
       $build[$region]['layout_builder_add_block']['#type'] = 'container';
-      $build[$region]['layout_builder_add_block']['#attributes'] = ['class' => ['add-block']];
+      $build[$region]['layout_builder_add_block']['#attributes'] = ['class' => ['new-block']];
       $build[$region]['layout_builder_add_block']['#weight'] = 1000;
       $build[$region]['#attributes']['data-region'] = $region;
       $build[$region]['#attributes']['class'][] = 'layout-builder--layout__region';

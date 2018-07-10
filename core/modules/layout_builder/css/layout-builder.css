@@ -1,4 +1,4 @@
-.add-section {
+.new-section {
   background-color: #f7f7f7;
   width: 100%;
   outline: 2px dashed #979797;
@@ -8,20 +8,20 @@
   transition: visually-hidden 2s ease-out, height 2s ease-in;
 }
 
-.add-section__link,
-.add-block__link {
+.new-section__link,
+.new-block__link {
   color: #787878;
   border-bottom: none;
   padding-left: 24px;
   background: url(../../../misc/icons/787878/plus.svg) transparent top left / 16px 16px no-repeat;
 }
 
-.add-section__link:hover,
-.add-section__link:active,
-.add-section__link:focus,
-.add-block__link:hover,
-.add-block__link:active,
-.add-block__link:focus {
+.new-section__link:hover,
+.new-section__link:active,
+.new-section__link:focus,
+.new-block__link:hover,
+.new-block__link:active,
+.new-block__link:focus {
   border-bottom-style: none;
   color: #000;
 }
@@ -46,7 +46,7 @@
   outline: 2px dashed #2f91da;
 }
 
-.layout-section .layout-builder--layout__region .add-block {
+.layout-section .layout-builder--layout__region .new-block {
   background-color: #eff6fc;
   padding: 1.5em 0;
   text-align: center;
