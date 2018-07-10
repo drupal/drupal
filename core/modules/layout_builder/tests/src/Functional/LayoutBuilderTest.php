@@ -351,6 +351,24 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Verify that blocks explicitly removed are not present.
     $assert_session->linkNotExists('Help');
     $assert_session->linkNotExists('Sticky at top of lists');
+
+    // Verify that Changed block is not present on first section.
+    $assert_session->linkNotExists('Changed');
+
+    // Go back to Manage layout.
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->clickLink('Manage layout');
+
+    // Add a new section.
+    $this->clickLink('Add Section', 1);
+    $assert_session->linkExists('Two column');
+    $this->clickLink('Two column');
+
+    // Add a new block to second section.
+    $this->clickLink('Add Block', 1);
+
+    // Verify that Changed block is present on second section.
+    $assert_session->linkExists('Changed');
   }
 
   /**
