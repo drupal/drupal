@@ -365,13 +365,8 @@ abstract class Database {
       throw new DriverNotSpecifiedException('Driver not specified for this database connection: ' . $key);
     }
 
-    if (!empty(self::$databaseInfo[$key][$target]['namespace'])) {
-      $driver_class = self::$databaseInfo[$key][$target]['namespace'] . '\\Connection';
-    }
-    else {
-      // Fallback for Drupal 7 settings.php.
-      $driver_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Connection";
-    }
+    $namespace = static::getDatabaseDriverNamespace(self::$databaseInfo[$key][$target]);
+    $driver_class = $namespace . '\\Connection';
 
     $pdo_connection = $driver_class::open(self::$databaseInfo[$key][$target]);
     $new_connection = new $driver_class($pdo_connection, self::$databaseInfo[$key][$target]);
@@ -455,36 +450,25 @@ abstract class Database {
    *   requirements.
    */
   public static function convertDbUrlToConnectionInfo($url, $root) {
-    $info = parse_url($url);
-    if (!isset($info['scheme'], $info['host'], $info['path'])) {
-      throw new \InvalidArgumentException('Minimum requirement: driver://host/database');
+    // Check that the URL is well formed, starting with 'scheme://', where
+    // 'scheme' is a database driver name.
+    if (preg_match('/^(.*):\/\//', $url, $matches) !== 1) {
+      throw new \InvalidArgumentException("Missing scheme in URL '$url'");
     }
-    $info += [
-      'user' => '',
-      'pass' => '',
-      'fragment' => '',
-    ];
+    $driver = $matches[1];
 
-    // A SQLite database path with two leading slashes indicates a system path.
-    // Otherwise the path is relative to the Drupal root.
-    if ($info['path'][0] === '/') {
-      $info['path'] = substr($info['path'], 1);
-    }
-    if ($info['scheme'] === 'sqlite' && $info['path'][0] !== '/') {
-      $info['path'] = $root . '/' . $info['path'];
+    // Discover if the URL has a valid driver scheme. Try with core drivers
+    // first.
+    $connection_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Connection";
+    if (!class_exists($connection_class)) {
+      // If the URL is not relative to a core driver, try with custom ones.
+      $connection_class = "Drupal\\Driver\\Database\\{$driver}\\Connection";
+      if (!class_exists($connection_class)) {
+        throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$connection_class' does not exist");
+      }
     }
 
-    $database = [
-      'driver' => $info['scheme'],
-      'username' => $info['user'],
-      'password' => $info['pass'],
-      'host' => $info['host'],
-      'database' => $info['path'],
-    ];
-    if (isset($info['port'])) {
-      $database['port'] = $info['port'];
-    }
-    return $database;
+    return $connection_class::createConnectionOptionsFromUrl($url, $root);
   }
 
   /**
@@ -495,32 +479,36 @@ abstract class Database {
    *
    * @return string
    *   The connection info as a URL.
+   *
+   * @throws \RuntimeException
+   *   When the database connection is not defined.
    */
   public static function getConnectionInfoAsUrl($key = 'default') {
     $db_info = static::getConnectionInfo($key);
-    if ($db_info['default']['driver'] == 'sqlite') {
-      $db_url = 'sqlite://localhost/' . $db_info['default']['database'];
+    if (empty($db_info) || empty($db_info['default'])) {
+      throw new \RuntimeException("Database connection $key not defined or missing the 'default' settings");
     }
-    else {
-      $user = '';
-      if ($db_info['default']['username']) {
-        $user = $db_info['default']['username'];
-        if ($db_info['default']['password']) {
-          $user .= ':' . $db_info['default']['password'];
-        }
-        $user .= '@';
-      }
+    $connection_class = static::getDatabaseDriverNamespace($db_info['default']) . '\\Connection';
+    return $connection_class::createUrlFromConnectionOptions($db_info['default']);
+  }
 
-      $db_url = $db_info['default']['driver'] . '://' . $user . $db_info['default']['host'];
-      if (isset($db_info['default']['port'])) {
-        $db_url .= ':' . $db_info['default']['port'];
-      }
-      $db_url .= '/' . $db_info['default']['database'];
+  /**
+   * Gets the PHP namespace of a database driver from the connection info.
+   *
+   * @param array $connection_info
+   *   The database connection information, as defined in settings.php. The
+   *   structure of this array depends on the database driver it is connecting
+   *   to.
+   *
+   * @return string
+   *   The PHP namespace of the driver's database.
+   */
+  protected static function getDatabaseDriverNamespace(array $connection_info) {
+    if (isset($connection_info['namespace'])) {
+      return $connection_info['namespace'];
     }
-    if ($db_info['default']['prefix']['default']) {
-      $db_url .= '#' . $db_info['default']['prefix']['default'];
-    }
-    return $db_url;
+    // Fallback for Drupal 7 settings.php.
+    return 'Drupal\\Core\\Database\\Driver\\' . $connection_info['driver'];
   }
 
 }

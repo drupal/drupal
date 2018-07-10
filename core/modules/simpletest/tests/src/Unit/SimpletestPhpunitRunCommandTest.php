@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\simpletest\Unit;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\File\FileSystemInterface;
 use PHPUnit\Framework\TestCase;
@@ -15,6 +16,7 @@ use PHPUnit\Framework\TestCase;
  * @group simpletest
  *
  * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class SimpletestPhpunitRunCommandTest extends TestCase {
 
@@ -85,6 +87,18 @@ class SimpletestPhpunitRunCommandTest extends TestCase {
    * @dataProvider provideStatusCodes
    */
   public function testSimpletestPhpUnitRunCommand($status, $label) {
+    // Add a default database connection in order for
+    // Database::getConnectionInfoAsUrl() to return valid information.
+    Database::addConnectionInfo('default', 'default', [
+        'driver' => 'mysql',
+        'username' => 'test_user',
+        'password' => 'test_pass',
+        'host' => 'test_host',
+        'database' => 'test_database',
+        'port' => 3306,
+        'namespace' => 'Drupal\Core\Database\Driver\mysql',
+      ]
+    );
     $test_id = basename(tempnam(sys_get_temp_dir(), 'xxx'));
     putenv('SimpletestPhpunitRunCommandTestWillDie=' . $status);
     $ret = simpletest_run_phpunit_tests($test_id, [SimpletestPhpunitRunCommandTestWillDie::class]);
