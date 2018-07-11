@@ -45,10 +45,18 @@ EOF;
   }
 
   /**
+   * Installer step: Requirements problem.
+   */
+  protected function setUpRequirementsProblem() {
+    // This form will never be reached.
+    return;
+  }
+
+  /**
    * Installer step: Configure settings.
    */
   protected function setUpSettings() {
-    // This form will never be reached
+    // This form will never be reached.
     return;
   }
 
@@ -56,7 +64,7 @@ EOF;
    * Final installer step: Configure site.
    */
   protected function setUpSite() {
-    // This form will never be reached
+    // This form will never be reached.
     return;
   }
 
