@@ -2295,10 +2295,10 @@ function install_display_requirements($install_state, $requirements) {
  *    install profile is written to core.extension.
  */
 function install_write_profile($install_state) {
-  // Only write the install profile to settings.php if already exists. The value
-  // from settings.php is never used but drupal_rewrite_settings() does not
-  // support removing a setting. If the value in configuration and settings.php
-  // don't match there will be a warning on the status report.
+  // Only write the install profile to settings.php if it already exists. The
+  // value from settings.php is never used but drupal_rewrite_settings() does
+  // not support removing a setting. If the value is present in settings.php
+  // there will be an informational notice on the status report.
   $settings_path = \Drupal::service('site.path') . '/settings.php';
   if (is_writable($settings_path) && array_key_exists('install_profile', Settings::getAll())) {
     // Remember the profile which was used.
