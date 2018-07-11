@@ -10,6 +10,7 @@ use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\Importer\ConfigImporterBatch;
+use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
@@ -1527,16 +1528,23 @@ function _install_get_version_info($version) {
  *   profile information will be added here.
  */
 function install_load_profile(&$install_state) {
+  global $config_directories;
   $profile = $install_state['parameters']['profile'];
   $install_state['profiles'][$profile]->load();
   $install_state['profile_info'] = install_profile_info($profile, isset($install_state['parameters']['langcode']) ? $install_state['parameters']['langcode'] : 'en');
+
+  if (!empty($install_state['parameters']['existing_config']) && !empty($config_directories[CONFIG_SYNC_DIRECTORY])) {
+    $install_state['config_install_path'] = $config_directories[CONFIG_SYNC_DIRECTORY];
+  }
   // If the profile has a config/sync directory copy the information to the
   // install_state global.
-  if (!empty($install_state['profile_info']['config_install_path'])) {
+  elseif (!empty($install_state['profile_info']['config_install_path'])) {
     $install_state['config_install_path'] = $install_state['profile_info']['config_install_path'];
-    if (!empty($install_state['profile_info']['config'])) {
-      $install_state['config'] = $install_state['profile_info']['config'];
-    }
+  }
+
+  if (!empty($install_state['config_install_path'])) {
+    $sync = new FileStorage($install_state['config_install_path']);
+    $install_state['config']['system.site'] = $sync->read('system.site');
   }
 }
 

@@ -4,6 +4,7 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Archiver\ArchiveTar;
+use Drupal\Core\Installer\Form\SelectProfileForm;
 
 /**
  * Provides a base class for testing installing from existing configuration.
@@ -14,6 +15,11 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
    * This is set by the profile in the core.extension extracted.
    */
   protected $profile = NULL;
+
+  /**
+   * @todo
+   */
+  protected $existingSyncDirectory = FALSE;
 
   /**
    * {@inheritdoc}
@@ -33,14 +39,25 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
       'core' => \Drupal::CORE_COMPATIBILITY,
       'name' => 'Configuration installation test profile (' . $this->profile . ')',
     ];
+
     // File API functions are not available yet.
     $path = $this->siteDirectory . '/profiles/' . $this->profile;
+    if ($this->existingSyncDirectory) {
+      $config_sync_directory = $this->siteDirectory . '/config/sync';
+      $this->settings['config_directories'][CONFIG_SYNC_DIRECTORY] = (object) [
+        'value' => $config_sync_directory,
+        'required' => TRUE,
+      ];
+    }
+    else {
+      // Put the sync directory inside the profile.
+      $config_sync_directory = $path . '/config/sync';
+    }
 
     mkdir($path, 0777, TRUE);
     file_put_contents("$path/{$this->profile}.info.yml", Yaml::encode($info));
 
     // Create config/sync directory and extract tarball contents to it.
-    $config_sync_directory = $path . '/config/sync';
     mkdir($config_sync_directory, 0777, TRUE);
     $files = [];
     $list = $archiver->listContent();
@@ -94,6 +111,21 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
       'rename' => [],
     ];
     $this->assertEqual($expected, $change_list);
+  }
+
+  /**
+   * Installer step: Select installation profile.
+   */
+  protected function setUpProfile() {
+    if ($this->existingSyncDirectory) {
+      $edit = [
+        'profile' => SelectProfileForm::CONFIG_INSTALL_PROFILE_KEY,
+      ];
+      $this->drupalPostForm(NULL, $edit, $this->translations['Save and continue']);
+    }
+    else {
+      parent::setUpProfile();
+    }
   }
 
 }

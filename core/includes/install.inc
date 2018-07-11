@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Site\Settings;
 
@@ -1127,8 +1126,6 @@ function install_profile_info($profile, $langcode = 'en') {
     // If the profile has a config/sync directory use that to install drupal.
     if (is_dir($profile_path . '/config/sync')) {
       $info['config_install_path'] = $profile_path . '/config/sync';
-      $sync = new FileStorage($profile_path . '/config/sync');
-      $info['config']['system.site'] = $sync->read('system.site');
     }
     $cache[$profile][$langcode] = $info;
   }
