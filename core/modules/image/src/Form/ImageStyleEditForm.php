@@ -258,16 +258,6 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function actions(array $form, FormStateInterface $form_state) {
-    $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = $this->t('Update style');
-
-    return $actions;
-  }
-
-  /**
    * Updates image effect weights.
    *
    * @param array $effects

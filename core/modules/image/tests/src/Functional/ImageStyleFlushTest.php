@@ -103,7 +103,7 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
     }
     $this->drupalPostForm($style_path . '/effects/' . $uuids['image_scale'] . '/delete', [], t('Delete'));
     $this->assertResponse(200);
-    $this->drupalPostForm($style_path, [], t('Update style'));
+    $this->drupalPostForm($style_path, [], t('Save'));
     $this->assertResponse(200);
 
     // Post flush, expected 1 image in the 'public' wrapper (sample.png).
