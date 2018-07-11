@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\workspace\Plugin\RepositoryHandler\NullRepositoryHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -94,7 +93,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
       ];
     }
 
-    if (!$entity->getRepositoryHandler() instanceof NullRepositoryHandler) {
+    if (!$entity->isDefaultWorkspace()) {
       $operations['deploy'] = [
         'title' => $this->t('Deploy content'),
         // The 'Deploy' operation should be the default one for the currently

@@ -48,14 +48,12 @@ function workspace_install() {
   Workspace::create([
     'id' => 'live',
     'label' => 'Live',
-    'target' => '',
     'uid' => $owner_id,
   ])->save();
 
   Workspace::create([
     'id' => 'stage',
     'label' => 'Stage',
-    'target' => 'live',
     'uid' => $owner_id,
   ])->save();
 }

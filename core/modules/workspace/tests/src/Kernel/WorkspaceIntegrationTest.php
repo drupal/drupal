@@ -104,7 +104,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // Create two workspaces by default, 'live' and 'stage'.
     $this->workspaces['live'] = Workspace::create(['id' => 'live']);
     $this->workspaces['live']->save();
-    $this->workspaces['stage'] = Workspace::create(['id' => 'stage', 'target' => 'live']);
+    $this->workspaces['stage'] = Workspace::create(['id' => 'stage']);
     $this->workspaces['stage']->save();
 
     $permissions = [
@@ -345,7 +345,8 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->assertWorkspaceAssociation($expected_workspace_association['add_published_node_in_stage'], 'node');
 
     // Deploy 'stage' to 'live'.
-    $stage_repository_handler = $this->workspaces['stage']->getRepositoryHandler();
+    /** @var \Drupal\workspace\WorkspacePublisher $workspace_publisher */
+    $workspace_publisher = \Drupal::service('workspace.operation_factory')->getPublisher($this->workspaces['stage']);
 
     // Check which revisions need to be pushed.
     $expected = [
@@ -356,14 +357,14 @@ class WorkspaceIntegrationTest extends KernelTestBase {
         7 => 4,
       ],
     ];
-    $this->assertEquals($expected, $stage_repository_handler->getDifferringRevisionIdsOnSource());
+    $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnSource());
 
-    $stage_repository_handler->push();
+    $this->workspaces['stage']->publish();
     $this->assertWorkspaceStatus($test_scenarios['push_stage_to_live'], 'node');
     $this->assertWorkspaceAssociation($expected_workspace_association['push_stage_to_live'], 'node');
 
     // Check that there are no more revisions to push.
-    $this->assertEmpty($stage_repository_handler->getDifferringRevisionIdsOnSource());
+    $this->assertEmpty($workspace_publisher->getDifferringRevisionIdsOnSource());
   }
 
   /**

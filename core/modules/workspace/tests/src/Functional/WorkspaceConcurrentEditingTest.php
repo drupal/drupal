@@ -87,7 +87,7 @@ class WorkspaceConcurrentEditingTest extends BrowserTestBase {
 
     // Deploy the changes from the 'Vultures' workspace and check that the node
     // can be edited again in other workspaces.
-    $vultures->getRepositoryHandler()->push();
+    $vultures->publish();
     $this->switchToWorkspace($gravity);
     $this->drupalGet('/node/' . $test_node->id() . '/edit');
     $page = $this->getSession()->getPage();

@@ -24,7 +24,7 @@ class WorkspaceDeleteForm extends ContentEntityDeleteForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $source_rev_diff = $this->entity->getRepositoryHandler()->getDifferringRevisionIdsOnSource();
+    $source_rev_diff = $this->entityTypeManager->getStorage('workspace_association')->getTrackedEntities($this->entity->id());
     $items = [];
     foreach ($source_rev_diff as $entity_type_id => $revision_ids) {
       $label = $this->entityTypeManager->getDefinition($entity_type_id)->getLabel();

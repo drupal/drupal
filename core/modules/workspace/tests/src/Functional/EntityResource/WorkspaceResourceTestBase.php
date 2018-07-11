@@ -68,7 +68,6 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
     $workspace = Workspace::create([
       'id' => 'layla',
       'label' => 'Layla',
-      'target' => 'live',
     ]);
     $workspace->save();
     return $workspace;
@@ -120,11 +119,6 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
           'url' => base_path() . 'user/' . $author->id(),
         ],
       ],
-      'target' => [
-        [
-          'value' => 'live',
-        ],
-      ],
       'uuid' => [
         [
           'value' => $this->entity->uuid(),
@@ -148,11 +142,6 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
           'value' => 'Running on faith',
         ],
       ],
-      'target' => [
-        [
-          'value' => 'local_workspace:stage',
-        ],
-      ],
     ];
   }
 
@@ -174,11 +163,6 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
       'label' => [
         [
           'value' => 'Running on faith',
-        ],
-      ],
-      'target' => [
-        [
-          'value' => 'local_workspace:stage',
         ],
       ],
     ];

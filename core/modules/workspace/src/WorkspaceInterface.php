@@ -17,22 +17,9 @@ interface WorkspaceInterface extends ContentEntityInterface, EntityChangedInterf
   const DEFAULT_WORKSPACE = 'live';
 
   /**
-   * Pushes content from this workspace to the target repository.
+   * Publishes the contents of this workspace to the default (Live) workspace.
    */
-  public function push();
-
-  /**
-   * Pulls content from the target repository into this workspace.
-   */
-  public function pull();
-
-  /**
-   * Gets an instance of the repository handler configured for the workspace.
-   *
-   * @return \Drupal\workspace\RepositoryHandlerInterface
-   *   A repository handler plugin object.
-   */
-  public function getRepositoryHandler();
+  public function publish();
 
   /**
    * Determines whether the workspace is the default one or not.

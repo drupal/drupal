@@ -1,35 +1,26 @@
 <?php
 
-namespace Drupal\workspace\Plugin\RepositoryHandler;
+namespace Drupal\workspace;
 
 use Drupal\Core\Database\Connection;
-use Drupal\workspace\RepositoryHandlerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\workspace\RepositoryHandlerInterface;
-use Drupal\workspace\WorkspaceConflictException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines a plugin which replicates content to the default (Live) workspace.
+ * Default implementation of the workspace publisher.
  *
- * @RepositoryHandler(
- *   id = "live",
- *   label = @Translation("Live"),
- *   description = @Translation("The default (Live) workspace."),
- * )
+ * @internal
  */
-class LiveRepositoryHandler extends RepositoryHandlerBase implements RepositoryHandlerInterface, ContainerFactoryPluginInterface {
+class WorkspacePublisher implements WorkspacePublisherInterface {
 
   /**
-   * The source workspace entity for the repository handler.
+   * The source workspace entity.
    *
    * @var \Drupal\workspace\WorkspaceInterface
    */
   protected $sourceWorkspace;
 
   /**
-   * The target workspace entity for the repository handler.
+   * The target workspace entity.
    *
    * @var \Drupal\workspace\WorkspaceInterface
    */
@@ -57,56 +48,25 @@ class LiveRepositoryHandler extends RepositoryHandlerBase implements RepositoryH
   protected $workspaceAssociationStorage;
 
   /**
-   * Constructs a new LiveRepositoryHandler.
+   * Constructs a new WorkspacePublisher.
    *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Database\Connection $database
    *   Database connection.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $database) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceInterface $source) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
     $this->workspaceAssociationStorage = $entity_type_manager->getStorage('workspace_association');
-    $this->sourceWorkspace = $this->entityTypeManager->getStorage('workspace')->load($this->source);
-    $this->targetWorkspace = $this->entityTypeManager->getStorage('workspace')->load($this->target);
+    $this->sourceWorkspace = $source;
+    $this->targetWorkspace = $this->entityTypeManager->getStorage('workspace')->load(WorkspaceInterface::DEFAULT_WORKSPACE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('database')
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function calculateDependencies() {
-    $this->dependencies = parent::calculateDependencies();
-    $this->addDependency($this->sourceWorkspace->getConfigDependencyKey(), $this->sourceWorkspace->getConfigDependencyName());
-
-    return $this->dependencies;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function push() {
+  public function publish() {
     if ($this->checkConflictsOnTarget()) {
       throw new WorkspaceConflictException();
     }
@@ -145,9 +105,15 @@ class LiveRepositoryHandler extends RepositoryHandlerBase implements RepositoryH
   /**
    * {@inheritdoc}
    */
-  public function pull() {
-    // Nothing to do for now, pulling in changes can only be implemented when we
-    // are able to resolve conflicts.
+  public function getSourceLabel() {
+    return $this->sourceWorkspace->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTargetLabel() {
+    return $this->targetWorkspace->label();
   }
 
   /**
@@ -165,7 +131,7 @@ class LiveRepositoryHandler extends RepositoryHandlerBase implements RepositoryH
   public function getDifferringRevisionIdsOnTarget() {
     $target_revision_difference = [];
 
-    $tracked_entities = $this->workspaceAssociationStorage->getTrackedEntities($this->source);
+    $tracked_entities = $this->workspaceAssociationStorage->getTrackedEntities($this->sourceWorkspace->id());
     foreach ($tracked_entities as $entity_type_id => $tracked_revisions) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
 
@@ -195,7 +161,7 @@ class LiveRepositoryHandler extends RepositoryHandlerBase implements RepositoryH
    */
   public function getDifferringRevisionIdsOnSource() {
     // Get the Workspace association revisions which haven't been pushed yet.
-    return $this->workspaceAssociationStorage->getTrackedEntities($this->source);
+    return $this->workspaceAssociationStorage->getTrackedEntities($this->sourceWorkspace->id());
   }
 
   /**

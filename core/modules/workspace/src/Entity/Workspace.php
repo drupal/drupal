@@ -108,35 +108,14 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
       ->setLabel(new TranslatableMarkup('Created'))
       ->setDescription(new TranslatableMarkup('The time that the workspaces was created.'));
 
-    $fields['target'] = BaseFieldDefinition::create('string')
-      ->setLabel(new TranslatableMarkup('Target workspace'))
-      ->setDescription(new TranslatableMarkup('The workspace to push to and pull from.'))
-      ->setRevisionable(TRUE)
-      ->setRequired(TRUE)
-      ->setDefaultValue('live');
-
     return $fields;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function push() {
-    return $this->getRepositoryHandler()->push();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function pull() {
-    return $this->getRepositoryHandler()->pull();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRepositoryHandler() {
-    return \Drupal::service('plugin.manager.workspace.repository_handler')->createFromWorkspace($this);
+  public function publish() {
+    return \Drupal::service('workspace.operation_factory')->getPublisher($this)->publish();
   }
 
   /**
