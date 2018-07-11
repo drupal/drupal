@@ -728,8 +728,8 @@ class SchemaTest extends KernelTestBase {
     $table_name = 'test_table';
     $table_spec = [
       'fields' => [
-        'test_field' => ['type' => 'int'],
-        'other_test_field' => ['type' => 'int'],
+        'test_field' => ['type' => 'int', 'not null' => TRUE],
+        'other_test_field' => ['type' => 'int', 'not null' => TRUE],
       ],
       'primary key' => $initial_primary_key,
     ];
@@ -738,7 +738,7 @@ class SchemaTest extends KernelTestBase {
     $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
 
     // Change the field type and make sure the primary key stays in place.
-    $schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'varchar', 'length' => 32]);
+    $schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'varchar', 'length' => 32, 'not null' => TRUE]);
     $this->assertTrue($schema->fieldExists($table_name, 'test_field'));
     $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
 
@@ -747,7 +747,7 @@ class SchemaTest extends KernelTestBase {
     $connection->insert($table_name)
       ->fields(['test_field' => 1, 'other_test_field' => 2])
       ->execute();
-    $schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'int']);
+    $schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'int', 'not null' => TRUE]);
     $this->assertTrue($schema->fieldExists($table_name, 'test_field'));
     $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
 
@@ -755,12 +755,12 @@ class SchemaTest extends KernelTestBase {
     // a field, as well.
     $schema->dropPrimaryKey($table_name);
     $this->assertEquals([], $find_primary_key_columns->invoke($schema, $table_name));
-    $schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'int'], ['primary key' => $initial_primary_key]);
+    $schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'int', 'not null' => TRUE], ['primary key' => $initial_primary_key]);
     $this->assertTrue($schema->fieldExists($table_name, 'test_field'));
     $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
 
     // Rename the field and make sure the primary key was updated.
-    $schema->changeField($table_name, 'test_field', 'test_field_renamed', ['type' => 'int']);
+    $schema->changeField($table_name, 'test_field', 'test_field_renamed', ['type' => 'int', 'not null' => TRUE]);
     $this->assertTrue($schema->fieldExists($table_name, 'test_field_renamed'));
     $this->assertEquals($renamed_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
 
@@ -771,7 +771,7 @@ class SchemaTest extends KernelTestBase {
 
     // Add the field again and make sure adding the primary key can be done at
     // the same time.
-    $schema->addField($table_name, 'test_field', ['type' => 'int', 'default' => 0], ['primary key' => $initial_primary_key]);
+    $schema->addField($table_name, 'test_field', ['type' => 'int', 'default' => 0, 'not null' => TRUE], ['primary key' => $initial_primary_key]);
     $this->assertTrue($schema->fieldExists($table_name, 'test_field'));
     $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
 
@@ -783,7 +783,7 @@ class SchemaTest extends KernelTestBase {
 
     // Test that adding a field with a primary key will work even with a
     // pre-existing primary key.
-    $schema->addField($table_name, 'test_field', ['type' => 'int', 'default' => 0], ['primary key' => $initial_primary_key]);
+    $schema->addField($table_name, 'test_field', ['type' => 'int', 'default' => 0, 'not null' => TRUE], ['primary key' => $initial_primary_key]);
     $this->assertTrue($schema->fieldExists($table_name, 'test_field'));
     $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($schema, $table_name));
   }
@@ -811,6 +811,71 @@ class SchemaTest extends KernelTestBase {
     ];
 
     return $tests;
+  }
+
+  /**
+   * Tests an invalid field specification as a primary key on table creation.
+   */
+  public function testInvalidPrimaryKeyOnTableCreation() {
+    $connection = Database::getConnection();
+    $schema = $connection->schema();
+
+    // Test making an invalid field the primary key of the table upon creation.
+    $table_name = 'test_table';
+    $table_spec = [
+      'fields' => [
+        'test_field' => ['type' => 'int'],
+      ],
+      'primary key' => ['test_field'],
+    ];
+    $this->expectException(SchemaException::class);
+    $this->expectExceptionMessage("The 'test_field' field specification does not define 'not null' as TRUE.");
+    $schema->createTable($table_name, $table_spec);
+  }
+
+  /**
+   * Tests adding an invalid field specification as a primary key.
+   */
+  public function testInvalidPrimaryKeyAddition() {
+    $connection = Database::getConnection();
+    $schema = $connection->schema();
+
+    // Test adding a new invalid field to the primary key.
+    $table_name = 'test_table';
+    $table_spec = [
+      'fields' => [
+        'test_field' => ['type' => 'int', 'not null' => TRUE],
+      ],
+      'primary key' => ['test_field'],
+    ];
+    $schema->createTable($table_name, $table_spec);
+
+    $this->expectException(SchemaException::class);
+    $this->expectExceptionMessage("The 'new_test_field' field specification does not define 'not null' as TRUE.");
+    $schema->addField($table_name, 'new_test_field', ['type' => 'int'], ['primary key' => ['test_field', 'new_test_field']]);
+  }
+
+  /**
+   * Tests changing the primary key with an invalid field specification.
+   */
+  public function testInvalidPrimaryKeyChange() {
+    $connection = Database::getConnection();
+    $schema = $connection->schema();
+
+    // Test adding a new invalid field to the primary key.
+    $table_name = 'test_table';
+    $table_spec = [
+      'fields' => [
+        'test_field' => ['type' => 'int', 'not null' => TRUE],
+      ],
+      'primary key' => ['test_field'],
+    ];
+    $schema->createTable($table_name, $table_spec);
+
+    $this->expectException(SchemaException::class);
+    $this->expectExceptionMessage("The 'changed_test_field' field specification does not define 'not null' as TRUE.");
+    $schema->dropPrimaryKey($table_name);
+    $schema->changeField($table_name, 'test_field', 'changed_test_field', ['type' => 'int'], ['primary key' => ['changed_test_field']]);
   }
 
   /**

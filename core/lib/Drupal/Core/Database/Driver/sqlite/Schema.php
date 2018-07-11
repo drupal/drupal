@@ -52,6 +52,10 @@ class Schema extends DatabaseSchema {
    *   An array of SQL statements to create the table.
    */
   public function createTableSql($name, $table) {
+    if (!empty($table['primary key']) && is_array($table['primary key'])) {
+      $this->ensureNotNullPrimaryKey($table['primary key'], $table['fields']);
+    }
+
     $sql = [];
     $sql[] = "CREATE TABLE {" . $name . "} (\n" . $this->createColumnsSql($name, $table) . "\n)\n";
     return array_merge($sql, $this->createIndexSql($name, $table));
@@ -315,6 +319,9 @@ class Schema extends DatabaseSchema {
     if ($this->fieldExists($table, $field)) {
       throw new SchemaObjectExistsException(t("Cannot add field @table.@field: field already exists.", ['@field' => $field, '@table' => $table]));
     }
+    if (isset($keys_new['primary key']) && in_array($field, $keys_new['primary key'], TRUE)) {
+      $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field => $specification]);
+    }
 
     // SQLite doesn't have a full-featured ALTER TABLE statement. It only
     // supports adding new fields to a table, in some simple cases. In most
@@ -495,7 +502,7 @@ class Schema extends DatabaseSchema {
         $schema['fields'][$row->name] = [
           'type' => $type,
           'size' => $size,
-          'not null' => !empty($row->notnull),
+          'not null' => !empty($row->notnull) || $row->pk !== "0",
           'default' => trim($row->dflt_value, "'"),
         ];
         if ($length) {
@@ -583,6 +590,9 @@ class Schema extends DatabaseSchema {
     }
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
       throw new SchemaObjectExistsException(t("Cannot rename field @table.@name to @name_new: target field already exists.", ['@table' => $table, '@name' => $field, '@name_new' => $field_new]));
+    }
+    if (isset($keys_new['primary key']) && in_array($field_new, $keys_new['primary key'], TRUE)) {
+      $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field_new => $spec]);
     }
 
     $old_schema = $this->introspectSchema($table);
@@ -733,6 +743,7 @@ class Schema extends DatabaseSchema {
     }
 
     $new_schema['primary key'] = $fields;
+    $this->ensureNotNullPrimaryKey($new_schema['primary key'], $new_schema['fields']);
     $this->alterTable($table, $old_schema, $new_schema);
   }
 

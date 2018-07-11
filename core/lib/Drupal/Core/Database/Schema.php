@@ -682,4 +682,25 @@ abstract class Schema implements PlaceholderInterface {
     return is_string($value) ? $this->connection->quote($value) : $value;
   }
 
+  /**
+   * Ensures that all the primary key fields are correctly defined.
+   *
+   * @param array $primary_key
+   *   An array containing the fields that will form the primary key of a table.
+   * @param array $fields
+   *   An array containing the field specifications of the table, as per the
+   *   schema data structure format.
+   *
+   * @throws \Drupal\Core\Database\SchemaException
+   *   Thrown if any primary key field specification does not exist or if they
+   *   do not define 'not null' as TRUE.
+   */
+  protected function ensureNotNullPrimaryKey(array $primary_key, array $fields) {
+    foreach (array_intersect($primary_key, array_keys($fields)) as $field_name) {
+      if (!isset($fields[$field_name]['not null']) || $fields[$field_name]['not null'] !== TRUE) {
+        throw new SchemaException("The '$field_name' field specification does not define 'not null' as TRUE.");
+      }
+    }
+  }
+
 }
