@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests the update for the 'size' setting of the 'email_default' field widget.
  *
  * @group field
+ * @group legacy
  */
 class EmailWidgetSizeSettingUpdateTest extends UpdatePathTestBase {
 

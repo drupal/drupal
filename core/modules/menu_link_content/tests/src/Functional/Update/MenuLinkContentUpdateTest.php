@@ -10,6 +10,7 @@ use Drupal\user\Entity\User;
  *
  * @group menu_link_content
  * @group Update
+ * @group legacy
  */
 class MenuLinkContentUpdateTest extends UpdatePathTestBase {
 

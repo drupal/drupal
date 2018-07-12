@@ -10,7 +10,7 @@ use Drupal\views\Views;
  *
  * @see views_update_8500()
  *
- * @group Update
+ * @group legacy
  */
 class EntityViewsMultiValueBaseFieldDataUpdateTest extends UpdatePathTestBase {
 

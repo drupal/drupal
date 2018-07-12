@@ -10,6 +10,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @see image_post_update_scale_and_crop_effect_add_anchor()
  *
  * @group Update
+ * @group legacy
  */
 class ScaleAndCropAddAnchorUpdateTest extends UpdatePathTestBase {
 

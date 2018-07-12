@@ -158,20 +158,12 @@ trait DeprecationListenerTrait {
       'Passing a single revision ID to "\Drupal\Core\Entity\Sql\SqlContentEntityStorage::buildQuery()" is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.0. An array of revision IDs should be given instead. See https://www.drupal.org/node/2924915.',
       'Adding or retrieving messages prior to the container being initialized was deprecated in Drupal 8.5.0 and this functionality will be removed before Drupal 9.0.0. Please report this usage at https://www.drupal.org/node/2928994.',
       'The "serializer.normalizer.file_entity.hal" normalizer service is deprecated: it is obsolete, it only remains available for backwards compatibility.',
-      'Drupal\comment\Plugin\Action\PublishComment is deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Use \Drupal\Core\Action\Plugin\Action\PublishAction instead. See https://www.drupal.org/node/2919303.',
-      'Drupal\comment\Plugin\Action\SaveComment is deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Use \Drupal\Core\Action\Plugin\Action\SaveAction instead. See https://www.drupal.org/node/2919303.',
-      'Drupal\comment\Plugin\Action\UnpublishComment is deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Use \Drupal\Core\Action\Plugin\Action\UnpublishAction instead. See https://www.drupal.org/node/2919303.',
-      'Drupal\node\Plugin\Action\PublishNode is deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Use \Drupal\Core\Action\Plugin\Action\PublishAction instead. See https://www.drupal.org/node/2919303.',
-      'Drupal\node\Plugin\Action\SaveNode is deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Use \Drupal\Core\Action\Plugin\Action\SaveAction instead. See https://www.drupal.org/node/2919303.',
-      'Drupal\node\Plugin\Action\UnpublishNode is deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Use \Drupal\Core\Action\Plugin\Action\UnpublishAction instead. See https://www.drupal.org/node/2919303.',
       'The Symfony\Component\ClassLoader\ApcClassLoader class is deprecated since Symfony 3.3 and will be removed in 4.0. Use `composer install --apcu-autoloader` instead.',
       'The Symfony\Component\ClassLoader\WinCacheClassLoader class is deprecated since Symfony 3.3 and will be removed in 4.0. Use `composer install --apcu-autoloader` instead.',
       'The Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher class is deprecated since Symfony 3.3 and will be removed in 4.0. Use EventDispatcher with closure factories instead.',
       'The Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler class is deprecated since Symfony 3.4 and will be removed in 4.0. Implement `SessionUpdateTimestampHandlerInterface` or extend `AbstractSessionHandler` instead.',
       'The "session_handler.write_check" service relies on the deprecated "Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler" class. It should either be deprecated or its implementation upgraded.',
       'Not setting the strict option of the Choice constraint to true is deprecated since Symfony 3.4 and will throw an exception in 4.0.',
-      'Drupal\node\Plugin\Action\DeleteNode is deprecated in Drupal 8.6.x, will be removed before Drupal 9.0.0. Use \Drupal\Core\Action\Plugin\Action\DeleteAction instead. See https://www.drupal.org/node/2934349.',
-      'Drupal\comment\Plugin\Action\DeleteComment is deprecated in Drupal 8.6.x, will be removed before Drupal 9.0.0. Use \Drupal\Core\Action\Plugin\Action\DeleteAction instead. See https://www.drupal.org/node/2934349.',
     ];
   }
 

@@ -9,6 +9,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests the upgrade path for Layout Builder section dependencies.
  *
  * @group layout_builder
+ * @group legacy
  */
 class SectionDependenciesUpdatePathTest extends UpdatePathTestBase {
 

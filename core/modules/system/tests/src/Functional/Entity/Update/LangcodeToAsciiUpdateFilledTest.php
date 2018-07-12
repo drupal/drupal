@@ -6,6 +6,7 @@ namespace Drupal\Tests\system\Functional\Entity\Update;
  * Runs LangcodeToAsciiUpdateTest with a dump filled with content.
  *
  * @group Entity
+ * @group legacy
  */
 class LangcodeToAsciiUpdateFilledTest extends LangcodeToAsciiUpdateTest {
 

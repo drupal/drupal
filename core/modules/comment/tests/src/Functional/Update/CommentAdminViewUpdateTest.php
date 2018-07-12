@@ -10,6 +10,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @see comment_post_update_enable_comment_admin_view()
  *
  * @group Update
+ * @group legacy
  */
 class CommentAdminViewUpdateTest extends UpdatePathTestBase {
 

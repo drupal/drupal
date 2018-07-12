@@ -10,6 +10,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests updates for entity displays.
  *
  * @group Update
+ * @group legacy
  */
 class UpdateEntityDisplayTest extends UpdatePathTestBase {
 

@@ -10,6 +10,7 @@ use Drupal\taxonomy\Entity\Term;
  *
  * @group taxonomy
  * @group Update
+ * @group legacy
  */
 class TaxonomyParentUpdateTest extends UpdatePathTestBase {
 

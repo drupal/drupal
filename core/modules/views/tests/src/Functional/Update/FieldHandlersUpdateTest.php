@@ -11,6 +11,7 @@ use Drupal\views\Entity\View;
  * @see views_post_update_cleanup_duplicate_views_data()
  *
  * @group Update
+ * @group legacy
  */
 class FieldHandlersUpdateTest extends UpdatePathTestBase {
 

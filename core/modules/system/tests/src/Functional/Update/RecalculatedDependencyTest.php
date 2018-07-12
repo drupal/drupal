@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests system_post_update_recalculate_dependencies_for_installed_config_entities().
  *
  * @group Update
+ * @group legacy
  */
 class RecalculatedDependencyTest extends UpdatePathTestBase {
 

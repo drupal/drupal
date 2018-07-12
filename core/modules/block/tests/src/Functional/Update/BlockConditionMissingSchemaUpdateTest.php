@@ -10,6 +10,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @see https://www.drupal.org/node/2811519
  *
  * @group Update
+ * @group legacy
  */
 class BlockConditionMissingSchemaUpdateTest extends UpdatePathTestBase {
 

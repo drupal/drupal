@@ -9,6 +9,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests that the entity langcode fields have been updated to varchar_ascii.
  *
  * @group Entity
+ * @group legacy
  */
 class LangcodeToAsciiUpdateTest extends UpdatePathTestBase {
 

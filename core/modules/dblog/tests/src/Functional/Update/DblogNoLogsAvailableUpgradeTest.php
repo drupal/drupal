@@ -11,6 +11,7 @@ use Drupal\views\Views;
  * @see dblog_update_8600()
  *
  * @group Update
+ * @group legacy
  */
 class DblogNoLogsAvailableUpgradeTest extends UpdatePathTestBase {
 

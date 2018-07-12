@@ -9,6 +9,7 @@ use Drupal\Component\Render\FormattableMarkup;
  * Tests the update path base class.
  *
  * @group Update
+ * @group legacy
  */
 class UpdatePathTestBaseTest extends UpdatePathTestBase {
 

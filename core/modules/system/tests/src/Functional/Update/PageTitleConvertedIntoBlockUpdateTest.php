@@ -11,6 +11,7 @@ use Drupal\node\Entity\Node;
  * @see https://www.drupal.org/node/2476947
  *
  * @group system
+ * @group legacy
  */
 class PageTitleConvertedIntoBlockUpdateTest extends UpdatePathTestBase {
 

@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests that node settings are properly updated during database updates.
  *
  * @group aggregator
+ * @group legacy
  */
 class AggregatorUpdateTest extends UpdatePathTestBase {
 

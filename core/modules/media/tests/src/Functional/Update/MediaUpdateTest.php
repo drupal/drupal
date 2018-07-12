@@ -9,6 +9,7 @@ use Drupal\user\Entity\Role;
  * Tests that media settings are properly updated during database updates.
  *
  * @group media
+ * @group legacy
  */
 class MediaUpdateTest extends UpdatePathTestBase {
 

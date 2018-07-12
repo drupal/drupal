@@ -7,7 +7,7 @@ use Drupal\system\Tests\Update\UpdatePathTestBase;
 /**
  * Ensures that update hook is run properly for REST Export config.
  *
- * @group Update
+ * @group legacy
  */
 class RestExportAuthCorrectionUpdateTest extends UpdatePathTestBase {
 

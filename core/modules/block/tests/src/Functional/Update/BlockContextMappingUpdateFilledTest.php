@@ -6,6 +6,7 @@ namespace Drupal\Tests\block\Functional\Update;
  * Runs BlockContextMappingUpdateTest with a dump filled with content.
  *
  * @group Update
+ * @group legacy
  */
 class BlockContextMappingUpdateFilledTest extends BlockContextMappingUpdateTest {
 

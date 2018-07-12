@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests the update for the entity reference 'handler' setting.
  *
  * @group field
+ * @group legacy
  */
 class EntityReferenceHandlerSettingUpdateTest extends UpdatePathTestBase {
 

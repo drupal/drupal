@@ -9,6 +9,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests that comment hostname settings are properly updated.
  *
  * @group comment
+ * @group legacy
  */
 class CommentHostnameUpdateTest extends UpdatePathTestBase {
 

@@ -7,6 +7,7 @@ namespace Drupal\Tests\system\Functional\Entity\Update;
  *
  * @group Entity
  * @group Update
+ * @group legacy
  */
 class SqlContentEntityStorageSchemaConverterNonTranslatableTest extends SqlContentEntityStorageSchemaConverterTestBase {
 

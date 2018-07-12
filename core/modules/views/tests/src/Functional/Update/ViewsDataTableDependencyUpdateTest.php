@@ -11,6 +11,7 @@ use Drupal\views\Views;
  * @see views_post_update_views_data_table_dependencies()
  *
  * @group Update
+ * @group legacy
  */
 class ViewsDataTableDependencyUpdateTest extends UpdatePathTestBase {
 

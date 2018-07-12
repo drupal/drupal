@@ -11,6 +11,7 @@ use Drupal\views\Entity\View;
  * @see views_post_update_table_display_cache_max_age()
  *
  * @group Update
+ * @group legacy
  */
 class TableDisplayCacheMaxAgeTest extends UpdatePathTestBase {
 

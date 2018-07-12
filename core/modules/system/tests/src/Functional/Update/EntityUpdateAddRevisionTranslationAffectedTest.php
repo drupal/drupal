@@ -11,6 +11,7 @@ use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
  * @see https://www.drupal.org/node/2896845
  *
  * @group Update
+ * @group legacy
  */
 class EntityUpdateAddRevisionTranslationAffectedTest extends UpdatePathTestBase {
 

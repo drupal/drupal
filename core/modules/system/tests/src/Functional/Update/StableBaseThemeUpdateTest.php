@@ -10,6 +10,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @see https://www.drupal.org/node/2575421
  *
  * @group system
+ * @group legacy
  */
 class StableBaseThemeUpdateTest extends UpdatePathTestBase {
 

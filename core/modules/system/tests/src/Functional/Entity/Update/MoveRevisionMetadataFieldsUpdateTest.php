@@ -10,6 +10,7 @@ use Drupal\views\Entity\View;
  * Tests the upgrade path for moving the revision metadata fields.
  *
  * @group Update
+ * @group legacy
  */
 class MoveRevisionMetadataFieldsUpdateTest extends UpdatePathTestBase {
 

@@ -6,6 +6,7 @@ namespace Drupal\Tests\views\Functional\Update;
  * Runs EntityViewsDataUpdateTest with a dump filled with content.
  *
  * @group Update
+ * @group legacy
  */
 class EntityViewsDataUpdateFilledTest extends EntityViewsDataUpdateTest {
 

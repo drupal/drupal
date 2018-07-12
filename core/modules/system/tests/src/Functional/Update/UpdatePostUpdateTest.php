@@ -9,6 +9,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests hook_post_update().
  *
  * @group Update
+ * @group legacy
  */
 class UpdatePostUpdateTest extends UpdatePathTestBase {
 

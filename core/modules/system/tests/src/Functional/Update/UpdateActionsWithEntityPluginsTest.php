@@ -9,6 +9,7 @@ use Drupal\system\Entity\Action;
  * Tests upgrading comment and node actions to generic entity ones.
  *
  * @group Update
+ * @group legacy
  */
 class UpdateActionsWithEntityPluginsTest extends UpdatePathTestBase {
 

@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests hook_post_update() when there are failing update hooks.
  *
  * @group Update
+ * @group legacy
  */
 class UpdatePostUpdateFailingTest extends UpdatePathTestBase {
 

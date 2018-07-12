@@ -9,6 +9,7 @@ use Drupal\Core\Entity\Sql\TemporaryTableMapping;
  *
  * @group Entity
  * @group Update
+ * @group legacy
  */
 class SqlContentEntityStorageSchemaConverterTranslatableTest extends SqlContentEntityStorageSchemaConverterTestBase {
 

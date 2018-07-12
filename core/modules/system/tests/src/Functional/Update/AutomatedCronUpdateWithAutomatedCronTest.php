@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Ensures that the automated cron module is installed on update.
  *
  * @group Update
+ * @group legacy
  */
 class AutomatedCronUpdateWithAutomatedCronTest extends UpdatePathTestBase {
 

@@ -6,6 +6,7 @@ namespace Drupal\Tests\system\Functional\Entity\Update;
  * Runs SqlContentEntityStorageSchemaIndexTest with a dump filled with content.
  *
  * @group Entity
+ * @group legacy
  */
 class SqlContentEntityStorageSchemaIndexFilledTest extends SqlContentEntityStorageSchemaIndexTest {
 

@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Ensures that update hook that creates the watchdog view ran sucessfully.
  *
  * @group Update
+ * @group legacy
  */
 class DblogRecentLogsUsingViewsUpdateTest extends UpdatePathTestBase {
 

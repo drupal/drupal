@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests that syslog settings are properly updated during database updates.
  *
  * @group syslog
+ * @group legacy
  */
 class SyslogUpdateTest extends UpdatePathTestBase {
 

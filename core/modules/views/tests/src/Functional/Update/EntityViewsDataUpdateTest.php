@@ -11,6 +11,7 @@ use Drupal\views\Views;
  * @see https://www.drupal.org/node/2455125
  *
  * @group Update
+ * @group legacy
  */
 class EntityViewsDataUpdateTest extends UpdatePathTestBase {
 

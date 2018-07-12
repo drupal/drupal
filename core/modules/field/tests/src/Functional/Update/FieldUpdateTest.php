@@ -14,6 +14,7 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
  * Tests that field settings are properly updated during database updates.
  *
  * @group field
+ * @group legacy
  */
 class FieldUpdateTest extends UpdatePathTestBase {
 

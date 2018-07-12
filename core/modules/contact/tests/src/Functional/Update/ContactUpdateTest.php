@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests contact update path.
  *
  * @group contact
+ * @group legacy
  */
 class ContactUpdateTest extends UpdatePathTestBase {
 

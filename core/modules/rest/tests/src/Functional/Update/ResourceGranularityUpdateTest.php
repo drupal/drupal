@@ -11,6 +11,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @see rest_post_update_resource_granularity()
  *
  * @group rest
+ * @group legacy
  */
 class ResourceGranularityUpdateTest extends UpdatePathTestBase {
 

@@ -10,7 +10,7 @@ use Drupal\views\Entity\View;
  *
  * @see views_post_update_entity_link_url()
  *
- * @group Update
+ * @group legacy
  */
 class EntityLinkOutputUrlUpdateTest extends UpdatePathTestBase {
 

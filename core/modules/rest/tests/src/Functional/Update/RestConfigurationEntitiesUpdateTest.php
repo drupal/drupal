@@ -13,6 +13,7 @@ use Drupal\rest\RestResourceConfigInterface;
  * @see rest_post_update_create_rest_resource_config_entities()
  *
  * @group rest
+ * @group legacy
  */
 class RestConfigurationEntitiesUpdateTest extends UpdatePathTestBase {
 

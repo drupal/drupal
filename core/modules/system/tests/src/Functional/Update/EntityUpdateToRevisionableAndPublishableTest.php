@@ -12,6 +12,7 @@ use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
  * @see https://www.drupal.org/node/2841291
  *
  * @group Update
+ * @group legacy
  */
 class EntityUpdateToRevisionableAndPublishableTest extends UpdatePathTestBase {
 

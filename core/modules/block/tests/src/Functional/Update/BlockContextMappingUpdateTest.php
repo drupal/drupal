@@ -12,6 +12,7 @@ use Drupal\node\Entity\Node;
  * @see https://www.drupal.org/node/2354889
  *
  * @group Update
+ * @group legacy
  */
 class BlockContextMappingUpdateTest extends UpdatePathTestBase {
 

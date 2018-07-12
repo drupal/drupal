@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests the upgrade path for page site variables being converted into a block.
  *
  * @group system
+ * @group legacy
  */
 class SiteBrandingConvertedIntoBlockUpdateTest extends UpdatePathTestBase {
 

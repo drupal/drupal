@@ -7,7 +7,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 /**
  * Tests File update path.
  *
- * @group file
+ * @group legacy
  */
 class FileUpdateTest extends UpdatePathTestBase {
 

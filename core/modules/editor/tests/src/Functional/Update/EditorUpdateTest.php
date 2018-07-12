@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests Editor module database updates.
  *
  * @group editor
+ * @group legacy
  */
 class EditorUpdateTest extends UpdatePathTestBase {
 

@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests user permissions sort upgrade path.
  *
  * @group Update
+ * @group legacy
  */
 class UserUpdateOrderPermissionsTest extends UpdatePathTestBase {
 

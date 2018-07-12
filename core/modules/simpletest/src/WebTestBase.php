@@ -698,7 +698,8 @@ abstract class WebTestBase extends TestBase {
       if ($parameters[1] === 'User deprecated function') {
         if (getenv('SYMFONY_DEPRECATIONS_HELPER') !== 'disabled') {
           $message = (string) $parameters[0];
-          if (!in_array($message, DeprecationListenerTrait::getSkippedDeprecations())) {
+          $test_info = TestDiscovery::getTestInfo(get_called_class());
+          if ($test_info['group'] !== 'legacy' && !in_array($message, DeprecationListenerTrait::getSkippedDeprecations())) {
             call_user_func_array([&$this, 'error'], $parameters);
           }
         }

@@ -10,6 +10,7 @@ use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
  * Tests the upgrade path for the Content Translation module.
  *
  * @group Update
+ * @group legacy
  */
 class ContentTranslationUpdateTest extends UpdatePathTestBase {
 

@@ -11,6 +11,7 @@ use Drupal\views\Entity\View;
  * @see views_update_8002()
  *
  * @group views
+ * @group legacy
  */
 class ArgumentPlaceholderUpdatePathTest extends UpdatePathTestBase {
 

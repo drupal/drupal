@@ -11,6 +11,7 @@ use Drupal\user\Entity\User;
  * Runs UpdatePathTestBaseTest with a dump filled with content.
  *
  * @group Update
+ * @group legacy
  */
 class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 

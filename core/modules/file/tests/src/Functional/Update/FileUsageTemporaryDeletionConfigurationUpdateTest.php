@@ -10,6 +10,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @see https://www.drupal.org/node/2801777
  *
  * @group Update
+ * @group legacy
  */
 class FileUsageTemporaryDeletionConfigurationUpdateTest extends UpdatePathTestBase {
 

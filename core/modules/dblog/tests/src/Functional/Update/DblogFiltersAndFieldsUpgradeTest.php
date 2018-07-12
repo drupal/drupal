@@ -12,6 +12,7 @@ use Drupal\Core\Serialization\Yaml;
  * @see dblog_update_8400()
  *
  * @group Update
+ * @group legacy
  */
 class DblogFiltersAndFieldsUpgradeTest extends UpdatePathTestBase {
 
