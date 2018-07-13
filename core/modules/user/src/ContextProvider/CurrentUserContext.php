@@ -4,9 +4,8 @@ namespace Drupal\user\ContextProvider;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextProviderInterface;
+use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -56,7 +55,7 @@ class CurrentUserContext implements ContextProviderInterface {
       $current_user->_skipProtectedUserFieldConstraint = TRUE;
     }
 
-    $context = new Context(new ContextDefinition('entity:user', $this->t('Current user')), $current_user);
+    $context = EntityContext::fromEntity($current_user, $this->t('Current user'));
     $cacheability = new CacheableMetadata();
     $cacheability->setCacheContexts(['user']);
     $context->addCacheableDependency($cacheability);

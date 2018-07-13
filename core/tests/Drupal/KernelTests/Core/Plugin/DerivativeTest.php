@@ -10,6 +10,11 @@ namespace Drupal\KernelTests\Core\Plugin;
 class DerivativeTest extends PluginTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['node', 'user'];
+
+  /**
    * Tests getDefinitions() and getDefinition() with a derivativeDecorator.
    */
   public function testDerivativeDecorator() {

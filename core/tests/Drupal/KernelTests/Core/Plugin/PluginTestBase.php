@@ -2,7 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Plugin;
 
-use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\plugin_test\Plugin\TestPluginManager;
 use Drupal\plugin_test\Plugin\MockBlockManager;
@@ -93,7 +93,7 @@ abstract class PluginTestBase extends KernelTestBase {
         'label' => 'User name',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
         'context' => [
-          'user' => new ContextDefinition('entity:user', 'User'),
+          'user' => EntityContextDefinition::fromEntityTypeId('user')->setLabel('User'),
         ],
       ],
       'user_name_optional' => [
@@ -101,7 +101,7 @@ abstract class PluginTestBase extends KernelTestBase {
         'label' => 'User name optional',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
         'context' => [
-          'user' => new ContextDefinition('entity:user', 'User', FALSE),
+          'user' => EntityContextDefinition::fromEntityTypeId('user')->setLabel('User')->setRequired(FALSE),
         ],
       ],
       'string_context' => [
@@ -114,8 +114,8 @@ abstract class PluginTestBase extends KernelTestBase {
         'label' => 'Complex context',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockComplexContextBlock',
         'context' => [
-          'user' => new ContextDefinition('entity:user', 'User'),
-          'node' => new ContextDefinition('entity:node', 'Node'),
+          'user' => EntityContextDefinition::fromEntityTypeId('user')->setLabel('User'),
+          'node' => EntityContextDefinition::fromEntityTypeId('node')->setLabel('Node'),
         ],
       ],
     ];

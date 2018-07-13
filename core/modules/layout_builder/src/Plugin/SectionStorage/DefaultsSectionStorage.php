@@ -8,9 +8,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\layout_builder\DefaultsSectionStorageInterface;
@@ -255,12 +253,9 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
   public function getContexts() {
     $display = $this->getDisplay();
     $entity = $this->sampleEntityGenerator->get($display->getTargetEntityTypeId(), $display->getTargetBundle());
-    $context_label = new TranslatableMarkup('@entity being viewed', ['@entity' => $entity->getEntityType()->getLabel()]);
 
-    // @todo Use EntityContextDefinition after resolving
-    //   https://www.drupal.org/node/2932462.
     $contexts = [];
-    $contexts['layout_builder.entity'] = new Context(new ContextDefinition("entity:{$entity->getEntityTypeId()}", $context_label), $entity);
+    $contexts['layout_builder.entity'] = EntityContext::fromEntity($entity);
     return $contexts;
   }
 

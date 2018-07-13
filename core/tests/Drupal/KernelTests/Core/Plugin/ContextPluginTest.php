@@ -3,7 +3,7 @@
 namespace Drupal\KernelTests\Core\Plugin;
 
 use Drupal\Component\Plugin\Exception\ContextException;
-use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -45,7 +45,7 @@ class ContextPluginTest extends KernelTestBase {
     }
 
     // Test the getContextDefinitions() method.
-    $user_context_definition = ContextDefinition::create('entity:user')->setLabel(t('User'));
+    $user_context_definition = EntityContextDefinition::fromEntityTypeId('user')->setLabel(t('User'));
     $this->assertEqual($plugin->getContextDefinitions()['user']->getLabel(), $user_context_definition->getLabel());
 
     // Test the getContextDefinition() method for a valid context.

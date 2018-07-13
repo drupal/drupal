@@ -3,7 +3,8 @@
 namespace Drupal\KernelTests\Core\Plugin\Condition;
 
 use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -44,7 +45,7 @@ class OptionalContextConditionTest extends KernelTestBase {
       ->setContextMapping([
         'node' => 'node',
       ]);
-    $definition = new ContextDefinition('entity:node');
+    $definition = EntityContextDefinition::fromEntityTypeId('node');
     $contexts['node'] = (new Context($definition));
     \Drupal::service('context.handler')->applyContextMapping($condition, $contexts);
     $this->assertTrue($condition->execute());
@@ -61,9 +62,8 @@ class OptionalContextConditionTest extends KernelTestBase {
       ->setContextMapping([
         'node' => 'node',
       ]);
-    $definition = new ContextDefinition('entity:node');
     $node = Node::create(['type' => 'example']);
-    $contexts['node'] = new Context($definition, $node);
+    $contexts['node'] = EntityContext::fromEntity($node);
     \Drupal::service('context.handler')->applyContextMapping($condition, $contexts);
     $this->assertFalse($condition->execute());
   }

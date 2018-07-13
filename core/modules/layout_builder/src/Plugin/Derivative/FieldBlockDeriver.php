@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\FormatterPluginManager;
-use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -118,9 +118,7 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
           // unavailable to place in the block UI.
           $derivative['_block_ui_hidden'] = !$field_definition->isDisplayConfigurable('view');
 
-          // @todo Use EntityContextDefinition after resolving
-          //   https://www.drupal.org/node/2932462.
-          $context_definition = new ContextDefinition('entity:' . $entity_type_id, $entity_type_labels[$entity_type_id], TRUE);
+          $context_definition = EntityContextDefinition::fromEntityTypeId($entity_type_id)->setLabel($entity_type_labels[$entity_type_id]);
           $context_definition->addConstraint('Bundle', [$bundle]);
           $derivative['context'] = [
             'entity' => $context_definition,

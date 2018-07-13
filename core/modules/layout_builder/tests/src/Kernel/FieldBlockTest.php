@@ -10,7 +10,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterPluginManager;
-use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\layout_builder\Plugin\Block\FieldBlock;
@@ -207,7 +207,7 @@ class FieldBlockTest extends EntityKernelTestBase {
       'admin_label' => 'Test Block',
       'bundles' => ['entity_test'],
       'context' => [
-        'entity' => new ContextDefinition('entity:entity_test', 'Test', TRUE),
+        'entity' => EntityContextDefinition::fromEntityTypeId('entity_test')->setLabel('Test'),
       ],
     ];
     $formatter_manager = $this->prophesize(FormatterPluginManager::class);

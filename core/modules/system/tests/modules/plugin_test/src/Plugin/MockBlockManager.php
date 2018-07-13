@@ -7,6 +7,7 @@ use Drupal\Component\Plugin\Discovery\StaticDiscovery;
 use Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\Factory\ReflectionFactory;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
 
 /**
  * Defines a plugin manager used by Plugin API derivative unit tests.
@@ -140,7 +141,11 @@ class MockBlockManager extends PluginManagerBase {
     // a TranslatableMarkup and we will do assertEqual() checks on arrays that
     // include ContextDefinition objects, and var_export() has problems
     // printing TranslatableMarkup objects.
-    return new ContextDefinition($data_type, (string) $label, $required);
+    $class = ContextDefinition::class;
+    if (strpos($data_type, 'entity:') === 0) {
+      $class = EntityContextDefinition::class;
+    }
+    return new $class($data_type, (string) $label, $required);
   }
 
 }

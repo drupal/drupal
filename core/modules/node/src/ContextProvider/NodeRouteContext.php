@@ -4,8 +4,9 @@ namespace Drupal\node\ContextProvider;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextProviderInterface;
+use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -39,7 +40,7 @@ class NodeRouteContext implements ContextProviderInterface {
    */
   public function getRuntimeContexts(array $unqualified_context_ids) {
     $result = [];
-    $context_definition = new ContextDefinition('entity:node', NULL, FALSE);
+    $context_definition = EntityContextDefinition::create('node')->setRequired(FALSE);
     $value = NULL;
     if (($route_object = $this->routeMatch->getRouteObject()) && ($route_contexts = $route_object->getOption('parameters')) && isset($route_contexts['node'])) {
       if ($node = $this->routeMatch->getParameter('node')) {
@@ -65,7 +66,7 @@ class NodeRouteContext implements ContextProviderInterface {
    * {@inheritdoc}
    */
   public function getAvailableContexts() {
-    $context = new Context(new ContextDefinition('entity:node', $this->t('Node from URL')));
+    $context = EntityContext::fromEntityTypeId('node', $this->t('Node from URL'));
     return ['node' => $context];
   }
 

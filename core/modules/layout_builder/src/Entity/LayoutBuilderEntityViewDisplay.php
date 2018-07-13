@@ -5,8 +5,7 @@ namespace Drupal\layout_builder\Entity;
 use Drupal\Core\Entity\Entity\EntityViewDisplay as BaseEntityViewDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -137,6 +136,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   public function buildMultiple(array $entities) {
     $build_list = parent::buildMultiple($entities);
 
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
     foreach ($entities as $id => $entity) {
       $sections = $this->getRuntimeSections($entity);
       if ($sections) {
@@ -150,9 +150,10 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
         // Bypass ::getContexts() in order to use the runtime entity, not a
         // sample entity.
         $contexts = $this->contextRepository()->getAvailableContexts();
-        // @todo Use EntityContextDefinition after resolving
-        //   https://www.drupal.org/node/2932462.
-        $contexts['layout_builder.entity'] = new Context(new ContextDefinition("entity:{$entity->getEntityTypeId()}", new TranslatableMarkup('@entity being viewed', ['@entity' => $entity->getEntityType()->getLabel()])), $entity);
+        $label = new TranslatableMarkup('@entity being viewed', [
+          '@entity' => $entity->getEntityType()->getSingularLabel(),
+        ]);
+        $contexts['layout_builder.entity'] = EntityContext::fromEntity($entity, $label);
         foreach ($sections as $delta => $section) {
           $build_list[$id]['_layout_builder'][$delta] = $section->toRenderArray($contexts);
         }

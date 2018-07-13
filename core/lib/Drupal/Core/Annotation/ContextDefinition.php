@@ -116,8 +116,34 @@ class ContextDefinition extends Plugin {
     if (isset($values['class']) && !in_array('Drupal\Core\Plugin\Context\ContextDefinitionInterface', class_implements($values['class']))) {
       throw new \Exception('ContextDefinition class must implement \Drupal\Core\Plugin\Context\ContextDefinitionInterface.');
     }
-    $class = isset($values['class']) ? $values['class'] : 'Drupal\Core\Plugin\Context\ContextDefinition';
+
+    $class = $this->getDefinitionClass($values);
     $this->definition = new $class($values['value'], $values['label'], $values['required'], $values['multiple'], $values['description'], $values['default_value']);
+  }
+
+  /**
+   * Determines the context definition class to use.
+   *
+   * If the annotation specifies a specific context definition class, we use
+   * that. Otherwise, we use \Drupal\Core\Plugin\Context\EntityContextDefinition
+   * if the data type starts with 'entity:', since it contains specialized logic
+   * specific to entities. Otherwise, we fall back to the generic
+   * \Drupal\Core\Plugin\Context\ContextDefinition class.
+   *
+   * @param array $values
+   *   The annotation values.
+   *
+   * @return string
+   *   The fully-qualified name of the context definition class.
+   */
+  protected function getDefinitionClass(array $values) {
+    if (isset($values['class'])) {
+      return $values['class'];
+    }
+    if (strpos($values['value'], 'entity:') === 0) {
+      return 'Drupal\Core\Plugin\Context\EntityContextDefinition';
+    }
+    return 'Drupal\Core\Plugin\Context\ContextDefinition';
   }
 
   /**

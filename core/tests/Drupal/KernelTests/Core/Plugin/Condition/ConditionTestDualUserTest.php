@@ -2,8 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Plugin\Condition;
 
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
@@ -66,8 +65,7 @@ class ConditionTestDualUserTest extends KernelTestBase {
         'user1' => 'anonymous',
         'user2' => 'anonymous',
       ]);
-    $definition = new ContextDefinition('entity:user');
-    $contexts['anonymous'] = new Context($definition, $this->anonymous);
+    $contexts['anonymous'] = EntityContext::fromEntity($this->anonymous);
     \Drupal::service('context.handler')->applyContextMapping($condition, $contexts);
     $this->assertTrue($condition->execute());
   }
@@ -83,9 +81,8 @@ class ConditionTestDualUserTest extends KernelTestBase {
         'user1' => 'anonymous',
         'user2' => 'authenticated',
       ]);
-    $definition = new ContextDefinition('entity:user');
-    $contexts['anonymous'] = new Context($definition, $this->anonymous);
-    $contexts['authenticated'] = new Context($definition, $this->authenticated);
+    $contexts['anonymous'] = EntityContext::fromEntity($this->anonymous);
+    $contexts['authenticated'] = EntityContext::fromEntity($this->authenticated);
     \Drupal::service('context.handler')->applyContextMapping($condition, $contexts);
     $this->assertFalse($condition->execute());
   }
