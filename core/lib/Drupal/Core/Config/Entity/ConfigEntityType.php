@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config\Entity;
 
 use Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException;
+use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Config\ConfigPrefixLengthException;
 
@@ -142,30 +143,40 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPropertiesToExport() {
-    if (!empty($this->config_export)) {
-      if (empty($this->mergedConfigExport)) {
-        // Always add default properties to be exported.
-        $this->mergedConfigExport = [
-          'uuid' => 'uuid',
-          'langcode' => 'langcode',
-          'status' => 'status',
-          'dependencies' => 'dependencies',
-          'third_party_settings' => 'third_party_settings',
-          '_core' => '_core',
-        ];
-        foreach ($this->config_export as $property => $name) {
-          if (is_numeric($property)) {
-            $this->mergedConfigExport[$name] = $name;
-          }
-          else {
-            $this->mergedConfigExport[$property] = $name;
-          }
-        }
-      }
+  public function getPropertiesToExport($id = NULL) {
+    if (!empty($this->mergedConfigExport)) {
       return $this->mergedConfigExport;
     }
-    return NULL;
+    if (!empty($this->config_export)) {
+      // Always add default properties to be exported.
+      $this->mergedConfigExport = [
+        'uuid' => 'uuid',
+        'langcode' => 'langcode',
+        'status' => 'status',
+        'dependencies' => 'dependencies',
+        'third_party_settings' => 'third_party_settings',
+        '_core' => '_core',
+      ];
+      foreach ($this->config_export as $property => $name) {
+        if (is_numeric($property)) {
+          $this->mergedConfigExport[$name] = $name;
+        }
+        else {
+          $this->mergedConfigExport[$property] = $name;
+        }
+      }
+    }
+    else {
+      // @todo https://www.drupal.org/project/drupal/issues/2949021 Deprecate
+      //   fallback to schema.
+      $config_name = $this->getConfigPrefix() . '.' . $id;
+      $definition = \Drupal::service('config.typed')->getDefinition($config_name);
+      if (!isset($definition['mapping'])) {
+        throw new SchemaIncompleteException("Incomplete or missing schema for $config_name");
+      }
+      $this->mergedConfigExport = array_combine(array_keys($definition['mapping']), array_keys($definition['mapping']));
+    }
+    return $this->mergedConfigExport;
   }
 
   /**

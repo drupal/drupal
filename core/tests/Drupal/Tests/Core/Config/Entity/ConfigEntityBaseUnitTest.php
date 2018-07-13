@@ -8,7 +8,6 @@
 namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
@@ -550,32 +549,6 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $properties = $entity->toArray();
     $this->assertInternalType('array', $properties);
     $this->assertEquals(['configId' => $entity->id(), 'dependencies' => []], $properties);
-  }
-
-  /**
-   * @covers ::toArray
-   */
-  public function testToArraySchemaFallback() {
-    $this->typedConfigManager->expects($this->once())
-      ->method('getDefinition')
-      ->will($this->returnValue(['mapping' => ['id' => '', 'dependencies' => '']]));
-    $this->entityType->expects($this->any())
-      ->method('getPropertiesToExport')
-      ->willReturn([]);
-    $properties = $this->entity->toArray();
-    $this->assertInternalType('array', $properties);
-    $this->assertEquals(['id' => $this->entity->id(), 'dependencies' => []], $properties);
-  }
-
-  /**
-   * @covers ::toArray
-   */
-  public function testToArrayFallback() {
-    $this->entityType->expects($this->any())
-      ->method('getPropertiesToExport')
-      ->willReturn([]);
-    $this->setExpectedException(SchemaIncompleteException::class);
-    $this->entity->toArray();
   }
 
   /**

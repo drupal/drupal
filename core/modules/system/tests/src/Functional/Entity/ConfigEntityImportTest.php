@@ -21,7 +21,7 @@ class ConfigEntityImportTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['action', 'block', 'filter', 'image', 'search', 'search_extra_type'];
+  public static $modules = ['action', 'block', 'filter', 'image', 'search', 'search_extra_type', 'config_test'];
 
   /**
    * {@inheritdoc}
@@ -41,6 +41,7 @@ class ConfigEntityImportTest extends BrowserTestBase {
     $this->doFilterFormatUpdate();
     $this->doImageStyleUpdate();
     $this->doSearchPageUpdate();
+    $this->doThirdPartySettingsUpdate();
   }
 
   /**
@@ -170,6 +171,34 @@ class ConfigEntityImportTest extends BrowserTestBase {
     $custom_data = $original_data = $this->container->get('config.storage')->read($name);
     $custom_data['configuration']['boost'] = 'asdf';
     $this->assertConfigUpdateImport($name, $original_data, $custom_data);
+  }
+
+  /**
+   * Tests updating of third party settings.
+   */
+  protected function doThirdPartySettingsUpdate() {
+    // Create a test action with a known label.
+    $name = 'system.action.third_party_settings_test';
+
+    /** @var \Drupal\config_test\Entity\ConfigTest $entity */
+    $entity = Action::create([
+      'id' => 'third_party_settings_test',
+      'plugin' => 'action_message_action',
+    ]);
+    $entity->save();
+
+    $this->assertIdentical([], $entity->getThirdPartyProviders());
+    // Get a copy of the configuration before the third party setting is added.
+    $no_third_part_setting_config = $this->container->get('config.storage')->read($name);
+
+    // Add a third party setting.
+    $entity->setThirdPartySetting('config_test', 'integer', 1);
+    $entity->save();
+    $this->assertIdentical(1, $entity->getThirdPartySetting('config_test', 'integer'));
+    $has_third_part_setting_config = $this->container->get('config.storage')->read($name);
+
+    // Ensure configuration imports can completely remove third party settings.
+    $this->assertConfigUpdateImport($name, $has_third_part_setting_config, $no_third_part_setting_config);
   }
 
   /**

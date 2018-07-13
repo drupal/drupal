@@ -65,11 +65,22 @@ interface ConfigEntityTypeInterface extends EntityTypeInterface {
   /**
    * Gets the config entity properties to export if declared on the annotation.
    *
+   * Falls back to determining the properties using configuration schema, if the
+   * config entity properties are not declared.
+   *
+   * param string $id
+   *   The ID of the configuration entity. Used when checking schema instead of
+   *   the annotation.
+   *
    * @return array|null
    *   The properties to export or NULL if they can not be determine from the
    *   config entity type annotation.
+   *
+   * @throws \Drupal\Core\Config\Schema\SchemaIncompleteException
+   *   Thrown when the configuration entity type does not have the annotation or
+   *   a configuration schema.
    */
-  public function getPropertiesToExport();
+  public function getPropertiesToExport($id = NULL);
 
   /**
    * Gets the keys that are available for fast lookup.

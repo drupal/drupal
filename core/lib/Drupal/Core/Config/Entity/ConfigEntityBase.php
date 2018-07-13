@@ -4,7 +4,6 @@ namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -267,18 +266,8 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     /** @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $entity_type */
     $entity_type = $this->getEntityType();
 
-    $properties_to_export = $entity_type->getPropertiesToExport();
-    if (empty($properties_to_export)) {
-      $config_name = $entity_type->getConfigPrefix() . '.' . $this->id();
-      $definition = $this->getTypedConfig()->getDefinition($config_name);
-      if (!isset($definition['mapping'])) {
-        throw new SchemaIncompleteException("Incomplete or missing schema for $config_name");
-      }
-      $properties_to_export = array_combine(array_keys($definition['mapping']), array_keys($definition['mapping']));
-    }
-
     $id_key = $entity_type->getKey('id');
-    foreach ($properties_to_export as $property_name => $export_name) {
+    foreach ($entity_type->getPropertiesToExport($this->id()) as $property_name => $export_name) {
       // Special handling for IDs so that computed compound IDs work.
       // @see \Drupal\Core\Entity\EntityDisplayBase::id()
       if ($property_name == $id_key) {

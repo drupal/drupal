@@ -450,9 +450,19 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     $data = $this->mapFromStorageRecords([$values]);
     $updated_entity = current($data);
 
-    foreach (array_keys($values) as $property) {
-      $value = $updated_entity->get($property);
-      $entity->set($property, $value);
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $entity_type */
+    $entity_type = $this->getEntityType();
+    $id_key = $entity_type->getKey('id');
+    foreach ($entity_type->getPropertiesToExport($updated_entity->get($id_key)) as $property) {
+      if ($property === $this->uuidKey) {
+        // During an update the UUID field should not be copied. Under regular
+        // circumstances the values will be equal. If configuration is written
+        // twice during configuration install the updated entity will not have a
+        // UUID.
+        // @see \Drupal\Core\Config\ConfigInstaller::createConfiguration()
+        continue;
+      }
+      $entity->set($property, $updated_entity->get($property));
     }
 
     return $entity;

@@ -158,6 +158,14 @@ config_test.foo:
 config_test.bar:
   type: config_test.foo
 
+system.action.*.third_party.config_test:
+  type: mapping
+  label: 'Third party setting for action entity'
+  mapping:
+    integer:
+      type: integer
+      label: 'Integer'
+
 config_test.validation:
   type: config_object
   label: 'Configuration type'
