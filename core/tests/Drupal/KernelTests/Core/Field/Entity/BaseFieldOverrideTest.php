@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Field\Entity;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Field\FieldItemList;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -18,7 +19,11 @@ class BaseFieldOverrideTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system'];
+  public static $modules = [
+    'system',
+    'user',
+    'entity_test',
+  ];
 
   /**
    * {@inheritdoc}
@@ -60,6 +65,31 @@ class BaseFieldOverrideTest extends KernelTestBase {
         static::class,
       ],
     ];
+  }
+
+  /**
+   * Test the default value callback.
+   */
+  public function testDefaultValueCallback() {
+    $base_field = BaseFieldDefinition::create('entity_reference')
+      ->setName('Test Field')
+      ->setTargetEntityTypeId('entity_test')
+      ->setDefaultValueCallback(static::class . '::defaultValueCallbackPrimitive');
+    $base_field_override = BaseFieldOverride::createFromBaseFieldDefinition($base_field, 'test_bundle');
+    $entity = EntityTest::create([]);
+
+    $this->assertEquals([['target_id' => 99]], $base_field->getDefaultValue($entity));
+    $this->assertEquals([['target_id' => 99]], $base_field_override->getDefaultValue($entity));
+  }
+
+  /**
+   * A default value callback which returns a primitive value.
+   *
+   * @return int
+   *   A primitive default value.
+   */
+  public static function defaultValueCallbackPrimitive() {
+    return 99;
   }
 
 }
