@@ -7,12 +7,28 @@
 
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.ViewsAjaxView = {};
-  Drupal.behaviors.ViewsAjaxView.attach = function () {
-    if (drupalSettings && drupalSettings.views && drupalSettings.views.ajaxViews) {
-      var ajaxViews = drupalSettings.views.ajaxViews;
+  Drupal.behaviors.ViewsAjaxView.attach = function (context, settings) {
+    if (settings && settings.views && settings.views.ajaxViews) {
+      var ajaxViews = settings.views.ajaxViews;
+
       Object.keys(ajaxViews || {}).forEach(function (i) {
         Drupal.views.instances[i] = new Drupal.views.ajaxView(ajaxViews[i]);
       });
+    }
+  };
+  Drupal.behaviors.ViewsAjaxView.detach = function (context, settings, trigger) {
+    if (trigger === 'unload') {
+      if (settings && settings.views && settings.views.ajaxViews) {
+        var ajaxViews = settings.views.ajaxViews;
+
+        Object.keys(ajaxViews || {}).forEach(function (i) {
+          var selector = '.js-view-dom-id-' + ajaxViews[i].view_dom_id;
+          if ($(selector, context).length) {
+            delete Drupal.views.instances[i];
+            delete settings.views.ajaxViews[i];
+          }
+        });
+      }
     }
   };
 
