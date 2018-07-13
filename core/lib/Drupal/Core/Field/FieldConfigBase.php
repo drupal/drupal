@@ -12,6 +12,8 @@ use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
  */
 abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigInterface {
 
+  use FieldInputValueNormalizerTrait;
+
   /**
    * The field ID.
    *
@@ -393,6 +395,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     // Allow custom default values function.
     if ($callback = $this->getDefaultValueCallback()) {
       $value = call_user_func($callback, $entity, $this);
+      $value = $this->normalizeValue($value, $this->getFieldStorageDefinition()->getMainPropertyName());
     }
     else {
       $value = $this->getDefaultValueLiteral();
@@ -413,18 +416,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    * {@inheritdoc}
    */
   public function setDefaultValue($value) {
-    if (!is_array($value)) {
-      if ($value === NULL) {
-        $value = [];
-      }
-      $key = $this->getFieldStorageDefinition()->getPropertyNames()[0];
-      // Convert to the multi value format to support fields with a cardinality
-      // greater than 1.
-      $value = [
-        [$key => $value],
-      ];
-    }
-    $this->default_value = $value;
+    $this->default_value = $this->normalizeValue($value, $this->getFieldStorageDefinition()->getMainPropertyName());
     return $this;
   }
 
