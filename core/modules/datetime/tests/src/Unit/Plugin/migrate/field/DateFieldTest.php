@@ -12,24 +12,14 @@ use Drupal\Tests\UnitTestCase;
 class DateFieldTest extends UnitTestCase {
 
   /**
-   * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
-   */
-  protected $plugin;
-
-  /**
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
    * Tests an Exception is thrown when the field type is not a known date type.
    */
-  public function testUnknownDateType() {
-    $this->migration = $this->prophesize('Drupal\migrate\Plugin\MigrationInterface')->reveal();
-    $this->plugin = new DateField([], '', []);
+  public function testUnknownDateType($method = 'defineValueProcessPipeline') {
+    $migration = $this->prophesize('Drupal\migrate\Plugin\MigrationInterface')->reveal();
+    $plugin = new DateField([], '', []);
 
     $this->setExpectedException(MigrateException::class, "Field field_date of type 'timestamp' is an unknown date field type.");
-    $this->plugin->processFieldValues($this->migration, 'field_date', ['type' => 'timestamp']);
+    $plugin->$method($migration, 'field_date', ['type' => 'timestamp']);
   }
 
 }

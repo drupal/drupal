@@ -4,7 +4,7 @@ migration_tags:
   - Drupal 7
   - Configuration
 class: Drupal\migrate_drupal\Plugin\migrate\FieldMigration
-field_plugin_method: processField
+field_plugin_method: alterFieldMigration
 source:
   plugin: d7_field
   constants:

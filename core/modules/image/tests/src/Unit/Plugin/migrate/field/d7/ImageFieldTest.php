@@ -10,6 +10,7 @@ use Prophecy\Argument;
 /**
  * @coversDefaultClass \Drupal\image\Plugin\migrate\field\d7\ImageField
  * @group image
+ * @group legacy
  */
 class ImageFieldTest extends UnitTestCase {
 
@@ -44,6 +45,7 @@ class ImageFieldTest extends UnitTestCase {
 
   /**
    * @covers ::processFieldValues
+   * @expectedDeprecation Deprecated in Drupal 8.6.0, to be removed before Drupal 9.0.0. Use defineValueProcessPipeline() instead. See https://www.drupal.org/node/2944598.
    */
   public function testProcessFieldValues() {
     $this->plugin->processFieldValues($this->migration, 'somefieldname', []);

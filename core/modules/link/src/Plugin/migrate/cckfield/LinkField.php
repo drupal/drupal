@@ -29,8 +29,8 @@ class LinkField extends CckFieldPluginBase {
    * {@inheritdoc}
    */
   public function getFieldFormatterMap() {
-    // See d6_field_formatter_settings.yml and CckFieldPluginBase
-    // processFieldFormatter().
+    // See d6_field_formatter_settings.yml and FieldPluginBase
+    // alterFieldFormatterMigration().
     return [
       'default' => 'link',
       'plain' => 'link',

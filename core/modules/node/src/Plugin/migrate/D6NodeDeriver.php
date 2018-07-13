@@ -165,7 +165,7 @@ class D6NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
                 $this->fieldPluginCache[$field_type] = $this->fieldPluginManager->createInstance($plugin_id, ['core' => 6], $migration);
               }
               $this->fieldPluginCache[$field_type]
-                ->processFieldValues($migration, $field_name, $info);
+                ->defineValueProcessPipeline($migration, $field_name, $info);
             }
             catch (PluginNotFoundException $ex) {
               try {

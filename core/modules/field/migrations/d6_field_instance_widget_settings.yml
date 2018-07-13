@@ -4,7 +4,7 @@ migration_tags:
   - Drupal 6
   - Configuration
 class: Drupal\migrate_drupal\Plugin\migrate\FieldMigration
-field_plugin_method: processFieldWidget
+field_plugin_method: alterFieldWidgetMigration
 source:
   plugin: d6_field_instance_per_form_display
   constants:

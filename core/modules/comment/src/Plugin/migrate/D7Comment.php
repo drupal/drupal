@@ -35,7 +35,7 @@ class D7Comment extends FieldMigration {
           $this->fieldPluginCache[$field_type] = $this->fieldPluginManager->createInstance($field_type, [], $this);
         }
         $info = $row->getSource();
-        $this->fieldPluginCache[$field_type]->processFieldValues($this, $field_name, $info);
+        $this->fieldPluginCache[$field_type]->defineValueProcessPipeline($this, $field_name, $info);
       }
       else {
         $this->setProcessOfProperty($field_name, $field_name);

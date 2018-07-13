@@ -30,7 +30,7 @@ class TaxonomyTermReference extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
+  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
     $process = [
       'plugin' => 'sub_process',
       'source' => $field_name,

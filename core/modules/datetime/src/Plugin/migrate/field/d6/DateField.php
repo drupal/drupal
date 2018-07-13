@@ -40,7 +40,7 @@ class DateField extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
+  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
     switch ($data['type']) {
       case 'date':
         $from_format = 'Y-m-d\TH:i:s';

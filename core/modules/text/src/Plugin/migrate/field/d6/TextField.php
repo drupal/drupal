@@ -44,7 +44,7 @@ class TextField extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function processFieldValues(MigrationInterface $migration, $field_name, $field_info) {
+  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $field_info) {
     $widget_type = isset($field_info['widget_type']) ? $field_info['widget_type'] : $field_info['widget']['type'];
 
     if ($widget_type == 'optionwidgets_onoff') {

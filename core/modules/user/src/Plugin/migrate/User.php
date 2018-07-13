@@ -37,7 +37,7 @@ class User extends FieldMigration {
             }
             $info = $row->getSource();
             $this->fieldPluginCache[$field_type]
-              ->processFieldValues($this, $field_name, $info);
+              ->defineValueProcessPipeline($this, $field_name, $info);
           }
           else {
             if ($this->cckPluginManager->hasDefinition($field_type)) {
