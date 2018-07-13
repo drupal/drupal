@@ -153,7 +153,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    * @return string[]
    *   An array of the additional cache contexts.
    *
-   * @see \Drupal\system\Tests\Entity\EntityCacheTagsTestBase::createEntity()
+   * @see \Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase::createEntity()
    */
   protected function getAdditionalCacheContextsForEntity(EntityInterface $entity) {
     return [];
@@ -167,7 +167,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    * @return array
    *   An array of the additional cache tags.
    *
-   * @see \Drupal\system\Tests\Entity\EntityCacheTagsTestBase::createEntity()
+   * @see \Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase::createEntity()
    */
   protected function getAdditionalCacheTagsForEntity(EntityInterface $entity) {
     return [];
