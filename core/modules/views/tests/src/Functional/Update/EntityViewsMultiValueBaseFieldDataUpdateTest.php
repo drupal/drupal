@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\views\Tests\Update;
+namespace Drupal\Tests\views\Functional\Update;
 
-use Drupal\system\Tests\Update\UpdatePathTestBase;
+use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\views\Views;
 
 /**
@@ -19,8 +19,8 @@ class EntityViewsMultiValueBaseFieldDataUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
-      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.views-entity-views-data-2846614.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.views-entity-views-data-2846614.php',
     ];
   }
 

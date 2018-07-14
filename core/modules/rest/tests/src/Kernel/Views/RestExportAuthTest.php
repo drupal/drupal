@@ -45,7 +45,7 @@ class RestExportAuthTest extends ViewsKernelTestBase {
    *
    * @see rest_update_8401()
    * @see rest_views_presave()
-   * @see \Drupal\rest\Tests\Update\RestExportAuthCorrectionUpdateTest
+   * @see \Drupal\Tests\rest\Functional\Update\RestExportAuthCorrectionUpdateTest
    */
   public function testAuthCorrection() {
     // Get particular view.

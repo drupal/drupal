@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\rest\Tests\Update;
+namespace Drupal\Tests\rest\Functional\Update;
 
-use Drupal\system\Tests\Update\UpdatePathTestBase;
+use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
  * Ensures that update hook is run properly for REST Export config.
@@ -16,8 +16,8 @@ class RestExportAuthCorrectionUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
-      __DIR__ . '/../../../tests/fixtures/update/rest-export-with-authentication-correction.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
+      __DIR__ . '/../../../fixtures/update/rest-export-with-authentication-correction.php',
     ];
   }
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\views\Tests\Update;
+namespace Drupal\Tests\views\Functional\Update;
 
-use Drupal\system\Tests\Update\UpdatePathTestBase;
+use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\views\Entity\View;
 
 /**
@@ -19,8 +19,8 @@ class EntityLinkOutputUrlUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
-      __DIR__ . '/../../../tests/fixtures/update/entity-link-output-url.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
+      __DIR__ . '/../../../fixtures/update/entity-link-output-url.php',
     ];
   }
 
