@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\comment\Tests;
+namespace Drupal\Tests\comment\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Language\LanguageInterface;
@@ -30,34 +30,19 @@ class CommentNewIndicatorTest extends CommentTestBase {
    * @param array $node_ids
    *   An array of node IDs.
    *
-   * @return string
-   *   The response body.
+   * @return \Psr\Http\Message\ResponseInterface
+   *   The HTTP response.
    */
   protected function renderNewCommentsNodeLinks(array $node_ids) {
-    // Build POST values.
-    $post = [];
-    for ($i = 0; $i < count($node_ids); $i++) {
-      $post['node_ids[' . $i . ']'] = $node_ids[$i];
-    }
-    $post['field_name'] = 'comment';
+    $client = $this->getHttpClient();
+    $url = Url::fromRoute('comment.new_comments_node_links');
 
-    // Serialize POST values.
-    foreach ($post as $key => $value) {
-      // Encode according to application/x-www-form-urlencoded
-      // Both names and values needs to be urlencoded, according to
-      // http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1
-      $post[$key] = urlencode($key) . '=' . urlencode($value);
-    }
-    $post = implode('&', $post);
-
-    // Perform HTTP request.
-    return $this->curlExec([
-      CURLOPT_URL => \Drupal::url('comment.new_comments_node_links', [], ['absolute' => TRUE]),
-      CURLOPT_POST => TRUE,
-      CURLOPT_POSTFIELDS => $post,
-      CURLOPT_HTTPHEADER => [
-        'Accept: application/json',
-        'Content-Type: application/x-www-form-urlencoded',
+    return $client->request('POST', $this->buildUrl($url), [
+      'cookies' => $this->getSessionCookies(),
+      'http_errors' => FALSE,
+      'form_params' => [
+        'node_ids' => $node_ids,
+        'field_name' => 'comment',
       ],
     ]);
   }
@@ -127,8 +112,8 @@ class CommentNewIndicatorTest extends CommentTestBase {
     // Pretend the data was not present in drupalSettings, i.e. test the
     // separate request to the server.
     $response = $this->renderNewCommentsNodeLinks([$this->node->id()]);
-    $this->assertResponse(200);
-    $json = Json::decode($response);
+    $this->assertSame(200, $response->getStatusCode());
+    $json = Json::decode($response->getBody());
     $expected = [
       $this->node->id() => [
         'new_comment_count' => 1,
@@ -138,15 +123,15 @@ class CommentNewIndicatorTest extends CommentTestBase {
     $this->assertIdentical($expected, $json);
 
     // Failing to specify node IDs for the endpoint should return a 404.
-    $this->renderNewCommentsNodeLinks([]);
-    $this->assertResponse(404);
+    $response = $this->renderNewCommentsNodeLinks([]);
+    $this->assertSame(404, $response->getStatusCode());
 
     // Accessing the endpoint as the anonymous user should return a 403.
     $this->drupalLogout();
-    $this->renderNewCommentsNodeLinks([$this->node->id()]);
-    $this->assertResponse(403);
-    $this->renderNewCommentsNodeLinks([]);
-    $this->assertResponse(403);
+    $response = $this->renderNewCommentsNodeLinks([$this->node->id()]);
+    $this->assertSame(403, $response->getStatusCode());
+    $response = $this->renderNewCommentsNodeLinks([]);
+    $this->assertSame(403, $response->getStatusCode());
   }
 
 }
