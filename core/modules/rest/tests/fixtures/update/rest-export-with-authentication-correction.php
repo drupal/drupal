@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Test fixture for \Drupal\rest\Tests\Update\RestExportAuthCorrectionUpdateTest.
+ * Test fixture for \Drupal\Tests\rest\Functional\Update\RestExportAuthCorrectionUpdateTest.
  */
 
 use Drupal\Core\Database\Database;
