@@ -424,7 +424,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // after calling _file_save_upload_from_form() are correct.
     $this->assertText($error);
     $this->assertRaw('Number of error messages before _file_save_upload_from_form(): 1');
-    $this->assertRaw('Number of error messages after _file_save_upload_from_form(): 2');
+    $this->assertRaw('Number of error messages after _file_save_upload_from_form(): 1');
 
     // Test a successful upload with no messages.
     $edit = [

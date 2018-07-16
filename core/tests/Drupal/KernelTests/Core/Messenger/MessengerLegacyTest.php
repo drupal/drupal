@@ -103,6 +103,11 @@ class MessengerLegacyTest extends KernelTestBase {
     $this->assertCount(4, $messages[MessengerInterface::TYPE_STATUS]);
     $this->assertCount(4, $messages[MessengerInterface::TYPE_WARNING]);
     $this->assertCount(4, $messages[MessengerInterface::TYPE_ERROR]);
+
+    // Test deleteByType().
+    $this->assertCount(4, $messenger->deleteByType(MessengerInterface::TYPE_WARNING));
+    $this->assertCount(0, $messenger->messagesByType(MessengerInterface::TYPE_WARNING));
+    $this->assertCount(4, $messenger->messagesByType(MessengerInterface::TYPE_ERROR));
   }
 
 }
