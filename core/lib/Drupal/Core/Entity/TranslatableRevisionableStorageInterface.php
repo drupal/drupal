@@ -20,7 +20,9 @@ interface TranslatableRevisionableStorageInterface extends TranslatableStorageIn
    *   to TRUE.
    * @param bool|null $keep_untranslatable_fields
    *   (optional) Whether untranslatable field values should be kept or copied
-   *   from the default revision when generating a merged revision.
+   *   from the default revision when generating a merged revision. Defaults to
+   *   TRUE if the provided entity is the default translation and untranslatable
+   *   fields should only affect the default translation, FALSE otherwise.
    *
    * @return \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface
    *   A new translatable entity revision object.

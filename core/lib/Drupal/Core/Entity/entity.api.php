@@ -910,6 +910,54 @@ function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
+ * Respond to entity revision creation.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $new_revision
+ *   The new revision that was created.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The original entity that was used to create the revision from.
+ * @param bool|null $keep_untranslatable_fields
+ *   Whether untranslatable field values were kept (TRUE) or copied from the
+ *   default revision (FALSE) when generating a merged revision. If no value was
+ *   explicitly specified (NULL), a default value of TRUE should be assumed if
+ *   the provided entity is the default translation and untranslatable fields
+ *   should only affect the default translation, FALSE otherwise.
+ *
+ * @ingroup entity_crud
+ * @see \Drupal\Core\Entity\RevisionableStorageInterface::createRevision()
+ * @see \Drupal\Core\Entity\TranslatableRevisionableStorageInterface::createRevision()
+ */
+function hook_entity_revision_create(Drupal\Core\Entity\EntityInterface $new_revision, Drupal\Core\Entity\EntityInterface $entity, $keep_untranslatable_fields) {
+  // Retain the value from an untranslatable field, which are by default
+  // synchronized from the default revision.
+  $new_revision->set('untranslatable_field', $entity->get('untranslatable_field'));
+}
+
+/**
+ * Respond to entity revision creation.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $new_revision
+ *   The new revision that was created.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The original entity that was used to create the revision from.
+ * @param bool|null $keep_untranslatable_fields
+ *   Whether untranslatable field values were kept (TRUE) or copied from the
+ *   default revision (FALSE) when generating a merged revision. If no value was
+ *   explicitly specified (NULL), a default value of TRUE should be assumed if
+ *   the provided entity is the default translation and untranslatable fields
+ *   should only affect the default translation, FALSE otherwise.
+ *
+ * @ingroup entity_crud
+ * @see \Drupal\Core\Entity\RevisionableStorageInterface::createRevision()
+ * @see \Drupal\Core\Entity\TranslatableRevisionableStorageInterface::createRevision()
+ */
+function hook_ENTITY_TYPE_revision_create(Drupal\Core\Entity\EntityInterface $new_revision, Drupal\Core\Entity\EntityInterface $entity, $keep_untranslatable_fields) {
+  // Retain the value from an untranslatable field, which are by default
+  // synchronized from the default revision.
+  $new_revision->set('untranslatable_field', $entity->get('untranslatable_field'));
+}
+
+/**
  * Act on entities when loaded.
  *
  * This is a generic load hook called for all entity types loaded via the
