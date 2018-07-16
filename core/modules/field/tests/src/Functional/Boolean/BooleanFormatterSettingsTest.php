@@ -1,18 +1,17 @@
 <?php
 
-namespace Drupal\field\Tests\Boolean;
+namespace Drupal\Tests\field\Functional\Boolean;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the Boolean field formatter settings.
  *
  * @group field
  */
-class BooleanFormatterSettingsTest extends WebTestBase {
+class BooleanFormatterSettingsTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -89,10 +88,6 @@ class BooleanFormatterSettingsTest extends WebTestBase {
       'Custom',
     ];
 
-    // Define what the "default" option should look like, depending on the
-    // field settings.
-    $default = 'Field settings (@on / @off)';
-
     // For several different values of the field settings, test that the
     // options, including default, are shown correctly.
     $settings = [
@@ -101,6 +96,7 @@ class BooleanFormatterSettingsTest extends WebTestBase {
       ['TRUE', 'FALSE'],
     ];
 
+    $assert_session = $this->assertSession();
     foreach ($settings as $values) {
       // Set up the field settings.
       $this->drupalGet('admin/structure/types/manage/' . $this->bundle . '/fields/node.' . $this->bundle . '.' . $this->fieldName);
@@ -111,18 +107,20 @@ class BooleanFormatterSettingsTest extends WebTestBase {
 
       // Open the Manage Display page and trigger the field settings form.
       $this->drupalGet('admin/structure/types/manage/' . $this->bundle . '/display');
-      $this->drupalPostAjaxForm(NULL, [], $this->fieldName . '_settings_edit');
+      $this->drupalPostForm(NULL, [], $this->fieldName . '_settings_edit');
 
       // Test that the settings options are present in the correct format.
       foreach ($options as $string) {
-        $this->assertText($string);
+        $assert_session->pageTextContains($string);
       }
-      $this->assertText(new FormattableMarkup($default, ['@on' => $values[0], '@off' => $values[1]]));
-    }
+      $assert_session->pageTextContains(t('Field settings (@on_label / @off_label)', ['@on_label' => $values[0], '@off_label' => $values[1]]));
 
-    foreach ($settings as $values) {
+      // Test that the settings summary are present in the correct format.
       $this->drupalGet('admin/structure/types/manage/' . $this->bundle . '/display');
-      $result = $this->xpath('//div[contains(@class, :class) and contains(text(), :text)]', [':class' => 'field-plugin-summary', ':text' => 'Display: TRUE / FALSE']);
+      $result = $this->xpath('//div[contains(@class, :class) and contains(text(), :text)]', [
+        ':class' => 'field-plugin-summary',
+        ':text' => (string) t('Display: @true_label / @false_label', ['@true_label' => $values[0], '@false_label' => $values[1]]),
+      ]);
       $this->assertEqual(count($result), 1, "Boolean formatter settings summary exist.");
     }
   }
