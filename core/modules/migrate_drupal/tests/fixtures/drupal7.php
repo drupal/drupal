@@ -4492,6 +4492,15 @@ $connection->insert('field_config_instance')
   'data' => 'a:6:{s:5:"label";s:11:"Reference 2";s:6:"widget";a:4:{s:4:"type";s:14:"options_select";s:6:"weight";s:2:"21";s:8:"settings";a:0:{}s:6:"module";s:7:"options";}s:8:"settings";a:1:{s:18:"user_register_form";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:21:"entityreference_label";s:8:"settings";a:2:{s:4:"link";b:0;s:13:"bypass_access";b:0;}s:6:"module";s:15:"entityreference";s:6:"weight";i:21;}}s:8:"required";b:0;s:11:"description";s:0:"";}',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '66',
+  'field_id' => '38',
+  'field_name' => 'field_reference',
+  'entity_type' => 'user',
+  'bundle' => 'user',
+  'data' => 'a:7:{s:5:"label";s:9:"Reference";s:6:"widget";a:5:{s:6:"weight";s:2:"11";s:4:"type";s:14:"options_select";s:6:"module";s:7:"options";s:6:"active";i:1;s:8:"settings";a:0:{}}s:8:"settings";a:2:{s:18:"user_register_form";i:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:21:"entityreference_label";s:8:"settings";a:2:{s:4:"link";b:0;s:13:"bypass_access";b:0;}s:6:"module";s:15:"entityreference";s:6:"weight";i:9;}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
+  'deleted' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('field_data_body', array(
