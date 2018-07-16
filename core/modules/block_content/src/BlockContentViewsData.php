@@ -23,6 +23,8 @@ class BlockContentViewsData extends EntityViewsData {
 
     $data['block_content_field_data']['type']['field']['id'] = 'field';
 
+    $data['block_content_field_data']['table']['wizard_id'] = 'block_content';
+
     $data['block_content']['block_content_listing_empty'] = [
       'title' => $this->t('Empty block library behavior'),
       'help' => $this->t('Provides a link to add a new block.'),

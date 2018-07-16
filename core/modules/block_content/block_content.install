@@ -138,3 +138,19 @@ function block_content_update_8400() {
     $definition_update_manager->uninstallFieldStorageDefinition($content_translation_status);
   }
 }
+
+/**
+ * Add 'reusable' field to 'block_content' entities.
+ */
+function block_content_update_8600() {
+  $reusable = BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Reusable'))
+    ->setDescription(t('A boolean indicating whether this block is reusable.'))
+    ->setTranslatable(FALSE)
+    ->setRevisionable(FALSE)
+    ->setDefaultValue(TRUE)
+    ->setInitialValue(TRUE);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('reusable', 'block_content', 'block_content', $reusable);
+}
