@@ -180,7 +180,7 @@ class LegacyMessenger implements MessengerInterface {
   public function deleteByType($type) {
     // Proxy to the Messenger service, if it exists.
     if ($messenger = $this->getMessengerService()) {
-      return $messenger->messagesByType($type);
+      return $messenger->deleteByType($type);
     }
 
     $messages = static::$messages[$type];
