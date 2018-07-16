@@ -410,7 +410,7 @@ function locale_languages_edit_form_submit($form, &$form_state) {
       'prefix' => $form_state['values']['prefix'],
       'direction' => $form_state['values']['direction'],
     ))
-    ->condition('language',  $form_state['values']['langcode'])
+    ->condition('language', $form_state['values']['langcode'])
     ->execute();
   $default = language_default();
   if ($default->language == $form_state['values']['langcode']) {

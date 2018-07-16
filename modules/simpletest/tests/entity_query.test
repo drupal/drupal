@@ -1437,7 +1437,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $_GET['sort'] = 'asc';
     $_GET['order'] = 'Id';
     $header = array(
-      'id' => array('data' => 'Id', 'type' => 'property',  'specifier' => 'ftid'),
+      'id' => array('data' => 'Id', 'type' => 'property', 'specifier' => 'ftid'),
       'type' => array('data' => 'Type', 'type' => 'entity', 'specifier' => 'bundle'),
     );
     $query = new EntityFieldQuery();
@@ -1502,7 +1502,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $_GET['sort'] = 'asc';
     $_GET['order'] = 'Id';
     $header = array(
-      'id' => array('data' => 'Id', 'type' => 'property',  'specifier' => 'ftid'),
+      'id' => array('data' => 'Id', 'type' => 'property', 'specifier' => 'ftid'),
       'type' => array('data' => 'Type', 'type' => 'entity', 'specifier' => 'bundle'),
       'field' => array('data' => 'Field', 'type' => 'field', 'specifier' => array('field' => $this->field_names[0], 'column' => 'value')),
     );

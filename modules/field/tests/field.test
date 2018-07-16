@@ -1264,7 +1264,7 @@ class FieldInfoTestCase extends FieldTestCase {
       foreach ($field_type as $key => $val) {
         $this->assertEqual($info[$t_key][$key], $val, format_string('Field type %t_key key %key is %value', array('%t_key' => $t_key, '%key' => $key, '%value' => print_r($val, TRUE))));
       }
-      $this->assertEqual($info[$t_key]['module'], 'field_test',  "Field type field_test module appears");
+      $this->assertEqual($info[$t_key]['module'], 'field_test', "Field type field_test module appears");
     }
 
     $formatter_info = field_test_field_formatter_info();
@@ -1273,7 +1273,7 @@ class FieldInfoTestCase extends FieldTestCase {
       foreach ($formatter as $key => $val) {
         $this->assertEqual($info[$f_key][$key], $val, format_string('Formatter type %f_key key %key is %value', array('%f_key' => $f_key, '%key' => $key, '%value' => print_r($val, TRUE))));
       }
-      $this->assertEqual($info[$f_key]['module'], 'field_test',  "Formatter type field_test module appears");
+      $this->assertEqual($info[$f_key]['module'], 'field_test', "Formatter type field_test module appears");
     }
 
     $widget_info = field_test_field_widget_info();
@@ -1282,7 +1282,7 @@ class FieldInfoTestCase extends FieldTestCase {
       foreach ($widget as $key => $val) {
         $this->assertEqual($info[$w_key][$key], $val, format_string('Widget type %w_key key %key is %value', array('%w_key' => $w_key, '%key' => $key, '%value' => print_r($val, TRUE))));
       }
-      $this->assertEqual($info[$w_key]['module'], 'field_test',  "Widget type field_test module appears");
+      $this->assertEqual($info[$w_key]['module'], 'field_test', "Widget type field_test module appears");
     }
 
     $storage_info = field_test_field_storage_info();
@@ -1291,7 +1291,7 @@ class FieldInfoTestCase extends FieldTestCase {
       foreach ($storage as $key => $val) {
         $this->assertEqual($info[$s_key][$key], $val, format_string('Storage type %s_key key %key is %value', array('%s_key' => $s_key, '%key' => $key, '%value' => print_r($val, TRUE))));
       }
-      $this->assertEqual($info[$s_key]['module'], 'field_test',  "Storage type field_test module appears");
+      $this->assertEqual($info[$s_key]['module'], 'field_test', "Storage type field_test module appears");
     }
 
     // Verify that no unexpected instances exist.

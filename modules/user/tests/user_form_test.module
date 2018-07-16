@@ -15,7 +15,7 @@ function user_form_test_menu() {
   $items['user_form_test_current_password/%user'] = array(
     'title' => 'User form test for current password validation',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_form_test_current_password',1),
+    'page arguments' => array('user_form_test_current_password', 1),
     'access arguments' => array('administer users'),
     'type' => MENU_SUGGESTED_ITEM,
   );

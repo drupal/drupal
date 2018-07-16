@@ -95,7 +95,7 @@ function trigger_unassign_submit($form, &$form_state) {
       ->execute();
     drupal_static_reset('trigger_get_assigned_actions');
     $actions = actions_get_all_actions();
-    watchdog('actions', 'Action %action has been unassigned.',  array('%action' => $actions[$aid]['label']));
+    watchdog('actions', 'Action %action has been unassigned.', array('%action' => $actions[$aid]['label']));
     drupal_set_message(t('Action %action has been unassigned.', array('%action' => $actions[$aid]['label'])));
     $form_state['redirect'] = 'admin/structure/trigger/' . $form_state['values']['module'];
   }

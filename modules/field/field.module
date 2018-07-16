@@ -761,7 +761,7 @@ function field_filter_xss($string) {
  * List of tags allowed by field_filter_xss().
  */
 function _field_filter_xss_allowed_tags() {
-  return array('a', 'b', 'big',  'code', 'del', 'em', 'i', 'ins',  'pre', 'q', 'small', 'span', 'strong', 'sub', 'sup', 'tt', 'ol', 'ul', 'li', 'p', 'br', 'img');
+  return array('a', 'b', 'big', 'code', 'del', 'em', 'i', 'ins', 'pre', 'q', 'small', 'span', 'strong', 'sub', 'sup', 'tt', 'ol', 'ul', 'li', 'p', 'br', 'img');
 }
 
 /**

@@ -326,7 +326,7 @@ function image_style_delete_form($form, &$form_state, $style) {
     t('Optionally select a style before deleting %style', array('%style' => $style['label'])),
     'admin/config/media/image-styles',
     t('If this style is in use on the site, you may select another style to replace it. All images that have been generated for this style will be permanently deleted.'),
-    t('Delete'),  t('Cancel')
+    t('Delete'), t('Cancel')
   );
 }
 
@@ -352,7 +352,7 @@ function image_style_revert_form($form, &$form_state, $style) {
     t('Revert the %style style?', array('%style' => $style['label'])),
     'admin/config/media/image-styles',
     t('Reverting this style will delete the customized settings and restore the defaults provided by the @module module.', array('@module' => $style['module'])),
-    t('Revert'),  t('Cancel')
+    t('Revert'), t('Cancel')
   );
 }
 

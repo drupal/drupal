@@ -181,7 +181,7 @@ function theme_authorize_report($variables) {
         }
         $items[] = theme('authorize_message', array('message' => $log_message['message'], 'success' => $log_message['success']));
       }
-      $output .= theme('item_list',  array('items' => $items, 'title' => $heading));
+      $output .= theme('item_list', array('items' => $items, 'title' => $heading));
     }
     $output .= '</div>';
   }

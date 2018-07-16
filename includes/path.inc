@@ -317,7 +317,7 @@ function drupal_match_path($path, $patterns) {
     // Therefore replace newlines with a logical or, /* with asterisks and the <front> with the frontpage.
     $to_replace = array(
       '/(\r\n?|\n)/', // newlines
-      '/\\\\\*/',     // asterisks
+      '/\\\\\*/', // asterisks
       '/(^|\|)\\\\<front\\\\>($|\|)/' // <front>
     );
     $replacements = array(

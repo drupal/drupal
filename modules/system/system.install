@@ -2877,7 +2877,7 @@ function system_update_7061(&$sandbox) {
     }
     $query = db_select('upload', 'u');
     $query->distinct();
-    $query->addField('u','vid');
+    $query->addField('u', 'vid');
     db_insert('system_update_7061')
       ->from($query)
       ->execute();

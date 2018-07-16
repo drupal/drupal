@@ -423,7 +423,7 @@ function system_test_filetransfer_info() {
   return array(
     'system_test' => array(
       'title' => t('System Test FileTransfer'),
-      'file' => 'system_test.module',  // Should be a .inc, but for test, ok.
+      'file' => 'system_test.module', // Should be a .inc, but for test, ok.
       'class' => 'SystemTestFileTransfer',
       'weight' => -10,
     ),

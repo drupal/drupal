@@ -1029,7 +1029,7 @@ class MenuTreeOutputTestCase extends DrupalWebTestCase {
     $this->assertEqual($output['#theme_wrappers'][0], 'menu_tree__main_menu', 'Hyphen is changed to an underscore on menu_tree wrapper');
     // Looking for child items in the data
     $this->assertEqual( $output['1']['#below']['2']['#href'], 'a/b', 'Checking the href on a child item');
-    $this->assertTrue( in_array('active-trail',$output['1']['#below']['2']['#attributes']['class']) , 'Checking the active trail class');
+    $this->assertTrue( in_array('active-trail', $output['1']['#below']['2']['#attributes']['class']) , 'Checking the active trail class');
     // Validate that the hidden and no access items are missing
     $this->assertFalse( isset($output['5']), 'Hidden item should be missing');
     $this->assertFalse( isset($output['6']), 'False access should be missing');

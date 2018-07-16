@@ -494,7 +494,7 @@ function node_admin_nodes() {
     }
   }
   $nids = $query
-    ->fields('n',array('nid'))
+    ->fields('n', array('nid'))
     ->limit(50)
     ->orderByHeader($header)
     ->addTag('node_access')

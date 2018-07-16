@@ -58,7 +58,7 @@ class FieldUITestCase extends DrupalWebTestCase {
     $field_name = $initial_edit['fields[_add_new_field][field_name]'];
 
     // First step : 'Add new field' on the 'Manage fields' page.
-    $this->drupalPost("$bundle_path/fields",  $initial_edit, t('Save'));
+    $this->drupalPost("$bundle_path/fields", $initial_edit, t('Save'));
     $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', array('%label' => $label)), 'Field settings page was displayed.');
 
     // Second step : 'Field settings' form.

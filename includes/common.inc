@@ -2930,7 +2930,7 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
     // Also add a HTTP header "Link:".
     $href = '<' . check_plain($attributes['href']) . '>;';
     unset($attributes['href']);
-    $element['#attached']['drupal_add_http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
+    $element['#attached']['drupal_add_http_header'][] = array('Link', $href . drupal_http_header_attributes($attributes), TRUE);
   }
 
   drupal_add_html_head($element, 'drupal_add_html_head_link:' . $attributes['rel'] . ':' . $href);

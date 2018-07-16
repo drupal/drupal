@@ -506,7 +506,7 @@ function update_fix_d7_requirements() {
     db_add_index('system', 'bootstrap', array(
       'status', 'bootstrap', array('type', 12), 'weight', 'name'));
 
-    db_drop_index('system' ,'modules');
+    db_drop_index('system' , 'modules');
     db_add_index('system', 'modules', array(array(
       'type', 12), 'status', 'weight', 'name'));
 
