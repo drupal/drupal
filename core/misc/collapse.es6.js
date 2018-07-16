@@ -17,7 +17,7 @@
     this.$node.data('details', this);
     // Expand details if there are errors inside, or if it contains an
     // element that is targeted by the URI fragment identifier.
-    const anchor = location.hash && location.hash !== '#' ? `, ${location.hash}` : '';
+    const anchor = window.location.hash && window.location.hash !== '#' ? `, ${window.location.hash}` : '';
     if (this.$node.find(`.error${anchor}`).length) {
       this.$node.attr('open', true);
     }

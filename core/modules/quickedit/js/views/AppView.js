@@ -63,7 +63,7 @@
 
           if (reload) {
             reload = false;
-            location.reload();
+            window.location.reload();
           }
           break;
       }

@@ -72,9 +72,9 @@
     }
 
     function openActiveItem($menu) {
-      var pathItem = $menu.find('a[href="' + location.pathname + '"]');
+      var pathItem = $menu.find('a[href="' + window.location.pathname + '"]');
       if (pathItem.length && !activeItem) {
-        activeItem = location.pathname;
+        activeItem = window.location.pathname;
       }
       if (activeItem) {
         var $activeItem = $menu.find('a[href="' + activeItem + '"]').addClass('menu-item--active');

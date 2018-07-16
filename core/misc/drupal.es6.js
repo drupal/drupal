@@ -434,14 +434,14 @@ window.Drupal = { behaviors: {}, locale: {} };
     // Always use browser-derived absolute URLs in the comparison, to avoid
     // attempts to break out of the base path using directory traversal.
     let absoluteUrl = Drupal.url.toAbsolute(url);
-    let protocol = location.protocol;
+    let { protocol } = window.location;
 
     // Consider URLs that match this site's base URL but use HTTPS instead of HTTP
     // as local as well.
     if (protocol === 'http:' && absoluteUrl.indexOf('https:') === 0) {
       protocol = 'https:';
     }
-    let baseUrl = `${protocol}//${location.host}${drupalSettings.path.baseUrl.slice(0, -1)}`;
+    let baseUrl = `${protocol}//${window.location.host}${drupalSettings.path.baseUrl.slice(0, -1)}`;
 
     // Decoding non-UTF-8 strings may throw an exception.
     try {

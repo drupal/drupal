@@ -270,7 +270,7 @@
       url = e.currentTarget.location ? e.currentTarget.location : e.currentTarget;
     }
     else {
-      url = location;
+      url = window.location;
     }
     const hash = url.hash.substr(1);
     if (hash) {
