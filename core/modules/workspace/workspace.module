@@ -8,6 +8,7 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -17,6 +18,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\workspace\EntityAccess;
 use Drupal\workspace\EntityOperations;
 use Drupal\workspace\EntityTypeInfo;
+use Drupal\workspace\FormOperations;
 use Drupal\workspace\ViewsQueryAlter;
 
 /**
@@ -46,8 +48,13 @@ function workspace_entity_type_build(array &$entity_types) {
  * Implements hook_form_alter().
  */
 function workspace_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
+  if ($form_state->getFormObject() instanceof EntityFormInterface) {
+    \Drupal::service('class_resolver')
+      ->getInstanceFromDefinition(EntityOperations::class)
+      ->entityFormAlter($form, $form_state, $form_id);
+  }
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(FormOperations::class)
     ->formAlter($form, $form_state, $form_id);
 }
 
@@ -85,6 +92,15 @@ function workspace_entity_update(EntityInterface $entity) {
   return \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityOperations::class)
     ->entityUpdate($entity);
+}
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function workspace_entity_predelete(EntityInterface $entity) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityPredelete($entity);
 }
 
 /**

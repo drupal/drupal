@@ -10,7 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @internal
  */
-class WorkspaceDeleteForm extends ContentEntityDeleteForm {
+class WorkspaceDeleteForm extends ContentEntityDeleteForm implements WorkspaceFormInterface {
 
   /**
    * The workspace entity.

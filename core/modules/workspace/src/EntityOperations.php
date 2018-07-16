@@ -3,9 +3,9 @@
 namespace Drupal\workspace;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -119,13 +119,21 @@ class EntityOperations implements ContainerInjectionInterface {
    * @see hook_entity_presave()
    */
   public function entityPresave(EntityInterface $entity) {
-    /** @var \Drupal\Core\Entity\RevisionableInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
-    // Only run if the entity type can belong to a workspace and we are in a
-    // non-default workspace.
-    if (!$this->workspaceManager->shouldAlterOperations($entity->getEntityType())) {
+    $entity_type = $entity->getEntityType();
+
+    // Only run if this is not an entity type provided by the Workspace module
+    // and we are in a non-default workspace
+    if ($entity_type->getProvider() === 'workspace' || $this->workspaceManager->getActiveWorkspace()->isDefaultWorkspace()) {
       return;
     }
 
+    // Disallow any change to an unsupported entity when we are not in the
+    // default workspace.
+    if (!$this->workspaceManager->isEntityTypeSupported($entity_type)) {
+      throw new \RuntimeException('This entity can only be saved in the default workspace.');
+    }
+
+    /** @var \Drupal\Core\Entity\RevisionableInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
     if (!$entity->isNew() && !isset($entity->_isReplicating)) {
       // Force a new revision if the entity is not replicating.
       $entity->setNewRevision(TRUE);
@@ -209,6 +217,30 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Acts on an entity before it is deleted.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity being deleted.
+   *
+   * @see hook_entity_predelete()
+   */
+  public function entityPredelete(EntityInterface $entity) {
+    $entity_type = $entity->getEntityType();
+
+    // Only run if this is not an entity type provided by the Workspace module
+    // and we are in a non-default workspace
+    if ($entity_type->getProvider() === 'workspace' || $this->workspaceManager->getActiveWorkspace()->isDefaultWorkspace()) {
+      return;
+    }
+
+    // Disallow any change to an unsupported entity when we are not in the
+    // default workspace.
+    if (!$this->workspaceManager->isEntityTypeSupported($entity_type)) {
+      throw new \RuntimeException('This entity can only be deleted in the default workspace.');
+    }
+  }
+
+  /**
    * Updates or creates a WorkspaceAssociation entity for a given entity.
    *
    * If the passed-in entity can belong to a workspace and already has a
@@ -266,15 +298,26 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @see hook_form_alter()
    */
-  public function formAlter(array &$form, FormStateInterface $form_state, $form_id) {
-    $form_object = $form_state->getFormObject();
-    if (!$form_object instanceof EntityFormInterface) {
+  public function entityFormAlter(array &$form, FormStateInterface $form_state, $form_id) {
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    $entity = $form_state->getFormObject()->getEntity();
+    if (!$this->workspaceManager->isEntityTypeSupported($entity->getEntityType())) {
       return;
     }
 
-    $entity = $form_object->getEntity();
-    if (!$this->workspaceManager->isEntityTypeSupported($entity->getEntityType())) {
-      return;
+    // For supported entity types, signal the fact that this form is safe to use
+    // in a non-default workspace.
+    // @see \Drupal\workspace\FormOperations::validateForm()
+    $form_state->set('workspace_safe', TRUE);
+
+    // Add an entity builder to the form which marks the edited entity object as
+    // a pending revision. This is needed so validation constraints like
+    // \Drupal\path\Plugin\Validation\Constraint\PathAliasConstraintValidator
+    // know in advance (before hook_entity_presave()) that the new revision will
+    // be a pending one.
+    $active_workspace = $this->workspaceManager->getActiveWorkspace();
+    if (!$active_workspace->isDefaultWorkspace()) {
+      $form['#entity_builders'][] = [$this, 'entityFormEntityBuild'];
     }
 
     /** @var \Drupal\workspace\WorkspaceAssociationStorageInterface $workspace_association_storage */
@@ -283,13 +326,22 @@ class EntityOperations implements ContainerInjectionInterface {
       // An entity can only be edited in one workspace.
       $workspace_id = reset($workspace_ids);
 
-      if ($workspace_id !== $this->workspaceManager->getActiveWorkspace()->id()) {
+      if ($workspace_id !== $active_workspace->id()) {
         $workspace = $this->entityTypeManager->getStorage('workspace')->load($workspace_id);
 
         $form['#markup'] = $this->t('The content is being edited in the %label workspace.', ['%label' => $workspace->label()]);
         $form['#access'] = FALSE;
       }
     }
+  }
+
+  /**
+   * Entity builder that marks all supported entities as pending revisions.
+   */
+  public function entityFormEntityBuild($entity_type_id, RevisionableInterface $entity, &$form, FormStateInterface &$form_state) {
+    // Set the non-default revision flag so that validation constraints are also
+    // aware that a pending revision is about to be created.
+    $entity->isDefaultRevision(FALSE);
   }
 
 }

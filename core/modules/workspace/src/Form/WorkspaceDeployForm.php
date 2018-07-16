@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides the workspace deploy form.
  */
-class WorkspaceDeployForm extends ContentEntityForm {
+class WorkspaceDeployForm extends ContentEntityForm implements WorkspaceFormInterface {
 
   /**
    * The workspace entity.

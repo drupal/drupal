@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a form that activates a different workspace.
  */
-class WorkspaceSwitcherForm extends FormBase {
+class WorkspaceSwitcherForm extends FormBase implements WorkspaceFormInterface {
 
   /**
    * The workspace manager.
