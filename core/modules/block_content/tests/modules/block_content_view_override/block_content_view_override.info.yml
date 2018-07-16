@@ -1,0 +1,9 @@
+name: "Custom Block module reusable tests"
+type: module
+description: "Support module for custom block reusable testing."
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - drupal:block_content
+  - drupal:views

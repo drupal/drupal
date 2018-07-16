@@ -2,6 +2,7 @@
 
 namespace Drupal\block_content;
 
+use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
@@ -10,7 +11,7 @@ use Drupal\Core\Entity\RevisionLogInterface;
 /**
  * Provides an interface defining a custom block entity.
  */
-interface BlockContentInterface extends ContentEntityInterface, EntityChangedInterface, RevisionLogInterface, EntityPublishedInterface {
+interface BlockContentInterface extends ContentEntityInterface, EntityChangedInterface, RevisionLogInterface, EntityPublishedInterface, RefinableDependentAccessInterface {
 
   /**
    * Returns the block revision log message.
@@ -47,6 +48,28 @@ interface BlockContentInterface extends ContentEntityInterface, EntityChangedInt
    *   \Drupal\Core\Entity\RevisionLogInterface::setRevisionLogMessage() instead.
    */
   public function setRevisionLog($revision_log);
+
+  /**
+   * Determines if the block is reusable or not.
+   *
+   * @return bool
+   *   Returns TRUE if reusable and FALSE otherwise.
+   */
+  public function isReusable();
+
+  /**
+   * Sets the block to be reusable.
+   *
+   * @return $this
+   */
+  public function setReusable();
+
+  /**
+   * Sets the block to be non-reusable.
+   *
+   * @return $this
+   */
+  public function setNonReusable();
 
   /**
    * Sets the theme value.

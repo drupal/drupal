@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\block_content\Functional;
 
+use Drupal\block_content\Entity\BlockContent;
+
 /**
  * Tests the listing of custom blocks.
  *
@@ -104,6 +106,19 @@ class BlockContentListTest extends BlockContentTestBase {
 
     // Confirm that the empty text is displayed.
     $this->assertText(t('There are no custom blocks yet.'));
+
+    $block_content = BlockContent::create([
+      'info' => 'Non-reusable block',
+      'type' => 'basic',
+      'reusable' => FALSE,
+    ]);
+    $block_content->save();
+
+    $this->drupalGet('admin/structure/block/block-content');
+    // Confirm that the empty text is displayed.
+    $this->assertSession()->pageTextContains('There are no custom blocks yet.');
+    // Confirm the non-reusable block is not on the page.
+    $this->assertSession()->pageTextNotContains('Non-reusable block');
   }
 
 }
