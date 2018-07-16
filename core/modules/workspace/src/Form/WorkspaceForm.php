@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Form controller for the workspace edit forms.
  */
-class WorkspaceForm extends ContentEntityForm {
+class WorkspaceForm extends ContentEntityForm implements WorkspaceFormInterface {
 
   /**
    * The workspace entity.

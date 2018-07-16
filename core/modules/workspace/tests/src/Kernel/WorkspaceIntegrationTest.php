@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\workspace\Kernel;
 
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\entity_test\Entity\EntityTestMulRev;
+use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -74,6 +76,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->installSchema('node', ['node_access']);
 
     $this->installEntitySchema('entity_test_mulrev');
+    $this->installEntitySchema('entity_test_mulrevpub');
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
 
@@ -373,8 +376,9 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   public function testEntityQueryRelationship() {
     $this->initializeWorkspaceModule();
 
-    // Add an entity reference field that targets 'entity_test_mulrev' entities.
-    $this->createEntityReferenceField('node', 'page', 'field_test_entity', 'Test entity reference', 'entity_test_mulrev');
+    // Add an entity reference field that targets 'entity_test_mulrevpub'
+    // entities.
+    $this->createEntityReferenceField('node', 'page', 'field_test_entity', 'Test entity reference', 'entity_test_mulrevpub');
 
     // Add an entity reference field that targets 'node' entities so we can test
     // references to the same base tables.
@@ -384,8 +388,8 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $node_1 = $this->createNode([
       'title' => 'live node 1',
     ]);
-    $entity_test = EntityTestMulRev::create([
-      'name' => 'live entity_test_mulrev',
+    $entity_test = EntityTestMulRevPub::create([
+      'name' => 'live entity_test_mulrevpub',
       'non_rev_field' => 'live non-revisionable value',
     ]);
     $entity_test->save();
@@ -405,7 +409,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $node_2->title->value = 'stage node 2';
     $node_2->save();
 
-    $entity_test->name->value = 'stage entity_test_mulrev';
+    $entity_test->name->value = 'stage entity_test_mulrevpub';
     $entity_test->non_rev_field->value = 'stage non-revisionable value';
     $entity_test->save();
 
@@ -435,16 +439,55 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       ->condition('field_test_node.entity.uuid', $node_1->uuid());
 
     // Add conditions for a reference to a different entity type.
+    // @todo Re-enable the two conditions below when we find a way to not join
+    //   the workspace_association table for every duplicate entity base table
+    //   join.
+    // @see https://www.drupal.org/project/drupal/issues/2983639
     $query
       // Check a condition on the revision data table.
-      ->condition('field_test_entity.entity.name', 'stage entity_test_mulrev')
+      // ->condition('field_test_entity.entity.name', 'stage entity_test_mulrevpub')
       // Check a condition on the data table.
-      ->condition('field_test_entity.entity.non_rev_field', 'stage non-revisionable value')
+      // ->condition('field_test_entity.entity.non_rev_field', 'stage non-revisionable value')
       // Check a condition on the base table.
       ->condition('field_test_entity.entity.uuid', $entity_test->uuid());
 
     $result = $query->execute();
     $this->assertSame([$node_2->getRevisionId() => $node_2->id()], $result);
+  }
+
+  /**
+   * Tests CRUD operations for unsupported entity types.
+   */
+  public function testDisallowedEntityCRUDInNonDefaultWorkspace() {
+    $this->initializeWorkspaceModule();
+
+    // Create an unsupported entity type in the default workspace.
+    $this->switchToWorkspace('live');
+    $entity_test = EntityTestMulRev::create([
+      'name' => 'live entity_test_mulrev',
+    ]);
+    $entity_test->save();
+
+    // Switch to a non-default workspace and check that any entity type CRUD are
+    // not allowed.
+    $this->switchToWorkspace('stage');
+
+    // Check updating an existing entity.
+    $entity_test->name->value = 'stage entity_test_mulrev';
+    $entity_test->setNewRevision(TRUE);
+    $this->setExpectedException(EntityStorageException::class, 'This entity can only be saved in the default workspace.');
+    $entity_test->save();
+
+    // Check saving a new entity.
+    $new_entity_test = EntityTestMulRev::create([
+      'name' => 'stage entity_test_mulrev',
+    ]);
+    $this->setExpectedException(EntityStorageException::class, 'This entity can only be saved in the default workspace.');
+    $new_entity_test->save();
+
+    // Check deleting an existing entity.
+    $this->setExpectedException(EntityStorageException::class, 'This entity can only be deleted in the default workspace.');
+    $entity_test->delete();
   }
 
   /**

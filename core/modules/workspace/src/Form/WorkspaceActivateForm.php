@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Handle activation of a workspace on administrative pages.
  */
-class WorkspaceActivateForm extends EntityConfirmFormBase {
+class WorkspaceActivateForm extends EntityConfirmFormBase implements WorkspaceFormInterface {
 
   /**
    * The workspace entity.
