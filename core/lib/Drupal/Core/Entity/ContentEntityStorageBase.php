@@ -241,6 +241,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $new_revision = clone $entity;
 
+    $original_keep_untranslatable_fields = $keep_untranslatable_fields;
+
     // For translatable entities, create a merged revision of the active
     // translation and the other translations in the default revision. This
     // permits the creation of pending revisions that can always be saved as the
@@ -310,6 +312,11 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     // there are no explicit changes, to be sure this revision can be related
     // to the correct translation.
     $new_revision->setRevisionTranslationAffected(TRUE);
+
+    // Notify modules about the new revision.
+    $arguments = [$new_revision, $entity, $original_keep_untranslatable_fields];
+    $this->moduleHandler()->invokeAll($this->entityTypeId . '_revision_create', $arguments);
+    $this->moduleHandler()->invokeAll('entity_revision_create', $arguments);
 
     return $new_revision;
   }
