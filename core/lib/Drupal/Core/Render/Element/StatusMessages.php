@@ -86,7 +86,6 @@ class StatusMessages extends RenderElement {
       // Render the messages.
       $render = [
         '#theme' => 'status_messages',
-        // @todo Improve when https://www.drupal.org/node/2278383 lands.
         '#message_list' => $messages,
         '#status_headings' => [
           'status' => t('Status message'),
