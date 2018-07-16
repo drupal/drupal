@@ -76,10 +76,12 @@ interface AccountInterface {
    *   language if the user has no language preference.
    *
    * @return string
-   *   The language code that is preferred by the account. If the preferred
-   *   language is not set or is a language not configured anymore on the site,
-   *   the site default is returned or an empty string is returned (if
-   *   $fallback_to_default is FALSE).
+   *   Returned language code depends upon following:
+   *   - The user preferred language code is returned if set in the account.
+   *   - If the user has no preferred language and $fallback_to_default is TRUE
+   *     then the site default language code is returned.
+   *   - If the user has no preferred language and $fallback_to_default is FALSE
+   *     then empty string is returned.
    */
   public function getPreferredLangcode($fallback_to_default = TRUE);
 
