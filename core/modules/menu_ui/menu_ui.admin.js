@@ -26,7 +26,7 @@
     });
 
     $.ajax({
-      url: location.protocol + '//' + location.host + Drupal.url('admin/structure/menu/parents'),
+      url: window.location.protocol + '//' + window.location.host + Drupal.url('admin/structure/menu/parents'),
       type: 'POST',
       data: { 'menus[]': values },
       dataType: 'json',

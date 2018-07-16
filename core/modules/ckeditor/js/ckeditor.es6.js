@@ -295,13 +295,13 @@
 
   // Redirect on hash change when the original hash has an associated CKEditor.
   function redirectTextareaFragmentToCKEditorInstance() {
-    const hash = location.hash.substr(1);
+    const hash = window.location.hash.substr(1);
     const element = document.getElementById(hash);
     if (element) {
       const editor = CKEDITOR.dom.element.get(element).getEditor();
       if (editor) {
         const id = editor.container.getAttribute('id');
-        location.replace(`#${id}`);
+        window.location.replace(`#${id}`);
       }
     }
   }

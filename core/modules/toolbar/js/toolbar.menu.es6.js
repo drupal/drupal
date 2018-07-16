@@ -142,9 +142,9 @@
      *   The root of the menu.
      */
     function openActiveItem($menu) {
-      const pathItem = $menu.find(`a[href="${location.pathname}"]`);
+      const pathItem = $menu.find(`a[href="${window.location.pathname}"]`);
       if (pathItem.length && !activeItem) {
-        activeItem = location.pathname;
+        activeItem = window.location.pathname;
       }
       if (activeItem) {
         const $activeItem = $menu.find(`a[href="${activeItem}"]`).addClass('menu-item--active');

@@ -177,13 +177,13 @@
   });
 
   function redirectTextareaFragmentToCKEditorInstance() {
-    var hash = location.hash.substr(1);
+    var hash = window.location.hash.substr(1);
     var element = document.getElementById(hash);
     if (element) {
       var editor = CKEDITOR.dom.element.get(element).getEditor();
       if (editor) {
         var id = editor.container.getAttribute('id');
-        location.replace('#' + id);
+        window.location.replace('#' + id);
       }
     }
   }

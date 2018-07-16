@@ -135,12 +135,12 @@ window.Drupal = { behaviors: {}, locale: {} };
 
   Drupal.url.isLocal = function (url) {
     var absoluteUrl = Drupal.url.toAbsolute(url);
-    var protocol = location.protocol;
+    var protocol = window.location.protocol;
 
     if (protocol === 'http:' && absoluteUrl.indexOf('https:') === 0) {
       protocol = 'https:';
     }
-    var baseUrl = protocol + '//' + location.host + drupalSettings.path.baseUrl.slice(0, -1);
+    var baseUrl = protocol + '//' + window.location.host + drupalSettings.path.baseUrl.slice(0, -1);
 
     try {
       absoluteUrl = decodeURIComponent(absoluteUrl);
