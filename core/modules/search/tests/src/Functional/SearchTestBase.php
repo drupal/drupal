@@ -2,10 +2,17 @@
 
 namespace Drupal\Tests\search\Functional;
 
+@trigger_error(__NAMESPACE__ . '\SearchTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\BrowserTestBase. See https://www.drupal.org/node/2979950.', E_USER_DEPRECATED);
+
 use Drupal\Tests\BrowserTestBase;
 
 /**
  * Defines the common search test code.
+ *
+ * @deprecated in Drupal 8.6.0 and will be removed in Drupal 9.0.0. Use
+ *   \Drupal\Tests\BrowserTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2979950
  */
 abstract class SearchTestBase extends BrowserTestBase {
 

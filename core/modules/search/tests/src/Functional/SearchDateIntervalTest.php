@@ -3,23 +3,24 @@
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests searching with date filters that exclude some translations.
  *
  * @group search
  */
-class SearchDateIntervalTest extends SearchTestBase {
+class SearchDateIntervalTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
-  public static $modules = ['language', 'search_date_query_alter'];
+  protected static $modules = ['language', 'search_date_query_alter', 'node', 'search'];
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create and log in user.
     $test_user = $this->drupalCreateUser(['access content', 'search content', 'use advanced search', 'administer nodes', 'administer languages', 'access administration pages', 'administer site configuration']);

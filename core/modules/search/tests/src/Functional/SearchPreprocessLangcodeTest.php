@@ -2,19 +2,19 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Tests that the search preprocessing uses the correct language code.
  *
  * @group search
  */
-class SearchPreprocessLangcodeTest extends SearchTestBase {
+class SearchPreprocessLangcodeTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['search_langcode_test'];
+  protected static $modules = ['node', 'search', 'search_langcode_test'];
 
   /**
    * Test node for searching.
@@ -25,6 +25,8 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     $web_user = $this->drupalCreateUser([
       'create page content',

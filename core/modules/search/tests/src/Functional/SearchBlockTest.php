@@ -2,19 +2,19 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Tests if the search form block is available.
  *
  * @group search
  */
-class SearchBlockTest extends SearchTestBase {
+class SearchBlockTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['block'];
+  protected static $modules = ['block', 'node', 'search', 'dblog'];
 
   protected function setUp() {
     parent::setUp();

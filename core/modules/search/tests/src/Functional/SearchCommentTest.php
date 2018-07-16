@@ -6,6 +6,7 @@ use Behat\Mink\Exception\ResponseTextException;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\user\RoleInterface;
 use Drupal\filter\Entity\FilterFormat;
@@ -15,17 +16,15 @@ use Drupal\filter\Entity\FilterFormat;
  *
  * @group search
  */
-class SearchCommentTest extends SearchTestBase {
+class SearchCommentTest extends BrowserTestBase {
 
   use CommentTestTrait;
   use CronRunTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['filter', 'node', 'comment'];
+  protected static $modules = ['filter', 'node', 'comment', 'search'];
 
   /**
    * Test subject for comments.
@@ -57,6 +56,9 @@ class SearchCommentTest extends SearchTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     $full_html_format = FilterFormat::create([
       'format' => 'full_html',

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
@@ -10,9 +11,14 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
  *
  * @group search
  */
-class SearchNumberMatchingTest extends SearchTestBase {
+class SearchNumberMatchingTest extends BrowserTestBase {
 
   use CronRunTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['dblog', 'node', 'search'];
 
   /**
    * A user with permission to administer nodes.
@@ -50,6 +56,8 @@ class SearchNumberMatchingTest extends SearchTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     $this->testUser = $this->drupalCreateUser(['search content', 'access content', 'administer nodes', 'access site reports']);
     $this->drupalLogin($this->testUser);

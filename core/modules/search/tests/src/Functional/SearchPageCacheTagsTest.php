@@ -3,6 +3,7 @@
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
@@ -10,9 +11,14 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
  *
  * @group search
  */
-class SearchPageCacheTagsTest extends SearchTestBase {
+class SearchPageCacheTagsTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['node', 'search'];
 
   /**
    * {@inheritdoc}
@@ -38,6 +44,8 @@ class SearchPageCacheTagsTest extends SearchTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create user.
     $this->searchingUser = $this->drupalCreateUser(['search content', 'access user profiles']);

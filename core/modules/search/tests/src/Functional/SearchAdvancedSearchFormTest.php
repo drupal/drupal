@@ -2,12 +2,19 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Indexes content and tests the advanced search form.
  *
  * @group search
  */
-class SearchAdvancedSearchFormTest extends SearchTestBase {
+class SearchAdvancedSearchFormTest extends BrowserTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['node', 'search', 'dblog'];
 
   /**
    * A node to use for testing.
@@ -18,6 +25,10 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+
     // Create and log in user.
     $test_user = $this->drupalCreateUser(['access content', 'search content', 'use advanced search', 'administer nodes']);
     $this->drupalLogin($test_user);

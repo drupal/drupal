@@ -2,19 +2,19 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Verifies that a form embedded in search results works.
  *
  * @group search
  */
-class SearchEmbedFormTest extends SearchTestBase {
+class SearchEmbedFormTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['search_embedded_form'];
+  protected static $modules = ['node', 'search', 'search_embedded_form'];
 
   /**
    * Node used for testing.
@@ -32,6 +32,8 @@ class SearchEmbedFormTest extends SearchTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create a user and a node, and update the search index.
     $test_user = $this->drupalCreateUser(['access content', 'search content', 'administer nodes']);
