@@ -2,12 +2,19 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Tests that the search_simply() function works as intended.
  *
  * @group search
  */
-class SearchSimplifyTest extends SearchTestBase {
+class SearchSimplifyTest extends BrowserTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['search'];
 
   /**
    * Tests that all Unicode characters simplify correctly.

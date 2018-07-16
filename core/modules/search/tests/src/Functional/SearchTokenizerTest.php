@@ -2,12 +2,19 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Tests that CJK tokenizer works as intended.
  *
  * @group search
  */
-class SearchTokenizerTest extends SearchTestBase {
+class SearchTokenizerTest extends BrowserTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['search'];
 
   /**
    * Verifies that strings of CJK characters are tokenized.

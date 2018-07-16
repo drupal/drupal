@@ -4,13 +4,20 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the search help text and search page text.
  *
  * @group search
  */
-class SearchPageTextTest extends SearchTestBase {
+class SearchPageTextTest extends BrowserTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['block', 'node', 'search'];
+
   /**
    * A user with permission to use advanced search.
    *
@@ -19,17 +26,12 @@ class SearchPageTextTest extends SearchTestBase {
   protected $searchingUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
-   */
-  public static $modules = ['block'];
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create user.
     $this->searchingUser = $this->drupalCreateUser(['search content', 'access user profiles', 'use advanced search']);

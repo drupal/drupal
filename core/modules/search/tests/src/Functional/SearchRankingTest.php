@@ -7,6 +7,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Url;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\search\Entity\SearchPage;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
@@ -14,7 +15,7 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
  *
  * @group search
  */
-class SearchRankingTest extends SearchTestBase {
+class SearchRankingTest extends BrowserTestBase {
 
   use CommentTestTrait;
   use CronRunTrait;
@@ -27,14 +28,14 @@ class SearchRankingTest extends SearchTestBase {
   protected $nodeSearch;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['statistics', 'comment'];
+  protected static $modules = ['node', 'search', 'statistics', 'comment'];
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create a plugin instance.
     $this->nodeSearch = SearchPage::load('node_search');

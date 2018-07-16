@@ -4,20 +4,19 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\Core\Url;
 use Drupal\search\Entity\SearchPage;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Verify the search config settings form.
  *
  * @group search
  */
-class SearchConfigSettingsFormTest extends SearchTestBase {
+class SearchConfigSettingsFormTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['block', 'search_extra_type', 'test_page_test'];
+  protected static $modules = ['block', 'dblog', 'node', 'search', 'search_extra_type', 'test_page_test'];
 
   /**
    * User who can search and administer search.
@@ -35,6 +34,8 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Log in as a user that can create and search content.
     $this->searchUser = $this->drupalCreateUser(['search content', 'administer search', 'administer nodes', 'bypass node access', 'access user profiles', 'administer users', 'administer blocks', 'access site reports']);

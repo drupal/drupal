@@ -2,17 +2,26 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Tests that searching for a phrase gets the correct page count.
  *
  * @group search
  */
-class SearchExactTest extends SearchTestBase {
+class SearchExactTest extends BrowserTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['node', 'search'];
 
   /**
    * Tests that the correct number of pager links are found for both keywords and phrases.
    */
   public function testExactQuery() {
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
+
     // Log in with sufficient privileges.
     $user = $this->drupalCreateUser(['create page content', 'search content']);
     $this->drupalLogin($user);

@@ -2,19 +2,19 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Tests search index is updated properly when nodes are removed or updated.
  *
  * @group search
  */
-class SearchNodeUpdateAndDeletionTest extends SearchTestBase {
+class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = [];
+  protected static $modules = ['node', 'search'];
 
   /**
    * A user with permission to access and search content.
@@ -25,6 +25,8 @@ class SearchNodeUpdateAndDeletionTest extends SearchTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create a test user and log in.
     $this->testUser = $this->drupalCreateUser(['access content', 'search content']);

@@ -2,19 +2,19 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Tests that search works with numeric locale settings.
  *
  * @group search
  */
-class SearchSetLocaleTest extends SearchTestBase {
+class SearchSetLocaleTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['comment'];
+  protected static $modules = ['comment', 'node', 'search'];
 
   /**
    * A node search plugin instance.
@@ -25,6 +25,8 @@ class SearchSetLocaleTest extends SearchTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create a plugin instance.
     $this->nodeSearchPlugin = $this->container->get('plugin.manager.search')->createInstance('node_search');

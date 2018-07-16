@@ -2,23 +2,27 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Tests that the node search query can be altered via the query alter hook.
  *
  * @group search
  */
-class SearchQueryAlterTest extends SearchTestBase {
+class SearchQueryAlterTest extends BrowserTestBase {
+
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['search_query_alter'];
+  protected static $modules = ['node', 'search', 'search_query_alter'];
 
   /**
    * Tests that the query alter works.
    */
   public function testQueryAlter() {
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+
     // Log in with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(['create page content', 'search content']));
 

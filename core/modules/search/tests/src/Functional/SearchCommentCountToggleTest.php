@@ -4,6 +4,7 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that comment count display toggles properly on comment status of node.
@@ -17,16 +18,14 @@ use Drupal\comment\Tests\CommentTestTrait;
  *
  * @group search
  */
-class SearchCommentCountToggleTest extends SearchTestBase {
+class SearchCommentCountToggleTest extends BrowserTestBase {
 
   use CommentTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['node', 'comment'];
+  protected static $modules = ['node', 'comment', 'search', 'dblog'];
 
   /**
    * A user with permission to search and post comments.
@@ -44,6 +43,8 @@ class SearchCommentCountToggleTest extends SearchTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     // Create searching user.
     $this->searchingUser = $this->drupalCreateUser(['search content', 'access content', 'access comments', 'post comments', 'skip comment approval']);

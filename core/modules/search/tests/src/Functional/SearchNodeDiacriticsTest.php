@@ -2,12 +2,19 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+
 /**
  * Tests search functionality with diacritics.
  *
  * @group search
  */
-class SearchNodeDiacriticsTest extends SearchTestBase {
+class SearchNodeDiacriticsTest extends BrowserTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['node', 'search'];
 
   /**
    * A user with permission to use advanced search.
@@ -18,6 +25,9 @@ class SearchNodeDiacriticsTest extends SearchTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
+
     node_access_rebuild();
 
     // Create a test user and log in.

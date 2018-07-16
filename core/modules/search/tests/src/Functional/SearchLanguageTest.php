@@ -4,20 +4,19 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests advanced search with different languages added.
  *
  * @group search
  */
-class SearchLanguageTest extends SearchTestBase {
+class SearchLanguageTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['language'];
+  protected static $modules = ['language', 'node', 'search'];
 
   /**
    * Array of nodes available to search.
@@ -28,6 +27,8 @@ class SearchLanguageTest extends SearchTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create and log in user.
     $test_user = $this->drupalCreateUser(['access content', 'search content', 'use advanced search', 'administer nodes', 'administer languages', 'access administration pages', 'administer site configuration']);
