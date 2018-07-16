@@ -53,8 +53,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       $this->assertNoText($field_name, format_string('Field label is hidden when no file attached for formatter %formatter', ['%formatter' => $formatter]));
     }
 
-    $test_file = $this->getTestFile('text');
-    simpletest_generate_file('escaped-&-text', 64, 10, 'text');
+    $this->generateFile('escaped-&-text', 64, 10, 'text');
     $test_file = File::create([
       'uri' => 'public://escaped-&-text.txt',
       'name' => 'escaped-&-text',
