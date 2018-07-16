@@ -6,8 +6,6 @@
  */
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -164,16 +162,6 @@ function workspace_toolbar() {
   /** @var \Drupal\workspace\WorkspaceInterface $active_workspace */
   $active_workspace = \Drupal::service('workspace.manager')->getActiveWorkspace();
 
-  $configure_link = NULL;
-  if ($current_user->hasPermission('administer workspaces')) {
-    $configure_link = [
-      '#type' => 'link',
-      '#title' => t('Manage workspaces'),
-      '#url' => $active_workspace->toUrl('collection'),
-      '#options' => ['attributes' => ['class' => ['manage-workspaces']]],
-    ];
-  }
-
   $items['workspace'] = [
     '#type' => 'toolbar_item',
     'tab' => [
@@ -182,13 +170,16 @@ function workspace_toolbar() {
       '#url' => $active_workspace->toUrl('collection'),
       '#attributes' => [
         'title' => t('Switch workspace'),
-        'class' => ['toolbar-icon', 'toolbar-icon-workspace'],
+        'class' => ['use-ajax', 'toolbar-icon', 'toolbar-icon-workspace'],
+        'data-dialog-type' => 'dialog',
+        'data-dialog-renderer' => 'off_canvas_top',
+        'data-dialog-options' => Json::encode([
+          'height' => 161,
+          'classes' => [
+            'ui-dialog' => 'workspace-dialog',
+          ],
+        ]),
       ],
-    ],
-    'tray' => [
-      '#heading' => t('Workspaces'),
-      'workspaces' => workspace_build_renderable_links(),
-      'configure' => $configure_link,
     ],
     '#wrapper_attributes' => [
       'class' => ['workspace-toolbar-tab'],
@@ -206,62 +197,4 @@ function workspace_toolbar() {
   }
 
   return $items;
-}
-
-/**
- * Returns an array of workspace activation form links, suitable for rendering.
- *
- * @return array
- *   A render array containing links to the workspace activation form.
- */
-function workspace_build_renderable_links() {
-  $entity_type_manager = \Drupal::entityTypeManager();
-  /** @var \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository */
-  $entity_repository = \Drupal::service('entity.repository');
-  /** @var \Drupal\workspace\WorkspaceInterface $active_workspace */
-  $active_workspace = \Drupal::service('workspace.manager')->getActiveWorkspace();
-
-  $links = $cache_tags = [];
-  foreach ($entity_type_manager->getStorage('workspace')->loadMultiple() as $workspace) {
-    $workspace = $entity_repository->getTranslationFromContext($workspace);
-
-    // Add the 'is-active' class for the currently active workspace.
-    $options = [];
-    if ($workspace->id() === $active_workspace->id()) {
-      $options['attributes']['class'][] = 'is-active';
-    }
-
-    // Get the URL of the workspace activation form and display it in a modal.
-    $url = Url::fromRoute('entity.workspace.activate_form', ['workspace' => $workspace->id()], $options);
-    if ($url->access()) {
-      $links[$workspace->id()] = [
-        'type' => 'link',
-        'title' => $workspace->label(),
-        'url' => $url,
-        'attributes' => [
-          'class' => ['use-ajax'],
-          'data-dialog-type' => 'modal',
-          'data-dialog-options' => Json::encode([
-            'width' => 500,
-          ]),
-        ],
-      ];
-      $cache_tags = Cache::mergeTags($cache_tags, $workspace->getCacheTags());
-    }
-  }
-
-  if (!empty($links)) {
-    $links = [
-      '#theme' => 'links__toolbar_workspaces',
-      '#links' => $links,
-      '#attributes' => [
-        'class' => ['toolbar-menu'],
-      ],
-      '#cache' => [
-        'tags' => $cache_tags,
-      ],
-    ];
-  }
-
-  return $links;
 }
