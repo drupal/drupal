@@ -1,5 +1,0 @@
-entity.workspace.collection:
-  title: 'Workspaces'
-  parent: system.admin_config_workflow
-  description: 'Create and manage workspaces.'
-  route_name: entity.workspace.collection

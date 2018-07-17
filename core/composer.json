@@ -133,7 +133,6 @@
         "drupal/locale": "self.version",
         "drupal/minimal": "self.version",
         "drupal/media": "self.version",
-        "drupal/media_library": "self.version",
         "drupal/menu_link_content": "self.version",
         "drupal/menu_ui": "self.version",
         "drupal/migrate": "self.version",
@@ -169,7 +168,6 @@
         "drupal/views": "self.version",
         "drupal/views_ui": "self.version",
         "drupal/workflows": "self.version",
-        "drupal/workspace": "self.version"
     },
     "extra": {
         "merge-plugin": {

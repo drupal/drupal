@@ -1,5 +1,0 @@
-media_library.add:
-  route_name: entity.media.add_page
-  title: 'Add media'
-  appears_on:
-    - view.media.media_page_list
