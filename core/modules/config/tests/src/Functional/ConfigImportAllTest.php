@@ -94,9 +94,11 @@ class ConfigImportAllTest extends ModuleTestBase {
     $shortcuts = Shortcut::loadMultiple();
     entity_delete_multiple('shortcut', array_keys($shortcuts));
 
-    // Delete any workspaces so the workspace module can be uninstalled.
-    $workspaces = Workspace::loadMultiple();
-    \Drupal::entityTypeManager()->getStorage('workspace')->delete($workspaces);
+    if (\Drupal::moduleHandler()->moduleExists('workspace')) {
+      // Delete any workspaces so the workspace module can be uninstalled.
+      $workspaces = Workspace::loadMultiple();
+      \Drupal::entityTypeManager()->getStorage('workspace')->delete($workspaces);
+    }
 
     system_list_reset();
     $all_modules = system_rebuild_module_data();
