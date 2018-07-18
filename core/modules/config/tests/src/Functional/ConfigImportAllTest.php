@@ -3,12 +3,9 @@
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Config\StorageComparer;
-use Drupal\filter\Entity\FilterFormat;
-use Drupal\shortcut\Entity\Shortcut;
-use Drupal\taxonomy\Entity\Term;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\system\Functional\Module\ModuleTestBase;
-use Drupal\workspace\Entity\Workspace;
 
 /**
  * Tests the largest configuration import possible with all available modules.
@@ -73,32 +70,22 @@ class ConfigImportAllTest extends ModuleTestBase {
     system_list_reset();
     $this->resetAll();
 
-    // Delete every field on the site so all modules can be uninstalled. For
-    // example, if a comment field exists then module becomes required and can
-    // not be uninstalled.
-
-    $field_storages = \Drupal::entityManager()->getStorage('field_storage_config')->loadMultiple();
-    \Drupal::entityManager()->getStorage('field_storage_config')->delete($field_storages);
-    // Purge the data.
-    field_purge_batch(1000);
-
-    // Delete all terms.
-    $terms = Term::loadMultiple();
-    entity_delete_multiple('taxonomy_term', array_keys($terms));
-
-    // Delete all filter formats.
-    $filters = FilterFormat::loadMultiple();
-    entity_delete_multiple('filter_format', array_keys($filters));
-
-    // Delete any shortcuts so the shortcut module can be uninstalled.
-    $shortcuts = Shortcut::loadMultiple();
-    entity_delete_multiple('shortcut', array_keys($shortcuts));
-
-    if (\Drupal::moduleHandler()->moduleExists('workspace')) {
-      // Delete any workspaces so the workspace module can be uninstalled.
-      $workspaces = Workspace::loadMultiple();
-      \Drupal::entityTypeManager()->getStorage('workspace')->delete($workspaces);
+    // Delete all entities provided by modules that prevent uninstallation. For
+    // example, if any content entity exists its provider cannot be uninstalled.
+    // So deleting all taxonomy terms allows the Taxonomy to be uninstalled.
+    // Additionally, every field is deleted so modules can be uninstalled. For
+    // example, if a comment field exists then Comment cannot be uninstalled.
+    $entity_type_manager = \Drupal::entityTypeManager();
+    foreach ($entity_type_manager->getDefinitions() as $entity_type) {
+      if (($entity_type instanceof ContentEntityTypeInterface || in_array($entity_type->id(), ['field_storage_config', 'filter_format'], TRUE))
+        && !in_array($entity_type->getProvider(), ['system', 'user'], TRUE)) {
+        $storage = $entity_type_manager->getStorage($entity_type->id());
+        $storage->delete($storage->loadMultiple());
+      }
     }
+
+    // Purge the field data.
+    field_purge_batch(1000);
 
     system_list_reset();
     $all_modules = system_rebuild_module_data();
