@@ -136,13 +136,17 @@
         // Calculate minimum weight.
         let weight = -Math.round(table.find('.draggable').length / 2);
         // Update the block weights.
-        table.find(`.region-${region}-message`).nextUntil('.region-title')
-          .find('select.block-weight').val(() =>
+        table
+          .find(`.region-${region}-message`)
+          .nextUntil('.region-title')
+          .find('select.block-weight')
+          .val(
             // Increment the weight before assigning it to prevent using the
             // absolute minimum available weight. This way we always have an
             // unused upper and lower bound, which makes manually setting the
             // weights easier for users who prefer to do it that way.
-            ++weight);
+            () => ++weight,
+          );
       }
 
       const table = $('#blocks');
