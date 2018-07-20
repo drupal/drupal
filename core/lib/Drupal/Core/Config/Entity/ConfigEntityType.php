@@ -3,7 +3,6 @@
 namespace Drupal\Core\Config\Entity;
 
 use Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException;
-use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Config\ConfigPrefixLengthException;
 
@@ -172,7 +171,7 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
       $config_name = $this->getConfigPrefix() . '.' . $id;
       $definition = \Drupal::service('config.typed')->getDefinition($config_name);
       if (!isset($definition['mapping'])) {
-        throw new SchemaIncompleteException("Incomplete or missing schema for $config_name");
+        return NULL;
       }
       $this->mergedConfigExport = array_combine(array_keys($definition['mapping']), array_keys($definition['mapping']));
     }

@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
@@ -583,6 +584,17 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     // Test unsetThirdPartyProviders().
     $this->entity->unsetThirdPartySetting('test_provider2', $key);
     $this->assertEquals([$third_party], $this->entity->getThirdPartyProviders());
+  }
+
+  /**
+   * @covers ::toArray
+   */
+  public function testToArraySchemaException() {
+    $this->entityType->expects($this->any())
+      ->method('getPropertiesToExport')
+      ->willReturn(NULL);
+    $this->setExpectedException(SchemaIncompleteException::class, 'Incomplete or missing schema for test_provider.');
+    $this->entity->toArray();
   }
 
 }

@@ -4,6 +4,7 @@ namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -267,7 +268,12 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     $entity_type = $this->getEntityType();
 
     $id_key = $entity_type->getKey('id');
-    foreach ($entity_type->getPropertiesToExport($this->id()) as $property_name => $export_name) {
+    $property_names = $entity_type->getPropertiesToExport($this->id());
+    if (empty($property_names)) {
+      $config_name = $entity_type->getConfigPrefix() . '.' . $this->id();
+      throw new SchemaIncompleteException("Incomplete or missing schema for $config_name");
+    }
+    foreach ($property_names as $property_name => $export_name) {
       // Special handling for IDs so that computed compound IDs work.
       // @see \Drupal\Core\Entity\EntityDisplayBase::id()
       if ($property_name == $id_key) {

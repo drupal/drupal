@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\Core\Config\Entity;
 
-use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
@@ -208,12 +207,11 @@ class ConfigEntityTypeTest extends UnitTestCase {
   /**
    * @covers ::getPropertiesToExport
    */
-  public function testGetPropertiesToExportException() {
+  public function testGetPropertiesToExportNoFallback() {
     $config_entity_type = new ConfigEntityType([
       'id' => 'example_config_entity_type',
     ]);
-    $this->setExpectedException(SchemaIncompleteException::class);
-    $config_entity_type->getPropertiesToExport();
+    $this->assertNull($config_entity_type->getPropertiesToExport());
   }
 
 }
