@@ -92,8 +92,12 @@ function statistics_cron() {
  *   A query result containing the node ID, title, user ID that owns the node,
  *   and the username for the selected node(s), or FALSE if the query could not
  *   be executed correctly.
+ *
+ * @deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\statistics\NodeStatisticsDatabaseStorage::fetchAll() instead.
  */
 function statistics_title_list($dbfield, $dbrows) {
+  @trigger_error('statistics_title_list() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use \Drupal\statistics\NodeStatisticsDatabaseStorage::fetchAll() instead.', E_USER_DEPRECATED);
   if (in_array($dbfield, ['totalcount', 'daycount', 'timestamp'])) {
     $query = db_select('node_field_data', 'n');
     $query->addTag('node_access');
