@@ -44,6 +44,7 @@ class ImageFieldTest extends UnitTestCase {
   }
 
   /**
+   * @runInSeparateProcess
    * @covers ::defineValueProcessPipeline
    * @expectedDeprecation ImageField is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.x. Use \Drupal\image\Plugin\migrate\field\d7\ImageField instead. See https://www.drupal.org/node/2936061.
    */

@@ -29,6 +29,7 @@ class DateFieldTest extends UnitTestCase {
   /**
    * Tests an Exception is thrown when the field type is not a known date type.
    *
+   * @runInSeparateProcess
    * @expectedDeprecation DateField is deprecated in Drupal 8.4.x and will be removed before Drupal 9.0.x. Use \Drupal\datetime\Plugin\migrate\field\DateField instead.
    */
   public function testUnknownDateType($method = 'defineValueProcessPipeline') {
