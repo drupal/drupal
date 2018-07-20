@@ -232,6 +232,8 @@ class TwigExtension extends \Twig_Extension {
    * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    */
   public function getPath($name, $parameters = [], $options = []) {
+    assert($this->urlGenerator instanceof UrlGeneratorInterface, "The URL generator hasn't been set up. Any configuration YAML file with a service directive dealing with the Twig configuration can cause this, most likely found in a recently installed or changed module.");
+
     $options['absolute'] = FALSE;
     return $this->urlGenerator->generateFromRoute($name, $parameters, $options);
   }
@@ -253,6 +255,8 @@ class TwigExtension extends \Twig_Extension {
    * @todo Add an option for scheme-relative URLs.
    */
   public function getUrl($name, $parameters = [], $options = []) {
+    assert($this->urlGenerator instanceof UrlGeneratorInterface, "The URL generator hasn't been set up. Any configuration YAML file with a service directive dealing with the Twig configuration can cause this, most likely found in a recently installed or changed module.");
+
     // Generate URL.
     $options['absolute'] = TRUE;
     $generated_url = $this->urlGenerator->generateFromRoute($name, $parameters, $options, TRUE);
@@ -277,6 +281,9 @@ class TwigExtension extends \Twig_Extension {
    *   A render array representing a link to the given URL.
    */
   public function getLink($text, $url, $attributes = []) {
+    assert(is_string($url) || $url instanceof Url, '$url must be a string or object of type \Drupal\Core\Url');
+    assert(is_array($attributes) || $attributes instanceof Attribute, '$attributes, if set, must be an array or object of type \Drupal\Core\Template\Attribute');
+
     if (!$url instanceof Url) {
       $url = Url::fromUri($url);
     }
@@ -374,6 +381,8 @@ class TwigExtension extends \Twig_Extension {
    *   An asset library.
    */
   public function attachLibrary($library) {
+    assert(is_string($library), 'Argument must be a string.');
+
     // Use Renderer::render() on a temporary render array to get additional
     // bubbleable metadata on the render stack.
     $template_attached = ['#attached' => ['library' => [$library]]];
@@ -391,8 +400,10 @@ class TwigExtension extends \Twig_Extension {
    * @return string|null
    *   The escaped, rendered output, or NULL if there is no valid output.
    */
-  public function escapePlaceholder($env, $string) {
-    return '<em class="placeholder">' . $this->escapeFilter($env, $string) . '</em>';
+  public function escapePlaceholder(\Twig_Environment $env, $string) {
+    $return = $this->escapeFilter($env, $string);
+
+    return $return ? '<em class="placeholder">' . $return . '</em>' : NULL;
   }
 
   /**
