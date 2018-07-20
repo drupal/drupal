@@ -1034,13 +1034,12 @@
   Drupal.theme.ajaxWrapperNewContent = ($newContent, ajax, response) => (
     (response.effect || ajax.effect) !== 'none' &&
     $newContent.filter(
-      i =>
-        !(
-          // We can not consider HTML comments or whitespace text as separate
-          // roots, since they do not cause visual regression with effect.
-          $newContent[i].nodeName === '#comment' ||
-          ($newContent[i].nodeName === '#text' && /^(\s|\n|\r)*$/.test($newContent[i].textContent))
-        ),
+      i => !(
+        // We can not consider HTML comments or whitespace text as separate
+        // roots, since they do not cause visual regression with effect.
+        $newContent[i].nodeName === '#comment' ||
+        ($newContent[i].nodeName === '#text' && /^(\s|\n|\r)*$/.test($newContent[i].textContent))
+      ),
     ).length > 1
       ? Drupal.theme('ajaxWrapperMultipleRootElements', $newContent)
       : $newContent
