@@ -102,6 +102,7 @@ class TestSiteInstallCommand extends Command {
       $output->writeln(json_encode([
         'db_prefix' => $this->databasePrefix,
         'user_agent' => $user_agent,
+        'site_path' => $this->siteDirectory,
       ]));
     }
     else {
@@ -110,6 +111,7 @@ class TestSiteInstallCommand extends Command {
       $io->table([], [
         ['Database prefix', $this->databasePrefix],
         ['User agent', $user_agent],
+        ['Site path', $this->siteDirectory],
       ]);
     }
   }
