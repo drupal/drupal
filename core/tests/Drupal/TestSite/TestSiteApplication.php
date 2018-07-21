@@ -5,6 +5,7 @@ namespace Drupal\TestSite;
 use Drupal\TestSite\Commands\TestSiteInstallCommand;
 use Drupal\TestSite\Commands\TestSiteReleaseLocksCommand;
 use Drupal\TestSite\Commands\TestSiteTearDownCommand;
+use Drupal\TestSite\Commands\TestSiteUserLoginCommand;
 use Symfony\Component\Console\Application;
 
 /**
@@ -25,6 +26,7 @@ class TestSiteApplication extends Application {
     $default_commands[] = new TestSiteInstallCommand();
     $default_commands[] = new TestSiteTearDownCommand();
     $default_commands[] = new TestSiteReleaseLocksCommand();
+    $default_commands[] = new TestSiteUserLoginCommand();
     return $default_commands;
   }
 

@@ -5,16 +5,16 @@ import { commandAsWebserver } from '../globals';
 /**
  * Installs a Drupal test site.
  *
- * @param {Object}
- *   (optional) Settings object
- *   @param setupFile
- *     (optional) Setup file used by TestSiteApplicationTest
+ * @param {oject} [settings={}]
+ *   Settings object
+ * @param {string} [settings.setupFile='']
+ *   Setup file used by TestSiteApplicationTest
  * @param {function} callback
  *   A callback which will be called, when the installation is finished.
  * @return {object}
  *   The 'browser' object.
  */
-exports.command = function drupalInstall({ setupFile = '' }, callback) {
+exports.command = function drupalInstall({ setupFile = '' } = {}, callback) {
   const self = this;
 
   try {
@@ -23,6 +23,7 @@ exports.command = function drupalInstall({ setupFile = '' }, callback) {
     const install = execSync(commandAsWebserver(`php ./scripts/test-site.php install ${setupFile} --base-url ${process.env.DRUPAL_TEST_BASE_URL} ${dbOption} --json`));
     const installData = JSON.parse(install.toString());
     this.drupalDbPrefix = installData.db_prefix;
+    this.drupalSitePath = installData.site_path;
     const url = new URL(process.env.DRUPAL_TEST_BASE_URL);
     this
       .url(process.env.DRUPAL_TEST_BASE_URL)
@@ -45,5 +46,6 @@ exports.command = function drupalInstall({ setupFile = '' }, callback) {
   if (typeof callback === 'function') {
     callback.call(self);
   }
+
   return this;
 };
