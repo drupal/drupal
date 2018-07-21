@@ -20,7 +20,7 @@ class LanguageDomains extends ArrayBuild {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if ($row->getSourceProperty('domain_negotiation')) {
+    if ($row->getSourceProperty('domain_negotiation_used')) {
       global $base_url;
 
       foreach ($value as $old_key => $old_value) {

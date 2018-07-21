@@ -53,6 +53,10 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal7TestBase {
    * Tests the migration with prefix negotiation.
    */
   public function testLanguageNegotiationWithPrefix() {
+    $this->sourceDatabase->update('languages')
+      ->fields(['domain' => ''])
+      ->execute();
+
     $this->executeMigrations([
       'language',
       'd7_language_negotiation_settings',
@@ -68,6 +72,15 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal7TestBase {
       'is' => 'is',
     ];
     $this->assertSame($expected_prefixes, $config->get('url.prefixes'));
+
+    // If prefix negotiation is used, make sure that no domains are migrated.
+    // Otherwise there will be validation errors when trying to save URL
+    // language detection configuration from the UI.
+    $expected_domains = [
+      'en' => '',
+      'is' => '',
+    ];
+    $this->assertSame($expected_domains, $config->get('url.domains'));
   }
 
   /**
