@@ -217,7 +217,7 @@ class ManagedFile extends FormElement {
 
     // Set some default element properties.
     $element['#progress_indicator'] = empty($element['#progress_indicator']) ? 'none' : $element['#progress_indicator'];
-    $element['#files'] = !empty($fids) ? File::loadMultiple($fids) : FALSE;
+    $element['#files'] = !empty($fids) ? File::loadMultiple($fids) : [];
     $element['#tree'] = TRUE;
 
     // Generate a unique wrapper HTML ID.
