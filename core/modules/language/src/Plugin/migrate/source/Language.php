@@ -66,7 +66,7 @@ class Language extends DrupalSqlBase {
       // when the 'language_negotiation' variable is set to '3', and in D7, when
       // the 'locale_language_negotiation_url_part' variable is set to '1'.
       if ($this->variableGet('language_negotiation', 0) == 3 || $this->variableGet('locale_language_negotiation_url_part', 0) == 1) {
-        $row->setSourceProperty('domain_negotiation', TRUE);
+        $row->setSourceProperty('domain_negotiation_used', TRUE);
       }
     }
 
