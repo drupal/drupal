@@ -85,6 +85,7 @@ class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterfa
   public function build() {
     $config = $this->configuration;
     $cacheability = new CacheableMetadata();
+    $cacheability->addCacheableDependency($this->localTaskManager);
     $tabs = [
       '#theme' => 'menu_local_tasks',
     ];
