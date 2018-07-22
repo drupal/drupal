@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\contextual\Tests;
+namespace Drupal\Tests\contextual\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Template\Attribute;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests if contextual links are showing on the front page depending on
@@ -14,7 +14,7 @@ use Drupal\Core\Template\Attribute;
  *
  * @group contextual
  */
-class ContextualDynamicContextTest extends WebTestBase {
+class ContextualDynamicContextTest extends BrowserTestBase {
 
   /**
    * A user with permission to access contextual links and edit content.
@@ -89,12 +89,12 @@ class ContextualDynamicContextTest extends WebTestBase {
     for ($i = 0; $i < count($ids); $i++) {
       $this->assertContextualLinkPlaceHolder($ids[$i]);
     }
-    $this->renderContextualLinks([], 'node');
-    $this->assertResponse(400);
-    $this->assertRaw('No contextual ids specified.');
+    $response = $this->renderContextualLinks([], 'node');
+    $this->assertSame(400, $response->getStatusCode());
+    $this->assertContains('No contextual ids specified.', (string) $response->getBody());
     $response = $this->renderContextualLinks($ids, 'node');
-    $this->assertResponse(200);
-    $json = Json::decode($response);
+    $this->assertSame(200, $response->getStatusCode());
+    $json = Json::decode((string) $response->getBody());
     $this->assertIdentical($json[$ids[0]], '<ul class="contextual-links"><li class="entitynodeedit-form"><a href="' . base_path() . 'node/1/edit">Edit</a></li></ul>');
     $this->assertIdentical($json[$ids[1]], '');
     $this->assertIdentical($json[$ids[2]], '<ul class="contextual-links"><li class="entitynodeedit-form"><a href="' . base_path() . 'node/3/edit">Edit</a></li></ul>');
@@ -112,12 +112,12 @@ class ContextualDynamicContextTest extends WebTestBase {
     for ($i = 0; $i < count($ids); $i++) {
       $this->assertContextualLinkPlaceHolder($ids[$i]);
     }
-    $this->renderContextualLinks([], 'node');
-    $this->assertResponse(400);
-    $this->assertRaw('No contextual ids specified.');
+    $response = $this->renderContextualLinks([], 'node');
+    $this->assertSame(400, $response->getStatusCode());
+    $this->assertContains('No contextual ids specified.', (string) $response->getBody());
     $response = $this->renderContextualLinks($ids, 'node');
-    $this->assertResponse(200);
-    $json = Json::decode($response);
+    $this->assertSame(200, $response->getStatusCode());
+    $json = Json::decode((string) $response->getBody());
     $this->assertIdentical($json[$ids[0]], '');
     $this->assertIdentical($json[$ids[1]], '');
     $this->assertIdentical($json[$ids[2]], '');
@@ -129,10 +129,10 @@ class ContextualDynamicContextTest extends WebTestBase {
     for ($i = 0; $i < count($ids); $i++) {
       $this->assertNoContextualLinkPlaceHolder($ids[$i]);
     }
-    $this->renderContextualLinks([], 'node');
-    $this->assertResponse(403);
+    $response = $this->renderContextualLinks([], 'node');
+    $this->assertSame(403, $response->getStatusCode());
     $this->renderContextualLinks($ids, 'node');
-    $this->assertResponse(403);
+    $this->assertSame(403, $response->getStatusCode());
 
     // Get a page where contextual links are directly rendered.
     $this->drupalGet(Url::fromRoute('menu_test.contextual_test'));
@@ -174,15 +174,23 @@ class ContextualDynamicContextTest extends WebTestBase {
    * @param string $current_path
    *   The Drupal path for the page for which the contextual links are rendered.
    *
-   * @return string
-   *   The response body.
+   * @return \Psr\Http\Message\ResponseInterface
+   *   The response object.
    */
   protected function renderContextualLinks($ids, $current_path) {
-    $post = [];
-    for ($i = 0; $i < count($ids); $i++) {
-      $post['ids[' . $i . ']'] = $ids[$i];
-    }
-    return $this->drupalPostWithFormat('contextual/render', 'json', $post, ['query' => ['destination' => $current_path]]);
+    $http_client = $this->getHttpClient();
+    $url = Url::fromRoute('contextual.render', [], [
+      'query' => [
+        '_format' => 'json',
+        'destination' => $current_path,
+      ],
+    ]);
+
+    return $http_client->request('POST', $this->buildUrl($url), [
+      'cookies' => $this->getSessionCookies(),
+      'form_params' => ['ids' => $ids],
+      'http_errors' => FALSE,
+    ]);
   }
 
 }
