@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\media\MediaForm;
 
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
@@ -167,9 +168,13 @@ function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
  * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\media\MediaForm.
  */
 function seven_form_media_form_alter(&$form, FormStateInterface $form_state) {
-  // @todo Revisit after https://www.drupal.org/node/2892304 is in. It
-  // introduces a footer region to these forms which will allow for us to
-  // display a top border over the published checkbox by defining a
-  // media-edit-form.html.twig template the same way node does.
-  $form['#attached']['library'][] = 'seven/media-form';
+  // Only attach CSS from core if this form comes from Media core, and not from
+  // the contrib Media Entity 1.x branch.
+  if (\Drupal::moduleHandler()->moduleExists('media') && $form_state->getFormObject() instanceof MediaForm) {
+    // @todo Revisit after https://www.drupal.org/node/2892304 is in. It
+    // introduces a footer region to these forms which will allow for us to
+    // display a top border over the published checkbox by defining a
+    // media-edit-form.html.twig template the same way node does.
+    $form['#attached']['library'][] = 'seven/media-form';
+  }
 }
