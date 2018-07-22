@@ -3,6 +3,7 @@
 namespace Drupal\Tests\migrate\Kernel\Plugin;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\migrate\MigrateException;
 
 /**
  * Tests the migration plugin.
@@ -25,6 +26,17 @@ class MigrationTest extends KernelTestBase {
   public function testGetProcessPlugins() {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([]);
     $this->assertEquals([], $migration->getProcessPlugins([]));
+  }
+
+  /**
+   * Tests Migration::getProcessPlugins() throws an exception.
+   *
+   * @covers ::getProcessPlugins
+   */
+  public function testGetProcessPluginsException() {
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([]);
+    $this->setExpectedException(MigrateException::class, 'Invalid process configuration for foobar');
+    $migration->getProcessPlugins(['foobar' => ['plugin' => 'get']]);
   }
 
   /**
