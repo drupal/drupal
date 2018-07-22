@@ -348,35 +348,27 @@ class UserRegistrationTest extends WebTestBase {
     // Check that the 'add more' button works.
     $field_storage->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $field_storage->save();
-    foreach (['js', 'nojs'] as $js) {
-      $this->drupalGet('user/register');
-      $this->assertRegistrationFormCacheTagsWithUserFields();
-      // Add two inputs.
-      $value = rand(1, 255);
-      $edit = [];
-      $edit['test_user_field[0][value]'] = $value;
-      if ($js == 'js') {
-        $this->drupalPostAjaxForm(NULL, $edit, 'test_user_field_add_more');
-        $this->drupalPostAjaxForm(NULL, $edit, 'test_user_field_add_more');
-      }
-      else {
-        $this->drupalPostForm(NULL, $edit, t('Add another item'));
-        $this->drupalPostForm(NULL, $edit, t('Add another item'));
-      }
-      // Submit with three values.
-      $edit['test_user_field[1][value]'] = $value + 1;
-      $edit['test_user_field[2][value]'] = $value + 2;
-      $edit['name'] = $name = $this->randomMachineName();
-      $edit['mail'] = $mail = $edit['name'] . '@example.com';
-      $this->drupalPostForm(NULL, $edit, t('Create new account'));
-      // Check user fields.
-      $accounts = $this->container->get('entity_type.manager')->getStorage('user')
-        ->loadByProperties(['name' => $name, 'mail' => $mail]);
-      $new_user = reset($accounts);
-      $this->assertEqual($new_user->test_user_field[0]->value, $value, format_string('@js : The field value was correctly saved.', ['@js' => $js]));
-      $this->assertEqual($new_user->test_user_field[1]->value, $value + 1, format_string('@js : The field value was correctly saved.', ['@js' => $js]));
-      $this->assertEqual($new_user->test_user_field[2]->value, $value + 2, format_string('@js : The field value was correctly saved.', ['@js' => $js]));
-    }
+    $this->drupalGet('user/register');
+    $this->assertRegistrationFormCacheTagsWithUserFields();
+    // Add two inputs.
+    $value = rand(1, 255);
+    $edit = [];
+    $edit['test_user_field[0][value]'] = $value;
+    $this->drupalPostForm(NULL, $edit, t('Add another item'));
+    $this->drupalPostForm(NULL, $edit, t('Add another item'));
+    // Submit with three values.
+    $edit['test_user_field[1][value]'] = $value + 1;
+    $edit['test_user_field[2][value]'] = $value + 2;
+    $edit['name'] = $name = $this->randomMachineName();
+    $edit['mail'] = $mail = $edit['name'] . '@example.com';
+    $this->drupalPostForm(NULL, $edit, t('Create new account'));
+    // Check user fields.
+    $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+      ->loadByProperties(['name' => $name, 'mail' => $mail]);
+    $new_user = reset($accounts);
+    $this->assertEqual($new_user->test_user_field[0]->value, $value, 'The field value was correctly saved.');
+    $this->assertEqual($new_user->test_user_field[1]->value, $value + 1, 'The field value was correctly saved.');
+    $this->assertEqual($new_user->test_user_field[2]->value, $value + 2, 'The field value was correctly saved.');
   }
 
   /**
