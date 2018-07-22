@@ -97,7 +97,7 @@ class MenuLinkParent extends ProcessPluginBase implements ContainerFactoryPlugin
         }
       }
     }
-    throw new MigrateSkipRowException();
+    throw new MigrateSkipRowException(sprintf("No parent link found for plid '%d' in menu '%s'.", $parent_id, $value[0]));
   }
 
 }
