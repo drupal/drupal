@@ -9,6 +9,7 @@ use Drupal\migrate\Plugin\migrate\process\FileCopy;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\Row;
+use GuzzleHttp\Client;
 
 /**
  * Tests the file_copy process plugin.
@@ -76,28 +77,50 @@ class FileCopyTest extends FileTestBase {
 
   /**
    * Test successful file reuse.
+   *
+   * @dataProvider providerSuccessfulReuse
+   *
+   * @param string $source_path
+   *   Source path to copy from.
+   * @param string $destination_path
+   *   The destination path to copy to.
    */
-  public function testSuccessfulReuse() {
-    $source_path = $this->root . '/core/modules/simpletest/files/image-test.jpg';
-    $destination_path = 'public://file1.jpg';
-    $file_reuse = file_unmanaged_copy($source_path, $destination_path);
+  public function testSuccessfulReuse($source_path, $destination_path) {
+    $file_reuse = $this->doTransform($source_path, $destination_path);
+    clearstatcache(TRUE, $destination_path);
+
     $timestamp = (new \SplFileInfo($file_reuse))->getMTime();
     $this->assertInternalType('int', $timestamp);
 
     // We need to make sure the modified timestamp on the file is sooner than
     // the attempted migration.
     sleep(1);
-    $configuration = ['reuse' => TRUE];
+    $configuration = ['file_exists' => 'use existing'];
     $this->doTransform($source_path, $destination_path, $configuration);
     clearstatcache(TRUE, $destination_path);
     $modified_timestamp = (new \SplFileInfo($destination_path))->getMTime();
     $this->assertEquals($timestamp, $modified_timestamp);
 
-    $configuration = ['reuse' => FALSE];
-    $this->doTransform($source_path, $destination_path, $configuration);
+    $this->doTransform($source_path, $destination_path);
     clearstatcache(TRUE, $destination_path);
     $modified_timestamp = (new \SplFileInfo($destination_path))->getMTime();
     $this->assertGreaterThan($timestamp, $modified_timestamp);
+  }
+
+  /**
+   * Provides the source and destination path files.
+   */
+  public function providerSuccessfulReuse() {
+    return [
+      [
+        'local_source_path' => static::getDrupalRoot() . '/core/modules/simpletest/files/image-test.jpg',
+        'local_destination_path' => 'public://file1.jpg',
+      ],
+      [
+        'remote_source_path' => 'https://www.drupal.org/favicon.ico',
+        'remote_destination_path' => 'public://file2.jpg',
+      ],
+    ];
   }
 
   /**
@@ -179,7 +202,7 @@ class FileCopyTest extends FileTestBase {
     $source = $this->createUri(NULL, NULL, 'temporary');
     $destination = $this->createUri('foo.txt', NULL, 'public');
     $expected_destination = 'public://foo_0.txt';
-    $actual_destination = $this->doTransform($source, $destination, ['rename' => TRUE]);
+    $actual_destination = $this->doTransform($source, $destination, ['file_exists' => 'rename']);
     $this->assertFileExists($expected_destination, 'File was renamed on import');
     $this->assertSame($actual_destination, $expected_destination, 'The importer returned the renamed filename.');
   }
@@ -222,6 +245,9 @@ class FileCopyTest extends FileTestBase {
    *   The URI of the copied file.
    */
   protected function doTransform($source_path, $destination_path, $configuration = []) {
+    // Prepare a mock HTTP client.
+    $this->container->set('http_client', $this->createMock(Client::class));
+
     $plugin = FileCopy::create($this->container, $configuration, 'file_copy', []);
     $executable = $this->prophesize(MigrateExecutableInterface::class)->reveal();
     $row = new Row([], []);

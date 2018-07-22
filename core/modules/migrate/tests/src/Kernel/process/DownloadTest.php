@@ -51,7 +51,7 @@ class DownloadTest extends FileTestBase {
     $destination_uri = $this->createUri('another_existing_file.txt');
 
     // Test non-destructive download.
-    $actual_destination = $this->doTransform($destination_uri, ['rename' => TRUE]);
+    $actual_destination = $this->doTransform($destination_uri, ['file_exists' => 'rename']);
     $this->assertSame('public://another_existing_file_0.txt', $actual_destination, 'Import returned a renamed destination');
     $this->assertFileExists($actual_destination, 'Downloaded file was created');
   }
