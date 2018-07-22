@@ -1,18 +1,17 @@
 <?php
 
-namespace Drupal\field\Tests\Number;
+namespace Drupal\Tests\field\Functional\Number;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\node\Entity\Node;
-use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the creation of numeric fields.
  *
  * @group field
  */
-class NumberFieldTest extends WebTestBase {
+class NumberFieldTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -77,7 +76,7 @@ class NumberFieldTest extends WebTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
     $this->assertRaw($value, 'Value is displayed.');
@@ -189,7 +188,7 @@ class NumberFieldTest extends WebTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
 
@@ -238,7 +237,7 @@ class NumberFieldTest extends WebTestBase {
         "{$field_name}[0][value]" => $valid_entry,
       ];
       $this->drupalPostForm(NULL, $edit, t('Save'));
-      preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+      preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
       $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
       $this->assertRaw($valid_entry, 'Value is displayed.');
@@ -260,7 +259,7 @@ class NumberFieldTest extends WebTestBase {
       "{$field_name}[0][value]" => $integer_value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
     $this->drupalGet('entity_test/' . $id);
@@ -311,7 +310,7 @@ class NumberFieldTest extends WebTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
 
@@ -355,137 +354,6 @@ class NumberFieldTest extends WebTestBase {
       $this->drupalPostForm(NULL, $edit, t('Save'));
       $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]), 'Correctly failed to save float value with minus sign in the wrong position.');
     }
-  }
-
-  /**
-   * Test default formatter behavior
-   */
-  public function testNumberFormatter() {
-    $type = mb_strtolower($this->randomMachineName());
-    $float_field = mb_strtolower($this->randomMachineName());
-    $integer_field = mb_strtolower($this->randomMachineName());
-    $thousand_separators = ['', '.', ',', ' ', chr(8201), "'"];
-    $decimal_separators = ['.', ','];
-    $prefix = $this->randomMachineName();
-    $suffix = $this->randomMachineName();
-    $random_float = rand(0, pow(10, 6));
-    $random_integer = rand(0, pow(10, 6));
-
-    // Create a content type containing float and integer fields.
-    $this->drupalCreateContentType(['type' => $type]);
-
-    FieldStorageConfig::create([
-      'field_name' => $float_field,
-      'entity_type' => 'node',
-      'type' => 'float',
-    ])->save();
-
-    FieldStorageConfig::create([
-      'field_name' => $integer_field,
-      'entity_type' => 'node',
-      'type' => 'integer',
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => $float_field,
-      'entity_type' => 'node',
-      'bundle' => $type,
-      'settings' => [
-        'prefix' => $prefix,
-        'suffix' => $suffix,
-      ],
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => $integer_field,
-      'entity_type' => 'node',
-      'bundle' => $type,
-      'settings' => [
-        'prefix' => $prefix,
-        'suffix' => $suffix,
-      ],
-    ])->save();
-
-    entity_get_form_display('node', $type, 'default')
-      ->setComponent($float_field, [
-        'type' => 'number',
-        'settings' => [
-          'placeholder' => '0.00',
-        ],
-      ])
-      ->setComponent($integer_field, [
-        'type' => 'number',
-        'settings' => [
-          'placeholder' => '0.00',
-        ],
-      ])
-      ->save();
-
-    entity_get_display('node', $type, 'default')
-      ->setComponent($float_field, [
-        'type' => 'number_decimal',
-      ])
-      ->setComponent($integer_field, [
-        'type' => 'number_unformatted',
-      ])
-      ->save();
-
-    // Create a node to test formatters.
-    $node = Node::create([
-      'type' => $type,
-      'title' => $this->randomMachineName(),
-      $float_field => ['value' => $random_float],
-      $integer_field => ['value' => $random_integer],
-    ]);
-    $node->save();
-
-    // Go to manage display page.
-    $this->drupalGet("admin/structure/types/manage/$type/display");
-
-    // Configure number_decimal formatter for the 'float' field type.
-    $thousand_separator = $thousand_separators[array_rand($thousand_separators)];
-    $decimal_separator = $decimal_separators[array_rand($decimal_separators)];
-    $scale = rand(0, 10);
-
-    $this->drupalPostAjaxForm(NULL, [], "${float_field}_settings_edit");
-    $edit = [
-      "fields[${float_field}][settings_edit_form][settings][prefix_suffix]" => TRUE,
-      "fields[${float_field}][settings_edit_form][settings][scale]" => $scale,
-      "fields[${float_field}][settings_edit_form][settings][decimal_separator]" => $decimal_separator,
-      "fields[${float_field}][settings_edit_form][settings][thousand_separator]" => $thousand_separator,
-    ];
-    $this->drupalPostAjaxForm(NULL, $edit, "${float_field}_plugin_settings_update");
-    $this->drupalPostForm(NULL, [], t('Save'));
-
-    // Check number_decimal and number_unformatted formatters behavior.
-    $this->drupalGet('node/' . $node->id());
-    $float_formatted = number_format($random_float, $scale, $decimal_separator, $thousand_separator);
-    $this->assertRaw("$prefix$float_formatted$suffix", 'Prefix and suffix added');
-    $this->assertRaw((string) $random_integer);
-
-    // Configure the number_decimal formatter.
-    entity_get_display('node', $type, 'default')
-      ->setComponent($integer_field, [
-        'type' => 'number_integer',
-      ])
-      ->save();
-    $this->drupalGet("admin/structure/types/manage/$type/display");
-
-    $thousand_separator = $thousand_separators[array_rand($thousand_separators)];
-
-    $this->drupalPostAjaxForm(NULL, [], "${integer_field}_settings_edit");
-    $edit = [
-      "fields[${integer_field}][settings_edit_form][settings][prefix_suffix]" => FALSE,
-      "fields[${integer_field}][settings_edit_form][settings][thousand_separator]" => $thousand_separator,
-    ];
-    $this->drupalPostAjaxForm(NULL, $edit, "${integer_field}_plugin_settings_update");
-    $this->drupalPostForm(NULL, [], t('Save'));
-
-    // Check number_integer formatter behavior.
-    $this->drupalGet('node/' . $node->id());
-
-    $integer_formatted = number_format($random_integer, 0, '', $thousand_separator);
-    $this->assertRaw($integer_formatted, 'Random integer formatted');
   }
 
   /**
