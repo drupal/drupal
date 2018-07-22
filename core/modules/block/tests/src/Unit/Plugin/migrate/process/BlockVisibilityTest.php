@@ -4,6 +4,7 @@ namespace Drupal\Tests\block\Unit\Plugin\migrate\process;
 
 use Drupal\block\Plugin\migrate\process\BlockVisibility;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 
@@ -78,6 +79,24 @@ class BlockVisibilityTest extends MigrateProcessTestCase {
     $this->moduleHandler->moduleExists('php')->willReturn(FALSE);
     $transformed_value = $this->plugin->transform([2, '<?php', []], $this->migrateExecutable, $this->row, 'destinationproperty');
     $this->assertEmpty($transformed_value);
+  }
+
+  /**
+   * @covers ::transform
+   */
+  public function testTransformException() {
+    $this->moduleHandler->moduleExists('php')->willReturn(FALSE);
+    $migration_plugin = $this->prophesize(MigrateProcessInterface::class);
+    $this->row = $this->getMockBuilder('Drupal\migrate\Row')
+      ->disableOriginalConstructor()
+      ->setMethods(['getSourceProperty'])
+      ->getMock();
+    $this->row->expects($this->exactly(2))
+      ->method('getSourceProperty')
+      ->willReturnMap([['bid', 99], ['module', 'foobar']]);
+    $this->plugin = new BlockVisibility(['skip_php' => TRUE], 'block_visibility_pages', [], $this->moduleHandler->reveal(), $migration_plugin->reveal());
+    $this->setExpectedException(MigrateSkipRowException::class, "The block with bid '99' from module 'foobar' will have no PHP or request_path visibility configuration.");
+    $this->plugin->transform([2, '<?php', []], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 
 }
