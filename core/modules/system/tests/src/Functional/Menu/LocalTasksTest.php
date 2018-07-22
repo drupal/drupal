@@ -18,7 +18,7 @@ class LocalTasksTest extends BrowserTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['block', 'menu_test', 'entity_test'];
+  public static $modules = ['block', 'menu_test', 'entity_test', 'node'];
 
   /**
    * The local tasks block under testing.
@@ -251,6 +251,31 @@ class LocalTasksTest extends BrowserTestBase {
       ['menu_test.local_task_test_tasks_settings_derived', ['placeholder' => 'derive2']],
     ];
     $this->assertLocalTasks($sub_tasks, 1);
+  }
+
+  /**
+   * Test that local tasks blocks cache is invalidated correctly.
+   */
+  public function testLocalTaskBlockCache() {
+    $this->drupalLogin($this->rootUser);
+    $this->drupalCreateContentType(['type' => 'page']);
+
+    $this->drupalGet('/admin/structure/types/manage/page');
+
+    // Only the Edit task. The block avoids showing a single tab.
+    $this->assertNoLocalTasks();
+
+    // Field UI adds the usual Manage fields etc tabs.
+    \Drupal::service('module_installer')->install(['field_ui']);
+
+    $this->drupalGet('/admin/structure/types/manage/page');
+
+    $this->assertLocalTasks([
+      ['entity.node_type.edit_form', ['node_type' => 'page']],
+      ['entity.node.field_ui_fields', ['node_type' => 'page']],
+      ['entity.entity_form_display.node.default', ['node_type' => 'page']],
+      ['entity.entity_view_display.node.default', ['node_type' => 'page']],
+    ]);
   }
 
 }
