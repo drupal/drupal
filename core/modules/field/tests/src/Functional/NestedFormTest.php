@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\field\Tests;
+namespace Drupal\Tests\field\Functional;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
@@ -139,12 +139,10 @@ class NestedFormTest extends FieldTestBase {
     $this->assertFieldValues($entity_1, 'field_unlimited', [3, 2]);
     $this->assertFieldValues($entity_2, 'field_unlimited', [13, 12]);
 
-    // Test the 'add more' buttons. Only Ajax submission is tested, because
-    // the two 'add more' buttons present in the form have the same #value,
-    // which confuses drupalPostForm().
+    // Test the 'add more' buttons.
     // 'Add more' button in the first entity:
     $this->drupalGet('test-entity/nested/1/2');
-    $this->drupalPostAjaxForm(NULL, [], 'field_unlimited_add_more');
+    $this->drupalPostForm(NULL, [], 'field_unlimited_add_more');
     $this->assertFieldByName('field_unlimited[0][value]', 3, 'Entity 1: field_unlimited value 0 appears correctly is the form.');
     $this->assertFieldByName('field_unlimited[1][value]', 2, 'Entity 1: field_unlimited value 1 appears correctly is the form.');
     $this->assertFieldByName('field_unlimited[2][value]', '', 'Entity 1: field_unlimited value 2 appears correctly is the form.');
@@ -155,7 +153,7 @@ class NestedFormTest extends FieldTestBase {
       'entity_2[field_unlimited][1][value]' => 14,
       'entity_2[field_unlimited][2][value]' => 15,
     ];
-    $this->drupalPostAjaxForm(NULL, $edit, 'entity_2_field_unlimited_add_more');
+    $this->drupalPostForm(NULL, $edit, 'entity_2_field_unlimited_add_more');
     $this->assertFieldByName('entity_2[field_unlimited][0][value]', 13, 'Entity 2: field_unlimited value 0 appears correctly is the form.');
     $this->assertFieldByName('entity_2[field_unlimited][1][value]', 14, 'Entity 2: field_unlimited value 1 appears correctly is the form.');
     $this->assertFieldByName('entity_2[field_unlimited][2][value]', 15, 'Entity 2: field_unlimited value 2 appears correctly is the form.');
@@ -180,13 +178,17 @@ class NestedFormTest extends FieldTestBase {
     $entity_2 = $storage->create();
     $entity_2->save();
 
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
     // Display the 'combined form'.
     $this->drupalGet("test-entity-constraints/nested/{$entity_1->id()}/{$entity_2->id()}");
-    $this->assertFieldByName('entity_2[changed]', 0, 'Entity 2: changed value appears correctly in the form.');
+    $assert_session->hiddenFieldValueEquals('entity_2[changed]', REQUEST_TIME);
 
     // Submit the form and check that the entities are updated accordingly.
-    $edit = ['entity_2[changed]' => REQUEST_TIME - 86400];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $assert_session->hiddenFieldExists('entity_2[changed]')
+      ->setValue(REQUEST_TIME - 86400);
+    $page->pressButton(t('Save'));
 
     $elements = $this->cssSelect('.entity-2.error');
     $this->assertEqual(1, count($elements), 'The whole nested entity form has been correctly flagged with an error class.');
