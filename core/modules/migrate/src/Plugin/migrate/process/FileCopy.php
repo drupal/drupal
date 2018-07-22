@@ -9,7 +9,6 @@ use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
-use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,10 +25,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Available configuration keys:
  * - move: (optional) Boolean, if TRUE, move the file, otherwise copy the file.
  *   Defaults to FALSE.
- * - rename: (optional) Boolean, if TRUE, rename the file by appending a number
- *   until the name is unique. Defaults to FALSE.
- * - reuse: (optional) Boolean, if TRUE, reuse the current file in its existing
- *   location rather than move/copy/rename the file. Defaults to FALSE.
+ * - file_exists: (optional) Replace behavior when the destination file already
+ *   exists:
+ *   - 'replace' - (default) Replace the existing file.
+ *   - 'rename' - Append _{incrementing number} until the filename is
+ *       unique.
+ *   - 'use existing' - Do nothing and return FALSE.
  *
  * Examples:
  *
@@ -48,7 +49,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "file_copy"
  * )
  */
-class FileCopy extends ProcessPluginBase implements ContainerFactoryPluginInterface {
+class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterface {
 
   /**
    * The stream wrapper manager service.
@@ -90,8 +91,6 @@ class FileCopy extends ProcessPluginBase implements ContainerFactoryPluginInterf
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, StreamWrapperManagerInterface $stream_wrappers, FileSystemInterface $file_system, MigrateProcessInterface $download_plugin) {
     $configuration += [
       'move' => FALSE,
-      'rename' => FALSE,
-      'reuse' => FALSE,
     ];
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->streamWrapperManager = $stream_wrappers;
@@ -109,7 +108,7 @@ class FileCopy extends ProcessPluginBase implements ContainerFactoryPluginInterf
       $plugin_definition,
       $container->get('stream_wrapper_manager'),
       $container->get('file_system'),
-      $container->get('plugin.manager.migrate.process')->createInstance('download')
+      $container->get('plugin.manager.migrate.process')->createInstance('download', $configuration)
     );
   }
 
@@ -150,7 +149,7 @@ class FileCopy extends ProcessPluginBase implements ContainerFactoryPluginInterf
       }
     }
 
-    $final_destination = $this->writeFile($source, $destination, $this->getOverwriteMode());
+    $final_destination = $this->writeFile($source, $destination, $this->configuration['file_exists']);
     if ($final_destination) {
       return $final_destination;
     }
@@ -179,24 +178,6 @@ class FileCopy extends ProcessPluginBase implements ContainerFactoryPluginInterf
     }
     $function = 'file_unmanaged_' . ($this->configuration['move'] ? 'move' : 'copy');
     return $function($source, $destination, $replace);
-  }
-
-  /**
-   * Determines how to handle file conflicts.
-   *
-   * @return int
-   *   FILE_EXISTS_REPLACE (default), FILE_EXISTS_RENAME, or FILE_EXISTS_ERROR
-   *   depending on the current configuration.
-   */
-  protected function getOverwriteMode() {
-    if (!empty($this->configuration['rename'])) {
-      return FILE_EXISTS_RENAME;
-    }
-    if (!empty($this->configuration['reuse'])) {
-      return FILE_EXISTS_ERROR;
-    }
-
-    return FILE_EXISTS_REPLACE;
   }
 
   /**
