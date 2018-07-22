@@ -1040,9 +1040,9 @@
         $newContent[i].nodeName === '#comment' ||
         ($newContent[i].nodeName === '#text' && /^(\s|\n|\r)*$/.test($newContent[i].textContent))
       ),
-    ).length > 1
-      ? Drupal.theme('ajaxWrapperMultipleRootElements', $newContent)
-      : $newContent
+    ).length > 1 ?
+      Drupal.theme('ajaxWrapperMultipleRootElements', $newContent) :
+      $newContent
   );
 
   /**

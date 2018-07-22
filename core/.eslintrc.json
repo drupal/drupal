@@ -36,6 +36,7 @@
       "requireReturn": false
     }],
     "brace-style": ["error", "stroustrup"],
-    "no-unused-vars": ["warn"]
+    "no-unused-vars": ["warn"],
+    "operator-linebreak": ["error", "after"]
   }
 }
