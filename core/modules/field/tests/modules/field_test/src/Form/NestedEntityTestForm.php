@@ -49,7 +49,7 @@ class NestedEntityTestForm extends FormBase {
 
     if ($entity_2 instanceof EntityChangedInterface) {
       // Changed must be sent to the client, for later overwrite error checking.
-      // @see Drupal\field\Tests\NestedFormTest::testNestedEntityFormEntityLevelValidation()
+      // @see \Drupal\Tests\field\Functional\NestedFormTest::testNestedEntityFormEntityLevelValidation()
       $form['entity_2']['changed'] = [
         '#type' => 'hidden',
         '#default_value' => $entity_1->getChangedTime(),
@@ -82,7 +82,7 @@ class NestedEntityTestForm extends FormBase {
     // Extract the values of fields that are not rendered through widgets, by
     // simply copying from top-level form values. This leaves the fields that
     // are not being edited within this form untouched.
-    // @see Drupal\field\Tests\NestedFormTest::testNestedEntityFormEntityLevelValidation()
+    // @see \Drupal\Tests\field\Functional\NestedFormTest::testNestedEntityFormEntityLevelValidation()
     foreach ($form_state->getValues()['entity_2'] as $name => $values) {
       if ($entity_2->hasField($name) && !isset($extracted[$name])) {
         $entity_2->set($name, $values);
