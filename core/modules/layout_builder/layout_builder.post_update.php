@@ -5,6 +5,9 @@
  * Post update functions for Layout Builder.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
 /**
  * Rebuild plugin dependencies for all entity view displays.
  */
@@ -23,4 +26,31 @@ function layout_builder_post_update_rebuild_plugin_dependencies(&$sandbox = NULL
   }
 
   $sandbox['#finished'] = empty($sandbox['ids']) ? 1 : ($sandbox['count'] - count($sandbox['ids'])) / $sandbox['count'];
+}
+
+/**
+ * Ensure all extra fields are properly stored on entity view displays.
+ *
+ * Previously
+ * \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::setComponent()
+ * was not correctly setting the configuration for extra fields. This function
+ * calls setComponent() for all extra field components to ensure the updated
+ * logic is invoked on all extra fields to correct the settings.
+ */
+function layout_builder_post_update_add_extra_fields(&$sandbox = NULL) {
+  $entity_field_manager = \Drupal::service('entity_field.manager');
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $display) use ($entity_field_manager) {
+    $extra_fields = $entity_field_manager->getExtraFields($display->getTargetEntityTypeId(), $display->getTargetBundle());
+    $components = $display->getComponents();
+    // Sort the components to avoid them being reordered by setComponent().
+    uasort($components, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+    $result = FALSE;
+    foreach ($components as $name => $component) {
+      if (isset($extra_fields['display'][$name])) {
+        $display->setComponent($name, $component);
+        $result = TRUE;
+      }
+    }
+    return $result;
+  });
 }
