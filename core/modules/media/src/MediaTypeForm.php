@@ -2,6 +2,7 @@
 
 namespace Drupal\media;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -23,7 +24,7 @@ class MediaTypeForm extends EntityForm {
   /**
    * Media source plugin manager.
    *
-   * @var \Drupal\media\MediaSourceManager
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $sourceManager;
 
@@ -37,12 +38,12 @@ class MediaTypeForm extends EntityForm {
   /**
    * Constructs a new class instance.
    *
-   * @param \Drupal\media\MediaSourceManager $source_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $source_manager
    *   Media source plugin manager.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   Entity field manager service.
    */
-  public function __construct(MediaSourceManager $source_manager, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(PluginManagerInterface $source_manager, EntityFieldManagerInterface $entity_field_manager) {
     $this->sourceManager = $source_manager;
     $this->entityFieldManager = $entity_field_manager;
   }
