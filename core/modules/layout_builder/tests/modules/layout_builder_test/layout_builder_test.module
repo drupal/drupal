@@ -5,6 +5,9 @@
  * Provides hook implementations for Layout Builder tests.
  */
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
  */
@@ -30,5 +33,28 @@ function layout_builder_test_plugin_filter_block__layout_builder_alter(array &$d
       // Unset any field blocks that match our predefined list.
       unset($definitions[$plugin_id]);
     }
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function layout_builder_test_entity_extra_field_info() {
+  $extra['node']['bundle_with_section_field']['display']['layout_builder_test'] = [
+    'label' => t('Extra label'),
+    'description' => t('Extra description'),
+    'weight' => 0,
+  ];
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_node_view().
+ */
+function layout_builder_test_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($display->getComponent('layout_builder_test')) {
+    $build['layout_builder_test'] = [
+      '#markup' => 'Extra, Extra read all about it.',
+    ];
   }
 }

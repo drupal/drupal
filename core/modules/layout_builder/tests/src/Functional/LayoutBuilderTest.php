@@ -83,8 +83,25 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
     $assert_session->addressEquals("$field_ui_prefix/display-layout/default");
-    // The body field is present.
-    $assert_session->elementExists('css', '.field--name-body');
+    // The body field is only present once.
+    $assert_session->elementsCount('css', '.field--name-body', 1);
+    // The extra field is only present once.
+    $this->assertTextAppearsOnce('Placeholder for the "Extra label" field');
+    // Save the defaults.
+    $assert_session->linkExists('Save Layout');
+    $this->clickLink('Save Layout');
+    $assert_session->addressEquals("$field_ui_prefix/display/default");
+
+    // Load the default layouts again after saving to confirm fields are only
+    // added on new layouts.
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $assert_session->linkExists('Manage layout');
+    $this->clickLink('Manage layout');
+    $assert_session->addressEquals("$field_ui_prefix/display-layout/default");
+    // The body field is only present once.
+    $assert_session->elementsCount('css', '.field--name-body', 1);
+    // The extra field is only present once.
+    $this->assertTextAppearsOnce('Placeholder for the "Extra label" field');
 
     // Add a new block.
     $assert_session->linkExists('Add Block');
@@ -107,6 +124,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('The first node body');
     $assert_session->pageTextContains('Powered by Drupal');
+    $assert_session->pageTextContains('Extra, Extra read all about it.');
+    $assert_session->pageTextNotContains('Placeholder for the "Extra label" field');
     $assert_session->linkNotExists('Layout');
 
     // Enable overrides.
@@ -116,6 +135,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Remove the section from the defaults.
     $assert_session->linkExists('Layout');
     $this->clickLink('Layout');
+    $assert_session->pageTextContains('Placeholder for the "Extra label" field');
     $assert_session->linkExists('Remove section');
     $this->clickLink('Remove section');
     $page->pressButton('Remove');
@@ -128,6 +148,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->clickLink('Save Layout');
     $assert_session->pageTextNotContains('The first node body');
     $assert_session->pageTextNotContains('Powered by Drupal');
+    $assert_session->pageTextNotContains('Extra, Extra read all about it.');
+    $assert_session->pageTextNotContains('Placeholder for the "Extra label" field');
 
     // Assert that overrides cannot be turned off while overrides exist.
     $this->drupalGet("$field_ui_prefix/display/default");
@@ -149,12 +171,16 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('The second node title');
     $assert_session->pageTextContains('The second node body');
     $assert_session->pageTextContains('Powered by Drupal');
+    $assert_session->pageTextContains('Extra, Extra read all about it.');
+    $assert_session->pageTextNotContains('Placeholder for the "Extra label" field');
 
     // The overridden node does not pick up the changes to defaults.
     $this->drupalGet('node/1');
     $assert_session->elementNotExists('css', '.field--name-title');
     $assert_session->pageTextNotContains('The first node body');
     $assert_session->pageTextNotContains('Powered by Drupal');
+    $assert_session->pageTextNotContains('Extra, Extra read all about it.');
+    $assert_session->pageTextNotContains('Placeholder for the "Extra label" field');
     $assert_session->linkExists('Layout');
 
     // Reverting the override returns it to the defaults.
@@ -166,6 +192,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementExists('css', '.field--name-title');
     $assert_session->pageTextContains('The first node body');
     $assert_session->pageTextContains('Powered by Drupal');
+    $assert_session->pageTextContains('Placeholder for the "Extra label" field');
 
     // Assert that overrides can be turned off now that all overrides are gone.
     $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => FALSE], 'Save');
@@ -405,6 +432,16 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Node can be loaded after deleting the View.
     $assert_session->pageTextContains(Node::load(1)->getTitle());
     $assert_session->pageTextNotContains('Test Block View');
+  }
+
+  /**
+   * Asserts that a text string only appears once on the page.
+   *
+   * @param string $needle
+   *   The string to look for.
+   */
+  protected function assertTextAppearsOnce($needle) {
+    $this->assertEquals(1, substr_count($this->getSession()->getPage()->getContent(), $needle), "'$needle' only appears once on the page.");
   }
 
 }
