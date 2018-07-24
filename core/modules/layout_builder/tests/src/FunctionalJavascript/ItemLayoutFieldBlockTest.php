@@ -44,7 +44,10 @@ class ItemLayoutFieldBlockTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
 
     // Allow overrides for the layout.
-    $this->drupalPostForm('admin/structure/types/manage/bundle_with_layout_overrides/display/default', ['layout[allow_custom]' => TRUE], 'Save');
+    $this->drupalGet('admin/structure/types/manage/bundle_with_layout_overrides/display/default');
+    $page->checkField('layout[enabled]');
+    $page->checkField('layout[allow_custom]');
+    $page->pressButton('Save');
 
     // Start by creating a node of type with layout overrides.
     $node = $this->createNode([

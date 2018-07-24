@@ -254,6 +254,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_key display',
           '_has_layout_section' => 'true',
+          '_layout_builder_access' => 'view',
         ],
         [
           'parameters' => [
@@ -275,6 +276,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_key display',
           '_has_layout_section' => 'true',
+          '_layout_builder_access' => 'view',
         ],
         [
           'parameters' => [
@@ -296,6 +298,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_key display',
           '_has_layout_section' => 'true',
+          '_layout_builder_access' => 'view',
         ],
         [
           'parameters' => [
@@ -303,6 +306,26 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           ],
           '_layout_builder' => TRUE,
           '_admin_route' => FALSE,
+        ]
+      ),
+      'layout_builder.defaults.with_bundle_key.disable' => new Route(
+        '/admin/entity/whatever/display-layout/{view_mode_name}/disable',
+        [
+          'entity_type_id' => 'with_bundle_key',
+          'bundle_key' => 'my_bundle_type',
+          'section_storage_type' => 'defaults',
+          'section_storage' => '',
+          '_form' => '\Drupal\layout_builder\Form\LayoutBuilderDisableForm',
+        ],
+        [
+          '_field_ui_view_mode_access' => 'administer with_bundle_key display',
+          '_has_layout_section' => 'true',
+          '_layout_builder_access' => 'view',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+          ],
         ]
       ),
       'layout_builder.defaults.with_bundle_parameter.view' => new Route(
@@ -318,6 +341,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
           '_has_layout_section' => 'true',
+          '_layout_builder_access' => 'view',
         ],
         [
           'parameters' => [
@@ -338,6 +362,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
           '_has_layout_section' => 'true',
+          '_layout_builder_access' => 'view',
         ],
         [
           'parameters' => [
@@ -358,6 +383,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
           '_has_layout_section' => 'true',
+          '_layout_builder_access' => 'view',
         ],
         [
           'parameters' => [
@@ -365,6 +391,25 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           ],
           '_layout_builder' => TRUE,
           '_admin_route' => FALSE,
+        ]
+      ),
+      'layout_builder.defaults.with_bundle_parameter.disable' => new Route(
+        '/admin/entity/{bundle}/display-layout/{view_mode_name}/disable',
+        [
+          'entity_type_id' => 'with_bundle_parameter',
+          'section_storage_type' => 'defaults',
+          'section_storage' => '',
+          '_form' => '\Drupal\layout_builder\Form\LayoutBuilderDisableForm',
+        ],
+        [
+          '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
+          '_has_layout_section' => 'true',
+          '_layout_builder_access' => 'view',
+        ],
+        [
+          'parameters' => [
+            'section_storage' => ['layout_builder_tempstore' => TRUE],
+          ],
         ]
       ),
     ];

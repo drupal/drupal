@@ -11,8 +11,10 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
  *   Layout Builder is currently experimental and should only be leveraged by
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
+ *
+ * @todo Refactor this interface in https://www.drupal.org/node/2985362.
  */
-interface DefaultsSectionStorageInterface extends SectionStorageInterface, ThirdPartySettingsInterface {
+interface DefaultsSectionStorageInterface extends SectionStorageInterface, ThirdPartySettingsInterface, LayoutBuilderEnabledInterface {
 
   /**
    * Determines if the defaults allow custom overrides.

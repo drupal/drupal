@@ -54,6 +54,7 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends LayoutBuilderCompatibili
     $this->assertFieldAttributes($this->entity, $expected_fields);
 
     // Add a layout override.
+    $this->enableOverrides();
     /** @var \Drupal\layout_builder\SectionStorageInterface $field_list */
     $field_list = $this->entity->get('layout_builder__layout');
     $field_list->appendSection(new Section('layout_onecol'));

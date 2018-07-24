@@ -33,6 +33,8 @@ class LayoutBuilderInstallTest extends LayoutBuilderCompatibilityTestBase {
     $this->assertFieldAttributes($this->entity, $expected_fields);
 
     // Add a layout override.
+    $this->enableOverrides();
+    $this->entity = $this->reloadEntity($this->entity);
     $this->entity->get('layout_builder__layout')->appendSection(new Section('layout_onecol'));
     $this->entity->save();
 

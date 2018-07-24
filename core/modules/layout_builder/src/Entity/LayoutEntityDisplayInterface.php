@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder\Entity;
 
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
+use Drupal\layout_builder\LayoutBuilderEnabledInterface;
 use Drupal\layout_builder\SectionListInterface;
 
 /**
@@ -12,8 +13,10 @@ use Drupal\layout_builder\SectionListInterface;
  *   Layout Builder is currently experimental and should only be leveraged by
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
+ *
+ * @todo Refactor this interface in https://www.drupal.org/node/2985362.
  */
-interface LayoutEntityDisplayInterface extends EntityDisplayInterface, SectionListInterface {
+interface LayoutEntityDisplayInterface extends EntityDisplayInterface, SectionListInterface, LayoutBuilderEnabledInterface {
 
   /**
    * Determines if the display allows custom overrides.

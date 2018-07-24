@@ -4,6 +4,7 @@ layout_builder.choose_section:
    _controller: '\Drupal\layout_builder\Controller\ChooseSectionController::build'
   requirements:
     _permission: 'configure any layout'
+    _layout_builder_access: 'view'
   options:
     _admin_route: TRUE
     parameters:
@@ -16,6 +17,7 @@ layout_builder.add_section:
     _controller: '\Drupal\layout_builder\Controller\AddSectionController::build'
   requirements:
     _permission: 'configure any layout'
+    _layout_builder_access: 'view'
   options:
     _admin_route: TRUE
     parameters:
@@ -32,6 +34,7 @@ layout_builder.configure_section:
     plugin_id: null
   requirements:
     _permission: 'configure any layout'
+    _layout_builder_access: 'view'
   options:
     _admin_route: TRUE
     parameters:
@@ -44,6 +47,7 @@ layout_builder.remove_section:
     _form: '\Drupal\layout_builder\Form\RemoveSectionForm'
   requirements:
     _permission: 'configure any layout'
+    _layout_builder_access: 'view'
   options:
     _admin_route: TRUE
     parameters:
@@ -56,6 +60,7 @@ layout_builder.choose_block:
     _controller: '\Drupal\layout_builder\Controller\ChooseBlockController::build'
   requirements:
     _permission: 'configure any layout'
+    _layout_builder_access: 'view'
   options:
     _admin_route: TRUE
     parameters:
@@ -68,6 +73,7 @@ layout_builder.add_block:
     _form: '\Drupal\layout_builder\Form\AddBlockForm'
   requirements:
     _permission: 'configure any layout'
+    _layout_builder_access: 'view'
   options:
     _admin_route: TRUE
     parameters:
@@ -80,6 +86,7 @@ layout_builder.update_block:
     _form: '\Drupal\layout_builder\Form\UpdateBlockForm'
   requirements:
     _permission: 'configure any layout'
+    _layout_builder_access: 'view'
   options:
     _admin_route: TRUE
     parameters:
@@ -92,6 +99,7 @@ layout_builder.remove_block:
     _form: '\Drupal\layout_builder\Form\RemoveBlockForm'
   requirements:
     _permission: 'configure any layout'
+    _layout_builder_access: 'view'
   options:
     _admin_route: TRUE
     parameters:
@@ -110,6 +118,7 @@ layout_builder.move_block:
     preceding_block_uuid: null
   requirements:
     _permission: 'configure any layout'
+    _layout_builder_access: 'view'
   options:
     _admin_route: TRUE
     parameters:

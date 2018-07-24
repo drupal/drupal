@@ -2,6 +2,10 @@ services:
   layout_builder.tempstore_repository:
     class: Drupal\layout_builder\LayoutTempstoreRepository
     arguments: ['@tempstore.shared']
+  access_check.entity.layout_builder_access:
+    class: Drupal\layout_builder\Access\LayoutBuilderAccessCheck
+    tags:
+      - { name: access_check, applies_to: _layout_builder_access }
   access_check.entity.layout:
     class: Drupal\layout_builder\Access\LayoutSectionAccessCheck
     tags:

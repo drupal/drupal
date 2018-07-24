@@ -41,6 +41,7 @@ class LayoutSectionTest extends BrowserTestBase {
     ]);
 
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
       ->setOverridable()
       ->save();
 

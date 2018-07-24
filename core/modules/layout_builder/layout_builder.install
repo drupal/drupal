@@ -13,6 +13,8 @@ use Drupal\layout_builder\Section;
  * Implements hook_install().
  */
 function layout_builder_install() {
+  $display_changed = FALSE;
+
   $displays = LayoutBuilderEntityViewDisplay::loadMultiple();
   /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface[] $displays */
   foreach ($displays as $display) {
@@ -20,21 +22,43 @@ function layout_builder_install() {
     $field_layout = $display->getThirdPartySettings('field_layout');
     if (isset($field_layout['id'])) {
       $field_layout += ['settings' => []];
-      $display->appendSection(new Section($field_layout['id'], $field_layout['settings']));
+      $display
+        ->enableLayoutBuilder()
+        ->appendSection(new Section($field_layout['id'], $field_layout['settings']))
+        ->save();
+      $display_changed = TRUE;
     }
-
-    // Sort the components by weight.
-    $components = $display->get('content');
-    uasort($components, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
-    foreach ($components as $name => $component) {
-      $display->setComponent($name, $component);
-    }
-    $display->save();
   }
 
   // Clear the rendered cache to ensure the new layout builder flow is used.
   // While in many cases the above change will not affect the rendered output,
   // the cacheability metadata will have changed and should be processed to
   // prepare for future changes.
-  Cache::invalidateTags(['rendered']);
+  if ($display_changed) {
+    Cache::invalidateTags(['rendered']);
+  }
+}
+
+/**
+ * Enable Layout Builder for existing entity displays.
+ */
+function layout_builder_update_8601(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+
+  if (!isset($sandbox['count'])) {
+    $sandbox['ids'] = $config_factory->listAll('core.entity_view_display.');
+    $sandbox['count'] = count($sandbox['ids']);
+  }
+
+  $ids = array_splice($sandbox['ids'], 0, 50);
+  foreach ($ids as $id) {
+    $display = $config_factory->getEditable($id);
+    if ($display->get('third_party_settings.layout_builder')) {
+      $display
+        ->set('third_party_settings.layout_builder.enabled', TRUE)
+        ->save();
+    }
+  }
+
+  $sandbox['#finished'] = empty($sandbox['ids']) ? 1 : ($sandbox['count'] - count($sandbox['ids'])) / $sandbox['count'];
 }
