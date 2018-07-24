@@ -1,17 +1,20 @@
 <?php
 
-namespace Drupal\system\Tests\Theme;
+namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests Twig-specific theme functionality.
  *
  * @group Theme
  */
-class EngineTwigTest extends WebTestBase {
+class EngineTwigTest extends BrowserTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Modules to enable.

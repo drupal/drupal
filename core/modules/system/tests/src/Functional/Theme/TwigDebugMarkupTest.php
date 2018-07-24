@@ -1,15 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Theme;
+namespace Drupal\Tests\system\Functional\Theme;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Component\Utility\Html;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests for Twig debug markup.
  *
  * @group Theme
  */
-class TwigDebugMarkupTest extends WebTestBase {
+class TwigDebugMarkupTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -45,10 +46,9 @@ class TwigDebugMarkupTest extends WebTestBase {
     $build = node_view($node);
     $output = $renderer->renderRoot($build);
     $this->assertTrue(strpos($output, '<!-- THEME DEBUG -->') !== FALSE, 'Twig debug markup found in theme output when debug is enabled.');
-    $this->setRawContent($output);
     $this->assertTrue(strpos($output, "THEME HOOK: 'node'") !== FALSE, 'Theme call information found.');
     $this->assertTrue(strpos($output, '* node--1--full' . $extension . PHP_EOL . '   x node--1' . $extension . PHP_EOL . '   * node--page--full' . $extension . PHP_EOL . '   * node--page' . $extension . PHP_EOL . '   * node--full' . $extension . PHP_EOL . '   * node' . $extension) !== FALSE, 'Suggested template files found in order and node ID specific template shown as current template.');
-    $this->assertEscaped('node--<script type="text/javascript">alert(\'yo\');</script>');
+    $this->assertContains(Html::escape('node--<script type="text/javascript">alert(\'yo\');</script>'), (string) $output);
     $template_filename = $templates['node__1']['path'] . '/' . $templates['node__1']['template'] . $extension;
     $this->assertTrue(strpos($output, "BEGIN OUTPUT from '$template_filename'") !== FALSE, 'Full path to current template file found.');
 

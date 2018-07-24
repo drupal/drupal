@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Theme;
+namespace Drupal\Tests\system\Kernel\Theme;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests Twig 'raw' filter.
  *
  * @group Theme
  */
-class TwigRawTest extends WebTestBase {
+class TwigRawTest extends KernelTestBase {
 
   /**
    * Modules to enable.

@@ -1,27 +1,38 @@
 <?php
 
-namespace Drupal\system\Tests\Theme;
+namespace Drupal\Tests\system\Kernel\Theme;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests for common theme functions.
  *
  * @group Theme
  */
-class FunctionsTest extends WebTestBase {
+class FunctionsTest extends KernelTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['router_test'];
+  public static $modules = ['router_test', 'system'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Enable the Classy theme.
+    $this->container->get('theme_handler')->install(['classy']);
+    $this->config('system.theme')->set('default', 'classy')->save();
+  }
 
   /**
    * Tests item-list.html.twig.
