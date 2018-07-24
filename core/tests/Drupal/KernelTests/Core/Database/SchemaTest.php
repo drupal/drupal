@@ -24,6 +24,29 @@ class SchemaTest extends KernelTestBase {
   protected $counter;
 
   /**
+   * Connection to the database.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * Database schema instance.
+   *
+   * @var \Drupal\Core\Database\Schema
+   */
+  protected $schema;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->connection = Database::getConnection();
+    $this->schema = $this->connection->schema();
+  }
+
+  /**
    * Tests database interactions.
    */
   public function testSchema() {
@@ -121,7 +144,7 @@ class SchemaTest extends KernelTestBase {
     $this->assertEqual($count, 2, 'Two fields were successfully inserted.');
 
     // Try to drop the table.
-    db_drop_table('test_table2');
+    $this->schema->dropTable('test_table2');
     $this->assertFalse(db_table_exists('test_table2'), 'The dropped table does not exist.');
 
     // Recreate the table.
@@ -148,7 +171,7 @@ class SchemaTest extends KernelTestBase {
     $this->assertEqual($count, 2, 'There were two rows.');
 
     // Test adding a serial field to an existing table.
-    db_drop_table('test_table');
+    $this->schema->dropTable('test_table');
     db_create_table('test_table', $table_specification);
     db_field_set_default('test_table', 'test_field', 0);
     db_add_field('test_table', 'test_serial', ['type' => 'serial', 'not null' => TRUE], ['primary key' => ['test_serial']]);
@@ -174,7 +197,7 @@ class SchemaTest extends KernelTestBase {
     $this->assertSame(['test_serial', 'test_composite_primary_key'], $method->invoke($schema, 'test_table'));
 
     // Test renaming of keys and constraints.
-    db_drop_table('test_table');
+    $this->schema->dropTable('test_table');
     $table_specification = [
       'fields' => [
         'id'  => [
@@ -606,7 +629,7 @@ class SchemaTest extends KernelTestBase {
     $this->assertFieldCharacteristics($table_name, 'test_field', $field_spec);
 
     // Clean-up.
-    db_drop_table($table_name);
+    $this->schema->dropTable($table_name);
 
     // Try adding a field to an existing table.
     $table_name = 'test_table_' . ($this->counter++);
@@ -646,7 +669,7 @@ class SchemaTest extends KernelTestBase {
     // key.
     db_add_field($table_name, 'test_field', $field_spec);
     db_drop_field($table_name, 'serial_column');
-    db_drop_table($table_name);
+    $this->schema->dropTable($table_name);
   }
 
   /**
@@ -968,7 +991,7 @@ class SchemaTest extends KernelTestBase {
     $this->assertFieldCharacteristics($table_name, 'test_field', $new_spec);
 
     // Clean-up.
-    db_drop_table($table_name);
+    $this->schema->dropTable($table_name);
   }
 
   /**

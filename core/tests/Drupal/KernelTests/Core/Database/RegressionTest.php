@@ -71,4 +71,15 @@ class RegressionTest extends DatabaseTestBase {
     $this->assert(db_set_active($get_active_db), 'Database connection is active');
   }
 
+  /**
+   * Tests the db_drop_table() function.
+   *
+   * @group legacy
+   *
+   * @expectedDeprecation db_drop_table() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Database\Database::getConnection()->schema()->dropTable() instead. See https://www.drupal.org/node/2987737
+   */
+  public function testDbDropTable() {
+    $this->assertFalse(db_drop_table('temp_test_table'));
+  }
+
 }
