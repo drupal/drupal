@@ -1,12 +1,14 @@
 <?php
 
-namespace Drupal\text\Tests;
+namespace Drupal\Tests\text\Functional;
 
+use Drupal\Component\Utility\Html;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Tests\String\StringFieldTest;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\field\Functional\String\StringFieldTest;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the creation of text fields.
@@ -14,6 +16,10 @@ use Drupal\filter\Entity\FilterFormat;
  * @group text
  */
 class TextFieldTest extends StringFieldTest {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
 
   /**
    * A user with relevant administrative privileges.
@@ -190,7 +196,7 @@ class TextFieldTest extends StringFieldTest {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
 
@@ -198,9 +204,9 @@ class TextFieldTest extends StringFieldTest {
     $entity = EntityTest::load($id);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
-    $this->setRawContent($renderer->renderRoot($content));
-    $this->assertNoRaw($value, 'HTML tags are not displayed.');
-    $this->assertEscaped($value, 'Escaped HTML is displayed correctly.');
+    $rendered_entity = \Drupal::service('renderer')->renderRoot($content);
+    $this->assertNotContains($value, (string) $rendered_entity);
+    $this->assertContains(Html::escape($value), (string) $rendered_entity);
 
     // Create a new text format that does not escape HTML, and grant the user
     // access to it.
@@ -237,8 +243,8 @@ class TextFieldTest extends StringFieldTest {
     $entity = EntityTest::load($id);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
-    $this->setRawContent($renderer->renderRoot($content));
-    $this->assertRaw($value, 'Value is displayed unfiltered');
+    $rendered_entity = \Drupal::service('renderer')->renderRoot($content);
+    $this->assertContains($value, (string) $rendered_entity);
   }
 
 }
