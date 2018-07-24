@@ -21,5 +21,14 @@ view:
   dependencies:
     - media_library/style
     - media_library/click_to_select
+
+widget:
+  version: VERSION
+  js:
+    js/media_library.widget.js: {}
+  dependencies:
+    - core/drupal.ajax
+    - core/jquery.ui.sortable
+    - media_library/view
     - core/drupal.announce
     - core/jquery.once

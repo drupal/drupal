@@ -8,13 +8,13 @@
 (function ($, Drupal) {
   Drupal.behaviors.ClickToSelect = {
     attach: function attach(context) {
-      $('.js-click-to-select__trigger', context).once('media-library-click-to-select').on('click', function (event) {
+      $('.js-click-to-select-trigger', context).once('media-library-click-to-select').on('click', function (event) {
         event.preventDefault();
 
-        var $input = $(event.currentTarget).closest('.js-click-to-select').find('.js-click-to-select__checkbox input');
+        var $input = $(event.currentTarget).closest('.js-click-to-select').find('.js-click-to-select-checkbox input');
         $input.prop('checked', !$input.prop('checked')).trigger('change');
       });
-      $('.js-click-to-select__checkbox input', context).once('media-library-click-to-select').on('change', function (_ref) {
+      $('.js-click-to-select-checkbox input', context).once('media-library-click-to-select').on('change', function (_ref) {
         var currentTarget = _ref.currentTarget;
 
         $(currentTarget).closest('.js-click-to-select').toggleClass('checked', $(currentTarget).prop('checked'));

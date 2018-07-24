@@ -5,7 +5,7 @@
  * @see https://www.drupal.org/project/drupal/issues/2980769
  */
 
-.media-library-page-form__header .form-item {
+.media-library-views-form__header .form-item {
   margin-right: 8px;
 }
 
@@ -16,21 +16,29 @@
 .media-library-item {
   justify-content: center;
   vertical-align: top;
-  padding: 2px;
-  border: 1px solid #ebebeb;
+  border: 1px solid #dbdbdb;
   margin: 16px 16px 2px 2px;
   width: 180px;
   background: #fff;
   transition: border-color 0.2s, color 0.2s, background 0.2s;
 }
 
+.media-library-view {
+  min-height: 300px;
+}
+
 .media-library-view .form-actions {
   margin: 0.75em 0;
 }
 
+.media-library-view .media-library-view--form-actions {
+  clear: left;
+  margin: 0.75em 0;
+  align-self: flex-end;
+}
+
 .media-library-item .field--name-thumbnail {
   background-color: #ebebeb;
-  margin: 2px;
   overflow: hidden;
   text-align: center;
 }
@@ -54,17 +62,17 @@
   border-color: #0076c0;
 }
 
-.media-library-item .js-click-to-select__checkbox input {
+.media-library-item .js-click-to-select-checkbox input {
   width: 30px;
   height: 30px;
 }
 
-.media-library-item .js-click-to-select__checkbox .form-item {
+.media-library-item .js-click-to-select-checkbox .form-item {
   margin: 0;
 }
 
 .media-library-item__preview {
-  padding-bottom: 44px;
+  padding-bottom: 34px;
 }
 
 .media-library-item__status {
@@ -90,9 +98,9 @@
   position: absolute;
   bottom: 0;
   display: block;
-  padding: 10px;
-  max-width: calc(100% - 20px);
-  max-height: calc(100% - 60px);
+  padding: 5px;
+  max-width: calc(100% - 10px);
+  max-height: calc(100% - 50px);
   overflow: hidden;
   background: white;
 }
@@ -133,6 +141,68 @@
 
 .media-library-select-all input {
   margin-right: 10px;
+}
+
+.media-library-item--disabled {
+  opacity: 0.5;
+}
+
+.media-library-selection {
+  margin-bottom: 1.5rem;
+}
+
+.media-library-widget {
+  position: relative;
+}
+
+.media-library-widget__toggle-weight {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+.media-library-item .form-item {
+  margin: 0.75em;
+}
+
+.media-library-item__remove,
+.media-library-item__remove:hover,
+.media-library-item__remove:focus,
+.media-library-item__remove.button,
+.media-library-item__remove.button:disabled,
+.media-library-item__remove.button:disabled:active,
+.media-library-item__remove.button:hover,
+.media-library-item__remove.button:focus {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  margin: 5px;
+  padding: 0;
+  background: url('../../../misc/icons/787878/ex.svg') #fff center no-repeat;
+  background-size: 16px 16px;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  color: transparent;
+  text-shadow: none;
+  transition: 0.2s border-color;
+}
+
+.media-library-item__remove:hover,
+.media-library-item__remove:focus,
+.media-library-item__remove.button:hover,
+.media-library-item__remove.button:focus,
+.media-library-item__remove.button:disabled:active {
+  border-color: #40b6ff;
+}
+
+/* @todo Remove or re-work in https://www.drupal.org/node/2985168 */
+.media-library-widget .media-library-item__name a,
+.media-library-view.view-display-id-widget .media-library-item__name a {
+  color: black;
+  text-decoration: none;
 }
 
 @media screen and (max-width: 600px) {

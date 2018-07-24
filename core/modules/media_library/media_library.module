@@ -5,12 +5,17 @@
  * Contains hook implementations for the media_library module.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\views\Plugin\views\cache\CachePluginBase;
-use Drupal\views\ViewExecutable;
-use Drupal\Core\Template\Attribute;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\views\Form\ViewsForm;
+use Drupal\views\Plugin\views\cache\CachePluginBase;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\Plugin\views\query\Sql;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_help().
@@ -43,6 +48,27 @@ function media_library_theme() {
 function media_library_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
   if ($view->id() === 'media_library') {
     $output['#attached']['library'][] = 'media_library/view';
+    if ($view->current_display === 'widget') {
+      $query = array_intersect_key(\Drupal::request()->query->all(), array_flip([
+        'media_library_widget_id',
+        'media_library_allowed_types',
+        'media_library_remaining',
+      ]));
+      // If the current query contains any parameters we use to contextually
+      // filter the view, ensure they persist across AJAX rebuilds.
+      // The ajax_path is shared for all AJAX views on the page, but our query
+      // parameters are prefixed and should not interfere with any other views.
+      // @todo Rework or remove this in https://www.drupal.org/node/2983451
+      if (!empty($query)) {
+        $ajax_path = &$output['#attached']['drupalSettings']['views']['ajax_path'];
+        $parsed_url = UrlHelper::parse($ajax_path);
+        $query = array_merge($query, $parsed_url['query']);
+        $ajax_path = $parsed_url['path'] . '?' . UrlHelper::buildQuery($query);
+        if (isset($query['media_library_remaining'])) {
+          $output['#attached']['drupalSettings']['media_library']['selection_remaining'] = (int) $query['media_library_remaining'];
+        }
+      }
+    }
   }
 }
 
@@ -59,7 +85,7 @@ function media_library_preprocess_media(&$variables) {
       'language' => $media->language(),
     ]);
     $variables['preview_attributes'] = new Attribute();
-    $variables['preview_attributes']->addClass('media-library-item__preview', 'js-click-to-select__trigger');
+    $variables['preview_attributes']->addClass('media-library-item__preview', 'js-media-library-item-preview', 'js-click-to-select-trigger');
     $variables['metadata_attributes'] = new Attribute();
     $variables['metadata_attributes']->addClass('media-library-item__attributes');
     $variables['status'] = $media->isPublished();
@@ -74,12 +100,10 @@ function media_library_preprocess_media(&$variables) {
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  *
- * @todo Remove in https://www.drupal.org/project/drupal/issues/2969660
+ * @todo Remove in https://www.drupal.org/node/2983454
  */
 function media_library_form_views_form_media_library_page_alter(array &$form, FormStateInterface $form_state) {
   if (isset($form['media_bulk_form']) && isset($form['output'])) {
-    $form['#attributes']['class'][] = 'media-library-page-form';
-    $form['header']['#attributes']['class'][] = 'media-library-page-form__header';
     /** @var \Drupal\views\ViewExecutable $view */
     $view = $form['output'][0]['#view'];
     foreach (Element::getVisibleChildren($form['media_bulk_form']) as $key) {
@@ -90,6 +114,102 @@ function media_library_form_views_form_media_library_page_alter(array &$form, Fo
         ]);
       }
     }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function media_library_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+  if ($form_object instanceof ViewsForm && strpos($form_object->getBaseFormId(), 'views_form_media_library') === 0) {
+    $form['#attributes']['class'][] = 'media-library-views-form';
+    if (isset($form['header'])) {
+      $form['header']['#attributes']['class'][] = 'media-library-views-form__header';
+      $form['header']['media_bulk_form']['#attributes']['class'][] = 'media-library-views-form__bulk_form';
+    }
+  }
+
+  // Add after build to fix media library views exposed filter's submit button.
+  if ($form_id === 'views_exposed_form' && $form['#id'] === 'views-exposed-form-media-library-widget') {
+    $form['#after_build'][] = '_media_library_views_form_media_library_after_build';
+  }
+}
+
+/**
+ * After build callback for views form media library.
+ */
+function _media_library_views_form_media_library_after_build(array $form, FormStateInterface $form_state) {
+  // Remove .form-actions from media library views exposed filter actions
+  // and replace with .media-library-view--form-actions.
+  //
+  // This prevents the views exposed filter's 'Apply filter' submit button from
+  // being moved into the dialog's buttons.
+  // @see \Drupal\Core\Render\Element\Actions::processActions
+  // @see Drupal.behaviors.dialog.prepareDialogButtons
+  if (($key = array_search('form-actions', $form['actions']['#attributes']['class'])) !== FALSE) {
+    unset($form['actions']['#attributes']['class'][$key]);
+  }
+  $form['actions']['#attributes']['class'][] = 'media-library-view--form-actions';
+  return $form;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Alters the widget view's query to only show media that can be selected,
+ * based on what types are allowed in the field settings.
+ *
+ * @todo Remove in https://www.drupal.org/node/2983454
+ */
+function media_library_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($query instanceof Sql && $view->id() === 'media_library' && $view->current_display === 'widget') {
+    $types = _media_library_get_allowed_types();
+    if ($types) {
+      $entity_type = \Drupal::entityTypeManager()->getDefinition('media');
+      $group = $query->setWhereGroup();
+      $query->addWhere($group, $entity_type->getDataTable() . '.' . $entity_type->getKey('bundle'), $types, 'in');
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Limits the types available in the exposed filter to avoid users trying to
+ * filter by a type that is un-selectable.
+ *
+ * @see media_library_views_query_alter()
+ *
+ * @todo Remove in https://www.drupal.org/node/2983454
+ */
+function media_library_form_views_exposed_form_alter(array &$form, FormStateInterface $form_state) {
+  if (isset($form['#id']) && $form['#id'] === 'views-exposed-form-media-library-widget') {
+    $types = _media_library_get_allowed_types();
+    if ($types && isset($form['type']['#options'])) {
+      $keys = array_flip($types);
+      // Ensure that the default value (by default "All") persists.
+      if (isset($form['type']['#default_value'])) {
+        $keys[$form['type']['#default_value']] = TRUE;
+      }
+      $form['type']['#options'] = array_intersect_key($form['type']['#options'], $keys);
+    }
+  }
+}
+
+/**
+ * Implements hook_field_ui_preconfigured_options_alter().
+ */
+function media_library_field_ui_preconfigured_options_alter(array &$options, $field_type) {
+  // If the field is not an "entity_reference"-based field, bail out.
+  $class = \Drupal::service('plugin.manager.field.field_type')->getPluginClass($field_type);
+  if (!is_a($class, EntityReferenceItem::class, TRUE)) {
+    return;
+  }
+
+  // Set the default field widget for media to be the Media library.
+  if (!empty($options['media'])) {
+    $options['media']['entity_form_display']['type'] = 'media_library_widget';
   }
 }
 
@@ -106,4 +226,18 @@ function media_library_local_tasks_alter(&$local_tasks) {
       unset($local_tasks[$key]);
     }
   }
+}
+
+/**
+ * Determines what types are allowed based on the current request.
+ *
+ * @return array
+ *   An array of allowed types.
+ */
+function _media_library_get_allowed_types() {
+  $types = \Drupal::request()->query->get('media_library_allowed_types');
+  if ($types && is_array($types)) {
+    return array_filter($types, 'is_string');
+  }
+  return [];
 }
