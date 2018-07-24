@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the media_library module.
+ */
+
+use Drupal\views\Entity\View;
+
+/**
+ * Implements hook_install().
+ */
+function media_library_install() {
+  // Change the path to the original media view.
+  /** @var \Drupal\views\Entity\View $view */
+  if ($view = View::load('media')) {
+    $display = &$view->getDisplay('media_page_list');
+    if (!empty($display)) {
+      $display['display_options']['path'] = 'admin/content/media-table';
+      unset($display['display_options']['menu']);
+      $view->trustData()->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function media_library_uninstall() {
+  // Restore the path to the original media view.
+  /** @var \Drupal\views\Entity\View $view */
+  if ($view = View::load('media')) {
+    $display = &$view->getDisplay('media_page_list');
+    if (!empty($display)) {
+      $display['display_options']['path'] = 'admin/content/media';
+      $display['display_options']['menu'] = [
+        'type' => 'tab',
+        'title' => 'Media',
+        'description' => '',
+        'expanded' => FALSE,
+        'parent' => '',
+        'weight' => 0,
+        'context' => '0',
+        'menu_name' => 'main',
+      ];
+      $view->trustData()->save();
+    }
+  }
+}

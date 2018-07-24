@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+    - media_test_source
+id: type_two
+label: 'Type Two'
+description: ''
+source: test
+queue_thumbnail_downloads: false
+new_revision: false
+source_configuration:
+  source_field: field_media_test_1
+  test_config_value: 'This is default value.'
+field_map: {  }

@@ -1,0 +1,25 @@
+style:
+  version: VERSION
+  css:
+    component:
+      css/media_library.module.css: {}
+    theme:
+      css/media_library.theme.css: {}
+
+click_to_select:
+  version: VERSION
+  js:
+    js/media_library.click_to_select.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery.once
+
+view:
+  version: VERSION
+  js:
+    js/media_library.view.js: {}
+  dependencies:
+    - media_library/style
+    - media_library/click_to_select
+    - core/drupal.announce
+    - core/jquery.once
