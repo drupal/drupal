@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Theme;
+namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests theme suggestion alter hooks.
  *
  * @group Theme
  */
-class ThemeSuggestionsAlterTest extends WebTestBase {
+class ThemeSuggestionsAlterTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -170,16 +170,20 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
     $this->drupalGet('theme-test/suggestion-alter');
     // Ensure that the order is first by extension, then for a given extension,
     // the hook-specific one after the generic one.
-    $expected = [
+    $expected_order = [
       'theme_suggestions_test_theme_suggestions_alter() executed.',
       'theme_suggestions_test_theme_suggestions_theme_test_suggestions_alter() executed.',
-      'theme_test_theme_suggestions_alter() executed.',
+      'theme_test_theme_suggestions_alter() executed for theme_test_suggestions.',
       'theme_test_theme_suggestions_theme_test_suggestions_alter() executed.',
       'test_theme_theme_suggestions_alter() executed.',
       'test_theme_theme_suggestions_theme_test_suggestions_alter() executed.',
     ];
-    $content = preg_replace('/\s+/', ' ', Xss::filter($this->content, []));
-    $this->assert(strpos($content, implode(' ', $expected)) !== FALSE, 'Suggestion alter hooks executed in the expected order.');
+    $content = preg_replace('/\s+/', ' ', Xss::filter($this->getSession()->getPage()->getContent(), []));
+    $order = 0;
+    foreach ($expected_order as $expected_string) {
+      $this->assertGreaterThan($order, strpos($content, $expected_string));
+      $order = strpos($content, $expected_string);
+    }
   }
 
 }

@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Theme;
+namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\node\NodeInterface;
-use Drupal\simpletest\WebTestBase;
 use Drupal\comment\Entity\Comment;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests themed output for each entity type in all available themes to ensure
@@ -17,7 +17,7 @@ use Drupal\taxonomy\Entity\Term;
  *
  * @group Theme
  */
-class EntityFilteringThemeTest extends WebTestBase {
+class EntityFilteringThemeTest extends BrowserTestBase {
 
   use CommentTestTrait;
 

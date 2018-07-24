@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Theme;
+namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests Twig "trans" tags.
  *
  * @group Theme
  */
-class TwigTransTest extends WebTestBase {
+class TwigTransTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
