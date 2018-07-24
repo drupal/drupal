@@ -1,0 +1,10 @@
+drupal.workspaces.toolbar:
+  version: VERSION
+  css:
+    theme:
+      css/workspaces.toolbar.css: {}
+drupal.workspaces.overview:
+  version: VERSION
+  css:
+    theme:
+      css/workspaces.overview.css: {}

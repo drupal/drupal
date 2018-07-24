@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.workspace.deploy
+  module:
+    - workspaces
+id: workspace.workspace.deploy
+targetEntityType: workspace
+bundle: workspace
+mode: deploy
+content: {  }
+hidden:
+  uid: true

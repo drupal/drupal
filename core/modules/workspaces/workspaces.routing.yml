@@ -1,0 +1,27 @@
+entity.workspace.collection:
+  path: '/admin/config/workflow/workspaces'
+  defaults:
+    _title: 'Workspaces'
+    _entity_list: 'workspace'
+  requirements:
+    _permission: 'administer workspaces+edit any workspace'
+
+entity.workspace.activate_form:
+  path: '/admin/config/workflow/workspaces/manage/{workspace}/activate'
+  defaults:
+    _entity_form: 'workspace.activate'
+    _title: 'Activate Workspace'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_access: 'workspace.view'
+
+entity.workspace.deploy_form:
+  path: '/admin/config/workflow/workspaces/manage/{workspace}/deploy'
+  defaults:
+    _entity_form: 'workspace.deploy'
+    _title: 'Deploy Workspace'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer workspaces'

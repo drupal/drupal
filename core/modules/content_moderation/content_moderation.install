@@ -10,10 +10,10 @@
  */
 function content_moderation_requirements($phase) {
   $requirements = [];
-  if ($phase === 'install' && \Drupal::moduleHandler()->moduleExists('workspace')) {
-    $requirements['workspace_incompatibility'] = [
+  if ($phase === 'install' && \Drupal::moduleHandler()->moduleExists('workspaces')) {
+    $requirements['workspaces_incompatibility'] = [
       'severity' => REQUIREMENT_ERROR,
-      'description' => t('Content Moderation can not be installed when Workspace is also installed.'),
+      'description' => t('Content Moderation can not be installed when Workspaces is also installed.'),
     ];
   }
 

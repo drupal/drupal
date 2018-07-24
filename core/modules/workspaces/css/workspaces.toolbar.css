@@ -1,0 +1,267 @@
+/**
+ * @file
+ * Styling for Workspaces module's toolbar tab.
+ */
+
+/**
+ * @todo Remove this after https://www.drupal.org/project/drupal/issues/2986056
+ *  has been solved.
+ */
+.workspaces-dialog #drupal-off-canvas * {
+  background: initial;
+}
+.workspaces-dialog #drupal-off-canvas {
+  background: #444;
+}
+
+
+/* Tab appearance. */
+.toolbar .toolbar-bar .workspaces-toolbar-tab {
+  float: right; /* LTR */
+  background-color: #e09600;
+}
+[dir="rtl"] .toolbar .toolbar-bar .workspaces-toolbar-tab {
+  float: left;
+}
+.toolbar .toolbar-bar .workspaces-toolbar-tab--is-default {
+  background-color: #81C071;
+}
+
+.toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
+  color: #000000;
+  margin: 0;
+}
+
+.toolbar .toolbar-icon-workspace:before {
+  background-image: url("../icons/000000/workspaces.svg");
+}
+
+/* Off canvas dialog */
+.workspaces-dialog.ui-dialog-off-canvas a:focus {
+  outline:none;
+}
+
+.workspaces-dialog.ui-dialog-off-canvas #drupal-off-canvas,
+.workspaces-dialog.ui-dialog-off-canvas {
+  background: #333333;
+  padding: 0;
+}
+
+.workspaces-dialog.ui-widget.ui-widget-content {
+  height: 100% !important;
+}
+
+.workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
+  visibility: hidden;
+  position: relative;
+}
+
+.workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar .ui-button {
+  visibility: visible;
+  z-index: 101;
+}
+
+#drupal-off-canvas .active-workspace {
+  background-color: #444444;
+  width: 100%;
+  padding: 20px 40px 0 20px;
+  height: 140px;
+  position: relative;
+  top: 16px;
+}
+
+@media all and (min-width: 767px) {
+  #drupal-off-canvas .active-workspace {
+    padding: 20px 40px 0 40px;
+  }
+}
+
+#drupal-off-canvas .active-workspace__title {
+  font-size: 0.8125rem;
+  font-weight: bold;
+}
+
+#drupal-off-canvas .active-workspace__label {
+  color: #ffffff;
+  font-size: 1.285em;
+  margin-top: 0.5em;
+  margin-left: 3.2rem;
+}
+
+#drupal-off-canvas .active-workspace__manage {
+  font-size: 0.9286em;
+  margin-left: 3.2rem;
+  white-space: nowrap;
+  outline-color: currentColor;
+}
+
+#drupal-off-canvas .active-workspace__actions {
+  position: relative;
+  top: 1em;
+}
+
+#drupal-off-canvas .active-workspace__button {
+  border-radius: 20px;
+  background-image: linear-gradient(to bottom, #007bc6, #0071b8);
+  border: solid 1px #1e5c90;
+  padding: 5px 22px;
+  color: #ffffff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
+
+#drupal-off-canvas .active-workspace__button:hover {
+  text-decoration: none;
+}
+
+#drupal-off-canvas .all-workspaces {
+  position: fixed;
+  bottom: 1em;
+  left: 20px;
+  color: #ffffff;
+  outline-color: currentColor;
+}
+
+#drupal-off-canvas .workspaces ul {
+  display: block;
+}
+
+#drupal-off-canvas .workspaces li {
+  flex: 1;
+  margin-bottom: 1px;
+}
+
+#drupal-off-canvas .workspaces a {
+  background-color: #555555;
+  box-sizing: border-box;
+  padding: 20px 0 0 50px;
+  margin-right: 1px;
+  color: #FFFFFF;
+  font-size: 0.929em;
+  font-weight: bold;
+  text-decoration: none;
+  position: relative;
+  display: block;
+  height: 73px;
+}
+
+#drupal-off-canvas .active-workspace__label:before,
+#drupal-off-canvas .workspaces__item:before {
+  background: url("../icons/f0a100/ws_icon.svg") center center no-repeat;
+  background-size: 100% auto;
+  content: '';
+  display: block;
+  height: 20px;
+  width: 20px;
+  left: 20px;
+  position: absolute;
+}
+
+#drupal-off-canvas .active-workspace--default .active-workspace__label:before,
+#drupal-off-canvas .workspaces__item--default:before {
+  background-image: url("../icons/81c071/ws_icon.svg");
+}
+
+#drupal-off-canvas .active-workspace__label:before {
+  height: 40px;
+  width: 40px;
+  left: 20px;
+}
+
+
+@media all and (min-width: 767px) {
+  #drupal-off-canvas .active-workspace__label:before {
+    left: 40px;
+  }
+}
+
+ .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
+   padding: 0;
+   top: 39px;
+ }
+
+.workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
+  right: 0.5em;
+  top: 1em;
+}
+
+@media all and (max-width: 766px) {
+  .toolbar .toolbar-icon-workspace {
+    padding-left: 2.75em;
+    padding-right: 1.3333em;
+    text-indent: 0;
+    width: 8em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .toolbar .toolbar-icon-workspace:before {
+    background-size: 100% auto;
+    left: 0.6667em;
+    width: 20px;
+  }
+}
+
+@media all and (min-width: 767px) {
+  #drupal-off-canvas .active-workspace {
+    right: 0;
+    top: 0;
+    position: fixed;
+    width: calc(30% - 80px);
+    padding: 20px 40px 0;
+    height: 140px;
+  }
+
+  #drupal-off-canvas .all-workspaces {
+    padding-left: 20px;
+    position: relative;
+    margin-top: 31px;
+    left: 0;
+    top: 27px;
+  }
+
+  .workspaces-dialog.ui-widget.ui-widget-content {
+    height: 161px !important;
+  }
+
+  #drupal-off-canvas .workspaces {
+    width: 70%;
+    bottom: 0;
+    position: absolute;
+  }
+
+  #drupal-off-canvas .workspaces ul {
+    display: flex;
+    flex-direction: row;
+  }
+
+  #drupal-off-canvas .workspaces li {
+    margin-bottom: 0;
+  }
+
+  #drupal-off-canvas .active-workspace__actions {
+    position: absolute;
+    bottom: 1em;
+    top: unset;
+  }
+
+  .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
+    top: 0;
+  }
+
+  .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close,
+  .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:hover,
+  .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:focus {
+    top: 1.5em;
+  }
+
+}
+
+/* Make dialog width 100% for workspace mobile viewports. */
+@media all and (max-width: 48em) {
+  .ui-dialog.workspaces-dialog {
+      min-width: 100%;
+      max-width: 100%;
+  }
+}
