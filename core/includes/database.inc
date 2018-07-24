@@ -723,6 +723,7 @@ function db_rename_table($table, $new_name) {
  * @see \Drupal\Core\Database\Schema::dropTable()
  */
 function db_drop_table($table) {
+  @trigger_error('db_drop_table() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Database\Database::getConnection()->schema()->dropTable() instead. See https://www.drupal.org/node/2987737', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->dropTable($table);
 }
 

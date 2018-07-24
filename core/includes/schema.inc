@@ -130,12 +130,12 @@ function drupal_install_schema($module) {
  *   The module for which the tables will be removed.
  */
 function drupal_uninstall_schema($module) {
-  $schema = drupal_get_module_schema($module);
-  _drupal_schema_initialize($schema, $module, FALSE);
-
-  foreach ($schema as $table) {
+  $tables = drupal_get_module_schema($module);
+  _drupal_schema_initialize($tables, $module, FALSE);
+  $schema = \Drupal::database()->schema();
+  foreach ($tables as $table) {
     if (db_table_exists($table['name'])) {
-      db_drop_table($table['name']);
+      $schema->dropTable($table['name']);
     }
   }
 }

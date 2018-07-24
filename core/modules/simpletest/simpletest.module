@@ -669,13 +669,14 @@ function simpletest_clean_environment() {
  * Removes prefixed tables from the database from crashed tests.
  */
 function simpletest_clean_database() {
+  $schema = Database::getConnection()->schema();
   $tables = db_find_tables('test%');
   $count = 0;
   foreach ($tables as $table) {
     // Only drop tables which begin wih 'test' followed by digits, for example,
     // {test12345678node__body}.
     if (preg_match('/^test\d+.*/', $table, $matches)) {
-      db_drop_table($matches[0]);
+      $schema->dropTable($matches[0]);
       $count++;
     }
   }
