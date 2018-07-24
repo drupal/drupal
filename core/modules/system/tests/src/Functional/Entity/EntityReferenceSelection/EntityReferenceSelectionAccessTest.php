@@ -6,9 +6,11 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\comment\Entity\Comment;
 
@@ -17,22 +19,46 @@ use Drupal\comment\Entity\Comment;
  *
  * @group entity_reference
  */
-class EntityReferenceSelectionAccessTest extends BrowserTestBase {
+class EntityReferenceSelectionAccessTest extends KernelTestBase {
 
   use CommentTestTrait;
+  use ContentTypeCreationTrait;
+  use UserCreationTrait;
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['node', 'comment'];
+  public static $modules = ['comment', 'field', 'node', 'system', 'text', 'user'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
-    // Create an Article node type.
-    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+    $this->installSchema('system', 'sequences');
+    $this->installSchema('comment', ['comment_entity_statistics']);
+
+    $this->installEntitySchema('comment');
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('user');
+
+    $this->installConfig(['comment', 'field', 'node', 'user']);
+
+    // Create the anonymous and the admin users.
+    $anonymous_user = User::create([
+      'uid' => 0,
+      'name' => '',
+    ]);
+    $anonymous_user->save();
+    $admin_user = User::create([
+      'uid' => 1,
+      'name' => 'admin',
+      'status' => 1,
+    ]);
+    $admin_user->save();
   }
 
   /**
@@ -110,8 +136,8 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     }
 
     // Test as a non-admin.
-    $normal_user = $this->drupalCreateUser(['access content']);
-    \Drupal::currentUser()->setAccount($normal_user);
+    $normal_user = $this->createUser(['access content']);
+    $this->setCurrentUser($normal_user);
     $referenceable_tests = [
       [
         'arguments' => [
@@ -162,8 +188,8 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     $this->assertReferenceable($selection_options, $referenceable_tests, 'Node handler');
 
     // Test as an admin.
-    $admin_user = $this->drupalCreateUser(['access content', 'bypass node access']);
-    \Drupal::currentUser()->setAccount($admin_user);
+    $content_admin = $this->createUser(['access content', 'bypass node access']);
+    $this->setCurrentUser($content_admin);
     $referenceable_tests = [
       [
         'arguments' => [
@@ -239,7 +265,7 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     }
 
     // Test as a non-admin.
-    \Drupal::currentUser()->setAccount($users['non_admin']);
+    $this->setCurrentUser($users['non_admin']);
     $referenceable_tests = [
       [
         'arguments' => [
@@ -278,7 +304,7 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler');
 
-    \Drupal::currentUser()->setAccount($users['admin']);
+    $this->setCurrentUser($users['admin']);
     $referenceable_tests = [
       [
         'arguments' => [
@@ -361,6 +387,7 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     ];
 
     // Build a set of test data.
+    $this->createContentType(['type' => 'article', 'name' => 'Article']);
     $node_values = [
       'published' => [
         'type' => 'article',
@@ -431,8 +458,8 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     }
 
     // Test as a non-admin.
-    $normal_user = $this->drupalCreateUser(['access content', 'access comments']);
-    \Drupal::currentUser()->setAccount($normal_user);
+    $normal_user = $this->createUser(['access content', 'access comments']);
+    $this->setCurrentUser($normal_user);
     $referenceable_tests = [
       [
         'arguments' => [
@@ -470,8 +497,8 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     $this->assertReferenceable($selection_options, $referenceable_tests, 'Comment handler');
 
     // Test as a comment admin.
-    $admin_user = $this->drupalCreateUser(['access content', 'access comments', 'administer comments']);
-    \Drupal::currentUser()->setAccount($admin_user);
+    $admin_user = $this->createUser(['access content', 'access comments', 'administer comments']);
+    $this->setCurrentUser($admin_user);
     $referenceable_tests = [
       [
         'arguments' => [
@@ -488,8 +515,8 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     $this->assertReferenceable($selection_options, $referenceable_tests, 'Comment handler (comment admin)');
 
     // Test as a node and comment admin.
-    $admin_user = $this->drupalCreateUser(['access content', 'access comments', 'administer comments', 'bypass node access']);
-    \Drupal::currentUser()->setAccount($admin_user);
+    $admin_user = $this->createUser(['access content', 'access comments', 'administer comments', 'bypass node access']);
+    $this->setCurrentUser($admin_user);
     $referenceable_tests = [
       [
         'arguments' => [
