@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * Contains install, update and uninstall functions for the Workspaces module.
+ */
+
+use Drupal\workspaces\Entity\Workspace;
+
+/**
+ * Implements hook_requirements().
+ */
+function workspaces_requirements($phase) {
+  $requirements = [];
+  if ($phase === 'install') {
+    if (\Drupal::moduleHandler()->moduleExists('content_moderation')) {
+      $requirements['content_moderation_incompatibility'] = [
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('Workspaces can not be installed when Content Moderation is also installed.'),
+      ];
+    }
+    if (\Drupal::moduleHandler()->moduleExists('workspace')) {
+      $requirements['workspace_incompatibility'] = [
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('Workspaces can not be installed when the contributed Workspace module is also installed. See the <a href=":link">upgrade path</a> page for more information on how to upgrade.', [
+          ':link' => 'https://www.drupal.org/node/2987783',
+        ]),
+      ];
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+function workspaces_install() {
+  // Set the owner of these default workspaces to be first user which which has
+  // the 'administrator' role. This way we avoid hard coding user ID 1 for sites
+  // that prefer to not give it any special meaning.
+  $admin_roles = \Drupal::entityTypeManager()->getStorage('user_role')->getQuery()
+    ->condition('is_admin', TRUE)
+    ->execute();
+  if (!empty($admin_roles)) {
+    $query = \Drupal::entityTypeManager()->getStorage('user')->getQuery()
+      ->condition('roles', $admin_roles, 'IN')
+      ->condition('status', 1)
+      ->sort('uid', 'ASC')
+      ->range(0, 1);
+    $result = $query->execute();
+  }
+
+  // Default to user ID 1 if we could not find any other administrator users.
+  $owner_id = !empty($result) ? reset($result) : 1;
+
+  // Create two workspaces by default, 'live' and 'stage'.
+  Workspace::create([
+    'id' => 'live',
+    'label' => 'Live',
+    'uid' => $owner_id,
+  ])->save();
+
+  Workspace::create([
+    'id' => 'stage',
+    'label' => 'Stage',
+    'uid' => $owner_id,
+  ])->save();
+}

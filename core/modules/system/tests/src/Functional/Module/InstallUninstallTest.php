@@ -4,7 +4,7 @@ namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\workspace\Entity\Workspace;
+use Drupal\workspaces\Entity\Workspace;
 
 /**
  * Install/uninstall core module and confirm table creation/deletion.
@@ -150,7 +150,7 @@ class InstallUninstallTest extends ModuleTestBase {
       }
 
       // Delete all workspaces before uninstall.
-      if ($name == 'workspace') {
+      if ($name == 'workspaces') {
         $workspaces = Workspace::loadMultiple();
         \Drupal::entityTypeManager()->getStorage('workspace')->delete($workspaces);
       }
