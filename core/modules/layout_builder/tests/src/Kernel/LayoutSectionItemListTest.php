@@ -32,7 +32,10 @@ class LayoutSectionItemListTest extends SectionStorageTestBase {
       'bundle' => 'entity_test_base_field_display',
       'mode' => 'default',
       'status' => TRUE,
-    ])->setOverridable()->save();
+    ])
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
 
     array_map(function ($row) {
       return ['section' => $row];

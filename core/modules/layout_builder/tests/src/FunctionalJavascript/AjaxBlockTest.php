@@ -60,7 +60,7 @@ class AjaxBlockTest extends WebDriverTestBase {
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
 
     // From the manage display page, go to manage the layout.
-    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
     $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
     $assert_session->addressEquals("$field_ui_prefix/display-layout/default");

@@ -80,6 +80,10 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     // From the manage display page, go to manage the layout.
     $this->drupalGet("$field_ui_prefix/display/default");
+    $assert_session->linkNotExists('Manage layout');
+    $assert_session->fieldDisabled('layout[allow_custom]');
+
+    $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
     $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
     $assert_session->addressEquals("$field_ui_prefix/display-layout/default");
@@ -153,6 +157,7 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     // Assert that overrides cannot be turned off while overrides exist.
     $this->drupalGet("$field_ui_prefix/display/default");
+    $assert_session->checkboxChecked('layout[allow_custom]');
     $assert_session->fieldDisabled('layout[allow_custom]');
 
     // Alter the defaults.
@@ -243,7 +248,9 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->fillField('id', 'myothermenu');
     $page->pressButton('Save');
 
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display-layout/default');
+    $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display', ['layout[enabled]' => TRUE], 'Save');
+    $assert_session->linkExists('Manage layout');
+    $this->clickLink('Manage layout');
     $assert_session->linkExists('Add Section');
     $this->clickLink('Add Section');
     $assert_session->linkExists('Layout plugin (with dependencies)');
@@ -305,6 +312,7 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
     // Allow overrides for the layout.
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
     $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => TRUE], 'Save');
 
     // Customize the default view mode.
@@ -365,7 +373,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     ]));
 
     // From the manage display page, go to manage the layout.
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display/default', ['layout[enabled]' => TRUE], 'Save');
+    $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
 
     // Add a new block.
@@ -412,6 +421,7 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
     // Enable overrides.
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
     $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => TRUE], 'Save');
     $this->drupalGet('node/1');
 

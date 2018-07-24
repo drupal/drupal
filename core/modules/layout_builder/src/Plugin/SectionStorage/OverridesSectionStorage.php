@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Plugin\SectionStorage;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -9,6 +10,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
@@ -200,10 +202,10 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
   /**
    * {@inheritdoc}
    */
-  public function getLayoutBuilderUrl() {
+  public function getLayoutBuilderUrl($rel = 'view') {
     $entity = $this->getEntity();
     $route_parameters[$entity->getEntityTypeId()] = $entity->id();
-    return Url::fromRoute("layout_builder.{$this->getStorageType()}.{$this->getEntity()->getEntityTypeId()}.view", $route_parameters);
+    return Url::fromRoute("layout_builder.{$this->getStorageType()}.{$this->getEntity()->getEntityTypeId()}.$rel", $route_parameters);
   }
 
   /**
@@ -227,6 +229,15 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    */
   public function save() {
     return $this->getEntity()->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $default_section_storage = $this->getDefaultSectionStorage();
+    $result = AccessResult::allowedIf($default_section_storage->isLayoutBuilderEnabled())->addCacheableDependency($default_section_storage);
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
 }

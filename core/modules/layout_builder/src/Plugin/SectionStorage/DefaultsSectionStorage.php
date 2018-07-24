@@ -3,12 +3,14 @@
 namespace Drupal\layout_builder\Plugin\SectionStorage;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\layout_builder\DefaultsSectionStorageInterface;
@@ -123,8 +125,8 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
-  public function getLayoutBuilderUrl() {
-    return Url::fromRoute("layout_builder.{$this->getStorageType()}.{$this->getDisplay()->getTargetEntityTypeId()}.view", $this->getRouteParameters());
+  public function getLayoutBuilderUrl($rel = 'view') {
+    return Url::fromRoute("layout_builder.{$this->getStorageType()}.{$this->getDisplay()->getTargetEntityTypeId()}.$rel", $this->getRouteParameters());
   }
 
   /**
@@ -299,6 +301,29 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
+  public function isLayoutBuilderEnabled() {
+    return $this->getDisplay()->isLayoutBuilderEnabled();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function enableLayoutBuilder() {
+    $this->getDisplay()->enableLayoutBuilder();
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function disableLayoutBuilder() {
+    $this->getDisplay()->disableLayoutBuilder();
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getThirdPartySetting($module, $key, $default = NULL) {
     return $this->getDisplay()->getThirdPartySetting($module, $key, $default);
   }
@@ -323,6 +348,14 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
    */
   public function getThirdPartyProviders() {
     return $this->getDisplay()->getThirdPartyProviders();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $result = AccessResult::allowedIf($this->isLayoutBuilderEnabled());
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
 }

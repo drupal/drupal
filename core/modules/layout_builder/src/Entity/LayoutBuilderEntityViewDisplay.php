@@ -61,6 +61,30 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   /**
    * {@inheritdoc}
    */
+  public function isLayoutBuilderEnabled() {
+    return (bool) $this->getThirdPartySetting('layout_builder', 'enabled');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function enableLayoutBuilder() {
+    $this->setThirdPartySetting('layout_builder', 'enabled', TRUE);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function disableLayoutBuilder() {
+    $this->setOverridable(FALSE);
+    $this->setThirdPartySetting('layout_builder', 'enabled', FALSE);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSections() {
     return $this->getThirdPartySetting('layout_builder', 'sections', []);
   }
@@ -90,6 +114,27 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       }
       elseif ($field = FieldConfig::loadByName($entity_type_id, $bundle, 'layout_builder__layout')) {
         $field->delete();
+      }
+    }
+
+    $already_enabled = isset($this->original) ? $this->original->isLayoutBuilderEnabled() : FALSE;
+    $set_enabled = $this->isLayoutBuilderEnabled();
+    if ($already_enabled !== $set_enabled) {
+      if ($set_enabled) {
+        // Loop through all existing field-based components and add them as
+        // section-based components.
+        $components = $this->getComponents();
+        // Sort the components by weight.
+        uasort($components, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+        foreach ($components as $name => $component) {
+          $this->setComponent($name, $component);
+        }
+      }
+      else {
+        // When being disabled, remove all existing section data.
+        while (count($this) > 0) {
+          $this->removeSection(0);
+        }
       }
     }
   }
@@ -153,6 +198,9 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   public function buildMultiple(array $entities) {
     $build_list = parent::buildMultiple($entities);
+    if (!$this->isLayoutBuilderEnabled()) {
+      return $build_list;
+    }
 
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     foreach ($entities as $id => $entity) {
@@ -269,6 +317,11 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     // @todo Remove workaround for EntityViewBuilder::getSingleFieldDisplay() in
     //   https://www.drupal.org/project/drupal/issues/2936464.
     if ($this->getMode() === static::CUSTOM_MODE) {
+      return $this;
+    }
+
+    // Only continue if Layout Builder is enabled.
+    if (!$this->isLayoutBuilderEnabled()) {
       return $this;
     }
 
