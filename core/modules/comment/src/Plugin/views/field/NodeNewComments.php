@@ -36,7 +36,7 @@ class NodeNewComments extends NumericField {
   protected $database;
 
   /**
-   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   * Constructs a \Drupal\comment\Plugin\views\field\NodeNewComments object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

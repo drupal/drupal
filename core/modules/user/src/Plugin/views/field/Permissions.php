@@ -33,7 +33,7 @@ class Permissions extends PrerenderList {
   protected $moduleHandler;
 
   /**
-   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   * Constructs a \Drupal\user\Plugin\views\field\Permissions object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

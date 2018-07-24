@@ -25,7 +25,7 @@ class Roles extends PrerenderList {
   protected $database;
 
   /**
-   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   * Constructs a \Drupal\user\Plugin\views\field\Roles object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
