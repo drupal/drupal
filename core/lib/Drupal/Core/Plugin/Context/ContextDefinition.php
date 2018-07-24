@@ -242,6 +242,11 @@ class ContextDefinition implements ContextDefinitionInterface {
    * {@inheritdoc}
    */
   public function getConstraints() {
+    // If the backwards compatibility layer is present, delegate to that.
+    if ($this->entityContextDefinition) {
+      return $this->entityContextDefinition->getConstraints();
+    }
+
     // @todo Apply defaults.
     return $this->constraints;
   }
@@ -250,6 +255,11 @@ class ContextDefinition implements ContextDefinitionInterface {
    * {@inheritdoc}
    */
   public function getConstraint($constraint_name) {
+    // If the backwards compatibility layer is present, delegate to that.
+    if ($this->entityContextDefinition) {
+      return $this->entityContextDefinition->getConstraint($constraint_name);
+    }
+
     $constraints = $this->getConstraints();
     return isset($constraints[$constraint_name]) ? $constraints[$constraint_name] : NULL;
   }
@@ -258,6 +268,11 @@ class ContextDefinition implements ContextDefinitionInterface {
    * {@inheritdoc}
    */
   public function setConstraints(array $constraints) {
+    // If the backwards compatibility layer is present, delegate to that.
+    if ($this->entityContextDefinition) {
+      $this->entityContextDefinition->setConstraint();
+    }
+
     $this->constraints = $constraints;
     return $this;
   }
@@ -266,6 +281,11 @@ class ContextDefinition implements ContextDefinitionInterface {
    * {@inheritdoc}
    */
   public function addConstraint($constraint_name, $options = NULL) {
+    // If the backwards compatibility layer is present, delegate to that.
+    if ($this->entityContextDefinition) {
+      $this->entityContextDefinition->addConstraint($constraint_name, $options);
+    }
+
     $this->constraints[$constraint_name] = $options;
     return $this;
   }
@@ -408,6 +428,7 @@ class ContextDefinition implements ContextDefinitionInterface {
       ->setRequired($this->isRequired())
       ->setMultiple($this->isMultiple())
       ->setDescription($this->getDescription())
+      ->setConstraints($this->getConstraints())
       ->setDefaultValue($this->getDefaultValue());
   }
 
