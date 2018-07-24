@@ -23,7 +23,7 @@ class Iid extends NumericArgument {
   protected $entityManager;
 
   /**
-   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   * Constructs a \Drupal\aggregator\Plugin\views\argument\Iid object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

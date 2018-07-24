@@ -29,7 +29,7 @@ class Vid extends NumericArgument {
   protected $nodeStorage;
 
   /**
-   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   * Constructs a \Drupal\node\Plugin\views\argument\Vid object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

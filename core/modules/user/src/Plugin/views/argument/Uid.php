@@ -23,7 +23,7 @@ class Uid extends NumericArgument {
   protected $storage;
 
   /**
-   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   * Constructs a \Drupal\user\Plugin\views\argument\Uid object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
