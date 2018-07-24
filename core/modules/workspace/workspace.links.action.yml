@@ -1,5 +1,0 @@
-entity.workspace.add_form:
-  route_name: entity.workspace.add_form
-  title: 'Add workspace'
-  appears_on:
-    - entity.workspace.collection
