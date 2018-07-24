@@ -7,7 +7,7 @@
    */
   Drupal.behaviors.MediaLibraryHover = {
     attach(context) {
-      $('.media-library-item .js-click-to-select__trigger,.media-library-item .js-click-to-select__checkbox', context).once('media-library-item-hover')
+      $('.media-library-item .js-click-to-select-trigger,.media-library-item .js-click-to-select-checkbox', context).once('media-library-item-hover')
         .on('mouseover mouseout', ({ currentTarget, type }) => {
           $(currentTarget).closest('.media-library-item').toggleClass('is-hover', type === 'mouseover');
         });
@@ -19,7 +19,7 @@
    */
   Drupal.behaviors.MediaLibraryFocus = {
     attach(context) {
-      $('.media-library-item .js-click-to-select__checkbox input', context).once('media-library-item-focus')
+      $('.media-library-item .js-click-to-select-checkbox input', context).once('media-library-item-focus')
         .on('focus blur', ({ currentTarget, type }) => {
           $(currentTarget).closest('.media-library-item').toggleClass('is-focus', type === 'focus');
         });

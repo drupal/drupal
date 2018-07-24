@@ -243,31 +243,9 @@ function media_field_widget_multivalue_form_alter(array &$elements, FormStateInt
   // Retrieve the media bundle list and add information for the user based on
   // which bundles are available to be created or referenced.
   $settings = $context['items']->getFieldDefinition()->getSetting('handler_settings');
-  $allowed_bundles = isset($settings['target_bundles']) ? $settings['target_bundles'] : [];
-  $access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('media');
-  $all_bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('media');
-  $bundle_labels = [];
-  $create_bundles = [];
-  foreach ($allowed_bundles as $bundle) {
-    $bundle_labels[] = $all_bundles[$bundle]['label'];
-    if ($access_handler->createAccess($bundle)) {
-      $create_bundles[] = $bundle;
-      if (count($create_bundles) > 1) {
-        // If the user has access to create more than 1 bundle then the
-        // individual media type form can not be used.
-        break;
-      }
-    }
-  }
-
-  // Add a section about how to create media if the user has access to do so.
-  if (!empty($create_bundles)) {
-    if (count($create_bundles) === 1) {
-      $add_url = Url::fromRoute('entity.media.add_form', ['media_type' => $create_bundles[0]])->toString();
-    }
-    elseif (count($create_bundles) > 1) {
-      $add_url = Url::fromRoute('entity.media.add_page')->toString();
-    }
+  $allowed_bundles = !empty($settings['target_bundles']) ? $settings['target_bundles'] : [];
+  $add_url = _media_get_add_url($allowed_bundles);
+  if ($add_url) {
     $elements['#media_help']['#media_add_help'] = t('Create your media on the <a href=":add_page" target="_blank">media add page</a> (opens a new window), then add it by name to the field below.', [':add_page' => $add_url]);
   }
 
@@ -308,6 +286,10 @@ function media_field_widget_multivalue_form_alter(array &$elements, FormStateInt
     if ($overview_url->access()) {
       $elements['#media_help']['#media_list_link'] = t('See the <a href=":list_url" target="_blank">media list</a> (opens a new window) to help locate media.', [':list_url' => $overview_url->toString()]);
     }
+    $all_bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('media');
+    $bundle_labels = array_map(function ($bundle) use ($all_bundles) {
+      return $all_bundles[$bundle]['label'];
+    }, $allowed_bundles);
     $elements['#media_help']['#allowed_types_help'] = t('Allowed media types: %types', ['%types' => implode(", ", $bundle_labels)]);
   }
 }
@@ -335,4 +317,33 @@ function media_preprocess_media_reference_help(&$variables) {
       $variables[substr($key, 1)] = $text;
     }
   }
+}
+
+/**
+ * Returns the appropriate URL to add media for the current user.
+ *
+ * @todo Remove in https://www.drupal.org/project/drupal/issues/2938116
+ *
+ * @param string[] $allowed_bundles
+ *   An array of bundles that should be checked for create access.
+ *
+ * @return bool|\Drupal\Core\Url
+ *   The URL to add media, or FALSE if the user cannot create any media.
+ *
+ * @internal
+ *   This function is internal and may be removed in a minor release.
+ */
+function _media_get_add_url($allowed_bundles) {
+  $access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('media');
+  $create_bundles = array_filter($allowed_bundles, [$access_handler, 'createAccess']);
+
+  // Add a section about how to create media if the user has access to do so.
+  if (count($create_bundles) === 1) {
+    return Url::fromRoute('entity.media.add_form', ['media_type' => reset($create_bundles)])->toString();
+  }
+  elseif (count($create_bundles) > 1) {
+    return Url::fromRoute('entity.media.add_page')->toString();
+  }
+
+  return FALSE;
 }

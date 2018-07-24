@@ -8,7 +8,7 @@
 (function ($, Drupal) {
   Drupal.behaviors.MediaLibraryHover = {
     attach: function attach(context) {
-      $('.media-library-item .js-click-to-select__trigger,.media-library-item .js-click-to-select__checkbox', context).once('media-library-item-hover').on('mouseover mouseout', function (_ref) {
+      $('.media-library-item .js-click-to-select-trigger,.media-library-item .js-click-to-select-checkbox', context).once('media-library-item-hover').on('mouseover mouseout', function (_ref) {
         var currentTarget = _ref.currentTarget,
             type = _ref.type;
 
@@ -19,7 +19,7 @@
 
   Drupal.behaviors.MediaLibraryFocus = {
     attach: function attach(context) {
-      $('.media-library-item .js-click-to-select__checkbox input', context).once('media-library-item-focus').on('focus blur', function (_ref2) {
+      $('.media-library-item .js-click-to-select-checkbox input', context).once('media-library-item-focus').on('focus blur', function (_ref2) {
         var currentTarget = _ref2.currentTarget,
             type = _ref2.type;
 
