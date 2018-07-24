@@ -1,0 +1,9 @@
+/**
+ * @file
+ * Styling for the Workspace overview table.
+ */
+
+/** @todo Move to Seven theme before Workspace is marked stable. */
+tr.active-workspace {
+  background-color: #ebeae4;
+}
