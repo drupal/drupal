@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Bootstrap;
+namespace Drupal\FunctionalTests\Bootstrap;
 
 use Drupal\Core\DependencyInjection\Container;
 
