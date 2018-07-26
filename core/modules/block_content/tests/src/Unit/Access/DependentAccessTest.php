@@ -100,7 +100,6 @@ class DependentAccessTest extends UnitTestCase {
     $accessResultNeutral = $dependencies[1]->access('view', $this->account, TRUE);
     $this->assertTrue($accessResultNeutral->isNeutral());
     $this->assertEquals('I have no opinion', $accessResultNeutral->getReason());
-
   }
 
   /**

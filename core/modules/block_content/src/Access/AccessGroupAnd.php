@@ -13,7 +13,6 @@ use Drupal\Core\Session\AccountInterface;
  */
 class AccessGroupAnd implements AccessibleInterface {
 
-
   /**
    * The access dependencies.
    *
