@@ -55,12 +55,14 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($operation === 'view') {
-      $access = AccessResult::allowedIf($entity->isPublished())->addCacheableDependency($entity)
+      $access = AccessResult::allowedIf($entity->isPublished())
         ->orIf(AccessResult::allowedIfHasPermission($account, 'administer blocks'));
     }
     else {
       $access = parent::checkAccess($entity, $operation, $account);
     }
+    // Add the entity as a cacheable dependency because access will at least be
+    // determined by whether the block is reusable.
     $access->addCacheableDependency($entity);
     /** @var \Drupal\block_content\BlockContentInterface $entity */
     if ($entity->isReusable() === FALSE) {

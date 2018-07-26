@@ -9,6 +9,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests 'reusable' field related update functions for the Block Content module.
  *
  * @group Update
+ * @group block_content
  * @group legacy
  */
 class BlockContentReusableUpdateTest extends UpdatePathTestBase {
@@ -18,28 +19,25 @@ class BlockContentReusableUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
+      // Override the 'block_content' view with an extra display with overridden
+      // filters. This extra display should also have a filter added for
+      // 'reusable' field so that it does not expose non-reusable fields. This
+      // display also has a filter that only shows blocks that contain 'block2'
+      // in the 'info' field.
+      __DIR__ . '/../../../fixtures/update/drupal-8.views_block_content-2976334.php',
     ];
   }
 
   /**
    * Tests adding 'reusable' entity base field to the block content entity type.
    *
-   * @see block_content_update_8600
-   * @see block_content_post_update_add_views_reusable_filter
+   * @see block_content_update_8600()
+   * @see block_content_post_update_add_views_reusable_filter()
    */
   public function testReusableFieldAddition() {
     $assert_session = $this->assertSession();
     $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-
-    // Delete custom block library view.
-    $this->config('views.view.block_content')->delete();
-    // Install the test module with the 'block_content' view with an extra
-    // display with overridden filters. This extra display should also have a
-    // filter added for 'reusable' field so that it does not expose non-reusable
-    // fields. This display also has a filter that only shows blocks that
-    // contain 'block2' in the 'info' field.
-    $this->container->get('module_installer')->install(['block_content_view_override']);
 
     // Ensure that 'reusable' field is not present before updates.
     $this->assertEmpty($entity_definition_update_manager->getFieldStorageDefinition('reusable', 'block_content'));
