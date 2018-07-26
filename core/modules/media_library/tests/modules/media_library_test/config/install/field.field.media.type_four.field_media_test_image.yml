@@ -1,0 +1,37 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_test_image
+    - media.type.type_four
+  module:
+    - image
+id: media.type_three.field_media_test_image
+field_name: field_media_test_image
+entity_type: media
+bundle: type_four
+label: Image
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_extensions: 'jpg'
+  alt_field: true
+  alt_field_required: true
+  title_field: false
+  title_field_required: false
+  max_resolution: ''
+  min_resolution: ''
+  default_image:
+    uuid: null
+    alt: ''
+    title: ''
+    width: null
+    height: null
+  file_directory: 'type-four-dir'
+  max_filesize: ''
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: image

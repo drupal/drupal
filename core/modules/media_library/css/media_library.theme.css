@@ -198,6 +198,44 @@
   border-color: #40b6ff;
 }
 
+/* Style the wrappers around new media and files */
+.media-library-upload__media,
+.media-library-upload__file {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px 0 20px 0;
+}
+
+.media-library-upload__file {
+  align-items: center;
+}
+
+.media-library-upload__file-label {
+  margin-right: 10px;
+}
+
+/* @todo Remove in https://www.drupal.org/project/drupal/issues/2987921 */
+.media-library-upload__source-field .file,
+.media-library-upload__source-field .button,
+.media-library-upload__source-field .image-preview,
+.media-library-upload__source-field .form-type-managed-file > label,
+.media-library-upload__source-field .file-size {
+  display: none;
+}
+
+.media-library-upload__media-preview {
+  margin-right: 20px;
+  width: 220px;
+  background: #ebebeb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-library-upload__media-preview img {
+  display: block;
+}
+
 /* @todo Remove or re-work in https://www.drupal.org/node/2985168 */
 .media-library-widget .media-library-item__name a,
 .media-library-view.view-display-id-widget .media-library-item__name a {

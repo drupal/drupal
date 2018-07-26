@@ -1,0 +1,6 @@
+media_library.upload:
+  path: '/admin/content/media-widget-upload'
+  defaults:
+    _form: '\Drupal\media_library\Form\MediaLibraryUploadForm'
+  requirements:
+    _custom_access: '\Drupal\media_library\Form\MediaLibraryUploadForm::access'
