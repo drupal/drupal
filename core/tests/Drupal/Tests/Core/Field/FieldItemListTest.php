@@ -6,6 +6,8 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Tests\UnitTestCase;
 
@@ -134,6 +136,71 @@ class FieldItemListTest extends UnitTestCase {
     $datasets[] = [TRUE, $field_item_h, $field_item_i];
 
     return $datasets;
+  }
+
+  /**
+   * Tests identical behavior of ::hasAffectingChanges with ::equals.
+   *
+   * @covers ::hasAffectingChanges
+   *
+   * @dataProvider providerTestEquals
+   */
+  public function testHasAffectingChanges($expected, FieldItemInterface $first_field_item = NULL, FieldItemInterface $second_field_item = NULL) {
+    // Mock the field type manager and place it in the container.
+    $field_type_manager = $this->createMock(FieldTypePluginManagerInterface::class);
+    $container = new ContainerBuilder();
+    $container->set('plugin.manager.field.field_type', $field_type_manager);
+    \Drupal::setContainer($container);
+
+    $field_storage_definition = $this->createMock(FieldStorageDefinitionInterface::class);
+    $field_storage_definition->expects($this->any())
+      ->method('getColumns')
+      ->willReturn([0 => '0', 1 => '1']);
+
+    // Set up three properties, one of them being computed.
+    $property_definitions['0'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['0']->expects($this->any())
+      ->method('isComputed')
+      ->willReturn(FALSE);
+    $property_definitions['1'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['1']->expects($this->any())
+      ->method('isComputed')
+      ->willReturn(FALSE);
+    $property_definitions['2'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['2']->expects($this->any())
+      ->method('isComputed')
+      ->willReturn(TRUE);
+
+    $field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $field_storage_definition->expects($this->any())
+      ->method('getPropertyDefinitions')
+      ->will($this->returnValue($property_definitions));
+
+    $field_definition = $this->createMock(FieldDefinitionInterface::class);
+    $field_definition->expects($this->any())
+      ->method('getFieldStorageDefinition')
+      ->willReturn($field_storage_definition);
+    $field_definition->expects($this->any())
+      ->method('isComputed')
+      ->willReturn(FALSE);
+
+    $field_list_a = new FieldItemList($field_definition);
+    $field_list_b = new FieldItemList($field_definition);
+
+    // Set up the mocking necessary for creating field items.
+    $field_type_manager->expects($this->any())
+      ->method('createFieldItem')
+      ->willReturnOnConsecutiveCalls($first_field_item, $second_field_item);
+
+    // Set the field item values.
+    if ($first_field_item instanceof FieldItemInterface) {
+      $field_list_a->setValue($first_field_item);
+    }
+    if ($second_field_item instanceof FieldItemInterface) {
+      $field_list_b->setValue($second_field_item);
+    }
+
+    $this->assertEquals($expected, !$field_list_a->hasAffectingChanges($field_list_b, ''));
   }
 
   /**

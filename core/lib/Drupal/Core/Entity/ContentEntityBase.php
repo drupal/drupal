@@ -5,7 +5,6 @@ namespace Drupal\Core\Entity;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Field\ChangedFieldItemList;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -175,6 +174,13 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * @var bool[]
    */
   protected $enforceRevisionTranslationAffected = [];
+
+  /**
+   * Local cache for fields to skip from the checking for translation changes.
+   *
+   * @var array
+   */
+  protected static $fieldsToSkipFromTranslationChangesCheck = [];
 
   /**
    * {@inheritdoc}
@@ -1377,7 +1383,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    *   An array of field names.
    */
   protected function getFieldsToSkipFromTranslationChangesCheck() {
-    return $this->traitGetFieldsToSkipFromTranslationChangesCheck($this);
+    $bundle = $this->bundle();
+    if (!isset(static::$fieldsToSkipFromTranslationChangesCheck[$this->entityTypeId][$bundle])) {
+      static::$fieldsToSkipFromTranslationChangesCheck[$this->entityTypeId][$bundle] = $this->traitGetFieldsToSkipFromTranslationChangesCheck($this);
+    }
+    return static::$fieldsToSkipFromTranslationChangesCheck[$this->entityTypeId][$bundle];
   }
 
   /**
@@ -1413,6 +1423,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // possible or be meaningless.
     /** @var \Drupal\Core\Entity\ContentEntityBase $translation */
     $translation = $original->getTranslation($this->activeLangcode);
+    $langcode = $this->language()->getId();
 
     // The list of fields to skip from the comparision.
     $skip_fields = $this->getFieldsToSkipFromTranslationChangesCheck();
@@ -1428,18 +1439,10 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       if (in_array($field_name, $skip_fields, TRUE) || ($skip_untranslatable_fields && !$definition->isTranslatable())) {
         continue;
       }
-      $field = $this->get($field_name);
-      // When saving entities in the user interface, the changed timestamp is
-      // automatically incremented by ContentEntityForm::submitForm() even if
-      // nothing was actually changed. Thus, the changed time needs to be
-      // ignored when determining whether there are any actual changes in the
-      // entity.
-      if (!($field instanceof ChangedFieldItemList) && !$definition->isComputed()) {
-        $items = $field->filterEmptyItems();
-        $original_items = $translation->get($field_name)->filterEmptyItems();
-        if (!$items->equals($original_items)) {
-          return TRUE;
-        }
+      $items = $this->get($field_name)->filterEmptyItems();
+      $original_items = $translation->get($field_name)->filterEmptyItems();
+      if ($items->hasAffectingChanges($original_items, $langcode)) {
+        return TRUE;
       }
     }
 

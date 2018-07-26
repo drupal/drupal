@@ -18,4 +18,16 @@ class ChangedFieldItemList extends FieldItemList {
     return AccessResult::allowedIf($operation !== 'edit');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasAffectingChanges(FieldItemListInterface $original_items, $langcode) {
+    // When saving entities in the user interface, the changed timestamp is
+    // automatically incremented by ContentEntityForm::submitForm() even if
+    // nothing was actually changed. Thus, the changed time needs to be
+    // ignored when determining whether there are any actual changes in the
+    // entity.
+    return FALSE;
+  }
+
 }
