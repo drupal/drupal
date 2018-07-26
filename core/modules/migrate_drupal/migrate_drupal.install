@@ -24,3 +24,10 @@ function migrate_drupal_update_8502() {
     ->set('follow_up_migration_tags', ['Follow-up migration'])
     ->save();
 }
+
+/**
+ * Install migrate_drupal_multilingual since migrate_drupal is installed.
+ */
+function migrate_drupal_update_8601() {
+  \Drupal::service('module_installer')->install(['migrate_drupal_multilingual']);
+}

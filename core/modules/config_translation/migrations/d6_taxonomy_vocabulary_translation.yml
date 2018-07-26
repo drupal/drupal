@@ -3,6 +3,7 @@ label: Taxonomy vocabularies
 migration_tags:
   - Drupal 6
   - Configuration
+  - Multilingual
 source:
   plugin: d6_taxonomy_vocabulary_translation
 process:
@@ -23,6 +24,7 @@ process:
   translation: translation
 destination:
   plugin: entity:taxonomy_vocabulary
+  destination_module: config_translation
 migration_dependencies:
   required:
     - d6_taxonomy_vocabulary

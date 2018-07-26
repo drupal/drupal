@@ -3,6 +3,7 @@ label: Menu links
 migration_tags:
   - Drupal 6
   - Content
+  - Multilingual
 source:
   plugin: d6_menu_link_translation
 process:

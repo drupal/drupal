@@ -2,6 +2,7 @@ id: d7_entity_reference_translation
 label: Entity reference translations
 migration_tags:
   - Drupal 7
+  - Multilingual
   - Follow-up migration
 deriver: Drupal\migrate_drupal\Plugin\migrate\EntityReferenceTranslationDeriver
 # Supported target types for entity reference translation migrations. The array

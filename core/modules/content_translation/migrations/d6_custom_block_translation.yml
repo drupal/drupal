@@ -3,6 +3,7 @@ label: Custom block translations
 migration_tags:
   - Drupal 6
   - Content
+  - Multilingual
 source:
   plugin: d6_box_translation
 process:

@@ -15,7 +15,14 @@ class MigrateUserProfileFieldInstanceTranslationTest extends MigrateDrupal6TestB
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['config_translation', 'locale', 'language', 'field'];
+  public static $modules = [
+    'config_translation',
+    'locale',
+    'language',
+    'field',
+    // Required for translation migrations.
+    'migrate_drupal_multilingual',
+  ];
 
   /**
    * Tests migration of translated user profile fields.

@@ -3,6 +3,7 @@ label: Maintenance page configuration
 migration_tags:
   - Drupal 6
   - Configuration
+  - Multilingual
 source:
   plugin: variable_translation
   variables:

@@ -3,6 +3,7 @@ label: Block translations
 migration_tags:
   - Drupal 6
   - Configuration
+  - Multilingual
 source:
   plugin: d6_block_translation
   constants:
