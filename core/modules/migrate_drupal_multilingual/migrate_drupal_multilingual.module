@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Provides a requirement for multilingual content and configuration migrations.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function migrate_drupal_multilingual_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.migrate_drupal_multilingual':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Migrate Drupal Multilingual module is a requirement for migrating translations. It does not provide a user interface. For more information, see the <a href=":migrate_drupal_multilingual">online documentation for the Migrate Drupal Multilingual module</a>.', [':migrate_drupal_multilingual' => 'https://www.drupal.org/node/2959712']) . '</p>';
+      return $output;
+  }
+}

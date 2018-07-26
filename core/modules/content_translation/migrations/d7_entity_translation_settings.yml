@@ -3,6 +3,7 @@ label: Drupal 7 Entity Translation settings
 migration_tags:
   - Drupal 7
   - Configuration
+  - Multilingual
 source:
   plugin: d7_entity_translation_settings
 process:

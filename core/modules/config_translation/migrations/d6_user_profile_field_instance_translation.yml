@@ -3,6 +3,7 @@ label: User profile field instance configuration
 migration_tags:
   - Drupal 6
   - Configuration
+  - Multilingual
 source:
   plugin: d6_profile_field_translation
   constants:

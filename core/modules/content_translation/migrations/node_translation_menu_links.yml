@@ -5,6 +5,7 @@ migration_tags:
   - Drupal 6
   - Drupal 7
   - Content
+  - Multilingual
 source:
   plugin: menu_link
   constants:

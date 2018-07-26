@@ -20,6 +20,8 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
     'content_translation',
     'language',
     'menu_ui',
+    // Required for translation migrations.
+    'migrate_drupal_multilingual',
     'node',
     'taxonomy',
   ];

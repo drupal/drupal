@@ -110,6 +110,12 @@ trait MigrationConfigurationTrait {
       if (!empty(array_intersect($migration->getMigrationTags(), $this->getFollowUpMigrationTags()))) {
         continue;
       }
+      // Multilingual migrations require migrate_drupal_multilingual.
+      $tags = $migration->getMigrationTags() ?: [];
+      if (in_array('Multilingual', $tags, TRUE) && (!\Drupal::service('module_handler')->moduleExists('migrate_drupal_multilingual'))) {
+        throw new RequirementsException(sprintf("Install migrate_drupal_multilingual to run migration '%s'.", $migration->getPluginId()));
+      }
+
       try {
         // @todo https://drupal.org/node/2681867 We should be able to validate
         //   the entire migration at this point.

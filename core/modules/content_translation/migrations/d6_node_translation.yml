@@ -4,6 +4,7 @@ migration_tags:
   - Drupal 6
   - translation
   - Content
+  - Multilingual
 class: Drupal\node\Plugin\migrate\D6NodeTranslation
 deriver: Drupal\node\Plugin\migrate\D6NodeDeriver
 source:

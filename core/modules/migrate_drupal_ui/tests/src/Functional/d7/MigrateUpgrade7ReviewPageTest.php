@@ -26,6 +26,8 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
     'syslog',
     'tracker',
     'update',
+    // Required for translation migrations.
+    'migrate_drupal_multilingual',
   ];
 
   /**
@@ -57,7 +59,6 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'date',
       'dblog',
       'email',
-      'entity_translation',
       'field',
       'field_sql_storage',
       'file',
@@ -108,6 +109,7 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'entity_feature',
       'entity_token',
       'entityreference',
+      'entity_translation',
       'field_ui',
       'help',
       'openid',
