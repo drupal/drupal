@@ -629,16 +629,12 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *     of links.
  *   - set_active_class: (optional) Whether each link should compare the
  *     route_name + route_parameters or href (path), language and query options
- *     to the current URL, to determine whether the link is "active". If so, an
- *     "active" class will be applied to the list item containing the link, as
- *     well as the link itself. It is important to use this sparingly since it
- *     is usually unnecessary and requires extra processing.
- *     For anonymous users, the "active" class will be calculated on the server,
- *     because most sites serve each anonymous user the same cached page anyway.
- *     For authenticated users, the "active" class will be calculated on the
- *     client (through JavaScript), only data- attributes are added to list
- *     items and contained links, to prevent breaking the render cache. The
- *     JavaScript is added in system_page_attachments().
+ *     to the current URL, to determine whether the link is "active". If so,
+ *     attributes will be added to the HTML elements for both the link and the
+ *     list item that contains it, which will result in an "is-active" class
+ *     being added to both. The class is added via JavaScript for authenticated
+ *     users (in the active-link library), and via PHP for anonymous users (in
+ *     the \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter class).
  *   - heading: (optional) A heading to precede the links. May be an
  *     associative array or a string. If it's an array, it can have the
  *     following elements:
@@ -698,7 +694,16 @@ function template_preprocess_links(&$variables) {
       ];
 
       // Handle links and ensure that the active class is added on the LIs, but
-      // only if the 'set_active_class' option is not empty.
+      // only if the 'set_active_class' option is not empty. Links templates
+      // duplicate the "is-active" class handling of l() and
+      // LinkGenerator::generate() because they need to be able to set the
+      // "is-active" class not on the links themselves (<a> tags), but on the
+      // list items (<li> tags) that contain the links. This is necessary for
+      // CSS to be able to style list items differently when the link is active,
+      // since CSS does not yet allow one to style list items only if they
+      // contain a certain element with a certain class. That is, we cannot yet
+      // convert this jQuery selector to a CSS selector:
+      // jQuery('li:has("a.is-active")')
       if (isset($link['url'])) {
         if (!empty($variables['set_active_class'])) {
 
@@ -711,6 +716,8 @@ function template_preprocess_links(&$variables) {
 
           // Add a "data-drupal-link-query" attribute to let the
           // drupal.active-link library know the query in a standardized manner.
+          // Only add the data- attribute. The "is-active" class will be
+          // calculated using JavaScript, to prevent breaking the render cache.
           if (!empty($link['query'])) {
             $query = $link['query'];
             ksort($query);
@@ -721,7 +728,10 @@ function template_preprocess_links(&$variables) {
           $url = $link['url'];
           if ($url->isRouted()) {
             // Add a "data-drupal-link-system-path" attribute to let the
-            // drupal.active-link library know the path in a standardized manner.
+            // drupal.active-link library know the path in a standardized
+            // manner. Only add the data- attribute. The "is-active" class will
+            // be calculated using JavaScript, to prevent breaking the render
+            // cache.
             $system_path = $url->getInternalPath();
             // @todo System path is deprecated - use the route name and parameters.
             // Special case for the front page.
