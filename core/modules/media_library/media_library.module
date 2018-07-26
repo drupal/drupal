@@ -6,11 +6,13 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 use Drupal\views\Form\ViewsForm;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
@@ -40,6 +42,36 @@ function media_library_theme() {
       'base hook' => 'media',
     ],
   ];
+}
+
+/**
+ * Implements hook_preprocess_view().
+ *
+ * Adds a link to add media above the view.
+ */
+function media_library_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
+  if ($view->id() === 'media_library' && $view->current_display === 'widget') {
+    $url = Url::fromRoute('media_library.upload');
+    if ($url->access()) {
+      $url->setOption('query', \Drupal::request()->query->all());
+      $variables['header']['add_media'] = [
+        '#type' => 'link',
+        '#title' => t('Add media'),
+        '#url' => $url,
+        '#attributes' => [
+          'class' => ['button', 'button-action', 'button--primary', 'use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'dialogClass' => 'media-library-widget-modal',
+            'height' => '75%',
+            'width' => '75%',
+            'title' => t('Add media'),
+          ]),
+        ],
+      ];
+    }
+  }
 }
 
 /**

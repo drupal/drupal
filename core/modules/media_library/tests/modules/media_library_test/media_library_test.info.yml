@@ -4,6 +4,7 @@ description: 'Test module for Media library.'
 package: Testing
 core: 8.x
 dependencies:
+  - drupal:image
   - drupal:media_library
   - drupal:media_test_source
   - drupal:menu_ui

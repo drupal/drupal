@@ -4,6 +4,7 @@ namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
+use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
@@ -13,6 +14,8 @@ use Drupal\user\RoleInterface;
  * @group media_library
  */
 class MediaLibraryTest extends WebDriverTestBase {
+
+  use TestFileCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -284,6 +287,112 @@ class MediaLibraryTest extends WebDriverTestBase {
     ], 'Save');
     $assert_session->pageTextContains('Basic Page My page has been created');
     $assert_session->pageTextContains('Dog');
+  }
+
+  /**
+   * Tests that uploads in the Media library's widget works as expected.
+   */
+  public function testWidgetUpload() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    foreach ($this->getTestFiles('image') as $image) {
+      $extension = pathinfo($image->filename, PATHINFO_EXTENSION);
+      if ($extension === 'png') {
+        $png_image = $image;
+      }
+      elseif ($extension === 'jpg') {
+        $jpg_image = $image;
+      }
+    }
+
+    if (!isset($png_image) || !isset($jpg_image)) {
+      $this->fail('Expected test files not present.');
+    }
+
+    // Visit a node create page.
+    $this->drupalGet('node/add/basic_page');
+
+    $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = $this->container->get('file_system');
+
+    // Add to the twin media field using the add button directly on the widget.
+    $unlimited_button = $assert_session->elementExists('css', '.media-library-add-button[href*="field_twin_media"]');
+    $unlimited_button->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $page->attachFileToField('Upload', $this->container->get('file_system')->realpath($png_image->uri));
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Files are temporary until the form is saved.
+    $files = $file_storage->loadMultiple();
+    $file = array_pop($files);
+    $this->assertSame('public://type-three-dir', $file_system->dirname($file->getFileUri()));
+    $this->assertTrue($file->isTemporary());
+
+    $this->assertSame($assert_session->fieldExists('Name')->getValue(), $png_image->filename);
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Alternative text field is required');
+    $page->fillField('Alternative text', $this->randomString());
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // The file should be permanent now.
+    $files = $file_storage->loadMultiple();
+    $file = array_pop($files);
+    $this->assertFalse($file->isTemporary());
+
+    // Ensure the media item was added.
+    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextContains($png_image->filename);
+
+    // Open the browser again to test type resolution.
+    $unlimited_button = $assert_session->elementExists('css', '.media-library-open-button[href*="field_twin_media"]');
+    $unlimited_button->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Media library');
+    $assert_session->elementExists('css', '#drupal-modal')->clickLink('Add media');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $page->attachFileToField('Upload', $file_system->realpath($jpg_image->uri));
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $assert_session->pageTextContains('Select a media type for ' . $jpg_image->filename);
+
+    // Before the type is determined, the file lives in the default upload
+    // location (temporary://).
+    $files = $file_storage->loadMultiple();
+    $file = array_pop($files);
+    $this->assertSame('temporary', $file_system->uriScheme($file->getFileUri()));
+
+    // Both the type_three and type_four media types accept jpg images.
+    $assert_session->buttonExists('Type Three');
+    $assert_session->buttonExists('Type Four')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // The file should have been moved when the type was selected.
+    $files = $file_storage->loadMultiple();
+    $file = array_pop($files);
+    $this->assertSame('public://type-four-dir', $file_system->dirname($file->getFileUri()));
+    $this->assertSame($assert_session->fieldExists('Name')->getValue(), $jpg_image->filename);
+    $page->fillField('Alternative text', $this->randomString());
+
+    // The type_four media type has another optional image field.
+    $assert_session->pageTextContains('Extra Image');
+    $page->attachFileToField('Extra Image', $this->container->get('file_system')->realpath($jpg_image->uri));
+    $assert_session->assertWaitOnAjaxRequest();
+    // Ensure that the extra image was uploaded to the correct directory.
+    $files = $file_storage->loadMultiple();
+    $file = array_pop($files);
+    $this->assertSame('public://type-four-extra-dir', $file_system->dirname($file->getFileUri()));
+
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextContains($jpg_image->filename);
   }
 
 }

@@ -124,31 +124,6 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       ],
     ];
 
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/2938116
-    $allowed_bundles = !empty($element['#target_bundles']) ? $element['#target_bundles'] : [];
-    $add_url = _media_get_add_url($allowed_bundles);
-    if ($add_url) {
-      $element['create_help'] = [
-        '#type' => 'container',
-      ];
-      $element['create_help']['label'] = [
-        '#type' => 'html_tag',
-        '#tag' => 'h4',
-        '#attributes' => [
-          'class' => ['label'],
-        ],
-        '#value' => $this->t('Create new media'),
-      ];
-      $element['create_help']['description'] = [
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#attributes' => [
-          'class' => ['description'],
-        ],
-        '#value' => $this->t('Create your media on the <a href=":add_page" target="_blank">media add page</a> (opens a new window), then select it in the library.', [':add_page' => $add_url]),
-      ];
-    }
-
     $element['selection'] = [
       '#type' => 'container',
       '#attributes' => [
@@ -242,6 +217,18 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       $element['#description'] .= '<br />' . $cardinality_message;
     }
 
+    $query = [
+      'media_library_widget_id' => $field_name . $id_suffix,
+      'media_library_allowed_types' => $element['#target_bundles'],
+      'media_library_remaining' => $cardinality_unlimited ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : $remaining,
+    ];
+    $dialog_options = Json::encode([
+      'dialogClass' => 'media-library-widget-modal',
+      'height' => '75%',
+      'width' => '75%',
+      'title' => $this->t('Media library'),
+    ]);
+
     // Add a button that will load the Media library in a modal using AJAX.
     $element['media_library_open_button'] = [
       '#type' => 'link',
@@ -249,25 +236,34 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       '#name' => $field_name . '-media-library-open-button' . $id_suffix,
       // @todo Make the view configurable in https://www.drupal.org/project/drupal/issues/2971209
       '#url' => Url::fromRoute('view.media_library.widget', [], [
-        'query' => [
-          'media_library_widget_id' => $field_name . $id_suffix,
-          'media_library_allowed_types' => $element['#target_bundles'],
-          'media_library_remaining' => $cardinality_unlimited ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : $remaining,
-        ],
+        'query' => $query,
       ]),
       '#attributes' => [
         'class' => ['button', 'use-ajax', 'media-library-open-button'],
         'data-dialog-type' => 'modal',
-        'data-dialog-options' => Json::encode([
-          'dialogClass' => 'media-library-widget-modal',
-          'height' => '75%',
-          'width' => '75%',
-          'title' => $this->t('Media library'),
-        ]),
+        'data-dialog-options' => $dialog_options,
       ],
       // Prevent errors in other widgets from preventing addition.
       '#limit_validation_errors' => $limit_validation_errors,
       '#access' => $cardinality_unlimited || $remaining > 0,
+    ];
+
+    $add_url = Url::fromRoute('media_library.upload', [], [
+      'query' => $query,
+    ]);
+    $element['media_library_add_button'] = [
+      '#type' => 'link',
+      '#title' => $this->t('Add media'),
+      '#name' => $field_name . '-media-library-add-button' . $id_suffix,
+      '#url' => $add_url,
+      '#attributes' => [
+        'class' => ['button', 'use-ajax', 'media-library-add-button'],
+        'data-dialog-type' => 'modal',
+        'data-dialog-options' => $dialog_options,
+      ],
+      // Prevent errors in other widgets from preventing addition.
+      '#limit_validation_errors' => $limit_validation_errors,
+      '#access' => $add_url->access() && ($cardinality_unlimited || $remaining > 0),
     ];
 
     // This hidden field and button are used to add new items to the widget.
