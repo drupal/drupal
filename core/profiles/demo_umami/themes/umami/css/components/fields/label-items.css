@@ -13,12 +13,3 @@
 .label-items .field__item {
   display: inline;
 }
-
-.label-items .field__label,
-.label-items .field__item {
-  margin-right: 0.6rem;
-}
-
-.label-items .field__label {
-  font-weight: 400;
-}

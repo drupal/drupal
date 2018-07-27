@@ -2,8 +2,8 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.highlighted_medium
-    - core.entity_view_mode.node.highlighted_top
+    - core.entity_view_mode.node.card_common
+    - core.entity_view_mode.node.card_common_alt
     - node.type.article
     - node.type.recipe
   module:
@@ -60,7 +60,7 @@ display:
         type: 'entity:node'
         options:
           relationship: none
-          view_mode: highlighted_top
+          view_mode: card_common
       fields:
         title:
           id: title
@@ -254,7 +254,7 @@ display:
         type: 'entity:node'
         options:
           relationship: none
-          view_mode: highlighted_medium
+          view_mode: card_common_alt
       pager:
         type: some
         options:

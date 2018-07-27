@@ -66,42 +66,8 @@
  * @see template_preprocess_node()
  */
 #}
-{%
-  set classes = [
-    'node',
-    'node--type-' ~ node.bundle|clean_class,
-    node.isPromoted() ? 'node--promoted',
-    node.isSticky() ? 'node--sticky',
-    not node.isPublished() ? 'node--unpublished',
-    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-  ]
-%}
-{{ attach_library('classy/node') }}
-{{ attach_library('umami/view-mode-highlighted-bottom') }}
+{% extends "node--card-common.html.twig" %}
 
-<article{{ attributes.addClass(classes) }}>
-
-  <div{{ content_attributes.addClass('node__content') }}>
-    {{ content.field_image }}
-  </div>
-
-  <div class="node__meta">
-
-    {{ content.field_difficulty }}
-
-    {{ title_prefix }}
-
-    {% if not page %}
-      <h2{{ title_attributes.addClass('node__title') }}>
-        <a class="node__link" href="{{ url }}" rel="bookmark">{{ label }}</a>
-      </h2>
-    {% endif %}
-    {{ title_suffix }}
-
-    <div class="read-more">
-      <a class="read-more__link" href="{{ url }}">{{ 'View'|t }} {{ node.bundle }}</a>
-    </div>
-
-  </div>
-
-</article>
+{% block libraries %}
+  {{ attach_library('umami/view-mode-card-common-alt') }}
+{% endblock %}

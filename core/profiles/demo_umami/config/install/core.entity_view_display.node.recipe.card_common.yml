@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.highlighted_bottom
+    - core.entity_view_mode.node.card_common
     - field.field.node.recipe.field_author
     - field.field.node.recipe.field_cooking_time
     - field.field.node.recipe.field_difficulty
@@ -19,20 +19,20 @@ dependencies:
   module:
     - responsive_image
     - user
-id: node.recipe.highlighted_bottom
+id: node.recipe.card_common
 targetEntityType: node
 bundle: recipe
-mode: highlighted_bottom
+mode: card_common
 content:
   field_image:
+    type: responsive_image
     weight: 0
+    region: content
     label: hidden
     settings:
       responsive_image_style: 3_2_image
-      image_link: content
+      image_link: ''
     third_party_settings: {  }
-    type: responsive_image
-    region: content
 hidden:
   content_moderation_control: true
   field_author: true

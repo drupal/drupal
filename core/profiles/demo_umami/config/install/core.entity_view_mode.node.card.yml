@@ -3,7 +3,7 @@ status: true
 dependencies:
   module:
     - node
-id: node.highlighted_bottom
-label: 'Highlighted Bottom'
+id: node.card
+label: Card
 targetEntityType: node
 cache: true

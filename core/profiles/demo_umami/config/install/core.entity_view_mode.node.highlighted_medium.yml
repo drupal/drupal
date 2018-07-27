@@ -1,9 +1,0 @@
-langcode: en
-status: true
-dependencies:
-  module:
-    - node
-id: node.highlighted_medium
-label: 'Highlighted Medium'
-targetEntityType: node
-cache: true

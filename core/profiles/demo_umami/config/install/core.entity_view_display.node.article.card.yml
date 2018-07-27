@@ -2,27 +2,27 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.highlighted_medium
+    - core.entity_view_mode.node.card
     - field.field.node.article.body
     - field.field.node.article.field_image
     - field.field.node.article.field_tags
     - node.type.article
-    - responsive_image.styles.square
+    - responsive_image.styles.3_2_image
   module:
     - responsive_image
     - user
-id: node.article.highlighted_medium
+id: node.article.card
 targetEntityType: node
 bundle: article
-mode: highlighted_medium
+mode: card
 content:
   field_image:
     type: responsive_image
     weight: 0
     region: content
     settings:
-      responsive_image_style: square
-      image_link: content
+      responsive_image_style: 3_2_image
+      image_link: ''
     third_party_settings: {  }
     label: hidden
 hidden:

@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.highlighted_bottom
+    - core.entity_view_mode.node.card_common
     - core.entity_view_mode.node.rss
     - node.type.recipe
   module:
@@ -218,7 +218,7 @@ display:
         type: 'entity:node'
         options:
           relationship: none
-          view_mode: highlighted_bottom
+          view_mode: card_common
       sorts:
         sticky:
           admin_label: ''
