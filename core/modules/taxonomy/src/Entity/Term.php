@@ -4,10 +4,12 @@ namespace Drupal\taxonomy\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
+use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\taxonomy\TermInterface;
+use Drupal\user\StatusItem;
 
 /**
  * Defines the taxonomy term entity.
@@ -45,7 +47,8 @@ use Drupal\taxonomy\TermInterface;
  *     "bundle" = "vid",
  *     "label" = "name",
  *     "langcode" = "langcode",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "published" = "status",
  *   },
  *   bundle_entity_type = "taxonomy_vocabulary",
  *   field_ui_base_route = "entity.taxonomy_vocabulary.overview_form",
@@ -62,6 +65,7 @@ use Drupal\taxonomy\TermInterface;
 class Term extends ContentEntityBase implements TermInterface {
 
   use EntityChangedTrait;
+  use EntityPublishedTrait;
 
   /**
    * {@inheritdoc}
@@ -115,6 +119,12 @@ class Term extends ContentEntityBase implements TermInterface {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     $fields = parent::baseFieldDefinitions($entity_type);
+
+    // Add the published field.
+    $fields += static::publishedBaseFieldDefinitions($entity_type);
+    // @todo Remove the usage of StatusItem in
+    //   https://www.drupal.org/project/drupal/issues/2936864.
+    $fields['status']->getItemDefinition()->setClass(StatusItem::class);
 
     $fields['tid']->setLabel(t('Term ID'))
       ->setDescription(t('The term ID.'));

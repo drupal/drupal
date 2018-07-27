@@ -200,6 +200,11 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
           'langcode' => 'en',
         ],
       ],
+      'status' => [
+        [
+          'value' => TRUE,
+        ],
+      ],
     ];
   }
 
@@ -237,7 +242,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
 
     switch ($method) {
       case 'GET':
-        return "The 'access content' permission is required.";
+        return "The 'access content' permission is required and the taxonomy term must be published.";
       case 'POST':
         return "The following permissions are required: 'create terms in camelids' OR 'administer taxonomy'.";
       case 'PATCH':
@@ -346,6 +351,15 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
         [3, 2],
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessCacheability() {
+    // @see \Drupal\taxonomy\TermAccessControlHandler::checkAccess()
+    return parent::getExpectedUnauthorizedAccessCacheability()
+      ->addCacheTags(['taxonomy_term:1']);
   }
 
 }
