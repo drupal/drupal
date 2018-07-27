@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
@@ -23,6 +24,13 @@ class DefaultTableMapping implements TableMappingInterface {
    * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]
    */
   protected $fieldStorageDefinitions = [];
+
+  /**
+   * The prefix to be used by all the tables of this mapping.
+   *
+   * @var string
+   */
+  protected $prefix;
 
   /**
    * The base table of the entity.
@@ -112,22 +120,26 @@ class DefaultTableMapping implements TableMappingInterface {
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $storage_definitions
    *   A list of field storage definitions that should be available for the
    *   field columns of this table mapping.
+   * @param string $prefix
+   *   (optional) A prefix to be used by all the tables of this mapping.
+   *   Defaults to an empty string.
    */
-  public function __construct(ContentEntityTypeInterface $entity_type, array $storage_definitions) {
+  public function __construct(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
     $this->entityType = $entity_type;
     $this->fieldStorageDefinitions = $storage_definitions;
+    $this->prefix = $prefix;
 
     // @todo Remove table names from the entity type definition in
     //   https://www.drupal.org/node/2232465.
-    $this->baseTable = $entity_type->getBaseTable() ?: $entity_type->id();
+    $this->baseTable = $this->prefix . $entity_type->getBaseTable() ?: $entity_type->id();
     if ($entity_type->isRevisionable()) {
-      $this->revisionTable = $entity_type->getRevisionTable() ?: $entity_type->id() . '_revision';
+      $this->revisionTable = $this->prefix . $entity_type->getRevisionTable() ?: $entity_type->id() . '_revision';
     }
     if ($entity_type->isTranslatable()) {
-      $this->dataTable = $entity_type->getDataTable() ?: $entity_type->id() . '_field_data';
+      $this->dataTable = $this->prefix . $entity_type->getDataTable() ?: $entity_type->id() . '_field_data';
     }
     if ($entity_type->isRevisionable() && $entity_type->isTranslatable()) {
-      $this->revisionDataTable = $entity_type->getRevisionDataTable() ?: $entity_type->id() . '_field_revision';
+      $this->revisionDataTable = $this->prefix . $entity_type->getRevisionDataTable() ?: $entity_type->id() . '_field_revision';
     }
   }
 
@@ -139,13 +151,16 @@ class DefaultTableMapping implements TableMappingInterface {
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $storage_definitions
    *   A list of field storage definitions that should be available for the
    *   field columns of this table mapping.
+   * @param string $prefix
+   *   (optional) A prefix to be used by all the tables of this mapping.
+   *   Defaults to an empty string.
    *
    * @return static
    *
    * @internal
    */
-  public static function create(ContentEntityTypeInterface $entity_type, array $storage_definitions) {
-    $table_mapping = new static($entity_type, $storage_definitions);
+  public static function create(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
+    $table_mapping = new static($entity_type, $storage_definitions, $prefix);
 
     $revisionable = $entity_type->isRevisionable();
     $translatable = $entity_type->isTranslatable();
@@ -590,18 +605,30 @@ class DefaultTableMapping implements TableMappingInterface {
    *   The final table name.
    */
   protected function generateFieldTableName(FieldStorageDefinitionInterface $storage_definition, $revision) {
+    // The maximum length of an entity type ID is 32 characters.
+    $entity_type_id = substr($storage_definition->getTargetEntityTypeId(), 0, EntityTypeInterface::ID_MAX_LENGTH);
     $separator = $revision ? '_revision__' : '__';
-    $table_name = $storage_definition->getTargetEntityTypeId() . $separator . $storage_definition->getName();
+
+    $table_name = $this->prefix . $entity_type_id . $separator . $storage_definition->getName();
     // Limit the string to 48 characters, keeping a 16 characters margin for db
     // prefixes.
     if (strlen($table_name) > 48) {
-      // Use a shorter separator, a truncated entity_type, and a hash of the
-      // field storage unique identifier.
+      // Use a shorter separator and a hash of the field storage unique
+      // identifier.
       $separator = $revision ? '_r__' : '__';
-      // Truncate to the same length for the current and revision tables.
-      $entity_type = substr($storage_definition->getTargetEntityTypeId(), 0, 34);
       $field_hash = substr(hash('sha256', $storage_definition->getUniqueStorageIdentifier()), 0, 10);
-      $table_name = $entity_type . $separator . $field_hash;
+
+      $table_name = $this->prefix . $entity_type_id . $separator . $field_hash;
+
+      // If the resulting table name is still longer than 48 characters, use the
+      // following pattern:
+      // - prefix: max 34 chars;
+      // - separator: max 4 chars;
+      // - field_hash: max 10 chars.
+      if (strlen($table_name) > 48) {
+        $prefix = substr($this->prefix, 0, 34);
+        $table_name = $prefix . $separator . $field_hash;
+      }
     }
     return $table_name;
   }

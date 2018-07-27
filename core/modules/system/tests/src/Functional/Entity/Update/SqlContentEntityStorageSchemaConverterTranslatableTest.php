@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Entity\Update;
 
-use Drupal\Core\Entity\Sql\TemporaryTableMapping;
-
 /**
  * Tests converting a translatable entity type with data to revisionable.
  *
@@ -79,8 +77,11 @@ class SqlContentEntityStorageSchemaConverterTranslatableTest extends SqlContentE
 
     // Check that temporary tables have been removed.
     $schema = \Drupal::database()->schema();
-    foreach ($storage->getTableMapping()->getTableNames() as $table_name) {
-      $this->assertFalse($schema->tableExists(TemporaryTableMapping::getTempTableName($table_name)));
+    $temporary_table_names = $storage->getCustomTableMapping($new_entity_type, $new_storage_definitions, 'tmp_')->getTableNames();
+    $current_table_names = $storage->getCustomTableMapping($new_entity_type, $new_storage_definitions)->getTableNames();
+    foreach (array_combine($temporary_table_names, $current_table_names) as $temp_table_name => $table_name) {
+      $this->assertTrue($schema->tableExists($table_name));
+      $this->assertFalse($schema->tableExists($temp_table_name));
     }
 
     // Check that the original tables still exist and their data is intact.

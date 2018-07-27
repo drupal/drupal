@@ -149,23 +149,19 @@ class SqlContentEntityStorageSchemaConverter {
 
       // Rename the original tables so we can put them back in place in case
       // anything goes wrong.
-      foreach ($sandbox['original_table_mapping']->getTableNames() as $table_name) {
-        $old_table_name = TemporaryTableMapping::getTempTableName($table_name, 'old_');
-        $this->database->schema()->renameTable($table_name, $old_table_name);
+      $backup_table_names = array_combine($sandbox['original_table_mapping']->getTableNames(), $sandbox['backup_table_mapping']->getTableNames());
+      foreach ($backup_table_names as $original_table_name => $backup_table_name) {
+        $this->database->schema()->renameTable($original_table_name, $backup_table_name);
       }
 
       // Put the new tables in place and update the entity type and field
       // storage definitions.
       try {
-        $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
-        $storage->setEntityType($actual_entity_type);
-        $storage->setTemporary(FALSE);
-        $actual_table_names = $storage->getTableMapping()->getTableNames();
+        $storage = $this->entityTypeManager->createHandlerInstance($actual_entity_type->getStorageClass(), $actual_entity_type);
+        $current_table_mapping = $storage->getCustomTableMapping($actual_entity_type, $sandbox['updated_storage_definitions']);
 
-        $table_name_mapping = [];
-        foreach ($actual_table_names as $new_table_name) {
-          $temp_table_name = TemporaryTableMapping::getTempTableName($new_table_name);
-          $table_name_mapping[$temp_table_name] = $new_table_name;
+        $table_name_mapping = array_combine($sandbox['temporary_table_mapping']->getTableNames(), $current_table_mapping->getTableNames());
+        foreach ($table_name_mapping as $temp_table_name => $new_table_name) {
           $this->database->schema()->renameTable($temp_table_name, $new_table_name);
         }
 
@@ -201,15 +197,14 @@ class SqlContentEntityStorageSchemaConverter {
       }
       catch (\Exception $e) {
         // Something went wrong, bring back the original tables.
-        foreach ($sandbox['original_table_mapping']->getTableNames() as $table_name) {
+        foreach ($backup_table_names as $original_table_name => $backup_table_name) {
           // We are in the 'original data recovery' phase, so we need to be sure
           // that the initial tables can be properly restored.
-          if ($this->database->schema()->tableExists($table_name)) {
-            $this->database->schema()->dropTable($table_name);
+          if ($this->database->schema()->tableExists($original_table_name)) {
+            $this->database->schema()->dropTable($original_table_name);
           }
 
-          $old_table_name = TemporaryTableMapping::getTempTableName($table_name, 'old_');
-          $this->database->schema()->renameTable($old_table_name, $table_name);
+          $this->database->schema()->renameTable($backup_table_name, $original_table_name);
         }
 
         // Re-throw the original exception.
@@ -219,9 +214,8 @@ class SqlContentEntityStorageSchemaConverter {
       // At this point the update process either finished successfully or any
       // error has been handled already, so we can drop the backup entity
       // tables.
-      foreach ($sandbox['original_table_mapping']->getTableNames() as $table_name) {
-        $old_table_name = TemporaryTableMapping::getTempTableName($table_name, 'old_');
-        $this->database->schema()->dropTable($old_table_name);
+      foreach ($backup_table_names as $original_table_name => $backup_table_name) {
+        $this->database->schema()->dropTable($backup_table_name);
       }
     }
   }
@@ -236,7 +230,7 @@ class SqlContentEntityStorageSchemaConverter {
    *   Thrown in case of an error during the entity save process.
    */
   protected function copyData(array &$sandbox) {
-    /** @var \Drupal\Core\Entity\Sql\TemporaryTableMapping $temporary_table_mapping */
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $temporary_table_mapping */
     $temporary_table_mapping = $sandbox['temporary_table_mapping'];
     $temporary_entity_type = $sandbox['temporary_entity_type'];
     $original_table_mapping = $sandbox['original_table_mapping'];
@@ -437,12 +431,13 @@ class SqlContentEntityStorageSchemaConverter {
 
     /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage */
     $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
-    $storage->setEntityType($original_entity_type);
-    $original_table_mapping = $storage->getTableMapping($original_storage_definitions);
+    $original_table_mapping = $storage->getCustomTableMapping($original_entity_type, $original_storage_definitions);
+    $backup_table_mapping = $storage->getCustomTableMapping($original_entity_type, $original_storage_definitions, 'old_');
 
     $sandbox['original_entity_type'] = $original_entity_type;
     $sandbox['original_storage_definitions'] = $original_storage_definitions;
     $sandbox['original_table_mapping'] = $original_table_mapping;
+    $sandbox['backup_table_mapping'] = $backup_table_mapping;
 
     $sandbox['original_entity_schema_data'] = $this->installedStorageSchema->get($this->entityTypeId . '.entity_schema_data', []);
     foreach ($original_storage_definitions as $storage_definition) {
@@ -487,20 +482,11 @@ class SqlContentEntityStorageSchemaConverter {
     $actual_entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
 
     $temporary_entity_type = clone $actual_entity_type;
-    $temporary_entity_type->set('base_table', TemporaryTableMapping::getTempTableName($temporary_entity_type->getBaseTable()));
-    $temporary_entity_type->set('revision_table', TemporaryTableMapping::getTempTableName($temporary_entity_type->getRevisionTable()));
-    if ($temporary_entity_type->isTranslatable()) {
-      $temporary_entity_type->set('data_table', TemporaryTableMapping::getTempTableName($temporary_entity_type->getDataTable()));
-      $temporary_entity_type->set('revision_data_table', TemporaryTableMapping::getTempTableName($temporary_entity_type->getRevisionDataTable()));
-    }
+    $updated_storage_definitions = $this->updateFieldStorageDefinitionsToRevisionable($temporary_entity_type, $sandbox['original_storage_definitions'], $fields_to_update, FALSE);
 
     /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage */
     $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
-    $storage->setTemporary(TRUE);
-    $storage->setEntityType($temporary_entity_type);
-
-    $updated_storage_definitions = $this->updateFieldStorageDefinitionsToRevisionable($temporary_entity_type, $sandbox['original_storage_definitions'], $fields_to_update, FALSE);
-    $temporary_table_mapping = $storage->getTableMapping($updated_storage_definitions);
+    $temporary_table_mapping = $storage->getCustomTableMapping($temporary_entity_type, $updated_storage_definitions, 'tmp_');
 
     $sandbox['temporary_entity_type'] = $temporary_entity_type;
     $sandbox['temporary_table_mapping'] = $temporary_table_mapping;

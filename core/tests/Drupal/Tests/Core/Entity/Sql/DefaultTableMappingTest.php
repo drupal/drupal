@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageException;
+use Drupal\Core\Entity\Sql\TemporaryTableMapping;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -442,6 +443,142 @@ class DefaultTableMappingTest extends UnitTestCase {
     $table_mapping = new DefaultTableMapping($this->entityType, []);
     $this->setExpectedException(SqlContentEntityStorageException::class, "Table information not available for the 'invalid_field_name' field.");
     $table_mapping->getFieldTableName('invalid_field_name');
+  }
+
+  /**
+   * @covers ::getDedicatedDataTableName
+   * @covers ::getDedicatedRevisionTableName
+   *
+   * @dataProvider providerTestGetDedicatedTableName
+   */
+  public function testGetDedicatedTableName($info, $expected_data_table, $expected_revision_table) {
+    $entity_type_id = $info['entity_type_id'];
+    $field_name = $info['field_name'];
+
+    $definition = $this->setUpDefinition($field_name, []);
+    $definition->expects($this->any())
+      ->method('getTargetEntityTypeId')
+      ->will($this->returnValue($entity_type_id));
+    $definition->expects($this->any())
+      ->method('getUniqueStorageIdentifier')
+      ->will($this->returnValue($entity_type_id . '-' . $field_name));
+
+    $this->entityType
+      ->expects($this->any())
+      ->method('getBaseTable')
+      ->willReturn($info['entity_type_id']);
+    $this->entityType
+      ->expects($this->any())
+      ->method('isTranslatable')
+      ->willReturn(FALSE);
+    $this->entityType
+      ->expects($this->any())
+      ->method('isRevisionable')
+      ->willReturn(FALSE);
+
+    $table_mapping = new DefaultTableMapping($this->entityType, [], $info['prefix']);
+
+    $this->assertSame($expected_data_table, $table_mapping->getDedicatedDataTableName($definition));
+    $this->assertSame($expected_revision_table, $table_mapping->getDedicatedRevisionTableName($definition));
+  }
+
+  /**
+   * Provides test data for testGetDedicatedTableName().
+   *
+   * @return array[]
+   *   A nested array where each inner array has the following values: an array
+   *   consisting of the entity type ID, field name and a table prefix, followed
+   *   by the expected data table name and the revision table name.
+   */
+  public function providerTestGetDedicatedTableName() {
+    $data = [];
+
+    $data['short entity type; short field name; no prefix'] = [
+      [
+        'entity_type_id' => 'short_entity_type',
+        'field_name' => 'short_field_name',
+        'prefix' => '',
+      ],
+      'short_entity_type__short_field_name',
+      'short_entity_type_revision__short_field_name',
+    ];
+    $data['short entity type; long field name; no prefix'] = [
+      [
+        'entity_type_id' => 'short_entity_type',
+        'field_name' => 'long_field_name_abcdefghijklmnopqrstuvwxyz',
+        'prefix' => '',
+      ],
+      'short_entity_type__28a01c7777',
+      'short_entity_type_r__28a01c7777',
+    ];
+    $data['long entity type; short field name; no prefix'] = [
+      [
+        'entity_type_id' => 'long_entity_type_abcdefghijklmnopqrstuvwxyz',
+        'field_name' => 'short_field_name',
+        'prefix' => '',
+      ],
+      'long_entity_type_abcdefghijklmno__a526e4e042',
+      'long_entity_type_abcdefghijklmno_r__a526e4e042',
+    ];
+    $data['long entity type; long field name; no prefix'] = [
+      [
+        'entity_type_id' => 'long_entity_type_abcdefghijklmnopqrstuvwxyz',
+        'field_name' => 'long_field_name_abcdefghijklmnopqrstuvwxyz',
+        'prefix' => '',
+      ],
+      'long_entity_type_abcdefghijklmno__7705d52d75',
+      'long_entity_type_abcdefghijklmno_r__7705d52d75',
+    ];
+
+    $data['short entity type; short field name; with prefix'] = [
+      [
+        'entity_type_id' => 'short_entity_type',
+        'field_name' => 'short_field_name',
+        'prefix' => 'prefix_',
+      ],
+      'prefix_short_entity_type__short_field_name',
+      'prefix_short_entity_type_r__a133cc765a',
+    ];
+    $data['short entity type; long field name; with prefix'] = [
+      [
+        'entity_type_id' => 'short_entity_type',
+        'field_name' => 'long_field_name_abcdefghijklmnopqrstuvwxyz',
+        'prefix' => 'prefix_',
+      ],
+      'prefix_short_entity_type__28a01c7777',
+      'prefix_short_entity_type_r__28a01c7777',
+    ];
+    $data['long entity type; short field name; with prefix'] = [
+      [
+        'entity_type_id' => 'long_entity_type_abcdefghijklmnopqrstuvwxyz',
+        'field_name' => 'short_field_name',
+        'prefix' => 'prefix_',
+      ],
+      'prefix___a526e4e042',
+      'prefix__r__a526e4e042',
+    ];
+    $data['long entity type; long field name; with prefix'] = [
+      [
+        'entity_type_id' => 'long_entity_type_abcdefghijklmnopqrstuvwxyz',
+        'field_name' => 'long_field_name_abcdefghijklmnopqrstuvwxyz',
+        'prefix' => 'prefix_',
+      ],
+      'prefix___7705d52d75',
+      'prefix__r__7705d52d75',
+    ];
+
+    return $data;
+  }
+
+  /**
+   * @coversDefaultClass \Drupal\Core\Entity\Sql\TemporaryTableMapping
+   *
+   * @expectedDeprecation Drupal\Core\Entity\Sql\TemporaryTableMapping is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Use the default table mapping with a prefix instead.
+   * @group legacy
+   */
+  public function testTemporaryTableMapping() {
+    $table_mapping = new TemporaryTableMapping($this->entityType, [], '');
+    $this->assertTrue($table_mapping instanceof DefaultTableMapping);
   }
 
   /**

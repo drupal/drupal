@@ -517,9 +517,9 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       'field_name' => $field_name,
       'type' => 'test_field',
     ]);
-    $expected = 'long_entity_type_abcdefghijklmnopq__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'long_entity_type_abcdefghijklmno__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEqual($this->tableMapping->getDedicatedDataTableName($field_storage), $expected);
-    $expected = 'long_entity_type_abcdefghijklmnopq_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'long_entity_type_abcdefghijklmno_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEqual($this->tableMapping->getDedicatedRevisionTableName($field_storage), $expected);
 
     // Long entity type and field name.
@@ -530,9 +530,9 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       'field_name' => $field_name,
       'type' => 'test_field',
     ]);
-    $expected = 'long_entity_type_abcdefghijklmnopq__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'long_entity_type_abcdefghijklmno__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEqual($this->tableMapping->getDedicatedDataTableName($field_storage), $expected);
-    $expected = 'long_entity_type_abcdefghijklmnopq_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'long_entity_type_abcdefghijklmno_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEqual($this->tableMapping->getDedicatedRevisionTableName($field_storage), $expected);
     // Try creating a second field and check there are no clashes.
     $field_storage2 = FieldStorageConfig::create([

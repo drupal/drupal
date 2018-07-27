@@ -336,15 +336,18 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $storage_definitions
    *   An array of field storage definitions to be used to compute the table
    *   mapping.
+   * @param string $prefix
+   *   (optional) A prefix to be used by all the tables of this mapping.
+   *   Defaults to an empty string.
    *
    * @return \Drupal\Core\Entity\Sql\TableMappingInterface
    *   A table mapping object for the entity's tables.
    *
    * @internal
    */
-  public function getCustomTableMapping(ContentEntityTypeInterface $entity_type, array $storage_definitions) {
-    $table_mapping_class = $this->temporary ? TemporaryTableMapping::class : DefaultTableMapping::class;
-    return $table_mapping_class::create($entity_type, $storage_definitions);
+  public function getCustomTableMapping(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
+    $prefix = $prefix ?: ($this->temporary ? 'tmp_' : '');
+    return DefaultTableMapping::create($entity_type, $storage_definitions, $prefix);
   }
 
   /**
