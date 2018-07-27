@@ -144,6 +144,7 @@ Contact
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
 Content Moderation
+- Sam Becker 'Sam152' https://www.drupal.org/u/sam152
 - Tim Millwood 'timmillwood' https://www.drupal.org/u/timmillwood
 
 Content Translation
