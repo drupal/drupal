@@ -64,30 +64,25 @@ webfonts:
     theme:
       'https://fonts.googleapis.com/css?family=Open+Sans|Scope+One': { type: external, minified: true }
 
-view-mode-highlighted-bottom:
+view-mode-card:
   css:
     theme:
-      css/components/content/highlighted-bottom/highlighted-bottom.css: {}
+      css/components/content/card/card.css: {}
   dependencies:
     - umami/more-link
 
-view-mode-highlighted-small:
+view-mode-card-common:
   css:
     theme:
-      css/components/content/highlighted-small/highlighted-small.css: {}
+      css/components/content/card/card.css: {}
+      css/components/content/card-common/card-common.css: {}
   dependencies:
     - umami/more-link
 
-view-mode-highlighted-medium:
+view-mode-card-common-alt:
   css:
     theme:
-      css/components/content/highlighted-medium/highlighted-medium.css: {}
-  dependencies:
-    - umami/more-link
-
-view-mode-highlighted-top:
-  css:
-    theme:
-      css/components/content/highlighted-top/highlighted-top.css: {}
+      css/components/content/card/card.css: {}
+      css/components/content/card-common-alt/card-common-alt.css: {}
   dependencies:
     - umami/more-link

@@ -3,7 +3,7 @@ status: true
 dependencies:
   module:
     - node
-id: node.highlighted_small
-label: 'Highlighted Small'
+id: node.card_common
+label: 'Card common'
 targetEntityType: node
 cache: true

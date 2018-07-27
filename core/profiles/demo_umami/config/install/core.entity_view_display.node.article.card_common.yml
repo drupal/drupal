@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.highlighted_top
+    - core.entity_view_mode.node.card_common
     - field.field.node.article.body
     - field.field.node.article.field_image
     - field.field.node.article.field_tags
@@ -11,10 +11,10 @@ dependencies:
   module:
     - responsive_image
     - user
-id: node.article.highlighted_top
+id: node.article.card_common
 targetEntityType: node
 bundle: article
-mode: highlighted_top
+mode: card_common
 content:
   field_image:
     type: responsive_image
@@ -22,7 +22,7 @@ content:
     region: content
     settings:
       responsive_image_style: 3_2_image
-      image_link: content
+      image_link: ''
     third_party_settings: {  }
     label: hidden
 hidden:

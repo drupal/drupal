@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.highlighted_small
+    - core.entity_view_mode.node.card
     - field.field.node.recipe.field_author
     - field.field.node.recipe.field_cooking_time
     - field.field.node.recipe.field_difficulty
@@ -20,32 +20,27 @@ dependencies:
     - options
     - responsive_image
     - user
-id: node.recipe.highlighted_small
+id: node.recipe.card
 targetEntityType: node
 bundle: recipe
-mode: highlighted_small
+mode: card
 content:
   field_difficulty:
-    weight: 1
-    label: above
+    weight: 0
+    label: inline
     settings: {  }
     third_party_settings: {  }
     type: list_default
     region: content
   field_image:
-    weight: 0
+    weight: 1
     label: hidden
     settings:
       responsive_image_style: 3_2_image
-      image_link: content
+      image_link: ''
     third_party_settings: {  }
     type: responsive_image
     region: content
-  links:
-    weight: 2
-    region: content
-    settings: {  }
-    third_party_settings: {  }
 hidden:
   content_moderation_control: true
   field_author: true
@@ -57,3 +52,4 @@ hidden:
   field_recipe_instruction: true
   field_summary: true
   field_tags: true
+  links: true
