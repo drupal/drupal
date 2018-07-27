@@ -70,6 +70,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
       'd7_field_instance',
       'd7_node',
       'd7_node_translation',
+      'd7_node_entity_translation',
     ]);
   }
 
@@ -179,6 +180,12 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertEquals('another@example.com', $node->field_email[1]->value);
     $this->assertEquals(CommentItemInterface::OPEN, $node->comment_node_test_content_type->status);
     $this->assertEquals('3.1416', $node->field_float_list[0]->value);
+
+    // Test that fields translated with Entity Translation are migrated.
+    $node_fr = $node->getTranslation('fr');
+    $this->assertEquals('6', $node_fr->field_integer->value);
+    $node_is = $node->getTranslation('is');
+    $this->assertEquals('7', $node_is->field_integer->value);
 
     $node = Node::load(2);
     $this->assertEquals('en', $node->langcode->value);

@@ -60,6 +60,12 @@ class CommentTest extends MigrateSqlSourceTestBase {
         'translate' => '0',
       ],
     ];
+    $tests[0]['source_data']['field_config'] = [
+      [
+        'id' => '1',
+        'translatable' => '0',
+      ],
+    ];
     $tests[0]['source_data']['field_config_instance'] = [
       [
         'id' => '14',

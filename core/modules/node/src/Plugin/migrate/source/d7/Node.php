@@ -104,11 +104,23 @@ class Node extends FieldableEntity {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
+    $nid = $row->getSourceProperty('nid');
+    $vid = $row->getSourceProperty('vid');
+    $type = $row->getSourceProperty('type');
+
+    // If this entity was translated using Entity Translation, we need to get
+    // its source language to get the field values in the right language.
+    // The translations will be migrated by the d7_node_entity_translation
+    // migration.
+    $entity_translatable = $this->isEntityTranslatable('node') && (int) $this->variableGet('language_content_type_' . $type, 0) === 4;
+    $language = $entity_translatable ? $this->getEntityTranslationSourceLanguage('node', $nid) : $row->getSourceProperty('language');
+
     // Get Field API field values.
-    foreach (array_keys($this->getFields('node', $row->getSourceProperty('type'))) as $field) {
-      $nid = $row->getSourceProperty('nid');
-      $vid = $row->getSourceProperty('vid');
-      $row->setSourceProperty($field, $this->getFieldValues('node', $field, $nid, $vid));
+    foreach ($this->getFields('node', $type) as $field_name => $field) {
+      // Ensure we're using the right language if the entity and the field are
+      // translatable.
+      $field_language = $entity_translatable && $field['translatable'] ? $language : NULL;
+      $row->setSourceProperty($field_name, $this->getFieldValues('node', $field_name, $nid, $vid, $field_language));
     }
 
     // Make sure we always have a translation set.
