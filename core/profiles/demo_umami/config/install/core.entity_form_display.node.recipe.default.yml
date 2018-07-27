@@ -16,6 +16,7 @@ dependencies:
     - image.style.thumbnail
     - node.type.recipe
   module:
+    - content_moderation
     - image
     - path
     - text
@@ -116,6 +117,12 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete_tags
     region: content
+  moderation_state:
+    type: moderation_state_default
+    weight: 18
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   path:
     type: path
     weight: 16

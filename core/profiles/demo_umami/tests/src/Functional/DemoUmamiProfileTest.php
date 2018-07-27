@@ -89,7 +89,12 @@ class DemoUmamiProfileTest extends BrowserTestBase {
    * Tests the successful editing of nodes by admin.
    */
   public function testEditNodesByAdmin() {
-    $account = $this->drupalCreateUser(['administer nodes', 'edit any recipe content']);
+    $permissions = [
+      'administer nodes',
+      'edit any recipe content',
+      'use editorial transition create_new_draft',
+    ];
+    $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
     $webassert = $this->assertSession();
 
@@ -122,10 +127,11 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   public function testDemonstrationWarningMessage() {
     $permissions = [
       'access content overview',
-      'administer nodes',
-      'create recipe content',
-      'edit any recipe content',
       'access toolbar',
+      'administer nodes',
+      'edit any recipe content',
+      'create recipe content',
+      'use editorial transition create_new_draft',
     ];
     $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);

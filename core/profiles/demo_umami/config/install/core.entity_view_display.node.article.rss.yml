@@ -19,5 +19,6 @@ content:
     region: content
 hidden:
   body: true
+  content_moderation_control: true
   field_image: true
   field_tags: true

@@ -27,5 +27,6 @@ content:
     label: hidden
 hidden:
   body: true
+  content_moderation_control: true
   field_tags: true
   links: true

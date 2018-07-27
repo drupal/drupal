@@ -41,7 +41,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 4
     settings:
       match_operator: CONTAINS
       size: 60
@@ -49,4 +49,5 @@ content:
     region: content
     third_party_settings: {  }
 hidden:
+  moderation_state: true
   name: true
