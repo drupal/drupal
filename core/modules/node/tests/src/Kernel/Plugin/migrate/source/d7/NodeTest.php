@@ -170,6 +170,12 @@ class NodeTest extends MigrateSqlSourceTestBase {
         'sticky' => 0,
       ],
     ];
+    $tests[0]['source_data']['field_config'] = [
+      [
+        'id' => '2',
+        'translatable' => '0',
+      ],
+    ];
     $tests[0]['source_data']['field_config_instance'] = [
       [
         'id' => '2',

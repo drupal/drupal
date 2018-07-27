@@ -1,0 +1,32 @@
+id: d7_node_entity_translation
+label: Node entity translations
+migration_tags:
+  - Drupal 7
+  - translation
+  - Content
+  - Multilingual
+deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
+source:
+  plugin: d7_node_entity_translation
+process:
+  nid: entity_id
+  type: type
+  langcode: language
+  title: title
+  uid: uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+  content_translation_source: source
+destination:
+  plugin: entity:node
+  translations: true
+  destination_module: content_translation
+migration_dependencies:
+  required:
+    - d7_node

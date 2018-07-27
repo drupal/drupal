@@ -3108,6 +3108,42 @@ $connection->insert('entity_translation')
   'changed' => '1421727536',
 ))
 ->values(array(
+  'entity_type' => 'node',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'en',
+  'source' => '',
+  'uid' => '1',
+  'status' => '1',
+  'translate' => '0',
+  'created' => '1529615790',
+  'changed' => '1529615790',
+))
+->values(array(
+  'entity_type' => 'node',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'fr',
+  'source' => 'en',
+  'uid' => '1',
+  'status' => '1',
+  'translate' => '0',
+  'created' => '1529615802',
+  'changed' => '1529615802',
+))
+->values(array(
+  'entity_type' => 'node',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'is',
+  'source' => 'en',
+  'uid' => '1',
+  'status' => '1',
+  'translate' => '0',
+  'created' => '1529615813',
+  'changed' => '1529615813',
+))
+->values(array(
   'entity_type' => 'user',
   'entity_id' => '2',
   'revision_id' => '2',
@@ -5808,6 +5844,26 @@ $connection->insert('field_data_field_integer')
   'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '5',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'fr',
+  'delta' => '0',
+  'field_integer_value' => '6',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'is',
+  'delta' => '0',
+  'field_integer_value' => '7',
 ))
 ->values(array(
   'entity_type' => 'user',
@@ -9563,6 +9619,26 @@ $connection->insert('field_revision_field_integer')
   'field_integer_value' => '5',
 ))
 ->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'fr',
+  'delta' => '0',
+  'field_integer_value' => '6',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'is',
+  'delta' => '0',
+  'field_integer_value' => '7',
+))
+->values(array(
   'entity_type' => 'user',
   'bundle' => 'user',
   'deleted' => '0',
@@ -12971,6 +13047,19 @@ $connection->insert('languages')
   'formula' => '',
   'domain' => '',
   'prefix' => '',
+  'weight' => '0',
+  'javascript' => '',
+))
+->values(array(
+  'language' => 'fr',
+  'name' => 'French',
+  'native' => 'Français',
+  'direction' => '0',
+  'enabled' => '1',
+  'plurals' => '0',
+  'formula' => '',
+  'domain' => 'fr.drupal.org',
+  'prefix' => 'fr',
   'weight' => '0',
   'javascript' => '',
 ))
@@ -48305,7 +48394,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'language_count',
-  'value' => 'i:2;',
+  'value' => 'i:3;',
 ))
 ->values(array(
   'name' => 'language_default',

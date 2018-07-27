@@ -126,14 +126,24 @@ class TermTest extends MigrateSqlSourceTestBase {
         'machine_name' => 'categories',
       ],
     ];
+    $tests[0]['source_data']['field_config'] = [
+      [
+        'id' => '3',
+        'translatable' => '0',
+      ],
+    ];
     $tests[0]['source_data']['field_config_instance'] = [
       [
+        'id' => '2',
+        'field_id' => 3,
         'field_name' => 'field_term_field',
         'entity_type' => 'taxonomy_term',
         'bundle' => 'tags',
         'deleted' => 0,
       ],
       [
+        'id' => '3',
+        'field_id' => 3,
         'field_name' => 'field_term_field',
         'entity_type' => 'taxonomy_term',
         'bundle' => 'categories',
