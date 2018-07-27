@@ -49,6 +49,27 @@ class PathWidget extends WidgetBase {
       '#type' => 'value',
       '#value' => $items[$delta]->langcode,
     ];
+
+    // If the advanced settings tabs-set is available (normally rendered in the
+    // second column on wide-resolutions), place the field as a details element
+    // in this tab-set.
+    if (isset($form['advanced'])) {
+      $element += [
+        '#type' => 'details',
+        '#title' => t('URL path settings'),
+        '#open' => !empty($items[$delta]->alias),
+        '#group' => 'advanced',
+        '#access' => $entity->get('path')->access('edit'),
+        '#attributes' => [
+          'class' => ['path-form'],
+        ],
+        '#attached' => [
+          'library' => ['path/drupal.path'],
+        ],
+      ];
+      $element['#weight'] = 30;
+    }
+
     return $element;
   }
 
