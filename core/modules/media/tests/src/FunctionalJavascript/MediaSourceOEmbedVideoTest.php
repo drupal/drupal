@@ -100,7 +100,11 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $assert_session->fieldExists('Remote video URL')->setValue($video_url);
     $assert_session->buttonExists('Save')->press();
 
-    $assert_session->addressEquals('media/1');
+    $assert_session->addressEquals('admin/content/media');
+
+    // Get the media entity view URL from the creation message.
+    $this->drupalGet($this->assertLinkToCreatedMedia());
+
     /** @var \Drupal\media\MediaInterface $media */
     $media = Media::load(1);
 

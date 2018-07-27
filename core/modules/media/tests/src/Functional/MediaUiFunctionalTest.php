@@ -71,6 +71,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       ->loadUnchanged($media_id);
     $this->assertSame($media->getRevisionLogMessage(), $revision_log_message);
     $this->assertSame($media->getName(), $media_name);
+    $this->drupalGet('media/' . $media_id);
     $assert_session->titleEquals($media_name . ' | Drupal');
 
     // Tests media edit form.
@@ -87,6 +88,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       ->getStorage('media')
       ->loadUnchanged($media_id);
     $this->assertSame($media->getName(), $media_name2);
+    $this->drupalGet('media/' . $media_id);
     $assert_session->titleEquals($media_name2 . ' | Drupal');
 
     // Test that there is no empty vertical tabs element, if the container is
@@ -113,6 +115,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $page->fillField('name[0][value]', $media_name);
     $page->fillField('revision_log_message[0][value]', $revision_log_message);
     $page->pressButton('Save');
+    $this->drupalGet('media/' . $media_id);
     $assert_session->titleEquals($media_name . ' | Drupal');
     /** @var \Drupal\media\MediaInterface $media */
     $media = $this->container->get('entity_type.manager')
@@ -431,6 +434,49 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       $this->assertNoHelpTexts([$list_text]);
       $this->assertNoHelpLink($fieldset, 'media list');
     }
+  }
+
+  /**
+   * Tests the redirect URL after creating a media item.
+   */
+  public function testMediaCreateRedirect() {
+    $session = $this->getSession();
+    $page = $session->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->createMediaType('test', [
+      'queue_thumbnail_downloads' => FALSE,
+    ]);
+
+    // Test a redirect to the media canonical URL for a user without the 'access
+    // media overview' permission.
+    $this->drupalLogin($this->drupalCreateUser([
+      'view media',
+      'create media',
+    ]));
+    $this->drupalGet('media/add');
+    $page->fillField('name[0][value]', $this->randomMachineName());
+    $page->fillField('field_media_test[0][value]', $this->randomString());
+    $page->pressButton('Save');
+    $media_id = $this->container->get('entity_type.manager')
+      ->getStorage('media')
+      ->getQuery()
+      ->execute();
+    $media_id = reset($media_id);
+    $assert_session->addressEquals('media/' . $media_id);
+
+    // Test a redirect to the media overview for a user with the 'access media
+    // overview' permission.
+    $this->drupalLogin($this->drupalCreateUser([
+      'view media',
+      'create media',
+      'access media overview',
+    ]));
+    $this->drupalGet('media/add');
+    $page->fillField('name[0][value]', $this->randomMachineName());
+    $page->fillField('field_media_test[0][value]', $this->randomString());
+    $page->pressButton('Save');
+    $assert_session->addressEquals('admin/content/media');
   }
 
   /**

@@ -59,9 +59,9 @@ class MediaForm extends ContentEntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $saved = parent::save($form, $form_state);
-    $context = ['@type' => $this->entity->bundle(), '%label' => $this->entity->label()];
+    $context = ['@type' => $this->entity->bundle(), '%label' => $this->entity->label(), 'link' => $this->entity->toLink($this->t('View'))->toString()];
     $logger = $this->logger('media');
-    $t_args = ['@type' => $this->entity->bundle->entity->label(), '%label' => $this->entity->label()];
+    $t_args = ['@type' => $this->entity->bundle->entity->label(), '%label' => $this->entity->toLink($this->entity->label())->toString()];
 
     if ($saved === SAVED_NEW) {
       $logger->notice('@type: added %label.', $context);
@@ -72,7 +72,16 @@ class MediaForm extends ContentEntityForm {
       $this->messenger()->addStatus($this->t('@type %label has been updated.', $t_args));
     }
 
-    $form_state->setRedirectUrl($this->entity->toUrl('canonical'));
+    // Redirect the user to the media overview if the user has the 'access media
+    // overview' permission. If not, redirect to the canonical URL of the media
+    // item.
+    if ($this->currentUser()->hasPermission('access media overview')) {
+      $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+    }
+    else {
+      $form_state->setRedirectUrl($this->entity->toUrl());
+    }
+
     return $saved;
   }
 
