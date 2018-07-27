@@ -88,6 +88,13 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   protected $languageManager;
 
+  /**
+   * The mocked event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $eventDispatcher;
+
   protected function setUp() {
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
 
@@ -122,6 +129,8 @@ class ConfigNamesMapperTest extends UnitTestCase {
 
     $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
 
+    $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+
     $this->configNamesMapper = new TestConfigNamesMapper(
       'system.site_information_settings',
       $this->pluginDefinition,
@@ -131,7 +140,8 @@ class ConfigNamesMapperTest extends UnitTestCase {
       $this->configMapperManager,
       $this->routeProvider,
       $this->getStringTranslationStub(),
-      $this->languageManager
+      $this->languageManager,
+      $this->eventDispatcher
     );
   }
 

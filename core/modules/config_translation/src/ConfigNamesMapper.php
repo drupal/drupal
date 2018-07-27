@@ -2,6 +2,8 @@
 
 namespace Drupal\config_translation;
 
+use Drupal\config_translation\Event\ConfigMapperPopulateEvent;
+use Drupal\config_translation\Event\ConfigTranslationEvents;
 use Drupal\config_translation\Exception\ConfigMapperLanguageException;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
@@ -15,6 +17,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\locale\LocaleConfigManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -87,6 +90,13 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   protected $languageManager;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Constructs a ConfigNamesMapper.
    *
    * @param $plugin_id
@@ -115,12 +125,14 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    *   The string translation manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   (optional) The event dispatcher.
    *
    * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
    *   Throws an exception if the route specified by the 'base_route_name' in
    *   the plugin definition could not be found by the route provider.
    */
-  public function __construct($plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $string_translation, LanguageManagerInterface $language_manager) {
+  public function __construct($plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $string_translation, LanguageManagerInterface $language_manager, EventDispatcherInterface $event_dispatcher = NULL) {
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
     $this->routeProvider = $route_provider;
@@ -132,6 +144,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
 
     $this->stringTranslation = $string_translation;
     $this->languageManager = $language_manager;
+    $this->eventDispatcher = $event_dispatcher ?: \Drupal::service('event_dispatcher');
   }
 
   /**
@@ -149,7 +162,8 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
       $container->get('plugin.manager.config_translation.mapper'),
       $container->get('router.route_provider'),
       $container->get('string_translation'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('event_dispatcher')
     );
   }
 
@@ -368,6 +382,9 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    */
   public function populateFromRouteMatch(RouteMatchInterface $route_match) {
     $this->langcode = $route_match->getParameter('langcode');
+
+    $event = new ConfigMapperPopulateEvent($this, $route_match);
+    $this->eventDispatcher->dispatch(ConfigTranslationEvents::POPULATE_MAPPER, $event);
   }
 
   /**
