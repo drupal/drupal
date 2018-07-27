@@ -83,6 +83,9 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
       ->execute();
     $image_media_id = reset($image_media_id);
 
+    // Go to the media entity view.
+    $this->drupalGet('/media/' . $image_media_id);
+
     // Here we expect to see only the image, nothing else.
     // Assert only one element in the content region.
     $this->assertSame(1, count($page->findAll('css', '.media--type-image > div')));
@@ -103,6 +106,9 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
+
+    // Go to the media entity view.
+    $this->drupalGet($this->assertLinkToCreatedMedia());
 
     // Here we expect to see only the linked filename.
     // Assert only one element in the content region.

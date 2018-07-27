@@ -43,4 +43,21 @@ abstract class MediaJavascriptTestBase extends WebDriverTestBase {
     $this->assertJsCondition($condition, $timeout, $message);
   }
 
+  /**
+   * Asserts that a link to a new media item is displayed in the messages area.
+   *
+   * @return string
+   *   The link URL.
+   */
+  protected function assertLinkToCreatedMedia() {
+    $assert_session = $this->assertSession();
+    $selector = '.messages a';
+
+    // Get the canonical media entity URL from the creation message.
+    $link = $assert_session->elementExists('css', $selector);
+    $assert_session->elementAttributeExists('css', $selector, 'href');
+
+    return $link->getAttribute('href');
+  }
+
 }

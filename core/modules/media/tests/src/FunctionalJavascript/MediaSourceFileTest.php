@@ -57,7 +57,10 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
 
-    $assert_session->addressEquals('media/1');
+    $assert_session->addressEquals('admin/content/media');
+
+    // Get the media entity view URL from the creation message.
+    $this->drupalGet($this->assertLinkToCreatedMedia());
 
     // Make sure the thumbnail is displayed.
     $assert_session->elementAttributeContains('css', '.image-style-thumbnail', 'src', 'generic.png');

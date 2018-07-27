@@ -88,7 +88,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $page->fillField('Name', 'Foobar');
     $page->attachFileToField('File', $this->container->get('file_system')->realpath($uri));
     $page->pressButton('Save');
-    $assert->addressMatches('/^\/media\/[0-9]+$/');
+    $assert->addressEquals('admin/content/media');
 
     // The media item was just created, so it should only have one revision.
     $media = $this->container
@@ -137,7 +137,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $page->fillField('Name', 'Foobar');
     $page->attachFileToField('Image', $this->root . '/core/modules/media/tests/fixtures/example_1.jpeg');
     $page->pressButton('Save');
-    $assert->addressMatches('/^\/media\/[0-9]+$/');
+    $assert->addressEquals('admin/content/media');
 
     // The media item was just created, so it should only have one revision.
     $media = $this->container
