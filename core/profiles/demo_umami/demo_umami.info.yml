@@ -40,6 +40,8 @@ install:
   - tour
   - automated_cron
   - responsive_image
+  - content_moderation
+  - workflows
 themes:
   - seven
   - umami

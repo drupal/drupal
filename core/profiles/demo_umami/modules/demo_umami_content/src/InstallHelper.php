@@ -81,10 +81,39 @@ class InstallHelper implements ContainerInjectionInterface {
    * Imports default contents.
    */
   public function importContent() {
-    $this->importArticles()
+    $this->importEditors()
+      ->importArticles()
       ->importRecipes()
       ->importPages()
       ->importBlockContent();
+  }
+
+  /**
+   * Imports editors.
+   *
+   * Other users are created as their content is imported. However, editors
+   * don't have their own content so are created here instead.
+   *
+   * @return $this
+   */
+  protected function importEditors() {
+    $user_storage = $this->entityTypeManager->getStorage('user');
+    $editors = [
+      'Margaret Hopper',
+      'Grace Hamilton',
+    ];
+    foreach ($editors as $name) {
+      $user = $user_storage->create([
+        'name' => $name,
+        'status' => 1,
+        'roles' => ['editor'],
+        'mail' => mb_strtolower(str_replace(' ', '.', $name)) . '@example.com',
+      ]);
+      $user->enforceIsNew();
+      $user->save();
+      $this->storeCreatedContentUuids([$user->uuid() => 'user']);
+    }
+    return $this;
   }
 
   /**
@@ -104,6 +133,7 @@ class InstallHelper implements ContainerInjectionInterface {
         $values = [
           'type' => 'article',
           'title' => $data['title'],
+          'moderation_state' => 'published',
         ];
         // Fields mapping starts.
         // Set Body Field.
@@ -167,6 +197,7 @@ class InstallHelper implements ContainerInjectionInterface {
           'type' => 'recipe',
           // Title field.
           'title' => $data['title'],
+          'moderation_state' => 'published',
         ];
         // Set article author.
         if (!empty($data['author'])) {
@@ -264,6 +295,7 @@ class InstallHelper implements ContainerInjectionInterface {
         $values = [
           'type' => 'page',
           'title' => $data['title'],
+          'moderation_state' => 'published',
         ];
         // Fields mapping starts.
         // Set Body Field.
@@ -401,10 +433,11 @@ class InstallHelper implements ContainerInjectionInterface {
     $user_storage = $this->entityTypeManager->getStorage('user');
     $users = $user_storage->loadByProperties(['name' => $name]);;
     if (empty($users)) {
-      // Creating user without any email/password.
+      // Creating user without any password.
       $user = $user_storage->create([
         'name' => $name,
         'status' => 1,
+        'roles' => ['author'],
         'mail' => mb_strtolower(str_replace(' ', '.', $name)) . '@example.com',
       ]);
       $user->enforceIsNew();

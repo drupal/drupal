@@ -26,6 +26,7 @@ content:
     weight: 100
     region: content
 hidden:
+  content_moderation_control: true
   field_author: true
   field_cooking_time: true
   field_difficulty: true
