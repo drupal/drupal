@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the taxonomy module.
  */
 
+use Drupal\Core\Field\BaseFieldDefinition;
+
 /**
  * Convert the custom taxonomy term hierarchy storage to a default storage.
  */
@@ -125,4 +127,51 @@ function taxonomy_update_8503() {
       }
     }
   }
+}
+
+/**
+ * Add the publishing status fields to taxonomy terms.
+ */
+function taxonomy_update_8601() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $definition_update_manager->getEntityType('taxonomy_term');
+
+  // Bail out early if a field named 'status' is already installed.
+  if ($definition_update_manager->getFieldStorageDefinition('status', 'taxonomy_term')) {
+    return t('The publishing status field has <strong>not</strong> been added to taxonomy terms. See <a href=":link">this page</a> for more information on how to install it.', [
+      ':link' => 'https://www.drupal.org/node/2985366',
+    ]);
+  }
+
+  // Add the 'published' entity key to the taxonomy_term entity type.
+  $entity_keys = $entity_type->getKeys();
+  $entity_keys['published'] = 'status';
+  $entity_type->set('entity_keys', $entity_keys);
+
+  $definition_update_manager->updateEntityType($entity_type);
+
+  // Add the status field.
+  $status = BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Publishing status'))
+    ->setDescription(t('A boolean indicating the published state.'))
+    ->setRevisionable(TRUE)
+    ->setTranslatable(TRUE)
+    ->setDefaultValue(TRUE);
+
+  $has_content_translation_status_field = \Drupal::moduleHandler()->moduleExists('content_translation') && $definition_update_manager->getFieldStorageDefinition('content_translation_status', 'taxonomy_term');
+  if ($has_content_translation_status_field) {
+    $status->setInitialValueFromField('content_translation_status', TRUE);
+  }
+  else {
+    $status->setInitialValue(TRUE);
+  }
+  $definition_update_manager->installFieldStorageDefinition('status', 'taxonomy_term', 'taxonomy_term', $status);
+
+  // Uninstall the 'content_translation_status' field if needed.
+  if ($has_content_translation_status_field) {
+    $content_translation_status = $definition_update_manager->getFieldStorageDefinition('content_translation_status', 'taxonomy_term');
+    $definition_update_manager->uninstallFieldStorageDefinition($content_translation_status);
+  }
+
+  return t('The publishing status field has been added to taxonomy terms.');
 }
