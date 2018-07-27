@@ -13,6 +13,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\locale\LocaleConfigManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -73,9 +74,11 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    *   The entity manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    */
-  public function __construct($plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager) {
-    parent::__construct($plugin_id, $plugin_definition, $config_factory, $typed_config, $locale_config_manager, $config_mapper_manager, $route_provider, $translation_manager, $language_manager);
+  public function __construct($plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, EventDispatcherInterface $event_dispatcher = NULL) {
+    parent::__construct($plugin_id, $plugin_definition, $config_factory, $typed_config, $locale_config_manager, $config_mapper_manager, $route_provider, $translation_manager, $language_manager, $event_dispatcher);
     $this->setType($plugin_definition['entity_type']);
 
     $this->entityManager = $entity_manager;
@@ -97,7 +100,8 @@ class ConfigEntityMapper extends ConfigNamesMapper {
       $container->get('router.route_provider'),
       $container->get('string_translation'),
       $container->get('entity.manager'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('event_dispatcher')
     );
   }
 
@@ -105,9 +109,9 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    * {@inheritdoc}
    */
   public function populateFromRouteMatch(RouteMatchInterface $route_match) {
-    parent::populateFromRouteMatch($route_match);
     $entity = $route_match->getParameter($this->entityType);
     $this->setEntity($entity);
+    parent::populateFromRouteMatch($route_match);
   }
 
   /**

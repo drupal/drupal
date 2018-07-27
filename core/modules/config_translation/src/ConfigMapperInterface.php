@@ -282,12 +282,12 @@ interface ConfigMapperInterface {
   public function hasTranslation(LanguageInterface $language);
 
   /**
-   * Populate the config mapper with request data.
-   *
-   * @todo Replace $request with RouteMatch https://www.drupal.org/node/2295255.
+   * Populate the config mapper with route match data.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
+   *
+   * @see \Drupal\config_translation\Event\ConfigTranslationEvents::POPULATE_MAPPER
    */
   public function populateFromRouteMatch(RouteMatchInterface $route_match);
 

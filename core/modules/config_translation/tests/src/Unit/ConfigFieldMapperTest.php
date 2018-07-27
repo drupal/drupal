@@ -36,6 +36,13 @@ class ConfigFieldMapperTest extends UnitTestCase {
   protected $entityManager;
 
   /**
+   * The mocked event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $eventDispatcher;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -54,6 +61,8 @@ class ConfigFieldMapperTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+
     $this->configFieldMapper = new ConfigFieldMapper(
       'node_fields',
       $definition,
@@ -64,7 +73,8 @@ class ConfigFieldMapperTest extends UnitTestCase {
       $this->getMock('Drupal\Core\Routing\RouteProviderInterface'),
       $this->getStringTranslationStub(),
       $this->entityManager,
-      $this->getMock('Drupal\Core\Language\LanguageManagerInterface')
+      $this->getMock('Drupal\Core\Language\LanguageManagerInterface'),
+      $this->eventDispatcher
     );
   }
 
