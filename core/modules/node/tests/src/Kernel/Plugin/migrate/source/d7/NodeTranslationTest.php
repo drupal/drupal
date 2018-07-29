@@ -31,7 +31,7 @@ class NodeTranslationTest extends NodeTest {
         'vid' => 7,
         'type' => 'article',
         'language' => 'fr',
-        'title' => 'fr - node title 5',
+        'title' => 'node title 5 (title_field)',
         'node_uid' => 1,
         'revision_uid' => 1,
         'status' => 1,

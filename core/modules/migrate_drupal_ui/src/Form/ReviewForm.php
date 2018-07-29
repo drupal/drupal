@@ -138,6 +138,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
       'simpletest',
       'stylizer',
       'term_depth',
+      'title',
       'toolbar',
       'translation',
       'trigger',

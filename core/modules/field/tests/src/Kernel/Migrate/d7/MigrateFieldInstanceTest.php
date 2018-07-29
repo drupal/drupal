@@ -132,6 +132,16 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertLinkFields('node.test_content_type.field_link', DRUPAL_OPTIONAL);
     $this->assertLinkFields('node.article.field_link', DRUPAL_DISABLED);
     $this->assertLinkFields('node.blog.field_link', DRUPAL_REQUIRED);
+
+    // Tests that fields created by the Title module are not migrated.
+    $title_field = FieldConfig::load('node.test_content_type.title_field');
+    $this->assertNull($title_field);
+    $subject_field = FieldConfig::load('comment.comment_node_article.subject_field');
+    $this->assertNull($subject_field);
+    $name_field = FieldConfig::load('taxonomy_term.test_vocabulary.name_field');
+    $this->assertNull($name_field);
+    $description_field = FieldConfig::load('taxonomy_term.test_vocabulary.description_field');
+    $this->assertNull($description_field);
   }
 
   /**

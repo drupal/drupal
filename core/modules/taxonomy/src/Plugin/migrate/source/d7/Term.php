@@ -75,6 +75,20 @@ class Term extends FieldableEntity {
     $current_tid = $row->getSourceProperty('tid');
     $row->setSourceProperty('is_container', in_array($current_tid, $forum_container_tids));
 
+    // If the term name or term description were replaced by real fields using
+    // the Drupal 7 Title module, use the fields value instead of the term name
+    // or term description.
+    if ($this->moduleExists('title')) {
+      $name_field = $row->getSourceProperty('name_field');
+      if (isset($name_field[0]['value'])) {
+        $row->setSourceProperty('name', $name_field[0]['value']);
+      }
+      $description_field = $row->getSourceProperty('description_field');
+      if (isset($description_field[0]['value'])) {
+        $row->setSourceProperty('description', $description_field[0]['value']);
+      }
+    }
+
     return parent::prepareRow($row);
   }
 

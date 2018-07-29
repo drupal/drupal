@@ -71,6 +71,15 @@ class NodeEntityTranslation extends FieldableEntity {
       $row->setSourceProperty($field_name, $this->getFieldValues('node', $field_name, $nid, $vid, $field_language));
     }
 
+    // If the node title was replaced by a real field using the Drupal 7 Title
+    // module, use the field value instead of the node title.
+    if ($this->moduleExists('title')) {
+      $title_field = $row->getSourceProperty('title_field');
+      if (isset($title_field[0]['value'])) {
+        $row->setSourceProperty('title', $title_field[0]['value']);
+      }
+    }
+
     return parent::prepareRow($row);
   }
 

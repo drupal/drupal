@@ -78,6 +78,13 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $node = $comment->getCommentedEntity();
     $this->assertInstanceOf(NodeInterface::class, $node);
     $this->assertSame('1', $node->id());
+
+    // Tests that comments that used the Drupal 7 Title module and that have
+    // their subject replaced by a real field are correctly migrated.
+    $comment = Comment::load(2);
+    $this->assertInstanceOf(Comment::class, $comment);
+    $this->assertSame('TNG for the win!', $comment->getSubject());
+    $this->assertSame('TNG is better than DS9.', $comment->comment_body->value);
   }
 
 }
