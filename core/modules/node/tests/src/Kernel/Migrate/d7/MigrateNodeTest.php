@@ -154,8 +154,8 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
    * Test node migration from Drupal 7 to 8.
    */
   public function testNode() {
-    $this->assertEntity(1, 'test_content_type', 'en', 'A Node', '2', TRUE, '1421727515', '1441032132', TRUE, FALSE);
-    $this->assertRevision(1, 'A Node', '1', NULL, '1441032132');
+    $this->assertEntity(1, 'test_content_type', 'en', 'An English Node', '2', TRUE, '1421727515', '1441032132', TRUE, FALSE);
+    $this->assertRevision(1, 'An English Node', '1', NULL, '1441032132');
 
     $node = Node::load(1);
     $this->assertTrue($node->field_boolean->value);
@@ -183,8 +183,10 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
 
     // Test that fields translated with Entity Translation are migrated.
     $node_fr = $node->getTranslation('fr');
+    $this->assertEquals('A French Node', $node_fr->getTitle());
     $this->assertEquals('6', $node_fr->field_integer->value);
     $node_is = $node->getTranslation('is');
+    $this->assertEquals('An Icelandic Node', $node_is->getTitle());
     $this->assertEquals('7', $node_is->field_integer->value);
 
     $node = Node::load(2);

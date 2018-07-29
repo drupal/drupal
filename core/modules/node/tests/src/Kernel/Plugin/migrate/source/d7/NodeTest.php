@@ -175,6 +175,10 @@ class NodeTest extends MigrateSqlSourceTestBase {
         'id' => '2',
         'translatable' => '0',
       ],
+      [
+        'id' => '3',
+        'translatable' => '1',
+      ],
     ];
     $tests[0]['source_data']['field_config_instance'] = [
       [
@@ -190,6 +194,15 @@ class NodeTest extends MigrateSqlSourceTestBase {
         'id' => '3',
         'field_id' => '2',
         'field_name' => 'body',
+        'entity_type' => 'node',
+        'bundle' => 'article',
+        'data' => 'a:0:{}',
+        'deleted' => '0',
+      ],
+      [
+        'id' => '4',
+        'field_id' => '3',
+        'field_name' => 'title_field',
         'entity_type' => 'node',
         'bundle' => 'article',
         'data' => 'a:0:{}',
@@ -258,6 +271,48 @@ class NodeTest extends MigrateSqlSourceTestBase {
         'body_format' => 'filtered_html',
       ],
     ];
+    $tests[0]['source_data']['field_revision_title_field'] = [
+      [
+        'entity_type' => 'node',
+        'bundle' => 'article',
+        'deleted' => '0',
+        'entity_id' => '5',
+        'revision_id' => '5',
+        'language' => 'en',
+        'delta' => '0',
+        'title_field_value' => 'node title 5 (title_field)',
+        'title_field_format' => NULL,
+      ],
+      [
+        'entity_type' => 'node',
+        'bundle' => 'article',
+        'deleted' => '0',
+        'entity_id' => '6',
+        'revision_id' => '6',
+        'language' => 'en',
+        'delta' => '0',
+        'title_field_value' => 'node title 5 (title_field)',
+        'title_field_format' => NULL,
+      ],
+      [
+        'entity_type' => 'node',
+        'bundle' => 'article',
+        'deleted' => '0',
+        'entity_id' => '7',
+        'revision_id' => '7',
+        'language' => 'en',
+        'delta' => '0',
+        'title_field_value' => 'node title 5 (title_field)',
+        'title_field_format' => NULL,
+      ],
+    ];
+    $tests[0]['source_data']['system'] = [
+      [
+        'name' => 'title',
+        'type' => 'module',
+        'status' => 1,
+      ],
+    ];
 
     // The expected results.
     $tests[0]['expected_data'] = [
@@ -318,7 +373,7 @@ class NodeTest extends MigrateSqlSourceTestBase {
         'vid' => 5,
         'type' => 'article',
         'language' => 'en',
-        'title' => 'node title 5',
+        'title' => 'node title 5 (title_field)',
         'node_uid' => 1,
         'revision_uid' => 2,
         'status' => 1,
@@ -344,7 +399,7 @@ class NodeTest extends MigrateSqlSourceTestBase {
         'vid' => 6,
         'type' => 'article',
         'language' => 'en',
-        'title' => 'node title 5',
+        'title' => 'node title 5 (title_field)',
         'node_uid' => 1,
         'revision_uid' => 1,
         'status' => 1,

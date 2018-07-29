@@ -104,7 +104,11 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    */
   public function testTaxonomyTerms() {
     $this->assertEntity(1, 'General discussion', 'forums', '', NULL, 2);
-    $this->assertEntity(2, 'Term1', 'test_vocabulary', 'The first term.', 'filtered_html', 0, [], NULL, 3);
+
+    // Tests that terms that used the Drupal 7 Title module and that have their
+    // name and description replaced by real fields are correctly migrated.
+    $this->assertEntity(2, 'Term1 (This is a real field!)', 'test_vocabulary', 'The first term. (This is a real field!)', 'filtered_html', 0, [], NULL, 3);
+
     $this->assertEntity(3, 'Term2', 'test_vocabulary', 'The second term.', 'filtered_html');
     $this->assertEntity(4, 'Term3', 'test_vocabulary', 'The third term.', 'full_html', 0, [3], 6);
     $this->assertEntity(5, 'Custom Forum', 'forums', 'Where the cool kids are.', NULL, 3);

@@ -123,6 +123,7 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'simpletest',
       'stylizer',
       'term_depth',
+      'title',
       'toolbar',
       'translation',
       'trigger',

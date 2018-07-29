@@ -34,6 +34,19 @@ class Field extends DrupalSqlBase {
       ->condition('fci.deleted', 0);
     $query->join('field_config_instance', 'fci', 'fc.id = fci.field_id');
 
+    // If the Drupal 7 Title module is enabled, we don't want to migrate the
+    // fields it provides. The values of those fields will be migrated to the
+    // base fields they were replacing.
+    if ($this->moduleExists('title')) {
+      $title_fields = [
+        'title_field',
+        'name_field',
+        'description_field',
+        'subject_field',
+      ];
+      $query->condition('fc.field_name', $title_fields, 'NOT IN');
+    }
+
     return $query;
   }
 

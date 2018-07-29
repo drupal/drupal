@@ -40,6 +40,15 @@ class Comment extends FieldableEntity {
       $row->setSourceProperty($field, $this->getFieldValues('comment', $field, $cid));
     }
 
+    // If the comment subject was replaced by a real field using the Drupal 7
+    // Title module, use the field value instead of the comment subject.
+    if ($this->moduleExists('title')) {
+      $subject_field = $row->getSourceProperty('subject_field');
+      if (isset($subject_field[0]['value'])) {
+        $row->setSourceProperty('subject', $subject_field[0]['value']);
+      }
+    }
+
     return parent::prepareRow($row);
   }
 

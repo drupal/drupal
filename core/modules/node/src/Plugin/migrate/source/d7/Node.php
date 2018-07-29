@@ -127,6 +127,16 @@ class Node extends FieldableEntity {
     if ($row->getSourceProperty('tnid') == 0) {
       $row->setSourceProperty('tnid', $row->getSourceProperty('nid'));
     }
+
+    // If the node title was replaced by a real field using the Drupal 7 Title
+    // module, use the field value instead of the node title.
+    if ($this->moduleExists('title')) {
+      $title_field = $row->getSourceProperty('title_field');
+      if (isset($title_field[0]['value'])) {
+        $row->setSourceProperty('title', $title_field[0]['value']);
+      }
+    }
+
     return parent::prepareRow($row);
   }
 

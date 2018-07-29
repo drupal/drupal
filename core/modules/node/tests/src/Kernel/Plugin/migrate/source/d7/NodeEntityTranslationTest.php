@@ -79,6 +79,21 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'translatable' => 1,
         'deleted' => 0,
       ],
+      [
+        'id' => 2,
+        'field_name' => 'title_field',
+        'type' => 'text',
+        'module' => 'text',
+        'active' => 1,
+        'storage_type' => 'field_sql_storage',
+        'storage_module' => 'field_sql_storage',
+        'storage_active' => 1,
+        'locked' => 1,
+        'data' => 'a:0:{}',
+        'cardinality' => 1,
+        'translatable' => 1,
+        'deleted' => 0,
+      ],
     ];
     $tests[0]['source_data']['field_config_instance'] = [
       [
@@ -91,9 +106,18 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'deleted' => 0,
       ],
       [
-        'id' => 1,
+        'id' => 2,
         'field_id' => 1,
         'field_name' => 'body',
+        'entity_type' => 'node',
+        'bundle' => 'page',
+        'data' => 'a:0:{}',
+        'deleted' => 0,
+      ],
+      [
+        'id' => 3,
+        'field_id' => 2,
+        'field_name' => 'title_field',
         'entity_type' => 'node',
         'bundle' => 'page',
         'data' => 'a:0:{}',
@@ -148,6 +172,41 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'body_value' => 'Spanish body',
         'body_summary' => 'Spanish summary',
         'body_format' => 'filtered_html',
+      ],
+    ];
+    $tests[0]['source_data']['field_revision_title_field'] = [
+      [
+        'entity_type' => 'node',
+        'bundle' => 'page',
+        'deleted' => '0',
+        'entity_id' => '2',
+        'revision_id' => '2',
+        'language' => 'en',
+        'delta' => '0',
+        'title_field_value' => 'English Source',
+        'title_field_format' => NULL,
+      ],
+      [
+        'entity_type' => 'node',
+        'bundle' => 'page',
+        'deleted' => '0',
+        'entity_id' => '2',
+        'revision_id' => '2',
+        'language' => 'fr',
+        'delta' => '0',
+        'title_field_value' => 'French Translation',
+        'title_field_format' => NULL,
+      ],
+      [
+        'entity_type' => 'node',
+        'bundle' => 'page',
+        'deleted' => '0',
+        'entity_id' => '2',
+        'revision_id' => '2',
+        'language' => 'es',
+        'delta' => '0',
+        'title_field_value' => 'Spanish Translation',
+        'title_field_format' => NULL,
       ],
     ];
     $tests[0]['source_data']['node'] = [
@@ -210,6 +269,13 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'sticky' => 0,
       ],
     ];
+    $tests[0]['source_data']['system'] = [
+      [
+        'name' => 'title',
+        'type' => 'module',
+        'status' => 1,
+      ],
+    ];
 
     // The expected results.
     $tests[0]['expected_data'] = [
@@ -223,7 +289,7 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'created' => 1531343508,
         'changed' => 1531343508,
         'type' => 'page',
-        'title' => 'Translated page',
+        'title' => 'French Translation',
         'promote' => 0,
         'sticky' => 0,
         'log' => '',
@@ -247,7 +313,7 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'created' => 1531343528,
         'changed' => 1531343528,
         'type' => 'page',
-        'title' => 'Translated page',
+        'title' => 'Spanish Translation',
         'promote' => 0,
         'sticky' => 0,
         'log' => '',

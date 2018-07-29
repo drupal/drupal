@@ -105,6 +105,16 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.field_date_without_time', 'datetime', TRUE, 1);
     $this->assertEntity('node.field_datetime_without_time', 'datetime', TRUE, 1);
 
+    // Tests that fields created by the Title module are not migrated.
+    $title_field = FieldStorageConfig::load('node.title_field');
+    $this->assertNull($title_field);
+    $subject_field = FieldStorageConfig::load('comment.subject_field');
+    $this->assertNull($subject_field);
+    $name_field = FieldStorageConfig::load('taxonomy_term.name_field');
+    $this->assertNull($name_field);
+    $description_field = FieldStorageConfig::load('taxonomy_term.description_field');
+    $this->assertNull($description_field);
+
     // Assert that the taxonomy term reference fields are referencing the
     // correct entity type.
     $field = FieldStorageConfig::load('node.field_term_reference');
