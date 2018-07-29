@@ -87,12 +87,6 @@
     <h1 class="page-title">
       {{ label }}
     </h1>
-    {% if display_submitted %}
-    <div{{ author_attributes.addClass('node__submitted') }}>
-      {% trans %}<span class="by-author">by {{ author_name }}</span> {{ created_date }}{% endtrans %}
-      {{ metadata }}
-    </div>
-    {% endif %}
   </header>
   {% else %}
     <h2{{ title_attributes }}>
@@ -105,7 +99,7 @@
     <footer class="node__meta">
       {{ author_picture }}
       <div{{ author_attributes.addClass('node__submitted') }}>
-        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+        {% trans %}<span class="by-author">by {{ author_name }}</span> {{ created_date }}{% endtrans %}
         {{ metadata }}
       </div>
     </footer>

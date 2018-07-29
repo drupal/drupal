@@ -85,18 +85,20 @@
       <h1 class="page-title">
         {{ label }}
       </h1>
-      {% if display_submitted %}
-      <div{{ author_attributes.addClass('node__submitted') }}>
-        {% trans %}<span class="by-author">by {{ author_name }}</span> {{ created_date }}{% endtrans %}
-        {{ metadata }}
-      </div>
-      {% endif %}
-      {{ content.field_tags }}
     </header>
   {{ title_suffix }}
 
+  {% if display_submitted %}
+  <footer class="node__meta">
+    <div{{ author_attributes.addClass('node__submitted') }}>
+      {% trans %}<span class="by-author">by {{ author_name }}</span> {{ created_date }}{% endtrans %}
+      {{ metadata }}
+    </div>
+  </footer>
+  {% endif %}
+
   <div{{ content_attributes.addClass('node__content') }}>
-    {{ content|without('field_tags') }}
+    {{ content }}
   </div>
 
 </article>

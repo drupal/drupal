@@ -1,0 +1,54 @@
+/**
+ * @file
+ * This file is used to style the 'field-ingredients' field.
+ */
+
+.field--name-field-ingredients {
+  margin-top: 1.184rem;
+  margin-bottom: 1.184rem;
+  padding: 1.266rem;
+  background-color: #fbf5ee;
+}
+/* Large */
+@media screen and (min-width: 60rem) {
+  /* 960px */
+  .field--name-field-ingredients {
+    margin-top: 2.369rem;
+    margin-bottom: 2.369rem;
+    padding: 2.369rem;
+  }
+}
+
+.field--name-field-ingredients .field__label {
+  margin: 0 0 1em 0;
+  padding: 0 0 0.6em 0;
+  border-bottom: 1px solid #eec2cb;
+  font-family: "Scope One", Georgia, serif;
+  font-size: 1.266rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+/* Large */
+@media screen and (min-width: 60rem) {
+  /* 960px */
+  .field--name-field-ingredients .field__label {
+    margin: 0 0 1.5em 0;
+    font-size: 1.77rem;
+  }
+}
+
+/* Small */
+@media screen and (min-width: 30rem) {
+  /* 480px */
+  .field--name-field-ingredients .field__items {
+    column-count: 2;
+    column-gap: 2rem;
+  }
+}
+
+.field--name-field-ingredients .field__item {
+  margin: 0 0 0.6em 0;
+  padding: 0 0 0.6em 0;
+  border-bottom: 1px solid #eec2cb;
+  break-inside: avoid-column;
+}
