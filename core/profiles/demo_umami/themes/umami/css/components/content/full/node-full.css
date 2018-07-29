@@ -3,69 +3,43 @@
  * This file is used to style the 'full' view mode.
  */
 .node--view-mode-full {
-  background-color: #fff;
-  border-bottom: 1px solid #fcece7;
-  border-left: none;
-  border-right: none;
-  border-top: 1px solid #fcece7;
   margin: 0 auto 2.37rem;
   padding: 1.266rem;
+  border-top: 1px solid #fcece7;
+  border-right: none;
+  border-bottom: 1px solid #fcece7;
+  border-left: none;
+  background-color: #fff;
 }
 /* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+@media screen and (min-width: 60rem) {
+  /* 960px */
   .node--view-mode-full {
-    border-left: 1px solid #fcece7;
-    border-right: 1px solid #fcece7;
     padding: 2.37rem;
+    border-right: 1px solid #fcece7;
+    border-left: 1px solid #fcece7;
   }
-}
-
-.node--view-mode-full > .node__header {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.node--view-mode-full .page-title {
-  flex: 0 0 100%;
 }
 
 .node--view-mode-full .node__submitted {
-  flex: 0 0 100%;
-  font-size: 0.889em;
   margin-bottom: 1.2em;
-}
-/* Large */
-@media screen and (min-width: 60rem) { /* 960px */
-  .node--view-mode-full .node__submitted {
-    flex: 0 1 auto;
-    margin-right: 2rem;
-  }
+  font-size: 0.889em;
 }
 .node--view-mode-full .by-author::after {
-  content: "•";
-  font-size: 2em;
-  vertical-align: middle;
   display: inline-block;
   margin: 0 0.25ex;
+  content: "•";
+  vertical-align: middle;
   color: #7cbe8c;
-}
-
-.node--view-mode-full .field--name-field-tags {
-  flex: 0 0 100%;
-}
-/* Large */
-@media screen and (min-width: 60rem) { /* 960px */
-  .node--view-mode-full .field--name-field-tags {
-    flex: 0 1 auto;
-    margin-left: auto;
-  }
+  font-size: 2em;
 }
 
 .node--view-mode-full .field--name-field-image {
   margin-bottom: 1.184rem;
 }
 /* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+@media screen and (min-width: 60rem) {
+  /* 960px */
   .node--view-mode-full .field--name-field-image {
     margin-bottom: 2.369rem;
   }

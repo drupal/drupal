@@ -26,7 +26,7 @@ bundle: recipe
 mode: default
 content:
   field_cooking_time:
-    weight: 1
+    weight: 5
     label: above
     settings:
       thousand_separator: ''
@@ -35,7 +35,7 @@ content:
     type: number_integer
     region: content
   field_difficulty:
-    weight: 2
+    weight: 7
     label: above
     settings: {  }
     third_party_settings: {  }
@@ -51,7 +51,7 @@ content:
     type: responsive_image
     region: content
   field_ingredients:
-    weight: 4
+    weight: 8
     label: above
     settings:
       link_to_entity: false
@@ -59,15 +59,6 @@ content:
     type: string
     region: content
   field_number_of_servings:
-    weight: 5
-    label: above
-    settings:
-      thousand_separator: ''
-      prefix_suffix: true
-    third_party_settings: {  }
-    type: number_integer
-    region: content
-  field_preparation_time:
     weight: 6
     label: above
     settings:
@@ -76,8 +67,17 @@ content:
     third_party_settings: {  }
     type: number_integer
     region: content
+  field_preparation_time:
+    weight: 4
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
   field_recipe_category:
-    weight: 7
+    weight: 1
     label: above
     settings:
       link: true
@@ -85,21 +85,21 @@ content:
     type: entity_reference_label
     region: content
   field_recipe_instruction:
-    weight: 8
+    weight: 9
     label: above
     settings: {  }
     third_party_settings: {  }
     type: text_default
     region: content
   field_summary:
-    weight: 9
+    weight: 0
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
     region: content
   field_tags:
-    weight: 10
+    weight: 2
     label: above
     settings:
       link: true
@@ -107,7 +107,7 @@ content:
     type: entity_reference_label
     region: content
   links:
-    weight: 0
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
