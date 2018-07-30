@@ -144,6 +144,11 @@ libraries-override:
       theme:
         css/menu_ui.admin.css: css/menu_ui/menu_ui.admin.css
 
+  migrate_drupal_ui/base:
+    css:
+      component:
+        css/components/upgrade-analysis-report-tables.css: css/migrate_drupal_ui/components/upgrade-analysis-report-tables.css
+
   node/drupal.node:
     css:
       layout:
