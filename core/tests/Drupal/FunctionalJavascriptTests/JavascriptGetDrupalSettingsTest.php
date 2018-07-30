@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\Tests\simpletest\FunctionalJavascript;
-
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+namespace Drupal\FunctionalJavascriptTests;
 
 /**
  * Tests Drupal settings retrieval in JavascriptTestBase tests.
