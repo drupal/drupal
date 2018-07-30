@@ -1,0 +1,6 @@
+name: 'Drupal system cross profile test'
+type: module
+description: 'Support module for testing that a module in one profile can be reused in another profile.'
+package: Testing
+version: VERSION
+core: 8.x
