@@ -31,7 +31,7 @@ class OtherInstallationProfileTestsTest extends BrowserTestBase {
    * @var string
    *
    * @see \Drupal\simpletest\Tests\InstallationProfileModuleTestsTest
-   * @see \Drupal\Tests\drupal_system_listing_compatible_test\Kernel\SystemListingCompatibleTest
+   * @see \Drupal\Tests\drupal_system_listing_compatible_test\Kernel\SystemListingCrossProfileCompatibleTest
    */
   protected $profile = 'minimal';
 
@@ -60,7 +60,7 @@ class OtherInstallationProfileTestsTest extends BrowserTestBase {
 
     // Assert the existence of a test for a module in a different installation
     // profile than the current.
-    $this->assertText('Drupal\Tests\drupal_system_listing_compatible_test\Kernel\SystemListingCompatibleTest');
+    $this->assertText('Drupal\Tests\drupal_system_listing_compatible_test\Kernel\SystemListingCrossProfileCompatibleTest');
   }
 
 }

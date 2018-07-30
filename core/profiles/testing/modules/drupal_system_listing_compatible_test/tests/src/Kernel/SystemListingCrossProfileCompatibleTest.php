@@ -10,7 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group drupal_system_listing_compatible_test
  */
-class SystemListingCompatibleTest extends KernelTestBase {
+class SystemListingCrossProfileCompatibleTest extends KernelTestBase {
 
   /**
    * Attempt to enable a module from the Testing profile.
@@ -20,7 +20,7 @@ class SystemListingCompatibleTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['drupal_system_listing_compatible_test'];
+  public static $modules = ['drupal_system_cross_profile_test'];
 
   /**
    * Use the Minimal profile.
@@ -47,7 +47,9 @@ class SystemListingCompatibleTest extends KernelTestBase {
    * Non-empty test* method required to executed the test case class.
    */
   public function testSystemListing() {
-    $this->assertTrue(TRUE, __CLASS__ . ' test executed.');
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
+    $module_handler = $this->container->get('module_handler');
+    $this->assertTrue($module_handler->moduleExists('drupal_system_cross_profile_test'), 'Module installed from different profile');
   }
 
 }
