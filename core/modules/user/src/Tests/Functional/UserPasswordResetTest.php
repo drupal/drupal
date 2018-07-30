@@ -1,10 +1,11 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\user\Tests\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
-use Drupal\system\Tests\Cache\PageCacheTagsTestBase;
+use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -14,16 +15,9 @@ use Drupal\user\Entity\User;
  */
 class UserPasswordResetTest extends PageCacheTagsTestBase {
 
-  /**
-   * The profile to install as a basis for testing.
-   *
-   * This test uses the standard profile to test the password reset in
-   * combination with an ajax request provided by the user picture configuration
-   * in the standard profile.
-   *
-   * @var string
-   */
-  protected $profile = 'standard';
+  use AssertMailTrait {
+    getMails as drupalGetMails;
+  }
 
   /**
    * The user object to test password resetting.
@@ -54,7 +48,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->drupalLogin($account);
 
     $this->account = User::load($account->id());
-    $this->account->pass_raw = $account->pass_raw;
+    $this->account->passRaw = $account->passRaw;
     $this->drupalLogout();
 
     // Set the last login time that is used to generate the one-time link so
@@ -113,14 +107,6 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->drupalPostForm(NULL, NULL, t('Log in'));
     $this->assertLink(t('Log out'));
     $this->assertTitle(t('@name | @site', ['@name' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name')]), 'Logged in using password reset link.');
-
-    // Make sure the ajax request from uploading a user picture does not
-    // invalidate the reset token.
-    $image = current($this->drupalGetTestFiles('image'));
-    $edit = [
-      'files[user_picture_0]' => \Drupal::service('file_system')->realpath($image->uri),
-    ];
-    $this->drupalPostAjaxForm(NULL, $edit, 'user_picture_0_upload_button');
 
     // Change the forgotten password.
     $password = user_password();
