@@ -256,7 +256,7 @@ display:
           row_class: ''
           default_row_class: true
           uses_fields: false
-      title: Recipes
+      title: Home
       header:
         area:
           id: area
