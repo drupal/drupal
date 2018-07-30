@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\Tests\simpletest\FunctionalJavascript;
-
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+namespace Drupal\FunctionalJavascriptTests;
 
 /**
  * Tests if we can execute JavaScript in the browser.
