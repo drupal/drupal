@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\comment\Tests;
+namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentManagerInterface;
 use Drupal\Component\Render\FormattableMarkup;
@@ -217,7 +217,7 @@ class CommentPagerTest extends CommentTestBase {
     $comment_anchors = $this->xpath('//a[starts-with(@id,"comment-")]');
     $result_order = [];
     foreach ($comment_anchors as $anchor) {
-      $result_order[] = substr($anchor['id'], 8);
+      $result_order[] = substr($anchor->getAttribute('id'), 8);
     }
     return $this->assertEqual($expected_cids, $result_order, format_string('Comment order: expected @expected, returned @returned.', ['@expected' => implode(',', $expected_cids), '@returned' => implode(',', $result_order)]));
   }
@@ -339,12 +339,12 @@ class CommentPagerTest extends CommentTestBase {
     $this->drupalGet('admin/structure/types/manage/article/display');
     $this->assertNoText(t('Pager ID: @id', ['@id' => 0]), 'No summary for standard pager');
     $this->assertText(t('Pager ID: @id', ['@id' => 1]));
-    $this->drupalPostAjaxForm(NULL, [], 'comment_settings_edit');
+    $this->drupalPostForm(NULL, [], 'comment_settings_edit');
     // Change default pager to 2.
     $this->drupalPostForm(NULL, ['fields[comment][settings_edit_form][settings][pager_id]' => 2], t('Save'));
     $this->assertText(t('Pager ID: @id', ['@id' => 2]));
     // Revert the changes.
-    $this->drupalPostAjaxForm(NULL, [], 'comment_settings_edit');
+    $this->drupalPostForm(NULL, [], 'comment_settings_edit');
     $this->drupalPostForm(NULL, ['fields[comment][settings_edit_form][settings][pager_id]' => 0], t('Save'));
     $this->assertNoText(t('Pager ID: @id', ['@id' => 0]), 'No summary for standard pager');
 
@@ -422,7 +422,7 @@ class CommentPagerTest extends CommentTestBase {
     $url_before = $this->getUrl();
     $urls = $this->xpath($xpath, $arguments);
     if (isset($urls[$index])) {
-      $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
+      $url_target = $this->getAbsoluteUrl($urls[$index]->getAttribute('href'));
       $this->pass(new FormattableMarkup('Clicked link %label (@url_target) from @url_before', ['%label' => $xpath, '@url_target' => $url_target, '@url_before' => $url_before]), 'Browser');
       return $this->drupalGet($url_target);
     }
