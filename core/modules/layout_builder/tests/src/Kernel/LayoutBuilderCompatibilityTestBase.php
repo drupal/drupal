@@ -112,9 +112,6 @@ abstract class LayoutBuilderCompatibilityTestBase extends EntityKernelTestBase {
    *   The entity to render.
    * @param array $attributes
    *   An array of field attributes to assert.
-   *
-   * @return string
-   *   The rendered string output (typically HTML).
    */
   protected function assertFieldAttributes(EntityInterface $entity, array $attributes) {
     $view_builder = $this->container->get('entity_type.manager')->getViewBuilder($entity->getEntityTypeId());
