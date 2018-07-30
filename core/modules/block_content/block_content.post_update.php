@@ -49,7 +49,7 @@ function block_content_post_update_add_views_reusable_filter(&$sandbox = NULL) {
           'admin_label' => '',
           'operator' => '=',
           'value' => '1',
-          'group' => '1',
+          'group' => 1,
           'exposed' => FALSE,
           'expose' => [
             'operator_id' => '',
