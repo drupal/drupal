@@ -5,6 +5,9 @@ namespace Drupal\Tests\Component\Bridge;
 use Drupal\Component\Bridge\ZfExtensionManagerSfContainer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Zend\Feed\Reader\Extension\Atom\Entry;
+use Zend\Feed\Reader\StandaloneExtensionManager;
 
 /**
  * @coversDefaultClass \Drupal\Component\Bridge\ZfExtensionManagerSfContainer
@@ -14,6 +17,7 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
 
   /**
    * @covers ::setContainer
+   * @covers ::setStandalone
    * @covers ::get
    */
   public function testGet() {
@@ -24,10 +28,16 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
     $bridge = new ZfExtensionManagerSfContainer();
     $bridge->setContainer($container);
     $this->assertEquals($service, $bridge->get('foo'));
+    $bridge->setStandalone(StandaloneExtensionManager::class);
+    $this->assertInstanceOf(Entry::class, $bridge->get('Atom\Entry'));
+    // Ensure that the container is checked first.
+    $container->set('atomentry', $service);
+    $this->assertEquals($service, $bridge->get('Atom\Entry'));
   }
 
   /**
    * @covers ::setContainer
+   * @covers ::setStandalone
    * @covers ::has
    */
   public function testHas() {
@@ -39,6 +49,42 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
     $bridge->setContainer($container);
     $this->assertTrue($bridge->has('foo'));
     $this->assertFalse($bridge->has('bar'));
+    $this->assertFalse($bridge->has('Atom\Entry'));
+    $bridge->setStandalone(StandaloneExtensionManager::class);
+    $this->assertTrue($bridge->has('Atom\Entry'));
+  }
+
+  /**
+   * @covers ::setStandalone
+   */
+  public function testSetStandaloneException() {
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(\RuntimeException::class);
+      $this->expectExceptionMessage('Drupal\Tests\Component\Bridge\ZfExtensionManagerSfContainerTest must implement Zend\Feed\Reader\ExtensionManagerInterface or Zend\Feed\Writer\ExtensionManagerInterface');
+    }
+    else {
+      $this->setExpectedException(\RuntimeException::class, 'Drupal\Tests\Component\Bridge\ZfExtensionManagerSfContainerTest must implement Zend\Feed\Reader\ExtensionManagerInterface or Zend\Feed\Writer\ExtensionManagerInterface');
+    }
+    $bridge = new ZfExtensionManagerSfContainer();
+    $bridge->setStandalone(static::class);
+  }
+
+  /**
+   * @covers ::get
+   */
+  public function testGetContainerException() {
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(ServiceNotFoundException::class);
+      $this->expectExceptionMessage('You have requested a non-existent service "test.foo".');
+    }
+    else {
+      $this->setExpectedException(ServiceNotFoundException::class, 'You have requested a non-existent service "test.foo".');
+    }
+    $container = new ContainerBuilder();
+    $bridge = new ZfExtensionManagerSfContainer('test.');
+    $bridge->setContainer($container);
+    $bridge->setStandalone(StandaloneExtensionManager::class);
+    $bridge->get('foo');
   }
 
   /**

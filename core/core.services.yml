@@ -1418,11 +1418,13 @@ services:
     class: Drupal\Component\Bridge\ZfExtensionManagerSfContainer
     calls:
       - [setContainer, ['@service_container']]
+      - [setStandalone, ['\Zend\Feed\Reader\StandaloneExtensionManager']]
     arguments: ['feed.reader.']
   feed.bridge.writer:
     class: Drupal\Component\Bridge\ZfExtensionManagerSfContainer
     calls:
       - [setContainer, ['@service_container']]
+      - [setStandalone, ['\Zend\Feed\Writer\StandaloneExtensionManager']]
     arguments: ['feed.writer.']
 # Zend Feed reader plugins. Plugin instances should not be shared.
   feed.reader.dublincoreentry:
