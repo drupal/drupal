@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\config_translation\Tests;
+namespace Drupal\Tests\config_translation\Functional;
 
-use Drupal\simpletest\InstallerTestBase;
+use Drupal\FunctionalTests\Installer\InstallerTestBase;
 
 /**
  * Installs the config translation module on a site installed in non english.

@@ -2,6 +2,8 @@
 
 namespace Drupal\simpletest;
 
+@trigger_error(__NAMESPACE__ . '\InstallerTestBase is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\FunctionalTests\Installer\InstallerTestBase, see https://www.drupal.org/node/2988752.', E_USER_DEPRECATED);
+
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\UserSession;
@@ -13,6 +15,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Base class for testing the interactive installer.
+ *
+ * @deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0.
+ * Use \Drupal\FunctionalTests\Installer\InstallerTestBase. See
+ * https://www.drupal.org/node/2988752
  */
 abstract class InstallerTestBase extends WebTestBase {
 

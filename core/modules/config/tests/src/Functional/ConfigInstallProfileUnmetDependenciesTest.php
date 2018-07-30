@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
+use Drupal\FunctionalTests\Installer\InstallerTestBase;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Serialization\Yaml;
-use Drupal\simpletest\InstallerTestBase;
 
 /**
  * Tests install profile config overrides can not add unmet dependencies.
@@ -21,16 +21,41 @@ class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
   protected $profile = 'testing_config_overrides';
 
   /**
-   * Set to TRUE if the expected exception is thrown.
+   * Contains the expected exception if it is thrown.
    *
-   * @var bool
+   * @var \Drupal\Core\Config\UnmetDependenciesException
    */
   protected $expectedException = FALSE;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
+    $this->copyTestingOverrides();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
-    // Copy the testing_config_overrides install profile so we can change the
-    // configuration to include a dependency that can not be met. File API
-    // functions are not available yet.
+    // During set up an UnmetDependenciesException should be thrown, which will
+    // be re-thrown by TestHttpClientMiddleware as a standard Exception.
+    try {
+      parent::setUp();
+    }
+    catch (\Exception $exception) {
+      $this->expectedException = $exception;
+    }
+  }
+
+  /**
+   * Copy the testing_config_overrides install profile.
+   *
+   * So we can change the configuration to include a dependency that can not be
+   * met. File API functions are not available yet.
+   */
+  protected function copyTestingOverrides() {
     $dest = $this->siteDirectory . '/profiles/testing_config_overrides';
     mkdir($dest, 0777, TRUE);
     $source = DRUPAL_ROOT . '/core/profiles/testing_config_overrides';
@@ -50,33 +75,6 @@ class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
     $action = Yaml::decode(file_get_contents($config_file));
     $action['dependencies']['module'][] = 'action';
     file_put_contents($config_file, Yaml::encode($action));
-
-    parent::setUp();
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * Override the error method so we can test for the expected exception.
-   */
-  protected function error($message = '', $group = 'Other', array $caller = NULL) {
-    if ($group == 'User notice') {
-      // Since 'User notice' is set by trigger_error() which is used for debug
-      // set the message to a status of 'debug'.
-      return $this->assert('debug', $message, 'Debug', $caller);
-    }
-    if ($group == 'Drupal\Core\Config\UnmetDependenciesException') {
-      $this->expectedException = TRUE;
-      return FALSE;
-    }
-    return $this->assert('exception', $message, $group, $caller);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpSite() {
-    // This step is not reached due to the exception.
   }
 
   /**
@@ -84,12 +82,12 @@ class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
    */
   public function testInstalled() {
     if ($this->expectedException) {
-      $this->pass('Expected Drupal\Core\Config\UnmetDependenciesException exception thrown');
+      $this->assertContains('Configuration objects provided by <em class="placeholder">user</em> have unmet dependencies: <em class="placeholder">system.action.user_block_user_action (action)</em>', $this->expectedException->getMessage());
+      $this->assertContains('Drupal\Core\Config\UnmetDependenciesException', $this->expectedException->getMessage());
     }
     else {
-      $this->fail('Expected Drupal\Core\Config\UnmetDependenciesException exception thrown');
+      $this->fail('Expected Drupal\Core\Config\UnmetDependenciesException exception not thrown');
     }
-    $this->assertErrorLogged('Configuration objects provided by <em class="placeholder">user</em> have unmet dependencies: <em class="placeholder">system.action.user_block_user_action (action)</em>');
   }
 
 }
