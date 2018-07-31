@@ -3,6 +3,7 @@
 namespace Drupal\system\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\system\MenuInterface;
 
 /**
@@ -76,6 +77,45 @@ class Menu extends ConfigEntityBase implements MenuInterface {
    */
   public function isLocked() {
     return (bool) $this->locked;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+    foreach ($entities as $menu) {
+      // Delete all links from the menu.
+      $menu_link_manager->deleteLinksInMenu($menu->id());
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save() {
+    $return = parent::save();
+    \Drupal::cache('menu')->invalidateAll();
+    // Invalidate the block cache to update menu-based derivatives.
+    if (\Drupal::moduleHandler()->moduleExists('block')) {
+      \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+    }
+    return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function delete() {
+    parent::delete();
+    \Drupal::cache('menu')->invalidateAll();
+
+    // Invalidate the block cache to update menu-based derivatives.
+    if (\Drupal::moduleHandler()->moduleExists('block')) {
+      \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+    }
   }
 
 }

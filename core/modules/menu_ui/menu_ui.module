@@ -79,50 +79,6 @@ function menu_ui_entity_type_build(array &$entity_types) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert( for menu entities.
- */
-function menu_ui_menu_insert(Menu $menu) {
-  menu_cache_clear_all();
-  // Invalidate the block cache to update menu-based derivatives.
-  if (\Drupal::moduleHandler()->moduleExists('block')) {
-    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update() for menu entities.
- */
-function menu_ui_menu_update(Menu $menu) {
-  menu_cache_clear_all();
-  // Invalidate the block cache to update menu-based derivatives.
-  if (\Drupal::moduleHandler()->moduleExists('block')) {
-    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_predelete() for menu entities.
- */
-function menu_ui_menu_predelete(Menu $menu) {
-  // Delete all links from the menu.
-  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
-  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-  $menu_link_manager->deleteLinksInMenu($menu->id());
-}
-
-/**
- * Implements hook_ENTITY_TYPE_delete() for menu entities.
- */
-function menu_ui_menu_delete(Menu $menu) {
-  menu_cache_clear_all();
-
-  // Invalidate the block cache to update menu-based derivatives.
-  if (\Drupal::moduleHandler()->moduleExists('block')) {
-    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
-  }
-}
-
-/**
  * Implements hook_block_view_BASE_BLOCK_ID_alter() for 'system_menu_block'.
  */
 function menu_ui_block_view_system_menu_block_alter(array &$build, BlockPluginInterface $block) {

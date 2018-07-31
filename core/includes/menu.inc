@@ -161,8 +161,14 @@ function menu_local_tabs() {
  *
  * This should be called any time broad changes
  * might have been made to the router items or menu links.
+ *
+ * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+ *   \Drupal::cache('menu')->invalidateAll() instead.
+ *
+ * @see https://www.drupal.org/node/2989138
  */
 function menu_cache_clear_all() {
+  @trigger_error("menu_cache_clear_all() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use \Drupal::cache('menu')->invalidateAll() instead. See https://www.drupal.org/node/2989138", E_USER_DEPRECATED);
   \Drupal::cache('menu')->invalidateAll();
 }
 
