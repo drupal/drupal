@@ -151,6 +151,7 @@ abstract class DatabaseTestBase extends KernelTestBase {
       ->fields([
         'id' => 1,
         'offset' => 'Offset value 1',
+        'function' => 'Function value 1',
       ])
       ->execute();
   }

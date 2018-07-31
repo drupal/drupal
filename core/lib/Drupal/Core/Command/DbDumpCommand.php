@@ -259,8 +259,12 @@ class DbDumpCommand extends DbCommandBase {
     $query = $connection->query("SHOW TABLE STATUS LIKE '{" . $table . "}'");
     $data = $query->fetchAssoc();
 
+    // Map the collation to a character set. For example, 'utf8mb4_general_ci'
+    // (MySQL 5) or 'utf8mb4_0900_ai_ci' (MySQL 8) will be mapped to 'utf8mb4'.
+    list($charset,) = explode('_', $data['Collation'], 2);
+
     // Set `mysql_character_set`. This will be ignored by other backends.
-    $definition['mysql_character_set'] = str_replace('_general_ci', '', $data['Collation']);
+    $definition['mysql_character_set'] = $charset;
   }
 
   /**

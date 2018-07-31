@@ -95,7 +95,7 @@ class SchemaTest extends KernelTestBase {
       $columns = $this->connection->query('SHOW FULL COLUMNS FROM {test_table}');
       foreach ($columns as $column) {
         if ($column->Field == 'test_field_string') {
-          $string_check = ($column->Collation == 'utf8mb4_general_ci');
+          $string_check = ($column->Collation == 'utf8mb4_general_ci' || $column->Collation == 'utf8mb4_0900_ai_ci');
         }
         if ($column->Field == 'test_field_string_ascii') {
           $string_ascii_check = ($column->Collation == 'ascii_general_ci');

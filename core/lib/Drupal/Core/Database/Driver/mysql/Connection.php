@@ -65,6 +65,277 @@ class Connection extends DatabaseConnection {
   const MIN_MAX_ALLOWED_PACKET = 1024;
 
   /**
+   * The list of MySQL reserved key words.
+   *
+   * @link https://dev.mysql.com/doc/refman/8.0/en/keywords.html
+   */
+  private $reservedKeyWords = [
+    'accessible',
+    'add',
+    'admin',
+    'all',
+    'alter',
+    'analyze',
+    'and',
+    'as',
+    'asc',
+    'asensitive',
+    'before',
+    'between',
+    'bigint',
+    'binary',
+    'blob',
+    'both',
+    'by',
+    'call',
+    'cascade',
+    'case',
+    'change',
+    'char',
+    'character',
+    'check',
+    'collate',
+    'column',
+    'condition',
+    'constraint',
+    'continue',
+    'convert',
+    'create',
+    'cross',
+    'cube',
+    'cume_dist',
+    'current_date',
+    'current_time',
+    'current_timestamp',
+    'current_user',
+    'cursor',
+    'database',
+    'databases',
+    'day_hour',
+    'day_microsecond',
+    'day_minute',
+    'day_second',
+    'dec',
+    'decimal',
+    'declare',
+    'default',
+    'delayed',
+    'delete',
+    'dense_rank',
+    'desc',
+    'describe',
+    'deterministic',
+    'distinct',
+    'distinctrow',
+    'div',
+    'double',
+    'drop',
+    'dual',
+    'each',
+    'else',
+    'elseif',
+    'empty',
+    'enclosed',
+    'escaped',
+    'except',
+    'exists',
+    'exit',
+    'explain',
+    'false',
+    'fetch',
+    'first_value',
+    'float',
+    'float4',
+    'float8',
+    'for',
+    'force',
+    'foreign',
+    'from',
+    'fulltext',
+    'function',
+    'generated',
+    'get',
+    'grant',
+    'group',
+    'grouping',
+    'groups',
+    'having',
+    'high_priority',
+    'hour_microsecond',
+    'hour_minute',
+    'hour_second',
+    'if',
+    'ignore',
+    'in',
+    'index',
+    'infile',
+    'inner',
+    'inout',
+    'insensitive',
+    'insert',
+    'int',
+    'int1',
+    'int2',
+    'int3',
+    'int4',
+    'int8',
+    'integer',
+    'interval',
+    'into',
+    'io_after_gtids',
+    'io_before_gtids',
+    'is',
+    'iterate',
+    'join',
+    'json_table',
+    'key',
+    'keys',
+    'kill',
+    'lag',
+    'last_value',
+    'lead',
+    'leading',
+    'leave',
+    'left',
+    'like',
+    'limit',
+    'linear',
+    'lines',
+    'load',
+    'localtime',
+    'localtimestamp',
+    'lock',
+    'long',
+    'longblob',
+    'longtext',
+    'loop',
+    'low_priority',
+    'master_bind',
+    'master_ssl_verify_server_cert',
+    'match',
+    'maxvalue',
+    'mediumblob',
+    'mediumint',
+    'mediumtext',
+    'middleint',
+    'minute_microsecond',
+    'minute_second',
+    'mod',
+    'modifies',
+    'natural',
+    'not',
+    'no_write_to_binlog',
+    'nth_value',
+    'ntile',
+    'null',
+    'numeric',
+    'of',
+    'on',
+    'optimize',
+    'optimizer_costs',
+    'option',
+    'optionally',
+    'or',
+    'order',
+    'out',
+    'outer',
+    'outfile',
+    'over',
+    'partition',
+    'percent_rank',
+    'persist',
+    'persist_only',
+    'precision',
+    'primary',
+    'procedure',
+    'purge',
+    'range',
+    'rank',
+    'read',
+    'reads',
+    'read_write',
+    'real',
+    'recursive',
+    'references',
+    'regexp',
+    'release',
+    'rename',
+    'repeat',
+    'replace',
+    'require',
+    'resignal',
+    'restrict',
+    'return',
+    'revoke',
+    'right',
+    'rlike',
+    'row',
+    'rows',
+    'row_number',
+    'schema',
+    'schemas',
+    'second_microsecond',
+    'select',
+    'sensitive',
+    'separator',
+    'set',
+    'show',
+    'signal',
+    'smallint',
+    'spatial',
+    'specific',
+    'sql',
+    'sqlexception',
+    'sqlstate',
+    'sqlwarning',
+    'sql_big_result',
+    'sql_calc_found_rows',
+    'sql_small_result',
+    'ssl',
+    'starting',
+    'stored',
+    'straight_join',
+    'system',
+    'table',
+    'terminated',
+    'then',
+    'tinyblob',
+    'tinyint',
+    'tinytext',
+    'to',
+    'trailing',
+    'trigger',
+    'true',
+    'undo',
+    'union',
+    'unique',
+    'unlock',
+    'unsigned',
+    'update',
+    'usage',
+    'use',
+    'using',
+    'utc_date',
+    'utc_time',
+    'utc_timestamp',
+    'values',
+    'varbinary',
+    'varchar',
+    'varcharacter',
+    'varying',
+    'virtual',
+    'when',
+    'where',
+    'while',
+    'window',
+    'with',
+    'write',
+    'xor',
+    'year_month',
+    'zerofill',
+  ];
+
+  /**
    * Constructs a Connection object.
    */
   public function __construct(\PDO $connection, array $connection_options = []) {
@@ -160,7 +431,8 @@ class Connection extends DatabaseConnection {
 
     // Force MySQL to use the UTF-8 character set. Also set the collation, if a
     // certain one has been set; otherwise, MySQL defaults to
-    // 'utf8mb4_general_ci' for utf8mb4.
+    // 'utf8mb4_general_ci' (MySQL 5) or 'utf8mb4_0900_ai_ci' (MySQL 8) for
+    // utf8mb4.
     if (!empty($connection_options['collation'])) {
       $pdo->exec('SET NAMES ' . $charset . ' COLLATE ' . $connection_options['collation']);
     }
@@ -179,15 +451,67 @@ class Connection extends DatabaseConnection {
     $connection_options += [
       'init_commands' => [],
     ];
+
+    $sql_mode = 'ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,ONLY_FULL_GROUP_BY';
+    // NO_AUTO_CREATE_USER is removed in MySQL 8.0.11
+    // https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-11.html#mysqld-8-0-11-deprecation-removal
+    $version_server = $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION);
+    if (version_compare($version_server, '8.0.11', '<')) {
+      $sql_mode .= ',NO_AUTO_CREATE_USER';
+    }
     $connection_options['init_commands'] += [
-      'sql_mode' => "SET sql_mode = 'ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,ONLY_FULL_GROUP_BY'",
+      'sql_mode' => "SET sql_mode = '$sql_mode'",
     ];
+
     // Execute initial commands.
     foreach ($connection_options['init_commands'] as $sql) {
       $pdo->exec($sql);
     }
 
     return $pdo;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function escapeField($field) {
+    $field = parent::escapeField($field);
+    return $this->quoteIdentifier($field);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function escapeAlias($field) {
+    // Quote fields so that MySQL reserved words like 'function' can be used
+    // as aliases.
+    $field = parent::escapeAlias($field);
+    return $this->quoteIdentifier($field);
+  }
+
+  /**
+   * Quotes an identifier if it matches a MySQL reserved keyword.
+   *
+   * @param string $identifier
+   *   The field to check.
+   *
+   * @return string
+   *   The identifier, quoted if it matches a MySQL reserved keyword.
+   */
+  private function quoteIdentifier($identifier) {
+    // Quote identifiers so that MySQL reserved words like 'function' can be
+    // used as column names. Sometimes the 'table.column_name' format is passed
+    // in. For example,
+    // \Drupal\Core\Entity\Sql\SqlContentEntityStorage::buildQuery() adds a
+    // condition on "base.uid" while loading user entities.
+    if (strpos($identifier, '.') !== FALSE) {
+      list($table, $identifier) = explode('.', $identifier, 2);
+    }
+    if (in_array(strtolower($identifier), $this->reservedKeyWords, TRUE)) {
+      // Quote the string for MySQL reserved keywords.
+      $identifier = '"' . $identifier . '"';
+    }
+    return isset($table) ? $table . '.' . $identifier : $identifier;
   }
 
   /**

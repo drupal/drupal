@@ -121,8 +121,9 @@ class Schema extends DatabaseSchema {
 
     $sql .= 'ENGINE = ' . $table['mysql_engine'] . ' DEFAULT CHARACTER SET ' . $table['mysql_character_set'];
     // By default, MySQL uses the default collation for new tables, which is
-    // 'utf8mb4_general_ci' for utf8mb4. If an alternate collation has been
-    // set, it needs to be explicitly specified.
+    // 'utf8mb4_general_ci' (MySQL 5) or 'utf8mb4_0900_ai_ci' (MySQL 8) for
+    // utf8mb4. If an alternate collation has been set, it needs to be
+    // explicitly specified.
     // @see \Drupal\Core\Database\Driver\mysql\Schema
     if (!empty($info['collation'])) {
       $sql .= ' COLLATE ' . $info['collation'];
@@ -154,12 +155,15 @@ class Schema extends DatabaseSchema {
       if (isset($spec['length'])) {
         $sql .= '(' . $spec['length'] . ')';
       }
+      if (isset($spec['type']) && $spec['type'] == 'varchar_ascii') {
+        $sql .= ' CHARACTER SET ascii';
+      }
       if (!empty($spec['binary'])) {
         $sql .= ' BINARY';
       }
       // Note we check for the "type" key here. "mysql_type" is VARCHAR:
-      if (isset($spec['type']) && $spec['type'] == 'varchar_ascii') {
-        $sql .= ' CHARACTER SET ascii COLLATE ascii_general_ci';
+      elseif (isset($spec['type']) && $spec['type'] == 'varchar_ascii') {
+        $sql .= ' COLLATE ascii_general_ci';
       }
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
@@ -650,11 +654,11 @@ class Schema extends DatabaseSchema {
       $condition->condition('column_name', $column);
       $condition->compile($this->connection, $this);
       // Don't use {} around information_schema.columns table.
-      return $this->connection->query("SELECT column_comment FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchField();
+      return $this->connection->query("SELECT column_comment as column_comment FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchField();
     }
     $condition->compile($this->connection, $this);
     // Don't use {} around information_schema.tables table.
-    $comment = $this->connection->query("SELECT table_comment FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
+    $comment = $this->connection->query("SELECT table_comment as table_comment FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
     // Work-around for MySQL 5.0 bug http://bugs.mysql.com/bug.php?id=11379
     return preg_replace('/; InnoDB free:.*$/', '', $comment);
   }
