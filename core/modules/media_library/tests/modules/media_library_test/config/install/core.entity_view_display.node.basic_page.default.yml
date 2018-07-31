@@ -4,6 +4,7 @@ dependencies:
   config:
     - field.field.node.basic_page.field_twin_media
     - field.field.node.basic_page.field_unlimited_media
+    - field.field.node.basic_page.field_noadd_media
     - node.type.basic_page
   module:
     - user
@@ -24,6 +25,15 @@ content:
   field_unlimited_media:
     type: entity_reference_entity_view
     weight: 101
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  field_noadd_media:
+    type: entity_reference_entity_view
+    weight: 103
     label: above
     settings:
       view_mode: default
