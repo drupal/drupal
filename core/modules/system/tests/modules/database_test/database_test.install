@@ -287,6 +287,10 @@ function database_test_schema() {
         'description' => 'A column with preserved name.',
         'type' => 'text',
       ],
+      'function' => [
+        'description' => 'A column with reserved name in MySQL 8.',
+        'type' => 'text',
+      ],
     ],
     'primary key' => ['id'],
   ];

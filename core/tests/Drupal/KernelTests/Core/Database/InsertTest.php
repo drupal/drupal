@@ -198,14 +198,20 @@ class InsertTest extends DatabaseTestBase {
    * Tests that we can INSERT INTO a special named column.
    */
   public function testSpecialColumnInsert() {
-    $id = db_insert('test_special_columns')
+    $this->connection->insert('test_special_columns')
       ->fields([
         'id' => 2,
         'offset' => 'Offset value 2',
+        'function' => 'foobar',
       ])
       ->execute();
-    $saved_value = db_query('SELECT "offset" FROM {test_special_columns} WHERE id = :id', [':id' => 2])->fetchField();
-    $this->assertIdentical($saved_value, 'Offset value 2', 'Can retrieve special column name value after inserting.');
+    $result = $this->connection->select('test_special_columns')
+      ->fields('test_special_columns', ['offset', 'function'])
+      ->condition('test_special_columns.function', 'foobar')
+      ->execute();
+    $record = $result->fetch();
+    $this->assertSame('Offset value 2', $record->offset);
+    $this->assertSame('foobar', $record->function);
   }
 
 }
