@@ -8,6 +8,7 @@ use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -358,7 +359,7 @@ class MediaLibraryUploadForm extends FormBase {
       $element['#value'] = [];
     }
     $values = $form_state->getValue('upload', []);
-    if (count($values['fids']) > $element['#cardinality']) {
+    if (count($values['fids']) > $element['#cardinality'] && $element['#cardinality'] !== FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
       $form_state->setError($element, $this->t('A maximum of @count files can be uploaded.', [
         '@count' => $element['#cardinality'],
       ]));
@@ -444,26 +445,36 @@ class MediaLibraryUploadForm extends FormBase {
   /**
    * Access callback to check that the user can create file based media.
    *
+   * @param array $allowed_types
+   *   (optional) The contextually allowed types.
+   *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
+   *
+   * @todo Remove $allowed_types param in https://www.drupal.org/node/2956747
    */
-  public function access() {
-    return AccessResultAllowed::allowedIf(count($this->getTypes()))->mergeCacheMaxAge(0);
+  public function access(array $allowed_types = NULL) {
+    return AccessResultAllowed::allowedIf(count($this->getTypes($allowed_types)))->mergeCacheMaxAge(0);
   }
 
   /**
    * Returns media types which use files that the current user can create.
+   *
+   * @param array $allowed_types
+   *   (optional) The contextually allowed types.
    *
    * @todo Move in https://www.drupal.org/node/2987924
    *
    * @return \Drupal\media\MediaTypeInterface[]
    *   A list of media types that are valid for this form.
    */
-  protected function getTypes() {
+  protected function getTypes(array $allowed_types = NULL) {
     // Cache results if possible.
     if (!isset($this->types)) {
       $media_type_storage = $this->entityTypeManager->getStorage('media_type');
-      $allowed_types = _media_library_get_allowed_types() ?: NULL;
+      if (!$allowed_types) {
+        $allowed_types = _media_library_get_allowed_types() ?: NULL;
+      }
       $types = $media_type_storage->loadMultiple($allowed_types);
       $types = $this->filterTypesWithFileSource($types);
       $types = $this->filterTypesWithCreateAccess($types);

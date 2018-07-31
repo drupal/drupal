@@ -317,9 +317,12 @@ class MediaLibraryTest extends WebDriverTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = $this->container->get('file_system');
 
+    // Ensure that the add button is not present if no media can be created.
+    $assert_session->elementNotExists('css', '.media-library-add-button[href*="field_noadd_media"]');
+
     // Add to the twin media field using the add button directly on the widget.
-    $unlimited_button = $assert_session->elementExists('css', '.media-library-add-button[href*="field_twin_media"]');
-    $unlimited_button->click();
+    $twin_button = $assert_session->elementExists('css', '.media-library-add-button[href*="field_twin_media"]');
+    $twin_button->click();
     $assert_session->assertWaitOnAjaxRequest();
 
     $page->attachFileToField('Upload', $this->container->get('file_system')->realpath($png_image->uri));
@@ -348,9 +351,25 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Media library');
     $assert_session->pageTextContains($png_image->filename);
 
-    // Open the browser again to test type resolution.
-    $unlimited_button = $assert_session->elementExists('css', '.media-library-open-button[href*="field_twin_media"]');
+    // Also make sure that we can upload to the unlimited cardinality field.
+    $unlimited_button = $assert_session->elementExists('css', '.media-library-add-button[href*="field_unlimited_media"]');
     $unlimited_button->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $page->attachFileToField('Upload', $this->container->get('file_system')->realpath($png_image->uri));
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->fillField('Name', 'Unlimited Cardinality Image');
+    $page->fillField('Alternative text', $this->randomString());
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Ensure the media item was added.
+    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextContains('Unlimited Cardinality Image');
+
+    // Open the browser again to test type resolution.
+    $twin_button = $assert_session->elementExists('css', '.media-library-open-button[href*="field_twin_media"]');
+    $twin_button->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Media library');
     $assert_session->elementExists('css', '#drupal-modal')->clickLink('Add media');
