@@ -333,11 +333,6 @@ class Schema extends DatabaseSchema {
       $this->connection->query($query);
 
       // Apply the initial value if set.
-      if (isset($specification['initial'])) {
-        $this->connection->update($table)
-          ->fields([$field => $specification['initial']])
-          ->execute();
-      }
       if (isset($specification['initial_from_field'])) {
         if (isset($specification['initial'])) {
           $expression = 'COALESCE(' . $specification['initial_from_field'] . ', :default_initial_value)';
@@ -349,6 +344,11 @@ class Schema extends DatabaseSchema {
         }
         $this->connection->update($table)
           ->expression($field, $expression, $arguments)
+          ->execute();
+      }
+      elseif (isset($specification['initial'])) {
+        $this->connection->update($table)
+          ->fields([$field => $specification['initial']])
           ->execute();
       }
     }
@@ -363,14 +363,7 @@ class Schema extends DatabaseSchema {
 
       // Build the mapping between the old fields and the new fields.
       $mapping = [];
-      if (isset($specification['initial'])) {
-        // If we have a initial value, copy it over.
-        $mapping[$field] = [
-          'expression' => ':newfieldinitial',
-          'arguments' => [':newfieldinitial' => $specification['initial']],
-        ];
-      }
-      elseif (isset($specification['initial_from_field'])) {
+      if (isset($specification['initial_from_field'])) {
         // If we have a initial value, copy it over.
         if (isset($specification['initial'])) {
           $expression = 'COALESCE(' . $specification['initial_from_field'] . ', :default_initial_value)';
@@ -383,6 +376,13 @@ class Schema extends DatabaseSchema {
         $mapping[$field] = [
           'expression' => $expression,
           'arguments' => $arguments,
+        ];
+      }
+      elseif (isset($specification['initial'])) {
+        // If we have a initial value, copy it over.
+        $mapping[$field] = [
+          'expression' => ':newfieldinitial',
+          'arguments' => [':newfieldinitial' => $specification['initial']],
         ];
       }
       else {
