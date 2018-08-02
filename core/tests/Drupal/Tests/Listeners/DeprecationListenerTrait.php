@@ -100,7 +100,7 @@ trait DeprecationListenerTrait {
   public static function getSkippedDeprecations() {
     return [
       'As of 3.1 an Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface is used to resolve arguments. In 4.0 the $argumentResolver becomes the Symfony\Component\HttpKernel\Controller\ArgumentResolver if no other is provided instead of using the $resolver argument.',
-      'Symfony\Component\HttpKernel\Controller\ControllerResolver::getArguments is deprecated as of 3.1 and will be removed in 4.0. Implement the Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface and inject it in the HttpKernel instead.',
+      'The "Symfony\Component\HttpKernel\Controller\ControllerResolver::getArguments()" method is deprecated as of 3.1 and will be removed in 4.0. Implement the Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface and inject it in the HttpKernel instead.',
       'The Twig_Node::getLine method is deprecated since version 1.27 and will be removed in 2.0. Use getTemplateLine() instead.',
       'The Twig_Environment::getCacheFilename method is deprecated since version 1.22 and will be removed in Twig 2.0.',
       'Install profile will be a mandatory parameter in Drupal 9.0.',
