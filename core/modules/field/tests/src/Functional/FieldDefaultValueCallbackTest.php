@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\field\Tests;
+namespace Drupal\Tests\field\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the default value callback.
  *
  * @group field
  */
-class FieldDefaultValueCallbackTest extends WebTestBase {
+class FieldDefaultValueCallbackTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -81,7 +81,7 @@ class FieldDefaultValueCallbackTest extends WebTestBase {
 
     // Set a default value callback instead, and the default field form should
     // not be visible.
-    $field_config->setDefaultValueCallback('\Drupal\field\Tests\FieldDefaultValueCallbackProvider::calculateDefaultValue')->save();
+    $field_config->setDefaultValueCallback('\Drupal\field_test\FieldDefaultValueCallbackProvider::calculateDefaultValue')->save();
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_test');
     $this->assertNoFieldByName('default_value_input[field_test][0][value]', 'Calculated default value', 'The default field form is not visible when a callback is defined.');
   }

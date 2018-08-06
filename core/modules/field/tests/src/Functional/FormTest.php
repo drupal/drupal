@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\field\Tests;
+namespace Drupal\Tests\field\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -131,7 +131,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
     $entity = EntityTest::load($id);
@@ -190,7 +190,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => '',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created.');
     $entity = EntityTest::load($id);
@@ -219,7 +219,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
     $entity = EntityTest::load($id);
@@ -300,7 +300,7 @@ class FormTest extends FieldTestBase {
 
     // Submit the form and create the entity.
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
     $entity = EntityTest::load($id);
@@ -418,7 +418,7 @@ class FormTest extends FieldTestBase {
       $field_name => '1, 2, 3',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
 
     // Check that the values were saved.
@@ -498,7 +498,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => 1,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match("|$entity_type/manage/(\d+)|", $this->url, $match);
+    preg_match("|$entity_type/manage/(\d+)|", $this->getUrl(), $match);
     $id = $match[1];
 
     // Check that the default value was saved.
@@ -554,7 +554,7 @@ class FormTest extends FieldTestBase {
     // the field that uses the hidden widget.
     $this->assertNoField("{$field_name}[0][value]", 'The field does not appear in the form');
     $this->drupalPostForm(NULL, [], t('Save'));
-    preg_match('|' . $entity_type . '/manage/(\d+)|', $this->url, $match);
+    preg_match('|' . $entity_type . '/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test_rev @id has been created.', ['@id' => $id]), 'Entity was created');
     $storage = $this->container->get('entity_type.manager')
