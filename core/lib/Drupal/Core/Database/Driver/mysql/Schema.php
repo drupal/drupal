@@ -438,11 +438,6 @@ class Schema extends DatabaseSchema {
       $query .= ', ADD ' . implode(', ADD ', $keys_sql);
     }
     $this->connection->query($query);
-    if (isset($spec['initial'])) {
-      $this->connection->update($table)
-        ->fields([$field => $spec['initial']])
-        ->execute();
-    }
     if (isset($spec['initial_from_field'])) {
       if (isset($spec['initial'])) {
         $expression = 'COALESCE(' . $spec['initial_from_field'] . ', :default_initial_value)';
@@ -454,6 +449,11 @@ class Schema extends DatabaseSchema {
       }
       $this->connection->update($table)
         ->expression($field, $expression, $arguments)
+        ->execute();
+    }
+    elseif (isset($spec['initial'])) {
+      $this->connection->update($table)
+        ->fields([$field => $spec['initial']])
         ->execute();
     }
     if ($fixnull) {

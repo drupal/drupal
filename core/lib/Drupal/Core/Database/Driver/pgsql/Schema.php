@@ -565,11 +565,6 @@ EOD;
     $query = 'ALTER TABLE {' . $table . '} ADD COLUMN ';
     $query .= $this->createFieldSql($field, $this->processField($spec));
     $this->connection->query($query);
-    if (isset($spec['initial'])) {
-      $this->connection->update($table)
-        ->fields([$field => $spec['initial']])
-        ->execute();
-    }
     if (isset($spec['initial_from_field'])) {
       if (isset($spec['initial'])) {
         $expression = 'COALESCE(' . $spec['initial_from_field'] . ', :default_initial_value)';
@@ -581,6 +576,11 @@ EOD;
       }
       $this->connection->update($table)
         ->expression($field, $expression, $arguments)
+        ->execute();
+    }
+    elseif (isset($spec['initial'])) {
+      $this->connection->update($table)
+        ->fields([$field => $spec['initial']])
         ->execute();
     }
     if ($fixnull) {
