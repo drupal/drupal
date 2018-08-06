@@ -379,8 +379,9 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       $this->tableMapping->getDedicatedDataTableName($prior_field_storage),
       $this->tableMapping->getDedicatedRevisionTableName($prior_field_storage),
     ];
+    $schema = Database::getConnection()->schema();
     foreach ($tables as $table_name) {
-      $this->assertTrue(db_table_exists($table_name), t('Table %table exists.', ['%table' => $table_name]));
+      $this->assertTrue($schema->tableExists($table_name), t('Table %table exists.', ['%table' => $table_name]));
     }
   }
 

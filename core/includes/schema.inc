@@ -134,7 +134,7 @@ function drupal_uninstall_schema($module) {
   _drupal_schema_initialize($tables, $module, FALSE);
   $schema = \Drupal::database()->schema();
   foreach ($tables as $table) {
-    if (db_table_exists($table['name'])) {
+    if ($schema->tableExists($table['name'])) {
       $schema->dropTable($table['name']);
     }
   }
