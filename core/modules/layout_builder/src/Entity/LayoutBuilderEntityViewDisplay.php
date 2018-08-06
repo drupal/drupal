@@ -314,12 +314,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   public function setComponent($name, array $options = []) {
     parent::setComponent($name, $options);
 
-    // @todo Remove workaround for EntityViewBuilder::getSingleFieldDisplay() in
-    //   https://www.drupal.org/project/drupal/issues/2936464.
-    if ($this->getMode() === static::CUSTOM_MODE) {
-      return $this;
-    }
-
     // Only continue if Layout Builder is enabled.
     if (!$this->isLayoutBuilderEnabled()) {
       return $this;
