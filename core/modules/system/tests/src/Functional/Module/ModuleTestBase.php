@@ -109,16 +109,18 @@ abstract class ModuleTestBase extends BrowserTestBase {
     }
     $this->assertTrue($all_names);
 
+    $module_config_dependencies = \Drupal::service('config.manager')->findConfigEntityDependents('module', [$module]);
     // Look up each default configuration object name in the active
     // configuration, and if it exists, remove it from the stack.
-    // Only default config that belongs to $module is guaranteed to exist; any
-    // other default config depends on whether other modules are enabled. Thus,
-    // list all default config once more, but filtered by $module.
-    $names = $module_file_storage->listAll($module . '.');
+    $names = $module_file_storage->listAll();
     foreach ($names as $key => $name) {
       if ($this->config($name)->get()) {
         unset($names[$key]);
       }
+      // All configuration in a module's config/install directory should depend
+      // on the module as it must be removed on uninstall or the module will not
+      // be re-installable.
+      $this->assertTrue(strpos($name, $module . '.') === 0 || isset($module_config_dependencies[$name]), "Configuration $name provided by $module in its config/install directory does not depend on it.");
     }
     // Verify that all configuration has been installed (which means that $names
     // is empty).
