@@ -1,12 +1,10 @@
 <?php
 
-namespace Drupal\field\Tests\Views;
-
-@trigger_error(__NAMESPACE__ . '\FieldTestBase is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\field\Functional\Views\FieldTestBase. See https://www.drupal.org/node/2971931.', E_USER_DEPRECATED);
+namespace Drupal\Tests\field\Functional\Views;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -19,11 +17,6 @@ use Drupal\field\Entity\FieldStorageConfig;
  *   - Use basic fields and make sure that the full wanted object is built.
  *   - Use relationships between different entity types, for example node and
  *     the node author(user).
- *
- * @deprecated in Drupal 8.6.0. Will be removed before Drupal 9.0.0. Use
- * \Drupal\Tests\field\Functional\Views\FieldTestBase instead.
- *
- * @see https://www.drupal.org/node/2989020
  */
 abstract class FieldTestBase extends ViewTestBase {
 

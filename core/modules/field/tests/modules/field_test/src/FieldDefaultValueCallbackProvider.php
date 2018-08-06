@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\field\Tests;
+namespace Drupal\field_test;
 
 /**
- * Helper class for \Drupal\field\Tests\FieldDefaultValueCallbackTest.
+ * Helper class for \Drupal\Tests\field\Functional\FieldDefaultValueCallbackTest.
  */
 class FieldDefaultValueCallbackProvider {
 

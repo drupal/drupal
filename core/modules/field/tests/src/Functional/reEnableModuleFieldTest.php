@@ -1,17 +1,20 @@
 <?php
 
-namespace Drupal\field\Tests;
+namespace Drupal\Tests\field\Functional;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Tests the behavior of a field module after being disabled and re-enabled.
  *
  * @group field
  */
-class reEnableModuleFieldTest extends WebTestBase {
+class reEnableModuleFieldTest extends BrowserTestBase {
+
+  use CronRunTrait;
 
   /**
    * Modules to enable.

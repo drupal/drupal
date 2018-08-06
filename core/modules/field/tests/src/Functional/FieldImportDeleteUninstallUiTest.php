@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\field\Tests;
+namespace Drupal\Tests\field\Functional;
 
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;

@@ -1,18 +1,21 @@
 <?php
 
-namespace Drupal\field\Tests\EntityReference;
+namespace Drupal\Tests\field\Functional\EntityReference;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests an autocomplete widget with file upload.
  *
  * @group entity_reference
  */
-class EntityReferenceFileUploadTest extends WebTestBase {
+class EntityReferenceFileUploadTest extends BrowserTestBase {
+
+  use TestFileCreationTrait;
 
   public static $modules = ['entity_reference', 'node', 'file'];
 
@@ -113,7 +116,7 @@ class EntityReferenceFileUploadTest extends WebTestBase {
     $user1 = $this->drupalCreateUser(['access content', "create $this->referencingType content"]);
     $this->drupalLogin($user1);
 
-    $test_file = current($this->drupalGetTestFiles('text'));
+    $test_file = current($this->getTestFiles('text'));
     $edit['files[file_field_0]'] = \Drupal::service('file_system')->realpath($test_file->uri);
     $this->drupalPostForm('node/add/' . $this->referencingType, $edit, 'Upload');
     $this->assertResponse(200);

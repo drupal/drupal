@@ -1,18 +1,18 @@
 <?php
 
-namespace Drupal\field\Tests\Email;
+namespace Drupal\Tests\field\Functional\Email;
 
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests email field functionality.
  *
  * @group field
  */
-class EmailFieldTest extends WebTestBase {
+class EmailFieldTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -90,7 +90,7 @@ class EmailFieldTest extends WebTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
     $this->assertRaw($value);
@@ -99,8 +99,8 @@ class EmailFieldTest extends WebTestBase {
     $entity = EntityTest::load($id);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
-    $this->setRawContent(\Drupal::service('renderer')->renderRoot($content));
-    $this->assertLinkByHref('mailto:test@example.com');
+    $rendered_content = (string) \Drupal::service('renderer')->renderRoot($content);
+    $this->assertContains('href="mailto:test@example.com"', $rendered_content);
   }
 
 }

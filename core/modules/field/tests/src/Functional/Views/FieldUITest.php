@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\field\Tests\Views;
+namespace Drupal\Tests\field\Functional\Views;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -58,7 +58,7 @@ class FieldUITest extends FieldTestBase {
     // Tests the available formatter options.
     $result = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-options-type']);
     $options = array_map(function ($item) {
-      return (string) $item->attributes()->value[0];
+      return $item->getAttribute('value');
     }, $result);
     // @todo Replace this sort by assertArray once it's in.
     sort($options, SORT_STRING);
@@ -112,7 +112,7 @@ class FieldUITest extends FieldTestBase {
     // Tests the available formatter options.
     $result = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-options-click-sort-column']);
     $options = array_map(function ($item) {
-      return (string) $item->attributes()->value[0];
+      return (string) $item->getAttribute('value');
     }, $result);
     sort($options, SORT_STRING);
 
@@ -143,15 +143,15 @@ class FieldUITest extends FieldTestBase {
     // Verify that using a boolean field as a filter also results in using the
     // boolean plugin.
     $option = $this->xpath('//label[@for="edit-options-value-1"]');
-    $this->assertEqual(t('True'), (string) $option[0]);
+    $this->assertEqual(t('True'), $option[0]->getText());
     $option = $this->xpath('//label[@for="edit-options-value-0"]');
-    $this->assertEqual(t('False'), (string) $option[0]);
+    $this->assertEqual(t('False'), $option[0]->getText());
 
     // Expose the filter and see if the 'Any' option is added and if we can save
     // it.
     $this->drupalPostForm(NULL, [], 'Expose filter');
     $option = $this->xpath('//label[@for="edit-options-value-all"]');
-    $this->assertEqual(t('- Any -'), (string) $option[0]);
+    $this->assertEqual(t('- Any -'), $option[0]->getText());
     $this->drupalPostForm(NULL, ['options[value]' => 'All', 'options[expose][required]' => FALSE], 'Apply');
     $this->drupalPostForm(NULL, [], 'Save');
     $this->drupalGet('/admin/structure/views/nojs/handler/test_view_fieldapi/default/filter/field_boolean_value');

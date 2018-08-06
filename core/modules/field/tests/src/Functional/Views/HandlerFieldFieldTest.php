@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\field\Tests\Views;
+namespace Drupal\Tests\field\Functional\Views;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\views\ViewExecutable;
