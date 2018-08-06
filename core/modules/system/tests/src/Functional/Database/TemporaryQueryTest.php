@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\system\Functional\Database;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Tests the temporary query functionality.
  *
@@ -29,7 +31,7 @@ class TemporaryQueryTest extends DatabaseTestBase {
     $data = json_decode($this->getSession()->getPage()->getContent());
     if ($data) {
       $this->assertEqual($this->countTableRows('test'), $data->row_count, 'The temporary table contains the correct amount of rows.');
-      $this->assertFalse(db_table_exists($data->table_name), 'The temporary table is, indeed, temporary.');
+      $this->assertFalse(Database::getConnection()->schema()->tableExists($data->table_name), 'The temporary table is, indeed, temporary.');
     }
     else {
       $this->fail('The creation of the temporary table failed.');

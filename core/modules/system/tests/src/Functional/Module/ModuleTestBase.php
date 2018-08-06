@@ -56,8 +56,9 @@ abstract class ModuleTestBase extends BrowserTestBase {
   public function assertModuleTablesExist($module) {
     $tables = array_keys(drupal_get_module_schema($module));
     $tables_exist = TRUE;
+    $schema = Database::getConnection()->schema();
     foreach ($tables as $table) {
-      if (!db_table_exists($table)) {
+      if (!$schema->tableExists($table)) {
         $tables_exist = FALSE;
       }
     }
@@ -73,8 +74,9 @@ abstract class ModuleTestBase extends BrowserTestBase {
   public function assertModuleTablesDoNotExist($module) {
     $tables = array_keys(drupal_get_module_schema($module));
     $tables_exist = FALSE;
+    $schema = Database::getConnection()->schema();
     foreach ($tables as $table) {
-      if (db_table_exists($table)) {
+      if ($schema->tableExists($table)) {
         $tables_exist = TRUE;
       }
     }

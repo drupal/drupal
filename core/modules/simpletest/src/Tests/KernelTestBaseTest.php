@@ -62,7 +62,7 @@ EOS;
     $this->assertIdentical(\Drupal::moduleHandler()->getImplementations('entity_type_alter'), ['entity_test']);
 
     // Verify that no modules have been installed.
-    $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
+    $this->assertFalse(Database::getConnection()->schema()->tableExists($table), "'$table' database table not found.");
 
     // Verify that the settings.testing.php got taken into account.
     $this->assertTrue(function_exists('simpletest_test_stub_settings_function'));
@@ -114,7 +114,7 @@ EOS;
     $list = \Drupal::moduleHandler()->getImplementations('hook_info');
     $this->assertFalse(in_array($module, $list), "{$module}_hook_info() in \Drupal::moduleHandler()->getImplementations() not found.");
 
-    $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
+    $this->assertFalse(Database::getConnection()->schema()->tableExists($table), "'$table' database table not found.");
 
     // Install the module.
     \Drupal::service('module_installer')->install([$module]);
@@ -126,7 +126,7 @@ EOS;
     $list = \Drupal::moduleHandler()->getImplementations('hook_info');
     $this->assertTrue(in_array($module, $list), "{$module}_hook_info() in \Drupal::moduleHandler()->getImplementations() found.");
 
-    $this->assertTrue(db_table_exists($table), "'$table' database table found.");
+    $this->assertTrue(Database::getConnection()->schema()->tableExists($table), "'$table' database table found.");
     $schema = drupal_get_module_schema($module, $table);
     $this->assertTrue($schema, "'$table' table schema found.");
   }
@@ -156,7 +156,7 @@ EOS;
     $table = 'entity_test_example';
     // Verify that we can install a table from the module schema.
     $this->installSchema($module, $table);
-    $this->assertTrue(db_table_exists($table), "'$table' database table found.");
+    $this->assertTrue(Database::getConnection()->schema()->tableExists($table), "'$table' database table found.");
 
     // Verify that the schema is known to Schema API.
     $schema = drupal_get_module_schema($module, $table);
@@ -171,7 +171,7 @@ EOS;
     catch (\Exception $e) {
       $this->pass('Exception for non-retrievable schema found.');
     }
-    $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
+    $this->assertFalse(Database::getConnection()->schema()->tableExists($table), "'$table' database table not found.");
     $schema = drupal_get_module_schema($module, $table);
     $this->assertFalse($schema, "'$table' table schema not found.");
 
@@ -185,14 +185,14 @@ EOS;
     catch (\Exception $e) {
       $this->pass('Exception for non-retrievable schema found.');
     }
-    $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
+    $this->assertFalse(Database::getConnection()->schema()->tableExists($table), "'$table' database table not found.");
     $schema = drupal_get_module_schema($module, $table);
     $this->assertTrue($schema, "'$table' table schema found.");
 
     // Verify that the same table can be installed after enabling the module.
     $this->enableModules([$module]);
     $this->installSchema($module, $table);
-    $this->assertTrue(db_table_exists($table), "'$table' database table found.");
+    $this->assertTrue(Database::getConnection()->schema()->tableExists($table), "'$table' database table found.");
     $schema = drupal_get_module_schema($module, $table);
     $this->assertTrue($schema, "'$table' table schema found.");
   }
@@ -206,7 +206,7 @@ EOS;
     $this->enableModules(['user']);
     // Verity that the entity schema is created properly.
     $this->installEntitySchema($entity);
-    $this->assertTrue(db_table_exists($entity), "'$entity' database table found.");
+    $this->assertTrue(Database::getConnection()->schema()->tableExists($entity), "'$entity' database table found.");
   }
 
   /**

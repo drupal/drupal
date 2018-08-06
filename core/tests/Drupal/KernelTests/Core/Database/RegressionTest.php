@@ -37,6 +37,10 @@ class RegressionTest extends DatabaseTestBase {
 
   /**
    * Tests the db_table_exists() function.
+   *
+   * @group legacy
+   *
+   * @expectedDeprecation db_table_exists() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Use $injected_database->schema()->tableExists($table) instead. See https://www.drupal.org/node/2947929.
    */
   public function testDBTableExists() {
     $this->assertSame(TRUE, db_table_exists('test'), 'Returns true for existent table.');
