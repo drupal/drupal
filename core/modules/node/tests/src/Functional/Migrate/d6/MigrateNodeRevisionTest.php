@@ -28,10 +28,10 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
    * Test node revisions migration from Drupal 6 to 8.
    */
   public function testNodeRevision() {
-    $node = \Drupal::entityManager()->getStorage('node')->loadRevision(2);
+    $node = \Drupal::entityManager()->getStorage('node')->loadRevision(2001);
     /** @var \Drupal\node\NodeInterface $node */
     $this->assertIdentical('1', $node->id());
-    $this->assertIdentical('2', $node->getRevisionId());
+    $this->assertIdentical('2001', $node->getRevisionId());
     $this->assertIdentical('und', $node->langcode->value);
     $this->assertIdentical('Test title rev 2', $node->getTitle());
     $this->assertIdentical('body test rev 2', $node->body->value);

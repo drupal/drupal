@@ -44161,17 +44161,6 @@ $connection->insert('node_revisions')
   'format' => '1',
 ))
 ->values(array(
-  'nid' => '1',
-  'vid' => '2',
-  'uid' => '2',
-  'title' => 'Test title rev 2',
-  'body' => 'body test rev 2',
-  'teaser' => 'teaser test rev 2',
-  'log' => 'modified rev 2',
-  'timestamp' => '1390095702',
-  'format' => '1',
-))
-->values(array(
   'nid' => '2',
   'vid' => '3',
   'uid' => '1',
@@ -44400,6 +44389,17 @@ $connection->insert('node_revisions')
   'teaser' => 'Le peuple zoulou.',
   'log' => '',
   'timestamp' => '1520613305',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '1',
+  'vid' => '2001',
+  'uid' => '2',
+  'title' => 'Test title rev 2',
+  'body' => 'body test rev 2',
+  'teaser' => 'teaser test rev 2',
+  'log' => 'modified rev 2',
+  'timestamp' => '1390095702',
   'format' => '1',
 ))
 ->execute();
@@ -46835,12 +46835,12 @@ $connection->insert('term_node')
 ))
 ->values(array(
   'nid' => '1',
-  'vid' => '2',
+  'vid' => '2001',
   'tid' => '4',
 ))
 ->values(array(
   'nid' => '1',
-  'vid' => '2',
+  'vid' => '2001',
   'tid' => '5',
 ))
 ->values(array(
