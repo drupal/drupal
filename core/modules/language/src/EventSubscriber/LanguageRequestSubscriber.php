@@ -7,7 +7,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\LanguageNegotiatorInterface;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -71,7 +70,7 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onKernelRequestLanguage(GetResponseEvent $event) {
-    if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
+    if ($event->isMasterRequest()) {
       $this->setLanguageOverrides();
     }
   }
