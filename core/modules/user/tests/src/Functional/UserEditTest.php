@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Functional;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -29,8 +30,14 @@ class UserEditTest extends BrowserTestBase {
     // is the raw value and not a formatted one.
     \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
     \Drupal::service('module_installer')->install(['user_hooks_test']);
+    Cache::invalidateTags(['rendered']);
     $this->drupalGet('user/' . $user1->id() . '/edit');
     $this->assertFieldByName('name', $user1->getAccountName());
+
+    // Ensure the formatted name is displayed when expected.
+    $this->drupalGet('user/' . $user1->id());
+    $this->assertSession()->responseContains($user1->getDisplayName());
+    $this->assertSession()->titleEquals(strip_tags($user1->getDisplayName()) . ' | Drupal');
 
     // Check that filling out a single password field does not validate.
     $edit = [];
