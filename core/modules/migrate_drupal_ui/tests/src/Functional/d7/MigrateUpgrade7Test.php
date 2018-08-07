@@ -78,7 +78,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
       'migration' => 73,
       'node' => 5,
       'node_type' => 6,
-      'rdf_mapping' => 7,
+      'rdf_mapping' => 8,
       'search_page' => 2,
       'shortcut' => 6,
       'shortcut_set' => 2,
@@ -146,6 +146,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
       'options',
       'path',
       'phone',
+      'rdf',
       'search',
       'shortcut',
       'statistics',
@@ -175,7 +176,6 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
-      'rdf',
       // These modules are in the missing path list because they are installed
       // on the source site but they are not installed on the destination site.
       'syslog',
