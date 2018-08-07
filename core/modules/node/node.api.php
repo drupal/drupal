@@ -297,11 +297,17 @@ function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface 
  * permission may always view and edit content through the administrative
  * interface.
  *
- * Note that not all modules will want to influence access on all node types. If
- * your module does not want to explicitly allow or forbid access, return an
- * AccessResultInterface object with neither isAllowed() nor isForbidden()
- * equaling TRUE. Blindly returning an object with isForbidden() equaling TRUE
- * will break other node access modules.
+ * The access to a node can be influenced in several ways:
+ * - To explicitly allow access, return an AccessResultInterface object with
+ * isAllowed() returning TRUE. Other modules can override this access by
+ * returning TRUE for isForbidden().
+ * - To explicitly forbid access, return an AccessResultInterface object with
+ * isForbidden() returning TRUE. Access will be forbidden even if your module
+ * (or another module) also returns TRUE for isNeutral() or isAllowed().
+ * - To neither allow nor explicitly forbid access, return an
+ * AccessResultInterface object with isNeutral() returning TRUE.
+ * - If your module does not return an AccessResultInterface object, neutral
+ * access will be assumed.
  *
  * Also note that this function isn't called for node listings (e.g., RSS feeds,
  * the default home page at path 'node', a recent content block, etc.) See
