@@ -161,7 +161,15 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     $kernel = TestRunnerKernel::createFromRequest($request, $autoloader);
     $kernel->loadLegacyIncludes();
 
-    $this->changeDatabasePrefix();
+    // Set the update url. This must be set here rather than in
+    // self::__construct() or the old URL generator will leak additional test
+    // sites.
+    $this->updateUrl = Url::fromRoute('system.db_update');
+
+    $this->setupBaseUrl();
+
+    // Install Drupal test site.
+    $this->prepareEnvironment();
     $this->runDbTasks();
     // Allow classes to set database dump files.
     $this->setDatabaseDumpFiles();
@@ -173,15 +181,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
       parent::setUp();
       return;
     }
-    // Set the update url. This must be set here rather than in
-    // self::__construct() or the old URL generator will leak additional test
-    // sites.
-    $this->updateUrl = Url::fromRoute('system.db_update');
-
-    $this->setupBaseUrl();
-
-    // Install Drupal test site.
-    $this->prepareEnvironment();
     $this->installDrupal();
 
     // Add the config directories to settings.php.
