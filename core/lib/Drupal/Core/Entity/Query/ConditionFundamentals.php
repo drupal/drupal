@@ -65,7 +65,7 @@ abstract class ConditionFundamentals {
    * {@inheritdoc}
    */
   public function count() {
-    return count($this->conditions) - 1;
+    return count($this->conditions);
   }
 
   /**

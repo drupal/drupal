@@ -557,6 +557,31 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests that condition count returns expected number of conditions.
+   */
+  public function testConditionCount() {
+    // Query for all entities of the first bundle that
+    // have red as a colour AND are triangle shaped.
+    $query = $this->storage->getQuery();
+
+    // Add an AND condition group with 2 conditions in it.
+    $and_condition_group = $query->andConditionGroup()
+      ->condition($this->figures . '.color', 'red')
+      ->condition($this->figures . '.shape', 'triangle');
+
+    // We added 2 conditions so count should be 2.
+    $this->assertEqual($and_condition_group->count(), 2);
+
+    // Add an OR condition group with 2 conditions in it.
+    $or_condition_group = $query->orConditionGroup()
+      ->condition($this->figures . '.color', 'red')
+      ->condition($this->figures . '.shape', 'triangle');
+
+    // We added 2 conditions so count should be 2.
+    $this->assertEqual($or_condition_group->count(), 2);
+  }
+
+  /**
    * Test queries with delta conditions.
    */
   public function testDelta() {
