@@ -65,7 +65,10 @@ class EntityTranslationSettings extends DrupalSqlBase {
 
     // Find out which vocabulary uses entity translation by looking at the
     // 'entity_translation_taxonomy' variable.
-    $vocabularies = array_keys(array_filter($results['entity_translation_taxonomy']));
+    $vocabularies = [];
+    if (isset($results['entity_translation_taxonomy']) && is_array($results['entity_translation_taxonomy'])) {
+      $vocabularies = array_keys(array_filter($results['entity_translation_taxonomy']));
+    }
 
     if (in_array('node', $entity_types, TRUE) && !empty($node_types)) {
       // For each node type that uses entity translation, check if a

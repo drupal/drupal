@@ -112,6 +112,15 @@ class EntityTranslationSettingsTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
+    // Source data when taxonomy terms are translatable but the
+    // 'entity_translation_taxonomy' variable is not set.
+    $tests[3]['source_data']['variable'] = [
+      [
+        'name' => 'entity_translation_entity_types',
+        'value' => 'a:4:{s:7:"comment";i:0;s:4:"node";i:0;s:13:"taxonomy_term";i:1;s:4:"user";i:0;}',
+      ],
+    ];
+
     // Expected data when there's no entity type that uses entity translation.
     $tests[0]['expected_data'] = [];
 
@@ -234,6 +243,10 @@ class EntityTranslationSettingsTest extends MigrateSqlSourceTestBase {
         'untranslatable_fields_hide' => TRUE,
       ],
     ];
+
+    // Expected data when taxonomy terms are translatable but the
+    // 'entity_translation_taxonomy' variable is not set.
+    $tests[3]['expected_data'] = [];
 
     return $tests;
   }
