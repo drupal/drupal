@@ -76,6 +76,7 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'path',
       'phone',
       'profile',
+      'rdf',
       'search',
       'shortcut',
       'statistics',
@@ -137,7 +138,6 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
    */
   protected function getMissingPaths() {
     return [
-      'rdf',
       'views',
     ];
   }

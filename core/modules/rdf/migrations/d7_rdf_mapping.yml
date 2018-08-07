@@ -1,0 +1,26 @@
+id: d7_rdf_mapping
+label: Drupal 7 RDF Mappings
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: d7_rdf_mapping
+process:
+  targetEntityType: type
+  bundle: bundle
+  types: types
+  fieldMappings:
+    plugin: sub_process
+    source: fieldMappings
+    process:
+      properties: predicates
+      datatype: datatype
+      datatype_callback/callable: callback
+      mapping_type: type
+destination:
+  plugin: entity:rdf_mapping
+migration_dependencies:
+  optional:
+    - d7_comment_type
+    - d7_node_type
+    - d7_taxonomy_vocabulary
