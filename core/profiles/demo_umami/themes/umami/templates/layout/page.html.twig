@@ -44,10 +44,16 @@
 #}
 <div class="layout-container">
 
-  {% if page.header|render|striptags|trim is not empty %}
+  {% if page.pre_header|render|striptags|trim is not empty or
+     page.header|render|striptags|trim is not empty %}
     <header class="layout-header" role="banner">
       <div class="container">
-        {{ page.header }}
+        {% if page.pre_header|render|striptags|trim is not empty %}
+          {{ page.pre_header }}
+        {% endif %}
+        {% if page.header|render|striptags|trim is not empty %}
+          {{ page.header }}
+        {% endif %}
       </div>
     </header>
   {% endif %}

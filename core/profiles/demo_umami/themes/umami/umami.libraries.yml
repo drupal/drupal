@@ -33,6 +33,7 @@ global:
       css/components/regions/bottom/bottom.css: {}
       css/components/regions/footer/footer.css: {}
       css/components/regions/header/header.css: {}
+      css/components/regions/pre-header/pre-header.css: {}
     layout:
       css/layout/grid-2.css: {}
       css/layout/grid-3.css: {}

@@ -13,10 +13,8 @@
 
 @media screen and (min-width: 48em) {
   .search-block-form {
-    flex: 0 1 50%;
-    order: 1;
     display: block;
-    border-bottom: 1px solid #e6eee0;
+    flex: 0 1 50%;
   }
 }
 
@@ -27,11 +25,8 @@
 }
 
 .search-iconwrap {
-  flex: 0 1 30%;
-  order: 3;
-  display: flex;
-  justify-content: flex-end;
-  padding-right: 1rem;
+  /* Compensate for focus styling that offsets left alignment of icon */
+  margin-left: -7px;
 }
 
 @media screen and (min-width: 48em) {
@@ -42,19 +37,19 @@
 
 /* Search icon for mobile */
 .search-link {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   width: 40px;
   height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
   /* Centres the icon when focused/hovered */
-  padding-right: 7px;
   margin-right: -7px;
+  padding-right: 7px;
 }
 .search-link:focus,
 .search-link:hover {
-  background-color: #fff;
   outline: 3px solid #00836d;
+  background-color: #fff;
 }
 .search-link svg {
   display: block;
@@ -74,19 +69,19 @@
   height: auto;
   margin: 0 -2px 0 0;
   padding: 7px 8px 7px 32px;
+  color: #464646;
   border: 1px solid #dbdbdb;
   border-right: none;
   border-radius: 3px;
+  background: url(../../../../images/svg/search.svg) no-repeat 0.5em center #fff;
   font-size: 0.875rem;
   line-height: normal;
-  background: url(../../../../images/svg/search.svg) no-repeat 0.5em center #fff;
-  color: #464646;
 }
 
 .form-search:focus {
-  outline: none;
   margin: 0 0 -2px -2px;
   padding: 5px 8px 5px 32px;
+  outline: none;
 }
 
 .form-search::placeholder {
@@ -98,10 +93,10 @@
 
 /* Search submit */
 .search-block-form .form-actions {
-  margin-top: 0;
-  margin-bottom: 0;
   position: relative;
   z-index: 1;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .search-block-form .form-submit,
 .search-form .form-submit {
@@ -114,7 +109,7 @@
 .search-block-form .form-submit:hover,
 .search-form .form-submit:focus,
 .search-form .form-submit:hover {
+  margin: 0;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
-  margin: 0;
 }

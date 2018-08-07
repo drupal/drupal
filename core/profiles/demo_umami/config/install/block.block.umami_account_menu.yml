@@ -9,8 +9,8 @@ dependencies:
     - umami
 id: umami_account_menu
 theme: umami
-region: header
-weight: -4
+region: pre_header
+weight: -6
 provider: null
 plugin: 'system_menu_block:account'
 settings:

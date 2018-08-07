@@ -13,6 +13,7 @@ libraries-override:
   classy/messages: false
 
 regions:
+  pre_header: Pre-header
   header: Header
   highlighted: Highlighted
   tabs: Tabs
