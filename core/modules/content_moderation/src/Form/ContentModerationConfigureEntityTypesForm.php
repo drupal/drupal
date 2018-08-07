@@ -119,6 +119,7 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
         // Add the bundle to the options if it's not enabled on a workflow,
         // unless the workflow it's enabled on is this one.
         $options[$bundle_id] = [
+          'title' => ['data' => ['#title' => $bundle['label']]],
           'type' => $bundle['label'],
         ];
         // Add the bundle to the list of default values if it's enabled on this

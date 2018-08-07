@@ -96,6 +96,7 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
     $session->pageTextContains('Select the content types for the Test workflow');
     foreach ($types as $type) {
       $session->pageTextContains($type->label());
+      $session->elementContains('css', sprintf('.form-item-bundles-%s label', $type->id()), sprintf('Update %s', $type->label()));
     }
 
     // Ensure warning message are displayed for unsupported features.
