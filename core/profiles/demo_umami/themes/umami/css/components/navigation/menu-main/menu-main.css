@@ -31,7 +31,7 @@
   line-height: 1;
   /* the padding, margin & transparent border means the hamburger doesn't move on focus/hover */
   padding: 0 6px;
-  margin-left: -9px;
+  margin-right: -9px;
   border: 3px solid transparent;
   border-radius: 0;
   text-align: left;
@@ -90,12 +90,6 @@
   }
 }
 
-.menu-main-togglewrap {
-  flex: 0 1 30%;
-  order: 1;
-  padding-left: 1rem;
-}
-
 @media screen and (min-width: 48em) {
   .menu-main-togglewrap {
     display: none;
@@ -103,14 +97,12 @@
 }
 
 .menu-main__wrapper {
-  order: 4;
   flex: 0 1 100%;
   text-align: center;
 }
 
 @media screen and (min-width: 48em) {
   .menu-main__wrapper {
-    order: 4;
     flex-grow: 0;
     flex-shrink: 1;
     flex-basis: calc(100% - 220px);
