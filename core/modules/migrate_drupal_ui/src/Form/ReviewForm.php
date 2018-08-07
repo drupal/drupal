@@ -81,7 +81,6 @@ class ReviewForm extends MigrateUpgradeFormBase {
       'fieldgroup',
       'filefield_meta',
       'help',
-      'i18n',
       'i18nstrings',
       'imageapi',
       'imageapi_gd',
