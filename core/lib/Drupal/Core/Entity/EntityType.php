@@ -3,7 +3,6 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Plugin\Definition\PluginDefinition;
-use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\Exception\EntityTypeIdLengthException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -15,7 +14,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 class EntityType extends PluginDefinition implements EntityTypeInterface {
 
-  use DependencySerializationTrait;
   use StringTranslationTrait;
 
   /**
