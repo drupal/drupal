@@ -10,6 +10,7 @@
     "prefer-destructuring": "off",
     "react/no-this-in-sfc": "off",
     "react/destructuring-assignment": "off",
-    "import/named": "off"
+    "import/named": "off",
+    "prettier/prettier": "off"
   }
 }

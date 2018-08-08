@@ -1,5 +1,8 @@
 {
-  "extends": "eslint-config-airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:prettier/recommended"
+  ],
   "root": true,
   "env": {
     "browser": true,
@@ -19,6 +22,7 @@
     "CKEDITOR": true
   },
   "rules": {
+    "prettier/prettier": "error",
     "consistent-return": ["off"],
     "no-underscore-dangle": ["off"],
     "max-nested-callbacks": ["warn", 3],
@@ -35,8 +39,7 @@
       },
       "requireReturn": false
     }],
-    "brace-style": ["error", "stroustrup"],
     "no-unused-vars": ["warn"],
-    "operator-linebreak": ["error", "after"]
+    "operator-linebreak": ["error", "after", { "overrides": { "?": "ignore", ":": "ignore" } }]
   }
 }
