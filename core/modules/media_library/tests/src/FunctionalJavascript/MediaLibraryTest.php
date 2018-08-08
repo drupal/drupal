@@ -356,6 +356,10 @@ class MediaLibraryTest extends WebDriverTestBase {
     $unlimited_button->click();
     $assert_session->assertWaitOnAjaxRequest();
 
+    // Multiple uploads should be allowed.
+    // @todo Add test when https://github.com/minkphp/Mink/issues/358 is closed
+    $this->assertTrue($assert_session->fieldExists('Upload')->hasAttribute('multiple'));
+
     $page->attachFileToField('Upload', $this->container->get('file_system')->realpath($png_image->uri));
     $assert_session->assertWaitOnAjaxRequest();
     $page->fillField('Name', 'Unlimited Cardinality Image');
