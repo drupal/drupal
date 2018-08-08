@@ -127,10 +127,10 @@ class MediaLibraryUploadForm extends FormBase {
         '#description' => $this->t('Upload files here to add new media.'),
         '#upload_validators' => $upload_validators,
       ];
-      $remaining = $this->getRequest()->query->get('media_library_remaining');
-      if ($remaining) {
-        $form['upload']['#multiple'] = $remaining > 1;
-        $form['upload']['#cardinality'] = $form['upload_help']['#cardinality'] = (int) $remaining;
+      $remaining = (int) $this->getRequest()->query->get('media_library_remaining');
+      if ($remaining || $remaining === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+        $form['upload']['#multiple'] = $remaining > 1 || $remaining === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED;
+        $form['upload']['#cardinality'] = $form['upload_help']['#cardinality'] = $remaining;
       }
     }
     else {
