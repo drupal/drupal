@@ -15,7 +15,9 @@
       };
 
       var label = $('label[for=' + element.getAttribute('id') + ']').html();
-      format.editorSettings.title = Drupal.t('Rich Text Editor, !label field', { '!label': label });
+      format.editorSettings.title = Drupal.t('Rich Text Editor, !label field', {
+        '!label': label
+      });
 
       return !!CKEDITOR.replace(element, format.editorSettings);
     },

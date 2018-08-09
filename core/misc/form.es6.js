@@ -22,16 +22,16 @@
  * @event formFragmentLinkClickOrHashChange
  */
 
-(function ($, Drupal, debounce) {
+(function($, Drupal, debounce) {
   /**
    * Retrieves the summary for the first element.
    *
    * @return {string}
    *   The text of the summary.
    */
-  $.fn.drupalGetSummary = function () {
+  $.fn.drupalGetSummary = function() {
     const callback = this.data('summaryCallback');
-    return (this[0] && callback) ? $.trim(callback(this[0])) : '';
+    return this[0] && callback ? $.trim(callback(this[0])) : '';
   };
 
   /**
@@ -48,29 +48,30 @@
    *
    * @listens event:formUpdated
    */
-  $.fn.drupalSetSummary = function (callback) {
+  $.fn.drupalSetSummary = function(callback) {
     const self = this;
 
     // To facilitate things, the callback should always be a function. If it's
     // not, we wrap it into an anonymous function which just returns the value.
     if (typeof callback !== 'function') {
       const val = callback;
-      callback = function () {
+      callback = function() {
         return val;
       };
     }
 
-    return this
-      .data('summaryCallback', callback)
-      // To prevent duplicate events, the handlers are first removed and then
-      // (re-)added.
-      .off('formUpdated.summary')
-      .on('formUpdated.summary', () => {
-        self.trigger('summaryUpdated');
-      })
-      // The actual summaryUpdated handler doesn't fire when the callback is
-      // changed, so we have to do this manually.
-      .trigger('summaryUpdated');
+    return (
+      this.data('summaryCallback', callback)
+        // To prevent duplicate events, the handlers are first removed and then
+        // (re-)added.
+        .off('formUpdated.summary')
+        .on('formUpdated.summary', () => {
+          self.trigger('summaryUpdated');
+        })
+        // The actual summaryUpdated handler doesn't fire when the callback is
+        // changed, so we have to do this manually.
+        .trigger('summaryUpdated')
+    );
   };
 
   /**
@@ -121,13 +122,13 @@
         const previousValues = $form.attr('data-drupal-form-submit-last');
         if (previousValues === formValues) {
           e.preventDefault();
-        }
-        else {
+        } else {
           $form.attr('data-drupal-form-submit-last', formValues);
         }
       }
 
-      $('body').once('form-single-submit')
+      $('body')
+        .once('form-single-submit')
         .on('submit.singleSubmit', 'form:not([method~="GET"])', onFormSubmit);
     },
   };
@@ -154,11 +155,13 @@
    *   Array of IDs for form fields.
    */
   function fieldsList(form) {
-    const $fieldList = $(form).find('[name]').map(
-      // We use id to avoid name duplicates on radio fields and filter out
-      // elements with a name but no id.
-      (index, element) => element.getAttribute('id'),
-    );
+    const $fieldList = $(form)
+      .find('[name]')
+      .map(
+        // We use id to avoid name duplicates on radio fields and filter out
+        // elements with a name but no id.
+        (index, element) => element.getAttribute('id'),
+      );
     // Return a true array.
     return $.makeArray($fieldList);
   }
@@ -179,16 +182,18 @@
     attach(context) {
       const $context = $(context);
       const contextIsForm = $context.is('form');
-      const $forms = (contextIsForm ? $context : $context.find('form')).once('form-updated');
+      const $forms = (contextIsForm ? $context : $context.find('form')).once(
+        'form-updated',
+      );
       let formFields;
 
       if ($forms.length) {
         // Initialize form behaviors, use $.makeArray to be able to use native
         // forEach array method and have the callback parameters in the right
         // order.
-        $.makeArray($forms).forEach((form) => {
+        $.makeArray($forms).forEach(form => {
           const events = 'change.formUpdated input.formUpdated ';
-          const eventHandler = debounce((event) => {
+          const eventHandler = debounce(event => {
             triggerFormUpdated(event.target);
           }, 300);
           formFields = fieldsList(form).join(',');
@@ -213,9 +218,12 @@
       const $context = $(context);
       const contextIsForm = $context.is('form');
       if (trigger === 'unload') {
-        const $forms = (contextIsForm ? $context : $context.find('form')).removeOnce('form-updated');
+        const $forms = (contextIsForm
+          ? $context
+          : $context.find('form')
+        ).removeOnce('form-updated');
         if ($forms.length) {
-          $.makeArray($forms).forEach((form) => {
+          $.makeArray($forms).forEach(form => {
             form.removeAttribute('data-drupal-form-fields');
             $(form).off('.formUpdated');
           });
@@ -235,19 +243,23 @@
   Drupal.behaviors.fillUserInfoFromBrowser = {
     attach(context, settings) {
       const userInfo = ['name', 'mail', 'homepage'];
-      const $forms = $('[data-user-info-from-browser]').once('user-info-from-browser');
+      const $forms = $('[data-user-info-from-browser]').once(
+        'user-info-from-browser',
+      );
       if ($forms.length) {
-        userInfo.forEach((info) => {
+        userInfo.forEach(info => {
           const $element = $forms.find(`[name=${info}]`);
           const browserData = localStorage.getItem(`Drupal.visitor.${info}`);
-          const emptyOrDefault = ($element.val() === '' || ($element.attr('data-drupal-default-value') === $element.val()));
+          const emptyOrDefault =
+            $element.val() === '' ||
+            $element.attr('data-drupal-default-value') === $element.val();
           if ($element.length && emptyOrDefault && browserData) {
             $element.val(browserData);
           }
         });
       }
       $forms.on('submit', () => {
-        userInfo.forEach((info) => {
+        userInfo.forEach(info => {
           const $element = $forms.find(`[name=${info}]`);
           if ($element.length) {
             localStorage.setItem(`Drupal.visitor.${info}`, $element.val());
@@ -265,12 +277,13 @@
    *
    * @fires event:formFragmentLinkClickOrHashChange
    */
-  const handleFragmentLinkClickOrHashChange = (e) => {
+  const handleFragmentLinkClickOrHashChange = e => {
     let url;
     if (e.type === 'click') {
-      url = e.currentTarget.location ? e.currentTarget.location : e.currentTarget;
-    }
-    else {
+      url = e.currentTarget.location
+        ? e.currentTarget.location
+        : e.currentTarget;
+    } else {
       url = window.location;
     }
     const hash = url.hash.substr(1);
@@ -286,10 +299,17 @@
     }
   };
 
-  const debouncedHandleFragmentLinkClickOrHashChange = debounce(handleFragmentLinkClickOrHashChange, 300, true);
+  const debouncedHandleFragmentLinkClickOrHashChange = debounce(
+    handleFragmentLinkClickOrHashChange,
+    300,
+    true,
+  );
 
   // Binds a listener to handle URL fragment changes.
-  $(window).on('hashchange.form-fragment', debouncedHandleFragmentLinkClickOrHashChange);
+  $(window).on(
+    'hashchange.form-fragment',
+    debouncedHandleFragmentLinkClickOrHashChange,
+  );
 
   /**
    * Binds a listener to handle clicks on fragment links and absolute URL links
@@ -297,5 +317,9 @@
    * because clicking such links doesn't trigger a hash change when the fragment
    * is already in the URL.
    */
-  $(document).on('click.form-fragment', 'a[href*="#"]', debouncedHandleFragmentLinkClickOrHashChange);
-}(jQuery, Drupal, Drupal.debounce));
+  $(document).on(
+    'click.form-fragment',
+    'a[href*="#"]',
+    debouncedHandleFragmentLinkClickOrHashChange,
+  );
+})(jQuery, Drupal, Drupal.debounce);

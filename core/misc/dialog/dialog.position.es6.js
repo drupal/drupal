@@ -9,9 +9,12 @@
  * @event dialogContentResize
  */
 
-(function ($, Drupal, drupalSettings, debounce, displace) {
+(function($, Drupal, drupalSettings, debounce, displace) {
   // autoResize option will turn off resizable and draggable.
-  drupalSettings.dialog = $.extend({ autoResize: true, maxHeight: '95%' }, drupalSettings.dialog);
+  drupalSettings.dialog = $.extend(
+    { autoResize: true, maxHeight: '95%' },
+    drupalSettings.dialog,
+  );
 
   /**
    * Position the dialog's center at the center of displace.offsets boundaries.
@@ -29,10 +32,14 @@
     const left = offsets.left - offsets.right;
     const top = offsets.top - offsets.bottom;
 
-    const leftString = `${(left > 0 ? '+' : '-') + Math.abs(Math.round(left / 2))}px`;
-    const topString = `${(top > 0 ? '+' : '-') + Math.abs(Math.round(top / 2))}px`;
+    const leftString = `${(left > 0 ? '+' : '-') +
+      Math.abs(Math.round(left / 2))}px`;
+    const topString = `${(top > 0 ? '+' : '-') +
+      Math.abs(Math.round(top / 2))}px`;
     options.position = {
-      my: `center${left !== 0 ? leftString : ''} center${top !== 0 ? topString : ''}`,
+      my: `center${left !== 0 ? leftString : ''} center${
+        top !== 0 ? topString : ''
+      }`,
       of: window,
     };
     return options;
@@ -54,7 +61,15 @@
    * @fires event:dialogContentResize
    */
   function resetSize(event) {
-    const positionOptions = ['width', 'height', 'minWidth', 'minHeight', 'maxHeight', 'maxWidth', 'position'];
+    const positionOptions = [
+      'width',
+      'height',
+      'minWidth',
+      'minHeight',
+      'maxHeight',
+      'maxWidth',
+      'position',
+    ];
     let adjustedOptions = {};
     let windowHeight = $(window).height();
     let option;
@@ -65,12 +80,22 @@
       optionValue = event.data.settings[option];
       if (optionValue) {
         // jQuery UI does not support percentages on heights, convert to pixels.
-        if (typeof optionValue === 'string' && /%$/.test(optionValue) && /height/i.test(option)) {
+        if (
+          typeof optionValue === 'string' &&
+          /%$/.test(optionValue) &&
+          /height/i.test(option)
+        ) {
           // Take offsets in account.
           windowHeight -= displace.offsets.top + displace.offsets.bottom;
-          adjustedValue = parseInt(0.01 * parseInt(optionValue, 10) * windowHeight, 10);
+          adjustedValue = parseInt(
+            0.01 * parseInt(optionValue, 10) * windowHeight,
+            10,
+          );
           // Don't force the dialog to be bigger vertically than needed.
-          if (option === 'height' && event.data.$element.parent().outerHeight() < adjustedValue) {
+          if (
+            option === 'height' &&
+            event.data.$element.parent().outerHeight() < adjustedValue
+          ) {
             adjustedValue = 'auto';
           }
           adjustedOptions[option] = adjustedValue;
@@ -87,22 +112,27 @@
   }
 
   $(window).on({
-    'dialog:aftercreate': function (event, dialog, $element, settings) {
+    'dialog:aftercreate': function(event, dialog, $element, settings) {
       const autoResize = debounce(resetSize, 20);
       const eventData = { settings, $element };
       if (settings.autoResize === true || settings.autoResize === 'true') {
         $element
           .dialog('option', { resizable: false, draggable: false })
-          .dialog('widget').css('position', 'fixed');
+          .dialog('widget')
+          .css('position', 'fixed');
         $(window)
           .on('resize.dialogResize scroll.dialogResize', eventData, autoResize)
           .trigger('resize.dialogResize');
-        $(document).on('drupalViewportOffsetChange.dialogResize', eventData, autoResize);
+        $(document).on(
+          'drupalViewportOffsetChange.dialogResize',
+          eventData,
+          autoResize,
+        );
       }
     },
-    'dialog:beforeclose': function (event, dialog, $element) {
+    'dialog:beforeclose': function(event, dialog, $element) {
       $(window).off('.dialogResize');
       $(document).off('.dialogResize');
     },
   });
-}(jQuery, Drupal, drupalSettings, Drupal.debounce, Drupal.displace));
+})(jQuery, Drupal, drupalSettings, Drupal.debounce, Drupal.displace);

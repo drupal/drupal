@@ -2,7 +2,7 @@
  * @file
  *  Testing behavior for JSWebAssertTest.
  */
-(function ($, Drupal) {
+(function($, Drupal) {
   /**
    * Test Ajax command.
    *
@@ -13,7 +13,7 @@
    * @param {string} response.selector
    *   A jQuery selector string.
    */
-  Drupal.AjaxCommands.prototype.jsAjaxTestCommand = function (ajax, response) {
+  Drupal.AjaxCommands.prototype.jsAjaxTestCommand = function(ajax, response) {
     const $domElement = $(response.selector);
     ajax.element_settings.cat = 'catbro';
 
@@ -22,6 +22,8 @@
       elementSettings: ajax.elementSettings.cat || {},
     };
 
-    $domElement.html(`<div id="js_ajax_test_form_element">${JSON.stringify(data)}</div>`);
+    $domElement.html(
+      `<div id="js_ajax_test_form_element">${JSON.stringify(data)}</div>`,
+    );
   };
-}(jQuery, Drupal));
+})(jQuery, Drupal);

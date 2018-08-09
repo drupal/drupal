@@ -3,14 +3,13 @@
  * Attaches preview-related behavior for the Color module.
  */
 
-(function ($, Drupal) {
+(function($, Drupal) {
   /**
    * Namespace for color-related functionality for Drupal.
    *
    * @namespace
    */
   Drupal.color = {
-
     /**
      * The callback for when the color preview has been attached.
      *
@@ -31,14 +30,29 @@
       let accum;
       let delta;
       // Solid background.
-      form.find('.color-preview').css('backgroundColor', form.find('.color-palette input[name="palette[base]"]').val());
+      form
+        .find('.color-preview')
+        .css(
+          'backgroundColor',
+          form.find('.color-palette input[name="palette[base]"]').val(),
+        );
 
       // Text preview.
-      form.find('#text').css('color', form.find('.color-palette input[name="palette[text]"]').val());
-      form.find('#text a, #text h2').css('color', form.find('.color-palette input[name="palette[link]"]').val());
+      form
+        .find('#text')
+        .css(
+          'color',
+          form.find('.color-palette input[name="palette[text]"]').val(),
+        );
+      form
+        .find('#text a, #text h2')
+        .css(
+          'color',
+          form.find('.color-palette input[name="palette[link]"]').val(),
+        );
 
       function gradientLineColor(i, element) {
-        Object.keys(accum || {}).forEach((k) => {
+        Object.keys(accum || {}).forEach(k => {
           accum[k] += delta[k];
         });
         element.style.backgroundColor = farb.pack(accum);
@@ -47,13 +61,31 @@
       // Set up gradients if there are some.
       let colorStart;
       let colorEnd;
-      Object.keys(settings.gradients || {}).forEach((i) => {
-        colorStart = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[0]}]"]`).val());
-        colorEnd = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[1]}]"]`).val());
+      Object.keys(settings.gradients || {}).forEach(i => {
+        colorStart = farb.unpack(
+          form
+            .find(
+              `.color-palette input[name="palette[${
+                settings.gradients[i].colors[0]
+              }]"]`,
+            )
+            .val(),
+        );
+        colorEnd = farb.unpack(
+          form
+            .find(
+              `.color-palette input[name="palette[${
+                settings.gradients[i].colors[1]
+              }]"]`,
+            )
+            .val(),
+        );
         if (colorStart && colorEnd) {
           delta = [];
-          Object.keys(colorStart || {}).forEach((colorStartKey) => {
-            delta[colorStartKey] = (colorEnd[colorStartKey] - colorStart[colorStartKey]) / (settings.gradients[i].vertical ? height[i] : width[i]);
+          Object.keys(colorStart || {}).forEach(colorStartKey => {
+            delta[colorStartKey] =
+              (colorEnd[colorStartKey] - colorStart[colorStartKey]) /
+              (settings.gradients[i].vertical ? height[i] : width[i]);
           });
           accum = colorStart;
           // Render gradient lines.
@@ -62,4 +94,4 @@
       });
     },
   };
-}(jQuery, Drupal));
+})(jQuery, Drupal);

@@ -15,14 +15,22 @@ exports.command = function drupalUninstal(callback) {
 
   // Check for any existing errors, because running this will cause Nightwatch to hang.
   if (!this.currentTest.results.errors && !this.currentTest.results.failed) {
-    const dbOption = process.env.DRUPAL_TEST_DB_URL.length > 0 ? `--db-url ${process.env.DRUPAL_TEST_DB_URL}` : '';
+    const dbOption =
+      process.env.DRUPAL_TEST_DB_URL.length > 0
+        ? `--db-url ${process.env.DRUPAL_TEST_DB_URL}`
+        : '';
     try {
       if (!prefix || !prefix.length) {
-        throw new Error('Missing database prefix parameter, unable to uninstall Drupal (the initial install was probably unsuccessful).');
+        throw new Error(
+          'Missing database prefix parameter, unable to uninstall Drupal (the initial install was probably unsuccessful).',
+        );
       }
-      execSync(commandAsWebserver(`php ./scripts/test-site.php tear-down ${prefix} ${dbOption}`));
-    }
-    catch (error) {
+      execSync(
+        commandAsWebserver(
+          `php ./scripts/test-site.php tear-down ${prefix} ${dbOption}`,
+        ),
+      );
+    } catch (error) {
       this.assert.fail(error);
     }
   }

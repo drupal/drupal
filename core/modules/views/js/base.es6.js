@@ -3,7 +3,7 @@
  * Some basic behaviors and utility functions for Views.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function($, Drupal, drupalSettings) {
   /**
    * @namespace
    */
@@ -18,7 +18,7 @@
    * @return {object}
    *   A map of query parameters.
    */
-  Drupal.Views.parseQueryString = function (query) {
+  Drupal.Views.parseQueryString = function(query) {
     const args = {};
     const pos = query.indexOf('?');
     if (pos !== -1) {
@@ -30,7 +30,9 @@
       pair = pairs[i].split('=');
       // Ignore the 'q' path argument, if present.
       if (pair[0] !== 'q' && pair[1]) {
-        args[decodeURIComponent(pair[0].replace(/\+/g, ' '))] = decodeURIComponent(pair[1].replace(/\+/g, ' '));
+        args[
+          decodeURIComponent(pair[0].replace(/\+/g, ' '))
+        ] = decodeURIComponent(pair[1].replace(/\+/g, ' '));
       }
     }
     return args;
@@ -47,14 +49,18 @@
    * @return {object}
    *   An object containing `view_args` and `view_path`.
    */
-  Drupal.Views.parseViewArgs = function (href, viewPath) {
+  Drupal.Views.parseViewArgs = function(href, viewPath) {
     const returnObj = {};
     const path = Drupal.Views.getPath(href);
     // Get viewPath url without baseUrl portion.
-    const viewHref = Drupal.url(viewPath).substring(drupalSettings.path.baseUrl.length);
+    const viewHref = Drupal.url(viewPath).substring(
+      drupalSettings.path.baseUrl.length,
+    );
     // Ensure we have a correct path.
     if (viewHref && path.substring(0, viewHref.length + 1) === `${viewHref}/`) {
-      returnObj.view_args = decodeURIComponent(path.substring(viewHref.length + 1, path.length));
+      returnObj.view_args = decodeURIComponent(
+        path.substring(viewHref.length + 1, path.length),
+      );
       returnObj.view_path = path;
     }
     return returnObj;
@@ -69,7 +75,7 @@
    * @return {string}
    *   The href without the protocol and domain.
    */
-  Drupal.Views.pathPortion = function (href) {
+  Drupal.Views.pathPortion = function(href) {
     // Remove e.g. http://example.com if present.
     const protocol = window.location.protocol;
     if (href.substring(0, protocol.length) === protocol) {
@@ -88,7 +94,7 @@
    * @return {string}
    *   An internal path.
    */
-  Drupal.Views.getPath = function (href) {
+  Drupal.Views.getPath = function(href) {
     href = Drupal.Views.pathPortion(href);
     href = href.substring(drupalSettings.path.baseUrl.length, href.length);
     // 3 is the length of the '?q=' added to the url without clean urls.
@@ -103,4 +109,4 @@
     }
     return href;
   };
-}(jQuery, Drupal, drupalSettings));
+})(jQuery, Drupal, drupalSettings);

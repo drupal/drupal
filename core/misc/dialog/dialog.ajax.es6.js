@@ -3,7 +3,7 @@
  * Extends the Drupal AJAX functionality to integrate the dialog API.
  */
 
-(function ($, Drupal) {
+(function($, Drupal) {
   /**
    * Initialize dialogs for Ajax purposes.
    *
@@ -23,7 +23,9 @@
         // Add 'ui-front' jQuery UI class so jQuery UI widgets like autocomplete
         // sit on top of dialogs. For more information see
         // http://api.jqueryui.com/theming/stacking-elements/.
-        $('<div id="drupal-modal" class="ui-front"/>').hide().appendTo('body');
+        $('<div id="drupal-modal" class="ui-front"/>')
+          .hide()
+          .appendTo('body');
       }
 
       // Special behaviors specific when attaching content within a dialog.
@@ -42,7 +44,7 @@
 
       const originalClose = settings.dialog.close;
       // Overwrite the close method to remove the dialog on closing.
-      settings.dialog.close = function (event, ...args) {
+      settings.dialog.close = function(event, ...args) {
         originalClose.apply(settings.dialog, [event, ...args]);
         $(event.target).remove();
       };
@@ -59,8 +61,10 @@
      */
     prepareDialogButtons($dialog) {
       const buttons = [];
-      const $buttons = $dialog.find('.form-actions input[type=submit], .form-actions a.button');
-      $buttons.each(function () {
+      const $buttons = $dialog.find(
+        '.form-actions input[type=submit], .form-actions a.button',
+      );
+      $buttons.each(function() {
         // Hidden form buttons need special attention. For browser consistency,
         // the button needs to be "visible" in order to have the enter key fire
         // the form submit event. So instead of a simple "hide" or
@@ -82,9 +86,11 @@
             // event will not simulate a click. Use the click method instead.
             if ($originalButton.is('a')) {
               $originalButton[0].click();
-            }
-            else {
-              $originalButton.trigger('mousedown').trigger('mouseup').trigger('click');
+            } else {
+              $originalButton
+                .trigger('mousedown')
+                .trigger('mouseup')
+                .trigger('click');
               e.preventDefault();
             }
           },
@@ -107,14 +113,16 @@
    * @return {bool|undefined}
    *   Returns false if there was no selector property in the response object.
    */
-  Drupal.AjaxCommands.prototype.openDialog = function (ajax, response, status) {
+  Drupal.AjaxCommands.prototype.openDialog = function(ajax, response, status) {
     if (!response.selector) {
       return false;
     }
     let $dialog = $(response.selector);
     if (!$dialog.length) {
       // Create the element if needed.
-      $dialog = $(`<div id="${response.selector.replace(/^#/, '')}" class="ui-front"/>`).appendTo('body');
+      $dialog = $(
+        `<div id="${response.selector.replace(/^#/, '')}" class="ui-front"/>`,
+      ).appendTo('body');
     }
     // Set up the wrapper, if there isn't one.
     if (!ajax.wrapper) {
@@ -129,7 +137,9 @@
     // Move the buttons to the jQuery UI dialog buttons area.
     if (!response.dialogOptions.buttons) {
       response.dialogOptions.drupalAutoButtons = true;
-      response.dialogOptions.buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
+      response.dialogOptions.buttons = Drupal.behaviors.dialog.prepareDialogButtons(
+        $dialog,
+      );
     }
 
     // Bind dialogButtonsChange.
@@ -143,13 +153,15 @@
     const dialog = Drupal.dialog($dialog.get(0), response.dialogOptions);
     if (response.dialogOptions.modal) {
       dialog.showModal();
-    }
-    else {
+    } else {
       dialog.show();
     }
 
     // Add the standard Drupal class for buttons for style consistency.
-    $dialog.parent().find('.ui-dialog-buttonset').addClass('form-actions');
+    $dialog
+      .parent()
+      .find('.ui-dialog-buttonset')
+      .addClass('form-actions');
   };
 
   /**
@@ -168,7 +180,7 @@
    * @param {number} [status]
    *   The HTTP status code.
    */
-  Drupal.AjaxCommands.prototype.closeDialog = function (ajax, response, status) {
+  Drupal.AjaxCommands.prototype.closeDialog = function(ajax, response, status) {
     const $dialog = $(response.selector);
     if ($dialog.length) {
       Drupal.dialog($dialog.get(0)).close();
@@ -199,7 +211,11 @@
    * @param {number} [status]
    *   The HTTP status code.
    */
-  Drupal.AjaxCommands.prototype.setDialogOption = function (ajax, response, status) {
+  Drupal.AjaxCommands.prototype.setDialogOption = function(
+    ajax,
+    response,
+    status,
+  ) {
     const $dialog = $(response.selector);
     if ($dialog.length) {
       $dialog.dialog('option', response.optionName, response.optionValue);
@@ -219,7 +235,7 @@
    *   Dialog settings.
    */
   $(window).on('dialog:aftercreate', (e, dialog, $element, settings) => {
-    $element.on('click.dialog', '.dialog-cancel', (e) => {
+    $element.on('click.dialog', '.dialog-cancel', e => {
       dialog.close('cancel');
       e.preventDefault();
       e.stopPropagation();
@@ -239,4 +255,4 @@
   $(window).on('dialog:beforeclose', (e, dialog, $element) => {
     $element.off('.dialog');
   });
-}(jQuery, Drupal));
+})(jQuery, Drupal);

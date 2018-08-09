@@ -1,4 +1,4 @@
-(function () {
+(function() {
   function findActiveStep(steps) {
     for (let i = 0; i < steps.length; i++) {
       if (steps[i].className === 'is-active') {
@@ -26,4 +26,4 @@
   if (document.addEventListener) {
     document.addEventListener('DOMContentLoaded', installStepsSetup);
   }
-}());
+})();

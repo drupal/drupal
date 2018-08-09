@@ -3,7 +3,7 @@
  * Attaches the behaviors for the Field UI module.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function($, Drupal, drupalSettings) {
   /**
    * @type {Drupal~behavior}
    *
@@ -12,27 +12,34 @@
    */
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
     attach(context) {
-      const $form = $(context).find('[data-drupal-selector="field-ui-field-storage-add-form"]').once('field_ui_add');
+      const $form = $(context)
+        .find('[data-drupal-selector="field-ui-field-storage-add-form"]')
+        .once('field_ui_add');
       if ($form.length) {
         // Add a few 'js-form-required' and 'form-required' css classes here.
         // We can not use the Form API '#required' property because both label
         // elements for "add new" and "re-use existing" can never be filled and
         // submitted at the same time. The actual validation will happen
         // server-side.
-        $form.find(
-          '.js-form-item-label label,' +
-          '.js-form-item-field-name label,' +
-          '.js-form-item-existing-storage-label label',
-        )
+        $form
+          .find(
+            '.js-form-item-label label,' +
+              '.js-form-item-field-name label,' +
+              '.js-form-item-existing-storage-label label',
+          )
           .addClass('js-form-required form-required');
 
         const $newFieldType = $form.find('select[name="new_storage_type"]');
-        const $existingStorageName = $form.find('select[name="existing_storage_name"]');
-        const $existingStorageLabel = $form.find('input[name="existing_storage_label"]');
+        const $existingStorageName = $form.find(
+          'select[name="existing_storage_name"]',
+        );
+        const $existingStorageLabel = $form.find(
+          'input[name="existing_storage_label"]',
+        );
 
         // When the user selects a new field type, clear the "existing field"
         // selection.
-        $newFieldType.on('change', function () {
+        $newFieldType.on('change', function() {
           if ($(this).val() !== '') {
             // Reset the "existing storage name" selection.
             $existingStorageName.val('').trigger('change');
@@ -41,15 +48,19 @@
 
         // When the user selects an existing storage name, clear the "new field
         // type" selection and populate the 'existing_storage_label' element.
-        $existingStorageName.on('change', function () {
+        $existingStorageName.on('change', function() {
           const value = $(this).val();
           if (value !== '') {
             // Reset the "new field type" selection.
             $newFieldType.val('').trigger('change');
 
             // Pre-populate the "existing storage label" element.
-            if (typeof drupalSettings.existingFieldLabels[value] !== 'undefined') {
-              $existingStorageLabel.val(drupalSettings.existingFieldLabels[value]);
+            if (
+              typeof drupalSettings.existingFieldLabels[value] !== 'undefined'
+            ) {
+              $existingStorageLabel.val(
+                drupalSettings.existingFieldLabels[value],
+              );
             }
           }
         });
@@ -69,9 +80,16 @@
    */
   Drupal.behaviors.fieldUIDisplayOverview = {
     attach(context, settings) {
-      $(context).find('table#field-display-overview').once('field-display-overview').each(function () {
-        Drupal.fieldUIOverview.attach(this, settings.fieldUIRowsData, Drupal.fieldUIDisplayOverview);
-      });
+      $(context)
+        .find('table#field-display-overview')
+        .once('field-display-overview')
+        .each(function() {
+          Drupal.fieldUIOverview.attach(
+            this,
+            settings.fieldUIRowsData,
+            Drupal.fieldUIDisplayOverview,
+          );
+        });
     },
   };
 
@@ -81,7 +99,6 @@
    * @namespace
    */
   Drupal.fieldUIOverview = {
-
     /**
      * Attaches the fieldUIOverview behavior.
      *
@@ -100,19 +117,21 @@
       tableDrag.row.prototype.onSwap = this.onSwap;
 
       // Create row handlers.
-      $(table).find('tr.draggable').each(function () {
-        // Extract server-side data for the row.
-        const row = this;
-        if (row.id in rowsData) {
-          const data = rowsData[row.id];
-          data.tableDrag = tableDrag;
+      $(table)
+        .find('tr.draggable')
+        .each(function() {
+          // Extract server-side data for the row.
+          const row = this;
+          if (row.id in rowsData) {
+            const data = rowsData[row.id];
+            data.tableDrag = tableDrag;
 
-          // Create the row handler, make it accessible from the DOM row
-          // element.
-          const rowHandler = new rowHandlers[data.rowHandler](row, data);
-          $(row).data('fieldUIRowHandler', rowHandler);
-        }
-      });
+            // Create the row handler, make it accessible from the DOM row
+            // element.
+            const rowHandler = new rowHandlers[data.rowHandler](row, data);
+            $(row).data('fieldUIRowHandler', rowHandler);
+          }
+        });
     },
 
     /**
@@ -151,7 +170,10 @@
       const rowHandler = $row.data('fieldUIRowHandler');
       if (typeof rowHandler !== 'undefined') {
         const regionRow = $row.prevAll('tr.region-message').get(0);
-        const region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
+        const region = regionRow.className.replace(
+          /([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/,
+          '$2',
+        );
 
         if (region !== rowHandler.region) {
           // Let the row handler deal with the region change.
@@ -174,26 +196,37 @@
      */
     onSwap(draggedRow) {
       const rowObject = this;
-      $(rowObject.table).find('tr.region-message').each(function () {
-        const $this = $(this);
-        // If the dragged row is in this region, but above the message row, swap
-        // it down one space.
-        if ($this.prev('tr').get(0) === rowObject.group[rowObject.group.length - 1]) {
-          // Prevent a recursion problem when using the keyboard to move rows
-          // up.
-          if ((rowObject.method !== 'keyboard' || rowObject.direction === 'down')) {
-            rowObject.swap('after', this);
+      $(rowObject.table)
+        .find('tr.region-message')
+        .each(function() {
+          const $this = $(this);
+          // If the dragged row is in this region, but above the message row, swap
+          // it down one space.
+          if (
+            $this.prev('tr').get(0) ===
+            rowObject.group[rowObject.group.length - 1]
+          ) {
+            // Prevent a recursion problem when using the keyboard to move rows
+            // up.
+            if (
+              rowObject.method !== 'keyboard' ||
+              rowObject.direction === 'down'
+            ) {
+              rowObject.swap('after', this);
+            }
           }
-        }
-        // This region has become empty.
-        if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length === 0) {
-          $this.removeClass('region-populated').addClass('region-empty');
-        }
-        // This region has become populated.
-        else if ($this.is('.region-empty')) {
-          $this.removeClass('region-empty').addClass('region-populated');
-        }
-      });
+          // This region has become empty.
+          if (
+            $this.next('tr').is(':not(.draggable)') ||
+            $this.next('tr').length === 0
+          ) {
+            $this.removeClass('region-populated').addClass('region-empty');
+          }
+          // This region has become populated.
+          else if ($this.is('.region-empty')) {
+            $this.removeClass('region-empty').addClass('region-populated');
+          }
+        });
     },
 
     /**
@@ -213,7 +246,7 @@
       // Separate keys and values.
       const rowNames = [];
       const ajaxElements = [];
-      Object.keys(rows || {}).forEach((rowName) => {
+      Object.keys(rows || {}).forEach(rowName => {
         rowNames.push(rowName);
         ajaxElements.push(rows[rowName]);
       });
@@ -255,7 +288,7 @@
    * @return {Drupal.fieldUIDisplayOverview.field}
    *   The field row handler constructed.
    */
-  Drupal.fieldUIDisplayOverview.field = function (row, data) {
+  Drupal.fieldUIDisplayOverview.field = function(row, data) {
     this.row = row;
     this.name = data.name;
     this.region = data.region;
@@ -274,7 +307,6 @@
   };
 
   Drupal.fieldUIDisplayOverview.field.prototype = {
-
     /**
      * Returns the region corresponding to the current form values of the row.
      *
@@ -314,7 +346,10 @@
       // Restore the formatter back to the default formatter. Pseudo-fields
       // do not have default formatters, we just return to 'visible' for
       // those.
-      const value = (typeof this.defaultPlugin !== 'undefined') ? this.defaultPlugin : this.$pluginSelect.find('option').val();
+      const value =
+        typeof this.defaultPlugin !== 'undefined'
+          ? this.defaultPlugin
+          : this.$pluginSelect.find('option').val();
 
       if (typeof value !== 'undefined') {
         this.$pluginSelect.val(value);
@@ -326,4 +361,4 @@
       return refreshRows;
     },
   };
-}(jQuery, Drupal, drupalSettings));
+})(jQuery, Drupal, drupalSettings);

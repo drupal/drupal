@@ -7,7 +7,7 @@
  * prevents separate file fields from accidentally uploading files).
  */
 
-(function ($, Drupal) {
+(function($, Drupal) {
   /**
    * Attach behaviors to the file fields passed in the settings.
    *
@@ -24,9 +24,14 @@
       let elements;
 
       function initFileValidation(selector) {
-        $context.find(selector)
+        $context
+          .find(selector)
           .once('fileValidate')
-          .on('change.fileValidate', { extensions: elements[selector] }, Drupal.file.validateExtension);
+          .on(
+            'change.fileValidate',
+            { extensions: elements[selector] },
+            Drupal.file.validateExtension,
+          );
       }
 
       if (settings.file && settings.file.elements) {
@@ -39,7 +44,8 @@
       let elements;
 
       function removeFileValidation(selector) {
-        $context.find(selector)
+        $context
+          .find(selector)
           .removeOnce('fileValidate')
           .off('change.fileValidate', Drupal.file.validateExtension);
       }
@@ -63,11 +69,17 @@
    */
   Drupal.behaviors.fileAutoUpload = {
     attach(context) {
-      $(context).find('input[type="file"]').once('auto-file-upload').on('change.autoFileUpload', Drupal.file.triggerUploadButton);
+      $(context)
+        .find('input[type="file"]')
+        .once('auto-file-upload')
+        .on('change.autoFileUpload', Drupal.file.triggerUploadButton);
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        $(context).find('input[type="file"]').removeOnce('auto-file-upload').off('.autoFileUpload');
+        $(context)
+          .find('input[type="file"]')
+          .removeOnce('auto-file-upload')
+          .off('.autoFileUpload');
       }
     },
   };
@@ -85,14 +97,22 @@
   Drupal.behaviors.fileButtons = {
     attach(context) {
       const $context = $(context);
-      $context.find('.js-form-submit').on('mousedown', Drupal.file.disableFields);
-      $context.find('.js-form-managed-file .js-form-submit').on('mousedown', Drupal.file.progressBar);
+      $context
+        .find('.js-form-submit')
+        .on('mousedown', Drupal.file.disableFields);
+      $context
+        .find('.js-form-managed-file .js-form-submit')
+        .on('mousedown', Drupal.file.progressBar);
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
         const $context = $(context);
-        $context.find('.js-form-submit').off('mousedown', Drupal.file.disableFields);
-        $context.find('.js-form-managed-file .js-form-submit').off('mousedown', Drupal.file.progressBar);
+        $context
+          .find('.js-form-submit')
+          .off('mousedown', Drupal.file.disableFields);
+        $context
+          .find('.js-form-managed-file .js-form-submit')
+          .off('mousedown', Drupal.file.progressBar);
       }
     },
   };
@@ -109,10 +129,14 @@
    */
   Drupal.behaviors.filePreviewLinks = {
     attach(context) {
-      $(context).find('div.js-form-managed-file .file a').on('click', Drupal.file.openInNewWindow);
+      $(context)
+        .find('div.js-form-managed-file .file a')
+        .on('click', Drupal.file.openInNewWindow);
     },
     detach(context) {
-      $(context).find('div.js-form-managed-file .file a').off('click', Drupal.file.openInNewWindow);
+      $(context)
+        .find('div.js-form-managed-file .file a')
+        .off('click', Drupal.file.openInNewWindow);
     },
   };
 
@@ -122,7 +146,6 @@
    * @namespace
    */
   Drupal.file = Drupal.file || {
-
     /**
      * Client-side file input validation of file extensions.
      *
@@ -141,18 +164,25 @@
       if (extensionPattern.length > 1 && this.value.length > 0) {
         const acceptableMatch = new RegExp(`\\.(${extensionPattern})$`, 'gi');
         if (!acceptableMatch.test(this.value)) {
-          const error = Drupal.t('The selected file %filename cannot be uploaded. Only files with the following extensions are allowed: %extensions.', {
-            // According to the specifications of HTML5, a file upload control
-            // should not reveal the real local path to the file that a user
-            // has selected. Some web browsers implement this restriction by
-            // replacing the local path with "C:\fakepath\", which can cause
-            // confusion by leaving the user thinking perhaps Drupal could not
-            // find the file because it messed up the file path. To avoid this
-            // confusion, therefore, we strip out the bogus fakepath string.
-            '%filename': this.value.replace('C:\\fakepath\\', ''),
-            '%extensions': extensionPattern.replace(/\|/g, ', '),
-          });
-          $(this).closest('div.js-form-managed-file').prepend(`<div class="messages messages--error file-upload-js-error" aria-live="polite">${error}</div>`);
+          const error = Drupal.t(
+            'The selected file %filename cannot be uploaded. Only files with the following extensions are allowed: %extensions.',
+            {
+              // According to the specifications of HTML5, a file upload control
+              // should not reveal the real local path to the file that a user
+              // has selected. Some web browsers implement this restriction by
+              // replacing the local path with "C:\fakepath\", which can cause
+              // confusion by leaving the user thinking perhaps Drupal could not
+              // find the file because it messed up the file path. To avoid this
+              // confusion, therefore, we strip out the bogus fakepath string.
+              '%filename': this.value.replace('C:\\fakepath\\', ''),
+              '%extensions': extensionPattern.replace(/\|/g, ', '),
+            },
+          );
+          $(this)
+            .closest('div.js-form-managed-file')
+            .prepend(
+              `<div class="messages messages--error file-upload-js-error" aria-live="polite">${error}</div>`,
+            );
           this.value = '';
           // Cancel all other change event handlers.
           event.stopImmediatePropagation();
@@ -169,7 +199,10 @@
      *   The event triggered. For example `change.autoFileUpload`.
      */
     triggerUploadButton(event) {
-      $(event.target).closest('.js-form-managed-file').find('.js-form-submit').trigger('mousedown');
+      $(event.target)
+        .closest('.js-form-managed-file')
+        .find('.js-form-submit')
+        .trigger('mousedown');
     },
 
     /**
@@ -186,7 +219,9 @@
       // Check if we're working with an "Upload" button.
       let $enabledFields = [];
       if ($clickedButton.closest('div.js-form-managed-file').length > 0) {
-        $enabledFields = $clickedButton.closest('div.js-form-managed-file').find('input.js-form-file');
+        $enabledFields = $clickedButton
+          .closest('div.js-form-managed-file')
+          .find('input.js-form-file');
       }
 
       // Temporarily disable upload fields other than the one we're currently
@@ -198,7 +233,11 @@
       // functions are called, so we don't have to worry about the fields being
       // re-enabled too soon. @todo If the previous sentence is true, why not
       // set the timeout to 0?
-      const $fieldsToTemporarilyDisable = $('div.js-form-managed-file input.js-form-file').not($enabledFields).not(':disabled');
+      const $fieldsToTemporarilyDisable = $(
+        'div.js-form-managed-file input.js-form-file',
+      )
+        .not($enabledFields)
+        .not(':disabled');
       $fieldsToTemporarilyDisable.prop('disabled', true);
       setTimeout(() => {
         $fieldsToTemporarilyDisable.prop('disabled', false);
@@ -215,12 +254,17 @@
      */
     progressBar(event) {
       const $clickedButton = $(this);
-      const $progressId = $clickedButton.closest('div.js-form-managed-file').find('input.file-progress');
+      const $progressId = $clickedButton
+        .closest('div.js-form-managed-file')
+        .find('input.file-progress');
       if ($progressId.length) {
         const originalName = $progressId.attr('name');
 
         // Replace the name with the required identifier.
-        $progressId.attr('name', originalName.match(/APC_UPLOAD_PROGRESS|UPLOAD_IDENTIFIER/)[0]);
+        $progressId.attr(
+          'name',
+          originalName.match(/APC_UPLOAD_PROGRESS|UPLOAD_IDENTIFIER/)[0],
+        );
 
         // Restore the original name after the upload begins.
         setTimeout(() => {
@@ -229,7 +273,10 @@
       }
       // Show the progress bar if the upload takes longer than half a second.
       setTimeout(() => {
-        $clickedButton.closest('div.js-form-managed-file').find('div.ajax-progress-bar').slideDown();
+        $clickedButton
+          .closest('div.js-form-managed-file')
+          .find('div.ajax-progress-bar')
+          .slideDown();
       }, 500);
       $clickedButton.trigger('fileUpload');
     },
@@ -245,7 +292,11 @@
     openInNewWindow(event) {
       event.preventDefault();
       $(this).attr('target', '_blank');
-      window.open(this.href, 'filePreview', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=500,height=550');
+      window.open(
+        this.href,
+        'filePreview',
+        'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=500,height=550',
+      );
     },
   };
-}(jQuery, Drupal));
+})(jQuery, Drupal);

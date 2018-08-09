@@ -202,7 +202,10 @@
       return;
     }
 
-    if (Drupal.quickedit.collections.entities.findWhere({ entityID: entityID, entityInstanceID: entityInstanceID })) {
+    if (Drupal.quickedit.collections.entities.findWhere({
+      entityID: entityID,
+      entityInstanceID: entityInstanceID
+    })) {
       initializeField(fieldElement, fieldID, entityID, entityInstanceID);
     } else {
         fieldsAvailableQueue.push({
@@ -216,7 +219,9 @@
 
   function deleteContainedModelsAndQueues($context) {
     $context.find('[data-quickedit-entity-id]').addBack('[data-quickedit-entity-id]').each(function (index, entityElement) {
-      var entityModel = Drupal.quickedit.collections.entities.findWhere({ el: entityElement });
+      var entityModel = Drupal.quickedit.collections.entities.findWhere({
+        el: entityElement
+      });
       if (entityModel) {
         var contextualLinkView = entityModel.get('contextualLinkView');
         contextualLinkView.undelegateEvents();

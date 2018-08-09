@@ -3,7 +3,7 @@
  * Simpletest behaviors.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function($, Drupal, drupalSettings) {
   /**
    * Collapses table rows followed by group rows on the test listing page.
    *
@@ -14,19 +14,20 @@
    */
   Drupal.behaviors.simpleTestGroupCollapse = {
     attach(context) {
-      $(context).find('.simpletest-group').once('simpletest-group-collapse').each(function () {
-        const $group = $(this);
-        const $image = $group.find('.simpletest-image');
-        $image
-          .html(drupalSettings.simpleTest.images[0])
-          .on('click', () => {
+      $(context)
+        .find('.simpletest-group')
+        .once('simpletest-group-collapse')
+        .each(function() {
+          const $group = $(this);
+          const $image = $group.find('.simpletest-image');
+          $image.html(drupalSettings.simpleTest.images[0]).on('click', () => {
             const $tests = $group.nextUntil('.simpletest-group');
             const expand = !$group.hasClass('expanded');
             $group.toggleClass('expanded', expand);
             $tests.toggleClass('js-hide', !expand);
             $image.html(drupalSettings.simpleTest.images[+expand]);
           });
-      });
+        });
     },
   };
 
@@ -40,33 +41,42 @@
    */
   Drupal.behaviors.simpleTestSelectAll = {
     attach(context) {
-      $(context).find('.simpletest-group').once('simpletest-group-select-all').each(function () {
-        const $group = $(this);
-        const $cell = $group.find('.simpletest-group-select-all');
-        const $groupCheckbox = $(`<input type="checkbox" id="${$cell.attr('id')}-group-select-all" class="form-checkbox" />`);
-        const $testCheckboxes = $group.nextUntil('.simpletest-group').find('input[type=checkbox]');
-        $cell.append($groupCheckbox);
+      $(context)
+        .find('.simpletest-group')
+        .once('simpletest-group-select-all')
+        .each(function() {
+          const $group = $(this);
+          const $cell = $group.find('.simpletest-group-select-all');
+          const $groupCheckbox = $(
+            `<input type="checkbox" id="${$cell.attr(
+              'id',
+            )}-group-select-all" class="form-checkbox" />`,
+          );
+          const $testCheckboxes = $group
+            .nextUntil('.simpletest-group')
+            .find('input[type=checkbox]');
+          $cell.append($groupCheckbox);
 
-        // Toggle the test checkboxes when the group checkbox is toggled.
-        $groupCheckbox.on('change', function () {
-          const checked = $(this).prop('checked');
-          $testCheckboxes.prop('checked', checked);
-        });
-
-        // Update the group checkbox when a test checkbox is toggled.
-        function updateGroupCheckbox() {
-          let allChecked = true;
-          $testCheckboxes.each(function () {
-            if (!$(this).prop('checked')) {
-              allChecked = false;
-              return false;
-            }
+          // Toggle the test checkboxes when the group checkbox is toggled.
+          $groupCheckbox.on('change', function() {
+            const checked = $(this).prop('checked');
+            $testCheckboxes.prop('checked', checked);
           });
-          $groupCheckbox.prop('checked', allChecked);
-        }
 
-        $testCheckboxes.on('change', updateGroupCheckbox);
-      });
+          // Update the group checkbox when a test checkbox is toggled.
+          function updateGroupCheckbox() {
+            let allChecked = true;
+            $testCheckboxes.each(function() {
+              if (!$(this).prop('checked')) {
+                allChecked = false;
+                return false;
+              }
+            });
+            $groupCheckbox.prop('checked', allChecked);
+          }
+
+          $testCheckboxes.on('change', updateGroupCheckbox);
+        });
     },
   };
 
@@ -90,12 +100,18 @@
       let searched = false;
 
       function filterTestList(e) {
-        const query = $(e.target).val().toLowerCase();
+        const query = $(e.target)
+          .val()
+          .toLowerCase();
 
         function showTestRow(index, row) {
           const $row = $(row);
           const $sources = $row.find('.table-filter-text-source');
-          const textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
+          const textMatch =
+            $sources
+              .text()
+              .toLowerCase()
+              .indexOf(query) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
 
@@ -119,8 +135,10 @@
 
       if ($table.length) {
         $rows = $table.find('tbody tr');
-        $input.trigger('focus').on('keyup', Drupal.debounce(filterTestList, 200));
+        $input
+          .trigger('focus')
+          .on('keyup', Drupal.debounce(filterTestList, 200));
       }
     },
   };
-}(jQuery, Drupal, drupalSettings));
+})(jQuery, Drupal, drupalSettings);

@@ -12,7 +12,7 @@
  * @event summaryUpdated
  */
 
-(function ($, Drupal, drupalSettings) {
+(function($, Drupal, drupalSettings) {
   /**
    * Show the parent vertical tab pane of a targeted page fragment.
    *
@@ -26,7 +26,9 @@
    */
   const handleFragmentLinkClickOrHashChange = (e, $target) => {
     $target.parents('.vertical-tabs__pane').each((index, pane) => {
-      $(pane).data('verticalTab').focus();
+      $(pane)
+        .data('verticalTab')
+        .focus();
     });
   };
 
@@ -56,62 +58,77 @@
       /**
        * Binds a listener to handle fragment link clicks and URL hash changes.
        */
-      $('body').once('vertical-tabs-fragments').on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
+      $('body')
+        .once('vertical-tabs-fragments')
+        .on(
+          'formFragmentLinkClickOrHashChange.verticalTabs',
+          handleFragmentLinkClickOrHashChange,
+        );
 
-      $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs').each(function () {
-        const $this = $(this).addClass('vertical-tabs__panes');
-        const focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
-        let tabFocus;
+      $(context)
+        .find('[data-vertical-tabs-panes]')
+        .once('vertical-tabs')
+        .each(function() {
+          const $this = $(this).addClass('vertical-tabs__panes');
+          const focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
+          let tabFocus;
 
-        // Check if there are some details that can be converted to
-        // vertical-tabs.
-        const $details = $this.find('> details');
-        if ($details.length === 0) {
-          return;
-        }
+          // Check if there are some details that can be converted to
+          // vertical-tabs.
+          const $details = $this.find('> details');
+          if ($details.length === 0) {
+            return;
+          }
 
-        // Create the tab column.
-        const tabList = $('<ul class="vertical-tabs__menu"></ul>');
-        $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tabList);
+          // Create the tab column.
+          const tabList = $('<ul class="vertical-tabs__menu"></ul>');
+          $this
+            .wrap('<div class="vertical-tabs clearfix"></div>')
+            .before(tabList);
 
-        // Transform each details into a tab.
-        $details.each(function () {
-          const $that = $(this);
-          const verticalTab = new Drupal.verticalTab({
-            title: $that.find('> summary').text(),
-            details: $that,
+          // Transform each details into a tab.
+          $details.each(function() {
+            const $that = $(this);
+            const verticalTab = new Drupal.verticalTab({
+              title: $that.find('> summary').text(),
+              details: $that,
+            });
+            tabList.append(verticalTab.item);
+            $that
+              .removeClass('collapsed')
+              // prop() can't be used on browsers not supporting details element,
+              // the style won't apply to them if prop() is used.
+              .attr('open', true)
+              .addClass('vertical-tabs__pane')
+              .data('verticalTab', verticalTab);
+            if (this.id === focusID) {
+              tabFocus = $that;
+            }
           });
-          tabList.append(verticalTab.item);
-          $that
-            .removeClass('collapsed')
-            // prop() can't be used on browsers not supporting details element,
-            // the style won't apply to them if prop() is used.
-            .attr('open', true)
-            .addClass('vertical-tabs__pane')
-            .data('verticalTab', verticalTab);
-          if (this.id === focusID) {
-            tabFocus = $that;
+
+          $(tabList)
+            .find('> li')
+            .eq(0)
+            .addClass('first');
+          $(tabList)
+            .find('> li')
+            .eq(-1)
+            .addClass('last');
+
+          if (!tabFocus) {
+            // If the current URL has a fragment and one of the tabs contains an
+            // element that matches the URL fragment, activate that tab.
+            const $locationHash = $this.find(window.location.hash);
+            if (window.location.hash && $locationHash.length) {
+              tabFocus = $locationHash.closest('.vertical-tabs__pane');
+            } else {
+              tabFocus = $this.find('> .vertical-tabs__pane').eq(0);
+            }
+          }
+          if (tabFocus.length) {
+            tabFocus.data('verticalTab').focus();
           }
         });
-
-        $(tabList).find('> li').eq(0).addClass('first');
-        $(tabList).find('> li').eq(-1).addClass('last');
-
-        if (!tabFocus) {
-          // If the current URL has a fragment and one of the tabs contains an
-          // element that matches the URL fragment, activate that tab.
-          const $locationHash = $this.find(window.location.hash);
-          if (window.location.hash && $locationHash.length) {
-            tabFocus = $locationHash.closest('.vertical-tabs__pane');
-          }
-          else {
-            tabFocus = $this.find('> .vertical-tabs__pane').eq(0);
-          }
-        }
-        if (tabFocus.length) {
-          tabFocus.data('verticalTab').focus();
-        }
-      });
     },
   };
 
@@ -131,25 +148,27 @@
    *
    * @listens event:summaryUpdated
    */
-  Drupal.verticalTab = function (settings) {
+  Drupal.verticalTab = function(settings) {
     const self = this;
     $.extend(this, settings, Drupal.theme('verticalTab', settings));
 
     this.link.attr('href', `#${settings.details.attr('id')}`);
 
-    this.link.on('click', (e) => {
+    this.link.on('click', e => {
       e.preventDefault();
       self.focus();
     });
 
     // Keyboard events added:
     // Pressing the Enter key will open the tab pane.
-    this.link.on('keydown', (event) => {
+    this.link.on('keydown', event => {
       if (event.keyCode === 13) {
         event.preventDefault();
         self.focus();
         // Set focus on the first input field of the visible details/tab pane.
-        $('.vertical-tabs__pane :input:visible:enabled').eq(0).trigger('focus');
+        $('.vertical-tabs__pane :input:visible:enabled')
+          .eq(0)
+          .trigger('focus');
       }
     });
 
@@ -161,14 +180,13 @@
   };
 
   Drupal.verticalTab.prototype = {
-
     /**
      * Displays the tab's content pane.
      */
     focus() {
       this.details
         .siblings('.vertical-tabs__pane')
-        .each(function () {
+        .each(function() {
           const tab = $(this).data('verticalTab');
           tab.details.hide();
           tab.item.removeClass('is-selected');
@@ -180,7 +198,11 @@
       this.item.addClass('is-selected');
       // Mark the active tab for screen readers.
       $('#active-vertical-tab').remove();
-      this.link.append(`<span id="active-vertical-tab" class="visually-hidden">${Drupal.t('(active tab)')}</span>`);
+      this.link.append(
+        `<span id="active-vertical-tab" class="visually-hidden">${Drupal.t(
+          '(active tab)',
+        )}</span>`,
+      );
     },
 
     /**
@@ -240,7 +262,9 @@
       // Hide the details element.
       this.details.addClass('vertical-tab--hidden').hide();
       // Focus the first visible tab (if there is one).
-      const $firstTab = this.details.siblings('.vertical-tabs__pane:not(.vertical-tab--hidden)').eq(0);
+      const $firstTab = this.details
+        .siblings('.vertical-tabs__pane:not(.vertical-tab--hidden)')
+        .eq(0);
       if ($firstTab.length) {
         $firstTab.data('verticalTab').focus();
       }
@@ -267,14 +291,23 @@
    *       (jQuery version)
    *   - summary: The jQuery element that contains the tab summary
    */
-  Drupal.theme.verticalTab = function (settings) {
+  Drupal.theme.verticalTab = function(settings) {
     const tab = {};
-    tab.item = $('<li class="vertical-tabs__menu-item" tabindex="-1"></li>')
-      .append(
-        tab.link = $('<a href="#"></a>')
-          .append(tab.title = $('<strong class="vertical-tabs__menu-item-title"></strong>').text(settings.title))
-          .append(tab.summary = $('<span class="vertical-tabs__menu-item-summary"></span>')),
-      );
+    tab.item = $(
+      '<li class="vertical-tabs__menu-item" tabindex="-1"></li>',
+    ).append(
+      (tab.link = $('<a href="#"></a>')
+        .append(
+          (tab.title = $(
+            '<strong class="vertical-tabs__menu-item-title"></strong>',
+          ).text(settings.title)),
+        )
+        .append(
+          (tab.summary = $(
+            '<span class="vertical-tabs__menu-item-summary"></span>',
+          )),
+        )),
+    );
     return tab;
   };
-}(jQuery, Drupal, drupalSettings));
+})(jQuery, Drupal, drupalSettings);

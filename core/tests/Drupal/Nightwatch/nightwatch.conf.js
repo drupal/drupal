@@ -13,10 +13,11 @@ const searchDirectory = process.env.DRUPAL_NIGHTWATCH_SEARCH_DIRECTORY || '';
 glob
   .sync('**/tests/**/Nightwatch/**/*.js', {
     cwd: path.resolve(process.cwd(), `../${searchDirectory}`),
-    ignore: process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES ?
-      process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES.split(',') : [],
+    ignore: process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES
+      ? process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES.split(',')
+      : [],
   })
-  .forEach((file) => {
+  .forEach(file => {
     let m = regex.exec(file);
     while (m !== null) {
       // This is necessary to avoid infinite loops with zero-width matches.
@@ -25,7 +26,7 @@ glob
       }
 
       const key = `../${m[1]}`;
-      Object.keys(collectedFolders).forEach((folder) => {
+      Object.keys(collectedFolders).forEach(folder => {
         if (file.includes(`Nightwatch/${folder}`)) {
           collectedFolders[folder].push(`${searchDirectory}${key}/${folder}`);
         }
@@ -35,7 +36,7 @@ glob
   });
 
 // Remove duplicate folders.
-Object.keys(collectedFolders).forEach((folder) => {
+Object.keys(collectedFolders).forEach(folder => {
   collectedFolders[folder] = Array.from(new Set(collectedFolders[folder]));
 });
 
@@ -58,7 +59,9 @@ module.exports = {
         browserName: 'chrome',
         acceptSslCerts: true,
         chromeOptions: {
-          args: process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS ? process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS.split(' ') : [],
+          args: process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS
+            ? process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS.split(' ')
+            : [],
         },
       },
       screenshots: {

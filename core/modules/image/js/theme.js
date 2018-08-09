@@ -17,10 +17,10 @@
   Drupal.theme.quickeditImageToolbar = function (settings) {
     var html = '<form class="quickedit-image-field-info">';
     if (settings.alt_field) {
-      html += '' + ('  <div>' + '    <label for="alt" class="') + (settings.alt_field_required ? 'required' : '') + '">' + Drupal.t('Alternative text') + '</label>' + ('    <input type="text" placeholder="' + settings.alt + '" value="' + settings.alt + '" name="alt" ' + (settings.alt_field_required ? 'required' : '') + '/>') + '  </div>';
+      html += '<div><label for="alt" class="' + (settings.alt_field_required ? 'required' : '') + '">' + Drupal.t('Alternative text') + '</label>' + ('<input type="text" placeholder="' + settings.alt + '" value="' + settings.alt + '" name="alt" ' + (settings.alt_field_required ? 'required' : '') + '/>') + '  </div>';
     }
     if (settings.title_field) {
-      html += '' + ('  <div>' + '    <label for="title" class="') + (settings.title_field_required ? 'form-required' : '') + '">' + Drupal.t('Title') + '</label>' + ('    <input type="text" placeholder="' + settings.title + '" value="' + settings.title + '" name="title" ' + (settings.title_field_required ? 'required' : '') + '/>') + '  </div>';
+      html += '<div><label for="title" class="' + (settings.title_field_required ? 'form-required' : '') + '">' + Drupal.t('Title') + '</label>' + ('<input type="text" placeholder="' + settings.title + '" value="' + settings.title + '" name="title" ' + (settings.title_field_required ? 'required' : '') + '/>') + '</div>';
     }
     html += '</form>';
 

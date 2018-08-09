@@ -3,7 +3,7 @@
  * Taxonomy behaviors.
  */
 
-(function ($, Drupal) {
+(function($, Drupal) {
   /**
    * Move a block in the blocks table from one region to another.
    *
@@ -25,10 +25,16 @@
       const rows = $table.find('tr').length;
 
       // When a row is swapped, keep previous and next page classes set.
-      tableDrag.row.prototype.onSwap = function (swappedRow) {
-        $table.find('tr.taxonomy-term-preview').removeClass('taxonomy-term-preview');
-        $table.find('tr.taxonomy-term-divider-top').removeClass('taxonomy-term-divider-top');
-        $table.find('tr.taxonomy-term-divider-bottom').removeClass('taxonomy-term-divider-bottom');
+      tableDrag.row.prototype.onSwap = function(swappedRow) {
+        $table
+          .find('tr.taxonomy-term-preview')
+          .removeClass('taxonomy-term-preview');
+        $table
+          .find('tr.taxonomy-term-divider-top')
+          .removeClass('taxonomy-term-divider-top');
+        $table
+          .find('tr.taxonomy-term-divider-bottom')
+          .removeClass('taxonomy-term-divider-bottom');
 
         const tableBody = $table[0].tBodies[0];
         if (backStep) {
@@ -43,10 +49,14 @@
           for (let k = rows - forwardStep - 1; k < rows - 1; k++) {
             $(tableBody.rows[k]).addClass('taxonomy-term-preview');
           }
-          $(tableBody.rows[rows - forwardStep - 2]).addClass('taxonomy-term-divider-top');
-          $(tableBody.rows[rows - forwardStep - 1]).addClass('taxonomy-term-divider-bottom');
+          $(tableBody.rows[rows - forwardStep - 2]).addClass(
+            'taxonomy-term-divider-top',
+          );
+          $(tableBody.rows[rows - forwardStep - 1]).addClass(
+            'taxonomy-term-divider-bottom',
+          );
         }
       };
     },
   };
-}(jQuery, Drupal));
+})(jQuery, Drupal);

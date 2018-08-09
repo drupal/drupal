@@ -3,7 +3,7 @@
  * Statistics functionality.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function($, Drupal, drupalSettings) {
   $(document).ready(() => {
     $.ajax({
       type: 'POST',
@@ -12,4 +12,4 @@
       data: drupalSettings.statistics.data,
     });
   });
-}(jQuery, Drupal, drupalSettings));
+})(jQuery, Drupal, drupalSettings);

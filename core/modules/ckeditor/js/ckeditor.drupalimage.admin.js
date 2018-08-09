@@ -24,7 +24,10 @@
         }
 
         var output = '';
-        output += Drupal.t('Uploads enabled, max size: @size @dimensions', { '@size': maxFileSize, '@dimensions': maxDimensions });
+        output += Drupal.t('Uploads enabled, max size: @size @dimensions', {
+          '@size': maxFileSize,
+          '@dimensions': maxDimensions
+        });
         if ($scheme.length) {
           output += '<br />' + $scheme.attr('data-label');
         }

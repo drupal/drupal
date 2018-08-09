@@ -3,7 +3,7 @@
  * Menu UI behaviors.
  */
 
-(function ($, Drupal) {
+(function($, Drupal) {
   /**
    * Set a summary on the menu link form.
    *
@@ -14,14 +14,20 @@
    */
   Drupal.behaviors.menuUiDetailsSummaries = {
     attach(context) {
-      $(context).find('.menu-link-form').drupalSetSummary((context) => {
-        const $context = $(context);
-        if ($context.find('.js-form-item-menu-enabled input').is(':checked')) {
-          return Drupal.checkPlain($context.find('.js-form-item-menu-title input').val());
-        }
+      $(context)
+        .find('.menu-link-form')
+        .drupalSetSummary(context => {
+          const $context = $(context);
+          if (
+            $context.find('.js-form-item-menu-enabled input').is(':checked')
+          ) {
+            return Drupal.checkPlain(
+              $context.find('.js-form-item-menu-title input').val(),
+            );
+          }
 
-        return Drupal.t('Not in menu');
-      });
+          return Drupal.t('Not in menu');
+        });
     },
   };
 
@@ -37,14 +43,16 @@
   Drupal.behaviors.menuUiLinkAutomaticTitle = {
     attach(context) {
       const $context = $(context);
-      $context.find('.menu-link-form').each(function () {
+      $context.find('.menu-link-form').each(function() {
         const $this = $(this);
         // Try to find menu settings widget elements as well as a 'title' field
         // in the form, but play nicely with user permissions and form
         // alterations.
         const $checkbox = $this.find('.js-form-item-menu-enabled input');
         const $linkTitle = $context.find('.js-form-item-menu-title input');
-        const $title = $this.closest('form').find('.js-form-item-title-0-value input');
+        const $title = $this
+          .closest('form')
+          .find('.js-form-item-title-0-value input');
         // Bail out if we do not have all required fields.
         if (!($checkbox.length && $linkTitle.length && $title.length)) {
           return;
@@ -65,8 +73,7 @@
             if (!$linkTitle.data('menuLinkAutomaticTitleOverridden')) {
               $linkTitle.val($title.val());
             }
-          }
-          else {
+          } else {
             $linkTitle.val('');
             $linkTitle.removeData('menuLinkAutomaticTitleOverridden');
           }
@@ -75,7 +82,10 @@
         });
         // Take over any title change.
         $title.on('keyup', () => {
-          if (!$linkTitle.data('menuLinkAutomaticTitleOverridden') && $checkbox.is(':checked')) {
+          if (
+            !$linkTitle.data('menuLinkAutomaticTitleOverridden') &&
+            $checkbox.is(':checked')
+          ) {
             $linkTitle.val($title.val());
             $linkTitle.val($title.val()).trigger('formUpdated');
           }
@@ -83,4 +93,4 @@
       });
     },
   };
-}(jQuery, Drupal));
+})(jQuery, Drupal);

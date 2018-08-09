@@ -3,7 +3,7 @@
  *  Testing behavior for JSWebAssertTest.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function($, Drupal, drupalSettings) {
   /**
    * @type {Drupal~behavior}
    *
@@ -15,4 +15,4 @@
       $('#js_webassert_test_element_invisible').show();
     },
   };
-}(jQuery, Drupal, drupalSettings));
+})(jQuery, Drupal, drupalSettings);

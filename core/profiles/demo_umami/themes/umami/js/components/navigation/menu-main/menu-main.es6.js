@@ -3,8 +3,10 @@
  * This file is used to add any javascript that is needed for the main menu.
  */
 
-(function () {
-  const toggler = document.querySelector('[data-drupal-selector="menu-main-toggle"]');
+(function() {
+  const toggler = document.querySelector(
+    '[data-drupal-selector="menu-main-toggle"]',
+  );
   const menu = document.querySelector('[data-drupal-selector="menu-main"]');
 
   function toggleMenu() {
@@ -14,4 +16,4 @@
   }
 
   toggler.addEventListener('click', toggleMenu);
-}());
+})();
