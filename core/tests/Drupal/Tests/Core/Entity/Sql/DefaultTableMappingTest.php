@@ -573,7 +573,7 @@ class DefaultTableMappingTest extends UnitTestCase {
   /**
    * @coversDefaultClass \Drupal\Core\Entity\Sql\TemporaryTableMapping
    *
-   * @expectedDeprecation Drupal\Core\Entity\Sql\TemporaryTableMapping is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Use the default table mapping with a prefix instead.
+   * @expectedDeprecation Drupal\Core\Entity\Sql\TemporaryTableMapping is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use the default table mapping with a prefix instead.
    * @group legacy
    */
   public function testTemporaryTableMapping() {

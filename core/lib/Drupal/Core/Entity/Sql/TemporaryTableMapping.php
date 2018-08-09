@@ -4,13 +4,13 @@ namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
-@trigger_error(__NAMESPACE__ . '\TemporaryTableMapping is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Use the default table mapping with a prefix instead.', E_USER_DEPRECATED);
+@trigger_error(__NAMESPACE__ . '\TemporaryTableMapping is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use the default table mapping with a prefix instead.', E_USER_DEPRECATED);
 
 /**
  * Defines a temporary table mapping class.
  *
- * @deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Use the
- * default table mapping with a prefix instead.
+ * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use the
+ *   default table mapping with a prefix instead.
  */
 class TemporaryTableMapping extends DefaultTableMapping {
 
