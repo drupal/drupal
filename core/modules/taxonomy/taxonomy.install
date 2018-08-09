@@ -138,9 +138,10 @@ function taxonomy_update_8601() {
 
   // Bail out early if a field named 'status' is already installed.
   if ($definition_update_manager->getFieldStorageDefinition('status', 'taxonomy_term')) {
-    return t('The publishing status field has <strong>not</strong> been added to taxonomy terms. See <a href=":link">this page</a> for more information on how to install it.', [
+    $message = \Drupal::state()->get('taxonomy_update_8601_skip_message', t('The publishing status field has <strong>not</strong> been added to taxonomy terms. See <a href=":link">this page</a> for more information on how to install it.', [
       ':link' => 'https://www.drupal.org/node/2985366',
-    ]);
+    ]));
+    return $message;
   }
 
   // Add the 'published' entity key to the taxonomy_term entity type.
