@@ -235,6 +235,30 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Bear');
     $assert_session->pageTextContains('Horse');
     $assert_session->pageTextContains('Turtle');
+
+    // Re-edit the content and make a new selection.
+    $this->drupalGet('node/1/edit');
+    $assert_session->pageTextNotContains('Dog');
+    $assert_session->pageTextContains('Cat');
+    $assert_session->pageTextContains('Bear');
+    $assert_session->pageTextContains('Horse');
+    $assert_session->pageTextContains('Turtle');
+    $unlimited_button = $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]');
+    $unlimited_button->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Media library');
+    // Select the first media items (should be Dog, again).
+    $checkbox_selector = '.media-library-view .js-click-to-select-checkbox input';
+    $checkboxes = $page->findAll('css', $checkbox_selector);
+    $checkboxes[0]->click();
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
+    $assert_session->assertWaitOnAjaxRequest();
+    // "Dog" and the existing selection should still exist.
+    $assert_session->pageTextContains('Dog');
+    $assert_session->pageTextContains('Cat');
+    $assert_session->pageTextContains('Bear');
+    $assert_session->pageTextContains('Horse');
+    $assert_session->pageTextContains('Turtle');
   }
 
   /**

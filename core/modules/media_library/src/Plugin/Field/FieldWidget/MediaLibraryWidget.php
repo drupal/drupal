@@ -509,8 +509,13 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
    *     - weight: (int) A weight for the selection.
    */
   protected static function getFieldState(array $element, FormStateInterface $form_state) {
+    // Default to using the current selection if the form is new.
+    $path = $element['#parents'];
+    $values = NestedArray::getValue($form_state->getValues(), $path);
+    $selection = isset($values['selection']) ? $values['selection'] : [];
+
     $widget_state = static::getWidgetState($element['#field_parents'], $element['#field_name'], $form_state);
-    $widget_state['items'] = isset($widget_state['items']) ? $widget_state['items'] : [];
+    $widget_state['items'] = isset($widget_state['items']) ? $widget_state['items'] : $selection;
     return $widget_state;
   }
 
