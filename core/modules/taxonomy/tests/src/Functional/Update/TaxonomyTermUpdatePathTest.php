@@ -80,6 +80,13 @@ class TaxonomyTermUpdatePathTest extends UpdatePathTestBase {
     $term->save();
     $term = $storage->loadUnchanged($term->id());
     $this->assertFalse($term->isPublished());
+
+    // Test the update does not run when a status field already exists.
+    module_load_install('taxonomy');
+    $this->assertEquals('The publishing status field has <strong>not</strong> been added to taxonomy terms. See <a href="https://www.drupal.org/node/2985366">this page</a> for more information on how to install it.', (string) taxonomy_update_8601());
+    // Test the message can be overridden.
+    \Drupal::state()->set('taxonomy_update_8601_skip_message', 'Another message');
+    $this->assertEquals('Another message', (string) taxonomy_update_8601());
   }
 
   /**
