@@ -20,9 +20,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see http://bugs.php.net/bug.php?id=18090
  * @see http://php.net/manual/function.syslog.php
  * @see http://php.net/manual/network.constants.php
- * @see self::getLevels()
+ * @see \Drupal\Core\Logger\RfcLogLevel::getLevels()
  *
- * @} End of "defgroup logging_severity_levels".
+ * @}
  */
 
 /**
