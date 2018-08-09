@@ -14,41 +14,43 @@
  * @return {object}
  *   The drupalCreateUser command.
  */
-exports.command = function drupalCreateUser({ name, password, permissions = [] }, callback) {
+exports.command = function drupalCreateUser(
+  { name, password, permissions = [] },
+  callback,
+) {
   const self = this;
 
   let role;
-  this
-    .perform((client, done) => {
-      if (permissions) {
-        client.drupalCreateRole({ permissions, name: null }, (newRole) => {
-          role = newRole;
-          done();
-        });
-      }
-      else {
+  this.perform((client, done) => {
+    if (permissions) {
+      client.drupalCreateRole({ permissions, name: null }, newRole => {
+        role = newRole;
         done();
-      }
-    })
-    .drupalLoginAsAdmin(() => {
-      this
-        .drupalRelativeURL('/admin/people/create')
-        .setValue('input[name="name"]', name)
-        .setValue('input[name="pass[pass1]"]', password)
-        .setValue('input[name="pass[pass2]"]', password)
-        .perform((client, done) => {
-          if (role) {
-            client.click(`input[name="roles[${role}]`, () => {
-              done();
-            });
-          }
-          else {
+      });
+    } else {
+      done();
+    }
+  }).drupalLoginAsAdmin(() => {
+    this.drupalRelativeURL('/admin/people/create')
+      .setValue('input[name="name"]', name)
+      .setValue('input[name="pass[pass1]"]', password)
+      .setValue('input[name="pass[pass2]"]', password)
+      .perform((client, done) => {
+        if (role) {
+          client.click(`input[name="roles[${role}]`, () => {
             done();
-          }
-        })
-        .submitForm('#user-register-form')
-        .assert.containsText('.messages', 'Created a new user account', `User "${name}" was created succesfully.`);
-    });
+          });
+        } else {
+          done();
+        }
+      })
+      .submitForm('#user-register-form')
+      .assert.containsText(
+        '.messages',
+        'Created a new user account',
+        `User "${name}" was created succesfully.`,
+      );
+  });
 
   if (typeof callback === 'function') {
     callback.call(self);

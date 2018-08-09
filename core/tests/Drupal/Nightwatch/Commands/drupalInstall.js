@@ -19,23 +19,29 @@ exports.command = function drupalInstall({ setupFile = '' } = {}, callback) {
 
   try {
     setupFile = setupFile ? `--setup-file "${setupFile}"` : '';
-    const dbOption = process.env.DRUPAL_TEST_DB_URL.length > 0 ? `--db-url ${process.env.DRUPAL_TEST_DB_URL}` : '';
-    const install = execSync(commandAsWebserver(`php ./scripts/test-site.php install ${setupFile} --base-url ${process.env.DRUPAL_TEST_BASE_URL} ${dbOption} --json`));
+    const dbOption =
+      process.env.DRUPAL_TEST_DB_URL.length > 0
+        ? `--db-url ${process.env.DRUPAL_TEST_DB_URL}`
+        : '';
+    const install = execSync(
+      commandAsWebserver(
+        `php ./scripts/test-site.php install ${setupFile} --base-url ${
+          process.env.DRUPAL_TEST_BASE_URL
+        } ${dbOption} --json`,
+      ),
+    );
     const installData = JSON.parse(install.toString());
     this.drupalDbPrefix = installData.db_prefix;
     this.drupalSitePath = installData.site_path;
     const url = new URL(process.env.DRUPAL_TEST_BASE_URL);
-    this
-      .url(process.env.DRUPAL_TEST_BASE_URL)
-      .setCookie({
-        name: 'SIMPLETEST_USER_AGENT',
-        // Colons need to be URL encoded to be valid.
-        value: encodeURIComponent(installData.user_agent),
-        path: url.pathname,
-        domain: url.host,
-      });
-  }
-  catch (error) {
+    this.url(process.env.DRUPAL_TEST_BASE_URL).setCookie({
+      name: 'SIMPLETEST_USER_AGENT',
+      // Colons need to be URL encoded to be valid.
+      value: encodeURIComponent(installData.user_agent),
+      path: url.pathname,
+      domain: url.host,
+    });
+  } catch (error) {
     this.assert.fail(error);
   }
 

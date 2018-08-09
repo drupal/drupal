@@ -139,7 +139,9 @@
     regionViews: []
   };
 
-  Drupal.contextual.collection = new Backbone.Collection([], { model: Drupal.contextual.StateModel });
+  Drupal.contextual.collection = new Backbone.Collection([], {
+    model: Drupal.contextual.StateModel
+  });
 
   Drupal.theme.contextualTrigger = function () {
     return '<button class="trigger visually-hidden focusable" type="button"></button>';

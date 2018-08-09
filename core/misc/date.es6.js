@@ -3,7 +3,7 @@
  * Polyfill for HTML5 date input.
  */
 
-(function ($, Modernizr, Drupal) {
+(function($, Modernizr, Drupal) {
   /**
    * Attach datepicker fallback on date elements.
    *
@@ -23,30 +23,36 @@
       if (Modernizr.inputtypes.date === true) {
         return;
       }
-      $context.find('input[data-drupal-date-format]').once('datePicker').each(function () {
-        const $input = $(this);
-        const datepickerSettings = {};
-        const dateFormat = $input.data('drupalDateFormat');
-        // The date format is saved in PHP style, we need to convert to jQuery
-        // datepicker.
-        datepickerSettings.dateFormat = dateFormat
-          .replace('Y', 'yy')
-          .replace('m', 'mm')
-          .replace('d', 'dd');
-        // Add min and max date if set on the input.
-        if ($input.attr('min')) {
-          datepickerSettings.minDate = $input.attr('min');
-        }
-        if ($input.attr('max')) {
-          datepickerSettings.maxDate = $input.attr('max');
-        }
-        $input.datepicker(datepickerSettings);
-      });
+      $context
+        .find('input[data-drupal-date-format]')
+        .once('datePicker')
+        .each(function() {
+          const $input = $(this);
+          const datepickerSettings = {};
+          const dateFormat = $input.data('drupalDateFormat');
+          // The date format is saved in PHP style, we need to convert to jQuery
+          // datepicker.
+          datepickerSettings.dateFormat = dateFormat
+            .replace('Y', 'yy')
+            .replace('m', 'mm')
+            .replace('d', 'dd');
+          // Add min and max date if set on the input.
+          if ($input.attr('min')) {
+            datepickerSettings.minDate = $input.attr('min');
+          }
+          if ($input.attr('max')) {
+            datepickerSettings.maxDate = $input.attr('max');
+          }
+          $input.datepicker(datepickerSettings);
+        });
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        $(context).find('input[data-drupal-date-format]').findOnce('datePicker').datepicker('destroy');
+        $(context)
+          .find('input[data-drupal-date-format]')
+          .findOnce('datePicker')
+          .datepicker('destroy');
       }
     },
   };
-}(jQuery, Modernizr, Drupal));
+})(jQuery, Modernizr, Drupal);

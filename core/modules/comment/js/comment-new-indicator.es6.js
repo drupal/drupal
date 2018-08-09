@@ -6,7 +6,7 @@
  * installed.
  */
 
-(function ($, Drupal, window) {
+(function($, Drupal, window) {
   /**
    * Processes the markup for "new comment" indicators.
    *
@@ -20,7 +20,10 @@
 
     $placeholders.each((index, placeholder) => {
       $placeholder = $(placeholder);
-      const timestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
+      const timestamp = parseInt(
+        $placeholder.attr('data-comment-timestamp'),
+        10,
+      );
       const $node = $placeholder.closest('[data-history-node-id]');
       const nodeID = $node.attr('data-history-node-id');
       const lastViewTimestamp = Drupal.history.getLastRead(nodeID);
@@ -42,7 +45,10 @@
           // If the URL points to the first new comment, then scroll to that
           // comment.
           if (window.location.hash === '#new') {
-            window.scrollTo(0, $comment.offset().top - Drupal.displace.offsets.top);
+            window.scrollTo(
+              0,
+              $comment.offset().top - Drupal.displace.offsets.top,
+            );
           }
         }
       }
@@ -66,10 +72,15 @@
       const $placeholders = $(context)
         .find('[data-comment-timestamp]')
         .once('history')
-        .filter(function () {
+        .filter(function() {
           const $placeholder = $(this);
-          const commentTimestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
-          const nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
+          const commentTimestamp = parseInt(
+            $placeholder.attr('data-comment-timestamp'),
+            10,
+          );
+          const nodeID = $placeholder
+            .closest('[data-history-node-id]')
+            .attr('data-history-node-id');
           if (Drupal.history.needsServerCheck(nodeID, commentTimestamp)) {
             nodeIDs.push(nodeID);
             return true;
@@ -88,4 +99,4 @@
       });
     },
   };
-}(jQuery, Drupal, window));
+})(jQuery, Drupal, window);

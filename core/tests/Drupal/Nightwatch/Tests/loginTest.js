@@ -2,15 +2,13 @@ module.exports = {
   '@tags': ['core'],
 
   before(browser) {
-    browser
-      .drupalInstall();
+    browser.drupalInstall();
   },
   after(browser) {
-    browser
-      .drupalUninstall();
+    browser.drupalUninstall();
   },
 
-  'Test login': (browser) => {
+  'Test login': browser => {
     browser
       .drupalCreateUser({
         name: 'user',
@@ -19,6 +17,7 @@ module.exports = {
       })
       .drupalLogin({ name: 'user', password: '123' })
       .drupalRelativeURL('/admin/reports')
-      .expect.element('h1.page-title').text.to.contain('Reports');
+      .expect.element('h1.page-title')
+      .text.to.contain('Reports');
   },
 };

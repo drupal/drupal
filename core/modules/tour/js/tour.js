@@ -122,7 +122,10 @@
         }
 
         $tour.find('li').each(function (index) {
-          var progress = Drupal.t('!tour_item of !total', { '!tour_item': index + 1, '!total': total });
+          var progress = Drupal.t('!tour_item of !total', {
+            '!tour_item': index + 1,
+            '!total': total
+          });
           $(this).find('.tour-progress').text(progress);
         }).eq(-1).attr('data-text', Drupal.t('End tour'));
       }

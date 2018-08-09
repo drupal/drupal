@@ -1,14 +1,14 @@
 module.exports = {
   '@tags': ['core'],
   before(browser) {
-    browser
-      .drupalInstall({ setupFile: 'core/tests/Drupal/TestSite/TestSiteInstallTestScript.php' });
+    browser.drupalInstall({
+      setupFile: 'core/tests/Drupal/TestSite/TestSiteInstallTestScript.php',
+    });
   },
   after(browser) {
-    browser
-      .drupalUninstall();
+    browser.drupalUninstall();
   },
-  'Test page': (browser) => {
+  'Test page': browser => {
     browser
       .drupalRelativeURL('/test-page')
       .waitForElementVisible('body', 1000)

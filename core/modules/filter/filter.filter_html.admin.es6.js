@@ -3,7 +3,7 @@
  * Attaches behavior for updating filter_html's settings automatically.
  */
 
-(function ($, Drupal, _, document) {
+(function($, Drupal, _, document) {
   if (Drupal.filterConfiguration) {
     /**
      * Implement a live setting parser to prevent text editors from automatically
@@ -12,14 +12,17 @@
      * @namespace
      */
     Drupal.filterConfiguration.liveSettingParsers.filter_html = {
-
       /**
        * @return {Array}
        *   An array of filter rules.
        */
       getRules() {
-        const currentValue = $('#edit-filters-filter-html-settings-allowed-html').val();
-        const rules = Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(currentValue);
+        const currentValue = $(
+          '#edit-filters-filter-html-settings-allowed-html',
+        ).val();
+        const rules = Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(
+          currentValue,
+        );
 
         // Build a FilterHTMLRule that reflects the hard-coded behavior that
         // strips all "style" attribute and all "on*" attributes.
@@ -44,7 +47,6 @@
    *   Attaches behavior for updating allowed HTML tags.
    */
   Drupal.behaviors.filterFilterHtmlUpdating = {
-
     // The form item contains the "Allowed HTML tags" setting.
     $allowedHTMLFormItem: null,
 
@@ -66,35 +68,43 @@
 
     attach(context, settings) {
       const that = this;
-      $(context).find('[name="filters[filter_html][settings][allowed_html]"]').once('filter-filter_html-updating').each(function () {
-        that.$allowedHTMLFormItem = $(this);
-        that.$allowedHTMLDescription = that.$allowedHTMLFormItem.closest('.js-form-item').find('.description');
-        that.userTags = that._parseSetting(this.value);
+      $(context)
+        .find('[name="filters[filter_html][settings][allowed_html]"]')
+        .once('filter-filter_html-updating')
+        .each(function() {
+          that.$allowedHTMLFormItem = $(this);
+          that.$allowedHTMLDescription = that.$allowedHTMLFormItem
+            .closest('.js-form-item')
+            .find('.description');
+          that.userTags = that._parseSetting(this.value);
 
-        // Update the new allowed tags based on added text editor features.
-        $(document)
-          .on('drupalEditorFeatureAdded', (e, feature) => {
-            that.newFeatures[feature.name] = feature.rules;
-            that._updateAllowedTags();
-          })
-          .on('drupalEditorFeatureModified', (e, feature) => {
-            if (that.newFeatures.hasOwnProperty(feature.name)) {
+          // Update the new allowed tags based on added text editor features.
+          $(document)
+            .on('drupalEditorFeatureAdded', (e, feature) => {
               that.newFeatures[feature.name] = feature.rules;
               that._updateAllowedTags();
-            }
-          })
-          .on('drupalEditorFeatureRemoved', (e, feature) => {
-            if (that.newFeatures.hasOwnProperty(feature.name)) {
-              delete that.newFeatures[feature.name];
-              that._updateAllowedTags();
-            }
-          });
+            })
+            .on('drupalEditorFeatureModified', (e, feature) => {
+              if (that.newFeatures.hasOwnProperty(feature.name)) {
+                that.newFeatures[feature.name] = feature.rules;
+                that._updateAllowedTags();
+              }
+            })
+            .on('drupalEditorFeatureRemoved', (e, feature) => {
+              if (that.newFeatures.hasOwnProperty(feature.name)) {
+                delete that.newFeatures[feature.name];
+                that._updateAllowedTags();
+              }
+            });
 
-        // When the allowed tags list is manually changed, update userTags.
-        that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = _.difference(that._parseSetting(this.value), that.autoTags);
+          // When the allowed tags list is manually changed, update userTags.
+          that.$allowedHTMLFormItem.on('change.updateUserTags', function() {
+            that.userTags = _.difference(
+              that._parseSetting(this.value),
+              that.autoTags,
+            );
+          });
         });
-      });
     },
 
     /**
@@ -102,16 +112,28 @@
      */
     _updateAllowedTags() {
       // Update the list of auto-created tags.
-      this.autoTags = this._calculateAutoAllowedTags(this.userTags, this.newFeatures);
+      this.autoTags = this._calculateAutoAllowedTags(
+        this.userTags,
+        this.newFeatures,
+      );
 
       // Remove any previous auto-created tag message.
       this.$allowedHTMLDescription.find('.editor-update-message').remove();
 
       // If any auto-created tags: insert message and update form item.
       if (!_.isEmpty(this.autoTags)) {
-        this.$allowedHTMLDescription.append(Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags));
-        const userTagsWithoutOverrides = _.omit(this.userTags, _.keys(this.autoTags));
-        this.$allowedHTMLFormItem.val(`${this._generateSetting(userTagsWithoutOverrides)} ${this._generateSetting(this.autoTags)}`);
+        this.$allowedHTMLDescription.append(
+          Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags),
+        );
+        const userTagsWithoutOverrides = _.omit(
+          this.userTags,
+          _.keys(this.autoTags),
+        );
+        this.$allowedHTMLFormItem.val(
+          `${this._generateSetting(
+            userTagsWithoutOverrides,
+          )} ${this._generateSetting(this.autoTags)}`,
+        );
       }
       // Restore to original state.
       else {
@@ -139,7 +161,7 @@
 
       // Map the newly added Text Editor features to Drupal.FilterHtmlRule
       // objects (to allow comparing userTags with autoTags).
-      Object.keys(newFeatures || {}).forEach((featureName) => {
+      Object.keys(newFeatures || {}).forEach(featureName => {
         const feature = newFeatures[featureName];
         let featureRule;
         let filterRule;
@@ -159,16 +181,26 @@
               //   always disallows the "style" attribute, so we only need to
               //   support "class" attribute value restrictions. Fix once
               //   https://www.drupal.org/node/2567801 lands.
-              filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(0);
-              filterRule.restrictedTags.allowed.classes = featureRule.required.classes.slice(0);
+              filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(
+                0,
+              );
+              filterRule.restrictedTags.allowed.classes = featureRule.required.classes.slice(
+                0,
+              );
               editorRequiredTags[tag] = filterRule;
             }
             // The tag is already allowed, add any additionally allowed
             // attributes.
             else {
               filterRule = editorRequiredTags[tag];
-              filterRule.restrictedTags.allowed.attributes = _.union(filterRule.restrictedTags.allowed.attributes, featureRule.required.attributes);
-              filterRule.restrictedTags.allowed.classes = _.union(filterRule.restrictedTags.allowed.classes, featureRule.required.classes);
+              filterRule.restrictedTags.allowed.attributes = _.union(
+                filterRule.restrictedTags.allowed.attributes,
+                featureRule.required.attributes,
+              );
+              filterRule.restrictedTags.allowed.classes = _.union(
+                filterRule.restrictedTags.allowed.classes,
+                featureRule.required.classes,
+              );
             }
           }
         }
@@ -181,7 +213,7 @@
       // - any tags in editorRequiredTags that already exists in userAllowedTags
       //   but does not allow all attributes or attribute values
       const autoAllowedTags = {};
-      Object.keys(editorRequiredTags).forEach((tag) => {
+      Object.keys(editorRequiredTags).forEach(tag => {
         // If userAllowedTags does not contain a rule for this editor-required
         // tag, then add it to the list of automatically allowed tags.
         if (!_.has(userAllowedTags, tag)) {
@@ -191,20 +223,34 @@
         // additional attributes and classes on this tag are required by the
         // editor.
         else {
-          const requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
-          const allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
-          const needsAdditionalAttributes = requiredAttributes.length && _.difference(requiredAttributes, allowedAttributes).length;
-          const requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
-          const allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
-          const needsAdditionalClasses = requiredClasses.length && _.difference(requiredClasses, allowedClasses).length;
+          const requiredAttributes =
+            editorRequiredTags[tag].restrictedTags.allowed.attributes;
+          const allowedAttributes =
+            userAllowedTags[tag].restrictedTags.allowed.attributes;
+          const needsAdditionalAttributes =
+            requiredAttributes.length &&
+            _.difference(requiredAttributes, allowedAttributes).length;
+          const requiredClasses =
+            editorRequiredTags[tag].restrictedTags.allowed.classes;
+          const allowedClasses =
+            userAllowedTags[tag].restrictedTags.allowed.classes;
+          const needsAdditionalClasses =
+            requiredClasses.length &&
+            _.difference(requiredClasses, allowedClasses).length;
           if (needsAdditionalAttributes || needsAdditionalClasses) {
             autoAllowedTags[tag] = userAllowedTags[tag].clone();
           }
           if (needsAdditionalAttributes) {
-            autoAllowedTags[tag].restrictedTags.allowed.attributes = _.union(allowedAttributes, requiredAttributes);
+            autoAllowedTags[tag].restrictedTags.allowed.attributes = _.union(
+              allowedAttributes,
+              requiredAttributes,
+            );
           }
           if (needsAdditionalClasses) {
-            autoAllowedTags[tag].restrictedTags.allowed.classes = _.union(allowedClasses, requiredClasses);
+            autoAllowedTags[tag].restrictedTags.allowed.classes = _.union(
+              allowedClasses,
+              requiredClasses,
+            );
           }
         }
       });
@@ -255,8 +301,7 @@
           if (attributeName === 'class') {
             const attributeValue = attribute.textContent;
             rule.restrictedTags.allowed.classes = attributeValue.split(' ');
-          }
-          else {
+          } else {
             rule.restrictedTags.allowed.attributes.push(attributeName);
           }
         }
@@ -276,29 +321,34 @@
      *   The string representation of the setting. e.g. "<p> <br> <a>"
      */
     _generateSetting(tags) {
-      return _.reduce(tags, (setting, rule, tag) => {
-        if (setting.length) {
-          setting += ' ';
-        }
+      return _.reduce(
+        tags,
+        (setting, rule, tag) => {
+          if (setting.length) {
+            setting += ' ';
+          }
 
-        setting += `<${tag}`;
-        if (rule.restrictedTags.allowed.attributes.length) {
-          setting += ` ${rule.restrictedTags.allowed.attributes.join(' ')}`;
-        }
-        // @todo Drupal.FilterHtmlRule does not allow for generic attribute
-        //   value restrictions, only for the "class" and "style" attribute's
-        //   values. The filter_html filter always disallows the "style"
-        //   attribute, so we only need to support "class" attribute value
-        //   restrictions. Fix once https://www.drupal.org/node/2567801 lands.
-        if (rule.restrictedTags.allowed.classes.length) {
-          setting += ` class="${rule.restrictedTags.allowed.classes.join(' ')}"`;
-        }
+          setting += `<${tag}`;
+          if (rule.restrictedTags.allowed.attributes.length) {
+            setting += ` ${rule.restrictedTags.allowed.attributes.join(' ')}`;
+          }
+          // @todo Drupal.FilterHtmlRule does not allow for generic attribute
+          //   value restrictions, only for the "class" and "style" attribute's
+          //   values. The filter_html filter always disallows the "style"
+          //   attribute, so we only need to support "class" attribute value
+          //   restrictions. Fix once https://www.drupal.org/node/2567801 lands.
+          if (rule.restrictedTags.allowed.classes.length) {
+            setting += ` class="${rule.restrictedTags.allowed.classes.join(
+              ' ',
+            )}"`;
+          }
 
-        setting += '>';
-        return setting;
-      }, '');
+          setting += '>';
+          return setting;
+        },
+        '',
+      );
     },
-
   };
 
   /**
@@ -310,12 +360,17 @@
    * @return {string}
    *   The corresponding HTML.
    */
-  Drupal.theme.filterFilterHTMLUpdateMessage = function (tags) {
+  Drupal.theme.filterFilterHTMLUpdateMessage = function(tags) {
     let html = '';
-    const tagList = Drupal.behaviors.filterFilterHtmlUpdating._generateSetting(tags);
+    const tagList = Drupal.behaviors.filterFilterHtmlUpdating._generateSetting(
+      tags,
+    );
     html += '<p class="editor-update-message">';
-    html += Drupal.t('Based on the text editor configuration, these tags have automatically been added: <strong>@tag-list</strong>.', { '@tag-list': tagList });
+    html += Drupal.t(
+      'Based on the text editor configuration, these tags have automatically been added: <strong>@tag-list</strong>.',
+      { '@tag-list': tagList },
+    );
     html += '</p>';
     return html;
   };
-}(jQuery, Drupal, _, document));
+})(jQuery, Drupal, _, document);

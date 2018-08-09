@@ -3,7 +3,7 @@
  * Menu UI admin behaviors.
  */
 
-(function ($, Drupal) {
+(function($, Drupal) {
   /**
    *
    * @type {Drupal~behavior}
@@ -25,17 +25,19 @@
   /**
    * Function to set the options of the menu parent item dropdown.
    */
-  Drupal.menuUiUpdateParentList = function () {
+  Drupal.menuUiUpdateParentList = function() {
     const $menu = $('#edit-menu');
     const values = [];
 
-    $menu.find('input:checked').each(function () {
+    $menu.find('input:checked').each(function() {
       // Get the names of all checked menus.
       values.push(Drupal.checkPlain($.trim($(this).val())));
     });
 
     $.ajax({
-      url: `${window.location.protocol}//${window.location.host}${Drupal.url('admin/structure/menu/parents')}`,
+      url: `${window.location.protocol}//${window.location.host}${Drupal.url(
+        'admin/structure/menu/parents',
+      )}`,
       type: 'POST',
       data: { 'menus[]': values },
       dataType: 'json',
@@ -47,16 +49,25 @@
         $select.children().remove();
         // Add new options to dropdown. Keep a count of options for testing later.
         let totalOptions = 0;
-        Object.keys(options || {}).forEach((machineName) => {
+        Object.keys(options || {}).forEach(machineName => {
           $select.append(
-            $(`<option ${machineName === selected ? ' selected="selected"' : ''}></option>`).val(machineName).text(options[machineName]),
+            $(
+              `<option ${
+                machineName === selected ? ' selected="selected"' : ''
+              }></option>`,
+            )
+              .val(machineName)
+              .text(options[machineName]),
           );
           totalOptions++;
         });
 
         // Hide the parent options if there are no options for it.
-        $select.closest('div').toggle(totalOptions > 0).attr('hidden', totalOptions === 0);
+        $select
+          .closest('div')
+          .toggle(totalOptions > 0)
+          .attr('hidden', totalOptions === 0);
       },
     });
   };
-}(jQuery, Drupal));
+})(jQuery, Drupal);

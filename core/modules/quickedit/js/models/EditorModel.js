@@ -14,6 +14,5 @@
 
       validationErrors: null
     }
-
   });
 })(Backbone, Drupal);

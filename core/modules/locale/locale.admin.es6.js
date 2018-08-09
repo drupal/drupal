@@ -3,7 +3,7 @@
  * Locale admin behavior.
  */
 
-(function ($, Drupal) {
+(function($, Drupal) {
   /**
    * Marks changes of translations.
    *
@@ -16,16 +16,22 @@
    */
   Drupal.behaviors.localeTranslateDirty = {
     attach() {
-      const $form = $('#locale-translate-edit-form').once('localetranslatedirty');
+      const $form = $('#locale-translate-edit-form').once(
+        'localetranslatedirty',
+      );
       if ($form.length) {
         // Display a notice if any row changed.
-        $form.one('formUpdated.localeTranslateDirty', 'table', function () {
-          const $marker = $(Drupal.theme('localeTranslateChangedWarning')).hide();
-          $(this).addClass('changed').before($marker);
+        $form.one('formUpdated.localeTranslateDirty', 'table', function() {
+          const $marker = $(
+            Drupal.theme('localeTranslateChangedWarning'),
+          ).hide();
+          $(this)
+            .addClass('changed')
+            .before($marker);
           $marker.fadeIn('slow');
         });
         // Highlight changed row.
-        $form.on('formUpdated.localeTranslateDirty', 'tr', function () {
+        $form.on('formUpdated.localeTranslateDirty', 'tr', function() {
           const $row = $(this);
           const $rowToMark = $row.once('localemark');
           const marker = Drupal.theme('localeTranslateChangedMarker');
@@ -40,7 +46,9 @@
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        const $form = $('#locale-translate-edit-form').removeOnce('localetranslatedirty');
+        const $form = $('#locale-translate-edit-form').removeOnce(
+          'localetranslatedirty',
+        );
         if ($form.length) {
           $form.off('formUpdated.localeTranslateDirty');
         }
@@ -58,12 +66,14 @@
    */
   Drupal.behaviors.hideUpdateInformation = {
     attach(context, settings) {
-      const $table = $('#locale-translation-status-form').once('expand-updates');
+      const $table = $('#locale-translation-status-form').once(
+        'expand-updates',
+      );
       if ($table.length) {
         const $tbodies = $table.find('tbody');
 
         // Open/close the description details by toggling a tr class.
-        $tbodies.on('click keydown', '.description', function (e) {
+        $tbodies.on('click keydown', '.description', function(e) {
           if (e.keyCode && (e.keyCode !== 13 && e.keyCode !== 32)) {
             return;
           }
@@ -86,26 +96,34 @@
     },
   };
 
-  $.extend(Drupal.theme, /** @lends Drupal.theme */{
+  $.extend(
+    Drupal.theme,
+    /** @lends Drupal.theme */ {
+      /**
+       * Creates markup for a changed translation marker.
+       *
+       * @return {string}
+       *   Markup for the marker.
+       */
+      localeTranslateChangedMarker() {
+        return `<abbr class="warning ajax-changed" title="${Drupal.t(
+          'Changed',
+        )}">*</abbr>`;
+      },
 
-    /**
-     * Creates markup for a changed translation marker.
-     *
-     * @return {string}
-     *   Markup for the marker.
-     */
-    localeTranslateChangedMarker() {
-      return `<abbr class="warning ajax-changed" title="${Drupal.t('Changed')}">*</abbr>`;
+      /**
+       * Creates markup for the translation changed warning.
+       *
+       * @return {string}
+       *   Markup for the warning.
+       */
+      localeTranslateChangedWarning() {
+        return `<div class="clearfix messages messages--warning">${Drupal.theme(
+          'localeTranslateChangedMarker',
+        )} ${Drupal.t(
+          'Changes made in this table will not be saved until the form is submitted.',
+        )}</div>`;
+      },
     },
-
-    /**
-     * Creates markup for the translation changed warning.
-     *
-     * @return {string}
-     *   Markup for the warning.
-     */
-    localeTranslateChangedWarning() {
-      return `<div class="clearfix messages messages--warning">${Drupal.theme('localeTranslateChangedMarker')} ${Drupal.t('Changes made in this table will not be saved until the form is submitted.')}</div>`;
-    },
-  });
-}(jQuery, Drupal));
+  );
+})(jQuery, Drupal);

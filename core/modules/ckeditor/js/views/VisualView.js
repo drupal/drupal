@@ -7,7 +7,6 @@
 
 (function (Drupal, Backbone, $) {
   Drupal.ckeditor.VisualView = Backbone.View.extend({
-
     events: {
       'click .ckeditor-toolbar-group-name': 'onGroupNameClick',
       'click .ckeditor-groupnames-toggle': 'onGroupNamesToggleClick',

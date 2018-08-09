@@ -38,7 +38,9 @@
           var $checkboxes = $(currentTarget).closest('.media-library-view').find('.media-library-item input[type="checkbox"]');
           $checkboxes.prop('checked', $(currentTarget).prop('checked')).trigger('change');
 
-          var announcement = $(currentTarget).prop('checked') ? Drupal.t('Zero items selected') : Drupal.t('All @count items selected', { '@count': $checkboxes.length });
+          var announcement = $(currentTarget).prop('checked') ? Drupal.t('Zero items selected') : Drupal.t('All @count items selected', {
+            '@count': $checkboxes.length
+          });
           Drupal.announce(announcement);
         });
         var $label = $('<label class="media-library-select-all"></label>').text(Drupal.t('Select all media'));

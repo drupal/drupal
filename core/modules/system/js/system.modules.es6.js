@@ -3,7 +3,7 @@
  * Module page behaviors.
  */
 
-(function ($, Drupal, debounce) {
+(function($, Drupal, debounce) {
   /**
    * Filters the module list table by a text input search string.
    *
@@ -38,7 +38,9 @@
 
         function showModuleRow(index, row) {
           const $row = $(row);
-          const $sources = $row.find('.table-filter-text-source, .module-name, .module-description');
+          const $sources = $row.find(
+            '.table-filter-text-source, .module-name, .module-description',
+          );
           const textMatch = $sources.text().search(re) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
@@ -53,25 +55,26 @@
           // Note that we first open all <details> to be able to use ':visible'.
           // Mark the <details> elements that were closed before filtering, so
           // they can be reclosed when filtering is removed.
-          $details.not('[open]').attr('data-drupal-system-state', 'forced-open');
+          $details
+            .not('[open]')
+            .attr('data-drupal-system-state', 'forced-open');
 
           // Hide the package <details> if they don't have any visible rows.
           // Note that we first show() all <details> to be able to use ':visible'.
           $details.attr('open', true).each(hidePackageDetails);
 
           Drupal.announce(
-            Drupal.t(
-              '!modules modules are available in the modified list.',
-              { '!modules': $rowsAndDetails.find('tbody tr:visible').length },
-            ),
+            Drupal.t('!modules modules are available in the modified list.', {
+              '!modules': $rowsAndDetails.find('tbody tr:visible').length,
+            }),
           );
-        }
-        else if (searching) {
+        } else if (searching) {
           searching = false;
           $rowsAndDetails.show();
           // Return <details> elements that had been closed before filtering
           // to a closed state.
-          $details.filter('[data-drupal-system-state="forced-open"]')
+          $details
+            .filter('[data-drupal-system-state="forced-open"]')
             .removeAttr('data-drupal-system-state')
             .attr('open', false);
         }
@@ -96,4 +99,4 @@
       }
     },
   };
-}(jQuery, Drupal, Drupal.debounce));
+})(jQuery, Drupal, Drupal.debounce);

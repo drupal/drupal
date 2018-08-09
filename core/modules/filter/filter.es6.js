@@ -3,7 +3,7 @@
  * Attaches behavior for the Filter module.
  */
 
-(function ($, Drupal) {
+(function($, Drupal) {
   /**
    * Displays the guidelines of the selected text format automatically.
    *
@@ -38,4 +38,4 @@
         .trigger('change.filterGuidelines');
     },
   };
-}(jQuery, Drupal));
+})(jQuery, Drupal);

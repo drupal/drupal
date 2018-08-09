@@ -3,7 +3,7 @@
  * Drupal's batch API.
  */
 
-(function ($, Drupal) {
+(function($, Drupal) {
   /**
    * Attaches the batch behavior to progress bars.
    *
@@ -29,7 +29,12 @@
       }
 
       if ($progress.length) {
-        progressBar = new Drupal.ProgressBar('updateprogress', updateCallback, 'POST', errorCallback);
+        progressBar = new Drupal.ProgressBar(
+          'updateprogress',
+          updateCallback,
+          'POST',
+          errorCallback,
+        );
         progressBar.setProgress(-1, batch.initMessage);
         progressBar.startMonitoring(`${batch.uri}&op=do`, 10);
         // Remove HTML from no-js progress bar.
@@ -39,4 +44,4 @@
       }
     },
   };
-}(jQuery, Drupal));
+})(jQuery, Drupal);

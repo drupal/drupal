@@ -9,9 +9,9 @@ document.documentElement.className += ' js';
 // JavaScript should be made compatible with libraries other than jQuery by
 // wrapping it in an anonymous closure.
 
-(function (domready, Drupal, drupalSettings) {
+(function(domready, Drupal, drupalSettings) {
   // Attach all behaviors.
   domready(() => {
     Drupal.attachBehaviors(document, drupalSettings);
   });
-}(domready, Drupal, window.drupalSettings));
+})(domready, Drupal, window.drupalSettings);

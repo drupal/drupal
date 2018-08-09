@@ -3,7 +3,7 @@
  * Adds default classes to buttons for styling purposes.
  */
 
-(function ($) {
+(function($) {
   $.widget('ui.dialog', $.ui.dialog, {
     options: {
       buttonClass: 'button',
@@ -15,7 +15,10 @@
       let index;
       const il = opts.buttons.length;
       for (index = 0; index < il; index++) {
-        if (opts.buttons[index].primary && opts.buttons[index].primary === true) {
+        if (
+          opts.buttons[index].primary &&
+          opts.buttons[index].primary === true
+        ) {
           primaryIndex = index;
           delete opts.buttons[index].primary;
           break;
@@ -28,4 +31,4 @@
       }
     },
   });
-}(jQuery));
+})(jQuery);

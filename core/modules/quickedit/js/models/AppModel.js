@@ -14,6 +14,5 @@
 
       activeModal: null
     }
-
   });
 })(Backbone, Drupal);

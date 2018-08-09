@@ -3,7 +3,7 @@
  * CKEditor StylesCombo admin behavior.
  */
 
-(function ($, Drupal, drupalSettings, _) {
+(function($, Drupal, drupalSettings, _) {
   /**
    * Ensures that the "stylescombo" button's metadata remains up-to-date.
    *
@@ -30,10 +30,12 @@
       const $ckeditorActiveToolbar = $context
         .find('.ckeditor-toolbar-configuration')
         .find('.ckeditor-toolbar-active');
-      let previousStylesSet = drupalSettings.ckeditor.hiddenCKEditorConfig.stylesSet;
+      let previousStylesSet =
+        drupalSettings.ckeditor.hiddenCKEditorConfig.stylesSet;
       const that = this;
-      $context.find('[name="editor[settings][plugins][stylescombo][styles]"]')
-        .on('blur.ckeditorStylesComboSettings', function () {
+      $context
+        .find('[name="editor[settings][plugins][stylescombo][styles]"]')
+        .on('blur.ckeditorStylesComboSettings', function() {
           const styles = $.trim($(this).val());
           const stylesSet = that._generateStylesSetSetting(styles);
           if (!_.isEqual(previousStylesSet, stylesSet)) {
@@ -74,7 +76,10 @@
         }
 
         // Validate syntax: element[.class...]|label pattern expected.
-        if (style.match(/^ *[a-zA-Z0-9]+ *(\.[a-zA-Z0-9_-]+ *)*\| *.+ *$/) === null) {
+        if (
+          style.match(/^ *[a-zA-Z0-9]+ *(\.[a-zA-Z0-9_-]+ *)*\| *.+ *$/) ===
+          null
+        ) {
           // Instead of failing, we just ignore any invalid styles.
           continue;
         }
@@ -109,8 +114,12 @@
    */
   Drupal.behaviors.ckeditorStylesComboSettingsSummary = {
     attach() {
-      $('[data-ckeditor-plugin-id="stylescombo"]').drupalSetSummary((context) => {
-        const styles = $.trim($('[data-drupal-selector="edit-editor-settings-plugins-stylescombo-styles"]').val());
+      $('[data-ckeditor-plugin-id="stylescombo"]').drupalSetSummary(context => {
+        const styles = $.trim(
+          $(
+            '[data-drupal-selector="edit-editor-settings-plugins-stylescombo-styles"]',
+          ).val(),
+        );
         if (styles.length === 0) {
           return Drupal.t('No styles configured');
         }
@@ -120,4 +129,4 @@
       });
     },
   };
-}(jQuery, Drupal, drupalSettings, _));
+})(jQuery, Drupal, drupalSettings, _);

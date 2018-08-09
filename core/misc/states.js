@@ -119,7 +119,11 @@
 
         value = invert(value, this.state.invert);
 
-        this.element.trigger({ type: 'state:' + this.state, value: value, trigger: true });
+        this.element.trigger({
+          type: 'state:' + this.state,
+          value: value,
+          trigger: true
+        });
       }
     },
     verifyConstraints: function verifyConstraints(constraints, selector) {
@@ -214,13 +218,21 @@
         var value = valueFn.call(this.element, e);
 
         if (oldValue !== value) {
-          this.element.trigger({ type: 'state:' + this.state, value: value, oldValue: oldValue });
+          this.element.trigger({
+            type: 'state:' + this.state,
+            value: value,
+            oldValue: oldValue
+          });
           oldValue = value;
         }
       }, this));
 
       states.postponed.push($.proxy(function () {
-        this.element.trigger({ type: 'state:' + this.state, value: oldValue, oldValue: null });
+        this.element.trigger({
+          type: 'state:' + this.state,
+          value: oldValue,
+          oldValue: null
+        });
       }, this));
     }
   };

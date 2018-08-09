@@ -66,21 +66,29 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     statusText = '';
 
     try {
-      statusText = '\n' + Drupal.t('StatusText: !statusText', { '!statusText': $.trim(xmlhttp.statusText) });
+      statusText = '\n' + Drupal.t('StatusText: !statusText', {
+        '!statusText': $.trim(xmlhttp.statusText)
+      });
     } catch (e) {}
 
     responseText = '';
 
     try {
-      responseText = '\n' + Drupal.t('ResponseText: !responseText', { '!responseText': $.trim(xmlhttp.responseText) });
+      responseText = '\n' + Drupal.t('ResponseText: !responseText', {
+        '!responseText': $.trim(xmlhttp.responseText)
+      });
     } catch (e) {}
 
     responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi, '');
     responseText = responseText.replace(/[\n]+\s+/g, '\n');
 
-    var readyStateText = xmlhttp.status === 0 ? '\n' + Drupal.t('ReadyState: !readyState', { '!readyState': xmlhttp.readyState }) : '';
+    var readyStateText = xmlhttp.status === 0 ? '\n' + Drupal.t('ReadyState: !readyState', {
+      '!readyState': xmlhttp.readyState
+    }) : '';
 
-    customMessage = customMessage ? '\n' + Drupal.t('CustomMessage: !customMessage', { '!customMessage': customMessage }) : '';
+    customMessage = customMessage ? '\n' + Drupal.t('CustomMessage: !customMessage', {
+      '!customMessage': customMessage
+    }) : '';
 
     this.message = statusCode + pathText + statusText + customMessage + responseText + readyStateText;
 
@@ -254,7 +262,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     $(ajax.element).on(elementSettings.event, function (event) {
       if (!drupalSettings.ajaxTrustedUrl[ajax.url] && !Drupal.url.isLocal(ajax.url)) {
-        throw new Error(Drupal.t('The callback URL is not local and not trusted: !url', { '!url': ajax.url }));
+        throw new Error(Drupal.t('The callback URL is not local and not trusted: !url', {
+          '!url': ajax.url
+        }));
       }
       return ajax.eventResponse(this, event);
     });
@@ -610,7 +620,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       $('head').prepend(response.data);
 
       var match = void 0;
-      var importMatch = /^@import url\("(.*)"\);$/igm;
+      var importMatch = /^@import url\("(.*)"\);$/gim;
       if (document.styleSheets[0].addImport && importMatch.test(response.data)) {
         importMatch.lastIndex = 0;
         do {

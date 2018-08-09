@@ -3,7 +3,7 @@
  * Autocomplete based on jQuery UI.
  */
 
-(function ($, Drupal) {
+(function($, Drupal) {
   let autocomplete;
 
   /**
@@ -30,12 +30,10 @@
       if (character === '"') {
         current += character;
         quote = !quote;
-      }
-      else if (character === ',' && !quote) {
+      } else if (character === ',' && !quote) {
         result.push(current.trim());
         current = '';
-      }
-      else {
+      } else {
         current += character;
       }
     }
@@ -81,7 +79,10 @@
 
     const term = autocomplete.extractLastTerm(event.target.value);
     // Abort search if the first character is in firstCharacterBlacklist.
-    if (term.length > 0 && options.firstCharacterBlacklist.indexOf(term[0]) !== -1) {
+    if (
+      term.length > 0 &&
+      options.firstCharacterBlacklist.indexOf(term[0]) !== -1
+    ) {
       return false;
     }
     // Only search when the term is at least the minimum length.
@@ -141,9 +142,11 @@
     // Check if the term is already cached.
     if (autocomplete.cache[elementId].hasOwnProperty(term)) {
       showSuggestions(autocomplete.cache[elementId][term]);
-    }
-    else {
-      const options = $.extend({ success: sourceCallbackHandler, data: { q: term } }, autocomplete.ajax);
+    } else {
+      const options = $.extend(
+        { success: sourceCallbackHandler, data: { q: term } },
+        autocomplete.ajax,
+      );
       $.ajax(this.element.attr('data-autocomplete-path'), options);
     }
   }
@@ -211,18 +214,22 @@
   Drupal.behaviors.autocomplete = {
     attach(context) {
       // Act on textfields with the "form-autocomplete" class.
-      const $autocomplete = $(context).find('input.form-autocomplete').once('autocomplete');
+      const $autocomplete = $(context)
+        .find('input.form-autocomplete')
+        .once('autocomplete');
       if ($autocomplete.length) {
         // Allow options to be overriden per instance.
-        const blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
+        const blacklist = $autocomplete.attr(
+          'data-autocomplete-first-character-blacklist',
+        );
         $.extend(autocomplete.options, {
-          firstCharacterBlacklist: (blacklist) || '',
+          firstCharacterBlacklist: blacklist || '',
         });
         // Use jQuery UI Autocomplete on the textfield.
-        $autocomplete.autocomplete(autocomplete.options)
-          .each(function () {
-            $(this).data('ui-autocomplete')._renderItem = autocomplete.options.renderItem;
-          });
+        $autocomplete.autocomplete(autocomplete.options).each(function() {
+          $(this).data('ui-autocomplete')._renderItem =
+            autocomplete.options.renderItem;
+        });
 
         // Use CompositionEvent to handle IME inputs. It requests remote server on "compositionend" event only.
         $autocomplete.on('compositionstart.autocomplete', () => {
@@ -235,7 +242,8 @@
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        $(context).find('input.form-autocomplete')
+        $(context)
+          .find('input.form-autocomplete')
           .removeOnce('autocomplete')
           .autocomplete('destroy');
       }
@@ -277,4 +285,4 @@
   };
 
   Drupal.autocomplete = autocomplete;
-}(jQuery, Drupal));
+})(jQuery, Drupal);

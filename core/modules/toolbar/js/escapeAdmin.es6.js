@@ -3,7 +3,7 @@
  * Replaces the home link in toolbar with a back to site link.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function($, Drupal, drupalSettings) {
   const pathInfo = drupalSettings.path;
   const escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
   const windowLocation = window.location;
@@ -12,7 +12,10 @@
   // back to it when browsing administrative pages. If there is a destination
   // parameter there is not need to save the current path because the page is
   // loaded within an existing "workflow".
-  if (!pathInfo.currentPathIsAdmin && !/destination=/.test(windowLocation.search)) {
+  if (
+    !pathInfo.currentPathIsAdmin &&
+    !/destination=/.test(windowLocation.search)
+  ) {
     sessionStorage.setItem('escapeAdminPath', windowLocation);
   }
 
@@ -29,15 +32,16 @@
    */
   Drupal.behaviors.escapeAdmin = {
     attach() {
-      const $toolbarEscape = $('[data-toolbar-escape-admin]').once('escapeAdmin');
+      const $toolbarEscape = $('[data-toolbar-escape-admin]').once(
+        'escapeAdmin',
+      );
       if ($toolbarEscape.length && pathInfo.currentPathIsAdmin) {
         if (escapeAdminPath !== null) {
           $toolbarEscape.attr('href', escapeAdminPath);
-        }
-        else {
+        } else {
           $toolbarEscape.text(Drupal.t('Home'));
         }
       }
     },
   };
-}(jQuery, Drupal, drupalSettings));
+})(jQuery, Drupal, drupalSettings);

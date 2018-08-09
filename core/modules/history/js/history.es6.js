@@ -5,13 +5,14 @@
  * May only be loaded for authenticated users, with the History module enabled.
  */
 
-(function ($, Drupal, drupalSettings, storage) {
+(function($, Drupal, drupalSettings, storage) {
   const currentUserID = parseInt(drupalSettings.user.uid, 10);
 
   // Any comment that is older than 30 days is automatically considered read,
   // so for these we don't need to perform a request at all!
   const secondsIn30Days = 2592000;
-  const thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - secondsIn30Days;
+  const thirtyDaysAgo =
+    Math.round(new Date().getTime() / 1000) - secondsIn30Days;
 
   // Use the data embedded in the page, if available.
   let embeddedLastReadTimestamps = false;
@@ -23,7 +24,6 @@
    * @namespace
    */
   Drupal.history = {
-
     /**
      * Fetch "last read" timestamps for the given nodes.
      *
@@ -45,8 +45,11 @@
         data: { 'node_ids[]': nodeIDs },
         dataType: 'json',
         success(results) {
-          Object.keys(results || {}).forEach((nodeID) => {
-            storage.setItem(`Drupal.history.${currentUserID}.${nodeID}`, results[nodeID]);
+          Object.keys(results || {}).forEach(nodeID => {
+            storage.setItem(
+              `Drupal.history.${currentUserID}.${nodeID}`,
+              results[nodeID],
+            );
           });
           callback();
         },
@@ -67,7 +70,10 @@
       if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
         return parseInt(embeddedLastReadTimestamps[nodeID], 10);
       }
-      return parseInt(storage.getItem(`Drupal.history.${currentUserID}.${nodeID}`) || 0, 10);
+      return parseInt(
+        storage.getItem(`Drupal.history.${currentUserID}.${nodeID}`) || 0,
+        10,
+      );
     },
 
     /**
@@ -84,11 +90,17 @@
         success(timestamp) {
           // If the data is embedded in the page, don't store on the client
           // side.
-          if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
+          if (
+            embeddedLastReadTimestamps &&
+            embeddedLastReadTimestamps[nodeID]
+          ) {
             return;
           }
 
-          storage.setItem(`Drupal.history.${currentUserID}.${nodeID}`, timestamp);
+          storage.setItem(
+            `Drupal.history.${currentUserID}.${nodeID}`,
+            timestamp,
+          );
         },
       });
     },
@@ -119,11 +131,16 @@
 
       // Use the data embedded in the page, if available.
       if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
-        return contentTimestamp > parseInt(embeddedLastReadTimestamps[nodeID], 10);
+        return (
+          contentTimestamp > parseInt(embeddedLastReadTimestamps[nodeID], 10)
+        );
       }
 
-      const minLastReadTimestamp = parseInt(storage.getItem(`Drupal.history.${currentUserID}.${nodeID}`) || 0, 10);
+      const minLastReadTimestamp = parseInt(
+        storage.getItem(`Drupal.history.${currentUserID}.${nodeID}`) || 0,
+        10,
+      );
       return contentTimestamp > minLastReadTimestamp;
     },
   };
-}(jQuery, Drupal, drupalSettings, window.localStorage));
+})(jQuery, Drupal, drupalSettings, window.localStorage);

@@ -5,14 +5,18 @@
  * @ignore
  */
 
-(function ($, Drupal, drupalSettings, CKEDITOR) {
+(function($, Drupal, drupalSettings, CKEDITOR) {
   function parseAttributes(editor, element) {
     const parsedAttributes = {};
 
     const domElement = element.$;
     let attribute;
     let attributeName;
-    for (let attrIndex = 0; attrIndex < domElement.attributes.length; attrIndex++) {
+    for (
+      let attrIndex = 0;
+      attrIndex < domElement.attributes.length;
+      attrIndex++
+    ) {
       attribute = domElement.attributes.item(attrIndex);
       attributeName = attribute.nodeName.toLowerCase();
       // Ignore data-cke-* attributes; they're CKEditor internals.
@@ -21,12 +25,15 @@
       }
       // Store the value for this attribute, unless there's a data-cke-saved-
       // alternative for it, which will contain the quirk-free, original value.
-      parsedAttributes[attributeName] = element.data(`cke-saved-${attributeName}`) || attribute.nodeValue;
+      parsedAttributes[attributeName] =
+        element.data(`cke-saved-${attributeName}`) || attribute.nodeValue;
     }
 
     // Remove any cke_* classes.
     if (parsedAttributes.class) {
-      parsedAttributes.class = CKEDITOR.tools.trim(parsedAttributes.class.replace(/cke_\S+/, ''));
+      parsedAttributes.class = CKEDITOR.tools.trim(
+        parsedAttributes.class.replace(/cke_\S+/, ''),
+      );
     }
 
     return parsedAttributes;
@@ -34,7 +41,7 @@
 
   function getAttributes(editor, data) {
     const set = {};
-    Object.keys(data || {}).forEach((attributeName) => {
+    Object.keys(data || {}).forEach(attributeName => {
       set[attributeName] = data[attributeName];
     });
 
@@ -44,7 +51,7 @@
 
     // Remove all attributes which are not currently set.
     const removed = {};
-    Object.keys(set).forEach((s) => {
+    Object.keys(set).forEach(s => {
       delete removed[s];
     });
 
@@ -115,7 +122,8 @@
         canUndo: true,
         exec(editor) {
           const drupalImageUtils = CKEDITOR.plugins.drupalimage;
-          const focusedImageWidget = drupalImageUtils && drupalImageUtils.getFocusedWidget(editor);
+          const focusedImageWidget =
+            drupalImageUtils && drupalImageUtils.getFocusedWidget(editor);
           let linkElement = getSelectedLink(editor);
 
           // Set existing values based on selected element.
@@ -130,11 +138,17 @@
           }
 
           // Prepare a save callback to be used upon saving the dialog.
-          const saveCallback = function (returnValues) {
+          const saveCallback = function(returnValues) {
             // If an image widget is focused, we're not editing an independent
             // link, but we're wrapping an image widget in a link.
             if (focusedImageWidget) {
-              focusedImageWidget.setData('link', CKEDITOR.tools.extend(returnValues.attributes, focusedImageWidget.data.link));
+              focusedImageWidget.setData(
+                'link',
+                CKEDITOR.tools.extend(
+                  returnValues.attributes,
+                  focusedImageWidget.data.link,
+                ),
+              );
               editor.fire('saveSnapshot');
               return;
             }
@@ -149,13 +163,19 @@
               // Use link URL as text with a collapsed cursor.
               if (range.collapsed) {
                 // Shorten mailto URLs to just the email address.
-                const text = new CKEDITOR.dom.text(returnValues.attributes.href.replace(/^mailto:/, ''), editor.document);
+                const text = new CKEDITOR.dom.text(
+                  returnValues.attributes.href.replace(/^mailto:/, ''),
+                  editor.document,
+                );
                 range.insertNode(text);
                 range.selectNodeContents(text);
               }
 
               // Create the new link by applying a style to the new text.
-              const style = new CKEDITOR.style({ element: 'a', attributes: returnValues.attributes });
+              const style = new CKEDITOR.style({
+                element: 'a',
+                attributes: returnValues.attributes,
+              });
               style.type = CKEDITOR.STYLE_INLINE;
               style.applyToRange(range);
               range.select();
@@ -165,7 +185,7 @@
             }
             // Update the link properties.
             else if (linkElement) {
-              Object.keys(returnValues.attributes || {}).forEach((attrName) => {
+              Object.keys(returnValues.attributes || {}).forEach(attrName => {
                 // Update the property if a value is specified.
                 if (returnValues.attributes[attrName].length > 0) {
                   const value = returnValues.attributes[attrName];
@@ -186,12 +206,20 @@
           // loads the JavaScript file instead of Drupal. Pull translated
           // strings from the plugin settings that are translated server-side.
           const dialogSettings = {
-            title: linkElement ? editor.config.drupalLink_dialogTitleEdit : editor.config.drupalLink_dialogTitleAdd,
+            title: linkElement
+              ? editor.config.drupalLink_dialogTitleEdit
+              : editor.config.drupalLink_dialogTitleAdd,
             dialogClass: 'editor-link-dialog',
           };
 
           // Open the dialog for the edit form.
-          Drupal.ckeditor.openDialog(editor, Drupal.url(`editor/dialog/link/${editor.config.drupal.format}`), existingValues, saveCallback, dialogSettings);
+          Drupal.ckeditor.openDialog(
+            editor,
+            Drupal.url(`editor/dialog/link/${editor.config.drupal.format}`),
+            existingValues,
+            saveCallback,
+            dialogSettings,
+          );
         },
       });
       editor.addCommand('drupalunlink', {
@@ -204,15 +232,24 @@
           },
         }),
         exec(editor) {
-          const style = new CKEDITOR.style({ element: 'a', type: CKEDITOR.STYLE_INLINE, alwaysRemoveElement: 1 });
+          const style = new CKEDITOR.style({
+            element: 'a',
+            type: CKEDITOR.STYLE_INLINE,
+            alwaysRemoveElement: 1,
+          });
           editor.removeStyle(style);
         },
         refresh(editor, path) {
-          const element = path.lastElement && path.lastElement.getAscendant('a', true);
-          if (element && element.getName() === 'a' && element.getAttribute('href') && element.getChildCount()) {
+          const element =
+            path.lastElement && path.lastElement.getAscendant('a', true);
+          if (
+            element &&
+            element.getName() === 'a' &&
+            element.getAttribute('href') &&
+            element.getChildCount()
+          ) {
             this.setState(CKEDITOR.TRISTATE_OFF);
-          }
-          else {
+          } else {
             this.setState(CKEDITOR.TRISTATE_DISABLED);
           }
         },
@@ -233,7 +270,7 @@
         });
       }
 
-      editor.on('doubleclick', (evt) => {
+      editor.on('doubleclick', evt => {
         const element = getSelectedLink(editor) || evt.data.element;
 
         if (!element.isReadOnly()) {
@@ -276,7 +313,10 @@
 
           let menu = {};
           if (anchor.getAttribute('href') && anchor.getChildCount()) {
-            menu = { link: CKEDITOR.TRISTATE_OFF, unlink: CKEDITOR.TRISTATE_OFF };
+            menu = {
+              link: CKEDITOR.TRISTATE_OFF,
+              unlink: CKEDITOR.TRISTATE_OFF,
+            };
           }
           return menu;
         });
@@ -291,4 +331,4 @@
     parseLinkAttributes: parseAttributes,
     getLinkAttributes: getAttributes,
   };
-}(jQuery, Drupal, drupalSettings, CKEDITOR));
+})(jQuery, Drupal, drupalSettings, CKEDITOR);

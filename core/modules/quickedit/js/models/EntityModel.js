@@ -193,7 +193,9 @@
                 error: function error() {
                   entityModel.set('isCommitting', false);
 
-                  entityModel.set('state', 'opened', { reason: 'networkerror' });
+                  entityModel.set('state', 'opened', {
+                    reason: 'networkerror'
+                  });
 
                   var message = Drupal.t('Your changes to <q>@entity-title</q> could not be saved, either due to a website problem or a network connection problem.<br>Please try again.', { '@entity-title': entityModel.get('label') });
                   Drupal.quickedit.util.networkErrorModal(Drupal.t('Network problem!'), message);
