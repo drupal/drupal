@@ -69,7 +69,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'editor' => 2,
       'field_config' => 89,
       'field_storage_config' => 63,
-      'file' => 8,
+      'file' => 7,
       'filter_format' => 7,
       'image_style' => 5,
       'language_content_settings' => 3,
@@ -109,7 +109,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts['comment'] = 7;
     $counts['entity_view_display'] = 55;
     $counts['entity_view_mode'] = 14;
-    $counts['file'] = 9;
+    $counts['file'] = 8;
     $counts['menu_link_content'] = 11;
     $counts['node'] = 18;
     $counts['taxonomy_term'] = 9;

@@ -42,6 +42,7 @@ class File extends DrupalSqlBase {
   public function query() {
     return $this->select('files', 'f')
       ->fields('f')
+      ->condition('filepath', '/tmp%', 'NOT LIKE')
       ->orderBy('timestamp')
       // If two or more files have the same timestamp, they'll end up in a
       // non-deterministic order. Ordering by fid (or any other unique field)

@@ -43,18 +43,21 @@ class File extends DrupalSqlBase {
   public function query() {
     $query = $this->select('file_managed', 'f')
       ->fields('f')
+      ->condition('uri', 'temporary://%', 'NOT LIKE')
       ->orderBy('f.timestamp');
 
     // Filter by scheme(s), if configured.
     if (isset($this->configuration['scheme'])) {
       $schemes = [];
+      // Remove 'temporary' scheme.
+      $valid_schemes = array_diff((array) $this->configuration['scheme'], ['temporary']);
       // Accept either a single scheme, or a list.
-      foreach ((array) $this->configuration['scheme'] as $scheme) {
+      foreach ((array) $valid_schemes as $scheme) {
         $schemes[] = rtrim($scheme) . '://';
       }
       $schemes = array_map([$this->getDatabase(), 'escapeLike'], $schemes);
 
-      // uri LIKE 'public://%' OR uri LIKE 'private://%'
+      // Add conditions, uri LIKE 'public://%' OR uri LIKE 'private://%'.
       $conditions = new Condition('OR');
       foreach ($schemes as $scheme) {
         $conditions->condition('uri', $scheme . '%', 'LIKE');
