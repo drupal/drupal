@@ -13373,6 +13373,17 @@ $connection->insert('file_managed')
   'status' => '1',
   'timestamp' => '1486104045',
 ))
+->values(array(
+  'fid' => '4',
+  'uid' => '1',
+  'filename' => 'TerokNor.txt',
+  'uri' => 'temporary://TerokNor.txt',
+  'filemime' => 'text/plain',
+  'filesize' => '2369',
+  'status' => '1',
+  'timestamp' => '1421747516',
+))
+
 ->execute();
 
 $connection->schema()->createTable('file_usage', array(

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\file\Kernel\Migrate\d7;
 
+use Drupal\file\Entity\File;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
@@ -43,6 +44,8 @@ class MigrateFileTest extends MigrateDrupal7TestBase {
    */
   public function testFileMigration() {
     $this->assertEntity(1, 'cube.jpeg', 'public://cube.jpeg', 'image/jpeg', '3620', '1421727515', '1421727515', '1');
+    // Ensure temporary file was not migrated.
+    $this->assertNull(File::load(4));
   }
 
 }
