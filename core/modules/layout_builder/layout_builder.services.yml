@@ -43,3 +43,6 @@ services:
   logger.channel.layout_builder:
     parent: logger.channel_base
     arguments: ['layout_builder']
+  inline_block.usage:
+    class: Drupal\layout_builder\InlineBlockUsage
+    arguments: ['@database']

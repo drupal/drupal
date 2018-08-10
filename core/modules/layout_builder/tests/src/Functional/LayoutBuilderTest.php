@@ -122,6 +122,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Save the defaults.
     $assert_session->linkExists('Save Layout');
     $this->clickLink('Save Layout');
+    $assert_session->pageTextContains('The layout has been saved.');
     $assert_session->addressEquals("$field_ui_prefix/display/default");
 
     // The node uses the defaults, no overrides available.
