@@ -5,6 +5,9 @@ migration_tags:
   - Multilingual
   - Follow-up migration
 deriver: Drupal\migrate_drupal\Plugin\migrate\EntityReferenceTranslationDeriver
+provider:
+  - content_translation
+  - migrate_drupal
 # Supported target types for entity reference translation migrations. The array
 # keys are the supported target types and the values are arrays of migrations
 # to lookup for the translated entity IDs.
