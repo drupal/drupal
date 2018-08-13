@@ -29,7 +29,7 @@ class TextItemSillyNormalizer extends FieldItemNormalizer {
    */
   protected function constructValue($data, $context) {
     $value = parent::constructValue($data, $context);
-    $value['value']  = str_replace('::silly_suffix', '', $value['value']);
+    $value['value'] = str_replace('::silly_suffix', '', $value['value']);
     return $value;
   }
 

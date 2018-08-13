@@ -62,7 +62,7 @@ class DownloadTest extends FileManagedTestBase {
     $file->setPermanent();
     $file->save();
 
-    $url  = file_create_url($file->getFileUri());
+    $url = file_create_url($file->getFileUri());
 
     // Set file_test access header to allow the download.
     file_test_set_return('download', ['x-foo' => 'Bar']);

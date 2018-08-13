@@ -41,7 +41,7 @@ class DateTimePlus {
 
   use ToStringTrait;
 
-  const FORMAT   = 'Y-m-d H:i:s';
+  const FORMAT = 'Y-m-d H:i:s';
 
   /**
    * A RFC7231 Compliant date.

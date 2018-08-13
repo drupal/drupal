@@ -74,7 +74,7 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
     $max_rows_settings = $this->settings->get('database_cache_max_rows');
     // First, look for a cache bin specific setting.
     if (isset($max_rows_settings['bins'][$bin])) {
-      $max_rows  = $max_rows_settings['bins'][$bin];
+      $max_rows = $max_rows_settings['bins'][$bin];
     }
     // Second, use configured default backend.
     elseif (isset($max_rows_settings['default'])) {

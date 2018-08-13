@@ -176,7 +176,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ->setSetting('max_length', 255);
 
     // A base field with cardinality > 1
-    $base_fields['string']  = BaseFieldDefinition::create('string')
+    $base_fields['string'] = BaseFieldDefinition::create('string')
       ->setLabel('Strong')
       ->setTranslatable(TRUE)
       ->setCardinality(2);

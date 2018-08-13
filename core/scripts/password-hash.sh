@@ -17,7 +17,7 @@ if (PHP_SAPI !== 'cli') {
 }
 
 if (version_compare(PHP_VERSION, '5.4.5') < 0) {
-  $version  = PHP_VERSION;
+  $version = PHP_VERSION;
   echo <<<EOF
 
 ERROR: This script requires at least PHP version 5.4.5. You invoked it with

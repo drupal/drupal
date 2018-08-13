@@ -179,7 +179,7 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
 
         // Comment related URLs.
         case 'url':
-          $url_options['fragment']  = 'comment-' . $comment->id();
+          $url_options['fragment'] = 'comment-' . $comment->id();
           $replacements[$original] = $comment->url('canonical', $url_options);
           break;
 

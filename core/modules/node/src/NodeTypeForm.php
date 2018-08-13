@@ -124,7 +124,7 @@ class NodeTypeForm extends BundleEntityFormBase {
         DRUPAL_REQUIRED => t('Required'),
       ],
     ];
-    $form['submission']['help']  = [
+    $form['submission']['help'] = [
       '#type' => 'textarea',
       '#title' => t('Explanation or submission guidelines'),
       '#default_value' => $type->getHelp(),

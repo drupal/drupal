@@ -99,7 +99,7 @@ function entity_test_update_entity_presave(EntityInterface $entity) {
  */
 function _entity_test_update_create_test_entities($start = 1, $end = 50, $add_translation = FALSE) {
   for ($i = $start; $i <= $end; $i++) {
-    $entity  = EntityTestUpdate::create([
+    $entity = EntityTestUpdate::create([
       'id' => $i,
       'name' => $i,
       'test_single_property' => $i . ' - test single property',

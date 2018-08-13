@@ -491,7 +491,7 @@ function template_preprocess_username(&$variables) {
   // unsanitized version, in case other preprocess functions want to implement
   // their own shortening logic or add markup. If they do so, they must ensure
   // that $variables['name'] is safe for printing.
-  $name  = $account->getDisplayName();
+  $name = $account->getDisplayName();
   $variables['name_raw'] = $account->getUsername();
   if (mb_strlen($name) > 20) {
     $name = Unicode::truncate($name, 15, FALSE, TRUE);

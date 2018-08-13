@@ -189,7 +189,7 @@ class CssOptimizer implements AssetOptimizerInterface {
     if ($optimize) {
       // Perform some safe CSS optimizations.
       // Regexp to match comment blocks.
-      $comment     = '/\*[^*]*\*+(?:[^/*][^*]*\*+)*/';
+      $comment = '/\*[^*]*\*+(?:[^/*][^*]*\*+)*/';
       // Regexp to match double quoted strings.
       $double_quot = '"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"';
       // Regexp to match single quoted strings.

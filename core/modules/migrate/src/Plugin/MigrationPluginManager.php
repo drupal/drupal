@@ -83,7 +83,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
       // This gets rid of migrations which try to use a non-existent source
       // plugin. The common case for this is if the source plugin has, or
       // specifies, a non-existent provider.
-      $only_with_source_discovery  = new NoSourcePluginDecorator($yaml_discovery);
+      $only_with_source_discovery = new NoSourcePluginDecorator($yaml_discovery);
       // This gets rid of migrations with explicit providers set if one of the
       // providers do not exist before we try to use a potentially non-existing
       // deriver. This is a rare case.

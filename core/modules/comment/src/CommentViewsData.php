@@ -235,7 +235,7 @@ class CommentViewsData extends EntityViewsData {
 
     // Define the base group of this table. Fields that don't have a group defined
     // will go into this field by default.
-    $data['comment_entity_statistics']['table']['group']  = $this->t('Comment Statistics');
+    $data['comment_entity_statistics']['table']['group'] = $this->t('Comment Statistics');
 
     // Provide a relationship for each entity type except comment.
     foreach ($entities_types as $type => $entity_type) {

@@ -1371,9 +1371,9 @@ function template_preprocess_page(&$variables) {
     }
   }
 
-  $variables['base_path']         = base_path();
-  $variables['front_page']        = \Drupal::url('<front>');
-  $variables['language']          = $language_interface;
+  $variables['base_path'] = base_path();
+  $variables['front_page'] = \Drupal::url('<front>');
+  $variables['language'] = $language_interface;
 
   // An exception might be thrown.
   try {

@@ -811,7 +811,7 @@ function template_preprocess_views_view_unformatted(&$variables) {
  *   - view: A View object.
  */
 function template_preprocess_views_view_list(&$variables) {
-  $handler  = $variables['view']->style_plugin;
+  $handler = $variables['view']->style_plugin;
 
   // Fetch classes from handler options.
   if ($handler->options['class']) {
@@ -844,7 +844,7 @@ function template_preprocess_views_view_list(&$variables) {
  *   - rows: The raw row data.
  */
 function template_preprocess_views_view_rss(&$variables) {
-  $view  = $variables['view'];
+  $view = $variables['view'];
   $items = $variables['rows'];
   $style = $view->style_plugin;
 
@@ -945,7 +945,7 @@ function template_preprocess_views_view_row_rss(&$variables) {
  *   - rows: The raw row data.
  */
 function template_preprocess_views_view_opml(&$variables) {
-  $view  = $variables['view'];
+  $view = $variables['view'];
   $items = $variables['rows'];
 
   $config = \Drupal::config('system.site');
