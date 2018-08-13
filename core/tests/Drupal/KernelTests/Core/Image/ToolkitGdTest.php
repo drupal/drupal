@@ -31,7 +31,7 @@ class ToolkitGdTest extends KernelTestBase {
   protected $white       = [255, 255, 255, 0];
   protected $transparent = [0, 0, 0, 127];
   // Used as rotate background colors.
-  protected $fuchsia            = [255, 0, 255, 0];
+  protected $fuchsia           = [255, 0, 255, 0];
   protected $rotateTransparent = [255, 255, 255, 127];
 
   protected $width = 40;

@@ -99,6 +99,7 @@
   <rule ref="Drupal.Files.FileEncoding"/>
   <rule ref="Drupal.Files.TxtFileLineLength"/>
   <rule ref="Drupal.Formatting.MultiLineAssignment"/>
+  <rule ref="Drupal.Formatting.MultipleStatementAlignment"/>
   <rule ref="Drupal.Formatting.SpaceInlineIf"/>
   <rule ref="Drupal.Formatting.SpaceUnaryOperator"/>
   <rule ref="Drupal.Functions.DiscouragedFunctions"/>

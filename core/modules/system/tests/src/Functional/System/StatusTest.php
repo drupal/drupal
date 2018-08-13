@@ -27,7 +27,7 @@ class StatusTest extends BrowserTestBase {
 
     // Unset the sync directory in settings.php to trigger $config_directories
     // error.
-    $settings['config_directories']  = [
+    $settings['config_directories'] = [
       CONFIG_SYNC_DIRECTORY => (object) [
         'value' => '',
         'required' => TRUE,

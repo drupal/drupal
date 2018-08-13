@@ -133,7 +133,7 @@ class TermViewsData extends EntityViewsData {
       ],
     ];
 
-    $data['taxonomy_index']['table']['group']  = $this->t('Taxonomy term');
+    $data['taxonomy_index']['table']['group'] = $this->t('Taxonomy term');
 
     $data['taxonomy_index']['table']['join'] = [
       'taxonomy_term_field_data' => [

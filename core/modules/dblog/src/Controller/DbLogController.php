@@ -413,7 +413,7 @@ class DbLogController extends ControllerBase {
       }
     }
 
-    $build['dblog_top_table']  = [
+    $build['dblog_top_table'] = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,

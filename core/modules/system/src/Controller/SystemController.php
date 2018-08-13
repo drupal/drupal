@@ -187,7 +187,7 @@ class SystemController extends ControllerBase {
     uasort($themes, 'system_sort_modules_by_info_name');
 
     $theme_default = $config->get('default');
-    $theme_groups  = ['installed' => [], 'uninstalled' => []];
+    $theme_groups = ['installed' => [], 'uninstalled' => []];
     $admin_theme = $config->get('admin');
     $admin_theme_options = [];
 

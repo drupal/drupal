@@ -77,7 +77,7 @@ class ForumForm extends TermForm {
     $status = $term_storage->save($term);
 
     $route_name = $this->urlStub == 'container' ? 'entity.taxonomy_term.forum_edit_container_form' : 'entity.taxonomy_term.forum_edit_form';
-    $route_parameters  = ['taxonomy_term' => $term->id()];
+    $route_parameters = ['taxonomy_term' => $term->id()];
     $link = $this->l($this->t('Edit'), new Url($route_name, $route_parameters));
     $view_link = $term->link($term->getName());
     switch ($status) {

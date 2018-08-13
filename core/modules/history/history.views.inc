@@ -14,7 +14,7 @@ function history_views_data() {
   // We're actually defining a specific instance of the table, so let's
   // alias it so that we can later add the real table for other purposes if we
   // need it.
-  $data['history']['table']['group']  = t('Content');
+  $data['history']['table']['group'] = t('Content');
 
   // Explain how this table joins to others.
   $data['history']['table']['join'] = [

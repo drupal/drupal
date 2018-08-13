@@ -140,7 +140,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
 
     // Overrides for standard stuff.
     $options['style']['contains']['type']['default'] = 'rss';
-    $options['style']['contains']['options']['default']  = ['description' => ''];
+    $options['style']['contains']['options']['default'] = ['description' => ''];
     $options['sitename_title']['default'] = FALSE;
     $options['row']['contains']['type']['default'] = 'rss_fields';
     $options['defaults']['default']['style'] = FALSE;

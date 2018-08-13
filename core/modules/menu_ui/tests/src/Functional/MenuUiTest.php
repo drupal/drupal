@@ -662,7 +662,7 @@ class MenuUiTest extends BrowserTestBase {
       $this->drupalPostForm("admin/structure/menu/manage/{$this->menu->id()}/add", $edit, t('Save'));
       $menu_links = entity_load_multiple_by_properties('menu_link_content', ['title' => $title]);
       $last_link = reset($menu_links);
-      $created_links[]  = 'tools:' . $last_link->getPluginId();
+      $created_links[] = 'tools:' . $last_link->getPluginId();
     }
 
     // The last link cannot be a parent in the new menu link form.

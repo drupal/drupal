@@ -1513,7 +1513,7 @@ class Sql extends QueryPluginBase {
 
         if (!empty($this->limit) || !empty($this->offset)) {
           // We can't have an offset without a limit, so provide a very large limit instead.
-          $limit  = intval(!empty($this->limit) ? $this->limit : 999999);
+          $limit = intval(!empty($this->limit) ? $this->limit : 999999);
           $offset = intval(!empty($this->offset) ? $this->offset : 0);
           $query->range($offset, $limit);
         }

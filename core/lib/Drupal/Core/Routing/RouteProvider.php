@@ -401,7 +401,7 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
    * {@inheritdoc}
    */
   public function reset() {
-    $this->routes  = [];
+    $this->routes = [];
     $this->serializedRoutes = [];
     $this->cacheTagInvalidator->invalidateTags(['routes']);
   }

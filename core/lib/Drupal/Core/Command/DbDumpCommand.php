@@ -145,7 +145,7 @@ class DbDumpCommand extends DbCommandBase {
       $name = $row['Field'];
       // Parse out the field type and meta information.
       preg_match('@([a-z]+)(?:\((\d+)(?:,(\d+))?\))?\s*(unsigned)?@', $row['Type'], $matches);
-      $type  = $this->fieldTypeMap($connection, $matches[1]);
+      $type = $this->fieldTypeMap($connection, $matches[1]);
       if ($row['Extra'] === 'auto_increment') {
         // If this is an auto increment, then the type is 'serial'.
         $type = 'serial';
