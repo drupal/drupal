@@ -63,7 +63,7 @@ class DefaultFactory implements FactoryInterface {
    * @param \Drupal\Component\Plugin\Definition\PluginDefinitionInterface|mixed[] $plugin_definition
    *   The plugin definition associated with the plugin ID.
    * @param string $required_interface
-   *   (optional) THe required plugin interface.
+   *   (optional) The required plugin interface.
    *
    * @return string
    *   The appropriate class name.
