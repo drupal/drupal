@@ -15,7 +15,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['node_access_test'];
+  protected static $modules = ['node_access_test'];
 
   /**
    * User with permission to view content.

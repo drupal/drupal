@@ -27,7 +27,7 @@ class ContactLinkTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['contact_test_views'];
+  protected static $modules = ['contact_test_views'];
 
   /**
    * Views used by this test.

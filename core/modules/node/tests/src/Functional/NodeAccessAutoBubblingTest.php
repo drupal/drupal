@@ -21,7 +21,7 @@ class NodeAccessAutoBubblingTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['node_access_test', 'node_access_test_auto_bubbling'];
+  protected static $modules = ['node_access_test', 'node_access_test_auto_bubbling'];
 
   /**
    * {@inheritdoc}

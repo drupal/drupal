@@ -19,7 +19,7 @@ class UserEntityTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user', 'field'];
+  protected static $modules = ['system', 'user', 'field'];
 
   /**
    * {@inheritdoc}

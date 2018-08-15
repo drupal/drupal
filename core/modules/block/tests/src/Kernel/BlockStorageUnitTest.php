@@ -21,7 +21,7 @@ class BlockStorageUnitTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_test', 'system'];
+  protected static $modules = ['block', 'block_test', 'system'];
 
   /**
    * The block storage.

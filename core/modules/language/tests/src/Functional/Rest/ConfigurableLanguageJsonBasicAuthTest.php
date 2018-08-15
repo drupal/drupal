@@ -14,7 +14,7 @@ class ConfigurableLanguageJsonBasicAuthTest extends ConfigurableLanguageResource
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['basic_auth'];
+  protected static $modules = ['basic_auth'];
 
   /**
    * {@inheritdoc}

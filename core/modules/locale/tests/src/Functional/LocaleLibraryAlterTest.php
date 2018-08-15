@@ -19,7 +19,7 @@ class LocaleLibraryAlterTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['locale'];
+  protected static $modules = ['locale'];
 
   /**
    * Verifies that the datepicker can be localized.

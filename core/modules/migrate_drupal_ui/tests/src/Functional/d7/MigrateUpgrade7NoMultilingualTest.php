@@ -16,7 +16,7 @@ class MigrateUpgrade7NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'file',
     'language',
     'content_translation',

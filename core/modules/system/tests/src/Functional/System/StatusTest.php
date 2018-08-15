@@ -17,7 +17,7 @@ class StatusTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['update_test_postupdate'];
+  protected static $modules = ['update_test_postupdate'];
 
   /**
    * {@inheritdoc}

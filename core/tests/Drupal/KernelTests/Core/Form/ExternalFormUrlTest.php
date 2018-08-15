@@ -18,7 +18,7 @@ class ExternalFormUrlTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user', 'system'];
+  protected static $modules = ['user', 'system'];
 
   /**
    * {@inheritdoc}

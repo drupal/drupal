@@ -19,7 +19,7 @@ class NodeLanguageTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language', 'node_test_views'];
+  protected static $modules = ['language', 'node_test_views'];
 
   /**
    * Views used by this test.

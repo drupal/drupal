@@ -21,7 +21,7 @@ class UserActionConfigSchemaTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user'];
+  protected static $modules = ['system', 'user'];
 
   /**
    * Tests whether the user action config schema are valid.

@@ -21,7 +21,7 @@ class RenderWebTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['common_test'];
+  protected static $modules = ['common_test'];
 
   /**
    * Asserts the cache context for the wrapper format is always present.

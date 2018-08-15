@@ -15,7 +15,7 @@ class MigrateUserProfileFieldInstanceTranslationTest extends MigrateDrupal6TestB
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'config_translation',
     'locale',
     'language',

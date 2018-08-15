@@ -17,7 +17,7 @@ class FilterDefaultFormatTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter'];
+  protected static $modules = ['filter'];
 
   /**
    * Tests if the default text format is accessible to users.

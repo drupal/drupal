@@ -22,7 +22,7 @@ class ModerationActionsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'content_moderation',
     'node',
     'views',

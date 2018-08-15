@@ -16,7 +16,7 @@ class TwigNamespaceTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['twig_theme_test', 'twig_namespace_a', 'twig_namespace_b', 'node'];
+  protected static $modules = ['twig_theme_test', 'twig_namespace_a', 'twig_namespace_b', 'node'];
 
   /**
    * @var \Drupal\Core\Template\TwigEnvironment

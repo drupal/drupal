@@ -21,7 +21,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['text'];
+  protected static $modules = ['text'];
 
   /**
    * The entity type being tested.

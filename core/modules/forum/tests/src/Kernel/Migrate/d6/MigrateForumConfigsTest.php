@@ -17,7 +17,7 @@ class MigrateForumConfigsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['comment', 'forum', 'taxonomy'];
+  protected static $modules = ['comment', 'forum', 'taxonomy'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'content_translation',
     'telephone',

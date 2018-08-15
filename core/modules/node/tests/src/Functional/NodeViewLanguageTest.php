@@ -16,7 +16,7 @@ class NodeViewLanguageTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'datetime', 'language'];
+  protected static $modules = ['node', 'datetime', 'language'];
 
   /**
    * Tests the language extra field display.

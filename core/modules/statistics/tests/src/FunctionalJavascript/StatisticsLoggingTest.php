@@ -17,7 +17,7 @@ class StatisticsLoggingTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'statistics', 'language'];
+  protected static $modules = ['node', 'statistics', 'language'];
 
   /**
    * Node for tests.

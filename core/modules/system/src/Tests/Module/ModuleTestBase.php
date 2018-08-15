@@ -21,7 +21,7 @@ abstract class ModuleTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['system_test'];
+  protected static $modules = ['system_test'];
 
   protected $adminUser;
 

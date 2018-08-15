@@ -21,7 +21,7 @@ class PageNotFoundTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['system_test'];
+  protected static $modules = ['system_test'];
 
   protected $adminUser;
 

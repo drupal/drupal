@@ -26,7 +26,7 @@ class QueryBatchTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'migrate',
     'migrate_query_batch_test',
   ];

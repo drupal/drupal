@@ -19,7 +19,7 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
    *
    * @var array
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * {@inheritdoc}

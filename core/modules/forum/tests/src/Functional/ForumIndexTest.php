@@ -16,7 +16,7 @@ class ForumIndexTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy', 'comment', 'forum'];
+  protected static $modules = ['taxonomy', 'comment', 'forum'];
 
   protected function setUp() {
     parent::setUp();

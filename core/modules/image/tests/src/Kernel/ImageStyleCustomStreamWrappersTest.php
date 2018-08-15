@@ -23,7 +23,7 @@ class ImageStyleCustomStreamWrappersTest extends KernelTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['system', 'image'];
+  protected static $modules = ['system', 'image'];
 
   /**
    * A testing image style entity.

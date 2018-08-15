@@ -19,7 +19,7 @@ class CommentAccessTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'comment',
   ];

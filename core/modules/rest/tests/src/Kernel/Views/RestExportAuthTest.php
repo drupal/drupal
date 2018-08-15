@@ -16,7 +16,7 @@ class RestExportAuthTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'rest',
     'views_ui',

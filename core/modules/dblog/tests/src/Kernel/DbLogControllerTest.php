@@ -15,7 +15,7 @@ class DbLogControllerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['dblog', 'user'];
+  protected static $modules = ['dblog', 'user'];
 
   public function setUp() {
     parent::setUp();

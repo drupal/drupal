@@ -17,7 +17,7 @@ class ColorTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['color', 'color_test', 'block', 'file'];
+  protected static $modules = ['color', 'color_test', 'block', 'file'];
 
   /**
    * A user with administrative permissions.

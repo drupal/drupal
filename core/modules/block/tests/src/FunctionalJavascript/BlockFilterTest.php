@@ -15,7 +15,7 @@ class BlockFilterTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user', 'block'];
+  protected static $modules = ['user', 'block'];
 
   /**
    * {@inheritdoc}

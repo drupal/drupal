@@ -15,7 +15,7 @@ class ConfigTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['migrate_drupal'];
+  protected static $modules = ['migrate_drupal'];
 
   /**
    * {@inheritdoc}

@@ -20,7 +20,7 @@ abstract class DatabaseWebTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['database_test'];
+  protected static $modules = ['database_test'];
 
   protected function setUp() {
     parent::setUp();

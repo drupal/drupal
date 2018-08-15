@@ -17,7 +17,7 @@ class ModerationFormTest extends ModerationStateTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'content_moderation',
     'locale',

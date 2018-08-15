@@ -20,7 +20,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_ui'];
+  protected static $modules = ['field_ui'];
 
   /**
    * Permissions to grant admin user.

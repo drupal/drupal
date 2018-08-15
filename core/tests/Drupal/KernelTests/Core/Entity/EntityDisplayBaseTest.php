@@ -18,7 +18,7 @@ class EntityDisplayBaseTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'entity_test_third_party', 'field', 'system', 'comment'];
+  protected static $modules = ['entity_test', 'entity_test_third_party', 'field', 'system', 'comment'];
 
   /**
    * @covers ::preSave

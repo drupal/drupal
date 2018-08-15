@@ -27,7 +27,7 @@ class CacheTagTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * The node storage.

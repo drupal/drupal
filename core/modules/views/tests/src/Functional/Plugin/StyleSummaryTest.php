@@ -15,7 +15,7 @@ class StyleSummaryTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'views_ui'];
+  protected static $modules = ['entity_test', 'views_ui'];
 
   /**
    * {@inheritdoc}

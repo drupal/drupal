@@ -17,7 +17,7 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
    *
    * @var array
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   protected function setUp() {
     parent::setUp();

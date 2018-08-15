@@ -16,7 +16,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'path'];
+  protected static $modules = ['node', 'path'];
 
   /**
    * {@inheritdoc}

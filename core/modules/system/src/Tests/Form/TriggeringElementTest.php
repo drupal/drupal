@@ -16,7 +16,7 @@ class TriggeringElementTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['form_test'];
+  protected static $modules = ['form_test'];
 
   /**
    * Test the determination of the triggering element when no button

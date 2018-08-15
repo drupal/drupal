@@ -18,7 +18,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['datetime_test', 'node', 'datetime_range', 'field'];
+  protected static $modules = ['datetime_test', 'node', 'datetime_range', 'field'];
 
   /**
    * Type of the field.

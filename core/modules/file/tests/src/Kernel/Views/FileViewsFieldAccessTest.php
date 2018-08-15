@@ -17,7 +17,7 @@ class FileViewsFieldAccessTest extends FieldFieldAccessTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['file', 'entity_test', 'language', 'user'];
+  protected static $modules = ['file', 'entity_test', 'language', 'user'];
 
   /**
    * {@inheritdoc}

@@ -24,7 +24,7 @@ class LinkItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['link'];
+  protected static $modules = ['link'];
 
   protected function setUp() {
     parent::setUp();

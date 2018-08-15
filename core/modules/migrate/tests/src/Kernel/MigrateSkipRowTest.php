@@ -19,7 +19,7 @@ class MigrateSkipRowTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['migrate', 'migrate_prepare_row_test'];
+  protected static $modules = ['migrate', 'migrate_prepare_row_test'];
 
   /**
    * Tests migration interruptions.

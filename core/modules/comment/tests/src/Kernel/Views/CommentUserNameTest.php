@@ -27,7 +27,7 @@ class CommentUserNameTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user', 'comment', 'entity_test'];
+  protected static $modules = ['user', 'comment', 'entity_test'];
 
   /**
    * {@inheritdoc}

@@ -16,7 +16,7 @@ class PagerTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['dblog', 'pager_test'];
+  protected static $modules = ['dblog', 'pager_test'];
 
   /**
    * A user with permission to access site reports.

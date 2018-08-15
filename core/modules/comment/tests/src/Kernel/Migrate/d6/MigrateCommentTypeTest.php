@@ -16,7 +16,7 @@ class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['comment'];
+  protected static $modules = ['comment'];
 
   /**
    * {@inheritdoc}

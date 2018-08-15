@@ -17,7 +17,7 @@ class Breadcrumb404Test extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'block'];
+  protected static $modules = ['system', 'block'];
 
   /**
    * Tests that different 404s don't create unnecessary cache entries.

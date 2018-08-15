@@ -26,7 +26,7 @@ class CommentLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'language', 'language_test', 'comment_test'];
+  protected static $modules = ['node', 'language', 'language_test', 'comment_test'];
 
   protected function setUp() {
     parent::setUp();

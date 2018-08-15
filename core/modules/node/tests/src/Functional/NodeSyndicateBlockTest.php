@@ -14,7 +14,7 @@ class NodeSyndicateBlockTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['block'];
+  protected static $modules = ['block'];
 
   protected function setUp() {
     parent::setUp();

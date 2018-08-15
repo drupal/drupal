@@ -16,7 +16,7 @@ class MissingCheckedRequirementsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['simpletest'];
+  protected static $modules = ['simpletest'];
 
   protected function setUp() {
     parent::setUp();

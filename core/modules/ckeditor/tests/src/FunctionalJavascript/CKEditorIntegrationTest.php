@@ -27,7 +27,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'ckeditor', 'filter'];
+  protected static $modules = ['node', 'ckeditor', 'filter'];
 
   /**
    * {@inheritdoc}

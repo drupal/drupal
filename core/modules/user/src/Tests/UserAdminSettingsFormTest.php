@@ -15,7 +15,7 @@ class UserAdminSettingsFormTest extends ConfigFormTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user', 'system'];
+  protected static $modules = ['user', 'system'];
 
   /**
    * {@inheritdoc}

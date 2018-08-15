@@ -22,7 +22,7 @@ class TranslationTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'node'];
+  protected static $modules = ['language', 'node'];
 
   /**
    * The name of the field to use in this test.

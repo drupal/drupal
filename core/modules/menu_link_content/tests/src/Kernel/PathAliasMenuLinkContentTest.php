@@ -18,7 +18,7 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['menu_link_content', 'system', 'link', 'test_page_test'];
+  protected static $modules = ['menu_link_content', 'system', 'link', 'test_page_test'];
 
   /**
    * {@inheritdoc}

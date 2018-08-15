@@ -20,7 +20,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class UrlTest extends BrowserTestBase {
 
-  public static $modules = ['common_test', 'url_alter_test'];
+  protected static $modules = ['common_test', 'url_alter_test'];
 
   /**
    * Confirms that invalid URLs are filtered in link generating functions.

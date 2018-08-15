@@ -16,7 +16,7 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['simpletest'];
+  protected static $modules = ['simpletest'];
 
   /**
    * An administrative user with permission to adminsiter unit tests.

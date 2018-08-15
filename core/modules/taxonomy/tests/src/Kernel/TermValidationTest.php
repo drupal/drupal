@@ -16,7 +16,7 @@ class TermValidationTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy'];
+  protected static $modules = ['taxonomy'];
 
   /**
    * {@inheritdoc}

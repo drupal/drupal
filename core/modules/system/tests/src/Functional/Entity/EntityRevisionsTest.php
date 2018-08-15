@@ -21,7 +21,7 @@ class EntityRevisionsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test', 'language'];
+  protected static $modules = ['entity_test', 'language'];
 
   /**
    * A user with permission to administer entity_test content.

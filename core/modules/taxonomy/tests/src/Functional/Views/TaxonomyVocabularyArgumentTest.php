@@ -14,7 +14,7 @@ class TaxonomyVocabularyArgumentTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['taxonomy', 'taxonomy_test_views', 'views'];
+  protected static $modules = ['taxonomy', 'taxonomy_test_views', 'views'];
 
   /**
    * {@inheritdoc}

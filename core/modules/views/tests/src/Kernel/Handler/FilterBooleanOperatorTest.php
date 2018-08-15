@@ -18,7 +18,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * Views used by this test.

@@ -21,7 +21,7 @@ class LinksTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['router_test', 'menu_link_content'];
+  protected static $modules = ['router_test', 'menu_link_content'];
 
   /**
    * The menu link plugin manager.

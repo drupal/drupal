@@ -30,7 +30,7 @@ class BigPipeTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['big_pipe', 'big_pipe_test', 'dblog'];
+  protected static $modules = ['big_pipe', 'big_pipe_test', 'dblog'];
 
   /**
    * {@inheritdoc}

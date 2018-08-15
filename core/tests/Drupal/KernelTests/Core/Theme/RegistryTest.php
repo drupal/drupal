@@ -20,7 +20,7 @@ class RegistryTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['theme_test', 'system'];
+  protected static $modules = ['theme_test', 'system'];
 
   protected $profile = 'testing';
 

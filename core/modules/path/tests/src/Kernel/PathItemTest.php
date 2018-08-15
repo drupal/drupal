@@ -19,7 +19,7 @@ class PathItemTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['path', 'node', 'user', 'system', 'language', 'content_translation'];
+  protected static $modules = ['path', 'node', 'user', 'system', 'language', 'content_translation'];
 
   /**
    * {@inheritdoc}

@@ -18,7 +18,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation'];
+  protected static $modules = ['language', 'content_translation'];
 
   /**
    * {@inheritdoc}

@@ -19,7 +19,7 @@ class EmailFieldTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'entity_test', 'field_ui'];
+  protected static $modules = ['node', 'entity_test', 'field_ui'];
 
   /**
    * A field storage to use in this test class.

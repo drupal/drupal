@@ -37,7 +37,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['error_service_test'];
+  protected static $modules = ['error_service_test'];
 
   /**
    * {@inheritdoc}

@@ -23,7 +23,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'content_moderation_test_views',
     'node',
     'content_moderation',

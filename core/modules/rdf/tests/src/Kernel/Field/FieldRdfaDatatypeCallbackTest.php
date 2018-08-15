@@ -19,7 +19,7 @@ class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['text', 'filter', 'rdf_test'];
+  protected static $modules = ['text', 'filter', 'rdf_test'];
 
   protected function setUp() {
     parent::setUp();

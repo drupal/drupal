@@ -18,7 +18,7 @@ class MigrationTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['migrate', 'field'];
+  protected static $modules = ['migrate', 'field'];
 
   /**
    * Tests Migration::set().

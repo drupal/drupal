@@ -18,7 +18,7 @@ class UserServiceProviderFallbackTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['user'];
+  protected static $modules = ['user'];
 
   /**
    * Tests that user.tempstore.expire equals tempstore.expire if not customized.

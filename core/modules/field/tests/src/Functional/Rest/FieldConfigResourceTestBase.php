@@ -12,7 +12,7 @@ abstract class FieldConfigResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['field', 'node'];
+  protected static $modules = ['field', 'node'];
 
   /**
    * {@inheritdoc}

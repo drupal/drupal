@@ -19,7 +19,7 @@ class EntityRevisionTest extends MigrateTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'content_translation',
     'field',
     'filter',

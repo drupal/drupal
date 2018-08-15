@@ -35,7 +35,7 @@ class TwigWhiteListTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'taxonomy', 'user', 'system', 'text', 'field', 'entity_reference'];
+  protected static $modules = ['node', 'taxonomy', 'user', 'system', 'text', 'field', 'entity_reference'];
 
   /**
    * {@inheritdoc}

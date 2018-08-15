@@ -17,7 +17,7 @@ abstract class PathTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'path'];
+  protected static $modules = ['node', 'path'];
 
   protected function setUp() {
     parent::setUp();

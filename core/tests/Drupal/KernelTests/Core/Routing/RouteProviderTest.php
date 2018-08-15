@@ -37,7 +37,7 @@ class RouteProviderTest extends KernelTestBase {
   /**
    * Modules to enable.
    */
-  public static $modules = ['url_alter_test', 'system', 'language'];
+  protected static $modules = ['url_alter_test', 'system', 'language'];
 
   /**
    * A collection of shared fixture data for tests.

@@ -22,7 +22,7 @@ class BrokenSetUpTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['simpletest'];
+  protected static $modules = ['simpletest'];
 
   /**
    * The path to the shared trigger file.

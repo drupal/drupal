@@ -31,7 +31,7 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'views_ui', 'block', 'entity_test'];
+  protected static $modules = ['node', 'views_ui', 'block', 'entity_test'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);

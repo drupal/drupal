@@ -24,7 +24,7 @@ class DisplayKernelTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'node', 'field', 'user'];
+  protected static $modules = ['block', 'node', 'field', 'user'];
 
   /**
    * Views plugin types to test.

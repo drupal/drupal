@@ -25,7 +25,7 @@ class ContactPersonalTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['contact', 'dblog'];
+  protected static $modules = ['contact', 'dblog'];
 
   /**
    * A user with some administrative permissions.

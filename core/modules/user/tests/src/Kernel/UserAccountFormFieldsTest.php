@@ -18,7 +18,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user', 'field'];
+  protected static $modules = ['system', 'user', 'field'];
 
   /**
    * Tests the root user account form section in the "Configure site" form.

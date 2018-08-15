@@ -21,7 +21,7 @@ class UserRegistrationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_test'];
+  protected static $modules = ['field_test'];
 
   public function testRegistrationWithEmailVerification() {
     $config = $this->config('user.settings');

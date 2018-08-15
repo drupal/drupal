@@ -27,7 +27,7 @@ class TrackerTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'comment', 'tracker', 'history', 'node_test'];
+  protected static $modules = ['block', 'comment', 'tracker', 'history', 'node_test'];
 
   /**
    * The main user for testing.

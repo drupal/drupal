@@ -24,7 +24,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
   *
   * @var array
   */
-  public static $modules = ['node', 'file', 'file_module_test', 'field_ui'];
+  protected static $modules = ['node', 'file', 'file_module_test', 'field_ui'];
 
   /**
    * An user with administration permissions.

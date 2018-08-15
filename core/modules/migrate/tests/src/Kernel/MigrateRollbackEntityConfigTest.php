@@ -17,7 +17,7 @@ class MigrateRollbackEntityConfigTest extends MigrateTestBase {
    *
    * @var array
    */
-  public static $modules = ['field', 'taxonomy', 'text', 'language', 'config_translation', 'user'];
+  protected static $modules = ['field', 'taxonomy', 'text', 'language', 'config_translation', 'user'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ abstract class BlockTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'filter', 'test_page_test', 'help', 'block_test'];
+  protected static $modules = ['block', 'filter', 'test_page_test', 'help', 'block_test'];
 
   /**
    * A list of theme regions to test.

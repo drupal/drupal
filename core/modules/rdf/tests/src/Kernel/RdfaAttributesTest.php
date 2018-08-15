@@ -16,7 +16,7 @@ class RdfaAttributesTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['rdf'];
+  protected static $modules = ['rdf'];
 
   /**
    * Test attribute creation for mappings which use 'property'.

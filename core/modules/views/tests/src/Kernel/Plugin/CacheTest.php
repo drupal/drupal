@@ -28,7 +28,7 @@ class CacheTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy', 'text', 'user', 'node'];
+  protected static $modules = ['taxonomy', 'text', 'user', 'node'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class RestExportAuthTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['rest', 'views_ui', 'basic_auth'];
+  protected static $modules = ['rest', 'views_ui', 'basic_auth'];
 
   /**
    * {@inheritdoc}

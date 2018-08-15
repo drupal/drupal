@@ -19,7 +19,7 @@ class ConfigImportUITest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['config', 'config_test', 'config_import_test', 'text', 'options'];
+  protected static $modules = ['config', 'config_test', 'config_import_test', 'text', 'options'];
 
   /**
    * A user with the 'synchronize configuration' permission.

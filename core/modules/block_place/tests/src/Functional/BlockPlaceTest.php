@@ -17,7 +17,7 @@ class BlockPlaceTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_place', 'toolbar'];
+  protected static $modules = ['block', 'block_place', 'toolbar'];
 
   /**
    * Tests placing blocks as an admin.

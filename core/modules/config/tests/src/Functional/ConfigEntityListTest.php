@@ -21,7 +21,7 @@ class ConfigEntityListTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'config_test'];
+  protected static $modules = ['block', 'config_test'];
 
   /**
    * {@inheritdoc}

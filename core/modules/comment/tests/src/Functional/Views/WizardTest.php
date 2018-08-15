@@ -21,7 +21,7 @@ class WizardTest extends WizardTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'comment'];
+  protected static $modules = ['node', 'comment'];
 
   /**
    * {@inheritdoc}

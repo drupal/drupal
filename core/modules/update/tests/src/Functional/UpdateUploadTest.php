@@ -23,7 +23,7 @@ class UpdateUploadTest extends UpdateTestBase {
    *
    * @var array
    */
-  public static $modules = ['update', 'update_test'];
+  protected static $modules = ['update', 'update_test'];
 
   protected function setUp() {
     parent::setUp();

@@ -14,7 +14,7 @@ class LibraryCachingTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'views', 'views_ui'];
+  protected static $modules = ['node', 'views', 'views_ui'];
 
   /**
    * Tests if the Views UI dialogs open on consecutive requests.

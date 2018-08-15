@@ -15,7 +15,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['migrate'];
+  protected static $modules = ['migrate'];
 
   /**
    * The mocked migration.

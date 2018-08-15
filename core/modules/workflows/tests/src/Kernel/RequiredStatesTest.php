@@ -18,7 +18,7 @@ class RequiredStatesTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['workflows', 'workflow_type_test'];
+  protected static $modules = ['workflows', 'workflow_type_test'];
 
   /**
    * @covers ::getRequiredStates

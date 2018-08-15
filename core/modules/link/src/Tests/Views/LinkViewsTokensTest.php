@@ -19,7 +19,7 @@ class LinkViewsTokensTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['link_test_views'];
+  protected static $modules = ['link_test_views'];
 
   /**
    * Views used by this test.

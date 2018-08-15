@@ -17,7 +17,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['file_test', 'file'];
+  protected static $modules = ['file_test', 'file'];
 
   protected function setUp() {
     parent::setUp();

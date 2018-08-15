@@ -10,7 +10,7 @@ abstract class SearchPageResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'search'];
+  protected static $modules = ['node', 'search'];
 
   /**
    * {@inheritdoc}

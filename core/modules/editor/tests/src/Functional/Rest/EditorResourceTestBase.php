@@ -14,7 +14,7 @@ abstract class EditorResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['ckeditor', 'editor'];
+  protected static $modules = ['ckeditor', 'editor'];
 
   /**
    * {@inheritdoc}

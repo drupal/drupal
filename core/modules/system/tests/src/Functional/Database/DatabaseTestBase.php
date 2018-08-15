@@ -13,7 +13,7 @@ abstract class DatabaseTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['database_test'];
+  protected static $modules = ['database_test'];
 
   /**
    * {@inheritdoc}

@@ -19,7 +19,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['text'];
+  protected static $modules = ['text'];
 
   /**
    * The entity type being tested.

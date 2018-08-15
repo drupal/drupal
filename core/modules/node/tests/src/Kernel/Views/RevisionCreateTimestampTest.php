@@ -18,7 +18,7 @@ class RevisionCreateTimestampTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node_test_views', 'node', 'views', 'user'];
+  protected static $modules = ['node_test_views', 'node', 'views', 'user'];
 
   /**
    * {@inheritdoc}

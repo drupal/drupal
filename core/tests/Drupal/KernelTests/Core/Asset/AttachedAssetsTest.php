@@ -38,7 +38,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language', 'simpletest', 'common_test', 'system'];
+  protected static $modules = ['language', 'simpletest', 'common_test', 'system'];
 
   /**
    * {@inheritdoc}

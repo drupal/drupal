@@ -20,7 +20,7 @@ class ShapeItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_test'];
+  protected static $modules = ['field_test'];
 
   /**
    * The name of the field to use in this test.

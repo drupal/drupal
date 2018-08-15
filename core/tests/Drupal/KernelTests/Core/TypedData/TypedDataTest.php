@@ -38,7 +38,7 @@ class TypedDataTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'field', 'file', 'user'];
+  protected static $modules = ['system', 'field', 'file', 'user'];
 
   protected function setUp() {
     parent::setup();

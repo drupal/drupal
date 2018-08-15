@@ -13,7 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 abstract class DatabaseTestBase extends KernelTestBase {
 
-  public static $modules = ['database_test'];
+  protected static $modules = ['database_test'];
 
   /**
    * The database connection for testing.

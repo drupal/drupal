@@ -19,7 +19,7 @@ class FieldTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'views', 'views_ui', 'views_test_config'];
+  protected static $modules = ['node', 'views', 'views_ui', 'views_test_config'];
 
   /**
    * Views used by this test.

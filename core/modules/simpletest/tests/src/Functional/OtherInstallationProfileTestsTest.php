@@ -17,7 +17,7 @@ class OtherInstallationProfileTestsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['simpletest'];
+  protected static $modules = ['simpletest'];
 
   /**
    * Use the Minimal profile.

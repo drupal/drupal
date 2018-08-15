@@ -34,7 +34,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_content', 'block_content_test_views'];
+  protected static $modules = ['block', 'block_content', 'block_content_test_views'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);

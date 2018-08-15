@@ -20,7 +20,7 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'image', 'field_ui'];
+  protected static $modules = ['node', 'image', 'field_ui'];
 
   /**
    * A user with permissions to edit Articles and use Quick Edit.

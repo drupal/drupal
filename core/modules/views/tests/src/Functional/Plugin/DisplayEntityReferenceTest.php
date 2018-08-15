@@ -32,7 +32,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test', 'field', 'views_ui'];
+  protected static $modules = ['entity_test', 'field', 'views_ui'];
 
   /**
    * The used field name in the test.

@@ -22,7 +22,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test'];
+  protected static $modules = ['entity_test'];
 
   /**
    * Views used by this test.

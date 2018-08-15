@@ -17,7 +17,7 @@ class WorkspacePermissionsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['workspaces'];
+  protected static $modules = ['workspaces'];
 
   /**
    * Verifies that a user can create but not edit a workspace.

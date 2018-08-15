@@ -34,7 +34,7 @@ class NodeAccessTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'datetime',
     'user',

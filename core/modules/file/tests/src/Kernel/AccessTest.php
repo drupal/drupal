@@ -18,7 +18,7 @@ class AccessTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['file', 'system', 'user'];
+  protected static $modules = ['file', 'system', 'user'];
 
   /**
    * An authenticated user.

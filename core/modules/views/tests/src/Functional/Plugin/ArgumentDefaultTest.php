@@ -35,7 +35,7 @@ class ArgumentDefaultTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'views_ui', 'block'];
+  protected static $modules = ['node', 'views_ui', 'block'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);

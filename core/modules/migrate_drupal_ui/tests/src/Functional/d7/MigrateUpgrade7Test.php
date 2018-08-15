@@ -20,7 +20,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'file',
     'language',
     'content_translation',

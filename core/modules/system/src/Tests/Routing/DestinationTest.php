@@ -20,7 +20,7 @@ class DestinationTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system_test'];
+  protected static $modules = ['system_test'];
 
   /**
    * Tests that $_GET/$_REQUEST['destination'] only contain internal URLs.

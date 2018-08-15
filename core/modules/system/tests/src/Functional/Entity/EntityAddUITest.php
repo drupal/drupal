@@ -17,7 +17,7 @@ class EntityAddUITest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test'];
+  protected static $modules = ['entity_test'];
 
   /**
    * Tests the add page for an entity type using bundle entities.

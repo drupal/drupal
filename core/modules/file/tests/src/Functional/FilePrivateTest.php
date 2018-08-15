@@ -20,7 +20,7 @@ class FilePrivateTest extends FileFieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['node_access_test', 'field_test'];
+  protected static $modules = ['node_access_test', 'field_test'];
 
   protected function setUp() {
     parent::setUp();

@@ -22,7 +22,7 @@ class GlossaryViewTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language', 'node', 'views', 'views_test_config'];
+  protected static $modules = ['language', 'node', 'views', 'views_test_config'];
 
   /**
    * @var array

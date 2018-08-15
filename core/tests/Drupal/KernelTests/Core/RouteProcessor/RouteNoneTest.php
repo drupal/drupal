@@ -22,7 +22,7 @@ class RouteNoneTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * The URL generator.

@@ -29,7 +29,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation', 'entity_test'];
+  protected static $modules = ['language', 'content_translation', 'entity_test'];
 
   protected function setUp() {
     parent::setUp();

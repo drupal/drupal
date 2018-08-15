@@ -24,7 +24,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['locale'];
+  protected static $modules = ['locale'];
 
   /**
    * {@inheritdoc}

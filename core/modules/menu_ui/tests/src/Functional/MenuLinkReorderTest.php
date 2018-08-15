@@ -23,7 +23,7 @@ class MenuLinkReorderTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['menu_ui', 'test_page_test', 'node', 'block'];
+  protected static $modules = ['menu_ui', 'test_page_test', 'node', 'block'];
 
   /**
    * Test creating, editing, deleting menu links via node form widget.

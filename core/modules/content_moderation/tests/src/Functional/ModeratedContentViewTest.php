@@ -24,7 +24,7 @@ class ModeratedContentViewTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['content_moderation', 'node', 'views'];
+  protected static $modules = ['content_moderation', 'node', 'views'];
 
   /**
    * {@inheritdoc}

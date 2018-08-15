@@ -18,7 +18,7 @@ class CKEditorStylesComboAdminTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter', 'editor', 'ckeditor'];
+  protected static $modules = ['filter', 'editor', 'ckeditor'];
 
   /**
    * A user with the 'administer filters' permission.

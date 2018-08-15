@@ -25,7 +25,7 @@ class MiniPagerTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * Nodes used by the test.

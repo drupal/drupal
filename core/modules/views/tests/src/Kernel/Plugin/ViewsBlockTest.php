@@ -19,7 +19,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_test_views'];
+  protected static $modules = ['block', 'block_test_views'];
 
   /**
    * Views used by this test.

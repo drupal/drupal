@@ -19,7 +19,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  */
 class FilterAPITest extends EntityKernelTestBase {
 
-  public static $modules = ['system', 'filter', 'filter_test', 'user'];
+  protected static $modules = ['system', 'filter', 'filter_test', 'user'];
 
   protected function setUp() {
     parent::setUp();

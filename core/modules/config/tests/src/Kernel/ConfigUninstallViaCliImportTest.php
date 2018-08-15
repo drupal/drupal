@@ -24,7 +24,7 @@ class ConfigUninstallViaCliImportTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'config'];
+  protected static $modules = ['system', 'config'];
 
   protected function setUp() {
     parent::setUp();

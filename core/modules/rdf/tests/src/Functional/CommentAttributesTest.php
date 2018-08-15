@@ -20,7 +20,7 @@ class CommentAttributesTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $modules = ['views', 'node', 'comment', 'rdf'];
+  protected static $modules = ['views', 'node', 'comment', 'rdf'];
 
   /**
    * URI of the front page of the Drupal site.

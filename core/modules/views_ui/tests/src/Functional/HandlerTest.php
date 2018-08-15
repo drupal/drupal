@@ -19,7 +19,7 @@ class HandlerTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node_test_views'];
+  protected static $modules = ['node_test_views'];
 
   /**
    * Views used by this test.

@@ -17,7 +17,7 @@ class NodeImportChangeTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'field', 'text', 'system', 'node_test_config', 'user'];
+  protected static $modules = ['node', 'field', 'text', 'system', 'node_test_config', 'user'];
 
   /**
    * Set the default field storage backend for fields created during tests.

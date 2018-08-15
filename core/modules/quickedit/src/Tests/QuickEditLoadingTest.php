@@ -26,7 +26,7 @@ class QuickEditLoadingTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'contextual',
     'quickedit',
     'filter',

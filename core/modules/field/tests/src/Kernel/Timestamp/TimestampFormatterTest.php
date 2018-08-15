@@ -20,7 +20,7 @@ class TimestampFormatterTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'field', 'text', 'entity_test', 'user'];
+  protected static $modules = ['system', 'field', 'text', 'entity_test', 'user'];
 
   /**
    * @var string

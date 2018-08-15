@@ -21,7 +21,7 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
   /**
    * @var array
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * Tests the integrity of field plugin definitions.

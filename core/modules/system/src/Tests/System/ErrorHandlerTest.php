@@ -17,7 +17,7 @@ class ErrorHandlerTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['error_test'];
+  protected static $modules = ['error_test'];
 
   /**
    * Test the error handler.

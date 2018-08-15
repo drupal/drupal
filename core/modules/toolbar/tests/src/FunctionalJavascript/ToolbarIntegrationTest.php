@@ -14,7 +14,7 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['toolbar', 'node'];
+  protected static $modules = ['toolbar', 'node'];
 
   /**
    * Tests if the toolbar can be toggled with JavaScript.

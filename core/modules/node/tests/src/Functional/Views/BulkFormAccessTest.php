@@ -22,7 +22,7 @@ class BulkFormAccessTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['node_test_views', 'node_access_test'];
+  protected static $modules = ['node_test_views', 'node_access_test'];
 
   /**
    * Views used by this test.

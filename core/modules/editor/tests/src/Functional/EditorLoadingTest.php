@@ -20,7 +20,7 @@ class EditorLoadingTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter', 'editor', 'editor_test', 'node'];
+  protected static $modules = ['filter', 'editor', 'editor_test', 'node'];
 
   /**
    * An untrusted user, with access to the 'plain_text' format.

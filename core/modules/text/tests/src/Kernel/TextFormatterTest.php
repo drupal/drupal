@@ -33,7 +33,7 @@ class TextFormatterTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['text'];
+  protected static $modules = ['text'];
 
   /**
    * {@inheritdoc}

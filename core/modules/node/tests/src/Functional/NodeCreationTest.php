@@ -21,7 +21,7 @@ class NodeCreationTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['node_test_exception', 'dblog', 'test_page_test'];
+  protected static $modules = ['node_test_exception', 'dblog', 'test_page_test'];
 
   protected function setUp() {
     parent::setUp();

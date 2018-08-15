@@ -13,7 +13,7 @@ use Drupal\taxonomy\TermInterface;
  */
 class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
 
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'datetime',
     'forum',

@@ -24,7 +24,7 @@ class LinkFieldTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_test',
     'link',
     'node',

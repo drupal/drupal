@@ -23,7 +23,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['editor', 'editor_test', 'node', 'file'];
+  protected static $modules = ['editor', 'editor_test', 'node', 'file'];
 
   protected function setUp() {
     parent::setUp();

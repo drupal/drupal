@@ -17,7 +17,7 @@ class InstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['module_test'];
+  protected static $modules = ['module_test'];
 
   /**
    * Verify that drupal_get_schema() can be used during module installation.

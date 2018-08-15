@@ -18,7 +18,7 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'datetime',
     'field',

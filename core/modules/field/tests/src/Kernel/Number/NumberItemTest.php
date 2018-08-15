@@ -21,7 +21,7 @@ class NumberItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [];
+  protected static $modules = [];
 
   protected function setUp() {
     parent::setUp();

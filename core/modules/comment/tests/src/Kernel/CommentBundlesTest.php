@@ -15,7 +15,7 @@ class CommentBundlesTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['comment', 'node', 'taxonomy', 'user'];
+  protected static $modules = ['comment', 'node', 'taxonomy', 'user'];
 
   /**
    * Entity type ids to use for target_entity_type_id on comment bundles.

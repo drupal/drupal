@@ -19,7 +19,7 @@ class CommentFieldsTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_ui'];
+  protected static $modules = ['field_ui'];
 
   /**
    * Tests that the default 'comment_body' field is correctly added.

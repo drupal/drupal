@@ -14,7 +14,7 @@ class RemoteFileUnmanagedCopyTest extends UnmanagedCopyTest {
    *
    * @var array
    */
-  public static $modules = ['file_test'];
+  protected static $modules = ['file_test'];
 
   /**
    * A stream wrapper scheme to register for the test.

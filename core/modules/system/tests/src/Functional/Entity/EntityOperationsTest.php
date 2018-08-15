@@ -16,7 +16,7 @@ class EntityOperationsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test'];
+  protected static $modules = ['entity_test'];
 
   protected function setUp() {
     parent::setUp();

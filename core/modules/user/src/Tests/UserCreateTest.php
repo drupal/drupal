@@ -18,7 +18,7 @@ class UserCreateTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['image'];
+  protected static $modules = ['image'];
 
   /**
    * Create a user through the administration interface and ensure that it

@@ -27,7 +27,7 @@ class RequestHandlerTest extends KernelTestBase {
    */
   protected $requestHandler;
 
-  public static $modules = ['serialization', 'rest'];
+  protected static $modules = ['serialization', 'rest'];
 
   /**
    * The entity storage.

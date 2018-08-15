@@ -19,7 +19,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
 
   use EntityReferenceTestTrait;
 
-  public static $modules = ['node', 'taxonomy'];
+  protected static $modules = ['node', 'taxonomy'];
 
   /**
    * The name of a content type that will reference $referencedType.

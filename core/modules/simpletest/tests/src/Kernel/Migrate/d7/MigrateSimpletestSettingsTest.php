@@ -11,7 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateSimpletestSettingsTest extends MigrateDrupal7TestBase {
 
-  public static $modules = ['simpletest'];
+  protected static $modules = ['simpletest'];
 
   /**
    * {@inheritdoc}

@@ -16,7 +16,7 @@ class ConfigEntityStatusTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_test'];
+  protected static $modules = ['config_test'];
 
   /**
    * Tests the enabling/disabling of entities.

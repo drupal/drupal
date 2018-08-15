@@ -17,7 +17,7 @@ class RowPluginTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * Views used by this test.

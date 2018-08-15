@@ -12,7 +12,7 @@ abstract class ConfigurableLanguageResourceTestBase extends EntityResourceTestBa
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language'];
+  protected static $modules = ['language'];
 
   /**
    * {@inheritdoc}

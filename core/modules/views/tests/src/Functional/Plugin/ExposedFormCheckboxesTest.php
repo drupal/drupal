@@ -27,7 +27,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'views_ui', 'taxonomy'];
+  protected static $modules = ['node', 'views_ui', 'taxonomy'];
 
   /**
    * Test terms.

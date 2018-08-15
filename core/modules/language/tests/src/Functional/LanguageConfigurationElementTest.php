@@ -20,7 +20,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy', 'node', 'language', 'language_elements_test', 'field_ui'];
+  protected static $modules = ['taxonomy', 'node', 'language', 'language_elements_test', 'field_ui'];
 
   protected function setUp() {
     parent::setUp();

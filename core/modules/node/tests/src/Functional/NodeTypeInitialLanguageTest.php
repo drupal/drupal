@@ -16,7 +16,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'field_ui'];
+  protected static $modules = ['language', 'field_ui'];
 
   protected function setUp() {
     parent::setUp();

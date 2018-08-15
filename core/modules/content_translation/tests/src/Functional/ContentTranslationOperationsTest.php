@@ -32,7 +32,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation', 'node', 'views', 'block'];
+  protected static $modules = ['language', 'content_translation', 'node', 'views', 'block'];
 
   /**
    * {@inheritdoc}

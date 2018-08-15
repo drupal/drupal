@@ -17,7 +17,7 @@ class ImageEffectsTest extends ToolkitTestBase {
    *
    * @var array
    */
-  public static $modules = ['image', 'image_test', 'image_module_test'];
+  protected static $modules = ['image', 'image_test', 'image_module_test'];
 
   /**
    * The image effect manager.

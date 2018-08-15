@@ -30,7 +30,7 @@ class FieldWebTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * Maps between the key in the expected result and the query result.

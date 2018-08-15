@@ -17,7 +17,7 @@ class ActionUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['views', 'action'];
+  protected static $modules = ['views', 'action'];
 
   /**
    * Tests Action uninstall.

@@ -18,7 +18,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_test', 'taxonomy_crud'];
+  protected static $modules = ['field_test', 'taxonomy_crud'];
 
   protected function setUp() {
     parent::setUp();

@@ -21,7 +21,7 @@ class ConfigEntityImportTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['action', 'block', 'filter', 'image', 'search', 'search_extra_type', 'config_test'];
+  protected static $modules = ['action', 'block', 'filter', 'image', 'search', 'search_extra_type', 'config_test'];
 
   /**
    * {@inheritdoc}

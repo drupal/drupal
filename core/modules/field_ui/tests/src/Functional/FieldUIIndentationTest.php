@@ -16,7 +16,7 @@ class FieldUIIndentationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'field_ui', 'field_ui_test'];
+  protected static $modules = ['node', 'field_ui', 'field_ui_test'];
 
   /**
    * {@inheritdoc}

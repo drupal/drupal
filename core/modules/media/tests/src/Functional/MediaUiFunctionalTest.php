@@ -21,7 +21,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'media_test_source',
   ];

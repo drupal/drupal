@@ -19,7 +19,7 @@ class NodeTitleTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['comment', 'views', 'block'];
+  protected static $modules = ['comment', 'views', 'block'];
 
   /**
    * A user with permission to bypass access content.

@@ -47,7 +47,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation', 'node', 'comment'];
+  protected static $modules = ['language', 'content_translation', 'node', 'comment'];
 
   protected function setUp() {
     $this->entityTypeId = 'comment';

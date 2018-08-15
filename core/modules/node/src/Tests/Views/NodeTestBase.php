@@ -20,7 +20,7 @@ abstract class NodeTestBase extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node_test_views'];
+  protected static $modules = ['node_test_views'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);

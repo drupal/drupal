@@ -18,7 +18,7 @@ class OptionsFloatFieldImportTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'options', 'field_ui', 'config', 'options_config_install_test'];
+  protected static $modules = ['node', 'options', 'field_ui', 'config', 'options_config_install_test'];
 
   protected function setUp() {
     parent::setUp();

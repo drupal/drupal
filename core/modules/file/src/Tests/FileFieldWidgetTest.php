@@ -37,7 +37,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['comment', 'block'];
+  protected static $modules = ['comment', 'block'];
 
   /**
    * Creates a temporary file, for a specific user.

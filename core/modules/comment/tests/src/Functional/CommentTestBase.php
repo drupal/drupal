@@ -23,7 +23,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'comment', 'node', 'history', 'field_ui', 'datetime'];
+  protected static $modules = ['block', 'comment', 'node', 'history', 'field_ui', 'datetime'];
 
   /**
    * An administrative user with permission to configure comment settings.

@@ -26,7 +26,7 @@ class FieldGroupRowsWebTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * The page node type.

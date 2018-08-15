@@ -26,7 +26,7 @@ class FilterEntityBundleTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * Entity bundle data.
