@@ -16,7 +16,7 @@ class NewDefaultThemeBlocksTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block'];
+  protected static $modules = ['block'];
 
   /**
    * Check the enabled Bartik blocks are correctly copied over.

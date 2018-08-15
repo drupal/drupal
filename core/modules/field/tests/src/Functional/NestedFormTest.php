@@ -18,7 +18,7 @@ class NestedFormTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_test', 'entity_test'];
+  protected static $modules = ['field_test', 'entity_test'];
 
   protected function setUp() {
     parent::setUp();

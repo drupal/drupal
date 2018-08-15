@@ -17,7 +17,7 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['conneg_test'];
+  protected static $modules = ['conneg_test'];
 
   /**
    * {@inheritdoc}

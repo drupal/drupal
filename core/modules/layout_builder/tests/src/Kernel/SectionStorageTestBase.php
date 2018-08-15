@@ -14,7 +14,7 @@ abstract class SectionStorageTestBase extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'layout_builder',
     'layout_discovery',
     'layout_test',

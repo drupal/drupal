@@ -14,7 +14,7 @@ class UpdateDeleteFileIfStaleTest extends UpdateTestBase {
    *
    * @var array
    */
-  public static $modules = ['update'];
+  protected static $modules = ['update'];
 
   /**
    * {@inheritdoc}

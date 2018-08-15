@@ -12,7 +12,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  */
 class MigrateSystemSiteTranslationTest extends MigrateDrupal6TestBase {
 
-  public static $modules = [
+  protected static $modules = [
     'language',
     'config_translation',
     // Required for translation migrations.

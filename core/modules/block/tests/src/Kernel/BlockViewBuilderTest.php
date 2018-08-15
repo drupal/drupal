@@ -20,7 +20,7 @@ class BlockViewBuilderTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_test', 'system', 'user'];
+  protected static $modules = ['block', 'block_test', 'system', 'user'];
 
   /**
    * The block being tested.

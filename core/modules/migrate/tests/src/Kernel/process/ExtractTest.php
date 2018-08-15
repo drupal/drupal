@@ -16,7 +16,7 @@ class ExtractTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['migrate'];
+  protected static $modules = ['migrate'];
 
   /**
    * Returns test migration definition.

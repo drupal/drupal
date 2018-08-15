@@ -20,7 +20,7 @@ class BookTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['book', 'block', 'node_access_test', 'book_test'];
+  protected static $modules = ['book', 'block', 'node_access_test', 'book_test'];
 
   /**
    * A user with permission to view a book and access printer-friendly version.

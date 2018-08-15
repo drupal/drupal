@@ -23,7 +23,7 @@ class ImageDimensionsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['image', 'image_module_test'];
+  protected static $modules = ['image', 'image_module_test'];
 
   protected $profile = 'testing';
 

@@ -25,7 +25,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation', 'taxonomy'];
+  protected static $modules = ['language', 'content_translation', 'taxonomy'];
 
   protected function setUp() {
     $this->entityTypeId = 'taxonomy_term';

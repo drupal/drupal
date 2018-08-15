@@ -35,7 +35,7 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'filter', 'text', 'node', 'user'];
+  protected static $modules = ['system', 'filter', 'text', 'node', 'user'];
 
   protected function setUp() {
     parent::setup();

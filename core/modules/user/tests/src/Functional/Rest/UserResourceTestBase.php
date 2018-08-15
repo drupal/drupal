@@ -15,7 +15,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user'];
+  protected static $modules = ['user'];
 
   /**
    * {@inheritdoc}

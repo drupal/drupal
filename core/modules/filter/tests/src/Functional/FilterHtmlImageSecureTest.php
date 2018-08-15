@@ -23,7 +23,7 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter', 'node', 'comment'];
+  protected static $modules = ['filter', 'node', 'comment'];
 
   /**
    * An authenticated user.

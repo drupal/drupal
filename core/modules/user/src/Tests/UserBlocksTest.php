@@ -17,7 +17,7 @@ class UserBlocksTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'views'];
+  protected static $modules = ['block', 'views'];
 
   /**
    * A user with the 'administer blocks' permission.

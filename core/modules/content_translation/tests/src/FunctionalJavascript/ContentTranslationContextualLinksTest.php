@@ -22,7 +22,7 @@ class ContentTranslationContextualLinksTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['content_translation', 'contextual', 'node'];
+  protected static $modules = ['content_translation', 'contextual', 'node'];
 
   /**
    * {@inheritdoc}

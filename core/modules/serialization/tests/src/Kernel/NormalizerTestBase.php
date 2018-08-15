@@ -16,7 +16,7 @@ abstract class NormalizerTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['serialization', 'system', 'field', 'entity_test', 'text', 'filter', 'user'];
+  protected static $modules = ['serialization', 'system', 'field', 'entity_test', 'text', 'filter', 'user'];
 
   protected function setUp() {
     parent::setUp();

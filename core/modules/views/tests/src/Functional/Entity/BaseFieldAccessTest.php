@@ -25,7 +25,7 @@ class BaseFieldAccessTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'views', 'views_test_config', 'entity_test', 'node', 'views_entity_test',
   ];
 

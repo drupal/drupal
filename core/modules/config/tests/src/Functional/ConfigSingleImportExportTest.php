@@ -17,7 +17,7 @@ class ConfigSingleImportExportTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'config',
     'config_test',

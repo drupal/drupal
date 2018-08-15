@@ -33,7 +33,7 @@ class SessionHttpsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['session_test'];
+  protected static $modules = ['session_test'];
 
   protected function setUp() {
     parent::setUp();

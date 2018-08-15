@@ -20,7 +20,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['locale', 'locale_test', 'language', 'block', 'language_test', 'menu_ui'];
+  protected static $modules = ['locale', 'locale_test', 'language', 'block', 'language_test', 'menu_ui'];
 
   protected function setUp() {
     parent::setUp();

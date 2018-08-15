@@ -17,7 +17,7 @@ class EntityFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test', 'language'];
+  protected static $modules = ['entity_test', 'language'];
 
   protected function setUp() {
     parent::setUp();

@@ -17,7 +17,7 @@ class ResponseGeneratorTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['hal', 'rest', 'node', 'basic_auth'];
+  protected static $modules = ['hal', 'rest', 'node', 'basic_auth'];
 
   /**
    * {@inheritdoc}

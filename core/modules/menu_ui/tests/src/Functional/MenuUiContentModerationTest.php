@@ -19,7 +19,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'content_moderation', 'node', 'menu_ui', 'test_page_test'];
+  protected static $modules = ['block', 'content_moderation', 'node', 'menu_ui', 'test_page_test'];
 
   /**
    * {@inheritdoc}

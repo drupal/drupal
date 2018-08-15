@@ -16,7 +16,7 @@ class NodeTypeTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'user', 'migrate_drupal'];
+  protected static $modules = ['node', 'user', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

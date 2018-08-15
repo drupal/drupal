@@ -17,7 +17,7 @@ class CsrfRequestHeaderTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'csrf_test'];
+  protected static $modules = ['system', 'csrf_test'];
 
   /**
    * Tests access to routes protected by CSRF request header requirements.

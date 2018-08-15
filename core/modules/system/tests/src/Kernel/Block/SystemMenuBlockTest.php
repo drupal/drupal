@@ -31,7 +31,7 @@ class SystemMenuBlockTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'block',
     'menu_test',

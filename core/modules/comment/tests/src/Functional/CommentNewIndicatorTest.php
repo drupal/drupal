@@ -22,7 +22,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
    *
    * @todo Remove this dependency.
    */
-  public static $modules = ['views'];
+  protected static $modules = ['views'];
 
   /**
    * Get node "x new comments" metadata from the server for the current user.

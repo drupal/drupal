@@ -16,7 +16,7 @@ class AjaxPageStateTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'views'];
+  protected static $modules = ['node', 'views'];
 
   /**
    * User account with all available permissions

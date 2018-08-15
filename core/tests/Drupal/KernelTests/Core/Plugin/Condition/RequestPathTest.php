@@ -42,7 +42,7 @@ class RequestPathTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user', 'field', 'path'];
+  protected static $modules = ['system', 'user', 'field', 'path'];
 
   /**
    * The current path.

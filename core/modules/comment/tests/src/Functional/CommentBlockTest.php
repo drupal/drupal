@@ -17,7 +17,7 @@ class CommentBlockTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'views'];
+  protected static $modules = ['block', 'views'];
 
   protected function setUp() {
     parent::setUp();

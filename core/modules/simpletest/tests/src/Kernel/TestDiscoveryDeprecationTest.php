@@ -15,7 +15,7 @@ class TestDiscoveryDeprecationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['simpletest', 'simpletest_deprecation_test'];
+  protected static $modules = ['simpletest', 'simpletest_deprecation_test'];
 
   /**
    * @expectedDeprecation The deprecated alter hook hook_simpletest_alter() is implemented in these functions: simpletest_deprecation_test_simpletest_alter. Convert your test to a PHPUnit-based one and implement test listeners. See: https://www.drupal.org/node/2939892

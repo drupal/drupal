@@ -22,7 +22,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy'];
+  protected static $modules = ['taxonomy'];
 
   /**
    * Term entities.

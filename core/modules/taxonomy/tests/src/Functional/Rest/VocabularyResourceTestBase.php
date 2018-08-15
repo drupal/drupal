@@ -10,7 +10,7 @@ abstract class VocabularyResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['taxonomy'];
+  protected static $modules = ['taxonomy'];
 
   /**
    * {@inheritdoc}

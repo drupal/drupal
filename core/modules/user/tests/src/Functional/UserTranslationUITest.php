@@ -23,7 +23,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation', 'user', 'views'];
+  protected static $modules = ['language', 'content_translation', 'user', 'views'];
 
   protected function setUp() {
     $this->entityTypeId = 'user';

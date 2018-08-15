@@ -32,7 +32,7 @@ abstract class FieldTestBase extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'field_test_views'];
+  protected static $modules = ['node', 'field_test_views'];
 
   /**
    * Stores the field definitions used by the test.

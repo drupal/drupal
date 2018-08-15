@@ -20,7 +20,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_test',
     'user',
     'language',

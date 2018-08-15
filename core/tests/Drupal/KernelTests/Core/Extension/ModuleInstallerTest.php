@@ -22,7 +22,7 @@ class ModuleInstallerTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * Tests that routes are rebuilt during install and uninstall of modules.

@@ -15,7 +15,7 @@ class MigrateTrackerUserTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'menu_ui',
     'node',
     'text',

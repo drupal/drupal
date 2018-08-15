@@ -13,7 +13,7 @@ abstract class FeedResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['aggregator'];
+  protected static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}

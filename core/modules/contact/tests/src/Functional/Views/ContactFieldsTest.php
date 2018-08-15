@@ -19,7 +19,7 @@ class ContactFieldsTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['field', 'text', 'contact'];
+  protected static $modules = ['field', 'text', 'contact'];
 
   /**
    * Contains the field storage definition for contact used for this test.

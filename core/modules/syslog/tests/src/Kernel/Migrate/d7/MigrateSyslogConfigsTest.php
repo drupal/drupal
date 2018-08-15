@@ -19,7 +19,7 @@ class MigrateSyslogConfigsTest extends MigrateDrupal7TestBase {
    *
    * @var array
    */
-  public static $modules = ['syslog'];
+  protected static $modules = ['syslog'];
 
   /**
    * {@inheritdoc}

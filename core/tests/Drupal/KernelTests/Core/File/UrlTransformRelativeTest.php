@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class UrlTransformRelativeTest extends KernelTestBase {
 
-  public static $modules = ['file_test'];
+  protected static $modules = ['file_test'];
 
   /**
    * Tests file_url_transform_relative function.

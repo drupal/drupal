@@ -14,7 +14,7 @@ class ContentTranslationDisableSettingTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'content_translation',
     'menu_link_content',
     'language',

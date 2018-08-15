@@ -20,7 +20,7 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['comment', 'menu_ui'];
+  protected static $modules = ['comment', 'menu_ui'];
 
   /**
    * {@inheritdoc}

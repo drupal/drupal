@@ -17,7 +17,7 @@ class MigrateAggregatorConfigsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['aggregator'];
+  protected static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}

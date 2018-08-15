@@ -16,7 +16,7 @@ class ServiceProviderTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['file', 'service_provider_test', 'system'];
+  protected static $modules = ['file', 'service_provider_test', 'system'];
 
   /**
    * Tests that services provided by module service providers get registered to the DIC.

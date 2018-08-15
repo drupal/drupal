@@ -16,7 +16,7 @@ class TwigRawTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['twig_theme_test'];
+  protected static $modules = ['twig_theme_test'];
 
   /**
    * Tests the raw filter inside an autoescape tag.

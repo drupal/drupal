@@ -20,7 +20,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'language'];
+  protected static $modules = ['node', 'language'];
 
   protected function setUp() {
     parent::setUp();

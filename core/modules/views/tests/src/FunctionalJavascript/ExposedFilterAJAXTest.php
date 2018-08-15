@@ -19,7 +19,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'views', 'views_test_modal'];
+  protected static $modules = ['node', 'views', 'views_test_modal'];
 
   /**
    * {@inheritdoc}

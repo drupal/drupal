@@ -20,7 +20,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['locale'];
+  protected static $modules = ['locale'];
 
   /**
    * Enable interface translation to English.

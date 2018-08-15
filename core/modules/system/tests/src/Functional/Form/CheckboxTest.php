@@ -17,7 +17,7 @@ class CheckboxTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['form_test'];
+  protected static $modules = ['form_test'];
 
   public function testFormCheckbox() {
     // Ensure that the checked state is determined and rendered correctly for

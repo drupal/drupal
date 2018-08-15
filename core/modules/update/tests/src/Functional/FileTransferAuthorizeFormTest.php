@@ -14,7 +14,7 @@ class FileTransferAuthorizeFormTest extends UpdateTestBase {
    *
    * @var array
    */
-  public static $modules = ['update', 'update_test'];
+  protected static $modules = ['update', 'update_test'];
 
   protected function setUp() {
     parent::setUp();

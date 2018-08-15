@@ -16,7 +16,7 @@ class EngineNyanCatTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['theme_test'];
+  protected static $modules = ['theme_test'];
 
   protected function setUp() {
     parent::setUp();

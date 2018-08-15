@@ -48,7 +48,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['locale', 'language_test', 'block', 'user', 'content_translation'];
+  protected static $modules = ['locale', 'language_test', 'block', 'user', 'content_translation'];
 
   protected function setUp() {
     parent::setUp();

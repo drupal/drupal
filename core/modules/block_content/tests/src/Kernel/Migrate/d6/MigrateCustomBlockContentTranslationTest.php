@@ -15,7 +15,7 @@ class MigrateCustomBlockContentTranslationTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'block_content',
     'content_translation',
     'language',

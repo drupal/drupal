@@ -17,7 +17,7 @@ class MigrateFileStubTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['file'];
+  protected static $modules = ['file'];
 
   /**
    * {@inheritdoc}

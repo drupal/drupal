@@ -17,7 +17,7 @@ class ConfigSnapshotTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_test', 'system'];
+  protected static $modules = ['config_test', 'system'];
 
   /**
    * {@inheritdoc}

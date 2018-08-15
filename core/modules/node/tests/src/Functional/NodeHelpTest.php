@@ -16,7 +16,7 @@ class NodeHelpTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'node', 'help'];
+  protected static $modules = ['block', 'node', 'help'];
 
   /**
    * The name of the test node type to create.

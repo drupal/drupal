@@ -43,7 +43,7 @@ class WorkspaceCRUDTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'user',
     'system',
     'workspaces',

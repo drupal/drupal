@@ -18,7 +18,7 @@ class NoHelpTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['help', 'menu_test'];
+  protected static $modules = ['help', 'menu_test'];
 
   /**
    * The user who will be created.

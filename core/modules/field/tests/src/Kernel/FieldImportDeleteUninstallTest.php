@@ -21,7 +21,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['telephone'];
+  protected static $modules = ['telephone'];
 
   protected function setUp() {
     parent::setUp();

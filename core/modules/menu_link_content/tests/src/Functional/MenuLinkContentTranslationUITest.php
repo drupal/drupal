@@ -22,7 +22,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'content_translation',
     'menu_link_content',

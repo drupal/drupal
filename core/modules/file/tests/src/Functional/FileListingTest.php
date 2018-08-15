@@ -18,7 +18,7 @@ class FileListingTest extends FileFieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['views', 'file', 'image', 'entity_test'];
+  protected static $modules = ['views', 'file', 'image', 'entity_test'];
 
   /**
    * An authenticated user.

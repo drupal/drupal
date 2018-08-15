@@ -21,7 +21,7 @@ class AccessDeniedTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'node', 'system_test'];
+  protected static $modules = ['block', 'node', 'system_test'];
 
   protected $adminUser;
 

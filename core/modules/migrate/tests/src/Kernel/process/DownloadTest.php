@@ -20,7 +20,7 @@ class DownloadTest extends FileTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * {@inheritdoc}

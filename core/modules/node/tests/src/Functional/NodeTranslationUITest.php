@@ -37,7 +37,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'language', 'content_translation', 'node', 'datetime', 'field_ui', 'help'];
+  protected static $modules = ['block', 'language', 'content_translation', 'node', 'datetime', 'field_ui', 'help'];
 
   /**
    * The profile to install as a basis for testing.

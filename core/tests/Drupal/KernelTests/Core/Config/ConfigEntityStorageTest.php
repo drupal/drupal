@@ -18,7 +18,7 @@ class ConfigEntityStorageTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_test'];
+  protected static $modules = ['config_test'];
 
   /**
    * Tests creating configuration entities with changed UUIDs.

@@ -22,7 +22,7 @@ class DbDumpTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'config', 'dblog', 'menu_link_content', 'link', 'block_content', 'file', 'user'];
+  protected static $modules = ['system', 'config', 'dblog', 'menu_link_content', 'link', 'block_content', 'file', 'user'];
 
   /**
    * Test data to write into config.

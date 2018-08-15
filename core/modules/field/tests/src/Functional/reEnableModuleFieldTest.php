@@ -21,7 +21,7 @@ class reEnableModuleFieldTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'node',
     // We use telephone module instead of test_field because test_field is

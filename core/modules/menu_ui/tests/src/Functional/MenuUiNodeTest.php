@@ -26,7 +26,7 @@ class MenuUiNodeTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['menu_ui', 'test_page_test', 'node', 'block', 'locale', 'language', 'content_translation'];
+  protected static $modules = ['menu_ui', 'test_page_test', 'node', 'block', 'locale', 'language', 'content_translation'];
 
   protected function setUp() {
     parent::setUp();

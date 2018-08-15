@@ -26,7 +26,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'entity_test_update', 'user', 'text'];
+  protected static $modules = ['entity_test', 'entity_test_update', 'user', 'text'];
 
   /**
    * Views used by this test.

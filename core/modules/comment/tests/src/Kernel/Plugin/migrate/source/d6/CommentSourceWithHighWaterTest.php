@@ -16,7 +16,7 @@ class CommentSourceWithHighWaterTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['comment', 'migrate_drupal'];
+  protected static $modules = ['comment', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

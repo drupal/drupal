@@ -17,7 +17,7 @@ class MigrateContactSettingsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['contact'];
+  protected static $modules = ['contact'];
 
   /**
    * {@inheritdoc}

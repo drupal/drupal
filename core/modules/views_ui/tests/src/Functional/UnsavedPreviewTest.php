@@ -26,7 +26,7 @@ class UnsavedPreviewTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'views_ui'];
+  protected static $modules = ['node', 'views_ui'];
 
   /**
    * Sets up a Drupal site for running functional and integration tests.

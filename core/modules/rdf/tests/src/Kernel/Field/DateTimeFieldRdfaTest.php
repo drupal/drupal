@@ -26,7 +26,7 @@ class DateTimeFieldRdfaTest extends FieldRdfaTestBase {
   /**
   * {@inheritdoc}
   */
-  public static $modules = ['datetime'];
+  protected static $modules = ['datetime'];
 
   protected function setUp() {
     parent::setUp();

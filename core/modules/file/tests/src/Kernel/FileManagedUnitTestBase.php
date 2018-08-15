@@ -18,7 +18,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['file_test', 'file', 'system', 'field', 'user'];
+  protected static $modules = ['file_test', 'file', 'system', 'field', 'user'];
 
   protected function setUp() {
     parent::setUp();

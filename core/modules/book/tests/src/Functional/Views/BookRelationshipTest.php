@@ -26,7 +26,7 @@ class BookRelationshipTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['book_test_views', 'book', 'views'];
+  protected static $modules = ['book_test_views', 'book', 'views'];
 
   /**
    * A book node.

@@ -35,7 +35,7 @@ class MenuLinkTreeTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'menu_test',
     'menu_link_content',

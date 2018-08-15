@@ -19,7 +19,7 @@ class ItemCacheTagsTest extends EntityCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['aggregator'];
+  protected static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}

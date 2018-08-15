@@ -18,7 +18,7 @@ class ConfirmFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['form_test'];
+  protected static $modules = ['form_test'];
 
   public function testConfirmForm() {
     // Test the building of the form.

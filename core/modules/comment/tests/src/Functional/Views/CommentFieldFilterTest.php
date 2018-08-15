@@ -15,7 +15,7 @@ class CommentFieldFilterTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language'];
+  protected static $modules = ['language'];
 
   /**
    * Views used by this test.

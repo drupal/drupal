@@ -16,7 +16,7 @@ class MainContentFallbackTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'system_test'];
+  protected static $modules = ['block', 'system_test'];
 
   protected $adminUser;
   protected $webUser;

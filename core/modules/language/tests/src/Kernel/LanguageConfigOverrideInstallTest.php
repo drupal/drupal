@@ -17,7 +17,7 @@ class LanguageConfigOverrideInstallTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'config_events_test'];
+  protected static $modules = ['language', 'config_events_test'];
 
   /**
    * Tests the configuration events are not fired during install of overrides.

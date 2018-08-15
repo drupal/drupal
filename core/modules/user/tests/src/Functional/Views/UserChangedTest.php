@@ -17,7 +17,7 @@ class UserChangedTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['views_ui', 'user_test_views'];
+  protected static $modules = ['views_ui', 'user_test_views'];
 
   /**
    * Views used by this test.

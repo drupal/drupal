@@ -17,7 +17,7 @@ class MenuLinkDefaultIntegrationTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'menu_test',
   ];
 

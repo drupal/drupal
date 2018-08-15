@@ -23,7 +23,7 @@ class NodeSaveTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['node_test'];
+  protected static $modules = ['node_test'];
 
   protected function setUp() {
     parent::setUp();

@@ -14,7 +14,7 @@ class FactoryTest extends PluginTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'user'];
+  protected static $modules = ['node', 'user'];
 
   /**
    * Test that DefaultFactory can create a plugin instance.

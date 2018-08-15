@@ -23,7 +23,7 @@ class ToolbarHookToolbarTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['toolbar', 'toolbar_test', 'test_page_test'];
+  protected static $modules = ['toolbar', 'toolbar_test', 'test_page_test'];
 
   protected function setUp() {
     parent::setUp();

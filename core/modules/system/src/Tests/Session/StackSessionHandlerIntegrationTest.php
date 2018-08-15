@@ -16,7 +16,7 @@ class StackSessionHandlerIntegrationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['session_test'];
+  protected static $modules = ['session_test'];
 
   /**
    * Tests a request.

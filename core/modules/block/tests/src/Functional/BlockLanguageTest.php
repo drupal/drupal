@@ -23,7 +23,7 @@ class BlockLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'block', 'content_translation'];
+  protected static $modules = ['language', 'block', 'content_translation'];
 
   protected function setUp() {
     parent::setUp();

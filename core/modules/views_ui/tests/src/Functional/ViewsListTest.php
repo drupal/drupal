@@ -17,7 +17,7 @@ class ViewsListTest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'views_ui'];
+  protected static $modules = ['block', 'views_ui'];
 
   /**
    * A user with permission to administer views.

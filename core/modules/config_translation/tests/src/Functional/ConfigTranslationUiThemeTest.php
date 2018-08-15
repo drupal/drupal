@@ -17,7 +17,7 @@ class ConfigTranslationUiThemeTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_translation', 'config_translation_test'];
+  protected static $modules = ['config_translation', 'config_translation_test'];
 
   /**
    * Languages to enable.

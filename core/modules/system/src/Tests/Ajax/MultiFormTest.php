@@ -19,7 +19,7 @@ class MultiFormTest extends AjaxTestBase {
    *
    * @var array
    */
-  public static $modules = ['form_test'];
+  protected static $modules = ['form_test'];
 
   protected function setUp() {
     parent::setUp();

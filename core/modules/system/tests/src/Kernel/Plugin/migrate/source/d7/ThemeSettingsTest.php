@@ -16,7 +16,7 @@ class ThemeSettingsTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'migrate_drupal'];
+  protected static $modules = ['system', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

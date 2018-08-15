@@ -20,7 +20,7 @@ class StyleSerializerKernelTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['rest_test_views', 'serialization', 'rest'];
+  protected static $modules = ['rest_test_views', 'serialization', 'rest'];
 
   /**
    * {@inheritdoc}

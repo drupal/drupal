@@ -16,7 +16,7 @@ class MigrateSearchPageTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['search'];
+  protected static $modules = ['search'];
 
   /**
    * {@inheritdoc}

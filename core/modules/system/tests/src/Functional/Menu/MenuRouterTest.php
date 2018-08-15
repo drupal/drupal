@@ -17,7 +17,7 @@ class MenuRouterTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'menu_test', 'test_page_test'];
+  protected static $modules = ['block', 'menu_test', 'test_page_test'];
 
   /**
    * Name of the administrative theme to use for tests.

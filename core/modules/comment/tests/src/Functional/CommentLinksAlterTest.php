@@ -9,7 +9,7 @@ namespace Drupal\Tests\comment\Functional;
  */
 class CommentLinksAlterTest extends CommentTestBase {
 
-  public static $modules = ['comment_test'];
+  protected static $modules = ['comment_test'];
 
   protected function setUp() {
     parent::setUp();

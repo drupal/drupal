@@ -16,7 +16,7 @@ class TokenizeAreaUITest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test'];
+  protected static $modules = ['entity_test'];
 
   /**
    * Test that the right tokens are shown as available for replacement.

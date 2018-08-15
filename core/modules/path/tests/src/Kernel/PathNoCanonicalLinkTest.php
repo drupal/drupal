@@ -18,7 +18,7 @@ class PathNoCanonicalLinkTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['path', 'content_translation_test', 'language', 'entity_test', 'user', 'system'];
+  protected static $modules = ['path', 'content_translation_test', 'language', 'entity_test', 'user', 'system'];
 
   protected function setUp() {
     parent::setUp();

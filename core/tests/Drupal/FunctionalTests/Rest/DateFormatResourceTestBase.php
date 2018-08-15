@@ -13,7 +13,7 @@ abstract class DateFormatResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [];
+  protected static $modules = [];
 
   /**
    * {@inheritdoc}

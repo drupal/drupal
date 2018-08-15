@@ -24,7 +24,7 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
   ];

@@ -11,7 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateAggregatorSettingsTest extends MigrateDrupal7TestBase {
 
-  public static $modules = ['aggregator'];
+  protected static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}

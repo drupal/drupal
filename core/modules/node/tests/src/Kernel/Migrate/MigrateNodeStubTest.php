@@ -18,7 +18,7 @@ class MigrateNodeStubTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * {@inheritdoc}

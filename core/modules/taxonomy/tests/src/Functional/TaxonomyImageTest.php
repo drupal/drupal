@@ -32,7 +32,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = ['image'];
+  protected static $modules = ['image'];
 
   protected function setUp() {
     parent::setUp();

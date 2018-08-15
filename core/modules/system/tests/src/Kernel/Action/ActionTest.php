@@ -17,7 +17,7 @@ class ActionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'field', 'user', 'action_test'];
+  protected static $modules = ['system', 'field', 'user', 'action_test'];
 
   /**
    * The action manager.

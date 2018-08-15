@@ -19,7 +19,7 @@ class TagTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['views', 'views_ui', 'user'];
+  protected static $modules = ['views', 'views_ui', 'user'];
 
   /**
    * Tests the views_ui_autocomplete_tag function.

@@ -17,7 +17,7 @@ class NodeContextualLinksTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['contextual'];
+  protected static $modules = ['contextual'];
 
   /**
    * Views used by this test.

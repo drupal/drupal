@@ -17,7 +17,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['field_test'];
+  protected static $modules = ['field_test'];
 
   /**
    * {@inheritdoc}

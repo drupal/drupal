@@ -16,7 +16,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = ['help'];
+  protected static $modules = ['help'];
 
   protected function setUp() {
     parent::setUp();

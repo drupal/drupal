@@ -17,7 +17,7 @@ class MigrateAggregatorStubTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['aggregator'];
+  protected static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}

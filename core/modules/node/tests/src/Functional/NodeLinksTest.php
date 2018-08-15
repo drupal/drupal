@@ -16,7 +16,7 @@ class NodeLinksTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['views'];
+  protected static $modules = ['views'];
 
   /**
    * Tests that the links can be hidden in the view display settings.

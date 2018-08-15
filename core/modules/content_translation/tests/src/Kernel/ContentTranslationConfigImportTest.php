@@ -25,7 +25,7 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user', 'entity_test', 'language', 'content_translation'];
+  protected static $modules = ['system', 'user', 'entity_test', 'language', 'content_translation'];
 
   /**
    * {@inheritdoc}

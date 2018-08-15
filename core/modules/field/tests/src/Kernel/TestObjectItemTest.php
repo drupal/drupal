@@ -18,7 +18,7 @@ class TestObjectItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_test'];
+  protected static $modules = ['field_test'];
 
   /**
    * {@inheritdoc}

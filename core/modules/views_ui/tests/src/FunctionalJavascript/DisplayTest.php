@@ -19,7 +19,7 @@ class DisplayTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'contextual',
     'node',

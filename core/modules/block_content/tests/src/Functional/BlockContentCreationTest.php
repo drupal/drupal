@@ -20,7 +20,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public static $modules = ['block_content_test', 'dblog', 'field_ui'];
+  protected static $modules = ['block_content_test', 'dblog', 'field_ui'];
 
   /**
    * Permissions to grant admin user.

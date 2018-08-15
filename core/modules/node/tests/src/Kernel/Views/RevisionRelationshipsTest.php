@@ -20,7 +20,7 @@ class RevisionRelationshipsTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['node' , 'node_test_views'];
+  protected static $modules = ['node' , 'node_test_views'];
 
   /**
    * {@inheritdoc}

@@ -16,7 +16,7 @@ class InstallUninstallTest extends ModuleTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system_test', 'dblog', 'taxonomy', 'update_test_postupdate'];
+  protected static $modules = ['system_test', 'dblog', 'taxonomy', 'update_test_postupdate'];
 
   /**
    * Tests that a fixed set of modules can be installed and uninstalled.

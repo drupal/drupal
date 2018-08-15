@@ -16,7 +16,7 @@ class WhosOnlineBlockTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'user', 'block', 'views'];
+  protected static $modules = ['system', 'user', 'block', 'views'];
 
   /**
    * The block being tested.

@@ -18,7 +18,7 @@ class RouteCachingNonPathLanguageNegotiationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'block'];
+  protected static $modules = ['language', 'block'];
 
   /**
    * The admin user.

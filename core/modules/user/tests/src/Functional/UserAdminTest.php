@@ -22,7 +22,7 @@ class UserAdminTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy', 'views'];
+  protected static $modules = ['taxonomy', 'views'];
 
   /**
    * Registers a user and deletes it.

@@ -26,7 +26,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'block_content',
     'layout_builder',
     'block',

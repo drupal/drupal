@@ -31,7 +31,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
    *
    * @var array
    */
-  public static $modules = ['block'];
+  protected static $modules = ['block'];
 
   /**
    * {@inheritdoc}

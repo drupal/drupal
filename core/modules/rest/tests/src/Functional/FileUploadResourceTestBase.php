@@ -25,7 +25,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['rest_test', 'entity_test', 'file'];
+  protected static $modules = ['rest_test', 'entity_test', 'file'];
 
   /**
    * {@inheritdoc}

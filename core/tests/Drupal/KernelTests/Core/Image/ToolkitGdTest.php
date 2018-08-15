@@ -42,7 +42,7 @@ class ToolkitGdTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'simpletest'];
+  protected static $modules = ['system', 'simpletest'];
 
   /**
    * {@inheritdoc}

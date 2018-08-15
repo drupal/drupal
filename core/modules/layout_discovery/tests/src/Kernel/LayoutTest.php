@@ -15,7 +15,7 @@ class LayoutTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'layout_discovery', 'layout_test'];
+  protected static $modules = ['system', 'layout_discovery', 'layout_test'];
 
   /**
    * The layout plugin manager.

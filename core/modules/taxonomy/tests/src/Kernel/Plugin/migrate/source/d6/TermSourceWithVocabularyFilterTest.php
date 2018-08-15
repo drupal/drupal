@@ -13,7 +13,7 @@ class TermSourceWithVocabularyFilterTest extends TermTest {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['taxonomy', 'migrate_drupal'];
+  protected static $modules = ['taxonomy', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

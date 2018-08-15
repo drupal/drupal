@@ -15,7 +15,7 @@ class FollowUpMigrationsTest extends MigrateNodeTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'content_translation',
     'language',
     'menu_ui',

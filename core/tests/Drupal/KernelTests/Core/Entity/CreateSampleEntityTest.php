@@ -25,7 +25,7 @@ class CreateSampleEntityTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'field', 'filter', 'text', 'file', 'user', 'node', 'comment', 'taxonomy'];
+  protected static $modules = ['system', 'field', 'filter', 'text', 'file', 'user', 'node', 'comment', 'taxonomy'];
 
   /**
    * {@inheritdoc}

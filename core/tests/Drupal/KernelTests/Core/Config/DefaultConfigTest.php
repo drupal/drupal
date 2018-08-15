@@ -23,7 +23,7 @@ class DefaultConfigTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'config_test'];
+  protected static $modules = ['system', 'config_test'];
 
   /**
    * Themes which provide default configuration and need enabling.

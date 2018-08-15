@@ -13,7 +13,7 @@ class UnpublishByKeywordActionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['action', 'node', 'system', 'user'];
+  protected static $modules = ['action', 'node', 'system', 'user'];
 
   /**
    * Tests creating an action using the node_unpublish_by_keyword_action plugin.

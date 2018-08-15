@@ -16,7 +16,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'search',
     'settings_tray_test',

@@ -36,7 +36,7 @@ class CommentLinksTest extends CommentTestBase {
    *
    * @todo Remove this dependency.
    */
-  public static $modules = ['views'];
+  protected static $modules = ['views'];
 
   /**
    * Tests that comment links are output and can be hidden.

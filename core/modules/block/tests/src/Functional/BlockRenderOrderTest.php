@@ -17,7 +17,7 @@ class BlockRenderOrderTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'block'];
+  protected static $modules = ['node', 'block'];
 
   protected function setUp() {
     parent::setUp();

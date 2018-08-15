@@ -24,7 +24,7 @@ class LinkFieldUITest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'link', 'field_ui', 'block'];
+  protected static $modules = ['node', 'link', 'field_ui', 'block'];
 
   /**
    * A user that can edit content types.

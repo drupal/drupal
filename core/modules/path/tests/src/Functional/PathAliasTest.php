@@ -18,7 +18,7 @@ class PathAliasTest extends PathTestBase {
    *
    * @var array
    */
-  public static $modules = ['path'];
+  protected static $modules = ['path'];
 
   protected function setUp() {
     parent::setUp();

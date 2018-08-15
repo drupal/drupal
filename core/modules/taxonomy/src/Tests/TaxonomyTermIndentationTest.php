@@ -14,7 +14,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy'];
+  protected static $modules = ['taxonomy'];
 
   /**
    * Vocabulary for testing.

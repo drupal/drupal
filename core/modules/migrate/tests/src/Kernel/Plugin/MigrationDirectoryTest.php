@@ -15,7 +15,7 @@ class MigrationDirectoryTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['migration_directory_test'];
+  protected static $modules = ['migration_directory_test'];
 
   /**
    * Tests that migrations in the migration_templates directory are created.

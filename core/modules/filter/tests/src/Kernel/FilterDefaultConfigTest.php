@@ -13,7 +13,7 @@ use Drupal\user\RoleInterface;
  */
 class FilterDefaultConfigTest extends KernelTestBase {
 
-  public static $modules = ['system', 'user', 'filter', 'filter_test'];
+  protected static $modules = ['system', 'user', 'filter', 'filter_test'];
 
   protected function setUp() {
     parent::setUp();

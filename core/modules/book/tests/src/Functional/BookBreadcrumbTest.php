@@ -16,7 +16,7 @@ class BookBreadcrumbTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['book', 'block', 'book_breadcrumb_test'];
+  protected static $modules = ['book', 'block', 'book_breadcrumb_test'];
 
   /**
    * A book node.

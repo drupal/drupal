@@ -25,7 +25,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['dblog', 'dblog_test_views', 'user'];
+  protected static $modules = ['dblog', 'dblog_test_views', 'user'];
 
   /**
    * {@inheritdoc}

@@ -25,7 +25,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['block'];
+  protected static $modules = ['block'];
 
   /**
    * {@inheritdoc}

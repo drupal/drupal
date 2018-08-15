@@ -22,7 +22,7 @@ class BlockHiddenRegionTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_test', 'search'];
+  protected static $modules = ['block', 'block_test', 'search'];
 
   protected function setUp() {
     parent::setUp();

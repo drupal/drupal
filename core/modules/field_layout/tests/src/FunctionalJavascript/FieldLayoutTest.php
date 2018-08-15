@@ -15,7 +15,7 @@ class FieldLayoutTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['field_layout', 'field_ui', 'field_layout_test', 'layout_test'];
+  protected static $modules = ['field_layout', 'field_ui', 'field_layout_test', 'layout_test'];
 
   /**
    * {@inheritdoc}

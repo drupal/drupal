@@ -17,7 +17,7 @@ class DownloadFunctionalTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['migrate', 'file'];
+  protected static $modules = ['migrate', 'file'];
 
   /**
    * Tests that an exception is thrown bu migration continues with the next row.

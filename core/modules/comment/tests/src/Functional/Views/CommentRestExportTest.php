@@ -22,7 +22,7 @@ class CommentRestExportTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'comment', 'comment_test_views', 'rest', 'hal'];
+  protected static $modules = ['node', 'comment', 'comment_test_views', 'rest', 'hal'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);

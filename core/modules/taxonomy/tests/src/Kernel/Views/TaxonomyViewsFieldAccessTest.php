@@ -16,7 +16,7 @@ class TaxonomyViewsFieldAccessTest extends FieldFieldAccessTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['taxonomy', 'text', 'entity_test'];
+  protected static $modules = ['taxonomy', 'text', 'entity_test'];
 
   /**
    * {@inheritdoc}

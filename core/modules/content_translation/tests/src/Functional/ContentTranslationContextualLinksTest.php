@@ -47,7 +47,7 @@ class ContentTranslationContextualLinksTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['content_translation', 'contextual', 'node'];
+  protected static $modules = ['content_translation', 'contextual', 'node'];
 
   /**
    * The profile to install as a basis for testing.

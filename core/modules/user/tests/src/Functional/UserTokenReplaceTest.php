@@ -21,7 +21,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'user_hooks_test'];
+  protected static $modules = ['language', 'user_hooks_test'];
 
   /**
    * {@inheritdoc}

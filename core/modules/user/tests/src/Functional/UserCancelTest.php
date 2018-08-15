@@ -22,7 +22,7 @@ class UserCancelTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'comment'];
+  protected static $modules = ['node', 'comment'];
 
   protected function setUp() {
     parent::setUp();

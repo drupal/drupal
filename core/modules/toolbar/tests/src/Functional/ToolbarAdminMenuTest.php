@@ -54,7 +54,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'block', 'menu_ui', 'user', 'taxonomy', 'toolbar', 'language', 'test_page_test', 'locale'];
+  protected static $modules = ['node', 'block', 'menu_ui', 'user', 'taxonomy', 'toolbar', 'language', 'test_page_test', 'locale'];
 
   protected function setUp() {
     parent::setUp();

@@ -37,7 +37,7 @@ class FrontPageTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'contextual'];
+  protected static $modules = ['node', 'contextual'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class UserPictureFileTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user', 'migrate_drupal'];
+  protected static $modules = ['user', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

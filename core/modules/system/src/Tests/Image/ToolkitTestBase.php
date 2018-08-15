@@ -22,7 +22,7 @@ abstract class ToolkitTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['image_test'];
+  protected static $modules = ['image_test'];
 
   /**
    * The URI for the file.

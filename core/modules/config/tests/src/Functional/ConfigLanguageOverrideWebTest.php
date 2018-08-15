@@ -18,7 +18,7 @@ class ConfigLanguageOverrideWebTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'language',
     'system',

@@ -14,7 +14,7 @@ class RemoteFileSaveUploadTest extends SaveUploadTest {
    *
    * @var array
    */
-  public static $modules = ['file_test'];
+  protected static $modules = ['file_test'];
 
   protected function setUp() {
     parent::setUp();

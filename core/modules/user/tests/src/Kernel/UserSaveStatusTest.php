@@ -17,7 +17,7 @@ class UserSaveStatusTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user', 'field'];
+  protected static $modules = ['system', 'user', 'field'];
 
   protected function setUp() {
     parent::setUp();

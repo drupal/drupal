@@ -16,7 +16,7 @@ class BcRoutesTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'settings_tray',
   ];
 

@@ -19,7 +19,7 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'filter', 'editor', 'field', 'file', 'user'];
+  protected static $modules = ['system', 'filter', 'editor', 'field', 'file', 'user'];
 
   /**
    * @var \Drupal\filter\Plugin\FilterInterface[]

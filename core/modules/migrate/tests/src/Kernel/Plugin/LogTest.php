@@ -16,7 +16,7 @@ class LogTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['migrate'];
+  protected static $modules = ['migrate'];
 
   /**
    * Test the Log plugin.

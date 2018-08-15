@@ -15,7 +15,7 @@ class VocabularyHalJsonCookieTest extends VocabularyResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

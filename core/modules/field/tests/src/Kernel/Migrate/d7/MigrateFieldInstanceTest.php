@@ -20,7 +20,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'datetime',
     'file',

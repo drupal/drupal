@@ -14,7 +14,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  */
 class SelectionTest extends BrowserTestBase {
 
-  public static $modules = ['node', 'views', 'entity_reference_test', 'entity_test'];
+  protected static $modules = ['node', 'views', 'entity_reference_test', 'entity_test'];
 
   /**
    * Nodes for testing.

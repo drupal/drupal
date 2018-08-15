@@ -15,7 +15,7 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'block_content',
     'config',

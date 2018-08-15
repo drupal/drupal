@@ -16,7 +16,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['node_access_test', 'views'];
+  protected static $modules = ['node_access_test', 'views'];
 
   /**
    * The installation profile to use with this test.

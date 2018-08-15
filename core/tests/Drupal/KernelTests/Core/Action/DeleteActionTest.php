@@ -18,7 +18,7 @@ class DeleteActionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'entity_test', 'user'];
+  protected static $modules = ['system', 'entity_test', 'user'];
 
   /**
    * {@inheritdoc}

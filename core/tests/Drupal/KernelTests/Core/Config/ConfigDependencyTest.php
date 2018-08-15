@@ -21,7 +21,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_test', 'entity_test', 'user'];
+  protected static $modules = ['config_test', 'entity_test', 'user'];
 
   /**
    * Tests that calculating dependencies for system module.

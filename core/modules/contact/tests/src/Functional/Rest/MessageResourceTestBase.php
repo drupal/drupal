@@ -13,7 +13,7 @@ abstract class MessageResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['contact'];
+  protected static $modules = ['contact'];
 
   /**
    * {@inheritdoc}

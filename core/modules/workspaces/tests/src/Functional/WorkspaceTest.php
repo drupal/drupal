@@ -16,7 +16,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['workspaces'];
+  protected static $modules = ['workspaces'];
 
   /**
    * A test user.

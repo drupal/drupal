@@ -17,7 +17,7 @@ class MenuLinkContentFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'menu_link_content',
   ];
 

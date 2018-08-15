@@ -25,7 +25,7 @@ class ForumTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy', 'comment', 'forum', 'node', 'block', 'menu_ui', 'help'];
+  protected static $modules = ['taxonomy', 'comment', 'forum', 'node', 'block', 'menu_ui', 'help'];
 
   /**
    * A user with various administrative privileges.

@@ -20,7 +20,7 @@ class RevisionRelationshipsTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['block_content' , 'block_content_test_views'];
+  protected static $modules = ['block_content' , 'block_content_test_views'];
 
   /**
    * Views used by this test.

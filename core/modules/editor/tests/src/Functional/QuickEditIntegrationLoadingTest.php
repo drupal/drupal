@@ -19,7 +19,7 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['quickedit', 'filter', 'node', 'editor'];
+  protected static $modules = ['quickedit', 'filter', 'node', 'editor'];
 
   /**
    * The basic permissions necessary to view content and use in-place editing.

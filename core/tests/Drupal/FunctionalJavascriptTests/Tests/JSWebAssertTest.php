@@ -17,7 +17,7 @@ class JSWebAssertTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = ['js_webassert_test'];
+  protected static $modules = ['js_webassert_test'];
 
   /**
    * Tests that JSWebAssert assertions work correctly.

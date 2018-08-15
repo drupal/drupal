@@ -22,7 +22,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'comment', 'block'];
+  protected static $modules = ['node', 'comment', 'block'];
 
   /**
    * Number of results for the Master display.

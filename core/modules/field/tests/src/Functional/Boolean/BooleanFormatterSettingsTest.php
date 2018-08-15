@@ -18,7 +18,7 @@ class BooleanFormatterSettingsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['field', 'field_ui', 'text', 'node', 'user'];
+  protected static $modules = ['field', 'field_ui', 'text', 'node', 'user'];
 
   /**
    * The name of the entity bundle that is created in the test.

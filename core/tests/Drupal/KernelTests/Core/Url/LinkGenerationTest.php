@@ -14,7 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class LinkGenerationTest extends KernelTestBase {
 
-  public static $modules = ['link_generation_test'];
+  protected static $modules = ['link_generation_test'];
 
   /**
    * Tests how hook_link_alter() can affect escaping of the link text.

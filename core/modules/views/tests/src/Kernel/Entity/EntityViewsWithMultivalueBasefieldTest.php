@@ -16,7 +16,7 @@ class EntityViewsWithMultivalueBasefieldTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test'];
+  protected static $modules = ['entity_test'];
 
   /**
    * {@inheritdoc}
