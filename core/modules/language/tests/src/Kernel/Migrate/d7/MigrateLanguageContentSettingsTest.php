@@ -34,14 +34,31 @@ class MigrateLanguageContentSettingsTest extends MigrateDrupal7TestBase {
   public function testLanguageContent() {
     // Assert that a translatable content is still translatable.
     $config = $this->config('language.content_settings.node.blog');
-    $this->assertIdentical($config->get('target_entity_type_id'), 'node');
-    $this->assertIdentical($config->get('target_bundle'), 'blog');
-    $this->assertIdentical($config->get('default_langcode'), 'current_interface');
+    $this->assertSame($config->get('target_entity_type_id'), 'node');
+    $this->assertSame($config->get('target_bundle'), 'blog');
+    $this->assertSame($config->get('default_langcode'), 'current_interface');
     $this->assertFalse($config->get('language_alterable'));
     $this->assertTrue($config->get('third_party_settings.content_translation.enabled'));
 
     // Assert that a non-translatable content is not translatable.
     $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'page');
+    $this->assertTrue($config->isDefaultConfiguration());
+    $this->assertFalse($config->isLanguageAlterable());
+    $this->assertSame($config->getDefaultLangcode(), 'site_default');
+
+    // Make sure there's no migration exceptions.
+    $messages = $this->migration->getIdMap()->getMessageIterator()->fetchAll();
+    $this->assertEmpty($messages);
+
+    // Assert that a content type translatable with entity_translation is still
+    // translatable.
+    $config = $this->config('language.content_settings.node.test_content_type');
+    $this->assertTrue($config->get('third_party_settings.content_translation.enabled'));
+    $this->assertSame($config->get('default_langcode'), 'und');
+
+    // Assert that a content type without a 'language_content_type' variable is
+    // not translatable
+    $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'book');
     $this->assertTrue($config->isDefaultConfiguration());
     $this->assertFalse($config->isLanguageAlterable());
     $this->assertSame($config->getDefaultLangcode(), 'site_default');

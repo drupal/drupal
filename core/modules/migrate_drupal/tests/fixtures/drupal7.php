@@ -49586,10 +49586,6 @@ $connection->insert('variable')
   'value' => 's:1:"2";',
 ))
 ->values(array(
-  'name' => 'language_content_type_book',
-  'value' => 's:1:"0";',
-))
-->values(array(
   'name' => 'language_content_type_forum',
   'value' => 's:1:"0";',
 ))
