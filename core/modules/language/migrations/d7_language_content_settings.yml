@@ -20,6 +20,8 @@ process:
         0: NULL
         1: 'current_interface'
         2: 'current_interface'
+        4: 'und'
+      default_value: NULL
     -
       plugin: skip_on_empty
       method: row
@@ -38,6 +40,7 @@ process:
       0: NULL
       1: false
       2: true
+      4: true
 destination:
   plugin: entity:language_content_settings
   content_translation_update_definitions:
