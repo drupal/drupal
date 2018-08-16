@@ -59,7 +59,15 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
       'id' => 'llama',
       'title' => 'Llama Gabilondo',
       'description' => 'Llama Gabilondo',
-      'link' => 'https://nl.wikipedia.org/wiki/Llama',
+      'link' => [
+        'uri' => 'https://nl.wikipedia.org/wiki/Llama',
+        'options' => [
+          'fragment' => 'a-fragment',
+          'attributes' => [
+            'class' => ['example-class'],
+          ],
+        ],
+      ],
       'weight' => 0,
       'menu_name' => 'main',
     ]);
@@ -81,6 +89,12 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
       'link' => [
         [
           'uri' => 'http://www.urbandictionary.com/define.php?term=drama%20llama',
+          'options' => [
+            'fragment' => 'a-fragment',
+            'attributes' => [
+              'class' => ['example-class'],
+            ],
+          ],
         ],
       ],
       'bundle' => [
@@ -115,7 +129,12 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
         [
           'uri' => 'https://nl.wikipedia.org/wiki/Llama',
           'title' => NULL,
-          'options' => [],
+          'options' => [
+            'fragment' => 'a-fragment',
+            'attributes' => [
+              'class' => ['example-class'],
+            ],
+          ],
         ],
       ],
       'weight' => [

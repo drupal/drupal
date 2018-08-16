@@ -617,7 +617,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Only run this for fieldable entities. It doesn't make sense for config
     // entities as config values are already casted. They also run through the
     // ConfigEntityNormalizer, which doesn't deal with fields individually.
-    if ($this->entity instanceof FieldableEntityInterface) {
+    // Also exclude entity_test_map_field — that has a "map" base field, which
+    // only became normalizable since Drupal 8.6, so its normalization
+    // containing non-stringified numbers or booleans does not break BC.
+    if ($this->entity instanceof FieldableEntityInterface && static::$entityTypeId !== 'entity_test_map_field') {
       // Test primitive data casting BC (strings).
       $this->config('serialization.settings')->set('bc_primitives_as_strings', TRUE)->save(TRUE);
       // Rebuild the container so new config is reflected in the addition of the
@@ -921,17 +924,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $created_entity = $this->entityStorage->loadUnchanged(static::$firstCreatedEntityId);
       $created_entity_normalization = $this->serializer->normalize($created_entity, static::$format, ['account' => $this->account]);
       $this->assertSame($created_entity_normalization, $this->serializer->decode((string) $response->getBody(), static::$format));
-      // Assert that the entity was indeed created using the POSTed values.
-      foreach ($this->getNormalizedPostEntity() as $field_name => $field_normalization) {
-        // Some top-level keys in the normalization may not be fields on the
-        // entity (for example '_links' and '_embedded' in the HAL normalization).
-        if ($created_entity->hasField($field_name)) {
-          // Subset, not same, because we can e.g. send just the target_id for the
-          // bundle in a POST request; the response will include more properties.
-          $this->assertArraySubset(static::castToString($field_normalization), $created_entity->get($field_name)
-            ->getValue(), TRUE);
-        }
-      }
+      $this->assertStoredEntityMatchesSentNormalization($this->getNormalizedPostEntity(), $created_entity);
     }
 
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
@@ -1182,16 +1175,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $updated_entity = $this->entityStorage->loadUnchanged($this->entity->id());
     $updated_entity_normalization = $this->serializer->normalize($updated_entity, static::$format, ['account' => $this->account]);
     $this->assertSame($updated_entity_normalization, $this->serializer->decode((string) $response->getBody(), static::$format));
-    // Assert that the entity was indeed created using the PATCHed values.
-    foreach ($this->getNormalizedPatchEntity() as $field_name => $field_normalization) {
-      // Some top-level keys in the normalization may not be fields on the
-      // entity (for example '_links' and '_embedded' in the HAL normalization).
-      if ($updated_entity->hasField($field_name)) {
-        // Subset, not same, because we can e.g. send just the target_id for the
-        // bundle in a PATCH request; the response will include more properties.
-        $this->assertArraySubset(static::castToString($field_normalization), $updated_entity->get($field_name)->getValue(), TRUE);
-      }
-    }
+    $this->assertStoredEntityMatchesSentNormalization($this->getNormalizedPatchEntity(), $updated_entity);
     // Ensure that fields do not get deleted if they're not present in the PATCH
     // request. Test this using the configurable field that we added, but which
     // is not sent in the PATCH request.
@@ -1513,6 +1497,35 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     }
     else {
       $this->assert406Response($response);
+    }
+  }
+
+  /**
+   * Asserts that the stored entity matches the sent normalization.
+   *
+   * @param array $sent_normalization
+   *   An entity normalization.
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $modified_entity
+   *   The entity object of the modified (PATCHed or POSTed) entity.
+   */
+  protected function assertStoredEntityMatchesSentNormalization(array $sent_normalization, FieldableEntityInterface $modified_entity) {
+    foreach ($sent_normalization as $field_name => $field_normalization) {
+      // Some top-level keys in the normalization may not be fields on the
+      // entity (for example '_links' and '_embedded' in the HAL normalization).
+      if ($modified_entity->hasField($field_name)) {
+        $field_type = $modified_entity->get($field_name)->getFieldDefinition()->getType();
+        // Fields are stored in the database, when read they are represented
+        // as strings in PHP memory. The exception: field types that are
+        // stored in a serialized way. Hence we need to cast most expected
+        // field normalizations to strings.
+        $expected_field_normalization = ($field_type !== 'map')
+          ? static::castToString($field_normalization)
+          : $field_normalization;
+        // Subset, not same, because we can e.g. send just the target_id for the
+        // bundle in a PATCH or POST request; the response will include more
+        // properties.
+        $this->assertArraySubset($expected_field_normalization, $modified_entity->get($field_name)->getValue(), TRUE);
+      }
     }
   }
 
