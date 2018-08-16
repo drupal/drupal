@@ -20,7 +20,7 @@ class StatisticsLoggingTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'statistics', 'block', 'locale'];
+  public static $modules = ['node', 'statistics', 'block', 'locale'];
 
   /**
    * User with permissions to create and edit pages.

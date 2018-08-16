@@ -17,7 +17,7 @@ class LocaleStringTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['locale'];
+  public static $modules = ['locale'];
 
   /**
    * The locale storage.

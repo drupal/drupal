@@ -18,7 +18,7 @@ class ForumBlockTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['forum', 'block'];
+  public static $modules = ['forum', 'block'];
 
   /**
    * A user with various administrative privileges.

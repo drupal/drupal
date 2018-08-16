@@ -16,7 +16,7 @@ class GetRdfNamespacesTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rdf', 'rdf_test_namespaces'];
+  public static $modules = ['rdf', 'rdf_test_namespaces'];
 
   /**
    * Tests getting RDF namespaces.

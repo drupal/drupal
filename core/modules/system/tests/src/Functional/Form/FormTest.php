@@ -25,7 +25,7 @@ class FormTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['filter', 'form_test', 'file', 'datetime'];
+  public static $modules = ['filter', 'form_test', 'file', 'datetime'];
 
   protected function setUp() {
     parent::setUp();

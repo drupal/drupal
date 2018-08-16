@@ -16,7 +16,7 @@ class TwigRegistryLoaderTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['twig_theme_test', 'block'];
+  public static $modules = ['twig_theme_test', 'block'];
 
   /**
    * @var \Drupal\Core\Template\TwigEnvironment

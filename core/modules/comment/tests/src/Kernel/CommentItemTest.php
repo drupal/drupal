@@ -23,7 +23,7 @@ class CommentItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['comment', 'entity_test', 'user'];
+  public static $modules = ['comment', 'entity_test', 'user'];
 
   protected function setUp() {
     parent::setUp();

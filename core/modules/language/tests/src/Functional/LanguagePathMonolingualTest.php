@@ -16,7 +16,7 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'language', 'path'];
+  public static $modules = ['block', 'language', 'path'];
 
   protected function setUp() {
     parent::setUp();

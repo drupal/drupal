@@ -21,7 +21,7 @@ class CommentUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['comment', 'node'];
+  public static $modules = ['comment', 'node'];
 
   protected function setUp() {
     parent::setup();

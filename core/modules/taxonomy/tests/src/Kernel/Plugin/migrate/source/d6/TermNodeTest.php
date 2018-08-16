@@ -15,7 +15,7 @@ class TermNodeTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['taxonomy', 'migrate_drupal'];
+  public static $modules = ['taxonomy', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

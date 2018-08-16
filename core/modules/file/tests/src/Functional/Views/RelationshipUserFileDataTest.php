@@ -21,7 +21,7 @@ class RelationshipUserFileDataTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['file', 'file_test_views', 'user'];
+  public static $modules = ['file', 'file_test_views', 'user'];
 
   /**
    * Views used by this test.

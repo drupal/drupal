@@ -12,7 +12,7 @@ class DerivativeTest extends PluginTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'user'];
+  public static $modules = ['node', 'user'];
 
   /**
    * Tests getDefinitions() and getDefinition() with a derivativeDecorator.

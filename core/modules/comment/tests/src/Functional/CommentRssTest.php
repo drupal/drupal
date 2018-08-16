@@ -21,7 +21,7 @@ class CommentRssTest extends CommentTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views'];
+  public static $modules = ['views'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class RestResourceConfigHalJsonCookieTest extends RestResourceConfigResourceTest
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

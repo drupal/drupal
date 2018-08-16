@@ -21,7 +21,7 @@ class StateFormatterTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'workflows',
     'content_moderation',
     'entity_test',

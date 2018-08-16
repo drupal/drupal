@@ -14,7 +14,7 @@ class TestDiscoveryCacheContextTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['simpletest'];
+  public static $modules = ['simpletest'];
 
   /**
    * Tests that test context hashes are unique.

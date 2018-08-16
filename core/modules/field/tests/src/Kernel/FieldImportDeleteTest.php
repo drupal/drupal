@@ -23,7 +23,7 @@ class FieldImportDeleteTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['field_test_config'];
+  public static $modules = ['field_test_config'];
 
   /**
    * Tests deleting field storages and fields as part of config import.

@@ -30,7 +30,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['comment', 'entity_test', 'user'];
+  public static $modules = ['comment', 'entity_test', 'user'];
 
   /**
    * Fields that only users with administer comments permissions can change.

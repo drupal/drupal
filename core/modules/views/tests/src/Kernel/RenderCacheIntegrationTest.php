@@ -27,7 +27,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'user', 'node'];
+  public static $modules = ['entity_test', 'user', 'node'];
 
   /**
    * {@inheritdoc}

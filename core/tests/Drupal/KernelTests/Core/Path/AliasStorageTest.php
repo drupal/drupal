@@ -14,7 +14,7 @@ class AliasStorageTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * @var \Drupal\Core\Path\AliasStorage

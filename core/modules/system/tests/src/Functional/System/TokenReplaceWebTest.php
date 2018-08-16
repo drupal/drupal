@@ -18,7 +18,7 @@ class TokenReplaceWebTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['token_test', 'filter', 'node'];
+  public static $modules = ['token_test', 'filter', 'node'];
 
   /**
    * Tests a token replacement on an actual website.

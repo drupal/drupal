@@ -17,7 +17,7 @@ class PlaceholderMessageTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['render_placeholder_message_test'];
+  public static $modules = ['render_placeholder_message_test'];
 
   /**
    * Test rendering of message placeholder.

@@ -42,7 +42,7 @@ abstract class BlockContentTestBase extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'block_content'];
+  public static $modules = ['block', 'block_content'];
 
   /**
    * Whether or not to auto-create the basic block type during setup.

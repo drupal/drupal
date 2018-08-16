@@ -18,7 +18,7 @@ class TaxonomyQueryAlterTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['taxonomy', 'taxonomy_test'];
+  public static $modules = ['taxonomy', 'taxonomy_test'];
 
   /**
    * Tests that appropriate tags are added when querying the database.

@@ -21,7 +21,7 @@ class TestItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['field_test'];
+  public static $modules = ['field_test'];
 
   /**
    * The name of the field to use in this test.

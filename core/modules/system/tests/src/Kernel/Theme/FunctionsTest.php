@@ -21,7 +21,7 @@ class FunctionsTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['router_test', 'system'];
+  public static $modules = ['router_test', 'system'];
 
   /**
    * {@inheritdoc}

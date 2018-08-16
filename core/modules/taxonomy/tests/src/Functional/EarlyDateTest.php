@@ -18,7 +18,7 @@ class EarlyDateTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'datetime'];
+  public static $modules = ['node', 'datetime'];
 
   protected function setUp() {
     parent::setUp();

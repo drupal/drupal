@@ -18,7 +18,7 @@ class NumberFieldTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'entity_test', 'field_ui'];
+  public static $modules = ['node', 'entity_test', 'field_ui'];
 
   protected function setUp() {
     parent::setUp();

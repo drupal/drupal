@@ -17,7 +17,7 @@ class SerializationTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['serialization', 'serialization_test'];
+  public static $modules = ['serialization', 'serialization_test'];
 
   /**
    * The serializer service to test.

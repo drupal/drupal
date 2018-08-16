@@ -18,7 +18,7 @@ class FieldDefaultValueCallbackTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_test', 'field_ui'];
+  public static $modules = ['node', 'field_test', 'field_ui'];
 
   /**
    * The field name.

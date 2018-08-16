@@ -16,7 +16,7 @@ class PathPluginTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node'];
+  public static $modules = ['node'];
 
   /**
    * Views used by this test.

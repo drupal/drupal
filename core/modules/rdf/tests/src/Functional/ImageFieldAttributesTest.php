@@ -24,7 +24,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rdf', 'image'];
+  public static $modules = ['rdf', 'image'];
 
   /**
    * The name of the image field used in the test.

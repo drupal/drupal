@@ -12,7 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class AdminPathEntityConverterLanguageTest extends BrowserTestBase {
 
-  protected static $modules = ['language', 'language_test'];
+  public static $modules = ['language', 'language_test'];
 
   protected function setUp() {
     parent::setUp();

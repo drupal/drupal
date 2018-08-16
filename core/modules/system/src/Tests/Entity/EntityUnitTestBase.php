@@ -22,7 +22,7 @@ abstract class EntityUnitTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'system', 'field', 'text', 'filter', 'entity_test'];
+  public static $modules = ['user', 'system', 'field', 'text', 'filter', 'entity_test'];
 
   /**
    * The entity manager service.

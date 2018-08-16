@@ -21,7 +21,7 @@ class SaveUploadTest extends FileManagedTestBase {
    *
    * @var array
    */
-  protected static $modules = ['dblog'];
+  public static $modules = ['dblog'];
 
   /**
    * An image file path for uploading.

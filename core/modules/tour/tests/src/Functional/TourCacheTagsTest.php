@@ -18,7 +18,7 @@ class TourCacheTagsTest extends PageCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['tour', 'tour_test'];
+  public static $modules = ['tour', 'tour_test'];
 
   /**
    * {@inheritdoc}

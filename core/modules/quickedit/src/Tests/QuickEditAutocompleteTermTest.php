@@ -25,7 +25,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'taxonomy', 'quickedit'];
+  public static $modules = ['node', 'taxonomy', 'quickedit'];
 
   /**
    * Stores the node used for the tests.

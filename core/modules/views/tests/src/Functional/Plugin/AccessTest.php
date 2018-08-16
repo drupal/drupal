@@ -27,7 +27,7 @@ class AccessTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node'];
+  public static $modules = ['node'];
 
   /**
    * Web user for testing.

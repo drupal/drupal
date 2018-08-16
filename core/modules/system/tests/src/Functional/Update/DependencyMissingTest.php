@@ -16,7 +16,7 @@ class DependencyMissingTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['update_test_0', 'update_test_2'];
+  public static $modules = ['update_test_0', 'update_test_2'];
 
   protected function setUp() {
     // Only install update_test_2.module, even though its updates have a

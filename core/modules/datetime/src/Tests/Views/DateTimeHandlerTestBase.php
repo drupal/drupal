@@ -22,7 +22,7 @@ abstract class DateTimeHandlerTestBase extends HandlerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['datetime_test', 'node', 'datetime'];
+  public static $modules = ['datetime_test', 'node', 'datetime'];
 
   /**
    * Name of the field.

@@ -15,7 +15,7 @@ class MigrateEntityTranslationSettingsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'comment',
     'content_translation',
     'language',

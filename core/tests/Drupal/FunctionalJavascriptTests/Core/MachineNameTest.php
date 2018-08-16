@@ -19,7 +19,7 @@ class MachineNameTest extends WebDriverTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'form_test'];
+  public static $modules = ['node', 'form_test'];
 
   /**
    * {@inheritdoc}

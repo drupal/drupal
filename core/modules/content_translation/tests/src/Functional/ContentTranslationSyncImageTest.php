@@ -38,7 +38,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'content_translation', 'entity_test', 'image', 'field_ui'];
+  public static $modules = ['language', 'content_translation', 'entity_test', 'image', 'field_ui'];
 
   protected function setUp() {
     parent::setUp();

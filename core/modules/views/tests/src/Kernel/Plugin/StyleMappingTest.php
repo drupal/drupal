@@ -11,7 +11,7 @@ use Drupal\views\Views;
  */
 class StyleMappingTest extends StyleTestBase {
 
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * Views used by this test.

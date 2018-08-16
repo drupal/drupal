@@ -17,7 +17,7 @@ class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rdf', 'field_test', 'file', 'image'];
+  public static $modules = ['rdf', 'field_test', 'file', 'image'];
 
   /**
    * The name of the taxonomy term reference field used in the test.

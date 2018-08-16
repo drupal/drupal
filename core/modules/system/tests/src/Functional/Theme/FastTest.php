@@ -16,7 +16,7 @@ class FastTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['theme_test'];
+  public static $modules = ['theme_test'];
 
   protected function setUp() {
     parent::setUp();

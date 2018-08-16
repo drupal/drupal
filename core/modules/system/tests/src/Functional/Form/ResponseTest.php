@@ -17,7 +17,7 @@ class ResponseTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['form_test'];
+  public static $modules = ['form_test'];
 
   /**
    * Tests that enforced responses propagate through subscribers and middleware.

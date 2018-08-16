@@ -15,7 +15,7 @@ class ActionHalJsonCookieTest extends ActionResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

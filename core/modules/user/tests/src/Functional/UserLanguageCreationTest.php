@@ -18,7 +18,7 @@ class UserLanguageCreationTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'language'];
+  public static $modules = ['user', 'language'];
 
   /**
    * Functional test for language handling during user creation.

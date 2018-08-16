@@ -30,7 +30,7 @@ class DbLogFormInjectionTest extends KernelTestBase implements FormInterface {
    *
    * @var array
    */
-  protected static $modules = ['system', 'dblog', 'user'];
+  public static $modules = ['system', 'dblog', 'user'];
 
   /**
    * {@inheritdoc}

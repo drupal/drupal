@@ -21,7 +21,7 @@ class FilterSecurityTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'filter_test'];
+  public static $modules = ['node', 'filter_test'];
 
   /**
    * A user with administrative permissions.

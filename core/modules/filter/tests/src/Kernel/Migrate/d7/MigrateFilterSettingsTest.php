@@ -11,7 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateFilterSettingsTest extends MigrateDrupal7TestBase {
 
-  protected static $modules = ['filter'];
+  public static $modules = ['filter'];
 
   /**
    * {@inheritdoc}

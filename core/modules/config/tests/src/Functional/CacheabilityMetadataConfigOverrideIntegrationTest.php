@@ -17,7 +17,7 @@ class CacheabilityMetadataConfigOverrideIntegrationTest extends BrowserTestBase 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'block_test',
     'config_override_integration_test',
   ];

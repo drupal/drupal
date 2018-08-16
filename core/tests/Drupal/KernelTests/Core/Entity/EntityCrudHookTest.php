@@ -40,7 +40,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'block_test', 'entity_crud_hook_test', 'file', 'taxonomy', 'node', 'comment'];
+  public static $modules = ['block', 'block_test', 'entity_crud_hook_test', 'file', 'taxonomy', 'node', 'comment'];
 
   protected $ids = [];
 

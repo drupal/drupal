@@ -26,7 +26,7 @@ class ManageFieldsTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_ui', 'field_test', 'taxonomy', 'image', 'block'];
+  public static $modules = ['node', 'field_ui', 'field_test', 'taxonomy', 'image', 'block'];
 
   /**
    * The ID of the custom content type created for testing.

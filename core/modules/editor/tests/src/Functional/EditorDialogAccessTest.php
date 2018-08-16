@@ -18,7 +18,7 @@ class EditorDialogAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['editor', 'filter', 'ckeditor'];
+  public static $modules = ['editor', 'filter', 'ckeditor'];
 
   /**
    * Test access to the editor image dialog.

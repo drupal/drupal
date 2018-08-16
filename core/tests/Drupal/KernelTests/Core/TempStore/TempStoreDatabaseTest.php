@@ -21,7 +21,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * A key/value store factory.

@@ -18,7 +18,7 @@ class TaxonomyGlossaryTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['taxonomy'];
+  public static $modules = ['taxonomy'];
 
   /**
    * Views used by this test.

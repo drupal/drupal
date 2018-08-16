@@ -19,7 +19,7 @@ class LocaleContentTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'locale'];
+  public static $modules = ['node', 'locale'];
 
   /**
    * Verifies that machine name fields are always LTR.

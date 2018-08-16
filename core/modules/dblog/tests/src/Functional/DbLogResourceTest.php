@@ -39,7 +39,7 @@ class DbLogResourceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal', 'dblog'];
+  public static $modules = ['hal', 'dblog'];
 
   /**
    * {@inheritdoc}

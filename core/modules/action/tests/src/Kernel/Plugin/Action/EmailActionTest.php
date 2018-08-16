@@ -16,7 +16,7 @@ class EmailActionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'user', 'action', 'dblog'];
+  public static $modules = ['system', 'user', 'action', 'dblog'];
 
   /**
    * {@inheritdoc}

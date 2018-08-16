@@ -19,7 +19,7 @@ class CommentValidationTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['comment', 'node'];
+  public static $modules = ['comment', 'node'];
 
   /**
    * {@inheritdoc}

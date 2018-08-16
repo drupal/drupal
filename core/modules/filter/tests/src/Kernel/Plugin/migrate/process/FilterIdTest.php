@@ -19,7 +19,7 @@ class FilterIdTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['filter'];
+  public static $modules = ['filter'];
 
   /**
    * The mocked MigrateExecutable.

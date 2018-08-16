@@ -24,7 +24,7 @@ class FileItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['file'];
+  public static $modules = ['file'];
 
   /**
    * Created file entity.

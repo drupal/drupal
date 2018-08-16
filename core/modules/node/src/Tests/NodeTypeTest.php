@@ -21,7 +21,7 @@ class NodeTypeTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['field_ui', 'block'];
+  public static $modules = ['field_ui', 'block'];
 
   /**
    * Ensures that node type functions (node_type_get_*) work correctly.

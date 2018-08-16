@@ -12,7 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  */
 class UpcastingTest extends BrowserTestBase {
 
-  protected static $modules = ['paramconverter_test', 'node', 'language'];
+  public static $modules = ['paramconverter_test', 'node', 'language'];
 
   /**
    * Confirms that all parameters are converted as expected.

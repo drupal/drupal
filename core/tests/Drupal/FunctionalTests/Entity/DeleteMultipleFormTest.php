@@ -29,7 +29,7 @@ class DeleteMultipleFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'user', 'language'];
+  public static $modules = ['entity_test', 'user', 'language'];
 
   /**
    * {@inheritdoc}

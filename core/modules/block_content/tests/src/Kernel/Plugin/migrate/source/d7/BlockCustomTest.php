@@ -15,7 +15,7 @@ class BlockCustomTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block_content', 'migrate_drupal'];
+  public static $modules = ['block_content', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

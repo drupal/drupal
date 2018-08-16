@@ -22,7 +22,7 @@ class ContactStorageTest extends ContactSitewideTest {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'block',
     'text',
     'contact',

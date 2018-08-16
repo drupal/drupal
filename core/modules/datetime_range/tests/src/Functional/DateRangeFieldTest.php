@@ -25,7 +25,7 @@ class DateRangeFieldTest extends DateTestBase {
    *
    * @var array
    */
-  protected static $modules = ['datetime_range'];
+  public static $modules = ['datetime_range'];
 
   /**
    * The default display settings to use for the formatters.

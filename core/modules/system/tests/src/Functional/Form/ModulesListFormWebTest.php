@@ -14,7 +14,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system_test', 'help'];
+  public static $modules = ['system_test', 'help'];
 
   /**
    * {@inheritdoc}

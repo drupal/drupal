@@ -27,7 +27,7 @@ class DisplayPageWebTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['menu_ui', 'block', 'views_ui'];
+  public static $modules = ['menu_ui', 'block', 'views_ui'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class EditorHalJsonAnonTest extends EditorResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

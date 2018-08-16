@@ -15,7 +15,7 @@ class EntityViewModeHalJsonAnonTest extends EntityViewModeResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

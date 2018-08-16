@@ -16,7 +16,7 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'content_moderation',
     'node',
     'entity_test',

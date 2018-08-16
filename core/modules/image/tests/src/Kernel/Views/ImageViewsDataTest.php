@@ -19,7 +19,7 @@ class ImageViewsDataTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['image', 'file', 'views', 'entity_test', 'user', 'field'];
+  public static $modules = ['image', 'file', 'views', 'entity_test', 'user', 'field'];
 
   /**
    * Tests views data generated for image field relationship.

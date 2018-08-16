@@ -20,7 +20,7 @@ class EditorAdminTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['filter', 'editor'];
+  public static $modules = ['filter', 'editor'];
 
   /**
    * A user with the 'administer filters' permission.

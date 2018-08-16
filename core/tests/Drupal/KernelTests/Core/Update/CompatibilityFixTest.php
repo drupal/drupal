@@ -14,7 +14,7 @@ class CompatibilityFixTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   protected function setUp() {
     parent::setUp();

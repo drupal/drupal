@@ -20,7 +20,7 @@ class SimpleTestTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['simpletest'];
+  public static $modules = ['simpletest'];
 
   /**
    * The results array that has been parsed by getTestResults().

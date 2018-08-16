@@ -19,7 +19,7 @@ class FeedLanguageTest extends AggregatorTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language'];
+  public static $modules = ['language'];
 
   /**
    * List of langcodes.

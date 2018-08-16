@@ -18,7 +18,7 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['menu_link_content', 'link', 'system', 'menu_link_content_dynamic_route'];
+  public static $modules = ['menu_link_content', 'link', 'system', 'menu_link_content_dynamic_route'];
 
   /**
    * {@inheritdoc}

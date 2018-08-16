@@ -18,7 +18,7 @@ class SimpleTestBrowserTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['simpletest', 'test_page_test'];
+  public static $modules = ['simpletest', 'test_page_test'];
 
   protected function setUp() {
     parent::setUp();

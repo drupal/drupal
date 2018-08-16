@@ -17,7 +17,7 @@ class LanguageListModuleInstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language_test'];
+  public static $modules = ['language_test'];
 
   /**
    * Tests enabling Language.

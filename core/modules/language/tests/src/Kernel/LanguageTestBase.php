@@ -9,7 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 abstract class LanguageTestBase extends KernelTestBase {
 
-  protected static $modules = ['system', 'language', 'language_test'];
+  public static $modules = ['system', 'language', 'language_test'];
   /**
    * The language manager.
    *

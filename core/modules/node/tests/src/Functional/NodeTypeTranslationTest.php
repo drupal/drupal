@@ -21,7 +21,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'block',
     'config_translation',
     'field_ui',

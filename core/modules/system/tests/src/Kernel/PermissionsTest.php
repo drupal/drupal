@@ -12,7 +12,7 @@ class PermissionsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'system',
     'user',
   ];

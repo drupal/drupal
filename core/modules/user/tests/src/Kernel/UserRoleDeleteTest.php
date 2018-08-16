@@ -17,7 +17,7 @@ class UserRoleDeleteTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'user', 'field'];
+  public static $modules = ['system', 'user', 'field'];
 
   protected function setUp() {
     parent::setUp();

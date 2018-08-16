@@ -14,7 +14,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'field_ui',
     'field_ui_test',
     'node',

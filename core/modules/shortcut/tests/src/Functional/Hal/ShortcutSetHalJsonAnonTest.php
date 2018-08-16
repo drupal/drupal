@@ -15,7 +15,7 @@ class ShortcutSetHalJsonAnonTest extends ShortcutSetResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

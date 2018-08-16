@@ -14,7 +14,7 @@ class MediaContextualLinksTest extends MediaFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'contextual',
   ];
 

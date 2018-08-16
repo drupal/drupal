@@ -15,7 +15,7 @@ class VocabularyHalJsonAnonTest extends VocabularyResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

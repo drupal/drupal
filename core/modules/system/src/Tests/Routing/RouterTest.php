@@ -21,7 +21,7 @@ class RouterTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['router_test'];
+  public static $modules = ['router_test'];
 
   /**
    * Confirms that our FinishResponseSubscriber logic works properly.

@@ -20,7 +20,7 @@ class NodeRSSContentTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node_test', 'views'];
+  public static $modules = ['node_test', 'views'];
 
   protected function setUp() {
     parent::setUp();

@@ -15,7 +15,7 @@ class NodePreviewLinkTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'filter'];
+  public static $modules = ['node', 'filter'];
 
   /**
    * {@inheritdoc}

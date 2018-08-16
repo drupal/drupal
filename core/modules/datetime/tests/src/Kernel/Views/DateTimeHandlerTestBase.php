@@ -19,7 +19,7 @@ abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['datetime_test', 'node', 'datetime', 'field'];
+  public static $modules = ['datetime_test', 'node', 'datetime', 'field'];
 
   /**
    * Name of the field.

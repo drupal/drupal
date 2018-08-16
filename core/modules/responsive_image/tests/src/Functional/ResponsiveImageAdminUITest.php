@@ -16,7 +16,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['responsive_image', 'responsive_image_test_module'];
+  public static $modules = ['responsive_image', 'responsive_image_test_module'];
 
   /**
    * Drupal\simpletest\WebTestBase\setUp().

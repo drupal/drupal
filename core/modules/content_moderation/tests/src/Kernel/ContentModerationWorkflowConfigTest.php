@@ -20,7 +20,7 @@ class ContentModerationWorkflowConfigTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'node',
     'content_moderation',
     'user',

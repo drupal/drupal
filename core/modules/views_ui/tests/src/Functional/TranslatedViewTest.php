@@ -16,7 +16,7 @@ class TranslatedViewTest extends UITestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'config_translation',
     'views_ui',
   ];

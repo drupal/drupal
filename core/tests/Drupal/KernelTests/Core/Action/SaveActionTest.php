@@ -15,7 +15,7 @@ class SaveActionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'entity_test', 'user'];
+  public static $modules = ['system', 'entity_test', 'user'];
 
   /**
    * {@inheritdoc}

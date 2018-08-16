@@ -16,7 +16,7 @@ class ContextDefinitionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'user'];
+  public static $modules = ['entity_test', 'user'];
 
   /**
    * @covers ::isSatisfiedBy

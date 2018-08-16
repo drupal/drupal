@@ -18,7 +18,7 @@ class LocalActionTest extends BrowserTestBase {
    *
    * @var string[]
    */
-  protected static $modules = ['block', 'menu_test'];
+  public static $modules = ['block', 'menu_test'];
 
   /**
    * {@inheritdoc}

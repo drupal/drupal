@@ -18,7 +18,7 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['form_test'];
+  public static $modules = ['form_test'];
 
   /**
    * A user with permission to access vertical_tab_test_tabs.

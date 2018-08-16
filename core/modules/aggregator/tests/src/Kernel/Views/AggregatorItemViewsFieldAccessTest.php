@@ -16,7 +16,7 @@ class AggregatorItemViewsFieldAccessTest extends FieldFieldAccessTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['aggregator', 'entity_test', 'options'];
+  public static $modules = ['aggregator', 'entity_test', 'options'];
 
   /**
    * {@inheritdoc}

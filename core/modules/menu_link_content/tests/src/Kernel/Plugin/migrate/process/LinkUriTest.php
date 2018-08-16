@@ -23,7 +23,7 @@ class LinkUriTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'user'];
+  public static $modules = ['node', 'user'];
 
   /**
    * {@inheritdoc}

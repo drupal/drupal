@@ -28,7 +28,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * The cookie jar.

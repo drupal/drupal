@@ -19,7 +19,7 @@ class MailTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['simpletest', 'system_mail_failure_test'];
+  public static $modules = ['simpletest', 'system_mail_failure_test'];
 
   /**
    * Assert that the pluggable mail system is functional.

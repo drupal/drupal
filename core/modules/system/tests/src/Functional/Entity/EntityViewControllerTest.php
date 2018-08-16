@@ -17,7 +17,7 @@ class EntityViewControllerTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test'];
+  public static $modules = ['entity_test'];
 
   /**
    * Array of test entities.

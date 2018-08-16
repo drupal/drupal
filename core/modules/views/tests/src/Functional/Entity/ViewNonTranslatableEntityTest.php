@@ -18,7 +18,7 @@ class ViewNonTranslatableEntityTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'entity_test',
     'content_translation',
     'language_test',

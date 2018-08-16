@@ -16,7 +16,7 @@ class NodeAccessMenuLinkTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['menu_ui', 'block'];
+  public static $modules = ['menu_ui', 'block'];
 
   /**
    * A user with permission to manage menu links and create nodes.

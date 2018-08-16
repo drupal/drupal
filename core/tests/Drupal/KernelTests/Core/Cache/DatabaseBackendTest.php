@@ -23,7 +23,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * Creates a new instance of DatabaseBackend.

@@ -17,7 +17,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['locale', 'dblog'];
+  public static $modules = ['locale', 'dblog'];
 
   /**
    * A user able to create languages and import translations.

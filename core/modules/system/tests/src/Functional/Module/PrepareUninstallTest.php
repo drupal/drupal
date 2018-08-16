@@ -33,7 +33,7 @@ class PrepareUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'taxonomy', 'entity_test'];
+  public static $modules = ['node', 'taxonomy', 'entity_test'];
 
   /**
    * {@inheritdoc}

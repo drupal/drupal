@@ -25,7 +25,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['comment'];
+  public static $modules = ['comment'];
 
   /**
    * @var \Drupal\entity_test\Entity\EntityTest

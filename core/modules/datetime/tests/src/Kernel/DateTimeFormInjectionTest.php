@@ -30,7 +30,7 @@ class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface 
    *
    * @var array
    */
-  protected static $modules = ['system', 'datetime'];
+  public static $modules = ['system', 'datetime'];
 
   /**
    * {@inheritdoc}

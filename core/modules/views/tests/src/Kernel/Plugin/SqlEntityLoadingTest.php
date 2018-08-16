@@ -19,7 +19,7 @@ class SqlEntityLoadingTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'user'];
+  public static $modules = ['node', 'user'];
 
   /**
    * {@inheritdoc}

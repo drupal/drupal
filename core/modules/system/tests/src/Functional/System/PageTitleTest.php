@@ -19,7 +19,7 @@ class PageTitleTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'test_page_test', 'form_test', 'block'];
+  public static $modules = ['node', 'test_page_test', 'form_test', 'block'];
 
   protected $contentUser;
   protected $savedTitle;

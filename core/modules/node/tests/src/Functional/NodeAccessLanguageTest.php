@@ -20,7 +20,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'node_access_test'];
+  public static $modules = ['language', 'node_access_test'];
 
   protected function setUp() {
     parent::setUp();

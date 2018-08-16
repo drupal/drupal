@@ -87,7 +87,7 @@ abstract class KernelTestBase extends TestBase {
    *
    * @var array
    */
-  protected static $modules = [];
+  public static $modules = [];
 
   private $moduleFiles;
   private $themeFiles;

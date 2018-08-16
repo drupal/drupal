@@ -15,7 +15,7 @@ class MenuLinkTranslationTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['menu_link_content', 'migrate_drupal'];
+  public static $modules = ['menu_link_content', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

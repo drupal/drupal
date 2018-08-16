@@ -39,7 +39,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'block_content'];
+  public static $modules = ['block', 'block_content'];
 
   /**
    * Whether or not to auto-create the basic block type during setup.

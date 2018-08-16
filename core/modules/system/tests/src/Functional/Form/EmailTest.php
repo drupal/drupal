@@ -17,7 +17,7 @@ class EmailTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['form_test'];
+  public static $modules = ['form_test'];
 
   /**
    * Tests that #type 'email' fields are properly validated.

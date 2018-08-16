@@ -14,7 +14,7 @@ class NodeQueryAlterTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node_access_test'];
+  public static $modules = ['node_access_test'];
 
   /**
    * User with permission to view content.

@@ -14,7 +14,7 @@ class FieldLayoutTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field_layout', 'field_ui', 'node', 'field_layout_test'];
+  public static $modules = ['field_layout', 'field_ui', 'node', 'field_layout_test'];
 
   /**
    * {@inheritdoc}

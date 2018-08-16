@@ -16,7 +16,7 @@ class ThemeInfoTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['theme_test'];
+  public static $modules = ['theme_test'];
 
   /**
    * The theme handler used in this test for enabling themes.

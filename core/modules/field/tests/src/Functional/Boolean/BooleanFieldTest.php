@@ -19,7 +19,7 @@ class BooleanFieldTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'entity_test',
     'field_ui',
     'options',

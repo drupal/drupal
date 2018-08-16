@@ -155,7 +155,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rest_test', 'text'];
+  public static $modules = ['rest_test', 'text'];
 
   /**
    * Provides an entity resource.

@@ -18,7 +18,7 @@ class RssTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_ui', 'views'];
+  public static $modules = ['node', 'field_ui', 'views'];
 
   /**
    * Vocabulary for testing.

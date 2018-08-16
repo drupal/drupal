@@ -18,7 +18,7 @@ class UserEntityCallbacksTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'user_hooks_test'];
+  public static $modules = ['user', 'user_hooks_test'];
 
   /**
    * An authenticated user to use for testing.

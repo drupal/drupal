@@ -17,7 +17,7 @@ class TourTest extends TourTestBasic {
    *
    * @var array
    */
-  protected static $modules = ['block', 'tour', 'locale', 'language', 'tour_test'];
+  public static $modules = ['block', 'tour', 'locale', 'language', 'tour_test'];
 
   /**
    * The permissions required for a logged in user to test tour tips.

@@ -20,7 +20,7 @@ class InitialStateTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'entity_test',
     'node',
     'user',

@@ -19,7 +19,7 @@ class DialogTest extends AjaxTestBase {
    *
    * @var array
    */
-  protected static $modules = ['ajax_test', 'ajax_forms_test', 'contact'];
+  public static $modules = ['ajax_test', 'ajax_forms_test', 'contact'];
 
   /**
    * Test sending non-JS and AJAX requests to open and manipulate modals.

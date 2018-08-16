@@ -19,7 +19,7 @@ class BulkFormTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node_test_views', 'language'];
+  public static $modules = ['node_test_views', 'language'];
 
   /**
    * Views used by this test.

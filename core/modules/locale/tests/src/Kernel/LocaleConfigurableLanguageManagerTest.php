@@ -18,7 +18,7 @@ class LocaleConfigurableLanguageManagerTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'locale'];
+  public static $modules = ['language', 'locale'];
 
   public function testGetLanguages() {
     $this->installSchema('locale', ['locales_source', 'locales_target', 'locales_location']);

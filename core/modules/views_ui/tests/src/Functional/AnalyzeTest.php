@@ -14,7 +14,7 @@ class AnalyzeTest extends UITestBase {
    *
    * @var array
    */
-  protected static $modules = ['views_ui'];
+  public static $modules = ['views_ui'];
 
   /**
    * Views used by this test.

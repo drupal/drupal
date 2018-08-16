@@ -17,7 +17,7 @@ class FieldAccessTest extends FieldTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_test'];
+  public static $modules = ['node', 'field_test'];
 
   /**
    * Node entity to use in this test.

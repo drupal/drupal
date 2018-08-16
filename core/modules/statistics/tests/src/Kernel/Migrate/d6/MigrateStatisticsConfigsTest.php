@@ -17,7 +17,7 @@ class MigrateStatisticsConfigsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['statistics'];
+  public static $modules = ['statistics'];
 
   /**
    * {@inheritdoc}

@@ -23,7 +23,7 @@ class LanguageTourTest extends TourTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'language', 'tour'];
+  public static $modules = ['block', 'language', 'tour'];
 
   /**
    * {@inheritdoc}

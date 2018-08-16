@@ -16,7 +16,7 @@ class ConfigEntityStatusUITest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config_test'];
+  public static $modules = ['config_test'];
 
   /**
    * Tests status operations.

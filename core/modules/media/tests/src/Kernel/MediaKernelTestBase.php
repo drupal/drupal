@@ -22,7 +22,7 @@ abstract class MediaKernelTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'media',
     'media_test_source',
     'image',

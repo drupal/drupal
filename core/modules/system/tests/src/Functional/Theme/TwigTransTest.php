@@ -17,7 +17,7 @@ class TwigTransTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'theme_test',
     'twig_theme_test',
     'locale',

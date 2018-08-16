@@ -24,7 +24,7 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'system',
     'user',
   ];

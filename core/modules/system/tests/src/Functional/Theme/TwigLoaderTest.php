@@ -16,7 +16,7 @@ class TwigLoaderTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['twig_loader_test'];
+  public static $modules = ['twig_loader_test'];
 
   /**
    * Tests adding an additional twig loader to the loader chain.

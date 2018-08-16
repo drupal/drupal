@@ -16,7 +16,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'breakpoint', 'breakpoint_module_test'];
+  public static $modules = ['system', 'breakpoint', 'breakpoint_module_test'];
 
   protected function setUp() {
     parent::setUp();

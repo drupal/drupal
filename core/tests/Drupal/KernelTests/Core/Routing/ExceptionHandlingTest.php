@@ -17,7 +17,7 @@ class ExceptionHandlingTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'router_test'];
+  public static $modules = ['system', 'router_test'];
 
   /**
    * {@inheritdoc}

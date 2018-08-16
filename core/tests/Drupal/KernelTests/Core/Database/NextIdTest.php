@@ -15,7 +15,7 @@ class NextIdTest extends KernelTestBase {
    * The modules to enable.
    * @var array
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   protected function setUp() {
     parent::setUp();

@@ -22,7 +22,7 @@ class CommentBookTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['book', 'comment'];
+  public static $modules = ['book', 'comment'];
 
   protected function setUp() {
     parent::setUp();

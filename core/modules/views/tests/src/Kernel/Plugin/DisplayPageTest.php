@@ -30,7 +30,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'user', 'field', 'views_test_data'];
+  public static $modules = ['system', 'user', 'field', 'views_test_data'];
 
   /**
    * The router dumper to get all routes.

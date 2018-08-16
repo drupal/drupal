@@ -14,7 +14,7 @@ abstract class ShortcutResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['comment', 'shortcut'];
+  public static $modules = ['comment', 'shortcut'];
 
   /**
    * {@inheritdoc}

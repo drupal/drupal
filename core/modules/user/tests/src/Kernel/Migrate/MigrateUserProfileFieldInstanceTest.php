@@ -15,7 +15,7 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field'];
+  public static $modules = ['field'];
 
   /**
    * {@inheritdoc}

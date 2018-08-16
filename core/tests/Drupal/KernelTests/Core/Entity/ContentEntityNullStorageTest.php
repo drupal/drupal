@@ -22,7 +22,7 @@ class ContentEntityNullStorageTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'contact', 'user'];
+  public static $modules = ['system', 'contact', 'user'];
 
   /**
    * Tests using entity query with ContentEntityNullStorage.

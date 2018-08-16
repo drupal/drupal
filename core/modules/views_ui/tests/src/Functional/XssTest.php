@@ -14,7 +14,7 @@ class XssTest extends UITestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'user', 'views_ui', 'views_ui_test'];
+  public static $modules = ['node', 'user', 'views_ui', 'views_ui_test'];
 
   public function testViewsUi() {
     $this->drupalGet('admin/structure/views/view/sa_contrib_2013_035');

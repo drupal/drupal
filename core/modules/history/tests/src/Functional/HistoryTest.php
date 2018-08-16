@@ -21,7 +21,7 @@ class HistoryTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'history'];
+  public static $modules = ['node', 'history'];
 
   /**
    * The main user for testing.

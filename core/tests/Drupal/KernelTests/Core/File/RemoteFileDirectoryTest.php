@@ -14,7 +14,7 @@ class RemoteFileDirectoryTest extends DirectoryTest {
    *
    * @var array
    */
-  protected static $modules = ['file_test'];
+  public static $modules = ['file_test'];
 
   /**
    * A stream wrapper scheme to register for the test.

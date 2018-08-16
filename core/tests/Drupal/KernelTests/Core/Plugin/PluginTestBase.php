@@ -20,7 +20,7 @@ abstract class PluginTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['plugin_test'];
+  public static $modules = ['plugin_test'];
 
   protected $testPluginManager;
   protected $testPluginExpectedDefinitions;

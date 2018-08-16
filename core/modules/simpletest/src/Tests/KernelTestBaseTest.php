@@ -20,7 +20,7 @@ class KernelTestBaseTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test'];
+  public static $modules = ['entity_test'];
 
   /**
    * {@inheritdoc}

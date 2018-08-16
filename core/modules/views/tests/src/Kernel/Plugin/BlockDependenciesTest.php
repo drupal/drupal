@@ -24,7 +24,7 @@ class BlockDependenciesTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'block', 'user', 'field'];
+  public static $modules = ['node', 'block', 'user', 'field'];
 
   /**
    * Tests that exposed filter blocks have the correct dependencies.

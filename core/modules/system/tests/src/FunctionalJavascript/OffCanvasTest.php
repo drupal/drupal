@@ -21,7 +21,7 @@ class OffCanvasTest extends OffCanvasTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'off_canvas_test',
   ];
 

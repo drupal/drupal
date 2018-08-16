@@ -16,7 +16,7 @@ class SystemAuthorizeTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system_test'];
+  public static $modules = ['system_test'];
 
   protected function setUp() {
     parent::setUp();

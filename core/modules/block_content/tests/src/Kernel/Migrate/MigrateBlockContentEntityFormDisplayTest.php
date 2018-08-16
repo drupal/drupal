@@ -15,7 +15,7 @@ class MigrateBlockContentEntityFormDisplayTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'block_content', 'filter', 'text'];
+  public static $modules = ['block', 'block_content', 'filter', 'text'];
 
   /**
    * {@inheritdoc}

@@ -17,7 +17,7 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'locale', 'node'];
+  public static $modules = ['language', 'locale', 'node'];
 
   /**
    * {@inheritdoc}

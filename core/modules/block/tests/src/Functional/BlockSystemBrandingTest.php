@@ -14,7 +14,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'system'];
+  public static $modules = ['block', 'system'];
 
   /**
    * {@inheritdoc}

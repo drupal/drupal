@@ -19,7 +19,7 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'content_translation', 'entity_test'];
+  public static $modules = ['language', 'content_translation', 'entity_test'];
 
   /**
    * {@inheritdoc}

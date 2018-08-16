@@ -16,7 +16,7 @@ class FileNormalizeTest extends NormalizerTestBase {
    *
    * @var array
    */
-  protected static $modules = ['file'];
+  public static $modules = ['file'];
 
   /**
    * {@inheritdoc}

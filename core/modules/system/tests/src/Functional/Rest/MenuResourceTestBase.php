@@ -10,7 +10,7 @@ abstract class MenuResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [];
+  public static $modules = [];
 
   /**
    * {@inheritdoc}

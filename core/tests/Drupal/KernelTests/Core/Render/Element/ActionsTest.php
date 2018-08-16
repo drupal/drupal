@@ -15,7 +15,7 @@ class ActionsTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * {@inheritdoc}

@@ -16,7 +16,7 @@ class ConfigMapperTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'config_translation',
     'config_translation_test',
     'language',

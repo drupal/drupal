@@ -19,7 +19,7 @@ class StatisticsAdminTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'statistics'];
+  public static $modules = ['node', 'statistics'];
 
   /**
    * A user that has permission to administer statistics.

@@ -16,7 +16,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
   /**
    * Set up required modules.
    */
-  protected static $modules = [];
+  public static $modules = [];
 
   /**
    * Test setup.

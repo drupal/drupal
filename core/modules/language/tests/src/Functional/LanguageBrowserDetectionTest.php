@@ -11,7 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class LanguageBrowserDetectionTest extends BrowserTestBase {
 
-  protected static $modules = ['language'];
+  public static $modules = ['language'];
 
   /**
    * Tests for adding, editing and deleting mappings between browser language

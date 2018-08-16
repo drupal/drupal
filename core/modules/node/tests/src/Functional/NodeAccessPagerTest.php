@@ -21,7 +21,7 @@ class NodeAccessPagerTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node_access_test', 'comment', 'forum'];
+  public static $modules = ['node_access_test', 'comment', 'forum'];
 
   protected function setUp() {
     parent::setUp();

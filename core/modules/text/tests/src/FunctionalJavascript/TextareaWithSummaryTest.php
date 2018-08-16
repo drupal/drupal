@@ -15,7 +15,7 @@ class TextareaWithSummaryTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['text', 'node'];
+  public static $modules = ['text', 'node'];
 
   /**
    * {@inheritdoc}

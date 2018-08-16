@@ -30,7 +30,7 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'entity_test'];
+  public static $modules = ['user', 'entity_test'];
 
   /**
    * An admin user account.

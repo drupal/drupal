@@ -20,7 +20,7 @@ class PaginationAJAXTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'views', 'views_test_config'];
+  public static $modules = ['node', 'views', 'views_test_config'];
 
   /**
    * @var array

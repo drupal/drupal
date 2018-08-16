@@ -16,7 +16,7 @@ class MigrateDefaultLanguageTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['language'];
+  public static $modules = ['language'];
 
   /**
    * Tests language_default migration with a non-existing language.

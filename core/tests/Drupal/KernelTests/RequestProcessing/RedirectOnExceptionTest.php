@@ -16,7 +16,7 @@ class RedirectOnExceptionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'test_page_test'];
+  public static $modules = ['system', 'test_page_test'];
 
   /**
    * {@inheritdoc}

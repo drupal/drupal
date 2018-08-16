@@ -14,7 +14,7 @@ class ContentTranslationEnableTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'menu_link_content', 'node'];
+  public static $modules = ['entity_test', 'menu_link_content', 'node'];
 
   /**
    * Tests that entity schemas are up-to-date after enabling translation.

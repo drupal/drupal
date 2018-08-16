@@ -23,7 +23,7 @@ class ContentTranslationViewsUITest extends UITestBase {
    *
    * @var array
    */
-  protected static $modules = ['content_translation'];
+  public static $modules = ['content_translation'];
 
   /**
    * Tests the views UI.

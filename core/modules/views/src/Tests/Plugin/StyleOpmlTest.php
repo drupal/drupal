@@ -22,7 +22,7 @@ class StyleOpmlTest extends PluginTestBase {
    *
    * @var array
    */
-  protected static $modules = ['aggregator'];
+  public static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}

@@ -16,7 +16,7 @@ class LanguageLocaleListTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'locale'];
+  public static $modules = ['language', 'locale'];
 
   /**
    * {@inheritdoc}

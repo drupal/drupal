@@ -17,7 +17,7 @@ class ConfigTranslationFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config_translation', 'config_translation_test', 'editor'];
+  public static $modules = ['config_translation', 'config_translation_test', 'editor'];
 
   /**
    * The plugin ID of the mapper to test.

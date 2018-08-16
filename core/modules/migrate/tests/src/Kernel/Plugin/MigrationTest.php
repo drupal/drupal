@@ -17,7 +17,7 @@ class MigrationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['migrate'];
+  public static $modules = ['migrate'];
 
   /**
    * Tests Migration::getProcessPlugins()

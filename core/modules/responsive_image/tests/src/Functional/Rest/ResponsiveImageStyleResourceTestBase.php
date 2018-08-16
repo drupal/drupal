@@ -13,7 +13,7 @@ abstract class ResponsiveImageStyleResourceTestBase extends EntityResourceTestBa
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['responsive_image'];
+  public static $modules = ['responsive_image'];
 
   /**
    * {@inheritdoc}

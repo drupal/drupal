@@ -14,7 +14,7 @@ class DeleteFeedTest extends AggregatorTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block'];
+  public static $modules = ['block'];
 
   /**
    * Deletes a feed and ensures that all of its services are deleted.

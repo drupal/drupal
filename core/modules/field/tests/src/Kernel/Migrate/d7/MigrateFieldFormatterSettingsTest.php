@@ -17,7 +17,7 @@ use Drupal\node\Entity\NodeType;
  */
 class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
 
-  protected static $modules = [
+  public static $modules = [
     'comment',
     'datetime',
     'file',

@@ -15,7 +15,7 @@ class ContactFormHalJsonAnonTest extends ContactFormResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

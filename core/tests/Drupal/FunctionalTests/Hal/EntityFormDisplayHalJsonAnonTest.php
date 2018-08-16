@@ -15,7 +15,7 @@ class EntityFormDisplayHalJsonAnonTest extends EntityFormDisplayResourceTestBase
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

@@ -20,7 +20,7 @@ class ContactLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'contact',
     'language',
     'contact_test',

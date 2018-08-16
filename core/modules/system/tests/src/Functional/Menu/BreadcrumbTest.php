@@ -21,7 +21,7 @@ class BreadcrumbTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['menu_test', 'block'];
+  public static $modules = ['menu_test', 'block'];
 
   /**
    * An administrative user.

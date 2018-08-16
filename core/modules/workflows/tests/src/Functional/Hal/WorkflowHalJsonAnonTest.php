@@ -15,7 +15,7 @@ class WorkflowHalJsonAnonTest extends WorkflowResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

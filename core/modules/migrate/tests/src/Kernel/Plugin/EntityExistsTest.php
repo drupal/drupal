@@ -17,7 +17,7 @@ class EntityExistsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['migrate', 'system', 'user'];
+  public static $modules = ['migrate', 'system', 'user'];
 
   /**
    * {@inheritdoc}

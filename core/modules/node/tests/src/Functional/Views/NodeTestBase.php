@@ -13,7 +13,7 @@ abstract class NodeTestBase extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node_test_views'];
+  public static $modules = ['node_test_views'];
 
   /**
    * {@inheritdoc}

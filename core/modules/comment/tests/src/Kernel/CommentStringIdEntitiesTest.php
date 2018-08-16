@@ -18,7 +18,7 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'comment',
     'user',
     'field',

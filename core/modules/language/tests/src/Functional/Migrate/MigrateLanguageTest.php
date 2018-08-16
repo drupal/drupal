@@ -14,7 +14,7 @@ class MigrateLanguageTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['language'];
+  public static $modules = ['language'];
 
   /**
    * Asserts various properties of a configurable language entity.

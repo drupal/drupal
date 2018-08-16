@@ -17,7 +17,7 @@ class UserFieldsTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'system'];
+  public static $modules = ['user', 'system'];
 
   /**
    * {@inheritdoc}

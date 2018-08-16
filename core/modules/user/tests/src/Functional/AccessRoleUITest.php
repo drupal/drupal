@@ -25,7 +25,7 @@ class AccessRoleUITest extends UITestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'user_test_views'];
+  public static $modules = ['user', 'user_test_views'];
 
   /**
    * {@inheritdoc}

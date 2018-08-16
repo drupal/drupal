@@ -16,7 +16,7 @@ class StableThemeTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * The theme handler.

@@ -17,7 +17,7 @@ class FrontPageTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'system_test', 'views'];
+  public static $modules = ['node', 'system_test', 'views'];
 
   /**
    * The path to a node that is created for testing.

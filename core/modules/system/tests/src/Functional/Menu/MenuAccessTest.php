@@ -17,7 +17,7 @@ class MenuAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'menu_test'];
+  public static $modules = ['block', 'menu_test'];
 
   /**
    * {@inheritdoc}

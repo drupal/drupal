@@ -15,7 +15,7 @@ class SettingsTrayTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'settings_tray',
     'settings_tray_test',
   ];

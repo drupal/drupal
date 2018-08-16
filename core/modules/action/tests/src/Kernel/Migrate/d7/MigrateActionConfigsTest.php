@@ -17,7 +17,7 @@ class MigrateActionConfigsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['action'];
+  public static $modules = ['action'];
 
   /**
    * {@inheritdoc}

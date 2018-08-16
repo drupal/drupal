@@ -21,7 +21,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'node_access_test_language'];
+  public static $modules = ['language', 'node_access_test_language'];
 
   /**
    * A set of nodes to use in testing.

@@ -13,7 +13,7 @@ use Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass;
  */
 class PhpUnitBridgeTest extends KernelTestBase {
 
-  protected static $modules = ['deprecation_test'];
+  public static $modules = ['deprecation_test'];
 
   /**
    * @expectedDeprecation Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass is deprecated.

@@ -19,7 +19,7 @@ class ModerationInformationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'content_moderation',
     'entity_test',
     'user',

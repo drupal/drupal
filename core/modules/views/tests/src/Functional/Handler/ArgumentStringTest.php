@@ -24,7 +24,7 @@ class ArgumentStringTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node'];
+  public static $modules = ['node'];
 
   /**
    * Tests the glossary feature.

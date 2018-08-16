@@ -10,7 +10,7 @@ abstract class ConfigTestResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['config_test', 'config_test_rest'];
+  public static $modules = ['config_test', 'config_test_rest'];
 
   /**
    * {@inheritdoc}

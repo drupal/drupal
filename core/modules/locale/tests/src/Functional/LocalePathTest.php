@@ -18,7 +18,7 @@ class LocalePathTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'locale', 'path', 'views'];
+  public static $modules = ['node', 'locale', 'path', 'views'];
 
   /**
    * {@inheritdoc}

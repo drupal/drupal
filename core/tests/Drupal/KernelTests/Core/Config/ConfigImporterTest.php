@@ -33,7 +33,7 @@ class ConfigImporterTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config_test', 'system', 'config_import_test'];
+  public static $modules = ['config_test', 'system', 'config_import_test'];
 
   protected function setUp() {
     parent::setUp();

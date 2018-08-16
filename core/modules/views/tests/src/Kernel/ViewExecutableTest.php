@@ -31,7 +31,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
 
   use CommentTestTrait;
 
-  protected static $modules = ['system', 'node', 'comment', 'user', 'filter', 'field', 'text'];
+  public static $modules = ['system', 'node', 'comment', 'user', 'filter', 'field', 'text'];
 
   /**
    * Views used by this test.

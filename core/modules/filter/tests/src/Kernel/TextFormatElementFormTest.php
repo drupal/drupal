@@ -28,7 +28,7 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
    *
    * @var array
    */
-  protected static $modules = ['system', 'user', 'filter', 'filter_test', 'editor'];
+  public static $modules = ['system', 'user', 'filter', 'filter_test', 'editor'];
 
   /**
    * Sets up the test.

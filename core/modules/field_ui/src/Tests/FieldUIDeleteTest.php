@@ -22,7 +22,7 @@ class FieldUIDeleteTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_ui', 'field_test', 'block', 'field_test_views'];
+  public static $modules = ['node', 'field_ui', 'field_test', 'block', 'field_test_views'];
 
   /**
    * Test views to enable

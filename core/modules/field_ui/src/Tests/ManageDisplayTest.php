@@ -24,7 +24,7 @@ class ManageDisplayTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_ui', 'taxonomy', 'search', 'field_test', 'field_third_party_test', 'block'];
+  public static $modules = ['node', 'field_ui', 'taxonomy', 'search', 'field_test', 'field_third_party_test', 'block'];
 
   /**
    * {@inheritdoc}

@@ -20,7 +20,7 @@ class ResponsiveImageFieldUiTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_ui', 'image', 'responsive_image', 'responsive_image_test_module', 'block'];
+  public static $modules = ['node', 'field_ui', 'image', 'responsive_image', 'responsive_image_test_module', 'block'];
 
   /**
    * {@inheritdoc}

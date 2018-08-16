@@ -17,7 +17,7 @@ class BlockLanguageCacheTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'language', 'menu_ui'];
+  public static $modules = ['block', 'language', 'menu_ui'];
 
   /**
    * List of langcodes.

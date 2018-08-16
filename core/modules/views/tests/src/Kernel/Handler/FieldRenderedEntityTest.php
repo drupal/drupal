@@ -24,7 +24,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'field'];
+  public static $modules = ['entity_test', 'field'];
 
   /**
    * Views used by this test.

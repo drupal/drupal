@@ -18,7 +18,7 @@ class NumericFormatPluralTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views_ui', 'file', 'language', 'locale'];
+  public static $modules = ['views_ui', 'file', 'language', 'locale'];
 
   /**
    * Views used by this test.

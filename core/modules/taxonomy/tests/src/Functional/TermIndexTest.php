@@ -16,7 +16,7 @@ class TermIndexTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views'];
+  public static $modules = ['views'];
 
   /**
    * Vocabulary for testing.

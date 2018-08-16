@@ -24,7 +24,7 @@ class DisplayFeedTest extends PluginTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'node', 'views'];
+  public static $modules = ['block', 'node', 'views'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);

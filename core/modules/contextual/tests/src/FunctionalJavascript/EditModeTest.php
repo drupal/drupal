@@ -19,7 +19,7 @@ class EditModeTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'node',
     'block',
     'user',

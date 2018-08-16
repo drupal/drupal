@@ -47,7 +47,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test_update'];
+  public static $modules = ['entity_test_update'];
 
   /**
    * {@inheritdoc}

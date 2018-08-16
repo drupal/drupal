@@ -22,7 +22,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'field_test'];
+  public static $modules = ['node', 'field_test'];
 
   /**
    * Views used by this test.

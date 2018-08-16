@@ -25,7 +25,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['menu_ui'];
+  public static $modules = ['menu_ui'];
 
   /**
    * Views used by this test.

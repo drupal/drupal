@@ -21,7 +21,7 @@ class ExposedFormUITest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'views_ui', 'block', 'taxonomy', 'field_ui', 'datetime'];
+  public static $modules = ['node', 'views_ui', 'block', 'taxonomy', 'field_ui', 'datetime'];
 
   /**
    * Array of error message strings raised by the grouped form.

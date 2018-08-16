@@ -28,7 +28,7 @@ class PagerTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'views_ui'];
+  public static $modules = ['node', 'views_ui'];
 
   /**
    * String translation storage object.

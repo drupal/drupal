@@ -14,7 +14,7 @@ class ReportTest extends UITestBase {
    *
    * @var array
    */
-  protected static $modules = ['views', 'views_ui'];
+  public static $modules = ['views', 'views_ui'];
 
   /**
    * Stores an admin user used by the different tests.

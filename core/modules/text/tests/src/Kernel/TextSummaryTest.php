@@ -12,7 +12,7 @@ use Drupal\filter\Entity\FilterFormat;
  */
 class TextSummaryTest extends KernelTestBase {
 
-  protected static $modules = ['system', 'user', 'filter', 'text'];
+  public static $modules = ['system', 'user', 'filter', 'text'];
 
   protected function setUp() {
     parent::setUp();

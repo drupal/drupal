@@ -31,7 +31,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'field_test'];
+  public static $modules = ['entity_test', 'field_test'];
 
   /**
    * The main entity used for testing.

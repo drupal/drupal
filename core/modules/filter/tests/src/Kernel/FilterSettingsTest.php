@@ -17,7 +17,7 @@ class FilterSettingsTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['filter'];
+  public static $modules = ['filter'];
 
   /**
    * Tests explicit and implicit default settings for filters.

@@ -17,7 +17,7 @@ class StatisticsAttachedTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'statistics'];
+  public static $modules = ['node', 'statistics'];
 
   /**
    * {@inheritdoc}

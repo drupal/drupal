@@ -21,7 +21,7 @@ class FieldApiDataTest extends FieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['language'];
+  public static $modules = ['language'];
 
   /**
    * {@inheritdoc}

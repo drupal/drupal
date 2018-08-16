@@ -16,7 +16,7 @@ class ColorConfigSchemaTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['color'];
+  public static $modules = ['color'];
 
   /**
    * A user with administrative permissions.

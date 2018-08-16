@@ -15,7 +15,7 @@ class FieldConfigHalJsonCookieTest extends FieldConfigResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

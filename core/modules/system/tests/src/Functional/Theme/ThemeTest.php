@@ -18,7 +18,7 @@ class ThemeTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['theme_test', 'node'];
+  public static $modules = ['theme_test', 'node'];
 
   /**
    * {@inheritdoc}

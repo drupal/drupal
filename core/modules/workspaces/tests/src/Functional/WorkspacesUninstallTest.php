@@ -19,7 +19,7 @@ class WorkspacesUninstallTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['workspaces'];
+  public static $modules = ['workspaces'];
 
   /**
    * Tests deleting workspace entities and uninstalling Workspaces module.

@@ -15,7 +15,7 @@ class ConfigurableLanguageHalJsonCookieTest extends ConfigurableLanguageResource
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

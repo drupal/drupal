@@ -16,7 +16,7 @@ class TourHelpPageTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['help', 'tour', 'locale', 'language'];
+  public static $modules = ['help', 'tour', 'locale', 'language'];
 
   /**
    * User that can access tours and help.

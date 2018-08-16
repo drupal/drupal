@@ -16,7 +16,7 @@ class MigrateMenuLinkTest extends MigrateNodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'content_translation',
     'language',
     'menu_link_content',

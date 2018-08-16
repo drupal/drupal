@@ -16,7 +16,7 @@ class LocaleExportTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['locale'];
+  public static $modules = ['locale'];
 
   /**
    * A user able to create languages and export translations.

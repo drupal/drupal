@@ -14,7 +14,7 @@ class ContactFormJsonBasicAuthTest extends ContactFormResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['basic_auth'];
+  public static $modules = ['basic_auth'];
 
   /**
    * {@inheritdoc}

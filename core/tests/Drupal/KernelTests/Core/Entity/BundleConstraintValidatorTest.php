@@ -19,7 +19,7 @@ class BundleConstraintValidatorTest extends KernelTestBase {
    */
   protected $typedData;
 
-  protected static $modules = ['node', 'field', 'text', 'user'];
+  public static $modules = ['node', 'field', 'text', 'user'];
 
   protected function setUp() {
     parent::setUp();

@@ -22,7 +22,7 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['editor', 'editor_test'];
+  public static $modules = ['editor', 'editor_test'];
 
   /**
    * A user with permission as administer for testing.

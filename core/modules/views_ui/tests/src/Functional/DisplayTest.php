@@ -25,7 +25,7 @@ class DisplayTest extends UITestBase {
    *
    * @var array
    */
-  protected static $modules = ['contextual'];
+  public static $modules = ['contextual'];
 
   /**
    * Tests adding a display.

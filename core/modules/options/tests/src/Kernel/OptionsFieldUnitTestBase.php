@@ -16,7 +16,7 @@ abstract class OptionsFieldUnitTestBase extends FieldKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['options'];
+  public static $modules = ['options'];
 
   /**
    * The field name used in the test.

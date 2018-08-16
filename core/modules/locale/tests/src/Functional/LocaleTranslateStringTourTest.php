@@ -23,7 +23,7 @@ class LocaleTranslateStringTourTest extends TourTestBase {
    *
    * @var array
    */
-  protected static $modules = ['locale', 'tour'];
+  public static $modules = ['locale', 'tour'];
 
   /**
    * {@inheritdoc}

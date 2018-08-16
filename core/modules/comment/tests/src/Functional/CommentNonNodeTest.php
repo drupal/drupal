@@ -25,7 +25,7 @@ class CommentNonNodeTest extends BrowserTestBase {
   use FieldUiTestTrait;
   use CommentTestTrait;
 
-  protected static $modules = ['comment', 'user', 'field_ui', 'entity_test', 'block'];
+  public static $modules = ['comment', 'user', 'field_ui', 'entity_test', 'block'];
 
   /**
    * An administrative user with permission to configure comment settings.

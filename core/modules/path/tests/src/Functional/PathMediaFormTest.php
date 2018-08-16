@@ -14,7 +14,7 @@ class PathMediaFormTest extends PathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['media', 'media_test_source'];
+  public static $modules = ['media', 'media_test_source'];
 
   /**
    * {@inheritdoc}

@@ -39,7 +39,7 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'content_translation', 'taxonomy'];
+  public static $modules = ['language', 'content_translation', 'taxonomy'];
 
   protected function setUp() {
     parent::setUp();

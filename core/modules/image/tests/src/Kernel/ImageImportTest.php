@@ -15,7 +15,7 @@ class ImageImportTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'image', 'image_module_test'];
+  public static $modules = ['system', 'image', 'image_module_test'];
 
   /**
    * Tests importing image styles.

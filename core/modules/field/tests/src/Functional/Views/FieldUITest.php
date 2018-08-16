@@ -26,7 +26,7 @@ class FieldUITest extends FieldTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views_ui'];
+  public static $modules = ['views_ui'];
 
   /**
    * A user with the 'administer views' permission.

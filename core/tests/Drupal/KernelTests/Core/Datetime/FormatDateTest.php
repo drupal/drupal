@@ -15,7 +15,7 @@ class FormatDateTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['language', 'system'];
+  public static $modules = ['language', 'system'];
 
   /**
    * Arbitrary langcode for a custom language.

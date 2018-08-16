@@ -17,7 +17,7 @@ class UrlBubbleableMetadataBubblingTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['cache_test'];
+  public static $modules = ['cache_test'];
 
   /**
    * {@inheritdoc}

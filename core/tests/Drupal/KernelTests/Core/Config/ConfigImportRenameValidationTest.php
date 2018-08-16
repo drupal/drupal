@@ -29,7 +29,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'user', 'node', 'field', 'text', 'config_test'];
+  public static $modules = ['system', 'user', 'node', 'field', 'text', 'config_test'];
 
   /**
    * {@inheritdoc}

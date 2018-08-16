@@ -33,7 +33,7 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'node', 'user'];
+  public static $modules = ['field', 'node', 'user'];
 
   /**
    * {@inheritdoc}
