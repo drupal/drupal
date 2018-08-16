@@ -58,6 +58,9 @@ abstract class ShortcutResourceTestBase extends EntityResourceTestBase {
       'weight' => -20,
       'link' => [
         'uri' => 'internal:/admin/content/comment',
+        'options' => [
+          'fragment' => 'new',
+        ],
       ],
     ]);
     $shortcut->save();
@@ -96,7 +99,9 @@ abstract class ShortcutResourceTestBase extends EntityResourceTestBase {
         [
           'uri' => 'internal:/admin/content/comment',
           'title' => NULL,
-          'options' => [],
+          'options' => [
+            'fragment' => 'new',
+          ],
         ],
       ],
       'weight' => [

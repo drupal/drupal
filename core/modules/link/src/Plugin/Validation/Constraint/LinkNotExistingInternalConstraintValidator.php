@@ -30,7 +30,7 @@ class LinkNotExistingInternalConstraintValidator extends ConstraintValidator {
       if ($url->isRouted()) {
         $allowed = TRUE;
         try {
-          $url->toString();
+          $url->toString(TRUE);
         }
         // The following exceptions are all possible during URL generation, and
         // should be considered as disallowed URLs.
