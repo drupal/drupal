@@ -16,7 +16,7 @@ class UserCreateFailMailTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system_mail_failure_test'];
+  public static $modules = ['system_mail_failure_test'];
 
   /**
    * Tests the create user administration page.

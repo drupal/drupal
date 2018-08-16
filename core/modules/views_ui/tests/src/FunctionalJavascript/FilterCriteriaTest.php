@@ -14,7 +14,7 @@ class FilterCriteriaTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'views', 'views_ui'];
+  public static $modules = ['node', 'views', 'views_ui'];
 
   /**
    * {@inheritdoc}

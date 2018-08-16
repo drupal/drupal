@@ -13,7 +13,7 @@ use Drupal\node\Entity\NodeType;
  */
 class NodeConditionTest extends EntityKernelTestBase {
 
-  protected static $modules = ['node'];
+  public static $modules = ['node'];
 
   protected function setUp() {
     parent::setUp();

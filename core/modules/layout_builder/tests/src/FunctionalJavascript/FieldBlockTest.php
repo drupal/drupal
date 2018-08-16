@@ -16,7 +16,7 @@ class FieldBlockTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'datetime', 'layout_builder', 'user'];
+  public static $modules = ['block', 'datetime', 'layout_builder', 'user'];
 
   /**
    * {@inheritdoc}

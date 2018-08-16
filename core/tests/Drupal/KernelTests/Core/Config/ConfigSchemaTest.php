@@ -25,7 +25,7 @@ class ConfigSchemaTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'language', 'field', 'image', 'config_test', 'config_schema_test'];
+  public static $modules = ['system', 'language', 'field', 'image', 'config_test', 'config_schema_test'];
 
   /**
    * {@inheritdoc}

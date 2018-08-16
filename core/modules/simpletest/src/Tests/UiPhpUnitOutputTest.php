@@ -19,7 +19,7 @@ class UiPhpUnitOutputTest extends WebTestBase {
    *
    * @var string[]
    */
-  protected static $modules = ['simpletest'];
+  public static $modules = ['simpletest'];
 
   /**
    * Tests that PHPUnit output in the Simpletest UI looks good.

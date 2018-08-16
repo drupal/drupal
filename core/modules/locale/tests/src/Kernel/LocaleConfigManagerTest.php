@@ -18,7 +18,7 @@ class LocaleConfigManagerTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'language', 'locale', 'locale_test', 'block'];
+  public static $modules = ['system', 'language', 'locale', 'locale_test', 'block'];
 
   /**
    * This test creates simple config on the fly breaking schema checking.

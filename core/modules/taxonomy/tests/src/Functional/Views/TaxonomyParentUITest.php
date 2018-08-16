@@ -25,7 +25,7 @@ class TaxonomyParentUITest extends UITestBase {
    *
    * @var array
    */
-  protected static $modules = ['taxonomy', 'taxonomy_test_views'];
+  public static $modules = ['taxonomy', 'taxonomy_test_views'];
 
   /**
    * {@inheritdoc}

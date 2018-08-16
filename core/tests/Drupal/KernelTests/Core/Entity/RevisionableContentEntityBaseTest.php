@@ -17,7 +17,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test_revlog', 'system', 'user'];
+  public static $modules = ['entity_test_revlog', 'system', 'user'];
 
   /**
    * {@inheritdoc}

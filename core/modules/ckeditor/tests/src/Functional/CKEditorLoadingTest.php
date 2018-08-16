@@ -18,7 +18,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['filter', 'editor', 'ckeditor', 'node'];
+  public static $modules = ['filter', 'editor', 'ckeditor', 'node'];
 
   /**
    * An untrusted user with access to only the 'plain_text' format.

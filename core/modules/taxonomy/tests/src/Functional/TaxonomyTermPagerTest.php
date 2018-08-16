@@ -14,7 +14,7 @@ class TaxonomyTermPagerTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  protected static $modules = ['taxonomy'];
+  public static $modules = ['taxonomy'];
 
   /**
    * Vocabulary for testing.

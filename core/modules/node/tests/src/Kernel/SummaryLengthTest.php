@@ -36,7 +36,7 @@ class SummaryLengthTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'node',
     'datetime',
     'user',

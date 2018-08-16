@@ -20,7 +20,7 @@ class UpdateCoreTest extends UpdateTestBase {
    *
    * @var array
    */
-  protected static $modules = ['update_test', 'update', 'language', 'block'];
+  public static $modules = ['update_test', 'update', 'language', 'block'];
 
   protected function setUp() {
     parent::setUp();

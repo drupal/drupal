@@ -38,7 +38,7 @@ class NodeEditFormTest extends NodeTestBase {
    *
    * @var string[]
    */
-  protected static $modules = ['block', 'node', 'datetime'];
+  public static $modules = ['block', 'node', 'datetime'];
 
   protected function setUp() {
     parent::setUp();

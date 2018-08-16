@@ -17,7 +17,7 @@ class BlockTemplateSuggestionsTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block'];
+  public static $modules = ['block'];
 
   /**
    * Tests template suggestions from block_theme_suggestions_block().

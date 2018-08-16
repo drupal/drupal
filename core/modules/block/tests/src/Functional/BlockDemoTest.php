@@ -16,7 +16,7 @@ class BlockDemoTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block'];
+  public static $modules = ['block'];
 
   /**
    * Check for the accessibility of the admin block demo page.

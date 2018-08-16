@@ -22,7 +22,7 @@ class FilterUITest extends UITestBase {
    *
    * @var array
    */
-  protected static $modules = ['views_ui', 'node'];
+  public static $modules = ['views_ui', 'node'];
 
   /**
    * {@inheritdoc}

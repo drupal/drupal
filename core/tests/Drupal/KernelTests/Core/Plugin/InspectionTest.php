@@ -12,7 +12,7 @@ class InspectionTest extends PluginTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'user'];
+  public static $modules = ['node', 'user'];
 
   /**
    * Ensure the test plugins correctly implement getPluginId() and getPluginDefinition().

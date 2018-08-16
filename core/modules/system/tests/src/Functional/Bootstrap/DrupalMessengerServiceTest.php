@@ -17,7 +17,7 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system_test'];
+  public static $modules = ['system_test'];
 
   /**
    * Tests Messenger service.

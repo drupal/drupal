@@ -23,7 +23,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'taxonomy', 'field', 'user', 'text', 'entity_reference', 'entity_test', 'system'];
+  public static $modules = ['node', 'taxonomy', 'field', 'user', 'text', 'entity_reference', 'entity_test', 'system'];
 
   /**
    * Testing node type.

@@ -22,7 +22,7 @@ class FilterNodeAccessTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node_access_test'];
+  public static $modules = ['node_access_test'];
 
   /**
    * Views used by this test.

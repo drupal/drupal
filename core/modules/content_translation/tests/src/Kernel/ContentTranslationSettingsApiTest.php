@@ -16,7 +16,7 @@ class ContentTranslationSettingsApiTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'content_translation', 'user', 'entity_test'];
+  public static $modules = ['language', 'content_translation', 'user', 'entity_test'];
 
   /**
    * {@inheritdoc}

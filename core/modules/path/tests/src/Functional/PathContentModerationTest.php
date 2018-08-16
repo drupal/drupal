@@ -21,7 +21,7 @@ class PathContentModerationTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'path', 'content_moderation'];
+  public static $modules = ['node', 'path', 'content_moderation'];
 
   /**
    * {@inheritdoc}

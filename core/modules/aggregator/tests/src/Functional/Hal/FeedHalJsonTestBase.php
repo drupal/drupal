@@ -12,7 +12,7 @@ abstract class FeedHalJsonTestBase extends FeedResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

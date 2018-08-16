@@ -19,7 +19,7 @@ class SelectComplexTest extends DatabaseTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'user', 'node_access_test', 'field'];
+  public static $modules = ['system', 'user', 'node_access_test', 'field'];
 
   /**
    * Tests simple JOIN statements.

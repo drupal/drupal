@@ -30,7 +30,7 @@ class ConditionTestDualUserTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'user', 'condition_test'];
+  public static $modules = ['system', 'user', 'condition_test'];
 
   /**
    * {@inheritdoc}

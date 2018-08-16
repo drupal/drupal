@@ -54,7 +54,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
    */
   protected $unchangedFieldValues;
 
-  protected static $modules = ['language', 'content_translation'];
+  public static $modules = ['language', 'content_translation'];
 
   protected function setUp() {
     parent::setUp();

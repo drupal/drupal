@@ -23,7 +23,7 @@ class ConfigTranslationViewListUiTest extends UITestBase {
    *
    * @var array
    */
-  protected static $modules = ['config_translation', 'views_ui'];
+  public static $modules = ['config_translation', 'views_ui'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);

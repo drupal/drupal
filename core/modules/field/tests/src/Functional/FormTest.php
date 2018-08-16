@@ -25,7 +25,7 @@ class FormTest extends FieldTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_test', 'options', 'entity_test', 'locale'];
+  public static $modules = ['node', 'field_test', 'options', 'entity_test', 'locale'];
 
   /**
    * An array of values defining a field single.

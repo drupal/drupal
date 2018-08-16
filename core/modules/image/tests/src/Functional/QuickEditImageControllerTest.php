@@ -22,7 +22,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'image', 'quickedit'];
+  public static $modules = ['node', 'image', 'quickedit'];
 
   /**
    * The machine name of our image field.

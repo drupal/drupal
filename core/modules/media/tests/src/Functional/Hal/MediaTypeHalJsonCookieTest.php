@@ -15,7 +15,7 @@ class MediaTypeHalJsonCookieTest extends MediaTypeResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

@@ -16,7 +16,7 @@ use Drupal\simpletest\WebTestBase;
  */
 class ConditionFormTest extends WebTestBase {
 
-  protected static $modules = ['node', 'condition_test'];
+  public static $modules = ['node', 'condition_test'];
 
   /**
    * Submit the condition_node_type_test_form to test condition forms.

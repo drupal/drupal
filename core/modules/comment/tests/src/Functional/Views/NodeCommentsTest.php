@@ -14,7 +14,7 @@ class NodeCommentsTest extends CommentTestBase {
    *
    * @var array
    */
-  protected static $modules = ['history'];
+  public static $modules = ['history'];
 
   /**
    * Views used by this test.

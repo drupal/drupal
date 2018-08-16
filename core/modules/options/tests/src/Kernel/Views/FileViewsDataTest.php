@@ -19,7 +19,7 @@ class FileViewsDataTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['file', 'views', 'entity_test', 'user', 'field'];
+  public static $modules = ['file', 'views', 'entity_test', 'user', 'field'];
 
   /**
    * Tests views data generated for file field relationship.

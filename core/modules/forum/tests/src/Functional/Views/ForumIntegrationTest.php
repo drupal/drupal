@@ -19,7 +19,7 @@ class ForumIntegrationTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['forum_test_views'];
+  public static $modules = ['forum_test_views'];
 
   /**
    * Views used by this test.

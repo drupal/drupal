@@ -29,7 +29,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    *
    * @var array
    */
-  protected static $modules = ['field_ui'];
+  public static $modules = ['field_ui'];
 
   /**
    * Test image formatters on node display for public files.

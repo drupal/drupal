@@ -25,7 +25,7 @@ class UserRoleAdminTest extends BrowserTestBase {
    *
    * @var string[]
    */
-  protected static $modules = ['block'];
+  public static $modules = ['block'];
 
   /**
    * {@inheritdoc}

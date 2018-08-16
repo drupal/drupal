@@ -17,7 +17,7 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['migrate_overwrite_test'];
+  public static $modules = ['migrate_overwrite_test'];
 
   /**
    * {@inheritdoc}

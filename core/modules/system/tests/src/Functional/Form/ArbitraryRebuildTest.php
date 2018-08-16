@@ -18,7 +18,7 @@ class ArbitraryRebuildTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['text', 'form_test'];
+  public static $modules = ['text', 'form_test'];
 
   protected function setUp() {
     parent::setUp();

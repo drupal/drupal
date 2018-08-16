@@ -17,7 +17,7 @@ class CommentActionsTest extends CommentTestBase {
    *
    * @var array
    */
-  protected static $modules = ['dblog', 'action'];
+  public static $modules = ['dblog', 'action'];
 
   /**
    * Tests comment publish and unpublish actions.

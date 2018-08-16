@@ -18,7 +18,7 @@ class ConfigOverridesPriorityTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'config', 'config_override_test', 'language'];
+  public static $modules = ['system', 'config', 'config_override_test', 'language'];
 
   public function testOverridePriorities() {
     $GLOBALS['config_test_run_module_overrides'] = FALSE;

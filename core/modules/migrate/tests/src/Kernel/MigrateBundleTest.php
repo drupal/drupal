@@ -18,7 +18,7 @@ class MigrateBundleTest extends MigrateTestBase {
    *
    * @var array
    */
-  protected static $modules = ['taxonomy', 'text', 'user'];
+  public static $modules = ['taxonomy', 'text', 'user'];
 
   /**
    * {@inheritdoc}

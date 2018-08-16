@@ -23,7 +23,7 @@ class StorageTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['form_test', 'dblog'];
+  public static $modules = ['form_test', 'dblog'];
 
   protected function setUp() {
     parent::setUp();

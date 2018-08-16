@@ -14,7 +14,7 @@ class ModuleImplementsAlterTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * Tests hook_module_implements_alter() adding an implementation.

@@ -26,7 +26,7 @@ class FilterTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views_ui', 'node'];
+  public static $modules = ['views_ui', 'node'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);

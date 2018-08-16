@@ -17,7 +17,7 @@ class LanguageBreadcrumbTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'block', 'filter'];
+  public static $modules = ['language', 'block', 'filter'];
 
   /**
    * {@inheritdoc}

@@ -17,7 +17,7 @@ class MediaTranslationTest extends MediaKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language'];
+  public static $modules = ['language'];
 
   /**
    * The test media translation type.

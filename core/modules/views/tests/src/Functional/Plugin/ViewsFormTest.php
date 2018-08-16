@@ -16,7 +16,7 @@ class ViewsFormTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['action_bulk_test'];
+  public static $modules = ['action_bulk_test'];
 
   /**
    * Tests the Views form wrapper.

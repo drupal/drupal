@@ -17,7 +17,7 @@ class MigrateLocaleConfigsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['locale', 'language'];
+  public static $modules = ['locale', 'language'];
 
   /**
    * {@inheritdoc}

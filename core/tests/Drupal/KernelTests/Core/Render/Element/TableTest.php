@@ -16,7 +16,7 @@ class TableTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'form_test'];
+  public static $modules = ['system', 'form_test'];
 
   /**
    * Tableheader.js provides 'sticky' table headers, and is included by default.

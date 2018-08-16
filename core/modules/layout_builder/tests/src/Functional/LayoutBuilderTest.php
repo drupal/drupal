@@ -16,7 +16,7 @@ class LayoutBuilderTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'views',
     'layout_builder',
     'layout_builder_views_test',

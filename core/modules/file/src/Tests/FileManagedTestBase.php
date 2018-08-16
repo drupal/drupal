@@ -22,7 +22,7 @@ abstract class FileManagedTestBase extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['file_test', 'file'];
+  public static $modules = ['file_test', 'file'];
 
   protected function setUp() {
     parent::setUp();

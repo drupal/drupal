@@ -12,7 +12,7 @@ class TermContextualLinksTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'contextual',
   ];
 

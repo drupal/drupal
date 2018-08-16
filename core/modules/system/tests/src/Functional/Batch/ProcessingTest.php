@@ -17,7 +17,7 @@ class ProcessingTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['batch_test', 'test_page_test'];
+  public static $modules = ['batch_test', 'test_page_test'];
 
   /**
    * Tests batches triggered outside of form submission.

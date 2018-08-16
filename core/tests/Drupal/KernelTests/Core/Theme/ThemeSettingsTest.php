@@ -18,7 +18,7 @@ class ThemeSettingsTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * List of discovered themes.

@@ -16,7 +16,7 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system_test', 'error_test'];
+  public static $modules = ['system_test', 'error_test'];
 
   /**
    * Errors triggered during the test.

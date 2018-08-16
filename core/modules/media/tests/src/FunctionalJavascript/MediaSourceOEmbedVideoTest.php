@@ -19,7 +19,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['media_test_oembed'];
+  public static $modules = ['media_test_oembed'];
 
   use OEmbedTestTrait;
 

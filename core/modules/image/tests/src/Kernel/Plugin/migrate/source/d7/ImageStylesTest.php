@@ -16,7 +16,7 @@ class ImageStylesTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['image', 'migrate_drupal'];
+  public static $modules = ['image', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

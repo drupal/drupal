@@ -30,7 +30,7 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
    *
    * @var array
    */
-  protected static $modules = ['system', 'user', 'aggregator'];
+  public static $modules = ['system', 'user', 'aggregator'];
 
   /**
    * {@inheritdoc}

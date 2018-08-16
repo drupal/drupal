@@ -16,7 +16,7 @@ class MigrateEmbeddedDataTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['migrate'];
+  public static $modules = ['migrate'];
 
   /**
    * Tests the embedded_data source plugin.

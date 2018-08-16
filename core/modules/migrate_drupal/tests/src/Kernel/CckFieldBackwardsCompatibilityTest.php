@@ -14,7 +14,7 @@ class CckFieldBackwardsCompatibilityTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['file', 'migrate_cckfield_plugin_manager_test'];
+  public static $modules = ['file', 'migrate_cckfield_plugin_manager_test'];
 
   /**
    * Ensures that the cckfield backwards compatibility layer is invoked.

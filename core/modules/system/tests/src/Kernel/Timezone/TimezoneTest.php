@@ -11,7 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class TimezoneTest extends KernelTestBase {
 
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * Tests system_time_zones().

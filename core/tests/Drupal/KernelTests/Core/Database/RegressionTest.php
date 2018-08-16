@@ -14,7 +14,7 @@ class RegressionTest extends DatabaseTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'user'];
+  public static $modules = ['node', 'user'];
 
   /**
    * Ensures that non-ASCII UTF-8 data is stored in the database properly.

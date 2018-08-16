@@ -21,7 +21,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
    *
    * @var array
    */
-  protected static $modules = ['migrate', 'system'];
+  public static $modules = ['migrate', 'system'];
 
   /**
    * Migration to run.

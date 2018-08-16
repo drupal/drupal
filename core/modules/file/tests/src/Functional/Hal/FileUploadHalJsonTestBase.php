@@ -15,7 +15,7 @@ abstract class FileUploadHalJsonTestBase extends FileUploadResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

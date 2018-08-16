@@ -48,7 +48,7 @@ class ContentEntityFormFieldValidationFilteringTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'field_test', 'file', 'image'];
+  public static $modules = ['entity_test', 'field_test', 'file', 'image'];
 
   /**
    * {@inheritdoc}

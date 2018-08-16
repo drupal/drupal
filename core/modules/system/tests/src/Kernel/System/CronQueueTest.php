@@ -17,7 +17,7 @@ class CronQueueTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'cron_queue_test'];
+  public static $modules = ['system', 'cron_queue_test'];
 
   /**
    * The database connection.

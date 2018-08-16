@@ -19,7 +19,7 @@ class EntityTranslationFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'language', 'node'];
+  public static $modules = ['entity_test', 'language', 'node'];
 
   protected $langcodes;
 

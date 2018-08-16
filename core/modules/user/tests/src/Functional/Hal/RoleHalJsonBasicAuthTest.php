@@ -15,7 +15,7 @@ class RoleHalJsonBasicAuthTest extends RoleResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal', 'basic_auth'];
+  public static $modules = ['hal', 'basic_auth'];
 
   /**
    * {@inheritdoc}

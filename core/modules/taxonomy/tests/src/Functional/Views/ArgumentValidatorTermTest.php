@@ -38,7 +38,7 @@ class ArgumentValidatorTermTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  protected static $modules = ['taxonomy', 'taxonomy_test_views', 'views_test_config'];
+  public static $modules = ['taxonomy', 'taxonomy_test_views', 'views_test_config'];
 
   /**
    * Views used by this test.

@@ -17,7 +17,7 @@ class FieldCounterTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user'];
+  public static $modules = ['user'];
 
   /**
    * Views used by this test.

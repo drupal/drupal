@@ -15,7 +15,7 @@ class SessionTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['menu_link_content', 'block'];
+  public static $modules = ['menu_link_content', 'block'];
 
   /**
    * {@inheritdoc}

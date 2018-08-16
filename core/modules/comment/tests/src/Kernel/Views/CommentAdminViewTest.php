@@ -34,7 +34,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'user',
     'comment',
     'entity_test',

@@ -16,7 +16,7 @@ class UserAttributesTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rdf', 'node'];
+  public static $modules = ['rdf', 'node'];
 
   protected function setUp() {
     parent::setUp();

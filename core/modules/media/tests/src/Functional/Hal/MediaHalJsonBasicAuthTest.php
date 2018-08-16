@@ -14,7 +14,7 @@ class MediaHalJsonBasicAuthTest extends MediaHalJsonAnonTest {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['basic_auth'];
+  public static $modules = ['basic_auth'];
 
   /**
    * {@inheritdoc}

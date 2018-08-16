@@ -29,7 +29,7 @@ class BigPipeRegressionTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'big_pipe',
     'big_pipe_regression_test',
   ];

@@ -15,7 +15,7 @@ class NodeListBuilderTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'user'];
+  public static $modules = ['node', 'user'];
 
   protected function setUp() {
     parent::setUp();

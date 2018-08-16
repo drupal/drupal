@@ -14,7 +14,7 @@ class ContainerRebuildWebTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['service_provider_test'];
+  public static $modules = ['service_provider_test'];
 
   /**
    * Sets a different deployment identifier.

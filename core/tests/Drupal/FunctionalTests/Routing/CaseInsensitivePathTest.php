@@ -14,7 +14,7 @@ class CaseInsensitivePathTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'views', 'node', 'system_test'];
+  public static $modules = ['system', 'views', 'node', 'system_test'];
 
   /**
    * {@inheritdoc}

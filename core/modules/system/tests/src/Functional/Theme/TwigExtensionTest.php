@@ -16,7 +16,7 @@ class TwigExtensionTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['theme_test', 'twig_extension_test'];
+  public static $modules = ['theme_test', 'twig_extension_test'];
 
   protected function setUp() {
     parent::setUp();

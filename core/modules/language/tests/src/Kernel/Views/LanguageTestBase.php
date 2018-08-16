@@ -15,7 +15,7 @@ abstract class LanguageTestBase extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'language'];
+  public static $modules = ['system', 'language'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();

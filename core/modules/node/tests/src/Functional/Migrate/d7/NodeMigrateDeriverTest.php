@@ -11,7 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class NodeMigrateDeriverTest extends MigrateDrupal7TestBase {
 
-  protected static $modules = ['node'];
+  public static $modules = ['node'];
 
   public function testBuilder() {
     $process = $this->getMigration('d7_node:test_content_type')->getProcess();

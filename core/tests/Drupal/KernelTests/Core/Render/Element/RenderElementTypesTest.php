@@ -18,7 +18,7 @@ class RenderElementTypesTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'router_test'];
+  public static $modules = ['system', 'router_test'];
 
   protected function setUp() {
     parent::setUp();

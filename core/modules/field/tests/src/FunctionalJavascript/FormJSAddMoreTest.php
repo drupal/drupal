@@ -18,7 +18,7 @@ class FormJSAddMoreTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field_test', 'entity_test'];
+  public static $modules = ['field_test', 'entity_test'];
 
   /**
    * {@inheritdoc}

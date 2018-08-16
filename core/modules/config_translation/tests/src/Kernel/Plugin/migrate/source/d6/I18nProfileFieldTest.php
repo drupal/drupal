@@ -16,7 +16,7 @@ class I18nProfileFieldTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['config_translation', 'migrate_drupal', 'user'];
+  public static $modules = ['config_translation', 'migrate_drupal', 'user'];
 
   /**
    * {@inheritdoc}

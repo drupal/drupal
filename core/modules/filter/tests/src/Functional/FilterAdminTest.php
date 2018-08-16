@@ -20,7 +20,7 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'filter', 'node', 'filter_test_plugin', 'dblog'];
+  public static $modules = ['block', 'filter', 'node', 'filter_test_plugin', 'dblog'];
 
   /**
    * An user with administration permissions.

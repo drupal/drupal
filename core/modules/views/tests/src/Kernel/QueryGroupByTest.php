@@ -27,7 +27,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'system', 'field', 'user', 'language'];
+  public static $modules = ['entity_test', 'system', 'field', 'user', 'language'];
 
   /**
    * The storage for the test entity type.

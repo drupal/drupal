@@ -21,7 +21,7 @@ abstract class SearchTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'search', 'dblog'];
+  public static $modules = ['node', 'search', 'dblog'];
 
   protected function setUp() {
     parent::setUp();

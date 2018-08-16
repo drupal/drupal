@@ -19,7 +19,7 @@ class CKEditorToolbarButtonTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['filter', 'editor', 'ckeditor', 'locale'];
+  public static $modules = ['filter', 'editor', 'ckeditor', 'locale'];
 
   /**
    * {@inheritdoc}

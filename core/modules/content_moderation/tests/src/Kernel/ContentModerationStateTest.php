@@ -27,7 +27,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'entity_test',
     'node',
     'block',

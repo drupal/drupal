@@ -23,7 +23,7 @@ class BrowserTest extends WebTestBase {
    *
    * @var string[]
    */
-  protected static $modules = ['block'];
+  public static $modules = ['block'];
 
   /**
    * {@inheritdoc}

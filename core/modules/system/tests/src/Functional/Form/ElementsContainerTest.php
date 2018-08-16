@@ -16,7 +16,7 @@ class ElementsContainerTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['form_test'];
+  public static $modules = ['form_test'];
 
   /**
    * Tests the #optional container property.

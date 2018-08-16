@@ -21,7 +21,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'language_test'];
+  public static $modules = ['language', 'language_test'];
 
   /**
    * An user with permissions to administer languages.

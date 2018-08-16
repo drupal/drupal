@@ -19,7 +19,7 @@ class MigrateNodeSettingsTest extends MigrateDrupal7TestBase {
    *
    * @var array
    */
-  protected static $modules = ['node'];
+  public static $modules = ['node'];
 
   /**
    * {@inheritdoc}

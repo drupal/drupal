@@ -16,7 +16,7 @@ class BlockHtmlTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'block_test'];
+  public static $modules = ['block', 'block_test'];
 
   protected function setUp() {
     parent::setUp();

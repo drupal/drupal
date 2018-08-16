@@ -61,7 +61,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'content_moderation',
     'block',
     'block_content',

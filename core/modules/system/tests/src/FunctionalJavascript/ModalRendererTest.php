@@ -14,7 +14,7 @@ class ModalRendererTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'dialog_renderer_test'];
+  public static $modules = ['system', 'dialog_renderer_test'];
 
   /**
    * Tests that links respect 'data-dialog-renderer' attribute.

@@ -16,7 +16,7 @@ class TourPluginTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['tour'];
+  public static $modules = ['tour'];
 
   /**
    * Stores the tour plugin manager.

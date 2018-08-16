@@ -16,7 +16,7 @@ class EntityRevisionConverterTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'user',
     'system',
     'content_moderation',

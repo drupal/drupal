@@ -16,7 +16,7 @@ class BlockTranslationTest extends BlockTest {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block'];
+  public static $modules = ['block'];
 
   /**
    * {@inheritdoc}

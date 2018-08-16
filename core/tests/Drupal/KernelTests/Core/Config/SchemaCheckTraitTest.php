@@ -26,7 +26,7 @@ class SchemaCheckTraitTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config_test', 'config_schema_test'];
+  public static $modules = ['config_test', 'config_schema_test'];
 
   /**
    * {@inheritdoc}

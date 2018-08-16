@@ -14,7 +14,7 @@ class UserFieldsAccessChangeTest extends UserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user_access_test'];
+  public static $modules = ['user_access_test'];
 
   /**
    * Views used by this test.

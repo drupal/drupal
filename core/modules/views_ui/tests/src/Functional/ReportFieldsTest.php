@@ -20,7 +20,7 @@ class ReportFieldsTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test'];
+  public static $modules = ['entity_test'];
 
   /**
    * Tests the Views fields report page.

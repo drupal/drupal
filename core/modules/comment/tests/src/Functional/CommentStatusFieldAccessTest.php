@@ -37,7 +37,7 @@ class CommentStatusFieldAccessTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'node',
     'comment',
     'user',

@@ -31,7 +31,7 @@ class UserAdminLanguageTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'language', 'language_test'];
+  public static $modules = ['user', 'language', 'language_test'];
 
   protected function setUp() {
     parent::setUp();

@@ -16,7 +16,7 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rdf', 'views'];
+  public static $modules = ['rdf', 'views'];
 
   /**
    * Vocabulary created for testing purposes.

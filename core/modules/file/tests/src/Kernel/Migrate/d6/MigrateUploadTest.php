@@ -16,7 +16,7 @@ class MigrateUploadTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['language', 'menu_ui'];
+  public static $modules = ['language', 'menu_ui'];
 
   /**
    * {@inheritdoc}

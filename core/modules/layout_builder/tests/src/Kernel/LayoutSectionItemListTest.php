@@ -17,7 +17,7 @@ class LayoutSectionItemListTest extends SectionStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'field',
     'text',
   ];

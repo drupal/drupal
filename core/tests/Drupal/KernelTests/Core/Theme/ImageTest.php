@@ -17,7 +17,7 @@ class ImageTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /*
    * The images to test with.

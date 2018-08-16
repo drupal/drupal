@@ -19,7 +19,7 @@ class StringFieldTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'file'];
+  public static $modules = ['entity_test', 'file'];
 
   /**
    * A user without any special permissions.

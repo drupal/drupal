@@ -11,7 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class LanguageBlockSettingsVisibilityTest extends BrowserTestBase {
 
-  protected static $modules = ['block', 'language'];
+  public static $modules = ['block', 'language'];
 
   public function testUnnecessaryLanguageSettingsVisibility() {
     $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'administer blocks']);

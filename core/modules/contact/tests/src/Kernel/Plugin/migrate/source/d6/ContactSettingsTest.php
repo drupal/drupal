@@ -15,7 +15,7 @@ class ContactSettingsTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['contact', 'migrate_drupal', 'user'];
+  public static $modules = ['contact', 'migrate_drupal', 'user'];
 
   /**
    * {@inheritdoc}

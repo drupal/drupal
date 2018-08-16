@@ -21,7 +21,7 @@ class HistoryTimestampTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['history', 'node'];
+  public static $modules = ['history', 'node'];
 
   /**
    * Views used by this test.

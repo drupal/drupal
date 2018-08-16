@@ -23,7 +23,7 @@ class ResourceTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['hal', 'rest', 'entity_test', 'rest_test'];
+  public static $modules = ['hal', 'rest', 'entity_test', 'rest_test'];
 
   /**
    * The entity.

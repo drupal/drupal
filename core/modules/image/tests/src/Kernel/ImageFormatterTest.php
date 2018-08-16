@@ -22,7 +22,7 @@ class ImageFormatterTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['file', 'image'];
+  public static $modules = ['file', 'image'];
 
   /**
    * @var string

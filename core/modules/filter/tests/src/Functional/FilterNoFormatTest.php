@@ -16,7 +16,7 @@ class FilterNoFormatTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['filter'];
+  public static $modules = ['filter'];
 
   /**
    * Tests text without format.

@@ -15,7 +15,7 @@ class AggregatorFeedTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['aggregator', 'migrate_drupal'];
+  public static $modules = ['aggregator', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

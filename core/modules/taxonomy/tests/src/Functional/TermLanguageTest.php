@@ -12,7 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  */
 class TermLanguageTest extends TaxonomyTestBase {
 
-  protected static $modules = ['language'];
+  public static $modules = ['language'];
 
   /**
    * Vocabulary for testing.

@@ -19,7 +19,7 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node'];
+  public static $modules = ['node'];
 
   /**
    * Fields that only users with administer nodes permissions can change.

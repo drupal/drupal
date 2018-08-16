@@ -16,7 +16,7 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'language',
     'content_translation',
     'node',

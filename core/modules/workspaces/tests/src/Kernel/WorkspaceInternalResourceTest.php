@@ -17,7 +17,7 @@ class WorkspaceInternalResourceTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user', 'serialization', 'rest', 'workspaces'];
+  public static $modules = ['user', 'serialization', 'rest', 'workspaces'];
 
   /**
    * Tests enabling workspace associations for REST throws an exception.

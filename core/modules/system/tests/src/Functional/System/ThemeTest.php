@@ -30,7 +30,7 @@ class ThemeTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'block', 'file'];
+  public static $modules = ['node', 'block', 'file'];
 
   protected function setUp() {
     parent::setUp();

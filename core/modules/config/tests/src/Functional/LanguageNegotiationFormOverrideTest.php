@@ -12,7 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class LanguageNegotiationFormOverrideTest extends BrowserTestBase {
 
-  protected static $modules = ['language', 'locale', 'locale_test'];
+  public static $modules = ['language', 'locale', 'locale_test'];
 
   /**
    * Tests that overrides do not affect language-negotiation form values.

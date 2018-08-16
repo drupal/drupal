@@ -20,7 +20,7 @@ class BlockContentListTest extends BlockContentTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'block_content', 'config_translation'];
+  public static $modules = ['block', 'block_content', 'config_translation'];
 
   /**
    * Tests the custom block listing page.

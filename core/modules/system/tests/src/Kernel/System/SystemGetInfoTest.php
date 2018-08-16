@@ -11,7 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class SystemGetInfoTest extends KernelTestBase {
 
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * Tests system_get_info().

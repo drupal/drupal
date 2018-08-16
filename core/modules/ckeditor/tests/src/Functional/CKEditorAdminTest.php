@@ -20,7 +20,7 @@ class CKEditorAdminTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['filter', 'editor', 'ckeditor'];
+  public static $modules = ['filter', 'editor', 'ckeditor'];
 
   /**
    * A user with the 'administer filters' permission.

@@ -26,7 +26,7 @@ class ConfigImportUploadTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config'];
+  public static $modules = ['config'];
 
   protected function setUp() {
     parent::setUp();

@@ -15,7 +15,7 @@ class SearchPageHalJsonAnonTest extends SearchPageResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

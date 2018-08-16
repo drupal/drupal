@@ -14,7 +14,7 @@ class ConfigTranslationUiTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'config_translation',
     'contextual',
     'node',

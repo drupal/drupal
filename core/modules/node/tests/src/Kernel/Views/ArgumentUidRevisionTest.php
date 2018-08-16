@@ -19,7 +19,7 @@ class ArgumentUidRevisionTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'field', 'text', 'user', 'node_test_views'];
+  public static $modules = ['node', 'field', 'text', 'user', 'node_test_views'];
 
   /**
    * {@inheritdoc}

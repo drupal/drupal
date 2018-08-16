@@ -15,7 +15,7 @@ class MenuLinkContentDeleteTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['menu_link_content', 'link', 'system'];
+  public static $modules = ['menu_link_content', 'link', 'system'];
 
   /**
    * {@inheritdoc}

@@ -17,7 +17,7 @@ class CommentViewsFieldAccessTest extends FieldFieldAccessTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['comment', 'entity_test'];
+  public static $modules = ['comment', 'entity_test'];
 
   /**
    * {@inheritdoc}

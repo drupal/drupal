@@ -25,7 +25,7 @@ abstract class DateTestBase extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'entity_test', 'datetime', 'field_ui'];
+  public static $modules = ['node', 'entity_test', 'datetime', 'field_ui'];
 
   /**
    * An array of display options to pass to entity_get_display()

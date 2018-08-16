@@ -23,7 +23,7 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config'];
+  public static $modules = ['config'];
 
   /**
    * A user with the 'synchronize configuration' permission.

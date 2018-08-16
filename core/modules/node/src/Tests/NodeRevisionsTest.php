@@ -35,7 +35,7 @@ class NodeRevisionsTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'contextual', 'datetime', 'language', 'content_translation'];
+  public static $modules = ['node', 'contextual', 'datetime', 'language', 'content_translation'];
 
   /**
    * {@inheritdoc}

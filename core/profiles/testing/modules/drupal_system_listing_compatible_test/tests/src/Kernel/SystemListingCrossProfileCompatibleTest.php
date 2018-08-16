@@ -20,7 +20,7 @@ class SystemListingCrossProfileCompatibleTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['drupal_system_cross_profile_test'];
+  public static $modules = ['drupal_system_cross_profile_test'];
 
   /**
    * Use the Minimal profile.

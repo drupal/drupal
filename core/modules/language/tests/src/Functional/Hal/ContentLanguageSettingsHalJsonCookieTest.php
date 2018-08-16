@@ -15,7 +15,7 @@ class ContentLanguageSettingsHalJsonCookieTest extends ContentLanguageSettingsRe
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

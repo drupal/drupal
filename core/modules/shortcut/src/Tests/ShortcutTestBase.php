@@ -24,7 +24,7 @@ abstract class ShortcutTestBase extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'toolbar', 'shortcut'];
+  public static $modules = ['node', 'toolbar', 'shortcut'];
 
   /**
    * User with permission to administer shortcuts.

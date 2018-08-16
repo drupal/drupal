@@ -18,7 +18,7 @@ class FilterCaptionTwigDebugTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'filter'];
+  public static $modules = ['system', 'filter'];
 
   /**
    * @var \Drupal\filter\Plugin\FilterInterface[]

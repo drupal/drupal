@@ -14,7 +14,7 @@ class MediaInstallTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['media'];
+  public static $modules = ['media'];
 
   /**
    * {@inheritdoc}

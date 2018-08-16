@@ -20,7 +20,7 @@ abstract class TrackerTestBase extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['comment', 'tracker', 'tracker_test_views'];
+  public static $modules = ['comment', 'tracker', 'tracker_test_views'];
 
   /**
    * The node used for testing.

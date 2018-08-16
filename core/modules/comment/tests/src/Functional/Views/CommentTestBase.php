@@ -19,7 +19,7 @@ abstract class CommentTestBase extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'comment', 'comment_test_views'];
+  public static $modules = ['node', 'comment', 'comment_test_views'];
 
   /**
    * A normal user with permission to post comments (without approval).

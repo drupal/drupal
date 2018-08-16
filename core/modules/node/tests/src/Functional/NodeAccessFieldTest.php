@@ -17,7 +17,7 @@ class NodeAccessFieldTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node_access_test', 'field_ui'];
+  public static $modules = ['node_access_test', 'field_ui'];
 
   /**
    * A user with permission to bypass access content.

@@ -14,7 +14,7 @@ use Drupal\node\NodeInterface;
  */
 class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
 
-  protected static $modules = [
+  public static $modules = [
     'datetime',
     'field',
     'filter',

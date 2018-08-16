@@ -11,7 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
 
-  protected static $modules = ['locale', 'locale_test_development_release'];
+  public static $modules = ['locale', 'locale_test_development_release'];
 
   protected function setUp() {
     parent::setUp();

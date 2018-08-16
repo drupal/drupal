@@ -16,7 +16,7 @@ class HtmlResponseAttachmentsTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['render_attached_test'];
+  public static $modules = ['render_attached_test'];
 
   /**
    * Test rendering of ['#attached'].

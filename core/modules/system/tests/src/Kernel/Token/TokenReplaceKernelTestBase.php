@@ -28,7 +28,7 @@ abstract class TokenReplaceKernelTestBase extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   protected function setUp() {
     parent::setUp();

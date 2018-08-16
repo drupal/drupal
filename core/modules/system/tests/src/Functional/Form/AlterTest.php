@@ -17,7 +17,7 @@ class AlterTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'form_test'];
+  public static $modules = ['block', 'form_test'];
 
   /**
    * Tests execution order of hook_form_alter() and hook_form_FORM_ID_alter().

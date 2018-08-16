@@ -20,7 +20,7 @@ class MaximumFileSizeExceededUploadTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'file'];
+  public static $modules = ['node', 'file'];
 
   /**
    * The file system service.

@@ -33,7 +33,7 @@ class ExcludedFieldTokenTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'entity_test',
     'rest_test_views',
     'node',

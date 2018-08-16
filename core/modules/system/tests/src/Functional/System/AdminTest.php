@@ -31,7 +31,7 @@ class AdminTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['locale'];
+  public static $modules = ['locale'];
 
   protected function setUp() {
     // testAdminPages() requires Locale module.

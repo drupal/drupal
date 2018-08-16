@@ -44,7 +44,7 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['text', 'filter'];
+  public static $modules = ['text', 'filter'];
 
   protected function setUp() {
     parent::setUp();

@@ -23,7 +23,7 @@ class TwigEnvironmentTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * Tests inline templates.

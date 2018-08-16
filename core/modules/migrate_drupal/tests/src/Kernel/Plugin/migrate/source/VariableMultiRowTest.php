@@ -16,7 +16,7 @@ class VariableMultiRowTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['migrate_drupal'];
+  public static $modules = ['migrate_drupal'];
 
   /**
    * {@inheritdoc}

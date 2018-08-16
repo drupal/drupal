@@ -16,7 +16,7 @@ class NodeAttributesTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rdf'];
+  public static $modules = ['rdf'];
 
   protected function setUp() {
     parent::setUp();

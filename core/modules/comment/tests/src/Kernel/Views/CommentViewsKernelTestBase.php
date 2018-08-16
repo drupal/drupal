@@ -16,7 +16,7 @@ abstract class CommentViewsKernelTestBase extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['comment_test_views', 'user', 'comment'];
+  public static $modules = ['comment_test_views', 'user', 'comment'];
 
   /**
    * Admin user.

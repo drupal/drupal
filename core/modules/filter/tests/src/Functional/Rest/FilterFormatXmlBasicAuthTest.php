@@ -16,7 +16,7 @@ class FilterFormatXmlBasicAuthTest extends FilterFormatResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['basic_auth'];
+  public static $modules = ['basic_auth'];
 
   /**
    * {@inheritdoc}

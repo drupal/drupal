@@ -17,7 +17,7 @@ class ColorSafePreviewTest extends BrowserTestBase {
    *
    * @var string[]
    */
-  protected static $modules = ['color', 'color_test'];
+  public static $modules = ['color', 'color_test'];
 
   /**
    * A user with administrative permissions.

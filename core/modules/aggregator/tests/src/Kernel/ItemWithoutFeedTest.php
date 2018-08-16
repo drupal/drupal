@@ -15,7 +15,7 @@ class ItemWithoutFeedTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['aggregator', 'options'];
+  public static $modules = ['aggregator', 'options'];
 
   /**
    * {@inheritdoc}

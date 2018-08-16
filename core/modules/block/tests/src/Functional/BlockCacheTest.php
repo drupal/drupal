@@ -17,7 +17,7 @@ class BlockCacheTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'block_test', 'test_page_test'];
+  public static $modules = ['block', 'block_test', 'test_page_test'];
 
   /**
    * A user with permission to create and edit books and to administer blocks.

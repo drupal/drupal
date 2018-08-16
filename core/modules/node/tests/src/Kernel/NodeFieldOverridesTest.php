@@ -27,7 +27,7 @@ class NodeFieldOverridesTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'system', 'field', 'node'];
+  public static $modules = ['user', 'system', 'field', 'node'];
 
   /**
    * {@inheritdoc}

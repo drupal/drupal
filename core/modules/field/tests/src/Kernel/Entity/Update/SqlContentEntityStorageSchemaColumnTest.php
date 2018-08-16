@@ -18,7 +18,7 @@ class SqlContentEntityStorageSchemaColumnTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'field', 'text', 'user'];
+  public static $modules = ['entity_test', 'field', 'text', 'user'];
 
   /**
    * The created entity.

@@ -17,7 +17,7 @@ class MigrateSearchSettingsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['search'];
+  public static $modules = ['search'];
 
   /**
    * {@inheritdoc}

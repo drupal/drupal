@@ -17,7 +17,7 @@ class UserLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'language'];
+  public static $modules = ['user', 'language'];
 
   /**
    * Test if user can change their default language.

@@ -18,7 +18,7 @@ class UserServiceProviderTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user'];
+  public static $modules = ['user'];
 
   /**
    * Tests that tempstore.expire is set to user.tempstore.expire.

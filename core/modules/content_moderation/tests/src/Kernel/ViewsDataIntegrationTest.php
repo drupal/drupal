@@ -20,7 +20,7 @@ class ViewsDataIntegrationTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'content_moderation_test_views',
     'node',
     'content_moderation',

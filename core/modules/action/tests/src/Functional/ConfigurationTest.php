@@ -18,7 +18,7 @@ class ConfigurationTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['action'];
+  public static $modules = ['action'];
 
   /**
    * Tests configuration of advanced actions through administration interface.

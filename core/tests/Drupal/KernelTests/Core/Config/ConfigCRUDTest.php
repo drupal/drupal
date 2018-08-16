@@ -32,7 +32,7 @@ class ConfigCRUDTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * Tests CRUD operations.

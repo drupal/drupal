@@ -19,7 +19,7 @@ class EntityTranslationNormalizeTest extends NormalizerTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'content_translation'];
+  public static $modules = ['node', 'content_translation'];
 
   /**
    * {@inheritdoc}

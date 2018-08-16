@@ -18,7 +18,7 @@ class NodePreviewAnonymousTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node'];
+  public static $modules = ['node'];
 
   /**
    * {@inheritdoc}

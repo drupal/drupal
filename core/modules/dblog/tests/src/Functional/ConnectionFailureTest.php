@@ -12,7 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class ConnectionFailureTest extends BrowserTestBase {
 
-  protected static $modules = ['dblog'];
+  public static $modules = ['dblog'];
 
   /**
    * Tests logging of connection failures.

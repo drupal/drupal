@@ -13,7 +13,7 @@ use Drupal\views\Views;
  */
 class AreaTextTest extends ViewsKernelTestBase {
 
-  protected static $modules = ['system', 'user', 'filter'];
+  public static $modules = ['system', 'user', 'filter'];
 
   /**
    * Views used by this test.

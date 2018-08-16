@@ -17,7 +17,7 @@ class UpdatesWith7xTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['update_test_with_7x'];
+  public static $modules = ['update_test_with_7x'];
 
   /**
    * The URL for the update page.

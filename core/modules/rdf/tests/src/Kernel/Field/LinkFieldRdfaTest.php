@@ -19,7 +19,7 @@ class LinkFieldRdfaTest extends FieldRdfaTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['link', 'text'];
+  public static $modules = ['link', 'text'];
 
   /**
    * {@inheritdoc}

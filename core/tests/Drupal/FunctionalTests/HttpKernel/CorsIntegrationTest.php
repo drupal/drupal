@@ -19,7 +19,7 @@ class CorsIntegrationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'test_page_test', 'page_cache'];
+  public static $modules = ['system', 'test_page_test', 'page_cache'];
 
   public function testCrossSiteRequest() {
     // Test default parameters.

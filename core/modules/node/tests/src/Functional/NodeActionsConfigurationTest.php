@@ -17,7 +17,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['action', 'node'];
+  public static $modules = ['action', 'node'];
 
   /**
    * Tests configuration of the node_assign_owner_action action.

@@ -16,7 +16,7 @@ class LanguageNegotiationUrlTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'language',
     'node',
     'path',

@@ -17,6 +17,6 @@ class SchemaConfigListenerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['config_test'];
+  public static $modules = ['config_test'];
 
 }

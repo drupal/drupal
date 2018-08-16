@@ -20,7 +20,7 @@ class CacheContextOptimizationTest extends KernelTestBase {
    *
    * @var string[]
    */
-  protected static $modules = ['user', 'system'];
+  public static $modules = ['user', 'system'];
 
   /**
    * {@inheritdoc}

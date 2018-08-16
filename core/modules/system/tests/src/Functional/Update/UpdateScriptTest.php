@@ -18,7 +18,7 @@ class UpdateScriptTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['update_script_test', 'dblog', 'language'];
+  public static $modules = ['update_script_test', 'dblog', 'language'];
 
   /**
    * {@inheritdoc}

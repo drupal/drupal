@@ -18,7 +18,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['ban'];
+  public static $modules = ['ban'];
 
   /**
    * Tests various user input to confirm correct validation and saving of data.

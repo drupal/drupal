@@ -16,7 +16,7 @@ class UserAccountLinksTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['menu_ui', 'block', 'test_page_test'];
+  public static $modules = ['menu_ui', 'block', 'test_page_test'];
 
   /**
    * {@inheritdoc}

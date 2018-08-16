@@ -18,7 +18,7 @@ class TranslationWebTest extends FieldTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'field_test', 'entity_test'];
+  public static $modules = ['language', 'field_test', 'entity_test'];
 
   /**
    * The name of the field to use in this test.

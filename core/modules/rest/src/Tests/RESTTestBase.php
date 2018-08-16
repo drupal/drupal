@@ -65,7 +65,7 @@ abstract class RESTTestBase extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rest', 'entity_test'];
+  public static $modules = ['rest', 'entity_test'];
 
   /**
    * The last response.

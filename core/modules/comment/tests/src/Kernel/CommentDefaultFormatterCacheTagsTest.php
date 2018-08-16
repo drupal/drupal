@@ -26,7 +26,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'comment'];
+  public static $modules = ['entity_test', 'comment'];
 
   /**
    * {@inheritdoc}

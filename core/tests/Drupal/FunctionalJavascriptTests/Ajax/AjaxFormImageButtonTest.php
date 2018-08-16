@@ -14,7 +14,7 @@ class AjaxFormImageButtonTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['ajax_forms_test'];
+  public static $modules = ['ajax_forms_test'];
 
   /**
    * Tests image buttons can be operated with the keyboard ENTER key.

@@ -16,7 +16,7 @@ class AjaxCssTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['ckeditor', 'ckeditor_test'];
+  public static $modules = ['ckeditor', 'ckeditor_test'];
 
   /**
    * {@inheritdoc}

@@ -16,7 +16,7 @@ class ServiceProviderWebTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['file', 'service_provider_test'];
+  public static $modules = ['file', 'service_provider_test'];
 
   /**
    * Tests that module service providers get registered to the DIC.

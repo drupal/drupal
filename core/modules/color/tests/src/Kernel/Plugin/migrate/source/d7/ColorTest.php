@@ -16,7 +16,7 @@ class ColorTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['color', 'migrate_drupal'];
+  public static $modules = ['color', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

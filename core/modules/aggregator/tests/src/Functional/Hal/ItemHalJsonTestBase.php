@@ -18,7 +18,7 @@ abstract class ItemHalJsonTestBase extends ItemResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

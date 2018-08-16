@@ -18,7 +18,7 @@ class EntityTypeConstraintValidatorTest extends EntityKernelTestBase {
    */
   protected $typedData;
 
-  protected static $modules = ['node', 'field', 'user'];
+  public static $modules = ['node', 'field', 'user'];
 
   protected function setUp() {
     parent::setUp();

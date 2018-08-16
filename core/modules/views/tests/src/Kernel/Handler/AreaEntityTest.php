@@ -24,7 +24,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'user', 'block'];
+  public static $modules = ['entity_test', 'user', 'block'];
 
   /**
    * Views used by this test.

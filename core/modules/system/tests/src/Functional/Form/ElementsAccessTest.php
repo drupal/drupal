@@ -16,7 +16,7 @@ class ElementsAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['form_test'];
+  public static $modules = ['form_test'];
 
   /**
    * Ensures that child values are still processed when #access = FALSE.

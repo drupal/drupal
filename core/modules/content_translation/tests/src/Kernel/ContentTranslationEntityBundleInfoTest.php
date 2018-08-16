@@ -16,7 +16,7 @@ class ContentTranslationEntityBundleInfoTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user', 'language', 'content_translation_test', 'content_translation', 'entity_test'];
+  public static $modules = ['user', 'language', 'content_translation_test', 'content_translation', 'entity_test'];
 
   /**
    * The content translation manager.

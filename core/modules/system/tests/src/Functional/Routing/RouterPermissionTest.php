@@ -16,7 +16,7 @@ class RouterPermissionTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['router_test'];
+  public static $modules = ['router_test'];
 
   /**
    * Tests permission requirements on routes.

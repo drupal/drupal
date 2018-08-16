@@ -14,7 +14,7 @@ class RenderCacheWebTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'block'];
+  public static $modules = ['node', 'block'];
 
   /**
    * {@inheritdoc}

@@ -21,7 +21,7 @@ class TaggedWithTest extends WizardTestBase {
    *
    * @var array
    */
-  protected static $modules = ['taxonomy'];
+  public static $modules = ['taxonomy'];
 
   /**
    * Node type with an autocomplete tagging field.

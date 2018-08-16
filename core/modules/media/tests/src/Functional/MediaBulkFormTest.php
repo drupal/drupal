@@ -17,7 +17,7 @@ class MediaBulkFormTest extends MediaFunctionalTestBase {
    *
    * @var array
    */
-  protected static $modules = ['media_test_views'];
+  public static $modules = ['media_test_views'];
 
   /**
    * The test media type.

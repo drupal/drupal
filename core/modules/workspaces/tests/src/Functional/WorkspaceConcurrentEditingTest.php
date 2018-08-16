@@ -17,7 +17,7 @@ class WorkspaceConcurrentEditingTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'node', 'workspaces'];
+  public static $modules = ['block', 'node', 'workspaces'];
 
   /**
    * Test switching workspace via the switcher block and admin page.

@@ -31,7 +31,7 @@ class FieldEntityTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'comment'];
+  public static $modules = ['node', 'comment'];
 
   /**
    * {@inheritdoc}

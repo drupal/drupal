@@ -15,7 +15,7 @@ class ConfigAccessTest extends SettingsTrayTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'menu_link_content',
     'menu_ui',
   ];

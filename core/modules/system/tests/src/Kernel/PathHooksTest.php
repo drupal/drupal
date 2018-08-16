@@ -15,7 +15,7 @@ class PathHooksTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
+  static public $modules = ['system'];
 
   /**
    * Test system_path_*() correctly clears caches.

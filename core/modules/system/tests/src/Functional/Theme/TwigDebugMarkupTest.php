@@ -17,7 +17,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['theme_test', 'node'];
+  public static $modules = ['theme_test', 'node'];
 
   /**
    * Tests debug markup added to Twig template output.

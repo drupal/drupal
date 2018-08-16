@@ -14,7 +14,7 @@ class NodeContextualLinksTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'contextual',
   ];
 

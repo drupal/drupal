@@ -19,7 +19,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'system',
     'entity_test',
     'language',

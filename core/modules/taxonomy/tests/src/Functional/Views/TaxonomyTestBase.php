@@ -22,7 +22,7 @@ abstract class TaxonomyTestBase extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['taxonomy', 'taxonomy_test_views'];
+  public static $modules = ['taxonomy', 'taxonomy_test_views'];
 
   /**
    * Stores the nodes used for the different tests.

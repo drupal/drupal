@@ -16,7 +16,7 @@ class ContentModerationStateAccessControlHandlerTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'content_moderation',
     'workflows',
     'user',

@@ -21,7 +21,7 @@ class CommentEntityTest extends CommentTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'comment', 'node', 'history', 'field_ui', 'datetime', 'taxonomy'];
+  public static $modules = ['block', 'comment', 'node', 'history', 'field_ui', 'datetime', 'taxonomy'];
 
   use TaxonomyTestTrait;
 

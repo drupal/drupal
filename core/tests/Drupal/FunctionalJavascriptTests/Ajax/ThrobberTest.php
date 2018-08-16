@@ -14,7 +14,7 @@ class ThrobberTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'node',
     'views',
     'views_ui',

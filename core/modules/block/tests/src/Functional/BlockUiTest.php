@@ -17,7 +17,7 @@ class BlockUiTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'block_test', 'help', 'condition_test'];
+  public static $modules = ['block', 'block_test', 'help', 'condition_test'];
 
   protected $regions;
 

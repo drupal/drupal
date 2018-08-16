@@ -18,7 +18,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['quickedit_test'];
+  public static $modules = ['quickedit_test'];
 
   /**
    * The manager for editor plugins.

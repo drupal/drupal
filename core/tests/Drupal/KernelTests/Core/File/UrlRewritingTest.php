@@ -16,7 +16,7 @@ class UrlRewritingTest extends FileTestBase {
    *
    * @var array
    */
-  protected static $modules = ['file_test'];
+  public static $modules = ['file_test'];
 
   /**
    * Tests the rewriting of shipped file URLs by hook_file_url_alter().

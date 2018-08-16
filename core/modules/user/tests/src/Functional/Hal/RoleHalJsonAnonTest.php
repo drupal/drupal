@@ -15,7 +15,7 @@ class RoleHalJsonAnonTest extends RoleResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

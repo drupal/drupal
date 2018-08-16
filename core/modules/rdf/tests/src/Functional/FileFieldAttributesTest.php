@@ -17,7 +17,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rdf', 'file'];
+  public static $modules = ['rdf', 'file'];
 
   /**
    * The name of the file field used in the test.

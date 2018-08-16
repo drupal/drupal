@@ -14,7 +14,7 @@ class EntityDisplayTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field_ui', 'entity_test'];
+  public static $modules = ['field_ui', 'entity_test'];
 
   /**
    * {@inheritdoc}

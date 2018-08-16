@@ -15,7 +15,7 @@ class UrlAliasTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['migrate_drupal', 'path'];
+  public static $modules = ['migrate_drupal', 'path'];
 
   /**
    * {@inheritdoc}

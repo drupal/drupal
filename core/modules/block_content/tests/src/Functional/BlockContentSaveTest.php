@@ -16,7 +16,7 @@ class BlockContentSaveTest extends BlockContentTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block_content_test'];
+  public static $modules = ['block_content_test'];
 
   /**
    * Sets the test up.

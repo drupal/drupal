@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SyslogTest extends KernelTestBase {
 
-  protected static $modules = ['syslog', 'syslog_test'];
+  public static $modules = ['syslog', 'syslog_test'];
 
   /**
    * {@inheritdoc}

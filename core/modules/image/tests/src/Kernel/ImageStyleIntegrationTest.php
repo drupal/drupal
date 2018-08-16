@@ -20,7 +20,7 @@ class ImageStyleIntegrationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['image', 'file', 'field', 'system', 'user', 'node'];
+  public static $modules = ['image', 'file', 'field', 'system', 'user', 'node'];
 
   /**
    * Tests the dependency between ImageStyle and entity display components.

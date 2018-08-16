@@ -10,7 +10,7 @@ abstract class TourResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['tour'];
+  public static $modules = ['tour'];
 
   /**
    * {@inheritdoc}

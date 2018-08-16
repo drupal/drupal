@@ -16,7 +16,7 @@ class MigrateAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['migrate_drupal_ui'];
+  public static $modules = ['migrate_drupal_ui'];
 
   /**
    * Tests that only user 1 can access the migrate UI.

@@ -15,7 +15,7 @@ class ViewModeTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'migrate_drupal'];
+  public static $modules = ['field', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

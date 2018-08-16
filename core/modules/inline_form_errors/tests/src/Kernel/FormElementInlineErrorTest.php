@@ -15,7 +15,7 @@ class FormElementInlineErrorTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['inline_form_errors'];
+  public static $modules = ['inline_form_errors'];
 
   /**
    * Tests that no inline form errors are shown when disabled for a form.

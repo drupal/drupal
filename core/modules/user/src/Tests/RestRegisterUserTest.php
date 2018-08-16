@@ -17,7 +17,7 @@ class RestRegisterUserTest extends RESTTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

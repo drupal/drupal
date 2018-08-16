@@ -16,7 +16,7 @@ class SearchPageXmlBasicAuthTest extends SearchPageResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['basic_auth'];
+  public static $modules = ['basic_auth'];
 
   /**
    * {@inheritdoc}

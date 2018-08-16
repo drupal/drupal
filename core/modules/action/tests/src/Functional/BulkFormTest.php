@@ -18,7 +18,7 @@ class BulkFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'action_bulk_test'];
+  public static $modules = ['node', 'action_bulk_test'];
 
   /**
    * Tests the bulk form.

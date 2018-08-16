@@ -16,7 +16,7 @@ class NodeCounterTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['migrate_drupal', 'statistics'];
+  public static $modules = ['migrate_drupal', 'statistics'];
 
   /**
    * {@inheritdoc}

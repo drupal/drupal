@@ -17,7 +17,7 @@ class MigrateShortcutStubTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['shortcut', 'link'];
+  public static $modules = ['shortcut', 'link'];
 
   /**
    * {@inheritdoc}

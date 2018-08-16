@@ -17,7 +17,7 @@ class ConfigEntityListMultilingualTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config_test', 'language', 'block'];
+  public static $modules = ['config_test', 'language', 'block'];
 
   /**
    * {@inheritdoc}

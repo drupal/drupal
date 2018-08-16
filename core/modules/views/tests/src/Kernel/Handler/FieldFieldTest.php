@@ -24,7 +24,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'entity_test', 'user', 'views_test_formatter', 'views_entity_test'];
+  public static $modules = ['field', 'entity_test', 'user', 'views_test_formatter', 'views_entity_test'];
 
   /**
    * {@inheritdoc}

@@ -12,7 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
 
-  protected static $modules = [
+  public static $modules = [
     'language',
     'config_translation',
     'system',

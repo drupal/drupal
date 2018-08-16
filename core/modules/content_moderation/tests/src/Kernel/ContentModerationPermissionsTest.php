@@ -18,7 +18,7 @@ class ContentModerationPermissionsTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'workflows',
     'content_moderation',
     'workflow_type_test',

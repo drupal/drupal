@@ -24,7 +24,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['image', 'image_module_test', 'language'];
+  public static $modules = ['image', 'image_module_test', 'language'];
 
   /**
    * The image style.

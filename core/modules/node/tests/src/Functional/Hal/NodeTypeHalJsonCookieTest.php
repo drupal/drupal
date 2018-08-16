@@ -15,7 +15,7 @@ class NodeTypeHalJsonCookieTest extends NodeTypeResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

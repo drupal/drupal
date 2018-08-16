@@ -21,7 +21,7 @@ class EntityReferenceSelectionSortTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node'];
+  public static $modules = ['node'];
 
   protected function setUp() {
     parent::setUp();

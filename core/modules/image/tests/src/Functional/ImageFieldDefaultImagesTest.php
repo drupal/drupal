@@ -29,7 +29,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
    *
    * @var array
    */
-  protected static $modules = ['field_ui'];
+  public static $modules = ['field_ui'];
 
   /**
    * Tests CRUD for fields and field storages with default images.

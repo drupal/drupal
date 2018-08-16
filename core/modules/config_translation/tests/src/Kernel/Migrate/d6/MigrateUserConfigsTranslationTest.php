@@ -15,7 +15,7 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal6TestBase {
 
   use SchemaCheckTestTrait;
 
-  protected static $modules = [
+  public static $modules = [
     'language',
     'locale',
     'config_translation',

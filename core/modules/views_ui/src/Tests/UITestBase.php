@@ -31,7 +31,7 @@ abstract class UITestBase extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'views_ui', 'block', 'taxonomy'];
+  public static $modules = ['node', 'views_ui', 'block', 'taxonomy'];
 
   /**
    * {@inheritdoc}

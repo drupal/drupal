@@ -19,7 +19,7 @@ class LanguageConfigSchemaTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'menu_link_content'];
+  public static $modules = ['language', 'menu_link_content'];
 
   /**
    * A user with administrative permissions.

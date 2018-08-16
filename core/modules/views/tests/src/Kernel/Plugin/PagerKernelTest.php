@@ -21,7 +21,7 @@ class PagerKernelTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user', 'node'];
+  public static $modules = ['user', 'node'];
 
   /**
    * {@inheritdoc}

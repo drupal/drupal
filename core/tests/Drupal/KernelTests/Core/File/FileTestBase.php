@@ -16,7 +16,7 @@ abstract class FileTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system'];
+  public static $modules = ['system'];
 
   /**
    * A stream wrapper scheme to register for the test.

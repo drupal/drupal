@@ -17,7 +17,7 @@ class FileEntityFormatterTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['file', 'user'];
+  public static $modules = ['file', 'user'];
 
   /**
    * The files.

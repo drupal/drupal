@@ -12,7 +12,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateUserPictureEntityFormDisplayTest extends MigrateDrupal7TestBase {
 
-  protected static $modules = ['image', 'file'];
+  public static $modules = ['image', 'file'];
 
   /**
    * {@inheritdoc}

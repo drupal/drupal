@@ -16,7 +16,7 @@ class AlterTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'common_test'];
+  public static $modules = ['block', 'common_test'];
 
   /**
    * Tests if the theme has been altered.

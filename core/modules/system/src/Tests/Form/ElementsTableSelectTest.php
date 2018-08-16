@@ -18,7 +18,7 @@ class ElementsTableSelectTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['form_test'];
+  public static $modules = ['form_test'];
 
   /**
    * Test the display of checkboxes when #multiple is TRUE.

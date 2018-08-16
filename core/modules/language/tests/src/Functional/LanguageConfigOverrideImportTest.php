@@ -17,7 +17,7 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'config', 'locale', 'config_translation'];
+  public static $modules = ['language', 'config', 'locale', 'config_translation'];
 
   /**
    * Tests that language can be enabled and overrides are created during a sync.

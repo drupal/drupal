@@ -18,7 +18,7 @@ class LocalTasksTest extends BrowserTestBase {
    *
    * @var string[]
    */
-  protected static $modules = ['block', 'menu_test', 'entity_test', 'node'];
+  public static $modules = ['block', 'menu_test', 'entity_test', 'node'];
 
   /**
    * The local tasks block under testing.

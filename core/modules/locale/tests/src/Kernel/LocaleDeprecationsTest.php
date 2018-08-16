@@ -17,7 +17,7 @@ class LocaleDeprecationsTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['locale', 'system'];
+  public static $modules = ['locale', 'system'];
 
   /**
    * @expectedDeprecation locale_translation_manual_status() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. It is unused by Drupal core. Duplicate this function in your own extension if you need its behavior.

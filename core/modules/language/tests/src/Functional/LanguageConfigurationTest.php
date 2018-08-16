@@ -18,7 +18,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language'];
+  public static $modules = ['language'];
 
   /**
    * Functional tests for adding, editing and deleting languages.

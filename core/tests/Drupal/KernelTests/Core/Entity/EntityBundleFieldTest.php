@@ -14,7 +14,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_schema_test'];
+  public static $modules = ['entity_schema_test'];
 
   /**
    * The module handler.

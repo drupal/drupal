@@ -15,7 +15,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['language', 'content_translation'];
+  public static $modules = ['language', 'content_translation'];
 
   /**
    * The name of the file field used in the test.

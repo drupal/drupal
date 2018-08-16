@@ -23,7 +23,7 @@ class StateValuesCleanAdvancedTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['file', 'form_test'];
+  public static $modules = ['file', 'form_test'];
 
   /**
    * An image file path for uploading.

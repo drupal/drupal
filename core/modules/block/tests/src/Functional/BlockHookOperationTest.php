@@ -16,7 +16,7 @@ class BlockHookOperationTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'entity_test'];
+  public static $modules = ['block', 'entity_test'];
 
   protected function setUp() {
     parent::setUp();

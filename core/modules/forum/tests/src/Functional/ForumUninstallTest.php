@@ -21,7 +21,7 @@ class ForumUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['forum'];
+  public static $modules = ['forum'];
 
   /**
    * Tests if forum module uninstallation properly deletes the field.

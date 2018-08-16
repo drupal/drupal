@@ -16,7 +16,7 @@ class PathTaxonomyTermTest extends PathTestBase {
    *
    * @var array
    */
-  protected static $modules = ['taxonomy'];
+  public static $modules = ['taxonomy'];
 
   protected function setUp() {
     parent::setUp();

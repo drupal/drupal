@@ -17,7 +17,7 @@ class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['filter_test'];
+  public static $modules = ['filter_test'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class MigrateTermNodeTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['taxonomy', 'menu_ui'];
+  public static $modules = ['taxonomy', 'menu_ui'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class FilterFormatHalJsonCookieTest extends FilterFormatResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  public static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

@@ -21,7 +21,7 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['toolbar', 'test_page_test'];
+  public static $modules = ['toolbar', 'test_page_test'];
 
   /**
    * An authenticated user to use for testing.

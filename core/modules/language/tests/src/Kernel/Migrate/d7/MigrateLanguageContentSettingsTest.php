@@ -16,7 +16,7 @@ class MigrateLanguageContentSettingsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'text', 'language', 'content_translation', 'menu_ui'];
+  public static $modules = ['node', 'text', 'language', 'content_translation', 'menu_ui'];
 
   /**
    * {@inheritdoc}

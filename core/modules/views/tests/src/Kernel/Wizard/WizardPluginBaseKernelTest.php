@@ -20,7 +20,7 @@ class WizardPluginBaseKernelTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'system', 'user', 'views_ui'];
+  public static $modules = ['language', 'system', 'user', 'views_ui'];
 
   /**
    * Contains thw wizard plugin manager.

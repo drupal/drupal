@@ -25,7 +25,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'block',
     'config_translation',
     'contact',

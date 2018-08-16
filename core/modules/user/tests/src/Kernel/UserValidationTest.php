@@ -21,7 +21,7 @@ class UserValidationTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['field', 'user', 'system'];
+  public static $modules = ['field', 'user', 'system'];
 
   /**
    * {@inheritdoc}

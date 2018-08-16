@@ -16,7 +16,7 @@ class SessionTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['session_test'];
+  public static $modules = ['session_test'];
 
   protected $dumpHeaders = TRUE;
 

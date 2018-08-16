@@ -19,7 +19,7 @@ class PathValidatorTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['path', 'entity_test', 'user'];
+  public static $modules = ['path', 'entity_test', 'user'];
 
   /**
    * {@inheritdoc}

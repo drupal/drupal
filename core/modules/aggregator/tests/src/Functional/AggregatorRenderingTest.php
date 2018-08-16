@@ -17,7 +17,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'test_page_test'];
+  public static $modules = ['block', 'test_page_test'];
 
   protected function setUp() {
     parent::setUp();

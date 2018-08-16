@@ -16,7 +16,7 @@ class NodeAccessRecordsTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node_test'];
+  public static $modules = ['node_test'];
 
   /**
    * Creates a node and tests the creation of node access rules.

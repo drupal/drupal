@@ -15,7 +15,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['language'];
+  public static $modules = ['language'];
 
   /**
    * Tests the migration with LANGUAGE_NEGOTIATION_PATH_DEFAULT.

@@ -19,7 +19,7 @@ class BlockRebuildTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'system'];
+  public static $modules = ['block', 'system'];
 
   /**
    * {@inheritdoc}

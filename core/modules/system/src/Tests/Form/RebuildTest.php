@@ -21,7 +21,7 @@ class RebuildTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'form_test'];
+  public static $modules = ['node', 'form_test'];
 
   /**
    * A user for testing.

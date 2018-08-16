@@ -30,7 +30,7 @@ class FieldGroupRowsTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_test'];
+  public static $modules = ['node', 'field_test'];
 
   /**
    * Field that will be created to test the group/ungroup rows functionality

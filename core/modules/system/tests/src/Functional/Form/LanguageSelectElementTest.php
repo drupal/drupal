@@ -20,7 +20,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['form_test', 'language'];
+  public static $modules = ['form_test', 'language'];
 
   /**
    * Tests that the options printed by the language select element are correct.

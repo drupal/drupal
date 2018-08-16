@@ -12,7 +12,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class SimpletestDeprecationTest extends KernelTestBase {
 
-  protected static $modules = ['simpletest'];
+  public static $modules = ['simpletest'];
 
   /**
    * @expectedDeprecation The simpletest_phpunit_configuration_filepath function is deprecated since version 8.4.x and will be removed in 9.0.0.

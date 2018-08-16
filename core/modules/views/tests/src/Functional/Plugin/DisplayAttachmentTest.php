@@ -25,7 +25,7 @@ class DisplayAttachmentTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'views'];
+  public static $modules = ['node', 'views'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
