@@ -1,8 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: 'Recipe cuisine'
-vid: recipe_cuisine
-description: ''
-hierarchy: 0
-weight: 0

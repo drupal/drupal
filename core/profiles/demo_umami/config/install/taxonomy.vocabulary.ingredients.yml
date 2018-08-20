@@ -1,8 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: Ingredients
-vid: ingredients
-description: ''
-hierarchy: 0
-weight: 0
