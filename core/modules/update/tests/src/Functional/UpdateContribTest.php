@@ -438,4 +438,122 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertNoText(t('Security update'));
   }
 
+  /**
+   * Tests update status of security releases.
+   *
+   * @param string $module_version
+   *   The module version the site is using.
+   * @param string[] $expected_security_releases
+   *   The security releases, if any, that the status report should recommend.
+   * @param bool $update_available
+   *   Whether an update should be available.
+   * @param string $fixture
+   *   The fixture file to use.
+   *
+   * @dataProvider securityUpdateAvailabilityProvider
+   */
+  public function testSecurityUpdateAvailability($module_version, array $expected_security_releases, $update_available, $fixture) {
+    $system_info = [
+      '#all' => [
+        'version' => '8.0.0',
+      ],
+      'aaa_update_test' => [
+        'project' => 'aaa_update_test',
+        'version' => $module_version,
+        'hidden' => FALSE,
+      ],
+    ];
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->refreshUpdateStatus(['drupal' => '0.0', 'aaa_update_test' => $fixture]);
+    $this->assertSecurityUpdates('aaa_update_test', $expected_security_releases, $update_available, 'table.update:nth-of-type(2)');
+  }
+
+  /**
+   * Data provider method for testSecurityUpdateAvailability().
+   *
+   * These test cases rely on the following fixtures containing the following
+   * releases:
+   * - aaa_update_test.sec.8.x-1.2.xml
+   *   - 8.x-1.2 Security update
+   *   - 8.x-1.1 Insecure
+   *   - 8.x-1.0 Insecure
+   * - aaa_update_test.sec.8.x-1.1_8.x-1.2.xml
+   *   - 8.x-1.2 Security update
+   *   - 8.x-1.1 Security update, Insecure
+   *   - 8.x-1.0 Insecure
+   * - aaa_update_test.sec.8.x-1.2_8.x-2.2.xml
+   *   - 8.x-3.0-beta2
+   *   - 8.x-3.0-beta1 Insecure
+   *   - 8.x-2.2 Security update
+   *   - 8.x-2.1 Security update, Insecure
+   *   - 8.x-2.0 Insecure
+   *   - 8.x-1.2 Security update
+   *   - 8.x-1.1 Insecure
+   *   - 8.x-1.0 Insecure
+   * - aaa_update_test.sec.8.x-2.2_1.x_secure.xml
+   *   - 8.x-2.2 Security update
+   *   - 8.x-2.1 Security update, Insecure
+   *   - 8.x-2.0 Insecure
+   *   - 8.x-1.2
+   *   - 8.x-1.1
+   *   - 8.x-1.0
+   */
+  public function securityUpdateAvailabilityProvider() {
+    return [
+      // Security releases available for module major release 1.
+      // No releases for next major.
+      '8.x-1.0, 8.x-1.2' => [
+        'module_patch_version' => '8.x-1.0',
+        'expected_security_releases' => ['8.x-1.2'],
+        'update_available' => FALSE,
+        'fixture' => 'sec.8.x-1.2',
+      ],
+      // Two security releases available for module major release 1.
+      // 8.x-1.1 security release marked as insecure.
+      // No releases for next major.
+      '8.x-1.0, 8.x-1.1 8.x-1.2' => [
+        'module_patch_version' => '8.x-1.0',
+        'expected_security_releases' => ['8.x-1.2'],
+        'update_available' => FALSE,
+        'fixture' => 'sec.8.x-1.1_8.x-1.2',
+      ],
+      // Security release available for module major release 2.
+      // No releases for next major.
+      '8.x-2.0, 8.x-2.2' => [
+        'module_patch_version' => '8.x-2.0',
+        'expected_security_releases' => ['8.x-2.2'],
+        'update_available' => FALSE,
+        'fixture' => 'sec.8.x-2.2_1.x_secure',
+      ],
+      '8.x-2.2, 8.x-1.2 8.x-2.2' => [
+        'module_patch_version' => '8.x-2.2',
+        'expected_security_releases' => [],
+        'update_available' => FALSE,
+        'fixture' => 'sec.8.x-1.2_8.x-2.2',
+      ],
+      // Security release available for module major release 1.
+      // Security release also available for next major.
+      '8.x-1.0, 8.x-1.2 8.x-2.2' => [
+        'module_patch_version' => '8.x-1.0',
+        'expected_security_releases' => ['8.x-1.2'],
+        'update_available' => FALSE,
+        'fixture' => 'sec.8.x-1.2_8.x-2.2',
+      ],
+      // No security release available for module major release 1 but 1.x
+      // releases are not marked as insecure.
+      // Security release available for next major.
+      '8.x-1.0, 8.x-2.2, not insecure' => [
+        'module_patch_version' => '8.x-1.0',
+        'expected_security_releases' => [],
+        'update_available' => TRUE,
+        'fixture' => 'sec.8.x-2.2_1.x_secure',
+      ],
+      // @todo In https://www.drupal.org/node/2865920 add test cases:
+      //   - 8.x-2.0 using fixture 'sec.8.x-1.2_8.x-2.2' to ensure that 8.x-2.2
+      //     is the only security update.
+      //   - 8.x-3.0-beta1 using fixture 'sec.8.x-1.2_8.x-2.2' to ensure that
+      //     8.x-2.2 is the  only security update.
+    ];
+  }
+
 }

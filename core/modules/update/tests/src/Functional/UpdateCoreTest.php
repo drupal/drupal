@@ -160,20 +160,168 @@ class UpdateCoreTest extends UpdateTestBase {
 
   /**
    * Tests the Update Manager module when a security update is available.
+   *
+   * @param string $site_patch_version
+   *   The patch version to set the site to for testing.
+   * @param string[] $expected_security_releases
+   *   The security releases, if any, that the status report should recommend.
+   * @param bool $update_available
+   *   Whether an update is available.
+   * @param string $fixture
+   *   The test fixture that contains the test XML.
+   *
+   * @dataProvider securityUpdateAvailabilityProvider
    */
-  public function testSecurityUpdateAvailable() {
-    foreach ([0, 1] as $minor_version) {
-      $this->setSystemInfo("8.$minor_version.0");
-      $this->refreshUpdateStatus(['drupal' => "$minor_version.2-sec"]);
-      $this->standardTests();
-      $this->assertNoText(t('Up to date'));
-      $this->assertNoText(t('Update available'));
-      $this->assertText(t('Security update required!'));
-      $this->assertRaw(\Drupal::l("8.$minor_version.2", Url::fromUri("http://example.com/drupal-8-$minor_version-2-release")), 'Link to release appears.');
-      $this->assertRaw(\Drupal::l(t('Download'), Url::fromUri("http://example.com/drupal-8-$minor_version-2.tar.gz")), 'Link to download appears.');
-      $this->assertRaw(\Drupal::l(t('Release notes'), Url::fromUri("http://example.com/drupal-8-$minor_version-2-release")), 'Link to release notes appears.');
-      $this->assertRaw('error.svg', 'Error icon was found.');
+  public function testSecurityUpdateAvailability($site_patch_version, array $expected_security_releases, $update_available, $fixture) {
+    $this->setSystemInfo("8.$site_patch_version");
+    $this->refreshUpdateStatus(['drupal' => $fixture]);
+    $this->assertSecurityUpdates('drupal-8', $expected_security_releases, $update_available, 'table.update');
+  }
+
+  /**
+   * Data provider method for testSecurityUpdateAvailability().
+   *
+   * These test cases rely on the following fixtures containing the following
+   * releases:
+   * - drupal.sec.0.1_0.2.xml
+   *   - 8.0.2 Security update
+   *   - 8.0.1 Security update, Insecure
+   *   - 8.0.0 Insecure
+   * - drupal.sec.0.2.xml
+   *   - 8.0.2 Security update
+   *   - 8.0.1 Insecure
+   *   - 8.0.0 Insecure
+   * - drupal.sec.0.2-rc2.xml
+   *   - 8.2.0-rc2 Security update
+   *   - 8.2.0-rc1 Insecure
+   *   - 8.2.0-beta2 Insecure
+   *   - 8.2.0-beta1 Insecure
+   *   - 8.2.0-alpha2 Insecure
+   *   - 8.2.0-alpha1 Insecure
+   *   - 8.1.2 Security update
+   *   - 8.1.1 Insecure
+   *   - 8.1.0 Insecure
+   *   - 8.0.2 Security update
+   *   - 8.0.1 Insecure
+   *   - 8.0.0 Insecure
+   * - drupal.sec.1.2.xml
+   *   - 8.1.2 Security update
+   *   - 8.1.1 Insecure
+   *   - 8.1.0 Insecure
+   *   - 8.0.2
+   *   - 8.0.1
+   *   - 8.0.0
+   * - drupal.sec.1.2_insecure.xml
+   *   - 8.1.2 Security update
+   *   - 8.1.1 Insecure
+   *   - 8.1.0 Insecure
+   *   - 8.0.2 Insecure
+   *   - 8.0.1 Insecure
+   *   - 8.0.0 Insecure
+   * - drupal.sec.0.2-rc2-b.xml
+   *   - 8.2.0-rc2
+   *   - 8.2.0-rc1
+   *   - 8.2.0-beta2
+   *   - 8.2.0-beta1
+   *   - 8.2.0-alpha2
+   *   - 8.2.0-alpha1
+   *   - 8.1.2 Security update
+   *   - 8.1.1 Insecure
+   *   - 8.1.0 Insecure
+   *   - 8.0.2 Security update
+   *   - 8.0.1 Insecure
+   *   - 8.0.0 Insecure
+   */
+  public function securityUpdateAvailabilityProvider() {
+    $test_cases = [
+      // Security release available for site minor release 0.
+      // No releases for next minor.
+      '0.0, 0.2' => [
+        'site_patch_version' => '0.0',
+        'expected_security_releases' => ['0.2'],
+        'update_available' => FALSE,
+        'fixture' => 'sec.0.2',
+      ],
+      // Two security releases available for site minor release 0.
+      // 0.1 security release marked as insecure.
+      // No releases for next minor.
+      '0.0, 0.1 0.2' => [
+        'site_patch_version' => '0.0',
+        'expected_security_releases' => ['0.2'],
+        'update_available' => FALSE,
+        'fixture' => 'sec.0.1_0.2',
+      ],
+      // Security release available for site minor release 1.
+      // No releases for next minor.
+      '1.0, 1.2' => [
+        'site_patch_version' => '1.0',
+        'expected_security_releases' => ['1.2'],
+        'update_available' => FALSE,
+        'fixture' => 'sec.1.2',
+      ],
+      // Security release available for site minor release 0.
+      // Security release also available for next minor.
+      '0.0, 0.2 1.2' => [
+        'site_patch_version' => '0.0',
+        'expected_security_releases' => ['0.2', '1.2', '2.0-rc2'],
+        'update_available' => TRUE,
+        'fixture' => 'sec.0.2-rc2',
+      ],
+      // No newer security release for site minor 1.
+      // Previous minor has security release.
+      '1.2, 0.2 1.2' => [
+        'site_patch_version' => '1.2',
+        'expected_security_releases' => [],
+        'update_available' => FALSE,
+        // @todo Change to use fixture 'sec.0.2-rc2' in
+        // https://www.drupal.org/node/2804155. Currently this case would fail
+        // because 8.2.0-rc2 would be the recommend security release.
+        'fixture' => 'sec.0.2-rc2-b',
+      ],
+      // No security release available for site minor release 0.
+      // Security release available for next minor.
+      '0.0, 1.2, insecure' => [
+        'site_patch_version' => '0.0',
+        'expected_security_releases' => ['1.2'],
+        'update_available' => FALSE,
+        'fixture' => 'sec.1.2_insecure',
+      ],
+      // Site on 2.0-rc2 which is a security release.
+      '2.0-rc2, 0.2 1.2' => [
+        'site_patch_version' => '2.0-rc2',
+        'expected_security_releases' => [],
+        'update_available' => FALSE,
+        'fixture' => 'sec.0.2-rc2',
+      ],
+    ];
+    $pre_releases = [
+      '2.0-alpha1',
+      '2.0-alpha2',
+      '2.0-beta1',
+      '2.0-beta2',
+      '2.0-rc1',
+      '2.0-rc2',
+    ];
+
+    // If the site is on an alpha/beta/RC of an upcoming minor and none of the
+    // alpha/beta/RC versions are marked insecure, no security update should be
+    // required.
+    foreach ($pre_releases as $pre_release) {
+      $test_cases["Pre-release:$pre_release, no security update"] = [
+        'site_patch_version' => $pre_release,
+        'expected_security_releases' => [],
+        'update_available' => $pre_release === '2.0-rc2' ? FALSE : TRUE,
+        'fixture' => 'sec.0.2-rc2-b',
+      ];
     }
+
+    // @todo In https://www.drupal.org/node/2865920 add test cases:
+    //   - For all pre-releases for 8.2.0 except 8.2.0-rc2 using the
+    //     'sec.0.2-rc2' fixture to ensure that 8.2.0-rc2 is the only security
+    //     update.
+    //   - For 8.1.0 using fixture 'sec.0.2-rc2' to ensure that only security
+    //     updates are 8.1.2 and 8.2.0-rc2.
+    return $test_cases;
   }
 
   /**
@@ -270,7 +418,7 @@ class UpdateCoreTest extends UpdateTestBase {
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
     $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => '0.2-sec'])
+      ->set('xml_map', ['drupal' => 'sec.0.2'])
       ->save();
 
     $this->drupalGet('admin/reports/updates');
