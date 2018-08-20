@@ -23,6 +23,5 @@ settings:
     sort:
       field: name
       direction: asc
-    auto_create: false
-    auto_create_bundle: ''
+    auto_create: true
 field_type: entity_reference
