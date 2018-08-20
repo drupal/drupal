@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>Drupal</title>
+<short_name>drupal</short_name>
+<dc:creator>Drupal</dc:creator>
+<api_version>8.x</api_version>
+<recommended_major>8</recommended_major>
+<supported_majors>8</supported_majors>
+<default_major>8</default_major>
+<project_status>published</project_status>
+<link>http://example.com/project/drupal</link>
+  <terms>
+   <term><name>Projects</name><value>Drupal project</value></term>
+  </terms>
+<releases>
+ <release>
+  <name>drupal 8.2.0-rc2</name>
+  <version>8.2.0-rc2</version>
+  <tag>8.2.0-rc2</tag>
+  <version_major>8</version_major>
+  <version_minor>2</version_minor>
+  <version_patch>0</version_patch>
+  <version_extra>rc2</version_extra>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-2-0-rc2-release</release_link>
+  <download_link>http://example.com/drupal-8-2-0-rc2.tar.gz</download_link>
+  <date>1533298080</date>
+  <mdhash>2387284145e34a19fc45e03c258a2831</mdhash>
+  <filesize>16209911</filesize>
+  <terms>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Security update</value></term>
+  </terms>
+  <security>
+   RC releases are not covered by Drupal security advisories.
+  </security>
+ </release>
+ <release>
+  <name>drupal 8.2.0-rc1</name>
+  <version>8.2.0-rc1</version>
+  <tag>8.2.0-rc1</tag>
+  <version_major>8</version_major>
+  <version_minor>2</version_minor>
+  <version_patch>0</version_patch>
+  <version_extra>rc1</version_extra>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-2-0-rc1-release</release_link>
+  <download_link>http://example.com/drupal-8-2-0-rc1.tar.gz</download_link>
+  <date>1533270485</date>
+  <mdhash>3d70ae568dd8f7100082b8c58bc8d1fe</mdhash>
+  <filesize>16209123</filesize>
+  <terms>
+   <term><name>Release type</name><value>Insecure</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>New features</value></term>
+  </terms>
+  <security>
+   RC releases are not covered by Drupal security advisories.
+  </security>
+ </release>
+ <release>
+  <name>drupal 8.2.0-beta2</name>
+  <version>8.2.0-beta2</version>
+  <tag>8.2.0-beta2</tag>
+  <version_major>8</version_major>
+  <version_minor>2</version_minor>
+  <version_patch>0</version_patch>
+  <version_extra>beta2</version_extra>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-2-0-beta2-release</release_link>
+  <download_link>http://example.com/drupal-8-2-0-beta2.tar.gz</download_link>
+  <date>1533298080</date>
+  <mdhash>2387284145e34a19fc45e03c258a2831</mdhash>
+  <filesize>16209911</filesize>
+  <terms>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Insecure</value></term>
+  </terms>
+  <security>
+   Beta releases are not covered by Drupal security advisories.
+  </security>
+ </release>
+ <release>
+  <name>drupal 8.2.0-beta1</name>
+  <version>8.2.0-beta1</version>
+  <tag>8.2.0-beta1</tag>
+  <version_major>8</version_major>
+  <version_minor>2</version_minor>
+  <version_patch>0</version_patch>
+  <version_extra>beta1</version_extra>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-2-0-beta1-release</release_link>
+  <download_link>http://example.com/drupal-8-2-0-beta1.tar.gz</download_link>
+  <date>1533270485</date>
+  <mdhash>3d70ae568dd8f7100082b8c58bc8d1fe</mdhash>
+  <filesize>16209123</filesize>
+  <terms>
+   <term><name>Release type</name><value>Insecure</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>New features</value></term>
+  </terms>
+  <security>
+   Beta releases are not covered by Drupal security advisories.
+  </security>
+ </release>
+ <release>
+  <name>drupal 8.2.0-alpha2</name>
+  <version>8.2.0-alpha2</version>
+  <tag>8.2.0-alpha2</tag>
+  <version_major>8</version_major>
+  <version_minor>2</version_minor>
+  <version_patch>0</version_patch>
+  <version_extra>alpha2</version_extra>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-2-0-alpha2-release</release_link>
+  <download_link>http://example.com/drupal-8-2-0-alpha2.tar.gz</download_link>
+  <date>1533298080</date>
+  <mdhash>2387284145e34a19fc45e03c258a2831</mdhash>
+  <filesize>16209911</filesize>
+  <terms>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Insecure</value></term>
+  </terms>
+  <security>
+   Alpha releases are not covered by Drupal security advisories.
+  </security>
+ </release>
+ <release>
+  <name>drupal 8.2.0-alpha1</name>
+  <version>8.2.0-alpha1</version>
+  <tag>8.2.0-alpha1</tag>
+  <version_major>8</version_major>
+  <version_minor>2</version_minor>
+  <version_patch>0</version_patch>
+  <version_extra>alpha1</version_extra>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8.2.0-alpha1</release_link>
+  <download_link>http://example.com/drupal-8-2-0-alpha1.tar.gz</download_link>
+  <date>1533270485</date>
+  <mdhash>3d70ae568dd8f7100082b8c58bc8d1fe</mdhash>
+  <filesize>16209123</filesize>
+  <terms>
+   <term><name>Release type</name><value>Insecure</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>New features</value></term>
+  </terms>
+  <security>
+   Alpha releases are not covered by Drupal security advisories.
+  </security>
+ </release>
+ <release>
+  <name>Drupal 8.1.2</name>
+  <version>8.1.2</version>
+  <tag>DRUPAL-8-1-2</tag>
+  <version_major>8</version_major>
+  <version_minor>1</version_minor>
+  <version_patch>2</version_patch>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-1-2-release</release_link>
+  <download_link>http://example.com/drupal-8-1-2.tar.gz</download_link>
+  <date>1250424641</date>
+  <mdhash>b966255555d9c9b86d480ca08cfaa98e</mdhash>
+  <filesize>4294967296</filesize>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>Security update</value></term>
+  </terms>
+ </release>
+ <release>
+  <name>Drupal 8.1.1</name>
+  <version>8.1.1</version>
+  <tag>DRUPAL-8-1-1</tag>
+  <version_major>8</version_major>
+  <version_minor>1</version_minor>
+  <version_patch>1</version_patch>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-1-1-release</release_link>
+  <download_link>http://example.com/drupal-8-1-1.tar.gz</download_link>
+  <date>1250424581</date>
+  <mdhash>b966255555d9c9b86d480ca08cfaa98e</mdhash>
+  <filesize>2147483648</filesize>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>Insecure</value></term>
+  </terms>
+ </release>
+ <release>
+  <name>Drupal 8.1.0</name>
+  <version>8.1.0</version>
+  <tag>DRUPAL-8-1-0</tag>
+  <version_major>8</version_major>
+  <version_minor>1</version_minor>
+  <version_patch>0</version_patch>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-1-0-release</release_link>
+  <download_link>http://example.com/drupal-8-1-0.tar.gz</download_link>
+  <date>1250424521</date>
+  <mdhash>b966255555d9c9b86d480ca08cfaa98e</mdhash>
+  <filesize>1073741824</filesize>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>Insecure</value></term>
+  </terms>
+ </release>
+ <release>
+  <name>Drupal 8.0.2</name>
+  <version>8.0.2</version>
+  <tag>DRUPAL-8-0-2</tag>
+  <version_major>8</version_major>
+  <version_minor>0</version_minor>
+  <version_patch>2</version_patch>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-0-2-release</release_link>
+  <download_link>http://example.com/drupal-8-0-2.tar.gz</download_link>
+  <date>1250424641</date>
+  <mdhash>b966255555d9c9b86d480ca08cfaa98e</mdhash>
+  <filesize>4294967296</filesize>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>Security update</value></term>
+  </terms>
+ </release>
+ <release>
+  <name>Drupal 8.0.1</name>
+  <version>8.0.1</version>
+  <tag>DRUPAL-8-0-1</tag>
+  <version_major>8</version_major>
+  <version_minor>0</version_minor>
+  <version_patch>1</version_patch>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-0-1-release</release_link>
+  <download_link>http://example.com/drupal-8-0-1.tar.gz</download_link>
+  <date>1250424581</date>
+  <mdhash>b966255555d9c9b86d480ca08cfaa98e</mdhash>
+  <filesize>2147483648</filesize>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>Insecure</value></term>
+  </terms>
+ </release>
+ <release>
+  <name>Drupal 8.0.0</name>
+  <version>8.0.0</version>
+  <tag>DRUPAL-8-0-0</tag>
+  <version_major>8</version_major>
+  <version_minor>0</version_minor>
+  <version_patch>0</version_patch>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-0-0-release</release_link>
+  <download_link>http://example.com/drupal-8-0-0.tar.gz</download_link>
+  <date>1250424521</date>
+  <mdhash>b966255555d9c9b86d480ca08cfaa98e</mdhash>
+  <filesize>1073741824</filesize>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>Insecure</value></term>
+  </terms>
+ </release>
+</releases>
+</project>
