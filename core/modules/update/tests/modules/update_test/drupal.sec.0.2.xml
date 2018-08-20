@@ -48,6 +48,7 @@
   <terms>
    <term><name>Release type</name><value>New features</value></term>
    <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>Insecure</value></term>
   </terms>
  </release>
  <release>
@@ -66,6 +67,7 @@
   <terms>
    <term><name>Release type</name><value>New features</value></term>
    <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>Insecure</value></term>
   </terms>
  </release>
 </releases>
