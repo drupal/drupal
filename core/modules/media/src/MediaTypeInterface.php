@@ -35,6 +35,10 @@ interface MediaTypeInterface extends ConfigEntityInterface, EntityDescriptionInt
   /**
    * Returns whether thumbnail downloads are queued.
    *
+   * When using remote media sources, the thumbnail generation could be a slow
+   * process. Using a queue allows for this process to be handled in the
+   * background.
+   *
    * @return bool
    *   TRUE if thumbnails are queued for download later, FALSE if they should be
    *   downloaded now.
