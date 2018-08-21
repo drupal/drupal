@@ -808,12 +808,15 @@ abstract class Connection {
    * @param string $table
    *   The table to use for the insert statement.
    * @param array $options
-   *   (optional) An array of options on the query.
+   *   (optional) An associative array of options to control how the query is
+   *   run. The given options will be merged with
+   *   \Drupal\Core\Database\Connection::defaultOptions().
    *
    * @return \Drupal\Core\Database\Query\Insert
    *   A new Insert query object.
    *
    * @see \Drupal\Core\Database\Query\Insert
+   * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
   public function insert($table, array $options = []) {
     $class = $this->getDriverClass('Insert');
@@ -862,12 +865,15 @@ abstract class Connection {
    * @param string $table
    *   The table to use for the update statement.
    * @param array $options
-   *   (optional) An array of options on the query.
+   *   (optional) An associative array of options to control how the query is
+   *   run. The given options will be merged with
+   *   \Drupal\Core\Database\Connection::defaultOptions().
    *
    * @return \Drupal\Core\Database\Query\Update
    *   A new Update query object.
    *
    * @see \Drupal\Core\Database\Query\Update
+   * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
   public function update($table, array $options = []) {
     $class = $this->getDriverClass('Update');
@@ -880,12 +886,15 @@ abstract class Connection {
    * @param string $table
    *   The table to use for the delete statement.
    * @param array $options
-   *   (optional) An array of options on the query.
+   *   (optional) An associative array of options to control how the query is
+   *   run. The given options will be merged with
+   *   \Drupal\Core\Database\Connection::defaultOptions().
    *
    * @return \Drupal\Core\Database\Query\Delete
    *   A new Delete query object.
    *
    * @see \Drupal\Core\Database\Query\Delete
+   * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
   public function delete($table, array $options = []) {
     $class = $this->getDriverClass('Delete');
