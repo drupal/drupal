@@ -204,7 +204,6 @@ class SiteConfigureForm extends ConfigFormBase {
       '#empty_value' => '',
       '#default_value' => $this->config('system.date')->get('country.default'),
       '#options' => $countries,
-      '#description' => $this->t('Select the default country for the site.'),
       '#weight' => 0,
       '#access' => empty($install_state['config_install_path']),
     ];
@@ -214,7 +213,6 @@ class SiteConfigureForm extends ConfigFormBase {
       // Use system timezone if set, but avoid throwing a warning in PHP >=5.4
       '#default_value' => @date_default_timezone_get(),
       '#options' => system_time_zones(NULL, TRUE),
-      '#description' => $this->t('By default, dates in this site will be displayed in the chosen time zone.'),
       '#weight' => 5,
       '#attributes' => ['class' => ['timezone-detect']],
       '#access' => empty($install_state['config_install_path']),
@@ -223,7 +221,7 @@ class SiteConfigureForm extends ConfigFormBase {
     $form['update_notifications'] = [
       '#type' => 'fieldgroup',
       '#title' => $this->t('Update notifications'),
-      '#description' => $this->t('The system will notify you when updates and important security releases are available for installed components. Anonymous information about your site is sent to <a href=":drupal">Drupal.org</a>.', [':drupal' => 'https://www.drupal.org']),
+      '#description' => $this->t('When checking for updates, anonymous information about your site is sent to <a href="@drupal">Drupal.org</a>.', ['@drupal' => 'https://drupal.org']),
       '#access' => empty($install_state['config_install_path']),
     ];
     $form['update_notifications']['enable_update_status_module'] = [
