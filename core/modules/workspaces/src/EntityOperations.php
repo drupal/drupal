@@ -152,8 +152,8 @@ class EntityOperations implements ContainerInjectionInterface {
     // - An unpublished default revision in the default ('live') workspace.
     // - A published pending revision in the current workspace.
     if ($entity->isNew() && $entity->isPublished()) {
-      // Keep track of the publishing status for workspaces_entity_insert() and
-      // unpublish the default revision.
+      // Keep track of the publishing status in a dynamic property for
+      // ::entityInsert(), then unpublish the default revision.
       // @todo Remove this dynamic property once we have an API for associating
       //   temporary data with an entity: https://www.drupal.org/node/2896474.
       $entity->_initialPublished = TRUE;
@@ -179,11 +179,13 @@ class EntityOperations implements ContainerInjectionInterface {
 
     $this->trackEntity($entity);
 
-    // Handle the case when a new published entity was created in a non-default
-    // workspace and create a published pending revision for it. This does not
-    // cause an infinite recursion with ::entityPresave() because at this point
-    // the entity is no longer new.
-    // @todo Better explain in https://www.drupal.org/node/2962764
+    // When an entity is newly created in a workspace, it should be published in
+    // that workspace, but not yet published on the live workspace. It is first
+    // saved as unpublished for the default revision, then immediately a second
+    // revision is created which is published and attached to the workspace.
+    // This ensures that the published version of the entity does not 'leak'
+    // into the live site. This differs from edits to existing entities where
+    // there is already a valid default revision for the live workspace.
     if (isset($entity->_initialPublished)) {
       // Operate on a clone to avoid changing the entity prior to subsequent
       // hook_entity_insert() implementations.
