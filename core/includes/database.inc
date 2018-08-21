@@ -749,7 +749,7 @@ function db_drop_table($table) {
  *   with adding the field. The format is the same as a table specification, but
  *   without the 'fields' element. If you are adding a type 'serial' field, you
  *   MUST specify at least one key or index including it in this array. See
- *   db_change_field() for more explanation why.
+ *   \Drupal\Core\Database\Schema::changeField() for more explanation why.
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
@@ -757,7 +757,7 @@ function db_drop_table($table) {
  *   $injected_database->schema()->addField($table, $field, $spec, $keys_new);
  *
  * @see \Drupal\Core\Database\Schema::addField()
- * @see db_change_field()
+ * @see \Drupal\Core\Database\Schema::changeField()
  */
 function db_add_field($table, $field, $spec, $keys_new = []) {
   return Database::getConnection()->schema()->addField($table, $field, $spec, $keys_new);
@@ -967,9 +967,10 @@ function db_drop_index($table, $name) {
  * recreate all indices and primary keys that are using the changed field.
  *
  * That means that you have to drop all affected keys and indexes with
- * db_drop_{primary_key,unique_key,index}() before calling db_change_field().
+ * db_drop_{primary_key,unique_key,index}() before calling
+ * \Drupal\Core\Database\Schema::changeField().
  * To recreate the keys and indices, pass the key definitions as the optional
- * $keys_new argument directly to db_change_field().
+ * $keys_new argument directly to \Drupal\Core\Database\Schema::changeField().
  *
  * For example, suppose you have:
  * @code
@@ -983,8 +984,9 @@ function db_drop_index($table, $name) {
  * and you want to change foo.bar to be type serial, leaving it as the primary
  * key. The correct sequence is:
  * @code
+ * $schema = \Drupal::database()->schema();
  * db_drop_primary_key('foo');
- * db_change_field('foo', 'bar', 'bar',
+ * $schema->changeField('foo', 'bar', 'bar',
  *   array('type' => 'serial', 'not null' => TRUE),
  *   array('primary key' => array('bar')));
  * @endcode
@@ -1028,6 +1030,7 @@ function db_drop_index($table, $name) {
  * @see \Drupal\Core\Database\Schema::changeField()
  */
 function db_change_field($table, $field, $field_new, $spec, $keys_new = []) {
+  @trigger_error("Deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call changeField() on it. For example, \$injected_database->schema()->changeField(\$table, \$field, \$field_new, \$spec, \$keys_new). See https://www.drupal.org/node/2993033", E_USER_DEPRECATED);
   return Database::getConnection()->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
 }
 

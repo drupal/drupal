@@ -316,7 +316,7 @@ abstract class Schema implements PlaceholderInterface {
    *   table along with adding the field. The format is the same as a
    *   table specification but without the 'fields' element. If you are
    *   adding a type 'serial' field, you MUST specify at least one key
-   *   or index including it in this array. See db_change_field() for more
+   *   or index including it in this array. See ::changeField() for more
    *   explanation why.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
@@ -542,9 +542,9 @@ abstract class Schema implements PlaceholderInterface {
    * recreate all indices and primary keys that are using the changed field.
    *
    * That means that you have to drop all affected keys and indexes with
-   * db_drop_{primary_key,unique_key,index}() before calling db_change_field().
+   * db_drop_{primary_key,unique_key,index}() before calling ::changeField().
    * To recreate the keys and indices, pass the key definitions as the
-   * optional $keys_new argument directly to db_change_field().
+   * optional $keys_new argument directly to ::changeField().
    *
    * For example, suppose you have:
    * @code
@@ -558,8 +558,9 @@ abstract class Schema implements PlaceholderInterface {
    * and you want to change foo.bar to be type serial, leaving it as the
    * primary key. The correct sequence is:
    * @code
+   * $schema = \Drupal::database()->schema();
    * db_drop_primary_key('foo');
-   * db_change_field('foo', 'bar', 'bar',
+   * $schema->changeField('foo', 'bar', 'bar',
    *   array('type' => 'serial', 'not null' => TRUE),
    *   array('primary key' => array('bar')));
    * @endcode

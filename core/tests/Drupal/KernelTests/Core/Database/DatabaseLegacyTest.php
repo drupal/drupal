@@ -37,4 +37,21 @@ class DatabaseLegacyTest extends DatabaseTestBase {
     $this->assertFalse(db_drop_table('temp_test_table'));
   }
 
+  /**
+   * Tests the db_change_field() function is deprecated.
+   *
+   * @expectedDeprecation Deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call changeField() on it. For example, $injected_database->schema()->changeField($table, $field, $field_new, $spec, $keys_new). See https://www.drupal.org/node/2993033
+   */
+  public function testDbChangeField() {
+    $spec = [
+      'description' => "A new person's name",
+      'type' => 'varchar_ascii',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+      'binary' => TRUE,
+    ];
+    db_change_field('test', 'name', 'nosuchcolumn', $spec);
+  }
+
 }
