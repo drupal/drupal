@@ -18,12 +18,17 @@ class TwigNodeTrans extends \Twig_Node {
    * {@inheritdoc}
    */
   public function __construct(\Twig_Node $body, \Twig_Node $plural = NULL, \Twig_Node_Expression $count = NULL, \Twig_Node_Expression $options = NULL, $lineno, $tag = NULL) {
-    parent::__construct([
-      'count' => $count,
-      'body' => $body,
-      'plural' => $plural,
-      'options' => $options,
-    ], [], $lineno, $tag);
+    $nodes['body'] = $body;
+    if ($count !== NULL) {
+      $nodes['count'] = $count;
+    }
+    if ($plural !== NULL) {
+      $nodes['plural'] = $plural;
+    }
+    if ($options !== NULL) {
+      $nodes['options'] = $options;
+    }
+    parent::__construct($nodes, [], $lineno, $tag);
   }
 
   /**
@@ -32,12 +37,10 @@ class TwigNodeTrans extends \Twig_Node {
   public function compile(\Twig_Compiler $compiler) {
     $compiler->addDebugInfo($this);
 
-    $options = $this->getNode('options');
-
     list($singular, $tokens) = $this->compileString($this->getNode('body'));
     $plural = NULL;
 
-    if (NULL !== $this->getNode('plural')) {
+    if ($this->hasNode('plural')) {
       list($plural, $pluralTokens) = $this->compileString($this->getNode('plural'));
       $tokens = array_merge($tokens, $pluralTokens);
     }
@@ -67,8 +70,8 @@ class TwigNodeTrans extends \Twig_Node {
     $compiler->raw(')');
 
     // Write any options passed.
-    if (!empty($options)) {
-      $compiler->raw(', ')->subcompile($options);
+    if ($this->hasNode('options')) {
+      $compiler->raw(', ')->subcompile($this->getNode('options'));
     }
 
     // Write function closure.

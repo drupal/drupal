@@ -15,7 +15,6 @@ use Drupal\Tests\UnitTestCase;
  * Tests the twig extension.
  *
  * @group Template
- * @group legacy
  *
  * @coversDefaultClass \Drupal\Core\Template\TwigExtension
  */
@@ -74,11 +73,10 @@ class TwigExtensionTest extends UnitTestCase {
    * Tests the escaping
    *
    * @dataProvider providerTestEscaping
-   *
-   * @group legacy
    */
   public function testEscaping($template, $expected) {
-    $twig = new \Twig_Environment(NULL, [
+    $loader = new \Twig_Loader_Filesystem();
+    $twig = new \Twig_Environment($loader, [
       'debug' => TRUE,
       'cache' => FALSE,
       'autoescape' => 'html',
@@ -86,7 +84,8 @@ class TwigExtensionTest extends UnitTestCase {
     ]);
     $twig->addExtension($this->systemUnderTest);
 
-    $nodes = $twig->parse($twig->tokenize($template));
+    $name = '__string_template_test__';
+    $nodes = $twig->parse($twig->tokenize(new \Twig_Source($template, $name)));
 
     $this->assertSame($expected, $nodes->getNode('body')
       ->getNode(0)
@@ -126,8 +125,6 @@ class TwigExtensionTest extends UnitTestCase {
 
   /**
    * Tests the active_theme function.
-   *
-   * @group legacy
    */
   public function testActiveTheme() {
     $active_theme = $this->getMockBuilder('\Drupal\Core\Theme\ActiveTheme')
@@ -140,7 +137,7 @@ class TwigExtensionTest extends UnitTestCase {
       ->method('getActiveTheme')
       ->willReturn($active_theme);
 
-    $loader = new \Twig_Loader_String();
+    $loader = new StringLoader();
     $twig = new \Twig_Environment($loader);
     $twig->addExtension($this->systemUnderTest);
     $result = $twig->render('{{ active_theme() }}');
@@ -177,7 +174,7 @@ class TwigExtensionTest extends UnitTestCase {
       ->method('getActiveTheme')
       ->willReturn($active_theme);
 
-    $loader = new \Twig_Loader_String();
+    $loader = new StringLoader();
     $twig = new \Twig_Environment($loader);
     $twig->addExtension($this->systemUnderTest);
     $result = $twig->render('{{ active_theme_path() }}');
@@ -188,11 +185,10 @@ class TwigExtensionTest extends UnitTestCase {
    * Tests the escaping of objects implementing MarkupInterface.
    *
    * @covers ::escapeFilter
-   *
-   * @group legacy
    */
   public function testSafeStringEscaping() {
-    $twig = new \Twig_Environment(NULL, [
+    $loader = new \Twig_Loader_Filesystem();
+    $twig = new \Twig_Environment($loader, [
       'debug' => TRUE,
       'cache' => FALSE,
       'autoescape' => 'html',
@@ -274,11 +270,10 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * @covers ::escapeFilter
    * @covers ::bubbleArgMetadata
-   *
-   * @group legacy
    */
   public function testEscapeWithGeneratedLink() {
-    $twig = new \Twig_Environment(NULL, [
+    $loader = new \Twig_Loader_Filesystem();
+    $twig = new \Twig_Environment($loader, [
         'debug' => TRUE,
         'cache' => FALSE,
         'autoescape' => 'html',
