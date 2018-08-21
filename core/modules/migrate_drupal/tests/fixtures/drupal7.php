@@ -3171,6 +3171,30 @@ $connection->insert('entity_translation')
   'created' => '1527594929',
   'changed' => '1527594929',
 ))
+->values(array(
+  'entity_type' => 'user',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'fr',
+  'source' => 'en',
+  'uid' => '1',
+  'status' => '0',
+  'translate' => '0',
+  'created' => '1531663916',
+  'changed' => '1531663916',
+))
+->values(array(
+  'entity_type' => 'user',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'is',
+  'source' => 'en',
+  'uid' => '2',
+  'status' => '1',
+  'translate' => '1',
+  'created' => '1531663925',
+  'changed' => '1531663925',
+))
 ->execute();
 
 $connection->schema()->createTable('entity_translation_revision', array(
@@ -6141,6 +6165,26 @@ $connection->insert('field_data_field_integer')
   'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '99',
+))
+->values(array(
+  'entity_type' => 'user',
+  'bundle' => 'user',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'fr',
+  'delta' => '0',
+  'field_integer_value' => '9',
+))
+->values(array(
+  'entity_type' => 'user',
+  'bundle' => 'user',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'is',
+  'delta' => '0',
+  'field_integer_value' => '1',
 ))
 ->values(array(
   'entity_type' => 'taxonomy_term',
