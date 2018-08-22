@@ -4,6 +4,8 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Transaction;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Deprecation tests cases for the database layer.
  *
@@ -63,6 +65,17 @@ class DatabaseLegacyTest extends DatabaseTestBase {
    */
   public function testDbTransaction() {
     $this->assertInstanceOf(Transaction::class, db_transaction());
+  }
+
+  /**
+   * Tests the db_close() function.
+   *
+   * @expectedDeprecation db_close() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Database\Database::closeConnection() instead. See https://www.drupal.org/node/2993033.
+   */
+  public function testDbClose() {
+    $this->assertTrue(Database::isActiveConnection(), 'Database connection is active');
+    db_close();
+    $this->assertFalse(Database::isActiveConnection(), 'Database connection is not active');
   }
 
 }

@@ -456,6 +456,7 @@ function db_driver() {
  * @see \Drupal\Core\Database\Database::closeConnection()
  */
 function db_close(array $options = []) {
+  @trigger_error('db_close() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Database\Database::closeConnection() instead. See https://www.drupal.org/node/2993033.', E_USER_DEPRECATED);
   if (empty($options['target'])) {
     $options['target'] = NULL;
   }
