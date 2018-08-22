@@ -117,6 +117,12 @@
 
   </main>
 
+  {% if page.content_bottom|render|striptags|trim is not empty %}
+    <div class="layout-content-bottom">
+      {{ page.content_bottom }}
+    </div>
+  {% endif %}
+
   {% if page.footer|render|striptags|trim is not empty %}
   <div class="layout-footer">
     <footer class="footer" role="contentinfo">
