@@ -29,7 +29,7 @@ use Drupal\user\UserInterface;
  *   ),
  *   bundle_label = @Translation("Media type"),
  *   handlers = {
- *     "storage" = "Drupal\Core\Entity\Sql\SqlContentEntityStorage",
+ *     "storage" = "Drupal\media\MediaStorage",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\media\MediaListBuilder",
  *     "access" = "Drupal\media\MediaAccessControlHandler",
@@ -374,15 +374,22 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Sets the media entity's field values from the source's metadata.
+   *
+   * Fetching the metadata could be slow (e.g., if requesting it from a remote
+   * API), so this is called by \Drupal\media\MediaStorage::save() prior to it
+   * beginning the database transaction, whereas static::preSave() executes
+   * after the transaction has already started.
+   *
+   * @internal
+   *   Expose this as an API in
+   *   https://www.drupal.org/project/drupal/issues/2992426.
    */
-  public function save() {
+  public function prepareSave() {
     // @todo If the source plugin talks to a remote API (e.g. oEmbed), this code
     // might be performing a fair number of HTTP requests. This is dangerously
     // brittle and should probably be handled by a queue, to avoid doing HTTP
-    // operations during entity save. As it is, doing this before calling
-    // parent::save() is a quick-fix to avoid doing HTTP requests in the middle
-    // of a database transaction (which begins once we call parent::save()). See
+    // operations during entity save. See
     // https://www.drupal.org/project/drupal/issues/2976875 for more.
 
     // In order for metadata to be mapped correctly, $this->original must be
@@ -419,7 +426,6 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
         }
       }
     }
-    return parent::save();
   }
 
   /**
