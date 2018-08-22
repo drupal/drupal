@@ -16,6 +16,73 @@ use Drupal\media\Entity\MediaType;
 class MediaSourceTest extends MediaKernelTestBase {
 
   /**
+   * Tests that metadata is correctly mapped irrespective of how media is saved.
+   */
+  public function testSave() {
+    $field_storage = FieldStorageConfig::create([
+      'entity_type' => 'media',
+      'field_name' => 'field_to_map_to',
+      'type' => 'string',
+    ]);
+    $field_storage->save();
+
+    FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => $this->testMediaType->id(),
+      'label' => 'Field to map to',
+    ])->save();
+
+    // Set an arbitrary metadata value to be mapped.
+    $this->container->get('state')
+      ->set('media_source_test_attributes', [
+        'attribute_to_map' => [
+          'title' => 'Attribute to map',
+          'value' => 'Snowball',
+        ],
+        'thumbnail_uri' => [
+          'title' => 'Thumbnail',
+          'value' => 'public://TheSisko.png',
+        ],
+      ]);
+    $this->testMediaType->setFieldMap([
+      'attribute_to_map' => 'field_to_map_to',
+    ])->save();
+
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage('media');
+
+    /** @var \Drupal\media\MediaInterface $a */
+    $a = $storage->create([
+      'bundle' => $this->testMediaType->id(),
+    ]);
+    /** @var \Drupal\media\MediaInterface $b */
+    $b = $storage->create([
+      'bundle' => $this->testMediaType->id(),
+    ]);
+
+    // Set a random source value on both items.
+    $a->set($a->getSource()->getSourceFieldDefinition($a->bundle->entity)->getName(), $this->randomString());
+    $b->set($b->getSource()->getSourceFieldDefinition($b->bundle->entity)->getName(), $this->randomString());
+
+    $a->save();
+    $storage->save($b);
+
+    // Assert that the default name was mapped into the name field for both
+    // media items.
+    $this->assertFalse($a->get('name')->isEmpty());
+    $this->assertFalse($b->get('name')->isEmpty());
+
+    // Assert that arbitrary metadata was mapped correctly.
+    $this->assertFalse($a->get('field_to_map_to')->isEmpty());
+    $this->assertFalse($b->get('field_to_map_to')->isEmpty());
+
+    // Assert that the thumbnail was mapped correctly from the source.
+    $this->assertSame('public://TheSisko.png', $a->thumbnail->entity->getFileUri());
+    $this->assertSame('public://TheSisko.png', $b->thumbnail->entity->getFileUri());
+  }
+
+  /**
    * Tests default media name functionality.
    */
   public function testDefaultName() {
