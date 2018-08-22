@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.recipe_collections
+  module:
+    - views
+  theme:
+    - umami
+id: views_block__recipe_collections_block
+theme: umami
+region: content_bottom
+weight: 0
+provider: null
+plugin: 'views_block:recipe_collections-block'
+settings:
+  id: 'views_block:recipe_collections-block'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+visibility: {  }

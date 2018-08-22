@@ -57,6 +57,11 @@ quicklinks:
     theme:
       css/components/blocks/quicklinks/quicklinks.css: {}
 
+recipe-collections:
+  css:
+    theme:
+      css/components/blocks/recipe-collections/recipe-collections.css: {}
+
 two-columns:
   css:
     layout:

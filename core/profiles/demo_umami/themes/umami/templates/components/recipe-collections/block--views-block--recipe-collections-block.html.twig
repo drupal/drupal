@@ -1,0 +1,13 @@
+{% extends "block.html.twig" %}
+{#
+/**
+ * @file
+ * Theme override for recipe collections block.
+ */
+#}
+{% block content %}
+  {{ attach_library('umami/recipe-collections') }}
+  <div class="container">
+    {{ parent() }}
+  </div>
+{% endblock %}
