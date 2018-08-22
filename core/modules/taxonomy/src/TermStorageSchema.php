@@ -17,10 +17,12 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
   protected function getEntitySchema(ContentEntityTypeInterface $entity_type, $reset = FALSE) {
     $schema = parent::getEntitySchema($entity_type, $reset = FALSE);
 
-    $schema['taxonomy_term_field_data']['indexes'] += [
-      'taxonomy_term__tree' => ['vid', 'weight', 'name'],
-      'taxonomy_term__vid_name' => ['vid', 'name'],
-    ];
+    if ($data_table = $this->storage->getDataTable()) {
+      $schema[$data_table]['indexes'] += [
+        'taxonomy_term__tree' => ['vid', 'weight', 'name'],
+        'taxonomy_term__vid_name' => ['vid', 'name'],
+      ];
+    }
 
     $schema['taxonomy_index'] = [
       'description' => 'Maintains denormalized information about node/term relationships.',

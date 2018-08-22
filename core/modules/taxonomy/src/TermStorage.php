@@ -211,7 +211,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
         $this->treeChildren[$vid] = [];
         $this->treeParents[$vid] = [];
         $this->treeTerms[$vid] = [];
-        $query = $this->database->select('taxonomy_term_field_data', 't');
+        $query = $this->database->select($this->getDataTable(), 't');
         $query->join('taxonomy_term__parent', 'p', 't.tid = p.entity_id');
         $query->addExpression('parent_target_id', 'parent');
         $result = $query
@@ -305,7 +305,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   public function nodeCount($vid) {
     $query = $this->database->select('taxonomy_index', 'ti');
     $query->addExpression('COUNT(DISTINCT ti.nid)');
-    $query->leftJoin('taxonomy_term_data', 'td', 'ti.tid = td.tid');
+    $query->leftJoin($this->getBaseTable(), 'td', 'ti.tid = td.tid');
     $query->condition('td.vid', $vid);
     $query->addTag('vocabulary_node_count');
     return $query->execute()->fetchField();
@@ -315,7 +315,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    * {@inheritdoc}
    */
   public function resetWeights($vid) {
-    $this->database->update('taxonomy_term_field_data')
+    $this->database->update($this->getDataTable())
       ->fields(['weight' => 0])
       ->condition('vid', $vid)
       ->execute();
@@ -325,7 +325,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    * {@inheritdoc}
    */
   public function getNodeTerms(array $nids, array $vocabs = [], $langcode = NULL) {
-    $query = db_select('taxonomy_term_field_data', 'td');
+    $query = db_select($this->getDataTable(), 'td');
     $query->innerJoin('taxonomy_index', 'tn', 'td.tid = tn.tid');
     $query->fields('td', ['tid']);
     $query->addField('tn', 'nid', 'node_nid');
