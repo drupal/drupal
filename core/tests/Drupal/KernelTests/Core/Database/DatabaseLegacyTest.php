@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\Transaction;
+
 /**
  * Deprecation tests cases for the database layer.
  *
@@ -52,6 +54,15 @@ class DatabaseLegacyTest extends DatabaseTestBase {
       'binary' => TRUE,
     ];
     db_change_field('test', 'name', 'nosuchcolumn', $spec);
+  }
+
+  /**
+   * Tests deprecation of the db_transaction() function.
+   *
+   * @expectedDeprecation db_transaction is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call startTransaction() on it. For example, $injected_database->startTransaction($name). See https://www.drupal.org/node/2993033
+   */
+  public function testDbTransaction() {
+    $this->assertInstanceOf(Transaction::class, db_transaction());
   }
 
 }

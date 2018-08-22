@@ -316,6 +316,9 @@ function db_select($table, $alias = NULL, array $options = []) {
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_transaction($name = NULL, array $options = []) {
+  @trigger_error('db_transaction is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call startTransaction() on it. For example, $injected_database->startTransaction($name). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
+  // @todo Move away from here setting default target connection,
+  // https://www.drupal.org/node/2947775
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }

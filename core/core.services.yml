@@ -940,7 +940,7 @@ services:
       - { name: needs_destruction }
   menu.rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\MenuRouterRebuildSubscriber
-    arguments: ['@lock', '@plugin.manager.menu.link']
+    arguments: ['@lock', '@plugin.manager.menu.link', '@database']
     tags:
       - { name: event_subscriber }
   path.alias_storage:
