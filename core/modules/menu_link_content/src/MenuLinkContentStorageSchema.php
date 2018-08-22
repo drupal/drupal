@@ -17,7 +17,7 @@ class MenuLinkContentStorageSchema extends SqlContentEntityStorageSchema {
     $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
     $field_name = $storage_definition->getName();
 
-    if ($table_name == 'menu_link_content') {
+    if ($table_name == $this->storage->getBaseTable()) {
       switch ($field_name) {
         case 'rediscover':
           $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
