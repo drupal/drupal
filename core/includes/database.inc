@@ -607,6 +607,7 @@ function db_create_table($name, $table) {
  * @see \Drupal\Core\Database\Schema::fieldNames()
  */
 function db_field_names($fields) {
+  @trigger_error('db_field_names() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call fieldNames() on it. For example, $injected_database->schema()->fieldNames($fields). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->fieldNames($fields);
 }
 
@@ -764,6 +765,7 @@ function db_drop_table($table) {
  * @see \Drupal\Core\Database\Schema::changeField()
  */
 function db_add_field($table, $field, $spec, $keys_new = []) {
+  @trigger_error('db_add_field() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call addField() on it. For example, $injected_database->schema()->addField($table, $field, $spec, $keys_new). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->addField($table, $field, $spec, $keys_new);
 }
 
@@ -787,6 +789,7 @@ function db_add_field($table, $field, $spec, $keys_new = []) {
  * @see \Drupal\Core\Database\Schema::dropField()
  */
 function db_drop_field($table, $field) {
+  @trigger_error('db_drop_field() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call dropField() on it. For example, $injected_database->schema()->dropField($table, $field). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->dropField($table, $field);
 }
 

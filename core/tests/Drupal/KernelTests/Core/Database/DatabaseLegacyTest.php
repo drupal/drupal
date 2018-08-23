@@ -78,4 +78,40 @@ class DatabaseLegacyTest extends DatabaseTestBase {
     $this->assertFalse(Database::isActiveConnection(), 'Database connection is not active');
   }
 
+  /**
+   * Tests deprecation of the db_add_field() function.
+   *
+   * @expectedDeprecation db_add_field() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call addField() on it. For example, $injected_database->schema()->addField($table, $field, $spec, $keys_new). See https://www.drupal.org/node/2993033
+   */
+  public function testDbAddField() {
+    $this->assertFalse($this->connection->schema()->fieldExists('test', 'anint'));
+    db_add_field('test', 'anint', [
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'Added int column.',
+    ]);
+    $this->assertTrue($this->connection->schema()->fieldExists('test', 'anint'));
+  }
+
+  /**
+   * Tests deprecation of the db_drop_field() function.
+   *
+   * @expectedDeprecation db_drop_field() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call dropField() on it. For example, $injected_database->schema()->dropField($table, $field). See https://www.drupal.org/node/2993033
+   */
+  public function testDbDropField() {
+    $this->assertTrue($this->connection->schema()->fieldExists('test', 'age'));
+    $this->assertTrue(db_drop_field('test', 'age'));
+    $this->assertFalse($this->connection->schema()->fieldExists('test', 'age'));
+  }
+
+  /**
+   * Tests deprecation of the db_field_names() function.
+   *
+   * @expectedDeprecation db_field_names() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call fieldNames() on it. For example, $injected_database->schema()->fieldNames($fields). See https://www.drupal.org/node/2993033
+   */
+  public function testDbFieldNames() {
+    $this->assertSame(['test_field'], db_field_names(['test_field']));
+  }
+
 }
