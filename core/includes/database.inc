@@ -589,6 +589,7 @@ function db_condition($conjunction) {
  * @see \Drupal\Core\Database\Schema::createTable()
  */
 function db_create_table($name, $table) {
+  @trigger_error('db_create_table() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call createTable() on it. For example, $injected_database->schema()->createTable($name, $table). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->createTable($name, $table);
 }
 

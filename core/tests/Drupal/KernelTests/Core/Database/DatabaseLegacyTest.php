@@ -151,4 +151,25 @@ class DatabaseLegacyTest extends DatabaseTestBase {
     $this->assertSame(['test_field'], db_field_names(['test_field']));
   }
 
+  /**
+   * Tests deprecation of the db_create_table() function.
+   *
+   * @expectedDeprecation db_create_table() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call createTable() on it. For example, $injected_database->schema()->createTable($name, $table). See https://www.drupal.org/node/2993033
+   */
+  public function testDbCreateTable() {
+    $name = 'test_create_table';
+    $table = [
+      'fields' => [
+        'id' => [
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['id'],
+    ];
+    db_create_table($name, $table);
+    $this->assertTrue($this->connection->schema()->tableExists($name));
+  }
+
 }

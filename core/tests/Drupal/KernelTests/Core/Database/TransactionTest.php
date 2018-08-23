@@ -123,7 +123,7 @@ class TransactionTest extends DatabaseTestBase {
         ],
         'primary key' => ['id'],
       ];
-      db_create_table('database_test_1', $table);
+      $this->connection->schema()->createTable('database_test_1', $table);
 
       $this->assertTrue($this->connection->inTransaction(), 'In transaction inside nested transaction.');
     }
@@ -330,7 +330,7 @@ class TransactionTest extends DatabaseTestBase {
       ],
       'primary key' => ['id'],
     ];
-    db_create_table('database_test_' . ++$count, $table);
+    $this->connection->schema()->createTable('database_test_' . ++$count, $table);
   }
 
   /**
