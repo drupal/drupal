@@ -501,6 +501,7 @@ function db_next_id($existing_id = 0) {
  * @see \Drupal\Core\Database\Query\Condition
  */
 function db_or() {
+  @trigger_error('db_or() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Create a \Drupal\Core\Database\Query\Condition object, specifying an OR conjunction: new Condition(\'OR\'), instead. See https://www.drupal.org/node/2993033.', E_USER_DEPRECATED);
   return new Condition('OR');
 }
 
@@ -517,6 +518,7 @@ function db_or() {
  * @see \Drupal\Core\Database\Query\Condition
  */
 function db_and() {
+  @trigger_error('db_and() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Create a \Drupal\Core\Database\Query\Condition object, specifying an AND conjunction: new Condition(\'AND\'), instead. See https://www.drupal.org/node/2993033.', E_USER_DEPRECATED);
   return new Condition('AND');
 }
 
@@ -527,20 +529,22 @@ function db_and() {
  *   A new Condition object, set to "XOR" all conditions together.
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Create
- *   a \Drupal\Core\Database\Query\Condition object, specifying an XOR
+ *   a \Drupal\Core\Database\Query\Condition object, specifying a XOR
  *   conjunction: new Condition('XOR');
  *
  * @see \Drupal\Core\Database\Query\Condition
  */
 function db_xor() {
+  @trigger_error('db_xor() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Create a \Drupal\Core\Database\Query\Condition object, specifying a XOR conjunction: new Condition(\'XOR\'), instead. See https://www.drupal.org/node/2993033.', E_USER_DEPRECATED);
   return new Condition('XOR');
 }
 
 /**
  * Returns a new DatabaseCondition, set to the specified conjunction.
  *
- * Internal API function call.  The db_and(), db_or(), and db_xor()
- * functions are preferred.
+ * Internal API function call.  Creating a
+ * \Drupal\Core\Database\Query\Condition object, specifying the desired
+ * conjunction ('AND', 'OR' or 'XOR'), is preferred.
  *
  * @param string $conjunction
  *   The conjunction to use for query conditions (AND, OR or XOR).
@@ -550,11 +554,12 @@ function db_xor() {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Create
  *   a \Drupal\Core\Database\Query\Condition object, specifying the desired
- *   conjunction: new Condition($conjunctin);
+ *   conjunction: new Condition($conjunction);
  *
  * @see \Drupal\Core\Database\Query\Condition
  */
 function db_condition($conjunction) {
+  @trigger_error('db_condition() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Create a \Drupal\Core\Database\Query\Condition object, specifying the desired conjunction: new Condition($conjunction), instead. See https://www.drupal.org/node/2993033.', E_USER_DEPRECATED);
   return new Condition($conjunction);
 }
 

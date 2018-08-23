@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Transaction;
 
 use Drupal\Core\Database\Database;
@@ -12,6 +13,42 @@ use Drupal\Core\Database\Database;
  * @group legacy
  */
 class DatabaseLegacyTest extends DatabaseTestBase {
+
+  /**
+   * Tests deprecation of the db_and() function.
+   *
+   * @expectedDeprecation db_and() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Create a \Drupal\Core\Database\Query\Condition object, specifying an AND conjunction: new Condition('AND'), instead. See https://www.drupal.org/node/2993033.
+   */
+  public function testDbAnd() {
+    $this->assertInstanceOf(Condition::class, db_and());
+  }
+
+  /**
+   * Tests deprecation of the db_condition() function.
+   *
+   * @expectedDeprecation db_condition() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Create a \Drupal\Core\Database\Query\Condition object, specifying the desired conjunction: new Condition($conjunction), instead. See https://www.drupal.org/node/2993033.
+   */
+  public function testDbCondition() {
+    $this->assertInstanceOf(Condition::class, db_condition('AND'));
+  }
+
+  /**
+   * Tests deprecation of the db_or() function.
+   *
+   * @expectedDeprecation db_or() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Create a \Drupal\Core\Database\Query\Condition object, specifying an OR conjunction: new Condition('OR'), instead. See https://www.drupal.org/node/2993033.
+   */
+  public function testDbOr() {
+    $this->assertInstanceOf(Condition::class, db_or());
+  }
+
+  /**
+   * Tests deprecation of the db_xor() function.
+   *
+   * @expectedDeprecation db_xor() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Create a \Drupal\Core\Database\Query\Condition object, specifying a XOR conjunction: new Condition('XOR'), instead. See https://www.drupal.org/node/2993033.
+   */
+  public function testDbXor() {
+    $this->assertInstanceOf(Condition::class, db_xor());
+  }
 
   /**
    * Tests the db_table_exists() function.
