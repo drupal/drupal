@@ -250,6 +250,7 @@ function tracker_comment_delete(CommentInterface $comment) {
  *   The node updated timestamp or comment timestamp.
  */
 function _tracker_add($nid, $uid, $changed) {
+  $connection = \Drupal::database();
   // @todo This should be actually filtering on the desired language and just
   //   fall back to the default language.
   $node = db_query('SELECT nid, status, uid, changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1 ORDER BY changed DESC, status DESC', [':nid' => $nid])->fetchObject();
@@ -259,7 +260,7 @@ function _tracker_add($nid, $uid, $changed) {
   $changed = max($node->changed, $changed);
 
   // Update the node-level data.
-  db_merge('tracker_node')
+  $connection->merge('tracker_node')
     ->key('nid', $nid)
     ->fields([
       'changed' => $changed,
@@ -268,7 +269,7 @@ function _tracker_add($nid, $uid, $changed) {
     ->execute();
 
   // Create or update the user-level data, first for the user posting.
-  db_merge('tracker_user')
+  $connection->merge('tracker_user')
     ->keys([
       'nid' => $nid,
       'uid' => $uid,

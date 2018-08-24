@@ -211,13 +211,14 @@ function search_cron() {
  * up to date (even if cron times out or otherwise fails).
  */
 function search_update_totals() {
+  $connection = \Drupal::database();
   // Update word IDF (Inverse Document Frequency) counts for new/changed words.
   foreach (search_dirty() as $word => $dummy) {
     // Get total count
     $total = db_query("SELECT SUM(score) FROM {search_index} WHERE word = :word", [':word' => $word], ['target' => 'replica'])->fetchField();
     // Apply Zipf's law to equalize the probability distribution.
     $total = log10(1 + 1 / (max(1, $total)));
-    db_merge('search_total')
+    $connection->merge('search_total')
       ->key('word', $word)
       ->fields(['count' => $total])
       ->execute();
@@ -536,6 +537,7 @@ function search_index($type, $sid, $langcode, $text) {
   // cache tags.
   search_index_clear($type, $sid, $langcode);
 
+  $connection = \Drupal::database();
   // Insert cleaned up data into dataset
   db_insert('search_dataset')
     ->fields([
@@ -552,7 +554,7 @@ function search_index($type, $sid, $langcode, $text) {
     // If a word already exists in the database, its score gets increased
     // appropriately. If not, we create a new record with the appropriate
     // starting score.
-    db_merge('search_index')
+    $connection->merge('search_index')
       ->keys([
         'word' => $word,
         'sid' => $sid,

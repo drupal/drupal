@@ -836,7 +836,7 @@ function locale_translation_get_file_history() {
  *   FALSE on failure. Otherwise SAVED_NEW or SAVED_UPDATED.
  */
 function locale_translation_update_file_history($file) {
-  $status = db_merge('locale_file')
+  $status = \Drupal::database()->merge('locale_file')
     ->key([
       'project' => $file->project,
       'langcode' => $file->langcode,
