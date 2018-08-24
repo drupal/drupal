@@ -133,8 +133,8 @@ class EntityOperations implements ContainerInjectionInterface {
       throw new \RuntimeException('This entity can only be saved in the default workspace.');
     }
 
-    /** @var \Drupal\Core\Entity\RevisionableInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
-    if (!$entity->isNew() && !isset($entity->_isReplicating)) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
+    if (!$entity->isNew() && !$entity->isSyncing()) {
       // Force a new revision if the entity is not replicating.
       $entity->setNewRevision(TRUE);
 

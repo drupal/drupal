@@ -21,6 +21,6 @@ namespace Drupal\Core\Entity;
  *
  * @ingroup entity_api
  */
-interface ContentEntityInterface extends \Traversable, FieldableEntityInterface, TranslatableRevisionableInterface {
+interface ContentEntityInterface extends \Traversable, FieldableEntityInterface, TranslatableRevisionableInterface, SynchronizableInterface {
 
 }

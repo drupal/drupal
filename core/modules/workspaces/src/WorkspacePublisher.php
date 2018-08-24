@@ -78,14 +78,11 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
       foreach ($this->getDifferringRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
         $entity_revisions = $this->entityTypeManager->getStorage($entity_type_id)
           ->loadMultipleRevisions(array_keys($revision_difference));
-        /** @var \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface $entity */
+        /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
         foreach ($entity_revisions as $entity) {
           // When pushing workspace-specific revisions to the default workspace
           // (Live), we simply need to mark them as default revisions.
-          // @todo Remove this dynamic property once we have an API for
-          //   associating temporary data with an entity:
-          //   https://www.drupal.org/node/2896474.
-          $entity->_isReplicating = TRUE;
+          $entity->setSyncing(TRUE);
           $entity->isDefaultRevision(TRUE);
           $entity->save();
         }
