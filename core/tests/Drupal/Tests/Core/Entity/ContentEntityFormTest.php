@@ -22,7 +22,12 @@ class ContentEntityFormTest extends UnitTestCase {
     $entity_manager = $this->prophesize(EntityManagerInterface::class)->reveal();
     $entity_type_bundle_info = $this->prophesize(EntityTypeBundleInfoInterface::class)->reveal();
     $time = $this->prophesize(TimeInterface::class)->reveal();
-    new ContentEntityForm($entity_manager, $entity_type_bundle_info, $time);
+    $form = new ContentEntityForm($entity_manager, $entity_type_bundle_info, $time);
+
+    $reflected_form = new \ReflectionClass($form);
+    $entity_manager_property = $reflected_form->getProperty('entityManager');
+    $entity_manager_property->setAccessible(TRUE);
+    $this->assertTrue($entity_manager_property->getValue($form) === $entity_manager);
   }
 
 }

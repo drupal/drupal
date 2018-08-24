@@ -56,6 +56,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
     if ($entity_repository instanceof EntityManagerInterface) {
       @trigger_error('Passing the entity.manager service to ContentEntityForm::__construct() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Pass the entity.repository service instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $this->entityManager = $entity_repository;
     }
     $this->entityRepository = $entity_repository;
     $this->entityTypeBundleInfo = $entity_type_bundle_info ?: \Drupal::service('entity_type.bundle.info');
