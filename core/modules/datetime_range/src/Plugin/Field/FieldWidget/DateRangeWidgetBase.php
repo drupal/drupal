@@ -52,59 +52,49 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
     // The widget form element type has transformed the value to a
     // DrupalDateTime object at this point. We need to convert it back to the
     // storage timezone and format.
+
+    $datetime_type = $this->getFieldSetting('datetime_type');
+    if ($datetime_type === DateRangeItem::DATETIME_TYPE_DATE) {
+      $storage_format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
+    }
+    else {
+      $storage_format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
+    }
+
+    $storage_timezone = new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
+    $user_timezone = new \DateTimeZone(drupal_get_user_timezone());
+
     foreach ($values as &$item) {
       if (!empty($item['value']) && $item['value'] instanceof DrupalDateTime) {
         /** @var \Drupal\Core\Datetime\DrupalDateTime $start_date */
         $start_date = $item['value'];
-        switch ($this->getFieldSetting('datetime_type')) {
-          case DateRangeItem::DATETIME_TYPE_DATE:
-            $format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
-            break;
 
-          case DateRangeItem::DATETIME_TYPE_ALLDAY:
-            // All day fields start at midnight on the starting date, but are
-            // stored like datetime fields, so we need to adjust the time.
-            // This function is called twice, so to prevent a double conversion
-            // we need to explicitly set the timezone.
-            $start_date->setTimeZone(timezone_open(drupal_get_user_timezone()));
-            $start_date->setTime(0, 0, 0);
-            $format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
-            break;
-
-          default:
-            $format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
-            break;
+        if ($datetime_type === DateRangeItem::DATETIME_TYPE_ALLDAY) {
+          // All day fields start at midnight on the starting date, but are
+          // stored like datetime fields, so we need to adjust the time.
+          // This function is called twice, so to prevent a double conversion
+          // we need to explicitly set the timezone.
+          $start_date->setTimeZone($user_timezone)->setTime(0, 0, 0);
         }
+
         // Adjust the date for storage.
-        $start_date->setTimezone(new \DateTimezone(DateTimeItemInterface::STORAGE_TIMEZONE));
-        $item['value'] = $start_date->format($format);
+        $item['value'] = $start_date->setTimezone($storage_timezone)->format($storage_format);
       }
 
       if (!empty($item['end_value']) && $item['end_value'] instanceof DrupalDateTime) {
         /** @var \Drupal\Core\Datetime\DrupalDateTime $end_date */
         $end_date = $item['end_value'];
-        switch ($this->getFieldSetting('datetime_type')) {
-          case DateRangeItem::DATETIME_TYPE_DATE:
-            $format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
-            break;
 
-          case DateRangeItem::DATETIME_TYPE_ALLDAY:
-            // All day fields end at midnight on the end date, but are
-            // stored like datetime fields, so we need to adjust the time.
-            // This function is called twice, so to prevent a double conversion
-            // we need to explicitly set the timezone.
-            $end_date->setTimeZone(timezone_open(drupal_get_user_timezone()));
-            $end_date->setTime(23, 59, 59);
-            $format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
-            break;
-
-          default:
-            $format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
-            break;
+        if ($datetime_type === DateRangeItem::DATETIME_TYPE_ALLDAY) {
+          // All day fields start at midnight on the starting date, but are
+          // stored like datetime fields, so we need to adjust the time.
+          // This function is called twice, so to prevent a double conversion
+          // we need to explicitly set the timezone.
+          $end_date->setTimeZone($user_timezone)->setTime(23, 59, 59);
         }
+
         // Adjust the date for storage.
-        $end_date->setTimezone(new \DateTimezone(DateTimeItemInterface::STORAGE_TIMEZONE));
-        $item['end_value'] = $end_date->format($format);
+        $item['end_value'] = $end_date->setTimezone($storage_timezone)->format($storage_format);
       }
     }
 
