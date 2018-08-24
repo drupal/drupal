@@ -28,6 +28,8 @@ use Symfony\Component\HttpFoundation\Request;
  *   "before updates" state. Normally, these will add some configuration data to
  *   the database, set up some tables/fields, etc.
  * - Create a class that extends this class.
+ * - Ensure that the test is in the legacy group. Tests can have multiple
+ *   groups.
  * - In your setUp() method, point the $this->databaseDumpFiles variable to the
  *   database dump files, and then call parent::setUp() to run the base setUp()
  *   method in this class.
