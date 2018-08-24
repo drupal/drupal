@@ -36,3 +36,13 @@ function comment_post_update_enable_comment_admin_view() {
     ->create($storage->read('views.view.comment'))
     ->save();
 }
+
+/**
+ * Add comment settings.
+ */
+function comment_post_update_add_ip_address_setting() {
+  $config_factory = \Drupal::configFactory();
+  $settings = $config_factory->getEditable('comment.settings');
+  $settings->set('log_ip_addresses', TRUE)
+    ->save(TRUE);
+}

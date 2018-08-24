@@ -576,7 +576,10 @@ class Comment extends ContentEntityBase implements CommentInterface {
    *   The client host name.
    */
   public static function getDefaultHostname() {
-    return \Drupal::request()->getClientIP();
+    if (\Drupal::config('comment.settings')->get('log_ip_addresses')) {
+      return \Drupal::request()->getClientIP();
+    }
+    return '';
   }
 
 }

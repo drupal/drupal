@@ -51,6 +51,12 @@ class CommentTokenReplaceTest extends CommentTestBase {
     // Set comment variables.
     $this->setCommentSubject(TRUE);
 
+    // To test hostname token field should be populated.
+    \Drupal::configFactory()
+      ->getEditable('comment.settings')
+      ->set('log_ip_addresses', TRUE)
+      ->save(TRUE);
+
     // Create a node and a comment.
     $node = $this->drupalCreateNode(['type' => 'article', 'title' => '<script>alert("123")</script>']);
     $parent_comment = $this->postComment($node, $this->randomMachineName(), $this->randomMachineName(), TRUE);

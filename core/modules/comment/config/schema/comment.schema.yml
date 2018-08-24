@@ -1,4 +1,11 @@
 # Schema for the configuration files of the Comment module.
+comment.settings:
+  type: config_object
+  label: 'Comment settings'
+  mapping:
+    log_ip_addresses:
+      type: boolean
+      label: 'Whether to log IP addresses with comments or not.'
 
 field.formatter.settings.comment_default:
   type: mapping
