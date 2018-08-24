@@ -3,6 +3,7 @@
 namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Session\AnonymousUserSession;
 
 /**
  * Provides methods to generate log entries.
@@ -37,6 +38,8 @@ trait FakeLogEntries {
   private function generateLogEntries($count, $options = []) {
     global $base_root;
 
+    $user = !empty($this->adminUser) ? $this->adminUser : new AnonymousUserSession();
+
     // Prepare the fields to be logged.
     $log = $options + [
       'channel'     => 'custom',
@@ -44,8 +47,8 @@ trait FakeLogEntries {
       'variables'   => [],
       'severity'    => RfcLogLevel::NOTICE,
       'link'        => NULL,
-      'user'        => $this->adminUser,
-      'uid'         => $this->adminUser->id(),
+      'user'        => $user,
+      'uid'         => $user->id(),
       'request_uri' => $base_root . \Drupal::request()->getRequestUri(),
       'referer'     => \Drupal::request()->server->get('HTTP_REFERER'),
       'ip'          => '127.0.0.1',
