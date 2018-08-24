@@ -50,6 +50,10 @@ class Tasks extends InstallTasks {
    * {@inheritdoc}
    */
   public function minimumVersion() {
+    // This can not be increased above '5.5.5' without dropping support for all
+    // MariaDB versions. MariaDB prefixes its version string with '5.5.5-'. For
+    // more information, see
+    // https://github.com/MariaDB/server/blob/f6633bf058802ad7da8196d01fd19d75c53f7274/include/mysql_com.h#L42.
     return '5.5.3';
   }
 
