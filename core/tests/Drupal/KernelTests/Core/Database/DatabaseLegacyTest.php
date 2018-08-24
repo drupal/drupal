@@ -14,6 +14,13 @@ use Drupal\Core\Database\Database;
 class DatabaseLegacyTest extends DatabaseTestBase {
 
   /**
+   * The modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = ['database_test', 'system'];
+
+  /**
    * Tests deprecation of the db_and() function.
    *
    * @expectedDeprecation db_and() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Create a \Drupal\Core\Database\Query\Condition object, specifying an AND conjunction: new Condition('AND'), instead. See https://www.drupal.org/node/2993033.
@@ -75,6 +82,16 @@ class DatabaseLegacyTest extends DatabaseTestBase {
    */
   public function testDbDropTable() {
     $this->assertFalse(db_drop_table('temp_test_table'));
+  }
+
+  /**
+   * Tests deprecation of the db_next_id() function.
+   *
+   * @expectedDeprecation db_next_id() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call nextId() on it. For example, $injected_database->nextId($existing_id). See https://www.drupal.org/node/2993033
+   */
+  public function testDbNextId() {
+    $this->installSchema('system', 'sequences');
+    $this->assertEquals(1001, db_next_id(1000));
   }
 
   /**

@@ -488,6 +488,7 @@ function db_close(array $options = []) {
  * @see \Drupal\Core\Database\Connection::nextId()
  */
 function db_next_id($existing_id = 0) {
+  @trigger_error('db_next_id() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call nextId() on it. For example, $injected_database->nextId($existing_id). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->nextId($existing_id);
 }
 
