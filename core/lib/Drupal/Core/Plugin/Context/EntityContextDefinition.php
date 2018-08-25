@@ -57,13 +57,15 @@ class EntityContextDefinition extends ContextDefinition {
     $constraints = $this->getConstraintObjects();
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_type_id = $this->getEntityTypeId();
+    $entity_type = $entity_type_manager->getDefinition($entity_type_id);
     $storage = $entity_type_manager->getStorage($entity_type_id);
     // If the storage can generate a sample entity we might delegate to that.
     if ($storage instanceof ContentEntityStorageInterface) {
       if (!empty($constraints['Bundle']) && $constraints['Bundle'] instanceof BundleConstraint) {
         foreach ($constraints['Bundle']->getBundleOption() as $bundle) {
           // We have a bundle, we are bundleable and we can generate a sample.
-          yield EntityAdapter::createFromEntity($storage->createWithSampleValues($bundle));
+          $values = [$entity_type->getKey('bundle') => $bundle];
+          yield EntityAdapter::createFromEntity($storage->create($values));
         }
         return;
       }
