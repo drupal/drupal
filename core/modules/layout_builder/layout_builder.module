@@ -5,6 +5,7 @@
  * Provides hook implementations for Layout Builder.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -12,10 +13,12 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplayStorage;
 use Drupal\layout_builder\Form\LayoutBuilderEntityViewDisplayForm;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\Plugin\Block\ExtraFieldBlock;
+use Drupal\layout_builder\InlineBlockEntityOperations;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\AccessResult;
 
 /**
  * Implements hook_help().
@@ -133,4 +136,69 @@ function layout_builder_module_implements_alter(&$implementations, $hook) {
     unset($implementations['layout_builder']);
     $implementations['layout_builder'] = $group;
   }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function layout_builder_entity_presave(EntityInterface $entity) {
+  if (\Drupal::moduleHandler()->moduleExists('block_content')) {
+    /** @var \Drupal\layout_builder\InlineBlockEntityOperations $entity_operations */
+    $entity_operations = \Drupal::classResolver(InlineBlockEntityOperations::class);
+    $entity_operations->handlePreSave($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function layout_builder_entity_delete(EntityInterface $entity) {
+  if (\Drupal::moduleHandler()->moduleExists('block_content')) {
+    /** @var \Drupal\layout_builder\InlineBlockEntityOperations $entity_operations */
+    $entity_operations = \Drupal::classResolver(InlineBlockEntityOperations::class);
+    $entity_operations->handleEntityDelete($entity);
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function layout_builder_cron() {
+  if (\Drupal::moduleHandler()->moduleExists('block_content')) {
+    /** @var \Drupal\layout_builder\InlineBlockEntityOperations $entity_operations */
+    $entity_operations = \Drupal::classResolver(InlineBlockEntityOperations::class);
+    $entity_operations->removeUnused();
+  }
+}
+
+/**
+ * Implements hook_plugin_filter_TYPE_alter().
+ */
+function layout_builder_plugin_filter_block_alter(array &$definitions, array $extra, $consumer) {
+  // @todo Determine the 'inline_block' blocks should be allowed outside
+  //   of layout_builder https://www.drupal.org/node/2979142.
+  if ($consumer !== 'layout_builder') {
+    foreach ($definitions as $id => $definition) {
+      if ($definition['id'] === 'inline_block') {
+        unset($definitions[$id]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function layout_builder_block_content_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  /** @var \Drupal\block_content\BlockContentInterface $entity */
+  if ($operation === 'view' || $entity->isReusable() || empty(\Drupal::service('inline_block.usage')->getUsage($entity->id()))) {
+    // If the operation is 'view' or this is reusable block or if this is
+    // non-reusable that isn't used by this module then don't alter the access.
+    return AccessResult::neutral();
+  }
+
+  if ($account->hasPermission('configure any layout')) {
+    return AccessResult::allowed();
+  }
+  return AccessResult::forbidden();
 }
