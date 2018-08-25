@@ -112,10 +112,16 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
     $content_entity_storage = $this->prophesize(ContentEntityStorageInterface::class);
     $this->entityTypeManager->getStorage('test_config')->willReturn($entity_storage->reveal());
     $this->entityTypeManager->getStorage('test_content')->willReturn($content_entity_storage->reveal());
+
+    $config_entity_type = new EntityType(['id' => 'test_config']);
+    $content_entity_type = new EntityType(['id' => 'test_content']);
+    $this->entityTypeManager->getDefinition('test_config')->willReturn($config_entity_type);
+    $this->entityTypeManager->getDefinition('test_content')->willReturn($content_entity_type);
     $this->entityManager->getDefinitions()->willReturn([
-      'test_config' => new EntityType(['id' => 'test_config']),
-      'test_content' => new EntityType(['id' => 'test_content']),
+      'test_config' => $config_entity_type,
+      'test_content' => $content_entity_type,
     ]);
+
     $this->entityTypeBundleInfo->getBundleInfo('test_config')->willReturn([
       'test_config' => ['label' => 'test_config'],
     ]);
@@ -186,14 +192,25 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
       $entity->getEntityTypeId()->willReturn('test_content');
       $entity->getIterator()->willReturn(new \ArrayIterator([]));
       $entity->bundle()->willReturn($bundle);
-      $content_entity_storage->createWithSampleValues($bundle)
+      $content_entity_storage->create(['the_bundle_key' => $bundle])
         ->willReturn($entity->reveal())
         ->shouldBeCalled();
     }
 
-    $entity_type = new EntityType(['id' => 'test_content']);
+    // Creating entities with sample values can lead to performance issues when
+    // called many times. Ensure that createWithSampleValues() is not called.
+    $content_entity_storage->createWithSampleValues(Argument::any())->shouldNotBeCalled();
+
+    $entity_type = new EntityType([
+      'id' => 'test_content',
+      'entity_keys' => [
+        'bundle' => 'the_bundle_key',
+      ],
+    ]);
 
     $this->entityTypeManager->getStorage('test_content')->willReturn($content_entity_storage->reveal());
+
+    $this->entityTypeManager->getDefinition('test_content')->willReturn($entity_type);
     $this->entityManager->getDefinitions()->willReturn([
       'test_content' => $entity_type,
     ]);
