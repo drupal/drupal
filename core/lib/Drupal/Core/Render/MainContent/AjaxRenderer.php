@@ -16,13 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 class AjaxRenderer implements MainContentRendererInterface {
 
   /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   */
-  protected $controllerResolver;
-
-  /**
    * The element info manager.
    *
    * @var \Drupal\Core\Render\ElementInfoManagerInterface
