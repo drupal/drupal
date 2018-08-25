@@ -285,6 +285,13 @@ class EntityAdapterUnitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getEntity
+   */
+  public function testGetEntity() {
+    $this->assertSame($this->entity, $this->entityAdapter->getEntity());
+  }
+
+  /**
    * @covers ::setValue
    */
   public function testSetValue() {

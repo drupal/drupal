@@ -164,4 +164,14 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
     return $this->entity instanceof \IteratorAggregate ? $this->entity->getIterator() : new \ArrayIterator([]);
   }
 
+  /**
+   * Returns the wrapped entity object.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The wrapped entity object.
+   */
+  public function getEntity() {
+    return $this->entity;
+  }
+
 }
