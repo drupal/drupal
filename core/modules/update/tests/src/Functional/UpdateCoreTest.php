@@ -165,17 +165,17 @@ class UpdateCoreTest extends UpdateTestBase {
    *   The patch version to set the site to for testing.
    * @param string[] $expected_security_releases
    *   The security releases, if any, that the status report should recommend.
-   * @param bool $update_available
-   *   Whether an update is available.
+   * @param string $expected_update_message_type
+   *   The type of update message expected.
    * @param string $fixture
    *   The test fixture that contains the test XML.
    *
    * @dataProvider securityUpdateAvailabilityProvider
    */
-  public function testSecurityUpdateAvailability($site_patch_version, array $expected_security_releases, $update_available, $fixture) {
+  public function testSecurityUpdateAvailability($site_patch_version, array $expected_security_releases, $expected_update_message_type, $fixture) {
     $this->setSystemInfo("8.$site_patch_version");
     $this->refreshUpdateStatus(['drupal' => $fixture]);
-    $this->assertSecurityUpdates('drupal-8', $expected_security_releases, $update_available, 'table.update');
+    $this->assertSecurityUpdates('drupal-8', $expected_security_releases, $expected_update_message_type, 'table.update');
   }
 
   /**
@@ -239,7 +239,7 @@ class UpdateCoreTest extends UpdateTestBase {
       '0.0, 0.2' => [
         'site_patch_version' => '0.0',
         'expected_security_releases' => ['0.2'],
-        'update_available' => FALSE,
+        'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.0.2',
       ],
       // Two security releases available for site minor release 0.
@@ -248,7 +248,7 @@ class UpdateCoreTest extends UpdateTestBase {
       '0.0, 0.1 0.2' => [
         'site_patch_version' => '0.0',
         'expected_security_releases' => ['0.2'],
-        'update_available' => FALSE,
+        'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.0.1_0.2',
       ],
       // Security release available for site minor release 1.
@@ -256,7 +256,7 @@ class UpdateCoreTest extends UpdateTestBase {
       '1.0, 1.2' => [
         'site_patch_version' => '1.0',
         'expected_security_releases' => ['1.2'],
-        'update_available' => FALSE,
+        'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.1.2',
       ],
       // Security release available for site minor release 0.
@@ -264,7 +264,7 @@ class UpdateCoreTest extends UpdateTestBase {
       '0.0, 0.2 1.2' => [
         'site_patch_version' => '0.0',
         'expected_security_releases' => ['0.2', '1.2', '2.0-rc2'],
-        'update_available' => TRUE,
+        'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.0.2-rc2',
       ],
       // No newer security release for site minor 1.
@@ -272,7 +272,7 @@ class UpdateCoreTest extends UpdateTestBase {
       '1.2, 0.2 1.2' => [
         'site_patch_version' => '1.2',
         'expected_security_releases' => [],
-        'update_available' => FALSE,
+        'expected_update_message_type' => static::UPDATE_NONE,
         // @todo Change to use fixture 'sec.0.2-rc2' in
         // https://www.drupal.org/node/2804155. Currently this case would fail
         // because 8.2.0-rc2 would be the recommend security release.
@@ -283,14 +283,14 @@ class UpdateCoreTest extends UpdateTestBase {
       '0.0, 1.2, insecure' => [
         'site_patch_version' => '0.0',
         'expected_security_releases' => ['1.2'],
-        'update_available' => FALSE,
+        'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.1.2_insecure',
       ],
       // Site on 2.0-rc2 which is a security release.
       '2.0-rc2, 0.2 1.2' => [
         'site_patch_version' => '2.0-rc2',
         'expected_security_releases' => [],
-        'update_available' => FALSE,
+        'expected_update_message_type' => static::UPDATE_NONE,
         'fixture' => 'sec.0.2-rc2',
       ],
     ];
@@ -310,7 +310,7 @@ class UpdateCoreTest extends UpdateTestBase {
       $test_cases["Pre-release:$pre_release, no security update"] = [
         'site_patch_version' => $pre_release,
         'expected_security_releases' => [],
-        'update_available' => $pre_release === '2.0-rc2' ? FALSE : TRUE,
+        'expected_update_message_type' => $pre_release === '2.0-rc2' ? static::UPDATE_NONE : static::UPDATE_AVAILABLE,
         'fixture' => 'sec.0.2-rc2-b',
       ];
     }
