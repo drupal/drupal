@@ -25,6 +25,21 @@ use Drupal\Tests\BrowserTestBase;
  */
 abstract class UpdateTestBase extends BrowserTestBase {
 
+  /**
+   * Denotes a security update will be required in the test case.
+   */
+  const SECURITY_UPDATE_REQUIRED = 'SECURITY_UPDATE_REQUIRED';
+
+  /**
+   * Denotes an update will be available in the test case.
+   */
+  const UPDATE_AVAILABLE = 'UPDATE_AVAILABLE';
+
+  /**
+   * Denotes no update will be available in the test case.
+   */
+  const UPDATE_NONE = 'UPDATE_NONE';
+
   protected function setUp() {
     parent::setUp();
 
@@ -84,14 +99,16 @@ abstract class UpdateTestBase extends BrowserTestBase {
   /**
    * Asserts the expected security updates are displayed correctly on the page.
    *
+   * @param string $project_path_part
+   *   The project path part needed for the download and release links.
    * @param string[] $expected_security_releases
    *   The security releases, if any, that the status report should recommend.
-   * @param bool $update_available
-   *   Whether an update should be available.
-   * @param $update_element_css_locator
+   * @param string $expected_update_message_type
+   *   The type of update message expected.
+   * @param string $update_element_css_locator
    *   The CSS locator for the page element that contains the security updates.
    */
-  protected function assertSecurityUpdates($project, array $expected_security_releases, $update_available, $update_element_css_locator) {
+  protected function assertSecurityUpdates($project_path_part, array $expected_security_releases, $expected_update_message_type, $update_element_css_locator) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->standardTests();
@@ -105,13 +122,20 @@ abstract class UpdateTestBase extends BrowserTestBase {
     if ($expected_security_releases) {
       $expected_download_urls = [];
       $expected_release_urls = [];
-      foreach ($expected_security_releases as $expected_security_release) {
-        $assert_session->elementTextNotContains('css', $update_element_css_locator, 'Up to date');
+      if ($expected_update_message_type === static::SECURITY_UPDATE_REQUIRED) {
         $assert_session->elementTextNotContains('css', $update_element_css_locator, 'Update available');
         $assert_session->elementTextContains('css', $update_element_css_locator, 'Security update required!');
+        $assert_session->responseContains('error.svg', 'Error icon was found.');
+      }
+      else {
+        $assert_session->elementTextContains('css', $update_element_css_locator, 'Update available');
+        $assert_session->elementTextNotContains('css', $update_element_css_locator, 'Security update required!');
+      }
+      $assert_session->elementTextNotContains('css', $update_element_css_locator, 'Up to date');
+      foreach ($expected_security_releases as $expected_security_release) {
         $expected_url_version = str_replace('.', '-', $expected_security_release);
-        $release_url = "http://example.com/$project-$expected_url_version-release";
-        $download_url = "http://example.com/$project-$expected_url_version.tar.gz";
+        $release_url = "http://example.com/$project_path_part-$expected_url_version-release";
+        $download_url = "http://example.com/$project_path_part-$expected_url_version.tar.gz";
         $expected_release_urls[] = $release_url;
         $expected_download_urls[] = $download_url;
         // Ensure the expected links are security links.
@@ -119,7 +143,6 @@ abstract class UpdateTestBase extends BrowserTestBase {
         $this->assertTrue(in_array($download_url, $all_security_download_urls), "Release $download_url is a security download link.");
         $assert_session->linkByHrefExists($release_url);
         $assert_session->linkByHrefExists($download_url);
-        $assert_session->responseContains('error.svg', 'Error icon was found.');
       }
       // Ensure no other links are shown as security releases.
       $this->assertEquals([], array_diff($all_security_release_urls, $expected_release_urls));
@@ -130,13 +153,16 @@ abstract class UpdateTestBase extends BrowserTestBase {
       $this->assertEquals([], $all_security_release_urls);
       $this->assertEquals([], $all_security_download_urls);
       $assert_session->pageTextNotContains('Security update required!');
-      if ($update_available) {
+      if ($expected_update_message_type === static::UPDATE_AVAILABLE) {
         $assert_session->elementTextContains('css', $update_element_css_locator, 'Update available');
         $assert_session->elementTextNotContains('css', $update_element_css_locator, 'Up to date');
       }
-      else {
+      elseif ($expected_update_message_type === static::UPDATE_NONE) {
         $assert_session->elementTextNotContains('css', $update_element_css_locator, 'Update available');
         $assert_session->elementTextContains('css', $update_element_css_locator, 'Up to date');
+      }
+      else {
+        $this->fail('Unexpected value for $expected_update_message_type: ' . $expected_update_message_type);
       }
     }
   }
