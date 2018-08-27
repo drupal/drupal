@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\node\NodeInterface;
 
 /**
@@ -177,6 +178,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
         '%title' => $nodes[1]->getTitle(),
       ]),
       'Revision deleted.');
+    $connection = Database::getConnection();
     $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid',
       [':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()])->fetchField() == 0,
       'Revision not found.');
@@ -184,7 +186,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
     // Set the revision timestamp to an older date to make sure that the
     // confirmation message correctly displays the stored revision date.
     $old_revision_date = REQUEST_TIME - 86400;
-    db_update('node_revision')
+    $connection->update('node_revision')
       ->condition('vid', $nodes[2]->getRevisionId())
       ->fields([
         'revision_timestamp' => $old_revision_date,

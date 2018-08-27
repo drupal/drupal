@@ -524,7 +524,7 @@ abstract class Connection {
    *
    * For example, the comment:
    * @code
-   * db_update('example')
+   * \Drupal::database()->update('example')
    *  ->condition('id', $id)
    *  ->fields(array('field2' => 10))
    *  ->comment('Exploit * / DROP TABLE node; --')

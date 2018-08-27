@@ -13,7 +13,7 @@ class UpdateTest extends DatabaseTestBase {
    * Confirms that we can update a single record successfully.
    */
   public function testSimpleUpdate() {
-    $num_updated = db_update('test')
+    $num_updated = $this->connection->update('test')
       ->fields(['name' => 'Tiffany'])
       ->condition('id', 1)
       ->execute();
@@ -28,7 +28,7 @@ class UpdateTest extends DatabaseTestBase {
    */
   public function testSimpleNullUpdate() {
     $this->ensureSampleDataNull();
-    $num_updated = db_update('test_null')
+    $num_updated = $this->connection->update('test_null')
       ->fields(['age' => NULL])
       ->condition('name', 'Kermit')
       ->execute();
@@ -42,7 +42,7 @@ class UpdateTest extends DatabaseTestBase {
    * Confirms that we can update multiple records successfully.
    */
   public function testMultiUpdate() {
-    $num_updated = db_update('test')
+    $num_updated = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->condition('job', 'Singer')
       ->execute();
@@ -56,7 +56,7 @@ class UpdateTest extends DatabaseTestBase {
    * Confirms that we can update multiple records with a non-equality condition.
    */
   public function testMultiGTUpdate() {
-    $num_updated = db_update('test')
+    $num_updated = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->condition('age', 26, '>')
       ->execute();
@@ -70,7 +70,7 @@ class UpdateTest extends DatabaseTestBase {
    * Confirms that we can update multiple records with a where call.
    */
   public function testWhereUpdate() {
-    $num_updated = db_update('test')
+    $num_updated = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->where('age > :age', [':age' => 26])
       ->execute();
@@ -84,7 +84,7 @@ class UpdateTest extends DatabaseTestBase {
    * Confirms that we can stack condition and where calls.
    */
   public function testWhereAndConditionUpdate() {
-    $update = db_update('test')
+    $update = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->where('age > :age', [':age' => 26])
       ->condition('name', 'Ringo');
@@ -101,7 +101,7 @@ class UpdateTest extends DatabaseTestBase {
   public function testExpressionUpdate() {
     // Ensure that expressions are handled properly. This should set every
     // record's age to a square of itself.
-    $num_rows = db_update('test')
+    $num_rows = $this->connection->update('test')
       ->expression('age', 'age * age')
       ->execute();
     $this->assertIdentical($num_rows, 4, 'Updated 4 records.');
@@ -120,7 +120,7 @@ class UpdateTest extends DatabaseTestBase {
     // them actually don't have to be changed because their value was already
     // 'sleep'. Still, execute() should return 5 affected rows, not only 3,
     // because that's cross-db expected behavior.
-    $num_rows = db_update('test_task')
+    $num_rows = $this->connection->update('test_task')
       ->condition('priority', 1, '<>')
       ->fields(['task' => 'sleep'])
       ->execute();
@@ -131,7 +131,7 @@ class UpdateTest extends DatabaseTestBase {
    * Confirm that we can update the primary key of a record successfully.
    */
   public function testPrimaryKeyUpdate() {
-    $num_updated = db_update('test')
+    $num_updated = $this->connection->update('test')
       ->fields(['id' => 42, 'name' => 'John'])
       ->condition('id', 1)
       ->execute();
@@ -145,7 +145,7 @@ class UpdateTest extends DatabaseTestBase {
    * Confirm that we can update values in a column with special name.
    */
   public function testSpecialColumnUpdate() {
-    $num_updated = db_update('test_special_columns')
+    $num_updated = $this->connection->update('test_special_columns')
       ->fields(['offset' => 'New offset value'])
       ->condition('id', 1)
       ->execute();

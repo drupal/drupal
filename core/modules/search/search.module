@@ -587,7 +587,7 @@ function search_index($type, $sid, $langcode, $text) {
  *   $type and $sid is marked.
  */
 function search_mark_for_reindex($type = NULL, $sid = NULL, $langcode = NULL) {
-  $query = db_update('search_dataset')
+  $query = \Drupal::database()->update('search_dataset')
     ->fields(['reindex' => REQUEST_TIME])
     // Only mark items that were not previously marked for reindex, so that
     // marked items maintain their priority by request time.

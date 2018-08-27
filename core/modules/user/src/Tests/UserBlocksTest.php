@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\Core\Database\Database;
 use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\simpletest\WebTestBase;
 
@@ -125,7 +126,7 @@ class UserBlocksTest extends WebTestBase {
    * Updates the access column for a user.
    */
   private function updateAccess($uid, $access = REQUEST_TIME) {
-    db_update('users_field_data')
+    Database::getConnection()->update('users_field_data')
       ->condition('uid', $uid)
       ->fields(['access' => $access])
       ->execute();

@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Transaction;
 use Drupal\Core\Database\Database;
 
@@ -204,6 +205,15 @@ class DatabaseLegacyTest extends DatabaseTestBase {
       ->execute();
     $num_records_after = (int) $this->connection->select('test_people')->countQuery()->execute()->fetchField();
     $this->assertSame($num_records_before + 1, $num_records_after, 'Merge inserted properly.');
+  }
+
+  /**
+   * Tests the db_update() function.
+   *
+   * @expectedDeprecation db_update() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call call update() on it. For example, $injected_database->update($table, $options); See https://www.drupal.org/node/2993033
+   */
+  public function testDbUpdate() {
+    $this->assertInstanceOf(Update::class, db_update('test'));
   }
 
 }

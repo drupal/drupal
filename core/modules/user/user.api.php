@@ -55,7 +55,7 @@ function hook_user_cancel($edit, $account, $method) {
         ->execute();
       node_mass_update($nodes, ['uid' => 0], NULL, TRUE);
       // Anonymize old revisions.
-      db_update('node_field_revision')
+      \Drupal::database()->update('node_field_revision')
         ->fields(['uid' => 0])
         ->condition('uid', $account->id())
         ->execute();

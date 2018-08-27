@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
@@ -207,7 +208,8 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     // previously.
     $current = REQUEST_TIME;
     $old = $current - 10;
-    db_update('search_dataset')
+    $connection = Database::getConnection();
+    $connection->update('search_dataset')
       ->fields(['reindex' => $old])
       ->condition('reindex', $current, '>=')
       ->execute();

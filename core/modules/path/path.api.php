@@ -39,7 +39,7 @@ function hook_path_insert($path) {
  */
 function hook_path_update($path) {
   if ($path['alias'] != $path['original']['alias']) {
-    db_update('mytable')
+    \Drupal::database()->update('mytable')
       ->fields(['alias' => $path['alias']])
       ->condition('pid', $path['pid'])
       ->execute();

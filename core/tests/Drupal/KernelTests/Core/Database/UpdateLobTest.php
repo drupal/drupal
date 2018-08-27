@@ -20,7 +20,7 @@ class UpdateLobTest extends DatabaseTestBase {
       ->execute();
 
     $data .= $data;
-    db_update('test_one_blob')
+    $this->connection->update('test_one_blob')
       ->condition('id', $id)
       ->fields(['blob1' => $data])
       ->execute();
@@ -40,7 +40,7 @@ class UpdateLobTest extends DatabaseTestBase {
       ])
       ->execute();
 
-    db_update('test_two_blobs')
+    $this->connection->update('test_two_blobs')
       ->condition('id', $id)
       ->fields(['blob1' => 'and so', 'blob2' => 'is this'])
       ->execute();

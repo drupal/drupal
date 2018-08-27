@@ -3,6 +3,7 @@
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\block\Entity\Block;
+use Drupal\Core\Database\Database;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
@@ -69,14 +70,15 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $node2 = $this->drupalCreateNode($default_settings);
     $node3 = $this->drupalCreateNode($default_settings);
 
+    $connection = Database::getConnection();
     // Change the changed time for node so that we can test ordering.
-    db_update('node_field_data')
+    $connection->update('node_field_data')
       ->fields([
         'changed' => $node1->getChangedTime() + 100,
       ])
       ->condition('nid', $node2->id())
       ->execute();
-    db_update('node_field_data')
+    $connection->update('node_field_data')
       ->fields([
         'changed' => $node1->getChangedTime() + 200,
       ])

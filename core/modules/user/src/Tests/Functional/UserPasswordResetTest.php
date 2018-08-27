@@ -3,6 +3,7 @@
 namespace Drupal\user\Tests\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
@@ -54,7 +55,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // Set the last login time that is used to generate the one-time link so
     // that it is definitely over a second ago.
     $account->login = REQUEST_TIME - mt_rand(10, 100000);
-    db_update('users_field_data')
+    Database::getConnection()->update('users_field_data')
       ->fields(['login' => $account->getLastLoginTime()])
       ->condition('uid', $account->id())
       ->execute();
@@ -302,7 +303,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
 
     // Unique password hashes are automatically generated, the only way to
     // change that is to update it directly in the database.
-    db_update('users_field_data')
+    Database::getConnection()->update('users_field_data')
       ->fields(['pass' => NULL])
       ->condition('uid', [$user1->id(), $user2->id()], 'IN')
       ->execute();

@@ -2,6 +2,7 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -204,13 +205,14 @@ class NodeRevisionsTest extends NodeTestBase {
       '@type' => 'Basic page',
       '%title' => $nodes[1]->label(),
     ]), 'Revision deleted.');
+    $connection = Database::getConnection();
     $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid', [':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()])->fetchField() == 0, 'Revision not found.');
     $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid and vid = :vid', [':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()])->fetchField() == 0, 'Field revision not found.');
 
     // Set the revision timestamp to an older date to make sure that the
     // confirmation message correctly displays the stored revision date.
     $old_revision_date = REQUEST_TIME - 86400;
-    db_update('node_revision')
+    $connection->update('node_revision')
       ->condition('vid', $nodes[2]->getRevisionId())
       ->fields([
         'revision_timestamp' => $old_revision_date,

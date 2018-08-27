@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Config\Storage;
 
 use Drupal\Core\Config\DatabaseStorage;
+use Drupal\Core\Database\Database;
 
 /**
  * Tests DatabaseStorage operations.
@@ -34,7 +35,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
   }
 
   protected function update($name, $data) {
-    db_update('config')->fields(['data' => $data])->condition('name', $name)->execute();
+    Database::getConnection()->update('config')->fields(['data' => $data])->condition('name', $name)->execute();
   }
 
   protected function delete($name) {

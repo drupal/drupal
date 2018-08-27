@@ -280,7 +280,7 @@ function _tracker_add($nid, $uid, $changed) {
     ])
     ->execute();
   // Update the times for all the other users tracking the post.
-  db_update('tracker_user')
+  $connection->update('tracker_user')
     ->condition('nid', $nid)
     ->fields([
       'changed' => $changed,
@@ -323,6 +323,7 @@ function _tracker_calculate_changed($node) {
  */
 function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
   $node = Node::load($nid);
+  $connection = \Drupal::database();
 
   // The user only keeps their subscription if the node exists.
   if ($node) {
@@ -364,14 +365,14 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
 
       // And then we push the out the new changed timestamp to our denormalized
       // tables.
-      db_update('tracker_node')
+      $connection->update('tracker_node')
         ->fields([
           'changed' => $changed,
           'published' => $node->isPublished(),
         ])
         ->condition('nid', $nid)
         ->execute();
-      db_update('tracker_node')
+      $connection->update('tracker_node')
         ->fields([
           'changed' => $changed,
           'published' => $node->isPublished(),

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\file\Kernel;
 
+use Drupal\Core\Database\Database;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -152,7 +153,8 @@ class UsageTest extends FileManagedUnitTestBase {
   public function createTempFiles() {
     // Temporary file that is old.
     $temp_old = file_save_data('');
-    db_update('file_managed')
+    $connection = Database::getConnection();
+    $connection->update('file_managed')
       ->fields([
         'status' => 0,
         'changed' => REQUEST_TIME - $this->config('system.file')->get('temporary_maximum_age') - 1,
@@ -163,7 +165,7 @@ class UsageTest extends FileManagedUnitTestBase {
 
     // Temporary file that is new.
     $temp_new = file_save_data('');
-    db_update('file_managed')
+    $connection->update('file_managed')
       ->fields(['status' => 0])
       ->condition('fid', $temp_new->id())
       ->execute();
@@ -171,7 +173,7 @@ class UsageTest extends FileManagedUnitTestBase {
 
     // Permanent file that is old.
     $perm_old = file_save_data('');
-    db_update('file_managed')
+    $connection->update('file_managed')
       ->fields(['changed' => REQUEST_TIME - $this->config('system.file')->get('temporary_maximum_age') - 1])
       ->condition('fid', $temp_old->id())
       ->execute();

@@ -1129,7 +1129,7 @@ function hook_ENTITY_TYPE_insert(Drupal\Core\Entity\EntityInterface $entity) {
  */
 function hook_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
   // Update the entity's entry in a fictional table of all entities.
-  db_update('example_entity')
+  \Drupal::database()->update('example_entity')
     ->fields([
       'updated' => REQUEST_TIME,
     ])
@@ -1153,7 +1153,7 @@ function hook_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
  */
 function hook_ENTITY_TYPE_update(Drupal\Core\Entity\EntityInterface $entity) {
   // Update the entity's entry in a fictional table of this type of entity.
-  db_update('example_entity')
+  \Drupal::database()->update('example_entity')
     ->fields([
       'updated' => REQUEST_TIME,
     ])

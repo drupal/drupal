@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\user\RoleInterface;
 
 /**
@@ -66,10 +67,11 @@ class NodeAdminTest extends NodeTestBase {
     $this->drupalLogin($this->adminUser);
 
     $changed = REQUEST_TIME;
+    $connection = Database::getConnection();
     foreach (['dd', 'aa', 'DD', 'bb', 'cc', 'CC', 'AA', 'BB'] as $prefix) {
       $changed += 1000;
       $node = $this->drupalCreateNode(['title' => $prefix . $this->randomMachineName(6)]);
-      db_update('node_field_data')
+      $connection->update('node_field_data')
         ->fields(['changed' => $changed])
         ->condition('nid', $node->id())
         ->execute();
