@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TranslationStatusInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -35,6 +36,13 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cacheBackend;
+
+  /**
+   * Stores the latest revision IDs for entities.
+   *
+   * @var array
+   */
+  protected $latestRevisionIds = [];
 
   /**
    * Constructs a ContentEntityStorageBase object.
@@ -350,13 +358,17 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       return NULL;
     }
 
-    $result = $this->getQuery()
-      ->latestRevision()
-      ->condition($this->entityType->getKey('id'), $entity_id)
-      ->accessCheck(FALSE)
-      ->execute();
+    if (!isset($this->latestRevisionIds[$entity_id][LanguageInterface::LANGCODE_DEFAULT])) {
+      $result = $this->getQuery()
+        ->latestRevision()
+        ->condition($this->entityType->getKey('id'), $entity_id)
+        ->accessCheck(FALSE)
+        ->execute();
 
-    return key($result);
+      $this->latestRevisionIds[$entity_id][LanguageInterface::LANGCODE_DEFAULT] = key($result);
+    }
+
+    return $this->latestRevisionIds[$entity_id][LanguageInterface::LANGCODE_DEFAULT];
   }
 
   /**
@@ -371,16 +383,19 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       return $this->getLatestRevisionId($entity_id);
     }
 
-    $result = $this->getQuery()
-      ->allRevisions()
-      ->condition($this->entityType->getKey('id'), $entity_id)
-      ->condition($this->entityType->getKey('revision_translation_affected'), 1, '=', $langcode)
-      ->range(0, 1)
-      ->sort($this->entityType->getKey('revision'), 'DESC')
-      ->accessCheck(FALSE)
-      ->execute();
+    if (!isset($this->latestRevisionIds[$entity_id][$langcode])) {
+      $result = $this->getQuery()
+        ->allRevisions()
+        ->condition($this->entityType->getKey('id'), $entity_id)
+        ->condition($this->entityType->getKey('revision_translation_affected'), 1, '=', $langcode)
+        ->range(0, 1)
+        ->sort($this->entityType->getKey('revision'), 'DESC')
+        ->accessCheck(FALSE)
+        ->execute();
 
-    return key($result);
+      $this->latestRevisionIds[$entity_id][$langcode] = key($result);
+    }
+    return $this->latestRevisionIds[$entity_id][$langcode];
   }
 
   /**
@@ -1005,6 +1020,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       if ($this->entityType->isPersistentlyCacheable()) {
         $cids = [];
         foreach ($ids as $id) {
+          unset($this->latestRevisionIds[$id]);
           $cids[] = $this->buildCacheId($id);
         }
         $this->cacheBackend->deleteMultiple($cids);
@@ -1015,6 +1031,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       if ($this->entityType->isPersistentlyCacheable()) {
         Cache::invalidateTags([$this->entityTypeId . '_values']);
       }
+      $this->latestRevisionIds = [];
     }
   }
 

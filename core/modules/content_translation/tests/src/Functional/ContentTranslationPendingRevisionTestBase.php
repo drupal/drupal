@@ -127,6 +127,9 @@ abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslat
    *   The active revision translation or NULL if none could be identified.
    */
   protected function loadRevisionTranslation(ContentEntityInterface $entity, $langcode) {
+    // Explicitly invalidate the cache for that node, as the call below is
+    // statically cached.
+    $this->storage->resetCache([$entity->id()]);
     $revision_id = $this->storage->getLatestTranslationAffectedRevisionId($entity->id(), $langcode);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $revision */
     $revision = $revision_id ? $this->storage->loadRevision($revision_id) : NULL;
