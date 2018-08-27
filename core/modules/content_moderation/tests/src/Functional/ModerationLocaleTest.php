@@ -482,6 +482,9 @@ class ModerationLocaleTest extends ModerationStateTestBase {
   protected function loadTranslation(NodeInterface $node, $langcode) {
     /** @var \Drupal\node\NodeStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('node');
+    // Explicitly invalidate the cache for that node, as the call below is
+    // statically cached.
+    $storage->resetCache([$node->id()]);
     /** @var \Drupal\node\NodeInterface $node */
     $node = $storage->loadRevision($storage->getLatestRevisionId($node->id()));
     return $node->getTranslation($langcode);
