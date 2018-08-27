@@ -116,3 +116,12 @@
 .ui-dialog .ajax-progress-throbber .message {
   display: none;
 }
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
+  position: relative;
+}
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
+  top: 10px;
+}
+.ui-dialog.ui-dialog-off-canvas .ui-widget-content.ui-dialog-content {
+  background: none;
+}
