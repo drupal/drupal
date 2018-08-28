@@ -425,15 +425,6 @@ function update_calculate_project_update_status(&$project_data, $available) {
     $project_data['recommended'] = $project_data['latest_version'];
   }
 
-  //
-  // Check to see if we need an update or not.
-  //
-
-  if (!empty($project_data['security updates'])) {
-    // If we found security updates, that always trumps any other status.
-    $project_data['status'] = UPDATE_NOT_SECURE;
-  }
-
   if (isset($project_data['status'])) {
     // If we already know the status, we're done.
     return;
