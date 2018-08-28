@@ -242,6 +242,15 @@ class UpdateCoreTest extends UpdateTestBase {
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.0.2',
       ],
+      // Site on latest security release available for site minor release 0.
+      // Minor release 1 also has a security release, and the current release
+      // is marked as insecure.
+      '0.2, 0.2' => [
+        'site_patch_version' => '0.2',
+        'expected_security_release' => ['1.2', '2.0-rc2'],
+        'expected_update_message_type' => static::UPDATE_AVAILABLE,
+        'fixture' => 'sec.0.2-rc2',
+      ],
       // Two security releases available for site minor release 0.
       // 0.1 security release marked as insecure.
       // No releases for next minor.
@@ -273,10 +282,7 @@ class UpdateCoreTest extends UpdateTestBase {
         'site_patch_version' => '1.2',
         'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_NONE,
-        // @todo Change to use fixture 'sec.0.2-rc2' in
-        // https://www.drupal.org/node/2804155. Currently this case would fail
-        // because 8.2.0-rc2 would be the recommend security release.
-        'fixture' => 'sec.0.2-rc2-b',
+        'fixture' => 'sec.0.2-rc2',
       ],
       // No security release available for site minor release 0.
       // Security release available for next minor.
@@ -285,6 +291,20 @@ class UpdateCoreTest extends UpdateTestBase {
         'expected_security_releases' => ['1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.1.2_insecure',
+      ],
+      // All releases for minor 0 are secure.
+      // Security release available for next minor.
+      '0.0, 1.2, secure' => [
+        'site_patch_version' => '0.0',
+        'expected_security_release' => ['1.2'],
+        'expected_update_message_type' => static::UPDATE_AVAILABLE,
+        'fixture' => 'sec.1.2',
+      ],
+      '0.2, 1.2, secure' => [
+        'site_patch_version' => '0.2',
+        'expected_security_release' => ['1.2'],
+        'expected_update_message_type' => static::UPDATE_AVAILABLE,
+        'fixture' => 'sec.1.2',
       ],
       // Site on 2.0-rc2 which is a security release.
       '2.0-rc2, 0.2 1.2' => [
