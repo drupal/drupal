@@ -548,6 +548,14 @@ class UpdateContribTest extends UpdateTestBase {
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.x-2.2_1.x_secure',
       ],
+      // On latest security release for module major release 1.
+      // Security release also available for next major.
+      '8.x-1.2, 8.x-1.2 8.x-2.2' => [
+        'module_patch_version' => '8.x-1.2',
+        'expected_security_release' => [],
+        'expected_update_message_type' => static::UPDATE_NONE,
+        'fixture' => 'sec.8.x-1.2_8.x-2.2',
+      ],
       // @todo In https://www.drupal.org/node/2865920 add test cases:
       //   - 8.x-2.0 using fixture 'sec.8.x-1.2_8.x-2.2' to ensure that 8.x-2.2
       //     is the only security update.
