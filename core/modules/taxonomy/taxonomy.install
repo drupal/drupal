@@ -159,7 +159,7 @@ function taxonomy_update_8601() {
     ->setTranslatable(TRUE)
     ->setDefaultValue(TRUE);
 
-  $has_content_translation_status_field = \Drupal::moduleHandler()->moduleExists('content_translation') && $definition_update_manager->getFieldStorageDefinition('content_translation_status', 'taxonomy_term');
+  $has_content_translation_status_field = $definition_update_manager->getFieldStorageDefinition('content_translation_status', 'taxonomy_term');
   if ($has_content_translation_status_field) {
     $status->setInitialValueFromField('content_translation_status', TRUE);
   }

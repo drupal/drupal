@@ -9,22 +9,6 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Implements hook_update_dependencies().
- */
-function block_content_update_dependencies() {
-  // The update function that adds the status field must run after
-  // content_translation_update_8400() which fixes NULL values for the
-  // 'content_translation_status' field.
-  if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
-    $dependencies['block_content'][8400] = [
-      'content_translation' => 8400,
-    ];
-
-    return $dependencies;
-  }
-}
-
-/**
  * Add 'revision_translation_affected' field to 'block_content' entities.
  */
 function block_content_update_8001() {
@@ -110,7 +94,7 @@ function block_content_update_8400() {
     ->setTranslatable(TRUE)
     ->setDefaultValue(TRUE);
 
-  $has_content_translation_status_field = \Drupal::moduleHandler()->moduleExists('content_translation') && $definition_update_manager->getFieldStorageDefinition('content_translation_status', 'block_content');
+  $has_content_translation_status_field = $definition_update_manager->getFieldStorageDefinition('content_translation_status', 'block_content');
   if ($has_content_translation_status_field) {
     $status->setInitialValueFromField('content_translation_status', TRUE);
   }
