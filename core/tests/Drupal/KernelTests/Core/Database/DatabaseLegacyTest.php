@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\Query\Delete;
 use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Transaction;
 use Drupal\Core\Database\Database;
@@ -298,6 +299,15 @@ class DatabaseLegacyTest extends DatabaseTestBase {
    */
   public function testDbUpdate() {
     $this->assertInstanceOf(Update::class, db_update('test'));
+  }
+
+  /**
+   * Tests deprecation of the db_delete() function.
+   *
+   * @expectedDeprecation db_delete is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call delete() on it. For example, $injected_database->delete($table, $options). See https://www.drupal.org/node/2993033
+   */
+  public function testDbDelete() {
+    $this->assertInstanceOf(Delete::class, db_delete('test'));
   }
 
 }

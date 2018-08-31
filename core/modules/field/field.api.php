@@ -393,7 +393,7 @@ function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mo
  *   The field storage being purged.
  */
 function hook_field_purge_field_storage(\Drupal\field\Entity\FieldStorageConfig $field_storage) {
-  db_delete('my_module_field_storage_info')
+  \Drupal::database()->delete('my_module_field_storage_info')
     ->condition('uuid', $field_storage->uuid())
     ->execute();
 }
@@ -410,7 +410,7 @@ function hook_field_purge_field_storage(\Drupal\field\Entity\FieldStorageConfig 
  *   The field being purged.
  */
 function hook_field_purge_field(\Drupal\field\Entity\FieldConfig $field) {
-  db_delete('my_module_field_info')
+  \Drupal::database()->delete('my_module_field_info')
     ->condition('id', $field->id())
     ->execute();
 }

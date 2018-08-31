@@ -863,7 +863,7 @@ function locale_translation_update_file_history($file) {
  *   Language code(s) to be deleted from the file history.
  */
 function locale_translation_file_history_delete($projects = [], $langcodes = []) {
-  $query = db_delete('locale_file');
+  $query = \Drupal::database()->delete('locale_file');
   if (!empty($projects)) {
     $query->condition('project', $projects, 'IN');
   }

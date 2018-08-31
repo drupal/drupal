@@ -27,7 +27,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $subquery = db_select('test', 't')
       ->fields('t', ['id'])
       ->condition('t.id', [$pid_to_delete], 'IN');
-    $delete = db_delete('test_task')
+    $delete = $this->connection->delete('test_task')
       ->condition('task', 'sleep')
       ->condition('pid', $subquery, 'IN');
 
@@ -44,7 +44,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   public function testSimpleDelete() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
 
-    $num_deleted = db_delete('test')
+    $num_deleted = $this->connection->delete('test')
       ->condition('id', 1)
       ->execute();
     $this->assertIdentical($num_deleted, 1, 'Deleted 1 record.');
@@ -150,7 +150,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   public function testSpecialColumnDelete() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_special_columns}')->fetchField();
 
-    $num_deleted = db_delete('test_special_columns')
+    $num_deleted = $this->connection->delete('test_special_columns')
       ->condition('id', 1)
       ->execute();
     $this->assertIdentical($num_deleted, 1, 'Deleted 1 special column record.');

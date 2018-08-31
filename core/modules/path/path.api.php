@@ -56,7 +56,7 @@ function hook_path_update($path) {
  * @see \Drupal\Core\Path\AliasStorageInterface::delete()
  */
 function hook_path_delete($path) {
-  db_delete('mytable')
+  \Drupal::database()->delete('mytable')
     ->condition('pid', $path['pid'])
     ->execute();
 }

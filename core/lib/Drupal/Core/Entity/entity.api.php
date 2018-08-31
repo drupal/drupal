@@ -1342,7 +1342,7 @@ function hook_ENTITY_TYPE_predelete(Drupal\Core\Entity\EntityInterface $entity) 
  */
 function hook_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
   // Delete the entity's entry from a fictional table of all entities.
-  db_delete('example_entity')
+  \Drupal::database()->delete('example_entity')
     ->condition('type', $entity->getEntityTypeId())
     ->condition('id', $entity->id())
     ->execute();
@@ -1361,7 +1361,7 @@ function hook_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
  */
 function hook_ENTITY_TYPE_delete(Drupal\Core\Entity\EntityInterface $entity) {
   // Delete the entity's entry from a fictional table of all entities.
-  db_delete('example_entity')
+  \Drupal::database()->delete('example_entity')
     ->condition('type', $entity->getEntityTypeId())
     ->condition('id', $entity->id())
     ->execute();

@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\aggregator\Functional;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Tests OPML import.
  *
@@ -70,6 +72,7 @@ class ImportOpmlTest extends AggregatorTestBase {
    * Submits form with invalid, empty, and valid OPML files.
    */
   protected function submitImportForm() {
+    $connection = Database::getConnection();
     $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
 
     $form['files[upload]'] = $this->getInvalidOpml();
@@ -83,7 +86,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
     $this->assertEqual($before, $after, 'No feeds were added during the two last form submissions.');
 
-    db_delete('aggregator_feed')->execute();
+    $connection->delete('aggregator_feed')->execute();
 
     $feeds[0] = $this->getFeedEditArray();
     $feeds[1] = $this->getFeedEditArray();

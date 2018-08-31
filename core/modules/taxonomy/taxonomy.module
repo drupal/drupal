@@ -588,7 +588,7 @@ function taxonomy_node_predelete(EntityInterface $node) {
  */
 function taxonomy_delete_node_index(EntityInterface $node) {
   if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
-    db_delete('taxonomy_index')->condition('nid', $node->id())->execute();
+    \Drupal::database()->delete('taxonomy_index')->condition('nid', $node->id())->execute();
   }
 }
 
@@ -598,7 +598,7 @@ function taxonomy_delete_node_index(EntityInterface $node) {
 function taxonomy_taxonomy_term_delete(Term $term) {
   if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
     // Clean up the {taxonomy_index} table when terms are deleted.
-    db_delete('taxonomy_index')->condition('tid', $term->id())->execute();
+    \Drupal::database()->delete('taxonomy_index')->condition('tid', $term->id())->execute();
   }
 }
 

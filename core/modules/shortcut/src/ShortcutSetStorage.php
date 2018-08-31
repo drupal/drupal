@@ -78,7 +78,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
   public function deleteAssignedShortcutSets(ShortcutSetInterface $entity) {
     // First, delete any user assignments for this set, so that each of these
     // users will go back to using whatever default set applies.
-    db_delete('shortcut_set_users')
+    $this->connection->delete('shortcut_set_users')
       ->condition('set_name', $entity->id())
       ->execute();
   }
@@ -98,7 +98,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    * {@inheritdoc}
    */
   public function unassignUser($account) {
-    $deleted = db_delete('shortcut_set_users')
+    $deleted = $this->connection->delete('shortcut_set_users')
       ->condition('uid', $account->id())
       ->execute();
     return (bool) $deleted;

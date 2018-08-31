@@ -55,16 +55,17 @@ function tracker_cron() {
       ->execute();
 
     $nodes = Node::loadMultiple($nids);
+    $connection = \Drupal::database();
     foreach ($nodes as $nid => $node) {
 
       // Calculate the changed timestamp for this node.
       $changed = _tracker_calculate_changed($node);
 
       // Remove existing data for this node.
-      db_delete('tracker_node')
+      $connection->delete('tracker_node')
         ->condition('nid', $nid)
         ->execute();
-      db_delete('tracker_user')
+      $connection->delete('tracker_user')
         ->condition('nid', $nid)
         ->execute();
 
@@ -199,10 +200,11 @@ function tracker_node_update(NodeInterface $node, $arg = 0) {
  * Deletes tracking information for a node.
  */
 function tracker_node_predelete(EntityInterface $node, $arg = 0) {
-  db_delete('tracker_node')
+  $connection = \Drupal::database();
+  $connection->delete('tracker_node')
     ->condition('nid', $node->id())
     ->execute();
-  db_delete('tracker_user')
+  $connection->delete('tracker_user')
     ->condition('nid', $node->id())
     ->execute();
 }
@@ -345,7 +347,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
 
     // If we haven't found a reason to keep the user's subscription, delete it.
     if (!$keep_subscription) {
-      db_delete('tracker_user')
+      $connection->delete('tracker_user')
         ->condition('nid', $nid)
         ->condition('uid', $uid)
         ->execute();
@@ -383,10 +385,10 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
   }
   else {
     // If the node doesn't exist, remove everything.
-    db_delete('tracker_node')
+    $connection->delete('tracker_node')
       ->condition('nid', $nid)
       ->execute();
-    db_delete('tracker_user')
+    $connection->delete('tracker_user')
       ->condition('nid', $nid)
       ->execute();
   }

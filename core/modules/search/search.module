@@ -140,8 +140,9 @@ function search_preprocess_block(&$variables) {
  *   omitted, all items matching $sid and $type are cleared.
  */
 function search_index_clear($type = NULL, $sid = NULL, $langcode = NULL) {
-  $query_index = db_delete('search_index');
-  $query_dataset = db_delete('search_dataset');
+  $connection = \Drupal::database();
+  $query_index = $connection->delete('search_index');
+  $query_dataset = $connection->delete('search_dataset');
   if ($type) {
     $query_index->condition('type', $type);
     $query_dataset->condition('type', $type);
@@ -232,7 +233,7 @@ function search_update_totals() {
     $or->condition('word', $word->realword);
   }
   if (count($or) > 0) {
-    db_delete('search_total')
+    $connection->delete('search_total')
       ->condition($or)
       ->execute();
   }

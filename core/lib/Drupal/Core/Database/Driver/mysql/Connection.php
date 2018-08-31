@@ -610,7 +610,7 @@ class Connection extends DatabaseConnection {
     // counter.
     try {
       $max_id = $this->query('SELECT MAX(value) FROM {sequences}')->fetchField();
-      // We know we are using MySQL here, no need for the slower db_delete().
+      // We know we are using MySQL here, no need for the slower ::delete().
       $this->query('DELETE FROM {sequences} WHERE value < :value', [':value' => $max_id]);
     }
     // During testing, this function is called from shutdown with the

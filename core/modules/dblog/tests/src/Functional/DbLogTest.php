@@ -4,6 +4,7 @@ namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\dblog\Controller\DbLogController;
@@ -554,7 +555,7 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Clear the log to ensure that only generated entries will be found.
-    db_delete('watchdog')->execute();
+    Database::getConnection()->delete('watchdog')->execute();
 
     // Generate 9 random watchdog entries.
     $type_names = [];

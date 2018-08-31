@@ -67,6 +67,7 @@ function dblog_cron() {
   // Counting the most recent n rows avoids issues with wid number sequences,
   // e.g. auto_increment value > 1 or rows deleted directly from the table.
   if ($row_limit > 0) {
+    $connection = \Drupal::database();
     $min_row = db_select('watchdog', 'w')
       ->fields('w', ['wid'])
       ->orderBy('wid', 'DESC')
@@ -75,7 +76,7 @@ function dblog_cron() {
 
     // Delete all table entries older than the nth row, if nth row was found.
     if ($min_row) {
-      db_delete('watchdog')
+      $connection->delete('watchdog')
         ->condition('wid', $min_row, '<')
         ->execute();
     }
