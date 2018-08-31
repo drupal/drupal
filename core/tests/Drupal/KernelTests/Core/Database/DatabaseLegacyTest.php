@@ -242,7 +242,7 @@ class DatabaseLegacyTest extends DatabaseTestBase {
    */
   public function testDbRenameTable() {
     $this->assertTrue($this->connection->schema()->tableExists('test'));
-    $this->assertTrue(db_rename_table('test', 'test_rename'));
+    db_rename_table('test', 'test_rename');
     $this->assertTrue($this->connection->schema()->tableExists('test_rename'));
   }
 
