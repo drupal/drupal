@@ -37,7 +37,7 @@ class ShutdownFunctionsTest extends BrowserTestBase {
     // If using PHP-FPM then fastcgi_finish_request() will have been fired
     // returning the response before shutdown functions have fired.
     // @see \Drupal\system_test\Controller\SystemTestController::shutdownFunctions()
-    $server_using_fastcgi = strpos($this->getRawContent(), 'The function fastcgi_finish_request exists when serving the request.');
+    $server_using_fastcgi = strpos($this->getSession()->getPage()->getContent(), 'The function fastcgi_finish_request exists when serving the request.');
     if ($server_using_fastcgi) {
       // We need to wait to ensure that the shutdown functions have fired.
       sleep(1);

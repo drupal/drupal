@@ -296,7 +296,7 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertRaw('The count is 1.');
     $this->assertNoRaw('The count is 2.');
     $this->assertNoRaw('The count is 3.');
-    $raw_content = $this->getRawContent();
+    $raw_content = $this->getSession()->getPage()->getContent();
     $this->assertTrue(substr_count($raw_content, $expected_placeholder_replacement) == 1, 'Only one placeholder replacement was found for the duplicate #lazy_builder arrays.');
 
     // By calling performMetaRefresh() here, we simulate JavaScript being
@@ -357,7 +357,7 @@ class BigPipeTest extends BrowserTestBase {
       // Verify expected placeholder.
       $expected_placeholder_html = '<span data-big-pipe-placeholder-id="' . $big_pipe_placeholder_id . '"></span>';
       $this->assertRaw($expected_placeholder_html, 'BigPipe placeholder for placeholder ID "' . $big_pipe_placeholder_id . '" found.');
-      $pos = strpos($this->getRawContent(), $expected_placeholder_html);
+      $pos = strpos($this->getSession()->getPage()->getContent(), $expected_placeholder_html);
       $placeholder_positions[$pos] = $big_pipe_placeholder_id;
       // Verify expected placeholder replacement.
       $expected_placeholder_replacement = '<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="' . $big_pipe_placeholder_id . '">';
@@ -369,7 +369,7 @@ class BigPipeTest extends BrowserTestBase {
       }
       $this->assertEqual($expected_ajax_response, trim($result[0]->getText()));
       $this->assertRaw($expected_placeholder_replacement);
-      $pos = strpos($this->getRawContent(), $expected_placeholder_replacement);
+      $pos = strpos($this->getSession()->getPage()->getContent(), $expected_placeholder_replacement);
       $placeholder_replacement_positions[$pos] = $big_pipe_placeholder_id;
     }
     ksort($placeholder_positions, SORT_NUMERIC);
@@ -384,13 +384,13 @@ class BigPipeTest extends BrowserTestBase {
     }
     $this->assertEqual($expected_big_pipe_placeholders_with_replacements, array_filter($expected_big_pipe_placeholders));
     $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders_with_replacements), array_values($placeholder_replacement_positions));
-    $this->assertEqual(count($expected_big_pipe_placeholders_with_replacements), preg_match_all('/' . preg_quote('<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="', '/') . '/', $this->getRawContent()));
+    $this->assertEqual(count($expected_big_pipe_placeholders_with_replacements), preg_match_all('/' . preg_quote('<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="', '/') . '/', $this->getSession()->getPage()->getContent()));
 
     $this->pass('Verifying BigPipe start/stop signals…', 'Debug');
     $this->assertRaw(BigPipe::START_SIGNAL, 'BigPipe start signal present.');
     $this->assertRaw(BigPipe::STOP_SIGNAL, 'BigPipe stop signal present.');
-    $start_signal_position = strpos($this->getRawContent(), BigPipe::START_SIGNAL);
-    $stop_signal_position = strpos($this->getRawContent(), BigPipe::STOP_SIGNAL);
+    $start_signal_position = strpos($this->getSession()->getPage()->getContent(), BigPipe::START_SIGNAL);
+    $stop_signal_position = strpos($this->getSession()->getPage()->getContent(), BigPipe::STOP_SIGNAL);
     $this->assertTrue($start_signal_position < $stop_signal_position, 'BigPipe start signal appears before stop signal.');
 
     $this->pass('Verifying BigPipe placeholder replacements and start/stop signals were streamed in the correct order…', 'Debug');

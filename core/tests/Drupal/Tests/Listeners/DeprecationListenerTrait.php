@@ -113,7 +113,6 @@ trait DeprecationListenerTrait {
       'Using "null" for the value of node "options" of "Drupal\Core\Template\TwigNodeTrans" is deprecated since version 1.25 and will be removed in 2.0.',
       'Using "null" for the value of node "plural" of "Drupal\Core\Template\TwigNodeTrans" is deprecated since version 1.25 and will be removed in 2.0.',
       'Providing settings under \'handler_settings\' is deprecated and will be removed before 9.0.0. Move the settings in the root of the configuration array. See https://www.drupal.org/node/2870971.',
-      'AssertLegacyTrait::getRawContent() is scheduled for removal in Drupal 9.0.0. Use $this->getSession()->getPage()->getContent() instead.',
       'AssertLegacyTrait::getAllOptions() is scheduled for removal in Drupal 9.0.0. Use $element->findAll(\'xpath\', \'option\') instead.',
       'assertNoPattern() is deprecated and scheduled for removal in Drupal 9.0.0. Use $this->assertSession()->responseNotMatches($pattern) instead. See https://www.drupal.org/node/2864262.',
       'Using UTF-8 route patterns without setting the "utf8" option is deprecated since Symfony 3.2 and will throw a LogicException in 4.0. Turn on the "utf8" route option for pattern "/system-test/Ȅchȏ/meφΩ/{text}".',

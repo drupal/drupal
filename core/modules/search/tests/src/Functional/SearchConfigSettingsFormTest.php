@@ -397,7 +397,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
    */
   protected function setDefaultThroughUi($entity_id) {
     $this->drupalGet('admin/config/search/pages');
-    preg_match('|href="([^"]+' . $entity_id . '/set-default[^"]+)"|', $this->getRawContent(), $matches);
+    preg_match('|href="([^"]+' . $entity_id . '/set-default[^"]+)"|', $this->getSession()->getPage()->getContent(), $matches);
 
     $this->drupalGet($this->getAbsoluteUrl($matches[1]));
   }

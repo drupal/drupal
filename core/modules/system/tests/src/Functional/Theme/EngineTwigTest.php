@@ -63,7 +63,7 @@ class EngineTwigTest extends BrowserTestBase {
     $this->assertCacheContext('url.site');
 
     // Make sure we got something.
-    $content = $this->getRawContent();
+    $content = $this->getSession()->getPage()->getContent();
     $this->assertFalse(empty($content), 'Page content is not empty');
     foreach ($expected as $string) {
       $this->assertRaw('<div>' . $string . '</div>');
@@ -97,7 +97,7 @@ class EngineTwigTest extends BrowserTestBase {
     // tests for *which* cacheability metadata is bubbled live elsewhere.)
     $this->assertCacheContext('url.site');
 
-    $content = $this->getRawContent();
+    $content = $this->getSession()->getPage()->getContent();
     $this->assertFalse(empty($content), 'Page content is not empty');
     foreach ($expected as $string) {
       $this->assertRaw('<div>' . $string . '</div>');
@@ -116,7 +116,7 @@ class EngineTwigTest extends BrowserTestBase {
       'rendered url: ' . Url::fromRoute('user.register')->toString(),
     ];
 
-    $content = $this->getRawContent();
+    $content = $this->getSession()->getPage()->getContent();
     $this->assertFalse(empty($content), 'Page content is not empty');
     foreach ($expected as $string) {
       $this->assertRaw('<div>' . $string . '</div>');

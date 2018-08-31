@@ -71,10 +71,10 @@ class CommentBlockTest extends CommentTestBase {
       $this->assertText($comments[$i]->getSubject(), new FormattableMarkup('Comment @number found in block.', ['@number' => 10 - $i]));
       if ($i > 1) {
         $previous_position = $position;
-        $position = strpos($this->getRawContent(), $comments[$i]->getSubject());
+        $position = strpos($this->getSession()->getPage()->getContent(), $comments[$i]->getSubject());
         $this->assertTrue($position > $previous_position, new FormattableMarkup('Comment @a appears after comment @b', ['@a' => 10 - $i, '@b' => 11 - $i]));
       }
-      $position = strpos($this->getRawContent(), $comments[$i]->getSubject());
+      $position = strpos($this->getSession()->getPage()->getContent(), $comments[$i]->getSubject());
     }
 
     // Test that links to comments work when comments are across pages.

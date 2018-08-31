@@ -282,7 +282,7 @@ class EditorLoadingTest extends BrowserTestBase {
       // Editor.module's JS settings present.
       isset($settings['editor']),
       // Editor.module's JS present.
-      strpos($this->getRawContent(), drupal_get_path('module', 'editor') . '/js/editor.js') !== FALSE,
+      strpos($this->getSession()->getPage()->getContent(), drupal_get_path('module', 'editor') . '/js/editor.js') !== FALSE,
       // Body field.
       $this->xpath('//' . $type . '[@id="edit-' . $field_name . '-0-value"]'),
       // Format selector.

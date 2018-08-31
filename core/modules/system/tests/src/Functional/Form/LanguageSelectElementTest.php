@@ -83,7 +83,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
     // field elements.
     $edit = [];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
-    $values = Json::decode($this->getRawContent());
+    $values = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertEqual($values['languages_all'], 'xx');
     $this->assertEqual($values['languages_configurable'], 'en');
     $this->assertEqual($values['languages_locked'], LanguageInterface::LANGCODE_NOT_SPECIFIED);

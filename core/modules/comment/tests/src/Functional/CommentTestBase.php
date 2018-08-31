@@ -336,7 +336,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Contact info is available.
    */
   public function commentContactInfoAvailable() {
-    return preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getRawContent());
+    return preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getSession()->getPage()->getContent());
   }
 
   /**
@@ -375,7 +375,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    */
   public function getUnapprovedComment($subject) {
     $this->drupalGet('admin/content/comment/approval');
-    preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getRawContent(), $match);
+    preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getSession()->getPage()->getContent(), $match);
 
     return $match[2];
   }
