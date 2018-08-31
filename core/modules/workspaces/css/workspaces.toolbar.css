@@ -14,7 +14,6 @@
   background: #444;
 }
 
-
 /* Tab appearance. */
 .toolbar .toolbar-bar .workspaces-toolbar-tab {
   float: right; /* LTR */
@@ -24,11 +23,11 @@
   float: left;
 }
 .toolbar .toolbar-bar .workspaces-toolbar-tab--is-default {
-  background-color: #81C071;
+  background-color: #81c071;
 }
 
 .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
-  color: #000000;
+  color: #000;
   margin: 0;
 }
 
@@ -38,12 +37,12 @@
 
 /* Off canvas dialog */
 .workspaces-dialog.ui-dialog-off-canvas a:focus {
-  outline:none;
+  outline: none;
 }
 
 .workspaces-dialog.ui-dialog-off-canvas #drupal-off-canvas,
 .workspaces-dialog.ui-dialog-off-canvas {
-  background: #333333;
+  background: #333;
   padding: 0;
 }
 
@@ -62,7 +61,7 @@
 }
 
 #drupal-off-canvas .active-workspace {
-  background-color: #444444;
+  background-color: #444;
   width: 100%;
   padding: 20px 40px 0 20px;
   height: 140px;
@@ -82,7 +81,7 @@
 }
 
 #drupal-off-canvas .active-workspace__label {
-  color: #ffffff;
+  color: #fff;
   font-size: 1.285em;
   margin-top: 0.5em;
   margin-left: 3.2rem;
@@ -105,7 +104,7 @@
   background-image: linear-gradient(to bottom, #007bc6, #0071b8);
   border: solid 1px #1e5c90;
   padding: 5px 22px;
-  color: #ffffff;
+  color: #fff;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
   font-weight: bold;
 }
@@ -118,7 +117,7 @@
   position: fixed;
   bottom: 1em;
   left: 20px;
-  color: #ffffff;
+  color: #fff;
   outline-color: currentColor;
 }
 
@@ -132,11 +131,11 @@
 }
 
 #drupal-off-canvas .workspaces a {
-  background-color: #555555;
+  background-color: #555;
   box-sizing: border-box;
   padding: 20px 0 0 50px;
   margin-right: 1px;
-  color: #FFFFFF;
+  color: #fff;
   font-size: 0.929em;
   font-weight: bold;
   text-decoration: none;
@@ -168,17 +167,16 @@
   left: 20px;
 }
 
-
 @media all and (min-width: 767px) {
   #drupal-off-canvas .active-workspace__label:before {
     left: 40px;
   }
 }
 
- .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
-   padding: 0;
-   top: 39px;
- }
+.workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
+  padding: 0;
+  top: 39px;
+}
 
 .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
   right: 0.5em;
@@ -255,13 +253,12 @@
   .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:focus {
     top: 1.5em;
   }
-
 }
 
 /* Make dialog width 100% for workspace mobile viewports. */
 @media all and (max-width: 48em) {
   .ui-dialog.workspaces-dialog {
-      min-width: 100%;
-      max-width: 100%;
+    min-width: 100%;
+    max-width: 100%;
   }
 }
