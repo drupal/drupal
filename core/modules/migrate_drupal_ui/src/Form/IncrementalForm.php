@@ -2,7 +2,6 @@
 
 namespace Drupal\migrate_drupal_ui\Form;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
@@ -87,29 +86,6 @@ class IncrementalForm extends MigrateUpgradeFormBase {
       '#description' => $this->t('Last upgrade: @date', ['@date' => $this->dateFormatter->format($date_performed)]),
     ];
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    // Retrieve the database driver from state.
-    $database_state_key = $this->state->get('migrate.fallback_state_key', '');
-    if ($database_state_key) {
-      try {
-        $database = $this->state->get($database_state_key, [])['database'];
-        if ($connection = $this->getConnection($database)) {
-          if ($version = $this->getLegacyDrupalVersion($connection)) {
-            $this->setupMigrations($database, $form_state);
-            $valid_legacy_database = TRUE;
-          }
-        }
-      }
-      catch (DatabaseExceptionWrapper $exception) {
-        // Hide DB exceptions and forward to the DB credentials form. In that
-        // form we can more properly display errors and accept new credentials.
-      }
-    }
   }
 
   /**
