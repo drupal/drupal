@@ -208,6 +208,90 @@ class DatabaseLegacyTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests deprecation of the db_driver() function.
+   *
+   * @expectedDeprecation db_driver() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call driver() on it. For example, $injected_database->driver($string). See https://www.drupal.org/node/2993033
+   */
+  public function testDbDriver() {
+    $this->assertNotNull(db_driver());
+  }
+
+  /**
+   * Tests deprecation of the db_escape_field() function.
+   *
+   * @expectedDeprecation db_escape_field() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call escapeField() on it. For example, $injected_database->escapeField($field). See https://www.drupal.org/node/2993033
+   */
+  public function testDbEscapeField() {
+    $this->assertNotNull(db_escape_field('test'));
+  }
+
+  /**
+   * Tests deprecation of the db_escape_table() function.
+   *
+   * @expectedDeprecation db_escape_table() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call escapeTable() on it. For example, $injected_database->escapeTable($table). See https://www.drupal.org/node/2993033
+   */
+  public function testDbEscapeTable() {
+    $this->assertNotNull(db_escape_table('test'));
+  }
+
+  /**
+   * Tests deprecation of the db_rename_table() function.
+   *
+   * @expectedDeprecation db_rename_table() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call renameTable() on it. For example, $injected_database->schema()->renameTable($table, $new_name). See https://www.drupal.org/node/2993033
+   */
+  public function testDbRenameTable() {
+    $this->assertTrue($this->connection->schema()->tableExists('test'));
+    $this->assertTrue(db_rename_table('test', 'test_rename'));
+    $this->assertTrue($this->connection->schema()->tableExists('test_rename'));
+  }
+
+  /**
+   * Tests deprecation of the db_drop_index() function.
+   *
+   * @expectedDeprecation db_drop_index() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call dropIndex() on it. For example, $injected_database->schema()->dropIndex($table, $name). See https://www.drupal.org/node/2993033
+   */
+  public function testDbDropIndex() {
+    $this->assertFalse(db_drop_index('test', 'no_such_index'));
+  }
+
+  /**
+   * Tests deprecation of the db_drop_unique_key() function.
+   *
+   * @expectedDeprecation db_drop_unique_key() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call dropUniqueKey() on it. For example, $injected_database->schema()->dropUniqueKey($table, $name). See https://www.drupal.org/node/2993033
+   */
+  public function testDbDropUniqueKey() {
+    $this->assertTrue(db_drop_unique_key('test', 'name'));
+  }
+
+  /**
+   * Tests deprecation of the db_add_unique_key() function.
+   *
+   * @expectedDeprecation db_add_unique_key() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call addUniqueKey() on it. For example, $injected_database->schema()->addUniqueKey($table, $name, $fields). See https://www.drupal.org/node/2993033
+   */
+  public function testDbAddUniqueKey() {
+    db_add_unique_key('test', 'age', ['age']);
+  }
+
+  /**
+   * Tests deprecation of the db_drop_primary_key() function.
+   *
+   * @expectedDeprecation db_drop_primary_key() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call dropPrimaryKey() on it. For example, $injected_database->schema()->dropPrimaryKey($table). See https://www.drupal.org/node/2993033
+   */
+  public function testDbDropPrimaryKey() {
+    $this->assertTrue(db_drop_primary_key('test_people'));
+  }
+
+  /**
+   * Tests deprecation of the db_add_primary_key() function.
+   *
+   * @expectedDeprecation db_add_primary_key() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call addPrimaryKey() on it. For example, $injected_database->schema()->addPrimaryKey($table, $fields). See https://www.drupal.org/node/2993033
+   */
+  public function testDbAddPrimaryKey() {
+    $this->connection->schema()->dropPrimaryKey('test_people');
+    db_add_primary_key('test_people', ['job']);
+  }
+
+  /**
    * Tests the db_update() function.
    *
    * @expectedDeprecation db_update() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call call update() on it. For example, $injected_database->update($table, $options); See https://www.drupal.org/node/2993033

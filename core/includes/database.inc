@@ -365,6 +365,7 @@ function db_set_active($key = 'default') {
  * @see \Drupal\Core\Database\Connection::escapeTable()
  */
 function db_escape_table($table) {
+  @trigger_error('db_escape_table() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call escapeTable() on it. For example, $injected_database->escapeTable($table). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->escapeTable($table);
 }
 
@@ -381,12 +382,13 @@ function db_escape_table($table) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call escapeTable() on it. For example,
- *   $injected_database->escapeTable($table);
+ *   call escapeField() on it. For example,
+ *   $injected_database->escapeField($field);
  *
  * @see \Drupal\Core\Database\Connection::escapeField()
  */
 function db_escape_field($field) {
+  @trigger_error('db_escape_field() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call escapeField() on it. For example, $injected_database->escapeField($field). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->escapeField($field);
 }
 
@@ -444,6 +446,7 @@ function db_like($string) {
  * @see \Drupal\Core\Database\Connection::driver()
  */
 function db_driver() {
+  @trigger_error('db_driver() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call driver() on it. For example, $injected_database->driver($string). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->driver();
 }
 
@@ -727,6 +730,7 @@ function db_find_tables($table_expression) {
  * @see \Drupal\Core\Database\Schema::renameTable()
  */
 function db_rename_table($table, $new_name) {
+  @trigger_error('db_rename_table() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call renameTable() on it. For example, $injected_database->schema()->renameTable($table, $new_name). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->renameTable($table, $new_name);
 }
 
@@ -860,6 +864,7 @@ function db_field_set_no_default($table, $field) {
  * @see \Drupal\Core\Database\Schema::addPrimaryKey()
  */
 function db_add_primary_key($table, $fields) {
+  @trigger_error('db_add_primary_key() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call addPrimaryKey() on it. For example, $injected_database->schema()->addPrimaryKey($table, $fields). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->addPrimaryKey($table, $fields);
 }
 
@@ -881,6 +886,7 @@ function db_add_primary_key($table, $fields) {
  * @see \Drupal\Core\Database\Schema::dropPrimaryKey()
  */
 function db_drop_primary_key($table) {
+  @trigger_error('db_drop_primary_key() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call dropPrimaryKey() on it. For example, $injected_database->schema()->dropPrimaryKey($table). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->dropPrimaryKey($table);
 }
 
@@ -902,6 +908,7 @@ function db_drop_primary_key($table) {
  * @see \Drupal\Core\Database\Schema::addUniqueKey()
  */
 function db_add_unique_key($table, $name, $fields) {
+  @trigger_error('db_add_unique_key() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call addUniqueKey() on it. For example, $injected_database->schema()->addUniqueKey($table, $name, $fields). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->addUniqueKey($table, $name, $fields);
 }
 
@@ -925,6 +932,7 @@ function db_add_unique_key($table, $name, $fields) {
  * @see \Drupal\Core\Database\Schema::dropUniqueKey()
  */
 function db_drop_unique_key($table, $name) {
+  @trigger_error('db_drop_unique_key() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call dropUniqueKey() on it. For example, $injected_database->schema()->dropUniqueKey($table, $name). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->dropUniqueKey($table, $name);
 }
 
@@ -975,6 +983,7 @@ function db_add_index($table, $name, $fields, array $spec) {
  * @see \Drupal\Core\Database\Schema::dropIndex()
  */
 function db_drop_index($table, $name) {
+  @trigger_error('db_drop_index() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call dropIndex() on it. For example, $injected_database->schema()->dropIndex($table, $name). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->dropIndex($table, $name);
 }
 
@@ -1003,7 +1012,7 @@ function db_drop_index($table, $name) {
  * key. The correct sequence is:
  * @code
  * $schema = \Drupal::database()->schema();
- * db_drop_primary_key('foo');
+ * $schema->dropPrimaryKey('foo');
  * $schema->changeField('foo', 'bar', 'bar',
  *   array('type' => 'serial', 'not null' => TRUE),
  *   array('primary key' => array('bar')));

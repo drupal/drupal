@@ -559,7 +559,7 @@ abstract class Schema implements PlaceholderInterface {
    * primary key. The correct sequence is:
    * @code
    * $schema = \Drupal::database()->schema();
-   * db_drop_primary_key('foo');
+   * $schema->dropPrimaryKey('foo');
    * $schema->changeField('foo', 'bar', 'bar',
    *   array('type' => 'serial', 'not null' => TRUE),
    *   array('primary key' => array('bar')));

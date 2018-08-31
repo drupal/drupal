@@ -38,7 +38,8 @@ class TableSortExtender extends SelectExtender {
     $this->header = $header;
     $ts = $this->init();
     if (!empty($ts['sql'])) {
-      // Based on code from db_escape_table(), but this can also contain a dot.
+      // Based on code from \Drupal\Core\Database\Connection::escapeTable(),
+      // but this can also contain a dot.
       $field = preg_replace('/[^A-Za-z0-9_.]+/', '', $ts['sql']);
 
       // orderBy() will ensure that only ASC/DESC values are accepted, so we
