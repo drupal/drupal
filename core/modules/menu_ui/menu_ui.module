@@ -176,6 +176,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
         'title' => $menu_link->getTitle(),
         'title_max_length' => $menu_link->getFieldDefinitions()['title']->getSetting('max_length'),
         'description' => $menu_link->getDescription(),
+        'description_max_length' => $menu_link->getFieldDefinitions()['description']->getSetting('max_length'),
         'menu_name' => $menu_link->getMenuName(),
         'parent' => $menu_link->getParentId(),
         'weight' => $menu_link->getWeight(),
@@ -188,12 +189,14 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
     // definition.
     $field_definitions = \Drupal::entityManager()->getBaseFieldDefinitions('menu_link_content');
     $max_length = $field_definitions['title']->getSetting('max_length');
+    $description_max_length = $field_definitions['description']->getSetting('max_length');
     $defaults = [
       'entity_id' => 0,
       'id' => '',
       'title' => '',
       'title_max_length' => $max_length,
       'description' => '',
+      'description_max_length' => $description_max_length,
       'menu_name' => $menu_name,
       'parent' => '',
       'weight' => 0,
@@ -277,11 +280,11 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   ];
 
   $form['menu']['link']['description'] = [
-    '#type' => 'textarea',
+    '#type' => 'textfield',
     '#title' => t('Description'),
     '#default_value' => $defaults['description'],
-    '#rows' => 1,
     '#description' => t('Shown when hovering over the menu link.'),
+    '#maxlength' => $defaults['description_max_length'],
   ];
 
   $form['menu']['link']['menu_parent'] = $parent_element;

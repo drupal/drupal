@@ -63,9 +63,14 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.roles:authenticated');
 
     // Verify that the menu link title has the correct maxlength.
-    $max_length = \Drupal::entityManager()->getBaseFieldDefinitions('menu_link_content')['title']->getSetting('max_length');
+    $title_max_length = \Drupal::entityManager()->getBaseFieldDefinitions('menu_link_content')['title']->getSetting('max_length');
     $this->drupalGet('node/add/page');
-    $this->assertPattern('/<input .* id="edit-menu-title" .* maxlength="' . $max_length . '" .* \/>/', 'Menu link title field has correct maxlength in node add form.');
+    $this->assertPattern('/<input .* id="edit-menu-title" .* maxlength="' . $title_max_length . '" .* \/>/', 'Menu link title field has correct maxlength in node add form.');
+
+    // Verify that the menu link description has the correct maxlength.
+    $description_max_length = \Drupal::entityManager()->getBaseFieldDefinitions('menu_link_content')['description']->getSetting('max_length');
+    $this->drupalGet('node/add/page');
+    $this->assertPattern('/<input .* id="edit-menu-description" .* maxlength="' . $description_max_length . '" .* \/>/', 'Menu link description field has correct maxlength in node add form.');
 
     // Disable the default main menu, so that no menus are enabled.
     $edit = [
@@ -175,7 +180,8 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertFieldById('edit-menu-weight', 17, 'Menu weight correct in edit form');
-    $this->assertPattern('/<input .* id="edit-menu-title" .* maxlength="' . $max_length . '" .* \/>/', 'Menu link title field has correct maxlength in node edit form.');
+    $this->assertPattern('/<input .* id="edit-menu-title" .* maxlength="' . $title_max_length . '" .* \/>/', 'Menu link title field has correct maxlength in node edit form.');
+    $this->assertPattern('/<input .* id="edit-menu-description" .* maxlength="' . $description_max_length . '" .* \/>/', 'Menu link description field has correct maxlength in node add form.');
 
     // Disable the menu link, then edit the node--the link should stay disabled.
     $link_id = menu_ui_get_menu_link_defaults($node)['entity_id'];
