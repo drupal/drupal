@@ -59,7 +59,7 @@ class ThemeTest extends BrowserTestBase {
    */
   public function testThemeOnNonHtmlRequest() {
     $this->drupalGet('theme-test/non-html');
-    $json = Json::decode($this->getRawContent());
+    $json = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertFalse($json['theme_initialized']);
   }
 

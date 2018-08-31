@@ -220,7 +220,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertText($sanitized);
 
     // Test getRawContent().
-    $this->assertSame($this->getSession()->getPage()->getContent(), $this->getRawContent());
+    $this->assertSame($this->getSession()->getPage()->getContent(), $this->getSession()->getPage()->getContent());
   }
 
   /**

@@ -426,7 +426,7 @@ class FormTest extends BrowserTestBase {
       'multiple_no_default_required[]' => 'three',
     ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
-    $values = Json::decode($this->getRawContent());
+    $values = Json::decode($this->getSession()->getPage()->getContent());
 
     // Verify expected values.
     $expected = [

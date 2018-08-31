@@ -178,7 +178,7 @@ class UpdateContribTest extends UpdateTestBase {
     // we're really testing that the project listings are in the right order.
     $bbb_project_link = '<div class="project-update__title"><a href="http://example.com/project/bbb_update_test">BBB Update test</a>';
     $ccc_project_link = '<div class="project-update__title"><a href="http://example.com/project/ccc_update_test">CCC Update test</a>';
-    $this->assertTrue(strpos($this->getRawContent(), $bbb_project_link) < strpos($this->getRawContent(), $ccc_project_link), "'BBB Update test' project is listed before the 'CCC Update test' project");
+    $this->assertTrue(strpos($this->getSession()->getPage()->getContent(), $bbb_project_link) < strpos($this->getSession()->getPage()->getContent(), $ccc_project_link), "'BBB Update test' project is listed before the 'CCC Update test' project");
   }
 
   /**

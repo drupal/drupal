@@ -28,14 +28,14 @@ class RenderWebTest extends BrowserTestBase {
    */
   public function testWrapperFormatCacheContext() {
     $this->drupalGet('common-test/type-link-active-class');
-    $this->assertIdentical(0, strpos($this->getRawContent(), "<!DOCTYPE html>\n<html"));
+    $this->assertIdentical(0, strpos($this->getSession()->getPage()->getContent(), "<!DOCTYPE html>\n<html"));
     $this->assertIdentical('text/html; charset=UTF-8', $this->drupalGetHeader('Content-Type'));
     $this->assertTitle('Test active link class | Drupal');
     $this->assertCacheContext('url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT);
 
     $this->drupalGet('common-test/type-link-active-class', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'json']]);
     $this->assertIdentical('application/json', $this->drupalGetHeader('Content-Type'));
-    $json = Json::decode($this->getRawContent());
+    $json = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertEqual(['content', 'title'], array_keys($json));
     $this->assertIdentical('Test active link class', $json['title']);
     $this->assertCacheContext('url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT);
