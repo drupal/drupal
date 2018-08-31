@@ -363,7 +363,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   public function __sleep() {
     $vars = parent::__sleep();
     // Do not serialize static cache.
-    unset($vars['treeChildren'], $vars['treeParents'], $vars['treeTerms'], $vars['trees']);
+    unset($vars['ancestors'], $vars['treeChildren'], $vars['treeParents'], $vars['treeTerms'], $vars['trees']);
     return $vars;
   }
 
