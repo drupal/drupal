@@ -417,6 +417,30 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
+   * Checks that page HTML (response content) contains text.
+   *
+   * @param string|object $text
+   *   Text value. Any non-string value will be cast to string.
+   *
+   * @throws ExpectationException
+   */
+  public function responseContains($text) {
+    parent::responseContains((string) $text);
+  }
+
+  /**
+   * Checks that page HTML (response content) does not contains text.
+   *
+   * @param string|object $text
+   *   Text value. Any non-string value will be cast to string.
+   *
+   * @throws ExpectationException
+   */
+  public function responseNotContains($text) {
+    parent::responseNotContains((string) $text);
+  }
+
+  /**
    * Asserts a condition.
    *
    * The parent method is overridden because it is a private method.
