@@ -141,7 +141,7 @@ class EditorImageDialog extends FormBase {
     }
     $form['attributes']['alt'] = [
       '#title' => $this->t('Alternative text'),
-      '#placeholder' => $this->t('Short description for the visually impaired'),
+      '#description' => $this->t('Short description of the image used by screen readers and displayed when the image is not loaded. This is important for accessibility.'),
       '#type' => 'textfield',
       '#required' => TRUE,
       '#required_error' => $this->t('Alternative text is required.<br />(Only in rare cases should this be left empty. To create empty alternative text, enter <code>""</code> — two double quotes without any content).'),

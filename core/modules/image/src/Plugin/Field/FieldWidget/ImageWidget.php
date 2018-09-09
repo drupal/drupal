@@ -263,7 +263,7 @@ class ImageWidget extends FileWidget {
       '#title' => t('Alternative text'),
       '#type' => 'textfield',
       '#default_value' => isset($item['alt']) ? $item['alt'] : '',
-      '#description' => t('This text will be used by screen readers, search engines, or when the image cannot be loaded.'),
+      '#description' => t('Short description of the image used by screen readers and displayed when the image is not loaded. This is important for accessibility.'),
       // @see https://www.drupal.org/node/465106#alt-text
       '#maxlength' => 512,
       '#weight' => -12,
