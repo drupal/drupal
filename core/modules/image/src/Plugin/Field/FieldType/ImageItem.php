@@ -263,7 +263,7 @@ class ImageItem extends FileItem {
       '#type' => 'checkbox',
       '#title' => t('Enable <em>Alt</em> field'),
       '#default_value' => $settings['alt_field'],
-      '#description' => t('The alt attribute may be used by search engines, screen readers, and when the image cannot be loaded. Enabling this field is recommended.'),
+      '#description' => t('Short description of the image used by screen readers and displayed when the image is not loaded. Enabling this field is recommended.'),
       '#weight' => 9,
     ];
     $element['alt_field_required'] = [
@@ -433,7 +433,7 @@ class ImageItem extends FileItem {
     $element['default_image']['alt'] = [
       '#type' => 'textfield',
       '#title' => t('Alternative text'),
-      '#description' => t('This text will be used by screen readers, search engines, and when the image cannot be loaded.'),
+      '#description' => t('Short description of the image used by screen readers and displayed when the image is not loaded. This is important for accessibility.'),
       '#default_value' => $settings['default_image']['alt'],
       '#maxlength' => 512,
     ];
