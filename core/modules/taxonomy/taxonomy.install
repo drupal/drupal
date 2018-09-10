@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Site\Settings;
 
 /**
  * Convert the custom taxonomy term hierarchy storage to a default storage.
@@ -28,6 +29,9 @@ function taxonomy_update_8502(&$sandbox) {
   if (!isset($sandbox['current'])) {
     // Set batch ops sandbox.
     $sandbox['current'] = 0;
+    $sandbox['tid'] = -1;
+    $sandbox['delta'] = 0;
+    $sandbox['limit'] = Settings::get('entity_update_batch_size', 50);
     $sandbox['max'] = $database->select('taxonomy_term_hierarchy')
       ->countQuery()
       ->execute()
@@ -40,19 +44,20 @@ function taxonomy_update_8502(&$sandbox) {
   $hierarchy = $select
     ->fields('h', ['tid', 'parent'])
     ->fields('d', ['vid', 'langcode'])
-    ->range($sandbox['current'], $sandbox['current'] + 100)
+    ->range($sandbox['current'], $sandbox['limit'])
+    ->orderBy('tid', 'ASC')
+    ->orderBy('parent', 'ASC')
     ->execute()
     ->fetchAll();
 
   // Restore data.
   $insert = $database->insert('taxonomy_term__parent')
     ->fields(['bundle', 'entity_id', 'revision_id', 'langcode', 'delta', 'parent_target_id']);
-  $tid = -1;
 
   foreach ($hierarchy as $row) {
-    if ($row->tid !== $tid) {
-      $delta = 0;
-      $tid = $row->tid;
+    if ($row->tid !== $sandbox['tid']) {
+      $sandbox['delta'] = 0;
+      $sandbox['tid'] = $row->tid;
     }
 
     $insert->values([
@@ -60,11 +65,11 @@ function taxonomy_update_8502(&$sandbox) {
       'entity_id' => $row->tid,
       'revision_id' => $row->tid,
       'langcode' => $row->langcode,
-      'delta' => $delta,
+      'delta' => $sandbox['delta'],
       'parent_target_id' => $row->parent,
     ]);
 
-    $delta++;
+    $sandbox['delta']++;
     $sandbox['current']++;
   }
 
