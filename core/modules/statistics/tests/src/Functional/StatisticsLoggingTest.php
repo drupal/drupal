@@ -99,13 +99,13 @@ class StatisticsLoggingTest extends BrowserTestBase {
     // Verify that logging scripts are not found on a non-node page.
     $this->drupalGet('node');
     $settings = $this->getDrupalSettings();
-    $this->assertNoPattern($expected_library, 'Statistics library JS not found on node page.');
+    $this->assertSession()->responseNotMatches($expected_library, 'Statistics library JS not found on node page.');
     $this->assertFalse(isset($settings['statistics']), 'Statistics settings not found on node page.');
 
     // Verify that logging scripts are not found on a non-existent node page.
     $this->drupalGet('node/9999');
     $settings = $this->getDrupalSettings();
-    $this->assertNoPattern($expected_library, 'Statistics library JS not found on non-existent node page.');
+    $this->assertSession()->responseNotMatches($expected_library, 'Statistics library JS not found on non-existent node page.');
     $this->assertFalse(isset($settings['statistics']), 'Statistics settings not found on node page.');
 
     // Verify that logging scripts are found on a valid node page.

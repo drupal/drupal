@@ -61,7 +61,7 @@ class NoJavaScriptAnonymousTest extends BrowserTestBase {
 
     // Ensure no other JavaScript file exists on the page, while ignoring the
     // HTML5 shiv.
-    $this->assertNoPattern('/(?<!html5shiv\.min)\.js/', "No other JavaScript exists.");
+    $this->assertSession()->responseNotMatches('/(?<!html5shiv\.min)\.js/');
   }
 
 }

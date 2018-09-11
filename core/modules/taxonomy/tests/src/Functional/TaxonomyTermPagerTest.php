@@ -48,7 +48,7 @@ class TaxonomyTermPagerTest extends TaxonomyTestBase {
 
     // Get Page 1.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
-    $this->assertNoPattern('|<nav class="pager" [^>]*>|', 'Pager is not visible on page 1');
+    $this->assertSession()->responseNotMatches('|<nav class="pager" [^>]*>|', 'Pager is not visible on page 1');
 
     // Create 3 more terms to show pager.
     for ($x = 1; $x <= 3; $x++) {

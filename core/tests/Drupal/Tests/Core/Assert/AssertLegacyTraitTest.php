@@ -156,6 +156,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
 
   /**
    * @covers ::assertNoPattern
+   * @expectedDeprecation assertNoPattern() is deprecated and scheduled for removal in Drupal 9.0.0. Use $this->assertSession()->responseNotMatches($pattern) instead. See https://www.drupal.org/node/2864262.
    */
   public function testAssertNoPattern() {
     $this->webAssert
