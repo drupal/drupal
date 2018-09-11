@@ -113,7 +113,6 @@ CKEditor
 
 Classy
 - David Hernandez 'davidhernandez' https://www.drupal.org/u/davidhernandez
-- Morten Birch Heide-Jørgensen 'mortendk' https://www.drupal.org/u/mortendk
 
 Color
 - ?
