@@ -101,7 +101,6 @@ class LoggerChannel implements LoggerChannelInterface {
     $context += [
       'channel' => $this->channel,
       'link' => '',
-      'user' => NULL,
       'uid' => 0,
       'request_uri' => '',
       'referer' => '',
@@ -115,7 +114,6 @@ class LoggerChannel implements LoggerChannelInterface {
       $context['ip'] = $request->getClientIP();
       try {
         if ($this->currentUser) {
-          $context['user'] = $this->currentUser;
           $context['uid'] = $this->currentUser->id();
         }
       }
