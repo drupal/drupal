@@ -12,6 +12,7 @@ Drupal 7.xx, xxxx-xx-xx (development version)
 - PHP 7.2: Removed deprecated function each().
 - PHP 7.2: Avoid count() calls on uncountable variables.
 - PHP 7.2: Removed deprecated create_function() call.
+- PHP 7.2: Make sure variables are arrays in theme_links().
 - Fixed theme-settings.php not being loaded on cached forms
 
 Drupal 7.59, 2018-04-25

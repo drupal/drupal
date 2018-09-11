@@ -1776,8 +1776,8 @@ function theme_link($variables) {
  *     http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
  */
 function theme_links($variables) {
-  $links = $variables['links'];
-  $attributes = $variables['attributes'];
+  $links = (array) $variables['links'];
+  $attributes = (array) $variables['attributes'];
   $heading = $variables['heading'];
   global $language_url;
   $output = '';
