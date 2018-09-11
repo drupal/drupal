@@ -30,10 +30,9 @@ class LanguageNegotiationUser extends LanguageNegotiationMethodBase {
 
     // User preference (only for authenticated users).
     if ($this->languageManager && $this->currentUser->isAuthenticated()) {
-      $preferred_langcode = $this->currentUser->getPreferredLangcode();
-      $default_langcode = $this->languageManager->getDefaultLanguage()->getId();
+      $preferred_langcode = $this->currentUser->getPreferredLangcode(FALSE);
       $languages = $this->languageManager->getLanguages();
-      if (!empty($preferred_langcode) && $preferred_langcode != $default_langcode && isset($languages[$preferred_langcode])) {
+      if (!empty($preferred_langcode) && isset($languages[$preferred_langcode])) {
         $langcode = $preferred_langcode;
       }
     }

@@ -242,6 +242,21 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     ];
     $this->doRunTest($test);
 
+    // Set preferred langcode for user to default langcode.
+    $account = $this->loggedInUser;
+    $account->preferred_langcode = $default_language->getId();
+    $account->save();
+
+    $test = [
+      'language_negotiation' => [LanguageNegotiationUser::METHOD_ID, LanguageNegotiationUrl::METHOD_ID],
+      'path' => "$langcode/admin/config",
+      'expect' => $default_string,
+      'expected_method_id' => LanguageNegotiationUser::METHOD_ID,
+      'http_header' => [],
+      'message' => 'USER > URL: User has default language as preferred user language setting, the UI language is default',
+    ];
+    $this->doRunTest($test);
+
     // Set preferred langcode for user to unknown language.
     $account = $this->loggedInUser;
     $account->preferred_langcode = $langcode_unknown;
