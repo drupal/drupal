@@ -1,6 +1,6 @@
-workflow.type_settings.workflow_type_test:
+workflow_type_test.ignore_schema:
   type: mapping
-  label: 'Workflow test type settings'
+  label: 'Ignore schema workflow type'
   mapping:
     states:
       type: sequence
@@ -11,18 +11,17 @@ workflow.type_settings.workflow_type_test:
       sequence:
         type: ignore
 
-workflow.type_settings.workflow_type_required_state_test:
-  type: mapping
+workflow.type_settings.workflow_type_test:
+  type: workflow_type_test.ignore_schema
   label: 'Workflow test type settings'
-  mapping:
-    states:
-      type: sequence
-      sequence:
-        type: ignore
-    transitions:
-      type: sequence
-      sequence:
-        type: ignore
+
+workflow.type_settings.workflow_type_required_state_test:
+  type: workflow_type_test.ignore_schema
+  label: 'Workflow test type required state'
+
+workflow.type_settings.workflow_custom_access_type:
+  type: workflow_type_test.ignore_schema
+  label: 'Workflow custom access type'
 
 # @todo, inline this straight into "workflow.type_settings.workflow_type_complex_test"
 # after https://www.drupal.org/node/2871746 is resolved.

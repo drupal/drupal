@@ -4,6 +4,10 @@ services:
     parent: default_plugin_manager
     tags:
       - { name: plugin_manager_cache_clear }
+  workflows.access_check.extended_permissions:
+    class: \Drupal\workflows\WorkflowStateTransitionOperationsAccessCheck
+    tags:
+      - { name: access_check, applies_to: _workflow_access }
   workflows.access_check.delete_state:
     class: \Drupal\workflows\WorkflowDeleteAccessCheck
     tags:

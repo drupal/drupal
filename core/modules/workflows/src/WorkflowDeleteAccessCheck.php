@@ -2,56 +2,48 @@
 
 namespace Drupal\workflows;
 
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
 
 /**
  * Provides a access checker for deleting a workflow state.
  *
  * @internal
- *   Marked as internal until it's validated this should form part of the public
- *   API in https://www.drupal.org/node/2897148.
+ *   Marked as internal for use by the workflows module only.
+ *
+ * @deprecated
+ *   Using the _workflow_state_delete_access check is deprecated in Drupal 8.6.0
+ *   and will be removed before Drupal 9.0.0, you can use _workflow_access in
+ *   route definitions instead.
+ *   @code
+ *   # The old approach:
+ *   requirements:
+ *     _workflow_state_delete_access: 'true'
+ *   # The new approach:
+ *   requirements:
+ *     _workflow_access: 'delete-state'
+ *   @endcode
+ *   As an internal API the ability to use _workflow_state_delete_access may
+ *   also be removed in a minor release.
+ *
+ * @see \Drupal\workflows\WorkflowStateTransitionOperationsAccessCheck
+ * @see https://www.drupal.org/node/2929327
  */
-class WorkflowDeleteAccessCheck implements AccessInterface {
+class WorkflowDeleteAccessCheck extends WorkflowStateTransitionOperationsAccessCheck {
 
   /**
-   * Checks access to deleting a workflow state for a particular route.
-   *
-   * The value of '_workflow_state_delete_access' is ignored. The route must
-   * have the parameters 'workflow' and 'workflow_state'. For example:
-   * @code
-   * pattern: '/foo/{workflow}/bar/{workflow_state}/delete'
-   * requirements:
-   *   _workflow_state_delete_access: 'true'
-   * @endcode
-   * @see \Drupal\Core\ParamConverter\EntityConverter
-   *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route to check against.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The parametrized route
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The currently logged in account.
-   *
-   * @return \Drupal\Core\Access\AccessResultInterface
-   *   The access result.
+   * {@inheritdoc}
    */
-  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account) {
-    // If there is valid entity of the given entity type, check its access.
-    $parameters = $route_match->getParameters();
-    if ($parameters->has('workflow') && $parameters->has('workflow_state')) {
-      $entity = $parameters->get('workflow');
-      if ($entity instanceof EntityInterface) {
-        return $entity->access('delete-state:' . $parameters->get('workflow_state'), $account, TRUE);
-      }
-    }
-    // No opinion, so other access checks should decide if access should be
-    // allowed or not.
-    return AccessResult::neutral();
+  public function access(RouteMatchInterface $route_match, AccountInterface $account) {
+    @trigger_error('Using the _workflow_state_delete_access check is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0, use _workflow_access instead. As an internal API _workflow_state_delete_access may also be removed in a minor release.', E_USER_DEPRECATED);
+    return parent::access($route_match, $account);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getOperation(RouteMatchInterface $route_match) {
+    return 'delete-state';
   }
 
 }
