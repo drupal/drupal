@@ -64,11 +64,8 @@
       <directory>./modules</directory>
       <directory>../modules</directory>
       <directory>../sites</directory>
-      <!-- By definition test classes have no tests. -->
-      <exclude>
-        <directory suffix="Test.php">./</directory>
-        <directory suffix="TestBase.php">./</directory>
-      </exclude>
+      <!-- Exclude all test modules, tests etc -->
+      <exclude-pattern>*/tests/*</exclude-pattern>
      </whitelist>
   </filter>
 </phpunit>
