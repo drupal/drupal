@@ -41,34 +41,36 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Cacheab
    * {@inheritdoc}
    */
   public function getRouteParameters(RouteMatchInterface $route_match) {
-    $parameters = isset($this->pluginDefinition['route_parameters']) ? $this->pluginDefinition['route_parameters'] : [];
+    $route_parameters = isset($this->pluginDefinition['route_parameters']) ? $this->pluginDefinition['route_parameters'] : [];
     $route = $this->routeProvider()->getRouteByName($this->getRouteName());
     $variables = $route->compile()->getVariables();
 
     // Normally the \Drupal\Core\ParamConverter\ParamConverterManager has
-    // processed the Request attributes, and in that case the _raw_variables
-    // attribute holds the original path strings keyed to the corresponding
-    // slugs in the path patterns. For example, if the route's path pattern is
+    // run, and the route parameters have been upcast. The original values can
+    // be retrieved from the raw parameters. For example, if the route's path is
     // /filter/tips/{filter_format} and the path is /filter/tips/plain_text then
-    // $raw_variables->get('filter_format') == 'plain_text'.
-
-    $raw_variables = $route_match->getRawParameters();
+    // $raw_parameters->get('filter_format') == 'plain_text'. Parameters that
+    // are not represented in the route path as slugs might be added by a route
+    // enhancer and will not be present in the raw parameters.
+    $raw_parameters = $route_match->getRawParameters();
+    $parameters = $route_match->getParameters();
 
     foreach ($variables as $name) {
-      if (isset($parameters[$name])) {
+      if (isset($route_parameters[$name])) {
         continue;
       }
 
-      if ($raw_variables && $raw_variables->has($name)) {
-        $parameters[$name] = $raw_variables->get($name);
+      if ($raw_parameters->has($name)) {
+        $route_parameters[$name] = $raw_parameters->get($name);
       }
-      elseif ($value = $route_match->getRawParameter($name)) {
-        $parameters[$name] = $value;
+      elseif ($parameters->has($name)) {
+        $route_parameters[$name] = $parameters->get($name);
       }
     }
+
     // The UrlGenerator will throw an exception if expected parameters are
     // missing. This method should be overridden if that is possible.
-    return $parameters;
+    return $route_parameters;
   }
 
   /**

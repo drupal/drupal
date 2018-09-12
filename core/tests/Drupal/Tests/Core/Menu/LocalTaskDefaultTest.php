@@ -163,6 +163,28 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
+   * Tests the getRouteParameters method for a route with upcasted parameters.
+   *
+   * @covers ::getRouteParameters
+   */
+  public function testGetRouteParametersForDynamicRouteWithUpcastedParametersEmptyRawParameters() {
+    $this->pluginDefinition = [
+      'route_name' => 'test_route',
+    ];
+
+    $route = new Route('/test-route/{parameter}');
+    $this->routeProvider->expects($this->once())
+      ->method('getRouteByName')
+      ->with('test_route')
+      ->will($this->returnValue($route));
+
+    $this->setupLocalTaskDefault();
+
+    $route_match = new RouteMatch('', $route, ['parameter' => (object) 'example2']);
+    $this->assertEquals(['parameter' => (object) 'example2'], $this->localTaskBase->getRouteParameters($route_match));
+  }
+
+  /**
    * Defines a data provider for testGetWeight().
    *
    * @return array
