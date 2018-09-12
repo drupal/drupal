@@ -27,7 +27,6 @@ trait FakeLogEntries {
    *   - 'variables': Array of variables that match the message string.
    *   - 'severity': Log severity level as defined in logging_severity_levels.
    *   - 'link': String linking to view the result of the event.
-   *   - 'user': String identifying the username.
    *   - 'uid': Int identifying the user id for the user.
    *   - 'request_uri': String identifying the location of the request.
    *   - 'referer': String identifying the referring url.
@@ -47,7 +46,6 @@ trait FakeLogEntries {
       'variables'   => [],
       'severity'    => RfcLogLevel::NOTICE,
       'link'        => NULL,
-      'user'        => $user,
       'uid'         => $user->id(),
       'request_uri' => $base_root . \Drupal::request()->getRequestUri(),
       'referer'     => \Drupal::request()->server->get('HTTP_REFERER'),

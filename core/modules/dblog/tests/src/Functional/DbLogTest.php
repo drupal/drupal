@@ -477,7 +477,6 @@ class DbLogTest extends BrowserTestBase {
       'variables'   => [],
       'severity'    => RfcLogLevel::NOTICE,
       'link'        => NULL,
-      'user'        => $this->adminUser,
       'uid'         => $this->adminUser->id(),
       'request_uri' => $base_root . \Drupal::request()->getRequestUri(),
       'referer'     => \Drupal::request()->server->get('HTTP_REFERER'),
