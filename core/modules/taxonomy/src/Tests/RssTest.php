@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\views\Views;
@@ -106,11 +106,7 @@ class RssTest extends TaxonomyTestBase {
 
     // Test that the feed page exists for the term.
     $this->drupalGet("taxonomy/term/{$term1->id()}/feed");
-    $assert = $this->assertSession();
-    $assert->responseHeaderContains('Content-Type', 'application/rss+xml');
-    // Ensure the RSS version is 2.0.
-    $rss_array = $this->getSession()->getDriver()->find('rss');
-    $this->assertEquals('2.0', reset($rss_array)->getAttribute('version'));
+    $this->assertTrue(!empty($this->cssSelect('rss[version="2.0"]')), "Feed page is RSS.");
 
     // Check that the "Exception value" is disabled by default.
     $this->drupalGet('taxonomy/term/all/feed');
