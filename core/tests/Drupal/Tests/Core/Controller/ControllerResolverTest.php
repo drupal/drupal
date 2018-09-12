@@ -171,6 +171,7 @@ class ControllerResolverTest extends UnitTestCase {
    * @dataProvider providerTestGetControllerFromDefinition
    */
   public function testGetControllerFromDefinition($definition, $output) {
+    $this->container->set('invoke_service', new MockInvokeController());
     $controller = $this->controllerResolver->getControllerFromDefinition($definition);
     $this->assertCallableController($controller, NULL, $output);
   }
@@ -188,6 +189,8 @@ class ControllerResolverTest extends UnitTestCase {
       [new MockInvokeController(), 'This used __invoke().'],
       // Tests a class using __invoke().
       ['Drupal\Tests\Core\Controller\MockInvokeController', 'This used __invoke().'],
+      // Tests a service from the container using __invoke().
+      ['invoke_service', 'This used __invoke().'],
     ];
   }
 
