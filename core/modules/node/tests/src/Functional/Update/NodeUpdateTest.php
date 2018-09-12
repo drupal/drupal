@@ -65,4 +65,22 @@ class NodeUpdateTest extends UpdatePathTestBase {
     }
   }
 
+  /**
+   * Tests that the node entity type has an 'owner' entity key.
+   *
+   * @see node_update_8600()
+   */
+  public function testOwnerEntityKey() {
+    // Check that the 'owner' entity key does not exist prior to the update.
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('node');
+    $this->assertFalse($entity_type->getKey('owner'));
+
+    // Run updates.
+    $this->runUpdates();
+
+    // Check that the entity key exists and it has the correct value.
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('node');
+    $this->assertEquals('uid', $entity_type->getKey('owner'));
+  }
+
 }

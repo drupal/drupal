@@ -26,6 +26,11 @@ class FileStorageSchema extends SqlContentEntityStorageSchema {
           break;
       }
     }
+    // Entity keys automatically have not null assigned to TRUE, but for the
+    // file entity, NULL is a valid value for uid.
+    if ($field_name === 'uid') {
+      $schema['fields']['uid']['not null'] = FALSE;
+    }
 
     return $schema;
   }

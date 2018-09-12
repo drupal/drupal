@@ -56,4 +56,22 @@ class FileUpdateTest extends UpdatePathTestBase {
     $this->assertEqual($formatter_settings, ['use_description_as_link_text' => FALSE]);
   }
 
+  /**
+   * Tests that the file entity type has an 'owner' entity key.
+   *
+   * @see file_update_8600()
+   */
+  public function testOwnerEntityKey() {
+    // Check that the 'owner' entity key does not exist prior to the update.
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('file');
+    $this->assertFalse($entity_type->getKey('owner'));
+
+    // Run updates.
+    $this->runUpdates();
+
+    // Check that the entity key exists and it has the correct value.
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('file');
+    $this->assertEqual('uid', $entity_type->getKey('owner'));
+  }
+
 }

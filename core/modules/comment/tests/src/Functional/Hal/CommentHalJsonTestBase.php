@@ -42,8 +42,8 @@ abstract class CommentHalJsonTestBase extends CommentResourceTestBase {
     'thread' => NULL,
     'entity_type' => NULL,
     'field_name' => NULL,
-    'entity_id' => NULL,
     'uid' => "The 'administer comments' permission is required.",
+    'entity_id' => NULL,
   ];
 
   /**

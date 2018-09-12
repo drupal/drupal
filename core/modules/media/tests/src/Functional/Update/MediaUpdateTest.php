@@ -62,4 +62,22 @@ class MediaUpdateTest extends UpdatePathTestBase {
     $this->assertSame('', $config->get('iframe_domain'));
   }
 
+  /**
+   * Tests that the media entity type has an 'owner' entity key.
+   *
+   * @see media_update_8600()
+   */
+  public function testOwnerEntityKey() {
+    // Check that the 'owner' entity key does not exist prior to the update.
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('media');
+    $this->assertFalse($entity_type->getKey('owner'));
+
+    // Run updates.
+    $this->runUpdates();
+
+    // Check that the entity key exists and it has the correct value.
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('media');
+    $this->assertEquals('uid', $entity_type->getKey('owner'));
+  }
+
 }

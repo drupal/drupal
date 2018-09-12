@@ -267,3 +267,16 @@ function node_update_8401() {
     node_access_needs_rebuild(TRUE);
   }
 }
+
+/**
+ * Set the 'owner' entity key and update the field.
+ */
+function node_update_8600() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $definition_update_manager->getEntityType('node');
+  $keys = $entity_type->getKeys();
+  $keys['owner'] = 'uid';
+  $entity_type->set('entity_keys', $keys);
+  $definition_update_manager->updateEntityType($entity_type);
+  $definition_update_manager->updateFieldStorageDefinition($definition_update_manager->getFieldStorageDefinition('uid', 'node'));
+}

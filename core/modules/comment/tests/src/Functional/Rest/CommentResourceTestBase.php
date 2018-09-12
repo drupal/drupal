@@ -31,9 +31,9 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
    */
   protected static $patchProtectedFieldNames = [
     'status' => "The 'administer comments' permission is required.",
+    'uid' => "The 'administer comments' permission is required.",
     'pid' => NULL,
     'entity_id' => NULL,
-    'uid' => "The 'administer comments' permission is required.",
     'name' => "The 'administer comments' permission is required.",
     'homepage' => "The 'administer comments' permission is required.",
     'created' => "The 'administer comments' permission is required.",

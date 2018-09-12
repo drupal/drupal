@@ -6,6 +6,7 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\Entity\User;
 
 /**
  * Tests node owner functionality.
@@ -73,6 +74,38 @@ class NodeOwnerTest extends EntityKernelTestBase {
     $this->assertEqual(0, $english->getOwnerId());
     $this->assertEqual(0, $german->getOwnerId());
     $this->assertEqual(0, $italian->getOwnerId());
+  }
+
+  /**
+   * Test an unsaved node owner.
+   */
+  public function testUnsavedNodeOwner() {
+    $user = User::create([
+      'name' => 'foo',
+    ]);
+    $node = Node::create([
+      'type' => 'page',
+      'title' => $this->randomMachineName(),
+    ]);
+    // Set the node owner while the user is unsaved and then immediately save
+    // the user and node.
+    $node->setOwner($user);
+    $user->save();
+    $node->save();
+
+    // The ID assigned to the newly saved user will now be the owner ID of the
+    // node.
+    $this->assertEquals($user->id(), $node->getOwnerId());
+  }
+
+  /**
+   * Tests the legacy method used as the default entity owner.
+   *
+   * @group legacy
+   * @expectedDeprecation The ::getCurrentUserId method is deprecated in 8.6.x and will be removed before 9.0.0.
+   */
+  public function testGetCurrentUserId() {
+    $this->assertEquals(['0'], Node::getCurrentUserId());
   }
 
 }

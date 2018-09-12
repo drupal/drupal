@@ -53,7 +53,7 @@ class NodeFieldOverridesTest extends EntityKernelTestBase {
     $uid_field = \Drupal::entityManager()->getBaseFieldDefinitions('node')['uid'];
     $config = $uid_field->getConfig('ponies');
     $config->save();
-    $this->assertEqual($config->get('default_value_callback'), 'Drupal\node\Entity\Node::getCurrentUserId');
+    $this->assertEquals($config->get('default_value_callback'), 'Drupal\node\Entity\Node::getDefaultEntityOwner');
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::create(['type' => 'ponies']);
     $owner = $node->getOwner();

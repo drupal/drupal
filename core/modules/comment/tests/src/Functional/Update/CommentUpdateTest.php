@@ -72,4 +72,22 @@ class CommentUpdateTest extends UpdatePathTestBase {
     $this->assertTrue(\Drupal::database()->schema()->indexExists('comment_field_data', 'comment__status_comment_type'));
   }
 
+  /**
+   * Tests that the comment entity type has an 'owner' entity key.
+   *
+   * @see comment_update_8600()
+   */
+  public function testOwnerEntityKey() {
+    // Check that the 'owner' entity key does not exist prior to the update.
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('comment');
+    $this->assertFalse($entity_type->getKey('owner'));
+
+    // Run updates.
+    $this->runUpdates();
+
+    // Check that the entity key exists and it has the correct value.
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('comment');
+    $this->assertEquals('uid', $entity_type->getKey('owner'));
+  }
+
 }

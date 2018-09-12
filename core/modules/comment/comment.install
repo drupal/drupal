@@ -207,3 +207,16 @@ function comment_update_8600() {
   $field_storage_definition->setDefaultValueCallback(Comment::class . '::getDefaultHostname');
   $entity_definition_update_manager->updateFieldStorageDefinition($field_storage_definition);
 }
+
+/**
+ * Set the 'owner' entity key and update the field.
+ */
+function comment_update_8601() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $definition_update_manager->getEntityType('comment');
+  $keys = $entity_type->getKeys();
+  $keys['owner'] = 'uid';
+  $entity_type->set('entity_keys', $keys);
+  $definition_update_manager->updateEntityType($entity_type);
+  $definition_update_manager->updateFieldStorageDefinition($definition_update_manager->getFieldStorageDefinition('uid', 'comment'));
+}

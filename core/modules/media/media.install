@@ -163,3 +163,16 @@ function media_update_8600() {
     ->set('oembed_providers_url', 'https://oembed.com/providers.json')
     ->save(TRUE);
 }
+
+/**
+ * Set the 'owner' entity key and update the field.
+ */
+function media_update_8601() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $definition_update_manager->getEntityType('media');
+  $keys = $entity_type->getKeys();
+  $keys['owner'] = 'uid';
+  $entity_type->set('entity_keys', $keys);
+  $definition_update_manager->updateEntityType($entity_type);
+  $definition_update_manager->updateFieldStorageDefinition($definition_update_manager->getFieldStorageDefinition('uid', 'media'));
+}

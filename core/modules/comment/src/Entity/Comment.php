@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\Entity\User;
-use Drupal\user\UserInterface;
+use Drupal\user\EntityOwnerTrait;
 
 /**
  * Defines the comment entity class.
@@ -52,6 +52,7 @@ use Drupal\user\UserInterface;
  *     "langcode" = "langcode",
  *     "uuid" = "uuid",
  *     "published" = "status",
+ *     "owner" = "uid",
  *   },
  *   links = {
  *     "canonical" = "/comment/{comment}",
@@ -70,6 +71,7 @@ use Drupal\user\UserInterface;
 class Comment extends ContentEntityBase implements CommentInterface {
 
   use EntityChangedTrait;
+  use EntityOwnerTrait;
   use EntityPublishedTrait;
 
   /**
@@ -221,6 +223,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     $fields = parent::baseFieldDefinitions($entity_type);
     $fields += static::publishedBaseFieldDefinitions($entity_type);
+    $fields += static::ownerBaseFieldDefinitions($entity_type);
 
     $fields['cid']->setLabel(t('Comment ID'))
       ->setDescription(t('The comment ID.'));
@@ -256,12 +259,8 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ])
       ->setDisplayConfigurable('form', TRUE);
 
-    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('User ID'))
-      ->setDescription(t('The user ID of the comment author.'))
-      ->setTranslatable(TRUE)
-      ->setSetting('target_type', 'user')
-      ->setDefaultValue(0);
+    $fields['uid']
+      ->setDescription(t('The user ID of the comment author.'));
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
@@ -318,6 +317,13 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setSetting('max_length', FieldStorageConfig::NAME_MAX_LENGTH);
 
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getDefaultEntityOwner() {
+    return 0;
   }
 
   /**
@@ -522,29 +528,6 @@ class Comment extends ContentEntityBase implements CommentInterface {
       $user->homepage = $this->getHomepage();
     }
     return $user;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOwnerId() {
-    return $this->get('uid')->target_id;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOwnerId($uid) {
-    $this->set('uid', $uid);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOwner(UserInterface $account) {
-    $this->set('uid', $account->id());
-    return $this;
   }
 
   /**
