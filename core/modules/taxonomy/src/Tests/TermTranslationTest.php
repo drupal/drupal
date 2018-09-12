@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Url;
-use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
+use Drupal\system\Tests\Menu\AssertBreadcrumbTrait;
 
 /**
  * Tests for proper breadcrumb translation.

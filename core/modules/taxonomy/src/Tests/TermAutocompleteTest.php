@@ -1,8 +1,7 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\taxonomy\Tests;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -15,13 +14,6 @@ use Drupal\field\Entity\FieldStorageConfig;
  * @group taxonomy
  */
 class TermAutocompleteTest extends TaxonomyTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = ['node'];
 
   /**
    * The vocabulary.
@@ -135,25 +127,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
     // Retrieve the autocomplete url.
     $this->drupalGet('node/add/article');
     $result = $this->xpath('//input[@name="' . $this->fieldName . '[0][target_id]"]');
-    $this->autocompleteUrl = $this->getAbsoluteUrl($result[0]->getAttribute('data-autocomplete-path'));
-  }
-
-  /**
-   * Helper function for JSON formatted requests.
-   *
-   * @param string|\Drupal\Core\Url $path
-   *   Drupal path or URL to load into Mink controlled browser.
-   * @param array $options
-   *   (optional) Options to be forwarded to the url generator.
-   * @param string[] $headers
-   *   (optional) An array containing additional HTTP request headers.
-   *
-   * @return string[]
-   *   Array representing decoded JSON response.
-   */
-  protected function drupalGetJson($path, array $options = [], array $headers = []) {
-    $options = array_merge_recursive(['query' => ['_format' => 'json']], $options);
-    return Json::decode($this->drupalGet($path, $options, $headers));
+    $this->autocompleteUrl = $this->getAbsoluteUrl($result[0]['data-autocomplete-path']);
   }
 
   /**
@@ -163,21 +137,21 @@ class TermAutocompleteTest extends TaxonomyTestBase {
    */
   public function testAutocompleteCountResults() {
     // Test that no matching term found.
-    $data = $this->drupalGetJson(
+    $data = $this->drupalGetJSON(
       $this->autocompleteUrl,
       ['query' => ['q' => 'zzz']]
     );
     $this->assertTrue(empty($data), 'Autocomplete returned no results');
 
     // Test that only one matching term found, when only one matches.
-    $data = $this->drupalGetJson(
+    $data = $this->drupalGetJSON(
       $this->autocompleteUrl,
       ['query' => ['q' => 'aaa 10']]
     );
     $this->assertEqual(1, count($data), 'Autocomplete returned 1 result');
 
     // Test the correct number of matches when multiple are partial matches.
-    $data = $this->drupalGetJson(
+    $data = $this->drupalGetJSON(
       $this->autocompleteUrl,
       ['query' => ['q' => 'aaa 1']]
     );
@@ -185,7 +159,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
 
     // Tests that only 10 results are returned, even if there are more than 10
     // matches.
-    $data = $this->drupalGetJson(
+    $data = $this->drupalGetJSON(
       $this->autocompleteUrl,
       ['query' => ['q' => 'aaa']]
     );
@@ -218,7 +192,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
       ];
     }
 
-    $data = $this->drupalGetJson(
+    $data = $this->drupalGetJSON(
       $this->autocompleteUrl,
       ['query' => ['q' => 'bbb']]
     );
