@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\user\Tests\FunctionalJavascript;
+namespace Drupal\Tests\user\FunctionalJavascript;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\AssertMailTrait;
