@@ -24,7 +24,6 @@ class BlockContentDeletionTest extends KernelTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->installSchema('system', ['sequence']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('block_content');
   }

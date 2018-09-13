@@ -30,7 +30,6 @@ class MigrateMenuLinkTranslationTest extends MigrateDrupal6TestBase {
   protected function setUp() {
     parent::setUp();
     $this->migrateContent();
-    $this->installSchema('system', ['router']);
     $this->installEntitySchema('menu_link_content');
     $this->executeMigrations([
       'language',

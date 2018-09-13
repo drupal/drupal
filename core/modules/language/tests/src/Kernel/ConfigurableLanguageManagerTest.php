@@ -38,7 +38,6 @@ class ConfigurableLanguageManagerTest extends LanguageTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', ['sequence']);
     $this->installEntitySchema('user');
 
     $this->languageNegotiator = $this->container->get('language_negotiator');
