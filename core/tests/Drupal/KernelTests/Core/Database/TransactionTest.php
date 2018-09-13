@@ -337,7 +337,7 @@ class TransactionTest extends DatabaseTestBase {
    * Starts over for a new test.
    */
   protected function cleanUp() {
-    db_truncate('test')
+    $this->connection->truncate('test')
       ->execute();
   }
 

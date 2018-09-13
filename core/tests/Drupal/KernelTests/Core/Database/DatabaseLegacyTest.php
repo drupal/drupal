@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Database;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
 use Drupal\Core\Database\Query\Merge;
+use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Transaction;
 use Drupal\Core\Database\Database;
@@ -374,6 +375,15 @@ class DatabaseLegacyTest extends DatabaseTestBase {
    */
   public function testDbDelete() {
     $this->assertInstanceOf(Delete::class, db_delete('test'));
+  }
+
+  /**
+   * Tests deprecation of the db_truncate() function.
+   *
+   * @expectedDeprecation db_truncate() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call truncate() on it. For example, $injected_database->truncate($table, $options). See https://www.drupal.org/node/2993033
+   */
+  public function testDbTruncate() {
+    $this->assertInstanceOf(Truncate::class, db_truncate('test'));
   }
 
 }

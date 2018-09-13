@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\statistics\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\node\Entity\Node;
 
@@ -82,7 +83,7 @@ class StatisticsLoggingTest extends BrowserTestBase {
       ->save();
 
     // Clear the logs.
-    db_truncate('node_counter');
+    Database::getConnection()->truncate('node_counter');
     $this->client = \Drupal::httpClient();
   }
 
