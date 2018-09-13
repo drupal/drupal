@@ -28,7 +28,7 @@ class FinalExceptionSubscriberTest extends UnitTestCase {
     // of this so we'll hard code it here.
     $request->setRequestFormat('bananas');
     $e = new MethodNotAllowedHttpException(['POST', 'PUT'], 'test message');
-    $event = new GetResponseForExceptionEvent($kernel->reveal(), $request, 'GET', $e);
+    $event = new GetResponseForExceptionEvent($kernel->reveal(), $request, HttpKernelInterface::MASTER_REQUEST, $e);
     $subscriber = new TestDefaultExceptionSubscriber($config_factory);
     $subscriber->setStringTranslation($this->getStringTranslationStub());
     $subscriber->onException($event);

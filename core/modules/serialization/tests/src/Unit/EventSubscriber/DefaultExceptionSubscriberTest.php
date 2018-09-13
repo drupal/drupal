@@ -27,7 +27,7 @@ class DefaultExceptionSubscriberTest extends UnitTestCase {
     $request->setRequestFormat('json');
 
     $e = new MethodNotAllowedHttpException(['POST', 'PUT'], 'test message');
-    $event = new GetResponseForExceptionEvent($kernel->reveal(), $request, 'GET', $e);
+    $event = new GetResponseForExceptionEvent($kernel->reveal(), $request, HttpKernelInterface::MASTER_REQUEST, $e);
     $subscriber = new DefaultExceptionSubscriber(new Serializer([], [new JsonEncoder()]), []);
     $subscriber->on4xx($event);
     $response = $event->getResponse();
