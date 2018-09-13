@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Route;
  *
  * @ViewsAccess(
  *   id = "none",
- *   title = @Translation("None"),
+ *   title = @Translation("Unrestricted"),
  *   help = @Translation("Will be available to all users.")
  * )
  */
