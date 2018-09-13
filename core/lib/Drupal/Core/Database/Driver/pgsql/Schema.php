@@ -619,6 +619,7 @@ EOD;
    * {@inheritdoc}
    */
   public function fieldSetDefault($table, $field, $default) {
+    @trigger_error('fieldSetDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035', E_USER_DEPRECATED);
     if (!$this->fieldExists($table, $field)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot set default value of field @table.@field: field doesn't exist.", ['@table' => $table, '@field' => $field]));
     }
@@ -632,6 +633,7 @@ EOD;
    * {@inheritdoc}
    */
   public function fieldSetNoDefault($table, $field) {
+    @trigger_error('fieldSetNoDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035', E_USER_DEPRECATED);
     if (!$this->fieldExists($table, $field)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot remove default value of field @table.@field: field doesn't exist.", ['@table' => $table, '@field' => $field]));
     }
@@ -839,7 +841,7 @@ EOD;
     }
 
     // Remove old default.
-    $this->fieldSetNoDefault($table, $field);
+    $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" DROP DEFAULT');
 
     // Convert field type.
     // Usually, we do this via a simple typecast 'USING fieldname::type'. But
@@ -899,7 +901,7 @@ EOD;
 
     // Add default if necessary.
     if (isset($spec['default'])) {
-      $this->fieldSetDefault($table, $field_new, $spec['default']);
+      $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field_new . '" SET DEFAULT ' . $this->escapeDefaultValue($spec['default']));
     }
 
     // Change description if necessary.

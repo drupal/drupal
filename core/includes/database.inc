@@ -823,12 +823,14 @@ function db_drop_field($table, $field) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call fieldSetDefault() on it. For example,
- *   $injected_database->schema()->fieldSetDefault($table, $field, $default);
+ *   its schema driver, and call changeField() on it, passing a full field
+ *   specification. For example,
+ *   $injected_database->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
  *
- * @see \Drupal\Core\Database\Schema::fieldSetDefault()
+ * @see \Drupal\Core\Database\Schema::changeField()
  */
 function db_field_set_default($table, $field, $default) {
+  @trigger_error('db_field_set_default() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call changeField() on it, passing a full field specification. For example, $injected_database->schema()->changeField($table, $field, $field_new, $spec, $keys_new). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->fieldSetDefault($table, $field, $default);
 }
 
@@ -842,12 +844,14 @@ function db_field_set_default($table, $field, $default) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call fieldSetNoDefault() on it. For example,
- *   $injected_database->schema()->fieldSetNoDefault($table, $field);
+ *   its schema driver, and call changeField() on it, passing a full field
+ *   specification. For example,
+ *   $injected_database->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
  *
- * @see \Drupal\Core\Database\Schema::fieldSetNoDefault()
+ * @see \Drupal\Core\Database\Schema::changeField()
  */
 function db_field_set_no_default($table, $field) {
+  @trigger_error('db_field_set_no_default() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call changeField() on it, passing a full field specification. For example, $injected_database->schema()->changeField($table, $field, $field_new, $spec, $keys_new). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->fieldSetNoDefault($table, $field);
 }
 

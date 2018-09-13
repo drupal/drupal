@@ -8,6 +8,7 @@ use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Transaction;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseException;
 
 /**
  * Deprecation tests cases for the database layer.
@@ -112,6 +113,79 @@ class DatabaseLegacyTest extends DatabaseTestBase {
       'binary' => TRUE,
     ];
     db_change_field('test', 'name', 'nosuchcolumn', $spec);
+  }
+
+  /**
+   * Tests deprecation of the db_field_set_default() function.
+   *
+   * @expectedDeprecation db_field_set_default() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call changeField() on it, passing a full field specification. For example, $injected_database->schema()->changeField($table, $field, $field_new, $spec, $keys_new). See https://www.drupal.org/node/2993033
+   * @expectedDeprecation fieldSetDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
+   */
+  public function testDbFieldSetDefault() {
+    db_field_set_default('test', 'job', 'baz');
+  }
+
+  /**
+   * Tests deprecation of the db_field_set_no_default() function.
+   *
+   * @expectedDeprecation db_field_set_no_default() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call changeField() on it, passing a full field specification. For example, $injected_database->schema()->changeField($table, $field, $field_new, $spec, $keys_new). See https://www.drupal.org/node/2993033
+   * @expectedDeprecation fieldSetNoDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
+   */
+  public function testDbFieldSetNoDefault() {
+    db_field_set_no_default('test_null', 'age');
+  }
+
+  /**
+   * Tests Schema::fieldSetDefault and Schema::fieldSetNoDefault.
+   *
+   * @expectedDeprecation fieldSetDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
+   * @expectedDeprecation fieldSetNoDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
+   */
+  public function testSchemaFieldDefaultChange() {
+    // Create a table.
+    $table_specification = [
+      'description' => 'Schema table description.',
+      'fields' => [
+        'id'  => [
+          'type' => 'int',
+          'default' => NULL,
+        ],
+        'test_field'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+          'description' => 'Test field',
+        ],
+      ],
+    ];
+    $this->connection->schema()->createTable('test_table', $table_specification);
+
+    // An insert without a value for the column 'test_field' should fail.
+    try {
+      $this->connection->insert('test_table')->fields(['id' => 1])->execute();
+      $this->fail('Expected DatabaseException, none was thrown.');
+    }
+    catch (DatabaseException $e) {
+      $this->assertEquals(0, $this->connection->select('test_table')->countQuery()->execute()->fetchField());
+    }
+
+    // Add a default value to the column.
+    $this->connection->schema()->fieldSetDefault('test_table', 'test_field', 0);
+
+    // The insert should now succeed.
+    $this->connection->insert('test_table')->fields(['id' => 1])->execute();
+    $this->assertEquals(1, $this->connection->select('test_table')->countQuery()->execute()->fetchField());
+
+    // Remove the default.
+    $this->connection->schema()->fieldSetNoDefault('test_table', 'test_field');
+
+    // The insert should fail again.
+    try {
+      $this->connection->insert('test_table')->fields(['id' => 2])->execute();
+      $this->fail('Expected DatabaseException, none was thrown.');
+    }
+    catch (DatabaseException $e) {
+      $this->assertEquals(1, $this->connection->select('test_table')->countQuery()->execute()->fetchField());
+    }
   }
 
   /**

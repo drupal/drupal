@@ -352,6 +352,11 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table or field doesn't exist.
+   *
+   * @deprecated as of Drupal 8.7.x, will be removed in Drupal 9.0.0. Instead,
+   *   call ::changeField() passing a full field specification.
+   *
+   * @see ::changeField()
    */
   abstract public function fieldSetDefault($table, $field, $default);
 
@@ -365,6 +370,11 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table or field doesn't exist.
+   *
+   * @deprecated as of Drupal 8.7.x, will be removed in Drupal 9.0.0. Instead,
+   *   call ::changeField() passing a full field specification.
+   *
+   * @see ::changeField()
    */
   abstract public function fieldSetNoDefault($table, $field);
 

@@ -109,12 +109,12 @@ class SchemaTest extends KernelTestBase {
     $this->assertFalse($this->tryInsert(), 'Insert without a default failed.');
 
     // Add a default value to the column.
-    $this->schema->fieldSetDefault('test_table', 'test_field', 0);
+    $this->schema->changeField('test_table', 'test_field', 'test_field', ['type' => 'int', 'not null' => TRUE, 'default' => 0]);
     // The insert should now succeed.
     $this->assertTrue($this->tryInsert(), 'Insert with a default succeeded.');
 
     // Remove the default.
-    $this->schema->fieldSetNoDefault('test_table', 'test_field');
+    $this->schema->changeField('test_table', 'test_field', 'test_field', ['type' => 'int', 'not null' => TRUE]);
     // The insert should fail again.
     $this->assertFalse($this->tryInsert(), 'Insert without a default failed.');
 
@@ -135,7 +135,7 @@ class SchemaTest extends KernelTestBase {
     $this->assertTrue($index_exists, 'Index was renamed.');
 
     // We need the default so that we can insert after the rename.
-    $this->schema->fieldSetDefault('test_table2', 'test_field', 0);
+    $this->schema->changeField('test_table2', 'test_field', 'test_field', ['type' => 'int', 'not null' => TRUE, 'default' => 0]);
     $this->assertFalse($this->tryInsert(), 'Insert into the old table failed.');
     $this->assertTrue($this->tryInsert('test_table2'), 'Insert into the new table succeeded.');
 
@@ -149,7 +149,7 @@ class SchemaTest extends KernelTestBase {
 
     // Recreate the table.
     $this->schema->createTable('test_table', $table_specification);
-    $this->schema->fieldSetDefault('test_table', 'test_field', 0);
+    $this->schema->changeField('test_table', 'test_field', 'test_field', ['type' => 'int', 'not null' => TRUE, 'default' => 0]);
     $this->schema->addField('test_table', 'test_serial', ['type' => 'int', 'not null' => TRUE, 'default' => 0, 'description' => 'Added column description.']);
 
     // Assert that the column comment has been set.
@@ -173,7 +173,7 @@ class SchemaTest extends KernelTestBase {
     // Test adding a serial field to an existing table.
     $this->schema->dropTable('test_table');
     $this->schema->createTable('test_table', $table_specification);
-    $this->schema->fieldSetDefault('test_table', 'test_field', 0);
+    $this->schema->changeField('test_table', 'test_field', 'test_field', ['type' => 'int', 'not null' => TRUE, 'default' => 0]);
     $this->schema->addField('test_table', 'test_serial', ['type' => 'serial', 'not null' => TRUE], ['primary key' => ['test_serial']]);
 
     // Test the primary key columns.
