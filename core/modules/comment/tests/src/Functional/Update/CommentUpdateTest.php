@@ -75,7 +75,7 @@ class CommentUpdateTest extends UpdatePathTestBase {
   /**
    * Tests that the comment entity type has an 'owner' entity key.
    *
-   * @see comment_update_8600()
+   * @see comment_update_8700()
    */
   public function testOwnerEntityKey() {
     // Check that the 'owner' entity key does not exist prior to the update.

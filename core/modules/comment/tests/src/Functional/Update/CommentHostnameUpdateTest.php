@@ -44,11 +44,11 @@ class CommentHostnameUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests comment_update_8601().
+   * Tests comment_post_update_add_ip_address_setting().
    *
-   * @see comment_update_8601
+   * @see comment_post_update_add_ip_address_setting()
    */
-  public function testCommentUpdate8601() {
+  public function testCommentPostUpdateAddIpAddressSetting() {
     /** @var \Drupal\Core\Config\ConfigFactoryInterface $factory */
     $factory = $this->container->get('config.factory');
 

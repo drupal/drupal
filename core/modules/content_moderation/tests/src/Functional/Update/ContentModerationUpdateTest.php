@@ -25,7 +25,7 @@ class ContentModerationUpdateTest extends UpdatePathTestBase {
   /**
    * Tests that the content moderation state entity has an 'owner' entity key.
    *
-   * @see content_moderation_update_8600()
+   * @see content_moderation_update_8700()
    */
   public function testOwnerEntityKey() {
     // Check that the 'owner' entity key does not exist prior to the update.

@@ -33,7 +33,7 @@ function content_moderation_update_8401() {
 /**
  * Set the 'owner' entity key and update the field.
  */
-function content_moderation_update_8600() {
+function content_moderation_update_8700() {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   $entity_type = $definition_update_manager->getEntityType('content_moderation_state');
   $keys = $entity_type->getKeys();

@@ -65,7 +65,7 @@ class MediaUpdateTest extends UpdatePathTestBase {
   /**
    * Tests that the media entity type has an 'owner' entity key.
    *
-   * @see media_update_8600()
+   * @see media_update_8700()
    */
   public function testOwnerEntityKey() {
     // Check that the 'owner' entity key does not exist prior to the update.

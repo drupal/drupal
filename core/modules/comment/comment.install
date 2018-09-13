@@ -211,7 +211,7 @@ function comment_update_8600() {
 /**
  * Set the 'owner' entity key and update the field.
  */
-function comment_update_8601() {
+function comment_update_8700() {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   $entity_type = $definition_update_manager->getEntityType('comment');
   $keys = $entity_type->getKeys();

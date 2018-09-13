@@ -168,7 +168,7 @@ function file_update_8001() {
 /**
  * Set the 'owner' entity key and update the field.
  */
-function file_update_8600() {
+function file_update_8700() {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   $entity_type = $definition_update_manager->getEntityType('file');
   $keys = $entity_type->getKeys();

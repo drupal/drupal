@@ -68,7 +68,7 @@ class NodeUpdateTest extends UpdatePathTestBase {
   /**
    * Tests that the node entity type has an 'owner' entity key.
    *
-   * @see node_update_8600()
+   * @see node_update_8700()
    */
   public function testOwnerEntityKey() {
     // Check that the 'owner' entity key does not exist prior to the update.
