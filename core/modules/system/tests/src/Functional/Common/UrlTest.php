@@ -314,7 +314,7 @@ class UrlTest extends BrowserTestBase {
     $url = $test_url . '?drupal=awesome';
     $query = ['awesome' => 'drupal'];
     $result = Url::fromUri($url, ['query' => $query])->toString();
-    $this->assertEqual('https://www.drupal.org/?awesome=drupal&drupal=awesome', $result);
+    $this->assertEqual('https://www.drupal.org/?drupal=awesome&awesome=drupal', $result);
   }
 
 }
