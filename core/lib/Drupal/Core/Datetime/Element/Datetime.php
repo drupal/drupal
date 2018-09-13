@@ -274,7 +274,7 @@ class Datetime extends DateElementBase {
       // Allows custom callbacks to alter the element.
       if (!empty($element['#date_date_callbacks'])) {
         foreach ($element['#date_date_callbacks'] as $callback) {
-          if (function_exists($callback)) {
+          if (is_callable($callback)) {
             $callback($element, $form_state, $date);
           }
         }
