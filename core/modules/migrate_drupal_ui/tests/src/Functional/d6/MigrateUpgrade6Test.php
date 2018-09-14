@@ -57,7 +57,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
     return [
       'aggregator_item' => 1,
       'aggregator_feed' => 2,
-      'block' => 35,
+      'block' => 34,
       'block_content' => 2,
       'block_content_type' => 1,
       'comment' => 6,
