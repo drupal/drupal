@@ -106,7 +106,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   /**
    * Keeps track of the last render index.
    *
-   * @var int|NULL
+   * @var int|null
    */
   protected $lastRenderIndex;
 
