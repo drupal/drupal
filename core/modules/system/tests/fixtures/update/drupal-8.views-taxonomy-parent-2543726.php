@@ -60,4 +60,8 @@ foreach ($hierarchy as $tid => $parents) {
   }
 }
 
+// Insert an extra record with no corresponding term.
+// See https://www.drupal.org/project/drupal/issues/2997982
+$query->values(['tid' => max($tids) + 1, 'parent' => 0]);
+
 $query->execute();
