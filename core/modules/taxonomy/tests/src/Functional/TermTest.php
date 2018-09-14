@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Tests;
+namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -389,6 +389,7 @@ class TermTest extends TaxonomyTestBase {
    * Save, edit and delete a term using the user interface.
    */
   public function testTermReorder() {
+    $assert = $this->assertSession();
     $this->createTerm($this->vocabulary);
     $this->createTerm($this->vocabulary);
     $this->createTerm($this->vocabulary);
@@ -406,21 +407,30 @@ class TermTest extends TaxonomyTestBase {
     // "tid:1:0[depth]", and "tid:1:0[weight]". Change the order to term2,
     // term3, term1 by setting weight property, make term3 a child of term2 by
     // setting the parent and depth properties, and update all hidden fields.
-    $edit = [
+    $hidden_edit = [
       'terms[tid:' . $term2->id() . ':0][term][tid]' => $term2->id(),
       'terms[tid:' . $term2->id() . ':0][term][parent]' => 0,
       'terms[tid:' . $term2->id() . ':0][term][depth]' => 0,
-      'terms[tid:' . $term2->id() . ':0][weight]' => 0,
       'terms[tid:' . $term3->id() . ':0][term][tid]' => $term3->id(),
       'terms[tid:' . $term3->id() . ':0][term][parent]' => $term2->id(),
       'terms[tid:' . $term3->id() . ':0][term][depth]' => 1,
-      'terms[tid:' . $term3->id() . ':0][weight]' => 1,
       'terms[tid:' . $term1->id() . ':0][term][tid]' => $term1->id(),
       'terms[tid:' . $term1->id() . ':0][term][parent]' => 0,
       'terms[tid:' . $term1->id() . ':0][term][depth]' => 0,
+    ];
+    // Because we can't post hidden form elements, we have to change them in
+    // code here, and then submit.
+    foreach ($hidden_edit as $field => $value) {
+      $node = $assert->hiddenFieldExists($field);
+      $node->setValue($value);
+    }
+    // Edit non-hidden elements within drupalPostForm().
+    $edit = [
+      'terms[tid:' . $term2->id() . ':0][weight]' => 0,
+      'terms[tid:' . $term3->id() . ':0][weight]' => 1,
       'terms[tid:' . $term1->id() . ':0][weight]' => 2,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     $taxonomy_storage->resetCache();
     $terms = $taxonomy_storage->loadTree($this->vocabulary->id());
@@ -570,7 +580,7 @@ class TermTest extends TaxonomyTestBase {
     ];
 
     // Create the term.
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', $edit, 'Save');
 
     $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
@@ -578,19 +588,19 @@ class TermTest extends TaxonomyTestBase {
 
     // Check the breadcrumb on the term edit page.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $breadcrumbs = $this->cssSelect('nav.breadcrumb ol li a');
+    $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
     $this->assertIdentical(count($breadcrumbs), 2, 'The breadcrumbs are present on the page.');
-    $this->assertIdentical((string) $breadcrumbs[0], 'Home', 'First breadcrumb text is Home');
-    $this->assertIdentical((string) $breadcrumbs[1], $term->label(), 'Second breadcrumb text is term name on term edit page.');
-    $this->assertEscaped((string) $breadcrumbs[1], 'breadcrumbs displayed and escaped.');
+    $this->assertIdentical($breadcrumbs[0]->getText(), 'Home', 'First breadcrumb text is Home');
+    $this->assertIdentical($breadcrumbs[1]->getText(), $term->label(), 'Second breadcrumb text is term name on term edit page.');
+    $this->assertEscaped($breadcrumbs[1]->getText(), 'breadcrumbs displayed and escaped.');
 
     // Check the breadcrumb on the term delete page.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
-    $breadcrumbs = $this->cssSelect('nav.breadcrumb ol li a');
+    $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
     $this->assertIdentical(count($breadcrumbs), 2, 'The breadcrumbs are present on the page.');
-    $this->assertIdentical((string) $breadcrumbs[0], 'Home', 'First breadcrumb text is Home');
-    $this->assertIdentical((string) $breadcrumbs[1], $term->label(), 'Second breadcrumb text is term name on term delete page.');
-    $this->assertEscaped((string) $breadcrumbs[1], 'breadcrumbs displayed and escaped.');
+    $this->assertIdentical($breadcrumbs[0]->getText(), 'Home', 'First breadcrumb text is Home');
+    $this->assertIdentical($breadcrumbs[1]->getText(), $term->label(), 'Second breadcrumb text is term name on term delete page.');
+    $this->assertEscaped($breadcrumbs[1]->getText(), 'breadcrumbs displayed and escaped.');
   }
 
 }
