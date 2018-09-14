@@ -3,11 +3,13 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
- * Tests adding a custom bundle field.
+ * Tests the default entity storage schema handler.
  *
- * @group system
+ * @group Entity
  */
 class EntitySchemaTest extends EntityKernelTestBase {
 
@@ -107,6 +109,178 @@ class EntitySchemaTest extends EntityKernelTestBase {
       $this->assertEqual($schema_handler->tableExists($table), !$index, new FormattableMarkup('Entity schema correct for the @table table.', ['@table' => $table]));
     }
     $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), new FormattableMarkup('Field schema correct for the @table table.', ['@table' => $table]));
+  }
+
+  /**
+   * Tests deleting and creating a field that is part of a primary key.
+   *
+   * @param string $entity_type_id
+   *   The ID of the entity type whose schema is being tested.
+   * @param string $field_name
+   *   The name of the field that is being re-installed.
+   *
+   * @dataProvider providerTestPrimaryKeyUpdate
+   */
+  public function testPrimaryKeyUpdate($entity_type_id, $field_name) {
+    // EntityKernelTestBase::setUp() already installs the schema for the
+    // 'entity_test' entity type.
+    if ($entity_type_id !== 'entity_test') {
+      $this->installEntitySchema($entity_type_id);
+    }
+
+    /* @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $update_manager */
+    $update_manager = $this->container->get('entity.definition_update_manager');
+    $entity_type = $update_manager->getEntityType($entity_type_id);
+
+    /* @see \Drupal\Core\Entity\ContentEntityBase::baseFieldDefinitions() */
+    switch ($field_name) {
+      case 'id':
+        $field = BaseFieldDefinition::create('integer')
+          ->setLabel('ID')
+          ->setReadOnly(TRUE)
+          ->setSetting('unsigned', TRUE);
+        break;
+
+      case 'revision_id':
+        $field = BaseFieldDefinition::create('integer')
+          ->setLabel('Revision ID')
+          ->setReadOnly(TRUE)
+          ->setSetting('unsigned', TRUE);
+        break;
+
+      case 'langcode':
+        $field = BaseFieldDefinition::create('language')
+          ->setLabel('Language');
+        if ($entity_type->isRevisionable()) {
+          $field->setRevisionable(TRUE);
+        }
+        if ($entity_type->isTranslatable()) {
+          $field->setTranslatable(TRUE);
+        }
+        break;
+    }
+
+    $field
+      ->setName($field_name)
+      ->setTargetEntityTypeId($entity_type_id)
+      ->setProvider($entity_type->getProvider());
+
+    // Build up a map of expected primary keys depending on the entity type
+    // configuration.
+    $id_key = $entity_type->getKey('id');
+    $revision_key = $entity_type->getKey('revision');
+    $langcode_key = $entity_type->getKey('langcode');
+
+    $expected = [];
+    $expected[$entity_type->getBaseTable()] = [$id_key];
+    if ($entity_type->isRevisionable()) {
+      $expected[$entity_type->getRevisionTable()] = [$revision_key];
+    }
+    if ($entity_type->isTranslatable()) {
+      $expected[$entity_type->getDataTable()] = [$id_key, $langcode_key];
+    }
+    if ($entity_type->isRevisionable() && $entity_type->isTranslatable()) {
+      $expected[$entity_type->getRevisionDataTable()] = [$revision_key, $langcode_key];
+    }
+
+    // First, test explicitly deleting and re-installing a field. Make sure that
+    // all primary keys are there to start with.
+    $this->assertSame($expected, $this->findPrimaryKeys($entity_type));
+
+    // Then uninstall the field and make sure all primary keys that the field
+    // was part of have been updated. Since this is not a valid state of the
+    // entity type (for example a revisionable entity type without a revision ID
+    // field or a translatable entity type without a language code field) the
+    // actual primary keys at this point are irrelevant.
+    $update_manager->uninstallFieldStorageDefinition($field);
+    $this->assertNotEquals($expected, $this->findPrimaryKeys($entity_type));
+
+    // Finally, reinstall the field and make sure the primary keys have been
+    // recreated.
+    $update_manager->installFieldStorageDefinition($field->getName(), $entity_type_id, $field->getProvider(), $field);
+    $this->assertSame($expected, $this->findPrimaryKeys($entity_type));
+
+    // Now test updating a field without data. This will end up deleting
+    // and re-creating the field, similar to the code above.
+    $update_manager->updateFieldStorageDefinition($field);
+    $this->assertSame($expected, $this->findPrimaryKeys($entity_type));
+
+    // Now test updating a field with data.
+    /* @var \Drupal\Core\Entity\FieldableEntityStorageInterface $storage */
+    $storage = $this->entityManager->getStorage($entity_type_id);
+    // The schema of ID fields is incorrectly recreated as 'int' instead of
+    // 'serial', so we manually have to specify an ID.
+    // @todo Remove this in https://www.drupal.org/project/drupal/issues/2928906
+    $storage->create(['id' => 1, 'revision_id' => 1])->save();
+    $this->assertTrue($storage->countFieldData($field, TRUE));
+    $update_manager->updateFieldStorageDefinition($field);
+    $this->assertSame($expected, $this->findPrimaryKeys($entity_type));
+    $this->assertTrue($storage->countFieldData($field, TRUE));
+  }
+
+  /**
+   * Finds the primary keys for a given entity type.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type whose primary keys are being fetched.
+   *
+   * @return array[]
+   *   An array where the keys are the table names of the entity type's tables
+   *   and the values are a list of the respective primary keys.
+   */
+  protected function findPrimaryKeys(EntityTypeInterface $entity_type) {
+    $base_table = $entity_type->getBaseTable();
+    $revision_table = $entity_type->getRevisionTable();
+    $data_table = $entity_type->getDataTable();
+    $revision_data_table = $entity_type->getRevisionDataTable();
+
+    $schema = $this->database->schema();
+    $find_primary_key_columns = new \ReflectionMethod(get_class($schema), 'findPrimaryKeyColumns');
+    $find_primary_key_columns->setAccessible(TRUE);
+
+    // Build up a map of primary keys depending on the entity type
+    // configuration. If the field that is being removed is part of a table's
+    // primary key, we skip the assertion for that table as this represents an
+    // intermediate and invalid state of the entity schema.
+    $primary_keys[$base_table] = $find_primary_key_columns->invoke($schema, $base_table);
+    if ($entity_type->isRevisionable()) {
+      $primary_keys[$revision_table] = $find_primary_key_columns->invoke($schema, $revision_table);
+    }
+    if ($entity_type->isTranslatable()) {
+      $primary_keys[$data_table] = $find_primary_key_columns->invoke($schema, $data_table);
+    }
+    if ($entity_type->isRevisionable() && $entity_type->isTranslatable()) {
+      $primary_keys[$revision_data_table] = $find_primary_key_columns->invoke($schema, $revision_data_table);
+    }
+
+    return $primary_keys;
+  }
+
+  /**
+   * Provides test cases for EntitySchemaTest::testPrimaryKeyUpdate()
+   *
+   * @return array
+   *   An array of test cases consisting of an entity type ID and a field name.
+   */
+  public function providerTestPrimaryKeyUpdate() {
+    // Build up test cases for all possible entity type configurations.
+    // For each entity type we test reinstalling each field that is part of
+    // any table's primary key.
+    $tests = [];
+
+    $tests['entity_test:id'] = ['entity_test', 'id'];
+
+    $tests['entity_test_rev:id'] = ['entity_test_rev', 'id'];
+    $tests['entity_test_rev:revision_id'] = ['entity_test_rev', 'revision_id'];
+
+    $tests['entity_test_mul:id'] = ['entity_test_mul', 'id'];
+    $tests['entity_test_mul:langcode'] = ['entity_test_mul', 'langcode'];
+
+    $tests['entity_test_mulrev:id'] = ['entity_test_mulrev', 'id'];
+    $tests['entity_test_mulrev:revision_id'] = ['entity_test_mulrev', 'revision_id'];
+    $tests['entity_test_mulrev:langcode'] = ['entity_test_mulrev', 'langcode'];
+
+    return $tests;
   }
 
   /**

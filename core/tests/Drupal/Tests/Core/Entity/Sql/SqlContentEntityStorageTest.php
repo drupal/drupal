@@ -384,6 +384,14 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getKeys')
       ->will($this->returnValue(['id' => 'id']));
     $this->entityType->expects($this->any())
+      ->method('hasKey')
+      ->will($this->returnValueMap([
+        // SqlContentEntityStorageSchema::initializeBaseTable()
+        ['revision', FALSE],
+        // SqlContentEntityStorageSchema::processBaseTable()
+        ['id', TRUE],
+      ]));
+    $this->entityType->expects($this->any())
       ->method('getKey')
       ->will($this->returnValueMap([
         // EntityStorageBase::__construct()

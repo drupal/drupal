@@ -1174,12 +1174,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   The entity type.
    * @param array $schema
    *   The table schema, passed by reference.
-   *
-   * @return array
-   *   A partial schema array for the base table.
    */
   protected function processBaseTable(ContentEntityTypeInterface $entity_type, array &$schema) {
-    $this->processIdentifierSchema($schema, $entity_type->getKey('id'));
+    // Process the schema for the 'id' entity key only if it exists.
+    if ($entity_type->hasKey('id')) {
+      $this->processIdentifierSchema($schema, $entity_type->getKey('id'));
+    }
   }
 
   /**
@@ -1189,12 +1189,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   The entity type.
    * @param array $schema
    *   The table schema, passed by reference.
-   *
-   * @return array
-   *   A partial schema array for the base table.
    */
   protected function processRevisionTable(ContentEntityTypeInterface $entity_type, array &$schema) {
-    $this->processIdentifierSchema($schema, $entity_type->getKey('revision'));
+    // Process the schema for the 'revision' entity key only if it exists.
+    if ($entity_type->hasKey('revision')) {
+      $this->processIdentifierSchema($schema, $entity_type->getKey('revision'));
+    }
   }
 
   /**
@@ -1333,11 +1333,23 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           // Create field columns.
           $schema[$table_name] = $this->getSharedTableFieldSchema($storage_definition, $table_name, $column_names);
           if (!$only_save) {
+            // The entity schema needs to be checked because the field schema is
+            // potentially incomplete.
+            // @todo Fix this in https://www.drupal.org/node/2929120.
+            $entity_schema = $this->getEntitySchema($this->entityType);
             foreach ($schema[$table_name]['fields'] as $name => $specifier) {
+              // Check if the field is part of the primary keys and pass along
+              // this information when adding the field.
+              // @see \Drupal\Core\Database\Schema::addField()
+              $new_keys = [];
+              if (isset($entity_schema[$table_name]['primary key']) && array_intersect($column_names, $entity_schema[$table_name]['primary key'])) {
+                $new_keys = ['primary key' => $entity_schema[$table_name]['primary key']];
+              }
+
               // Check if the field exists because it might already have been
               // created as part of the earlier entity type update event.
               if (!$schema_handler->fieldExists($table_name, $name)) {
-                $schema_handler->addField($table_name, $name, $specifier);
+                $schema_handler->addField($table_name, $name, $specifier, $new_keys);
               }
             }
             if (!empty($schema[$table_name]['indexes'])) {
