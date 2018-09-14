@@ -27,19 +27,20 @@ class TemporaryQueryTest extends DatabaseTestBase {
    * Confirms that temporary tables work and are limited to one request.
    */
   public function testTemporaryQuery() {
+    $connection = Database::getConnection();
     $this->drupalGet('database_test/db_query_temporary');
     $data = json_decode($this->getSession()->getPage()->getContent());
     if ($data) {
       $this->assertEqual($this->countTableRows('test'), $data->row_count, 'The temporary table contains the correct amount of rows.');
-      $this->assertFalse(Database::getConnection()->schema()->tableExists($data->table_name), 'The temporary table is, indeed, temporary.');
+      $this->assertFalse($connection->schema()->tableExists($data->table_name), 'The temporary table is, indeed, temporary.');
     }
     else {
       $this->fail('The creation of the temporary table failed.');
     }
 
     // Now try to run two db_query_temporary() in the same request.
-    $table_name_test = db_query_temporary('SELECT name FROM {test}', []);
-    $table_name_task = db_query_temporary('SELECT pid FROM {test_task}', []);
+    $table_name_test = $connection->queryTemporary('SELECT name FROM {test}', []);
+    $table_name_task = $connection->queryTemporary('SELECT pid FROM {test_task}', []);
 
     $this->assertEqual($this->countTableRows($table_name_test), $this->countTableRows('test'), 'A temporary table was created successfully in this request.');
     $this->assertEqual($this->countTableRows($table_name_task), $this->countTableRows('test_task'), 'A second temporary table was created successfully in this request.');
@@ -50,7 +51,7 @@ class TemporaryQueryTest extends DatabaseTestBase {
       -- Let's select some rows into a temporary table
       SELECT name FROM {test}
     ";
-    $table_name_test = db_query_temporary($sql, []);
+    $table_name_test = $connection->queryTemporary($sql, []);
     $this->assertEqual($this->countTableRows($table_name_test), $this->countTableRows('test'), 'Leading white space and comments do not interfere with temporary table creation.');
   }
 

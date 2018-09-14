@@ -116,7 +116,7 @@ function db_query_range($query, $from, $count, array $args = [], array $options 
  * @param array $options
  *   An array of options to control how the query operates.
  *
- * @return
+ * @return string
  *   The name of the temporary table.
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
@@ -128,6 +128,7 @@ function db_query_range($query, $from, $count, array $args = [], array $options 
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_query_temporary($query, array $args = [], array $options = []) {
+  @trigger_error('db_query_temporary() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call queryTemporary() on it. For example, $injected_database->queryTemporary($query, $args, $options). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }

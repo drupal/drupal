@@ -386,4 +386,16 @@ class DatabaseLegacyTest extends DatabaseTestBase {
     $this->assertInstanceOf(Truncate::class, db_truncate('test'));
   }
 
+  /**
+   * Tests deprecation of the db_query_temporary() function.
+   *
+   * @expectedDeprecation db_query_temporary() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call queryTemporary() on it. For example, $injected_database->queryTemporary($query, $args, $options). See https://www.drupal.org/node/2993033
+   */
+  public function testDbQueryTemporary() {
+    $expected = $this->connection->select('test')->countQuery()->execute()->fetchField();
+    $name = db_query_temporary('SELECT name FROM {test}');
+    $count = $this->connection->select($name)->countQuery()->execute()->fetchField();
+    $this->assertSame($expected, $count);
+  }
+
 }
