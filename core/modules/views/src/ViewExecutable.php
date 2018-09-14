@@ -114,7 +114,7 @@ class ViewExecutable {
   /**
    * Attachments to place before the view.
    *
-   * @var array()
+   * @var array
    */
   public $attachment_before = [];
 

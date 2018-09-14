@@ -31,7 +31,7 @@ class DisplayApiTest extends FieldKernelTestBase {
   /**
    * The field cardinality to use in this test.
    *
-   * @var number
+   * @var int
    */
   protected $cardinality;
 

@@ -51,7 +51,7 @@ abstract class TestBase {
   /**
    * Current results of this test case.
    *
-   * @var Array
+   * @var array
    */
   public $results = [
     '#pass' => 0,
@@ -63,7 +63,7 @@ abstract class TestBase {
   /**
    * Assertions thrown in that test case.
    *
-   * @var Array
+   * @var array
    */
   protected $assertions = [];
 
