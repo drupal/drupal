@@ -32,7 +32,12 @@ function taxonomy_update_8502(&$sandbox) {
     $sandbox['tid'] = -1;
     $sandbox['delta'] = 0;
     $sandbox['limit'] = Settings::get('entity_update_batch_size', 50);
-    $sandbox['max'] = $database->select('taxonomy_term_hierarchy')
+
+    // Count records using a join, as there might be orphans in the hierarchy
+    // table. See https://www.drupal.org/project/drupal/issues/2997982.
+    $select = $database->select('taxonomy_term_hierarchy', 'h');
+    $select->join('taxonomy_term_data', 'd', 'h.tid = d.tid');
+    $sandbox['max'] = $select
       ->countQuery()
       ->execute()
       ->fetchField();
