@@ -32,7 +32,7 @@ use Symfony\Component\Routing\RouteCollection;
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
  */
-class DefaultsSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, DefaultsSectionStorageInterface {
+class DefaultsSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, DefaultsSectionStorageInterface, SectionStorageLocalTaskProviderInterface {
 
   /**
    * The entity type manager.
@@ -194,6 +194,32 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
         $route->setOption('parameters', $parameters);
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildLocalTasks($base_plugin_definition) {
+    $local_tasks = [];
+    foreach ($this->getEntityTypes() as $entity_type_id => $entity_type) {
+      $local_tasks["layout_builder.defaults.$entity_type_id.view"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.defaults.$entity_type_id.view",
+        'title' => $this->t('Manage layout'),
+        'base_route' => "layout_builder.defaults.$entity_type_id.view",
+      ];
+      $local_tasks["layout_builder.defaults.$entity_type_id.save"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.defaults.$entity_type_id.save",
+        'title' => $this->t('Save Layout'),
+        'parent_id' => "layout_builder_ui:layout_builder.defaults.$entity_type_id.view",
+      ];
+      $local_tasks["layout_builder.defaults.$entity_type_id.cancel"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.defaults.$entity_type_id.cancel",
+        'title' => $this->t('Cancel Layout'),
+        'weight' => 5,
+        'parent_id' => "layout_builder_ui:layout_builder.defaults.$entity_type_id.view",
+      ];
+    }
+    return $local_tasks;
   }
 
   /**
