@@ -47,9 +47,12 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
   /**
    * {@inheritdoc}
    */
-  public function __wakeup() {
+  public function getEntity() {
+    $entity = parent::getEntity();
+
     // Ensure the entity is updated with the latest value.
-    $this->getEntity()->set($this->getName(), $this->getValue());
+    $entity->set($this->getName(), $this->getValue());
+    return $entity;
   }
 
 }
