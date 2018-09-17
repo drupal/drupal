@@ -47,16 +47,16 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
+    // Remove the Layout Builder field from the list.
+    $form['#fields'] = array_diff($form['#fields'], ['layout_builder__layout']);
+    unset($form['fields']['layout_builder__layout']);
+
     $is_enabled = $this->entity->isLayoutBuilderEnabled();
     if ($is_enabled) {
       // Hide the table of fields.
       $form['fields']['#access'] = FALSE;
       $form['#fields'] = [];
       $form['#extra'] = [];
-    }
-    else {
-      // Remove the Layout Builder field from the list.
-      $form['#fields'] = array_diff($form['#fields'], ['layout_builder__layout']);
     }
 
     $form['manage_layout'] = [
@@ -180,7 +180,7 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
    * {@inheritdoc}
    */
   protected function buildFieldRow(FieldDefinitionInterface $field_definition, array $form, FormStateInterface $form_state) {
-    if ($this->entity->isLayoutBuilderEnabled() || $field_definition->getType() === 'layout_section') {
+    if ($this->entity->isLayoutBuilderEnabled()) {
       return [];
     }
 
