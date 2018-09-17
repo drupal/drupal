@@ -526,7 +526,7 @@ function node_is_page(NodeInterface $node) {
  *   An associative array containing:
  *   - content: An array of content types.
  *
- * @see node_add_page()
+ * @see \Drupal\node\Controller\NodeController::addPage()
  */
 function template_preprocess_node_add_list(&$variables) {
   $variables['types'] = [];
