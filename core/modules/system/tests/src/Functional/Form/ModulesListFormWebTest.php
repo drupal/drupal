@@ -51,4 +51,29 @@ class ModulesListFormWebTest extends BrowserTestBase {
     $this->assertText('simpletest');
   }
 
+  public function testModulesListFormWithInvalidInfoFile() {
+    $broken_info_yml = <<<BROKEN
+name: Module With Broken Info file
+type: module
+BROKEN;
+    $path = \Drupal::service('site.path') . "/modules/broken";
+    mkdir($path, 0777, TRUE);
+    file_put_contents("$path/broken.info.yml", $broken_info_yml);
+
+    $this->drupalLogin(
+      $this->drupalCreateUser(
+        ['administer modules', 'administer permissions']
+      )
+    );
+    $this->drupalGet('admin/modules');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Confirm that the error message is shown.
+    $this->assertSession()
+      ->pageTextContains('Modules could not be listed due to an error: Missing required keys (core) in ' . $path . '/broken.info.yml');
+
+    // Check that the module filter text box is available.
+    $this->assertTrue($this->xpath('//input[@name="text"]'));
+  }
+
 }
