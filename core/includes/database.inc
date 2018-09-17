@@ -650,6 +650,7 @@ function db_field_names($fields) {
  * @see \Drupal\Core\Database\Schema::indexExists()
  */
 function db_index_exists($table, $name) {
+  @trigger_error('db_index_exists() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call indexExists() on it. For example, $injected_database->schema()->indexExists($table, $name). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->indexExists($table, $name);
 }
 

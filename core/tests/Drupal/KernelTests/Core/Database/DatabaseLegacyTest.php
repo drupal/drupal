@@ -323,6 +323,15 @@ class DatabaseLegacyTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests deprecation of the db_index_exists() function.
+   *
+   * @expectedDeprecation db_index_exists() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call indexExists() on it. For example, $injected_database->schema()->indexExists($table, $name). See https://www.drupal.org/node/2993033
+   */
+  public function testDbIndexExists() {
+    $this->assertFalse(db_index_exists('test', 'no_such_index'));
+  }
+
+  /**
    * Tests deprecation of the db_drop_unique_key() function.
    *
    * @expectedDeprecation db_drop_unique_key() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call dropUniqueKey() on it. For example, $injected_database->schema()->dropUniqueKey($table, $name). See https://www.drupal.org/node/2993033

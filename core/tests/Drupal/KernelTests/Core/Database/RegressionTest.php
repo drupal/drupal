@@ -50,11 +50,11 @@ class RegressionTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests the db_index_exists() function.
+   * Tests the Schema::indexExists() method.
    */
   public function testDBIndexExists() {
-    $this->assertSame(TRUE, db_index_exists('test', 'ages'), 'Returns true for existent index.');
-    $this->assertSame(FALSE, db_index_exists('test', 'nosuchindex'), 'Returns false for nonexistent index.');
+    $this->assertSame(TRUE, $this->connection->schema()->indexExists('test', 'ages'), 'Returns true for existent index.');
+    $this->assertSame(FALSE, $this->connection->schema()->indexExists('test', 'nosuchindex'), 'Returns false for nonexistent index.');
   }
 
 }
