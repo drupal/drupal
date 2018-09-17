@@ -14,7 +14,7 @@ class RangeQueryTest extends DatabaseTestBase {
    */
   public function testRangeQuery() {
     // Test if return correct number of rows.
-    $range_rows = db_query_range("SELECT name FROM {test} ORDER BY name", 1, 3)->fetchAll();
+    $range_rows = $this->connection->queryRange("SELECT name FROM {test} ORDER BY name", 1, 3)->fetchAll();
     $this->assertEqual(count($range_rows), 3, 'Range query work and return correct number of rows.');
 
     // Test if return target data.

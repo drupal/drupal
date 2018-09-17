@@ -265,7 +265,7 @@ class DbLogTest extends BrowserTestBase {
       'link' => $link,
     ]);
 
-    $result = db_query_range('SELECT wid FROM {watchdog} ORDER BY wid DESC', 0, 1);
+    $result = Database::getConnection()->queryRange('SELECT wid FROM {watchdog} ORDER BY wid DESC', 0, 1);
     $this->drupalGet('admin/reports/dblog/event/' . $result->fetchField());
 
     // Check if the link exists (unescaped).

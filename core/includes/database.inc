@@ -92,6 +92,7 @@ function db_query($query, array $args = [], array $options = []) {
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_query_range($query, $from, $count, array $args = [], array $options = []) {
+  @trigger_error('db_query_range() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call queryRange() on it. For example, $injected_database->queryRange($query, $from, $count, $args, $options). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }

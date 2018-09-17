@@ -3,6 +3,7 @@
 namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\ResourceTestBase;
@@ -58,7 +59,7 @@ class DbLogResourceTest extends ResourceTestBase {
     // Write a log message to the DB.
     $this->container->get('logger.channel.rest')->notice('Test message');
     // Get the ID of the written message.
-    $id = db_query_range("SELECT wid FROM {watchdog} WHERE type = :type ORDER BY wid DESC", 0, 1, [':type' => 'rest'])
+    $id = Database::getConnection()->queryRange("SELECT wid FROM {watchdog} WHERE type = :type ORDER BY wid DESC", 0, 1, [':type' => 'rest'])
       ->fetchField();
 
     $this->initAuthentication();

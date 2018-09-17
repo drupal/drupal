@@ -398,4 +398,14 @@ class DatabaseLegacyTest extends DatabaseTestBase {
     $this->assertSame($expected, $count);
   }
 
+  /**
+   * Tests deprecation of the db_query_range() function.
+   *
+   * @expectedDeprecation db_query_range() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call queryRange() on it. For example, $injected_database->queryRange($query, $from, $count, $args, $options). See https://www.drupal.org/node/2993033
+   */
+  public function testDbQueryRange() {
+    $count = count(db_query_range('SELECT name FROM {test}', 1, 3)->fetchAll());
+    $this->assertSame(3, $count);
+  }
+
 }
