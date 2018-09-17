@@ -226,6 +226,33 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that a non-default view mode works as expected.
+   */
+  public function testNonDefaultViewMode() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    // Allow overrides for the layout.
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $page->checkField('layout[enabled]');
+    $page->pressButton('Save');
+    $page->checkField('layout[allow_custom]');
+    $page->pressButton('Save');
+
+    $this->clickLink('Teaser');
+    // Enabling Layout Builder for the default mode does not affect the teaser.
+    $assert_session->addressEquals("$field_ui_prefix/display/teaser");
+    $assert_session->elementNotExists('css', '#layout-builder__layout');
+    $assert_session->checkboxNotChecked('layout[enabled]');
+  }
+
+  /**
    * Tests that component's dependencies are respected during removal.
    */
   public function testPluginDependencies() {
