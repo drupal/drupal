@@ -237,6 +237,15 @@ class DatabaseLegacyTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests deprecation of the db_field_exists() function.
+   *
+   * @expectedDeprecation db_field_exists() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call fieldExists() on it. For example, $injected_database->schema()->fieldExists($table, $field). See https://www.drupal.org/node/2993033
+   */
+  public function testDbFieldExists() {
+    $this->assertTrue(db_field_exists('test', 'age'));
+  }
+
+  /**
    * Tests deprecation of the db_field_names() function.
    *
    * @expectedDeprecation db_field_names() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call fieldNames() on it. For example, $injected_database->schema()->fieldNames($fields). See https://www.drupal.org/node/2993033

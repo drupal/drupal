@@ -698,6 +698,7 @@ function db_table_exists($table) {
  * @see \Drupal\Core\Database\Schema::fieldExists()
  */
 function db_field_exists($table, $field) {
+  @trigger_error('db_field_exists() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call fieldExists() on it. For example, $injected_database->schema()->fieldExists($table, $field). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->schema()->fieldExists($table, $field);
 }
 

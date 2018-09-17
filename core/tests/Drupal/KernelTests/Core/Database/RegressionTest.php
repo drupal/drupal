@@ -42,11 +42,12 @@ class RegressionTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests the db_field_exists() function.
+   * Tests the \Drupal\Core\Database\Schema::fieldExists() method.
    */
   public function testDBFieldExists() {
-    $this->assertSame(TRUE, db_field_exists('test', 'name'), 'Returns true for existent column.');
-    $this->assertSame(FALSE, db_field_exists('test', 'nosuchcolumn'), 'Returns false for nonexistent column.');
+    $schema = $this->connection->schema();
+    $this->assertSame(TRUE, $schema->fieldExists('test', 'name'), 'Returns true for existent column.');
+    $this->assertSame(FALSE, $schema->fieldExists('test', 'nosuchcolumn'), 'Returns false for nonexistent column.');
   }
 
   /**
