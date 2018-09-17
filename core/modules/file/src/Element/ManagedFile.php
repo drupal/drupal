@@ -305,12 +305,24 @@ class ManagedFile extends FormElement {
       $element['upload_button']['#ajax']['event'] = 'fileUpload';
     }
 
+    // Use a manually generated ID for the file upload field so the desired
+    // field label can be associated with it below. Use the same method for
+    // setting the ID that the form API autogenerator does.
+    // @see \Drupal\Core\Form\FormBuilder::doBuildForm()
+    $id = Html::getUniqueId('edit-' . implode('-', array_merge($element['#parents'], ['upload'])));
+
     // The file upload field itself.
     $element['upload'] = [
       '#name' => 'files[' . $parents_prefix . ']',
       '#type' => 'file',
+      // This #title will not actually be used as the upload field's HTML label,
+      // since the theme function for upload fields never passes the element
+      // through theme('form_element'). Instead the parent element's #title is
+      // used as the label (see below). That is usually a more meaningful label
+      // anyway.
       '#title' => t('Choose a file'),
       '#title_display' => 'invisible',
+      '#id' => $id,
       '#size' => $element['#size'],
       '#multiple' => $element['#multiple'],
       '#theme_wrappers' => [],
@@ -320,6 +332,10 @@ class ManagedFile extends FormElement {
     if (!empty($element['#accept'])) {
       $element['upload']['#attributes'] = ['accept' => $element['#accept']];
     }
+
+    // Indicate that $element['#title'] should be used as the HTML label for the
+    // file upload field.
+    $element['#label_for'] = $element['upload']['#id'];
 
     if (!empty($fids) && $element['#files']) {
       foreach ($element['#files'] as $delta => $file) {
@@ -353,12 +369,8 @@ class ManagedFile extends FormElement {
     // Add the extension list to the page as JavaScript settings.
     if (isset($element['#upload_validators']['file_validate_extensions'][0])) {
       $extension_list = implode(',', array_filter(explode(' ', $element['#upload_validators']['file_validate_extensions'][0])));
-      $element['upload']['#attached']['drupalSettings']['file']['elements']['#' . $element['#id']] = $extension_list;
+      $element['upload']['#attached']['drupalSettings']['file']['elements']['#' . $id] = $extension_list;
     }
-
-    // Let #id point to the file element, so the field label's 'for' corresponds
-    // with it.
-    $element['#id'] = &$element['upload']['#id'];
 
     // Prefix and suffix used for Ajax replacement.
     $element['#prefix'] = '<div id="' . $ajax_wrapper_id . '">';

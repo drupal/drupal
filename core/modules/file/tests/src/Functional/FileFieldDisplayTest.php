@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\file\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
@@ -107,6 +108,9 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->assertRaw($field_name . '[0][display]', 'First file appears as expected.');
     $this->assertRaw($field_name . '[1][display]', 'Second file appears as expected.');
     $this->assertSession()->responseContains($field_name . '[1][description]', 'Description of second file appears as expected.');
+
+    // Check that the file fields don't contain duplicate HTML IDs.
+    $this->assertNoDuplicateIds();
   }
 
   /**
@@ -218,6 +222,34 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     $this->drupalGet('node/' . $nid);
     $this->assertFieldByXPath('//a[@href="' . $node->{$field_name}->entity->url() . '"]', $description);
+  }
+
+  /**
+   * Asserts that each HTML ID is used for just a single element on the page.
+   *
+   * @param string $message
+   *   (optional) A message to display with the assertion.
+   */
+  protected function assertNoDuplicateIds($message = '') {
+    $args = ['@url' => $this->getUrl()];
+
+    if (!$elements = $this->xpath('//*[@id]')) {
+      $this->fail(new FormattableMarkup('The page @url contains no HTML IDs.', $args));
+      return;
+    }
+
+    $message = $message ?: new FormattableMarkup('The page @url does not contain duplicate HTML IDs', $args);
+
+    $seen_ids = [];
+    foreach ($elements as $element) {
+      $id = $element->getAttribute('id');
+      if (isset($seen_ids[$id])) {
+        $this->fail($message);
+        return;
+      }
+      $seen_ids[$id] = TRUE;
+    }
+    $this->assertTrue(TRUE, $message);
   }
 
 }
