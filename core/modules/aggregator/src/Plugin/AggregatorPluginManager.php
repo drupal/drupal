@@ -46,6 +46,7 @@ class AggregatorPluginManager extends DefaultPluginManager {
     ];
 
     parent::__construct("Plugin/aggregator/$type", $namespaces, $module_handler, $plugin_interfaces[$type], $type_annotations[$type]);
+    $this->alterInfo('aggregator_' . $type . '_info');
     $this->setCacheBackend($cache_backend, 'aggregator_' . $type . '_plugins');
   }
 
