@@ -221,11 +221,15 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $node_type = $node->type->entity;
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
   $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
-  $menu_names = menu_ui_get_menus();
-  $type_menus = $node_type->getThirdPartySetting('menu_ui', 'available_menus', ['main']);
+  $type_menus_ids = $node_type->getThirdPartySetting('menu_ui', 'available_menus', ['main']);
+  if (empty($type_menus_ids)) {
+    return;
+  }
+  /** @var \Drupal\system\MenuInterface[] $type_menus */
+  $type_menus = Menu::loadMultiple($type_menus_ids);
   $available_menus = [];
   foreach ($type_menus as $menu) {
-    $available_menus[$menu] = $menu_names[$menu];
+    $available_menus[$menu->id()] = $menu->label();
   }
   if ($defaults['id']) {
     $default = $defaults['menu_name'] . ':' . $defaults['parent'];
