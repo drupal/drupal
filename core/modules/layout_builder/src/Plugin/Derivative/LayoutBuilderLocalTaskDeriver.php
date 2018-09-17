@@ -3,11 +3,11 @@
 namespace Drupal\layout_builder\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\layout_builder\Plugin\SectionStorage\SectionStorageLocalTaskProviderInterface;
+use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,13 +29,23 @@ class LayoutBuilderLocalTaskDeriver extends DeriverBase implements ContainerDeri
   protected $entityTypeManager;
 
   /**
+   * The section storage manager.
+   *
+   * @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface
+   */
+  protected $sectionStorageManager;
+
+  /**
    * Constructs a new LayoutBuilderLocalTaskDeriver.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
+   *   The section storage manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, SectionStorageManagerInterface $section_storage_manager) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->sectionStorageManager = $section_storage_manager;
   }
 
   /**
@@ -43,7 +53,8 @@ class LayoutBuilderLocalTaskDeriver extends DeriverBase implements ContainerDeri
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('plugin.manager.layout_builder.section_storage')
     );
   }
 
@@ -51,84 +62,13 @@ class LayoutBuilderLocalTaskDeriver extends DeriverBase implements ContainerDeri
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    foreach ($this->getEntityTypesForOverrides() as $entity_type_id => $entity_type) {
-      // Overrides.
-      $this->derivatives["layout_builder.overrides.$entity_type_id.view"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.overrides.$entity_type_id.view",
-        'weight' => 15,
-        'title' => $this->t('Layout'),
-        'base_route' => "entity.$entity_type_id.canonical",
-        'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
-      ];
-      $this->derivatives["layout_builder.overrides.$entity_type_id.save"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.overrides.$entity_type_id.save",
-        'title' => $this->t('Save Layout'),
-        'parent_id' => "layout_builder_ui:layout_builder.overrides.$entity_type_id.view",
-        'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
-      ];
-      $this->derivatives["layout_builder.overrides.$entity_type_id.cancel"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.overrides.$entity_type_id.cancel",
-        'title' => $this->t('Cancel Layout'),
-        'parent_id' => "layout_builder_ui:layout_builder.overrides.$entity_type_id.view",
-        'weight' => 5,
-        'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
-      ];
-      // @todo This link should be conditionally displayed, see
-      //   https://www.drupal.org/node/2917777.
-      $this->derivatives["layout_builder.overrides.$entity_type_id.revert"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.overrides.$entity_type_id.revert",
-        'title' => $this->t('Revert to defaults'),
-        'parent_id' => "layout_builder_ui:layout_builder.overrides.$entity_type_id.view",
-        'weight' => 10,
-        'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
-      ];
+    foreach ($this->sectionStorageManager->getDefinitions() as $plugin_id => $definition) {
+      $section_storage = $this->sectionStorageManager->loadEmpty($plugin_id);
+      if ($section_storage instanceof SectionStorageLocalTaskProviderInterface) {
+        $this->derivatives += $section_storage->buildLocalTasks($base_plugin_definition);
+      }
     }
-
-    foreach ($this->getEntityTypesForDefaults() as $entity_type_id => $entity_type) {
-      // Defaults.
-      $this->derivatives["layout_builder.defaults.$entity_type_id.view"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.defaults.$entity_type_id.view",
-        'title' => $this->t('Manage layout'),
-        'base_route' => "layout_builder.defaults.$entity_type_id.view",
-      ];
-      $this->derivatives["layout_builder.defaults.$entity_type_id.save"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.defaults.$entity_type_id.save",
-        'title' => $this->t('Save Layout'),
-        'parent_id' => "layout_builder_ui:layout_builder.defaults.$entity_type_id.view",
-      ];
-      $this->derivatives["layout_builder.defaults.$entity_type_id.cancel"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.defaults.$entity_type_id.cancel",
-        'title' => $this->t('Cancel Layout'),
-        'weight' => 5,
-        'parent_id' => "layout_builder_ui:layout_builder.defaults.$entity_type_id.view",
-      ];
-    }
-
     return $this->derivatives;
-  }
-
-  /**
-   * Returns an array of entity types relevant for defaults.
-   *
-   * @return \Drupal\Core\Entity\EntityTypeInterface[]
-   *   An array of entity types.
-   */
-  protected function getEntityTypesForDefaults() {
-    return array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $entity_type) {
-      return $entity_type->entityClassImplements(FieldableEntityInterface::class) && $entity_type->hasViewBuilderClass() && $entity_type->get('field_ui_base_route');
-    });
-  }
-
-  /**
-   * Returns an array of entity types relevant for overrides.
-   *
-   * @return \Drupal\Core\Entity\EntityTypeInterface[]
-   *   An array of entity types.
-   */
-  protected function getEntityTypesForOverrides() {
-    return array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $entity_type) {
-      return $entity_type->entityClassImplements(FieldableEntityInterface::class) && $entity_type->hasViewBuilderClass() && $entity_type->hasLinkTemplate('canonical');
-    });
   }
 
 }
