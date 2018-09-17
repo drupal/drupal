@@ -552,7 +552,8 @@ abstract class Schema implements PlaceholderInterface {
    * recreate all indices and primary keys that are using the changed field.
    *
    * That means that you have to drop all affected keys and indexes with
-   * db_drop_{primary_key,unique_key,index}() before calling ::changeField().
+   * Schema::dropPrimaryKey(), Schema::dropUniqueKey(), or Schema::dropIndex()
+   * before calling ::changeField().
    * To recreate the keys and indices, pass the key definitions as the
    * optional $keys_new argument directly to ::changeField().
    *
@@ -568,9 +569,8 @@ abstract class Schema implements PlaceholderInterface {
    * and you want to change foo.bar to be type serial, leaving it as the
    * primary key. The correct sequence is:
    * @code
-   * $schema = \Drupal::database()->schema();
-   * $schema->dropPrimaryKey('foo');
-   * $schema->changeField('foo', 'bar', 'bar',
+   * $injected_database->schema()->dropPrimaryKey('foo');
+   * $injected_database->schema()->changeField('foo', 'bar', 'bar',
    *   array('type' => 'serial', 'not null' => TRUE),
    *   array('primary key' => array('bar')));
    * @endcode
@@ -583,15 +583,15 @@ abstract class Schema implements PlaceholderInterface {
    *
    * On MySQL, all type 'serial' fields must be part of at least one key
    * or index as soon as they are created. You cannot use
-   * db_add_{primary_key,unique_key,index}() for this purpose because
-   * the ALTER TABLE command will fail to add the column without a key
-   * or index specification. The solution is to use the optional
-   * $keys_new argument to create the key or index at the same time as
-   * field.
+   * Schema::addPrimaryKey, Schema::addUniqueKey(), or Schema::addIndex()
+   * for this purpose because the ALTER TABLE command will fail to add
+   * the column without a key or index specification.
+   * The solution is to use the optional $keys_new argument to create the key
+   * or index at the same time as field.
    *
-   * You could use db_add_{primary_key,unique_key,index}() in all cases
-   * unless you are converting a field to be type serial. You can use
-   * the $keys_new argument in all cases.
+   * You could use Schema::addPrimaryKey, Schema::addUniqueKey(), or
+   * Schema::addIndex() in all cases unless you are converting a field to
+   * be type serial. You can use the $keys_new argument in all cases.
    *
    * @param $table
    *   Name of the table.
