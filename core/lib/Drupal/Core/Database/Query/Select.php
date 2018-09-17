@@ -914,6 +914,8 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function __clone() {
+    parent::__clone();
+
     // On cloning, also clone the dependent objects. However, we do not
     // want to clone the database connection object as that would duplicate the
     // connection itself.
@@ -922,6 +924,11 @@ class Select extends Query implements SelectInterface {
     $this->having = clone($this->having);
     foreach ($this->union as $key => $aggregate) {
       $this->union[$key]['query'] = clone($aggregate['query']);
+    }
+    foreach ($this->tables as $alias => $table) {
+      if ($table['table'] instanceof SelectInterface) {
+        $this->tables[$alias]['table'] = clone $table['table'];
+      }
     }
   }
 
