@@ -972,7 +972,8 @@ function db_drop_unique_key($table, $name) {
  * @see \Drupal\Core\Database\Schema::addIndex()
  */
 function db_add_index($table, $name, $fields, array $spec) {
-  return Database::getConnection()->schema()->addIndex($table, $name, $fields, $spec);
+  @trigger_error('db_add_index() is deprecated in Drupal 8.0.x and will be removed in Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call addIndex() on it. For example, $injected_database->schema()->addIndex($table, $name, $fields, $spec). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
+  Database::getConnection()->schema()->addIndex($table, $name, $fields, $spec);
 }
 
 /**

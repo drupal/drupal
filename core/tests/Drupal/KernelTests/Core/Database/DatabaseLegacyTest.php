@@ -426,4 +426,24 @@ class DatabaseLegacyTest extends DatabaseTestBase {
     $this->assertSame(3, $count);
   }
 
+  /**
+   * Tests deprecation of the db_add_index() function.
+   *
+   * @expectedDeprecation db_add_index() is deprecated in Drupal 8.0.x and will be removed in Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call addIndex() on it. For example, $injected_database->schema()->addIndex($table, $name, $fields, $spec). See https://www.drupal.org/node/2993033
+   */
+  public function testDbAddIndex() {
+    $table_specification = [
+      'fields' => [
+        'age' => [
+          'description' => "The person's age",
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+      ],
+    ];
+    $this->assertNull(db_add_index('test', 'test', ['age'], $table_specification));
+  }
+
 }

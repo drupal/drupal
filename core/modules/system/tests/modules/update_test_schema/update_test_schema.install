@@ -5,6 +5,8 @@
  * Update hooks and schema definition for the update_test_schema module.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Implements hook_schema().
  *
@@ -44,7 +46,7 @@ if ($schema_version >= 8001) {
     ];
 
     // Add a column.
-    db_add_index('update_test_schema_table', 'test', ['a'], $table);
+    Database::getConnection()->schema()->addIndex('update_test_schema_table', 'test', ['a'], $table);
   }
 
 }
