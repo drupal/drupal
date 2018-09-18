@@ -185,7 +185,7 @@ class Extension implements \Serializable {
   public function unserialize($data) {
     $data = unserialize($data);
     // Get the app root from the container.
-    $this->root = DRUPAL_ROOT;
+    $this->root = \Drupal::hasService('app.root') ? \Drupal::root() : DRUPAL_ROOT;
     $this->type = $data['type'];
     $this->pathname = $data['pathname'];
     $this->filename = $data['filename'];
