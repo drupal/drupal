@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\views_ui\Tests;
+namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\views\Views;
@@ -55,20 +55,7 @@ class RowUITest extends UITestBase {
     $this->assertEqual($row['type'], 'test_row', 'Make sure that the test_row got saved as used row plugin.');
     $this->assertEqual($row['options']['test_option'], $random_name, 'Make sure that the custom settings field got saved as expected.');
 
-    // Change the row plugin to fields using ajax.
-    // Note: this is the best approximation we can achieve, because we cannot
-    // simulate the 'openDialog' command in
-    // WebTestBase::drupalProcessAjaxResponse(), hence we have to make do.
-    $row_plugin_url_ajax = str_replace('/nojs/', '/ajax/', $row_plugin_url);
-    $ajax_settings = [
-      'accepts' => 'application/vnd.drupal-ajax',
-      'submit' => [
-        '_triggering_element_name' => 'op',
-        '_triggering_element_value' => 'Apply',
-      ],
-      'url' => $row_plugin_url_ajax,
-    ];
-    $this->drupalPostAjaxForm($row_plugin_url, ['row[type]' => 'fields'], NULL, $row_plugin_url_ajax, [], [], NULL, $ajax_settings);
+    $this->drupalPostForm($row_plugin_url, ['row[type]' => 'fields'], 'Apply');
     $this->drupalGet($row_plugin_url);
     $this->assertResponse(200);
     $this->assertFieldByName('row[type]', 'fields', 'Make sure that the fields got saved as used row plugin.');
