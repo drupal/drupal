@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\statistics\Tests\Views;
+namespace Drupal\Tests\statistics\Functional\Views;
 
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -74,7 +74,7 @@ class IntegrationTest extends ViewTestBase {
     // @see \Drupal\statistics\Tests\StatisticsLoggingTest::testLogging().
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
-    $client = \Drupal::httpClient();
+    $client = $this->getHttpClient();
     $client->post($stats_path, ['form_params' => ['nid' => $this->node->id()]]);
     $this->drupalGet('test_statistics_integration');
 
