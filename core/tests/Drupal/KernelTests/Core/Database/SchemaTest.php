@@ -128,7 +128,7 @@ class SchemaTest extends KernelTestBase {
     $this->assertIdentical($index_exists, TRUE, 'Index created.');
 
     // Rename the table.
-    $this->schema->renameTable('test_table', 'test_table2');
+    $this->assertNull($this->schema->renameTable('test_table', 'test_table2'));
 
     // Index should be renamed.
     $index_exists = $this->schema->indexExists('test_table2', 'test_field');
@@ -240,7 +240,7 @@ class SchemaTest extends KernelTestBase {
     $this->assertIdentical($primary_key_exists, TRUE, 'Primary key created.');
     $this->assertIdentical($unique_key_exists, TRUE, 'Unique key created.');
 
-    $this->schema->renameTable('test_table', 'test_table2');
+    $this->assertNull($this->schema->renameTable('test_table', 'test_table2'));
 
     // Test for renamed primary and unique keys.
     switch ($db_type) {

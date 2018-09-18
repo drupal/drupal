@@ -388,7 +388,7 @@ class Schema extends DatabaseSchema {
     }
 
     $info = $this->getPrefixInfo($new_name);
-    return $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO `' . $info['table'] . '`');
+    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO `' . $info['table'] . '`');
   }
 
   /**
