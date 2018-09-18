@@ -1,5 +1,5 @@
 name: Media
-description: 'Manages the creation, configuration of display of media items.'
+description: 'Manages the creation, configuration, and display of media items.'
 type: module
 package: Core
 version: VERSION
