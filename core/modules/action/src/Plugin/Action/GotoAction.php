@@ -40,7 +40,7 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
   protected $unroutedUrlAssembler;
 
   /**
-   * Constructs a new DeleteNode object.
+   * Constructs a GotoAction object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
