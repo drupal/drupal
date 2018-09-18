@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\node\Tests;
+namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
@@ -158,17 +158,6 @@ class NodeRevisionsTest extends NodeTestBase {
     // Confirm that this is the default revision.
     $this->assertTrue($node->isDefaultRevision(), 'Third node revision is the default one.');
 
-    // Confirm that the "Edit" and "Delete" contextual links appear for the
-    // default revision.
-    $ids = ['node:node=' . $node->id() . ':changed=' . $node->getChangedTime()];
-    $json = $this->renderContextualLinks($ids, 'node/' . $node->id());
-    $this->verbose($json[$ids[0]]);
-
-    $expected = '<li class="entitynodeedit-form"><a href="' . base_path() . 'node/' . $node->id() . '/edit">Edit</a></li>';
-    $this->assertTrue(strstr($json[$ids[0]], $expected), 'The "Edit" contextual link is shown for the default revision.');
-    $expected = '<li class="entitynodedelete-form"><a href="' . base_path() . 'node/' . $node->id() . '/delete">Delete</a></li>';
-    $this->assertTrue(strstr($json[$ids[0]], $expected), 'The "Delete" contextual link is shown for the default revision.');
-
     // Confirm that revisions revert properly.
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert", [], t('Revert'));
     $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', [
@@ -187,15 +176,6 @@ class NodeRevisionsTest extends NodeTestBase {
     // Confirm that this is not the default version.
     $node = node_revision_load($node->getRevisionId());
     $this->assertFalse($node->isDefaultRevision(), 'Third node revision is not the default one.');
-
-    // Confirm that "Edit" and "Delete" contextual links don't appear for
-    // non-default revision.
-    $ids = ['node_revision::node=' . $node->id() . '&node_revision=' . $node->getRevisionId() . ':'];
-    $json = $this->renderContextualLinks($ids, 'node/' . $node->id() . '/revisions/' . $node->getRevisionId() . '/view');
-    $this->verbose($json[$ids[0]]);
-
-    $this->assertFalse(strstr($json[$ids[0]], '<li class="entitynodeedit-form">'), 'The "Edit" contextual link is not shown for a non-default revision.');
-    $this->assertFalse(strstr($json[$ids[0]], '<li class="entitynodedelete-form">'), 'The "Delete" contextual link is not shown for a non-default revision.');
 
     // Confirm revisions delete properly.
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", [], t('Delete'));
