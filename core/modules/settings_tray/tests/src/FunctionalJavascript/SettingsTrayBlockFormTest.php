@@ -183,7 +183,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
           'theme' => $theme,
           'block_plugin' => 'search_form_block',
           'new_page_text' => NULL,
-          'element_selector' => '#search-form--submit',
+          'element_selector' => '#edit-submit',
           'label_selector' => 'h2',
           'button_text' => 'Save Search form',
           'toolbar_item' => NULL,

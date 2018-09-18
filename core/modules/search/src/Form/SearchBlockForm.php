@@ -108,7 +108,6 @@ class SearchBlockForm extends FormBase {
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#id' => 'search-form--submit',
       '#value' => $this->t('Search'),
       // Prevent op from showing up in the query string.
       '#name' => '',
