@@ -3,10 +3,12 @@
 namespace Drupal\Tests\workspaces\Kernel;
 
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\system\Form\SiteInformationForm;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -716,6 +718,37 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     }
 
     return $flattened;
+  }
+
+  /**
+   * Tests that entity forms can be stored in the form cache.
+   */
+  public function testFormCacheForEntityForms() {
+    $this->initializeWorkspacesModule();
+    $this->switchToWorkspace('stage');
+
+    $form_builder = $this->container->get('form_builder');
+
+    $form = $this->entityTypeManager->getFormObject('entity_test_mulrevpub', 'default');
+    $form->setEntity(EntityTestMulRevPub::create([]));
+
+    $form_state = new FormState();
+    $built_form = $form_builder->buildForm($form, $form_state);
+    $form_builder->setCache($built_form['#build_id'], $built_form, $form_state);
+  }
+
+  /**
+   * Tests that non-entity forms can be stored in the form cache.
+   */
+  public function testFormCacheForRegularForms() {
+    $this->initializeWorkspacesModule();
+    $this->switchToWorkspace('stage');
+
+    $form_builder = $this->container->get('form_builder');
+
+    $form_state = new FormState();
+    $built_form = $form_builder->getForm(SiteInformationForm::class, $form_state);
+    $form_builder->setCache($built_form['#build_id'], $built_form, $form_state);
   }
 
 }
