@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\user\EntityOwnerTrait;
+use Drupal\user\UserInterface;
 use Drupal\workspaces\WorkspaceInterface;
 
 /**
@@ -50,7 +50,6 @@ use Drupal\workspaces\WorkspaceInterface;
  *     "uuid" = "uuid",
  *     "label" = "label",
  *     "uid" = "uid",
- *     "owner" = "uid",
  *   },
  *   links = {
  *     "add-form" = "/admin/config/workflow/workspaces/add",
@@ -65,14 +64,12 @@ use Drupal\workspaces\WorkspaceInterface;
 class Workspace extends ContentEntityBase implements WorkspaceInterface {
 
   use EntityChangedTrait;
-  use EntityOwnerTrait;
 
   /**
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
-    $fields += static::ownerBaseFieldDefinitions($entity_type);
 
     $fields['id'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Workspace ID'))
@@ -90,9 +87,12 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
       ->setSetting('max_length', 128)
       ->setRequired(TRUE);
 
-    $fields['uid']
+    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(new TranslatableMarkup('Owner'))
       ->setDescription(new TranslatableMarkup('The workspace owner.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'user')
+      ->setDefaultValueCallback('Drupal\workspaces\Entity\Workspace::getCurrentUserId')
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
         'weight' => 5,
@@ -142,6 +142,34 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
   /**
    * {@inheritdoc}
    */
+  public function getOwner() {
+    return $this->get('uid')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOwner(UserInterface $account) {
+    return $this->set('uid', $account->id());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOwnerId() {
+    return $this->get('uid')->target_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOwnerId($uid) {
+    return $this->set('uid', $uid);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
 
@@ -161,14 +189,12 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
   /**
    * Default value callback for 'uid' base field definition.
    *
-   * @deprecated The ::getCurrentUserId method is deprecated in 8.6.x and will
-   *   be removed before 9.0.0.
+   * @see ::baseFieldDefinitions()
    *
    * @return int[]
    *   An array containing the ID of the current user.
    */
   public static function getCurrentUserId() {
-    @trigger_error('The ::getCurrentUserId method is deprecated in 8.6.x and will be removed before 9.0.0.', E_USER_DEPRECATED);
     return [\Drupal::currentUser()->id()];
   }
 
