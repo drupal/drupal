@@ -262,7 +262,7 @@ class MigrateUpgradeImportBatch {
     }
     // If we had failures, log them and show the migration failed.
     if ($failures > 0) {
-      \Drupal::messenger()->addStatus(\Drupal::translation()
+      \Drupal::messenger()->addError(\Drupal::translation()
         ->formatPlural($failures, '1 upgrade failed', '@count upgrades failed'));
       \Drupal::messenger()->addError(t('Upgrade process not completed'));
     }
