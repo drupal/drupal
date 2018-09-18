@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\history\Kernel\Views;
 
+use Drupal\Core\Database\Database;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\user\Entity\User;
@@ -67,14 +68,15 @@ class HistoryTimestampTest extends ViewsKernelTestBase {
     $account->save();
     \Drupal::currentUser()->setAccount($account);
 
-    db_insert('history')
+    $connection = Database::getConnection();
+    $connection->insert('history')
       ->fields([
         'uid' => $account->id(),
         'nid' => $nodes[0]->id(),
         'timestamp' => REQUEST_TIME - 100,
       ])->execute();
 
-    db_insert('history')
+    $connection->insert('history')
       ->fields([
         'uid' => $account->id(),
         'nid' => $nodes[1]->id(),

@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\simpletest\KernelTestBase;
 
@@ -71,7 +72,7 @@ abstract class ViewKernelTestBase extends KernelTestBase {
 
     // Load the test dataset.
     $data_set = $this->dataSet();
-    $query = db_insert('views_test_data')
+    $query = Database::getConnection()->insert('views_test_data')
       ->fields(array_keys($data_set[0]));
     foreach ($data_set as $record) {
       $query->values($record);

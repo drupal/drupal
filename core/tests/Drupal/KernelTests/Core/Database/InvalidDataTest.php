@@ -18,7 +18,7 @@ class InvalidDataTest extends DatabaseTestBase {
   public function testInsertDuplicateData() {
     // Try to insert multiple records where at least one has bad data.
     try {
-      db_insert('test')
+      $this->connection->insert('test')
         ->fields(['name', 'age', 'job'])
         ->values([
           'name' => 'Elvis',
@@ -75,7 +75,7 @@ class InvalidDataTest extends DatabaseTestBase {
     // Insert multiple records in 'test_people' where one has bad data
     // (duplicate key). A 'Meredith' record has already been inserted
     // in ::setUp.
-    db_insert('test_people')
+    $this->connection->insert('test_people')
       ->fields(['name', 'age', 'job'])
       ->values([
         'name' => 'Elvis',
@@ -109,7 +109,7 @@ class InvalidDataTest extends DatabaseTestBase {
         ->orderBy('name');
 
       // Try inserting from the subselect.
-      db_insert('test')
+      $this->connection->insert('test')
         ->from($query)
         ->execute();
 

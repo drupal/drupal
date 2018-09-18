@@ -31,7 +31,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
   }
 
   protected function insert($name, $data) {
-    db_insert('config')->fields(['name' => $name, 'data' => $data])->execute();
+    Database::getConnection()->insert('config')->fields(['name' => $name, 'data' => $data])->execute();
   }
 
   protected function update($name, $data) {

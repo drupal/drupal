@@ -22,7 +22,8 @@ class UsageTest extends FileManagedUnitTestBase {
    */
   public function testGetUsage() {
     $file = $this->createFile();
-    db_insert('file_usage')
+    $connection = Database::getConnection();
+    $connection->insert('file_usage')
       ->fields([
         'fid' => $file->id(),
         'module' => 'testing',
@@ -31,7 +32,7 @@ class UsageTest extends FileManagedUnitTestBase {
         'count' => 1,
       ])
       ->execute();
-    db_insert('file_usage')
+    $connection->insert('file_usage')
       ->fields([
         'fid' => $file->id(),
         'module' => 'testing',
@@ -105,7 +106,8 @@ class UsageTest extends FileManagedUnitTestBase {
     $file = $this->createFile();
     $file->setPermanent();
     $file_usage = $this->container->get('file.usage');
-    db_insert('file_usage')
+    $connection = Database::getConnection();
+    $connection->insert('file_usage')
       ->fields([
         'fid' => $file->id(),
         'module' => 'testing',

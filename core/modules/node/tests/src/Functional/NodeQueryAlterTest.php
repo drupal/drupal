@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Tests that node access queries are properly altered by the node module.
  *
@@ -151,7 +153,8 @@ class NodeQueryAlterTest extends NodeTestBase {
       'grant_update' => 0,
       'grant_delete' => 0,
     ];
-    db_insert('node_access')->fields($record)->execute();
+    $connection = Database::getConnection();
+    $connection->insert('node_access')->fields($record)->execute();
 
     // Test that the noAccessUser still doesn't have the 'view'
     // privilege after adding the node_access record.

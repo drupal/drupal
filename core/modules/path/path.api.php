@@ -20,7 +20,7 @@
  * @see \Drupal\Core\Path\AliasStorageInterface::save()
  */
 function hook_path_insert($path) {
-  db_insert('mytable')
+  \Drupal::database()->insert('mytable')
     ->fields([
       'alias' => $path['alias'],
       'pid' => $path['pid'],

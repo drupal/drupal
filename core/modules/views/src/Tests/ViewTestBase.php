@@ -4,6 +4,7 @@ namespace Drupal\views\Tests;
 
 @trigger_error('\Drupal\views\Tests\ViewTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\views\Functional\ViewTestBase', E_USER_DEPRECATED);
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewExecutable;
@@ -57,7 +58,7 @@ abstract class ViewTestBase extends WebTestBase {
 
     // Load the test dataset.
     $data_set = $this->dataSet();
-    $query = db_insert('views_test_data')
+    $query = Database::getConnection()->insert('views_test_data')
       ->fields(array_keys($data_set[0]));
     foreach ($data_set as $record) {
       $query->values($record);

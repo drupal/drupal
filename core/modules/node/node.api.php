@@ -51,7 +51,7 @@ use Drupal\Core\Access\AccessResult;
  *   'grant_update' => 0,
  *   'grant_delete' => 0,
  * );
- * db_insert('node_access')->fields($record)->execute();
+ * \Drupal::database()->insert('node_access')->fields($record)->execute();
  * @endcode
  * And then in its hook_node_grants() implementation, it would need to return:
  * @code

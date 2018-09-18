@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Render\RenderContext;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -88,7 +89,7 @@ class CacheTest extends ViewsKernelTestBase {
       'age' => 29,
       'job' => 'Banjo',
     ];
-    db_insert('views_test_data')->fields($record)->execute();
+    Database::getConnection()->insert('views_test_data')->fields($record)->execute();
 
     // The result should be the same as before, because of the caching. (Note
     // that views_test_data records don't have associated cache tags, and hence
@@ -242,7 +243,7 @@ class CacheTest extends ViewsKernelTestBase {
       'age' => 29,
       'job' => 'Banjo',
     ];
-    db_insert('views_test_data')->fields($record)->execute();
+    Database::getConnection()->insert('views_test_data')->fields($record)->execute();
 
     // The Result changes, because the view is not cached.
     $view = Views::getView('test_cache');

@@ -76,7 +76,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
    * Tests escaping of LIKE wildcards.
    */
   public function testLikeEscape() {
-    db_insert('test')
+    $this->connection->insert('test')
       ->fields([
         'name' => 'Ring_',
       ])
@@ -102,7 +102,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
    * Tests a LIKE query containing a backslash.
    */
   public function testLikeBackslash() {
-    db_insert('test')
+    $this->connection->insert('test')
       ->fields(['name'])
       ->values([
         'name' => 'abcde\f',

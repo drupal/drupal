@@ -155,7 +155,7 @@ function hook_user_login($account) {
  *   The user object on which the operation was just performed.
  */
 function hook_user_logout($account) {
-  db_insert('logouts')
+  \Drupal::database()->insert('logouts')
     ->fields([
       'uid' => $account->id(),
       'time' => time(),

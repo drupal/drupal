@@ -1081,7 +1081,7 @@ function hook_ENTITY_TYPE_presave(Drupal\Core\Entity\EntityInterface $entity) {
  */
 function hook_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
   // Insert the new entity into a fictional table of all entities.
-  db_insert('example_entity')
+  \Drupal::database()->insert('example_entity')
     ->fields([
       'type' => $entity->getEntityTypeId(),
       'id' => $entity->id(),
@@ -1105,7 +1105,7 @@ function hook_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
  */
 function hook_ENTITY_TYPE_insert(Drupal\Core\Entity\EntityInterface $entity) {
   // Insert the new entity into a fictional table of this type of entity.
-  db_insert('example_entity')
+  \Drupal::database()->insert('example_entity')
     ->fields([
       'id' => $entity->id(),
       'created' => REQUEST_TIME,

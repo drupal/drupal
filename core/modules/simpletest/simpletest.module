@@ -138,7 +138,7 @@ function simpletest_run_tests($test_list) {
     unset($test_list['phpunit']);
   }
 
-  $test_id = db_insert('simpletest_test_id')
+  $test_id = \Drupal::database()->insert('simpletest_test_id')
     ->useDefaults(['test_id'])
     ->execute();
 

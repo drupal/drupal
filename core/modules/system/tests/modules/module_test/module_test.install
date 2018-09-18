@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the module_test module.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Implements hook_schema().
  */
@@ -29,7 +31,7 @@ function module_test_schema() {
  */
 function module_test_install() {
   $schema = drupal_get_module_schema('module_test', 'module_test');
-  db_insert('module_test')
+  Database::getConnection()->insert('module_test')
     ->fields([
       'data' => $schema['fields']['data']['type'],
     ])

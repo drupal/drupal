@@ -17,7 +17,7 @@ $connection->update('contact')
   ->execute();
 
 // Add a custom contact category.
-db_insert('contact')->fields([
+$connection->insert('contact')->fields([
   'category',
   'recipients',
   'reply',

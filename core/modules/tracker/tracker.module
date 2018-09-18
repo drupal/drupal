@@ -70,7 +70,7 @@ function tracker_cron() {
         ->execute();
 
       // Insert the node-level data.
-      db_insert('tracker_node')
+      $connection->insert('tracker_node')
         ->fields([
           'nid' => $nid,
           'published' => (int) $node->isPublished(),
@@ -79,7 +79,7 @@ function tracker_cron() {
         ->execute();
 
       // Insert the user-level data for the node's author.
-      db_insert('tracker_user')
+      $connection->insert('tracker_user')
         ->fields([
           'nid' => $nid,
           'published' => (int) $node->isPublished(),
@@ -102,7 +102,7 @@ function tracker_cron() {
         ->groupBy('uid')
         ->execute();
       if ($result) {
-        $query = db_insert('tracker_user');
+        $query = $connection->insert('tracker_user');
         foreach ($result as $row) {
           $query->fields([
             'uid' => $row['uid'],

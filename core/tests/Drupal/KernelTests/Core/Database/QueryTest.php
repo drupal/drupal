@@ -100,7 +100,7 @@ class QueryTest extends DatabaseTestBase {
     // Attempt SQLi via union query with no unsafe characters.
     $this->enableModules(['user']);
     $this->installEntitySchema('user');
-    db_insert('test')
+    $this->connection->insert('test')
       ->fields(['name' => '123456'])
       ->execute();
     $injection = "= 1 UNION ALL SELECT password FROM user WHERE uid =";
@@ -117,7 +117,7 @@ class QueryTest extends DatabaseTestBase {
     }
 
     // Attempt SQLi via union query - uppercase tablename.
-    db_insert('TEST_UPPERCASE')
+    $this->connection->insert('TEST_UPPERCASE')
       ->fields(['name' => 'secrets'])
       ->execute();
     $injection = "IS NOT NULL) UNION ALL SELECT name FROM {TEST_UPPERCASE} -- ";

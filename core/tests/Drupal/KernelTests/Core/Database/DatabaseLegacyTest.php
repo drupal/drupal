@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
+use Drupal\Core\Database\Query\Insert;
 use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
@@ -453,6 +454,15 @@ class DatabaseLegacyTest extends DatabaseTestBase {
       ],
     ];
     $this->assertNull(db_add_index('test', 'test', ['age'], $table_specification));
+  }
+
+  /**
+   * Tests the db_insert() function.
+   *
+   * @expectedDeprecation db_insert() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call insert() on it. For example, $injected_database->insert($table, $options); See https://www.drupal.org/node/2993033
+   */
+  public function testDbInsert() {
+    $this->assertInstanceOf(Insert::class, db_insert('test'));
   }
 
 }

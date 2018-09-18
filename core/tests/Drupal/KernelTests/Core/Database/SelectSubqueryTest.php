@@ -209,7 +209,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
    */
   public function testExistsSubquerySelect() {
     // Put George into {test_people}.
-    db_insert('test_people')
+    $this->connection->insert('test_people')
       ->fields([
         'name' => 'George',
         'age' => 27,
@@ -239,7 +239,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
    */
   public function testNotExistsSubquerySelect() {
     // Put George into {test_people}.
-    db_insert('test_people')
+    $this->connection->insert('test_people')
       ->fields([
         'name' => 'George',
         'age' => 27,

@@ -540,7 +540,7 @@ function search_index($type, $sid, $langcode, $text) {
 
   $connection = \Drupal::database();
   // Insert cleaned up data into dataset
-  db_insert('search_dataset')
+  $connection->insert('search_dataset')
     ->fields([
       'sid' => $sid,
       'langcode' => $langcode,

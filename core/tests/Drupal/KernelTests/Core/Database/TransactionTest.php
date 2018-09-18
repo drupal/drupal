@@ -55,7 +55,7 @@ class TransactionTest extends DatabaseTestBase {
     $txn = $this->connection->startTransaction();
 
     // Insert a single row into the testing table.
-    db_insert('test')
+    $this->connection->insert('test')
       ->fields([
         'name' => 'David' . $suffix,
         'age' => '24',
@@ -103,7 +103,7 @@ class TransactionTest extends DatabaseTestBase {
     $this->assertTrue($depth < $depth2, 'Transaction depth is has increased with new transaction.');
 
     // Insert a single row into the testing table.
-    db_insert('test')
+    $this->connection->insert('test')
       ->fields([
         'name' => 'Daniel' . $suffix,
         'age' => '19',
@@ -308,7 +308,7 @@ class TransactionTest extends DatabaseTestBase {
    * Inserts a single row into the testing table.
    */
   protected function insertRow($name) {
-    db_insert('test')
+    $this->connection->insert('test')
       ->fields([
         'name' => $name,
       ])

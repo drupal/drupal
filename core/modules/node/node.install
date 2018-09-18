@@ -134,7 +134,7 @@ function node_install() {
   }
 
   // Populate the node access table.
-  db_insert('node_access')
+  Database::getConnection()->insert('node_access')
     ->fields([
       'nid' => 0,
       'gid' => 0,

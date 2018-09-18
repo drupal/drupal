@@ -123,7 +123,8 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
 
     // Generate values and insert them directly in the storage tables.
     $values = [];
-    $query = db_insert($this->revisionTable)->fields($columns);
+    $connection = Database::getConnection();
+    $query = $connection->insert($this->revisionTable)->fields($columns);
     foreach ($revision_ids as $revision_id) {
       // Put one value too many.
       for ($delta = 0; $delta <= $this->fieldCardinality; $delta++) {
@@ -133,7 +134,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       }
       $query->execute();
     }
-    $query = db_insert($this->table)->fields($columns);
+    $query = $connection->insert($this->table)->fields($columns);
     foreach ($values[$revision_id] as $delta => $value) {
       $query->values([$bundle, 0, $entity->id(), $revision_id, $delta, $entity->language()->getId(), $value]);
     }
@@ -167,8 +168,8 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     // loaded.
     $unavailable_langcode = 'xx';
     $values = [$bundle, 0, $entity->id(), $entity->getRevisionId(), 0, $unavailable_langcode, mt_rand(1, 127)];
-    db_insert($this->table)->fields($columns)->values($values)->execute();
-    db_insert($this->revisionTable)->fields($columns)->values($values)->execute();
+    $connection->insert($this->table)->fields($columns)->values($values)->execute();
+    $connection->insert($this->revisionTable)->fields($columns)->values($values)->execute();
     $entity = $storage->load($entity->id());
     $this->assertFalse(array_key_exists($unavailable_langcode, $entity->{$this->fieldName}));
   }

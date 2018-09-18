@@ -15,7 +15,7 @@ class InsertTest extends DatabaseTestBase {
   public function testSimpleInsert() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
 
-    $query = db_insert('test');
+    $query = $this->connection->insert('test');
     $query->fields([
       'name' => 'Yoko',
       'age' => '29',
@@ -37,7 +37,7 @@ class InsertTest extends DatabaseTestBase {
   public function testMultiInsert() {
     $num_records_before = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
 
-    $query = db_insert('test');
+    $query = $this->connection->insert('test');
     $query->fields([
       'name' => 'Larry',
       'age' => '30',
@@ -76,7 +76,7 @@ class InsertTest extends DatabaseTestBase {
   public function testRepeatedInsert() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
 
-    $query = db_insert('test');
+    $query = $this->connection->insert('test');
 
     $query->fields([
       'name' => 'Larry',
@@ -119,7 +119,7 @@ class InsertTest extends DatabaseTestBase {
   public function testInsertFieldOnlyDefinition() {
     // This is useful for importers, when we want to create a query and define
     // its fields once, then loop over a multi-insert execution.
-    db_insert('test')
+    $this->connection->insert('test')
       ->fields(['name', 'age'])
       ->values(['Larry', '30'])
       ->values(['Curly', '31'])
@@ -137,7 +137,7 @@ class InsertTest extends DatabaseTestBase {
    * Tests that inserts return the proper auto-increment ID.
    */
   public function testInsertLastInsertID() {
-    $id = db_insert('test')
+    $id = $this->connection->insert('test')
       ->fields([
         'name' => 'Larry',
         'age' => '30',
@@ -165,7 +165,7 @@ class InsertTest extends DatabaseTestBase {
     // SELECT tp.age AS age, tp.name AS name, tp.job AS job
     // FROM test_people tp
     // WHERE tp.name = 'Meredith'
-    db_insert('test')
+    $this->connection->insert('test')
       ->from($query)
       ->execute();
 
@@ -186,7 +186,7 @@ class InsertTest extends DatabaseTestBase {
     // SELECT *
     // FROM test_people tp
     // WHERE tp.name = 'Meredith'
-    db_insert('test_people_copy')
+    $this->connection->insert('test_people_copy')
       ->from($query)
       ->execute();
 

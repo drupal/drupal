@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Tests the node access grants cache context service.
  *
@@ -92,7 +94,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
       'grant_update' => 0,
       'grant_delete' => 0,
     ];
-    db_insert('node_access')->fields($record)->execute();
+    Database::getConnection()->insert('node_access')->fields($record)->execute();
 
     // Put user accessUser (uid 0) in the realm.
     \Drupal::state()->set('node_access_test.no_access_uid', 0);

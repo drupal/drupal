@@ -157,6 +157,7 @@ function db_query_temporary($query, array $args = [], array $options = []) {
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_insert($table, array $options = []) {
+  @trigger_error('db_insert() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call insert() on it. For example, $injected_database->insert($table, $options); See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   if (empty($options['target']) || $options['target'] == 'replica') {
     $options['target'] = 'default';
   }
