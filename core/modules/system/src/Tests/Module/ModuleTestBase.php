@@ -42,7 +42,8 @@ abstract class ModuleTestBase extends WebTestBase {
    *   specified base table. Defaults to TRUE.
    */
   public function assertTableCount($base_table, $count = TRUE) {
-    $tables = db_find_tables(Database::getConnection()->prefixTables('{' . $base_table . '}') . '%');
+    $connection = Database::getConnection();
+    $tables = $connection->schema()->findTables($connection->prefixTables('{' . $base_table . '}') . '%');
 
     if ($count) {
       return $this->assertTrue($tables, format_string('Tables matching "@base_table" found.', ['@base_table' => $base_table]));

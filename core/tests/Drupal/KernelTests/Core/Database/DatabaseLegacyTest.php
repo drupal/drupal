@@ -72,6 +72,19 @@ class DatabaseLegacyTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests the db_find_tables() function.
+   *
+   * @expectedDeprecation db_find_tables() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Use $injected_database->schema()->findTables($table_expression) instead. See https://www.drupal.org/node/2993033
+   */
+  public function testDbFindTables() {
+    $expected = [
+      'test_people' => 'test_people',
+      'test_people_copy' => 'test_people_copy',
+    ];
+    $this->assertEquals($expected, db_find_tables('test_people%'));
+  }
+
+  /**
    * Tests the db_set_active() function.
    *
    * @expectedDeprecation db_set_active() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Database\Database::setActiveConnection() instead. See https://www.drupal.org/node/2944084.

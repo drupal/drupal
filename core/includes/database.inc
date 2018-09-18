@@ -721,6 +721,10 @@ function db_field_exists($table, $field) {
  * @see \Drupal\Core\Database\Schema::findTables()
  */
 function db_find_tables($table_expression) {
+  @trigger_error(
+    'db_find_tables() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Use $injected_database->schema()->findTables($table_expression) instead. See https://www.drupal.org/node/2993033',
+    E_USER_DEPRECATED
+  );
   return Database::getConnection()->schema()->findTables($table_expression);
 }
 

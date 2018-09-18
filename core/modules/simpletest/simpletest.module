@@ -670,7 +670,7 @@ function simpletest_clean_environment() {
  */
 function simpletest_clean_database() {
   $schema = Database::getConnection()->schema();
-  $tables = db_find_tables('test%');
+  $tables = $schema->findTables('test%');
   $count = 0;
   foreach ($tables as $table) {
     // Only drop tables which begin wih 'test' followed by digits, for example,
