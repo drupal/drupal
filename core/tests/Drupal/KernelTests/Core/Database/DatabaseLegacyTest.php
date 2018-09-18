@@ -303,6 +303,15 @@ class DatabaseLegacyTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests deprecation of the db_like() function.
+   *
+   * @expectedDeprecation db_like() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call escapeLike() on it. For example, $injected_database->escapeLike($string). See https://www.drupal.org/node/2993033
+   */
+  public function testDbLike() {
+    $this->assertSame('test\%', db_like('test%'));
+  }
+
+  /**
    * Tests deprecation of the db_escape_table() function.
    *
    * @expectedDeprecation db_escape_table() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call escapeTable() on it. For example, $injected_database->escapeTable($table). See https://www.drupal.org/node/2993033

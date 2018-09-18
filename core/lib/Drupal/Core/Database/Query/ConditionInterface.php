@@ -31,7 +31,7 @@ interface ConditionInterface {
    * to tell the database that case insensitive equivalence is desired:
    * @code
    * db_select('users')
-   *  ->condition('name', db_like($name), 'LIKE')
+   *  ->condition('name', $injected_connection->escapeLike($name), 'LIKE')
    * @endcode
    * Use 'LIKE BINARY' instead of 'LIKE' for case sensitive queries.
    *

@@ -438,7 +438,7 @@ class StringDatabaseStorage implements StringStorageInterface {
         $filter = $query;
       }
       foreach ($options['filters'] as $field => $string) {
-        $filter->condition($this->dbFieldTable($field) . '.' . $field, '%' . db_like($string) . '%', 'LIKE');
+        $filter->condition($this->dbFieldTable($field) . '.' . $field, '%' . $this->connection->escapeLike($string) . '%', 'LIKE');
       }
     }
 

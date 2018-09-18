@@ -1028,7 +1028,7 @@ abstract class Connection {
    * @code
    * $result = db_query(
    *   'SELECT * FROM person WHERE name LIKE :pattern',
-   *   array(':pattern' => db_like($prefix) . '%')
+   *   array(':pattern' => $injected_connection->escapeLike($prefix) . '%')
    * );
    * @endcode
    *

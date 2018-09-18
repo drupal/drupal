@@ -436,6 +436,7 @@ function db_escape_field($field) {
  * @see \Drupal\Core\Database\Connection::escapeLike()
  */
 function db_like($string) {
+  @trigger_error('db_like() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call escapeLike() on it. For example, $injected_database->escapeLike($string). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection()->escapeLike($string);
 }
 

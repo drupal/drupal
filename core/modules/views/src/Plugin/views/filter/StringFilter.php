@@ -2,8 +2,10 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Basic textfield filter to handle string filtering commands
@@ -22,6 +24,42 @@ class StringFilter extends FilterPluginBase {
 
   // exposed filter options
   protected $alwaysMultiple = TRUE;
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * Constructs a new EntityReference object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $connection) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->connection = $connection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('database')
+    );
+  }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -288,7 +326,7 @@ class StringFilter extends FilterPluginBase {
   }
 
   protected function opContains($field) {
-    $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value) . '%', 'LIKE');
+    $this->query->addWhere($this->options['group'], $field, '%' . $this->connection->escapeLike($this->value) . '%', 'LIKE');
   }
 
   protected function opContainsWord($field) {
@@ -310,7 +348,7 @@ class StringFilter extends FilterPluginBase {
       $words = trim($match[2], ',?!();:-');
       $words = $phrase ? [$words] : preg_split('/ /', $words, -1, PREG_SPLIT_NO_EMPTY);
       foreach ($words as $word) {
-        $where->condition($field, '%' . db_like(trim($word, " ,!?")) . '%', 'LIKE');
+        $where->condition($field, '%' . $this->connection->escapeLike(trim($word, " ,!?")) . '%', 'LIKE');
       }
     }
 
@@ -324,23 +362,23 @@ class StringFilter extends FilterPluginBase {
   }
 
   protected function opStartsWith($field) {
-    $this->query->addWhere($this->options['group'], $field, db_like($this->value) . '%', 'LIKE');
+    $this->query->addWhere($this->options['group'], $field, $this->connection->escapeLike($this->value) . '%', 'LIKE');
   }
 
   protected function opNotStartsWith($field) {
-    $this->query->addWhere($this->options['group'], $field, db_like($this->value) . '%', 'NOT LIKE');
+    $this->query->addWhere($this->options['group'], $field, $this->connection->escapeLike($this->value) . '%', 'NOT LIKE');
   }
 
   protected function opEndsWith($field) {
-    $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value), 'LIKE');
+    $this->query->addWhere($this->options['group'], $field, '%' . $this->connection->escapeLike($this->value), 'LIKE');
   }
 
   protected function opNotEndsWith($field) {
-    $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value), 'NOT LIKE');
+    $this->query->addWhere($this->options['group'], $field, '%' . $this->connection->escapeLike($this->value), 'NOT LIKE');
   }
 
   protected function opNotLike($field) {
-    $this->query->addWhere($this->options['group'], $field, '%' . db_like($this->value) . '%', 'NOT LIKE');
+    $this->query->addWhere($this->options['group'], $field, '%' . $this->connection->escapeLike($this->value) . '%', 'NOT LIKE');
   }
 
   protected function opShorterThan($field) {
