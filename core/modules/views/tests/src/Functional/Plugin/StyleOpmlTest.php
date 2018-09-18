@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\views\Tests\Plugin;
+namespace Drupal\Tests\views\Functional\Plugin;
+
+use Drupal\Tests\views\Functional\ViewTestBase;
 
 /**
  * Tests the OPML feed style plugin.
@@ -8,7 +10,7 @@ namespace Drupal\views\Tests\Plugin;
  * @group views
  * @see \Drupal\views\Plugin\views\style\Opml
  */
-class StyleOpmlTest extends PluginTestBase {
+class StyleOpmlTest extends ViewTestBase {
 
   /**
    * Views used by this test.
@@ -52,10 +54,10 @@ class StyleOpmlTest extends PluginTestBase {
     $feed->save();
 
     $this->drupalGet('test-feed-opml-style');
-    $outline = $this->xpath('//outline[1]');
-    $this->assertEqual($outline[0]['type'], 'rss', 'The correct type attribute is used for rss OPML.');
-    $this->assertEqual($outline[0]['text'], $feed->label(), 'The correct text attribute is used for rss OPML.');
-    $this->assertEqual($outline[0]['xmlurl'], $feed->getUrl(), 'The correct xmlUrl attribute is used for rss OPML.');
+    $outline = $this->getSession()->getDriver()->find('//outline[1]')[0];
+    $this->assertEquals('rss', $outline->getAttribute('type'));
+    $this->assertEquals($feed->label(), $outline->getAttribute('text'));
+    $this->assertEquals($feed->getUrl(), $outline->getAttribute('xmlUrl'));
 
     $view = $this->container->get('entity.manager')
       ->getStorage('view')
@@ -66,12 +68,12 @@ class StyleOpmlTest extends PluginTestBase {
     $view->save();
 
     $this->drupalGet('test-feed-opml-style');
-    $outline = $this->xpath('//outline[1]');
-    $this->assertEqual($outline[0]['type'], 'link', 'The correct type attribute is used for link OPML.');
-    $this->assertEqual($outline[0]['text'], $feed->label(), 'The correct text attribute is used for link OPML.');
-    $this->assertEqual($outline[0]['url'], $feed->getUrl(), 'The correct URL attribute is used for link OPML.');
+    $outline = $this->getSession()->getDriver()->find('//outline[1]')[0];
+    $this->assertEquals('link', $outline->getAttribute('type'));
+    $this->assertEquals($feed->label(), $outline->getAttribute('text'));
+    $this->assertEquals($feed->getUrl(), $outline->getAttribute('url'));
     // xmlUrl should not be present when type is link.
-    $this->assertNull($outline[0]['xmlUrl'], 'The xmlUrl attribute is not used for link OPML.');
+    $this->assertNull($outline->getAttribute('xmlUrl'));
   }
 
 }
