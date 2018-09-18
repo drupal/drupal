@@ -3,6 +3,6 @@ status: true
 dependencies: {  }
 name: 'Recipe category'
 vid: recipe_category
-description: ''
+description: 'Use this taxonomy to group recipes of the same type together.'
 hierarchy: 0
 weight: 0
