@@ -1,15 +1,19 @@
 <?php
 
-namespace Drupal\system\Tests\Pager;
+namespace Drupal\Tests\system\Functional\Pager;
 
-use Drupal\simpletest\WebTestBase;
+use Behat\Mink\Element\NodeElement;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests pager functionality.
  *
  * @group Pager
  */
-class PagerTest extends WebTestBase {
+class PagerTest extends BrowserTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Modules to enable.
@@ -58,9 +62,9 @@ class PagerTest extends WebTestBase {
 
     // Verify last page.
     $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--last']);
-    preg_match('@page=(\d+)@', $elements[0]['href'], $matches);
+    preg_match('@page=(\d+)@', $elements[0]->getAttribute('href'), $matches);
     $current_page = (int) $matches[1];
-    $this->drupalGet($GLOBALS['base_root'] . parse_url($this->getUrl())['path'] . $elements[0]['href'], ['external' => TRUE]);
+    $this->drupalGet($GLOBALS['base_root'] . parse_url($this->getUrl())['path'] . $elements[0]->getAttribute('href'), ['external' => TRUE]);
     $this->assertPagerItems($current_page);
   }
 
@@ -76,15 +80,18 @@ class PagerTest extends WebTestBase {
 
     // Go to last page, the count of pager calls need to go to 1.
     $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--last']);
-    $this->drupalGet($this->getAbsoluteUrl($elements[0]['href']));
+    $elements[0]->click();
     $this->assertText(t('Pager calls: 1'), 'First link call to pager shows 1 calls.');
     $this->assertText('[url.query_args.pagers:0]=0.60');
     $this->assertCacheContext('url.query_args');
 
+    // Reset counter to 0.
+    $this->drupalGet('pager-test/query-parameters');
     // Go back to first page, the count of pager calls need to go to 2.
+    $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--last']);
+    $elements[0]->click();
     $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--first']);
-    $this->drupalGet($this->getAbsoluteUrl($elements[0]['href']));
-    $this->drupalGet($GLOBALS['base_root'] . parse_url($this->getUrl())['path'] . $elements[0]['href'], ['external' => TRUE]);
+    $elements[0]->click();
     $this->assertText(t('Pager calls: 2'), 'Second link call to pager shows 2 calls.');
     $this->assertText('[url.query_args.pagers:0]=0.0');
     $this->assertCacheContext('url.query_args');
@@ -167,7 +174,7 @@ class PagerTest extends WebTestBase {
       $this->drupalGet($GLOBALS['base_root'] . parse_url($this->getUrl())['path'] . $input_query, ['external' => TRUE]);
       foreach ([0, 1, 4] as $pager_element) {
         $active_page = $this->cssSelect("div.test-pager-{$pager_element} ul.pager__items li.is-active:contains('{$data['expected_page'][$pager_element]}')");
-        $destination = str_replace('%2C', ',', $active_page[0]->a['href'][0]->__toString());
+        $destination = str_replace('%2C', ',', $active_page[0]->find('css', 'a')->getAttribute('href'));
         $this->assertEqual($destination, $data['expected_query']);
       }
     }
@@ -232,16 +239,18 @@ class PagerTest extends WebTestBase {
 
       if ($current_page == $page) {
         $this->assertClass($element, 'is-active', 'Element for current page has .is-active class.');
-        $this->assertTrue($element->a, 'Element for current page has link.');
-        $destination = $element->a['href'][0]->__toString();
+        $link = $element->find('css', 'a');
+        $this->assertTrue($link, 'Element for current page has link.');
+        $destination = $link->getAttribute('href');
         // URL query string param is 0-indexed.
         $this->assertEqual($destination, '?page=' . ($page - 1));
       }
       else {
         $this->assertNoClass($element, 'is-active', "Element for page $page has no .is-active class.");
         $this->assertClass($element, 'pager__item', "Element for page $page has .pager__item class.");
-        $this->assertTrue($element->a, "Link to page $page found.");
-        $destination = $element->a['href'][0]->__toString();
+        $link = $element->find('css', 'a');
+        $this->assertTrue($link, "Link to page $page found.");
+        $destination = $link->getAttribute('href');
         $this->assertEqual($destination, '?page=' . ($page - 1));
       }
       unset($elements[--$page]);
@@ -252,32 +261,36 @@ class PagerTest extends WebTestBase {
     // Verify first/previous and next/last items and links.
     if (isset($first)) {
       $this->assertClass($first, 'pager__item--first', 'Element for first page has .pager__item--first class.');
-      $this->assertTrue($first->a, 'Link to first page found.');
-      $this->assertNoClass($first->a, 'is-active', 'Link to first page is not active.');
-      $destination = $first->a['href'][0]->__toString();
+      $link = $first->find('css', 'a');
+      $this->assertTrue($link, 'Link to first page found.');
+      $this->assertNoClass($link, 'is-active', 'Link to first page is not active.');
+      $destination = $link->getAttribute('href');
       $this->assertEqual($destination, '?page=0');
     }
     if (isset($previous)) {
       $this->assertClass($previous, 'pager__item--previous', 'Element for first page has .pager__item--previous class.');
-      $this->assertTrue($previous->a, 'Link to previous page found.');
-      $this->assertNoClass($previous->a, 'is-active', 'Link to previous page is not active.');
-      $destination = $previous->a['href'][0]->__toString();
+      $link = $previous->find('css', 'a');
+      $this->assertTrue($link, 'Link to previous page found.');
+      $this->assertNoClass($link, 'is-active', 'Link to previous page is not active.');
+      $destination = $link->getAttribute('href');
       // URL query string param is 0-indexed, $current_page is 1-indexed.
       $this->assertEqual($destination, '?page=' . ($current_page - 2));
     }
     if (isset($next)) {
       $this->assertClass($next, 'pager__item--next', 'Element for next page has .pager__item--next class.');
-      $this->assertTrue($next->a, 'Link to next page found.');
-      $this->assertNoClass($next->a, 'is-active', 'Link to next page is not active.');
-      $destination = $next->a['href'][0]->__toString();
+      $link = $next->find('css', 'a');
+      $this->assertTrue($link, 'Link to next page found.');
+      $this->assertNoClass($link, 'is-active', 'Link to next page is not active.');
+      $destination = $link->getAttribute('href');
       // URL query string param is 0-indexed, $current_page is 1-indexed.
       $this->assertEqual($destination, '?page=' . $current_page);
     }
     if (isset($last)) {
+      $link = $last->find('css', 'a');
       $this->assertClass($last, 'pager__item--last', 'Element for last page has .pager__item--last class.');
-      $this->assertTrue($last->a, 'Link to last page found.');
-      $this->assertNoClass($last->a, 'is-active', 'Link to last page is not active.');
-      $destination = $last->a['href'][0]->__toString();
+      $this->assertTrue($link, 'Link to last page found.');
+      $this->assertNoClass($link, 'is-active', 'Link to last page is not active.');
+      $destination = $link->getAttribute('href');
       // URL query string param is 0-indexed.
       $this->assertEqual($destination, '?page=' . ($total_pages - 1));
     }
@@ -286,35 +299,35 @@ class PagerTest extends WebTestBase {
   /**
    * Asserts that an element has a given class.
    *
-   * @param \SimpleXMLElement $element
+   * @param \Behat\Mink\Element\NodeElement $element
    *   The element to test.
    * @param string $class
    *   The class to assert.
    * @param string $message
    *   (optional) A verbose message to output.
    */
-  protected function assertClass(\SimpleXMLElement $element, $class, $message = NULL) {
+  protected function assertClass(NodeElement $element, $class, $message = NULL) {
     if (!isset($message)) {
       $message = "Class .$class found.";
     }
-    $this->assertTrue(strpos($element['class'], $class) !== FALSE, $message);
+    $this->assertTrue($element->hasClass($class) !== FALSE, $message);
   }
 
   /**
    * Asserts that an element does not have a given class.
    *
-   * @param \SimpleXMLElement $element
+   * @param \Behat\Mink\Element\NodeElement $element
    *   The element to test.
    * @param string $class
    *   The class to assert.
    * @param string $message
    *   (optional) A verbose message to output.
    */
-  protected function assertNoClass(\SimpleXMLElement $element, $class, $message = NULL) {
+  protected function assertNoClass(NodeElement $element, $class, $message = NULL) {
     if (!isset($message)) {
       $message = "Class .$class not found.";
     }
-    $this->assertTrue(strpos($element['class'], $class) === FALSE, $message);
+    $this->assertTrue($element->hasClass($class) === FALSE, $message);
   }
 
 }

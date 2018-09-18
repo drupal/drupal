@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Page;
+namespace Drupal\Tests\system\Functional\Page;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests default HTML metatags on a page.
  *
  * @group Page
  */
-class DefaultMetatagsTest extends WebTestBase {
+class DefaultMetatagsTest extends BrowserTestBase {
 
   /**
    * Tests meta tags.
@@ -22,7 +22,7 @@ class DefaultMetatagsTest extends WebTestBase {
 
     // Ensure that the charset one is the first metatag.
     $result = $this->xpath('//meta');
-    $this->assertEqual((string) $result[0]->attributes()->charset, 'utf-8');
+    $this->assertEqual((string) $result[0]->getAttribute('charset'), 'utf-8');
 
     // Ensure that the shortcut icon is on the page.
     $result = $this->xpath('//link[@rel = "shortcut icon"]');
