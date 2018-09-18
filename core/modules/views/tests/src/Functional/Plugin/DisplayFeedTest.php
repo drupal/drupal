@@ -1,7 +1,8 @@
 <?php
 
-namespace Drupal\views\Tests\Plugin;
+namespace Drupal\Tests\views\Functional\Plugin;
 
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 
 /**
@@ -10,7 +11,7 @@ use Drupal\views\Views;
  * @group views
  * @see \Drupal\views\Plugin\views\display\Feed
  */
-class DisplayFeedTest extends PluginTestBase {
+class DisplayFeedTest extends ViewTestBase {
 
   /**
    * Views used by this test.
@@ -58,9 +59,8 @@ class DisplayFeedTest extends PluginTestBase {
     $this->config('system.site')->set('name', $site_name)->save();
 
     $this->drupalGet('test-feed-display.xml');
-    $result = $this->xpath('//title');
-    $this->assertEqual($result[0], $site_name, 'The site title is used for the feed title.');
-    $this->assertEqual($result[1], $node_title, 'Node title with HTML entities displays correctly.');
+    $this->assertEquals($site_name, $this->getSession()->getDriver()->getText('//title'));
+    $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//item/title'));
     // Verify HTML is properly escaped in the description field.
     $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');
 
@@ -70,8 +70,7 @@ class DisplayFeedTest extends PluginTestBase {
     $view->save();
 
     $this->drupalGet('test-feed-display.xml');
-    $result = $this->xpath('//title');
-    $this->assertEqual($result[0], 'test_display_feed', 'The display title is used for the feed title.');
+    $this->assertEquals('test_display_feed', $this->getSession()->getDriver()->getText('//title'));
 
     // Add a block display and attach the feed.
     $view->getExecutable()->newDisplay('block', NULL, 'test');
@@ -82,14 +81,14 @@ class DisplayFeedTest extends PluginTestBase {
     $this->drupalPlaceBlock('views_block:test_display_feed-test');
     $this->drupalGet('<front>');
     $feed_icon = $this->cssSelect('div.view-id-test_display_feed a.feed-icon');
-    $this->assertTrue(strpos($feed_icon[0]['href'], 'test-feed-display.xml'), 'The feed icon was found.');
+    $this->assertTrue(strpos($feed_icon[0]->getAttribute('href'), 'test-feed-display.xml'), 'The feed icon was found.');
 
     // Test feed display attached to page display with arguments.
     $this->drupalGet('test-feed-icon/' . $node->id());
     $page_url = $this->getUrl();
-    $icon_href = $this->cssSelect('a.feed-icon[href *= "test-feed-icon"]')[0]['href'];
+    $icon_href = $this->cssSelect('a.feed-icon[href *= "test-feed-icon"]')[0]->getAttribute('href');
     $this->assertEqual($icon_href, $page_url . '/feed', 'The feed icon was found.');
-    $link_href = $this->cssSelect('link[type = "application/rss+xml"][href *= "test-feed-icon"]')[0]['href'];
+    $link_href = $this->cssSelect('link[type = "application/rss+xml"][href *= "test-feed-icon"]')[0]->getAttribute('href');
     $this->assertEqual($link_href, $page_url . '/feed', 'The RSS link was found.');
     $feed_link = simplexml_load_string($this->drupalGet($icon_href))->channel->link;
     $this->assertEqual($feed_link, $page_url, 'The channel link was found.');
@@ -114,8 +113,7 @@ class DisplayFeedTest extends PluginTestBase {
     ]);
 
     $this->drupalGet('test-feed-display-fields.xml');
-    $result = $this->xpath('//title/a');
-    $this->assertEqual($result[0], $node_title, 'Node title with HTML entities displays correctly.');
+    $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//title/a'));
     // Verify HTML is properly escaped in the description field.
     $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');
   }
@@ -136,8 +134,8 @@ class DisplayFeedTest extends PluginTestBase {
     // Check that the rss header is output on the page display.
     $this->drupalGet('/test-attached-disabled');
     $feed_header = $this->xpath('//link[@rel="alternate"]');
-    $this->assertEqual($feed_header[0]['type'], 'application/rss+xml', 'The feed link has the type application/rss+xml.');
-    $this->assertTrue(strpos($feed_header[0]['href'], 'test-attached-disabled.xml'), 'Page display contains the correct feed URL.');
+    $this->assertEqual($feed_header[0]->getAttribute('type'), 'application/rss+xml', 'The feed link has the type application/rss+xml.');
+    $this->assertTrue(strpos($feed_header[0]->getAttribute('href'), 'test-attached-disabled.xml'), 'Page display contains the correct feed URL.');
 
     // Disable the feed display.
     $view->displayHandlers->get('feed_1')->setOption('enabled', FALSE);
