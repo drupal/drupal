@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\link\Tests\Views;
+namespace Drupal\Tests\link\Functional\Views;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
