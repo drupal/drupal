@@ -319,7 +319,7 @@ class EntityOperations implements ContainerInjectionInterface {
     // be a pending one.
     $active_workspace = $this->workspaceManager->getActiveWorkspace();
     if (!$active_workspace->isDefaultWorkspace()) {
-      $form['#entity_builders'][] = [$this, 'entityFormEntityBuild'];
+      $form['#entity_builders'][] = [get_called_class(), 'entityFormEntityBuild'];
     }
 
     /** @var \Drupal\workspaces\WorkspaceAssociationStorageInterface $workspace_association_storage */
@@ -340,7 +340,7 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Entity builder that marks all supported entities as pending revisions.
    */
-  public function entityFormEntityBuild($entity_type_id, RevisionableInterface $entity, &$form, FormStateInterface &$form_state) {
+  public static function entityFormEntityBuild($entity_type_id, RevisionableInterface $entity, &$form, FormStateInterface &$form_state) {
     // Set the non-default revision flag so that validation constraints are also
     // aware that a pending revision is about to be created.
     $entity->isDefaultRevision(FALSE);
