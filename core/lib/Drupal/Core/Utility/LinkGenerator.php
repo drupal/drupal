@@ -133,8 +133,15 @@ class LinkGenerator implements LinkGeneratorInterface {
       if ($url->isRouted() && !isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
         // @todo System path is deprecated - use the route name and parameters.
         $system_path = $url->getInternalPath();
+
         // Special case for the front page.
-        $variables['options']['attributes']['data-drupal-link-system-path'] = $system_path == '' ? '<front>' : $system_path;
+        if ($url->getRouteName() === '<front>') {
+          $system_path = '<front>';
+        }
+
+        if (!empty($system_path)) {
+          $variables['options']['attributes']['data-drupal-link-system-path'] = $system_path;
+        }
       }
     }
 
