@@ -238,7 +238,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
   /**
    * Skips the migration process entirely if the value is FALSE.
    *
-   * @param mixed $value
+   * @param array $value
    *   The incoming value to transform.
    *
    * @throws \Drupal\migrate\MigrateSkipProcessException
