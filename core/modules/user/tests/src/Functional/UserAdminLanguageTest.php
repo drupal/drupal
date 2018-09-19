@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests users' ability to change their own administration language.
  *
  * @group user
  */
-class UserAdminLanguageTest extends WebTestBase {
+class UserAdminLanguageTest extends BrowserTestBase {
 
   /**
    * A user with permission to access admin pages and administer languages.

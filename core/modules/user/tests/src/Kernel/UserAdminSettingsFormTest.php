@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\ConfigFormTestBase;
 use Drupal\user\AccountSettingsForm;

@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
 use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests user blocks.
  *
  * @group user
  */
-class UserBlocksTest extends WebTestBase {
+class UserBlocksTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -69,7 +69,7 @@ class UserBlocksTest extends WebTestBase {
     // Log in using the block.
     $edit = [];
     $edit['name'] = $user->getUsername();
-    $edit['pass'] = $user->pass_raw;
+    $edit['pass'] = $user->passRaw;
     $this->drupalPostForm('admin/people/permissions', $edit, t('Log in'));
     $this->assertNoText(t('User login'), 'Logged in.');
 

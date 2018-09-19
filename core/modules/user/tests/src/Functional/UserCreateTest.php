@@ -1,17 +1,22 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the create user administration page.
  *
  * @group user
  */
-class UserCreateTest extends WebTestBase {
+class UserCreateTest extends BrowserTestBase {
+
+  use AssertMailTrait {
+    getMails as drupalGetMails;
+  }
 
   /**
    * Modules to enable.
@@ -109,7 +114,7 @@ class UserCreateTest extends WebTestBase {
       $this->drupalGet('admin/people');
       $this->assertText($edit['name'], 'User found in list of users');
       $user = user_load_by_name($name);
-      $this->assertEqual($user->isActive(), 'User is not blocked');
+      $this->assertTrue($user->isActive(), 'User is not blocked');
     }
 
     // Test that the password '0' is considered a password.

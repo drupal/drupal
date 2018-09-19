@@ -3,10 +3,10 @@
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Flood\DatabaseBackend;
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Controller\UserAuthenticationController;
-use Drupal\user\Tests\UserResetEmailTestTrait;
 use GuzzleHttp\Cookie\CookieJar;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -21,7 +21,9 @@ use Symfony\Component\Serializer\Serializer;
  */
 class UserLoginHttpTest extends BrowserTestBase {
 
-  use UserResetEmailTestTrait;
+  use AssertMailTrait {
+    getMails as drupalGetMails;
+  }
 
   /**
    * Modules to install.
@@ -524,6 +526,19 @@ class UserLoginHttpTest extends BrowserTestBase {
     $this->assertEquals(200, $response->getStatusCode());
     $this->loginFromResetEmail();
     $this->drupalLogout();
+  }
+
+  /**
+   * Login from reset password email.
+   */
+  protected function loginFromResetEmail() {
+    $_emails = $this->drupalGetMails();
+    $email = end($_emails);
+    $urls = [];
+    preg_match('#.+user/reset/.+#', $email['body'], $urls);
+    $resetURL = $urls[0];
+    $this->drupalGet($resetURL);
+    $this->drupalPostForm(NULL, NULL, 'Log in');
   }
 
 }
