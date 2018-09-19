@@ -219,7 +219,7 @@ class Tables implements TablesInterface {
           // field no other value than 0 makes sense.
           if (is_numeric($next)) {
             if ($next > 0) {
-              $this->sqlQuery->condition('1 <> 1');
+              $this->sqlQuery->alwaysFalse();
             }
             $key++;
             $next = $specifiers[$key + 1];

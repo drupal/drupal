@@ -133,6 +133,13 @@ interface ConditionInterface {
   public function notExists(SelectInterface $select);
 
   /**
+   * Sets a condition that is always false.
+   *
+   * @return $this
+   */
+  public function alwaysFalse();
+
+  /**
    * Gets the, possibly nested, list of conditions in this conditional clause.
    *
    * This method returns by reference. That allows alter hooks to access the

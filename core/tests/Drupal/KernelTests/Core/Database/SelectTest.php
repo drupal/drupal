@@ -252,6 +252,50 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests that we can force a query to return an empty result.
+   */
+  public function testAlwaysFalseCondition() {
+    $names = $this->connection->select('test', 'test')
+      ->fields('test', ['name'])
+      ->condition('age', 27)
+      ->execute()->fetchCol();
+
+    $this->assertCount(1, $names);
+    $this->assertSame($names[0], 'George');
+
+    $names = $this->connection->select('test', 'test')
+      ->fields('test', ['name'])
+      ->condition('age', 27)
+      ->alwaysFalse()
+      ->execute()->fetchCol();
+
+    $this->assertCount(0, $names);
+  }
+
+  /**
+   * Tests that we can force an extended query to return an empty result.
+   */
+  public function testExtenderAlwaysFalseCondition() {
+    $names = $this->connection->select('test', 'test')
+      ->extend('Drupal\Core\Database\Query\SelectExtender')
+      ->fields('test', ['name'])
+      ->condition('age', 27)
+      ->execute()->fetchCol();
+
+    $this->assertCount(1, $names);
+    $this->assertSame($names[0], 'George');
+
+    $names = $this->connection->select('test', 'test')
+      ->extend('Drupal\Core\Database\Query\SelectExtender')
+      ->fields('test', ['name'])
+      ->condition('age', 27)
+      ->alwaysFalse()
+      ->execute()->fetchCol();
+
+    $this->assertCount(0, $names);
+  }
+
+  /**
    * Tests that we can UNION multiple Select queries together.
    *
    * This is semantically equal to UNION DISTINCT, so we don't explicitly test

@@ -159,6 +159,13 @@ class Condition implements ConditionInterface, \Countable {
   /**
    * {@inheritdoc}
    */
+  public function alwaysFalse() {
+    return $this->where('1 = 0');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function &conditions() {
     return $this->conditions;
   }
