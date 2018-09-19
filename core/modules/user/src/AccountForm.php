@@ -68,8 +68,19 @@ abstract class AccountForm extends ContentEntityForm {
     $form['#cache']['tags'] = $config->getCacheTags();
 
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+
+    // Check for new account.
     $register = $account->isAnonymous();
-    $admin = $user->hasPermission('administer users');
+
+    // For a new account, there are 2 sub-cases:
+    // $self_register: A user creates their own, new, account
+    //   (path '/user/register')
+    // $admin_create: An administrator creates a new account for another user
+    //   (path '/admin/people/create')
+    // If the current user is logged in and has permission to create users
+    // then it must be the second case.
+    $admin_create = $register && $account->access('create');
+    $self_register = $register && !$admin_create;
 
     // Account information.
     $form['account'] = [
@@ -85,7 +96,7 @@ abstract class AccountForm extends ContentEntityForm {
       '#type' => 'email',
       '#title' => $this->t('Email address'),
       '#description' => $this->t('A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email.'),
-      '#required' => !(!$account->getEmail() && $admin),
+      '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
       '#default_value' => (!$register ? $account->getEmail() : ''),
     ];
 
@@ -103,7 +114,7 @@ abstract class AccountForm extends ContentEntityForm {
         'spellcheck' => 'false',
       ],
       '#default_value' => (!$register ? $account->getAccountName() : ''),
-      '#access' => ($register || ($user->id() == $account->id() && $user->hasPermission('change own username')) || $admin),
+      '#access' => $account->name->access('edit'),
     ];
 
     // Display password field only for existing users or when user is allowed to
@@ -150,7 +161,7 @@ abstract class AccountForm extends ContentEntityForm {
         }
       }
     }
-    elseif (!$config->get('verify_mail') || $admin) {
+    elseif (!$config->get('verify_mail') || $admin_create) {
       $form['account']['pass'] = [
         '#type' => 'password_confirm',
         '#size' => 25,
@@ -169,7 +180,7 @@ abstract class AccountForm extends ContentEntityForm {
       }
     }
 
-    if ($admin || !$register) {
+    if (!$self_register) {
       $status = $account->get('status')->value;
     }
     else {
@@ -181,7 +192,7 @@ abstract class AccountForm extends ContentEntityForm {
       '#title' => $this->t('Status'),
       '#default_value' => $status,
       '#options' => [$this->t('Blocked'), $this->t('Active')],
-      '#access' => $admin,
+      '#access' => $account->status->access('edit'),
     ];
 
     $roles = array_map(['\Drupal\Component\Utility\Html', 'escape'], user_role_names(TRUE));
@@ -203,7 +214,7 @@ abstract class AccountForm extends ContentEntityForm {
     $form['account']['notify'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user of new account'),
-      '#access' => $register && $admin,
+      '#access' => $admin_create,
     ];
 
     $user_preferred_langcode = $register ? $language_interface->getId() : $account->getPreferredLangcode();
@@ -222,7 +233,7 @@ abstract class AccountForm extends ContentEntityForm {
       '#open' => TRUE,
       // Display language selector when either creating a user on the admin
       // interface or editing a user account.
-      '#access' => !$register || $admin,
+      '#access' => !$self_register,
     ];
 
     $form['language']['preferred_langcode'] = [

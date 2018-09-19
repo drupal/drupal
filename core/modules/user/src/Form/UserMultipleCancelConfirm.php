@@ -142,12 +142,27 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
 
     $form['operation'] = ['#type' => 'hidden', '#value' => 'cancel'];
 
+    // Display account cancellation method selection, if allowed.
+    $user = $this->currentUser();
+    $selectCancel = $user->hasPermission('administer users') || $user->hasPermission('select account cancellation method');
+
     $form['user_cancel_method'] = [
       '#type' => 'radios',
       '#title' => $this->t('When cancelling these accounts'),
+      '#access' => $selectCancel,
     ];
 
     $form['user_cancel_method'] += user_cancel_methods();
+
+    if (!$selectCancel) {
+      // Display an item to inform the user of the setting.
+      $default_method = $form['user_cancel_method']['#default_value'];
+      $form['user_cancel_method_show'] = [
+        '#type' => 'item',
+        '#title' => $this->t('When cancelling these accounts'),
+        '#plain_text' => $form['user_cancel_method']['#options'][$default_method],
+      ];
+    }
 
     // Allow to send the account cancellation confirmation mail.
     $form['user_cancel_confirm'] = [

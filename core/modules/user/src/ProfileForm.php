@@ -20,12 +20,10 @@ class ProfileForm extends AccountForm {
     // The user account being edited.
     $account = $this->entity;
 
-    // The user doing the editing.
-    $user = $this->currentUser();
     $element['delete']['#type'] = 'submit';
     $element['delete']['#value'] = $this->t('Cancel account');
     $element['delete']['#submit'] = ['::editCancelSubmit'];
-    $element['delete']['#access'] = $account->id() > 1 && (($account->id() == $user->id() && $user->hasPermission('cancel account')) || $user->hasPermission('administer users'));
+    $element['delete']['#access'] = $account->id() > 1 && $account->access('delete');
 
     return $element;
   }

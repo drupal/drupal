@@ -18,7 +18,14 @@ class RegisterForm extends AccountForm {
     $user = $this->currentUser();
     /** @var \Drupal\user\UserInterface $account */
     $account = $this->entity;
-    $admin = $user->hasPermission('administer users');
+
+    // This form is used for two cases:
+    // - Self-register (route = 'user.register').
+    // - Admin-create (route = 'user.admin_create').
+    // If the current user has permission to create users then it must be the
+    // second case.
+    $admin = $account->access('create');
+
     // Pass access information to the submit handler. Running an access check
     // inside the submit function interferes with form processing and breaks
     // hook_form_alter().

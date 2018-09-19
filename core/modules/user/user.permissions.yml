@@ -14,7 +14,7 @@ access user profiles:
 change own username:
   title: 'Change own username'
 select account cancellation method:
-  title: 'Select method for cancelling own account'
+  title: 'Select method for cancelling account'
   restrict access: true
 cancel account:
   title: 'Cancel own user account'
