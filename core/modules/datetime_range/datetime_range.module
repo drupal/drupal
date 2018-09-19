@@ -53,9 +53,13 @@ function datetime_range_view_presave(ViewEntityInterface $view) {
     if (isset($display['display_options']['filters'])) {
       foreach ($display['display_options']['filters'] as $field_name => &$filter) {
         if ($filter['plugin_id'] === 'string') {
+          $table_data = Views::viewsData()->get($filter['table']);
+          if (!$table_data) {
+            continue;
+          }
 
           // Get field config.
-          $filter_views_data = Views::viewsData()->get($filter['table'])[$filter['field']]['filter'];
+          $filter_views_data = $table_data[$filter['field']]['filter'];
           if (!isset($filter_views_data['entity_type']) || !isset($filter_views_data['field_name'])) {
             continue;
           }
@@ -128,9 +132,13 @@ function datetime_range_view_presave(ViewEntityInterface $view) {
     if (isset($display['display_options']['sorts'])) {
       foreach ($display['display_options']['sorts'] as $field_name => &$sort) {
         if ($sort['plugin_id'] === 'standard') {
+          $table_data = Views::viewsData()->get($sort['table']);
+          if (!$table_data) {
+            continue;
+          }
 
           // Get field config.
-          $sort_views_data = Views::viewsData()->get($sort['table'])[$sort['field']]['sort'];
+          $sort_views_data = $table_data[$sort['field']]['sort'];
           if (!isset($sort_views_data['entity_type']) || !isset($sort_views_data['field_name'])) {
             continue;
           }
