@@ -20,6 +20,13 @@ class AnonymousPrivateTempStoreTest extends KernelTestBase {
   public static $modules = ['system'];
 
   /**
+   * The private temp store.
+   *
+   * @var \Drupal\Core\TempStore\PrivateTempStore
+   */
+  protected $tempStore;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -29,30 +36,35 @@ class AnonymousPrivateTempStoreTest extends KernelTestBase {
     // full Drupal environment.
     $this->installSchema('system', ['key_value_expire']);
 
-    $session = $this->container->get('session');
     $request = Request::create('/');
-    $request->setSession($session);
-
     $stack = $this->container->get('request_stack');
     $stack->pop();
     $stack->push($request);
 
+    $this->tempStore = $this->container->get('tempstore.private')->get('anonymous_private_temp_store');
+  }
+
+  /**
+   * Tests anonymous can get without a previous set.
+   */
+  public function testAnonymousCanUsePrivateTempStoreGet() {
+    $actual = $this->tempStore->get('foo');
+    $this->assertNull($actual);
   }
 
   /**
    * Tests anonymous can use the PrivateTempStore.
    */
-  public function testAnonymousCanUsePrivateTempStore() {
-    $temp_store = $this->container->get('tempstore.private')->get('anonymous_private_temp_store');
-    $temp_store->set('foo', 'bar');
-    $metadata1 = $temp_store->getMetadata('foo');
+  public function testAnonymousCanUsePrivateTempStoreSet() {
+    $this->tempStore->set('foo', 'bar');
+    $metadata1 = $this->tempStore->getMetadata('foo');
 
-    $this->assertEquals('bar', $temp_store->get('foo'));
+    $this->assertEquals('bar', $this->tempStore->get('foo'));
     $this->assertNotEmpty($metadata1->owner);
 
-    $temp_store->set('foo', 'bar2');
-    $metadata2 = $temp_store->getMetadata('foo');
-    $this->assertEquals('bar2', $temp_store->get('foo'));
+    $this->tempStore->set('foo', 'bar2');
+    $metadata2 = $this->tempStore->getMetadata('foo');
+    $this->assertEquals('bar2', $this->tempStore->get('foo'));
     $this->assertNotEmpty($metadata2->owner);
     $this->assertEquals($metadata2->owner, $metadata1->owner);
   }
