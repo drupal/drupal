@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\comment\Kernel;
 
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -9,6 +10,7 @@ use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests integration of comment with other components.
@@ -16,6 +18,8 @@ use Drupal\KernelTests\KernelTestBase;
  * @group comment
  */
 class CommentIntegrationTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -31,11 +35,13 @@ class CommentIntegrationTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('comment');
     $this->installSchema('dblog', ['watchdog']);
+    $this->installSchema('system', ['sequences']);
 
     // Create a new 'comment' comment-type.
     CommentType::create([
       'id' => 'comment',
       'label' => $this->randomString(),
+      'target_entity_type_id' => 'entity_test',
     ])->save();
   }
 
@@ -132,6 +138,23 @@ class CommentIntegrationTest extends KernelTestBase {
     // Check that the field formatter has been disabled on host view display.
     $this->assertNull($host_display->getComponent($field_name));
     $this->assertTrue($host_display->get('hidden')[$field_name]);
+  }
+
+  /**
+   * Test the default owner of comment entities.
+   */
+  public function testCommentDefaultOwner() {
+    $comment = Comment::create([
+      'comment_type' => 'comment',
+    ]);
+    $this->assertEquals(0, $comment->getOwnerId());
+
+    $user = $this->createUser();
+    $this->container->get('current_user')->setAccount($user);
+    $comment = Comment::create([
+      'comment_type' => 'comment',
+    ]);
+    $this->assertEquals($user->id(), $comment->getOwnerId());
   }
 
 }

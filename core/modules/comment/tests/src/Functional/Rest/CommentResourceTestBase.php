@@ -314,7 +314,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     // $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nentity_type: This value should not be null.\n", $response);
 
     // DX: 422 when missing 'entity_type' field.
-    $request_options[RequestOptions::BODY] = $this->serializer->encode(array_diff_key($this->getNormalizedPostEntity(), ['field_name' => TRUE]), static::$format);
+    $request_options[RequestOptions::BODY] = $this->serializer->encode(array_diff_key($this->getNormalizedPostEntity(), ['entity_type' => TRUE]), static::$format);
     $response = $this->request('POST', $url, $request_options);
     // @todo Uncomment, remove next 2 lines in https://www.drupal.org/node/2820364.
     $this->assertSame(500, $response->getStatusCode());
