@@ -68,6 +68,7 @@ class EntityBundleListener implements EntityBundleListenerInterface {
     }
     // Invoke hook_entity_bundle_create() hook.
     $this->moduleHandler->invokeAll('entity_bundle_create', [$entity_type_id, $bundle]);
+    $this->entityFieldManager->clearCachedFieldDefinitions();
   }
 
   /**
