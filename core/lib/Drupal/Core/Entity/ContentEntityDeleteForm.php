@@ -60,6 +60,7 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->getEntity();
+    $message = $this->getDeletionMessage();
 
     // Make sure that deleting a translation does not delete the whole entity.
     if (!$entity->isDefaultTranslation()) {
@@ -73,7 +74,7 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
       $form_state->setRedirectUrl($this->getRedirectUrl());
     }
 
-    $this->messenger()->addStatus($this->getDeletionMessage());
+    $this->messenger()->addStatus($message);
     $this->logDeletionMessage();
   }
 
