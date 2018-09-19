@@ -497,7 +497,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
           }
         }
 
-        $this->cacheSet($cid, $this->fieldMap, Cache::PERMANENT, ['entity_types']);
+        $this->cacheSet($cid, $this->fieldMap, Cache::PERMANENT, ['entity_types', 'entity_field_info']);
       }
     }
     return $this->fieldMap;
