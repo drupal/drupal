@@ -77,6 +77,9 @@ class DemoUmamiProfileTest extends BrowserTestBase {
           'filter.format.basic_html' => ['roles:', '  - authenticated'],
           'filter.format.full_html' => ['roles:', '  - administrator'],
           'filter.format.restricted_html' => ['roles:', '  - anonymous'],
+          // The system.site config is overwritten during tests by
+          // FunctionalTestSetupTrait::installParameters().
+          'system.site' => ['uuid:', 'name:', 'mail:'],
         ]);
       }
       else {
