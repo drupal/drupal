@@ -1,20 +1,20 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests registration of user under different configurations.
  *
  * @group user
  */
-class UserRegistrationTest extends WebTestBase {
+class UserRegistrationTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
