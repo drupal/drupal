@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\file\Tests;
+namespace Drupal\Tests\file\Functional;
 
 /**
  * Tests the 'managed_file' element type.
@@ -36,11 +36,13 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           // Submit with a file, but with an invalid form token. Ensure the file
           // was not saved.
           $last_fid_prior = $this->getLastFileId();
+          $this->drupalGet($path);
+          $form_token_field = $this->assertSession()->hiddenFieldExists('form_token');
+          $form_token_field->setValue('invalid token');
           $edit = [
             $file_field_name => \Drupal::service('file_system')->realpath($test_file->getFileUri()),
-            'form_token' => 'invalid token',
           ];
-          $this->drupalPostForm($path, $edit, t('Save'));
+          $this->drupalPostForm(NULL, $edit, t('Save'));
           $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
           $last_fid = $this->getLastFileId();
           $this->assertEqual($last_fid_prior, $last_fid, 'File was not saved when uploaded with an invalid form token.');
@@ -57,64 +59,41 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $this->drupalPostForm($path . '/' . $last_fid, [], t('Save'));
           $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]), 'Empty submission did not change an existing file.');
 
-          // Now, test the Upload and Remove buttons, with and without Ajax.
-          foreach ([FALSE, TRUE] as $ajax) {
-            // Upload, then Submit.
-            $last_fid_prior = $this->getLastFileId();
-            $this->drupalGet($path);
-            $edit = [$file_field_name => \Drupal::service('file_system')->realpath($test_file->getFileUri())];
-            if ($ajax) {
-              $this->drupalPostAjaxForm(NULL, $edit, $input_base_name . '_upload_button');
-            }
-            else {
-              $this->drupalPostForm(NULL, $edit, t('Upload'));
-            }
-            $last_fid = $this->getLastFileId();
-            $this->assertTrue($last_fid > $last_fid_prior, 'New file got uploaded.');
-            $this->drupalPostForm(NULL, [], t('Save'));
-            $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]), 'Submit handler has correct file info.');
+          // Upload, then Submit.
+          $last_fid_prior = $this->getLastFileId();
+          $this->drupalGet($path);
+          $edit = [$file_field_name => \Drupal::service('file_system')->realpath($test_file->getFileUri())];
+          $this->drupalPostForm(NULL, $edit, t('Upload'));
+          $last_fid = $this->getLastFileId();
+          $this->assertTrue($last_fid > $last_fid_prior, 'New file got uploaded.');
+          $this->drupalPostForm(NULL, [], t('Save'));
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]), 'Submit handler has correct file info.');
 
-            // Remove, then Submit.
-            $remove_button_title = $multiple ? t('Remove selected') : t('Remove');
-            $remove_edit = [];
-            if ($multiple) {
-              $selected_checkbox = ($tree ? 'nested[file]' : 'file') . '[file_' . $last_fid . '][selected]';
-              $remove_edit = [$selected_checkbox => '1'];
-            }
-            $this->drupalGet($path . '/' . $last_fid);
-            if ($ajax) {
-              $this->drupalPostAjaxForm(NULL, $remove_edit, $input_base_name . '_remove_button');
-            }
-            else {
-              $this->drupalPostForm(NULL, $remove_edit, $remove_button_title);
-            }
-            $this->drupalPostForm(NULL, [], t('Save'));
-            $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']), 'Submission after file removal was successful.');
-
-            // Upload, then Remove, then Submit.
-            $this->drupalGet($path);
-            $edit = [$file_field_name => \Drupal::service('file_system')->realpath($test_file->getFileUri())];
-            if ($ajax) {
-              $this->drupalPostAjaxForm(NULL, $edit, $input_base_name . '_upload_button');
-            }
-            else {
-              $this->drupalPostForm(NULL, $edit, t('Upload'));
-            }
-            $remove_edit = [];
-            if ($multiple) {
-              $selected_checkbox = ($tree ? 'nested[file]' : 'file') . '[file_' . $this->getLastFileId() . '][selected]';
-              $remove_edit = [$selected_checkbox => '1'];
-            }
-            if ($ajax) {
-              $this->drupalPostAjaxForm(NULL, $remove_edit, $input_base_name . '_remove_button');
-            }
-            else {
-              $this->drupalPostForm(NULL, $remove_edit, $remove_button_title);
-            }
-
-            $this->drupalPostForm(NULL, [], t('Save'));
-            $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']), 'Submission after file upload and removal was successful.');
+          // Remove, then Submit.
+          $remove_button_title = $multiple ? t('Remove selected') : t('Remove');
+          $remove_edit = [];
+          if ($multiple) {
+            $selected_checkbox = ($tree ? 'nested[file]' : 'file') . '[file_' . $last_fid . '][selected]';
+            $remove_edit = [$selected_checkbox => '1'];
           }
+          $this->drupalGet($path . '/' . $last_fid);
+          $this->drupalPostForm(NULL, $remove_edit, $remove_button_title);
+          $this->drupalPostForm(NULL, [], t('Save'));
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']), 'Submission after file removal was successful.');
+
+          // Upload, then Remove, then Submit.
+          $this->drupalGet($path);
+          $edit = [$file_field_name => \Drupal::service('file_system')->realpath($test_file->getFileUri())];
+          $this->drupalPostForm(NULL, $edit, t('Upload'));
+          $remove_edit = [];
+          if ($multiple) {
+            $selected_checkbox = ($tree ? 'nested[file]' : 'file') . '[file_' . $this->getLastFileId() . '][selected]';
+            $remove_edit = [$selected_checkbox => '1'];
+          }
+          $this->drupalPostForm(NULL, $remove_edit, $remove_button_title);
+
+          $this->drupalPostForm(NULL, [], t('Save'));
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']), 'Submission after file upload and removal was successful.');
         }
       }
     }
