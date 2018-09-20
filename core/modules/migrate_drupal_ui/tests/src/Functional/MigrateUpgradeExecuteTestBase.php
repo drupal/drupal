@@ -90,11 +90,11 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     }
     $this->drupalPostForm(NULL, $paths + $edits, t('Review upgrade'));
     if ($version == 6) {
-      $session->responseContains('Unable to read from Files directory.');
+      $session->responseContains('Failed to read from Files directory.');
     }
     else {
-      $session->responseContains('Unable to read from Public files directory.');
-      $session->responseContains('Unable to read from Private files directory.');
+      $session->responseContains('Failed to read from Public files directory.');
+      $session->responseContains('Failed to read from Private files directory.');
     }
 
     // Restart the upgrade process.

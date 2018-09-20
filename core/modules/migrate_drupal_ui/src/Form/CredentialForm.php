@@ -3,7 +3,6 @@
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\migrate\Exception\RequirementsException;
@@ -219,12 +218,28 @@ class CredentialForm extends MigrateUpgradeFormBase {
       }
     }
     else {
-      // Validate the database connection.
+      $error_key = $database['driver'] . '[database';
       try {
         $connection = $this->getConnection($database);
+        $version = (string) $this->getLegacyDrupalVersion($connection);
+        if (!$version) {
+          $this->errors[$error_key] = $this->t('Source database does not contain a recognizable Drupal version.');
+        }
+        elseif ($version !== (string) $form_state->getValue('version')) {
+          $this->errors['version'] = $this->t('Source database is Drupal version @version but version @selected was selected.',
+            [
+              '@version' => $version,
+              '@selected' => $form_state->getValue('version'),
+            ]);
+        }
+        else {
+          // Setup migrations and save form data to private store.
+          $this->setupMigrations($database, $form_state);
+        }
       }
-      catch (DatabaseException $e) {
-        $this->errors[$error_key] = $e->getMessage();
+      catch (\Exception $e) {
+        $msg = $this->t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', ['%error' => $e->getMessage()]);
+        $this->errors[$error_key] = $msg;
       }
     }
 
@@ -274,13 +289,14 @@ class CredentialForm extends MigrateUpgradeFormBase {
    */
   public function validatePaths($element, FormStateInterface $form_state) {
     if ($source = $element['#value']) {
-      $msg = $this->t('Unable to read from @title.', ['@title' => $element['#title']]);
+      $msg = $this->t('Failed to read from @title.', ['@title' => $element['#title']]);
       if (UrlHelper::isExternal($source)) {
         try {
           $this->httpClient->head($source);
         }
         catch (TransferException $e) {
-          $this->errors[$element['#name']] = $msg . ' ' . $e->getMessage();
+          $msg .= ' ' . $this->t('The server reports the following message: %error.', ['%error' => $e->getMessage()]);
+          $this->errors[$element['#name']] = $msg;
         }
       }
       elseif (!file_exists($source) || (!is_dir($source)) || (!is_readable($source))) {
