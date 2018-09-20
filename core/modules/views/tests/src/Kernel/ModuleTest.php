@@ -37,9 +37,9 @@ class ModuleTest extends ViewsKernelTestBase {
   protected $lastErrorMessage;
 
   /**
-   * Tests the views_get_handler method.
+   * Tests the  ViewsHandlerManager::getHandler() method.
    *
-   * @see views_get_handler()
+   * @see \Drupal\views\Plugin\ViewsHandlerManager::getHandler()
    */
   public function testViewsGetHandler() {
     $types = ['field', 'area', 'filter'];
