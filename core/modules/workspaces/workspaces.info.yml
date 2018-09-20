@@ -1,6 +1,6 @@
 name: Workspaces
 type: module
-description: 'Provides the ability to have multiple workspaces on a single site to facilitate things like full-site preview and content staging.'
+description: 'Allows users to stage content or preview a full site by using multiple workspaces on a single site.'
 version: VERSION
 core: 8.x
 package: Core (Experimental)
