@@ -87,8 +87,8 @@ class FormState implements FormStateInterface {
    * copy of the form is immediately built and sent to the browser, instead of a
    * redirect. This is used for multi-step forms, such as wizards and
    * confirmation forms. Normally, self::$rebuild is set by a submit handler,
-   * since its is usually logic within a submit handler that determines whether
-   * a form is done or requires another step. However, a validation handler may
+   * since it is usually logic within a submit handler that determines whether a
+   * form is done or requires another step. However, a validation handler may
    * already set self::$rebuild to cause the form processing to bypass submit
    * handlers and rebuild the form instead, even if there are no validation
    * errors.
