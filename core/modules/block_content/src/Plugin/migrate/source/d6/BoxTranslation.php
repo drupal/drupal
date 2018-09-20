@@ -4,6 +4,7 @@ namespace Drupal\block_content\Plugin\migrate\source\d6;
 
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+use Drupal\content_translation\Plugin\migrate\source\d6\I18nQueryTrait;
 
 /**
  * Gets Drupal 6 i18n custom block translations from database.
@@ -14,6 +15,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * )
  */
 class BoxTranslation extends DrupalSqlBase {
+
+  use I18nQueryTrait;
 
   /**
    * {@inheritdoc}
@@ -48,34 +51,13 @@ class BoxTranslation extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    $language = $row->getSourceProperty('language');
-    $bid = $row->getSourceProperty('bid');
-
-    // If this row has been migrated it is a duplicate then skip it.
-    if ($this->idMap->lookupDestinationIds(['bid' => $bid, 'language' => $language])) {
-      return FALSE;
-    }
-
+    parent::prepareRow($row);
     // Save the translation for this property.
-    $property = $row->getSourceProperty('property');
-    $row->setSourceProperty($property . '_translated', $row->getSourceProperty('translation'));
-
-    // Get the translation for the property not already in the row.
-    $translation = ($property === 'title') ? 'body' : 'title';
-    $query = $this->select('i18n_strings', 'i18n')
-      ->fields('i18n', ['lid'])
-      ->condition('i18n.property', $translation)
-      ->condition('i18n.objectid', $bid);
-    $query->leftJoin('locales_target', 'lt', 'i18n.lid = lt.lid');
-    $query->condition('lt.language', $language)
-      ->addField('lt', 'translation');
-    $results = $query->execute()->fetchAssoc();
-    if (!$results) {
-      $row->setSourceProperty($translation . '_translated', NULL);
-    }
-    else {
-      $row->setSourceProperty($translation . '_translated', $results['translation']);
-    }
+    $property_in_row = $row->getSourceProperty('property');
+    // Get the translation for the property not already in the row and save it
+    // in the row.
+    $property_not_in_row = ($property_in_row === 'title') ? 'body' : 'title';
+    return $this->getPropertyNotInRowTranslation($row, $property_not_in_row, 'bid', $this->idMap);
   }
 
   /**
