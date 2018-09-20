@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\field_layout\Display\EntityDisplayWithLayoutInterface;
@@ -15,8 +16,10 @@ use Drupal\field_layout\Display\EntityDisplayWithLayoutInterface;
  */
 function field_layout_install() {
   // Ensure each entity display has a layout.
-  $entity_save = function (EntityDisplayWithLayoutInterface $entity) {
-    $entity->ensureLayout()->save();
+  $entity_save = function (EntityDisplayInterface $entity) {
+    if ($entity instanceof EntityDisplayWithLayoutInterface) {
+      $entity->ensureLayout()->save();
+    }
   };
   array_map($entity_save, EntityViewDisplay::loadMultiple());
   array_map($entity_save, EntityFormDisplay::loadMultiple());
@@ -31,8 +34,10 @@ function field_layout_install() {
 function field_layout_uninstall() {
   // Reset each entity display to use the one-column layout to best approximate
   // the absence of layouts.
-  $entity_save = function (EntityDisplayWithLayoutInterface $entity) {
-    $entity->setLayoutId('layout_onecol')->save();
+  $entity_save = function (EntityDisplayInterface $entity) {
+    if ($entity instanceof EntityDisplayWithLayoutInterface) {
+      $entity->setLayoutId('layout_onecol')->save();
+    }
   };
   array_map($entity_save, EntityViewDisplay::loadMultiple());
   array_map($entity_save, EntityFormDisplay::loadMultiple());
