@@ -4,6 +4,7 @@ namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\GeneratedUrl;
 use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -11,6 +12,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\Core\Url;
 use Drupal\locale\StringInterface;
 use Drupal\serialization\Normalizer\EntityReferenceFieldItemNormalizer;
 use Drupal\Tests\UnitTestCase;
@@ -106,9 +108,17 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
   public function testNormalize() {
     $test_url = '/test/100';
 
+    $generated_url = (new GeneratedUrl())->setGeneratedUrl($test_url);
+
+    $url = $this->prophesize(Url::class);
+    $url->toString(TRUE)
+      ->willReturn($generated_url);
+
     $entity = $this->prophesize(EntityInterface::class);
-    $entity->url('canonical')
-      ->willReturn($test_url)
+    $entity->hasLinkTemplate('canonical')
+      ->willReturn(TRUE);
+    $entity->toUrl('canonical')
+      ->willReturn($url)
       ->shouldBeCalled();
     $entity->uuid()
       ->willReturn('080e3add-f9d5-41ac-9821-eea55b7b42fb')

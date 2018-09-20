@@ -3,8 +3,10 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\file\FileInterface;
 use Drupal\hal\LinkManager\LinkManagerInterface;
 
 /**
@@ -67,6 +69,21 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
     }
 
     return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEntityUri(EntityInterface $entity, array $context = []) {
+    assert($entity instanceof FileInterface);
+    // https://www.drupal.org/project/drupal/issues/2277705 introduced a hack
+    // in \Drupal\file\Entity\File::url(), but EntityInterface::url() was
+    // deprecated in favor of ::toUrl(). The parent implementation now calls
+    // ::toUrl(), but this normalizer (for File entities) needs to override that
+    // back to the old behavior because it relies on said hack, not just to
+    // generate the value for the 'uri' field of a file (see ::normalize()), but
+    // also for the HAL normalization's '_links' value.
+    return file_create_url($entity->getFileUri());
   }
 
 }

@@ -179,17 +179,25 @@ class ContentEntityNormalizer extends NormalizerBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
+   * @param array $context
+   *   Normalization/serialization context.
+   *
    * @return string
    *   The entity URI.
    */
-  protected function getEntityUri(EntityInterface $entity) {
+  protected function getEntityUri(EntityInterface $entity, array $context = []) {
     // Some entity types don't provide a canonical link template, at least call
     // out to ->url().
     if ($entity->isNew() || !$entity->hasLinkTemplate('canonical')) {
       return $entity->url('canonical', []);
     }
-    $url = $entity->urlInfo('canonical', ['absolute' => TRUE]);
-    return $url->setRouteParameter('_format', 'hal_json')->toString();
+    $url = $entity->toUrl('canonical', ['absolute' => TRUE]);
+    if (!$url->isExternal()) {
+      $url->setRouteParameter('_format', 'hal_json');
+    }
+    $generated_url = $url->toString(TRUE);
+    $this->addCacheableDependency($context, $generated_url);
+    return $generated_url->getGeneratedUrl();
   }
 
   /**

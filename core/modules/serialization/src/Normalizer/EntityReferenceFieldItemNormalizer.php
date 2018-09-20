@@ -55,8 +55,14 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
       // Add a 'url' value if there is a reference and a canonical URL. Hard
       // code 'canonical' here as config entities override the default $rel
       // parameter value to 'edit-form.
-      if ($url = $entity->url('canonical')) {
-        $values['url'] = $url;
+      if ($entity->hasLinkTemplate('canonical') && $url = $entity->toUrl('canonical')->toString(TRUE)) {
+        $this->addCacheableDependency($context, $url);
+        $values['url'] = $url->getGeneratedUrl();
+      }
+      // @todo Remove in https://www.drupal.org/project/drupal/issues/2925520
+      // @see \Drupal\hal\Normalizer\FileEntityNormalizer
+      elseif ($entity->getEntityTypeId() === 'file') {
+        $values['url'] = file_create_url($entity->getFileUri());
       }
     }
 
