@@ -7,10 +7,12 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
@@ -25,6 +27,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
 
   use CommentTestTrait;
   use ContentTypeCreationTrait;
+  use MediaTypeCreationTrait;
   use UserCreationTrait;
 
   /**
@@ -32,7 +35,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['comment', 'field', 'node', 'system', 'taxonomy', 'text', 'user'];
+  public static $modules = ['comment', 'field', 'file', 'image', 'node', 'media', 'system', 'taxonomy', 'text', 'user'];
 
   /**
    * {@inheritdoc}
@@ -42,13 +45,16 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
 
     $this->installSchema('system', 'sequences');
     $this->installSchema('comment', ['comment_entity_statistics']);
+    $this->installSchema('file', ['file_usage']);
 
     $this->installEntitySchema('comment');
+    $this->installEntitySchema('file');
+    $this->installEntitySchema('media');
     $this->installEntitySchema('node');
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('user');
 
-    $this->installConfig(['comment', 'field', 'node', 'taxonomy', 'user']);
+    $this->installConfig(['comment', 'field', 'media', 'node', 'taxonomy', 'user']);
 
     // Create the anonymous and the admin users.
     $anonymous_user = User::create([
@@ -679,6 +685,94 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
       ],
     ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'Term handler (admin)');
+  }
+
+  /**
+   * Tests the selection handler for the media entity type.
+   */
+  public function testMediaHandler() {
+    $selection_options = [
+      'target_type' => 'media',
+      'handler' => 'default',
+      'target_bundles' => NULL,
+    ];
+
+    // Build a set of test data.
+    $media_type = $this->createMediaType('file');
+    $media_values = [
+      'published' => [
+        'bundle' => $media_type->id(),
+        'status' => 1,
+        'name' => 'Media published',
+        'uid' => 1,
+      ],
+      'unpublished' => [
+        'bundle' => $media_type->id(),
+        'status' => 0,
+        'name' => 'Media unpublished',
+        'uid' => 1,
+      ],
+    ];
+
+    $media_entities = [];
+    $media_labels = [];
+    foreach ($media_values as $key => $values) {
+      $media = Media::create($values);
+      $media->save();
+      $media_entities[$key] = $media;
+      $media_labels[$key] = Html::escape($media->label());
+    }
+
+    // Test as a non-admin.
+    $normal_user = $this->createUser(['view media']);
+    $this->setCurrentUser($normal_user);
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL, 'CONTAINS'],
+        ],
+        'result' => [
+          $media_type->id() => [
+            $media_entities['published']->id() => $media_labels['published'],
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['Media unpublished', 'CONTAINS'],
+        ],
+        'result' => [],
+      ],
+    ];
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'Media handler');
+
+    // Test as an admin.
+    $admin_user = $this->createUser(['view media', 'administer media']);
+    $this->setCurrentUser($admin_user);
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL, 'CONTAINS'],
+        ],
+        'result' => [
+          $media_type->id() => [
+            $media_entities['published']->id() => $media_labels['published'],
+            $media_entities['unpublished']->id() => $media_labels['unpublished'],
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['Media unpublished', 'CONTAINS'],
+        ],
+        'result' => [
+          $media_type->id() => [
+            $media_entities['unpublished']->id() => $media_labels['unpublished'],
+          ],
+        ],
+      ],
+    ];
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'Media handler (admin)');
   }
 
 }
