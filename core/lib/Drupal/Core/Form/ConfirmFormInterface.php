@@ -10,7 +10,7 @@ interface ConfirmFormInterface extends FormInterface {
   /**
    * Returns the question to ask the user.
    *
-   * @return string
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The form question. The page title will be set to this value.
    */
   public function getQuestion();
@@ -26,7 +26,7 @@ interface ConfirmFormInterface extends FormInterface {
   /**
    * Returns additional text to display as a description.
    *
-   * @return string
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The form description.
    */
   public function getDescription();
@@ -34,7 +34,7 @@ interface ConfirmFormInterface extends FormInterface {
   /**
    * Returns a caption for the button that confirms the action.
    *
-   * @return string
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The form confirmation text.
    */
   public function getConfirmText();
@@ -42,7 +42,7 @@ interface ConfirmFormInterface extends FormInterface {
   /**
    * Returns a caption for the link which cancels the action.
    *
-   * @return string
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The form cancellation text.
    */
   public function getCancelText();
