@@ -2,6 +2,7 @@
 
 namespace Drupal\menu_link_content\Plugin\migrate\source\d6;
 
+use Drupal\content_translation\Plugin\migrate\source\d6\I18nQueryTrait;
 use Drupal\migrate\Row;
 use Drupal\menu_link_content\Plugin\migrate\source\MenuLink;
 
@@ -14,6 +15,8 @@ use Drupal\menu_link_content\Plugin\migrate\source\MenuLink;
  * )
  */
 class MenuLinkTranslation extends MenuLink {
+
+  use I18nQueryTrait;
 
   /**
    * {@inheritdoc}
@@ -48,31 +51,15 @@ class MenuLinkTranslation extends MenuLink {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    $language = $row->getSourceProperty('language');
-    $mlid = $row->getSourceProperty('mlid');
-
-    // If this row has been migrated it is a duplicate then skip it.
-    if ($this->idMap->lookupDestinationIds(['mlid' => $mlid, 'language' => $language])) {
-      return FALSE;
-    }
+    parent::prepareRow($row);
 
     // Save the translation for this property.
-    $property = $row->getSourceProperty('property');
-    $row->setSourceProperty($property . '_translated', $row->getSourceProperty('translation'));
+    $property_in_row = $row->getSourceProperty('property');
 
-    // Get the translation, if one exists, for the property not already in the
-    // row.
-    $other_property = ($property == 'title') ? 'description' : 'title';
-    $query = $this->select('i18n_strings', 'i18n')
-      ->fields('i18n', ['lid'])
-      ->condition('i18n.property', $other_property)
-      ->condition('i18n.objectid', $mlid);
-    $query->leftJoin('locales_target', 'lt', 'i18n.lid = lt.lid');
-    $query->condition('lt.language', $language);
-    $query->addField('lt', 'translation');
-    $results = $query->execute()->fetchAssoc();
-    $row->setSourceProperty($other_property . '_translated', $results['translation']);
-    parent::prepareRow($row);
+    // Get the translation for the property not already in the row and save it
+    // in the row.
+    $property_not_in_row = ($property_in_row == 'title') ? 'description' : 'title';
+    return $this->getPropertyNotInRowTranslation($row, $property_not_in_row, 'mlid', $this->idMap);
   }
 
   /**
