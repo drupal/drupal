@@ -306,11 +306,11 @@ class ContentModeration extends WorkflowTypeBase implements ContentModerationInt
     if (!($entity instanceof ContentEntityInterface)) {
       throw new \InvalidArgumentException('A content entity object must be supplied.');
     }
-    if ($entity instanceof EntityPublishedInterface) {
-      return $this->getState($entity->isPublished() && !$entity->isNew() ? 'published' : 'draft');
+    if ($entity instanceof EntityPublishedInterface && !$entity->isNew()) {
+      return $this->getState($entity->isPublished() ? 'published' : 'draft');
     }
-    // Workflows determines the initial state for non-publishable entities.
-    return parent::getInitialState();
+
+    return $this->getState(!empty($this->configuration['default_moderation_state']) ? $this->configuration['default_moderation_state'] : 'draft');
   }
 
 }

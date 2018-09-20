@@ -33,3 +33,6 @@ workflow.type_settings.content_moderation:
         sequence:
           type: string
           label: 'Bundle ID'
+    default_moderation_state:
+      type: string
+      label: 'Default moderation state'
