@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\system\Tests\Routing;
+namespace Drupal\Tests\system\Functional\Routing;
 
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests for $_GET['destination'] and $_REQUEST['destination'] validation.
@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group Routing
  */
-class DestinationTest extends WebTestBase {
+class DestinationTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
@@ -26,6 +26,9 @@ class DestinationTest extends WebTestBase {
    * Tests that $_GET/$_REQUEST['destination'] only contain internal URLs.
    */
   public function testDestination() {
+    $http_client = $this->getHttpClient();
+    $session = $this->getSession();
+
     $test_cases = [
       [
         'input' => 'node',
@@ -61,10 +64,12 @@ class DestinationTest extends WebTestBase {
     foreach ($test_cases as $test_case) {
       // Test $_GET['destination'].
       $this->drupalGet('system-test/get-destination', ['query' => ['destination' => $test_case['input']]]);
-      $this->assertIdentical($test_case['output'], $this->getRawContent(), $test_case['message']);
+      $this->assertIdentical($test_case['output'], $session->getPage()->getContent(), $test_case['message']);
       // Test $_REQUEST['destination'].
-      $post_output = $this->drupalPost('system-test/request-destination', '*', ['destination' => $test_case['input']]);
-      $this->assertIdentical($test_case['output'], $post_output, $test_case['message']);
+      $post_output = $http_client->request('POST', $this->buildUrl('system-test/request-destination'), [
+        'form_params' => ['destination' => $test_case['input']],
+      ]);
+      $this->assertIdentical($test_case['output'], (string) $post_output->getBody(), $test_case['message']);
     }
 
     // Make sure that 404 pages do not populate $_GET['destination'] with
@@ -72,7 +77,7 @@ class DestinationTest extends WebTestBase {
     \Drupal::configFactory()->getEditable('system.site')->set('page.404', '/system-test/get-destination')->save();
     $this->drupalGet('http://example.com', ['external' => FALSE]);
     $this->assertResponse(404);
-    $this->assertIdentical(Url::fromRoute('<front>')->toString(), $this->getRawContent(), 'External URL is not allowed on 404 pages.');
+    $this->assertIdentical(Url::fromRoute('<front>')->toString(), $session->getPage()->getContent(), 'External URL is not allowed on 404 pages.');
   }
 
 }
