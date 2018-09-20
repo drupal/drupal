@@ -126,7 +126,7 @@ class ContentEntityNormalizer extends NormalizerBase {
 
     // Figure out the language to use.
     if (isset($data[$default_langcode_key])) {
-      // Find the field item for which the default_lancode value is set to 1 and
+      // Find the field item for which the default_langcode value is set to 1 and
       // set the langcode the right default language.
       foreach ($data[$default_langcode_key] as $item) {
         if (!empty($item['value']) && isset($item['lang'])) {

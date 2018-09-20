@@ -94,7 +94,7 @@ class ItemsImporter implements ItemsImporterInterface {
       watchdog_exception('aggregator', $e);
     }
 
-    // Store instances in an array so we dont have to instantiate new objects.
+    // Store instances in an array so we don't have to instantiate new objects.
     $processor_instances = [];
     foreach ($this->config->get('processors') as $processor) {
       try {

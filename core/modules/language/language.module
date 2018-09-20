@@ -204,7 +204,7 @@ function language_configuration_element_submit(&$form, FormStateInterface $form_
       $config->setLanguageAlterable($form_state->getValue([$element_name, 'language_alterable']));
       $config->save();
 
-      // Set the form_state languaged with the updated bundle.
+      // Set the form_state language with the updated bundle.
       $form_state->set('language', $language);
     }
   }

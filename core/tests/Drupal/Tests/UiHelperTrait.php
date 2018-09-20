@@ -371,7 +371,7 @@ trait UiHelperTrait {
    *   Options to be passed to Url::fromUri().
    *
    * @return string
-   *   An absolute URL stsring.
+   *   An absolute URL string.
    */
   protected function buildUrl($path, array $options = []) {
     if ($path instanceof Url) {

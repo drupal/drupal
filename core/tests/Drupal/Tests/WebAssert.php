@@ -167,7 +167,7 @@ class WebAssert extends MinkWebAssert {
    * @param string $select
    *   One of id|name|label|value for the select field.
    * @param string $option
-   *   The option value that shoulkd not exist.
+   *   The option value that should not exist.
    * @param \Behat\Mink\Element\TraversableElement $container
    *   (optional) The document to check against. Defaults to the current page.
    *

@@ -518,7 +518,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           // Some fields can have more then one columns in the data table so
           // column names are needed.
           foreach ($data_fields as $data_field) {
-            // \Drupal\Core\Entity\Sql\TableMappingInterface:: getColumNames()
+            // \Drupal\Core\Entity\Sql\TableMappingInterface::getColumnNames()
             // returns an array keyed by property names so remove the keys
             // before array_merge() to avoid losing data with fields having the
             // same columns i.e. value.

@@ -59,7 +59,7 @@ li.tabs__tab {
   display: block;
   padding: 0;
 }
-/* This is required to win over specifity of [dir="rtl"] .tabs__tab */
+/* This is required to win over specificity of [dir="rtl"] .tabs__tab */
 [dir="rtl"] li.tabs__tab {
   padding-left: 0;
   padding-right: 0;
@@ -195,7 +195,7 @@ li.tabs__tab a {
 }
 [dir="rtl"] .is-horizontal .tabs__tab {
   float: right;
-  /* This is required to win over specifity of [dir="rtl"] .tabs > li */
+  /* This is required to win over specificity of [dir="rtl"] .tabs > li */
   margin-left: 0;
 }
 .is-horizontal .tabs__tab + .tabs__tab {
@@ -336,7 +336,7 @@ li.tabs__tab a {
   padding: 0;
 }
 /**
- * 1. This is required to win over specifity of
+ * 1. This is required to win over specificity of
  *      [dir="rtl"] .tabs.secondary .tabs__tab:hover,
  *      [dir="rtl"] .tabs.secondary .tabs__tab:focus
  */

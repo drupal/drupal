@@ -642,7 +642,7 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attach handlers to make it possible to rearange the filters in the form
+   *   Attach handlers to make it possible to rearrange the filters in the form
    *   in question.
    *   @see Drupal.viewsUi.RearrangeFilterHandler
    */

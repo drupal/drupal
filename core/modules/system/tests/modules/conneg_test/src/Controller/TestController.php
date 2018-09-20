@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Test controller for content negotation tests.
+ * Test controller for content negotiation tests.
  */
 class TestController {
 

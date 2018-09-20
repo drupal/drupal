@@ -510,7 +510,7 @@ function search_index($type, $sid, $langcode, $text) {
         foreach ($words as $word) {
           // Add word to accumulator
           $accum .= $word . ' ';
-          // Check wordlength
+          // Check word length.
           if (is_numeric($word) || mb_strlen($word) >= $minimum_word_size) {
             if (!isset($scored_words[$word])) {
               $scored_words[$word] = 0;

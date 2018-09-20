@@ -34,7 +34,7 @@ class CallbackTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test callback excpetions.
+   * Test callback exceptions.
    *
    * @dataProvider providerCallbackExceptions
    */

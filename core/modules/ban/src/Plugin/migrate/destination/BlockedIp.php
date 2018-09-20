@@ -33,7 +33,7 @@ class BlockedIP extends DestinationBase implements ContainerFactoryPluginInterfa
    * @param string $plugin_id
    *   The plugin ID.
    * @param mixed $plugin_definition
-   *   The plugin definiiton.
+   *   The plugin definition.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The current migration.
    * @param \Drupal\ban\BanIpManagerInterface $ban_manager

@@ -142,7 +142,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    * Assert that a term is present in the tree storage, with the right parents.
    *
    * @param string $vid
-   *   Vocabular ID.
+   *   Vocabulary ID.
    * @param int $tid
    *   ID of the term to check.
    * @param array $parent_ids

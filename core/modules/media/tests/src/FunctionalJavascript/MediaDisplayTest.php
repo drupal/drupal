@@ -125,7 +125,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     ]);
     $node_type->save();
 
-    // Reference the created media using an entity_refernce field and make sure
+    // Reference the created media using an entity_reference field and make sure
     // the output is what we expect.
     $storage = FieldStorageConfig::create([
       'entity_type' => 'node',

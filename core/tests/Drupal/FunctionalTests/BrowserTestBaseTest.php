@@ -576,7 +576,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertFieldChecked('edit-checkbox-enabled');
     $this->assertNoFieldChecked('edit-checkbox-disabled');
 
-    // Test that the assertion fails correctly with non-existant field id.
+    // Test that the assertion fails correctly with non-existent field id.
     try {
       $this->assertNoFieldChecked('incorrect_checkbox_id');
       $this->fail('The "incorrect_checkbox_id" field was found');

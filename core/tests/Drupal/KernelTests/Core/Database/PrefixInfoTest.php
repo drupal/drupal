@@ -30,7 +30,7 @@ class PrefixInfoTest extends DatabaseTestBase {
       $db1_schema = $db1_connection->schema();
       $db2_connection = Database::getConnection('default', 'extra');
 
-      // Get the prefix info for the first databse.
+      // Get the prefix info for the first database.
       $method = new \ReflectionMethod($db1_schema, 'getPrefixInfo');
       $method->setAccessible(TRUE);
       $db1_info = $method->invoke($db1_schema);

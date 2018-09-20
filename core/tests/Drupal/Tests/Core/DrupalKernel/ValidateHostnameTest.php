@@ -50,7 +50,7 @@ class ValidateHostnameTest extends UnitTestCase {
     $data[] = ['72.21.91.99:80', 'Properly formed HTTP_HOST with IPv4 address valid.', TRUE];
     $data[] = ['2607:f8b0:4004:803::1002:80', 'Properly formed HTTP_HOST with IPv6 address valid.', TRUE];
 
-    // Verfies that the IPv6 loopback address is valid.
+    // Verifies that the IPv6 loopback address is valid.
     $data[] = ['[::1]:80', 'HTTP_HOST containing IPv6 loopback is valid.', TRUE];
 
     return $data;

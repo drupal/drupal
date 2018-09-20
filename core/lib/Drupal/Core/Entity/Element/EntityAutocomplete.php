@@ -251,8 +251,8 @@ class EntityAutocomplete extends Textfield {
   /**
    * Finds an entity from an autocomplete input without an explicit ID.
    *
-   * The method will return an entity ID if one single entity unambuguously
-   * matches the incoming input, and sill assign form errors otherwise.
+   * The method will return an entity ID if one single entity unambiguously
+   * matches the incoming input, and assign form errors otherwise.
    *
    * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface $handler
    *   Entity reference selection plugin.

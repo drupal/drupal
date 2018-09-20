@@ -30,7 +30,7 @@ interface MenuLinkTreeInterface {
    *
    * Builds menu link tree parameters that:
    * - Expand all links in the active trail based on route being viewed.
-   * - Expand the descendents of the links in the active trail whose
+   * - Expand the descendants of the links in the active trail whose
    *   'expanded' flag is enabled.
    *
    * This only sets the (relatively complex) parameters to achieve the two above

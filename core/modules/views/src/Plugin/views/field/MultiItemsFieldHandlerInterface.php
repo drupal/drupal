@@ -5,7 +5,7 @@ namespace Drupal\views\Plugin\views\field;
 use Drupal\views\ResultRow;
 
 /**
- * Defines a field hander which renders multiple items per row.
+ * Defines a field handler which renders multiple items per row.
  */
 interface MultiItemsFieldHandlerInterface extends FieldHandlerInterface {
 

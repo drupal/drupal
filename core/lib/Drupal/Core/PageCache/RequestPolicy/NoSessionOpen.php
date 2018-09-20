@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * Do not serve cached pages to authenticated users, or to anonymous users when
  * $_SESSION is non-empty. $_SESSION may contain status messages from a form
- * submission, the contents of a shopping cart, or other userspecific content
+ * submission, the contents of a shopping cart, or other user-specific content
  * that should not be cached and displayed to other users.
  */
 class NoSessionOpen implements RequestPolicyInterface {

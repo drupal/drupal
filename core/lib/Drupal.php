@@ -229,7 +229,7 @@ class Drupal {
   }
 
   /**
-   * Retrives the request stack.
+   * Retrieves the request stack.
    *
    * @return \Symfony\Component\HttpFoundation\RequestStack
    *   The request stack

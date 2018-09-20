@@ -6,7 +6,7 @@ use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the log message added by file_save_htacess().
+ * Tests the log message added by file_save_htaccess().
  *
  * @group File
  */

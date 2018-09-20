@@ -188,7 +188,7 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
         throw new \InvalidArgumentException("Property $property_name is unknown.");
       }
       // Create the prototype without any value, but with initial parenting
-      // so that constructors can set up the objects correclty.
+      // so that constructors can set up the objects correctly.
       $this->prototypes[$key] = $this->create($definition, NULL, $property_name, $object);
     }
 

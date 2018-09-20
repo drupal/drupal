@@ -287,7 +287,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @dataProvider providerLimitValidationErrors
    *
    * @param array[]|null $limit_validation_errors
-   *   Any valid vlaue for
+   *   Any valid value for
    *   \Drupal\Core\Form\FormStateInterface::getLimitValidationErrors()'s
    *   return value;
    */

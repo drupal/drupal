@@ -661,7 +661,7 @@ class StyleSerializerTest extends ViewTestBase {
     }
 
     // Test that multiple raw body fields are shown.
-    // Make the body field unlimited cardinatlity.
+    // Set the body field to unlimited cardinality.
     $storage_definition = $node->getFieldDefinition('body')->getFieldStorageDefinition();
     $storage_definition->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $storage_definition->save();

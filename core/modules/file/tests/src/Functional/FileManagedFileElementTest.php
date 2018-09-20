@@ -191,7 +191,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->assertNoText('The file used in the Managed file &amp; butter field may not be referenced.');
     $this->assertText('The file ids are ' . $file->id());
 
-    // Enable marking unused files as tempory, unused permanent files must not
+    // Enable marking unused files as temporary, unused permanent files must not
     // be referenced now.
     $this->config('file.settings')
       ->set('make_unused_managed_files_temporary', TRUE)

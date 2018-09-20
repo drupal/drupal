@@ -22,7 +22,7 @@ class CorsCompilerPass implements CompilerPassInterface {
       $enabled = !empty($cors_config['enabled']);
     }
 
-    // Remove the CORS middleware completly in case it was not enabled.
+    // Remove the CORS middleware completely in case it was not enabled.
     if (!$enabled) {
       $container->removeDefinition('http_middleware.cors');
     }

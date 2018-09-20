@@ -50,7 +50,7 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
   protected $calculateOffset = TRUE;
 
   /**
-   * The request stack used to determin current time.
+   * The request stack used to determine current time.
    *
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */

@@ -218,7 +218,7 @@
         .find('input.form-autocomplete')
         .once('autocomplete');
       if ($autocomplete.length) {
-        // Allow options to be overriden per instance.
+        // Allow options to be overridden per instance.
         const blacklist = $autocomplete.attr(
           'data-autocomplete-first-character-blacklist',
         );

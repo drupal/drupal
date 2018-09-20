@@ -69,7 +69,7 @@ class InstallerExistingSettingsMismatchProfileTest extends InstallerTestBase {
    * {@inheritdoc}
    */
   protected function setUpLanguage() {
-    // This step is skipped, because there is a lagcode as a query param.
+    // This step is skipped, because there is a langcode as a query param.
   }
 
   /**

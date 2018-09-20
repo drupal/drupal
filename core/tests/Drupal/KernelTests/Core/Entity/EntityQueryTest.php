@@ -630,7 +630,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition("$figures.%delta", 1)
       ->sort('id')
       ->execute();
-    // Entity needs to have atleast two figures.
+    // Entity needs to have at least two figures.
     $this->assertResult(3, 7, 11, 15);
 
     // Numeric delta on single value base field should return results only if

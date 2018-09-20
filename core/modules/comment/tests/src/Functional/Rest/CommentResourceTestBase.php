@@ -60,7 +60,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
         $this->grantPermissionsToTestedRole(['post comments']);
         break;
       case 'PATCH':
-        // Anononymous users are not ever allowed to edit their own comments. To
+        // Anonymous users are not ever allowed to edit their own comments. To
         // be able to test PATCHing comments as the anonymous user, the more
         // permissive 'administer comments' permission must be granted.
         // @see \Drupal\comment\CommentAccessControlHandler::checkAccess

@@ -487,7 +487,7 @@ class ManageDisplayTest extends WebTestBase {
   }
 
   /**
-   * Asserts that a string is (not) found in the rendered nodein a view mode.
+   * Asserts that a string is (not) found in the rendered node in a view mode.
    *
    * This helper function is used by assertNodeViewText() and
    * assertNodeViewNoText().

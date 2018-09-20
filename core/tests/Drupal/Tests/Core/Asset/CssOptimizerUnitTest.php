@@ -107,7 +107,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
         str_replace('url(../images/icon.png)', 'url(' . file_url_transform_relative(file_create_url($path . 'images/icon.png')) . ')', file_get_contents($absolute_path . 'css_subfolder/css_input_with_import.css.optimized.css')),
       ],
       // File. Tests:
-      // - Any @charaset declaration at the beginning of a file should be
+      // - Any @charset declaration at the beginning of a file should be
       //   removed without breaking subsequent CSS.
       [
         [

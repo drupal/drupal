@@ -6,7 +6,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\views\Views;
 
 /**
- * Test the upgrade path of changing the emtpy text area for watchdog view.
+ * Test the upgrade path of changing the empty text area for watchdog view.
  *
  * @see dblog_update_8600()
  *

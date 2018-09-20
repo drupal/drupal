@@ -32,7 +32,7 @@ abstract class ViewKernelTestBase extends KernelTestBase {
    * {@inheritdoc}
    *
    * @param bool $import_test_views
-   *   Should the views specififed on the test class be imported. If you need
+   *   Should the views specified on the test class be imported. If you need
    *   to setup some additional stuff, like fields, you need to call false and
    *   then call createTestViews for your own.
    */

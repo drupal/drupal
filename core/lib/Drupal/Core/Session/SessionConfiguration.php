@@ -106,7 +106,7 @@ class SessionConfiguration implements SessionConfigurationInterface {
    * Return the session cookie domain.
    *
    * The Set-Cookie response header and its domain attribute are defined in RFC
-   * 2109, RFC 2965 and RFC 6265 each one superseeding the previous version.
+   * 2109, RFC 2965 and RFC 6265 each one superseding the previous version.
    *
    * @see http://tools.ietf.org/html/rfc2109
    * @see http://tools.ietf.org/html/rfc2965

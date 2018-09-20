@@ -339,7 +339,7 @@ class FieldWebTest extends ViewTestBase {
     $this->assertSubString($output, UrlHelper::encodePath('Drupal Has A Great Community'));
     unset($id_field->options['alter']['path_case']);
 
-    // Tests the linkclass setting and see whether it actually exists in the
+    // Tests the link_class setting and see whether it actually exists in the
     // output.
     $id_field->options['alter']['link_class'] = $class = $this->randomMachineName();
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {

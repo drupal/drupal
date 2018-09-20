@@ -1095,7 +1095,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         // misses.
         $old_loader = $this->classLoader;
         $this->classLoader = $loader;
-        // Our class loaders are preprended to ensure they come first like the
+        // Our class loaders are prepended to ensure they come first like the
         // class loader they are replacing.
         $old_loader->register(TRUE);
         $loader->register(TRUE);

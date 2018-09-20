@@ -63,7 +63,7 @@ class DisplayTest extends WebDriverTestBase {
     // Wait for the animation to complete.
     $this->assertSession()->assertWaitOnAjaxRequest();
 
-    // Add the diplay.
+    // Add the display.
     $page->find('css', '#edit-displays-top-add-display-block')->click();
 
     $element = $page->findById('views-display-menu-tabs')->findLink('Block');

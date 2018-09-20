@@ -46,7 +46,7 @@ class FileStorage implements StorageInterface {
     $this->collection = $collection;
 
     // Use a NULL File Cache backend by default. This will ensure only the
-    // internal statc caching of FileCache is used and thus avoids blowing up
+    // internal static caching of FileCache is used and thus avoids blowing up
     // the APCu cache.
     $this->fileCache = FileCacheFactory::get('config', ['cache_backend_class' => NULL]);
   }

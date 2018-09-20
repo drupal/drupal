@@ -216,7 +216,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $sourcePluginManager;
 
   /**
-   * Thep process plugin manager.
+   * The process plugin manager.
    *
    * @var \Drupal\migrate\Plugin\MigratePluginManager
    */

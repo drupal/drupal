@@ -26,7 +26,7 @@ class PathFieldItemList extends FieldItemList {
 
     $entity = $this->getEntity();
     if (!$entity->isNew()) {
-      // @todo Support loading languge neutral aliases in
+      // @todo Support loading language neutral aliases in
       //   https://www.drupal.org/node/2511968.
       $alias = \Drupal::service('path.alias_storage')->load([
         'source' => '/' . $entity->toUrl()->getInternalPath(),
