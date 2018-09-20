@@ -16,7 +16,7 @@ use Drupal\Core\TypedData\DataReferenceBase;
  * or the entity ID may be passed.
  *
  * Note that the definition of the referenced entity's type is required, whereas
- * defining referencable entity bundle(s) is optional. A reference defining the
+ * defining referenceable entity bundle(s) is optional. A reference defining the
  * type and bundle of the referenced entity can be created as following:
  * @code
  * $definition = \Drupal\Core\Entity\EntityDefinition::create($entity_type)

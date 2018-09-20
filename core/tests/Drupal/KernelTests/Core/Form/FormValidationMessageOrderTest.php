@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests form validation mesages are displayed in the same order as the fields.
+ * Tests form validation messages are displayed in the same order as the fields.
  *
  * @group Form
  */

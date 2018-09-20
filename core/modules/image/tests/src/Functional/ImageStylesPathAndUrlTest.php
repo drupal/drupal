@@ -287,7 +287,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $this->drupalGet($generate_url);
     $this->assertResponse(200, 'Image was accessible at the URL with a missing token.');
 
-    // Stop supressing the security token in the URL.
+    // Stop suppressing the security token in the URL.
     $this->config('image.settings')->set('suppress_itok_output', FALSE)->save();
     // Ensure allow_insecure_derivatives is enabled.
     $this->assertEqual($this->config('image.settings')

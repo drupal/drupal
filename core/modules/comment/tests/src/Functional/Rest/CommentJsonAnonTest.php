@@ -24,7 +24,7 @@ class CommentJsonAnonTest extends CommentResourceTestBase {
   /**
    * {@inheritdoc}
    *
-   * Anononymous users cannot edit their own comments.
+   * Anonymous users cannot edit their own comments.
    *
    * @see \Drupal\comment\CommentAccessControlHandler::checkAccess
    *

@@ -28,7 +28,7 @@ abstract class TestBase {
   use TestSetupTrait;
   use RandomGeneratorTrait;
   use GeneratePermutationsTrait;
-  // For backwards compatibility switch the visbility of the methods to public.
+  // For backwards compatibility switch the visibility of the methods to public.
   use ConfigTestTrait {
     configImporter as public;
     copyConfig as public;

@@ -136,7 +136,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     // Test the initStyle() method.
     $view->initStyle();
     $this->assertTrue($view->style_plugin instanceof DefaultStyle, 'Make sure a reference to the style plugin is set.');
-    // Test the plugin has been inited and view have references to the view and
+    // Test the plugin has been invited and view have references to the view and
     // display handler.
     $this->assertEqual(spl_object_hash($view->style_plugin->view), $view_hash);
     $this->assertEqual(spl_object_hash($view->style_plugin->displayHandler), $display_hash);

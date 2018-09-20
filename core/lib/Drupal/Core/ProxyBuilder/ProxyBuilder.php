@@ -5,7 +5,7 @@ namespace Drupal\Core\ProxyBuilder;
 use Drupal\Component\ProxyBuilder\ProxyBuilder as BaseProxyBuilder;
 
 /**
- * Extend the component proxy builder by using the DependencySerialziationTrait.
+ * Extend the component proxy builder by using the DependencySerializationTrait.
  */
 class ProxyBuilder extends BaseProxyBuilder {
 

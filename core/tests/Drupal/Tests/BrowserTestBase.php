@@ -124,7 +124,7 @@ abstract class BrowserTestBase extends TestCase {
   /*
    * Mink class for the default driver to use.
    *
-   * Shoud be a fully qualified class name that implements
+   * Should be a fully-qualified class name that implements
    * Behat\Mink\Driver\DriverInterface.
    *
    * Value can be overridden using the environment variable MINK_DRIVER_CLASS.

@@ -287,7 +287,7 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
-   * A plain Symfony reponse with Cache-Control: public, max-age=60.
+   * A plain Symfony response with Cache-Control: public, max-age=60.
    */
   public function respondWithPublicResponse() {
     return (new Response('test'))->setPublic()->setMaxAge(60);

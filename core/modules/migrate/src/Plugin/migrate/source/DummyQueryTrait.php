@@ -16,7 +16,7 @@ trait DummyQueryTrait {
    * {@inheritdoc}
    */
   public function query() {
-    // Pass an arbritrary table name - the query should never be executed
+    // Pass an arbitrary table name - the query should never be executed
     // anyway.
     $query = $this->select(uniqid(), 's')
       ->range(0, 1);

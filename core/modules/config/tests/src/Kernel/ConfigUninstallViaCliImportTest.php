@@ -55,7 +55,7 @@ class ConfigUninstallViaCliImportTest extends KernelTestBase {
   }
 
   /**
-   * Tests that the config mopdule can be uninstalled via CLI config import.
+   * Tests that the config module can be uninstalled via CLI config import.
    *
    * @see \Drupal\config\ConfigSubscriber
    */

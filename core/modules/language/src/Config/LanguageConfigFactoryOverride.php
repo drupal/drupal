@@ -75,7 +75,7 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
     $this->baseStorage = $storage;
     $this->eventDispatcher = $event_dispatcher;
     $this->typedConfigManager = $typed_config;
-    // Prior to negiotiation the override language should be the default
+    // Prior to negotiation the override language should be the default
     // language.
     $this->language = $default_language->get();
   }

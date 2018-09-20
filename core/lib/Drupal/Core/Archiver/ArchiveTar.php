@@ -49,7 +49,7 @@
  * The following changes have been done:
  *  Added namespace Drupal\Core\Archiver.
  *  Removed require_once 'PEAR.php'.
- *  Added defintion of OS_WINDOWS taken from PEAR.php.
+ *  Added definition of OS_WINDOWS taken from PEAR.php.
  *  Renamed class to ArchiveTar.
  *  Removed extends PEAR from class.
  *  Removed call parent:: __construct().
@@ -181,7 +181,7 @@ class ArchiveTar
                     if ($data == "\37\213") {
                         $this->_compress = true;
                         $this->_compress_type = 'gz';
-                        // No sure it's enought for a magic code ....
+                        // Not sure it's enough for a magic code ....
                     } elseif ($data == "BZ") {
                         $this->_compress = true;
                         $this->_compress_type = 'bz2';
@@ -2385,7 +2385,7 @@ class ArchiveTar
 
     /**
      * Compress path by changing for example "/dir/foo/../bar" to "/dir/bar",
-     * rand emove double slashes.
+     * and remove double slashes.
      *
      * @param string $p_dir path to reduce
      *

@@ -96,7 +96,7 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
     // will be replaced at the very last moment. This ensures forms with
     // dynamically generated action URLs don't have poor cacheability.
     // Use the proper API to generate the placeholder, when we have one. See
-    // https://www.drupal.org/node/2562341. The placholder uses a fixed string
+    // https://www.drupal.org/node/2562341. The placeholder uses a fixed string
     // that is
     // Crypt::hashBase64('\Drupal\user\Plugin\Block\UserLoginBlock::build');
     // This is based on the implementation in

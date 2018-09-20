@@ -394,7 +394,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
             ($this->context != 'MSGCTXT') &&
             ($this->context != 'MSGID_PLURAL') &&
             ($this->context != 'MSGSTR_ARR')) {
-          // Plural message strings must come after msgid, msgxtxt,
+          // Plural message strings must come after msgid, msgctxt,
           // msgid_plural, or other msgstr[] entries.
           $this->errors[] = new FormattableMarkup('The translation stream %uri contains an error: "msgstr[]" is unexpected on line %line.', $log_vars);
           return FALSE;

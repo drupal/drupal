@@ -165,7 +165,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertNoFieldByName('uid[0][target_id]');
 
-    // Now test with the Autcomplete (Tags) field widget.
+    // Now test with the Autocomplete (Tags) field widget.
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
     $form_display = \Drupal::entityManager()->getStorage('entity_form_display')->load('node.page.default');
     $widget = $form_display->getComponent('uid');

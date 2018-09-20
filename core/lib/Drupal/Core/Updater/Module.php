@@ -105,7 +105,7 @@ class Module extends Updater implements UpdaterInterface {
    * {@inheritdoc}
    */
   public function postInstallTasks() {
-    // Since this is being called outsite of the primary front controller,
+    // Since this is being called outside of the primary front controller,
     // the base_url needs to be set explicitly to ensure that links are
     // relative to the site root.
     // @todo Simplify with https://www.drupal.org/node/2548095

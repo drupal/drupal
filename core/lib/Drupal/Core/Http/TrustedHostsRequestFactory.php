@@ -44,7 +44,7 @@ class TrustedHostsRequestFactory {
    * @param array $request
    *   (optional) An array of request variables.
    * @param array $attributes
-   *   (optioanl) An array of attributes.
+   *   (optional) An array of attributes.
    * @param array $cookies
    *   (optional) The request cookies ($_COOKIE).
    * @param array $files

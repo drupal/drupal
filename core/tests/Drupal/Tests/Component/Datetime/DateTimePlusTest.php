@@ -807,7 +807,7 @@ class DateTimePlusTest extends TestCase {
   public function testValidateFormat() {
     // Check that an input that does not strictly follow the input format will
     // produce the desired date. In this case the year string '11' doesn't
-    // precisely match the 'Y' formater parameter, but PHP will parse it
+    // precisely match the 'Y' formatter parameter, but PHP will parse it
     // regardless. However, when formatted with the same string, the year will
     // be output with four digits. With the ['validate_format' => FALSE]
     // $settings, this will not thrown an exception.

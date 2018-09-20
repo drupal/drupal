@@ -241,7 +241,7 @@ class AliasTest extends PathUnitTestBase {
 
     // Lookup admin path in whitelist. It will query the DB and figure out
     // that it indeed has an alias, and add it to the internal whitelist and
-    // flag it to be peristed to cache.
+    // flag it to be persisted to cache.
     $this->assertTrue($whitelist->get('admin'));
 
     // Destruct the whitelist so it persists its cache.

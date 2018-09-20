@@ -9,7 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\Entity\Editor;
 
 /**
- * Defines a "LlamaContextualAndbutton" plugin, with a contextually OR toolbar
+ * Defines a "LlamaContextualAndButton" plugin, with a contextually OR toolbar
  * builder-enabled "llama" feature.
  *
  * @CKEditorPlugin(

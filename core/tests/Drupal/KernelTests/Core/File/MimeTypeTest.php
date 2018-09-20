@@ -53,7 +53,7 @@ class MimeTypeTest extends FileTestBase {
       $this->assertIdentical($output, $expected, format_string('Mimetype (using default mappings) for %input is %output (expected: %expected).', ['%input' => $input, '%output' => $output, '%expected' => $expected]));
     }
 
-    // Now test the extension gusser by passing in a custom mapping.
+    // Now test the extension guesser by passing in a custom mapping.
     $mapping = [
       'mimetypes' => [
         0 => 'application/java-archive',

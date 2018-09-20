@@ -9,7 +9,7 @@ namespace Drupal\Core\Cache;
  * Drupal\Core\Cache\DatabaseBackend provides the default implementation, which
  * can be consulted as an example.
  *
- * The cache indentifiers are case sensitive.
+ * The cache identifiers are case sensitive.
  *
  * @ingroup cache
  */

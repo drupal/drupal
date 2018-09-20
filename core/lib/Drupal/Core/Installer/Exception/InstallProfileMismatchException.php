@@ -19,7 +19,7 @@ class InstallProfileMismatchException extends InstallerException {
    * @param string $settings_profile
    *   The profile in settings.php.
    * @param string $settings_file
-   *   The path to settigns.php.
+   *   The path to settings.php.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation manager.
    *

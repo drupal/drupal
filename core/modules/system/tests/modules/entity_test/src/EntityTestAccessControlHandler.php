@@ -36,7 +36,7 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
     /** @var \Drupal\entity_test\Entity\EntityTest $entity */
 
     // Always forbid access to entities with the label 'forbid_access', used for
-    // \Drupal\system\Tests\Entity\EntityAccessHControlandlerTest::testDefaultEntityAccess().
+    // \Drupal\system\Tests\Entity\EntityAccessControlHandlerTest::testDefaultEntityAccess().
     if ($entity->label() == 'forbid_access') {
       return AccessResult::forbidden();
     }

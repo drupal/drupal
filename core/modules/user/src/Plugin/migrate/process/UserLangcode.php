@@ -33,7 +33,7 @@ class UserLangcode extends ProcessPluginBase implements ContainerFactoryPluginIn
    * @param string $plugin_id
    *   The plugin ID.
    * @param mixed $plugin_definition
-   *   The plugin definiiton.
+   *   The plugin definition.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager service.
    */

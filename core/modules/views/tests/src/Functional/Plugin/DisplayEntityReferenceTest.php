@@ -213,7 +213,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     $this->drupalPostForm('admin/structure/views/nojs/display/test_display_entity_reference/entity_reference_1/style_options', ['style_options[search_fields][uid]' => 'uid'], t('Apply'));
     $this->drupalPostForm(NULL, [], t('Save'));
 
-    // Test that the search still works with the ralated field.
+    // Test that the search still works with the related field.
     $view = Views::getView('test_display_entity_reference');
     $view->setDisplay('entity_reference_1');
 

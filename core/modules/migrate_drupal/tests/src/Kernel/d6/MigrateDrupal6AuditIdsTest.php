@@ -59,7 +59,7 @@ class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
     $node->moderation_state->value = 'published';
     $node->save();
 
-    // Insert data in the d6_node:page migration mappping table to simulate a
+    // Insert data in the d6_node:page migration mapping table to simulate a
     // previously migrated node.
     $id_map = $this->getMigration('d6_node:page')->getIdMap();
     $table_name = $id_map->mapTableName();
@@ -158,8 +158,8 @@ class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
     $node->setNewRevision(TRUE);
     $node->save();
 
-    // Insert data in the d6_node_revision:page migration mappping table to
-    // simulate a previously migrated node revison.
+    // Insert data in the d6_node_revision:page migration mapping table to
+    // simulate a previously migrated node revision.
     $id_map = $this->getMigration('d6_node_revision:page')->getIdMap();
     $table_name = $id_map->mapTableName();
     $id_map->getDatabase()->insert($table_name)

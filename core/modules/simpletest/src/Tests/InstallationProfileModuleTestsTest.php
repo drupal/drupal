@@ -19,7 +19,7 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
   public static $modules = ['simpletest'];
 
   /**
-   * An administrative user with permission to adminsiter unit tests.
+   * An administrative user with permission to administer unit tests.
    *
    * @var \Drupal\user\UserInterface
    */

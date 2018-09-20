@@ -38,7 +38,7 @@ class Connection extends DatabaseConnection {
   /**
    * A map of condition operators to PostgreSQL operators.
    *
-   * In PostgreSQL, 'LIKE' is case-sensitive. ILKE should be used for
+   * In PostgreSQL, 'LIKE' is case-sensitive. ILIKE should be used for
    * case-insensitive statements.
    */
   protected static $postgresqlConditionOperatorMap = [

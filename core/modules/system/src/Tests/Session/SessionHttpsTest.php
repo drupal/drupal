@@ -190,7 +190,7 @@ class SessionHttpsTest extends WebTestBase {
     }
 
     // The mock front controllers (http.php and https.php) add the script name
-    // to $_SERVER['REQEUST_URI'] and friends. Therefore it is necessary to
+    // to $_SERVER['REQUEST_URI'] and friends. Therefore it is necessary to
     // strip that also.
     $base_url .= 'index.php/';
 

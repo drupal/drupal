@@ -96,9 +96,9 @@
        *   The keypress event.
        */
       onKeypress(event) {
-        // The first tab key press is tracked so that an annoucement about tabbing
-        // constraints can be raised if edit mode is enabled when the page is
-        // loaded.
+        // The first tab key press is tracked so that an announcement about
+        // tabbing constraints can be raised if edit mode is enabled when the page
+        // is loaded.
         if (
           !this.announcedOnce &&
           event.keyCode === 9 &&

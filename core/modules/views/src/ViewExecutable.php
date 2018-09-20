@@ -1522,7 +1522,7 @@ class ViewExecutable {
     // Let modules modify the view just prior to rendering it.
     $module_handler->invokeAll('views_pre_render', [$this]);
 
-    // Let the themes play too, because pre render is a very themey thing.
+    // Let the themes play too, because prerender is a very themey thing.
     foreach ($themes as $theme_name) {
       $function = $theme_name . '_views_pre_render';
       if (function_exists($function)) {

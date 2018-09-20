@@ -28,7 +28,7 @@ interface MigrationWithFollowUpInterface {
   /**
    * Generates follow-up migrations.
    *
-   * When the migration implementing this interface has been succesfully
+   * When the migration implementing this interface has been successfully
    * executed, this method will be used to generate the follow-up migrations
    * which depends on the now migrated data.
    *

@@ -171,7 +171,7 @@ class DateTimeFieldTest extends DateTestBase {
       // past.  First update the test entity so that the date difference always
       // has the same interval.  Since the database always stores UTC, and the
       // interval will use this, force the test date to use UTC and not the local
-      // or user timezome.
+      // or user timezone.
       $timestamp = REQUEST_TIME - 87654321;
       $entity = EntityTest::load($id);
       $field_name = $this->fieldStorage->getName();
@@ -201,7 +201,7 @@ class DateTimeFieldTest extends DateTestBase {
       // future.  First update the test entity so that the date difference always
       // has the same interval.  Since the database always stores UTC, and the
       // interval will use this, force the test date to use UTC and not the local
-      // or user timezome.
+      // or user timezone.
       $timestamp = REQUEST_TIME + 87654321;
       $entity = EntityTest::load($id);
       $field_name = $this->fieldStorage->getName();
@@ -323,7 +323,7 @@ class DateTimeFieldTest extends DateTestBase {
     // past.  First update the test entity so that the date difference always
     // has the same interval.  Since the database always stores UTC, and the
     // interval will use this, force the test date to use UTC and not the local
-    // or user timezome.
+    // or user timezone.
     $timestamp = REQUEST_TIME - 87654321;
     $entity = EntityTest::load($id);
     $field_name = $this->fieldStorage->getName();
@@ -350,7 +350,7 @@ class DateTimeFieldTest extends DateTestBase {
     // future.  First update the test entity so that the date difference always
     // has the same interval.  Since the database always stores UTC, and the
     // interval will use this, force the test date to use UTC and not the local
-    // or user timezome.
+    // or user timezone.
     $timestamp = REQUEST_TIME + 87654321;
     $entity = EntityTest::load($id);
     $field_name = $this->fieldStorage->getName();
