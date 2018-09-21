@@ -6,8 +6,8 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\Tests\config\Traits\AssertConfigEntityImportTrait;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 
 /**
  * Tests various Entity reference UI components.

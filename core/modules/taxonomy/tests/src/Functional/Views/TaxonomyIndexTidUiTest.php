@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\taxonomy\Functional\Views;
 
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\views_ui\Functional\UITestBase;
