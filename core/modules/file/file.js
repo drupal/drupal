@@ -96,6 +96,7 @@
     },
     disableFields: function disableFields(event) {
       var $clickedButton = $(this);
+      $clickedButton.trigger('formUpdated');
 
       var $enabledFields = [];
       if ($clickedButton.closest('div.js-form-managed-file').length > 0) {
