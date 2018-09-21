@@ -2,7 +2,6 @@
 
 namespace Drupal\node;
 
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\Entity\NodeType;
 
@@ -12,7 +11,6 @@ use Drupal\node\Entity\NodeType;
 class NodePermissions {
 
   use StringTranslationTrait;
-  use UrlGeneratorTrait;
 
   /**
    * Returns an array of node type permissions.
