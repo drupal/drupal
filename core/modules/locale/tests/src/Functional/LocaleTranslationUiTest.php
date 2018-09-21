@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
@@ -232,7 +233,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
 
     // Retrieve the source string of the first string available in the
     // {locales_source} table and translate it.
-    $query = db_select('locales_source', 's');
+    $query = Database::getConnection()->select('locales_source', 's');
     $query->addJoin('INNER', 'locales_location', 'l', 's.lid = l.lid');
     $source = $query->fields('s', ['source'])
       ->condition('l.type', 'javascript')

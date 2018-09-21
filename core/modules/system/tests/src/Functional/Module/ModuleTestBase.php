@@ -186,7 +186,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    *   A link to associate with the message.
    */
   public function assertLogMessage($type, $message, $variables = [], $severity = RfcLogLevel::NOTICE, $link = '') {
-    $count = db_select('watchdog', 'w')
+    $count = Database::getConnection()->select('watchdog', 'w')
       ->condition('type', $type)
       ->condition('message', $message)
       ->condition('variables', serialize($variables))

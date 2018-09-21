@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -251,9 +252,9 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     $this->assertNodeAccess($expected_node_access_no_access, $this->nodes['private_no_language_public'], $this->webUser);
 
     // Query the node table with the node access tag in several languages.
-
+    $connection = Database::getConnection();
     // Query with no language specified. The fallback (hu or und) will be used.
-    $select = db_select('node', 'n')
+    $select = $connection->select('node', 'n')
       ->fields('n', ['nid'])
       ->addMetaData('account', $this->webUser)
       ->addTag('node_access');
@@ -268,7 +269,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     $this->assertTrue(array_key_exists($this->nodes['public_no_language_public']->id(), $nids), 'Returned node ID is no language public node.');
 
     // Query with Hungarian (hu) specified.
-    $select = db_select('node', 'n')
+    $select = $connection->select('node', 'n')
       ->fields('n', ['nid'])
       ->addMetaData('account', $this->webUser)
       ->addMetaData('langcode', 'hu')
@@ -282,7 +283,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     $this->assertTrue(array_key_exists($this->nodes['private_both_public']->id(), $nids), 'Returned node ID is both public non-language-aware private only node.');
 
     // Query with Catalan (ca) specified.
-    $select = db_select('node', 'n')
+    $select = $connection->select('node', 'n')
       ->fields('n', ['nid'])
       ->addMetaData('account', $this->webUser)
       ->addMetaData('langcode', 'ca')
@@ -296,7 +297,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     $this->assertTrue(array_key_exists($this->nodes['private_both_public']->id(), $nids), 'Returned node ID is both public non-language-aware private only node.');
 
     // Query with German (de) specified.
-    $select = db_select('node', 'n')
+    $select = $connection->select('node', 'n')
       ->fields('n', ['nid'])
       ->addMetaData('account', $this->webUser)
       ->addMetaData('langcode', 'de')
@@ -308,7 +309,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and no specific langcode.
-    $select = db_select('node', 'n')
+    $select = $connection->select('node', 'n')
       ->fields('n', ['nid'])
       ->addMetaData('account', $this->adminUser)
       ->addTag('node_access');
@@ -319,7 +320,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and langcode de.
-    $select = db_select('node', 'n')
+    $select = $connection->select('node', 'n')
       ->fields('n', ['nid'])
       ->addMetaData('account', $this->adminUser)
       ->addMetaData('langcode', 'de')

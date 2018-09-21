@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Database\Database;
 use Drupal\node\Entity\Node;
 
 /**
@@ -22,13 +23,13 @@ use Drupal\node\Entity\Node;
  */
 function tracker_page($account = NULL) {
   if ($account) {
-    $query = db_select('tracker_user', 't')
+    $query = Database::getConnection()->select('tracker_user', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->addMetaData('base_table', 'tracker_user')
       ->condition('t.uid', $account->id());
   }
   else {
-    $query = db_select('tracker_node', 't', ['target' => 'replica'])
+    $query = Database::getConnection('replica')->select('tracker_node', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->addMetaData('base_table', 'tracker_node');
   }

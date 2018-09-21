@@ -300,6 +300,7 @@ function db_truncate($table, array $options = []) {
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_select($table, $alias = NULL, array $options = []) {
+  @trigger_error('db_select() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call call select() on it. For example, $injected_database->db_select($table, $alias, $options); See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }

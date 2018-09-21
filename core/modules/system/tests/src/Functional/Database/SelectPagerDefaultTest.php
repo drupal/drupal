@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Database;
 
+use Drupal\Core\Database\Database;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -85,14 +86,15 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
    * This is a regression test for #467984.
    */
   public function testInnerPagerQuery() {
-    $query = db_select('test', 't')
+    $connection = Database::getConnection();
+    $query = $connection->select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query
       ->fields('t', ['age'])
       ->orderBy('age')
       ->limit(5);
 
-    $outer_query = db_select($query);
+    $outer_query = $connection->select($query);
     $outer_query->addField('subquery', 'age');
 
     $ages = $outer_query
@@ -107,7 +109,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
    * This is a regression test for #467984.
    */
   public function testHavingPagerQuery() {
-    $query = db_select('test', 't')
+    $query = Database::getConnection()->select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query
       ->fields('t', ['name'])
@@ -133,7 +135,8 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     ]);
     \Drupal::getContainer()->get('request_stack')->push($request);
 
-    $name = db_select('test', 't')
+    $connection = Database::getConnection();
+    $name = $connection->select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->element(2)
       ->fields('t', ['name'])
@@ -145,7 +148,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
 
     // Setting an element smaller than the previous one
     // should not overwrite the pager $maxElement with a smaller value.
-    $name = db_select('test', 't')
+    $name = $connection->select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->element(1)
       ->fields('t', ['name'])
@@ -155,7 +158,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
       ->fetchField();
     $this->assertEqual($name, 'George', 'Pager query #2 with a specified element ID returned the correct results.');
 
-    $name = db_select('test', 't')
+    $name = $connection->select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->fields('t', ['name'])
       ->orderBy('age')

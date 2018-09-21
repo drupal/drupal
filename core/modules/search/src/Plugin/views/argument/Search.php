@@ -2,7 +2,9 @@
 
 namespace Drupal\search\Plugin\views\argument;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\search\ViewsSearchQuery;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -48,7 +50,7 @@ class Search extends ArgumentPluginBase {
    */
   protected function queryParseSearchExpression($input) {
     if (!isset($this->searchQuery)) {
-      $this->searchQuery = db_select('search_index', 'i', ['target' => 'replica'])->extend('Drupal\search\ViewsSearchQuery');
+      $this->searchQuery = Database::getConnection('replica')->select('search_index', 'i')->extend(ViewsSearchQuery::class);
       $this->searchQuery->searchExpression($input, $this->searchType);
       $this->searchQuery->publicParseSearchExpression();
     }

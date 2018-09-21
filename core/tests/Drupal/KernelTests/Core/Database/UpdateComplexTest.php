@@ -126,7 +126,7 @@ class UpdateComplexTest extends DatabaseTestBase {
    * Test UPDATE with a subselect value.
    */
   public function testSubSelectUpdate() {
-    $subselect = db_select('test_task', 't');
+    $subselect = $this->connection->select('test_task', 't');
     $subselect->addExpression('MAX(priority) + :increment', 'max_priority', [':increment' => 30]);
     // Clone this to make sure we are running a different query when
     // asserting.

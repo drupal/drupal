@@ -14,7 +14,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
    */
   public function testFromSubquerySelect() {
     // Create a subquery, which is just a normal query object.
-    $subquery = db_select('test_task', 'tt');
+    $subquery = $this->connection->select('test_task', 'tt');
     $subquery->addField('tt', 'pid', 'pid');
     $subquery->addField('tt', 'task', 'task');
     $subquery->condition('priority', 1);
@@ -22,7 +22,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     for ($i = 0; $i < 2; $i++) {
       // Create another query that joins against the virtual table resulting
       // from the subquery.
-      $select = db_select($subquery, 'tt2');
+      $select = $this->connection->select($subquery, 'tt2');
       $select->join('test', 't', 't.id=tt2.pid');
       $select->addField('t', 'name');
       if ($i) {
@@ -48,7 +48,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
    */
   public function testFromSubquerySelectWithLimit() {
     // Create a subquery, which is just a normal query object.
-    $subquery = db_select('test_task', 'tt');
+    $subquery = $this->connection->select('test_task', 'tt');
     $subquery->addField('tt', 'pid', 'pid');
     $subquery->addField('tt', 'task', 'task');
     $subquery->orderBy('priority', 'DESC');
@@ -56,7 +56,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
 
     // Create another query that joins against the virtual table resulting
     // from the subquery.
-    $select = db_select($subquery, 'tt2');
+    $select = $this->connection->select($subquery, 'tt2');
     $select->join('test', 't', 't.id=tt2.pid');
     $select->addField('t', 'name');
 
@@ -74,13 +74,13 @@ class SelectSubqueryTest extends DatabaseTestBase {
    */
   public function testConditionSubquerySelect() {
     // Create a subquery, which is just a normal query object.
-    $subquery = db_select('test_task', 'tt');
+    $subquery = $this->connection->select('test_task', 'tt');
     $subquery->addField('tt', 'pid', 'pid');
     $subquery->condition('tt.priority', 1);
 
     // Create another query that joins against the virtual table resulting
     // from the subquery.
-    $select = db_select('test_task', 'tt2');
+    $select = $this->connection->select('test_task', 'tt2');
     $select->addField('tt2', 'task');
     $select->condition('tt2.pid', $subquery, 'IN');
 
@@ -97,11 +97,11 @@ class SelectSubqueryTest extends DatabaseTestBase {
    */
   public function testConditionSubquerySelect2() {
     // Create a subquery, which is just a normal query object.
-    $subquery = db_select('test', 't2');
+    $subquery = $this->connection->select('test', 't2');
     $subquery->addExpression('AVG(t2.age)');
 
     // Create another query that adds a clause using the subquery.
-    $select = db_select('test', 't');
+    $select = $this->connection->select('test', 't');
     $select->addField('t', 'name');
     $select->condition('t.age', $subquery, '<');
 
@@ -118,16 +118,16 @@ class SelectSubqueryTest extends DatabaseTestBase {
    */
   public function testConditionSubquerySelect3() {
     // Create subquery 1, which is just a normal query object.
-    $subquery1 = db_select('test_task', 'tt');
+    $subquery1 = $this->connection->select('test_task', 'tt');
     $subquery1->addExpression('AVG(tt.priority)');
     $subquery1->where('tt.pid = t.id');
 
     // Create subquery 2, which is just a normal query object.
-    $subquery2 = db_select('test_task', 'tt2');
+    $subquery2 = $this->connection->select('test_task', 'tt2');
     $subquery2->addExpression('AVG(tt2.priority)');
 
     // Create another query that adds a clause using the subqueries.
-    $select = db_select('test', 't');
+    $select = $this->connection->select('test', 't');
     $select->addField('t', 'name');
     $select->condition($subquery1, $subquery2, '>');
 
@@ -148,22 +148,22 @@ class SelectSubqueryTest extends DatabaseTestBase {
    */
   public function testConditionSubquerySelect4() {
     // Create subquery 1, which is just a normal query object.
-    $subquery1 = db_select('test_task', 'tt');
+    $subquery1 = $this->connection->select('test_task', 'tt');
     $subquery1->addExpression('AVG(tt.priority)');
     $subquery1->where('tt.pid = t.id');
 
     // Create subquery 2, which is just a normal query object.
-    $subquery2 = db_select('test_task', 'tt2');
+    $subquery2 = $this->connection->select('test_task', 'tt2');
     $subquery2->addExpression('MIN(tt2.priority)');
     $subquery2->where('tt2.pid <> t.id');
 
     // Create subquery 3, which is just a normal query object.
-    $subquery3 = db_select('test_task', 'tt3');
+    $subquery3 = $this->connection->select('test_task', 'tt3');
     $subquery3->addExpression('AVG(tt3.priority)');
     $subquery3->where('tt3.pid <> t.id');
 
     // Create another query that adds a clause using the subqueries.
-    $select = db_select('test', 't');
+    $select = $this->connection->select('test', 't');
     $select->addField('t', 'name');
     $select->condition($subquery1, [$subquery2, $subquery3], 'BETWEEN');
 
@@ -182,13 +182,13 @@ class SelectSubqueryTest extends DatabaseTestBase {
    */
   public function testJoinSubquerySelect() {
     // Create a subquery, which is just a normal query object.
-    $subquery = db_select('test_task', 'tt');
+    $subquery = $this->connection->select('test_task', 'tt');
     $subquery->addField('tt', 'pid', 'pid');
     $subquery->condition('priority', 1);
 
     // Create another query that joins against the virtual table resulting
     // from the subquery.
-    $select = db_select('test', 't');
+    $select = $this->connection->select('test', 't');
     $select->join($subquery, 'tt', 't.id=tt.pid');
     $select->addField('t', 'name');
 
@@ -217,10 +217,10 @@ class SelectSubqueryTest extends DatabaseTestBase {
       ])
       ->execute();
     // Base query to {test}.
-    $query = db_select('test', 't')
+    $query = $this->connection->select('test', 't')
       ->fields('t', ['name']);
     // Subquery to {test_people}.
-    $subquery = db_select('test_people', 'tp')
+    $subquery = $this->connection->select('test_people', 'tp')
       ->fields('tp', ['name'])
       ->where('tp.name = t.name');
     $query->exists($subquery);
@@ -248,10 +248,10 @@ class SelectSubqueryTest extends DatabaseTestBase {
       ->execute();
 
     // Base query to {test}.
-    $query = db_select('test', 't')
+    $query = $this->connection->select('test', 't')
       ->fields('t', ['name']);
     // Subquery to {test_people}.
-    $subquery = db_select('test_people', 'tp')
+    $subquery = $this->connection->select('test_people', 'tp')
       ->fields('tp', ['name'])
       ->where('tp.name = t.name');
     $query->notExists($subquery);

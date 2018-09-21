@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field\Kernel;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
@@ -87,7 +88,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
       // Count the actual number of rows in the field table.
       $table_mapping = $storage->getTableMapping();
       $field_table_name = $table_mapping->getDedicatedDataTableName($field_storage);
-      $result = db_select($field_table_name, 't')
+      $result = Database::getConnection()->select($field_table_name, 't')
         ->fields('t')
         ->countQuery()
         ->execute()

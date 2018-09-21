@@ -68,7 +68,7 @@ function dblog_cron() {
   // e.g. auto_increment value > 1 or rows deleted directly from the table.
   if ($row_limit > 0) {
     $connection = \Drupal::database();
-    $min_row = db_select('watchdog', 'w')
+    $min_row = $connection->select('watchdog', 'w')
       ->fields('w', ['wid'])
       ->orderBy('wid', 'DESC')
       ->range($row_limit - 1, 1)

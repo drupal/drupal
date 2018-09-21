@@ -24,7 +24,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
     $pid_to_delete = db_query("SELECT * FROM {test_task} WHERE task = 'sleep'")->fetchField();
 
-    $subquery = db_select('test', 't')
+    $subquery = $this->connection->select('test', 't')
       ->fields('t', ['id'])
       ->condition('t.id', [$pid_to_delete], 'IN');
     $delete = $this->connection->delete('test_task')

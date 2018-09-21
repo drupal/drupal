@@ -151,7 +151,7 @@ class InsertTest extends DatabaseTestBase {
    * Tests that the INSERT INTO ... SELECT (fields) ... syntax works.
    */
   public function testInsertSelectFields() {
-    $query = db_select('test_people', 'tp');
+    $query = $this->connection->select('test_people', 'tp');
     // The query builder will always append expressions after fields.
     // Add the expression first to test that the insert fields are correctly
     // re-ordered.
@@ -177,7 +177,7 @@ class InsertTest extends DatabaseTestBase {
    * Tests that the INSERT INTO ... SELECT * ... syntax works.
    */
   public function testInsertSelectAll() {
-    $query = db_select('test_people', 'tp')
+    $query = $this->connection->select('test_people', 'tp')
       ->fields('tp')
       ->condition('tp.name', 'Meredith');
 

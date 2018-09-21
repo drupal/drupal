@@ -333,7 +333,7 @@ function locale_cron_fill_queue() {
     return $project['status'] == 1;
   });
   $connection = \Drupal::database();
-  $files = db_select('locale_file', 'f')
+  $files = $connection->select('locale_file', 'f')
     ->condition('f.project', array_keys($projects), 'IN')
     ->condition('f.last_checked', $last, '<')
     ->fields('f', ['project', 'langcode'])

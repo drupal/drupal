@@ -55,7 +55,7 @@ function locale_translate_batch_import_files(array $options, $force = FALSE) {
   $files = locale_translate_get_interface_translation_files([], $langcodes);
 
   if (!$force) {
-    $result = db_select('locale_file', 'lf')
+    $result = \Drupal::database()->select('locale_file', 'lf')
       ->fields('lf', ['langcode', 'uri', 'timestamp'])
       ->condition('langcode', $langcodes)
       ->execute()

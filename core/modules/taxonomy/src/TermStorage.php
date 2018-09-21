@@ -325,7 +325,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    * {@inheritdoc}
    */
   public function getNodeTerms(array $nids, array $vocabs = [], $langcode = NULL) {
-    $query = db_select($this->getDataTable(), 'td');
+    $query = $this->database->select($this->getDataTable(), 'td');
     $query->innerJoin('taxonomy_index', 'tn', 'td.tid = tn.tid');
     $query->fields('td', ['tid']);
     $query->addField('tn', 'nid', 'node_nid');

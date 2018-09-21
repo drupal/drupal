@@ -13,11 +13,11 @@ class SelectCloneTest extends DatabaseTestBase {
    * Test that subqueries as value within conditions are cloned properly.
    */
   public function testSelectConditionSubQueryCloning() {
-    $subquery = db_select('test', 't');
+    $subquery = $this->connection->select('test', 't');
     $subquery->addField('t', 'id', 'id');
     $subquery->condition('age', 28, '<');
 
-    $query = db_select('test', 't');
+    $query = $this->connection->select('test', 't');
     $query->addField('t', 'name', 'name');
     $query->condition('id', $subquery, 'IN');
 

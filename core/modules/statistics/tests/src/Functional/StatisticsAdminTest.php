@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\statistics\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
@@ -115,7 +116,8 @@ class StatisticsAdminTest extends BrowserTestBase {
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
     $this->client->post($stats_path, ['form_params' => $post]);
 
-    $result = db_select('node_counter', 'n')
+    $connection = Database::getConnection();
+    $result = $connection->select('node_counter', 'n')
       ->fields('n', ['nid'])
       ->condition('n.nid', $this->testNode->id())
       ->execute()
@@ -124,7 +126,7 @@ class StatisticsAdminTest extends BrowserTestBase {
 
     $this->testNode->delete();
 
-    $result = db_select('node_counter', 'n')
+    $result = $connection->select('node_counter', 'n')
       ->fields('n', ['nid'])
       ->condition('n.nid', $this->testNode->id())
       ->execute()
@@ -162,7 +164,7 @@ class StatisticsAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/pages');
     $this->assertNoText('node/' . $this->testNode->id(), 'No hit URL found.');
 
-    $result = db_select('node_counter', 'nc')
+    $result = Database::getConnection()->select('node_counter', 'nc')
       ->fields('nc', ['daycount'])
       ->condition('nid', $this->testNode->id(), '=')
       ->execute()

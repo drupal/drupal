@@ -108,7 +108,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    * {@inheritdoc}
    */
   public function getAssignedToUser($account) {
-    $query = db_select('shortcut_set_users', 'ssu');
+    $query = $this->connection->select('shortcut_set_users', 'ssu');
     $query->fields('ssu', ['set_name']);
     $query->condition('ssu.uid', $account->id());
     return $query->execute()->fetchField();

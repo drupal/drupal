@@ -20,7 +20,7 @@ class TemporaryQueryTest extends DatabaseTestBase {
    * Returns the number of rows of a table.
    */
   public function countTableRows($table_name) {
-    return db_select($table_name)->countQuery()->execute()->fetchField();
+    return Database::getConnection()->select($table_name)->countQuery()->execute()->fetchField();
   }
 
   /**

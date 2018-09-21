@@ -201,9 +201,10 @@ class BlockContentCreationTest extends BlockContentTestBase {
       $this->pass('Expected exception has been thrown.');
     }
 
-    if (Database::getConnection()->supportsTransactions()) {
+    $connection = Database::getConnection();
+    if ($connection->supportsTransactions()) {
       // Check that the block does not exist in the database.
-      $id = db_select('block_content_field_data', 'b')
+      $id = $connection->select('block_content_field_data', 'b')
         ->fields('b', ['id'])
         ->condition('info', 'fail_creation')
         ->execute()
@@ -212,7 +213,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     }
     else {
       // Check that the block exists in the database.
-      $id = db_select('block_content_field_data', 'b')
+      $id = $connection->select('block_content_field_data', 'b')
         ->fields('b', ['id'])
         ->condition('info', 'fail_creation')
         ->execute()

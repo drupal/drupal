@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
@@ -24,7 +25,8 @@ class UserDeleteTest extends BrowserTestBase {
     $uids = [$user_a->id(), $user_b->id(), $user_c->id()];
 
     // These users should have a role
-    $query = db_select('user__roles', 'r');
+    $connection = Database::getConnection();
+    $query = $connection->select('user__roles', 'r');
     $roles_created = $query
       ->fields('r', ['entity_id'])
       ->condition('entity_id', $uids, 'IN')
@@ -38,7 +40,7 @@ class UserDeleteTest extends BrowserTestBase {
     // Delete the users.
     user_delete_multiple($uids);
     // Test if the roles assignments are deleted.
-    $query = db_select('user__roles', 'r');
+    $query = $connection->select('user__roles', 'r');
     $roles_after_deletion = $query
       ->fields('r', ['entity_id'])
       ->condition('entity_id', $uids, 'IN')

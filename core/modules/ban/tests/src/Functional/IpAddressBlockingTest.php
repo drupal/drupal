@@ -28,6 +28,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser(['ban IP addresses']);
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/config/people/ban');
+    $connection = Database::getConnection();
 
     // Ban a valid IP address.
     $edit = [];
@@ -78,13 +79,12 @@ class IpAddressBlockingTest extends BrowserTestBase {
 
     // Test duplicate ip address are not present in the 'blocked_ips' table.
     // when they are entered programmatically.
-    $connection = Database::getConnection();
     $banIp = new BanIpManager($connection);
     $ip = '1.0.0.0';
     $banIp->banIp($ip);
     $banIp->banIp($ip);
     $banIp->banIp($ip);
-    $query = db_select('ban_ip', 'bip');
+    $query = $connection->select('ban_ip', 'bip');
     $query->fields('bip', ['iid']);
     $query->condition('bip.ip', $ip);
     $ip_count = $query->execute()->fetchAll();
@@ -92,7 +92,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
     $ip = '';
     $banIp->banIp($ip);
     $banIp->banIp($ip);
-    $query = db_select('ban_ip', 'bip');
+    $query = $connection->select('ban_ip', 'bip');
     $query->fields('bip', ['iid']);
     $query->condition('bip.ip', $ip);
     $ip_count = $query->execute()->fetchAll();

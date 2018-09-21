@@ -51,7 +51,7 @@ class DatabaseTestController extends ControllerBase {
     $table_name = $this->connection->queryTemporary('SELECT age FROM {test}', []);
     return new JsonResponse([
       'table_name' => $table_name,
-      'row_count' => db_select($table_name)->countQuery()->execute()->fetchField(),
+      'row_count' => $this->connection->select($table_name)->countQuery()->execute()->fetchField(),
     ]);
   }
 
@@ -64,7 +64,7 @@ class DatabaseTestController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
   public function pagerQueryEven($limit) {
-    $query = db_select('test', 't');
+    $query = $this->connection->select('test', 't');
     $query
       ->fields('t', ['name'])
       ->orderBy('age');
@@ -90,7 +90,7 @@ class DatabaseTestController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
   public function pagerQueryOdd($limit) {
-    $query = db_select('test_task', 't');
+    $query = $this->connection->select('test_task', 't');
     $query
       ->fields('t', ['task'])
       ->orderBy('pid');
@@ -123,7 +123,7 @@ class DatabaseTestController extends ControllerBase {
       'priority' => ['data' => t('Priority'), 'field' => 'priority'],
     ];
 
-    $query = db_select('test_task', 't');
+    $query = $this->connection->select('test_task', 't');
     $query
       ->fields('t', ['tid', 'pid', 'task', 'priority']);
 
@@ -155,7 +155,7 @@ class DatabaseTestController extends ControllerBase {
       'priority' => ['data' => t('Priority'), 'field' => 'priority'],
     ];
 
-    $query = db_select('test_task', 't');
+    $query = $this->connection->select('test_task', 't');
     $query
       ->fields('t', ['tid', 'pid', 'task', 'priority']);
 

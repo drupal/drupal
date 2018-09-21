@@ -117,7 +117,7 @@ class FetchTest extends DatabaseTestBase {
    * Confirms that we can fetch all records into an array explicitly.
    */
   public function testQueryFetchAllColumn() {
-    $query = db_select('test');
+    $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $query->orderBy('name');
     $query_result = $query->execute()->fetchAll(\PDO::FETCH_COLUMN);

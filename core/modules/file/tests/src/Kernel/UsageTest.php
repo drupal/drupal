@@ -63,7 +63,7 @@ class UsageTest extends FileManagedUnitTestBase {
     $file_usage->add($file, 'testing', 'bar', 2);
     $file_usage->add($file, 'testing', 'bar', 2);
 
-    $usage = db_select('file_usage', 'f')
+    $usage = Database::getConnection()->select('file_usage', 'f')
       ->fields('f')
       ->condition('f.fid', $file->id())
       ->execute()
@@ -119,7 +119,7 @@ class UsageTest extends FileManagedUnitTestBase {
 
     // Normal decrement.
     $file_usage->delete($file, 'testing', 'bar', 2);
-    $count = db_select('file_usage', 'f')
+    $count = $connection->select('file_usage', 'f')
       ->fields('f', ['count'])
       ->condition('f.fid', $file->id())
       ->execute()
@@ -128,7 +128,7 @@ class UsageTest extends FileManagedUnitTestBase {
 
     // Multiple decrement and removal.
     $file_usage->delete($file, 'testing', 'bar', 2, 2);
-    $count = db_select('file_usage', 'f')
+    $count = $connection->select('file_usage', 'f')
       ->fields('f', ['count'])
       ->condition('f.fid', $file->id())
       ->execute()
@@ -137,7 +137,7 @@ class UsageTest extends FileManagedUnitTestBase {
 
     // Non-existent decrement.
     $file_usage->delete($file, 'testing', 'bar', 2);
-    $count = db_select('file_usage', 'f')
+    $count = $connection->select('file_usage', 'f')
       ->fields('f', ['count'])
       ->condition('f.fid', $file->id())
       ->execute()

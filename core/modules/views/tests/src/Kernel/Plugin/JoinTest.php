@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
+use Drupal\Core\Database\Database;
 use Drupal\views_test_data\Plugin\views\join\JoinTest as JoinTestPlugin;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Views;
@@ -58,7 +59,7 @@ class JoinTest extends RelationshipJoinTestBase {
     $rand_int = rand(0, 1000);
     $join->setJoinValue($rand_int);
 
-    $query = db_select('views_test_data');
+    $query = Database::getConnection()->select('views_test_data');
     $table = ['alias' => 'users_field_data'];
     $join->buildJoin($query, $table, $view->query);
 
@@ -93,7 +94,7 @@ class JoinTest extends RelationshipJoinTestBase {
 
     // Build the actual join values and read them back from the dbtng query
     // object.
-    $query = db_select('views_test_data');
+    $query = Database::getConnection()->select('views_test_data');
     $table = ['alias' => 'users_field_data'];
     $join->buildJoin($query, $table, $view->query);
 

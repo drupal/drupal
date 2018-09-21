@@ -2,6 +2,7 @@
 
 namespace Drupal\comment\Plugin\views\filter;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
@@ -18,7 +19,7 @@ class UserUid extends FilterPluginBase {
   public function query() {
     $this->ensureMyTable();
 
-    $subselect = db_select('comment_field_data', 'c');
+    $subselect = Database::getConnection()->select('comment_field_data', 'c');
     $subselect->addField('c', 'cid');
     $subselect->condition('c.uid', $this->value, $this->operator);
 

@@ -6,6 +6,7 @@ use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
 use Drupal\Core\Database\Query\Insert;
 use Drupal\Core\Database\Query\Merge;
+use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Transaction;
@@ -476,6 +477,15 @@ class DatabaseLegacyTest extends DatabaseTestBase {
    */
   public function testDbInsert() {
     $this->assertInstanceOf(Insert::class, db_insert('test'));
+  }
+
+  /**
+   * Tests the db_select() function.
+   *
+   * @expectedDeprecation db_select() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call call select() on it. For example, $injected_database->db_select($table, $alias, $options); See https://www.drupal.org/node/2993033
+   */
+  public function testDbSelect() {
+    $this->assertInstanceOf(Select::class, db_select('test'));
   }
 
 }

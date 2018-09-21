@@ -216,7 +216,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
 
     // Save the node again. Verify that the request time on it is not updated.
     $this->searchableNodes[1]->save();
-    $result = db_select('search_dataset', 'd')
+    $result = $connection->select('search_dataset', 'd')
       ->fields('d', ['reindex'])
       ->condition('type', 'node_search')
       ->condition('sid', $this->searchableNodes[1]->id())
@@ -304,7 +304,8 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
    */
   protected function assertDatabaseCounts($count_node, $count_foo, $message) {
     // Count number of distinct nodes by ID.
-    $results = db_select('search_dataset', 'i')
+    $connection = Database::getConnection();
+    $results = $connection->select('search_dataset', 'i')
       ->fields('i', ['sid'])
       ->condition('type', 'node_search')
       ->groupBy('sid')
@@ -313,7 +314,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $this->assertEqual($count_node, count($results), 'Node count was ' . $count_node . ' for ' . $message);
 
     // Count number of "foo" records.
-    $results = db_select('search_dataset', 'i')
+    $results = $connection->select('search_dataset', 'i')
       ->fields('i', ['sid'])
       ->condition('type', 'foo')
       ->execute()

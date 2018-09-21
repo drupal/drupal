@@ -2,6 +2,7 @@
 
 namespace Drupal\database_test\Form;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
@@ -29,7 +30,7 @@ class DatabaseTestForm extends FormBase {
       'status' => ['data' => t('Status'), 'field' => 'u.status'],
     ];
 
-    $query = db_select('users_field_data', 'u');
+    $query = Database::getConnection()->select('users_field_data', 'u');
     $query->condition('u.uid', 0, '<>');
     $query->condition('u.default_langcode', 1);
 

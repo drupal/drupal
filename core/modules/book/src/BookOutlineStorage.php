@@ -186,7 +186,7 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
    * {@inheritdoc}
    */
   public function getBookSubtree($link, $max_depth) {
-    $query = db_select('book', 'b', ['fetch' => \PDO::FETCH_ASSOC]);
+    $query = $this->connection->select('book', 'b', ['fetch' => \PDO::FETCH_ASSOC]);
     $query->fields('b');
     $query->condition('b.bid', $link['bid']);
 

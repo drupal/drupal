@@ -55,7 +55,7 @@ class NodeQueryAlterTest extends NodeTestBase {
   public function testNodeQueryAlterLowLevelWithAccess() {
     // User with access should be able to view 4 nodes.
     try {
-      $query = db_select('node', 'mytab')
+      $query = Database::getConnection()->select('node', 'mytab')
         ->fields('mytab');
       $query->addTag('node_access');
       $query->addMetaData('op', 'view');
@@ -96,7 +96,7 @@ class NodeQueryAlterTest extends NodeTestBase {
   public function testNodeQueryAlterLowLevelNoAccess() {
     // User without access should be able to view 0 nodes.
     try {
-      $query = db_select('node', 'mytab')
+      $query = Database::getConnection()->select('node', 'mytab')
         ->fields('mytab');
       $query->addTag('node_access');
       $query->addMetaData('op', 'view');
@@ -119,7 +119,7 @@ class NodeQueryAlterTest extends NodeTestBase {
   public function testNodeQueryAlterLowLevelEditAccess() {
     // User with view-only access should not be able to edit nodes.
     try {
-      $query = db_select('node', 'mytab')
+      $query = Database::getConnection()->select('node', 'mytab')
         ->fields('mytab');
       $query->addTag('node_access');
       $query->addMetaData('op', 'update');
@@ -160,7 +160,7 @@ class NodeQueryAlterTest extends NodeTestBase {
     // privilege after adding the node_access record.
     drupal_static_reset('node_access_view_all_nodes');
     try {
-      $query = db_select('node', 'mytab')
+      $query = $connection->select('node', 'mytab')
         ->fields('mytab');
       $query->addTag('node_access');
       $query->addMetaData('op', 'view');
@@ -182,7 +182,7 @@ class NodeQueryAlterTest extends NodeTestBase {
     \Drupal::state()->set('node_access_test.no_access_uid', $this->noAccessUser->id());
     drupal_static_reset('node_access_view_all_nodes');
     try {
-      $query = db_select('node', 'mytab')
+      $query = $connection->select('node', 'mytab')
         ->fields('mytab');
       $query->addTag('node_access');
       $query->addMetaData('op', 'view');

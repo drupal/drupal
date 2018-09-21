@@ -224,7 +224,7 @@ class NodeRevisionsTest extends NodeTestBase {
 
     // Verify that the non-default revision vid is greater than the default
     // revision vid.
-    $default_revision = db_select('node', 'n')
+    $default_revision = $connection->select('node', 'n')
       ->fields('n', ['vid'])
       ->condition('nid', $node->id())
       ->execute()
