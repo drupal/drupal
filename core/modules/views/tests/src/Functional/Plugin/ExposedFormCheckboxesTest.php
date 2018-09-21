@@ -3,9 +3,9 @@
 namespace Drupal\Tests\views\Functional\Plugin;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;

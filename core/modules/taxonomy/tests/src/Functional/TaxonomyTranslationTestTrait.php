@@ -3,9 +3,9 @@
 namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 
 /**
  * Provides common testing base for translated taxonomy terms.

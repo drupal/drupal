@@ -5,7 +5,7 @@ namespace Drupal\Tests\field\Functional\EntityReference;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\node\Entity\Node;
 use Drupal\field\Entity\FieldStorageConfig;

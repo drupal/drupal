@@ -6,10 +6,10 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\editor\Entity\Editor;
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 
 /**
  * @group quickedit

@@ -14,7 +14,6 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
@@ -24,6 +23,7 @@ use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 
 /**
  * Tests the new entity API for the entity reference field type.

@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\user\Kernel;
 
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\user\Entity\Role;
 
 /**

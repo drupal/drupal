@@ -5,10 +5,10 @@ namespace Drupal\Tests\field\Kernel\EntityReference;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Symfony\Component\Debug\BufferingLogger;
 
 /**
