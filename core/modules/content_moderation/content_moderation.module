@@ -207,6 +207,15 @@ function content_moderation_entity_access(EntityInterface $entity, $operation, A
     }
   }
 
+  // Do not allow users to delete the state that is configured as the default
+  // state for the workflow.
+  if ($entity instanceof WorkflowInterface) {
+    $configuration = $entity->getTypePlugin()->getConfiguration();
+    if (!empty($configuration['default_moderation_state']) && $operation === sprintf('delete-state:%s', $configuration['default_moderation_state'])) {
+      return AccessResult::forbidden()->addCacheableDependency($entity);
+    }
+  }
+
   return $access_result;
 }
 

@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\workflows\Plugin\WorkflowTypeConfigureFormBase;
+use Drupal\workflows\State;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -128,6 +129,21 @@ class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase imple
         ],
       ];
     }
+
+    $workflow_type_configuration = $this->workflowType->getConfiguration();
+    $form['workflow_settings'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Workflow Settings'),
+      '#open' => TRUE,
+    ];
+    $form['workflow_settings']['default_moderation_state'] = [
+      '#title' => $this->t('Default moderation state'),
+      '#type' => 'select',
+      '#required' => TRUE,
+      '#options' => array_map([State::class, 'labelCallback'], $this->workflowType->getStates()),
+      '#description' => $this->t('Select the state that new content will be assigned. This state will appear as the default in content forms and the available target states will be based on the transitions available from this state.'),
+      '#default_value' => isset($workflow_type_configuration['default_moderation_state']) ? $workflow_type_configuration['default_moderation_state'] : 'draft',
+    ];
     return $form;
   }
 
@@ -135,8 +151,9 @@ class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase imple
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    // Configuration is updated from modal windows launched from this form, no
-    // need to change any configuration here.
+    $configuration = $this->workflowType->getConfiguration();
+    $configuration['default_moderation_state'] = $form_state->getValue(['workflow_settings', 'default_moderation_state']);
+    $this->workflowType->setConfiguration($configuration);
   }
 
 }

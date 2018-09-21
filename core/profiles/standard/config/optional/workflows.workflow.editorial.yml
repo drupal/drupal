@@ -57,3 +57,4 @@ type_settings:
         - draft
         - published
   entity_types: {  }
+  default_moderation_state: draft

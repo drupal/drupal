@@ -65,3 +65,4 @@ type_settings:
       - article
       - page
       - recipe
+  default_moderation_state: draft
