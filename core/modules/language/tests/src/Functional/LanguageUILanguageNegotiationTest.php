@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\language\Functional;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationBrowser;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
@@ -40,6 +42,13 @@ use Drupal\block\Entity\Block;
 class LanguageUILanguageNegotiationTest extends BrowserTestBase {
 
   /**
+   * The admin user for testing.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $adminUser;
+
+  /**
    * Modules to enable.
    *
    * We marginally use interface translation functionality here, so need to use
@@ -53,8 +62,8 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $admin_user = $this->drupalCreateUser(['administer languages', 'translate interface', 'access administration pages', 'administer blocks']);
-    $this->drupalLogin($admin_user);
+    $this->adminUser = $this->drupalCreateUser(['administer languages', 'translate interface', 'access administration pages', 'administer blocks']);
+    $this->drupalLogin($this->adminUser);
   }
 
   /**
@@ -72,6 +81,17 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     $http_header_browser_fallback = ["Accept-Language" => "$langcode_browser_fallback;q=1"];
     // For setting browser language preference to some unknown.
     $http_header_blah = ["Accept-Language" => "blah;q=1"];
+
+    // Create a private file for testing accessible by the admin user.
+    drupal_mkdir($this->privateFilesDirectory . '/test');
+    $filepath = 'private://test/private-file-test.txt';
+    $contents = "file_put_contents() doesn't seem to appreciate empty strings so let's put in some data.";
+    file_put_contents($filepath, $contents);
+    $file = File::create([
+      'uri' => $filepath,
+      'uid' => $this->adminUser->id(),
+    ]);
+    $file->save();
 
     // Setup the site languages by installing two languages.
     // Set the default language in order for the translated string to be registered
@@ -374,6 +394,13 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     $this->drupalGet($test['path'], $test['path_options'], $test['http_header']);
     $this->assertText($test['expect'], $test['message']);
     $this->assertText(t('Language negotiation method: @name', ['@name' => $test['expected_method_id']]));
+
+    // Get the private file and ensure it is a 200. It is important to
+    // invalidate the router cache to ensure the routing system runs a full
+    // match.
+    Cache::invalidateTags(['route_match']);
+    $this->drupalGet('system/files/test/private-file-test.txt');
+    $this->assertResponse(200);
   }
 
   /**
