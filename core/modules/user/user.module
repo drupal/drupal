@@ -569,7 +569,7 @@ function user_login_finalize(UserInterface $account) {
 /**
  * Implements hook_user_login().
  */
-function user_user_login($account) {
+function user_user_login(UserInterface $account) {
   // Reset static cache of default variables in template_preprocess() to reflect
   // the new user.
   drupal_static_reset('template_preprocess');
@@ -578,7 +578,7 @@ function user_user_login($account) {
 /**
  * Implements hook_user_logout().
  */
-function user_user_logout($account) {
+function user_user_logout(AccountInterface $account) {
   // Reset static cache of default variables in template_preprocess() to reflect
   // the new user.
   drupal_static_reset('template_preprocess');
