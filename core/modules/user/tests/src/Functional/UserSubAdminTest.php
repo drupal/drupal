@@ -1,20 +1,18 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Test 'sub-admin' account with permission to edit some users but without 'administer users' permission.
  *
  * @group user
  */
-class UserSubAdminTest extends WebTestBase {
+class UserSubAdminTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = ['user_access_test'];
 
@@ -27,12 +25,12 @@ class UserSubAdminTest extends WebTestBase {
 
     // Test that the create user page has admin fields.
     $this->drupalGet('admin/people/create');
-    $this->assertField("edit-name", "Name field exists.");
-    $this->assertField("edit-notify", "Notify field exists.");
+    $this->assertSession()->fieldExists("edit-name");
+    $this->assertSession()->fieldExists("edit-notify");
 
     // Not 'status' or 'roles' as they require extra permission.
-    $this->assertNoField("edit-status-0", "Status field missing.");
-    $this->assertNoField("edit-role", "Role field missing.");
+    $this->assertSession()->fieldNotExists("edit-status-0");
+    $this->assertSession()->fieldNotExists("edit-role");
 
     // Test that create user gives an admin style message.
     $edit = [
@@ -42,25 +40,25 @@ class UserSubAdminTest extends WebTestBase {
       'pass[pass2]' => $pass,
       'notify' => FALSE,
     ];
-    $this->drupalPostForm('admin/people/create', $edit, t('Create new account'));
-    $this->assertText(t('Created a new user account for @name. No email has been sent.', ['@name' => $edit['name']]), 'User created');
+    $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
+    $this->assertSession()->pageTextContains('Created a new user account for ' . $edit['name'] . '. No email has been sent.');
 
     // Test that the cancel user page has admin fields.
     $cancel_user = $this->createUser();
     $this->drupalGet('user/' . $cancel_user->id() . '/cancel');
-    $this->assertRaw(t('Are you sure you want to cancel the account %name?', ['%name' => $cancel_user->getUsername()]), 'Confirmation form to cancel account displayed.');
-    $this->assertRaw(t('Disable the account and keep its content.') . ' ' . t('This action cannot be undone.'), 'Cannot select account cancellation method.');
+    $this->assertSession()->responseContains('Are you sure you want to cancel the account ' . $cancel_user->getUsername() . '?');
+    $this->assertSession()->responseContains('Disable the account and keep its content. This action cannot be undone.');
 
     // Test that cancel confirmation gives an admin style message.
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
-    $this->assertRaw(t('%name has been disabled.', ['%name' => $cancel_user->getUsername()]), "Confirmation message displayed to user.");
+    $this->assertSession()->pageTextContains($cancel_user->getUsername() . ' has been disabled.');
 
     // Repeat with permission to select account cancellation method.
     $user->addRole($this->drupalCreateRole(['select account cancellation method']));
     $user->save();
     $cancel_user = $this->createUser();
     $this->drupalGet('user/' . $cancel_user->id() . '/cancel');
-    $this->assertText(t('Select the method to cancel the account above.'), 'Allows to select account cancellation method.');
+    $this->assertSession()->pageTextContains('Select the method to cancel the account above.');
   }
 
 }
