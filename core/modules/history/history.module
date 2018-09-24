@@ -12,6 +12,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Entities changed before this time are always shown as read.
@@ -159,7 +160,7 @@ function history_node_delete(EntityInterface $node) {
 /**
  * Implements hook_user_cancel().
  */
-function history_user_cancel($edit, $account, $method) {
+function history_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
       db_delete('history')

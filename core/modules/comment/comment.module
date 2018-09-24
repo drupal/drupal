@@ -25,6 +25,7 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\node\NodeInterface;
 use Drupal\user\RoleInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Anonymous posters cannot enter their contact information.
@@ -518,7 +519,7 @@ function comment_node_search_result(EntityInterface $node) {
 /**
  * Implements hook_user_cancel().
  */
-function comment_user_cancel($edit, $account, $method) {
+function comment_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
       $comments = entity_load_multiple_by_properties('comment', ['uid' => $account->id()]);
