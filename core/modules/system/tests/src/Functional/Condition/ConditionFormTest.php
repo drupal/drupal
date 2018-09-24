@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\system\Tests\Condition;
+namespace Drupal\Tests\system\Functional\Condition;
 
 use Drupal\node\Entity\Node;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that condition plugins basic form handling is working.
@@ -14,7 +14,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group Condition
  */
-class ConditionFormTest extends WebTestBase {
+class ConditionFormTest extends BrowserTestBase {
 
   public static $modules = ['node', 'condition_test'];
 
