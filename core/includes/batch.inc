@@ -253,6 +253,7 @@ function _batch_process() {
   $current_set = &_batch_current_set();
   // Indicate that this batch set needs to be initialized.
   $set_changed = TRUE;
+  $task_message = '';
 
   // If this batch was marked for progressive execution (e.g. forms submitted by
   // \Drupal::formBuilder()->submitForm(), initialize a timer to determine
@@ -276,7 +277,7 @@ function _batch_process() {
       include_once \Drupal::root() . '/' . $current_set['file'];
     }
 
-    $task_message = $label = '';
+    $task_message = '';
     // Assume a single pass operation and set the completion level to 1 by
     // default.
     $finished = 1;
@@ -364,11 +365,8 @@ function _batch_process() {
       '@estimate'   => ($current > 0) ? \Drupal::service('date.formatter')->formatInterval(($elapsed * ($total - $current) / $current) / 1000) : '-',
     ];
     $message = strtr($progress_message, $values);
-    if (!empty($task_message)) {
-      $label = $task_message;
-    }
 
-    return [$percentage, $message, $label];
+    return [$percentage, $message, $task_message];
   }
   else {
     // If we are not in progressive mode, the entire batch has been processed.
