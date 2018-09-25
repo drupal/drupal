@@ -79,7 +79,7 @@ class MultiFormTest extends WebDriverTestBase {
     $fields = $page->findAll('xpath', $form_xpath . $field_xpath);
     $this->assertEqual(count($fields), 2);
     foreach ($fields as $field) {
-      $this->assertEqual(count($field->find('xpath', '.' . $field_items_xpath_suffix)), 1, 'Found the correct number of field items on the initial page.');
+      $this->assertCount(1, $field->findAll('xpath', '.' . $field_items_xpath_suffix), 'Found the correct number of field items on the initial page.');
       $this->assertFieldsByValue($field->find('xpath', '.' . $button_xpath_suffix), NULL, 'Found the "add more" button on the initial page.');
     }
 
