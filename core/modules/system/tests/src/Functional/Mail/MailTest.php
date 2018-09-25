@@ -2,8 +2,13 @@
 
 namespace Drupal\Tests\system\Functional\Mail;
 
+use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\Plugin\Mail\TestMailCollector;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\system_mail_failure_test\Plugin\Mail\TestPhpMailFailure;
 
@@ -19,7 +24,7 @@ class MailTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['simpletest', 'system_mail_failure_test'];
+  public static $modules = ['simpletest', 'system_mail_failure_test', 'mail_html_test', 'file', 'image'];
 
   /**
    * Assert that the pluggable mail system is functional.
@@ -102,6 +107,180 @@ class MailTest extends BrowserTestBase {
     $this->assertEquals('Drépal this is a very long test sentence to te <simpletest@example.com>', Unicode::mimeHeaderDecode($sent_message['headers']['From']), 'From header is correctly encoded.');
     $this->assertFalse(isset($sent_message['headers']['Reply-to']), 'Message reply-to is not set if not specified.');
     $this->assertFalse(isset($sent_message['headers']['Errors-To']), 'Errors-to header must not be set, it is deprecated.');
+  }
+
+  /**
+   * Checks that relative paths in mails are converted into absolute URLs.
+   */
+  public function testConvertRelativeUrlsIntoAbsolute() {
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+
+    // Use the HTML compatible state system collector mail backend.
+    $this->config('system.mail')->set('interface.default', 'test_html_mail_collector')->save();
+
+    // Fetch the hostname and port for matching against.
+    $http_host = \Drupal::request()->getSchemeAndHttpHost();
+
+    // Random generator.
+    $random = new Random();
+
+    // One random tag name.
+    $tag_name = strtolower($random->name(8, TRUE));
+
+    // Test root relative urls.
+    foreach (['href', 'src'] as $attribute) {
+      // Reset the state variable that holds sent messages.
+      \Drupal::state()->set('system.test_mail_collector', []);
+
+      $html = "<$tag_name $attribute=\"/root-relative\">root relative url in mail test</$tag_name>";
+      $expected_html = "<$tag_name $attribute=\"{$http_host}/root-relative\">root relative url in mail test</$tag_name>";
+
+      // Prepare render array.
+      $render = ['#markup' => Markup::create($html)];
+
+      // Send a test message that simpletest_mail_alter should cancel.
+      \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);
+      // Retrieve sent message.
+      $captured_emails = \Drupal::state()->get('system.test_mail_collector');
+      $sent_message = end($captured_emails);
+
+      // Wrap the expected HTML and assert.
+      $expected_html = MailFormatHelper::wrapMail($expected_html);
+      $this->assertSame($expected_html, $sent_message['body'], "Asserting that {$attribute} is properly converted for mails.");
+    }
+
+    // Test protocol relative urls.
+    foreach (['href', 'src'] as $attribute) {
+      // Reset the state variable that holds sent messages.
+      \Drupal::state()->set('system.test_mail_collector', []);
+
+      $html = "<$tag_name $attribute=\"//example.com/protocol-relative\">protocol relative url in mail test</$tag_name>";
+      $expected_html = "<$tag_name $attribute=\"//example.com/protocol-relative\">protocol relative url in mail test</$tag_name>";
+
+      // Prepare render array.
+      $render = ['#markup' => Markup::create($html)];
+
+      // Send a test message that simpletest_mail_alter should cancel.
+      \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);
+      // Retrieve sent message.
+      $captured_emails = \Drupal::state()->get('system.test_mail_collector');
+      $sent_message = end($captured_emails);
+
+      // Wrap the expected HTML and assert.
+      $expected_html = MailFormatHelper::wrapMail($expected_html);
+      $this->assertSame($expected_html, $sent_message['body'], "Asserting that {$attribute} is properly converted for mails.");
+    }
+
+    // Test absolute urls.
+    foreach (['href', 'src'] as $attribute) {
+      // Reset the state variable that holds sent messages.
+      \Drupal::state()->set('system.test_mail_collector', []);
+
+      $html = "<$tag_name $attribute=\"http://example.com/absolute\">absolute url in mail test</$tag_name>";
+      $expected_html = "<$tag_name $attribute=\"http://example.com/absolute\">absolute url in mail test</$tag_name>";
+
+      // Prepare render array.
+      $render = ['#markup' => Markup::create($html)];
+
+      // Send a test message that simpletest_mail_alter should cancel.
+      \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);
+      // Retrieve sent message.
+      $captured_emails = \Drupal::state()->get('system.test_mail_collector');
+      $sent_message = end($captured_emails);
+
+      // Wrap the expected HTML and assert.
+      $expected_html = MailFormatHelper::wrapMail($expected_html);
+      $this->assertSame($expected_html, $sent_message['body'], "Asserting that {$attribute} is properly converted for mails.");
+    }
+  }
+
+  /**
+   * Checks that mails built from render arrays contain absolute paths.
+   *
+   * By default Drupal uses relative paths for images and links. When sending
+   * emails, absolute paths should be used instead.
+   */
+  public function testRenderedElementsUseAbsolutePaths() {
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+
+    // Use the HTML compatible state system collector mail backend.
+    $this->config('system.mail')->set('interface.default', 'test_html_mail_collector')->save();
+
+    // Fetch the hostname and port for matching against.
+    $http_host = \Drupal::request()->getSchemeAndHttpHost();
+
+    // Random generator.
+    $random = new Random();
+    $image_name = $random->name();
+
+    // Create an image file.
+    $file = File::create(['uri' => "public://{$image_name}.png", 'filename' => "{$image_name}.png"]);
+    $file->save();
+
+    $base_path = base_path();
+
+    $path_pairs = [
+      'root relative' => [$file->getFileUri(), "{$http_host}{$base_path}{$this->publicFilesDirectory}/{$image_name}.png"],
+      'protocol relative' => ['//example.com/image.png', '//example.com/image.png'],
+      'absolute' => ['http://example.com/image.png', 'http://example.com/image.png'],
+    ];
+
+    // Test images.
+    foreach ($path_pairs as $test_type => $paths) {
+      list($input_path, $expected_path) = $paths;
+
+      // Reset the state variable that holds sent messages.
+      \Drupal::state()->set('system.test_mail_collector', []);
+
+      // Build the render array.
+      $render = [
+        '#theme' => 'image',
+        '#uri' => $input_path,
+      ];
+      $expected_html = "<img src=\"$expected_path\" alt=\"\" />";
+
+      // Send a test message that simpletest_mail_alter should cancel.
+      \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);
+      // Retrieve sent message.
+      $captured_emails = \Drupal::state()->get('system.test_mail_collector');
+      $sent_message = end($captured_emails);
+
+      // Wrap the expected HTML and assert.
+      $expected_html = MailFormatHelper::wrapMail($expected_html);
+      $this->assertSame($expected_html, $sent_message['body'], "Asserting that {$test_type} paths are converted properly.");
+    }
+
+    // Test links.
+    $path_pairs = [
+      'root relative' => [Url::fromUserInput('/path/to/something'), "{$http_host}{$base_path}path/to/something"],
+      'protocol relative' => [Url::fromUri('//example.com/image.png'), '//example.com/image.png'],
+      'absolute' => [Url::fromUri('http://example.com/image.png'), 'http://example.com/image.png'],
+    ];
+
+    foreach ($path_pairs as $paths) {
+      list($input_path, $expected_path) = $paths;
+
+      // Reset the state variable that holds sent messages.
+      \Drupal::state()->set('system.test_mail_collector', []);
+
+      // Build the render array.
+      $render = [
+        '#title' => 'Link',
+        '#type' => 'link',
+        '#url' => $input_path,
+      ];
+      $expected_html = "<a href=\"$expected_path\">Link</a>";
+
+      // Send a test message that simpletest_mail_alter should cancel.
+      \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);
+      // Retrieve sent message.
+      $captured_emails = \Drupal::state()->get('system.test_mail_collector');
+      $sent_message = end($captured_emails);
+
+      // Wrap the expected HTML and assert.
+      $expected_html = MailFormatHelper::wrapMail($expected_html);
+      $this->assertSame($expected_html, $sent_message['body']);
+    }
   }
 
 }
