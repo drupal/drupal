@@ -87,31 +87,25 @@ class FilterIdTest extends KernelTestBase {
    */
   public function provideFilters() {
     return [
-      // The filter ID is mapped, and the plugin exists.
-      [
+      'filter ID mapped to plugin that exists' => [
         'foo',
         'filter_html',
       ],
-      // The filter ID isn't mapped, but it's unchanged from the source (i.e.,
-      // it bypasses the static map) and the plugin exists.
-      [
+      'filter ID not mapped but unchanged from the source and the plugin exists' => [
         'filter_html',
         'filter_html',
       ],
-      // The filter ID is mapped, but the plugin does not exist.
-      [
+      'filter ID mapped to plugin that does not exist' => [
         'baz',
         'filter_null',
         'php_code',
       ],
-      // The filter ID isn't mapped, but it's unchanged from the source (i.e.,
-      // it bypasses the static map) but the plugin does not exist.
-      [
+      'filter ID not mapped but unchanged from the source and the plugin does not exist' => [
         'php_code',
         'filter_null',
         'php_code',
       ],
-      [
+      'filter ID set and the plugin does not exist' => [
         ['filter', 1],
         'filter_null',
         'filter:1',
