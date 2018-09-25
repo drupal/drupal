@@ -2,7 +2,9 @@
 
 namespace Drupal\Core\Mail;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerTrait;
@@ -10,6 +12,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -276,6 +279,13 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
 
     // Retrieve the responsible implementation for this message.
     $system = $this->getInstance(['module' => $module, 'key' => $key]);
+
+    // Attempt to convert relative URLs to absolute.
+    foreach ($message['body'] as &$body_part) {
+      if ($body_part instanceof MarkupInterface) {
+        $body_part = Markup::create(Html::transformRootRelativeUrlsToAbsolute((string) $body_part, \Drupal::request()->getSchemeAndHttpHost()));
+      }
+    }
 
     // Format the message body.
     $message = $system->format($message);
