@@ -238,9 +238,6 @@ class NodeViewsData extends EntityViewsData {
 
     $data['node_field_revision']['table']['wizard_id'] = 'node_field_revision';
 
-    $data['node_field_revision']['table']['join']['node_field_data']['left_field'] = 'vid';
-    $data['node_field_revision']['table']['join']['node_field_data']['field'] = 'vid';
-
     $data['node_field_revision']['status']['filter']['label'] = $this->t('Published');
     $data['node_field_revision']['status']['filter']['type'] = 'yes-no';
     $data['node_field_revision']['status']['filter']['use_equal'] = TRUE;
