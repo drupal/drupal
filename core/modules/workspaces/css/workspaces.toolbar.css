@@ -184,17 +184,18 @@
 }
 
 @media all and (max-width: 766px) {
-  .toolbar .toolbar-icon-workspace {
+  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
     padding-left: 2.75em;
     padding-right: 1.3333em;
     text-indent: 0;
-    width: 8em;
+    width: auto;
+    max-width: 8em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .toolbar .toolbar-icon-workspace:before {
+  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace:before {
     background-size: 100% auto;
     left: 0.6667em;
     width: 20px;
