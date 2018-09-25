@@ -22,6 +22,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     'layout_builder_views_test',
     'layout_test',
     'block',
+    'block_test',
     'node',
     'layout_builder_test',
   ];
@@ -480,6 +481,49 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Node can be loaded after deleting the View.
     $assert_session->pageTextContains(Node::load(1)->getTitle());
     $assert_session->pageTextNotContains('Test Block View');
+  }
+
+  /**
+   * Tests the usage of placeholders for empty blocks.
+   *
+   * @see \Drupal\Core\Block\BlockPluginInterface::getPlaceholderString()
+   * @see \Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray::onBuildRender()
+   */
+  public function testBlockPlaceholder() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
+
+    // Customize the default view mode.
+    $this->drupalGet("$field_ui_prefix/display-layout/default");
+
+    // Add a block whose content is controlled by state and is empty by default.
+    $this->clickLink('Add Block');
+    $this->clickLink('Test block caching');
+    $page->fillField('settings[label]', 'The block label');
+    $page->pressButton('Add Block');
+
+    $block_content = 'I am content';
+    $placeholder_content = 'Placeholder for the "The block label" block';
+
+    // The block placeholder is displayed and there is no content.
+    $assert_session->pageTextContains($placeholder_content);
+    $assert_session->pageTextNotContains($block_content);
+
+    // Set block content and reload the page.
+    \Drupal::state()->set('block_test.content', $block_content);
+    $this->getSession()->reload();
+
+    // The block placeholder is no longer displayed and the content is visible.
+    $assert_session->pageTextNotContains($placeholder_content);
+    $assert_session->pageTextContains($block_content);
   }
 
   /**

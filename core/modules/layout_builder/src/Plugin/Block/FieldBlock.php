@@ -17,7 +17,6 @@ use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
-use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Psr\Log\LoggerInterface;
@@ -160,11 +159,15 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
       $build = [];
       $this->logger->warning('The field "%field" failed to render with the error of "%error".', ['%field' => $this->fieldName, '%error' => $e->getMessage()]);
     }
-    if (!empty($entity->in_preview) && !Element::getVisibleChildren($build)) {
-      $build['content']['#markup'] = new TranslatableMarkup('Placeholder for the "@field" field', ['@field' => $this->getFieldDefinition()->getLabel()]);
-    }
     CacheableMetadata::createFromObject($this)->applyTo($build);
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPlaceholderString() {
+    return new TranslatableMarkup('Placeholder for the "@field" field', ['@field' => $this->getFieldDefinition()->getLabel()]);
   }
 
   /**

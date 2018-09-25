@@ -108,6 +108,13 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
+  public function getPlaceholderString() {
+    return $this->t('Placeholder for the "@view" views block', ['@view' => $this->view->storage->label()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
