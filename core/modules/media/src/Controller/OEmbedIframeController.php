@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
@@ -15,6 +14,7 @@ use Drupal\media\IFrameUrlHelper;
 use Drupal\media\OEmbed\ResourceException;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -58,7 +58,7 @@ class OEmbedIframeController implements ContainerInjectionInterface {
   /**
    * The logger channel.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   * @var \Psr\Log\LoggerInterface
    */
   protected $logger;
 
@@ -78,12 +78,12 @@ class OEmbedIframeController implements ContainerInjectionInterface {
    *   The oEmbed URL resolver service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   * @param \Psr\Log\LoggerInterface $logger
    *   The logger channel.
    * @param \Drupal\media\IFrameUrlHelper $iframe_url_helper
    *   The iFrame URL helper service.
    */
-  public function __construct(ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, RendererInterface $renderer, LoggerChannelInterface $logger, IFrameUrlHelper $iframe_url_helper) {
+  public function __construct(ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, RendererInterface $renderer, LoggerInterface $logger, IFrameUrlHelper $iframe_url_helper) {
     $this->resourceFetcher = $resource_fetcher;
     $this->urlResolver = $url_resolver;
     $this->renderer = $renderer;
