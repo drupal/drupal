@@ -64,7 +64,7 @@ class OEmbedFormatter extends FormatterBase implements ContainerFactoryPluginInt
   /**
    * The logger service.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   * @var \Psr\Log\LoggerInterface
    */
   protected $logger;
 
