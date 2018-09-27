@@ -13,6 +13,11 @@ Note: functional tests have to be invoked with a user in the same group as the
 web server user. You can either configure Apache (or nginx) to run as your own
 system user or run tests as a privileged user instead.
 
+Invoking tests with a user that is in the same group as the web server will
+require you to ensure Drupal keeps gid stickybits when creating new directories.
+
+`$settings['file_chmod_directory'] = 02775;`
+
 To develop locally, a straightforward - but also less secure - approach is to
 run tests as your own system user. To achieve that, change the default Apache
 user to run as your system user. Typically, you'd need to modify
