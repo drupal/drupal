@@ -9,6 +9,9 @@ use Drupal\views\Entity\View;
 /**
  * Tests the upgrade path for moving the revision metadata fields.
  *
+ * This test uses the entity_test_revlog module, which intentionally omits the
+ * entity_metadata_keys fields. This causes deprecation errors.
+ *
  * @group Update
  * @group legacy
  */
@@ -27,6 +30,10 @@ class MoveRevisionMetadataFieldsUpdateTest extends UpdatePathTestBase {
 
   /**
    * Tests that the revision metadata fields are moved correctly.
+   *
+   * @expectedDeprecation The revision_user revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
+   * @expectedDeprecation The revision_created revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
+   * @expectedDeprecation The revision_log_message revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
    */
   public function testSystemUpdate8400() {
     $this->runUpdates();
@@ -87,6 +94,10 @@ class MoveRevisionMetadataFieldsUpdateTest extends UpdatePathTestBase {
    * This test ensures that already cached entity instances will only return the
    * required revision metadata keys they have been cached with and only new
    * instances will return all the new required revision metadata keys.
+   *
+   * @expectedDeprecation The revision_user revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
+   * @expectedDeprecation The revision_created revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
+   * @expectedDeprecation The revision_log_message revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
    */
   public function testAddingRequiredRevisionMetadataKeys() {
     // Ensure that cached entity types without required revision metadata keys
@@ -194,6 +205,10 @@ class MoveRevisionMetadataFieldsUpdateTest extends UpdatePathTestBase {
 
   /**
    * Tests that the revision metadata key BC layer was updated correctly.
+   *
+   * @expectedDeprecation The revision_user revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
+   * @expectedDeprecation The revision_created revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
+   * @expectedDeprecation The revision_log_message revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
    */
   public function testSystemUpdate8501() {
     $this->runUpdates();

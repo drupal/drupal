@@ -5,6 +5,7 @@
  * Test module for the entity API providing a bundle field.
  */
 
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\FieldStorageDefinition;
@@ -14,13 +15,23 @@ use Drupal\entity_test\Entity\EntityTestMulRev;
  * Implements hook_entity_type_alter().
  */
 function entity_schema_test_entity_type_alter(array &$entity_types) {
+  // Allow a test to tell us whether or not to alter the entity type.
   if (\Drupal::state()->get('entity_schema_update')) {
     $entity_type = $entity_types['entity_test'];
-    $entity_type->set('translatable', TRUE);
-    $entity_type->set('data_table', 'entity_test_field_data');
-    $keys = $entity_type->getKeys();
-    $keys['revision'] = 'revision_id';
-    $entity_type->set('entity_keys', $keys);
+    if ($entity_type instanceof ContentEntityTypeInterface) {
+      $entity_type->set('translatable', TRUE);
+      $entity_type->set('data_table', 'entity_test_field_data');
+      // Update the keys with a revision ID.
+      $keys = $entity_type->getKeys();
+      $keys['revision'] = 'revision_id';
+      $entity_type->set('entity_keys', $keys);
+      // We can't use getRevisionMetadataKeys() because it causes recursion.
+      $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
+      $revision_metadata_keys = array_merge($revision_metadata_keys, [
+        'revision_log_message' => 'revision_log',
+      ]);
+      $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
+    }
   }
 }
 

@@ -9,8 +9,14 @@ use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
 /**
+ * Test the revision system.
+ *
+ * This test uses the entity_test_revlog module, which intentionally omits the
+ * entity_metadata_keys fields. This causes deprecation errors.
+ *
  * @coversDefaultClass \Drupal\Core\Entity\RevisionableContentEntityBase
  * @group Entity
+ * @group legacy
  */
 class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
 
@@ -29,6 +35,10 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
 
   /**
    * Tests the correct functionality CRUD operations of entity revisions.
+   *
+   * @expectedDeprecation The revision_user revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
+   * @expectedDeprecation The revision_created revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
+   * @expectedDeprecation The revision_log_message revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
    */
   public function testRevisionableContentEntity() {
     $entity_type = 'entity_test_mul_revlog';
@@ -89,6 +99,10 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
    * Tests the behavior of the "revision_default" flag.
    *
    * @covers \Drupal\Core\Entity\ContentEntityBase::wasDefaultRevision
+   *
+   * @expectedDeprecation The revision_user revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
+   * @expectedDeprecation The revision_created revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
+   * @expectedDeprecation The revision_log_message revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
    */
   public function testWasDefaultRevision() {
     $entity_type_id = 'entity_test_mul_revlog';
