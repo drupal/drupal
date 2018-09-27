@@ -340,7 +340,6 @@ services:
       - [setValidationConstraintManager, ['@validation.constraint']]
   context.handler:
     class: Drupal\Core\Plugin\Context\ContextHandler
-    arguments: ['@typed_data_manager']
   context.repository:
     class: Drupal\Core\Plugin\Context\LazyContextRepository
     arguments: ['@service_container']
