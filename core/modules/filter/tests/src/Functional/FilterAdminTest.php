@@ -203,7 +203,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit = [];
     $edit['filters[filter_html][settings][allowed_html]'] = "<a>   <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>\r\n<quote>";
     $this->drupalPostForm('admin/config/content/formats/manage/' . $restricted, $edit, t('Save configuration'));
-    $this->assertUrl('admin/config/content/formats');
+    $this->assertUrl('admin/config/content/formats/manage/' . $restricted);
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
     $this->assertFieldByName('filters[filter_html][settings][allowed_html]', "<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>", 'Allowed HTML tag added.');
 
@@ -218,7 +218,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit['filters[' . $second_filter . '][weight]'] = 1;
     $edit['filters[' . $first_filter . '][weight]'] = 2;
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
-    $this->assertUrl('admin/config/content/formats');
+    $this->assertUrl('admin/config/content/formats/manage/' . $restricted);
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
     $this->assertFieldByName('filters[' . $second_filter . '][weight]', 1, 'Order saved successfully.');
     $this->assertFieldByName('filters[' . $first_filter . '][weight]', 2, 'Order saved successfully.');
@@ -268,7 +268,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = 0;
     $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
     $this->drupalPostForm('admin/config/content/formats/manage/' . $full, $edit, t('Save configuration'));
-    $this->assertUrl('admin/config/content/formats');
+    $this->assertUrl('admin/config/content/formats/manage/' . $full);
     $this->assertRaw(t('The text format %format has been updated.', ['%format' => $format->label()]), 'Full HTML format successfully updated.');
 
     // Switch user.
@@ -322,7 +322,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit = [];
     $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
     $this->drupalPostForm('admin/config/content/formats/manage/' . $basic, $edit, t('Save configuration'));
-    $this->assertUrl('admin/config/content/formats');
+    $this->assertUrl('admin/config/content/formats/manage/' . $basic);
     $this->drupalGet('admin/config/content/formats/manage/' . $basic);
     $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Changes reverted.');
 
@@ -330,7 +330,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit = [];
     $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = FALSE;
     $this->drupalPostForm('admin/config/content/formats/manage/' . $full, $edit, t('Save configuration'));
-    $this->assertUrl('admin/config/content/formats');
+    $this->assertUrl('admin/config/content/formats/manage/' . $full);
     $this->assertRaw(t('The text format %format has been updated.', ['%format' => $format->label()]), 'Full HTML format successfully reverted.');
     $this->drupalGet('admin/config/content/formats/manage/' . $full);
     $this->assertFieldByName('roles[' . RoleInterface::AUTHENTICATED_ID . ']', $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'], 'Changes reverted.');
@@ -340,7 +340,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit['filters[' . $second_filter . '][weight]'] = 2;
     $edit['filters[' . $first_filter . '][weight]'] = 1;
     $this->drupalPostForm('admin/config/content/formats/manage/' . $basic, $edit, t('Save configuration'));
-    $this->assertUrl('admin/config/content/formats');
+    $this->assertUrl('admin/config/content/formats/manage/' . $basic);
     $this->drupalGet('admin/config/content/formats/manage/' . $basic);
     $this->assertFieldByName('filters[' . $second_filter . '][weight]', $edit['filters[' . $second_filter . '][weight]'], 'Changes reverted.');
     $this->assertFieldByName('filters[' . $first_filter . '][weight]', $edit['filters[' . $first_filter . '][weight]'], 'Changes reverted.');
