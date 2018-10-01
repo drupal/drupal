@@ -13,6 +13,10 @@ use org\bovigo\vfs\vfsStream;
 /**
  * @coversDefaultClass \Drupal\simpletest\TestDiscovery
  * @group simpletest
+ *
+ * Since TestDiscovery is expected to discover Simpletest-based tests, it will
+ * likely trigger deprecation errors. Therefore, we add the legacy group.
+ * @group legacy
  */
 class TestDiscoveryTest extends UnitTestCase {
 

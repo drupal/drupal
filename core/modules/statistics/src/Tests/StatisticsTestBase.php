@@ -2,6 +2,8 @@
 
 namespace Drupal\statistics\Tests;
 
+@trigger_error(__NAMESPACE__ . '\StatisticsTestBase is deprecated for removal before Drupal 9.0.0. Use \Drupal\Tests\statistics\Functional\StatisticsTestBase instead. See https://www.drupal.org/node/2999939', E_USER_DEPRECATED);
+
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -9,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.0.
  *   Use \Drupal\Tests\statistics\Functional\StatisticsTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2999939
  */
 abstract class StatisticsTestBase extends WebTestBase {
 

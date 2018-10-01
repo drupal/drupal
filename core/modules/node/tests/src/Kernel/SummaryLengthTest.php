@@ -5,10 +5,10 @@ namespace Drupal\Tests\node\Kernel;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
-use Drupal\simpletest\ContentTypeCreationTrait;
-use Drupal\simpletest\NodeCreationTrait;
-use Drupal\simpletest\UserCreationTrait;
 use Drupal\Tests\EntityViewTrait;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests summary length.

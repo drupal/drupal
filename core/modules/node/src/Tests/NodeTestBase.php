@@ -2,6 +2,8 @@
 
 namespace Drupal\node\Tests;
 
+@trigger_error(__NAMESPACE__ . '\NodeTestBase is deprecated for removal before Drupal 9.0.0. Use Drupal\Tests\node\Functional\NodeTestBase instead. See https://www.drupal.org/node/2999939', E_USER_DEPRECATED);
+
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
@@ -11,6 +13,8 @@ use Drupal\simpletest\WebTestBase;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.0.
  *   Use \Drupal\Tests\node\Functional\NodeTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2999939
  */
 abstract class NodeTestBase extends WebTestBase {
 

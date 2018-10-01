@@ -2,6 +2,8 @@
 
 namespace Drupal\system\Tests\Cache;
 
+@trigger_error(__NAMESPACE__ . '\CacheTestBase is deprecated for removal before Drupal 9.0.0. Use \Drupal\Tests\system\Functional\Cache\CacheTestBase instead. See https://www.drupal.org/node/2999939', E_USER_DEPRECATED);
+
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -9,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.0.
  *   Use \Drupal\Tests\system\Functional\Cache\CacheTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2999939
  */
 abstract class CacheTestBase extends WebTestBase {
 

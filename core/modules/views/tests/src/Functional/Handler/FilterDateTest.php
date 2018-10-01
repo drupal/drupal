@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\views\Functional\Handler;
 
-use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 

@@ -2,6 +2,8 @@
 
 namespace Drupal\aggregator\Tests;
 
+@trigger_error(__NAMESPACE__ . '\AggregatorTestBase is deprecated for removal before Drupal 9.0.0. Use \Drupal\Tests\aggregator\Functional\AggregatorTestBase instead. See https://www.drupal.org/node/2999939', E_USER_DEPRECATED);
+
 use Drupal\aggregator\Entity\Feed;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Database;
@@ -13,6 +15,8 @@ use Drupal\aggregator\FeedInterface;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.0.
  *   Use \Drupal\Tests\aggregator\Functional\AggregatorTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2999939
  */
 abstract class AggregatorTestBase extends WebTestBase {
 

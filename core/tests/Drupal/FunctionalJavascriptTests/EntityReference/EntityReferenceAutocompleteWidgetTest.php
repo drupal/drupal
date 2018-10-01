@@ -3,9 +3,9 @@
 namespace Drupal\FunctionalJavascriptTests\EntityReference;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\simpletest\ContentTypeCreationTrait;
-use Drupal\simpletest\NodeCreationTrait;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 /**
  * Tests the output of entity reference autocomplete widgets.

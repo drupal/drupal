@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\Core\Extension;
 
-use Drupal\simpletest\AssertHelperTrait;
+use Drupal\Tests\AssertHelperTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**

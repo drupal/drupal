@@ -2,6 +2,8 @@
 
 namespace Drupal\system\Tests\Cache;
 
+@trigger_error(__NAMESPACE__ . '\GenericCacheBackendUnitTestBase is deprecated for removal before Drupal 9.0.0. Use \Drupal\KernelTests\Core\Cache\GenericCacheBackendUnitTestBase instead.', E_USER_DEPRECATED);
+
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\simpletest\KernelTestBase;

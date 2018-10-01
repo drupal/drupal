@@ -3,9 +3,9 @@
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\simpletest\NodeCreationTrait;
 use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 /**
  * Tests the display UI.

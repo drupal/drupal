@@ -2,6 +2,8 @@
 
 namespace Drupal\search\Tests;
 
+@trigger_error(__NAMESPACE__ . '\SearchTestBase is deprecated for removal before Drupal 9.0.0. Use \Drupal\Tests\search\Functional\SearchTestBase instead. See https://www.drupal.org/node/2999939', E_USER_DEPRECATED);
+
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Render\FormattableMarkup;
 
@@ -10,6 +12,8 @@ use Drupal\Component\Render\FormattableMarkup;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.0.
  *   Use \Drupal\Tests\search\Functional\SearchTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2999939
  */
 abstract class SearchTestBase extends WebTestBase {
 

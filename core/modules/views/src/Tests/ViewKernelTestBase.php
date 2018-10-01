@@ -2,6 +2,8 @@
 
 namespace Drupal\views\Tests;
 
+@trigger_error(__NAMESPACE__ . '\ViewKernelTestBase is deprecated in Drupal 8.0.x, will be removed in Drupal 8.2.x. Use \Drupal\Tests\views\Kernel\ViewsKernelTestBase instead.', E_USER_DEPRECATED);
+
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\simpletest\KernelTestBase;

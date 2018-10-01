@@ -2,6 +2,8 @@
 
 namespace Drupal\simpletest;
 
+@trigger_error(__NAMESPACE__ . '\KernelTestBase is deprecated in Drupal 8.0.x, will be removed before Drupal 9.0.0. Use \Drupal\KernelTests\KernelTestBase instead.', E_USER_DEPRECATED);
+
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Variable;

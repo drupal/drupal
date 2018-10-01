@@ -3,7 +3,7 @@
 namespace Drupal\Tests\forum\Unit;
 
 use Drupal\Core\Url;
-use Drupal\simpletest\AssertHelperTrait;
+use Drupal\Tests\AssertHelperTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
-use Drupal\simpletest\BlockCreationTrait;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 

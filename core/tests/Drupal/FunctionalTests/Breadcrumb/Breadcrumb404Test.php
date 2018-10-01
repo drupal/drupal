@@ -2,7 +2,7 @@
 
 namespace Drupal\FunctionalTests\Breadcrumb;
 
-use Drupal\simpletest\BlockCreationTrait;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**

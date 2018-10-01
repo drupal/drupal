@@ -2,6 +2,8 @@
 
 namespace Drupal\content_translation\Tests;
 
+@trigger_error(__NAMESPACE__ . '\ContentTranslationUITestBase is deprecated for removal before Drupal 9.0.0. Use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase instead. See https://www.drupal.org/node/2999939', E_USER_DEPRECATED);
+
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -17,6 +19,8 @@ use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.0.
  *   Use \Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase instead.
+ *
+ * @see https://www.drupal.org/node/2999939
  */
 abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 

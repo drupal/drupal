@@ -4,7 +4,7 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormState;
-use Drupal\simpletest\BlockCreationTrait;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;

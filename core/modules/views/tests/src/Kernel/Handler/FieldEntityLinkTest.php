@@ -4,8 +4,8 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\simpletest\UserCreationTrait;
 use Drupal\user\Entity\Role;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 

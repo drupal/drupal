@@ -3,7 +3,7 @@
 namespace Drupal\Tests\node\Kernel\Views;
 
 use Drupal\node\Entity\Node;
-use Drupal\simpletest\UserCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;

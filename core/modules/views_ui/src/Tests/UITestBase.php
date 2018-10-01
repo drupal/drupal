@@ -2,6 +2,8 @@
 
 namespace Drupal\views_ui\Tests;
 
+@trigger_error(__NAMESPACE__ . '\UITestBase is deprecated for removal before Drupal 9.0.0. Use \Drupal\Tests\views_ui\Functional\UITestBase instead. See https://www.drupal.org/node/2999939', E_USER_DEPRECATED);
+
 use Drupal\views\Tests\ViewTestBase;
 
 /**
@@ -9,6 +11,8 @@ use Drupal\views\Tests\ViewTestBase;
  *
  * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.x.
  *   Use \Drupal\Tests\views_ui\Functional\UITestBase.
+ *
+ * @see https://www.drupal.org/node/2999939
  */
 abstract class UITestBase extends ViewTestBase {
 

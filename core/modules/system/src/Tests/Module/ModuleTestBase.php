@@ -2,6 +2,8 @@
 
 namespace Drupal\system\Tests\Module;
 
+@trigger_error(__NAMESPACE__ . '\ModuleTestBase is deprecated for removal before Drupal 9.0.0. Use \Drupal\Tests\system\Functional\Module\ModuleTestBase instead. See https://www.drupal.org/node/2999939', E_USER_DEPRECATED);
+
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\FileStorage;
@@ -13,6 +15,8 @@ use Drupal\simpletest\WebTestBase;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.0.
  *   Use \Drupal\Tests\system\Functional\Module\ModuleTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2999939
  */
 abstract class ModuleTestBase extends WebTestBase {
 

@@ -6,8 +6,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\simpletest\UserCreationTrait;
 use Drupal\system\Entity\Menu;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * @coversDefaultClass \Drupal\system\MenuAccessControlHandler
