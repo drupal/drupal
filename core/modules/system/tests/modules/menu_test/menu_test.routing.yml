@@ -125,6 +125,20 @@ menu_test.local_action6:
   requirements:
     _access: 'TRUE'
 
+menu_test.local_action7:
+  path: '/menu-test-local-action-7/cache-check'
+  defaults:
+    _controller: '\Drupal\menu_test\TestControllers::test2'
+  requirements:
+    _custom_access: '\Drupal\menu_test\Access\AccessCheck::menuLocalAction7'
+
+menu_test.local_action8:
+  path: '/menu-test-local-action-8/cache-check'
+  defaults:
+    _controller: '\Drupal\menu_test\TestControllers::test2'
+  requirements:
+    _custom_access: '\Drupal\menu_test\Access\AccessCheck::menuLocalAction8'
+
 menu_test.contextual_test:
   path: '/menu-test-contextual/default'
   defaults:

@@ -196,9 +196,10 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
       }
     }
     $links = [];
+    $cacheability = new CacheableMetadata();
+    $cacheability->addCacheContexts(['route']);
     /** @var $plugin \Drupal\Core\Menu\LocalActionInterface */
     foreach ($this->instances[$route_appears] as $plugin_id => $plugin) {
-      $cacheability = new CacheableMetadata();
       $route_name = $plugin->getRouteName();
       $route_parameters = $plugin->getRouteParameters($this->routeMatch);
       $access = $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account, TRUE);
@@ -213,9 +214,8 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
         '#weight' => $plugin->getWeight(),
       ];
       $cacheability->addCacheableDependency($access)->addCacheableDependency($plugin);
-      $cacheability->applyTo($links[$plugin_id]);
     }
-    $links['#cache']['contexts'][] = 'route';
+    $cacheability->applyTo($links);
 
     return $links;
   }

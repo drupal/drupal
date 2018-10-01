@@ -26,4 +26,18 @@ class AccessCheck implements AccessInterface {
     return $result->setCacheMaxAge(0);
   }
 
+  /**
+   * @return \Drupal\Core\Access\AccessResultForbidden
+   */
+  public function menuLocalAction7() {
+    return AccessResult::forbidden()->addCacheTags(['menu_local_action7'])->addCacheContexts(['url.query_args:menu_local_action7']);
+  }
+
+  /**
+   * @return \Drupal\Core\Access\AccessResultAllowed
+   */
+  public function menuLocalAction8() {
+    return AccessResult::allowed()->addCacheTags(['menu_local_action8'])->addCacheContexts(['url.query_args:menu_local_action8']);
+  }
+
 }

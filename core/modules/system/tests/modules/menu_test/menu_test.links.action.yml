@@ -50,6 +50,18 @@ menu_test.local_action6:
   appears_on:
     - menu_test.local_action1
 
+menu_test.local_action7:
+  route_name: menu_test.local_action7
+  title: 'Local action with access'
+  appears_on:
+    - menu_test.local_action7
+
+menu_test.local_action8:
+  route_name: menu_test.local_action8
+  title: 'Local action without access'
+  appears_on:
+    - menu_test.local_action7
+
 menu_test.hidden_menu_add:
   route_name: menu_test.hidden_menu_add
   title: 'Add menu'
