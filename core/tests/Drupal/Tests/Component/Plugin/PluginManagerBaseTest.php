@@ -3,6 +3,8 @@
 namespace Drupal\Tests\Component\Plugin;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Component\Plugin\Mapper\MapperInterface;
+use Drupal\Component\Plugin\PluginManagerBase;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -88,6 +90,45 @@ class PluginManagerBaseTest extends TestCase {
     $fallback_result = $manager->createInstance('invalid', $configuration_array);
     $this->assertEquals('invalid_fallback', $fallback_result['plugin_id']);
     $this->assertEquals($configuration_array, $fallback_result['configuration']);
+  }
+
+  /**
+   * @covers ::getInstance
+   */
+  public function testGetInstance() {
+    $options = [
+      'foo' => 'F00',
+      'bar' => 'bAr',
+    ];
+    $instance = new \stdClass();
+    $mapper = $this->prophesize(MapperInterface::class);
+    $mapper->getInstance($options)
+      ->shouldBeCalledTimes(1)
+      ->willReturn($instance);
+    $manager = new StubPluginManagerBaseWithMapper($mapper->reveal());
+    $this->assertEquals($instance, $manager->getInstance($options));
+  }
+
+  /**
+   * @covers ::getInstance
+   */
+  public function testGetInstanceWithoutMapperShouldThrowException() {
+    $options = [
+      'foo' => 'F00',
+      'bar' => 'bAr',
+    ];
+    /** @var \Drupal\Component\Plugin\PluginManagerBase $manager */
+    $manager = $this->getMockBuilder(PluginManagerBase::class)
+      ->getMockForAbstractClass();
+    // Set the expected exception thrown by ::getInstance.
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(\BadMethodCallException::class);
+      $this->expectExceptionMessage(sprintf('%s does not support this method unless %s::$mapper is set.', get_class($manager), get_class($manager)));
+    }
+    else {
+      $this->setExpectedException(\BadMethodCallException::class, sprintf('%s does not support this method unless %s::$mapper is set.', get_class($manager), get_class($manager)));
+    }
+    $manager->getInstance($options);
   }
 
 }

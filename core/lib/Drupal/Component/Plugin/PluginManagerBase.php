@@ -29,7 +29,7 @@ abstract class PluginManagerBase implements PluginManagerInterface {
   /**
    * The object that returns the preconfigured plugin instance appropriate for a particular runtime condition.
    *
-   * @var \Drupal\Component\Plugin\Mapper\MapperInterface
+   * @var \Drupal\Component\Plugin\Mapper\MapperInterface|null
    */
   protected $mapper;
 
@@ -104,6 +104,9 @@ abstract class PluginManagerBase implements PluginManagerInterface {
    * {@inheritdoc}
    */
   public function getInstance(array $options) {
+    if (!$this->mapper) {
+      throw new \BadMethodCallException(sprintf('%s does not support this method unless %s::$mapper is set.', static::class, static::class));
+    }
     return $this->mapper->getInstance($options);
   }
 
