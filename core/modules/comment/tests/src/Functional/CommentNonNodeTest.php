@@ -10,9 +10,9 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\user\RoleInterface;
 
 /**

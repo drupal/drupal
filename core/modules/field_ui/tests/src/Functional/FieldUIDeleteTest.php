@@ -1,10 +1,11 @@
 <?php
 
-namespace Drupal\field_ui\Tests;
+namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestData;
 
@@ -13,7 +14,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @group field_ui
  */
-class FieldUIDeleteTest extends WebTestBase {
+class FieldUIDeleteTest extends BrowserTestBase {
 
   use FieldUiTestTrait;
 

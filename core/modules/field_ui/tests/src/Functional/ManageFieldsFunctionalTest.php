@@ -1,22 +1,23 @@
 <?php
 
-namespace Drupal\field_ui\Tests;
+namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\simpletest\WebTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
  * Tests the Field UI "Manage fields" screen.
  *
  * @group field_ui
  */
-class ManageFieldsTest extends WebTestBase {
+class ManageFieldsFunctionalTest extends BrowserTestBase {
 
   use FieldUiTestTrait;
   use EntityReferenceTestTrait;
@@ -153,17 +154,17 @@ class ManageFieldsTest extends WebTestBase {
     $url = base_path() . "admin/structure/types/manage/$type/fields/node.$type.body";
 
     foreach ($operation_links as $link) {
-      switch ($link['title']) {
+      switch ($link->getAttribute('title')) {
         case 'Edit field settings.':
-          $this->assertIdentical($url, (string) $link['href']);
+          $this->assertIdentical($url, $link->getAttribute('href'));
           $number_of_links_found++;
           break;
         case 'Edit storage settings.':
-          $this->assertIdentical("$url/storage", (string) $link['href']);
+          $this->assertIdentical("$url/storage", $link->getAttribute('href'));
           $number_of_links_found++;
           break;
         case 'Delete field.':
-          $this->assertIdentical("$url/delete", (string) $link['href']);
+          $this->assertIdentical("$url/delete", $link->getAttribute('href'));
           $number_of_links_found++;
           break;
       }
@@ -449,7 +450,7 @@ class ManageFieldsTest extends WebTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
-    $this->assertEqual($field->getDefaultValueLiteral(), NULL, 'The default value was correctly saved.');
+    $this->assertEqual($field->getDefaultValueLiteral(), [], 'The default value was correctly saved.');
 
     // Check that the default value can be empty when the field is marked as
     // required and can store unlimited values.
@@ -467,7 +468,7 @@ class ManageFieldsTest extends WebTestBase {
     $this->drupalPostForm(NULL, [], t('Save settings'));
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
-    $this->assertEqual($field->getDefaultValueLiteral(), NULL, 'The default value was correctly saved.');
+    $this->assertEqual($field->getDefaultValueLiteral(), [], 'The default value was correctly saved.');
 
     // Check that the default widget is used when the field is hidden.
     entity_get_form_display($field->getTargetEntityTypeId(), $field->getTargetBundle(), 'default')
@@ -564,11 +565,7 @@ class ManageFieldsTest extends WebTestBase {
     // Check that the links for edit and delete are not present.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields');
     $locked = $this->xpath('//tr[@id=:field_name]/td[4]', [':field_name' => $field_name]);
-    $this->assertTrue(in_array('Locked', $locked), 'Field is marked as Locked in the UI');
-    $edit_link = $this->xpath('//tr[@id=:field_name]/td[4]', [':field_name' => $field_name]);
-    $this->assertFalse(in_array('edit', $edit_link), 'Edit option for locked field is not present the UI');
-    $delete_link = $this->xpath('//tr[@id=:field_name]/td[4]', [':field_name' => $field_name]);
-    $this->assertFalse(in_array('delete', $delete_link), 'Delete option for locked field is not present the UI');
+    $this->assertSame('Locked', $locked[0]->getHtml(), 'Field is marked as Locked in the UI');
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_name . '/delete');
     $this->assertResponse(403);
   }
@@ -720,7 +717,7 @@ class ManageFieldsTest extends WebTestBase {
   public function fieldListAdminPage() {
     $this->drupalGet('admin/reports/fields');
     $this->assertText($this->fieldName, 'Field name is displayed in field list.');
-    $this->assertTrue($this->assertLinkByHref('admin/structure/types/manage/' . $this->contentType . '/fields'), 'Link to content type using field is displayed in field list.');
+    $this->assertLinkByHref('admin/structure/types/manage/' . $this->contentType . '/fields');
   }
 
   /**
