@@ -92,10 +92,18 @@ trait DeprecationListenerTrait {
   /**
    * A list of deprecations to ignore whilst fixes are put in place.
    *
+   * Do not add any new deprecations to this list. All deprecation errors will
+   * eventually be removed from this list.
+   *
    * @return string[]
    *   A list of deprecations to ignore.
    *
    * @internal
+   *
+   * @todo Fix all these deprecations and remove them from this list.
+   *   https://www.drupal.org/project/drupal/issues/2959269
+   *
+   * @see https://www.drupal.org/node/2811561
    */
   public static function getSkippedDeprecations() {
     return [
