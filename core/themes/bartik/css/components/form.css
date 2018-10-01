@@ -23,7 +23,7 @@ fieldset {
  * @todo remove once this Mozilla bug is fixed.
  * See https://bugzilla.mozilla.org/show_bug.cgi?id=504622
  */
-@-moz-document url-prefix() {
+@media (min--moz-device-pixel-ratio: 0) {
   fieldset {
     display: table-cell;
   }
