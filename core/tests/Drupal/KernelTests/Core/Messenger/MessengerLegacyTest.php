@@ -9,13 +9,16 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * @group Messenger
+ * @group legacy
+ *
  * @coversDefaultClass \Drupal\Core\Messenger\LegacyMessenger
  *
- * Note: The Symphony PHPUnit Bridge automatically treats any test class that
- * starts with "Legacy" as a deprecation. To subvert that, reverse it here.
+ * Normally this test class would be named LegacyMessengerTest, but test classes
+ * starting with 'Legacy' are treated as belonging to group legacy. We want to
+ * explicitly use group annotation for consistency with other legacy tests.
  *
- * @see http://symfony.com/blog/new-in-symfony-2-7-phpunit-bridge
  * @see https://www.drupal.org/node/2931598#comment-12395743
+ * @see https://www.drupal.org/node/2774931
  */
 class MessengerLegacyTest extends KernelTestBase {
 
@@ -42,6 +45,8 @@ class MessengerLegacyTest extends KernelTestBase {
    * @covers ::addError
    * @covers ::addStatus
    * @covers ::addWarning
+   *
+   * @expectedDeprecation Adding or retrieving messages prior to the container being initialized was deprecated in Drupal 8.5.0 and this functionality will be removed before Drupal 9.0.0. Please report this usage at https://www.drupal.org/node/2928994.
    */
   public function testMessages() {
     // Save the current container for later use.
