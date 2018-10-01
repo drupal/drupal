@@ -1,15 +1,9 @@
 <?php
 
-namespace Drupal\field_ui\Tests;
-
-@trigger_error(__NAMESPACE__ . '\FieldUiTestTrait is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\field_ui\Traits\FieldUiTestTrait. See https://www.drupal.org/node/3001664', E_USER_DEPRECATED);
+namespace Drupal\Tests\field_ui\Traits;
 
 /**
  * Provides common functionality for the Field UI test classes.
- *
- * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Tests\field_ui\Traits\FieldUiTestTrait. See
- *   https://www.drupal.org/node/3001664
  */
 trait FieldUiTestTrait {
 
@@ -89,8 +83,6 @@ trait FieldUiTestTrait {
     $this->drupalPostForm("$bundle_path/fields/add-field", $initial_edit, t('Save and continue'));
     // Set the main content to only the content region because the label can
     // contain HTML which will be auto-escaped by Twig.
-    $main_content = $this->cssSelect('.region-content');
-    $this->setRawContent(reset($main_content)->asXml());
     $this->assertRaw('field-config-edit-form', 'The field config edit form is present.');
     $this->assertNoRaw('&amp;lt;', 'The page does not have double escaped HTML tags.');
 
