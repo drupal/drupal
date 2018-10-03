@@ -9,3 +9,5 @@ dependencies:
   - drupal:contextual
   # @todo Discuss removing in https://www.drupal.org/project/drupal/issues/2935999.
   - drupal:field_ui
+  # @todo Discuss removing in https://www.drupal.org/project/drupal/issues/3003610.
+  - drupal:block
