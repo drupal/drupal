@@ -16,6 +16,7 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
 
   /**
    * @covers ::get
+   * @covers ::has
    */
   public function testGetEmptyTempstore() {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
@@ -30,12 +31,15 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
 
     $repository = new LayoutTempstoreRepository($tempstore_factory->reveal());
 
+    $this->assertFalse($repository->has($section_storage->reveal()));
+
     $result = $repository->get($section_storage->reveal());
     $this->assertSame($section_storage->reveal(), $result);
   }
 
   /**
    * @covers ::get
+   * @covers ::has
    */
   public function testGetLoadedTempstore() {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
@@ -49,6 +53,8 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
     $tempstore_factory->get('layout_builder.section_storage.my_storage_type')->willReturn($tempstore->reveal());
 
     $repository = new LayoutTempstoreRepository($tempstore_factory->reveal());
+
+    $this->assertTrue($repository->has($section_storage->reveal()));
 
     $result = $repository->get($section_storage->reveal());
     $this->assertSame($tempstore_section_storage->reveal(), $result);

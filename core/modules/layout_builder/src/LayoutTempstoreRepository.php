@@ -48,6 +48,15 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
   /**
    * {@inheritdoc}
    */
+  public function has(SectionStorageInterface $section_storage) {
+    $id = $section_storage->getStorageId();
+    $tempstore = $this->getTempstore($section_storage)->get($id);
+    return !empty($tempstore['section_storage']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function set(SectionStorageInterface $section_storage) {
     $id = $section_storage->getStorageId();
     $this->getTempstore($section_storage)->set($id, ['section_storage' => $section_storage]);
