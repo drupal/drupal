@@ -60,7 +60,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'block' => 35,
       'block_content' => 2,
       'block_content_type' => 1,
-      'comment' => 6,
+      'comment' => 8,
       // The 'standard' profile provides the 'comment' comment type, and the
       // migration creates 12 comment types, one per node type.
       'comment_type' => 13,
@@ -74,7 +74,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'image_style' => 5,
       'language_content_settings' => 3,
       'migration' => 105,
-      'node' => 17,
+      'node' => 18,
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.
       'node_type' => 13,
@@ -106,12 +106,12 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
   protected function getEntityCountsIncremental() {
     $counts = $this->getEntityCounts();
     $counts['block_content'] = 3;
-    $counts['comment'] = 7;
+    $counts['comment'] = 9;
     $counts['entity_view_display'] = 55;
     $counts['entity_view_mode'] = 14;
     $counts['file'] = 8;
     $counts['menu_link_content'] = 11;
-    $counts['node'] = 18;
+    $counts['node'] = 19;
     $counts['taxonomy_term'] = 9;
     $counts['user'] = 8;
     $counts['view'] = 16;

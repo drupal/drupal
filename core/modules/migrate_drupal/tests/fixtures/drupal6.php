@@ -1990,6 +1990,38 @@ $connection->insert('comments')
   'mail' => '',
   'homepage' => '',
 ))
+->values(array(
+  'cid' => '7',
+  'pid' => '0',
+  'nid' => '21',
+  'uid' => '1',
+  'subject' => 'Comment to John Smith - EN',
+  'comment' => 'This is an English comment.',
+  'hostname' => '2001:14ba:13f8:300:d9d0:363c:9fe4:66e1',
+  'timestamp' => '1534014729',
+  'status' => '0',
+  'format' => '1',
+  'thread' => '01/',
+  'name' => 'root',
+  'mail' => '',
+  'homepage' => '',
+))
+->values(array(
+  'cid' => '8',
+  'pid' => '0',
+  'nid' => '22',
+  'uid' => '1',
+  'subject' => 'Comment to John Smith - FR',
+  'comment' => 'This is a French comment.',
+  'hostname' => '2001:14ba:13f8:300:d9d0:363c:9fe4:66e1',
+  'timestamp' => '1534014763',
+  'status' => '0',
+  'format' => '1',
+  'thread' => '01/',
+  'name' => 'root',
+  'mail' => '',
+  'homepage' => '',
+))
 ->execute();
 
 $connection->schema()->createTable('config', array(
@@ -2167,6 +2199,18 @@ $connection->insert('content_field_company')
   'nid' => '18',
   'delta' => '0',
   'field_company_nid' => '15',
+))
+->values(array(
+  'vid' => '2002',
+  'nid' => '21',
+  'delta' => '0',
+  'field_company_nid' => NULL,
+))
+->values(array(
+  'vid' => '2003',
+  'nid' => '22',
+  'delta' => '0',
+  'field_company_nid' => NULL,
 ))
 ->values(array(
   'vid' => '21',
@@ -3517,6 +3561,20 @@ $connection->insert('content_type_employee')
   'field_commander_uid' => '8',
   'field_company_2_nid' => '15',
   'field_company_3_nid' => '16',
+))
+->values(array(
+  'vid' => '2002',
+  'nid' => '21',
+  'field_commander_uid' => NULL,
+  'field_company_2_nid' => NULL,
+  'field_company_3_nid' => NULL,
+))
+->values(array(
+  'vid' => '2003',
+  'nid' => '22',
+  'field_commander_uid' => NULL,
+  'field_company_2_nid' => NULL,
+  'field_company_3_nid' => NULL,
 ))
 ->execute();
 
@@ -8665,6 +8723,16 @@ $connection->insert('history')
   'uid' => '1',
   'nid' => '19',
   'timestamp' => '1501955803',
+))
+->values(array(
+  'uid' => '1',
+  'nid' => '21',
+  'timestamp' => '1534014729',
+))
+->values(array(
+  'uid' => '1',
+  'nid' => '22',
+  'timestamp' => '1534014763',
 ))
 ->execute();
 
@@ -43733,6 +43801,40 @@ $connection->insert('node')
   'tnid' => '12',
   'translate' => '0',
 ))
+->values(array(
+  'nid' => '21',
+  'vid' => '2002',
+  'type' => 'employee',
+  'language' => 'en',
+  'title' => 'John Smith - EN',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1534014650',
+  'changed' => '1534014650',
+  'comment' => '2',
+  'promote' => '1',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '21',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '22',
+  'vid' => '2003',
+  'type' => 'employee',
+  'language' => 'fr',
+  'title' => 'John Smith - FR',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1534014687',
+  'changed' => '1534014687',
+  'comment' => '2',
+  'promote' => '1',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '21',
+  'translate' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('node_access', array(
@@ -43939,6 +44041,20 @@ $connection->insert('node_comment_statistics')
   'last_comment_uid' => '1',
   'comment_count' => '3',
 ))
+->values(array(
+  'nid' => '21',
+  'last_comment_timestamp' => '1534014729',
+  'last_comment_name' => '',
+  'last_comment_uid' => '1',
+  'comment_count' => '1',
+))
+->values(array(
+  'nid' => '22',
+  'last_comment_timestamp' => '1534014763',
+  'last_comment_name' => '',
+  'last_comment_uid' => '1',
+  'comment_count' => '1',
+))
 ->execute();
 
 $connection->schema()->createTable('node_counter', array(
@@ -44073,6 +44189,18 @@ $connection->insert('node_counter')
   'totalcount' => '4',
   'daycount' => '4',
   'timestamp' => '1501955803',
+))
+->values(array(
+  'nid' => '21',
+  'totalcount' => '3',
+  'daycount' => '3',
+  'timestamp' => '1534014729',
+))
+->values(array(
+  'nid' => '22',
+  'totalcount' => '3',
+  'daycount' => '3',
+  'timestamp' => '1534014763',
 ))
 ->execute();
 
@@ -44400,6 +44528,28 @@ $connection->insert('node_revisions')
   'teaser' => 'teaser test rev 2',
   'log' => 'modified rev 2',
   'timestamp' => '1390095702',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '21',
+  'vid' => '2002',
+  'uid' => '1',
+  'title' => 'John Smith - EN',
+  'body' => 'This is an English Bio text for employee John Smith. There is also a French translation to this node. Both language versions have comments.',
+  'teaser' => 'This is an English Bio text for employee John Smith. There is also a French translation to this node. Both language versions have comments.',
+  'log' => '',
+  'timestamp' => '1534014650',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '22',
+  'vid' => '2003',
+  'uid' => '1',
+  'title' => 'John Smith - FR',
+  'body' => 'This is a French Bio text for employee John Smith. The original node is in English. Both language versions have comments.',
+  'teaser' => 'This is a French Bio text for employee John Smith. The original node is in English. Both language versions have comments.',
+  'log' => '',
+  'timestamp' => '1534014687',
   'format' => '1',
 ))
 ->execute();

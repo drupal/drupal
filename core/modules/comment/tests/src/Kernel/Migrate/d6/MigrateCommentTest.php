@@ -20,7 +20,12 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['comment', 'menu_ui'];
+  public static $modules = [
+    'comment',
+    'content_translation',
+    'language',
+    'menu_ui',
+  ];
 
   /**
    * {@inheritdoc}
@@ -31,6 +36,7 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installSchema('comment', ['comment_entity_statistics']);
+    $this->installSchema('node', ['node_access']);
     $this->installConfig(['comment']);
 
     // The entity.node.canonical route must exist when the RDF hook is called.
@@ -38,7 +44,10 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
 
     $this->migrateContent();
     $this->executeMigrations([
+      'language',
+      'd6_language_content_settings',
       'd6_node',
+      'd6_node_translation',
       'd6_comment_type',
       'd6_comment_field',
       'd6_comment_field_instance',
@@ -84,6 +93,31 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
     $node = $comment->getCommentedEntity();
     $this->assertInstanceOf(NodeInterface::class, $node);
     $this->assertSame('1', $node->id());
+
+    // Tests that the language of the comment is migrated from the node.
+    $comment = Comment::load(7);
+    $this->assertSame('Comment to John Smith - EN', $comment->subject->value);
+    $this->assertSame('This is an English comment.', $comment->comment_body->value);
+    $this->assertSame('21', $comment->getCommentedEntityId());
+    $this->assertSame('node', $comment->getCommentedEntityTypeId());
+    $this->assertSame('en', $comment->language()->getId());
+
+    $node = $comment->getCommentedEntity();
+    $this->assertInstanceOf(NodeInterface::class, $node);
+    $this->assertSame('21', $node->id());
+
+    // Tests that the comment language is correct and that the commented entity
+    // is correctly migrated when the comment was posted to a node translation.
+    $comment = Comment::load(8);
+    $this->assertSame('Comment to John Smith - FR', $comment->subject->value);
+    $this->assertSame('This is a French comment.', $comment->comment_body->value);
+    $this->assertSame('21', $comment->getCommentedEntityId());
+    $this->assertSame('node', $comment->getCommentedEntityTypeId());
+    $this->assertSame('fr', $comment->language()->getId());
+
+    $node = $comment->getCommentedEntity();
+    $this->assertInstanceOf(NodeInterface::class, $node);
+    $this->assertSame('21', $node->id());
   }
 
 }
