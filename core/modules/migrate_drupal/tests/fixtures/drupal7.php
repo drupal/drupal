@@ -2566,6 +2566,22 @@ $connection->insert('comment')
   'homepage' => '',
   'language' => 'en',
 ))
+->values(array(
+  'cid' => '3',
+  'pid' => '0',
+  'nid' => '3',
+  'uid' => '1',
+  'subject' => 'Comment to IS translation',
+  'hostname' => '46.132.185.242',
+  'created' => '1533031490',
+  'changed' => '1533031490',
+  'status' => '1',
+  'thread' => '01/',
+  'name' => 'admin',
+  'mail' => '',
+  'homepage' => '',
+  'language' => 'is',
+))
 ->execute();
 
 $connection->schema()->createTable('contact', array(
@@ -4881,6 +4897,17 @@ $connection->insert('field_data_comment_body')
   'language' => 'und',
   'delta' => '0',
   'comment_body_value' => 'TNG is better than DS9.',
+  'comment_body_format' => 'filtered_html',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_article',
+  'deleted' => '0',
+  'entity_id' => '3',
+  'revision_id' => '3',
+  'language' => 'und',
+  'delta' => '0',
+  'comment_body_value' => 'This is a comment to an Icelandic translation.',
   'comment_body_format' => 'filtered_html',
 ))
 ->execute();
@@ -8737,6 +8764,17 @@ $connection->insert('field_data_subject_field')
   'subject_field_value' => 'TNG for the win!',
   'subject_field_format' => NULL,
 ))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_article',
+  'deleted' => '0',
+  'entity_id' => '3',
+  'revision_id' => '3',
+  'language' => 'is',
+  'delta' => '0',
+  'subject_field_value' => 'Comment to IS translation',
+  'subject_field_format' => NULL,
+))
 ->execute();
 
 $connection->schema()->createTable('field_data_taxonomy_forums', array(
@@ -9200,6 +9238,17 @@ $connection->insert('field_revision_comment_body')
   'language' => 'und',
   'delta' => '0',
   'comment_body_value' => 'TNG is better than DS9.',
+  'comment_body_format' => 'filtered_html',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_article',
+  'deleted' => '0',
+  'entity_id' => '3',
+  'revision_id' => '3',
+  'language' => 'und',
+  'delta' => '0',
+  'comment_body_value' => 'This is a comment to an Icelandic translation.',
   'comment_body_format' => 'filtered_html',
 ))
 ->execute();
@@ -13081,6 +13130,17 @@ $connection->insert('field_revision_subject_field')
   'language' => 'en',
   'delta' => '0',
   'subject_field_value' => 'TNG for the win!',
+  'subject_field_format' => NULL,
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_article',
+  'deleted' => '0',
+  'entity_id' => '3',
+  'revision_id' => '3',
+  'language' => 'is',
+  'delta' => '0',
+  'subject_field_value' => 'Comment to IS translation',
   'subject_field_format' => NULL,
 ))
 ->execute();
@@ -36570,11 +36630,11 @@ $connection->insert('node_comment_statistics')
 ))
 ->values(array(
   'nid' => '3',
-  'cid' => '0',
-  'last_comment_timestamp' => '1471428152',
-  'last_comment_name' => NULL,
+  'cid' => '3',
+  'last_comment_timestamp' => '1533031490',
+  'last_comment_name' => '',
   'last_comment_uid' => '1',
-  'comment_count' => '0',
+  'comment_count' => '1',
 ))
 ->values(array(
   'nid' => '4',

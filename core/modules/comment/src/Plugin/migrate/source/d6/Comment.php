@@ -25,7 +25,7 @@ class Comment extends DrupalSqlBase {
       'mail', 'homepage', 'format',
     ]);
     $query->innerJoin('node', 'n', 'c.nid = n.nid');
-    $query->fields('n', ['type']);
+    $query->fields('n', ['type', 'language']);
     $query->orderBy('c.timestamp');
     return $query;
   }
@@ -61,6 +61,13 @@ class Comment extends DrupalSqlBase {
     // In D6, status=0 means published, while in D8 means the opposite.
     // See https://www.drupal.org/node/237636.
     $row->setSourceProperty('status', !$row->getSourceProperty('status'));
+
+    // If node did not have a language, use site default language as a fallback.
+    if (!$row->getSourceProperty('language')) {
+      $language_default = $this->variableGet('language_default', NULL);
+      $language = $language_default ? $language_default->language : 'en';
+      $row->setSourceProperty('language', $language);
+    }
     return $row;
   }
 
@@ -84,6 +91,7 @@ class Comment extends DrupalSqlBase {
       'mail' => $this->t("The comment author's email address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on."),
       'homepage' => $this->t("The comment author's home page address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on."),
       'type' => $this->t("The {node}.type to which this comment is a reply."),
+      'language' => $this->t("The {node}.language to which this comment is a reply. Site default language is used as a fallback if node does not have a language."),
     ];
   }
 

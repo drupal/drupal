@@ -65,10 +65,12 @@ class CommentTest extends MigrateSqlSourceTestBase {
       [
         'nid' => 2,
         'type' => 'story',
+        'language' => 'en',
       ],
       [
         'nid' => 3,
         'type' => 'page',
+        'language' => 'fr',
       ],
     ];
 
@@ -90,6 +92,7 @@ class CommentTest extends MigrateSqlSourceTestBase {
         'homepage' => '',
         'format' => 'testformat1',
         'type' => 'story',
+        'language' => 'en',
       ],
       [
         'cid' => 2,
@@ -107,6 +110,7 @@ class CommentTest extends MigrateSqlSourceTestBase {
         'homepage' => '',
         'format' => 'testformat2',
         'type' => 'page',
+        'language' => 'fr',
       ],
     ];
 

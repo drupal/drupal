@@ -207,7 +207,7 @@ class MigrateUpgrade7NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
     }
     $edits = $this->translatePostValues($edit);
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
-    $session->pageTextContains("Install migrate_drupal_multilingual to run migration 'd7_node_entity_translation:article'.");
+    $session->pageTextContains("Install migrate_drupal_multilingual to run migration 'd7_node_translation:article'.");
   }
 
 }

@@ -60,7 +60,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
       'block' => 25,
       'block_content' => 1,
       'block_content_type' => 1,
-      'comment' => 2,
+      'comment' => 3,
       // The 'standard' profile provides the 'comment' comment type, and the
       // migration creates 6 comment types, one per node type.
       'comment_type' => 7,
@@ -106,7 +106,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
   protected function getEntityCountsIncremental() {
     $counts = $this->getEntityCounts();
     $counts['block_content'] = 2;
-    $counts['comment'] = 3;
+    $counts['comment'] = 4;
     $counts['file'] = 4;
     $counts['menu_link_content'] = 13;
     $counts['node'] = 6;
