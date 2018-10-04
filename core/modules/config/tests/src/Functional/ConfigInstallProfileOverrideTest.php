@@ -107,7 +107,16 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     $this->container->get('module_installer')->install(['dblog']);
     $this->rebuildContainer();
     $this->assertEqual($config_test_storage->load('override_unmet')->label(), 'Override', 'The optional config_test entity is overridden by the profile optional configuration and is installed when its dependencies are met.');
-    $this->assertEqual($config_test_storage->load('completely_new')->label(), 'Completely new optional configuration', 'The optional config_test entity is provided by the profile optional configuration and is installed when its dependencies are met.');
+    $config_test_new = $config_test_storage->load('completely_new');
+    $this->assertEqual($config_test_new->label(), 'Completely new optional configuration', 'The optional config_test entity is provided by the profile optional configuration and is installed when its dependencies are met.');
+    $config_test_new->delete();
+
+    // Install another module that provides optional configuration and ensure
+    // that deleted profile configuration is not re-created.
+    $this->container->get('module_installer')->install(['config_other_module_config_test']);
+    $this->rebuildContainer();
+    $config_test_storage = \Drupal::entityManager()->getStorage('config_test');
+    $this->assertNull($config_test_storage->load('completely_new'));
   }
 
 }

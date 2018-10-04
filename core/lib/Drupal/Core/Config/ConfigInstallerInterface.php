@@ -43,7 +43,8 @@ interface ConfigInstallerInterface {
    * @param \Drupal\Core\Config\StorageInterface $storage
    *   (optional) The configuration storage to search for optional
    *   configuration. If not provided, all enabled extension's optional
-   *   configuration directories will be searched.
+   *   configuration directories including the install profile's will be
+   *   searched.
    * @param array $dependency
    *   (optional) If set, ensures that the configuration being installed has
    *   this dependency. The format is dependency type as the key ('module',
