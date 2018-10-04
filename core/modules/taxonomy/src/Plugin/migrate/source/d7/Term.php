@@ -56,10 +56,26 @@ class Term extends FieldableEntity {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
+    $tid = $row->getSourceProperty('tid');
+    $vocabulary = $row->getSourceProperty('machine_name');
+    $default_language = (array) $this->variableGet('language_default', ['language' => 'en']);
+
+    // If this entity was translated using Entity Translation, we need to get
+    // its source language to get the field values in the right language.
+    // The translations will be migrated by the d7_node_entity_translation
+    // migration.
+    $translatable_vocabularies = array_keys(array_filter($this->variableGet('entity_translation_taxonomy', [])));
+    $entity_translatable = $this->isEntityTranslatable('taxonomy_term') && in_array($vocabulary, $translatable_vocabularies, TRUE);
+    $source_language = $this->getEntityTranslationSourceLanguage('taxonomy_term', $tid);
+    $language = $entity_translatable && $source_language ? $source_language : $default_language['language'];
+    $row->setSourceProperty('language', $language);
+
     // Get Field API field values.
-    foreach (array_keys($this->getFields('taxonomy_term', $row->getSourceProperty('machine_name'))) as $field) {
-      $tid = $row->getSourceProperty('tid');
-      $row->setSourceProperty($field, $this->getFieldValues('taxonomy_term', $field, $tid));
+    foreach ($this->getFields('taxonomy_term', $vocabulary) as $field_name => $field) {
+      // Ensure we're using the right language if the entity and the field are
+      // translatable.
+      $field_language = $entity_translatable && $field['translatable'] ? $language : NULL;
+      $row->setSourceProperty($field_name, $this->getFieldValues('taxonomy_term', $field_name, $tid, NULL, $field_language));
     }
 
     // Find parents for this row.
@@ -86,6 +102,9 @@ class Term extends FieldableEntity {
       $description_field = $row->getSourceProperty('description_field');
       if (isset($description_field[0]['value'])) {
         $row->setSourceProperty('description', $description_field[0]['value']);
+      }
+      if (isset($description_field[0]['format'])) {
+        $row->setSourceProperty('format', $description_field[0]['format']);
       }
     }
 
