@@ -137,6 +137,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'forum',
       'i18n',
       'i18nblocks',
+      'i18ncck',
       'i18nmenu',
       'i18nprofile',
       'i18nstrings',
@@ -179,7 +180,6 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
-      'i18ncck',
       'i18ncontent',
     ];
   }
