@@ -15,11 +15,15 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
 
   public static $modules = [
     'comment',
+    'content_translation',
     'datetime',
     'forum',
     'image',
+    'language',
     'link',
     'menu_ui',
+    // Required for translation migrations.
+    'migrate_drupal_multilingual',
     'node',
     'taxonomy',
     'telephone',
@@ -38,16 +42,23 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
+    $this->installEntitySchema('comment');
+    $this->installEntitySchema('node');
     $this->installEntitySchema('taxonomy_term');
     $this->installConfig(static::$modules);
 
     $this->executeMigrations([
+      'language',
+      'd7_user_role',
+      'd7_user',
       'd7_node_type',
       'd7_comment_type',
       'd7_field',
       'd7_taxonomy_vocabulary',
       'd7_field_instance',
       'd7_taxonomy_term',
+      'd7_entity_translation_settings',
+      'd7_taxonomy_term_entity_translation',
     ]);
   }
 
@@ -110,7 +121,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertEntity(2, 'Term1 (This is a real field!)', 'test_vocabulary', 'The first term. (This is a real field!)', 'filtered_html', 0, [], NULL, 3);
 
     $this->assertEntity(3, 'Term2', 'test_vocabulary', 'The second term.', 'filtered_html');
-    $this->assertEntity(4, 'Term3', 'test_vocabulary', 'The third term.', 'full_html', 0, [3], 6);
+    $this->assertEntity(4, 'Term3 in plain old English', 'test_vocabulary', 'The third term in plain old English.', 'full_html', 0, [3], 6);
     $this->assertEntity(5, 'Custom Forum', 'forums', 'Where the cool kids are.', NULL, 3);
     $this->assertEntity(6, 'Games', 'forums', '', NULL, 4, [], NULL, NULL, 1);
     $this->assertEntity(7, 'Minecraft', 'forums', '', NULL, 1, [6]);
@@ -160,6 +171,58 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertArrayHasKey($tid, $this->treeData[$vid], "Term $tid exists in taxonomy tree");
     $term = $this->treeData[$vid][$tid];
     $this->assertEquals($parent_ids, array_filter($term->parents), "Term $tid has correct parents in taxonomy tree");
+  }
+
+  /**
+   * Tests the migration of taxonomy term entity translations.
+   */
+  public function testTaxonomyTermEntityTranslations() {
+    $manager = $this->container->get('content_translation.manager');
+
+    // Get the term and its translations.
+    $term = Term::load(4);
+    $term_fr = $term->getTranslation('fr');
+    $term_is = $term->getTranslation('is');
+
+    // Test that fields translated with Entity Translation are migrated.
+    $this->assertSame('Term3 in plain old English', $term->getName());
+    $this->assertSame('Term3 en français s\'il vous plaît', $term_fr->getName());
+    $this->assertSame('Term3 á íslensku', $term_is->getName());
+    $this->assertSame('The third term in plain old English.', $term->getDescription());
+    $this->assertSame('The third term en français s\'il vous plaît.', $term_fr->getDescription());
+    $this->assertSame('The third term á íslensku.', $term_is->getDescription());
+    $this->assertSame('full_html', $term->getFormat());
+    $this->assertSame('filtered_html', $term_fr->getFormat());
+    $this->assertSame('plain_text', $term_is->getFormat());
+    $this->assertSame('6', $term->field_integer->value);
+    $this->assertSame('5', $term_fr->field_integer->value);
+    $this->assertSame('4', $term_is->field_integer->value);
+
+    // Test that the French translation metadata is correctly migrated.
+    $metadata_fr = $manager->getTranslationMetadata($term_fr);
+    $this->assertTrue($metadata_fr->isPublished());
+    $this->assertSame('en', $metadata_fr->getSource());
+    $this->assertSame('2', $metadata_fr->getAuthor()->uid->value);
+    $this->assertSame('1531922267', $metadata_fr->getCreatedTime());
+    $this->assertSame('1531922268', $metadata_fr->getChangedTime());
+    $this->assertTrue($metadata_fr->isOutdated());
+
+    // Test that the Icelandic translation metadata is correctly migrated.
+    $metadata_is = $manager->getTranslationMetadata($term_is);
+    $this->assertFalse($metadata_is->isPublished());
+    $this->assertSame('en', $metadata_is->getSource());
+    $this->assertSame('1', $metadata_is->getAuthor()->uid->value);
+    $this->assertSame('1531922278', $metadata_is->getCreatedTime());
+    $this->assertSame('1531922279', $metadata_is->getChangedTime());
+    $this->assertFalse($metadata_is->isOutdated());
+
+    // Test that untranslatable properties are the same as the source language.
+    $this->assertSame($term->bundle(), $term_fr->bundle());
+    $this->assertSame($term->bundle(), $term_is->bundle());
+    $this->assertSame($term->getWeight(), $term_fr->getWeight());
+    $this->assertSame($term->getWeight(), $term_is->getWeight());
+    $this->assertSame($term->parent->terget_id, $term_fr->parent->terget_id);
+    $this->assertSame($term->parent->terget_id, $term_is->parent->terget_id);
   }
 
 }

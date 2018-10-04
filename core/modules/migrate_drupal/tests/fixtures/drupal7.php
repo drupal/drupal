@@ -3176,6 +3176,42 @@ $connection->insert('entity_translation')
   'changed' => '1529615813',
 ))
 ->values(array(
+  'entity_type' => 'taxonomy_term',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'en',
+  'source' => '',
+  'uid' => '1',
+  'status' => '1',
+  'translate' => '0',
+  'created' => '1531922259',
+  'changed' => '1531922259',
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'fr',
+  'source' => 'en',
+  'uid' => '2',
+  'status' => '1',
+  'translate' => '1',
+  'created' => '1531922267',
+  'changed' => '1531922268',
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'is',
+  'source' => 'en',
+  'uid' => '1',
+  'status' => '0',
+  'translate' => '0',
+  'created' => '1531922278',
+  'changed' => '1531922279',
+))
+->values(array(
   'entity_type' => 'user',
   'entity_id' => '2',
   'revision_id' => '2',
@@ -5050,9 +5086,33 @@ $connection->insert('field_data_description_field')
   'revision_id' => '4',
   'language' => 'en',
   'delta' => '0',
-  'description_field_value' => 'The third term.',
+  'description_field_value' => 'The third term in plain old English.',
   'description_field_summary' => '',
   'description_field_format' => 'full_html',
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'fr',
+  'delta' => '0',
+  'description_field_value' => 'The third term en français s\'il vous plaît.',
+  'description_field_summary' => '',
+  'description_field_format' => 'filtered_html',
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'is',
+  'delta' => '0',
+  'description_field_value' => 'The third term á íslensku.',
+  'description_field_summary' => '',
+  'description_field_format' => 'plain_text',
 ))
 ->execute();
 
@@ -6222,6 +6282,26 @@ $connection->insert('field_data_field_integer')
   'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '6',
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'fr',
+  'delta' => '0',
+  'field_integer_value' => '5',
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'is',
+  'delta' => '0',
+  'field_integer_value' => '4',
 ))
 ->execute();
 
@@ -8648,7 +8728,29 @@ $connection->insert('field_data_name_field')
   'revision_id' => '4',
   'language' => 'en',
   'delta' => '0',
-  'name_field_value' => 'Term3',
+  'name_field_value' => 'Term3 in plain old English',
+  'name_field_format' => NULL,
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'fr',
+  'delta' => '0',
+  'name_field_value' => 'Term3 en français s\'il vous plaît',
+  'name_field_format' => NULL,
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'is',
+  'delta' => '0',
+  'name_field_value' => 'Term3 á íslensku',
   'name_field_format' => NULL,
 ))
 ->execute();
@@ -9392,8 +9494,32 @@ $connection->insert('field_revision_description_field')
   'revision_id' => '4',
   'language' => 'en',
   'delta' => '0',
-  'description_field_value' => 'The third term.',
-  'description_field_summary' => NULL,
+  'description_field_value' => 'The third term in plain old English.',
+  'description_field_summary' => '',
+  'description_field_format' => 'full_html',
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'fr',
+  'delta' => '0',
+  'description_field_value' => 'The third term en français s\'il vous plaît.',
+  'description_field_summary' => '',
+  'description_field_format' => 'full_html',
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'is',
+  'delta' => '0',
+  'description_field_value' => 'The third term á íslensku.',
+  'description_field_summary' => '',
   'description_field_format' => 'full_html',
 ))
 ->execute();
@@ -10556,6 +10682,26 @@ $connection->insert('field_revision_field_integer')
   'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '6',
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'fr',
+  'delta' => '0',
+  'field_integer_value' => '5',
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'is',
+  'delta' => '0',
+  'field_integer_value' => '4',
 ))
 ->execute();
 
@@ -13015,7 +13161,29 @@ $connection->insert('field_revision_name_field')
   'revision_id' => '4',
   'language' => 'en',
   'delta' => '0',
-  'name_field_value' => 'Term3',
+  'name_field_value' => 'Term3 in plain old English',
+  'name_field_format' => NULL,
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'fr',
+  'delta' => '0',
+  'name_field_value' => 'Term3 en français s\'il vous plaît',
+  'name_field_format' => NULL,
+))
+->values(array(
+  'entity_type' => 'taxonomy_term',
+  'bundle' => 'test_vocabulary',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'is',
+  'delta' => '0',
+  'name_field_value' => 'Term3 á íslensku',
   'name_field_format' => NULL,
 ))
 ->execute();
