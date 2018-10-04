@@ -29,6 +29,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
     'aggregator',
     'book',
     'forum',
+    'rdf',
     'statistics',
     'migration_provider_test',
     // Required for translation migrations.
