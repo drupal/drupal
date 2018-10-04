@@ -15087,13 +15087,6 @@ $connection->insert('locales_source')
   'version' => '1',
 ))
 ->values(array(
-  'lid' => '626',
-  'location' => 'field:test_planet-field_test_text_single_checkbox:widget_label',
-  'textgroup' => 'cck',
-  'source' => 'Text Single Checkbox Field',
-  'version' => '1',
-))
-->values(array(
   'lid' => '627',
   'location' => 'field:test_planet-field_test_text_single_checkbox:widget_description',
   'textgroup' => 'cck',
@@ -27070,7 +27063,7 @@ $connection->insert('locales_target')
 ))
 ->values(array(
   'lid' => '575',
-  'translation' => 'fr -  An example text field.',
+  'translation' => 'fr - An example text field.',
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -27182,7 +27175,7 @@ $connection->insert('locales_target')
 ))
 ->values(array(
   'lid' => '589',
-  'translation' => 'fr - An example image field.',
+  'translation' => 'fr - An example file field.',
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -27407,14 +27400,6 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '625',
   'translation' => 'Un exemple plusieurs valeurs champ décimal.',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '626',
-  'translation' => 'fr - Text Single Checkbox Field',
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
