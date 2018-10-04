@@ -144,7 +144,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     // Add the url.path.parent cache context. This code ignores the last path
     // part so the result only depends on the path parents.
-    $breadcrumb->addCacheContexts(['url.path.parent']);
+    $breadcrumb->addCacheContexts(['url.path.parent', 'url.path.is_front']);
 
     // Do not display a breadcrumb on the frontpage.
     if ($this->pathMatcher->isFrontPage()) {
