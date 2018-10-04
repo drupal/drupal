@@ -36,6 +36,17 @@ interface LayoutTempstoreRepositoryInterface {
   public function set(SectionStorageInterface $section_storage);
 
   /**
+   * Checks for the existence of a tempstore version of a section storage.
+   *
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage to check for in tempstore.
+   *
+   * @return bool
+   *   TRUE if there is a tempstore version of this section storage.
+   */
+  public function has(SectionStorageInterface $section_storage);
+
+  /**
    * Removes the tempstore version of a section storage.
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
