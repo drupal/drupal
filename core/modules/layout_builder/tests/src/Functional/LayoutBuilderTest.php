@@ -91,7 +91,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // The body field is only present once.
     $assert_session->elementsCount('css', '.field--name-body', 1);
     // The extra field is only present once.
-    $assert_session->pageTextContainsOnce('Placeholder for the "Extra label" field');
+    $this->assertTextAppearsOnce('Placeholder for the "Extra label" field');
     // Save the defaults.
     $assert_session->linkExists('Save Layout');
     $this->clickLink('Save Layout');
@@ -106,7 +106,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // The body field is only present once.
     $assert_session->elementsCount('css', '.field--name-body', 1);
     // The extra field is only present once.
-    $assert_session->pageTextContainsOnce('Placeholder for the "Extra label" field');
+    $this->assertTextAppearsOnce('Placeholder for the "Extra label" field');
 
     // Add a new block.
     $assert_session->linkExists('Add Block');
@@ -524,6 +524,16 @@ class LayoutBuilderTest extends BrowserTestBase {
     // The block placeholder is no longer displayed and the content is visible.
     $assert_session->pageTextNotContains($placeholder_content);
     $assert_session->pageTextContains($block_content);
+  }
+
+  /**
+   * Asserts that a text string only appears once on the page.
+   *
+   * @param string $needle
+   *   The string to look for.
+   */
+  protected function assertTextAppearsOnce($needle) {
+    $this->assertEquals(1, substr_count($this->getSession()->getPage()->getContent(), $needle), "'$needle' only appears once on the page.");
   }
 
 }
