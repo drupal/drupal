@@ -2,7 +2,6 @@
 
 namespace Drupal\search;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -622,7 +621,7 @@ class SearchQuery extends SelectExtender {
     $expressions = [];
 
     // Add sid as the only field and count them as a subquery.
-    $count = Database::getConnection('replica')->select($inner->fields('i', ['sid']), NULL);
+    $count = $this->connection->select($inner->fields('i', ['sid']), NULL);
 
     // Add the COUNT() expression.
     $count->addExpression('COUNT(*)');

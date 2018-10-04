@@ -21,6 +21,13 @@ class CommentStatistics implements CommentStatisticsInterface {
   protected $database;
 
   /**
+   * The replica database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $databaseReplica;
+
+  /**
    * The current logged in user.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -52,9 +59,12 @@ class CommentStatistics implements CommentStatisticsInterface {
    *   The entity manager service.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
+   * @param \Drupal\Core\Database\Connection|null $database_replica
+   *   (Optional) the replica database connection.
    */
-  public function __construct(Connection $database, AccountInterface $current_user, EntityManagerInterface $entity_manager, StateInterface $state) {
+  public function __construct(Connection $database, AccountInterface $current_user, EntityManagerInterface $entity_manager, StateInterface $state, Connection $database_replica = NULL) {
     $this->database = $database;
+    $this->databaseReplica = $database_replica ?: $database;
     $this->currentUser = $current_user;
     $this->entityManager = $entity_manager;
     $this->state = $state;
@@ -64,8 +74,8 @@ class CommentStatistics implements CommentStatisticsInterface {
    * {@inheritdoc}
    */
   public function read($entities, $entity_type, $accurate = TRUE) {
-    $options = $accurate ? [] : ['target' => 'replica'];
-    $stats = $this->database->select('comment_entity_statistics', 'ces', $options)
+    $connection = $accurate ? $this->database : $this->databaseReplica;
+    $stats = $connection->select('comment_entity_statistics', 'ces')
       ->fields('ces')
       ->condition('ces.entity_id', array_keys($entities), 'IN')
       ->condition('ces.entity_type', $entity_type)

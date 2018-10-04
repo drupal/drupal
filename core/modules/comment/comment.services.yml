@@ -11,7 +11,7 @@ services:
 
   comment.statistics:
     class: Drupal\comment\CommentStatistics
-    arguments: ['@database', '@current_user', '@entity.manager', '@state']
+    arguments: ['@database', '@current_user', '@entity.manager', '@state', '@database.replica']
     tags:
       - { name: backend_overridable }
 
