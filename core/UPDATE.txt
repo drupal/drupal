@@ -64,15 +64,51 @@ following the instructions in the INTRODUCTION section at the top of this file:
    Enable the "Put site into maintenance mode" checkbox and save the
    configuration.
 
-3. Remove the 'core' and 'vendor' directories. Also remove all of the files
-   in the top-level directory, except any that you added manually.
+3. Determine if your project is managed by Composer.
 
-   If you made modifications to files like .htaccess, composer.json, or
-   robots.txt you will need to re-apply them from your backup, after the new
-   files are in place.
+   On a typical Unix/Linux command line, this can be determined by running the
+   following command (replace /PATH/TO/composer with the appropriate location
+   for your system):
 
-   Sometimes an update includes changes to default.settings.php (this will be
-   noted in the release notes). If that's the case, follow these steps:
+     /PATH/TO/composer info drupal/core
+
+   If this is successful, your project is managed by Composer.
+
+   If you don't have Composer installed or access to the command line, you can
+   check the contents of composer.json. If "drupal/core" is present in the
+   "require" section of your composer.json file, then the project is managed by
+   Composer.
+
+   If the project is not managed by Composer, follow the steps under "UPDATING
+   CODE WITHOUT COMPOSER", otherwise go to "UPDATING CODE WITH COMPOSER".
+
+UPDATING CODE WITH COMPOSER
+---------------------------
+1. On a typical Unix/Linux command line, run the following command from the root
+   directory (replace /PATH/TO/composer with the appropriate location for your
+   system):
+
+     /PATH/TO/composer update
+
+   Note, if Composer is not installed you will need to install it in order to
+   update Drupal.
+
+   Note, if you want to only update drupal/core the following command will
+   probably work:
+
+     /PATH/TO/composer update drupal/core symfony/* --with-all-dependencies
+
+2. Check the release notes for the updated version of Drupal to find out if
+   there is a change to default.settings.php.
+
+   You can find the release notes for your version at
+   https://www.drupal.org/project/drupal. At bottom of the project page under
+   "Downloads" use the link for your version of Drupal to view the release
+   notes. If your version is not listed, use the 'View all releases' link. From
+   this page you can scroll down or use the filter to find your version and its
+   release notes.
+
+   If there is a change to default.settings.php, follow these steps:
 
    - Locate your settings.php file in the /sites/* directory. (Typically
      sites/default.)
@@ -87,16 +123,32 @@ following the instructions in the INTRODUCTION section at the top of this file:
      database information, and you will also want to copy in any other
      customizations you have added.
 
-   You can find the release notes for your version at
-   https://www.drupal.org/project/drupal. At bottom of the project page under
-   "Downloads" use the link for your version of Drupal to view the release
-   notes. If your version is not listed, use the 'View all releases' link. From
-   this page you can scroll down or use the filter to find your version and its
-   release notes.
+3. Determine if there are any modifications to files such as .htaccess or
+   robots.txt and re-apply them. The Drupal Scaffold composer plugin
+   (https://github.com/drupal-composer/drupal-scaffold) can help you with
+   excluding files you'd like to always preserve when updating Drupal.
 
-4. Download the latest Drupal 8.x.x release from https://www.drupal.org to a
-   directory outside of your web root. Extract the archive and copy the files
-   into your Drupal directory.
+4. Go to the "UPLOADING THE CODE" section
+
+UPDATING CODE WITHOUT COMPOSER
+------------------------------
+1. Remove the 'core' and 'vendor' directories. Also remove all of the files
+   in the top-level directory, except any that you added manually.
+
+   If you made modifications to files like .htaccess, composer.json, or
+   robots.txt you will need to re-apply them from your backup, after the new
+   files are in place.
+
+   This should leave you with the modules, profiles, sites, and themes
+   directories. These directories should only contain code that you've used to
+   extend Drupal.
+
+2. Download the latest Drupal 8.x.x release from https://www.drupal.org/download
+   to a directory outside of your web root. Extract the archive and copy the
+   files into your Drupal directory.
+
+   Copy all the files, but do not accidentally overwrite your modules, profiles,
+   sites, or themes directories.
 
    On a typical Unix/Linux command line, use the following commands to download
    and extract:
@@ -110,13 +162,60 @@ following the instructions in the INTRODUCTION section at the top of this file:
      cp -R drupal-x.y.z/* drupal-x.y.z/.htaccess /path/to/your/installation
 
    If you do not have command line access to your server, download the archive
-   from https://www.drupal.org using your web browser, extract it, and then use
-   an FTP client to upload the files to your web root.
+   from https://www.drupal.org using your web browser and extract it locally.
 
-5. Re-apply any modifications to files such as .htaccess, composer.json, or
-   robots.txt.
+3. Check the release notes for the updated version of Drupal to find out if
+   there is a change to default.settings.php.
 
-6. Run update.php by visiting http://www.example.com/update.php (replace
+   You can find the release notes for your updated version at
+   https://www.drupal.org/project/drupal. At bottom of the project page under
+   "Downloads" use the link for your updated version of Drupal to view the
+   release notes. If your updated version is not listed, use the 'View all
+   releases' link. From this page you can scroll down or use the filter to find
+   your updated version and its release notes.
+
+   If there is a change to default.settings.php, follow these steps:
+
+   - Locate your settings.php file in the /sites/* directory. (Typically
+     sites/default.)
+
+   - Make a backup copy of your settings.php file, with a different file name.
+
+   - Make a copy of the new default.settings.php file, and name the copy
+     settings.php (overwriting your previous settings.php file).
+
+   - Copy the custom and site-specific entries from the backup you made into the
+     new settings.php file. You will definitely need the lines giving the
+     database information, and you will also want to copy in any other
+     customizations you have added.
+
+4. Re-apply any modifications to files such as .htaccess or robots.txt.
+
+   If you have added requirements in composer.json, it is recommended that you
+   re-add the requirements using Composer instead of applying the changes by
+   hand. For example, on a typical Unix/Linux command line, to reinstall the
+   Address module and its dependencies run (replace /PATH/TO/composer with the
+   appropriate location for your system):
+
+     /PATH/TO/composer require drupal/address
+
+   If you do not have command line access to your server, you will need to run
+   the Composer commands locally before uploading the file system to your
+   server.
+
+5. Go to the "UPLOADING THE CODE" section
+
+UPLOADING THE CODE
+------------------
+1. If you updated the code in a different environment from where it is running
+   you need to upload the files to your web root including the vendor/
+   directory.
+
+2. Go to the "UPDATING THE DATABASE" section
+
+UPDATING THE DATABASE
+---------------------
+1. Run update.php by visiting http://www.example.com/update.php (replace
    www.example.com with your domain name). This will update the core database
    tables.
 
@@ -133,12 +232,11 @@ following the instructions in the INTRODUCTION section at the top of this file:
    - Once the update is done, $settings['update_free_access'] must be reverted
      to FALSE.
 
-7. Go to Administration > Reports > Status report. Verify that everything is
+2. Go to Administration > Reports > Status report. Verify that everything is
    working as expected.
 
-8. Ensure that $settings['update_free_access'] is FALSE in settings.php.
+3. Ensure that $settings['update_free_access'] is FALSE in settings.php.
 
-9. Go to Administration > Configuration > Development > Maintenance mode.
+4. Go to Administration > Configuration > Development > Maintenance mode.
    Disable the "Put site into maintenance mode" checkbox and save the
    configuration.
-
