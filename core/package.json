@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
-    "build:js-dev": "cross-env NODE_ENV=development node BABEL_ENV=legacy ./scripts/js/babel-es6-build.js",
+    "build:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
     "watch:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "watch:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "lint:core-js": "node ./node_modules/eslint/bin/eslint.js .",
