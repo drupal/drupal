@@ -24,6 +24,10 @@ class CKEditorPlugin extends Plugin {
   /**
    * The plugin ID.
    *
+   * This MUST match the name of the CKEditor plugin itself (written in
+   * JavaScript). Otherwise CKEditor will throw JavaScript errors when it runs,
+   * because it fails to load this CKEditor plugin.
+   *
    * @var string
    */
   public $id;
