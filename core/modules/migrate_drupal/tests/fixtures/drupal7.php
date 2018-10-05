@@ -2548,7 +2548,7 @@ $connection->insert('comment')
   'name' => 'admin',
   'mail' => '',
   'homepage' => '',
-  'language' => 'und',
+  'language' => 'en',
 ))
 ->values(array(
   'cid' => '2',
@@ -3131,13 +3131,37 @@ $connection->insert('entity_translation')
   'entity_type' => 'comment',
   'entity_id' => '1',
   'revision_id' => '1',
-  'language' => 'und',
+  'language' => 'en',
   'source' => '',
   'uid' => '1',
   'status' => '1',
   'translate' => '0',
   'created' => '1421727536',
   'changed' => '1421727536',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'fr',
+  'source' => 'en',
+  'uid' => '1',
+  'status' => '0',
+  'translate' => '0',
+  'created' => '1531837764',
+  'changed' => '1531837764',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'is',
+  'source' => 'en',
+  'uid' => '2',
+  'status' => '1',
+  'translate' => '1',
+  'created' => '1531838064',
+  'changed' => '1531838064',
 ))
 ->values(array(
   'entity_type' => 'node',
@@ -4725,6 +4749,15 @@ $connection->insert('field_config_instance')
   'data' => 'a:6:{s:8:"required";b:0;s:5:"label";s:11:"Description";s:11:"description";s:0:"";s:8:"settings";a:5:{s:15:"text_processing";i:1;s:10:"hide_label";a:2:{s:4:"page";b:0;s:6:"entity";b:0;}s:15:"display_summary";i:0;s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:6:"widget";a:4:{s:6:"weight";i:-5;s:4:"type";s:26:"text_textarea_with_summary";s:8:"settings";a:2:{s:4:"rows";i:20;s:12:"summary_rows";i:5;}s:6:"module";s:4:"text";}s:7:"display";a:1:{s:7:"default";a:4:{s:4:"type";s:6:"hidden";s:5:"label";s:5:"above";s:8:"settings";a:0:{}s:6:"weight";i:15;}}}',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '71',
+  'field_id' => '41',
+  'field_name' => 'subject_field',
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'data' => 'a:6:{s:5:"label";s:7:"Subject";s:11:"description";s:0:"";s:8:"required";b:1;s:8:"settings";a:4:{s:15:"text_processing";i:0;s:10:"hide_label";a:2:{s:4:"page";b:0;s:6:"entity";b:0;}s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:6:"widget";a:4:{s:6:"weight";i:-5;s:4:"type";s:14:"text_textfield";s:8:"settings";a:1:{s:4:"size";i:60;}s:6:"module";s:4:"text";}s:7:"display";a:1:{s:7:"default";a:4:{s:4:"type";s:6:"hidden";s:5:"label";s:5:"above";s:8:"settings";a:0:{}s:6:"weight";i:1;}}}',
+  'deleted' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('field_data_body', array(
@@ -6209,9 +6242,29 @@ $connection->insert('field_data_field_integer')
   'deleted' => '0',
   'entity_id' => '1',
   'revision_id' => '1',
-  'language' => 'und',
+  'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '1000000',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'fr',
+  'delta' => '0',
+  'field_integer_value' => '2000000',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'is',
+  'delta' => '0',
+  'field_integer_value' => '3000000',
 ))
 ->values(array(
   'entity_type' => 'node',
@@ -8857,6 +8910,39 @@ $connection->insert('field_data_subject_field')
 ))
 ->values(array(
   'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'en',
+  'delta' => '0',
+  'subject_field_value' => 'Subject field in English',
+  'subject_field_format' => NULL,
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'fr',
+  'delta' => '0',
+  'subject_field_value' => 'Subject field in French',
+  'subject_field_format' => NULL,
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'is',
+  'delta' => '0',
+  'subject_field_value' => 'Subject field in Icelandic',
+  'subject_field_format' => NULL,
+))
+->values(array(
+  'entity_type' => 'comment',
   'bundle' => 'comment_node_article',
   'deleted' => '0',
   'entity_id' => '2',
@@ -10629,9 +10715,29 @@ $connection->insert('field_revision_field_integer')
   'deleted' => '0',
   'entity_id' => '1',
   'revision_id' => '1',
-  'language' => 'und',
+  'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '1000000',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'fr',
+  'delta' => '0',
+  'field_integer_value' => '2000000',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'is',
+  'delta' => '0',
+  'field_integer_value' => '3000000',
 ))
 ->values(array(
   'entity_type' => 'node',
@@ -13288,6 +13394,39 @@ $connection->insert('field_revision_subject_field')
   'delta',
   'subject_field_value',
   'subject_field_format',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'en',
+  'delta' => '0',
+  'subject_field_value' => 'Subject field in English',
+  'subject_field_format' => NULL,
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'fr',
+  'delta' => '0',
+  'subject_field_value' => 'Subject field in French',
+  'subject_field_format' => NULL,
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'is',
+  'delta' => '0',
+  'subject_field_value' => 'Subject field in Icelandic',
+  'subject_field_format' => NULL,
 ))
 ->values(array(
   'entity_type' => 'comment',

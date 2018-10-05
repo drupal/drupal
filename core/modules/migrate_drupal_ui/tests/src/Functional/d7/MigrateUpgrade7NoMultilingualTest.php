@@ -61,7 +61,7 @@ class MigrateUpgrade7NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
       'configurable_language' => 4,
       'contact_form' => 3,
       'editor' => 2,
-      'field_config' => 67,
+      'field_config' => 68,
       'field_storage_config' => 50,
       'file' => 3,
       'filter_format' => 7,
