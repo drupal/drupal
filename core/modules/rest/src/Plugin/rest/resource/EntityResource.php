@@ -229,6 +229,8 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     }
 
     // Overwrite the received fields.
+    // @todo Remove $changed_fields in https://www.drupal.org/project/drupal/issues/2862574.
+    $changed_fields = [];
     foreach ($entity->_restSubmittedFields as $field_name) {
       $field = $entity->get($field_name);
       // It is not possible to set the language to NULL as it is automatically
@@ -238,12 +240,18 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
         continue;
       }
       if ($this->checkPatchFieldAccess($original_entity->get($field_name), $field)) {
+        $changed_fields[] = $field_name;
         $original_entity->set($field_name, $field->getValue());
       }
     }
 
+    // If no fields are changed, we can send a response immediately!
+    if (empty($changed_fields)) {
+      return new ModifiedResourceResponse($original_entity, 200);
+    }
+
     // Validate the received data before saving.
-    $this->validate($original_entity);
+    $this->validate($original_entity, $changed_fields);
     try {
       $original_entity->save();
       $this->logger->notice('Updated entity %type with ID %id.', ['%type' => $original_entity->getEntityTypeId(), '%id' => $original_entity->id()]);
@@ -275,13 +283,6 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    * @internal
    */
   protected function checkPatchFieldAccess(FieldItemListInterface $original_field, FieldItemListInterface $received_field) {
-    // If the user is allowed to edit the field, it is always safe to set the
-    // received value. We may be setting an unchanged value, but that is ok.
-    $field_edit_access = $original_field->access('edit', NULL, TRUE);
-    if ($field_edit_access->isAllowed()) {
-      return TRUE;
-    }
-
     // The user might not have access to edit the field, but still needs to
     // submit the current field value as part of the PATCH request. For
     // example, the entity keys required by denormalizers. Therefore, if the
@@ -292,6 +293,13 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     // absence of a 403 response a way to find that out.
     if ($original_field->access('view') && $original_field->equals($received_field)) {
       return FALSE;
+    }
+
+    // If the user is allowed to edit the field, it is always safe to set the
+    // received value. We may be setting an unchanged value, but that is ok.
+    $field_edit_access = $original_field->access('edit', NULL, TRUE);
+    if ($field_edit_access->isAllowed()) {
+      return TRUE;
     }
 
     // It's helpful and safe to let the user know when they are not allowed to

@@ -236,6 +236,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         // Set a default value on the fields.
         $this->entity->set('field_rest_test', ['value' => 'All the faith he had had had had no effect on the outcome of his life.']);
         $this->entity->set('field_rest_test_multivalue', [['value' => 'One'], ['value' => 'Two']]);
+        $this->entity->set('rest_test_validation', ['value' => 'allowed value']);
         $this->entity->save();
       }
     }
@@ -667,6 +668,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // ::formatExpectedTimestampValue() to generate the timestamp value. This
       // will take into account the above config setting.
       $expected = $this->getExpectedNormalizedEntity();
+
       // Config entities are not affected.
       // @see \Drupal\serialization\Normalizer\ConfigEntityNormalizer::normalize()
       static::recursiveKSort($expected);
@@ -1142,6 +1144,39 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $response = $this->request('PATCH', $url, $request_options);
       $this->assertResourceErrorResponse(403, "Access denied on updating field '" . $patch_protected_field_name . "'." . ($reason !== NULL ? ' ' . $reason : ''), $response);
       $modified_entity->get($patch_protected_field_name)->setValue($original_values[$patch_protected_field_name]);
+    }
+
+    if ($this->entity instanceof FieldableEntityInterface) {
+      // Change the rest_test_validation field to prove that then its validation
+      // does run.
+      $override = [
+        'rest_test_validation' => [
+          [
+            'value' => 'ALWAYS_FAIL',
+          ],
+        ],
+      ];
+      $valid_request_body = $override + $this->getNormalizedPatchEntity() + $this->serializer->normalize($modified_entity, static::$format);
+      $request_options[RequestOptions::BODY] = $this->serializer->serialize($valid_request_body, static::$format);
+      $response = $this->request('PATCH', $url, $request_options);
+      $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nrest_test_validation: REST test validation failed\n", $response);
+
+      // Set the rest_test_validation field to always fail validation, which
+      // allows asserting that not modifying that field does not trigger
+      // validation errors.
+      $this->entity->set('rest_test_validation', 'ALWAYS_FAIL');
+      $this->entity->save();
+
+      // Information disclosure prevented: when a malicious user correctly
+      // guesses the current invalid value of a field, ensure a 200 is not sent
+      // because this would disclose to the attacker what the current value is.
+      // @see rest_test_entity_field_access()
+      $response = $this->request('PATCH', $url, $request_options);
+      $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nrest_test_validation: REST test validation failed\n", $response);
+
+      // All requests after the above one will not include this field (neither
+      // its current value nor any other), and therefore all subsequent test
+      // assertions should not trigger a validation error.
     }
 
     // 200 for well-formed PATCH request that sends all fields (even including
