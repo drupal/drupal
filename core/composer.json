@@ -59,7 +59,7 @@
         "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
         "mikey179/vfsStream": "^1.2",
         "phpunit/phpunit": "^4.8.35 || ^6.5",
-        "phpspec/prophecy": "^1.4",
+        "phpspec/prophecy": "^1.7",
         "symfony/css-selector": "^3.4.0",
         "symfony/phpunit-bridge": "^3.4.3",
         "symfony/debug": "^3.4.0"
