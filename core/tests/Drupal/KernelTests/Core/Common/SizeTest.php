@@ -12,62 +12,42 @@ use Drupal\KernelTests\KernelTestBase;
  * @group Common
  */
 class SizeTest extends KernelTestBase {
-  protected $exactTestCases;
-  protected $roundedTestCases;
-
-  protected function setUp() {
-    parent::setUp();
-    $kb = Bytes::KILOBYTE;
-    $this->exactTestCases = [
-      '1 byte' => 1,
-      '1 KB'   => $kb,
-      '1 MB'   => $kb * $kb,
-      '1 GB'   => $kb * $kb * $kb,
-      '1 TB'   => $kb * $kb * $kb * $kb,
-      '1 PB'   => $kb * $kb * $kb * $kb * $kb,
-      '1 EB'   => $kb * $kb * $kb * $kb * $kb * $kb,
-      '1 ZB'   => $kb * $kb * $kb * $kb * $kb * $kb * $kb,
-      '1 YB'   => $kb * $kb * $kb * $kb * $kb * $kb * $kb * $kb,
-    ];
-    $this->roundedTestCases = [
-      '2 bytes' => 2,
-      // Rounded to 1 MB (not 1000 or 1024 kilobyte!).
-      '1 MB' => ($kb * $kb) - 1,
-      // Megabytes.
-      round(3623651 / ($this->exactTestCases['1 MB']), 2) . ' MB' => 3623651,
-      // Petabytes.
-      round(67234178751368124 / ($this->exactTestCases['1 PB']), 2) . ' PB' => 67234178751368124,
-      // Yottabytes.
-      round(235346823821125814962843827 / ($this->exactTestCases['1 YB']), 2) . ' YB' => 235346823821125814962843827,
-    ];
-  }
 
   /**
    * Checks that format_size() returns the expected string.
+   *
+   * @dataProvider providerTestCommonFormatSize
    */
-  public function testCommonFormatSize() {
-    foreach ([$this->exactTestCases, $this->roundedTestCases] as $test_cases) {
-      foreach ($test_cases as $expected => $input) {
-        $this->assertEqual(
-          ($result = format_size($input, NULL)),
-          $expected,
-          $expected . ' == ' . $result . ' (' . $input . ' bytes)'
-        );
-      }
-    }
+  public function testCommonFormatSize($expected, $input) {
+    $size = format_size($input, NULL);
+    $this->assertEquals($expected, $size);
   }
 
   /**
-   * Cross-tests Bytes::toInt() and format_size().
+   * Provides a list of byte size to test.
    */
-  public function testCommonParseSizeFormatSize() {
-    foreach ($this->exactTestCases as $size) {
-      $this->assertEqual(
-        $size,
-        ($parsed_size = Bytes::toInt($string = format_size($size, NULL))),
-        $size . ' == ' . $parsed_size . ' (' . $string . ')'
-      );
-    }
+  public function providerTestCommonFormatSize() {
+    $kb = Bytes::KILOBYTE;
+    return [
+      ['1 byte', 1],
+      ['2 bytes', 2],
+      ['1 KB', $kb],
+      ['1 MB', pow($kb, 2)],
+      ['1 GB', pow($kb, 3)],
+      ['1 TB', pow($kb, 4)],
+      ['1 PB', pow($kb, 5)],
+      ['1 EB', pow($kb, 6)],
+      ['1 ZB', pow($kb, 7)],
+      ['1 YB', pow($kb, 8)],
+      // Rounded to 1 MB - not 1000 or 1024 kilobyte
+      ['1 MB', ($kb * $kb) - 1],
+      // Decimal Megabytes
+      ['3.46 MB', 3623651],
+      // Decimal Petabytes
+      ['59.72 PB', 67234178751368124],
+      // Decimal Yottabytes
+      ['194.67 YB', 235346823821125814962843827],
+    ];
   }
 
 }
