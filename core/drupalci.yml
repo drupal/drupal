@@ -5,11 +5,6 @@ build:
   assessment:
     validate_codebase:
       phplint:
-      # Re-run composer install to ensure the dependencies resolve for the
-      # containerized PHP version.
-      container_composer:
-        options: ' install --prefer-dist --no-suggest --no-progress --no-interaction'
-        halt-on-fail: true
       csslint:
         halt-on-fail: false
       eslint:
