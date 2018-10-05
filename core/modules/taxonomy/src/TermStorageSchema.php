@@ -15,7 +15,7 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
    * {@inheritdoc}
    */
   protected function getEntitySchema(ContentEntityTypeInterface $entity_type, $reset = FALSE) {
-    $schema = parent::getEntitySchema($entity_type, $reset = FALSE);
+    $schema = parent::getEntitySchema($entity_type, $reset);
 
     if ($data_table = $this->storage->getDataTable()) {
       $schema[$data_table]['indexes'] += [
