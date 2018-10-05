@@ -713,10 +713,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *
    * @throws \LogicException
    *   If $module is not enabled or the table schema cannot be found.
-   *
-   * @deprecated Special handling of system module schemas has been deprecated
-   *   in Drupal 8.7.x, remove any calls to this method that use invalid schema
-   *   names.
    */
   protected function installSchema($module, $tables) {
     // drupal_get_module_schema() is technically able to install a schema
@@ -732,10 +728,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $schema = drupal_get_module_schema($module, $table);
       if (empty($schema)) {
         // BC layer to avoid some contrib tests to fail.
-        // @see https://www.drupal.org/node/2670360
-        // @see https://www.drupal.org/node/2670454
         if ($module == 'system') {
-          @trigger_error('Special handling of system module schemas in \Drupal\KernelTests\KernelTestBase::installSchema has been deprecated in Drupal 8.7.x, remove any calls to this method that use invalid schema names.', E_USER_DEPRECATED);
+          @trigger_error('Special handling of system module schemas in \Drupal\KernelTests\KernelTestBase::installSchema has been deprecated in Drupal 8.7.x, remove any calls to this method that use invalid schema names. See https://www.drupal.org/project/drupal/issues/2794347.', E_USER_DEPRECATED);
           continue;
         }
         throw new \LogicException("$module module does not define a schema for table '$table'.");
