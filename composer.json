@@ -53,7 +53,7 @@
         "post-package-install": "Drupal\\Core\\Composer\\Composer::vendorTestCodeCleanup",
         "post-package-update": "Drupal\\Core\\Composer\\Composer::vendorTestCodeCleanup",
         "drupal-phpunit-upgrade-check": "Drupal\\Core\\Composer\\Composer::upgradePHPUnit",
-        "drupal-phpunit-upgrade": "@composer update phpunit/phpunit --with-dependencies --no-progress",
+        "drupal-phpunit-upgrade": "@composer update phpunit/phpunit phpspec/prophecy symfony/yaml --with-dependencies --no-progress",
         "phpcs": "phpcs --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --",
         "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --"
     },
