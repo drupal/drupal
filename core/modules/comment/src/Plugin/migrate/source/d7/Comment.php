@@ -36,8 +36,20 @@ class Comment extends FieldableEntity {
     $comment_type = 'comment_node_' . $node_type;
     $row->setSourceProperty('comment_type', 'comment_node_' . $node_type);
 
-    foreach (array_keys($this->getFields('comment', $comment_type)) as $field) {
-      $row->setSourceProperty($field, $this->getFieldValues('comment', $field, $cid));
+    // If this entity was translated using Entity Translation, we need to get
+    // its source language to get the field values in the right language.
+    // The translations will be migrated by the d7_comment_entity_translation
+    // migration.
+    $entity_translatable = $this->isEntityTranslatable('comment') && (int) $this->variableGet('language_content_type_' . $node_type, 0) === 4;
+    $source_language = $this->getEntityTranslationSourceLanguage('comment', $cid);
+    $language = $entity_translatable && $source_language ? $source_language : $row->getSourceProperty('language');
+
+    // Get Field API field values.
+    foreach ($this->getFields('comment', $comment_type) as $field_name => $field) {
+      // Ensure we're using the right language if the entity and the field are
+      // translatable.
+      $field_language = $entity_translatable && $field['translatable'] ? $language : NULL;
+      $row->setSourceProperty($field_name, $this->getFieldValues('comment', $field_name, $cid, NULL, $field_language));
     }
 
     // If the comment subject was replaced by a real field using the Drupal 7

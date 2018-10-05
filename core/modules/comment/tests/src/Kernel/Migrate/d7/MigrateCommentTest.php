@@ -26,6 +26,8 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     'language',
     'link',
     'menu_ui',
+    // Required for translation migrations.
+    'migrate_drupal_multilingual',
     'node',
     'taxonomy',
     'telephone',
@@ -40,6 +42,7 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
 
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
+    $this->installEntitySchema('taxonomy_term');
     $this->installConfig(['comment', 'node']);
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installSchema('node', ['node_access']);
@@ -61,6 +64,8 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
       'd7_field',
       'd7_field_instance',
       'd7_comment',
+      'd7_entity_translation_settings',
+      'd7_comment_entity_translation',
     ]);
   }
 
@@ -70,7 +75,7 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
   public function testMigration() {
     $comment = Comment::load(1);
     $this->assertInstanceOf(Comment::class, $comment);
-    $this->assertSame('A comment', $comment->getSubject());
+    $this->assertSame('Subject field in English', $comment->getSubject());
     $this->assertSame('1421727536', $comment->getCreatedTime());
     $this->assertSame('1421727536', $comment->getChangedTime());
     $this->assertTrue($comment->getStatus());
@@ -79,7 +84,7 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $this->assertSame('This is a comment', $comment->comment_body->value);
     $this->assertSame('filtered_html', $comment->comment_body->format);
     $this->assertSame('2001:db8:ffff:ffff:ffff:ffff:ffff:ffff', $comment->getHostname());
-    $this->assertSame('und', $comment->language()->getId());
+    $this->assertSame('en', $comment->language()->getId());
     $this->assertSame('1000000', $comment->field_integer->value);
 
     $node = $comment->getCommentedEntity();
@@ -107,6 +112,44 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $node = $comment->getCommentedEntity();
     $this->assertInstanceOf(NodeInterface::class, $node);
     $this->assertSame('2', $node->id());
+  }
+
+  /**
+   * Tests the migration of comment entity translations.
+   */
+  public function testCommentEntityTranslations() {
+    $manager = $this->container->get('content_translation.manager');
+
+    // Get the comment and its translations.
+    $comment = Comment::load(1);
+    $comment_fr = $comment->getTranslation('fr');
+    $comment_is = $comment->getTranslation('is');
+
+    // Test that fields translated with Entity Translation are migrated.
+    $this->assertSame('Subject field in English', $comment->getSubject());
+    $this->assertSame('Subject field in French', $comment_fr->getSubject());
+    $this->assertSame('Subject field in Icelandic', $comment_is->getSubject());
+    $this->assertSame('1000000', $comment->field_integer->value);
+    $this->assertSame('2000000', $comment_fr->field_integer->value);
+    $this->assertSame('3000000', $comment_is->field_integer->value);
+
+    // Test that the French translation metadata is correctly migrated.
+    $metadata_fr = $manager->getTranslationMetadata($comment_fr);
+    $this->assertFalse($metadata_fr->isPublished());
+    $this->assertSame('en', $metadata_fr->getSource());
+    $this->assertSame('1', $metadata_fr->getAuthor()->uid->value);
+    $this->assertSame('1531837764', $metadata_fr->getCreatedTime());
+    $this->assertSame('1531837764', $metadata_fr->getChangedTime());
+    $this->assertFalse($metadata_fr->isOutdated());
+
+    // Test that the Icelandic translation metadata is correctly migrated.
+    $metadata_is = $manager->getTranslationMetadata($comment_is);
+    $this->assertTrue($metadata_is->isPublished());
+    $this->assertSame('en', $metadata_is->getSource());
+    $this->assertSame('2', $metadata_is->getAuthor()->uid->value);
+    $this->assertSame('1531838064', $metadata_is->getCreatedTime());
+    $this->assertSame('1531838064', $metadata_is->getChangedTime());
+    $this->assertTrue($metadata_is->isOutdated());
   }
 
 }
