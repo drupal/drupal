@@ -70,7 +70,8 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
 
     $this->assertUrl($node->toUrl());
-    $this->assertNoLink(t('Revisions'));
+    // Verify revisions exist since the content type has revisions enabled.
+    $this->assertLink(t('Revisions'));
 
     // Verify the checkbox is checked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -81,6 +82,40 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
 
     $this->assertUrl($node->toUrl());
+    $this->assertLink(t('Revisions'));
+
+    // Unset page revision setting 'create new revision'. This will mean new
+    // revisions are not created by default when the node is edited.
+    $type = NodeType::load('page');
+    $type->setNewRevision(FALSE);
+    $type->save();
+
+    // Create the node.
+    $node = $this->drupalCreateNode();
+
+    // Verify the checkbox is unchecked on the node edit form.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertNoFieldChecked('edit-revision', "'Create new revision' checkbox is unchecked");
+    // Submit the form without changing the checkbox.
+    $edit = [];
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+
+    $this->assertUrl($node->toUrl());
+    // Verify that no link to revisions is displayed since the type
+    // has the 'create new revision' setting unset.
+    $this->assertNoLink(t('Revisions'));
+
+    // Verify the checkbox is unchecked on the node edit form.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertNoFieldChecked('edit-revision', "'Create new revision' checkbox is unchecked");
+
+    // Check the 'create new revision' checkbox and save the node.
+    $edit = ['revision' => TRUE];
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+
+    $this->assertUrl($node->toUrl());
+    // Verify that the link is displayed since a new revision is created and
+    // the 'create new revision' checkbox on the node is checked.
     $this->assertLink(t('Revisions'));
   }
 

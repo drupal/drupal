@@ -239,6 +239,17 @@ class NodeRevisionsTest extends NodeTestBase {
     $node->save();
 
     $this->drupalGet("node/" . $node->id() . "/revisions");
+    // Verify revisions is accessible since the type has revisions enabled.
+    $this->assertResponse(200);
+    // Check initial revision is shown on the node revisions overview page.
+    $this->assertText('Simple revision message (EN)');
+
+    // Verify that delete operation is inaccessible for the default revision.
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/delete");
+    $this->assertResponse(403);
+
+    // Verify that revert operation is inaccessible for the default revision.
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/revert");
     $this->assertResponse(403);
 
     // Create a new revision and new log message.
@@ -261,7 +272,10 @@ class NodeRevisionsTest extends NodeTestBase {
     $node->save();
 
     $this->drupalGet("node/" . $node->id() . "/revisions");
-    $this->assertResponse(403);
+    // Verify revisions is accessible since the type has revisions enabled.
+    $this->assertResponse(200);
+    // Check initial revision is shown on the node revisions overview page.
+    $this->assertText('Simple revision message (EN)');
 
     // Add a translation in 'DE' and create a new revision and new log message.
     $translation = $node->addTranslation('de');
