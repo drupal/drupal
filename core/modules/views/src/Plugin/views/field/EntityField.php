@@ -1052,6 +1052,12 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    */
   public function getValue(ResultRow $values, $field = NULL) {
     $entity = $this->getEntity($values);
+
+    // Ensure the object is not NULL before attempting to translate it.
+    if ($entity === NULL) {
+      return NULL;
+    }
+
     // Retrieve the translated object.
     $translated_entity = $this->getEntityFieldRenderer()->getEntityTranslation($entity, $values);
 
