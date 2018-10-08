@@ -17,7 +17,7 @@ class RendererLegacyTest extends KernelTestBase {
    *
    * @dataProvider providerAttributes
    *
-   * @expectedDeprecation drupal_http_header_attributes() is deprecated nn Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::formatHttpHeaderAttributes() instead. See https://www.drupal.org/node/3000051
+   * @expectedDeprecation drupal_http_header_attributes() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::formatHttpHeaderAttributes() instead. See https://www.drupal.org/node/3000051
    */
   public function testHeaderAttributes($expected, $attributes) {
     $this->assertSame($expected, drupal_http_header_attributes($attributes));

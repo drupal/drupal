@@ -365,7 +365,7 @@ function date_iso8601($date) {
  * @see https://www.drupal.org/node/3000051
  */
 function drupal_http_header_attributes(array $attributes = []) {
-  @trigger_error("drupal_http_header_attributes() is deprecated nn Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::formatHttpHeaderAttributes() instead. See https://www.drupal.org/node/3000051", E_USER_DEPRECATED);
+  @trigger_error("drupal_http_header_attributes() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::formatHttpHeaderAttributes() instead. See https://www.drupal.org/node/3000051", E_USER_DEPRECATED);
   return HtmlResponseAttachmentsProcessor::formatHttpHeaderAttributes($attributes);
 }
 
