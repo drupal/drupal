@@ -14,6 +14,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Render\HtmlResponseAttachmentsProcessor;
 use Drupal\Core\Render\Element\Link;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -350,21 +351,22 @@ function date_iso8601($date) {
 /**
  * Formats an attribute string for an HTTP header.
  *
- * @param $attributes
+ * @param array $attributes
  *   An associative array of attributes such as 'rel'.
  *
- * @return
+ * @return string
  *   A ; separated string ready for insertion in a HTTP header. No escaping is
  *   performed for HTML entities, so this string is not safe to be printed.
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::formatHttpHeaderAttributes()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3000051
  */
 function drupal_http_header_attributes(array $attributes = []) {
-  foreach ($attributes as $attribute => &$data) {
-    if (is_array($data)) {
-      $data = implode(' ', $data);
-    }
-    $data = $attribute . '="' . $data . '"';
-  }
-  return $attributes ? ' ' . implode('; ', $attributes) : '';
+  @trigger_error("drupal_http_header_attributes() is deprecated nn Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::formatHttpHeaderAttributes() instead. See https://www.drupal.org/node/3000051", E_USER_DEPRECATED);
+  return HtmlResponseAttachmentsProcessor::formatHttpHeaderAttributes($attributes);
 }
 
 /**

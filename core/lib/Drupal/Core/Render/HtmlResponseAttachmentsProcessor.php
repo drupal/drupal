@@ -219,6 +219,30 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   }
 
   /**
+   * Formats an attribute string for an HTTP header.
+   *
+   * @param array $attributes
+   *   An associative array of attributes such as 'rel'.
+   *
+   * @return string
+   *   A ; separated string ready for insertion in a HTTP header. No escaping is
+   *   performed for HTML entities, so this string is not safe to be printed.
+   *
+   * @internal
+   *
+   * @see https://www.drupal.org/node/3000051
+   */
+  public static function formatHttpHeaderAttributes(array $attributes = []) {
+    foreach ($attributes as $attribute => &$data) {
+      if (is_array($data)) {
+        $data = implode(' ', $data);
+      }
+      $data = $attribute . '="' . $data . '"';
+    }
+    return $attributes ? ' ' . implode('; ', $attributes) : '';
+  }
+
+  /**
    * Renders placeholders (#attached['placeholders']).
    *
    * First, the HTML response object is converted to an equivalent render array,
@@ -421,7 +445,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
         // Also add a HTTP header "Link:".
         $href = '<' . Html::escape($attributes['href']) . '>';
         unset($attributes['href']);
-        if ($param = drupal_http_header_attributes($attributes)) {
+        if ($param = static::formatHttpHeaderAttributes($attributes)) {
           $href .= ';' . $param;
         }
 
