@@ -7,7 +7,7 @@ hidden: true
 install:
   # Enable page_cache and dynamic_page_cache in testing, to ensure that as many
   # tests as possible run with them enabled.
-  - page_cache
+  - drupal:page_cache
   - dynamic_page_cache
 # @todo: Remove this in https://www.drupal.org/node/2352949
 themes:
