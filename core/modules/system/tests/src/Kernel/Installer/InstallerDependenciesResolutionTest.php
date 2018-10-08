@@ -5,11 +5,11 @@ namespace Drupal\Tests\system\Kernel\Installer;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests that we handle the absence of a module dependency during install.
+ * Tests that we handle module dependency resolution during install.
  *
  * @group Installer
  */
-class InstallerMissingDependenciesTest extends KernelTestBase {
+class InstallerDependenciesResolutionTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -19,7 +19,7 @@ class InstallerMissingDependenciesTest extends KernelTestBase {
   /**
    * Verifies that the exception message in the profile step is correct.
    */
-  public function testSetUpWithMissingDependencies() {
+  public function testDependenciesResolution() {
     // Prime the drupal_get_filename() static cache with the location of the
     // testing profile as it is not the currently active profile and we don't
     // yet have any cached way to retrieve its location.
@@ -32,8 +32,11 @@ class InstallerMissingDependenciesTest extends KernelTestBase {
     ]);
 
     $message = $info['required_modules']['description']->render();
+    $this->assertContains('Fictional', $message);
     $this->assertContains('Missing_module1', $message);
     $this->assertContains('Missing_module2', $message);
+    $this->assertNotContains('Block', $message);
+    $this->assertNotContains('Node', $message);
   }
 
 }

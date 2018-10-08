@@ -5,6 +5,9 @@ version: VERSION
 core: 8.x
 hidden: true
 install:
+  - block
+  - drupal:node
+  - drupal:fictional
   - missing_module1
   - missing_module2
 keep_english: true
