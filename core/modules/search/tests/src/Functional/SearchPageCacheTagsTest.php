@@ -115,7 +115,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'search_index:user_search');
 
     // User search results.
-    $edit['keys'] = $this->searchingUser->getUsername();
+    $edit['keys'] = $this->searchingUser->getAccountName();
     $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertCacheTag('config:search.page.user_search');
     $this->assertCacheTag('user_list');

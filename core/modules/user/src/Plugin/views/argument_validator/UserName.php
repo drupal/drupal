@@ -56,7 +56,7 @@ class UserName extends User {
 
     // Validate each account. If any fails break out and return false.
     foreach ($accounts as $account) {
-      if (!in_array($account->getUserName(), $names) || !$this->validateEntity($account)) {
+      if (!in_array($account->getAccountName(), $names) || !$this->validateEntity($account)) {
         return FALSE;
       }
     }

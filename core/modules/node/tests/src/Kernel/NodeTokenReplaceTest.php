@@ -69,9 +69,9 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     $tests['[node:langcode]'] = $node->language()->getId();
     $tests['[node:url]'] = $node->url('canonical', $url_options);
     $tests['[node:edit-url]'] = $node->url('edit-form', $url_options);
-    $tests['[node:author]'] = $account->getUsername();
+    $tests['[node:author]'] = $account->getAccountName();
     $tests['[node:author:uid]'] = $node->getOwnerId();
-    $tests['[node:author:name]'] = $account->getUsername();
+    $tests['[node:author:name]'] = $account->getAccountName();
     $tests['[node:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getCreatedTime(), ['langcode' => $this->interfaceLanguage->getId()]);
     $tests['[node:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime(), ['langcode' => $this->interfaceLanguage->getId()]);
 

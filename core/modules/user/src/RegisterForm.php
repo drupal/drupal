@@ -110,7 +110,7 @@ class RegisterForm extends AccountForm {
 
     // New administrative account without notification.
     if ($admin && !$notify) {
-      $this->messenger()->addStatus($this->t('Created a new user account for <a href=":url">%name</a>. No email has been sent.', [':url' => $account->url(), '%name' => $account->getUsername()]));
+      $this->messenger()->addStatus($this->t('Created a new user account for <a href=":url">%name</a>. No email has been sent.', [':url' => $account->url(), '%name' => $account->getAccountName()]));
     }
     // No email verification required; log in user immediately.
     elseif (!$admin && !\Drupal::config('user.settings')->get('verify_mail') && $account->isActive()) {
@@ -122,13 +122,13 @@ class RegisterForm extends AccountForm {
     // No administrator approval required.
     elseif ($account->isActive() || $notify) {
       if (!$account->getEmail() && $notify) {
-        $this->messenger()->addStatus($this->t('The new user <a href=":url">%name</a> was created without an email address, so no welcome message was sent.', [':url' => $account->url(), '%name' => $account->getUsername()]));
+        $this->messenger()->addStatus($this->t('The new user <a href=":url">%name</a> was created without an email address, so no welcome message was sent.', [':url' => $account->url(), '%name' => $account->getAccountName()]));
       }
       else {
         $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
         if (_user_mail_notify($op, $account)) {
           if ($notify) {
-            $this->messenger()->addStatus($this->t('A welcome message with further instructions has been emailed to the new user <a href=":url">%name</a>.', [':url' => $account->url(), '%name' => $account->getUsername()]));
+            $this->messenger()->addStatus($this->t('A welcome message with further instructions has been emailed to the new user <a href=":url">%name</a>.', [':url' => $account->url(), '%name' => $account->getAccountName()]));
           }
           else {
             $this->messenger()->addStatus($this->t('A welcome message with further instructions has been sent to your email address.'));

@@ -80,12 +80,12 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->assertEqual(count($this->drupalGetMails(['id' => 'user_password_reset'])), 0, 'No email was sent when requesting a password for an invalid account.');
 
     // Reset the password by username via the password reset page.
-    $edit['name'] = $this->account->getUsername();
+    $edit['name'] = $this->account->getAccountName();
     $this->drupalPostForm(NULL, $edit, t('Submit'));
 
     // Verify that the user was sent an email.
     $this->assertMail('to', $this->account->getEmail(), 'Password email sent to user.');
-    $subject = t('Replacement login information for @username at @site', ['@username' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name')]);
+    $subject = t('Replacement login information for @username at @site', ['@username' => $this->account->getAccountName(), '@site' => $this->config('system.site')->get('name')]);
     $this->assertMail('subject', $subject, 'Password reset email subject is correct.');
 
     $resetURL = $this->getResetURL();
@@ -100,14 +100,14 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'));
 
     // Check the one-time login page.
-    $this->assertText($this->account->getUsername(), 'One-time login page contains the correct username.');
+    $this->assertText($this->account->getAccountName(), 'One-time login page contains the correct username.');
     $this->assertText(t('This login can be used only once.'), 'Found warning about one-time login.');
     $this->assertTitle(t('Reset password | Drupal'), 'Page title is "Reset password".');
 
     // Check successful login.
     $this->drupalPostForm(NULL, NULL, t('Log in'));
     $this->assertLink(t('Log out'));
-    $this->assertTitle(t('@name | @site', ['@name' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name')]), 'Logged in using password reset link.');
+    $this->assertTitle(t('@name | @site', ['@name' => $this->account->getAccountName(), '@site' => $this->config('system.site')->get('name')]), 'Logged in using password reset link.');
 
     // Change the forgotten password.
     $password = user_password();
@@ -161,14 +161,14 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->drupalGet('user/password');
     // Count email messages before to compare with after.
     $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
-    $edit = ['name' => $blocked_account->getUsername()];
+    $edit = ['name' => $blocked_account->getAccountName()];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
-    $this->assertRaw(t('%name is blocked or has not been activated yet.', ['%name' => $blocked_account->getUsername()]), 'Notified user blocked accounts can not request a new password');
+    $this->assertRaw(t('%name is blocked or has not been activated yet.', ['%name' => $blocked_account->getAccountName()]), 'Notified user blocked accounts can not request a new password');
     $this->assertTrue(count($this->drupalGetMails(['id' => 'user_password_reset'])) === $before, 'No email was sent when requesting password reset for a blocked account');
 
     // Verify a password reset link is invalidated when the user's email address changes.
     $this->drupalGet('user/password');
-    $edit = ['name' => $this->account->getUsername()];
+    $edit = ['name' => $this->account->getAccountName()];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
     $old_email_reset_link = $this->getResetURL();
     $this->account->setEmail("1" . $this->account->getEmail());
@@ -180,12 +180,12 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // Verify a password reset link will automatically log a user when /login is
     // appended.
     $this->drupalGet('user/password');
-    $edit = ['name' => $this->account->getUsername()];
+    $edit = ['name' => $this->account->getAccountName()];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
     $reset_url = $this->getResetURL();
     $this->drupalGet($reset_url . '/login');
     $this->assertLink(t('Log out'));
-    $this->assertTitle(t('@name | @site', ['@name' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name')]), 'Logged in using password reset link.');
+    $this->assertTitle(t('@name | @site', ['@name' => $this->account->getAccountName(), '@site' => $this->config('system.site')->get('name')]), 'Logged in using password reset link.');
 
     // Ensure blocked and deleted accounts can't access the user.reset.login
     // route.
@@ -230,7 +230,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->drupalGet($resetURL);
     $this->assertRaw(new FormattableMarkup(
       'Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href=":logout">log out</a> and try using the link again.',
-      ['%other_user' => $this->account->getUsername(), '%resetting_user' => $another_account->getUsername(), ':logout' => Url::fromRoute('user.logout')->toString()]
+      ['%other_user' => $this->account->getAccountName(), '%resetting_user' => $another_account->getAccountName(), ':logout' => Url::fromRoute('user.logout')->toString()]
     ));
 
     $another_account->delete();
@@ -319,7 +319,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $attack_reset_url = str_replace("user/reset/{$user1->id()}", "user/reset/{$user2->id()}", $reset_url);
     $this->drupalGet($attack_reset_url);
     $this->drupalPostForm(NULL, NULL, t('Log in'));
-    $this->assertNoText($user2->getUsername(), 'The invalid password reset page does not show the user name.');
+    $this->assertNoText($user2->getAccountName(), 'The invalid password reset page does not show the user name.');
     $this->assertUrl('user/password', [], 'The user is redirected to the password reset request page.');
     $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
   }

@@ -409,7 +409,7 @@ function user_user_view_alter(array &$build, UserInterface $account, EntityViewD
     foreach (Element::children($build['user_picture']) as $key) {
       $item = $build['user_picture'][$key]['#item'];
       if (!$item->get('alt')->getValue()) {
-        $item->get('alt')->setValue(\Drupal::translation()->translate('Profile picture for user @username', ['@username' => $account->getUsername()]));
+        $item->get('alt')->setValue(\Drupal::translation()->translate('Profile picture for user @username', ['@username' => $account->getAccountName()]));
       }
     }
   }
@@ -492,7 +492,7 @@ function template_preprocess_username(&$variables) {
   // their own shortening logic or add markup. If they do so, they must ensure
   // that $variables['name'] is safe for printing.
   $name = $account->getDisplayName();
-  $variables['name_raw'] = $account->getUsername();
+  $variables['name_raw'] = $account->getAccountName();
   if (mb_strlen($name) > 20) {
     $name = Unicode::truncate($name, 15, FALSE, TRUE);
     $variables['truncated'] = TRUE;
@@ -549,7 +549,7 @@ function template_preprocess_username(&$variables) {
  */
 function user_login_finalize(UserInterface $account) {
   \Drupal::currentUser()->setAccount($account);
-  \Drupal::logger('user')->notice('Session opened for %name.', ['%name' => $account->getUsername()]);
+  \Drupal::logger('user')->notice('Session opened for %name.', ['%name' => $account->getAccountName()]);
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
   $account->setLastLoginTime(REQUEST_TIME);
@@ -1281,7 +1281,7 @@ function user_form_process_password_confirm($element) {
       'fair' => t('Fair'),
       'good' => t('Good'),
       'strong' => t('Strong'),
-      'username' => \Drupal::currentUser()->getUsername(),
+      'username' => \Drupal::currentUser()->getAccountName(),
     ];
   }
 

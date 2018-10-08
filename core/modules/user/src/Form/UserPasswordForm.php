@@ -139,7 +139,7 @@ class UserPasswordForm extends FormBase {
     // Mail one time login URL and instructions using current language.
     $mail = _user_mail_notify('password_reset', $account, $langcode);
     if (!empty($mail)) {
-      $this->logger('user')->notice('Password reset instructions mailed to %name at %email.', ['%name' => $account->getUsername(), '%email' => $account->getEmail()]);
+      $this->logger('user')->notice('Password reset instructions mailed to %name at %email.', ['%name' => $account->getAccountName(), '%email' => $account->getEmail()]);
       $this->messenger()->addStatus($this->t('Further instructions have been sent to your email address.'));
     }
 

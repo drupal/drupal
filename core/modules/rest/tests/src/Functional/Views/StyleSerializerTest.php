@@ -84,7 +84,7 @@ class StyleSerializerTest extends ViewTestBase {
     // to see the page.
     $url = $this->buildUrl('test/serialize/auth_with_perm');
     $response = \Drupal::httpClient()->get($url, [
-      'auth' => [$this->adminUser->getUsername(), $this->adminUser->pass_raw],
+      'auth' => [$this->adminUser->getAccountName(), $this->adminUser->pass_raw],
       'query' => [
         '_format' => 'json',
       ],

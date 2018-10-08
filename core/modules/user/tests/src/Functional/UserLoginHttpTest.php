@@ -119,7 +119,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     // Grant the user administer users permissions to they can see the
     // 'roles' field.
     $account = $this->drupalCreateUser(['administer users']);
-    $name = $account->getUsername();
+    $name = $account->getAccountName();
     $pass = $account->passRaw;
 
     $login_status_url = $this->getLoginStatusUrlString($format);
@@ -295,12 +295,12 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     // Try 2 failed logins.
     for ($i = 0; $i < 2; $i++) {
-      $response = $this->loginRequest($incorrect_user->getUsername(), $incorrect_user->passRaw);
+      $response = $this->loginRequest($incorrect_user->getAccountName(), $incorrect_user->passRaw);
       $this->assertEquals('400', $response->getStatusCode());
     }
 
     // IP limit has reached to its limit. Even valid user credentials will fail.
-    $response = $this->loginRequest($user->getUsername(), $user->passRaw);
+    $response = $this->loginRequest($user->getAccountName(), $user->passRaw);
     $this->assertHttpResponseWithMessage($response, '403', 'Access is blocked because of IP based flood prevention.');
   }
 
@@ -359,18 +359,18 @@ class UserLoginHttpTest extends BrowserTestBase {
 
       // Try 2 failed logins.
       for ($i = 0; $i < 2; $i++) {
-        $response = $this->loginRequest($incorrect_user1->getUsername(), $incorrect_user1->passRaw);
+        $response = $this->loginRequest($incorrect_user1->getAccountName(), $incorrect_user1->passRaw);
         $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.');
       }
 
       // A successful login will reset the per-user flood control count.
-      $response = $this->loginRequest($user1->getUsername(), $user1->passRaw);
+      $response = $this->loginRequest($user1->getAccountName(), $user1->passRaw);
       $result_data = $this->serializer->decode($response->getBody(), 'json');
       $this->logoutRequest('json', $result_data['logout_token']);
 
       // Try 3 failed logins for user 1, they will not trigger flood control.
       for ($i = 0; $i < 3; $i++) {
-        $response = $this->loginRequest($incorrect_user1->getUsername(), $incorrect_user1->passRaw);
+        $response = $this->loginRequest($incorrect_user1->getAccountName(), $incorrect_user1->passRaw);
         $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.');
       }
 
@@ -381,7 +381,7 @@ class UserLoginHttpTest extends BrowserTestBase {
 
       // Try one more attempt for user 1, it should be rejected, even if the
       // correct password has been used.
-      $response = $this->loginRequest($user1->getUsername(), $user1->passRaw);
+      $response = $this->loginRequest($user1->getAccountName(), $user1->passRaw);
       // Depending on the uid_only setting the error message will be different.
       if ($uid_only_setting) {
         $excepted_message = 'There have been more than 3 failed login attempts for this account. It is temporarily blocked. Try again later or request a new password.';
@@ -433,7 +433,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     $client = \Drupal::httpClient();
     $login_status_url = $this->getLoginStatusUrlString();
     $account = $this->drupalCreateUser();
-    $name = $account->getUsername();
+    $name = $account->getAccountName();
     $pass = $account->passRaw;
 
     $response = $this->loginRequest($name, $pass);

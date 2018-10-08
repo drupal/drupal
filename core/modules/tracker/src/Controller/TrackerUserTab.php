@@ -22,7 +22,7 @@ class TrackerUserTab extends ControllerBase {
    * Title callback for the tracker.user_tab route.
    */
   public function getTitle(UserInterface $user) {
-    return $user->getUsername();
+    return $user->getAccountName();
   }
 
 }

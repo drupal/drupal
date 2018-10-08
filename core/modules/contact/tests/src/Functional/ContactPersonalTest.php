@@ -65,7 +65,7 @@ class ContactPersonalTest extends BrowserTestBase {
    */
   public function testSendPersonalContactMessage() {
     // Ensure that the web user's email needs escaping.
-    $mail = $this->webUser->getUsername() . '&escaped@example.com';
+    $mail = $this->webUser->getAccountName() . '&escaped@example.com';
     $this->webUser->setEmail($mail)->save();
     $this->drupalLogin($this->webUser);
 
@@ -98,7 +98,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $placeholders = [
       '@sender_name' => $this->webUser->username,
       '@sender_email' => $this->webUser->getEmail(),
-      '@recipient_name' => $this->contactUser->getUsername(),
+      '@recipient_name' => $this->contactUser->getAccountName(),
     ];
     $this->assertRaw(new FormattableMarkup('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
     // Ensure an unescaped version of the email does not exist anywhere.

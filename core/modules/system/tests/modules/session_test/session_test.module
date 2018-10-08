@@ -11,7 +11,7 @@ use Drupal\user\UserInterface;
  * Implements hook_user_login().
  */
 function session_test_user_login(UserInterface $account) {
-  if ($account->getUsername() == 'session_test_user') {
+  if ($account->getAccountName() == 'session_test_user') {
     // Exit so we can verify that the session was regenerated
     // before hook_user_login() was called.
     exit;

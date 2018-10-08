@@ -85,7 +85,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
     $this->drupalGet('user/password');
 
     // Reset the password by username via the password reset page.
-    $edit['name'] = $this->account->getUsername();
+    $edit['name'] = $this->account->getAccountName();
     $this->drupalPostForm(NULL, $edit, t('Submit'));
 
     $resetURL = $this->getResetURL();

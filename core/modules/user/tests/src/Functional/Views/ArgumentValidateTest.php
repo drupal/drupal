@@ -64,7 +64,7 @@ class ArgumentValidateTest extends UserTestBase {
     $view = Views::getView('test_view_argument_validate_username');
     $this->executeView($view);
 
-    $this->assertTrue($view->argument['null']->validateArgument($account->getUsername()));
+    $this->assertTrue($view->argument['null']->validateArgument($account->getAccountName()));
     // Reset argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a valid string, but for a user that doesn't exist

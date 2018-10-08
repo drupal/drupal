@@ -91,7 +91,7 @@ EOF;
   public function testCookies() {
     // Check that the $this->cookies property is populated when a user logs in.
     $user = $this->drupalCreateUser();
-    $edit = ['name' => $user->getUsername(), 'pass' => $user->pass_raw];
+    $edit = ['name' => $user->getAccountName(), 'pass' => $user->pass_raw];
     $this->drupalPostForm('<front>', $edit, t('Log in'));
     $this->assertEqual(count($this->cookies), 1, 'A cookie is set when the user logs in.');
 

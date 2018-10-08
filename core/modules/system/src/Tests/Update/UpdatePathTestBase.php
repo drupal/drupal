@@ -345,7 +345,7 @@ abstract class UpdatePathTestBase extends WebTestBase {
     $account = User::load(1);
     $account->setPassword($this->rootUser->pass_raw);
     $account->setEmail($this->rootUser->getEmail());
-    $account->setUsername($this->rootUser->getUsername());
+    $account->setUsername($this->rootUser->getAccountName());
     $account->save();
   }
 

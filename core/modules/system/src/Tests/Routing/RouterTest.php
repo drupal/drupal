@@ -263,11 +263,11 @@ class RouterTest extends WebTestBase {
     $second_account = $this->drupalCreateUser();
 
     $this->drupalGet('router_test/test12/' . $second_account->id());
-    $this->assertText($account->getUsername() . ':' . $second_account->getUsername());
+    $this->assertText($account->getAccountName() . ':' . $second_account->getAccountName());
     $this->assertEqual($account->id(), $this->loggedInUser->id(), 'Ensure that the user was not changed.');
 
     $this->drupalGet('router_test/test13/' . $second_account->id());
-    $this->assertText($account->getUsername() . ':' . $second_account->getUsername());
+    $this->assertText($account->getAccountName() . ':' . $second_account->getAccountName());
     $this->assertEqual($account->id(), $this->loggedInUser->id(), 'Ensure that the user was not changed.');
   }
 

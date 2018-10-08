@@ -117,7 +117,7 @@ class SessionHttpsTest extends WebTestBase {
     // creates a mock HTTP request on HTTPS test environments.
     $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpUrl('user/login');
-    $edit = ['name' => $account->getUsername(), 'pass' => $account->pass_raw];
+    $edit = ['name' => $account->getAccountName(), 'pass' => $account->pass_raw];
 
     // When posting directly to the HTTP or HTTPS mock front controller, the
     // location header on the returned response is an absolute URL. That URL
@@ -148,7 +148,7 @@ class SessionHttpsTest extends WebTestBase {
     // creates a mock HTTPS request on HTTP test environments.
     $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpsUrl('user/login');
-    $edit = ['name' => $account->getUsername(), 'pass' => $account->pass_raw];
+    $edit = ['name' => $account->getAccountName(), 'pass' => $account->pass_raw];
 
     // When posting directly to the HTTP or HTTPS mock front controller, the
     // location header on the returned response is an absolute URL. That URL

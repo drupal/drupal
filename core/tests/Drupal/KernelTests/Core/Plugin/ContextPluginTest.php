@@ -72,7 +72,7 @@ class ContextPluginTest extends KernelTestBase {
     $user = User::create(['name' => $name]);
     $plugin->setContextValue('user', $user);
 
-    $this->assertEqual($plugin->getContextValue('user')->getUsername(), $user->getUsername());
+    $this->assertEqual($plugin->getContextValue('user')->getAccountName(), $user->getAccountName());
     $this->assertEqual($user->label(), $plugin->getTitle());
 
     // Test Optional context handling.

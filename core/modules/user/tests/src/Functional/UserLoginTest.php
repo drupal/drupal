@@ -23,7 +23,7 @@ class UserLoginTest extends BrowserTestBase {
 
     $user = $this->drupalCreateUser([]);
     $this->drupalGet('user/login', ['query' => ['destination' => 'foo']]);
-    $edit = ['name' => $user->getUserName(), 'pass' => $user->passRaw];
+    $edit = ['name' => $user->getAccountName(), 'pass' => $user->passRaw];
     $this->drupalPostForm(NULL, $edit, t('Log in'));
     $this->assertUrl('foo', [], 'Redirected to the correct URL');
   }
@@ -156,7 +156,7 @@ class UserLoginTest extends BrowserTestBase {
    */
   public function assertFailedLogin($account, $flood_trigger = NULL) {
     $edit = [
-      'name' => $account->getUsername(),
+      'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
     ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));

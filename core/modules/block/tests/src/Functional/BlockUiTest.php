@@ -209,7 +209,7 @@ class BlockUiTest extends BrowserTestBase {
    * Tests the behavior of context-aware blocks.
    */
   public function testContextAwareBlocks() {
-    $expected_text = '<div id="test_context_aware--username">' . \Drupal::currentUser()->getUsername() . '</div>';
+    $expected_text = '<div id="test_context_aware--username">' . \Drupal::currentUser()->getAccountName() . '</div>';
     $this->drupalGet('');
     $this->assertNoText('Test context-aware block');
     $this->assertNoRaw($expected_text);

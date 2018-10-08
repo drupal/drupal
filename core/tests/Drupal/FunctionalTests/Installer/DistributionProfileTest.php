@@ -69,7 +69,7 @@ class DistributionProfileTest extends InstallerTestBase {
     $this->assertUrl('myrootuser');
     $this->assertResponse(200);
     // Confirm that we are logged-in after installation.
-    $this->assertText($this->rootUser->getUsername());
+    $this->assertText($this->rootUser->getAccountName());
 
     // Confirm that Drupal recognizes this distribution as the current profile.
     $this->assertEqual(\Drupal::installProfile(), 'mydistro');

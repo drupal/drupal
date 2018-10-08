@@ -123,8 +123,8 @@ class UserController extends ControllerBase {
           $this->messenger()
             ->addWarning($this->t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href=":logout">log out</a> and try using the link again.',
               [
-                '%other_user' => $account->getUsername(),
-                '%resetting_user' => $reset_link_user->getUsername(),
+                '%other_user' => $account->getAccountName(),
+                '%resetting_user' => $reset_link_user->getAccountName(),
                 ':logout' => $this->url('user.logout'),
               ]));
         }

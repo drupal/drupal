@@ -137,7 +137,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
         'text' => $this->searchNode->label(),
       ],
       'user_search' => [
-        'keys' => $this->searchUser->getUsername(),
+        'keys' => $this->searchUser->getAccountName(),
         'text' => $this->searchUser->getEmail(),
       ],
       'dummy_search_type' => [

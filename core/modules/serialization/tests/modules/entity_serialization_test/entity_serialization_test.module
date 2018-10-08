@@ -17,7 +17,7 @@ use Drupal\Core\Access\AccessResult;
 function entity_serialization_test_entity_field_access_alter(array &$grants, array $context) {
   // Override default access control from UserAccessControlHandler to allow
   // access to 'pass' field for the test user.
-  if ($context['field_definition']->getName() == 'pass' && $context['account']->getUsername() == 'serialization_test_user') {
+  if ($context['field_definition']->getName() == 'pass' && $context['account']->getAccountName() == 'serialization_test_user') {
     $grants[':default'] = AccessResult::allowed()->inheritCacheability($grants[':default'])->addCacheableDependency($context['items']->getEntity());
   }
 }

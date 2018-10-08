@@ -94,7 +94,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     // Log in user and verify that maintenance mode message is displayed
     // directly after login.
     $edit = [
-      'name' => $this->user->getUsername(),
+      'name' => $this->user->getAccountName(),
       'pass' => $this->user->pass_raw,
     ];
     $this->drupalPostForm(NULL, $edit, t('Log in'));
@@ -124,7 +124,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
 
     // Submit password reset form.
     $edit = [
-      'name' => $this->user->getUsername(),
+      'name' => $this->user->getAccountName(),
     ];
     $this->drupalPostForm('user/password', $edit, t('Submit'));
     $mails = $this->drupalGetMails();

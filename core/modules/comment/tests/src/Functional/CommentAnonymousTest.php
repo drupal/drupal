@@ -67,12 +67,12 @@ class CommentAnonymousTest extends CommentTestBase {
 
     // Ensure anonymous users cannot post in the name of registered users.
     $edit = [
-      'name' => $this->adminUser->getUsername(),
+      'name' => $this->adminUser->getAccountName(),
       'comment_body[0][value]' => $this->randomMachineName(),
     ];
     $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', $edit, t('Save'));
     $this->assertRaw(t('The name you used (%name) belongs to a registered user.', [
-      '%name' => $this->adminUser->getUsername(),
+      '%name' => $this->adminUser->getAccountName(),
     ]));
 
     // Allow contact info.
@@ -98,14 +98,14 @@ class CommentAnonymousTest extends CommentTestBase {
 
     // Ensure anonymous users cannot post in the name of registered users.
     $edit = [
-      'name' => $this->adminUser->getUsername(),
+      'name' => $this->adminUser->getAccountName(),
       'mail' => $this->randomMachineName() . '@example.com',
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(),
     ];
     $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', $edit, t('Save'));
     $this->assertRaw(t('The name you used (%name) belongs to a registered user.', [
-      '%name' => $this->adminUser->getUsername(),
+      '%name' => $this->adminUser->getAccountName(),
     ]));
 
     // Require contact info.

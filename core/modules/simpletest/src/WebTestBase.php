@@ -285,7 +285,7 @@ abstract class WebTestBase extends TestBase {
     }
 
     $edit = [
-      'name' => $account->getUsername(),
+      'name' => $account->getAccountName(),
       'pass' => $account->pass_raw,
     ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
@@ -294,7 +294,7 @@ abstract class WebTestBase extends TestBase {
     if (isset($this->sessionId)) {
       $account->session_id = $this->sessionId;
     }
-    $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', ['%name' => $account->getUsername()]), 'User login');
+    $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', ['%name' => $account->getAccountName()]), 'User login');
     if ($pass) {
       $this->loggedInUser = $account;
       $this->container->get('current_user')->setAccount($account);

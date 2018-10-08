@@ -212,12 +212,12 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
         $this->assertTrue($may_view, new FormattableMarkup('User @user can view field @field on comment @comment', [
-          '@user' => $set['user']->getUsername(),
+          '@user' => $set['user']->getAccountName(),
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
         ]));
         $this->assertEqual($may_update, $set['user']->hasPermission('administer comments'), new FormattableMarkup('User @user @state update field @field on comment @comment', [
-          '@user' => $set['user']->getUsername(),
+          '@user' => $set['user']->getAccountName(),
           '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
@@ -229,7 +229,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     foreach ($permutations as $set) {
       $may_update = $set['comment']->access('update', $set['user']) && $set['comment']->subject->access('edit', $set['user']);
       $this->assertEqual($may_update, $set['user']->hasPermission('administer comments') || ($set['user']->hasPermission('edit own comments') && $set['user']->id() == $set['comment']->getOwnerId()), new FormattableMarkup('User @user @state update field subject on comment @comment', [
-        '@user' => $set['user']->getUsername(),
+        '@user' => $set['user']->getAccountName(),
         '@state' => $may_update ? 'can' : 'cannot',
         '@comment' => $set['comment']->getSubject(),
       ]));
@@ -251,13 +251,13 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
           $state = 'can';
         }
         $this->assertEqual($may_view, $view_access, new FormattableMarkup('User @user @state view field @field on comment @comment', [
-          '@user' => $set['user']->getUsername(),
+          '@user' => $set['user']->getAccountName(),
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
           '@state' => $state,
         ]));
         $this->assertFalse($may_update, new FormattableMarkup('User @user @state update field @field on comment @comment', [
-          '@user' => $set['user']->getUsername(),
+          '@user' => $set['user']->getAccountName(),
           '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
@@ -272,12 +272,12 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
         $this->assertEqual($may_view, TRUE, new FormattableMarkup('User @user can view field @field on comment @comment', [
-          '@user' => $set['user']->getUsername(),
+          '@user' => $set['user']->getAccountName(),
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
         ]));
         $this->assertEqual($may_update, $set['user']->hasPermission('post comments') && $set['comment']->isNew(), new FormattableMarkup('User @user @state update field @field on comment @comment', [
-          '@user' => $set['user']->getUsername(),
+          '@user' => $set['user']->getAccountName(),
           '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
@@ -299,7 +299,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
             $set['user']->hasPermission('post comments') &&
             $set['comment']->getFieldName() == 'comment_other'
           ), new FormattableMarkup('User @user @state update field @field on comment @comment', [
-          '@user' => $set['user']->getUsername(),
+          '@user' => $set['user']->getAccountName(),
           '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,

@@ -22,7 +22,7 @@ class FormTestController extends ControllerBase {
     $user = $this->currentUser();
     $values = [
       'uid' => $user->id(),
-      'name' => $user->getUsername(),
+      'name' => $user->getAccountName(),
       'type' => 'page',
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ];

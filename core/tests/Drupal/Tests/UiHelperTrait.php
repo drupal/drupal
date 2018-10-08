@@ -258,7 +258,7 @@ trait UiHelperTrait {
 
     $this->drupalGet('user/login');
     $this->submitForm([
-      'name' => $account->getUsername(),
+      'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
     ], t('Log in'));
 

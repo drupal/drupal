@@ -65,7 +65,7 @@ class CommentNameConstraintValidator extends ConstraintValidator implements Cont
     // If an author name and owner are given, make sure they match.
     elseif (isset($author_name) && $author_name !== '' && $owner_id) {
       $owner = $this->userStorage->load($owner_id);
-      if ($owner->getUsername() != $author_name) {
+      if ($owner->getAccountName() != $author_name) {
         $this->context->buildViolation($constraint->messageMatch)
           ->atPath('name')
           ->addViolation();

@@ -53,8 +53,8 @@ class DatabaseTestForm extends FormBase {
 
     foreach (User::loadMultiple($uids) as $account) {
       $options[$account->id()] = [
-        'title' => ['data' => ['#title' => $account->getUsername()]],
-        'username' => $account->getUsername(),
+        'title' => ['data' => ['#title' => $account->getAccountName()]],
+        'username' => $account->getAccountName(),
         'status' => $account->isActive() ? t('active') : t('blocked'),
       ];
     }

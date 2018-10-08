@@ -197,7 +197,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         'promote' => (bool) mt_rand(0, 1),
       ];
       $edit = [
-        'uid[0][target_id]' => $user->getUsername(),
+        'uid[0][target_id]' => $user->getAccountName(),
         'created[0][value][date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'created[0][value][time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
         'sticky[value]' => $values[$langcode]['sticky'],

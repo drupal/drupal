@@ -22,7 +22,7 @@ class UserEditTest extends BrowserTestBase {
     $this->drupalLogin($user1);
 
     // Test that error message appears when attempting to use a non-unique user name.
-    $edit['name'] = $user2->getUsername();
+    $edit['name'] = $user2->getAccountName();
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
     $this->assertRaw(t('The username %name is already taken.', ['%name' => $edit['name']]));
 

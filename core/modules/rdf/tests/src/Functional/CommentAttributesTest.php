@@ -154,7 +154,7 @@ class CommentAttributesTest extends CommentTestBase {
     // Ensure that the author link still works properly after the author output
     // is modified by the RDF module.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertLink($this->webUser->getUsername());
+    $this->assertLink($this->webUser->getAccountName());
     $this->assertLinkByHref('user/' . $this->webUser->id());
   }
 
@@ -320,7 +320,7 @@ class CommentAttributesTest extends CommentTestBase {
     }
 
     // Author name.
-    $name = empty($account["name"]) ? $this->webUser->getUsername() : $account["name"] . " (not verified)";
+    $name = empty($account["name"]) ? $this->webUser->getAccountName() : $account["name"] . " (not verified)";
     $expected_value = [
       'type' => 'literal',
       'value' => $name,

@@ -316,17 +316,17 @@ class BreadcrumbTest extends BrowserTestBase {
     // Verify breadcrumb on user pages (without menu link) for anonymous user.
     $trail = $home;
     $this->assertBreadcrumb('user', $trail, t('Log in'));
-    $this->assertBreadcrumb('user/' . $this->adminUser->id(), $trail, $this->adminUser->getUsername());
+    $this->assertBreadcrumb('user/' . $this->adminUser->id(), $trail, $this->adminUser->getAccountName());
 
     // Verify breadcrumb on user pages (without menu link) for registered users.
     $this->drupalLogin($this->adminUser);
     $trail = $home;
-    $this->assertBreadcrumb('user', $trail, $this->adminUser->getUsername());
-    $this->assertBreadcrumb('user/' . $this->adminUser->id(), $trail, $this->adminUser->getUsername());
+    $this->assertBreadcrumb('user', $trail, $this->adminUser->getAccountName());
+    $this->assertBreadcrumb('user/' . $this->adminUser->id(), $trail, $this->adminUser->getAccountName());
     $trail += [
-      'user/' . $this->adminUser->id() => $this->adminUser->getUsername(),
+      'user/' . $this->adminUser->id() => $this->adminUser->getAccountName(),
     ];
-    $this->assertBreadcrumb('user/' . $this->adminUser->id() . '/edit', $trail, $this->adminUser->getUsername());
+    $this->assertBreadcrumb('user/' . $this->adminUser->id() . '/edit', $trail, $this->adminUser->getAccountName());
 
     // Create a second user to verify breadcrumb on user pages again.
     $this->webUser = $this->drupalCreateUser([
@@ -337,19 +337,19 @@ class BreadcrumbTest extends BrowserTestBase {
 
     // Verify correct breadcrumb and page title on another user's account pages.
     $trail = $home;
-    $this->assertBreadcrumb('user/' . $this->adminUser->id(), $trail, $this->adminUser->getUsername());
+    $this->assertBreadcrumb('user/' . $this->adminUser->id(), $trail, $this->adminUser->getAccountName());
     $trail += [
-      'user/' . $this->adminUser->id() => $this->adminUser->getUsername(),
+      'user/' . $this->adminUser->id() => $this->adminUser->getAccountName(),
     ];
-    $this->assertBreadcrumb('user/' . $this->adminUser->id() . '/edit', $trail, $this->adminUser->getUsername());
+    $this->assertBreadcrumb('user/' . $this->adminUser->id() . '/edit', $trail, $this->adminUser->getAccountName());
 
     // Verify correct breadcrumb and page title when viewing own user account.
     $trail = $home;
-    $this->assertBreadcrumb('user/' . $this->webUser->id(), $trail, $this->webUser->getUsername());
+    $this->assertBreadcrumb('user/' . $this->webUser->id(), $trail, $this->webUser->getAccountName());
     $trail += [
-      'user/' . $this->webUser->id() => $this->webUser->getUsername(),
+      'user/' . $this->webUser->id() => $this->webUser->getAccountName(),
     ];
-    $this->assertBreadcrumb('user/' . $this->webUser->id() . '/edit', $trail, $this->webUser->getUsername());
+    $this->assertBreadcrumb('user/' . $this->webUser->id() . '/edit', $trail, $this->webUser->getAccountName());
 
     // Create an only slightly privileged user being able to access site reports
     // but not administration pages.

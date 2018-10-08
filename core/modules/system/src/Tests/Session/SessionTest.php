@@ -56,12 +56,12 @@ class SessionTest extends WebTestBase {
     // We cannot use $this->drupalLogin($user); because we exit in
     // session_test_user_login() which breaks a normal assertion.
     $edit = [
-      'name' => $user->getUsername(),
+      'name' => $user->getAccountName(),
       'pass' => $user->pass_raw,
     ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
     $this->drupalGet('user');
-    $pass = $this->assertText($user->getUsername(), format_string('Found name: %name', ['%name' => $user->getUsername()]), 'User login');
+    $pass = $this->assertText($user->getAccountName(), format_string('Found name: %name', ['%name' => $user->getAccountName()]), 'User login');
     $this->_logged_in = $pass;
 
     $this->drupalGet('session-test/id');

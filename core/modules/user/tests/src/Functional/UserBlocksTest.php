@@ -69,7 +69,7 @@ class UserBlocksTest extends BrowserTestBase {
 
     // Log in using the block.
     $edit = [];
-    $edit['name'] = $user->getUsername();
+    $edit['name'] = $user->getAccountName();
     $edit['pass'] = $user->passRaw;
     $this->drupalPostForm('admin/people/permissions', $edit, t('Log in'));
     $this->assertNoText(t('User login'), 'Logged in.');

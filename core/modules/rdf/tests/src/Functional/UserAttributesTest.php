@@ -73,7 +73,7 @@ class UserAttributesTest extends BrowserTestBase {
       // User name.
       $expected_value = [
         'type' => 'literal',
-        'value' => $author->getUsername(),
+        'value' => $author->getAccountName(),
       ];
       $this->assertTrue($graph->hasProperty($account_uri, 'http://xmlns.com/foaf/0.1/name', $expected_value), 'User name found in RDF output (foaf:name).');
 
@@ -98,7 +98,7 @@ class UserAttributesTest extends BrowserTestBase {
       // User name.
       $expected_value = [
         'type' => 'literal',
-        'value' => $author->getUsername(),
+        'value' => $author->getAccountName(),
       ];
       $this->assertTrue($graph->hasProperty($account_uri, 'http://xmlns.com/foaf/0.1/name', $expected_value), 'User name found in RDF output (foaf:name).');
 

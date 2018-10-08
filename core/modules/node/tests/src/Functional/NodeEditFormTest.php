@@ -273,7 +273,7 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Change the authored by field to another user's name (that is not
     // logged in).
-    $edit[$form_element_name] = $this->webUser->getUsername();
+    $edit[$form_element_name] = $this->webUser->getAccountName();
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());

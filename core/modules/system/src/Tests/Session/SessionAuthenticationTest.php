@@ -55,7 +55,7 @@ class SessionAuthenticationTest extends WebTestBase {
     $this->assertResponse(401, 'An anonymous user cannot access a route protected with basic authentication.');
 
     // We should be able to access the route with basic authentication.
-    $this->basicAuthGet($protected_url, $this->user->getUsername(), $this->user->pass_raw);
+    $this->basicAuthGet($protected_url, $this->user->getAccountName(), $this->user->pass_raw);
     $this->assertResponse(200, 'A route protected with basic authentication can be accessed by an authenticated user.');
 
     // Check that the correct user is logged in.
@@ -79,12 +79,12 @@ class SessionAuthenticationTest extends WebTestBase {
   public function testBasicAuthSession() {
     // Set a session value on a request through basic auth.
     $test_value = 'alpaca';
-    $response = $this->basicAuthGet('session-test/set-session/' . $test_value, $this->user->getUsername(), $this->user->pass_raw);
+    $response = $this->basicAuthGet('session-test/set-session/' . $test_value, $this->user->getAccountName(), $this->user->pass_raw);
     $this->assertSessionData($response, $test_value);
     $this->assertResponse(200, 'The request to set a session value was successful.');
 
     // Test that on a subsequent request the session value is still present.
-    $response = $this->basicAuthGet('session-test/get-session', $this->user->getUsername(), $this->user->pass_raw);
+    $response = $this->basicAuthGet('session-test/get-session', $this->user->getAccountName(), $this->user->pass_raw);
     $this->assertSessionData($response, $test_value);
     $this->assertResponse(200, 'The request to get a session value was successful.');
   }
@@ -118,12 +118,12 @@ class SessionAuthenticationTest extends WebTestBase {
     // If we authenticate with a third party authentication system then no
     // session cookie should be set, the third party system is responsible for
     // sustaining the session.
-    $this->basicAuthGet($no_cookie_url, $this->user->getUsername(), $this->user->pass_raw);
+    $this->basicAuthGet($no_cookie_url, $this->user->getAccountName(), $this->user->pass_raw);
     $this->assertResponse(200, 'The user is successfully authenticated using basic authentication.');
     $this->assertFalse($this->drupalGetHeader('set-cookie', TRUE), 'No cookie is set on a route protected with basic authentication.');
 
     // On the other hand, authenticating using Cookie sets a cookie.
-    $edit = ['name' => $this->user->getUsername(), 'pass' => $this->user->pass_raw];
+    $edit = ['name' => $this->user->getAccountName(), 'pass' => $this->user->pass_raw];
     $this->drupalPostForm($cookie_url, $edit, t('Log in'));
     $this->assertResponse(200, 'The user is successfully authenticated using cookie authentication.');
     $this->assertTrue($this->drupalGetHeader('set-cookie', TRUE), 'A cookie is set on a route protected with cookie authentication.');

@@ -108,7 +108,7 @@ class UserPictureTest extends BrowserTestBase {
     $image_style_id = $this->config('core.entity_view_display.user.user.compact')->get('content.user_picture.settings.image_style');
     $style = ImageStyle::load($image_style_id);
     $image_url = file_url_transform_relative($style->buildUrl($file->getfileUri()));
-    $alt_text = 'Profile picture for user ' . $this->webUser->getUsername();
+    $alt_text = 'Profile picture for user ' . $this->webUser->getAccountName();
 
     // Verify that the image is displayed on the node page.
     $this->drupalGet('node/' . $node->id());

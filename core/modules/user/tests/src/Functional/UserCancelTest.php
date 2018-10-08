@@ -84,7 +84,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->drupalPostForm('user_form_test_cancel/' . $account->id(), [], t('Cancel account'));
 
     // Confirm deletion.
-    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getUsername()]), 'User deleted.');
+    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]), 'User deleted.');
     $this->assertFalse(User::load($account->id()), 'User is not found in the database.');
   }
 
@@ -198,7 +198,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertTrue($account->isBlocked(), 'User has been blocked.');
 
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been disabled.', ['%name' => $account->getUsername()]), "Confirmation message displayed to user.");
+    $this->assertRaw(t('%name has been disabled.', ['%name' => $account->getAccountName()]), "Confirmation message displayed to user.");
   }
 
   /**
@@ -255,7 +255,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertSession()->addressEquals('');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been disabled.', ['%name' => $account->getUsername()]), "Confirmation message displayed to user.");
+    $this->assertRaw(t('%name has been disabled.', ['%name' => $account->getAccountName()]), "Confirmation message displayed to user.");
 
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
@@ -352,7 +352,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertEqual($test_comment->getAuthorName(), $anonymous_user->getDisplayName(), 'Comment of the user has been attributed to anonymous user name.');
 
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getUsername()]), "Confirmation message displayed to user.");
+    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]), "Confirmation message displayed to user.");
   }
 
   /**
@@ -471,7 +471,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertFalse(Comment::load($comment->id()), 'Comment of the user has been deleted.');
 
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getUsername()]), "Confirmation message displayed to user.");
+    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]), "Confirmation message displayed to user.");
   }
 
   /**
@@ -490,12 +490,12 @@ class UserCancelTest extends BrowserTestBase {
     // Delete regular user.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
-    $this->assertRaw(t('Are you sure you want to cancel the account %name?', ['%name' => $account->getUsername()]), 'Confirmation form to cancel account displayed.');
+    $this->assertRaw(t('Are you sure you want to cancel the account %name?', ['%name' => $account->getAccountName()]), 'Confirmation form to cancel account displayed.');
     $this->assertText(t('Select the method to cancel the account above.'), 'Allows to select account cancellation method.');
 
     // Confirm deletion.
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
-    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getUsername()]), 'User deleted.');
+    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]), 'User deleted.');
     $this->assertFalse(User::load($account->id()), 'User is not found in the database.');
   }
 
@@ -518,12 +518,12 @@ class UserCancelTest extends BrowserTestBase {
     // Delete regular user without email address.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
-    $this->assertRaw(t('Are you sure you want to cancel the account %name?', ['%name' => $account->getUsername()]), 'Confirmation form to cancel account displayed.');
+    $this->assertRaw(t('Are you sure you want to cancel the account %name?', ['%name' => $account->getAccountName()]), 'Confirmation form to cancel account displayed.');
     $this->assertText(t('Select the method to cancel the account above.'), 'Allows to select account cancellation method.');
 
     // Confirm deletion.
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
-    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getUsername()]), 'User deleted.');
+    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]), 'User deleted.');
     $this->assertFalse(User::load($account->id()), 'User is not found in the database.');
   }
 
@@ -565,7 +565,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, NULL, t('Cancel accounts'));
     $status = TRUE;
     foreach ($users as $account) {
-      $status = $status && (strpos($this->getTextContent(), $account->getUsername() . ' has been deleted.') !== FALSE);
+      $status = $status && (strpos($this->getTextContent(), $account->getAccountName() . ' has been deleted.') !== FALSE);
       $user_storage->resetCache([$account->id()]);
       $status = $status && !$user_storage->load($account->id());
     }

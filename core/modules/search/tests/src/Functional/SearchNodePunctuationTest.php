@@ -54,7 +54,7 @@ class SearchNodePunctuationTest extends BrowserTestBase {
     $this->assertText($node->label());
 
     // Check if the author is linked correctly to the user profile page.
-    $username = $node->getOwner()->getUsername();
+    $username = $node->getOwner()->getAccountName();
     $this->assertLink($username);
 
     // Search for "&" and verify entities are not broken up in the output.

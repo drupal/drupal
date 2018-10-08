@@ -252,7 +252,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
-    $this->assertEqual($new_user->getUsername(), $name, 'Username matches.');
+    $this->assertEqual($new_user->getAccountName(), $name, 'Username matches.');
     $this->assertEqual($new_user->getEmail(), $mail, 'Email address matches.');
     $this->assertTrue(($new_user->getCreatedTime() > REQUEST_TIME - 20), 'Correct creation time.');
     $this->assertEqual($new_user->isActive(), $config_user_settings->get('register') == USER_REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
@@ -271,9 +271,9 @@ class UserRegistrationTest extends BrowserTestBase {
   public function testUniqueFields() {
     $account = $this->drupalCreateUser();
 
-    $edit = ['mail' => 'test@example.com', 'name' => $account->getUsername()];
+    $edit = ['mail' => 'test@example.com', 'name' => $account->getAccountName()];
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertRaw(new FormattableMarkup('The username %value is already taken.', ['%value' => $account->getUsername()]));
+    $this->assertRaw(new FormattableMarkup('The username %value is already taken.', ['%value' => $account->getAccountName()]));
 
     $edit = ['mail' => $account->getEmail(), 'name' => $this->randomString()];
     $this->drupalPostForm('user/register', $edit, t('Create new account'));

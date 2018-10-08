@@ -15,11 +15,11 @@ use Drupal\user\Entity\User;
  * Implements hook_ENTITY_TYPE_access() for entity type "user".
  */
 function user_access_test_user_access(User $entity, $operation, $account) {
-  if ($entity->getUsername() == "no_edit" && $operation == "update") {
+  if ($entity->getAccountName() == "no_edit" && $operation == "update") {
     // Deny edit access.
     return AccessResult::forbidden();
   }
-  if ($entity->getUsername() == "no_delete" && $operation == "delete") {
+  if ($entity->getAccountName() == "no_delete" && $operation == "delete") {
     // Deny delete access.
     return AccessResult::forbidden();
   }

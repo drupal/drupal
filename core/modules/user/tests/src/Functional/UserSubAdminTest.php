@@ -46,12 +46,12 @@ class UserSubAdminTest extends BrowserTestBase {
     // Test that the cancel user page has admin fields.
     $cancel_user = $this->createUser();
     $this->drupalGet('user/' . $cancel_user->id() . '/cancel');
-    $this->assertSession()->responseContains('Are you sure you want to cancel the account ' . $cancel_user->getUsername() . '?');
+    $this->assertSession()->responseContains('Are you sure you want to cancel the account ' . $cancel_user->getAccountName() . '?');
     $this->assertSession()->responseContains('Disable the account and keep its content. This action cannot be undone.');
 
     // Test that cancel confirmation gives an admin style message.
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
-    $this->assertSession()->pageTextContains($cancel_user->getUsername() . ' has been disabled.');
+    $this->assertSession()->pageTextContains($cancel_user->getAccountName() . ' has been disabled.');
 
     // Repeat with permission to select account cancellation method.
     $user->addRole($this->drupalCreateRole(['select account cancellation method']));

@@ -328,7 +328,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
         'created' => REQUEST_TIME - mt_rand(0, 1000),
       ];
       $edit = [
-        'content_translation[uid]' => $user->getUsername(),
+        'content_translation[uid]' => $user->getAccountName(),
         'content_translation[created]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d H:i:s O'),
       ];
       $url = $entity->urlInfo('edit-form', ['language' => ConfigurableLanguage::load($langcode)]);

@@ -94,14 +94,14 @@ class MigrateUserAdminPassTest extends MigrateTestBase {
     // Verify that admin username and email were changed, but password was not.
     /** @var \Drupal\user\Entity\User $admin_account */
     $admin_account = User::load(1);
-    $this->assertIdentical($admin_account->getUsername(), 'site_admin');
+    $this->assertIdentical($admin_account->getAccountName(), 'site_admin');
     $this->assertIdentical($admin_account->getEmail(), 'site_admin@example.com');
     $this->assertIdentical($admin_account->getPassword(), $this->originalPasswords[1]);
 
     // Verify that everything changed for the regular user.
     /** @var \Drupal\user\Entity\User $user_account */
     $user_account = User::load(2);
-    $this->assertIdentical($user_account->getUsername(), 'random_user');
+    $this->assertIdentical($user_account->getAccountName(), 'random_user');
     $this->assertIdentical($user_account->getEmail(), 'random_user@example.com');
     $this->assertNotIdentical($user_account->getPassword(), $this->originalPasswords[2]);
   }

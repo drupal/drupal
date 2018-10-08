@@ -42,7 +42,7 @@ class PathProcessorTest implements InboundPathProcessorInterface, OutboundPathPr
     if (preg_match('!^/user/([0-9]+)(/.*)?!', $path, $matches)) {
       if ($account = User::load($matches[1])) {
         $matches += [2 => ''];
-        $path = '/user/' . $account->getUsername() . $matches[2];
+        $path = '/user/' . $account->getAccountName() . $matches[2];
         if ($bubbleable_metadata) {
           $bubbleable_metadata->addCacheTags($account->getCacheTags());
         }

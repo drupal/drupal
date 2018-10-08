@@ -154,7 +154,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   protected function doTestWorkflows(UserInterface $user, $expected_status) {
     $default_langcode = $this->langcodes[0];
     $languages = $this->container->get('language_manager')->getLanguages();
-    $args = ['@user_label' => $user->getUsername()];
+    $args = ['@user_label' => $user->getAccountName()];
     $options = ['language' => $languages[$default_langcode], 'absolute' => TRUE];
     $this->drupalLogin($user);
 
