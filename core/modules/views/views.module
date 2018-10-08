@@ -864,7 +864,7 @@ function views_view_delete(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_view_presave().
+ * Implements hook_ENTITY_TYPE_presave().
  *
  * Provides a BC layer for modules providing old configurations.
  */
