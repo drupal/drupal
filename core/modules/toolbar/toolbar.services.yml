@@ -11,4 +11,4 @@ services:
       - { name: page_cache_request_policy }
   toolbar.menu_tree:
     class: Drupal\toolbar\Menu\ToolbarMenuLinkTree
-    arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@controller_resolver', '@cache.menu', '@current_route_match']
+    arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@controller_resolver']
