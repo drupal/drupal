@@ -30,7 +30,7 @@ function rest_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_view_presave().
+ * Implements hook_ENTITY_TYPE_presave().
  *
  * @see rest_update_8401()
  */
