@@ -30,7 +30,7 @@ function datetime_range_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_view_presave().
+ * Implements hook_ENTITY_TYPE_presave().
  *
  * When a view is saved using the old string or standard plugin format for
  * Datetime Range filters or sorts, they will automatically be updated to
