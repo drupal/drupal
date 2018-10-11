@@ -32,6 +32,43 @@ class RowTest extends UnitTestCase {
   ];
 
   /**
+   * Test source properties for testing get and getMultiple.
+   *
+   * @var array
+   */
+  protected $testGetSourceProperties = [
+    'source_key_1' => 'source_value_1',
+    'source_key_2' => 'source_value_2',
+    '@source_key_3' => 'source_value_3',
+    'shared_key_1' => 'source_shared_value_1',
+    '@shared_key_2' => 'source_shared_value_2',
+    '@@@@shared_key_3' => 'source_shared_value_3',
+  ];
+
+  /**
+   * Test source keys for testing get and getMultiple.
+   *
+   * @var array
+   */
+  protected $testGetSourceIds = [
+    'source_key_1' => [],
+  ];
+
+  /**
+   * Test destination properties for testing get and getMultiple.
+   *
+   * @var array
+   */
+  protected $testGetDestinationProperties = [
+    'destination_key_1' => 'destination_value_1',
+    'destination_key_2' => 'destination_value_2',
+    '@destination_key_3' => 'destination_value_3',
+    'shared_key_1' => 'destination_shared_value_1',
+    '@shared_key_2' => 'destination_shared_value_2',
+    '@@@@shared_key_3' => 'destination_shared_value_3',
+  ];
+
+  /**
    * The test hash.
    *
    * @var string
@@ -269,6 +306,148 @@ class RowTest extends UnitTestCase {
     $this->assertEquals(3, $destination['image']['fid']);
     $this->assertEquals('alt text', $row->getDestinationProperty('image/alt'));
     $this->assertEquals(3, $row->getDestinationProperty('image/fid'));
+  }
+
+  /**
+   * Test getting source and destination properties.
+   *
+   * @param string $key
+   *   The key to look up.
+   * @param string $expected_value
+   *   The expected value.
+   *
+   * @dataProvider getDataProvider
+   * @covers ::get
+   */
+  public function testGet($key, $expected_value) {
+    $row = $this->createRowWithDestinationProperties($this->testGetSourceProperties, $this->testGetSourceIds, $this->testGetDestinationProperties);
+    $this->assertSame($expected_value, $row->get($key));
+  }
+
+  /**
+   * Data Provider for testGet.
+   *
+   * @return array
+   *   The keys and expected values.
+   */
+  public function getDataProvider() {
+    return [
+      ['source_key_1', 'source_value_1'],
+      ['source_key_2', 'source_value_2'],
+      ['@@source_key_3', 'source_value_3'],
+      ['shared_key_1', 'source_shared_value_1'],
+      ['@@shared_key_2', 'source_shared_value_2'],
+      ['@@@@@@@@shared_key_3', 'source_shared_value_3'],
+      ['@destination_key_1', 'destination_value_1'],
+      ['@destination_key_2', 'destination_value_2'],
+      ['@@@destination_key_3', 'destination_value_3'],
+      ['@shared_key_1', 'destination_shared_value_1'],
+      ['@@@shared_key_2', 'destination_shared_value_2'],
+      ['@@@@@@@@@shared_key_3', 'destination_shared_value_3'],
+      ['destination_key_1', NULL],
+      ['@shared_key_2', NULL],
+      ['@source_key_1', NULL],
+      ['random_source_key', NULL],
+      ['@random_destination_key', NULL],
+    ];
+  }
+
+  /**
+   * Test getting multiple source and destination properties.
+   *
+   * @param array $keys
+   *   An array of keys to look up.
+   * @param array $expected_values
+   *   An array of expected values.
+   *
+   * @covers::getMultiple
+   * @dataProvider getMultipleDataProvider
+   */
+  public function testGetMultiple(array $keys, array $expected_values) {
+    $row = $this->createRowWithDestinationProperties($this->testGetSourceProperties, $this->testGetSourceIds, $this->testGetDestinationProperties);
+    $this->assertArrayEquals(array_combine($keys, $expected_values), $row->getMultiple($keys));
+  }
+
+  /**
+   * Data Provider for testGetMultiple.
+   *
+   * @return array
+   *   The keys and expected values.
+   */
+  public function getMultipleDataProvider() {
+    return [
+      'Single Key' => [
+        'keys' => ['source_key_1'],
+        'values' => ['source_value_1'],
+      ],
+      'All Source Keys' => [
+        'keys' => [
+          'source_key_1',
+          'source_key_2',
+          '@@source_key_3',
+        ],
+        'values' => [
+          'source_value_1',
+          'source_value_2',
+          'source_value_3',
+        ],
+      ],
+      'All Destination Keys' => [
+        'keys' => [
+          '@destination_key_1',
+          '@destination_key_2',
+          '@@@destination_key_3',
+        ],
+        'values' => [
+          'destination_value_1',
+          'destination_value_2',
+          'destination_value_3',
+        ],
+      ],
+      'Mix of keys including non-existant' => [
+        'keys' => [
+          'shared_key_1',
+          '@shared_key_1',
+          '@@shared_key_2',
+          '@@@shared_key_2',
+          '@@@@@@@@@shared_key_3',
+          'non_existant_source_key',
+          '@non_existant_destination_key',
+        ],
+        'values' => [
+          'source_shared_value_1',
+          'destination_shared_value_1',
+          'source_shared_value_2',
+          'destination_shared_value_2',
+          'destination_shared_value_3',
+          NULL,
+          NULL,
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Create a row and load it with destination properties.
+   *
+   * @param array $source_properties
+   *   The source property array.
+   * @param array $source_ids
+   *   The source ids array.
+   * @param array $destination_properties
+   *   The destination properties to load.
+   * @param bool $is_stub
+   *   Whether this row is a stub row, defaults to FALSE.
+   *
+   * @return \Drupal\migrate\Row
+   *   The row, populated with destination properties.
+   */
+  protected function createRowWithDestinationProperties(array $source_properties, array $source_ids, array $destination_properties, $is_stub = FALSE) {
+    $row = new Row($source_properties, $source_ids, $is_stub);
+    foreach ($destination_properties as $key => $property) {
+      $row->setDestinationProperty($key, $property);
+    }
+    return $row;
   }
 
 }

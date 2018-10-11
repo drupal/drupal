@@ -136,6 +136,13 @@ class Row {
   /**
    * Retrieves a source property.
    *
+   * This function directly retrieves a source property. It does not unescape
+   * '@' symbols. This is most useful in source plugins when you don't want to
+   * worry about escaping '@' symbols. If using this in a process plugin to
+   * retrieve a source property based on a configuration value, consider if the
+   * ::get() function might be more appropriate, to allow the migration to
+   * potentially specify a destination key as well.
+   *
    * @param string $property
    *   A property on the source.
    *
@@ -285,6 +292,10 @@ class Row {
   /**
    * Returns the value of a destination property.
    *
+   * This function directly returns a destination property. The property name
+   * should not begin with an @ symbol. This is most useful in a destination
+   * plugin.
+   *
    * @param string $property
    *   The name of a property on the destination.
    *
@@ -293,6 +304,60 @@ class Row {
    */
   public function getDestinationProperty($property) {
     return NestedArray::getValue($this->destination, explode(static::PROPERTY_SEPARATOR, $property));
+  }
+
+  /**
+   * Retrieve a source or destination property.
+   *
+   * If the property key begins with '@' return a destination property,
+   * otherwise return a source property. the '@' symbol itself can be escaped
+   * as '@@'. Returns NULL if property is not found. Useful in process plugins
+   * to retrieve a row property specified in a configuration key which may be
+   * either a source or destination property prefixed with an '@'.
+   *
+   * @param string $property
+   *   The property to get.
+   *
+   * @return mixed|null
+   *   The requested property.
+   */
+  public function get($property) {
+    $values = $this->getMultiple([$property]);
+    return reset($values);
+  }
+
+  /**
+   * Retrieve multiple source and destination properties at once.
+   *
+   * @param string[] $properties
+   *   An array of values to retrieve, with destination values prefixed with @.
+   *
+   * @return array
+   *   An array of property values, keyed by property name.
+   */
+  public function getMultiple(array $properties) {
+    $return = [];
+    foreach ($properties as $orig_property) {
+      $property = $orig_property;
+      $is_source = TRUE;
+      if ($property[0] == '@') {
+        $property = preg_replace_callback('/^(@?)((?:@@)*)([^@]|$)/', function ($matches) use (&$is_source) {
+          // If there are an odd number of @ in the beginning, it's a
+          // destination.
+          $is_source = empty($matches[1]);
+          // Remove the possible escaping and do not lose the terminating
+          // non-@ either.
+          return str_replace('@@', '@', $matches[2]) . $matches[3];
+        }, $property);
+      }
+      if ($is_source) {
+        $return[$orig_property] = $this->getSourceProperty($property);
+      }
+      else {
+        $return[$orig_property] = $this->getDestinationProperty($property);
+      }
+    }
+    return $return;
   }
 
   /**

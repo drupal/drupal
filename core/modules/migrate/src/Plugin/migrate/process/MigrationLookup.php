@@ -4,7 +4,6 @@ namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateSkipProcessException;
-use Drupal\migrate\Plugin\MigratePluginManagerInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -102,13 +101,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The process plugin manager.
-   *
-   * @var \Drupal\migrate\Plugin\MigratePluginManager
-   */
-  protected $processPluginManager;
-
-  /**
    * The migration plugin manager.
    *
    * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
@@ -123,13 +115,23 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
   protected $migration;
 
   /**
-   * {@inheritdoc}
+   * Constructs a MigrationLookup object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
+   *   The Migration the plugin is being used in.
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
+   *   The Migration Plugin Manager Interface.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, MigrationPluginManagerInterface $migration_plugin_manager, MigratePluginManagerInterface $process_plugin_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, MigrationPluginManagerInterface $migration_plugin_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->migrationPluginManager = $migration_plugin_manager;
     $this->migration = $migration;
-    $this->processPluginManager = $process_plugin_manager;
   }
 
   /**
@@ -141,8 +143,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       $plugin_id,
       $plugin_definition,
       $migration,
-      $container->get('plugin.manager.migration'),
-      $container->get('plugin.manager.migrate.process')
+      $container->get('plugin.manager.migration')
     );
   }
 
@@ -166,10 +167,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
         $self = TRUE;
       }
       if (isset($this->configuration['source_ids'][$lookup_migration_id])) {
-        $configuration = ['source' => $this->configuration['source_ids'][$lookup_migration_id]];
-        $value = $this->processPluginManager
-          ->createInstance('get', $configuration, $this->migration)
-          ->transform(NULL, $migrate_executable, $row, $destination_property);
+        $value = array_values($row->getMultiple($this->configuration['source_ids'][$lookup_migration_id]));
       }
       if (!is_array($value)) {
         $value = [$value];
