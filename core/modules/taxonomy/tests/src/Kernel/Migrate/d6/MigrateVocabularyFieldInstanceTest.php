@@ -39,19 +39,21 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
   public function testVocabularyFieldInstance() {
     $this->executeMigration('d6_vocabulary_field_instance');
 
-    // Test that the field exists.
+    // Test that the field exists. Tags has a multilingual option of 'None'.
     $field_id = 'node.article.field_tags';
     $field = FieldConfig::load($field_id);
     $this->assertSame($field_id, $field->id(), 'Field instance exists on article bundle.');
     $this->assertSame('Tags', $field->label());
     $this->assertTrue($field->isRequired(), 'Field is required');
+    $this->assertFalse($field->isTranslatable());
 
-    // Test the page bundle as well.
+    // Test the page bundle as well. Tags has a multilingual option of 'None'.
     $field_id = 'node.page.field_tags';
     $field = FieldConfig::load($field_id);
     $this->assertSame($field_id, $field->id(), 'Field instance exists on page bundle.');
     $this->assertSame('Tags', $field->label());
     $this->assertTrue($field->isRequired(), 'Field is required');
+    $this->assertFalse($field->isTranslatable());
 
     $settings = $field->getSettings();
     $this->assertSame('default:taxonomy_term', $settings['handler'], 'The handler plugin ID is correct.');
@@ -60,15 +62,32 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
 
     $this->assertSame(['node', 'article', 'field_tags'], $this->getMigration('d6_vocabulary_field_instance')->getIdMap()->lookupDestinationId([4, 'article']));
 
-    // Test the the field vocabulary_1_i_0_.
+    // Test the the field vocabulary_1_i_0_ with multilingual option,
+    // 'per language terms'.
     $field_id = 'node.story.field_vocabulary_1_i_0_';
     $field = FieldConfig::load($field_id);
     $this->assertFalse($field->isRequired(), 'Field is not required');
+    $this->assertTrue($field->isTranslatable());
+
+    // Test the the field vocabulary_2_i_0_ with multilingual option,
+    // 'Set language to vocabulary'.
+    $field_id = 'node.story.field_vocabulary_2_i_1_';
+    $field = FieldConfig::load($field_id);
+    $this->assertFalse($field->isRequired(), 'Field is not required');
+    $this->assertFalse($field->isTranslatable());
+
+    // Test the the field vocabulary_3_i_0_ with multilingual option,
+    // 'Localize terms'.
+    $field_id = 'node.story.field_vocabulary_3_i_2_';
+    $field = FieldConfig::load($field_id);
+    $this->assertFalse($field->isRequired(), 'Field is not required');
+    $this->assertFalse($field->isTranslatable());
 
     // Tests that a vocabulary named like a D8 base field will be migrated and
     // prefixed with 'field_' to avoid conflicts.
     $field_type = FieldConfig::load('node.sponsor.field_type');
     $this->assertInstanceOf(FieldConfig::class, $field_type);
+    $this->assertFalse($field->isTranslatable());
   }
 
   /**
