@@ -48491,7 +48491,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'i18ntaxonomy_vocabulary',
-  'value' => 'a:2:{i:1;s:1:"3";i:2;s:1:"2";}',
+  'value' => 'a:3:{i:1;s:1:"3";i:2;s:1:"2";i:3;s:1:"1";}',
 ))
 ->values(array(
   'name' => 'i18n_lock_node_article',
