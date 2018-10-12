@@ -161,7 +161,7 @@ abstract class AccountForm extends ContentEntityForm {
 
     // When not building the user registration form, prevent web browsers from
     // autofilling/prefilling the email, username, and password fields.
-    if ($this->getOperation() != 'register') {
+    if (!$register) {
       foreach (['mail', 'name', 'pass'] as $key) {
         if (isset($form['account'][$key])) {
           $form['account'][$key]['#attributes']['autocomplete'] = 'off';
