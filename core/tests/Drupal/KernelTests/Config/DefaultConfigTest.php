@@ -126,7 +126,7 @@ class DefaultConfigTest extends KernelTestBase {
         // recalculation of dependencies does not cause config change.
         if ($entity_type = $config_manager->getEntityTypeIdByName($config_name)) {
           $entity_storage = $config_manager
-            ->getEntityManager()
+            ->getEntityTypeManager()
             ->getStorage($entity_type);
           $id = $entity_storage->getIDFromConfigName($config_name, $entity_storage->getEntityType()
             ->getConfigPrefix());

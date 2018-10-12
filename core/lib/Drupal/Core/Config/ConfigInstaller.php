@@ -326,7 +326,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
         }
         /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $entity_storage */
         $entity_storage = $this->configManager
-          ->getEntityManager()
+          ->getEntityTypeManager()
           ->getStorage($entity_type);
 
         $id = $entity_storage->getIDFromConfigName($name, $entity_storage->getEntityType()->getConfigPrefix());

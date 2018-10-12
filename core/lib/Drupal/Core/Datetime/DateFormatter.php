@@ -3,7 +3,7 @@
 namespace Drupal\Core\Datetime;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -78,8 +78,8 @@ class DateFormatter implements DateFormatterInterface {
   /**
    * Constructs a Date object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
@@ -89,8 +89,8 @@ class DateFormatter implements DateFormatterInterface {
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    */
-  public function __construct(EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, RequestStack $request_stack) {
-    $this->dateFormatStorage = $entity_manager->getStorage('date_format');
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, RequestStack $request_stack) {
+    $this->dateFormatStorage = $entity_type_manager->getStorage('date_format');
     $this->languageManager = $language_manager;
     $this->stringTranslation = $translation;
     $this->configFactory = $config_factory;

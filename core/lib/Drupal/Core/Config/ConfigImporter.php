@@ -867,8 +867,8 @@ class ConfigImporter {
           // If the target already exists, use the entity storage to delete it
           // again, if is a simple config, delete it directly.
           if ($entity_type_id = $this->configManager->getEntityTypeIdByName($name)) {
-            $entity_storage = $this->configManager->getEntityManager()->getStorage($entity_type_id);
-            $entity_type = $this->configManager->getEntityManager()->getDefinition($entity_type_id);
+            $entity_storage = $this->configManager->getEntityTypeManager()->getStorage($entity_type_id);
+            $entity_type = $this->configManager->getEntityTypeManager()->getDefinition($entity_type_id);
             $entity = $entity_storage->load($entity_storage->getIDFromConfigName($name, $entity_type->getConfigPrefix()));
             $entity->delete();
             $this->logError($this->t('Deleted and replaced configuration entity "@name"', ['@name' => $name]));
@@ -970,7 +970,7 @@ class ConfigImporter {
       }
 
       $method = 'import' . ucfirst($op);
-      $entity_storage = $this->configManager->getEntityManager()->getStorage($entity_type);
+      $entity_storage = $this->configManager->getEntityTypeManager()->getStorage($entity_type);
       // Call to the configuration entity's storage to handle the configuration
       // change.
       if (!($entity_storage instanceof ImportableEntityStorageInterface)) {
@@ -1016,7 +1016,7 @@ class ConfigImporter {
       $new_config->setData($data);
     }
 
-    $entity_storage = $this->configManager->getEntityManager()->getStorage($entity_type_id);
+    $entity_storage = $this->configManager->getEntityTypeManager()->getStorage($entity_type_id);
     // Call to the configuration entity's storage to handle the configuration
     // change.
     if (!($entity_storage instanceof ImportableEntityStorageInterface)) {

@@ -32,9 +32,9 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * The mocked entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The mocked class resolver.
@@ -56,11 +56,11 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @covers ::__construct
    */
   protected function setUp() {
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityTypeManager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
     $this->classResolver = $this->getClassResolverStub();
 
-    $this->entityResolverManager = new EntityResolverManager($this->entityManager, $this->classResolver);
+    $this->entityResolverManager = new EntityResolverManager($this->entityTypeManager, $this->classResolver);
   }
 
   /**
@@ -455,13 +455,13 @@ class EntityResolverManagerTest extends UnitTestCase {
     $revisionable_definition->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(TRUE);
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinitions')
       ->will($this->returnValue([
         'entity_test' => $definition,
         'entity_test_rev' => $revisionable_definition,
       ]));
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->will($this->returnCallback(function ($entity_type) use ($definition, $revisionable_definition) {
         if ($entity_type == 'entity_test') {

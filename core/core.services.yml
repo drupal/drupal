@@ -291,7 +291,7 @@ services:
       - { name: dynamic_page_cache_response_policy }
   config.manager:
     class: Drupal\Core\Config\ConfigManager
-    arguments: ['@entity.manager', '@config.factory', '@config.typed', '@string_translation', '@config.storage', '@event_dispatcher']
+    arguments: ['@entity_type.manager', '@config.factory', '@config.typed', '@string_translation', '@config.storage', '@event_dispatcher', '@entity.repository']
   config.factory:
     class: Drupal\Core\Config\ConfigFactory
     tags:
@@ -518,7 +518,7 @@ services:
     class: Drupal\Core\Entity\ContentUninstallValidator
     tags:
       - { name: module_install.uninstall_validator }
-    arguments: ['@entity.manager', '@string_translation']
+    arguments: ['@entity_type.manager', '@string_translation']
     lazy: true
   required_module_uninstall_validator:
     class: Drupal\Core\Extension\RequiredModuleUninstallValidator
@@ -573,12 +573,12 @@ services:
     arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_field.manager', '@module_handler']
   entity_route_subscriber:
     class: Drupal\Core\EventSubscriber\EntityRouteProviderSubscriber
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager']
     tags:
       - { name: event_subscriber }
   entity.definition_update_manager:
     class: Drupal\Core\Entity\EntityDefinitionUpdateManager
-    arguments: ['@entity.manager', '@entity.last_installed_schema.repository']
+    arguments: ['@entity_type.manager', '@entity.last_installed_schema.repository', '@entity_field.manager', '@entity_type.listener', '@field_storage_definition.listener']
   entity.last_installed_schema.repository:
     class: Drupal\Core\Entity\EntityLastInstalledSchemaRepository
     arguments: ['@keyvalue']
@@ -593,10 +593,10 @@ services:
     arguments: ['@entity_type.manager', '@entity_field.manager', '@keyvalue', '@cache.discovery']
   entity.form_builder:
     class: Drupal\Core\Entity\EntityFormBuilder
-    arguments: ['@entity.manager', '@form_builder']
+    arguments: ['@entity_type.manager', '@form_builder']
   entity.bundle_config_import_validator:
     class: Drupal\Core\Entity\Event\BundleConfigImportValidate
-    arguments: ['@config.manager', '@entity.manager']
+    arguments: ['@config.manager', '@entity_type.manager']
     tags:
       - { name: event_subscriber }
   entity.autocomplete_matcher:
@@ -643,7 +643,7 @@ services:
       - { name: needs_destruction }
   menu.parent_form_selector:
     class: Drupal\Core\Menu\MenuParentFormSelector
-    arguments: ['@menu.link_tree', '@entity.manager', '@string_translation']
+    arguments: ['@menu.link_tree', '@entity_type.manager', '@string_translation']
   plugin.manager.menu.local_action:
     class: Drupal\Core\Menu\LocalActionManager
     arguments: ['@http_kernel.controller.argument_resolver', '@request_stack', '@current_route_match', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
@@ -903,7 +903,7 @@ services:
       - { name: event_subscriber }
   entity.query:
     class: Drupal\Core\Entity\Query\QueryFactory
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager']
     calls:
       - [setContainer, ['@service_container']]
     deprecated: The "%service_id%" service is deprecated. Use the 'entity_type.manager' service to get an entity type's storage object and then call \Drupal\Core\Entity\EntityStorageInterface::getQuery() or \Drupal\Core\Entity\EntityStorageInterface::getAggregateQuery() instead. See https://www.drupal.org/node/2849874
@@ -999,7 +999,7 @@ services:
     class: Drupal\Core\ParamConverter\EntityConverter
     tags:
       - { name: paramconverter }
-    arguments: ['@entity.manager', '@language_manager']
+    arguments: ['@entity_type.manager', '@language_manager', '@entity.repository']
   paramconverter.entity_revision:
     class: Drupal\Core\ParamConverter\EntityRevisionParamConverter
     tags:
@@ -1010,7 +1010,7 @@ services:
     tags:
       # Use a higher priority than EntityConverter, see the class for details.
       - { name: paramconverter, priority: 5 }
-    arguments: ['@entity.manager', '@config.factory', '@router.admin_context']
+    arguments: ['@entity_type.manager', '@config.factory', '@router.admin_context', '@language_manager', '@entity.repository']
     lazy: true
   route_subscriber.module:
     class: Drupal\Core\EventSubscriber\ModuleRouteSubscriber
@@ -1019,7 +1019,7 @@ services:
     arguments: ['@module_handler']
   resolver_manager.entity:
     class: Drupal\Core\Entity\EntityResolverManager
-    arguments: ['@entity.manager', '@class_resolver']
+    arguments: ['@entity_type.manager', '@class_resolver']
   route_subscriber.entity:
     class: Drupal\Core\EventSubscriber\EntityRouteAlterSubscriber
     tags:
@@ -1113,7 +1113,7 @@ services:
     arguments: ['@http_kernel.controller.argument_resolver', '@form_builder', '@class_resolver']
   controller.entity_form:
     class: Drupal\Core\Entity\HtmlEntityFormController
-    arguments: ['@http_kernel.controller.argument_resolver', '@form_builder', '@entity.manager']
+    arguments: ['@http_kernel.controller.argument_resolver', '@form_builder', '@entity_type.manager']
   form_ajax_response_builder:
     class: Drupal\Core\Form\FormAjaxResponseBuilder
     arguments: ['@main_content_renderer.ajax', '@current_route_match']
@@ -1157,7 +1157,7 @@ services:
       - { name: access_check, applies_to: _entity_access }
   access_check.entity_create:
     class: Drupal\Core\Entity\EntityCreateAccessCheck
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager']
     tags:
       - { name: access_check, applies_to: _entity_create_access }
   access_check.entity_create_any:
@@ -1412,7 +1412,7 @@ services:
     arguments: ['@module_handler']
   date.formatter:
     class: Drupal\Core\Datetime\DateFormatter
-    arguments: ['@entity.manager', '@language_manager', '@string_translation', '@config.factory', '@request_stack']
+    arguments: ['@entity_type.manager', '@language_manager', '@string_translation', '@config.factory', '@request_stack']
   feed.bridge.reader:
     class: Drupal\Component\Bridge\ZfExtensionManagerSfContainer
     calls:

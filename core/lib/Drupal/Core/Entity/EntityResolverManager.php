@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -12,13 +13,19 @@ use Symfony\Component\Routing\Route;
  * an entity interface, upcasting is done automatically.
  */
 class EntityResolverManager {
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityManager;
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The class resolver.
@@ -30,13 +37,19 @@ class EntityResolverManager {
   /**
    * Constructs a new EntityRouteAlterSubscriber.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ClassResolverInterface $class_resolver) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ClassResolverInterface $class_resolver) {
+    if ($entity_type_manager instanceof EntityManagerInterface) {
+      @trigger_error('Passing the entity.manager service to EntityResolverManager::__construct() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Pass the new dependencies instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+    }
+    else {
+      $this->entityTypeManager = $entity_type_manager;
+    }
     $this->classResolver = $class_resolver;
   }
 
@@ -221,7 +234,7 @@ class EntityResolverManager {
    */
   protected function getEntityTypes() {
     if (!isset($this->entityTypes)) {
-      $this->entityTypes = $this->entityManager->getDefinitions();
+      $this->entityTypes = $this->entityTypeManager->getDefinitions();
     }
     return $this->entityTypes;
   }

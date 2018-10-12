@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -12,13 +13,19 @@ use Symfony\Component\Routing\Route;
  * Defines an access checker for entity creation.
  */
 class EntityCreateAccessCheck implements AccessInterface {
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityManager;
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The key used by the routing requirement.
@@ -30,11 +37,18 @@ class EntityCreateAccessCheck implements AccessInterface {
   /**
    * Constructs a EntityCreateAccessCheck object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    if ($entity_type_manager instanceof EntityManagerInterface) {
+      @trigger_error('Passing the entity.manager service to EntityCreateAccessCheck::__construct() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Pass the new dependencies instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+    }
+    else {
+      $this->entityTypeManager = $entity_type_manager;
+    }
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -65,7 +79,7 @@ class EntityCreateAccessCheck implements AccessInterface {
         return AccessResult::neutral(sprintf("Could not find '%s' request argument, therefore cannot check create access.", $bundle));
       }
     }
-    return $this->entityManager->getAccessControlHandler($entity_type)->createAccess($bundle, $account, [], TRUE);
+    return $this->entityTypeManager->getAccessControlHandler($entity_type)->createAccess($bundle, $account, [], TRUE);
   }
 
 }

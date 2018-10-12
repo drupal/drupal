@@ -19,9 +19,9 @@ class DateTest extends UnitTestCase {
   /**
    * The mocked entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The mocked language manager.
@@ -63,8 +63,8 @@ class DateTest extends UnitTestCase {
 
     $entity_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
 
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $this->entityManager->expects($this->any())->method('getStorage')->with('date_format')->willReturn($entity_storage);
+    $this->entityTypeManager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
+    $this->entityTypeManager->expects($this->any())->method('getStorage')->with('date_format')->willReturn($entity_storage);
 
     $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->stringTranslation = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
@@ -76,10 +76,10 @@ class DateTest extends UnitTestCase {
     $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);
 
-    $this->dateFormatter = new DateFormatter($this->entityManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub(), $this->requestStack);
+    $this->dateFormatter = new DateFormatter($this->entityTypeManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub(), $this->requestStack);
 
     $this->dateFormatterStub = $this->getMockBuilder('\Drupal\Core\Datetime\DateFormatter')
-      ->setConstructorArgs([$this->entityManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub(), $this->requestStack])
+      ->setConstructorArgs([$this->entityTypeManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub(), $this->requestStack])
       ->setMethods(['formatDiff'])
       ->getMock();
   }

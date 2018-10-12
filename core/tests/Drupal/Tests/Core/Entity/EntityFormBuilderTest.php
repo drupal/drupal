@@ -14,9 +14,9 @@ class EntityFormBuilderTest extends UnitTestCase {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The form builder.
@@ -39,8 +39,8 @@ class EntityFormBuilderTest extends UnitTestCase {
     parent::setUp();
 
     $this->formBuilder = $this->getMock('Drupal\Core\Form\FormBuilderInterface');
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $this->entityFormBuilder = new EntityFormBuilder($this->entityManager, $this->formBuilder);
+    $this->entityTypeManager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
+    $this->entityFormBuilder = new EntityFormBuilder($this->entityTypeManager, $this->formBuilder);
   }
 
   /**
@@ -53,7 +53,7 @@ class EntityFormBuilderTest extends UnitTestCase {
     $form_controller->expects($this->any())
       ->method('getFormId')
       ->will($this->returnValue('the_form_id'));
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getFormObject')
       ->with('the_entity_type', 'default')
       ->will($this->returnValue($form_controller));

@@ -6,12 +6,20 @@ use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Config\ConfigImportValidateEventSubscriberBase;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Entity config importer validation event subscriber.
  */
 class BundleConfigImportValidate extends ConfigImportValidateEventSubscriberBase {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The config manager.
@@ -21,23 +29,29 @@ class BundleConfigImportValidate extends ConfigImportValidateEventSubscriberBase
   protected $configManager;
 
   /**
-   * The entity manager.
+   * The entity type manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * Constructs the event subscriber.
    *
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
-   *   The config manager
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   *   The config manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct(ConfigManagerInterface $config_manager, EntityManagerInterface $entity_manager) {
+  public function __construct(ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager) {
     $this->configManager = $config_manager;
-    $this->entityManager = $entity_manager;
+    if ($entity_type_manager instanceof EntityManagerInterface) {
+      @trigger_error('Passing the entity.manager service to BundleConfigImportValidate::__construct() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Pass the new dependencies instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+    }
+    else {
+      $this->entityTypeManager = $entity_type_manager;
+    }
   }
 
   /**
@@ -51,19 +65,19 @@ class BundleConfigImportValidate extends ConfigImportValidateEventSubscriberBase
       // Get the config entity type ID. This also ensure we are dealing with a
       // configuration entity.
       if ($entity_type_id = $this->configManager->getEntityTypeIdByName($config_name)) {
-        $entity_type = $this->entityManager->getDefinition($entity_type_id);
+        $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         // Does this entity type define a bundle of another entity type.
         if ($bundle_of = $entity_type->getBundleOf()) {
           // Work out if there are entities with this bundle.
-          $bundle_of_entity_type = $this->entityManager->getDefinition($bundle_of);
+          $bundle_of_entity_type = $this->entityTypeManager->getDefinition($bundle_of);
           $bundle_id = ConfigEntityStorage::getIDFromConfigName($config_name, $entity_type->getConfigPrefix());
-          $entity_query = $this->entityManager->getStorage($bundle_of)->getQuery();
+          $entity_query = $this->entityTypeManager->getStorage($bundle_of)->getQuery();
           $entity_ids = $entity_query->condition($bundle_of_entity_type->getKey('bundle'), $bundle_id)
             ->accessCheck(FALSE)
             ->range(0, 1)
             ->execute();
           if (!empty($entity_ids)) {
-            $entity = $this->entityManager->getStorage($entity_type_id)->load($bundle_id);
+            $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($bundle_id);
             $event->getConfigImporter()->logError($this->t('Entities exist of type %entity_type and %bundle_label %bundle. These entities need to be deleted before importing.', ['%entity_type' => $bundle_of_entity_type->getLabel(), '%bundle_label' => $bundle_of_entity_type->getBundleLabel(), '%bundle' => $entity->label()]));
           }
         }

@@ -2,8 +2,11 @@
 
 namespace Drupal\Core\ParamConverter;
 
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\TranslatableRevisionableInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -64,13 +67,26 @@ use Symfony\Component\Routing\Route;
  * @see entities_revisions_translations
  */
 class EntityConverter implements ParamConverterInterface {
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * Entity manager which performs the upcasting in the end.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityManager;
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * Entity type manager which performs the upcasting in the end.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
 
   /**
    * The language manager.
@@ -82,13 +98,25 @@ class EntityConverter implements ParamConverterInterface {
   /**
    * Constructs a new EntityConverter.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface|null $language_manager
    *   (optional) The language manager. Defaults to none.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    */
-  public function __construct(EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager = NULL) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager = NULL, EntityRepositoryInterface $entity_repository = NULL) {
+    if ($entity_type_manager instanceof EntityManagerInterface) {
+      @trigger_error('Passing the entity.manager service to EntityConverter::__construct() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Pass the entity_type.manager service instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+    }
+    $this->entityTypeManager = $entity_type_manager;
+    if ($entity_repository) {
+      $this->entityRepository = $entity_repository;
+    }
+    else {
+      @trigger_error('The entity.repository service must be passed to EntityConverter::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $this->entityRepository = \Drupal::service('entity.repository');
+    }
     $this->languageManager = $language_manager;
   }
 
@@ -97,8 +125,8 @@ class EntityConverter implements ParamConverterInterface {
    */
   public function convert($value, $definition, $name, array $defaults) {
     $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
-    $storage = $this->entityManager->getStorage($entity_type_id);
-    $entity_definition = $this->entityManager->getDefinition($entity_type_id);
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
+    $entity_definition = $this->entityTypeManager->getDefinition($entity_type_id);
 
     $entity = $storage->load($value);
 
@@ -115,7 +143,7 @@ class EntityConverter implements ParamConverterInterface {
     // If the entity type is translatable, ensure we return the proper
     // translation object for the current context.
     if ($entity instanceof EntityInterface && $entity instanceof TranslatableInterface) {
-      $entity = $this->entityManager->getTranslationFromContext($entity, NULL, ['operation' => 'entity_upcast']);
+      $entity = $this->entityRepository->getTranslationFromContext($entity, NULL, ['operation' => 'entity_upcast']);
     }
 
     return $entity;
@@ -136,7 +164,7 @@ class EntityConverter implements ParamConverterInterface {
    */
   protected function getLatestTranslationAffectedRevision(RevisionableInterface $entity, $langcode) {
     $revision = NULL;
-    $storage = $this->entityManager->getStorage($entity->getEntityTypeId());
+    $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
 
     if ($entity instanceof TranslatableRevisionableInterface && $entity->isTranslatable()) {
       /** @var \Drupal\Core\Entity\TranslatableRevisionableStorageInterface $storage */
@@ -185,7 +213,7 @@ class EntityConverter implements ParamConverterInterface {
     // We explicitly perform a loose equality check, since a revision ID may
     // be returned as an integer or a string.
     if ($entity->getLoadedRevisionId() != $revision_id) {
-      $storage = $this->entityManager->getStorage($entity->getEntityTypeId());
+      $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
       return $storage->loadRevision($revision_id);
     }
     else {
@@ -203,7 +231,7 @@ class EntityConverter implements ParamConverterInterface {
         $entity_type_slug = substr($entity_type_id, 1, -1);
         return $name != $entity_type_slug && in_array($entity_type_slug, $route->compile()->getVariables(), TRUE);
       }
-      return $this->entityManager->hasDefinition($entity_type_id);
+      return $this->entityTypeManager->hasDefinition($entity_type_id);
     }
     return FALSE;
   }

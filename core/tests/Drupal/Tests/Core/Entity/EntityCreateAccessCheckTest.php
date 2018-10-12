@@ -20,9 +20,9 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
   /**
    * The mocked entity manager.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  public $entityManager;
+  public $entityTypeManager;
 
   /**
    * {@inheritdoc}
@@ -36,6 +36,8 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
     $container = new Container();
     $container->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($container);
+
+    $this->entityTypeManager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
   }
 
   /**
@@ -78,8 +80,6 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
       $expected_access_result->setReason("Could not find '{bundle_argument}' request argument, therefore cannot check create access.");
     }
 
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-
     // Don't expect a call to the access control handler when we have a bundle
     // argument requirement but no bundle is provided.
     if ($entity_bundle || strpos($requirement, '{') === FALSE) {
@@ -89,12 +89,12 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
         ->with($entity_bundle)
         ->will($this->returnValue($access_result));
 
-      $entity_manager->expects($this->any())
+      $this->entityTypeManager->expects($this->any())
         ->method('getAccessControlHandler')
         ->will($this->returnValue($access_control_handler));
     }
 
-    $applies_check = new EntityCreateAccessCheck($entity_manager);
+    $applies_check = new EntityCreateAccessCheck($this->entityTypeManager);
 
     $route = $this->getMockBuilder('Symfony\Component\Routing\Route')
       ->disableOriginalConstructor()

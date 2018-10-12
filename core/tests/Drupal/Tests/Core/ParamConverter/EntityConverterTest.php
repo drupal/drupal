@@ -6,6 +6,8 @@ use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
@@ -22,11 +24,25 @@ use Symfony\Component\Routing\Route;
 class EntityConverterTest extends UnitTestCase {
 
   /**
-   * The mocked entity manager.
+   * The mocked entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
+
+  /**
+   * The mocked language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $languageManager;
+
+  /**
+   * The mocked entities repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityRepository;
 
   /**
    * The tested entity converter.
@@ -41,9 +57,11 @@ class EntityConverterTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
+    $this->languageManager = $this->createMock(LanguageManagerInterface::class);
+    $this->entityRepository = $this->createMock(EntityRepositoryInterface::class);
 
-    $this->entityConverter = new EntityConverter($this->entityManager);
+    $this->entityConverter = new EntityConverter($this->entityTypeManager, $this->languageManager, $this->entityRepository);
   }
 
   /**
@@ -54,7 +72,7 @@ class EntityConverterTest extends UnitTestCase {
    * @covers ::applies
    */
   public function testApplies(array $definition, $name, Route $route, $applies) {
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('hasDefinition')
       ->willReturnCallback(function ($entity_type) {
         return 'entity_test' == $entity_type;
@@ -86,7 +104,7 @@ class EntityConverterTest extends UnitTestCase {
    */
   public function testConvert($value, array $definition, array $defaults, $expected_result) {
     $entity_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
-    $this->entityManager->expects($this->once())
+    $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with('entity_test')
       ->willReturn($entity_storage);
@@ -119,7 +137,7 @@ class EntityConverterTest extends UnitTestCase {
    * Tests the convert() method with an invalid entity type.
    */
   public function testConvertWithInvalidEntityType() {
-    $this->entityManager->expects($this->once())
+    $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with('invalid_id')
       ->willThrowException(new InvalidPluginDefinitionException('invalid_id'));
@@ -168,7 +186,7 @@ class EntityConverterTest extends UnitTestCase {
       ->with('id')
       ->willReturn('revision_id');
 
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->with('entity_test')
       ->willReturn($storage);
@@ -178,7 +196,7 @@ class EntityConverterTest extends UnitTestCase {
       ->method('isRevisionable')
       ->willReturn(TRUE);
 
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with('entity_test')
       ->willReturn($entity_type);
@@ -203,6 +221,8 @@ class EntityConverterTest extends UnitTestCase {
 
     \Drupal::setContainer($container);
     $definition = ['type' => 'entity:entity_test', 'load_latest_revision' => TRUE];
+
+    $this->entityConverter = new EntityConverter($this->entityTypeManager, NULL, $this->entityRepository);
     $this->entityConverter->convert('id', $definition, 'foo', []);
   }
 
