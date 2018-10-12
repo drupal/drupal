@@ -1,24 +1,24 @@
 <?php
 
-namespace Drupal\KernelTests\Core\EventSubscriber;
+namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\EventSubscriber\ReplicaDatabaseIgnoreSubscriber;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * Tests that ReplicaDatabaseIgnoreSubscriber functions correctly.
+ * Tests that ReplicaKillSwitch functions correctly.
  *
  * @group system
  */
-class IgnoreReplicaSubscriberTest extends KernelTestBase {
+class ReplicaKillSwitchTest extends KernelTestBase {
 
   /**
-   * Tests \Drupal\Core\EventSubscriber\ReplicaDatabaseIgnoreSubscriber::checkReplicaServer().
+   * Tests database.replica_kill_switch service.
    */
   public function testSystemInitIgnoresSecondaries() {
     // Clone the master credentials to a replica connection.
@@ -27,17 +27,24 @@ class IgnoreReplicaSubscriberTest extends KernelTestBase {
     $connection_info = Database::getConnectionInfo('default');
     Database::addConnectionInfo('default', 'replica', $connection_info['default']);
 
-    db_ignore_replica();
+    /** @var \Drupal\Core\Database\ReplicaKillSwitch $service */
+    $service = \Drupal::service('database.replica_kill_switch');
+    $service->trigger();
     $class_loader = require $this->root . '/autoload.php';
     $kernel = new DrupalKernel('testing', $class_loader, FALSE);
     $event = new GetResponseEvent($kernel, Request::create('http://example.com'), HttpKernelInterface::MASTER_REQUEST);
-    $subscriber = new ReplicaDatabaseIgnoreSubscriber();
-    $subscriber->checkReplicaServer($event);
+    $service->checkReplicaServer($event);
 
     $db1 = Database::getConnection('default', 'default');
     $db2 = Database::getConnection('replica', 'default');
 
     $this->assertSame($db1, $db2, 'System Init ignores secondaries when requested.');
+
+    // Makes sure that session value set right.
+    $session = \Drupal::service('session');
+    $this->assertTrue($session->has('ignore_replica_server'));
+    $expected = \Drupal::time()->getRequestTime() + Settings::get('maximum_replication_lag', 300);
+    $this->assertEquals($expected, $session->get('ignore_replica_server'));
   }
 
 }

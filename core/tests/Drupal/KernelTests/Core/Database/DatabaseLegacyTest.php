@@ -488,4 +488,18 @@ class DatabaseLegacyTest extends DatabaseTestBase {
     $this->assertInstanceOf(Select::class, db_select('test'));
   }
 
+  /**
+   * Tests the db_ignore_replica() function.
+   *
+   * @expectedDeprecation db_ignore_replica() is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Database\ReplicaKillSwitch::trigger() instead. See https://www.drupal.org/node/2997500
+   */
+  public function testDbIgnoreReplica() {
+    $connection = Database::getConnectionInfo('default');
+    Database::addConnectionInfo('default', 'replica', $connection['default']);
+    db_ignore_replica();
+    /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
+    $session = \Drupal::service('session');
+    $this->assertTrue($session->has('ignore_replica_server'));
+  }
+
 }

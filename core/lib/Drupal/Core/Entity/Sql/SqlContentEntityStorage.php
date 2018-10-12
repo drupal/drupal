@@ -726,7 +726,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       parent::delete($entities);
 
       // Ignore replica server temporarily.
-      db_ignore_replica();
+      \Drupal::service('database.replica_kill_switch')->trigger();
     }
     catch (\Exception $e) {
       $transaction->rollBack();
@@ -777,7 +777,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $return = parent::save($entity);
 
       // Ignore replica server temporarily.
-      db_ignore_replica();
+      \Drupal::service('database.replica_kill_switch')->trigger();
       return $return;
     }
     catch (\Exception $e) {

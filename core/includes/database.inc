@@ -11,7 +11,6 @@
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
-use Drupal\Core\Site\Settings;
 
 /**
  * @addtogroup database
@@ -1089,18 +1088,14 @@ function db_change_field($table, $field, $field_new, $spec, $keys_new = []) {
  * Sets a session variable specifying the lag time for ignoring a replica
  * server (A replica server is traditionally referred to as
  * a "slave" in database server documentation).
+ *
+ * @deprecated as of Drupal 8.7.x, will be removed in Drupal 9.0.0. Use
+ *   \Drupal::service('database.replica_kill_switch')->trigger() instead.
+ *
+ * @see https://www.drupal.org/node/2997500
  * @see https://www.drupal.org/node/2275877
  */
 function db_ignore_replica() {
-  $connection_info = Database::getConnectionInfo();
-  // Only set ignore_replica_server if there are replica servers being used,
-  // which is assumed if there are more than one.
-  if (count($connection_info) > 1) {
-    // Five minutes is long enough to allow the replica to break and resume
-    // interrupted replication without causing problems on the Drupal site from
-    // the old data.
-    $duration = Settings::get('maximum_replication_lag', 300);
-    // Set session variable with amount of time to delay before using replica.
-    $_SESSION['ignore_replica_server'] = REQUEST_TIME + $duration;
-  }
+  @trigger_error('db_ignore_replica() is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Database\ReplicaKillSwitch::trigger() instead. See https://www.drupal.org/node/2997500', E_USER_DEPRECATED);
+  \Drupal::service('database.replica_kill_switch')->trigger();
 }

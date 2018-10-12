@@ -358,6 +358,11 @@ services:
     class: Drupal\Core\Database\Connection
     factory: Drupal\Core\Database\Database::getConnection
     arguments: [replica]
+  database.replica_kill_switch:
+    class: Drupal\Core\Database\ReplicaKillSwitch
+    arguments: ['@settings', '@datetime.time', '@session']
+    tags:
+      - { name: event_subscriber }
   datetime.time:
     class: Drupal\Component\Datetime\Time
     arguments: ['@request_stack']
@@ -939,7 +944,7 @@ services:
       - { name: needs_destruction }
   menu.rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\MenuRouterRebuildSubscriber
-    arguments: ['@lock', '@plugin.manager.menu.link', '@database']
+    arguments: ['@lock', '@plugin.manager.menu.link', '@database', '@database.replica_kill_switch']
     tags:
       - { name: event_subscriber }
   path.alias_storage:
@@ -1403,10 +1408,6 @@ services:
     tags:
       - { name: backend_overridable }
     lazy: true
-  replica_database_ignore__subscriber:
-    class: Drupal\Core\EventSubscriber\ReplicaDatabaseIgnoreSubscriber
-    tags:
-      - {name: event_subscriber}
   country_manager:
     class: Drupal\Core\Locale\CountryManager
     arguments: ['@module_handler']
