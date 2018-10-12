@@ -375,9 +375,13 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
     else {
       // https://www.drupal.org/node/2451657#comment-11462881
       \Drupal::logger('views')->error(
-        t('A non-existent config entity name returned by FieldStorageConfigInterface::getBundles(): field name: %field, bundle: %bundle',
-          ['%field' => $field_name, '%bundle' => $bundle]
-        ));
+        'A non-existent config entity name returned by FieldStorageConfigInterface::getBundles(): entity type: %entity_type, bundle: %bundle, field name: %field',
+        [
+          '%entity_type' => $entity_type->id(),
+          '%bundle' => $bundle,
+          '%field' => $field_name,
+        ]
+      );
     }
   }
 
