@@ -174,16 +174,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected $vfsRoot;
 
   /**
-   * @var int
-   */
-  protected $expectedLogSeverity;
-
-  /**
-   * @var string
-   */
-  protected $expectedLogMessage;
-
-  /**
    * @todo Move into Config test base class.
    * @var \Drupal\Core\Config\ConfigImporter
    */
