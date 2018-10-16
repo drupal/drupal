@@ -112,8 +112,8 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       if ($new_value) {
         $this->addSectionField($entity_type_id, $bundle, 'layout_builder__layout');
       }
-      elseif ($field = FieldConfig::loadByName($entity_type_id, $bundle, 'layout_builder__layout')) {
-        $field->delete();
+      else {
+        $this->removeSectionField($entity_type_id, $bundle, 'layout_builder__layout');
       }
     }
 
@@ -136,6 +136,31 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
           $this->removeSection(0);
         }
       }
+    }
+  }
+
+  /**
+   * Removes a layout section field if it is no longer needed.
+   *
+   * Because the field is shared across all view modes, the field will only be
+   * removed if no other view modes are using it.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param string $bundle
+   *   The bundle.
+   * @param string $field_name
+   *   The name for the layout section field.
+   */
+  protected function removeSectionField($entity_type_id, $bundle, $field_name) {
+    $query = $this->entityTypeManager()->getStorage($this->getEntityTypeId())->getQuery()
+      ->condition('targetEntityType', $this->getTargetEntityTypeId())
+      ->condition('bundle', $this->getTargetBundle())
+      ->condition('mode', $this->getMode(), '<>')
+      ->condition('third_party_settings.layout_builder.allow_custom', TRUE);
+    $enabled = (bool) $query->count()->execute();
+    if (!$enabled && $field = FieldConfig::loadByName($entity_type_id, $bundle, $field_name)) {
+      $field->delete();
     }
   }
 
