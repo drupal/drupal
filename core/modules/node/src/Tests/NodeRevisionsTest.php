@@ -2,6 +2,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -367,6 +369,10 @@ class NodeRevisionsTest extends NodeTestBase {
     $post = [];
     for ($i = 0; $i < count($ids); $i++) {
       $post['ids[' . $i . ']'] = $ids[$i];
+      $post['tokens[' . $i . ']'] = Crypt::hmacBase64(
+        $ids[$i],
+        Settings::getHashSalt() . \Drupal::service('private_key')->get()
+      );
     }
     $response = $this->drupalPost('contextual/render', 'application/json', $post, ['query' => ['destination' => $current_path]]);
 

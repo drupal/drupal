@@ -154,12 +154,17 @@
       // Collect the IDs for all contextual links placeholders.
       const ids = [];
       $placeholders.each(function () {
-        ids.push($(this).attr('data-contextual-id'));
+        ids.push({
+          id: $(this).attr('data-contextual-id'),
+          token: $(this).attr('data-contextual-token'),
+        });
       });
 
+      const uncachedIDs = [];
+      const uncachedTokens = [];
       // Update all contextual links placeholders whose HTML is cached.
-      const uncachedIDs = _.filter(ids, (contextualID) => {
-        const html = storage.getItem(`Drupal.contextual.${contextualID}`);
+      ids.forEach((contextualID) => {
+        const html = storage.getItem(`Drupal.contextual.${contextualID.id}`);
         if (html && html.length) {
           // Initialize after the current execution cycle, to make the AJAX
           // request for retrieving the uncached contextual links as soon as
@@ -167,11 +172,12 @@
           // the chance to set up an event listener on the Backbone collection
           // Drupal.contextual.collection.
           window.setTimeout(() => {
-            initContextual($context.find(`[data-contextual-id="${contextualID}"]`), html);
+            initContextual($context.find(`[data-contextual-id="${contextualID.id}"]`), html);
           });
-          return false;
+          return;
         }
-        return true;
+        uncachedIDs.push(contextualID.id);
+        uncachedTokens.push(contextualID.token);
       });
 
       // Perform an AJAX request to let the server render the contextual links
@@ -180,7 +186,7 @@
         $.ajax({
           url: Drupal.url('contextual/render'),
           type: 'POST',
-          data: { 'ids[]': uncachedIDs },
+          data: { 'ids[]': uncachedIDs, 'tokens[]': uncachedTokens },
           dataType: 'json',
           success(results) {
             _.each(results, (html, contextualID) => {
