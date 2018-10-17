@@ -11,7 +11,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -188,76 +187,6 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
     $data['path without drupal basepath'] = [new Request(['destination' => '/test'])];
     $data['path with URL'] = [new Request(['destination' => '/example.com'])];
     $data['path with URL and two slashes'] = [new Request(['destination' => '//example.com'])];
-
-    return $data;
-  }
-
-  /**
-   * Tests that $_GET only contain internal URLs.
-   *
-   * @covers ::sanitizeDestination
-   *
-   * @dataProvider providerTestSanitizeDestination
-   *
-   * @see \Drupal\Component\Utility\UrlHelper::isExternal
-   */
-  public function testSanitizeDestinationForGet($input, $output) {
-    $request = new Request();
-    $request->query->set('destination', $input);
-
-    $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext);
-    $kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
-    $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
-    $dispatcher = new EventDispatcher();
-    $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'sanitizeDestination'], 100);
-    $dispatcher->dispatch(KernelEvents::REQUEST, $event);
-
-    $this->assertEquals($output, $request->query->get('destination'));
-  }
-
-  /**
-   * Tests that $_REQUEST['destination'] only contain internal URLs.
-   *
-   * @covers ::sanitizeDestination
-   *
-   * @dataProvider providerTestSanitizeDestination
-   *
-   * @see \Drupal\Component\Utility\UrlHelper::isExternal
-   */
-  public function testSanitizeDestinationForPost($input, $output) {
-    $request = new Request();
-    $request->request->set('destination', $input);
-
-    $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext);
-    $kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
-    $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
-    $dispatcher = new EventDispatcher();
-    $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'sanitizeDestination'], 100);
-    $dispatcher->dispatch(KernelEvents::REQUEST, $event);
-
-    $this->assertEquals($output, $request->request->get('destination'));
-  }
-
-  /**
-   * Data provider for testSanitizeDestination().
-   */
-  public function providerTestSanitizeDestination() {
-    $data = [];
-    // Standard internal example node path is present in the 'destination'
-    // parameter.
-    $data[] = ['node', 'node'];
-    // Internal path with one leading slash is allowed.
-    $data[] = ['/example.com', '/example.com'];
-    // External URL without scheme is not allowed.
-    $data[] = ['//example.com/test', ''];
-    // Internal URL using a colon is allowed.
-    $data[] = ['example:test', 'example:test'];
-    // External URL is not allowed.
-    $data[] = ['http://example.com', ''];
-    // Javascript URL is allowed because it is treated as an internal URL.
-    $data[] = ['javascript:alert(0)', 'javascript:alert(0)'];
 
     return $data;
   }

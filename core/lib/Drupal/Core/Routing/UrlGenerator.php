@@ -297,6 +297,11 @@ class UrlGenerator implements UrlGeneratorInterface {
     if ($options['path_processing']) {
       $path = $this->processPath($path, $options, $generated_url);
     }
+    // Ensure the resulting path has at most one leading slash, to prevent it
+    // becoming an external URL without a protocol like //example.com.
+    if (strpos($path, '//') === 0) {
+      $path = '/' . ltrim($path, '/');
+    }
     // The contexts base URL is already encoded
     // (see Symfony\Component\HttpFoundation\Request).
     $path = str_replace($this->decodedChars[0], $this->decodedChars[1], rawurlencode($path));

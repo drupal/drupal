@@ -7,6 +7,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\Plugin\Validation\Constraint\ModerationStateConstraintValidator
@@ -15,6 +16,7 @@ use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 class EntityStateChangeValidationTest extends KernelTestBase {
 
   use ContentModerationTestTrait;
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -30,6 +32,13 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   ];
 
   /**
+   * An admin user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $adminUser;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -40,6 +49,9 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
+    $this->installSchema('system', ['sequences']);
+
+    $this->adminUser = $this->createUser(array_keys($this->container->get('user.permissions')->getPermissions()));
   }
 
   /**
@@ -48,6 +60,8 @@ class EntityStateChangeValidationTest extends KernelTestBase {
    * @covers ::validate
    */
   public function testValidTransition() {
+    $this->setCurrentUser($this->adminUser);
+
     $node_type = NodeType::create([
       'type' => 'example',
     ]);
@@ -76,6 +90,8 @@ class EntityStateChangeValidationTest extends KernelTestBase {
    * @covers ::validate
    */
   public function testInvalidTransition() {
+    $this->setCurrentUser($this->adminUser);
+
     $node_type = NodeType::create([
       'type' => 'example',
     ]);
@@ -125,6 +141,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
    * Test validation with content that has no initial state or an invalid state.
    */
   public function testInvalidStateWithoutExisting() {
+    $this->setCurrentUser($this->adminUser);
     // Create content without moderation enabled for the content type.
     $node_type = NodeType::create([
       'type' => 'example',
@@ -156,15 +173,24 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     // validating.
     $workflow->getTypePlugin()->deleteState('deleted_state');
     $workflow->save();
+
+    // When there is an invalid state, the content will revert to "draft". This
+    // will allow a draft to draft transition.
     $node->moderation_state->value = 'draft';
     $violations = $node->validate();
     $this->assertCount(0, $violations);
+    // This will disallow a draft to archived transition.
+    $node->moderation_state->value = 'archived';
+    $violations = $node->validate();
+    $this->assertCount(1, $violations);
   }
 
   /**
    * Test state transition validation with multiple languages.
    */
   public function testInvalidStateMultilingual() {
+    $this->setCurrentUser($this->adminUser);
+
     ConfigurableLanguage::createFromLangcode('fr')->save();
     $node_type = NodeType::create([
       'type' => 'example',
@@ -220,6 +246,8 @@ class EntityStateChangeValidationTest extends KernelTestBase {
    * Tests that content without prior moderation information can be moderated.
    */
   public function testExistingContentWithNoModeration() {
+    $this->setCurrentUser($this->adminUser);
+
     $node_type = NodeType::create([
       'type' => 'example',
     ]);
@@ -254,6 +282,8 @@ class EntityStateChangeValidationTest extends KernelTestBase {
    * Tests that content without prior moderation information can be translated.
    */
   public function testExistingMultilingualContentWithNoModeration() {
+    $this->setCurrentUser($this->adminUser);
+
     // Enable French.
     ConfigurableLanguage::createFromLangcode('fr')->save();
 
@@ -291,6 +321,83 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     /** @var \Drupal\node\NodeInterface $node_fr */
     $node_fr->setTitle('Nouveau');
     $node_fr->save();
+  }
+
+  /**
+   * @dataProvider transitionAccessValidationTestCases
+   */
+  public function testTransitionAccessValidation($permissions, $target_state, $messages) {
+    $node_type = NodeType::create([
+      'type' => 'example',
+    ]);
+    $node_type->save();
+    $workflow = $this->createEditorialWorkflow();
+    $workflow->getTypePlugin()->addState('foo', 'Foo');
+    $workflow->getTypePlugin()->addTransition('draft_to_foo', 'Draft to foo', ['draft'], 'foo');
+    $workflow->getTypePlugin()->addTransition('foo_to_foo', 'Foo to foo', ['foo'], 'foo');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
+    $workflow->save();
+
+    $this->setCurrentUser($this->createUser($permissions));
+
+    $node = Node::create([
+      'type' => 'example',
+      'title' => 'Test content',
+      'moderation_state' => $target_state,
+    ]);
+    $this->assertTrue($node->isNew());
+    $violations = $node->validate();
+    $this->assertCount(count($messages), $violations);
+    foreach ($messages as $i => $message) {
+      $this->assertEquals($message, $violations->get($i)->getMessage());
+    }
+  }
+
+  /**
+   * Test cases for ::testTransitionAccessValidation.
+   */
+  public function transitionAccessValidationTestCases() {
+    return [
+      'Invalid transition, no permissions validated' => [
+        [],
+        'archived',
+        ['Invalid state transition from <em class="placeholder">Draft</em> to <em class="placeholder">Archived</em>'],
+      ],
+      'Valid transition, missing permission' => [
+        [],
+        'published',
+        ['You do not have access to transition from <em class="placeholder">Draft</em> to <em class="placeholder">Published</em>'],
+      ],
+      'Valid transition, granted published permission' => [
+        ['use editorial transition publish'],
+        'published',
+        [],
+      ],
+      'Valid transition, granted draft permission' => [
+        ['use editorial transition create_new_draft'],
+        'draft',
+        [],
+      ],
+      'Valid transition, incorrect permission granted' => [
+        ['use editorial transition create_new_draft'],
+        'published',
+        ['You do not have access to transition from <em class="placeholder">Draft</em> to <em class="placeholder">Published</em>'],
+      ],
+      // Test with an additional state and set of transitions, since the
+      // "published" transition can start from either "draft" or "published", it
+      // does not capture bugs that fail to correctly distinguish the initial
+      // workflow state from the set state of a new entity.
+      'Valid transition, granted foo permission' => [
+        ['use editorial transition draft_to_foo'],
+        'foo',
+        [],
+      ],
+      'Valid transition, incorrect  foo permission granted' => [
+        ['use editorial transition foo_to_foo'],
+        'foo',
+        ['You do not have access to transition from <em class="placeholder">Draft</em> to <em class="placeholder">Foo</em>'],
+      ],
+    ];
   }
 
 }

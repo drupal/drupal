@@ -3,6 +3,8 @@
 namespace Drupal\Tests\block\Functional\Views;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\Tests\block\Functional\AssertBlockAppearsTrait;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
@@ -360,14 +362,16 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('test-page');
 
     $id = 'block:block=' . $block->id() . ':langcode=en|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1&langcode=en';
+    $id_token = Crypt::hmacBase64($id, Settings::getHashSalt() . $this->container->get('private_key')->get());
     $cached_id = 'block:block=' . $cached_block->id() . ':langcode=en|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1&langcode=en';
+    $cached_id_token = Crypt::hmacBase64($cached_id, Settings::getHashSalt() . $this->container->get('private_key')->get());
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
-    $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $id]) . '></div>', format_string('Contextual link placeholder with id @id exists.', ['@id' => $id]));
-    $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $cached_id]) . '></div>', format_string('Contextual link placeholder with id @id exists.', ['@id' => $cached_id]));
+    $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $id, 'data-contextual-token' => $id_token]) . '></div>', format_string('Contextual link placeholder with id @id exists.', ['@id' => $id]));
+    $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $cached_id, 'data-contextual-token' => $cached_id_token]) . '></div>', format_string('Contextual link placeholder with id @id exists.', ['@id' => $cached_id]));
 
     // Get server-rendered contextual links.
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()
-    $post = ['ids[0]' => $id, 'ids[1]' => $cached_id];
+    $post = ['ids[0]' => $id, 'ids[1]' => $cached_id, 'tokens[0]' => $id_token, 'tokens[1]' => $cached_id_token];
     $url = 'contextual/render?_format=json,destination=test-page';
     $this->getSession()->getDriver()->getClient()->request('POST', $url, $post);
     $this->assertResponse(200);
