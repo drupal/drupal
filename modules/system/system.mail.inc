@@ -70,7 +70,9 @@ class DefaultMailSystem implements MailSystemInterface {
     // hosts. The return value of this method will still indicate whether mail
     // was sent successfully.
     if (!isset($_SERVER['WINDIR']) && strpos($_SERVER['SERVER_SOFTWARE'], 'Win32') === FALSE) {
-      if (isset($message['Return-Path']) && !ini_get('safe_mode')) {
+      // We validate the return path, unless it is equal to the site mail, which
+      // we assume to be safe.
+      if (isset($message['Return-Path']) && !ini_get('safe_mode') && (variable_get('site_mail', ini_get('sendmail_from')) === $message['Return-Path'] || self::_isShellSafe($message['Return-Path']))) {
         // On most non-Windows systems, the "-f" option to the sendmail command
         // is used to set the Return-Path. There is no space between -f and
         // the value of the return path.
@@ -109,6 +111,36 @@ class DefaultMailSystem implements MailSystemInterface {
      }
      return $mail_result;
   }
+
+  /**
+   * Disallows potentially unsafe shell characters.
+   *
+   * Functionally similar to PHPMailer::isShellSafe() which resulted from
+   * CVE-2016-10045. Note that escapeshellarg and escapeshellcmd are inadequate
+   * for this purpose.
+   *
+   * @param string $string
+   *   The string to be validated.
+   *
+   * @return bool
+   *   True if the string is shell-safe.
+   *
+   * @see https://github.com/PHPMailer/PHPMailer/issues/924
+   * @see https://github.com/PHPMailer/PHPMailer/blob/v5.2.21/class.phpmailer.php#L1430
+   *
+   * @todo Rename to ::isShellSafe() and/or discuss whether this is the correct
+   *   location for this helper.
+   */
+  protected static function _isShellSafe($string) {
+    if (escapeshellcmd($string) !== $string || !in_array(escapeshellarg($string), array("'$string'", "\"$string\""))) {
+      return FALSE;
+    }
+    if (preg_match('/[^a-zA-Z0-9@_\-.]/', $string) !== 0) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
 }
 
 /**
