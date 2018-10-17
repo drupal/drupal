@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\node\Tests;
+namespace Drupal\Tests\node\Functional;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -12,6 +12,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the node entity preview functionality.
@@ -22,6 +23,9 @@ class PagePreviewTest extends NodeTestBase {
 
   use EntityReferenceTestTrait;
   use CommentTestTrait;
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
 
   /**
    * Enable the comment, node and taxonomy modules to test on the preview.
@@ -177,7 +181,8 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm(NULL, ['field_image[0][alt]' => 'Picture of llamas'], t('Preview'));
 
     // Check that the preview is displaying the title, body and term.
-    $this->assertTitle(t('@title | Drupal', ['@title' => $edit[$title_key]]), 'Basic page title is preview.');
+    $expected_title = $edit[$title_key] . ' | Drupal';
+    $this->assertSession()->titleEquals($expected_title);
     $this->assertEscaped($edit[$title_key], 'Title displayed and escaped.');
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
@@ -210,13 +215,13 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
     $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
     $this->assertFieldByName('field_image[0][alt]', 'Picture of llamas');
-    $this->drupalPostAjaxForm(NULL, [], ['field_test_multi_add_more' => t('Add another item')], NULL, [], [], 'node-page-form');
+    $this->getSession()->getPage()->pressButton('Add another item');
     $this->assertFieldByName('field_test_multi[0][value]');
     $this->assertFieldByName('field_test_multi[1][value]');
 
     // Return to page preview to check everything is as expected.
     $this->drupalPostForm(NULL, [], t('Preview'));
-    $this->assertTitle(t('@title | Drupal', ['@title' => $edit[$title_key]]), 'Basic page title is preview.');
+    $this->assertSession()->titleEquals($expected_title);
     $this->assertEscaped($edit[$title_key], 'Title displayed and escaped.');
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
@@ -353,8 +358,8 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertText('Basic page ' . $title . ' has been created.');
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->drupalPostAjaxForm(NULL, [], ['field_test_multi_add_more' => t('Add another item')]);
-    $this->drupalPostAjaxForm(NULL, [], ['field_test_multi_add_more' => t('Add another item')]);
+    $this->getSession()->getPage()->pressButton('Add another item');
+    $this->getSession()->getPage()->pressButton('Add another item');
     $edit = [
       'field_test_multi[1][value]' => $example_text_2,
       'field_test_multi[2][value]' => $example_text_3,

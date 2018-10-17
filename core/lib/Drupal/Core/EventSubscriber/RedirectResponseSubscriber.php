@@ -8,7 +8,6 @@ use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -130,36 +129,6 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Sanitize the destination parameter to prevent open redirect attacks.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Event to process.
-   */
-  public function sanitizeDestination(GetResponseEvent $event) {
-    $request = $event->getRequest();
-    // Sanitize the destination parameter (which is often used for redirects) to
-    // prevent open redirect attacks leading to other domains. Sanitize both
-    // $_GET['destination'] and $_REQUEST['destination'] to protect code that
-    // relies on either, but do not sanitize $_POST to avoid interfering with
-    // unrelated form submissions. The sanitization happens here because
-    // url_is_external() requires the variable system to be available.
-    $query_info = $request->query;
-    $request_info = $request->request;
-    if ($query_info->has('destination') || $request_info->has('destination')) {
-      // If the destination is an external URL, remove it.
-      if ($query_info->has('destination') && UrlHelper::isExternal($query_info->get('destination'))) {
-        $query_info->remove('destination');
-        $request_info->remove('destination');
-      }
-      // If there's still something in $_REQUEST['destination'] that didn't come
-      // from $_GET, check it too.
-      if ($request_info->has('destination') && (!$query_info->has('destination') || $request_info->get('destination') != $query_info->get('destination')) && UrlHelper::isExternal($request_info->get('destination'))) {
-        $request_info->remove('destination');
-      }
-    }
-  }
-
-  /**
    * Registers the methods in this class that should be listeners.
    *
    * @return array
@@ -167,7 +136,6 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events[KernelEvents::RESPONSE][] = ['checkRedirectUrl'];
-    $events[KernelEvents::REQUEST][] = ['sanitizeDestination', 100];
     return $events;
   }
 

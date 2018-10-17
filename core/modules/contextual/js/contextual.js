@@ -95,25 +95,31 @@
 
       var ids = [];
       $placeholders.each(function () {
-        ids.push($(this).attr('data-contextual-id'));
+        ids.push({
+          id: $(this).attr('data-contextual-id'),
+          token: $(this).attr('data-contextual-token')
+        });
       });
 
-      var uncachedIDs = _.filter(ids, function (contextualID) {
-        var html = storage.getItem('Drupal.contextual.' + contextualID);
+      var uncachedIDs = [];
+      var uncachedTokens = [];
+      ids.forEach(function (contextualID) {
+        var html = storage.getItem('Drupal.contextual.' + contextualID.id);
         if (html && html.length) {
           window.setTimeout(function () {
-            initContextual($context.find('[data-contextual-id="' + contextualID + '"]'), html);
+            initContextual($context.find('[data-contextual-id="' + contextualID.id + '"]'), html);
           });
-          return false;
+          return;
         }
-        return true;
+        uncachedIDs.push(contextualID.id);
+        uncachedTokens.push(contextualID.token);
       });
 
       if (uncachedIDs.length > 0) {
         $.ajax({
           url: Drupal.url('contextual/render'),
           type: 'POST',
-          data: { 'ids[]': uncachedIDs },
+          data: { 'ids[]': uncachedIDs, 'tokens[]': uncachedTokens },
           dataType: 'json',
           success: function success(results) {
             _.each(results, function (html, contextualID) {

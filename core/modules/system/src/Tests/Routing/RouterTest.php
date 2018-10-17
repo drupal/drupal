@@ -320,6 +320,13 @@ class RouterTest extends WebTestBase {
     $this->drupalGet($url);
     $this->assertEqual(1, $this->redirectCount, $url . " redirected to " . $this->url);
     $this->assertUrl($request->getUriForPath('/router_test/test1') . '?qs=test');
+
+    // Ensure that external URLs in destination query params are not redirected
+    // to.
+    $url = $request->getUriForPath('/////////////////////////////////////////////////router_test/test1') . '?qs=test&destination=http://www.example.com%5c@drupal8alt.test';
+    $this->drupalGet($url);
+    $this->assertEqual(1, $this->redirectCount, $url . " redirected to " . $this->url);
+    $this->assertUrl($request->getUriForPath('/router_test/test1') . '?qs=test');
   }
 
 }

@@ -1,11 +1,12 @@
 <?php
 
-namespace Drupal\node\Tests;
+namespace Drupal\Tests\node\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\Core\Url;
-use Drupal\system\Tests\Menu\AssertBreadcrumbTrait;
+use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Ensures that node type functions work correctly.
@@ -15,6 +16,7 @@ use Drupal\system\Tests\Menu\AssertBreadcrumbTrait;
 class NodeTypeTest extends NodeTestBase {
 
   use AssertBreadcrumbTrait;
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Modules to enable.
@@ -87,6 +89,7 @@ class NodeTypeTest extends NodeTestBase {
    * Tests editing a node type using the UI.
    */
   public function testNodeTypeEditing() {
+    $assert = $this->assertSession();
     $this->drupalPlaceBlock('system_breadcrumb_block');
     $web_user = $this->drupalCreateUser(['bypass node access', 'administer content types', 'administer node fields']);
     $this->drupalLogin($web_user);
@@ -96,8 +99,8 @@ class NodeTypeTest extends NodeTestBase {
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('node/add/page');
-    $this->assertRaw('Title', 'Title field was found.');
-    $this->assertRaw('Body', 'Body field was found.');
+    $assert->pageTextContains('Title');
+    $assert->pageTextContains('Body');
 
     // Rename the title field.
     $edit = [
@@ -106,8 +109,8 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
 
     $this->drupalGet('node/add/page');
-    $this->assertRaw('Foo', 'New title label was displayed.');
-    $this->assertNoRaw('Title', 'Old title label was not displayed.');
+    $assert->pageTextContains('Foo');
+    $assert->pageTextNotContains('Title');
 
     // Change the name and the description.
     $edit = [
@@ -117,11 +120,11 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
 
     $this->drupalGet('node/add');
-    $this->assertRaw('Bar', 'New name was displayed.');
-    $this->assertRaw('Lorem ipsum', 'New description was displayed.');
+    $assert->pageTextContains('Bar');
+    $assert->pageTextContains('Lorem ipsum');
     $this->clickLink('Bar');
-    $this->assertRaw('Foo', 'Title field was found.');
-    $this->assertRaw('Body', 'Body field was found.');
+    $assert->pageTextContains('Foo');
+    $assert->pageTextContains('Body');
 
     // Change the name through the API
     /** @var \Drupal\node\NodeTypeInterface $node_type */
@@ -146,7 +149,7 @@ class NodeTypeTest extends NodeTestBase {
     ]);
     // Check that the body field doesn't exist.
     $this->drupalGet('node/add/page');
-    $this->assertNoRaw('Body', 'Body field was not found.');
+    $assert->pageTextNotContains('Body');
   }
 
   /**

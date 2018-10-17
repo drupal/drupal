@@ -158,32 +158,15 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     ]);
     $this->drupalLogin($limited_user);
 
-    // Check the user can add content, but can't see the moderation state
-    // select.
+    // Check the user can see the content entity form, but can't see the
+    // moderation state select or save the entity form.
     $this->drupalGet('node/add/moderated_content');
     $session_assert->statusCodeEquals(200);
     $session_assert->fieldNotExists('moderation_state[0][state]');
     $this->drupalPostForm(NULL, [
       'title[0][value]' => 'moderated content',
     ], 'Save');
-
-    // Manually move the content to archived because the user doesn't have
-    // permission to do this.
-    $node = $this->getNodeByTitle('moderated content');
-    $node->moderation_state->value = 'archived';
-    $node->save();
-
-    // Check the user can see the current state but not the select.
-    $this->drupalGet('node/' . $node->id() . '/edit');
-    $session_assert->statusCodeEquals(200);
-    $session_assert->pageTextContains('Archived');
-    $session_assert->fieldNotExists('moderation_state[0][state]');
-    $this->drupalPostForm(NULL, [], 'Save');
-
-    // When saving they should still be on the edit form, and see the validation
-    // error message.
-    $session_assert->pageTextContains('Edit Moderated content moderated content');
-    $session_assert->pageTextContains('Invalid state transition from Archived to Archived');
+    $session_assert->pageTextContains('You do not have access to transition from Draft to Draft');
   }
 
 }
