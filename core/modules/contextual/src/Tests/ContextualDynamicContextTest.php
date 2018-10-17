@@ -3,6 +3,8 @@
 namespace Drupal\contextual\Tests;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
@@ -141,6 +143,43 @@ class ContextualDynamicContextTest extends WebTestBase {
   }
 
   /**
+   * Tests the contextual placeholder content is protected by a token.
+   */
+  public function testTokenProtection() {
+    $this->drupalLogin($this->editorUser);
+
+    // Create a node that will have a contextual link.
+    $node1 = $this->drupalCreateNode(['type' => 'article', 'promote' => 1]);
+
+    // Now, on the front page, all article nodes should have contextual links
+    // placeholders, as should the view that contains them.
+    $id = 'node:node=' . $node1->id() . ':changed=' . $node1->getChangedTime() . '&langcode=en';
+
+    // Editor user: can access contextual links and can edit articles.
+    $this->drupalGet('node');
+    $this->assertContextualLinkPlaceHolder($id);
+
+    $post = ['ids[0]' => $id];
+    $this->drupalPostWithFormat('contextual/render', 'json', $post, ['query' => ['destination' => 'node']]);
+    $this->assertResponse(400);
+    $this->assertRaw('No contextual ID tokens specified.');
+
+    $post = ['ids[0]' => $id, 'tokens[0]' => 'wrong_token'];
+    $this->drupalPostWithFormat('contextual/render', 'json', $post, ['query' => ['destination' => 'node']]);
+    $this->assertResponse(400);
+    $this->assertRaw('Invalid contextual ID specified.');
+
+    $post = ['ids[0]' => $id, 'tokens[wrong_key]' => $this->createContextualIdToken($id)];
+    $this->drupalPostWithFormat('contextual/render', 'json', $post, ['query' => ['destination' => 'node']]);
+    $this->assertResponse(400);
+    $this->assertRaw('Invalid contextual ID specified.');
+
+    $post = ['ids[0]' => $id, 'tokens[0]' => $this->createContextualIdToken($id)];
+    $this->drupalPostWithFormat('contextual/render', 'json', $post, ['query' => ['destination' => 'node']]);
+    $this->assertResponse(200);
+  }
+
+  /**
    * Asserts that a contextual link placeholder with the given id exists.
    *
    * @param string $id
@@ -150,7 +189,11 @@ class ContextualDynamicContextTest extends WebTestBase {
    *   The result of the assertion.
    */
   protected function assertContextualLinkPlaceHolder($id) {
-    return $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $id]) . '></div>', format_string('Contextual link placeholder with id @id exists.', ['@id' => $id]));
+    $attribute = new Attribute([
+      'data-contextual-id' => $id,
+      'data-contextual-token' => $this->createContextualIdToken($id),
+    ]);
+    return $this->assertRaw('<div' . $attribute . '></div>', format_string('Contextual link placeholder with id @id exists.', ['@id' => $id]));
   }
 
   /**
@@ -163,7 +206,11 @@ class ContextualDynamicContextTest extends WebTestBase {
    *   The result of the assertion.
    */
   protected function assertNoContextualLinkPlaceHolder($id) {
-    return $this->assertNoRaw('<div' . new Attribute(['data-contextual-id' => $id]) . '></div>', format_string('Contextual link placeholder with id @id does not exist.', ['@id' => $id]));
+    $attribute = new Attribute([
+      'data-contextual-id' => $id,
+      'data-contextual-token' => $this->createContextualIdToken($id),
+    ]);
+    return $this->assertNoRaw('<div' . $attribute . '></div>', format_string('Contextual link placeholder with id @id does not exist.', ['@id' => $id]));
   }
 
   /**
@@ -181,8 +228,22 @@ class ContextualDynamicContextTest extends WebTestBase {
     $post = [];
     for ($i = 0; $i < count($ids); $i++) {
       $post['ids[' . $i . ']'] = $ids[$i];
+      $post['tokens[' . $i . ']'] = $this->createContextualIdToken($ids[$i]);
     }
     return $this->drupalPostWithFormat('contextual/render', 'json', $post, ['query' => ['destination' => $current_path]]);
+  }
+
+  /**
+   * Creates a contextual ID token.
+   *
+   * @param string $id
+   *   The contextual ID to create a token for.
+   *
+   * @return string
+   *   The contextual ID token.
+   */
+  protected function createContextualIdToken($id) {
+    return Crypt::hmacBase64($id, Settings::getHashSalt() . $this->container->get('private_key')->get());
   }
 
 }

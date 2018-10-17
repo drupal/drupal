@@ -3,6 +3,8 @@
 namespace Drupal\node\Tests\Views;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Site\Settings;
 use Drupal\user\Entity\User;
 
 /**
@@ -66,6 +68,10 @@ class NodeContextualLinksTest extends NodeTestBase {
     $post = [];
     for ($i = 0; $i < count($ids); $i++) {
       $post['ids[' . $i . ']'] = $ids[$i];
+      $post['tokens[' . $i . ']'] = Crypt::hmacBase64(
+        $ids[$i],
+        Settings::getHashSalt() . \Drupal::service('private_key')->get()
+      );
     }
 
     // Serialize POST values.

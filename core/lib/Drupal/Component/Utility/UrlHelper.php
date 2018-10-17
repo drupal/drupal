@@ -248,6 +248,16 @@ class UrlHelper {
    *   Exception thrown when a either $url or $bath_url are not fully qualified.
    */
   public static function externalIsLocal($url, $base_url) {
+    // Some browsers treat \ as / so normalize to forward slashes.
+    $url = str_replace('\\', '/', $url);
+
+    // Leading control characters may be ignored or mishandled by browsers, so
+    // assume such a path may lead to an non-local location. The \p{C} character
+    // class matches all UTF-8 control, unassigned, and private characters.
+    if (preg_match('/^\p{C}/u', $url) !== 0) {
+      return FALSE;
+    }
+
     $url_parts = parse_url($url);
     $base_parts = parse_url($base_url);
 

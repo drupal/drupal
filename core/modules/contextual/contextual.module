@@ -191,13 +191,19 @@ function _contextual_links_to_id($contextual_links) {
 /**
  * Unserializes the result of _contextual_links_to_id().
  *
- * @see _contextual_links_to_id
+ * Note that $id is user input. Before calling this method the ID should be
+ * checked against the token stored in the 'data-contextual-token' attribute
+ * which is passed via the 'tokens' request parameter to
+ * \Drupal\contextual\ContextualController::render().
  *
  * @param string $id
  *   A serialized representation of a #contextual_links property value array.
  *
  * @return array
  *   The value for a #contextual_links property.
+ *
+ * @see _contextual_links_to_id()
+ * @see \Drupal\contextual\ContextualController::render()
  */
 function _contextual_id_to_links($id) {
   $contextual_links = [];
