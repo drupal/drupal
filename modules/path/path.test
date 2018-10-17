@@ -21,7 +21,7 @@ class PathTestCase extends DrupalWebTestCase {
     parent::setUp('path');
 
     // Create test user and login.
-    $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content', 'administer url aliases', 'create url aliases'));
+    $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content', 'administer url aliases', 'create url aliases', 'access content overview'));
     $this->drupalLogin($web_user);
   }
 
@@ -159,6 +159,34 @@ class PathTestCase extends DrupalWebTestCase {
     // Confirm that the alias no longer works.
     $this->drupalGet($edit['path[alias]']);
     $this->assertNoText($node1->title, 'Alias was successfully deleted.');
+    $this->assertResponse(404);
+
+    // Create third test node.
+    $node3 = $this->drupalCreateNode();
+
+    // Create an invalid alias with a leading slash and verify that the slash
+    // is removed when the link is generated. This ensures that URL aliases
+    // cannot be used to inject external URLs.
+    // @todo The user interface should either display an error message or
+    //   automatically trim these invalid aliases, rather than allowing them to
+    //   be silently created, at which point the functional aspects of this
+    //   test will need to be moved elsewhere and switch to using a
+    //   programmatically-created alias instead.
+    $alias = $this->randomName(8);
+    $edit = array('path[alias]' => '/' . $alias);
+    $this->drupalPost('node/' . $node3->nid . '/edit', $edit, t('Save'));
+    $this->drupalGet('admin/content');
+    // This checks the link href before clicking it, rather than using
+    // DrupalWebTestCase::assertUrl() after clicking it, because the test
+    // browser does not always preserve the correct number of slashes in the
+    // URL when it visits internal links; using DrupalWebTestCase::assertUrl()
+    // would actually make the test pass unconditionally on the testbot (or
+    // anywhere else where Drupal is installed in a subdirectory).
+    $link_xpath = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $node3->title));
+    $link_href = (string) $link_xpath[0]['href'];
+    $link_prefix = base_path() . (variable_get('clean_url', 0) ? '' : '?q=');
+    $this->assertEqual($link_href, $link_prefix . $alias);
+    $this->clickLink($node3->title);
     $this->assertResponse(404);
   }
 
