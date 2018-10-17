@@ -2,6 +2,8 @@
 
 namespace Drupal\contextual\Element;
 
+use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Component\Render\FormattableMarkup;
@@ -43,7 +45,12 @@ class ContextualLinksPlaceholder extends RenderElement {
    * @see _contextual_links_to_id()
    */
   public static function preRenderPlaceholder(array $element) {
-    $element['#markup'] = new FormattableMarkup('<div@attributes></div>', ['@attributes' => new Attribute(['data-contextual-id' => $element['#id']])]);
+    $token = Crypt::hmacBase64($element['#id'], Settings::getHashSalt() . \Drupal::service('private_key')->get());
+    $attribute = new Attribute([
+      'data-contextual-id' => $element['#id'],
+      'data-contextual-token' => $token,
+    ]);
+    $element['#markup'] = new FormattableMarkup('<div@attributes></div>', ['@attributes' => $attribute]);
 
     return $element;
   }

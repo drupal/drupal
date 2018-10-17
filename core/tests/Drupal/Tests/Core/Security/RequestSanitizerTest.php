@@ -198,6 +198,147 @@ class RequestSanitizerTest extends UnitTestCase {
   }
 
   /**
+   * Tests acceptable destinations are not removed from GET requests.
+   *
+   * @param string $destination
+   *   The destination string to test.
+   *
+   * @dataProvider providerTestAcceptableDestinations
+   */
+  public function testAcceptableDestinationGet($destination) {
+    // Set up a GET request.
+    $request = $this->createRequestForTesting(['destination' => $destination]);
+
+    $request = RequestSanitizer::sanitize($request, [], TRUE);
+
+    $this->assertSame($destination, $request->query->get('destination', NULL));
+    $this->assertNull($request->request->get('destination', NULL));
+    $this->assertSame($destination, $_GET['destination']);
+    $this->assertSame($destination, $_REQUEST['destination']);
+    $this->assertArrayNotHasKey('destination', $_POST);
+    $this->assertEquals([], $this->errors);
+  }
+
+  /**
+   * Tests unacceptable destinations are removed from GET requests.
+   *
+   * @param string $destination
+   *   The destination string to test.
+   *
+   * @dataProvider providerTestSanitizedDestinations
+   */
+  public function testSanitizedDestinationGet($destination) {
+    // Set up a GET request.
+    $request = $this->createRequestForTesting(['destination' => $destination]);
+
+    $request = RequestSanitizer::sanitize($request, [], TRUE);
+
+    $this->assertNull($request->request->get('destination', NULL));
+    $this->assertNull($request->query->get('destination', NULL));
+    $this->assertArrayNotHasKey('destination', $_POST);
+    $this->assertArrayNotHasKey('destination', $_REQUEST);
+    $this->assertArrayNotHasKey('destination', $_GET);
+    $this->assertError('Potentially unsafe destination removed from query parameter bag because it points to an external URL.', E_USER_NOTICE);
+  }
+
+  /**
+   * Tests acceptable destinations are not removed from POST requests.
+   *
+   * @param string $destination
+   *   The destination string to test.
+   *
+   * @dataProvider providerTestAcceptableDestinations
+   */
+  public function testAcceptableDestinationPost($destination) {
+    // Set up a POST request.
+    $request = $this->createRequestForTesting([], ['destination' => $destination]);
+
+    $request = RequestSanitizer::sanitize($request, [], TRUE);
+
+    $this->assertSame($destination, $request->request->get('destination', NULL));
+    $this->assertNull($request->query->get('destination', NULL));
+    $this->assertSame($destination, $_POST['destination']);
+    $this->assertSame($destination, $_REQUEST['destination']);
+    $this->assertArrayNotHasKey('destination', $_GET);
+    $this->assertEquals([], $this->errors);
+  }
+
+  /**
+   * Tests unacceptable destinations are removed from GET requests.
+   *
+   * @param string $destination
+   *   The destination string to test.
+   *
+   * @dataProvider providerTestSanitizedDestinations
+   */
+  public function testSanitizedDestinationPost($destination) {
+    // Set up a POST request.
+    $request = $this->createRequestForTesting([], ['destination' => $destination]);
+
+    $request = RequestSanitizer::sanitize($request, [], TRUE);
+
+    $this->assertNull($request->request->get('destination', NULL));
+    $this->assertNull($request->query->get('destination', NULL));
+    $this->assertArrayNotHasKey('destination', $_POST);
+    $this->assertArrayNotHasKey('destination', $_REQUEST);
+    $this->assertArrayNotHasKey('destination', $_GET);
+    $this->assertError('Potentially unsafe destination removed from request parameter bag because it points to an external URL.', E_USER_NOTICE);
+  }
+
+  /**
+   * Creates a request and sets PHP globals for testing.
+   *
+   * @param array $query
+   *   (optional) The GET parameters.
+   * @param array $request
+   *   (optional) The POST parameters.
+   *
+   * @return \Symfony\Component\HttpFoundation\Request
+   *   The request object.
+   */
+  protected function createRequestForTesting(array $query = [], array $request = []) {
+    $request = new Request($query, $request);
+
+    // Set up globals.
+    $_GET = $request->query->all();
+    $_POST = $request->request->all();
+    $_COOKIE = $request->cookies->all();
+    $_REQUEST = array_merge($request->query->all(), $request->request->all());
+    $request->server->set('QUERY_STRING', http_build_query($request->query->all()));
+    $_SERVER['QUERY_STRING'] = $request->server->get('QUERY_STRING');
+    return $request;
+  }
+
+  /**
+   * Data provider for testing acceptable destinations.
+   */
+  public function providerTestAcceptableDestinations() {
+    $data = [];
+    // Standard internal example node path is present in the 'destination'
+    // parameter.
+    $data[] = ['node'];
+    // Internal path with one leading slash is allowed.
+    $data[] = ['/example.com'];
+    // Internal URL using a colon is allowed.
+    $data[] = ['example:test'];
+    // Javascript URL is allowed because it is treated as an internal URL.
+    $data[] = ['javascript:alert(0)'];
+    return $data;
+  }
+
+  /**
+   * Data provider for testing sanitized destinations.
+   */
+  public function providerTestSanitizedDestinations() {
+    $data = [];
+    // External URL without scheme is not allowed.
+    $data[] = ['//example.com/test'];
+    // External URL is not allowed.
+    $data[] = ['http://example.com'];
+    return $data;
+  }
+
+  /**
    * Catches and logs errors to $this->errors.
    *
    * @param int $errno

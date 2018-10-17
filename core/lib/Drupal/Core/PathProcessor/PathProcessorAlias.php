@@ -43,6 +43,15 @@ class PathProcessorAlias implements InboundPathProcessorInterface, OutboundPathP
     if (empty($options['alias'])) {
       $langcode = isset($options['language']) ? $options['language']->getId() : NULL;
       $path = $this->aliasManager->getAliasByPath($path, $langcode);
+      // Ensure the resulting path has at most one leading slash, to prevent it
+      // becoming an external URL without a protocol like //example.com. This
+      // is done in \Drupal\Core\Routing\UrlGenerator::generateFromRoute()
+      // also, to protect against this problem in arbitrary path processors,
+      // but it is duplicated here to protect any other URL generation code
+      // that might call this method separately.
+      if (strpos($path, '//') === 0) {
+        $path = '/' . ltrim($path, '/');
+      }
     }
     return $path;
   }

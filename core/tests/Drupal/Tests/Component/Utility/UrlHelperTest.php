@@ -563,6 +563,10 @@ class UrlHelperTest extends TestCase {
       ['http://example.com/foo', 'http://example.com/bar', FALSE],
       ['http://example.com', 'http://example.com/bar', FALSE],
       ['http://example.com/bar', 'http://example.com/bar/', FALSE],
+      // Ensure \ is normalised to / since some browsers do that.
+      ['http://www.example.ca\@example.com', 'http://example.com', FALSE],
+      // Some browsers ignore or strip leading control characters.
+      ["\x00//www.example.ca", 'http://example.com', FALSE],
     ];
   }
 
