@@ -991,6 +991,12 @@ function drupal_check_profile($profile) {
     }
   }
 
+  // Add the profile requirements.
+  $function = $profile . '_requirements';
+  if (function_exists($function)) {
+    $requirements = array_merge($requirements, $function('install'));
+  }
+
   return $requirements;
 }
 
