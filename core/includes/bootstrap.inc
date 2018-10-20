@@ -1033,8 +1033,12 @@ function _drupal_shutdown_function() {
   chdir(DRUPAL_ROOT);
 
   try {
-    foreach ($callbacks as &$callback) {
+    reset($callbacks);
+    // Do not use foreach() here because it is possible that the callback will
+    // add to the $callbacks array via drupal_register_shutdown_function().
+    while ($callback = current($callbacks)) {
       call_user_func_array($callback['callback'], $callback['arguments']);
+      next($callbacks);
     }
   }
   // PHP 7 introduces Throwable, which covers both Error and
