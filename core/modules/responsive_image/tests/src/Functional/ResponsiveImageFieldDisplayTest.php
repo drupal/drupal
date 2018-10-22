@@ -1,13 +1,14 @@
 <?php
 
-namespace Drupal\responsive_image\Tests;
+namespace Drupal\Tests\responsive_image\Functional;
 
-use Drupal\image\Tests\ImageFieldTestBase;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
 use Drupal\responsive_image\Plugin\Field\FieldFormatter\ResponsiveImageFormatter;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
+use Drupal\Tests\image\Functional\ImageFieldTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 
 /**
@@ -16,6 +17,8 @@ use Drupal\user\RoleInterface;
  * @group responsive_image
  */
 class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
+
+  use TestFileCreationTrait;
 
   protected $dumpHeaders = TRUE;
 
@@ -172,7 +175,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $this->createImageField($field_name, 'article', ['uri_scheme' => $scheme]);
     // Create a new node with an image attached. Make sure we use a large image
     // so the scale effects of the image styles always have an effect.
-    $test_image = current($this->drupalGetTestFiles('image', 39325));
+    $test_image = current($this->getTestFiles('image', 39325));
 
     // Create alt text for the image.
     $alt = $this->randomMachineName();
@@ -240,13 +243,11 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $display->setComponent($field_name, $display_options)
       ->save();
 
-    $default_output = '<a href="' . file_url_transform_relative(file_create_url($image_uri)) . '"><picture';
     $this->drupalGet('node/' . $nid);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
 
-    $this->removeWhiteSpace();
-    $this->assertRaw($default_output, 'Image linked to file formatter displaying correctly on full node view.');
+    $this->assertPattern('/<a(.*?)href="' . preg_quote(file_url_transform_relative(file_create_url($image_uri)), '/') . '"(.*?)>\s*<picture/');
     // Verify that the image can be downloaded.
     $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
     if ($scheme == 'private') {
@@ -369,7 +370,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $field_name = mb_strtolower($this->randomMachineName());
     $this->createImageField($field_name, 'article', ['uri_scheme' => 'public']);
     // Create a new node with an image attached.
-    $test_image = current($this->drupalGetTestFiles('image'));
+    $test_image = current($this->getTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
     $node_storage->resetCache([$nid]);
 
@@ -389,7 +390,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid);
 
     // Assert an empty media attribute is not output.
-    $this->assertNoPattern('@srcset="data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x".+?media=".+?/><source@');
+    $this->assertSession()->responseNotMatches('@srcset="data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x".+?media=".+?/><source@');
 
     // Assert the media attribute is present if it has a value.
     $thumbnail_style = ImageStyle::load('thumbnail');
@@ -417,7 +418,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $field_name = mb_strtolower($this->randomMachineName());
     $this->createImageField($field_name, 'article', ['uri_scheme' => 'public']);
     // Create a new node with an image attached.
-    $test_image = current($this->drupalGetTestFiles('image'));
+    $test_image = current($this->getTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
     $node_storage->resetCache([$nid]);
 
@@ -455,7 +456,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $field_settings = ['alt_field_required' => 0];
     $this->createImageField($field_name, 'article', ['uri_scheme' => 'public'], $field_settings);
     // Create a new node with an image attached.
-    $test_image = current($this->drupalGetTestFiles('image'));
+    $test_image = current($this->getTestFiles('image'));
 
     // Test the image linked to file formatter.
     $display_options = [
@@ -497,16 +498,15 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Output should contain all image styles and all breakpoints.
     $this->drupalGet('node/' . $nid);
-    $this->removeWhiteSpace();
     switch ($link_type) {
       case 'file':
         // Make sure the link to the file is present.
-        $this->assertPattern('/<a(.*?)href="' . preg_quote(file_url_transform_relative(file_create_url($image_uri)), '/') . '"(.*?)><picture/');
+        $this->assertPattern('/<a(.*?)href="' . preg_quote(file_url_transform_relative(file_create_url($image_uri)), '/') . '"(.*?)>\s*<picture/');
         break;
 
       case 'content':
         // Make sure the link to the node is present.
-        $this->assertPattern('/<a(.*?)href="' . preg_quote($node->url(), '/') . '"(.*?)><picture/');
+        $this->assertPattern('/<a(.*?)href="' . preg_quote($node->url(), '/') . '"(.*?)>\s*<picture/');
         break;
     }
   }
