@@ -109,6 +109,7 @@
         "drupal/core-transliteration": "self.version",
         "drupal/core-utility": "self.version",
         "drupal/core-uuid": "self.version",
+        "drupal/core-version": "self.version",
         "drupal/datetime": "self.version",
         "drupal/datetime_range": "self.version",
         "drupal/dblog": "self.version",
@@ -196,7 +197,8 @@
                 "core/lib/Drupal/Component/Serialization/composer.json",
                 "core/lib/Drupal/Component/Transliteration/composer.json",
                 "core/lib/Drupal/Component/Utility/composer.json",
-                "core/lib/Drupal/Component/Uuid/composer.json"
+                "core/lib/Drupal/Component/Uuid/composer.json",
+                "core/lib/Drupal/Component/Version/composer.json"
             ],
             "recurse": false,
             "replace": false,

@@ -1214,9 +1214,13 @@ function debug($data, $label = NULL, $print_r = TRUE) {
  *   NULL if compatible, otherwise the original dependency version string that
  *   caused the incompatibility.
  *
- * @see \Drupal\Core\Extension\ModuleHandler::parseDependency()
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\Core\Extension\Dependency::isCompatible() instead.
+ *
+ * @see https://www.drupal.org/node/2756875
  */
 function drupal_check_incompatibility($v, $current_version) {
+  @trigger_error(__FUNCTION__ . '() is deprecated. Use \Drupal\Core\Extension\Dependency::isCompatible() instead. See https://www.drupal.org/node/2756875', E_USER_DEPRECATED);
   if (!empty($v['versions'])) {
     foreach ($v['versions'] as $required_version) {
       if ((isset($required_version['op']) && !version_compare($current_version, $required_version['version'], $required_version['op']))) {

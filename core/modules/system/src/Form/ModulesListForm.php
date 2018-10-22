@@ -307,7 +307,8 @@ class ModulesListForm extends FormBase {
     }
 
     // If this module requires other modules, add them to the array.
-    foreach ($module->requires as $dependency => $version) {
+    /** @var \Drupal\Core\Extension\Dependency $dependency_object */
+    foreach ($module->requires as $dependency => $dependency_object) {
       if (!isset($modules[$dependency])) {
         $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">missing</span>)', ['@module' => Unicode::ucfirst($dependency)]);
         $row['enable']['#disabled'] = TRUE;
@@ -317,9 +318,10 @@ class ModulesListForm extends FormBase {
         $name = $modules[$dependency]->info['name'];
         // Disable the module's checkbox if it is incompatible with the
         // dependency's version.
-        if ($incompatible_version = drupal_check_incompatibility($version, str_replace(\Drupal::CORE_COMPATIBILITY . '-', '', $modules[$dependency]->info['version']))) {
-          $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">incompatible with</span> version @version)', [
-            '@module' => $name . $incompatible_version,
+        if (!$dependency_object->isCompatible(str_replace(\Drupal::CORE_COMPATIBILITY . '-', '', $modules[$dependency]->info['version']))) {
+          $row['#requires'][$dependency] = $this->t('@module (@constraint) (<span class="admin-missing">incompatible with</span> version @version)', [
+            '@module' => $name,
+            '@constraint' => $dependency_object->getConstraintString(),
             '@version' => $modules[$dependency]->info['version'],
           ]);
           $row['enable']['#disabled'] = TRUE;

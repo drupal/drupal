@@ -497,39 +497,6 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider dependencyProvider
-   * @covers ::parseDependency
-   */
-  public function testDependencyParsing($dependency, $expected) {
-    $version = ModuleHandler::parseDependency($dependency);
-    $this->assertEquals($expected, $version);
-  }
-
-  /**
-   * Provider for testing dependency parsing.
-   */
-  public function dependencyProvider() {
-    return [
-      ['system', ['name' => 'system']],
-      ['taxonomy', ['name' => 'taxonomy']],
-      ['views', ['name' => 'views']],
-      ['views_ui(8.x-1.0)', ['name' => 'views_ui', 'original_version' => ' (8.x-1.0)', 'versions' => [['op' => '=', 'version' => '1.0']]]],
-      // Not supported?.
-      // array('views_ui(8.x-1.1-beta)', array('name' => 'views_ui', 'original_version' => ' (8.x-1.1-beta)', 'versions' => array(array('op' => '=', 'version' => '1.1-beta')))),
-      ['views_ui(8.x-1.1-alpha12)', ['name' => 'views_ui', 'original_version' => ' (8.x-1.1-alpha12)', 'versions' => [['op' => '=', 'version' => '1.1-alpha12']]]],
-      ['views_ui(8.x-1.1-beta8)', ['name' => 'views_ui', 'original_version' => ' (8.x-1.1-beta8)', 'versions' => [['op' => '=', 'version' => '1.1-beta8']]]],
-      ['views_ui(8.x-1.1-rc11)', ['name' => 'views_ui', 'original_version' => ' (8.x-1.1-rc11)', 'versions' => [['op' => '=', 'version' => '1.1-rc11']]]],
-      ['views_ui(8.x-1.12)', ['name' => 'views_ui', 'original_version' => ' (8.x-1.12)', 'versions' => [['op' => '=', 'version' => '1.12']]]],
-      ['views_ui(8.x-1.x)', ['name' => 'views_ui', 'original_version' => ' (8.x-1.x)', 'versions' => [['op' => '<', 'version' => '2.x'], ['op' => '>=', 'version' => '1.x']]]],
-      ['views_ui( <= 8.x-1.x)', ['name' => 'views_ui', 'original_version' => ' ( <= 8.x-1.x)', 'versions' => [['op' => '<=', 'version' => '2.x']]]],
-      ['views_ui(<= 8.x-1.x)', ['name' => 'views_ui', 'original_version' => ' (<= 8.x-1.x)', 'versions' => [['op' => '<=', 'version' => '2.x']]]],
-      ['views_ui( <=8.x-1.x)', ['name' => 'views_ui', 'original_version' => ' ( <=8.x-1.x)', 'versions' => [['op' => '<=', 'version' => '2.x']]]],
-      ['views_ui(>8.x-1.x)', ['name' => 'views_ui', 'original_version' => ' (>8.x-1.x)', 'versions' => [['op' => '>', 'version' => '2.x']]]],
-      ['drupal:views_ui(>8.x-1.x)', ['project' => 'drupal', 'name' => 'views_ui', 'original_version' => ' (>8.x-1.x)', 'versions' => [['op' => '>', 'version' => '2.x']]]],
-    ];
-  }
-
-  /**
    * @covers ::getModuleDirectories
    */
   public function testGetModuleDirectories() {

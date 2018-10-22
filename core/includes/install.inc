@@ -5,6 +5,7 @@
  * API functions for installing modules and themes.
  */
 
+use Drupal\Core\Extension\Dependency;
 use Drupal\Component\Utility\Unicode;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Component\Utility\Crypt;
@@ -1120,15 +1121,14 @@ function install_profile_info($profile, $langcode = 'en') {
     $info = \Drupal::service('info_parser')->parse("$profile_path/$profile.info.yml");
     $info += $defaults;
 
+    $dependency_name_function = function ($dependency) {
+      return Dependency::createFromString($dependency)->getName();
+    };
     // Convert dependencies in [project:module] format.
-    $info['dependencies'] = array_map(function ($dependency) {
-      return ModuleHandler::parseDependency($dependency)['name'];
-    }, $info['dependencies']);
+    $info['dependencies'] = array_map($dependency_name_function, $info['dependencies']);
 
     // Convert install key in [project:module] format.
-    $info['install'] = array_map(function ($dependency) {
-      return ModuleHandler::parseDependency($dependency)['name'];
-    }, $info['install']);
+    $info['install'] = array_map($dependency_name_function, $info['install']);
 
     // drupal_required_modules() includes the current profile as a dependency.
     // Remove that dependency, since a module cannot depend on itself.

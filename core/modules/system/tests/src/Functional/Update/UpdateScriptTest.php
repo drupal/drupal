@@ -142,6 +142,19 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertText('This is a requirements error provided by the update_script_test module.');
     $this->clickLink('try again');
     $this->assertText('This is a requirements error provided by the update_script_test module.');
+
+    // Ensure that changes to a module's requirements that would cause errors
+    // are displayed correctly.
+    $update_script_test_config->set('requirement_type', REQUIREMENT_OK)->save();
+    \Drupal::state()->set('update_script_test.system_info_alter', ['dependencies' => ['a_module_that_does_not_exist']]);
+    $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->assertSession()->responseContains('a_module_that_does_not_exist (Missing)');
+    $this->assertSession()->responseContains('Update script test requires this module.');
+
+    \Drupal::state()->set('update_script_test.system_info_alter', ['dependencies' => ['node (<7.x-0.0-dev)']]);
+    $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->assertSession()->assertEscaped('Node (Version <7.x-0.0-dev required)');
+    $this->assertSession()->responseContains('Update script test requires this module and version. Currently using Node version ' . \Drupal::VERSION);
   }
 
   /**

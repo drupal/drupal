@@ -214,7 +214,7 @@ class ModuleExtensionList extends ExtensionList {
   protected function ensureRequiredDependencies(Extension $module, array $modules = []) {
     if (!empty($module->info['required'])) {
       foreach ($module->info['dependencies'] as $dependency) {
-        $dependency_name = ModuleHandler::parseDependency($dependency)['name'];
+        $dependency_name = Dependency::createFromString($dependency)->getName();
         if (!isset($modules[$dependency_name]->info['required'])) {
           $modules[$dependency_name]->info['required'] = TRUE;
           $modules[$dependency_name]->info['explanation'] = $this->t('Dependency of required module @module', ['@module' => $module->info['name']]);

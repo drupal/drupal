@@ -5,6 +5,7 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
+use Drupal\Core\Extension\Dependency;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
@@ -21,7 +22,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
-use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Url;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\user\UserInterface;
@@ -1014,7 +1014,7 @@ function _system_rebuild_module_data_ensure_required($module, &$modules) {
   @trigger_error("_system_rebuild_module_data_ensure_required() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. This function is no longer used in Drupal core. See https://www.drupal.org/node/2709919", E_USER_DEPRECATED);
   if (!empty($module->info['required'])) {
     foreach ($module->info['dependencies'] as $dependency) {
-      $dependency_name = ModuleHandler::parseDependency($dependency)['name'];
+      $dependency_name = Dependency::createFromString($dependency)->getName();
       if (!isset($modules[$dependency_name]->info['required'])) {
         $modules[$dependency_name]->info['required'] = TRUE;
         $modules[$dependency_name]->info['explanation'] = t('Dependency of required module @module', ['@module' => $module->info['name']]);

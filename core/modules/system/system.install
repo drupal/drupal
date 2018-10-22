@@ -803,8 +803,9 @@ function system_requirements($phase) {
         $requirements['php']['severity'] = REQUIREMENT_ERROR;
       }
       // Check the module's required modules.
+      /** @var \Drupal\Core\Extension\Dependency $requirement */
       foreach ($file->requires as $requirement) {
-        $required_module = $requirement['name'];
+        $required_module = $requirement->getName();
         // Check if the module exists.
         if (!isset($files[$required_module])) {
           $requirements["$module-$required_module"] = [
@@ -819,13 +820,11 @@ function system_requirements($phase) {
         $required_file = $files[$required_module];
         $required_name = $required_file->info['name'];
         $version = str_replace(\Drupal::CORE_COMPATIBILITY . '-', '', $required_file->info['version']);
-        $compatibility = drupal_check_incompatibility($requirement, $version);
-        if ($compatibility) {
-          $compatibility = rtrim(substr($compatibility, 2), ')');
+        if (!$requirement->isCompatible($version)) {
           $requirements["$module-$required_module"] = [
             'title' => t('Unresolved dependency'),
             'description' => t('@name requires this module and version. Currently using @required_name version @version', ['@name' => $name, '@required_name' => $required_name, '@version' => $version]),
-            'value' => t('@required_name (Version @compatibility required)', ['@required_name' => $required_name, '@compatibility' => $compatibility]),
+            'value' => t('@required_name (Version @compatibility required)', ['@required_name' => $required_name, '@compatibility' => $requirement->getConstraintString()]),
             'severity' => REQUIREMENT_ERROR,
           ];
           continue;
