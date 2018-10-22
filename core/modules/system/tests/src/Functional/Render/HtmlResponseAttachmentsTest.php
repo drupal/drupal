@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Render;
+namespace Drupal\Tests\system\Functional\Render;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Functional tests for HtmlResponseAttachmentsProcessor.
  *
  * @group Render
  */
-class HtmlResponseAttachmentsTest extends WebTestBase {
+class HtmlResponseAttachmentsTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -61,7 +61,7 @@ class HtmlResponseAttachmentsTest extends WebTestBase {
       '</foo?bar=&lt;baz&gt;&amp;baz=false>; rel="alternate"',
       '</foo/bar>; hreflang="nl"; rel="alternate"',
     ];
-    $this->assertEqual($this->drupalGetHeader('link'), implode(',', $expected_link_headers));
+    $this->assertEqual($this->getSession()->getResponseHeaders()['Link'], $expected_link_headers);
   }
 
   /**
@@ -93,9 +93,10 @@ class HtmlResponseAttachmentsTest extends WebTestBase {
    * Helper function to make assertions about added HTTP headers.
    */
   protected function assertTeapotHeaders() {
-    $this->assertHeader('X-Test-Teapot', 'Teapot Mode Active');
-    $this->assertHeader('X-Test-Teapot-Replace', 'Teapot replaced');
-    $this->assertHeader('X-Test-Teapot-No-Replace', 'This value is not replaced,This one is added');
+    $headers = $this->getSession()->getResponseHeaders();
+    $this->assertEquals($headers['X-Test-Teapot'], ['Teapot Mode Active']);
+    $this->assertEquals($headers['X-Test-Teapot-Replace'], ['Teapot replaced']);
+    $this->assertEquals($headers['X-Test-Teapot-No-Replace'], ['This value is not replaced', 'This one is added']);
   }
 
   /**
@@ -117,8 +118,8 @@ class HtmlResponseAttachmentsTest extends WebTestBase {
       $this->fail('Unable to find feed link.');
     }
     else {
-      foreach ($test_meta->attributes() as $attribute => $value) {
-        $this->assertEqual($value, $test_meta_attributes[$attribute]);
+      foreach ($test_meta_attributes as $attribute => $value) {
+        $this->assertEquals($value, $test_meta->getAttribute($attribute));
       }
     }
   }
@@ -136,8 +137,7 @@ class HtmlResponseAttachmentsTest extends WebTestBase {
       $this->fail('Unable to find the head meta.');
     }
     else {
-      $test_meta_attributes = $test_meta->attributes();
-      $this->assertEqual($test_meta_attributes['test-attribute'], 'testvalue');
+      $this->assertEqual($test_meta->getAttribute('test-attribute'), 'testvalue');
     }
   }
 
