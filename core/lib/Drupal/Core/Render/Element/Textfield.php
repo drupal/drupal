@@ -15,6 +15,7 @@ use Drupal\Core\Render\Element;
  *   autocomplete JavaScript library.
  * - #autocomplete_route_parameters: An array of parameters to be used in
  *   conjunction with the route name.
+ * - #pattern: A string for the native HTML5 pattern attribute.
  *
  * Usage example:
  * @code
@@ -24,7 +25,8 @@ use Drupal\Core\Render\Element;
  *   '#default_value' => $node->title,
  *   '#size' => 60,
  *   '#maxlength' => 128,
- * '#required' => TRUE,
+ *   '#pattern' => 'some-prefix-[a-z]+',
+ *   '#required' => TRUE,
  * );
  * @endcode
  *
