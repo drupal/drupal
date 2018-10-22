@@ -10,6 +10,7 @@ use Drupal\Core\Render\Element;
  *
  * Properties:
  * - #size: The size of the input element in characters.
+ * - #pattern: A string for the native HTML5 pattern attribute.
  *
  * Usage example:
  * @code
@@ -17,6 +18,7 @@ use Drupal\Core\Render\Element;
  *   '#type' => 'password',
  *   '#title' => $this->t('Password'),
  *   '#size' => 25,
+ *   '#pattern' => '[01]+',
  * );
  * @endcode
  *

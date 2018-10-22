@@ -11,12 +11,14 @@ use Drupal\Core\Render\Element;
  * Properties:
  * - #default_value: An RFC-compliant email address.
  * - #size: The size of the input element in characters.
+ * - #pattern: A string for the native HTML5 pattern attribute.
  *
  * Example usage:
  * @code
  * $form['email'] = array(
  *   '#type' => 'email',
  *   '#title' => $this->t('Email'),
+ *   '#pattern' => '*@example.com',
  * );
  * @end
  *
