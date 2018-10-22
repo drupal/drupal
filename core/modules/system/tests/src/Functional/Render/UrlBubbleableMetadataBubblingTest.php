@@ -1,16 +1,19 @@
 <?php
 
-namespace Drupal\system\Tests\Render;
+namespace Drupal\Tests\system\Functional\Render;
 
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests that URL bubbleable metadata is correctly bubbled.
  *
  * @group Render
  */
-class UrlBubbleableMetadataBubblingTest extends WebTestBase {
+class UrlBubbleableMetadataBubblingTest extends BrowserTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Modules to enable.
@@ -24,7 +27,6 @@ class UrlBubbleableMetadataBubblingTest extends WebTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->dumpHeaders = TRUE;
   }
 
   /**
