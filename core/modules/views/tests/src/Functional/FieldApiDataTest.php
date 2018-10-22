@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\views\Tests;
+namespace Drupal\Tests\views\Functional;
 
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Tests\Views\FieldTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\field\Functional\Views\FieldTestBase;
 use Drupal\views\Views;
 
 /**
