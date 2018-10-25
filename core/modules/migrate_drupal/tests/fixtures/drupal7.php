@@ -48329,7 +48329,227 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7009',
   'weight' => '11',
-  'info' => 'a:14:{s:4:"name";s:18:"Entity Translation";s:11:"description";s:58:"Allows entities to be translated into different languages.";s:7:"package";s:33:"Multilingual - Entity Translation";s:4:"core";s:3:"7.x";s:9:"configure";s:40:"admin/config/regional/entity_translation";s:12:"dependencies";a:1:{i:0;s:14:"locale (>7.14)";}s:17:"test_dependencies";a:2:{i:0;s:17:"pathauto:pathauto";i:1;s:5:"title";}s:5:"files";a:15:{i:0;s:40:"includes/translation.handler_factory.inc";i:1;s:32:"includes/translation.handler.inc";i:2;s:40:"includes/translation.handler.comment.inc";i:3;s:37:"includes/translation.handler.node.inc";i:4;s:46:"includes/translation.handler.taxonomy_term.inc";i:5;s:37:"includes/translation.handler.user.inc";i:6;s:32:"includes/translation.migrate.inc";i:7;s:29:"tests/entity_translation.test";i:8;s:49:"views/entity_translation_handler_relationship.inc";i:9;s:57:"views/entity_translation_handler_field_translate_link.inc";i:10;s:48:"views/entity_translation_handler_field_label.inc";i:11;s:55:"views/entity_translation_handler_filter_entity_type.inc";i:12;s:52:"views/entity_translation_handler_filter_language.inc";i:13;s:62:"views/entity_translation_handler_filter_translation_exists.inc";i:14;s:48:"views/entity_translation_handler_field_field.inc";}s:7:"version";s:7:"7.x-1.0";s:7:"project";s:18:"entity_translation";s:9:"datestamp";s:10:"1522600694";s:5:"mtime";i:1522600694;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:18:"Entity Translation";s:11:"description";s:58:"Allows entities to be translated into different languages.";s:7:"package";s:33:"Multilingual - Entity Translation";s:4:"core";s:3:"7.x";s:9:"configure";s:40:"admin/config/regional/entity_translation";s:12:"dependencies";a:1:{i:0;s:14:"locale (>7.14)";}s:17:"test_dependencies";a:2:{i:0;s:17:"pathauto:pathauto";i:1;s:5:"title";}s:5:"files";a:15:{i:0;s:40:"includes/translation.handler_factory.inc";i:1;s:32:"includes/translation.handler.inc";i:2;s:40:"includes/translation.handler.comment.inc";i:3;s:37:"includes/translation.handler.node.inc";i:4;s:46:"includes/translation.handler.taxonomy_term.inc";i:5;s:37:"includes/translation.handler.user.inc";i:6;s:32:"includes/translation.migrate.inc";i:7;s:29:"tests/entity_translation.test";i:8;s:49:"views/entity_translation_handler_relationship.inc";i:9;s:57:"views/entity_translation_handler_field_translate_link.inc";i:10;s:48:"views/entity_translation_handler_field_label.inc";i:11;s:55:"views/entity_translation_handler_filter_entity_type.inc";i:12;s:52:"views/entity_translation_handler_filter_language.inc";i:13;s:62:"views/entity_translation_handler_filter_translation_exists.inc";i:14;s:48:"views/entity_translation_handler_field_field.inc";}s:7:"version";s:7:"7.x-1.0";s:7:"project";s:18:"entity_translation";s:9:"datestamp";s:10:"1522600694";s:5:"mtime";i:1535762879;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/entity_translation_i18n_menu/entity_translation_i18n_menu.module',
+  'name' => 'entity_translation_i18n_menu',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:23:"Entity Translation Menu";s:11:"description";s:54:"Allows menu items to be translated on the entity form.";s:7:"package";s:33:"Multilingual - Entity Translation";s:4:"core";s:3:"7.x";s:12:"dependencies";a:3:{i:0;s:18:"entity_translation";i:1;s:4:"i18n";i:2;s:9:"i18n_menu";}s:5:"files";a:1:{i:0;s:33:"entity_translation_i18n_menu.test";}s:7:"version";s:7:"7.x-1.0";s:7:"project";s:18:"entity_translation";s:9:"datestamp";s:10:"1522600694";s:5:"mtime";i:1535762879;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/entity_translation_upgrade/entity_translation_upgrade.module',
+  'name' => 'entity_translation_upgrade',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:26:"Entity Translation Upgrade";s:11:"description";s:80:"Provides an upgrade path from node-based translation to field-based translation.";s:7:"package";s:33:"Multilingual - Entity Translation";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:18:"entity_translation";}s:5:"files";a:1:{i:0;s:31:"entity_translation_upgrade.test";}s:7:"version";s:7:"7.x-1.0";s:7:"project";s:18:"entity_translation";s:9:"datestamp";s:10:"1522600694";s:5:"mtime";i:1535762879;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/tests/entity_translation_test.module',
+  'name' => 'entity_translation_test',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:13:{s:4:"name";s:26:"Entity Translation testing";s:11:"description";s:61:"Tests Entity Translation module functionality. Do not enable.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:6:"hidden";b:1;s:12:"dependencies";a:1:{i:0;s:18:"entity_translation";}s:5:"files";a:1:{i:0;s:30:"entity_translation_test.module";}s:7:"version";s:7:"7.x-1.0";s:7:"project";s:18:"entity_translation";s:9:"datestamp";s:10:"1522600694";s:5:"mtime";i:1535762879;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n.module',
+  'name' => 'i18n',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '1',
+  'schema_version' => '7001',
+  'weight' => '10',
+  'info' => 'a:13:{s:4:"name";s:20:"Internationalization";s:11:"description";s:49:"Extends Drupal support for multilingual features.";s:12:"dependencies";a:2:{i:0;s:6:"locale";i:1;s:8:"variable";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:15:"i18n_object.inc";i:1;s:9:"i18n.test";}s:9:"configure";s:26:"admin/config/regional/i18n";s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_block/i18n_block.module',
+  'name' => 'i18n_block',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:15:"Block languages";s:11:"description";s:68:"Enables language selector for blocks and optional block translation.";s:12:"dependencies";a:2:{i:0;s:5:"block";i:1;s:11:"i18n_string";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:14:"i18n_block.inc";i:1;s:15:"i18n_block.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_contact/i18n_contact.module',
+  'name' => 'i18n_contact',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:19:"Contact translation";s:11:"description";s:63:"Makes contact categories and replies available for translation.";s:12:"dependencies";a:2:{i:0;s:7:"contact";i:1;s:11:"i18n_string";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_field/i18n_field.module',
+  'name' => 'i18n_field',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:17:"Field translation";s:11:"description";s:26:"Translate field properties";s:12:"dependencies";a:2:{i:0;s:5:"field";i:1;s:11:"i18n_string";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:14:"i18n_field.inc";i:1;s:15:"i18n_field.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_forum/i18n_forum.module',
+  'name' => 'i18n_forum',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:18:"Multilingual forum";s:11:"description";s:60:"Enables multilingual forum, translates names and containers.";s:12:"dependencies";a:3:{i:0;s:5:"forum";i:1;s:13:"i18n_taxonomy";i:2;s:9:"i18n_node";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:15:"i18n_forum.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_menu/i18n_menu.module',
+  'name' => 'i18n_menu',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:16:"Menu translation";s:11:"description";s:40:"Supports translatable custom menu items.";s:12:"dependencies";a:4:{i:0;s:4:"i18n";i:1;s:4:"menu";i:2;s:11:"i18n_string";i:3;s:16:"i18n_translation";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:13:"i18n_menu.inc";i:1;s:14:"i18n_menu.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_node/i18n_node.module',
+  'name' => 'i18n_node',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:13:{s:4:"name";s:20:"Multilingual content";s:11:"description";s:46:"Extended node options for multilingual content";s:12:"dependencies";a:3:{i:0;s:11:"translation";i:1;s:4:"i18n";i:2;s:11:"i18n_string";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:9:"configure";s:31:"admin/config/regional/i18n/node";s:5:"files";a:2:{i:0;s:14:"i18n_node.test";i:1;s:22:"i18n_node.variable.inc";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_path/i18n_path.module',
+  'name' => 'i18n_path',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:16:"Path translation";s:11:"description";s:37:"Define translations for generic paths";s:12:"dependencies";a:1:{i:0;s:16:"i18n_translation";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:13:"i18n_path.inc";i:1;s:14:"i18n_path.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_redirect/i18n_redirect.module',
+  'name' => 'i18n_redirect',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:20:"Translation redirect";s:11:"description";s:71:"Redirect to translated page when available. SEO for multilingual sites.";s:12:"dependencies";a:1:{i:0;s:4:"i18n";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_select/i18n_select.module',
+  'name' => 'i18n_select',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:13:{s:4:"name";s:19:"Multilingual select";s:11:"description";s:45:"API module for multilingual content selection";s:12:"dependencies";a:1:{i:0;s:4:"i18n";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:9:"configure";s:33:"admin/config/regional/i18n/select";s:5:"files";a:1:{i:0;s:16:"i18n_select.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_string/i18n_string.module',
+  'name' => 'i18n_string',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:13:{s:4:"name";s:18:"String translation";s:11:"description";s:57:"Provides support for translation of user defined strings.";s:12:"dependencies";a:2:{i:0;s:6:"locale";i:1;s:4:"i18n";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:3:{i:0;s:21:"i18n_string.admin.inc";i:1;s:15:"i18n_string.inc";i:2;s:16:"i18n_string.test";}s:9:"configure";s:34:"admin/config/regional/i18n/strings";s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_sync/i18n_sync.module',
+  'name' => 'i18n_sync',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:24:"Synchronize translations";s:11:"description";s:73:"Synchronizes taxonomy and fields across translations of the same content.";s:12:"dependencies";a:2:{i:0;s:4:"i18n";i:1;s:11:"translation";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:5:{i:0;s:16:"i18n_sync.module";i:1;s:17:"i18n_sync.install";i:2;s:20:"i18n_sync.module.inc";i:3;s:18:"i18n_sync.node.inc";i:4;s:14:"i18n_sync.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.module',
+  'name' => 'i18n_taxonomy',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:20:"Taxonomy translation";s:11:"description";s:30:"Enables multilingual taxonomy.";s:12:"dependencies";a:3:{i:0;s:8:"taxonomy";i:1;s:11:"i18n_string";i:2;s:16:"i18n_translation";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:4:{i:0;s:17:"i18n_taxonomy.inc";i:1;s:23:"i18n_taxonomy.pages.inc";i:2;s:23:"i18n_taxonomy.admin.inc";i:3;s:18:"i18n_taxonomy.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_translation/i18n_translation.module',
+  'name' => 'i18n_translation',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:16:"Translation sets";s:11:"description";s:47:"Simple translation sets API for generic objects";s:12:"dependencies";a:1:{i:0;s:4:"i18n";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:20:"i18n_translation.inc";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_user/i18n_user.module',
+  'name' => 'i18n_user',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:21:"User mail translation";s:11:"description";s:43:"Translate emails sent from the User module.";s:4:"core";s:3:"7.x";s:7:"package";s:35:"Multilingual - Internationalization";s:12:"dependencies";a:1:{i:0;s:13:"i18n_variable";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_variable/i18n_variable.module',
+  'name' => 'i18n_variable',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '1',
+  'schema_version' => '7004',
+  'weight' => '-900',
+  'info' => 'a:13:{s:4:"name";s:20:"Variable translation";s:11:"description";s:71:"Multilingual variables that switch language depending on page language.";s:12:"dependencies";a:3:{i:0;s:4:"i18n";i:1;s:24:"variable_store (7.x-2.x)";i:2;s:24:"variable_realm (7.x-2.x)";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:9:"configure";s:35:"admin/config/regional/i18n/variable";s:5:"files";a:2:{i:0;s:23:"i18n_variable.class.inc";i:1;s:18:"i18n_variable.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/tests/i18n_test.module',
+  'name' => 'i18n_test',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:13:{s:4:"name";s:26:"Internationalization tests";s:11:"description";s:55:"Helper module for testing i18n (do not enable manually)";s:12:"dependencies";a:3:{i:0;s:6:"locale";i:1;s:11:"translation";i:2;s:4:"i18n";}s:7:"package";s:7:"Testing";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/link/link.module',
@@ -48363,6 +48583,83 @@ $connection->insert('system')
   'schema_version' => '7002',
   'weight' => '100',
   'info' => 'a:13:{s:4:"name";s:5:"Title";s:11:"description";s:50:"Replaces entity legacy fields with regular fields.";s:4:"core";s:3:"7.x";s:7:"package";s:6:"Fields";s:9:"configure";s:26:"admin/config/content/title";s:12:"dependencies";a:1:{i:0;s:14:"system (>7.14)";}s:5:"files";a:3:{i:0;s:12:"title.module";i:1;s:35:"views/views_handler_title_field.inc";i:2;s:16:"tests/title.test";}s:7:"version";s:14:"7.x-1.0-alpha9";s:7:"project";s:5:"title";s:9:"datestamp";s:10:"1484302985";s:5:"mtime";i:1484302985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/variable.module',
+  'name' => 'variable',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '1',
+  'schema_version' => '0',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:8:"Variable";s:11:"description";s:43:"Variable Information and basic variable API";s:7:"package";s:8:"Variable";s:4:"core";s:3:"7.x";s:5:"files";a:9:{i:0;s:27:"includes/forum.variable.inc";i:1;s:28:"includes/locale.variable.inc";i:2;s:26:"includes/menu.variable.inc";i:3;s:26:"includes/node.variable.inc";i:4;s:28:"includes/system.variable.inc";i:5;s:30:"includes/taxonomy.variable.inc";i:6;s:33:"includes/translation.variable.inc";i:7;s:26:"includes/user.variable.inc";i:8;s:13:"variable.test";}s:7:"version";s:7:"7.x-2.5";s:7:"project";s:8:"variable";s:9:"datestamp";s:10:"1398250128";s:5:"mtime";i:1398250128;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/variable_admin/variable_admin.module',
+  'name' => 'variable_admin',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:14:"Variable admin";s:11:"description";s:26:"Variable Administration UI";s:12:"dependencies";a:1:{i:0;s:8:"variable";}s:7:"package";s:8:"Variable";s:4:"core";s:3:"7.x";s:7:"version";s:7:"7.x-2.5";s:7:"project";s:8:"variable";s:9:"datestamp";s:10:"1398250128";s:5:"mtime";i:1398250128;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/variable_example/variable_example.module',
+  'name' => 'variable_example',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:16:"Variable example";s:11:"description";s:83:"An example module showing how to use the Variable API and providing some variables.";s:12:"dependencies";a:2:{i:0;s:8:"variable";i:1;s:14:"variable_store";}s:7:"package";s:15:"Example modules";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:29:"variable_example.variable.inc";}s:7:"version";s:7:"7.x-2.5";s:7:"project";s:8:"variable";s:9:"datestamp";s:10:"1398250128";s:5:"mtime";i:1398250128;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/variable_realm/variable_realm.module',
+  'name' => 'variable_realm',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '1',
+  'schema_version' => '7000',
+  'weight' => '-1000',
+  'info' => 'a:12:{s:4:"name";s:14:"Variable realm";s:11:"description";s:49:"API to use variable realms from different modules";s:12:"dependencies";a:1:{i:0;s:8:"variable";}s:7:"package";s:8:"Variable";s:4:"core";s:3:"7.x";s:7:"version";s:7:"7.x-2.5";s:5:"files";a:2:{i:0;s:24:"variable_realm.class.inc";i:1;s:30:"variable_realm_union.class.inc";}s:7:"project";s:8:"variable";s:9:"datestamp";s:10:"1398250128";s:5:"mtime";i:1398250128;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/variable_store/variable_store.module',
+  'name' => 'variable_store',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '1',
+  'schema_version' => '7000',
+  'weight' => '-1000',
+  'info' => 'a:12:{s:4:"name";s:14:"Variable store";s:11:"description";s:60:"Database storage for variable realms. This is an API module.";s:12:"dependencies";a:1:{i:0;s:8:"variable";}s:7:"package";s:8:"Variable";s:4:"core";s:3:"7.x";s:7:"version";s:7:"7.x-2.5";s:5:"files";a:2:{i:0;s:24:"variable_store.class.inc";i:1;s:19:"variable_store.test";}s:7:"project";s:8:"variable";s:9:"datestamp";s:10:"1398250128";s:5:"mtime";i:1398250128;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/variable_views/variable_views.module',
+  'name' => 'variable_views',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:14:"Variable views";s:11:"description";s:78:"Provides views integration for variable, included a default variable argument.";s:12:"dependencies";a:2:{i:0;s:8:"variable";i:1;s:5:"views";}s:7:"package";s:8:"Variable";s:4:"core";s:3:"7.x";s:5:"files";a:3:{i:0;s:51:"includes/views_plugin_argument_default_variable.inc";i:1;s:47:"includes/views_handler_field_variable_title.inc";i:2;s:47:"includes/views_handler_field_variable_value.inc";}s:7:"version";s:7:"7.x-2.5";s:7:"project";s:8:"variable";s:9:"datestamp";s:10:"1398250128";s:5:"mtime";i:1398250128;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/views/tests/views_test.module',
+  'name' => 'views_test',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:13:{s:4:"name";s:10:"Views Test";s:11:"description";s:22:"Test module for Views.";s:7:"package";s:5:"Views";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"views";}s:6:"hidden";b:1;s:7:"version";s:8:"7.x-3.20";s:7:"project";s:5:"views";s:9:"datestamp";s:10:"1523668093";s:5:"mtime";i:1535762879;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/views/views.module',
@@ -50563,6 +50860,77 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'user_signatures',
   'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'variable_module_list',
+  'value' => 'a:4:{s:6:"locale";a:5:{i:0;s:29:"language_content_type_article";i:1;s:26:"language_content_type_page";i:2;s:26:"language_content_type_book";i:3;s:39:"language_content_type_test_content_type";i:4;s:16:"language_default";}s:4:"i18n";a:1:{i:0;s:18:"i18n_language_list";}s:14:"variable_realm";a:4:{i:0;s:26:"variable_realm_list_global";i:1;s:28:"variable_realm_list_language";i:2;s:28:"variable_realm_weight_global";i:3;s:30:"variable_realm_weight_language";}s:13:"i18n_variable";a:2:{i:0;s:18:"i18n_variable_conf";i:1;s:18:"i18n_variable_list";}}',
+))
+->values(array(
+  'name' => 'variable_realm_list_language',
+  'value' => 'a:3:{i:0;s:9:"site_name";i:1;s:11:"site_slogan";i:2;s:24:"maintenance_mode_message";}',
+))
+->execute();
+
+$connection->schema()->createTable('variable_store', array(
+  'fields' => array(
+    'realm' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '50',
+      'default' => '',
+    ),
+    'realm_key' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '50',
+      'default' => '',
+    ),
+    'name' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'value' => array(
+      'type' => 'text',
+      'not null' => TRUE,
+      'size' => 'big',
+    ),
+    'serialized' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'small',
+      'default' => '1',
+    ),
+  ),
+  'primary key' => array(
+    'realm',
+    'realm_key',
+    'name',
+  ),
+  'indexes' => array(
+    'realm_value' => array(
+      'realm',
+      'realm_key',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('variable_store')
+->fields(array(
+  'realm',
+  'realm_key',
+  'name',
+  'value',
+  'serialized',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'maintenance_mode_message',
+  'value' => 'is - This is a custom maintenance mode message.',
+  'serialized' => '0',
 ))
 ->execute();
 

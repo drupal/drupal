@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\migrate_drupal\Plugin\migrate\source\d7;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\State\StateInterface;
@@ -8,15 +8,14 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Drupal i18n_variable source from database.
+ * Gets Drupal variable_store source from database.
  *
  * @MigrateSource(
- *   id = "d6_variable_translation",
- *   source_module = "system",
+ *   id = "d7_variable_translation",
+ *   source_module = "i18n_variable",
  * )
  */
 class VariableTranslation extends DrupalSqlBase {
-
   /**
    * The variable names to fetch.
    *
@@ -50,16 +49,22 @@ class VariableTranslation extends DrupalSqlBase {
    */
   protected function values() {
     $values = [];
-    $result = $this->prepareQuery()->execute()->FetchAllAssoc('language');
-    foreach ($result as $i18n_variable) {
-      $values[]['language'] = $i18n_variable->language;
+    $result = $this->prepareQuery()->execute()->FetchAllAssoc('realm_key');
+    foreach ($result as $variable_store) {
+      $values[]['language'] = $variable_store['realm_key'];
     }
     $result = $this->prepareQuery()->execute()->FetchAll();
-    foreach ($result as $i18n_variable) {
+    foreach ($result as $variable_store) {
       foreach ($values as $key => $value) {
-        if ($values[$key]['language'] === $i18n_variable->language) {
-          $values[$key][$i18n_variable->name] = unserialize($i18n_variable->value);
-          break;
+        if ($values[$key]['language'] === $variable_store['realm_key']) {
+          if ($variable_store['serialized']) {
+            $values[$key][$variable_store['name']] = unserialize($variable_store['value']);
+            break;
+          }
+          else {
+            $values[$key][$variable_store['name']] = $variable_store['value'];
+            break;
+          }
         }
       }
     }
@@ -83,19 +88,19 @@ class VariableTranslation extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function query() {
-    return $this->getDatabase()
-      ->select('i18n_variable', 'v')
-      ->fields('v')
-      ->condition('name', (array) $this->configuration['variables'], 'IN');
+  public function getIds() {
+    $ids['language']['type'] = 'string';
+    return $ids;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getIds() {
-    $ids['language']['type'] = 'string';
-    return $ids;
+  public function query() {
+    return $this->select('variable_store', 'vs')
+      ->fields('vs')
+      ->condition('realm', 'language')
+      ->condition('name', (array) $this->configuration['variables'], 'IN');
   }
 
 }
