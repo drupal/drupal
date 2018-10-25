@@ -23,6 +23,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
   public static $modules = [
     'file',
     'language',
+    'config_translation',
     'content_translation',
     'migrate_drupal_ui',
     'telephone',
@@ -87,7 +88,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
       'menu' => 6,
       'taxonomy_term' => 18,
       'taxonomy_vocabulary' => 4,
-      'tour' => 4,
+      'tour' => 5,
       'user' => 4,
       'user_role' => 3,
       'menu_link_content' => 12,
@@ -136,6 +137,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
       'file',
       'filter',
       'forum',
+      'i18n_variable',
       'image',
       'language',
       'link',
@@ -177,6 +179,10 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'i18n',
+      'variable',
+      'variable_realm',
+      'variable_store',
       // These modules are in the missing path list because they are installed
       // on the source site but they are not installed on the destination site.
       'syslog',

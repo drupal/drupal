@@ -5,7 +5,7 @@ migration_tags:
   - Configuration
   - Multilingual
 source:
-  plugin: variable_translation
+  plugin: d6_variable_translation
   constants:
     slash: '/'
   variables:

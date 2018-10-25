@@ -138,6 +138,29 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'entity_translation_i18n_menu',
+      'entity_translation_upgrade',
+      'i18n',
+      'i18n_block',
+      'i18n_contact',
+      'i18n_field',
+      'i18n_forum',
+      'i18n_menu',
+      'i18n_node',
+      'i18n_path',
+      'i18n_redirect',
+      'i18n_select',
+      'i18n_string',
+      'i18n_sync',
+      'i18n_taxonomy',
+      'i18n_translation',
+      'i18n_user',
+      'i18n_variable',
+      'variable',
+      'variable_admin',
+      'variable_realm',
+      'variable_store',
+      'variable_views',
       'views',
     ];
   }

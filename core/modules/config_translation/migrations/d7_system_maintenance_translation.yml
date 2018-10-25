@@ -1,17 +1,16 @@
-id: d6_system_maintenance_translation
+id: d7_system_maintenance_translation
 label: Maintenance page configuration
 migration_tags:
-  - Drupal 6
+  - Drupal 7
   - Configuration
   - Multilingual
 source:
-  plugin: d6_variable_translation
+  plugin: d7_variable_translation
   variables:
-    - site_offline_message
-  source_module: i18n
+    - maintenance_mode_message
 process:
   langcode: language
-  message: site_offline_message
+  message: maintenance_mode_message
 destination:
   plugin: config
   config_name: system.maintenance
