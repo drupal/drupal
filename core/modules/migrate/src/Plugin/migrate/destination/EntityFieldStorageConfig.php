@@ -58,6 +58,10 @@ class EntityFieldStorageConfig extends EntityConfigBase {
   public function getIds() {
     $ids['entity_type']['type'] = 'string';
     $ids['field_name']['type'] = 'string';
+    // @todo: Remove conditional. https://www.drupal.org/node/3004574
+    if ($this->isTranslationDestination()) {
+      $ids['langcode']['type'] = 'string';
+    }
     return $ids;
   }
 
@@ -65,8 +69,18 @@ class EntityFieldStorageConfig extends EntityConfigBase {
    * {@inheritdoc}
    */
   public function rollback(array $destination_identifier) {
-    $destination_identifier = implode('.', $destination_identifier);
-    parent::rollback([$destination_identifier]);
+    if ($this->isTranslationDestination()) {
+      $language = $destination_identifier['langcode'];
+      unset($destination_identifier['langcode']);
+      $destination_identifier = [
+        implode('.', $destination_identifier),
+        'langcode' => $language,
+      ];
+    }
+    else {
+      $destination_identifier = [implode('.', $destination_identifier)];
+    }
+    parent::rollback($destination_identifier);
   }
 
 }
