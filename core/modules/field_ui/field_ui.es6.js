@@ -343,16 +343,18 @@
       // Set the region of the select list.
       this.$regionSelect.val(region);
 
-      // Restore the formatter back to the default formatter. Pseudo-fields
-      // do not have default formatters, we just return to 'visible' for
-      // those.
-      const value =
-        typeof this.defaultPlugin !== 'undefined'
-          ? this.defaultPlugin
-          : this.$pluginSelect.find('option').val();
+      // Restore the formatter back to the default formatter only if it was
+      // disabled previously. Pseudo-fields do not have default formatters,
+      // we just return to 'visible' for those.
+      if (this.region === 'hidden') {
+        const value =
+          typeof this.defaultPlugin !== 'undefined'
+            ? this.defaultPlugin
+            : this.$pluginSelect.find('option').val();
 
-      if (typeof value !== 'undefined') {
-        this.$pluginSelect.val(value);
+        if (typeof value !== 'undefined') {
+          this.$pluginSelect.val(value);
+        }
       }
 
       const refreshRows = {};
