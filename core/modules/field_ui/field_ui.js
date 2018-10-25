@@ -163,10 +163,12 @@
 
       this.$regionSelect.val(region);
 
-      var value = typeof this.defaultPlugin !== 'undefined' ? this.defaultPlugin : this.$pluginSelect.find('option').val();
+      if (this.region === 'hidden') {
+        var value = typeof this.defaultPlugin !== 'undefined' ? this.defaultPlugin : this.$pluginSelect.find('option').val();
 
-      if (typeof value !== 'undefined') {
-        this.$pluginSelect.val(value);
+        if (typeof value !== 'undefined') {
+          this.$pluginSelect.val(value);
+        }
       }
 
       var refreshRows = {};

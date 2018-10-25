@@ -240,6 +240,40 @@ class FieldLayoutTest extends WebDriverTestBase {
   }
 
   /**
+   * Tests changing the formatter and region at the same time.
+   */
+  public function testChangingFormatterAndRegion() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Add the test field to the content region.
+    $this->drupalGet('entity_test/structure/entity_test/display');
+    $page->find('css', '#field-test-text .handle')->dragTo($page->find('css', '.region-content-message'));
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Save');
+    $assert_session->fieldValueEquals('fields[field_test_text][region]', 'content');
+    $assert_session->fieldValueEquals('fields[field_test_text][type]', 'text_default');
+
+    // Switch the layout to two columns.
+    $this->click('#edit-field-layouts');
+    $page->selectFieldOption('field_layout', 'layout_twocol');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Save');
+    $assert_session->fieldValueEquals('fields[field_test_text][region]', 'first');
+
+    // Change the formatter and move to another region.
+    $page->selectFieldOption('fields[field_test_text][type]', 'text_trimmed');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->find('css', '#field-test-text .handle')->dragTo($page->find('css', '.region-second-message'));
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Save');
+
+    // Assert that both the formatter and region change are persisted.
+    $assert_session->fieldValueEquals('fields[field_test_text][region]', 'second');
+    $assert_session->fieldValueEquals('fields[field_test_text][type]', 'text_trimmed');
+  }
+
+  /**
    * Gets the region titles on the page.
    *
    * @return string[]
