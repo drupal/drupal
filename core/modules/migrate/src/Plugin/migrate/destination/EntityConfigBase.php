@@ -268,7 +268,7 @@ class EntityConfigBase extends Entity {
       // The entity id does not include the langcode.
       $id_values = [];
       foreach ($destination_identifier as $key => $value) {
-        if ($this->isTranslationDestination() && $key == 'langcode') {
+        if ($this->isTranslationDestination() && $key === 'langcode') {
           continue;
         }
         $id_values[] = $value;

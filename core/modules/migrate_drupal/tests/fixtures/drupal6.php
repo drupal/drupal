@@ -3013,6 +3013,18 @@ $connection->insert('content_node_field')
   'locked' => '0',
 ))
 ->values(array(
+  'field_name' => 'field_test_string_selectlist',
+  'type' => 'text',
+  'global_settings' => "a:4:{s:15:\"text_processing\";s:1:\"0\";s:10:\"max_length\";s:0:\"\";s:14:\"allowed_values\";s:18:\"A|Black\r\nB|White\r\n\";s:18:\"allowed_values_php\";s:0:\"\";}",
+  'required' => '0',
+  'multiple' => '0',
+  'db_storage' => '1',
+  'module' => 'text',
+  'db_columns' => 'a:1:{s:5:"value";a:5:{s:4:"type";s:4:"text";s:4:"size";s:3:"big";s:8:"not null";b:0;s:8:"sortable";b:1;s:5:"views";b:1;}}',
+  'active' => '1',
+  'locked' => '0',
+))
+->values(array(
   'field_name' => 'field_test_text_single_checkbox',
   'type' => 'text',
   'global_settings' => "a:4:{s:15:\"text_processing\";s:1:\"0\";s:10:\"max_length\";s:0:\"\";s:14:\"allowed_values\";s:18:\"0|Hello\r\n1|Goodbye\";s:18:\"allowed_values_php\";s:0:\"\";}",
@@ -3431,6 +3443,18 @@ $connection->insert('content_node_field_instance')
   'widget_active' => '1',
 ))
 ->values(array(
+  'field_name' => 'field_test_string_selectlist',
+  'type_name' => 'story',
+  'weight' => '31',
+  'label' => 'String Select List Field',
+  'widget_type' => 'optionwidgets_select',
+  'widget_settings' => 'a:2:{s:13:"default_value";a:1:{i:0;a:1:{s:5:"value";s:0:"";}}s:17:"default_value_php";N;}',
+  'display_settings' => 'a:5:{s:5:"label";a:2:{s:6:"format";s:5:"above";s:7:"exclude";i:0;}i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:6:"teaser";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
+  'description' => '',
+  'widget_module' => 'optionwidgets',
+  'widget_active' => '1',
+))
+->values(array(
   'field_name' => 'field_test_text_single_checkbox',
   'type_name' => 'story',
   'weight' => '17',
@@ -3822,6 +3846,11 @@ $connection->schema()->createTable('content_type_story', array(
       'not null' => FALSE,
       'length' => '100',
     ),
+    'field_test_string_selectlist_value' => array(
+      'type' => 'text',
+      'not null' => FALSE,
+      'size' => 'big',
+    ),
   ),
   'primary key' => array(
     'vid',
@@ -3865,6 +3894,7 @@ $connection->insert('content_type_story')
   'field_test_text_single_checkbox2_value',
   'field_test_datestamp_value2',
   'field_test_datetime_value2',
+  'field_test_string_selectlist_value',
 ))
 ->values(array(
   'nid' => '1',
@@ -3896,6 +3926,7 @@ $connection->insert('content_type_story')
   'field_test_text_single_checkbox2_value' => 'Hello',
   'field_test_datestamp_value2' => NULL,
   'field_test_datetime_value2' => NULL,
+  'field_test_string_selectlist_value' => NULL,
 ))
 ->values(array(
   'nid' => '1',
@@ -3927,6 +3958,7 @@ $connection->insert('content_type_story')
   'field_test_text_single_checkbox2_value' => NULL,
   'field_test_datestamp_value2' => NULL,
   'field_test_datetime_value2' => NULL,
+  'field_test_string_selectlist_value' => NULL,
 ))
 ->values(array(
   'nid' => '2',
@@ -3958,6 +3990,7 @@ $connection->insert('content_type_story')
   'field_test_text_single_checkbox2_value' => NULL,
   'field_test_datestamp_value2' => NULL,
   'field_test_datetime_value2' => NULL,
+  'field_test_string_selectlist_value' => NULL,
 ))
 ->values(array(
   'nid' => '2',
@@ -3989,6 +4022,7 @@ $connection->insert('content_type_story')
   'field_test_text_single_checkbox2_value' => NULL,
   'field_test_datestamp_value2' => NULL,
   'field_test_datetime_value2' => NULL,
+  'field_test_string_selectlist_value' => NULL,
 ))
 ->values(array(
   'nid' => '9',
@@ -4020,6 +4054,7 @@ $connection->insert('content_type_story')
   'field_test_text_single_checkbox2_value' => 'Off',
   'field_test_datestamp_value2' => '1391357160',
   'field_test_datetime_value2' => '2015-03-04 06:07:00',
+  'field_test_string_selectlist_value' => NULL,
 ))
 ->execute();
 
@@ -9953,6 +9988,86 @@ $connection->insert('i18n_strings')
   'objectid' => 'menu-translation-test',
   'type' => 'menu',
   'property' => 'title',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1680',
+  'objectid' => 'employee-field_company',
+  'type' => 'field',
+  'property' => 'widget_label',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1681',
+  'objectid' => 'employee-field_commander',
+  'type' => 'field',
+  'property' => 'widget_label',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1682',
+  'objectid' => 'employee-field_company_2',
+  'type' => 'field',
+  'property' => 'widget_label',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1683',
+  'objectid' => 'employee-field_company_3',
+  'type' => 'field',
+  'property' => 'widget_label',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1684',
+  'objectid' => 'page-field_reference',
+  'type' => 'field',
+  'property' => 'widget_label',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1685',
+  'objectid' => 'page-field_reference_2',
+  'type' => 'field',
+  'property' => 'widget_label',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1686',
+  'objectid' => 'story-field_test_string_selectlist',
+  'type' => 'field',
+  'property' => 'widget_label',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1689',
+  'objectid' => 'test_planet-field_test_text_single_checkbox',
+  'type' => 'field',
+  'property' => 'widget_label',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1690',
+  'objectid' => 'field_test_string_selectlist',
+  'type' => 'field',
+  'property' => 'option_A',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1691',
+  'objectid' => 'field_test_string_selectlist',
+  'type' => 'field',
+  'property' => 'option_B',
   'objectindex' => '0',
   'format' => '0',
 ))
@@ -22457,6 +22572,76 @@ $connection->insert('locales_source')
   'source' => 'Translation test',
   'version' => '1',
 ))
+->values(array(
+  'lid' => '1680',
+  'location' => 'field:employee-field_company:widget_label',
+  'textgroup' => 'cck',
+  'source' => 'Company',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1681',
+  'location' => 'field:employee-field_commander:widget_label',
+  'textgroup' => 'cck',
+  'source' => 'Commanding Officer',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1682',
+  'location' => 'field:employee-field_company_2:widget_label',
+  'textgroup' => 'cck',
+  'source' => 'Company 2',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1683',
+  'location' => 'field:employee-field_company_3:widget_label',
+  'textgroup' => 'cck',
+  'source' => 'Company 3',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1684',
+  'location' => 'field:page-field_reference:widget_label',
+  'textgroup' => 'cck',
+  'source' => 'Reference',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1685',
+  'location' => 'field:page-field_reference_2:widget_label',
+  'textgroup' => 'cck',
+  'source' => 'Reference',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1686',
+  'location' => 'field:story-field_test_string_selectlist:widget_label',
+  'textgroup' => 'cck',
+  'source' => 'String Select List Field',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1689',
+  'location' => 'field:test_planet-field_test_text_single_checkbox:widget_label',
+  'textgroup' => 'cck',
+  'source' => 'Text Single Checkbox Field',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1690',
+  'location' => 'field:field_test_string_selectlist:option_A',
+  'textgroup' => 'cck',
+  'source' => 'Black',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1691',
+  'location' => 'field:field_test_string_selectlist:option_B',
+  'textgroup' => 'cck',
+  'source' => 'White',
+  'version' => '1',
+))
 ->execute();
 
 $connection->schema()->createTable('locales_target', array(
@@ -27294,6 +27479,14 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
+  'lid' => '607',
+  'translation' => 'fr - 1.234',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
   'lid' => '608',
   'translation' => 'fr - Integer Select List Field',
   'language' => 'fr',
@@ -27304,6 +27497,22 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '609',
   'translation' => 'fr - An example integer field using a select list.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '611',
+  'translation' => 'fr - 2341',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '613',
+  'translation' => 'fr - 4123',
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -27502,6 +27711,14 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
+  'lid' => '1690',
+  'translation' => 'Noir',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
   'lid' => '66',
   'translation' => 'zu - CCK - Aucune Intégration aux Vues',
   'language' => 'zu',
@@ -27582,6 +27799,22 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
+  'lid' => '607',
+  'translation' => 'zu - 1.234',
+  'language' => 'zu',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '611',
+  'translation' => 'zu - 2341',
+  'language' => 'zu',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
   'lid' => '621',
   'translation' => 'zu - Hello',
   'language' => 'zu',
@@ -27592,6 +27825,22 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '635',
   'translation' => 'zu - Test menu link 2',
+  'language' => 'zu',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1690',
+  'translation' => 'Okumnyama',
+  'language' => 'zu',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1691',
+  'translation' => 'Mhlophe',
   'language' => 'zu',
   'plid' => '0',
   'plural' => '0',
