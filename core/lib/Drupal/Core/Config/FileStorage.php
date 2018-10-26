@@ -279,6 +279,9 @@ class FileStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function getAllCollectionNames() {
+    if (!is_dir($this->directory)) {
+      return [];
+    }
     $collections = $this->getAllCollectionNamesHelper($this->directory);
     sort($collections);
     return $collections;
@@ -305,7 +308,8 @@ class FileStorage implements StorageInterface {
    * @param string $directory
    *   The directory to check for sub directories. This allows this
    *   function to be used recursively to discover all the collections in the
-   *   storage.
+   *   storage. It is the responsibility of the caller to ensure the directory
+   *   exists.
    *
    * @return array
    *   A list of collection names contained within the provided directory.
