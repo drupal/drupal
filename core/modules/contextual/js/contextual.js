@@ -55,7 +55,7 @@
 
     $contextual.html(html).addClass('contextual').prepend(Drupal.theme('contextualTrigger'));
 
-    var destination = 'destination=' + Drupal.encodePath(drupalSettings.path.currentPath);
+    var destination = 'destination=' + Drupal.encodePath(Drupal.url(drupalSettings.path.currentPath));
     $contextual.find('.contextual-links a').each(function () {
       var url = this.getAttribute('href');
       var glue = url.indexOf('?') === -1 ? '?' : '&';
