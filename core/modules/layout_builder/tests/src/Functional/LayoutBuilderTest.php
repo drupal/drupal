@@ -256,11 +256,41 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->checkField('layout[allow_custom]');
     $page->pressButton('Save');
 
+    $this->clickLink('Manage layout');
+    // Confirm the body field only is shown once.
+    $assert_session->elementsCount('css', '.field--name-body', 1);
+    $this->clickLink('Cancel Layout');
+
     $this->clickLink('Teaser');
     // Enabling Layout Builder for the default mode does not affect the teaser.
     $assert_session->addressEquals("$field_ui_prefix/display/teaser");
     $assert_session->elementNotExists('css', '#layout-builder__layout');
     $assert_session->checkboxNotChecked('layout[enabled]');
+    $page->checkField('layout[enabled]');
+    $page->pressButton('Save');
+    $assert_session->linkExists('Manage layout');
+    $page->clickLink('Manage layout');
+    // Confirm the body field only is shown once.
+    $assert_session->elementsCount('css', '.field--name-body', 1);
+
+    // Enable a disabled view mode.
+    $page->clickLink('Cancel Layout');
+    $assert_session->addressEquals("$field_ui_prefix/display/teaser");
+    $page->clickLink('Default');
+    $assert_session->addressEquals("$field_ui_prefix/display");
+    $assert_session->linkNotExists('Full content');
+    $page->checkField('display_modes_custom[full]');
+    $page->pressButton('Save');
+
+    $assert_session->linkExists('Full content');
+    $page->clickLink('Full content');
+    $assert_session->addressEquals("$field_ui_prefix/display/full");
+    $page->checkField('layout[enabled]');
+    $page->pressButton('Save');
+    $assert_session->linkExists('Manage layout');
+    $page->clickLink('Manage layout');
+    // Confirm the body field only is shown once.
+    $assert_session->elementsCount('css', '.field--name-body', 1);
   }
 
   /**
@@ -373,6 +403,7 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     // Enable the full view mode and customize it.
     $this->drupalPostForm("$field_ui_prefix/display/default", ['display_modes_custom[full]' => TRUE], 'Save');
+    $this->drupalPostForm("$field_ui_prefix/display/full", ['layout[enabled]' => TRUE], 'Save');
     $this->drupalGet("$field_ui_prefix/display-layout/full");
     $this->clickLink('Add Block');
     $this->clickLink('Powered by Drupal');
