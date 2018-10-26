@@ -87,9 +87,14 @@ class MigrationLookupTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests that processing is skipped when the input value is empty.
+   * Tests that processing is skipped when the input value is invalid.
+   *
+   * @param mixed $value
+   *   An invalid value.
+   *
+   * @dataProvider skipInvalidDataProvider
    */
-  public function testSkipOnEmpty() {
+  public function testSkipInvalid($value) {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
 
@@ -101,7 +106,66 @@ class MigrationLookupTest extends MigrateProcessTestCase {
       ->willReturn(['foobaz' => $migration_plugin->reveal()]);
     $migration = new MigrationLookup($configuration, 'migration_lookup', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal());
     $this->setExpectedException(MigrateSkipProcessException::class);
-    $migration->transform(0, $this->migrateExecutable, $this->row, 'foo');
+    $migration->transform($value, $this->migrateExecutable, $this->row, 'foo');
+  }
+
+  /**
+   * Provides data for the SkipInvalid test.
+   *
+   * @return array
+   *   Empty values.
+   */
+  public function skipInvalidDataProvider() {
+    return [
+      'Empty String' => [''],
+      'Boolean False' => [FALSE],
+      'Empty Array' => [[]],
+      'Null' => [NULL],
+    ];
+  }
+
+  /**
+   * Test that valid, but technically empty values are not skipped.
+   *
+   * @param mixed $value
+   *   A valid value.
+   *
+   * @dataProvider noSkipValidDataProvider
+   */
+  public function testNoSkipValid($value) {
+    $migration_plugin = $this->prophesize(MigrationInterface::class);
+    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
+    $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
+    $id_map = $this->prophesize(MigrateIdMapInterface::class);
+    $id_map->lookupDestinationId([$value])->willReturn([]);
+    $migration_plugin->getIdMap()->willReturn($id_map->reveal());
+
+    $configuration = [
+      'migration' => 'foobaz',
+      'no_stub' => TRUE,
+    ];
+    $migration_plugin->id()->willReturn(uniqid());
+    $migration_plugin_manager->createInstances(['foobaz'])
+      ->willReturn(['foobaz' => $migration_plugin->reveal()]);
+    $migration = new MigrationLookup($configuration, 'migration_lookup', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
+    $lookup = $migration->transform($value, $this->migrateExecutable, $this->row, 'foo');
+
+    /* We provided no values and asked for no stub, so we should get NULL. */
+    $this->assertNull($lookup);
+  }
+
+  /**
+   * Provides data for the NoSkipValid test.
+   *
+   * @return array
+   *   Empty values.
+   */
+  public function noSkipValidDataProvider() {
+    return [
+      'Integer Zero' => [0],
+      'String Zero' => ['0'],
+      'Float Zero' => [0.0],
+    ];
   }
 
   /**
@@ -158,6 +222,17 @@ class MigrationLookupTest extends MigrateProcessTestCase {
         [3],
         // Input value for the migration plugin.
         1,
+        // Expected output value of the migration plugin.
+        3,
+      ],
+      // Test 0 as data source ID.
+      [
+        // Source ID of the migration map.
+        [0],
+        // Destination ID of the migration map.
+        [3],
+        // Input value for the migration plugin.
+        0,
         // Expected output value of the migration plugin.
         3,
       ],

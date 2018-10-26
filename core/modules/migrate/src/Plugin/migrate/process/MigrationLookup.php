@@ -92,6 +92,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     source: author
  * @endcode
  *
+ * If the source value passed in to the plugin is NULL, boolean FALSE, an empty
+ * array or an empty string, the plugin will throw a
+ * MigrateSkipProcessException, causing further plugins in the process to be
+ * skipped.
+ *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
  * @MigrateProcessPlugin(
@@ -149,6 +154,8 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\migrate\MigrateSkipProcessException
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $lookup_migrations_ids = $this->configuration['migration'];
@@ -172,7 +179,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       if (!is_array($value)) {
         $value = [$value];
       }
-      $this->skipOnEmpty($value);
+      $this->skipInvalid($value);
       $source_id_values[$lookup_migration_id] = $value;
       // Break out of the loop as soon as a destination ID is found.
       if ($destination_ids = $lookup_migration->getIdMap()->lookupDestinationId($source_id_values[$lookup_migration_id])) {
@@ -236,17 +243,32 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
   }
 
   /**
-   * Skips the migration process entirely if the value is FALSE.
+   * Skips the migration process entirely if the value is invalid.
    *
    * @param array $value
-   *   The incoming value to transform.
+   *   The incoming value to check.
    *
    * @throws \Drupal\migrate\MigrateSkipProcessException
    */
-  protected function skipOnEmpty(array $value) {
-    if (!array_filter($value)) {
+  protected function skipInvalid(array $value) {
+    if (!array_filter($value, [$this, 'isValid'])) {
       throw new MigrateSkipProcessException();
     }
+  }
+
+  /**
+   * Determines if the value is valid for lookup.
+   *
+   * The only values considered invalid are: NULL, FALSE, [] and "".
+   *
+   * @param string $value
+   *   The value to test.
+   *
+   * @return bool
+   *   Return true if the value is valid.
+   */
+  protected function isValid($value) {
+    return !in_array($value, [NULL, FALSE, [], ""], TRUE);
   }
 
   /**

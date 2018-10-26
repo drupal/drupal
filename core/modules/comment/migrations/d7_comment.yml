@@ -14,9 +14,13 @@ process:
   # the cid field to allow incremental migrations.
   cid: cid
   pid:
-    plugin: migration_lookup
-    migration: d7_comment
-    source: pid
+    -
+      plugin: skip_on_empty
+      method: process
+      source: pid
+    -
+      plugin: migration_lookup
+      migration: d7_comment
   entity_id:
     -
       plugin: migration_lookup
