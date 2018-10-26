@@ -4,9 +4,9 @@ namespace Drupal\user\EventSubscriber;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Routing\RouteMatch;
-use Drupal\Core\Routing\UrlGeneratorTrait;
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -21,8 +21,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class AccessDeniedSubscriber implements EventSubscriberInterface {
 
-  use UrlGeneratorTrait;
-
   /**
    * The current user.
    *
@@ -35,12 +33,9 @@ class AccessDeniedSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The URL generator.
    */
-  public function __construct(AccountInterface $account, UrlGeneratorInterface $url_generator) {
+  public function __construct(AccountInterface $account) {
     $this->account = $account;
-    $this->setUrlGenerator($url_generator);
   }
 
   /**
@@ -53,21 +48,26 @@ class AccessDeniedSubscriber implements EventSubscriberInterface {
     $exception = $event->getException();
     if ($exception instanceof AccessDeniedHttpException) {
       $route_name = RouteMatch::createFromRequest($event->getRequest())->getRouteName();
+      $redirect_url = NULL;
       if ($this->account->isAuthenticated()) {
         switch ($route_name) {
           case 'user.login';
             // Redirect an authenticated user to the profile page.
-            $event->setResponse($this->redirect('entity.user.canonical', ['user' => $this->account->id()]));
+            $redirect_url = Url::fromRoute('entity.user.canonical', ['user' => $this->account->id()], ['absolute' => TRUE]);
             break;
 
           case 'user.register';
             // Redirect an authenticated user to the profile form.
-            $event->setResponse($this->redirect('entity.user.edit_form', ['user' => $this->account->id()]));
+            $redirect_url = Url::fromRoute('entity.user.edit_form', ['user' => $this->account->id()], ['absolute' => TRUE]);
             break;
         }
       }
       elseif ($route_name === 'user.page') {
-        $event->setResponse($this->redirect('user.login'));
+        $redirect_url = Url::fromRoute('user.login', [], ['absolute' => TRUE]);
+      }
+
+      if ($redirect_url) {
+        $event->setResponse(new RedirectResponse($redirect_url->toString()));
       }
     }
   }

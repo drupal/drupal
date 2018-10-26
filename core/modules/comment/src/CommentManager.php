@@ -8,11 +8,10 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\user\RoleInterface;
@@ -22,7 +21,6 @@ use Drupal\user\RoleInterface;
  */
 class CommentManager implements CommentManagerInterface {
   use StringTranslationTrait;
-  use UrlGeneratorTrait;
 
   /**
    * The entity manager service.
@@ -68,18 +66,15 @@ class CommentManager implements CommentManagerInterface {
    *   The config factory.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The url generator service.
    *  @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
+  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
     $this->entityManager = $entity_manager;
     $this->userConfig = $config_factory->get('user.settings');
     $this->stringTranslation = $string_translation;
-    $this->urlGenerator = $url_generator;
     $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
   }
@@ -151,7 +146,7 @@ class CommentManager implements CommentManagerInterface {
           'entity' => $entity->id(),
           'field_name' => $field_name,
         ];
-        $destination = ['destination' => $this->url('comment.reply', $comment_reply_parameters, ['fragment' => 'comment-form'])];
+        $destination = ['destination' => Url::fromRoute('comment.reply', $comment_reply_parameters, ['fragment' => 'comment-form'])->toString()];
       }
       else {
         $destination = ['destination' => $entity->url('canonical', ['fragment' => 'comment-form'])];
@@ -160,14 +155,14 @@ class CommentManager implements CommentManagerInterface {
       if ($this->userConfig->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
         // Users can register themselves.
         return $this->t('<a href=":login">Log in</a> or <a href=":register">register</a> to post comments', [
-          ':login' => $this->urlGenerator->generateFromRoute('user.login', [], ['query' => $destination]),
-          ':register' => $this->urlGenerator->generateFromRoute('user.register', [], ['query' => $destination]),
+          ':login' => Url::fromRoute('user.login', [], ['query' => $destination])->toString(),
+          ':register' => Url::fromRoute('user.register', [], ['query' => $destination])->toString(),
         ]);
       }
       else {
         // Only admins can add new users, no public registration.
         return $this->t('<a href=":login">Log in</a> to post comments', [
-          ':login' => $this->urlGenerator->generateFromRoute('user.login', [], ['query' => $destination]),
+          ':login' => Url::fromRoute('user.login', [], ['query' => $destination])->toString(),
         ]);
       }
     }

@@ -4,7 +4,6 @@ namespace Drupal\search_extra_type\Plugin\Search;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\Url;
 use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 
@@ -17,8 +16,6 @@ use Drupal\search\Plugin\ConfigurableSearchPluginBase;
  * )
  */
 class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
-
-  use UrlGeneratorTrait;
 
   /**
    * {@inheritdoc}

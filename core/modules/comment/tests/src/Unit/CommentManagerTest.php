@@ -48,7 +48,6 @@ class CommentManagerTest extends UnitTestCase {
       $entity_manager,
       $this->getMock('Drupal\Core\Config\ConfigFactoryInterface'),
       $this->getMock('Drupal\Core\StringTranslation\TranslationInterface'),
-      $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface'),
       $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface'),
       $this->getMock('Drupal\Core\Session\AccountInterface')
     );

@@ -32,7 +32,7 @@ services:
       - { name: event_subscriber }
   user_access_denied_subscriber:
     class: Drupal\user\EventSubscriber\AccessDeniedSubscriber
-    arguments: ['@current_user', '@url_generator']
+    arguments: ['@current_user']
     tags:
       - { name: event_subscriber }
   user_last_access_subscriber:
