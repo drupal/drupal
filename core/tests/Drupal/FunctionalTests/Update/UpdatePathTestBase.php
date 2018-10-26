@@ -296,7 +296,10 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     // Ensure there are no failed updates.
     if ($this->checkFailedUpdates) {
-      $this->assertNoRaw('<strong>' . t('Failed:') . '</strong>');
+      $failure = $this->cssSelect('.failure');
+      if ($failure) {
+        $this->fail('The update failed with the following message: "' . reset($failure)->getText() . '"');
+      }
 
       // Ensure that there are no pending updates.
       foreach (['update', 'post_update'] as $update_type) {
