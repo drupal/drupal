@@ -46,13 +46,6 @@ class BlockForm extends EntityForm {
   protected $manager;
 
   /**
-   * The event dispatcher service.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   */
-  protected $dispatcher;
-
-  /**
    * The language manager service.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
