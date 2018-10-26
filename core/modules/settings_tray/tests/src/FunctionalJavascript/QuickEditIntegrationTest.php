@@ -145,7 +145,8 @@ class QuickEditIntegrationTest extends SettingsTrayTestBase {
     $href = array_search('Quick edit', $link_labels);
     $this->assertEquals('', $href);
     $href = array_search('Quick edit settings', $link_labels);
-    $this->assertTrue(strstr($href, '/admin/structure/block/manage/custom/settings-tray?destination=user/2') !== FALSE);
+    $destination = (string) $this->loggedInUser->toUrl()->toString();
+    $this->assertTrue(strstr($href, "/admin/structure/block/manage/custom/settings-tray?destination=$destination") !== FALSE);
   }
 
   /**
