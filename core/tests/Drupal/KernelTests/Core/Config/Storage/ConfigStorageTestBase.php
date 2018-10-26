@@ -151,6 +151,11 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     // Listing on a non-existing storage bin returns an empty array.
     $result = $this->invalidStorage->listAll();
     $this->assertIdentical($result, []);
+
+    // Getting all collections on a non-existing storage bin return an empty
+    // array.
+    $this->assertSame([], $this->invalidStorage->getAllCollectionNames());
+
     // Writing to a non-existing storage bin creates the bin.
     $this->invalidStorage->write($name, ['foo' => 'bar']);
     $result = $this->invalidStorage->read($name);
