@@ -200,6 +200,16 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   /**
    * {@inheritdoc}
    */
+  public function createCopy($mode) {
+    // Disable Layout Builder and remove any sections copied from the original.
+    return parent::createCopy($mode)
+      ->setSections([])
+      ->disableLayoutBuilder();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getDefaultRegion() {
     if ($this->hasSection(0)) {
       return $this->getSection(0)->getDefaultRegion();
