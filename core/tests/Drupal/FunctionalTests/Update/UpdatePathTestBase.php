@@ -2,14 +2,9 @@
 
 namespace Drupal\FunctionalTests\Update;
 
-use Behat\Mink\Driver\GoutteDriver;
-use Behat\Mink\Mink;
-use Behat\Mink\Selector\SelectorsHandler;
-use Behat\Mink\Session;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\HiddenFieldSelector;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -197,14 +192,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     require_once $this->root . '/core/includes/update.inc';
 
     // Setup Mink.
-    $session = $this->initMink();
-
-    $cookies = $this->extractCookiesFromRequest(\Drupal::request());
-    foreach ($cookies as $cookie_name => $values) {
-      foreach ($values as $value) {
-        $session->setCookie($cookie_name, $value);
-      }
-    }
+    $this->initMink();
 
     // Set up the browser test output file.
     $this->initBrowserOutputFile();
@@ -244,37 +232,8 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function initMink() {
-    $driver = $this->getDefaultDriverInstance();
-
-    if ($driver instanceof GoutteDriver) {
-      // Turn off curl timeout. Having a timeout is not a problem in a normal
-      // test running, but it is a problem when debugging. Also, disable SSL
-      // peer verification so that testing under HTTPS always works.
-      /** @var \GuzzleHttp\Client $client */
-      $client = $this->container->get('http_client_factory')->fromOptions([
-        'timeout' => NULL,
-        'verify' => FALSE,
-      ]);
-
-      // Inject a Guzzle middleware to generate debug output for every request
-      // performed in the test.
-      $handler_stack = $client->getConfig('handler');
-      $handler_stack->push($this->getResponseLogHandler());
-
-      $driver->getClient()->setClient($client);
-    }
-
-    $selectors_handler = new SelectorsHandler([
-      'hidden_field_selector' => new HiddenFieldSelector(),
-    ]);
-    $session = new Session($driver, $selectors_handler);
-    $this->mink = new Mink();
-    $this->mink->registerSession('default', $session);
-    $this->mink->setDefaultSessionName('default');
-    $this->registerSessions();
-
-    return $session;
+  protected function initFrontPage() {
+    // Do nothing as Drupal is not installed yet.
   }
 
   /**
