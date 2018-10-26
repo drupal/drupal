@@ -186,7 +186,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['checked'] = BaseFieldDefinition::create('timestamp')
-      ->setLabel(t('Checked'))
+      ->setLabel(t('Checked', [], ['context' => 'Examined']))
       ->setDescription(t('Last time feed was checked for new items, as Unix timestamp.'))
       ->setDefaultValue(0)
       ->setDisplayOptions('view', [
