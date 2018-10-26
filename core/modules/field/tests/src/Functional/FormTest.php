@@ -403,11 +403,12 @@ class FormTest extends FieldTestBase {
     $this->field['field_name'] = $field_name;
     FieldStorageConfig::create($field_storage)->save();
     FieldConfig::create($this->field)->save();
-    entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
+    $form = entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
       ->setComponent($field_name, [
         'type' => 'test_field_widget_multiple',
-      ])
-      ->save();
+      ]);
+    $form->save();
+    $session = $this->assertSession();
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
@@ -435,6 +436,16 @@ class FormTest extends FieldTestBase {
     $this->assertRaw('this field cannot hold more than 4 values', 'Form validation failed.');
     // Check that the field values were not submitted.
     $this->assertFieldValues($entity_init, $field_name, [1, 2, 3]);
+
+    // Check that Attributes are rendered on the multivalue container if it is
+    // a multiple widget form.
+    $form->setComponent($field_name, [
+      'type' => 'entity_reference_autocomplete',
+    ])
+      ->save();
+    $this->drupalGet('entity_test/manage/' . $id . '/edit');
+    $name = str_replace('_', '-', $field_name);
+    $session->responseContains('data-drupal-selector="edit-' . $name . '"');
   }
 
   /**

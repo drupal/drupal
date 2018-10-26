@@ -22,7 +22,13 @@
  */
 #}
 {% if multiple %}
-  <div class="js-form-item form-item">
+  {%
+    set classes = [
+      'js-form-item',
+      'form-item'
+    ]
+  %}
+  <div{{ attributes.addClass(classes) }}>
     {{ table }}
     {% if description.content %}
       <div{{ description.attributes.addClass('description') }} >{{ description.content }}</div>
