@@ -2,7 +2,7 @@
 
 namespace Drupal\menu_link_content\Plugin\migrate\source\d6;
 
-use Drupal\content_translation\Plugin\migrate\source\d6\I18nQueryTrait;
+use Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait;
 use Drupal\migrate\Row;
 use Drupal\menu_link_content\Plugin\migrate\source\MenuLink;
 
@@ -17,6 +17,11 @@ use Drupal\menu_link_content\Plugin\migrate\source\MenuLink;
 class MenuLinkTranslation extends MenuLink {
 
   use I18nQueryTrait;
+
+  /**
+   * Drupal 6 table names.
+   */
+  const I18N_STRING_TABLE = 'i18n_strings';
 
   /**
    * {@inheritdoc}
@@ -35,7 +40,7 @@ class MenuLinkTranslation extends MenuLink {
 
     // Add in the property, which is either title or description. Cast the mlid
     // to text so PostgreSQL can make the join.
-    $query->leftJoin('i18n_strings', 'i18n', 'CAST(ml.mlid as CHAR(255)) = i18n.objectid');
+    $query->leftJoin(static::I18N_STRING_TABLE, 'i18n', 'CAST(ml.mlid as CHAR(255)) = i18n.objectid');
     $query->isNotNull('i18n.lid');
     $query->addField('i18n', 'lid');
     $query->addField('i18n', 'property');
@@ -56,6 +61,8 @@ class MenuLinkTranslation extends MenuLink {
     // Save the translation for this property.
     $property_in_row = $row->getSourceProperty('property');
 
+    // Set the i18n string table for use in I18nQueryTrait.
+    $this->i18nStringTable = static::I18N_STRING_TABLE;
     // Get the translation for the property not already in the row and save it
     // in the row.
     $property_not_in_row = ($property_in_row == 'title') ? 'description' : 'title';
