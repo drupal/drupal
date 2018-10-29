@@ -11,6 +11,286 @@ use Drupal\Core\Database\Database;
 
 $connection = Database::getConnection();
 
+$connection->schema()->createTable('i18n_block_language', array(
+  'fields' => array(
+    'module' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '64',
+    ),
+    'delta' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '12',
+      'default' => '',
+    ),
+  ),
+  'primary key' => array(
+    'module',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'language' => array(
+      'language',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->schema()->createTable('i18n_string', array(
+  'fields' => array(
+    'lid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'textgroup' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '50',
+      'default' => 'default',
+    ),
+    'context' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'objectid' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'property' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'objectindex' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'big',
+      'default' => '0',
+    ),
+    'format' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '255',
+    ),
+  ),
+  'primary key' => array(
+    'lid',
+  ),
+  'indexes' => array(
+    'group_context' => array(
+      'textgroup',
+      array(
+        'context',
+        '50',
+      ),
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('i18n_string')
+->fields(array(
+  'lid',
+  'textgroup',
+  'context',
+  'objectid',
+  'type',
+  'property',
+  'objectindex',
+  'format',
+))
+->values(array(
+  'lid' => '57',
+  'textgroup' => 'blocks',
+  'context' => 'block:1:title',
+  'objectid' => '1',
+  'type' => 'block',
+  'property' => 'title',
+  'objectindex' => '1',
+  'format' => '',
+))
+->values(array(
+  'lid' => '60',
+  'textgroup' => 'blocks',
+  'context' => 'block:1:body',
+  'objectid' => '1',
+  'type' => 'block',
+  'property' => 'body',
+  'objectindex' => '1',
+  'format' => 'filtered_html',
+))
+->values(array(
+  'lid' => '61',
+  'textgroup' => 'node',
+  'context' => 'type:article:name',
+  'objectid' => 'article',
+  'type' => 'type',
+  'property' => 'name',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '62',
+  'textgroup' => 'node',
+  'context' => 'type:article:title_label',
+  'objectid' => 'article',
+  'type' => 'type',
+  'property' => 'title_label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '63',
+  'textgroup' => 'node',
+  'context' => 'type:article:description',
+  'objectid' => 'article',
+  'type' => 'type',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '64',
+  'textgroup' => 'node',
+  'context' => 'type:article:help',
+  'objectid' => 'article',
+  'type' => 'type',
+  'property' => 'help',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '65',
+  'textgroup' => 'node',
+  'context' => 'type:book:name',
+  'objectid' => 'book',
+  'type' => 'type',
+  'property' => 'name',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '66',
+  'textgroup' => 'node',
+  'context' => 'type:book:title_label',
+  'objectid' => 'book',
+  'type' => 'type',
+  'property' => 'title_label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '67',
+  'textgroup' => 'node',
+  'context' => 'type:book:description',
+  'objectid' => 'book',
+  'type' => 'type',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '68',
+  'textgroup' => 'node',
+  'context' => 'type:page:name',
+  'objectid' => 'page',
+  'type' => 'type',
+  'property' => 'name',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '69',
+  'textgroup' => 'node',
+  'context' => 'type:page:title_label',
+  'objectid' => 'page',
+  'type' => 'type',
+  'property' => 'title_label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '70',
+  'textgroup' => 'node',
+  'context' => 'type:page:description',
+  'objectid' => 'page',
+  'type' => 'type',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '71',
+  'textgroup' => 'node',
+  'context' => 'type:page:help',
+  'objectid' => 'page',
+  'type' => 'type',
+  'property' => 'help',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '72',
+  'textgroup' => 'node',
+  'context' => 'type:test_content_type:name',
+  'objectid' => 'test_content_type',
+  'type' => 'type',
+  'property' => 'name',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '73',
+  'textgroup' => 'node',
+  'context' => 'type:test_content_type:title_label',
+  'objectid' => 'test_content_type',
+  'type' => 'type',
+  'property' => 'title_label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '74',
+  'textgroup' => 'node',
+  'context' => 'type:test_content_type:description',
+  'objectid' => 'test_content_type',
+  'type' => 'type',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '75',
+  'textgroup' => 'node',
+  'context' => 'type:test_content_type:help',
+  'objectid' => 'test_content_type',
+  'type' => 'type',
+  'property' => 'help',
+  'objectindex' => '0',
+  'format' => '',
+))
+->execute();
+
 $connection->schema()->createTable('accesslog', array(
   'fields' => array(
     'aid' => array(
@@ -15126,6 +15406,222 @@ $connection->insert('locales_source')
   'context' => '',
   'version' => 'none',
 ))
+->values(array(
+  'lid' => '49',
+  'location' => 'modules/block/block.js; sites/all/modules/i18n/i18n_block/i18n_block.js',
+  'textgroup' => 'default',
+  'source' => 'Not restricted',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '50',
+  'location' => 'modules/block/block.js',
+  'textgroup' => 'default',
+  'source' => 'Restricted to certain pages',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '51',
+  'location' => 'modules/block/block.js',
+  'textgroup' => 'default',
+  'source' => 'Not customizable',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '52',
+  'location' => 'modules/block/block.js',
+  'textgroup' => 'default',
+  'source' => 'The changes to these blocks will not be saved until the <em>Save blocks</em> button is clicked.',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '53',
+  'location' => 'modules/block/block.js',
+  'textgroup' => 'default',
+  'source' => 'The block cannot be placed in this region.',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '54',
+  'location' => 'sites/all/modules/i18n/i18n_block/i18n_block.js',
+  'textgroup' => 'default',
+  'source' => 'Translatable',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '55',
+  'location' => 'sites/all/modules/i18n/i18n_block/i18n_block.js',
+  'textgroup' => 'default',
+  'source' => 'Not translatable',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '56',
+  'location' => 'sites/all/modules/i18n/i18n_block/i18n_block.js',
+  'textgroup' => 'default',
+  'source' => 'Restricted to certain languages',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '57',
+  'location' => 'blocks:block:1:title',
+  'textgroup' => 'blocks',
+  'source' => 'Mildly amusing limerick of the day',
+  'context' => 'block:1:title',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '58',
+  'location' => 'misc/ajax.js',
+  'textgroup' => 'default',
+  'source' => 'The response failed verification so will not be processed.',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '59',
+  'location' => 'misc/ajax.js',
+  'textgroup' => 'default',
+  'source' => 'The callback URL is not local and not trusted: !url',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '60',
+  'location' => 'blocks:block:1:body',
+  'textgroup' => 'blocks',
+  'source' => "A fellow jumped off a high wall\r\nAnd had a most terrible fall\r\nHe went back to bed\r\nWith a bump on his head\r\nThat's why you don't jump off a wall",
+  'context' => 'block:1:body',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '61',
+  'location' => 'node:type:article:name',
+  'textgroup' => 'node',
+  'source' => 'Article',
+  'context' => 'type:article:name',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '62',
+  'location' => 'node:type:article:title_label',
+  'textgroup' => 'node',
+  'source' => 'Title',
+  'context' => 'type:article:title_label',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '63',
+  'location' => 'node:type:article:description',
+  'textgroup' => 'node',
+  'source' => 'Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.',
+  'context' => 'type:article:description',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '64',
+  'location' => 'node:type:article:help',
+  'textgroup' => 'node',
+  'source' => 'Help text for articles',
+  'context' => 'type:article:help',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '65',
+  'location' => 'node:type:book:name',
+  'textgroup' => 'node',
+  'source' => 'Book page',
+  'context' => 'type:book:name',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '66',
+  'location' => 'node:type:book:title_label',
+  'textgroup' => 'node',
+  'source' => 'Title',
+  'context' => 'type:book:title_label',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '67',
+  'location' => 'node:type:book:description',
+  'textgroup' => 'node',
+  'source' => '<em>Books</em> have a built-in hierarchical navigation. Use for handbooks or tutorials.',
+  'context' => 'type:book:description',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '68',
+  'location' => 'node:type:page:name',
+  'textgroup' => 'node',
+  'source' => 'Basic page',
+  'context' => 'type:page:name',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '69',
+  'location' => 'node:type:page:title_label',
+  'textgroup' => 'node',
+  'source' => 'Title',
+  'context' => 'type:page:title_label',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '70',
+  'location' => 'node:type:page:description',
+  'textgroup' => 'node',
+  'source' => "Use <em>basic pages</em> for your static content, such as an 'About us' page.",
+  'context' => 'type:page:description',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '71',
+  'location' => 'node:type:page:help',
+  'textgroup' => 'node',
+  'source' => 'Help text for basic pages',
+  'context' => 'type:page:help',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '72',
+  'location' => 'node:type:test_content_type:name',
+  'textgroup' => 'node',
+  'source' => 'Test content type',
+  'context' => 'type:test_content_type:name',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '73',
+  'location' => 'node:type:test_content_type:title_label',
+  'textgroup' => 'node',
+  'source' => 'Title',
+  'context' => 'type:test_content_type:title_label',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '74',
+  'location' => 'node:type:test_content_type:description',
+  'textgroup' => 'node',
+  'source' => 'This is the description of the test content type.',
+  'context' => 'type:test_content_type:description',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '75',
+  'location' => 'node:type:test_content_type:help',
+  'textgroup' => 'node',
+  'source' => 'Help text for test content type',
+  'context' => 'type:test_content_type:help',
+  'version' => '1',
+))
 ->execute();
 
 $connection->schema()->createTable('locales_target', array(
@@ -15159,6 +15655,12 @@ $connection->schema()->createTable('locales_target', array(
       'size' => 'normal',
       'default' => '0',
     ),
+    'i18n_status' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
   ),
   'primary key' => array(
     'lid',
@@ -15167,6 +15669,41 @@ $connection->schema()->createTable('locales_target', array(
   ),
   'mysql_character_set' => 'utf8',
 ));
+
+$connection->insert('locales_target')
+->fields(array(
+  'lid',
+  'translation',
+  'language',
+  'plid',
+  'plural',
+  'i18n_status',
+))
+->values(array(
+  'lid' => '57',
+  'translation' => 'fr - Mildly amusing limerick of the day',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '60',
+  'translation' => "fr - A fellow jumped off a high wall\r\nAnd had a most terrible fall\r\nHe went back to bed\r\nWith a bump on his head\r\nThat's why you don't jump off a wall",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '57',
+  'translation' => 'is - Mildly amusing limerick of the day',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->execute();
 
 $connection->schema()->createTable('menu_custom', array(
   'fields' => array(

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_translation\Plugin\migrate\source\d6;
+namespace Drupal\content_translation\Plugin\migrate\source;
 
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\MigrateException;
@@ -12,11 +12,18 @@ use Drupal\migrate\Row;
 trait I18nQueryTrait {
 
   /**
-   * Get the translation for the property not already in the row.
+   * The i18n string table name.
+   *
+   * @var string
+   */
+  protected $i18nStringTable;
+
+  /**
+   * Gets the translation for the property not already in the row.
    *
    * For some i18n migrations there are two translation values, such as a
    * translated title and a translated description, that need to be retrieved.
-   * Since these values are stored in separate rows of the i18n_strings
+   * Since these values are stored in separate rows of the i18nStringTable
    * table we get them individually, one in the source plugin query() and the
    * other in prepareRow(). The names of the properties varies, for example,
    * in BoxTranslation they are 'body' and 'title' whereas in
@@ -26,7 +33,7 @@ trait I18nQueryTrait {
    * @param \Drupal\migrate\Row $row
    *   The current migration row which must include both a 'language' property
    *   and an 'objectid' property. The 'objectid' is the value for the
-   *   'objectid' field in the i18n_strings table.
+   *   'objectid' field in the i18n_string table.
    * @param string $property_not_in_row
    *   The name of the property to get the translation for.
    * @param string $object_id_name
@@ -60,7 +67,7 @@ trait I18nQueryTrait {
 
     // Get the translation, if one exists, for the property not already in the
     // row.
-    $query = $this->select('i18n_strings', 'i18n')
+    $query = $this->select($this->i18nStringTable, 'i18n')
       ->fields('i18n', ['lid'])
       ->condition('i18n.property', $property_not_in_row)
       ->condition('i18n.objectid', $object_id);
