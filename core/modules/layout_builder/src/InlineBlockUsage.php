@@ -87,8 +87,10 @@ class InlineBlockUsage {
    *   The block content entity IDs.
    */
   public function deleteUsage(array $block_content_ids) {
-    $query = $this->database->delete('inline_block_usage')->condition('block_content_id', $block_content_ids, 'IN');
-    $query->execute();
+    if (!empty($block_content_ids)) {
+      $query = $this->database->delete('inline_block_usage')->condition('block_content_id', $block_content_ids, 'IN');
+      $query->execute();
+    }
   }
 
   /**
