@@ -422,6 +422,169 @@ class NodeTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
+    // The source data with a correct 'entity_translation' table.
+    $tests[1]['source_data']['entity_translation'] = [
+      [
+        'entity_type' => 'node',
+        'entity_id' => 1,
+        'revision_id' => 1,
+        'language' => 'en',
+        'source' => '',
+        'uid' => 1,
+        'status' => 1,
+        'translate' => 0,
+        'created' => 1279051598,
+        'changed' => 1279051598,
+      ],
+      [
+        'entity_type' => 'node',
+        'entity_id' => 1,
+        'revision_id' => 1,
+        'language' => 'fr',
+        'source' => 'en',
+        'uid' => 1,
+        'status' => 1,
+        'translate' => 0,
+        'created' => 1279051598,
+        'changed' => 1279051598,
+      ],
+    ];
+    $tests[1]['source_data']['field_config'] = [
+      [
+        'id' => '1',
+        'translatable' => '1',
+      ],
+    ];
+    $tests[1]['source_data']['field_config_instance'] = [
+      [
+        'id' => '1',
+        'field_id' => '1',
+        'field_name' => 'body',
+        'entity_type' => 'node',
+        'bundle' => 'page',
+        'data' => 'a:0:{}',
+        'deleted' => '0',
+      ],
+    ];
+    $tests[1]['source_data']['field_revision_body'] = [
+      [
+        'entity_type' => 'node',
+        'bundle' => 'page',
+        'deleted' => '0',
+        'entity_id' => '1',
+        'revision_id' => '1',
+        'language' => 'en',
+        'delta' => '0',
+        'body_value' => 'English body',
+        'body_summary' => '',
+        'body_format' => 'filtered_html',
+      ],
+      [
+        'entity_type' => 'node',
+        'bundle' => 'page',
+        'deleted' => '0',
+        'entity_id' => '1',
+        'revision_id' => '1',
+        'language' => 'fr',
+        'delta' => '0',
+        'body_value' => 'French body',
+        'body_summary' => '',
+        'body_format' => 'filtered_html',
+      ],
+    ];
+    $tests[1]['source_data']['node'] = [
+      [
+        'nid' => 1,
+        'vid' => 1,
+        'type' => 'page',
+        'language' => 'en',
+        'title' => 'Node Title',
+        'uid' => 1,
+        'status' => 1,
+        'created' => 1279051598,
+        'changed' => 1279051598,
+        'comment' => 2,
+        'promote' => 1,
+        'sticky' => 0,
+        'tnid' => 0,
+        'translate' => 0,
+      ],
+    ];
+    $tests[1]['source_data']['node_revision'] = [
+      [
+        'nid' => 1,
+        'vid' => 1,
+        'uid' => 1,
+        'title' => 'Node Title',
+        'log' => '',
+        'timestamp' => 1279051598,
+        'status' => 1,
+        'comment' => 2,
+        'promote' => 1,
+        'sticky' => 0,
+      ],
+    ];
+    $tests[1]['source_data']['variable'] = [
+      [
+        'name' => 'entity_translation_entity_types',
+        'value' => 'a:4:{s:7:"comment";i:0;s:4:"node";s:4:"node";s:13:"taxonomy_term";i:0;s:4:"user";i:0;}',
+      ],
+      [
+        'name' => 'language_content_type_page',
+        'value' => 's:1:"4";',
+      ],
+    ];
+
+    // The expected results with a correct 'entity_translation' table.
+    // entity_translation table.
+    $tests[1]['expected_data'] = [
+      [
+        'nid' => 1,
+        'vid' => 1,
+        'type' => 'page',
+        'language' => 'en',
+        'title' => 'Node Title',
+        'node_uid' => 1,
+        'revision_uid' => 1,
+        'status' => 1,
+        'created' => 1279051598,
+        'changed' => 1279051598,
+        'comment' => 2,
+        'promote' => 1,
+        'sticky' => 0,
+        'tnid' => 1,
+        'translate' => 0,
+        'log' => '',
+        'timestamp' => 1279051598,
+        'body' => [
+          [
+            'value' => 'English body',
+            'summary' => '',
+            'format' => 'filtered_html',
+          ],
+        ],
+      ],
+    ];
+
+    // Repeat the previous test with an incorrect 'entity_translation' table
+    // where the row with the empty 'source' property is missing.
+    $tests[2]['source_data'] = $tests[1]['source_data'];
+    $tests[2]['source_data']['entity_translation'] = [
+      [
+        'entity_type' => 'node',
+        'entity_id' => 1,
+        'revision_id' => 1,
+        'language' => 'fr',
+        'source' => 'en',
+        'uid' => 1,
+        'status' => 1,
+        'translate' => 0,
+        'created' => 1279051598,
+        'changed' => 1279051598,
+      ],
+    ];
+    $tests[2]['expected_data'] = $tests[1]['expected_data'];
+
     return $tests;
   }
 

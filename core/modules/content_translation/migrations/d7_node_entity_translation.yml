@@ -23,10 +23,14 @@ process:
   revision_log: log
   revision_timestamp: timestamp
   content_translation_source: source
+  # Boolean indicating whether this translation needs to be updated.
+  content_translation_outdated: translate
 destination:
   plugin: entity:node
   translations: true
   destination_module: content_translation
 migration_dependencies:
   required:
+    - language
+    - d7_entity_translation_settings
     - d7_node
