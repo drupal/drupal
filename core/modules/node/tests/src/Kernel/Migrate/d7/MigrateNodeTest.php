@@ -70,6 +70,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
       'd7_field_instance',
       'd7_node',
       'd7_node_translation',
+      'd7_entity_translation_settings',
       'd7_node_entity_translation',
     ]);
   }
@@ -181,14 +182,6 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertEquals(CommentItemInterface::OPEN, $node->comment_node_test_content_type->status);
     $this->assertEquals('3.1416', $node->field_float_list[0]->value);
 
-    // Test that fields translated with Entity Translation are migrated.
-    $node_fr = $node->getTranslation('fr');
-    $this->assertEquals('A French Node', $node_fr->getTitle());
-    $this->assertEquals('6', $node_fr->field_integer->value);
-    $node_is = $node->getTranslation('is');
-    $this->assertEquals('An Icelandic Node', $node_is->getTitle());
-    $this->assertEquals('7', $node_is->field_integer->value);
-
     $node = Node::load(2);
     $this->assertEquals('en', $node->langcode->value);
     $this->assertEquals("...is that it's the absolute best show ever. Trust me, I would know.", $node->body->value);
@@ -226,6 +219,44 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
 
     $node = Node::load(7);
     $this->assertEquals(CommentItemInterface::OPEN, $node->comment_forum->status);
+  }
+
+  /**
+   * Test node entity translations migration from Drupal 7 to 8.
+   */
+  public function testNodeEntityTranslations() {
+    $manager = $this->container->get('content_translation.manager');
+
+    // Get the node and its translations.
+    $node = Node::load(1);
+    $node_fr = $node->getTranslation('fr');
+    $node_is = $node->getTranslation('is');
+
+    // Test that fields translated with Entity Translation are migrated.
+    $this->assertSame('An English Node', $node->getTitle());
+    $this->assertSame('A French Node', $node_fr->getTitle());
+    $this->assertSame('An Icelandic Node', $node_is->getTitle());
+    $this->assertSame('5', $node->field_integer->value);
+    $this->assertSame('6', $node_fr->field_integer->value);
+    $this->assertSame('7', $node_is->field_integer->value);
+
+    // Test that the French translation metadata is correctly migrated.
+    $metadata_fr = $manager->getTranslationMetadata($node_fr);
+    $this->assertSame('en', $metadata_fr->getSource());
+    $this->assertTrue($metadata_fr->isOutdated());
+    $this->assertSame('2', $node_fr->getOwnerId());
+    $this->assertSame('1529615802', $node_fr->getCreatedTime());
+    $this->assertSame('1529615802', $node_fr->getChangedTime());
+    $this->assertTrue($node_fr->isPublished());
+
+    // Test that the Icelandic translation metadata is correctly migrated.
+    $metadata_is = $manager->getTranslationMetadata($node_is);
+    $this->assertSame('en', $metadata_is->getSource());
+    $this->assertFalse($metadata_is->isOutdated());
+    $this->assertSame('1', $node_is->getOwnerId());
+    $this->assertSame('1529615813', $node_is->getCreatedTime());
+    $this->assertSame('1529615813', $node_is->getChangedTime());
+    $this->assertFalse($node_is->isPublished());
   }
 
 }
