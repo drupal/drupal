@@ -51469,6 +51469,76 @@ $connection->insert('variable_store')
   'value' => 'is - This is a custom maintenance mode message.',
   'serialized' => '0',
 ))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'site_403',
+  'value' => 'node/1',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'site_404',
+  'value' => 'node/6',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'site_frontpage',
+  'value' => 'node/4',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'site_name',
+  'value' => 'is - The Site Name',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'site_slogan',
+  'value' => 'is - The Slogan',
+  'serialized' => '0',
+))
+  ->values(array(
+  'realm' => 'language',
+  'realm_key' => 'fr',
+  'name' => 'site_403',
+  'value' => 'node',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'fr',
+  'name' => 'site_404',
+  'value' => 'node',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'fr',
+  'name' => 'site_frontpage',
+  'value' => 'node',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'fr',
+  'name' => 'site_name',
+  'value' => 'The Site Name',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'fr',
+  'name' => 'site_slogan',
+  'value' => 'fr - The Slogan',
+  'serialized' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('watchdog', array(
