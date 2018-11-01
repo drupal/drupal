@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\NotNullConstraint;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -86,6 +87,13 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
 
     // Ignore entities that are not subject to moderation anyway.
     if (!$this->moderationInformation->isModeratedEntity($entity)) {
+      return;
+    }
+
+    // If the entity is moderated and the item list is empty, ensure users see
+    // the same required message as typical NotNull constraints.
+    if ($value->isEmpty()) {
+      $this->context->addViolation((new NotNullConstraint())->message);
       return;
     }
 

@@ -16,7 +16,6 @@ use Drupal\Core\TypedData\ComputedItemListTrait;
 class ModerationStateFieldItemList extends FieldItemList {
 
   use ComputedItemListTrait {
-    ensureComputedValue as traitEnsureComputedValue;
     get as traitGet;
   }
 
@@ -32,19 +31,6 @@ class ModerationStateFieldItemList extends FieldItemList {
       // An entity can only have a single moderation state.
       $this->list[0] = $this->createItem(0, $moderation_state);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function ensureComputedValue() {
-    // If the moderation state field is set to an empty value, always recompute
-    // the state. Empty is not a valid moderation state value, when none is
-    // present the default state is used.
-    if (!isset($this->list[0]) || $this->list[0]->isEmpty()) {
-      $this->valueComputed = FALSE;
-    }
-    $this->traitEnsureComputedValue();
   }
 
   /**
@@ -140,10 +126,8 @@ class ModerationStateFieldItemList extends FieldItemList {
    */
   public function setValue($values, $notify = TRUE) {
     parent::setValue($values, $notify);
+    $this->valueComputed = TRUE;
 
-    if (isset($this->list[0])) {
-      $this->valueComputed = TRUE;
-    }
     // If the parent created a field item and if the parent should be notified
     // about the change (e.g. this is not initialized with the current value),
     // update the moderated entity.
