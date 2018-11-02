@@ -51539,6 +51539,139 @@ $connection->insert('variable_store')
   'value' => 'fr - The Slogan',
   'serialized' => '0',
 ))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'en',
+  'name' => 'user_default_timezone',
+  'value' => '2',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'fr',
+  'name' => 'user_default_timezone',
+  'value' => '0',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_cancel_confirm_body',
+  'value' => 'is - A little birdie said you wanted to cancel your account.',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_cancel_confirm_subject',
+  'value' => 'is - Are you sure?',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_password_reset_body',
+  'value' => "is - Nope! You're locked out forever.",
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_password_reset_subject',
+  'value' => 'is - Fix your password',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_register_admin_created_body',
+  'value' => "is - ...and she could take it away.\r\n[site:name], [site:url]",
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_register_admin_created_subject',
+  'value' => 'is - Gawd made you an account',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_register_no_approval_required_body',
+  'value' => 'is - You can now log in if you can figure out how to use Drupal!',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_register_no_approval_required_subject',
+  'value' => 'is - Welcome!',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_register_pending_approval_body',
+  'value' => 'is - ...you will join our Circle. Let the Drupal flow through you.',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_register_pending_approval_subject',
+  'value' => 'is - Soon...',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_status_activated_body',
+  'value' => 'is - Your account was activated, and there was much rejoicing.',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_status_activated_subject',
+  'value' => 'is - Your account is approved!',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_status_blocked_body',
+  'value' => 'is - You no longer please the robot overlords. Go to your room and chill out.',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_status_blocked_subject',
+  'value' => 'is - BEGONE!',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_status_canceled_body',
+  'value' => 'is - The gates of Drupal are closed to you. Now you will work in the salt mines.',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_status_canceled_subject',
+  'value' => 'is - So long, bub',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'anonymous',
+  'value' => 'is - anonymous',
+   'serialized' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('watchdog', array(
