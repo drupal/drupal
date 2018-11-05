@@ -79,8 +79,6 @@ use Drupal\Core\Utility\UpdateException;
  *   - group: A string defining the group to which the hook belongs. The module
  *     system will determine whether a file with the name $module.$group.inc
  *     exists, and automatically load it when required.
- *
- * @see hook_hook_info_alter()
  */
 function hook_hook_info() {
   $hooks['token_info'] = [
