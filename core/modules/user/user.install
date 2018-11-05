@@ -13,7 +13,7 @@ function user_schema() {
     'description' => 'Stores module data as key/value pairs per user.',
     'fields' => [
       'uid' => [
-        'description' => 'Primary key: {users}.uid for user.',
+        'description' => 'The {users}.uid this record affects.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
