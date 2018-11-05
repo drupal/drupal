@@ -170,6 +170,30 @@ function content_translation_entity_type_alter(array &$entity_types) {
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_insert().
+ *
+ * Clear the bundle information cache so that the bundle's translatability will
+ * be set properly.
+ *
+ * @see content_translation_entity_bundle_info_alter()
+ */
+function content_translation_language_content_settings_insert(EntityInterface $entity) {
+  \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ *
+ * Clear the bundle information cache so that the bundle's translatability will
+ * be changed properly.
+ *
+ * @see content_translation_entity_bundle_info_alter()
+ */
+function content_translation_language_content_settings_update(EntityInterface $entity) {
+  \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
+}
+
+/**
  * Implements hook_entity_bundle_info_alter().
  */
 function content_translation_entity_bundle_info_alter(&$bundles) {
