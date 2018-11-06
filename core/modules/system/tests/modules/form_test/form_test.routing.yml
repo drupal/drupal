@@ -513,3 +513,10 @@ form_test.optional_container:
     _title: 'Optional container testing'
   requirements:
     _access: 'TRUE'
+
+form_test.javascript_states_form:
+  path: '/form-test/javascript-states-form'
+  defaults:
+    _form: '\Drupal\form_test\Form\JavascriptStatesForm'
+  requirements:
+    _access: 'TRUE'
