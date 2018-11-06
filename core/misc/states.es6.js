@@ -60,6 +60,30 @@
   }
 
   /**
+   * Bitwise AND with a third undefined state.
+   *
+   * @function Drupal.states~ternary
+   *
+   * @param {*} a
+   *   Value a.
+   * @param {*} b
+   *   Value b
+   *
+   * @return {bool}
+   *   The result.
+   */
+  function ternary(a, b) {
+    if (typeof a === 'undefined') {
+      return b;
+    }
+    if (typeof b === 'undefined') {
+      return a;
+    }
+
+    return a && b;
+  }
+
+  /**
    * Attaches the states.
    *
    * @type {Drupal~behavior}
@@ -305,18 +329,20 @@
       // bogus, we don't want to end up with an infinite loop.
       else if ($.isPlainObject(constraints)) {
         // This constraint is an object (AND).
-        result = Object.keys(constraints).every(constraint => {
-          const check = this.checkConstraints(
-            constraints[constraint],
-            selector,
-            constraint,
-          );
-          /**
-           * The checkConstraints() function's return value can be undefined. If
-           * this so, consider it to have returned true.
-           */
-          return typeof check === 'undefined' ? true : check;
-        });
+        // eslint-disable-next-line no-restricted-syntax
+        for (const n in constraints) {
+          if (constraints.hasOwnProperty(n)) {
+            result = ternary(
+              result,
+              this.checkConstraints(constraints[n], selector, n),
+            );
+            // False and anything else will evaluate to false, so return when
+            // any false condition is found.
+            if (result === false) {
+              return false;
+            }
+          }
+        }
       }
       return result;
     },

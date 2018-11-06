@@ -169,3 +169,12 @@ function system_post_update_extra_fields(&$sandbox = NULL) {
   $config_entity_updater->update($sandbox, 'entity_form_display', $callback);
   $config_entity_updater->update($sandbox, 'entity_view_display', $callback);
 }
+
+/**
+ * Force cache clear to ensure aggregated JavaScript files are regenerated.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2995570
+ */
+function system_post_update_states_clear_cache() {
+  // Empty post-update hook.
+}
