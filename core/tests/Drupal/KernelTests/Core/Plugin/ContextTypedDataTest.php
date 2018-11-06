@@ -49,11 +49,9 @@ class ContextTypedDataTest extends KernelTestBase {
 
     // Prepare a container that holds the typed data manager mock.
     $typed_data_manager = $this->prophesize(TypedDataManagerInterface::class);
-    $typed_data_manager->getCanonicalRepresentation($typed_data)
-      ->shouldBeCalledOnce()
-      ->will(function () use ($typed_data) {
-        return $typed_data->getValue();
-      });
+    $typed_data_manager->getCanonicalRepresentation($typed_data)->will(function ($arguments) {
+      return $arguments[0]->getValue();
+    });
     $this->container->set('typed_data_manager', $typed_data_manager->reveal());
 
     $definition = new ContextDefinition('any');
