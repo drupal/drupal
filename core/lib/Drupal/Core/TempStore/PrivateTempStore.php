@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\TempStore;
 
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -27,6 +28,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * \Drupal\Core\TempStore\SharedTempStore.
  */
 class PrivateTempStore {
+  use DependencySerializationTrait;
 
   /**
    * The key/value storage object used for this data.

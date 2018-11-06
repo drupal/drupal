@@ -855,6 +855,7 @@ function simpletest_phpunit_testcase_to_row($test_id, \SimpleXMLElement $testcas
 
   $attributes = $testcase->attributes();
 
+  $function = $attributes->class . '->' . $attributes->name . '()';
   $record = [
     'test_id' => $test_id,
     'test_class' => (string) $attributes->class,
@@ -862,9 +863,11 @@ function simpletest_phpunit_testcase_to_row($test_id, \SimpleXMLElement $testcas
     'message' => $message,
     // @todo: Check on the proper values for this.
     'message_group' => 'Other',
-    'function' => $attributes->class . '->' . $attributes->name . '()',
+    'function' => $function,
     'line' => $attributes->line ?: 0,
-    'file' => $attributes->file,
+    // There are situations when the file will not be present because a PHPUnit
+    // @requires has caused a test to be skipped.
+    'file' => $attributes->file ?: $function,
   ];
   return $record;
 }

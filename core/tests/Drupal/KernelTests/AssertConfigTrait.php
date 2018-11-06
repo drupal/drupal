@@ -40,7 +40,7 @@ trait AssertConfigTrait {
 
           // Allow to skip entire config files.
           if ($skipped_config[$config_name] === TRUE) {
-            continue;
+            break;
           }
 
           // Allow to skip some specific lines of imported config files.
@@ -71,12 +71,12 @@ trait AssertConfigTrait {
         case 'Drupal\Component\Diff\Engine\DiffOpAdd':
           // The _core property does not exist in the default config.
           if ($op->closing[0] === '_core:') {
-            continue;
+            break;
           }
           foreach ($op->closing as $closing) {
             // The UUIDs don't exist in the default config.
             if (strpos($closing, 'uuid: ') === 0) {
-              continue;
+              break;
             }
             throw new \Exception($config_name . ': ' . var_export($op, TRUE));
           }
