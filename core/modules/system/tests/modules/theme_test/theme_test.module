@@ -171,7 +171,7 @@ function theme_theme_test_function_suggestions($variables) {
  * Implements hook_theme_suggestions_HOOK().
  */
 function theme_test_theme_suggestions_theme_test_suggestion_provided(array $variables) {
-  return ['theme_test_suggestion_provided__' . 'foo'];
+  return ['theme_test_suggestion_provided__foo'];
 }
 
 /**

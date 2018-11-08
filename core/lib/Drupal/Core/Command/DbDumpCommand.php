@@ -418,10 +418,13 @@ ENDOFSCRIPT;
       foreach ($data as $record) {
         $insert .= "->values(" . Variable::export($record) . ")\n";
       }
-      $output .= "\$connection->insert('" . $table . "')\n"
-        . "->fields(" . Variable::export(array_keys($schema['fields'])) . ")\n"
-        . $insert
-        . "->execute();\n\n";
+      $fields = Variable::export(array_keys($schema['fields']));
+      $output .= <<<EOT
+\$connection->insert('$table')
+->fields($fields)
+{$insert}->execute();
+
+EOT;
     }
     return $output;
   }

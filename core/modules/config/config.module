@@ -70,7 +70,7 @@ function config_file_download($uri) {
       $date = DateTime::createFromFormat('U', $request->server->get('REQUEST_TIME'));
       $date_string = $date->format('Y-m-d-H-i');
       $hostname = str_replace('.', '-', $request->getHttpHost());
-      $filename = 'config' . '-' . $hostname . '-' . $date_string . '.tar.gz';
+      $filename = 'config-' . $hostname . '-' . $date_string . '.tar.gz';
       $disposition = 'attachment; filename="' . $filename . '"';
       return [
         'Content-disposition' => $disposition,

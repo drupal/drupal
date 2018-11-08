@@ -57,7 +57,7 @@ class ConfigExportUITest extends BrowserTestBase {
     $this->assertTrue($header_match, "Header with filename matches the expected format.");
 
     // Extract the archive and verify it's not empty.
-    $file_path = file_directory_temp() . '/' . 'config.tar.gz';
+    $file_path = file_directory_temp() . '/config.tar.gz';
     $archiver = new Tar($file_path);
     $archive_contents = $archiver->listContents();
     $this->assert(!empty($archive_contents), 'Downloaded archive file is not empty.');

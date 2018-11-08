@@ -101,8 +101,8 @@ class Roles extends PrerenderList {
 
   protected function addSelfTokens(&$tokens, $item) {
     if (!empty($item['role'])) {
-      $tokens['{{ ' . $this->options['id'] . '__role' . ' }}'] = $item['role'];
-      $tokens['{{ ' . $this->options['id'] . '__rid' . ' }}'] = $item['rid'];
+      $tokens['{{ ' . $this->options['id'] . '__role }}'] = $item['role'];
+      $tokens['{{ ' . $this->options['id'] . '__rid }}'] = $item['rid'];
     }
   }
 

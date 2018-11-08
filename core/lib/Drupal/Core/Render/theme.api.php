@@ -715,7 +715,7 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  */
 function hook_theme_suggestions_HOOK_alter(array &$suggestions, array $variables) {
   if (empty($variables['header'])) {
-    $suggestions[] = 'hookname__' . 'no_header';
+    $suggestions[] = 'hookname__no_header';
   }
 }
 

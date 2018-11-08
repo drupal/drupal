@@ -85,7 +85,7 @@ class FieldLink extends ProcessPluginBase {
       $anchor = "(?:#[a-z0-9" . $link_ichars . "_\-\.~+%=&,$'():;*@\[\]\/\?]*)";
 
       // The rest of the path for a standard URL.
-      $end = $directories . '?' . $query . '?' . $anchor . '?' . '$/i';
+      $end = $directories . '?' . $query . '?' . $anchor . '?$/i';
 
       if (!preg_match($internal_pattern . $end, $uri)) {
         $link_domains = '[a-z][a-z0-9-]{1,62}';

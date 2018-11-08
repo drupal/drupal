@@ -312,7 +312,7 @@ class AssetResolver implements AssetResolverInterface {
         $settings = $this->getJsSettingsAssets($assets);
         // Allow modules to add cached JavaScript settings.
         foreach ($this->moduleHandler->getImplementations('js_settings_build') as $module) {
-          $function = $module . '_' . 'js_settings_build';
+          $function = $module . '_js_settings_build';
           $function($settings, $assets);
         }
       }

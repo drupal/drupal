@@ -130,6 +130,7 @@
   <rule ref="Drupal.Semantics.PregSecurity"/>
   <rule ref="Drupal.Semantics.TInHookMenu"/>
   <rule ref="Drupal.Semantics.TInHookSchema"/>
+  <rule ref="Drupal.Strings.UnnecessaryStringConcat"/>
   <rule ref="Drupal.WhiteSpace.CloseBracketSpacing"/>
   <rule ref="Drupal.WhiteSpace.Comma"/>
   <rule ref="Drupal.WhiteSpace.EmptyLines"/>

@@ -108,7 +108,7 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
     // Directly call the hook implementations to pass the definitions to them
     // by reference, so new entity types can be added.
     foreach ($this->moduleHandler->getImplementations('entity_type_build') as $module) {
-      $function = $module . '_' . 'entity_type_build';
+      $function = $module . '_entity_type_build';
       $function($definitions);
     }
     foreach ($definitions as $plugin_id => $definition) {

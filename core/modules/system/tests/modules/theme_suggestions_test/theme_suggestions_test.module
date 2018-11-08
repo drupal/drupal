@@ -32,21 +32,21 @@ function theme_suggestions_test_theme_suggestions_alter(array &$suggestions, arr
  */
 function theme_suggestions_test_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables) {
   \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
-  $suggestions[] = 'theme_test_suggestions__' . 'module_override';
+  $suggestions[] = 'theme_test_suggestions__module_override';
 }
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
 function theme_suggestions_test_theme_suggestions_theme_test_function_suggestions_alter(array &$suggestions, array $variables) {
-  $suggestions[] = 'theme_test_function_suggestions__' . 'module_override';
+  $suggestions[] = 'theme_test_function_suggestions__module_override';
 }
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
 function theme_suggestions_test_theme_suggestions_theme_test_specific_suggestions_alter(array &$suggestions, array $variables) {
-  $suggestions[] = 'theme_test_specific_suggestions__' . 'variant__foo';
+  $suggestions[] = 'theme_test_specific_suggestions__variant__foo';
 }
 
 /**
