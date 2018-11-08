@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -501,7 +502,12 @@ function template_preprocess_username(&$variables) {
     $variables['truncated'] = FALSE;
   }
   $variables['name'] = $name;
-  $variables['profile_access'] = \Drupal::currentUser()->hasPermission('access user profiles');
+  if ($account instanceof AccessibleInterface) {
+    $variables['profile_access'] = $account->access('view');
+  }
+  else {
+    $variables['profile_access'] = \Drupal::currentUser()->hasPermission('access user profiles');
+  }
 
   $external = FALSE;
   // Populate link path and attributes if appropriate.

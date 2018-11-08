@@ -64,7 +64,7 @@ class UserAdminListingTest extends BrowserTestBase {
     $result_accounts = [];
     foreach ($result as $account) {
       $account_columns = $account->findAll('css', 'td');
-      $name = $account_columns[0]->getText();
+      $name = $account_columns[0]->find('css', 'a')->getText();
       $roles = [];
       $account_roles = $account_columns[2]->findAll('css', 'td div ul li');
       if (!empty($account_roles)) {
