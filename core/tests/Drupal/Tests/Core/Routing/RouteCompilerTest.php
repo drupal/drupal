@@ -54,7 +54,7 @@ class RouteCompilerTest extends UnitTestCase {
    */
   public function testCompilation() {
     $route = new Route('/test/{something}/more');
-    $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');
+    $route->setOption('compiler_class', RouteCompiler::class);
     $compiled = $route->compile();
 
     $this->assertEquals($compiled->getFit(), 5 /* That's 101 binary*/, 'The fit was incorrect.');
@@ -70,7 +70,7 @@ class RouteCompilerTest extends UnitTestCase {
     $route = new Route('/test/{something}/more/{here}', [
       'here' => 'there',
     ]);
-    $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');
+    $route->setOption('compiler_class', RouteCompiler::class);
     $compiled = $route->compile();
 
     $this->assertEquals($compiled->getFit(), 5 /* That's 101 binary*/, 'The fit was not correct.');

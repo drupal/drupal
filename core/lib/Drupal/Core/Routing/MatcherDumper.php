@@ -117,7 +117,7 @@ class MatcherDumper implements MatcherDumperInterface {
         $names = [];
         foreach ($routes as $name => $route) {
           /** @var \Symfony\Component\Routing\Route $route */
-          $route->setOption('compiler_class', '\Drupal\Core\Routing\RouteCompiler');
+          $route->setOption('compiler_class', RouteCompiler::class);
           /** @var \Drupal\Core\Routing\CompiledRoute $compiled */
           $compiled = $route->compile();
           // The fit value is a binary number which has 1 at every fixed path

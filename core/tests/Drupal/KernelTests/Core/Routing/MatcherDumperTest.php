@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Routing;
 
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\State\State;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Routing\Route;
@@ -115,7 +116,7 @@ class MatcherDumperTest extends KernelTestBase {
     $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
 
     $route = new Route('/test/{my}/path');
-    $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');
+    $route->setOption('compiler_class', RouteCompiler::class);
     $collection = new RouteCollection();
     $collection->add('test_route', $route);
 

@@ -168,6 +168,11 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
           'methods' => [],
           'condition' => '',
         ];
+        // Ensure routes default to using Drupal's route compiler instead of
+        // Symfony's.
+        $route_info['options'] += [
+          'compiler_class' => RouteCompiler::class,
+        ];
 
         $route = new Route($route_info['path'], $route_info['defaults'], $route_info['requirements'], $route_info['options'], $route_info['host'], $route_info['schemes'], $route_info['methods'], $route_info['condition']);
         $collection->add($name, $route);
