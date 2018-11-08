@@ -254,7 +254,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $this->assertResourceErrorResponse(415, sprintf('No route found that matches "Content-Type: %s"', static::$mimeType), $response);
 
     // An empty Content-Disposition header should return a 400.
-    $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => '']);
+    $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => FALSE]);
     $this->assertResourceErrorResponse(400, '"Content-Disposition" header is required. A file name in the format "filename=FILENAME" must be provided', $response);
 
     // An empty filename with a context in the Content-Disposition header should
@@ -658,7 +658,8 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
    *   The file contents to send as the request body.
    * @param array $headers
    *   Additional headers to send with the request. Defaults will be added for
-   *   Content-Type and Content-Disposition.
+   *   Content-Type and Content-Disposition. In order to remove the defaults set
+   *   the header value to FALSE.
    *
    * @return \Psr\Http\Message\ResponseInterface
    */
@@ -667,12 +668,15 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $url->setOption('query', ['_format' => static::$format]);
 
     $request_options = [];
-    $request_options[RequestOptions::HEADERS] = $headers + [
+    $headers = $headers + [
       // Set the required (and only accepted) content type for the request.
       'Content-Type' => 'application/octet-stream',
       // Set the required Content-Disposition header for the file name.
       'Content-Disposition' => 'file; filename="example.txt"',
     ];
+    $request_options[RequestOptions::HEADERS] = array_filter($headers, function ($value) {
+      return $value !== FALSE;
+    });
     $request_options[RequestOptions::BODY] = $file_contents;
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('POST'));
 
