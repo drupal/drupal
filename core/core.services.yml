@@ -1689,7 +1689,7 @@ services:
     tags:
       - { name: placeholder_strategy, priority: -1000 }
   email.validator:
-    class: Egulias\EmailValidator\EmailValidator
+    class: Drupal\Component\Utility\EmailValidator
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry
     factory: ['@update.post_update_registry_factory', create]

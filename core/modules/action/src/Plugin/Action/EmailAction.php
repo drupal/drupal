@@ -3,6 +3,7 @@
 namespace Drupal\action\Plugin\Action;
 
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Component\Utility\EmailValidatorInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -13,7 +14,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\Token;
 use Psr\Log\LoggerInterface;
-use Egulias\EmailValidator\EmailValidator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -65,7 +65,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   /**
    * The email validator.
    *
-   * @var \Egulias\EmailValidator\EmailValidator
+   * @var \Drupal\Component\Utility\EmailValidatorInterface
    */
   protected $emailValidator;
 
@@ -88,10 +88,10 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
    *   The mail manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Egulias\EmailValidator\EmailValidator $email_validator
+   * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
    *   The email validator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, EntityManagerInterface $entity_manager, LoggerInterface $logger, MailManagerInterface $mail_manager, LanguageManagerInterface $language_manager, EmailValidator $email_validator) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, EntityManagerInterface $entity_manager, LoggerInterface $logger, MailManagerInterface $mail_manager, LanguageManagerInterface $language_manager, EmailValidatorInterface $email_validator) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->token = $token;

@@ -39,7 +39,7 @@
         "easyrdf/easyrdf": "^0.9",
         "zendframework/zend-feed": "^2.4",
         "stack/builder": "^1.0",
-        "egulias/email-validator": "^1.2",
+        "egulias/email-validator": "^2.0",
         "masterminds/html5": "^2.1",
         "symfony/psr-http-message-bridge": "^1.0",
         "zendframework/zend-diactoros": "^1.1",

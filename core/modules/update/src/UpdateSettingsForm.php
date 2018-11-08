@@ -2,11 +2,11 @@
 
 namespace Drupal\update;
 
+use Drupal\Component\Utility\EmailValidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Egulias\EmailValidator\EmailValidator;
 
 /**
  * Configure update settings for this site.
@@ -18,17 +18,17 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
   /**
    * The email validator.
    *
-   * @var \Egulias\EmailValidator\EmailValidator
+   * @var \Drupal\Component\Utility\EmailValidatorInterface
    */
   protected $emailValidator;
 
   /**
    * Constructs a new UpdateSettingsForm.
    *
-   * @param \Egulias\EmailValidator\EmailValidator $email_validator
+   * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
    *   The email validator.
    */
-  public function __construct(EmailValidator $email_validator) {
+  public function __construct(EmailValidatorInterface $email_validator) {
     $this->emailValidator = $email_validator;
   }
 
