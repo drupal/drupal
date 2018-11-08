@@ -76,7 +76,9 @@ class StatusMessages extends RenderElement {
   public static function renderMessages($type = NULL) {
     $render = [];
     if (isset($type)) {
-      $messages = \Drupal::messenger()->deleteByType($type);
+      $messages = [
+        $type => \Drupal::messenger()->deleteByType($type),
+      ];
     }
     else {
       $messages = \Drupal::messenger()->deleteAll();
