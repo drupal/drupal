@@ -313,13 +313,35 @@ class ContextDefinition implements ContextDefinitionInterface {
   }
 
   /**
+   * Checks if this definition's data type matches that of the given context.
+   *
+   * @param \Drupal\Core\Plugin\Context\ContextInterface $context
+   *   The context to test against.
+   *
+   * @return bool
+   *   TRUE if the data types match, otherwise FALSE.
+   */
+  protected function dataTypeMatches(ContextInterface $context) {
+    $this_type = $this->getDataType();
+    $that_type = $context->getContextDefinition()->getDataType();
+
+    return (
+      // 'any' means all data types are supported.
+      $this_type === 'any' ||
+      $this_type === $that_type ||
+      // Allow a more generic data type like 'entity' to be fulfilled by a more
+      // specific data type like 'entity:user'. However, if this type is more
+      // specific, do not consider a more generic type to be a match.
+      strpos($that_type, "$this_type:") === 0
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function isSatisfiedBy(ContextInterface $context) {
     $definition = $context->getContextDefinition();
-    // If the data types do not match, this context is invalid unless the
-    // expected data type is any, which means all data types are supported.
-    if ($this->getDataType() != 'any' && $definition->getDataType() != $this->getDataType()) {
+    if (!$this->dataTypeMatches($context)) {
       return FALSE;
     }
 

@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\TypedData\TypedDataManager;
@@ -95,19 +96,20 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
    * @param mixed $value
    *   (optional) The value to set on the context, defaults to NULL.
    */
-  protected function assertRequirementIsSatisfied($expected, EntityContextDefinition $requirement, EntityContextDefinition $definition, $value = NULL) {
+  protected function assertRequirementIsSatisfied($expected, ContextDefinition $requirement, ContextDefinition $definition, $value = NULL) {
     $context = new EntityContext($definition, $value);
     $this->assertSame($expected, $requirement->isSatisfiedBy($context));
   }
 
   /**
    * @covers ::isSatisfiedBy
+   * @covers ::dataTypeMatches
    * @covers ::getSampleValues
    * @covers ::getConstraintObjects
    *
    * @dataProvider providerTestIsSatisfiedBy
    */
-  public function testIsSatisfiedBy($expected, EntityContextDefinition $requirement, EntityContextDefinition $definition, $value = NULL) {
+  public function testIsSatisfiedBy($expected, ContextDefinition $requirement, ContextDefinition $definition, $value = NULL) {
     $entity_storage = $this->prophesize(EntityStorageInterface::class);
     $content_entity_storage = $this->prophesize(ContentEntityStorageInterface::class);
     $this->entityTypeManager->getStorage('test_config')->willReturn($entity_storage->reveal());
@@ -169,12 +171,23 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
       EntityContextDefinition::fromEntityType($config),
       EntityContextDefinition::fromEntityType($config),
     ];
+    $data['generic entity requirement, specific context'] = [
+      TRUE,
+      new ContextDefinition('entity'),
+      EntityContextDefinition::fromEntityType($config),
+    ];
+    $data['specific requirement, generic entity context'] = [
+      FALSE,
+      EntityContextDefinition::fromEntityType($content),
+      new ContextDefinition('entity'),
+    ];
 
     return $data;
   }
 
   /**
    * @covers ::isSatisfiedBy
+   * @covers ::dataTypeMatches
    * @covers ::getSampleValues
    * @covers ::getConstraintObjects
    *
@@ -271,6 +284,7 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
 
   /**
    * @covers ::isSatisfiedBy
+   * @covers ::dataTypeMatches
    * @covers ::getSampleValues
    * @covers ::getConstraintObjects
    *

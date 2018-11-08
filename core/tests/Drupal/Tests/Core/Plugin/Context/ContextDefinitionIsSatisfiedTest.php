@@ -29,6 +29,7 @@ class ContextDefinitionIsSatisfiedTest extends UnitTestCase {
     $namespaces = new \ArrayObject([
       'Drupal\\Core\\TypedData' => $this->root . '/core/lib/Drupal/Core/TypedData',
       'Drupal\\Core\\Validation' => $this->root . '/core/lib/Drupal/Core/Validation',
+      'Drupal\\Tests\\Core\\Plugin\\Fixtures' => $this->root . '/core/tests/Drupal/Tests/Core/Plugin/Fixtures',
     ]);
     $cache_backend = new NullBackend('cache');
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
@@ -60,6 +61,7 @@ class ContextDefinitionIsSatisfiedTest extends UnitTestCase {
    *   (optional) The value to set on the context, defaults to NULL.
    *
    * @covers ::isSatisfiedBy
+   * @covers ::dataTypeMatches
    * @covers ::getSampleValues
    * @covers ::getConstraintObjects
    *
@@ -115,6 +117,16 @@ class ContextDefinitionIsSatisfiedTest extends UnitTestCase {
       TRUE,
       new InheritedContextDefinition('any'),
       new ContextDefinition('any'),
+    ];
+    $data['specific definition, generic requirement'] = [
+      TRUE,
+      new ContextDefinition('test_data_type'),
+      new ContextDefinition('test_data_type:a_variant'),
+    ];
+    $data['generic definition, specific requirement'] = [
+      FALSE,
+      new ContextDefinition('test_data_type:a_variant'),
+      new ContextDefinition('test_data_type'),
     ];
 
     return $data;
