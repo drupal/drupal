@@ -1,3 +1,6 @@
+Drupal 7.xx, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.61, 2018-11-07
 -----------------------
 - File upload validation functions and hook_file_validate() implementations are
