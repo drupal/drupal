@@ -167,6 +167,31 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * {@inheritdoc}
    */
   public function setActiveWorkspace(WorkspaceInterface $workspace) {
+    $this->doSwitchWorkspace($workspace);
+
+    // Set the workspace on the proper negotiator.
+    $request = $this->requestStack->getCurrentRequest();
+    foreach ($this->negotiatorIds as $negotiator_id) {
+      $negotiator = $this->classResolver->getInstanceFromDefinition($negotiator_id);
+      if ($negotiator->applies($request)) {
+        $negotiator->setActiveWorkspace($workspace);
+        break;
+      }
+    }
+
+    return $this;
+  }
+
+  /**
+   * Switches the current workspace.
+   *
+   * @param \Drupal\workspaces\WorkspaceInterface $workspace
+   *   The workspace to set as active.
+   *
+   * @throws \Drupal\workspaces\WorkspaceAccessException
+   *   Thrown when the current user doesn't have access to view the workspace.
+   */
+  protected function doSwitchWorkspace(WorkspaceInterface $workspace) {
     // If the current user doesn't have access to view the workspace, they
     // shouldn't be allowed to switch to it.
     if (!$workspace->access('view') && !$workspace->isDefaultWorkspace()) {
@@ -179,22 +204,29 @@ class WorkspaceManager implements WorkspaceManagerInterface {
 
     $this->activeWorkspace = $workspace;
 
-    // Set the workspace on the proper negotiator.
-    $request = $this->requestStack->getCurrentRequest();
-    foreach ($this->negotiatorIds as $negotiator_id) {
-      $negotiator = $this->classResolver->getInstanceFromDefinition($negotiator_id);
-      if ($negotiator->applies($request)) {
-        $negotiator->setActiveWorkspace($workspace);
-        break;
-      }
-    }
-
     $supported_entity_types = $this->getSupportedEntityTypes();
     foreach ($supported_entity_types as $supported_entity_type) {
       $this->entityTypeManager->getStorage($supported_entity_type->id())->resetCache();
     }
+  }
 
-    return $this;
+  /**
+   * {@inheritdoc}
+   */
+  public function executeInWorkspace($workspace_id, callable $function) {
+    /** @var \Drupal\workspaces\WorkspaceInterface $workspace */
+    $workspace = $this->entityTypeManager->getStorage('workspace')->load($workspace_id);
+
+    if (!$workspace) {
+      throw new \InvalidArgumentException('The ' . $workspace_id . ' workspace does not exist.');
+    }
+
+    $previous_active_workspace = $this->getActiveWorkspace();
+    $this->doSwitchWorkspace($workspace);
+    $result = $function();
+    $this->doSwitchWorkspace($previous_active_workspace);
+
+    return $result;
   }
 
   /**
