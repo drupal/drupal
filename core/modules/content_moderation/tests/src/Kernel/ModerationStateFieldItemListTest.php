@@ -3,6 +3,7 @@
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
@@ -65,6 +66,8 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $this->testNode->save();
     \Drupal::entityTypeManager()->getStorage('node')->resetCache();
     $this->testNode = Node::load($this->testNode->id());
+
+    ConfigurableLanguage::createFromLangcode('de')->save();
   }
 
   /**
@@ -363,6 +366,38 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $this->assertEquals('published', $updated_default_node->moderation_state->value);
     $legacy_configuration_node->save();
     $this->assertEquals('published', $updated_default_node->moderation_state->value);
+  }
+
+  /**
+   * Test the field item list when used with existing unmoderated content.
+   */
+  public function testWithExistingUnmoderatedContent() {
+    $node = Node::create([
+      'title' => 'Test title',
+      'type' => 'unmoderated',
+    ]);
+    $node->save();
+    $translation = $node->addTranslation('de', $node->toArray());
+    $translation->title = 'Translated';
+    $translation->save();
+
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'unmoderated');
+    $workflow->save();
+
+    // After enabling moderation, both the original node and translation should
+    // have a published moderation state.
+    $this->assertEquals('published', $node->moderation_state->value);
+    $this->assertEquals('published', $translation->moderation_state->value);
+
+    // After the node has been updated, both the original node and translation
+    // should still have a value.
+    $node = Node::load($node->id());
+    $node->title = 'Updated title';
+    $node->save();
+    $translation = $node->getTranslation('de');
+    $this->assertEquals('published', $node->moderation_state->value);
+    $this->assertEquals('published', $translation->moderation_state->value);
   }
 
 }
