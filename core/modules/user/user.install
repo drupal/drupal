@@ -53,7 +53,12 @@ function user_schema() {
       'name' => ['name'],
     ],
     'foreign keys' => [
-      'uid' => ['users' => 'uid'],
+      'data_user' => [
+        'table' => 'users',
+        'columns' => [
+          'uid' => 'uid',
+        ],
+      ],
     ],
   ];
 
