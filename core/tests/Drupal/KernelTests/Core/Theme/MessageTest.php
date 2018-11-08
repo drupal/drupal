@@ -32,6 +32,14 @@ class MessageTest extends KernelTestBase {
     $this->render($messages);
     $this->assertRaw('messages messages--error');
     $this->assertRaw('messages messages--status');
+    // Tests display of only one type of messages.
+    \Drupal::messenger()->addError('An error occurred');
+    $messages = [
+      '#type' => 'status_messages',
+      '#display' => 'error',
+    ];
+    $this->render($messages);
+    $this->assertRaw('messages messages--error');
   }
 
 }
