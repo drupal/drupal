@@ -50,6 +50,19 @@ interface WorkspaceManagerInterface {
   public function setActiveWorkspace(WorkspaceInterface $workspace);
 
   /**
+   * Executes the given callback function in the context of a workspace.
+   *
+   * @param string $workspace_id
+   *   The ID of a workspace.
+   * @param callable $function
+   *   The callback to be executed.
+   *
+   * @return mixed
+   *   The callable's return value.
+   */
+  public function executeInWorkspace($workspace_id, callable $function);
+
+  /**
    * Determines whether runtime entity operations should be altered.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type

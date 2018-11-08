@@ -37,6 +37,13 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   protected $entityTypeManager;
 
   /**
+   * The workspaces manager.
+   *
+   * @var \Drupal\workspaces\WorkspaceManagerInterface
+   */
+  protected $workspacesManager;
+
+  /**
    * An array of test workspaces, keyed by workspace ID.
    *
    * @var \Drupal\workspaces\WorkspaceInterface[]
@@ -102,6 +109,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->enableModules(['workspaces']);
     $this->container = \Drupal::getContainer();
     $this->entityTypeManager = \Drupal::entityTypeManager();
+    $this->workspacesManager = \Drupal::service('workspaces.manager');
 
     $this->installEntitySchema('workspace');
     $this->installEntitySchema('workspace_association');
@@ -490,6 +498,57 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // Check deleting an existing entity.
     $this->setExpectedException(EntityStorageException::class, 'This entity can only be deleted in the default workspace.');
     $entity_test->delete();
+  }
+
+  /**
+   * @covers \Drupal\workspaces\WorkspaceManager::executeInWorkspace
+   */
+  public function testExecuteInWorkspaceContext() {
+    $this->initializeWorkspacesModule();
+
+    // Create an entity in the default workspace.
+    $this->switchToWorkspace('live');
+    $node = $this->createNode([
+      'title' => 'live node 1',
+    ]);
+    $node->save();
+
+    // Switch to the 'stage' workspace and change some values for the referenced
+    // entities.
+    $this->switchToWorkspace('stage');
+    $node->title->value = 'stage node 1';
+    $node->save();
+
+    // Switch back to the default workspace and run the baseline assertions.
+    $this->switchToWorkspace('live');
+    $storage = $this->entityTypeManager->getStorage('node');
+
+    $this->assertEquals('live', $this->workspacesManager->getActiveWorkspace()->id());
+
+    $live_node = $storage->loadUnchanged($node->id());
+    $this->assertEquals('live node 1', $live_node->title->value);
+
+    $result = $storage->getQuery()
+      ->condition('title', 'live node 1')
+      ->execute();
+    $this->assertEquals([$live_node->getRevisionId() => $node->id()], $result);
+
+    // Try the same assertions in the context of the 'stage' workspace.
+    $this->workspacesManager->executeInWorkspace('stage', function () use ($node, $storage) {
+      $this->assertEquals('stage', $this->workspacesManager->getActiveWorkspace()->id());
+
+      $stage_node = $storage->loadUnchanged($node->id());
+      $this->assertEquals('stage node 1', $stage_node->title->value);
+
+      $result = $storage->getQuery()
+        ->condition('title', 'stage node 1')
+        ->execute();
+      $this->assertEquals([$stage_node->getRevisionId() => $stage_node->id()], $result);
+    });
+
+    // Check that the 'stage' workspace was not persisted by the workspace
+    // manager.
+    $this->assertEquals('live', $this->workspacesManager->getActiveWorkspace()->id());
   }
 
   /**
