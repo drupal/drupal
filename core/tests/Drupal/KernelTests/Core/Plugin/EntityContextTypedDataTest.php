@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Plugin\Context;
+namespace Drupal\KernelTests\Core\Plugin;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Plugin\Context\EntityContext;
