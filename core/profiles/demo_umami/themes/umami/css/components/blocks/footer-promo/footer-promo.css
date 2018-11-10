@@ -36,6 +36,9 @@
   background: url('../../../../images/svg/pointer--white.svg') no-repeat center center;
   vertical-align: middle;
 }
+[dir=rtl] .block-type-footer-promo-block .footer-promo-content a:after {
+  transform: rotate(180deg);
+}
 
 @media screen and (min-width: 60rem) {
   .block-type-footer-promo-block {

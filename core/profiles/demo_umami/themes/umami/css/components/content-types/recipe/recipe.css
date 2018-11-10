@@ -36,10 +36,18 @@
   align-items: center;
   min-height: 40px;
   margin-bottom: 0.96em;
-  padding-left: 48px;
+  padding-left: 48px; /* LTR */
   background-repeat: no-repeat;
-  background-position: left center;
+  background-position: left center; /* LTR */
   background-size: 40px 40px;
+}
+[dir=rtl] .node--type-recipe.node--view-mode-full .field--name-field-preparation-time,
+[dir=rtl] .node--type-recipe.node--view-mode-full .field--name-field-cooking-time,
+[dir=rtl] .node--type-recipe.node--view-mode-full .field--name-field-number-of-servings,
+[dir=rtl] .node--type-recipe.node--view-mode-full .field--name-field-difficulty {
+  background-position: right center;
+  padding-left: 0;
+  padding-right: 48px;
 }
 .node--type-recipe.node--view-mode-full .field--name-field-preparation-time {
   background-image: url(../../../../images/svg/knife.svg);

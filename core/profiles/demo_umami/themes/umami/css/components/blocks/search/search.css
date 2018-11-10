@@ -4,7 +4,7 @@
  */
 
 .search-form + h2 {
-  margin: 0 14px 1rem;
+  margin: 0 1rem 1rem;
 }
 
 .search-block-form {
@@ -67,21 +67,31 @@
   width: 20em;
   max-width: calc(100vw - 6.25em);
   height: auto;
-  margin: 0 -2px 0 0;
+  margin: 0 -2px 0 0; /* LTR */
   padding: 7px 8px 7px 32px;
   color: #464646;
-  border: 1px solid #dbdbdb;
-  border-right: none;
+  border: 1px solid #dbdbdb; /* LTR */
+  border-right: none; /* LTR */
   border-radius: 3px;
   background: url(../../../../images/svg/search.svg) no-repeat 0.5em center #fff;
   font-size: 0.875rem;
   line-height: normal;
 }
+[dir=rtl] .form-search {
+  margin: 0 0 0 -2px;
+  border-left: none;
+  border-right: 1px solid #dbdbdb;
+}
 
 .form-search:focus {
-  margin: 0 0 -2px -2px;
+  margin: 0 0 -2px -2px; /* LTR */
   padding: 5px 8px 5px 32px;
   outline: none;
+}
+[dir=rtl] .form-search:focus {
+  margin: 0 -2px -2px 0;
+  background-position: 0.35em;
+  border: 3px solid #00836d;
 }
 
 .form-search::placeholder {
@@ -101,8 +111,16 @@
 .search-block-form .form-submit,
 .search-form .form-submit {
   /* Take off the border radius on the left side as it bumps into the search field */
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  border-top-left-radius: 0; /* LTR */
+  border-bottom-left-radius: 0; /* LTR */
+}
+[dir=rtl] .search-block-form .form-submit,
+[dir=rtl] .search-form .form-submit {
+  /* Take off the border radius on the left side as it bumps into the search field */
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .search-block-form .form-submit:focus,
@@ -110,6 +128,14 @@
 .search-form .form-submit:focus,
 .search-form .form-submit:hover {
   margin: 0;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px; /* LTR */
+  border-bottom-left-radius: 4px; /* LTR */
+}
+/* Apply border radius to all corners to override LTR and RTL (normal state) changes. */
+[dir=rtl] .search-block-form .form-submit:focus,
+[dir=rtl] .search-block-form .form-submit:hover,
+[dir=rtl] .search-form .form-submit:focus,
+[dir=rtl] .search-form .form-submit:hover {
+  margin: 0;
+  border-radius: 4px;
 }

@@ -13,8 +13,11 @@
   padding: 0;
 }
 .tabs .tab {
-  margin: 0;
+  margin: 0; /* LTR */
   background-color: #e6eee0;
+}
+[dir=rtl] .tabs .tab {
+  margin: 0;
 }
 .tabs .tab.is-active {
   background-color: #fff;

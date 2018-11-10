@@ -7,7 +7,10 @@
   .menu--account {
     display: block;
     flex: 0 1 50%;
-    text-align: right;
+    text-align: right; /* LTR */
+  }
+  [dir="rtl"] .menu--account {
+    text-align: left;
   }
 }
 
@@ -19,7 +22,11 @@
   line-height: 1.5;
 }
 .menu-account__item + .menu-account__item {
-  margin-left: 1em;
+  margin-left: 1em; /* LTR */
+}
+[dir="rtl"] .menu-account__item + .menu-account__item {
+  margin-left: 0;
+  margin-right: 1em;
 }
 .menu-account__link,
 .menu-account__link:hover {

@@ -5,6 +5,9 @@
 .breadcrumb {
   padding: 0.79rem 1.266rem;
 }
+.breadcrumb li {
+  display: inline-block;
+}
 /* Large */
 @media screen and (min-width: 60rem) { /* 960px */
   .breadcrumb {
