@@ -86,7 +86,11 @@
     margin-bottom: 0;
   }
   .menu-main__item + .menu-main__item {
-    margin-left: 2.5em;
+    margin-left: 2.5em; /* LTR */
+  }
+  [dir="rtl"] .menu-main__item + .menu-main__item {
+    margin-left: 0;
+    margin-right: 2.5em;
   }
 }
 

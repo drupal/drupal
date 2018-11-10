@@ -19,6 +19,7 @@
 .search-form #edit-basic {
   display: flex;
   align-items: flex-end;
+  flex: 1 1;
 }
 .search-form .form-type-search {
   margin: 0;
@@ -43,6 +44,7 @@
 .search-form .search-help-link {
   padding: 1.28rem;
   margin: 0 1rem 1rem 0;
+  flex: 1 1;
 }
 
 .search-form #edit-advanced {
@@ -96,7 +98,11 @@
   background: #fff;
   border: 1px solid #fcece7;
   padding: 1.28rem;
-  margin: 0 0 1rem 0;
+  margin: 0 0 1rem 0; /* LTR */
+}
+/* Apply right margin to keep aligned with title and exposed filter. */
+[dir=rtl] .search-results li {
+  margin: 0 1rem 1rem 0;
 }
 
 .search-results .search-result__snippet {
