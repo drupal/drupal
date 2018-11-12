@@ -80,6 +80,19 @@ layout_builder.add_block:
       section_storage:
         layout_builder_tempstore: TRUE
 
+layout_builder.choose_inline_block:
+  path: '/layout_builder/choose/inline-block/{section_storage_type}/{section_storage}/{delta}/{region}'
+  defaults:
+    _controller: '\Drupal\layout_builder\Controller\ChooseBlockController::inlineBlockList'
+    _title: 'Add a new Inline Block'
+  requirements:
+    _permission: 'configure any layout'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE
+
 layout_builder.update_block:
   path: '/layout_builder/update/block/{section_storage_type}/{section_storage}/{delta}/{region}/{uuid}'
   defaults:

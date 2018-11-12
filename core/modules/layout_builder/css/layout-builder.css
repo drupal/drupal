@@ -85,3 +85,32 @@
   display: block;
   padding-top: 0.55em;
 }
+
+#drupal-off-canvas .inline-block-create-button {
+  display: block;
+  padding: 24px;
+  padding-left: 44px;
+  font-size: 16px;
+  color: #eee;
+  background: url(../../../misc/icons/bebebe/plus.svg) transparent 16px no-repeat;
+}
+
+#drupal-off-canvas .inline-block-create-button,
+#drupal-off-canvas .inline-block-list__item {
+  margin: 0 -20px;
+  background-color: #444;
+}
+
+#drupal-off-canvas .inline-block-create-button:hover,
+#drupal-off-canvas .inline-block-list__item:hover {
+  background-color: #333;
+}
+
+#drupal-off-canvas .inline-block-list {
+  margin-bottom: 15px;
+}
+
+#drupal-off-canvas .inline-block-list__item {
+  display: block;
+  padding: 15px 0 15px 25px;
+}

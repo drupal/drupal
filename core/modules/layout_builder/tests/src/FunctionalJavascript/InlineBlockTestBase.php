@@ -71,13 +71,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
         ],
       ],
     ]);
-    $bundle = BlockContentType::create([
-      'id' => 'basic',
-      'label' => 'Basic block',
-      'revision' => 1,
-    ]);
-    $bundle->save();
-    block_content_add_body_field($bundle->id());
+    $this->createBlockContentType('basic', 'Basic block');
 
     $this->blockStorage = $this->container->get('entity_type.manager')->getStorage('block_content');
   }
@@ -146,8 +140,8 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $page->clickLink('Add Block');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.block-categories details:contains(Create new block)'));
-    $this->clickLink('Basic block');
+    $this->assertNotEmpty($assert_session->waitForLink('Create custom block'));
+    $this->clickLink('Create custom block');
     $assert_session->assertWaitOnAjaxRequest();
     $textarea = $assert_session->waitForElement('css', '[name="settings[block_form][body][0][value]"]');
     $this->assertNotEmpty($textarea);
@@ -217,6 +211,24 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     else {
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', ".dialog-off-canvas-main-canvas:contains('$text')"));
     }
+  }
+
+  /**
+   * Creates a block content type.
+   *
+   * @param string $id
+   *   The block type id.
+   * @param string $label
+   *   The block type label.
+   */
+  protected function createBlockContentType($id, $label) {
+    $bundle = BlockContentType::create([
+      'id' => $id,
+      'label' => $label,
+      'revision' => 1,
+    ]);
+    $bundle->save();
+    block_content_add_body_field($bundle->id());
   }
 
 }
