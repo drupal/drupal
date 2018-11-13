@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
@@ -917,6 +918,35 @@ class EntityFieldTest extends EntityKernelTestBase {
       ->getStorage($entity_type)
       ->load($entity->id());
     $this->assertEqual($entity->field_test_text->processed, $target, format_string('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
+  }
+
+  /**
+   * Tests explicit entity ID assignment.
+   */
+  public function testEntityIdAssignment() {
+    $entity_type = 'entity_test';
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
+
+    // Check that an ID can be explicitly assigned on creation.
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $this->createTestEntity($entity_type);
+    $entity_id = 3;
+    $entity->set('id', $entity_id);
+    $this->assertSame($entity_id, $entity->id());
+    $storage->save($entity);
+    $entity = $storage->loadUnchanged($entity->id());
+    $this->assertTrue($entity);
+
+    // Check that an explicitly-assigned ID is preserved on update.
+    $storage->save($entity);
+    $entity = $storage->loadUnchanged($entity->id());
+    $this->assertTrue($entity);
+
+    // Check that an ID cannot be explicitly assigned on update.
+    $this->setExpectedException(EntityStorageException::class);
+    $entity->set('id', $entity_id + 1);
+    $storage->save($entity);
   }
 
 }

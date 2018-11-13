@@ -821,10 +821,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if ($update) {
         $default_revision = $entity->isDefaultRevision();
         if ($default_revision) {
+          // Remove the ID from the record to enable updates on SQL variants
+          // that prevent updating serial columns, for example, mssql.
+          unset($record->{$this->idKey});
           $this->database
             ->update($this->baseTable)
             ->fields((array) $record)
-            ->condition($this->idKey, $record->{$this->idKey})
+            ->condition($this->idKey, $entity->get($this->idKey)->value)
             ->execute();
         }
         if ($this->revisionTable) {
@@ -833,11 +836,15 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
           else {
             $record = $this->mapToStorageRecord($entity->getUntranslated(), $this->revisionTable);
+            // Remove the revision ID from the record to enable updates on SQL
+            // variants that prevent updating serial columns, for example,
+            // mssql.
+            unset($record->{$this->revisionKey});
             $entity->preSaveRevision($this, $record);
             $this->database
               ->update($this->revisionTable)
               ->fields((array) $record)
-              ->condition($this->revisionKey, $record->{$this->revisionKey})
+              ->condition($this->revisionKey, $entity->getRevisionId())
               ->execute();
           }
         }
@@ -1064,19 +1071,21 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ->condition($this->idKey, $record->{$this->idKey})
           ->execute();
       }
+      // Make sure to update the new revision key for the entity.
+      $entity->{$this->revisionKey}->value = $record->{$this->revisionKey};
     }
     else {
+      // Remove the revision ID from the record to enable updates on SQL
+      // variants that prevent updating serial columns, for example,
+      // mssql.
+      unset($record->{$this->revisionKey});
       $this->database
         ->update($this->revisionTable)
         ->fields((array) $record)
-        ->condition($this->revisionKey, $record->{$this->revisionKey})
+        ->condition($this->revisionKey, $entity->getRevisionId())
         ->execute();
     }
-
-    // Make sure to update the new revision key for the entity.
-    $entity->{$this->revisionKey}->value = $record->{$this->revisionKey};
-
-    return $record->{$this->revisionKey};
+    return $entity->getRevisionId();
   }
 
   /**
