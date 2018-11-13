@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <oembed>
   <type>video</type>
-  <version>1.0</version>
+  <version type="float">1.0</version>
   <title>Let's Not Get a Drink Sometime</title>
   <https/>
   <author_name>CollegeHumor</author_name>

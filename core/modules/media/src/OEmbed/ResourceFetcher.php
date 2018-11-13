@@ -7,7 +7,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
 
 /**
  * Fetches and caches oEmbed resources.
@@ -69,8 +68,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
     $content = (string) $response->getBody();
 
     if (strstr($format, 'text/xml') || strstr($format, 'application/xml')) {
-      $encoder = new XmlEncoder();
-      $data = $encoder->decode($content, 'xml');
+      $data = $this->parseResourceXml($content, $url);
     }
     elseif (strstr($format, 'text/javascript') || strstr($format, 'application/json')) {
       $data = Json::decode($content);
@@ -192,6 +190,44 @@ class ResourceFetcher implements ResourceFetcherInterface {
     catch (\InvalidArgumentException $e) {
       throw new ResourceException($e->getMessage(), $url, $data, $e);
     }
+  }
+
+  /**
+   * Parses XML resource data.
+   *
+   * @param string $data
+   *   The raw XML for the resource.
+   * @param string $url
+   *   The resource URL.
+   *
+   * @return array
+   *   The parsed resource data.
+   *
+   * @throws \Drupal\media\OEmbed\ResourceException
+   *   If the resource data could not be parsed.
+   */
+  protected function parseResourceXml($data, $url) {
+    // Enable userspace error handling.
+    $was_using_internal_errors = libxml_use_internal_errors(TRUE);
+    libxml_clear_errors();
+
+    $content = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
+    // Restore the previous error handling behavior.
+    libxml_use_internal_errors($was_using_internal_errors);
+
+    $error = libxml_get_last_error();
+    if ($error) {
+      libxml_clear_errors();
+      throw new ResourceException($error->message, $url);
+    }
+    elseif ($content === FALSE) {
+      throw new ResourceException('The fetched resource could not be parsed.', $url);
+    }
+
+    // Convert XML to JSON so that the parsed resource has a consistent array
+    // structure, regardless of any XML attributes or quirks of the XML parser.
+    $data = Json::encode($content);
+    return Json::decode($data);
   }
 
 }
