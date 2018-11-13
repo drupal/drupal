@@ -63,8 +63,8 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    *
    * @see https://www.drupal.org/node/2549139
    */
-  public function hasHandler($entity_type, $handler_type) {
-    return $this->container->get('entity_type.manager')->hasHandler($entity_type, $handler_type);
+  public function hasHandler($entity_type_id, $handler_type) {
+    return $this->container->get('entity_type.manager')->hasHandler($entity_type_id, $handler_type);
   }
 
   /**
@@ -75,8 +75,8 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    *
    * @see https://www.drupal.org/node/2549139
    */
-  public function getStorage($entity_type) {
-    return $this->container->get('entity_type.manager')->getStorage($entity_type);
+  public function getStorage($entity_type_id) {
+    return $this->container->get('entity_type.manager')->getStorage($entity_type_id);
   }
 
   /**
@@ -88,8 +88,8 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    *
    * @see https://www.drupal.org/node/2549139
    */
-  public function getListBuilder($entity_type) {
-    return $this->container->get('entity_type.manager')->getListBuilder($entity_type);
+  public function getListBuilder($entity_type_id) {
+    return $this->container->get('entity_type.manager')->getListBuilder($entity_type_id);
   }
 
   /**
@@ -101,8 +101,8 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    *
    * @see https://www.drupal.org/node/2549139
    */
-  public function getFormObject($entity_type, $operation) {
-    return $this->container->get('entity_type.manager')->getFormObject($entity_type, $operation);
+  public function getFormObject($entity_type_id, $operation) {
+    return $this->container->get('entity_type.manager')->getFormObject($entity_type_id, $operation);
   }
 
   /**
@@ -114,8 +114,8 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    *
    * @see https://www.drupal.org/node/2549139
    */
-  public function getRouteProviders($entity_type) {
-    return $this->container->get('entity_type.manager')->getRouteProviders($entity_type);
+  public function getRouteProviders($entity_type_id) {
+    return $this->container->get('entity_type.manager')->getRouteProviders($entity_type_id);
   }
 
   /**
@@ -127,8 +127,8 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    *
    * @see https://www.drupal.org/node/2549139
    */
-  public function getViewBuilder($entity_type) {
-    return $this->container->get('entity_type.manager')->getViewBuilder($entity_type);
+  public function getViewBuilder($entity_type_id) {
+    return $this->container->get('entity_type.manager')->getViewBuilder($entity_type_id);
   }
 
   /**
@@ -140,8 +140,8 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    *
    * @see https://www.drupal.org/node/2549139
    */
-  public function getAccessControlHandler($entity_type) {
-    return $this->container->get('entity_type.manager')->getAccessControlHandler($entity_type);
+  public function getAccessControlHandler($entity_type_id) {
+    return $this->container->get('entity_type.manager')->getAccessControlHandler($entity_type_id);
   }
 
   /**
@@ -152,8 +152,8 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    *
    * @see https://www.drupal.org/node/2549139
    */
-  public function getHandler($entity_type, $handler_type) {
-    return $this->container->get('entity_type.manager')->getHandler($entity_type, $handler_type);
+  public function getHandler($entity_type_id, $handler_type) {
+    return $this->container->get('entity_type.manager')->getHandler($entity_type_id, $handler_type);
   }
 
   /**

@@ -155,8 +155,8 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   /**
    * {@inheritdoc}
    */
-  public function hasHandler($entity_type, $handler_type) {
-    if ($definition = $this->getDefinition($entity_type, FALSE)) {
+  public function hasHandler($entity_type_id, $handler_type) {
+    if ($definition = $this->getDefinition($entity_type_id, FALSE)) {
       return $definition->hasHandlerClass($handler_type);
     }
 
@@ -166,23 +166,23 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   /**
    * {@inheritdoc}
    */
-  public function getStorage($entity_type) {
-    return $this->getHandler($entity_type, 'storage');
+  public function getStorage($entity_type_id) {
+    return $this->getHandler($entity_type_id, 'storage');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getListBuilder($entity_type) {
-    return $this->getHandler($entity_type, 'list_builder');
+  public function getListBuilder($entity_type_id) {
+    return $this->getHandler($entity_type_id, 'list_builder');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormObject($entity_type, $operation) {
-    if (!$class = $this->getDefinition($entity_type, TRUE)->getFormClass($operation)) {
-      throw new InvalidPluginDefinitionException($entity_type, sprintf('The "%s" entity type did not specify a "%s" form class.', $entity_type, $operation));
+  public function getFormObject($entity_type_id, $operation) {
+    if (!$class = $this->getDefinition($entity_type_id, TRUE)->getFormClass($operation)) {
+      throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The "%s" entity type did not specify a "%s" form class.', $entity_type_id, $operation));
     }
 
     $form_object = $this->classResolver->getInstanceFromDefinition($class);
@@ -200,46 +200,46 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   /**
    * {@inheritdoc}
    */
-  public function getRouteProviders($entity_type) {
-    if (!isset($this->handlers['route_provider'][$entity_type])) {
-      $route_provider_classes = $this->getDefinition($entity_type, TRUE)->getRouteProviderClasses();
+  public function getRouteProviders($entity_type_id) {
+    if (!isset($this->handlers['route_provider'][$entity_type_id])) {
+      $route_provider_classes = $this->getDefinition($entity_type_id, TRUE)->getRouteProviderClasses();
 
       foreach ($route_provider_classes as $type => $class) {
-        $this->handlers['route_provider'][$entity_type][$type] = $this->createHandlerInstance($class, $this->getDefinition($entity_type));
+        $this->handlers['route_provider'][$entity_type_id][$type] = $this->createHandlerInstance($class, $this->getDefinition($entity_type_id));
       }
     }
 
-    return isset($this->handlers['route_provider'][$entity_type]) ? $this->handlers['route_provider'][$entity_type] : [];
+    return isset($this->handlers['route_provider'][$entity_type_id]) ? $this->handlers['route_provider'][$entity_type_id] : [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getViewBuilder($entity_type) {
-    return $this->getHandler($entity_type, 'view_builder');
+  public function getViewBuilder($entity_type_id) {
+    return $this->getHandler($entity_type_id, 'view_builder');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getAccessControlHandler($entity_type) {
-    return $this->getHandler($entity_type, 'access');
+  public function getAccessControlHandler($entity_type_id) {
+    return $this->getHandler($entity_type_id, 'access');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getHandler($entity_type, $handler_type) {
-    if (!isset($this->handlers[$handler_type][$entity_type])) {
-      $definition = $this->getDefinition($entity_type);
+  public function getHandler($entity_type_id, $handler_type) {
+    if (!isset($this->handlers[$handler_type][$entity_type_id])) {
+      $definition = $this->getDefinition($entity_type_id);
       $class = $definition->getHandlerClass($handler_type);
       if (!$class) {
-        throw new InvalidPluginDefinitionException($entity_type, sprintf('The "%s" entity type did not specify a %s handler.', $entity_type, $handler_type));
+        throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The "%s" entity type did not specify a %s handler.', $entity_type_id, $handler_type));
       }
-      $this->handlers[$handler_type][$entity_type] = $this->createHandlerInstance($class, $definition);
+      $this->handlers[$handler_type][$entity_type_id] = $this->createHandlerInstance($class, $definition);
     }
 
-    return $this->handlers[$handler_type][$entity_type];
+    return $this->handlers[$handler_type][$entity_type_id];
   }
 
   /**

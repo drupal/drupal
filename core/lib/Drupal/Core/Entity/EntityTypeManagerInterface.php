@@ -13,19 +13,19 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
   /**
    * Creates a new access control handler instance.
    *
-   * @param string $entity_type
-   *   The entity type for this access control handler.
+   * @param string $entity_type_id
+   *   The entity type ID for this access control handler.
    *
    * @return \Drupal\Core\Entity\EntityAccessControlHandlerInterface
    *   A access control handler instance.
    */
-  public function getAccessControlHandler($entity_type);
+  public function getAccessControlHandler($entity_type_id);
 
   /**
    * Creates a new storage instance.
    *
-   * @param string $entity_type
-   *   The entity type for this storage.
+   * @param string $entity_type_id
+   *   The entity type ID for this storage.
    *
    * @return \Drupal\Core\Entity\EntityStorageInterface
    *   A storage instance.
@@ -35,65 +35,65 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    *   Thrown if the storage handler couldn't be loaded.
    */
-  public function getStorage($entity_type);
+  public function getStorage($entity_type_id);
 
   /**
    * Creates a new view builder instance.
    *
-   * @param string $entity_type
-   *   The entity type for this view builder.
+   * @param string $entity_type_id
+   *   The entity type ID for this view builder.
    *
    * @return \Drupal\Core\Entity\EntityViewBuilderInterface
    *   A view builder instance.
    */
-  public function getViewBuilder($entity_type);
+  public function getViewBuilder($entity_type_id);
 
   /**
    * Creates a new entity list builder.
    *
-   * @param string $entity_type
-   *   The entity type for this list builder.
+   * @param string $entity_type_id
+   *   The entity type ID for this list builder.
    *
    * @return \Drupal\Core\Entity\EntityListBuilderInterface
    *   An entity list builder instance.
    */
-  public function getListBuilder($entity_type);
+  public function getListBuilder($entity_type_id);
 
   /**
    * Creates a new form instance.
    *
-   * @param string $entity_type
-   *   The entity type for this form.
+   * @param string $entity_type_id
+   *   The entity type ID for this form.
    * @param string $operation
    *   The name of the operation to use, e.g., 'default'.
    *
    * @return \Drupal\Core\Entity\EntityFormInterface
    *   A form instance.
    */
-  public function getFormObject($entity_type, $operation);
+  public function getFormObject($entity_type_id, $operation);
 
   /**
    * Gets all route provider instances.
    *
-   * @param string $entity_type
-   *   The entity type for this route providers.
+   * @param string $entity_type_id
+   *   The entity type ID for the route providers.
    *
    * @return \Drupal\Core\Entity\Routing\EntityRouteProviderInterface[]
    */
-  public function getRouteProviders($entity_type);
+  public function getRouteProviders($entity_type_id);
 
   /**
    * Checks whether a certain entity type has a certain handler.
    *
-   * @param string $entity_type
-   *   The name of the entity type.
+   * @param string $entity_type_id
+   *   The ID of the entity type.
    * @param string $handler_type
    *   The name of the handler.
    *
    * @return bool
    *   Returns TRUE if the entity type has the handler, else FALSE.
    */
-  public function hasHandler($entity_type, $handler_type);
+  public function hasHandler($entity_type_id, $handler_type);
 
   /**
    * Returns a handler instance for the given entity type and handler.
@@ -105,8 +105,8 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * although as the handler is common to all entities of the same type,
    * any data that is per-entity should be keyed by the entity ID.
    *
-   * @param string $entity_type
-   *   The entity type for this handler.
+   * @param string $entity_type_id
+   *   The entity type ID for this handler.
    * @param string $handler_type
    *   The handler type to create an instance for.
    *
@@ -115,7 +115,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function getHandler($entity_type, $handler_type);
+  public function getHandler($entity_type_id, $handler_type);
 
   /**
    * Creates new handler instance.
