@@ -57,6 +57,15 @@ function workspaces_form_alter(&$form, FormStateInterface $form_state, $form_id)
 }
 
 /**
+ * Implements hook_field_info_alter().
+ */
+function workspaces_field_info_alter(&$definitions) {
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->fieldInfoAlter($definitions);
+}
+
+/**
  * Implements hook_entity_load().
  */
 function workspaces_entity_load(array &$entities, $entity_type_id) {
