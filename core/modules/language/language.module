@@ -294,7 +294,7 @@ function language_negotiation_url_prefixes_update() {
     }
     // Otherwise we keep the configured prefix.
   }
-  $config->set('url.prefixes', $prefixes)->save();
+  $config->set('url.prefixes', $prefixes)->save(TRUE);
 }
 
 /**

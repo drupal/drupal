@@ -251,6 +251,9 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
     $definitions = $this->getNegotiationMethods();
     $default_types = $this->languageManager->getLanguageTypes();
 
+    // Ensure that the weights are integers.
+    $enabled_methods = array_map('intval', $enabled_methods);
+
     // Order the language negotiation method list by weight.
     asort($enabled_methods);
     foreach ($enabled_methods as $method_id => $weight) {
@@ -268,7 +271,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
         unset($enabled_methods[$method_id]);
       }
     }
-    $this->configFactory->getEditable('language.types')->set('negotiation.' . $type . '.enabled', $enabled_methods)->save();
+    $this->configFactory->getEditable('language.types')->set('negotiation.' . $type . '.enabled', $enabled_methods)->save(TRUE);
   }
 
   /**

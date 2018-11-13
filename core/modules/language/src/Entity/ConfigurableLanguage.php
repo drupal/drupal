@@ -39,6 +39,13 @@ use Drupal\language\ConfigurableLanguageInterface;
  *     "label" = "label",
  *     "weight" = "weight"
  *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "direction",
+ *     "weight",
+ *     "locked"
+ *   },
  *   links = {
  *     "delete-form" = "/admin/config/regional/language/delete/{configurable_language}",
  *     "edit-form" = "/admin/config/regional/language/edit/{configurable_language}",
@@ -152,7 +159,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
       $config = \Drupal::configFactory()->getEditable('language.negotiation');
       $domains = $config->get('url.domains');
       $domains[$this->id()] = '';
-      $config->set('url.domains', $domains)->save();
+      $config->set('url.domains', $domains)->save(TRUE);
     }
   }
 
@@ -193,7 +200,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
     $config = \Drupal::configFactory()->getEditable('language.negotiation');
     $config->clear('url.prefixes.' . $entity->id());
     $config->clear('url.domains.' . $entity->id());
-    $config->save();
+    $config->save(TRUE);
   }
 
   /**

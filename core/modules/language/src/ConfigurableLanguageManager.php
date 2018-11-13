@@ -201,7 +201,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     if (isset($values['all'])) {
       $config->set('all', $values['all']);
     }
-    $config->save();
+    $config->save(TRUE);
   }
 
   /**
