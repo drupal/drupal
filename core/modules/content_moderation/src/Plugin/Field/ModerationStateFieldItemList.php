@@ -93,7 +93,7 @@ class ModerationStateFieldItemList extends FieldItemList {
     if ($entity->getEntityType()->hasKey('langcode')) {
       $langcode = $entity->language()->getId();
       if (!$content_moderation_state->hasTranslation($langcode)) {
-        $content_moderation_state->addTranslation($langcode);
+        $content_moderation_state->addTranslation($langcode, $content_moderation_state->toArray());
       }
       if ($content_moderation_state->language()->getId() !== $langcode) {
         $content_moderation_state = $content_moderation_state->getTranslation($langcode);
