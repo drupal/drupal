@@ -68,7 +68,9 @@ class Schema extends DatabaseSchema {
 
     // Retrieve the max identifier length which is usually 63 characters
     // but can be altered before PostgreSQL is compiled so we need to check.
-    $this->maxIdentifierLength = $this->connection->query("SHOW max_identifier_length")->fetchField();
+    if (empty($this->maxIdentifierLength)) {
+      $this->maxIdentifierLength = $this->connection->query("SHOW max_identifier_length")->fetchField();
+    }
 
     if (strlen($identifierName) > $this->maxIdentifierLength) {
       $saveIdentifier = '"drupal_' . $this->hashBase64($identifierName) . '_' . $args[2] . '"';
