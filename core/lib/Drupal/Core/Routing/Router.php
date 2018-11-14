@@ -125,6 +125,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
       throw new ResourceNotFoundException(sprintf('No routes found for "%s".', $this->currentPath->getPath()));
     }
     $collection = $this->applyRouteFilters($collection, $request);
+    $collection = $this->applyFitOrder($collection);
 
     if ($ret = $this->matchCollection(rawurldecode($this->currentPath->getPath($request)), $collection)) {
       return $this->applyRouteEnhancers($ret, $request);
@@ -283,6 +284,44 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
       $collection = $filter->filter($collection, $request);
     }
 
+    return $collection;
+  }
+
+  /**
+   * Reapplies the fit order to a RouteCollection object.
+   *
+   * Route filters can reorder route collections. For example, routes with an
+   * explicit _format requirement will be preferred. This can result in a less
+   * fit route being used. For example, as a result of filtering /user/% comes
+   * before /user/login. In order to not break this fundamental property of
+   * routes, we need to reapply the fit order. We also need to ensure that order
+   * within each group of the same fit is preserved.
+   *
+   * @param \Symfony\Component\Routing\RouteCollection $collection
+   *   The route collection.
+   *
+   * @return \Symfony\Component\Routing\RouteCollection
+   *   The reordered route collection.
+   */
+  protected function applyFitOrder(RouteCollection $collection) {
+    $buckets = [];
+    // Sort all the routes by fit descending.
+    foreach ($collection->all() as $name => $route) {
+      $fit = $route->compile()->getFit();
+      $buckets += [$fit => []];
+      $buckets[$fit][] = [$name, $route];
+    }
+    krsort($buckets);
+
+    $flattened = array_reduce($buckets, 'array_merge', []);
+
+    // Add them back onto a new route collection.
+    $collection = new RouteCollection();
+    foreach ($flattened as $pair) {
+      $name = $pair[0];
+      $route = $pair[1];
+      $collection->add($name, $route);
+    }
     return $collection;
   }
 
