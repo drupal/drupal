@@ -160,8 +160,10 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     // Set the update url. This must be set here rather than in
     // self::__construct() or the old URL generator will leak additional test
-    // sites.
-    $this->updateUrl = Url::fromRoute('system.db_update');
+    // sites. Additionally, we need to prevent the path alias processor from
+    // running because we might not have a working alias system before running
+    // the updates.
+    $this->updateUrl = Url::fromRoute('system.db_update', [], ['path_processing' => FALSE]);
 
     $this->setupBaseUrl();
 

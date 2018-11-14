@@ -32,6 +32,16 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
     $definition = $container->getDefinition('library.discovery.collector');
     $argument = new Reference('cache.null');
     $definition->replaceArgument(0, $argument);
+
+    // Prevent the alias-based path processor, which requires a path_alias db
+    // table, from being registered to the path processor manager. We do this by
+    // removing the tags that the compiler pass looks for. This means the url
+    // generator can safely be used during the database update process.
+    if ($container->hasDefinition('path_processor_alias')) {
+      $container->getDefinition('path_processor_alias')
+        ->clearTag('path_processor_inbound')
+        ->clearTag('path_processor_outbound');
+    }
   }
 
 }
