@@ -138,6 +138,17 @@ abstract class SectionStorageTestBase extends EntityKernelTestBase {
   }
 
   /**
+   * Tests __clone().
+   */
+  public function testClone() {
+    $this->assertSame([], $this->sectionStorage->getSection(0)->getLayoutSettings());
+
+    $new_section_storage = clone $this->sectionStorage;
+    $new_section_storage->getSection(0)->setLayoutSettings(['asdf' => 'qwer']);
+    $this->assertSame([], $this->sectionStorage->getSection(0)->getLayoutSettings());
+  }
+
+  /**
    * Asserts that the field list has the expected sections.
    *
    * @param \Drupal\layout_builder\Section[] $expected

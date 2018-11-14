@@ -111,4 +111,17 @@ trait SectionStorageTrait {
     return isset($this->getSections()[$delta]);
   }
 
+  /**
+   * Magic method: Implements a deep clone.
+   */
+  public function __clone() {
+    $sections = $this->getSections();
+
+    foreach ($sections as $delta => $item) {
+      $sections[$delta] = clone $item;
+    }
+
+    $this->setSections($sections);
+  }
+
 }
