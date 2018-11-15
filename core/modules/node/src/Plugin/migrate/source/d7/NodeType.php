@@ -40,7 +40,7 @@ class NodeType extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return [
+    $fields = [
       'type' => $this->t('Machine name of the node type.'),
       'name' => $this->t('Human name of the node type.'),
       'description' => $this->t('Description of the node type.'),
