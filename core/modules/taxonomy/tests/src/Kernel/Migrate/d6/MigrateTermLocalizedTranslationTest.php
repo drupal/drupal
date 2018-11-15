@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\Tests\content_translation\Kernel\Migrate\d6;
+namespace Drupal\Tests\taxonomy\Kernel\Migrate\d6;
 
-use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 
 /**
- * Test migration of translated taxonomy terms.
+ * Tests migration of localized translated taxonomy terms.
  *
  * @group migrate_drupal_6
  */
-class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
+class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
 
   /**
    * {@inheritdoc}
@@ -20,10 +20,10 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
     'content_translation',
     'language',
     'menu_ui',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
     'node',
     'taxonomy',
+    // Required for translation migrations.
+    'migrate_drupal_multilingual',
   ];
 
   /**
@@ -41,17 +41,18 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
     $this->installEntitySchema('taxonomy_term');
     $this->installConfig(static::$modules);
     $this->executeMigrations([
+      'language',
       'd6_node_type',
       'd6_field',
       'd6_taxonomy_vocabulary',
       'd6_field_instance',
       'd6_taxonomy_term',
-      'd6_taxonomy_term_translation',
+      'd6_taxonomy_term_localized_translation',
     ]);
   }
 
   /**
-   * Validate a migrated term contains the expected values.
+   * Validates a migrated term contains the expected values.
    *
    * @param int $id
    *   Entity ID to load and check.
@@ -74,7 +75,7 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
    * @param int $expected_term_reference_tid
    *   The term reference ID the migrated entity field should have.
    */
-  protected function assertEntity($id, $expected_language, $expected_label, $expected_vid, $expected_description = '', $expected_format = NULL, $expected_weight = 0, $expected_parents = [], $expected_field_integer_value = NULL, $expected_term_reference_tid = NULL) {
+  protected function assertEntity($id, $expected_language, $expected_label, $expected_vid, $expected_description = '', $expected_format = NULL, $expected_weight = 0, array $expected_parents = [], $expected_field_integer_value = NULL, $expected_term_reference_tid = NULL) {
     /** @var \Drupal\taxonomy\TermInterface $entity */
     $entity = Term::load($id);
     $this->assertInstanceOf(TermInterface::class, $entity);
@@ -88,7 +89,7 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Assert that a term is present in the tree storage, with the right parents.
+   * Asserts that a term is present in the tree storage, with the right parents.
    *
    * @param string $vid
    *   Vocabulary ID.
@@ -108,25 +109,34 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
 
     $this->assertArrayHasKey($tid, $this->treeData[$vid], "Term $tid exists in taxonomy tree");
     $term = $this->treeData[$vid][$tid];
-    // PostgreSQL, MySQL and SQLite may not return the parent terms in the same
-    // order so sort before testing.
-    sort($parent_ids);
-    $actual_terms = array_filter($term->parents);
-    sort($actual_terms);
-    $this->assertEquals($parent_ids, $actual_terms, "Term $tid has correct parents in taxonomy tree");
+    $this->assertEquals($parent_ids, array_filter($term->parents), "Term $tid has correct parents in taxonomy tree");
   }
 
   /**
-   * Tests the Drupal 6 i18n taxonomy term to Drupal 8 migration.
+   * Tests the Drupal 6 i18n localized taxonomy term to Drupal 8 migration.
    */
-  public function testTranslatedTaxonomyTerms() {
-    $this->assertEntity(1, 'zu', 'zu - term 1 of vocabulary 1', 'vocabulary_1_i_0_', 'zu - description of term 1 of vocabulary 1', NULL, '0', []);
-    $this->assertEntity(2, 'fr', 'fr - term 2 of vocabulary 2', 'vocabulary_2_i_1_', 'fr - description of term 2 of vocabulary 2', NULL, '3', []);
-    $this->assertEntity(3, 'fr', 'fr - term 3 of vocabulary 2', 'vocabulary_2_i_1_', 'fr - description of term 3 of vocabulary 2', NULL, '4', ['2']);
-    $this->assertEntity(4, 'en', 'term 4 of vocabulary 3', 'vocabulary_3_i_2_', 'description of term 4 of vocabulary 3', NULL, '6', []);
-    $this->assertEntity(5, 'en', 'term 5 of vocabulary 3', 'vocabulary_3_i_2_', 'description of term 5 of vocabulary 3', NULL, '7', ['4']);
-    $this->assertEntity(6, 'en', 'term 6 of vocabulary 3', 'vocabulary_3_i_2_', 'description of term 6 of vocabulary 3', NULL, '8', ['4', '5']);
-    $this->assertEntity(7, 'fr', 'fr - term 2 of vocabulary 1', 'vocabulary_1_i_0_', 'fr - desc of term 2 vocab 1', NULL, '0', []);
+  public function testTranslatedLocalizedTaxonomyTerms() {
+    $this->assertEntity(14, 'en', 'Talos IV', 'vocabulary_name_much_longer_than', 'The home of Captain Christopher Pike.', NULL, '0', []);
+    $this->assertEntity(15, 'en', 'Vulcan', 'vocabulary_name_much_longer_than', NULL, NULL, '0', []);
+
+    /** @var \Drupal\taxonomy\TermInterface $entity */
+    $entity = Term::load(14);
+    $this->assertTrue($entity->hasTranslation('fr'));
+    $translation = $entity->getTranslation('fr');
+    $this->assertSame('fr - Talos IV', $translation->label());
+    $this->assertSame('fr - The home of Captain Christopher Pike.', $translation->getDescription());
+
+    $this->assertTrue($entity->hasTranslation('zu'));
+    $translation = $entity->getTranslation('zu');
+    $this->assertSame('Talos IV', $translation->label());
+    $this->assertSame('zu - The home of Captain Christopher Pike.', $translation->getDescription());
+
+    $entity = Term::load(15);
+    $this->assertFalse($entity->hasTranslation('fr'));
+    $this->assertTrue($entity->hasTranslation('zu'));
+    $translation = $entity->getTranslation('zu');
+    $this->assertSame('zu - Vulcan', $translation->label());
+    $this->assertSame('', $translation->getDescription());
   }
 
 }
