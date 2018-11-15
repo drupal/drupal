@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -405,6 +406,8 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       if ($field_definition instanceof BaseFieldDefinition) {
         $field_definition->setName($field_name);
         $field_definition->setTargetEntityTypeId($entity_type_id);
+      }
+      if ($field_definition instanceof BaseFieldDefinition || $field_definition instanceof FieldDefinition) {
         $field_definition->setTargetBundle($bundle);
       }
     }

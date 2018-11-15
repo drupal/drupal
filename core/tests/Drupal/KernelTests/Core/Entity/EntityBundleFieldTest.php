@@ -80,7 +80,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
     $entity->delete();
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $storage->getTableMapping();
-    $table = $table_mapping->getDedicatedDataTableName($entity->getFieldDefinition('custom_bundle_field'));
+    $table = $table_mapping->getDedicatedDataTableName($entity->getFieldDefinition('custom_bundle_field')->getFieldStorageDefinition());
     $result = $this->database->select($table, 'f')
       ->fields('f')
       ->condition('f.entity_id', $entity->id())
@@ -93,7 +93,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
     $entity->save();
     entity_test_delete_bundle('custom');
 
-    $table = $table_mapping->getDedicatedDataTableName($entity->getFieldDefinition('custom_bundle_field'), TRUE);
+    $table = $table_mapping->getDedicatedDataTableName($entity->getFieldDefinition('custom_bundle_field')->getFieldStorageDefinition(), TRUE);
     $result = $this->database->select($table, 'f')
       ->condition('f.entity_id', $entity->id())
       ->condition('deleted', 1)

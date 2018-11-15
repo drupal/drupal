@@ -9,6 +9,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Render\Element;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\NodeType;
@@ -1860,6 +1861,7 @@ function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityT
  * @see hook_entity_field_storage_info_alter()
  * @see hook_entity_bundle_field_info_alter()
  * @see \Drupal\Core\Field\FieldDefinitionInterface
+ * @see \Drupal\Core\Field\FieldDefinition
  * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
  *
  * @todo WARNING: This hook will be changed in
@@ -1869,12 +1871,12 @@ function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $
   // Add a property only to nodes of the 'article' bundle.
   if ($entity_type->id() == 'node' && $bundle == 'article') {
     $fields = [];
-    $fields['mymodule_text_more'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('More text'))
-      ->setComputed(TRUE)
-      ->setClass('\Drupal\mymodule\EntityComputedMoreText');
+    $storage_definitions = mymodule_entity_field_storage_info($entity_type);
+    $fields['mymodule_bundle_field'] = FieldDefinition::createFromFieldStorageDefinition($storage_definitions['mymodule_bundle_field'])
+      ->setLabel(t('Bundle Field'));
     return $fields;
   }
+
 }
 
 /**
