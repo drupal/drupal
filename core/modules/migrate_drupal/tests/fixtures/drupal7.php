@@ -11,286 +11,6 @@ use Drupal\Core\Database\Database;
 
 $connection = Database::getConnection();
 
-$connection->schema()->createTable('i18n_block_language', array(
-  'fields' => array(
-    'module' => array(
-      'type' => 'varchar',
-      'not null' => TRUE,
-      'length' => '64',
-    ),
-    'delta' => array(
-      'type' => 'varchar',
-      'not null' => TRUE,
-      'length' => '32',
-    ),
-    'language' => array(
-      'type' => 'varchar',
-      'not null' => TRUE,
-      'length' => '12',
-      'default' => '',
-    ),
-  ),
-  'primary key' => array(
-    'module',
-    'delta',
-    'language',
-  ),
-  'indexes' => array(
-    'language' => array(
-      'language',
-    ),
-  ),
-  'mysql_character_set' => 'utf8',
-));
-
-$connection->schema()->createTable('i18n_string', array(
-  'fields' => array(
-    'lid' => array(
-      'type' => 'int',
-      'not null' => TRUE,
-      'size' => 'normal',
-      'default' => '0',
-    ),
-    'textgroup' => array(
-      'type' => 'varchar',
-      'not null' => TRUE,
-      'length' => '50',
-      'default' => 'default',
-    ),
-    'context' => array(
-      'type' => 'varchar',
-      'not null' => TRUE,
-      'length' => '255',
-      'default' => '',
-    ),
-    'objectid' => array(
-      'type' => 'varchar',
-      'not null' => TRUE,
-      'length' => '255',
-      'default' => '',
-    ),
-    'type' => array(
-      'type' => 'varchar',
-      'not null' => TRUE,
-      'length' => '255',
-      'default' => '',
-    ),
-    'property' => array(
-      'type' => 'varchar',
-      'not null' => TRUE,
-      'length' => '255',
-      'default' => '',
-    ),
-    'objectindex' => array(
-      'type' => 'int',
-      'not null' => TRUE,
-      'size' => 'big',
-      'default' => '0',
-    ),
-    'format' => array(
-      'type' => 'varchar',
-      'not null' => FALSE,
-      'length' => '255',
-    ),
-  ),
-  'primary key' => array(
-    'lid',
-  ),
-  'indexes' => array(
-    'group_context' => array(
-      'textgroup',
-      array(
-        'context',
-        '50',
-      ),
-    ),
-  ),
-  'mysql_character_set' => 'utf8',
-));
-
-$connection->insert('i18n_string')
-->fields(array(
-  'lid',
-  'textgroup',
-  'context',
-  'objectid',
-  'type',
-  'property',
-  'objectindex',
-  'format',
-))
-->values(array(
-  'lid' => '57',
-  'textgroup' => 'blocks',
-  'context' => 'block:1:title',
-  'objectid' => '1',
-  'type' => 'block',
-  'property' => 'title',
-  'objectindex' => '1',
-  'format' => '',
-))
-->values(array(
-  'lid' => '60',
-  'textgroup' => 'blocks',
-  'context' => 'block:1:body',
-  'objectid' => '1',
-  'type' => 'block',
-  'property' => 'body',
-  'objectindex' => '1',
-  'format' => 'filtered_html',
-))
-->values(array(
-  'lid' => '61',
-  'textgroup' => 'node',
-  'context' => 'type:article:name',
-  'objectid' => 'article',
-  'type' => 'type',
-  'property' => 'name',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '62',
-  'textgroup' => 'node',
-  'context' => 'type:article:title_label',
-  'objectid' => 'article',
-  'type' => 'type',
-  'property' => 'title_label',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '63',
-  'textgroup' => 'node',
-  'context' => 'type:article:description',
-  'objectid' => 'article',
-  'type' => 'type',
-  'property' => 'description',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '64',
-  'textgroup' => 'node',
-  'context' => 'type:article:help',
-  'objectid' => 'article',
-  'type' => 'type',
-  'property' => 'help',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '65',
-  'textgroup' => 'node',
-  'context' => 'type:book:name',
-  'objectid' => 'book',
-  'type' => 'type',
-  'property' => 'name',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '66',
-  'textgroup' => 'node',
-  'context' => 'type:book:title_label',
-  'objectid' => 'book',
-  'type' => 'type',
-  'property' => 'title_label',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '67',
-  'textgroup' => 'node',
-  'context' => 'type:book:description',
-  'objectid' => 'book',
-  'type' => 'type',
-  'property' => 'description',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '68',
-  'textgroup' => 'node',
-  'context' => 'type:page:name',
-  'objectid' => 'page',
-  'type' => 'type',
-  'property' => 'name',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '69',
-  'textgroup' => 'node',
-  'context' => 'type:page:title_label',
-  'objectid' => 'page',
-  'type' => 'type',
-  'property' => 'title_label',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '70',
-  'textgroup' => 'node',
-  'context' => 'type:page:description',
-  'objectid' => 'page',
-  'type' => 'type',
-  'property' => 'description',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '71',
-  'textgroup' => 'node',
-  'context' => 'type:page:help',
-  'objectid' => 'page',
-  'type' => 'type',
-  'property' => 'help',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '72',
-  'textgroup' => 'node',
-  'context' => 'type:test_content_type:name',
-  'objectid' => 'test_content_type',
-  'type' => 'type',
-  'property' => 'name',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '73',
-  'textgroup' => 'node',
-  'context' => 'type:test_content_type:title_label',
-  'objectid' => 'test_content_type',
-  'type' => 'type',
-  'property' => 'title_label',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '74',
-  'textgroup' => 'node',
-  'context' => 'type:test_content_type:description',
-  'objectid' => 'test_content_type',
-  'type' => 'type',
-  'property' => 'description',
-  'objectindex' => '0',
-  'format' => '',
-))
-->values(array(
-  'lid' => '75',
-  'textgroup' => 'node',
-  'context' => 'type:test_content_type:help',
-  'objectid' => 'test_content_type',
-  'type' => 'type',
-  'property' => 'help',
-  'objectindex' => '0',
-  'format' => '',
-))
-->execute();
-
 $connection->schema()->createTable('accesslog', array(
   'fields' => array(
     'aid' => array(
@@ -1316,6 +1036,12 @@ $connection->schema()->createTable('block', array(
       'size' => 'normal',
       'default' => '1',
     ),
+    'i18n_mode' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
   ),
   'primary key' => array(
     'bid',
@@ -1337,6 +1063,7 @@ $connection->insert('block')
   'pages',
   'title',
   'cache',
+  'i18n_mode',
 ))
 ->values(array(
   'bid' => '1',
@@ -1351,6 +1078,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '2',
@@ -1365,6 +1093,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '3',
@@ -1379,6 +1108,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '4',
@@ -1391,8 +1121,9 @@ $connection->insert('block')
   'custom' => '0',
   'visibility' => '0',
   'pages' => '',
-  'title' => '',
+  'title' => 'User login title',
   'cache' => '-1',
+  'i18n_mode' => '1',
 ))
 ->values(array(
   'bid' => '5',
@@ -1407,6 +1138,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '6',
@@ -1421,6 +1153,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '7',
@@ -1435,6 +1168,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '8',
@@ -1449,6 +1183,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '9',
@@ -1463,6 +1198,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '10',
@@ -1475,8 +1211,9 @@ $connection->insert('block')
   'custom' => '0',
   'visibility' => '0',
   'pages' => '',
-  'title' => '',
+  'title' => 'User login title',
   'cache' => '-1',
+  'i18n_mode' => '1',
 ))
 ->values(array(
   'bid' => '11',
@@ -1491,6 +1228,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '12',
@@ -1505,6 +1243,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '13',
@@ -1519,6 +1258,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '14',
@@ -1533,6 +1273,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '15',
@@ -1547,6 +1288,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '16',
@@ -1561,6 +1303,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '17',
@@ -1575,6 +1318,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '18',
@@ -1589,6 +1333,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '19',
@@ -1603,6 +1348,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '20',
@@ -1617,6 +1363,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '21',
@@ -1631,6 +1378,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '22',
@@ -1645,6 +1393,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '23',
@@ -1659,6 +1408,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '24',
@@ -1673,6 +1423,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '25',
@@ -1687,6 +1438,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '26',
@@ -1701,6 +1453,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '27',
@@ -1715,6 +1468,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '28',
@@ -1729,6 +1483,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '29',
@@ -1743,6 +1498,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '30',
@@ -1757,6 +1513,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '31',
@@ -1771,6 +1528,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '32',
@@ -1785,6 +1543,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '5',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '33',
@@ -1799,6 +1558,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '34',
@@ -1813,6 +1573,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-2',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '35',
@@ -1827,6 +1588,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-2',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '36',
@@ -1841,6 +1603,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '37',
@@ -1855,6 +1618,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '5',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '38',
@@ -1869,6 +1633,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '39',
@@ -1883,6 +1648,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-2',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '40',
@@ -1897,6 +1663,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-2',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '41',
@@ -1911,6 +1678,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '42',
@@ -1925,6 +1693,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '43',
@@ -1939,6 +1708,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '44',
@@ -1953,6 +1723,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '45',
@@ -1967,6 +1738,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => 'Mildly amusing limerick of the day',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '46',
@@ -1981,6 +1753,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => 'Mildly amusing limerick of the day',
   'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '47',
@@ -1995,6 +1768,7 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '1',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'bid' => '48',
@@ -2009,6 +1783,37 @@ $connection->insert('block')
   'pages' => '',
   'title' => '',
   'cache' => '1',
+  'i18n_mode' => '0',
+))
+->values(array(
+  'bid' => '49',
+  'module' => 'locale',
+  'delta' => 'language_content',
+  'theme' => 'bartik',
+  'status' => '0',
+  'weight' => '0',
+  'region' => '-1',
+  'custom' => '0',
+  'visibility' => '0',
+  'pages' => '',
+  'title' => '',
+  'cache' => '-1',
+  'i18n_mode' => '0',
+))
+->values(array(
+  'bid' => '50',
+  'module' => 'locale',
+  'delta' => 'language_content',
+  'theme' => 'seven',
+  'status' => '0',
+  'weight' => '0',
+  'region' => '-1',
+  'custom' => '0',
+  'visibility' => '0',
+  'pages' => '',
+  'title' => '',
+  'cache' => '-1',
+  'i18n_mode' => '0',
 ))
 ->execute();
 
@@ -2628,6 +2433,49 @@ $connection->schema()->createTable('cache_update', array(
   ),
   'primary key' => array(
     'cid',
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->schema()->createTable('cache_variable', array(
+  'fields' => array(
+    'cid' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'data' => array(
+      'type' => 'blob',
+      'not null' => FALSE,
+      'size' => 'big',
+    ),
+    'expire' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'created' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'serialized' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'small',
+      'default' => '0',
+    ),
+  ),
+  'primary key' => array(
+    'cid',
+  ),
+  'indexes' => array(
+    'expire' => array(
+      'expire',
+    ),
   ),
   'mysql_character_set' => 'utf8',
 ));
@@ -14702,6 +14550,296 @@ $connection->schema()->createTable('history', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->schema()->createTable('i18n_block_language', array(
+  'fields' => array(
+    'module' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '64',
+    ),
+    'delta' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '12',
+      'default' => '',
+    ),
+  ),
+  'primary key' => array(
+    'module',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'language' => array(
+      'language',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->schema()->createTable('i18n_string', array(
+  'fields' => array(
+    'lid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'textgroup' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '50',
+      'default' => 'default',
+    ),
+    'context' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'objectid' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'property' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'objectindex' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'big',
+      'default' => '0',
+    ),
+    'format' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '255',
+    ),
+  ),
+  'primary key' => array(
+    'lid',
+  ),
+  'indexes' => array(
+    'group_context' => array(
+      'textgroup',
+      array(
+        'context',
+        '50',
+      ),
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('i18n_string')
+->fields(array(
+  'lid',
+  'textgroup',
+  'context',
+  'objectid',
+  'type',
+  'property',
+  'objectindex',
+  'format',
+))
+->values(array(
+  'lid' => '57',
+  'textgroup' => 'blocks',
+  'context' => 'block:1:title',
+  'objectid' => '1',
+  'type' => 'block',
+  'property' => 'title',
+  'objectindex' => '1',
+  'format' => '',
+))
+->values(array(
+  'lid' => '60',
+  'textgroup' => 'blocks',
+  'context' => 'block:1:body',
+  'objectid' => '1',
+  'type' => 'block',
+  'property' => 'body',
+  'objectindex' => '1',
+  'format' => 'filtered_html',
+))
+->values(array(
+  'lid' => '61',
+  'textgroup' => 'node',
+  'context' => 'type:article:name',
+  'objectid' => 'article',
+  'type' => 'type',
+  'property' => 'name',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '62',
+  'textgroup' => 'node',
+  'context' => 'type:article:title_label',
+  'objectid' => 'article',
+  'type' => 'type',
+  'property' => 'title_label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '63',
+  'textgroup' => 'node',
+  'context' => 'type:article:description',
+  'objectid' => 'article',
+  'type' => 'type',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '64',
+  'textgroup' => 'node',
+  'context' => 'type:article:help',
+  'objectid' => 'article',
+  'type' => 'type',
+  'property' => 'help',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '65',
+  'textgroup' => 'node',
+  'context' => 'type:book:name',
+  'objectid' => 'book',
+  'type' => 'type',
+  'property' => 'name',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '66',
+  'textgroup' => 'node',
+  'context' => 'type:book:title_label',
+  'objectid' => 'book',
+  'type' => 'type',
+  'property' => 'title_label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '67',
+  'textgroup' => 'node',
+  'context' => 'type:book:description',
+  'objectid' => 'book',
+  'type' => 'type',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '68',
+  'textgroup' => 'node',
+  'context' => 'type:page:name',
+  'objectid' => 'page',
+  'type' => 'type',
+  'property' => 'name',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '69',
+  'textgroup' => 'node',
+  'context' => 'type:page:title_label',
+  'objectid' => 'page',
+  'type' => 'type',
+  'property' => 'title_label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '70',
+  'textgroup' => 'node',
+  'context' => 'type:page:description',
+  'objectid' => 'page',
+  'type' => 'type',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '71',
+  'textgroup' => 'node',
+  'context' => 'type:page:help',
+  'objectid' => 'page',
+  'type' => 'type',
+  'property' => 'help',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '72',
+  'textgroup' => 'node',
+  'context' => 'type:test_content_type:name',
+  'objectid' => 'test_content_type',
+  'type' => 'type',
+  'property' => 'name',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '73',
+  'textgroup' => 'node',
+  'context' => 'type:test_content_type:title_label',
+  'objectid' => 'test_content_type',
+  'type' => 'type',
+  'property' => 'title_label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '74',
+  'textgroup' => 'node',
+  'context' => 'type:test_content_type:description',
+  'objectid' => 'test_content_type',
+  'type' => 'type',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '75',
+  'textgroup' => 'node',
+  'context' => 'type:test_content_type:help',
+  'objectid' => 'test_content_type',
+  'type' => 'type',
+  'property' => 'help',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '76',
+  'textgroup' => 'blocks',
+  'context' => 'user:login:title',
+  'objectid' => 'login',
+  'type' => 'user',
+  'property' => 'title',
+  'objectindex' => '0',
+  'format' => '',
+))
+->execute();
+
 $connection->schema()->createTable('image_effects', array(
   'fields' => array(
     'ieid' => array(
@@ -15009,6 +15147,15 @@ $connection->schema()->createTable('locales_source', array(
   ),
   'primary key' => array(
     'lid',
+  ),
+  'indexes' => array(
+    'textgroup_context' => array(
+      'textgroup',
+      array(
+        'context',
+        '50',
+      ),
+    ),
   ),
   'mysql_character_set' => 'utf8',
 ));
@@ -15622,6 +15769,14 @@ $connection->insert('locales_source')
   'context' => 'type:test_content_type:help',
   'version' => '1',
 ))
+->values(array(
+  'lid' => '76',
+  'location' => 'blocks:user:login:title',
+  'textgroup' => 'blocks',
+  'source' => 'User login title',
+  'context' => 'user:login:title',
+  'version' => '1',
+))
 ->execute();
 
 $connection->schema()->createTable('locales_target', array(
@@ -15695,10 +15850,18 @@ $connection->insert('locales_target')
   'plural' => '0',
   'i18n_status' => '0',
 ))
-->values(array(
+  ->values(array(
   'lid' => '57',
   'translation' => 'is - Mildly amusing limerick of the day',
   'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '76',
+  'translation' => 'fr - User login title',
+  'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
   'i18n_status' => '0',
@@ -46258,6 +46421,16 @@ $connection->insert('role_permission')
 ))
 ->values(array(
   'rid' => '3',
+  'permission' => 'translate admin strings',
+  'module' => 'i18n_string',
+))
+->values(array(
+  'rid' => '3',
+  'permission' => 'translate blocks',
+  'module' => 'i18n_block',
+))
+->values(array(
+  'rid' => '3',
   'permission' => 'translate content',
   'module' => 'translation',
 ))
@@ -46265,6 +46438,11 @@ $connection->insert('role_permission')
   'rid' => '3',
   'permission' => 'translate interface',
   'module' => 'locale',
+))
+->values(array(
+  'rid' => '3',
+  'permission' => 'translate user-defined strings',
+  'module' => 'i18n_string',
 ))
 ->values(array(
   'rid' => '3',
@@ -48917,11 +49095,11 @@ $connection->insert('system')
   'name' => 'i18n_block',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'bootstrap' => '0',
-  'schema_version' => '-1',
-  'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:15:"Block languages";s:11:"description";s:68:"Enables language selector for blocks and optional block translation.";s:12:"dependencies";a:2:{i:0;s:5:"block";i:1;s:11:"i18n_string";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:14:"i18n_block.inc";i:1;s:15:"i18n_block.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'schema_version' => '7001',
+  'weight' => '100',
+  'info' => 'a:12:{s:4:"name";s:15:"Block languages";s:11:"description";s:68:"Enables language selector for blocks and optional block translation.";s:12:"dependencies";a:2:{i:0;s:5:"block";i:1;s:11:"i18n_string";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:14:"i18n_block.inc";i:1;s:15:"i18n_block.test";}s:7:"version";s:8:"7.x-1.25";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1531342125";s:5:"mtime";i:1537747250;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18n_contact/i18n_contact.module',

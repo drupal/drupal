@@ -1,0 +1,77 @@
+id: d7_block_translation
+label: Block translation
+migration_tags:
+  - Drupal 7
+  - Configuration
+  - Multilingual
+source:
+  plugin: d7_block_translation
+  constants:
+    dest_label: 'settings/label'
+process:
+  multilingual:
+    plugin: skip_on_empty
+    source: i18n_mode
+    method: row
+  langcode: language
+  property: constants/dest_label
+  translation: translation
+  id:
+    -
+      plugin: migration_lookup
+      migration: d7_block
+      source:
+        - module
+        - delta
+    -
+      plugin: skip_on_empty
+      method: row
+  # The plugin process is copied from d7_block.yml
+  plugin:
+    -
+      plugin: static_map
+      bypass: true
+      source:
+        - module
+        - delta
+      map:
+        book:
+          navigation: book_navigation
+        comment:
+          recent: views_block:comments_recent-block_1
+        forum:
+          active: forum_active_block
+          new: forum_new_block
+        # locale:
+        #  0: language_block
+        node:
+          syndicate: node_syndicate_block
+        search:
+          form: search_form_block
+        statistics:
+          popular: statistics_popular_block
+        system:
+          main: system_main_block
+          'powered-by': system_powered_by_block
+        user:
+          login: user_login_block
+          # 1: system_menu_block:tools
+          new: views_block:who_s_new-block_1
+          online: views_block:who_s_online-who_s_online_block
+    -
+      plugin: block_plugin_id
+    -
+      plugin: skip_on_empty
+      method: row
+  # The theme process is copied from d7_block.yml
+  theme:
+    plugin: block_theme
+    source:
+      - theme
+      - default_theme
+      - admin_theme
+destination:
+  plugin: entity:block
+migration_dependencies:
+  optional:
+    - d7_block
