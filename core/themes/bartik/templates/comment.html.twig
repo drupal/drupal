@@ -13,11 +13,11 @@
  *   {{ content|without('field_example') }}
  *   @endcode
  * - created: Formatted date and time for when the comment was created.
- *   Preprocess functions can reformat it by calling format_date() with the
- *   desired parameters on the 'comment.created' variable.
+ *   Preprocess functions can reformat it by calling DateFormatter::format()
+ *   with the desired parameters on the 'comment.created' variable.
  * - changed: Formatted date and time for when the comment was last changed.
- *   Preprocess functions can reformat it by calling format_date() with the
- *   desired parameters on the 'comment.changed' variable.
+ *   Preprocess functions can reformat it by calling DateFormatter::format()
+ *   with the desired parameters on the 'comment.changed' variable.
  * - permalink: Comment permalink.
  * - submitted: Submission information created from author and created
  *   during template_preprocess_comment().

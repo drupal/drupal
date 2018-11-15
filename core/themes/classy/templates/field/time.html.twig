@@ -9,11 +9,11 @@
  *   attribute value in attributes.datetime.
  * - text: (optional) The content to display within the <time> element.
  *   Defaults to a human-readable representation of the timestamp value or the
- *   datetime attribute value using format_date().
+ *   datetime attribute value using DateFormatter::format().
  * - attributes: (optional) HTML attributes to apply to the <time> element.
  *   A datetime attribute in 'attributes' overrides the 'timestamp'. To
  *   create a valid datetime attribute value from a UNIX timestamp, use
- *   format_date() with one of the predefined 'html_*' formats.
+ *   DateFormatter::format() with one of the predefined 'html_*' formats.
  *
  * @see template_preprocess_time()
  * @see http://www.w3.org/TR/html5-author/the-time-element.html#attr-time-datetime
