@@ -90,11 +90,11 @@ class TermTest extends TaxonomyTestBase {
     $term2 = $this->createTerm($this->vocabulary);
 
     // Get the taxonomy storage.
-    $taxonomy_storage = $this->container->get('entity.manager')->getStorage('taxonomy_term');
+    /** @var \Drupal\taxonomy\TermStorageInterface $taxonomy_storage */
+    $taxonomy_storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
 
     // Check that hierarchy is flat.
-    $vocabulary = Vocabulary::load($this->vocabulary->id());
-    $this->assertEqual(0, $vocabulary->getHierarchy(), 'Vocabulary is flat.');
+    $this->assertEquals(0, $taxonomy_storage->getVocabularyHierarchyType($this->vocabulary->id()), 'Vocabulary is flat.');
 
     // Edit $term2, setting $term1 as parent.
     $edit = [];

@@ -186,3 +186,12 @@ function taxonomy_update_8601() {
 
   return t('The publishing status field has been added to taxonomy terms.');
 }
+
+/**
+ * Add an index on the 'taxonomy_term__parent' field table.
+ */
+function taxonomy_update_8701() {
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $storage_definition = $entity_definition_update_manager->getFieldStorageDefinition('parent', 'taxonomy_term');
+  $entity_definition_update_manager->updateFieldStorageDefinition($storage_definition);
+}

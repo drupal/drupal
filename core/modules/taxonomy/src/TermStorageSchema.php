@@ -108,4 +108,29 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
     return $schema;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDedicatedTableSchema(FieldStorageDefinitionInterface $storage_definition, ContentEntityTypeInterface $entity_type = NULL) {
+    $dedicated_table_schema = parent::getDedicatedTableSchema($storage_definition, $entity_type);
+
+    // Add an index on 'bundle', 'delta' and 'parent_target_id' columns to
+    // increase the performance of the query from
+    // \Drupal\taxonomy\TermStorage::getVocabularyHierarchyType().
+    if ($storage_definition->getName() === 'parent') {
+      /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+      $table_mapping = $this->storage->getTableMapping();
+      $dedicated_table_name = $table_mapping->getDedicatedDataTableName($storage_definition);
+
+      unset($dedicated_table_schema[$dedicated_table_name]['indexes']['bundle']);
+      $dedicated_table_schema[$dedicated_table_name]['indexes']['bundle_delta_target_id'] = [
+        'bundle',
+        'delta',
+        $table_mapping->getFieldColumnName($storage_definition, 'target_id'),
+      ];
+    }
+
+    return $dedicated_table_schema;
+  }
+
 }

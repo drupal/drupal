@@ -54,7 +54,6 @@ abstract class VocabularyResourceTestBase extends EntityResourceTestBase {
       'dependencies' => [],
       'name' => 'Llama',
       'description' => NULL,
-      'hierarchy' => 0,
       'weight' => 0,
     ];
   }

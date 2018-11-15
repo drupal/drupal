@@ -18,6 +18,7 @@ class TermForm extends ContentEntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $term = $this->entity;
     $vocab_storage = $this->entityManager->getStorage('taxonomy_vocabulary');
+    /** @var \Drupal\taxonomy\TermStorageInterface $taxonomy_storage */
     $taxonomy_storage = $this->entityManager->getStorage('taxonomy_term');
     $vocabulary = $vocab_storage->load($term->bundle());
 
@@ -28,7 +29,7 @@ class TermForm extends ContentEntityForm {
     $form['relations'] = [
       '#type' => 'details',
       '#title' => $this->t('Relations'),
-      '#open' => $vocabulary->getHierarchy() == VocabularyInterface::HIERARCHY_MULTIPLE,
+      '#open' => $taxonomy_storage->getVocabularyHierarchyType($vocabulary->id()) == VocabularyInterface::HIERARCHY_MULTIPLE,
       '#weight' => 10,
     ];
 
@@ -142,24 +143,9 @@ class TermForm extends ContentEntityForm {
     }
 
     $current_parent_count = count($form_state->getValue('parent'));
-    $previous_parent_count = count($form_state->get(['taxonomy', 'parent']));
     // Root doesn't count if it's the only parent.
     if ($current_parent_count == 1 && $form_state->hasValue(['parent', 0])) {
-      $current_parent_count = 0;
       $form_state->setValue('parent', []);
-    }
-
-    // If the number of parents has been reduced to one or none, do a check on the
-    // parents of every term in the vocabulary value.
-    $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
-    if ($current_parent_count < $previous_parent_count && $current_parent_count < 2) {
-      taxonomy_check_vocabulary_hierarchy($vocabulary, $form_state->getValues());
-    }
-    // If we've increased the number of parents and this is a single or flat
-    // hierarchy, update the vocabulary immediately.
-    elseif ($current_parent_count > $previous_parent_count && $vocabulary->getHierarchy() != VocabularyInterface::HIERARCHY_MULTIPLE) {
-      $vocabulary->setHierarchy($current_parent_count == 1 ? VocabularyInterface::HIERARCHY_SINGLE : VocabularyInterface::HIERARCHY_MULTIPLE);
-      $vocabulary->save();
     }
 
     $form_state->setValue('tid', $term->id());

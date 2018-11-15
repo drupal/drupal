@@ -81,8 +81,9 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
 
     case 'entity.taxonomy_vocabulary.overview_form':
       $vocabulary = $route_match->getParameter('taxonomy_vocabulary');
+      $vocabulary_hierarchy = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->getVocabularyHierarchyType($vocabulary->id());
       if (\Drupal::currentUser()->hasPermission('administer taxonomy') || \Drupal::currentUser()->hasPermission('edit terms in ' . $vocabulary->id())) {
-        switch ($vocabulary->getHierarchy()) {
+        switch ($vocabulary_hierarchy) {
           case VocabularyInterface::HIERARCHY_DISABLED:
             return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', ['%capital_name' => Unicode::ucfirst($vocabulary->label()), '%name' => $vocabulary->label()]) . '</p>';
           case VocabularyInterface::HIERARCHY_SINGLE:
@@ -92,7 +93,7 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
         }
       }
       else {
-        switch ($vocabulary->getHierarchy()) {
+        switch ($vocabulary_hierarchy) {
           case VocabularyInterface::HIERARCHY_DISABLED:
             return '<p>' . t('%capital_name contains the following terms.', ['%capital_name' => Unicode::ucfirst($vocabulary->label())]) . '</p>';
           case VocabularyInterface::HIERARCHY_SINGLE:
@@ -156,11 +157,10 @@ function taxonomy_theme() {
 }
 
 /**
- * Checks and updates the hierarchy flag of a vocabulary.
+ * Checks the hierarchy flag of a vocabulary.
  *
- * Checks the current parents of all terms in a vocabulary and updates the
- * vocabulary's hierarchy setting to the lowest possible level. If no term
- * has parent terms then the vocabulary will be given a hierarchy of
+ * Checks the current parents of all terms in a vocabulary. If no term has
+ * parent terms then the vocabulary will be given a hierarchy of
  * VocabularyInterface::HIERARCHY_DISABLED. If any term has a single parent then
  * the vocabulary will be given a hierarchy of
  * VocabularyInterface::HIERARCHY_SINGLE. If any term has multiple parents then
@@ -172,33 +172,15 @@ function taxonomy_theme() {
  * @param $changed_term
  *   An array of the term structure that was updated.
  *
- * @return
+ * @return int
  *   An integer that represents the level of the vocabulary's hierarchy.
+ *
+ * @deprecated in Drupal 8.7.x. Will be removed before Drupal 9.0.0. Use
+ *   \Drupal\taxonomy\TermStorage::getVocabularyHierarchyType() instead.
  */
 function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $changed_term) {
-  $tree = \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($vocabulary->id());
-  $hierarchy = VocabularyInterface::HIERARCHY_DISABLED;
-  foreach ($tree as $term) {
-    // Update the changed term with the new parent value before comparison.
-    if ($term->tid == $changed_term['tid']) {
-      $term = (object) $changed_term;
-      $term->parents = $term->parent;
-    }
-    // Check this term's parent count.
-    if (count($term->parents) > 1) {
-      $hierarchy = VocabularyInterface::HIERARCHY_MULTIPLE;
-      break;
-    }
-    elseif (count($term->parents) == 1 && !isset($term->parents[0])) {
-      $hierarchy = VocabularyInterface::HIERARCHY_SINGLE;
-    }
-  }
-  if ($hierarchy != $vocabulary->getHierarchy()) {
-    $vocabulary->setHierarchy($hierarchy);
-    $vocabulary->save();
-  }
-
-  return $hierarchy;
+  @trigger_error('taxonomy_check_vocabulary_hierarchy() is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.x. Use \Drupal\taxonomy\TermStorage::getVocabularyHierarchyType() instead.', E_USER_DEPRECATED);
+  return \Drupal::entityTypeManager()->getStorage('taxonomy_term')->getVocabularyHierarchyType($vocabulary->id());
 }
 
 /**

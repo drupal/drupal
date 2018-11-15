@@ -125,3 +125,12 @@ function taxonomy_post_update_handle_publishing_status_addition_in_views(&$sandb
     return TRUE;
   });
 }
+
+/**
+ * Remove the 'hierarchy' property from vocabularies.
+ */
+function taxonomy_post_update_remove_hierarchy_from_vocabularies(&$sandbox = NULL) {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'taxonomy_vocabulary', function () {
+    return TRUE;
+  });
+}

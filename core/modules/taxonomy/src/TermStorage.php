@@ -4,6 +4,7 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\Core\Entity\Sql\TableMappingInterface;
 
 /**
  * Defines a Controller class for taxonomy terms.
@@ -47,6 +48,19 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   protected $ancestors;
 
   /**
+   * The type of hierarchy allowed within a vocabulary.
+   *
+   * Possible values:
+   * - VocabularyInterface::HIERARCHY_DISABLED: No parents.
+   * - VocabularyInterface::HIERARCHY_SINGLE: Single parent.
+   * - VocabularyInterface::HIERARCHY_MULTIPLE: Multiple parents.
+   *
+   * @var int[]
+   *   An array of one the possible values above, keyed by vocabulary ID.
+   */
+  protected $vocabularyHierarchyType;
+
+  /**
    * {@inheritdoc}
    *
    * @param array $values
@@ -72,6 +86,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $this->treeParents = [];
     $this->treeTerms = [];
     $this->trees = [];
+    $this->vocabularyHierarchyType = [];
     parent::resetCache($ids);
   }
 
@@ -360,10 +375,47 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
+  public function getVocabularyHierarchyType($vid) {
+    // Return early if we already computed this value.
+    if (isset($this->vocabularyHierarchyType[$vid])) {
+      return $this->vocabularyHierarchyType[$vid];
+    }
+
+    $parent_field_storage = $this->entityManager->getFieldStorageDefinitions($this->entityTypeId)['parent'];
+    $table_mapping = $this->getTableMapping();
+
+    $target_id_column = $table_mapping->getFieldColumnName($parent_field_storage, 'target_id');
+    $delta_column = $table_mapping->getFieldColumnName($parent_field_storage, TableMappingInterface::DELTA);
+
+    $query = $this->database->select($table_mapping->getFieldTableName('parent'), 'p');
+    $query->addExpression("MAX($target_id_column)", 'max_parent_id');
+    $query->addExpression("MAX($delta_column)", 'max_delta');
+    $query->condition('bundle', $vid);
+
+    $result = $query->execute()->fetchAll();
+
+    // If all the terms have the same parent, the parent can only be root (0).
+    if ((int) $result[0]->max_parent_id === 0) {
+      $this->vocabularyHierarchyType[$vid] = VocabularyInterface::HIERARCHY_DISABLED;
+    }
+    // If no term has a delta higher than 0, no term has multiple parents.
+    elseif ((int) $result[0]->max_delta === 0) {
+      $this->vocabularyHierarchyType[$vid] = VocabularyInterface::HIERARCHY_SINGLE;
+    }
+    else {
+      $this->vocabularyHierarchyType[$vid] = VocabularyInterface::HIERARCHY_MULTIPLE;
+    }
+
+    return $this->vocabularyHierarchyType[$vid];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function __sleep() {
     $vars = parent::__sleep();
     // Do not serialize static cache.
-    unset($vars['ancestors'], $vars['treeChildren'], $vars['treeParents'], $vars['treeTerms'], $vars['trees']);
+    unset($vars['ancestors'], $vars['treeChildren'], $vars['treeParents'], $vars['treeTerms'], $vars['trees'], $vars['vocabularyHierarchyType']);
     return $vars;
   }
 
@@ -378,6 +430,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $this->treeParents = [];
     $this->treeTerms = [];
     $this->trees = [];
+    $this->vocabularyHierarchyType = [];
   }
 
 }

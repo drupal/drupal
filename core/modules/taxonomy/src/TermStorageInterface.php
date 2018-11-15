@@ -126,4 +126,19 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    */
   public function getNodeTerms(array $nids, array $vocabs = [], $langcode = NULL);
 
+  /**
+   * Returns the hierarchy type for a specific vocabulary ID.
+   *
+   * @param string $vid
+   *   Vocabulary ID to retrieve the hierarchy type for.
+   *
+   * @return int
+   *   The vocabulary hierarchy.
+   *   Possible values:
+   *    - VocabularyInterface::HIERARCHY_DISABLED: No parents.
+   *    - VocabularyInterface::HIERARCHY_SINGLE: Single parent.
+   *    - VocabularyInterface::HIERARCHY_MULTIPLE: Multiple parents.
+   */
+  public function getVocabularyHierarchyType($vid);
+
 }
