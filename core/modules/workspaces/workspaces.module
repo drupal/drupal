@@ -163,15 +163,15 @@ function workspaces_toolbar() {
 
   $current_user = \Drupal::currentUser();
   if (!$current_user->hasPermission('administer workspaces')
-    || !$current_user->hasPermission('view own workspace')
-    || !$current_user->hasPermission('view any workspace')) {
+    && !$current_user->hasPermission('view own workspace')
+    && !$current_user->hasPermission('view any workspace')) {
     return $items;
   }
 
   /** @var \Drupal\workspaces\WorkspaceInterface $active_workspace */
   $active_workspace = \Drupal::service('workspaces.manager')->getActiveWorkspace();
 
-  $items['workspace'] = [
+  $items['workspace'] += [
     '#type' => 'toolbar_item',
     'tab' => [
       '#type' => 'link',
@@ -189,6 +189,7 @@ function workspaces_toolbar() {
           ],
         ]),
       ],
+      '#cache' => ['tags' => $active_workspace->getCacheTags()],
     ],
     '#wrapper_attributes' => [
       'class' => ['workspaces-toolbar-tab'],
