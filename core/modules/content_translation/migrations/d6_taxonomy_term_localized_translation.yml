@@ -1,0 +1,44 @@
+id: d6_taxonomy_term_localized_translation
+label: Taxonomy localized term translations
+migration_tags:
+  - Drupal 6
+  - Content
+  - Multilingual
+source:
+  plugin: d6_term_localized_translation
+  translations: true
+process:
+  # If you are using this file to build a custom migration consider removing
+  # the tid field to allow incremental migrations.
+  tid: tid
+  langcode: language
+  vid:
+    plugin: migration
+    migration: d6_taxonomy_vocabulary
+    source: vid
+  name:
+    -
+      plugin: callback
+      source:
+        - name_translated
+        - name
+      callable: array_filter
+    -
+      plugin: callback
+      callable: current
+  description:
+    -
+      plugin: callback
+      source:
+        - description_translated
+        - description
+      callable: array_filter
+    -
+      plugin: callback
+      callable: current
+destination:
+  plugin: entity:taxonomy_term
+  translations: true
+migration_dependencies:
+  required:
+    - d6_taxonomy_term

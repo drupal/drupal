@@ -81,13 +81,13 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
     $field_id = 'node.story.field_vocabulary_3_i_2_';
     $field = FieldConfig::load($field_id);
     $this->assertFalse($field->isRequired(), 'Field is not required');
-    $this->assertFalse($field->isTranslatable());
+    $this->assertTrue($field->isTranslatable());
 
     // Tests that a vocabulary named like a D8 base field will be migrated and
     // prefixed with 'field_' to avoid conflicts.
     $field_type = FieldConfig::load('node.sponsor.field_type');
     $this->assertInstanceOf(FieldConfig::class, $field_type);
-    $this->assertFalse($field->isTranslatable());
+    $this->assertTrue($field->isTranslatable());
   }
 
   /**
