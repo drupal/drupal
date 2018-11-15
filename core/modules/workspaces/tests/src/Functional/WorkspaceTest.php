@@ -16,7 +16,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['workspaces'];
+  public static $modules = ['workspaces', 'toolbar'];
 
   /**
    * A test user.
@@ -43,6 +43,8 @@ class WorkspaceTest extends BrowserTestBase {
       'create workspace',
       'edit own workspace',
       'edit any workspace',
+      'view own workspace',
+      'access toolbar',
     ];
 
     $this->editor1 = $this->drupalCreateUser($permissions);
@@ -67,6 +69,36 @@ class WorkspaceTest extends BrowserTestBase {
     $page->fillField('id', 'A!"£%^&*{}#~@?');
     $page->findButton('Save')->click();
     $page->hasContent("This value is not valid");
+  }
+
+  /**
+   * Test that the toolbar correctly shows the active workspace.
+   */
+  public function testWorkspaceToolbar() {
+    $this->drupalLogin($this->editor1);
+
+    $this->drupalPostForm('/admin/config/workflow/workspaces/add', [
+      'id' => 'test_workspace',
+      'label' => 'Test workspace',
+    ], 'Save');
+
+    // Activate the test workspace.
+    $this->drupalPostForm('/admin/config/workflow/workspaces/manage/test_workspace/activate', [], 'Confirm');
+
+    $this->drupalGet('<front>');
+    $page = $this->getSession()->getPage();
+    // Toolbar should show the correct label.
+    $this->assertTrue($page->hasLink('Test workspace'));
+
+    // Change the workspace label.
+    $this->drupalPostForm('/admin/config/workflow/workspaces/manage/test_workspace/edit', [
+      'label' => 'New name',
+    ], 'Save');
+
+    $this->drupalGet('<front>');
+    $page = $this->getSession()->getPage();
+    // Toolbar should show the new label.
+    $this->assertTrue($page->hasLink('New name'));
   }
 
   /**
