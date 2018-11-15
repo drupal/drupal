@@ -179,7 +179,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * The human-readable name of the type.
    *
-   * @var string
+   * @var string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *
    * @see \Drupal\Core\Entity\EntityTypeInterface::getLabel()
    */
@@ -188,7 +188,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * The human-readable label for a collection of entities of the type.
    *
-   * @var string
+   * @var string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *
    * @see \Drupal\Core\Entity\EntityTypeInterface::getCollectionLabel()
    */
@@ -197,7 +197,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * The indefinite singular name of the type.
    *
-   * @var string
+   * @var string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *
    * @see \Drupal\Core\Entity\EntityTypeInterface::getSingularLabel()
    */
@@ -206,7 +206,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * The indefinite plural name of the type.
    *
-   * @var string
+   * @var string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *
    * @see \Drupal\Core\Entity\EntityTypeInterface::getPluralLabel()
    */
@@ -217,7 +217,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    *
    * Needed keys: "singular" and "plural".
    *
-   * @var string[]
+   * @var string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *
    * @see \Drupal\Core\Entity\EntityTypeInterface::getCountLabel()
    */
@@ -237,6 +237,10 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
 
   /**
    * The human-readable name of the entity type group.
+   *
+   * @var string|\Drupal\Core\StringTranslation\TranslatableMarkup
+   *
+   * @see \Drupal\Core\Entity\EntityTypeInterface::getGroupLabel()
    */
   protected $group_label;
 
