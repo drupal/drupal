@@ -17,7 +17,6 @@ use Drupal\Core\Extension\Extension;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\PageCache\RequestPolicyInterface;
-use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -1254,10 +1253,6 @@ function system_cron() {
       $queue->garbageCollection();
     }
   }
-
-  // Clean up PHP storage.
-  PhpStorageFactory::get('container')->garbageCollection();
-  PhpStorageFactory::get('service_container')->garbageCollection();
 }
 
 /**
