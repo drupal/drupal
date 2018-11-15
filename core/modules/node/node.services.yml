@@ -25,7 +25,7 @@ services:
       - { name: access_check, applies_to: _node_preview_access }
   node.admin_path.route_subscriber:
     class: Drupal\node\EventSubscriber\NodeAdminRouteSubscriber
-    arguments: ['@config.factory']
+    arguments: ['@config.factory', '@router.builder']
     tags:
       - { name: event_subscriber }
   node_preview:
