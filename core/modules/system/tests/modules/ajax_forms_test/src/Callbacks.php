@@ -50,7 +50,7 @@ class Callbacks {
    */
   public function checkboxCallback($form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    $response->addCommand(new HtmlCommand('#ajax_checkbox_value', (int) $form_state->getValue('checkbox')));
+    $response->addCommand(new HtmlCommand('#ajax_checkbox_value', $form_state->getValue('checkbox') ? 'checked' : 'unchecked'));
     $response->addCommand(new DataCommand('#ajax_checkbox_value', 'form_state_value_select', (int) $form_state->getValue('checkbox')));
     return $response;
   }
