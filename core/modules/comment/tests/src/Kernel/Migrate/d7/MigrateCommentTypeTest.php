@@ -46,6 +46,17 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
    * Tests the migrated comment types.
    */
   public function testMigration() {
+    $comment_fields = [
+      'comment' => 'Default comment setting',
+      'comment_default_mode' => 'Default display mode',
+      'comment_default_per_page' => 'Default comments per page',
+      'comment_anonymous' => 'Anonymous commenting',
+      'comment_subject_field' => 'Comment subject field',
+      'comment_preview' => 'Preview comment',
+      'comment_form_location' => 'Location of comment submission form',
+    ];
+    $this->assertArraySubset($comment_fields, $this->migration->getSourcePlugin()->fields());
+
     $this->assertEntity('comment_node_article', 'Article comment');
     $this->assertEntity('comment_node_blog', 'Blog entry comment');
     $this->assertEntity('comment_node_book', 'Book page comment');
