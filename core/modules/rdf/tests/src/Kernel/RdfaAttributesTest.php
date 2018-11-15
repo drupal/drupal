@@ -57,12 +57,12 @@ class RdfaAttributesTest extends KernelTestBase {
     $datatype = 'xsd:dateTime';
 
     $date = 1252750327;
-    $iso_date = date('c', $date);
+    $iso_date = $this->container->get('date.formatter')->format($date, 'custom', 'c', 'UTC');
 
     $mapping = [
       'datatype' => $datatype,
       'properties' => $properties,
-      'datatype_callback' => ['callable' => 'date_iso8601'],
+      'datatype_callback' => ['callable' => 'Drupal\rdf\CommonDataConverter::dateIso8601Value'],
     ];
     $expected_attributes = [
       'datatype' => $datatype,
@@ -70,7 +70,7 @@ class RdfaAttributesTest extends KernelTestBase {
       'content' => $iso_date,
     ];
 
-    $this->_testAttributes($expected_attributes, $mapping, $date);
+    $this->_testAttributes($expected_attributes, $mapping, ['value' => $date]);
   }
 
   /**

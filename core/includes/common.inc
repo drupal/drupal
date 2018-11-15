@@ -332,13 +332,19 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
 /**
  * Returns an ISO8601 formatted date based on the given date.
  *
- * @param $date
+ * @param string $date
  *   A UNIX timestamp.
  *
  * @return string
  *   An ISO8601 formatted date.
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   date('c', $date) instead.
+ *
+ * @see https://www.drupal.org/node/2999991
  */
 function date_iso8601($date) {
+  @trigger_error('date_iso8601() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use date("c", $date) instead. See https://www.drupal.org/node/2999991.', E_USER_DEPRECATED);
   // The DATE_ISO8601 constant cannot be used here because it does not match
   // date('c') and produces invalid RDF markup.
   return date('c', $date);
