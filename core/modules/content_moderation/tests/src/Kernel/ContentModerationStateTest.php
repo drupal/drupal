@@ -416,23 +416,81 @@ class ContentModerationStateTest extends KernelTestBase {
 
   /**
    * Tests that entities with special languages can be moderated.
+   *
+   * @dataProvider moderationWithSpecialLanguagesTestCases
    */
-  public function testModerationWithSpecialLanguages() {
+  public function testModerationWithSpecialLanguages($original_language, $updated_language) {
     $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
     $workflow->save();
 
     // Create a test entity.
     $entity = EntityTestRev::create([
-      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      'langcode' => $original_language,
     ]);
     $entity->save();
     $this->assertEquals('draft', $entity->moderation_state->value);
 
     $entity->moderation_state->value = 'published';
+    $entity->langcode = $updated_language;
     $entity->save();
 
     $this->assertEquals('published', EntityTestRev::load($entity->id())->moderation_state->value);
+  }
+
+  /**
+   * Test cases for ::testModerationWithSpecialLanguages().
+   */
+  public function moderationWithSpecialLanguagesTestCases() {
+    return [
+      'Not specified to not specified' => [
+        LanguageInterface::LANGCODE_NOT_SPECIFIED,
+        LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      ],
+      'English to not specified' => [
+        'en',
+        LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      ],
+      'Not specified to english' => [
+        LanguageInterface::LANGCODE_NOT_SPECIFIED,
+        'en',
+      ],
+    ];
+  }
+
+  /**
+   * Test changing the language of content without adding a translation.
+   */
+  public function testChangingContentLangcode() {
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+    NodeType::create([
+      'type' => 'test_type',
+    ])->save();
+    $workflow = $this->createEditorialWorkflow();
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'test_type');
+    $workflow->save();
+
+    $entity = Node::create([
+      'title' => 'Test node',
+      'langcode' => 'en',
+      'type' => 'test_type',
+    ]);
+    $entity->save();
+
+    $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
+    $this->assertCount(1, $entity->getTranslationLanguages());
+    $this->assertCount(1, $content_moderation_state->getTranslationLanguages());
+    $this->assertEquals('en', $entity->langcode->value);
+    $this->assertEquals('en', $content_moderation_state->langcode->value);
+
+    $entity->langcode = 'fr';
+    $entity->save();
+
+    $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
+    $this->assertCount(1, $entity->getTranslationLanguages());
+    $this->assertCount(1, $content_moderation_state->getTranslationLanguages());
+    $this->assertEquals('fr', $entity->langcode->value);
+    $this->assertEquals('fr', $content_moderation_state->langcode->value);
   }
 
   /**

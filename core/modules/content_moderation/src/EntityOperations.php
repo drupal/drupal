@@ -184,11 +184,16 @@ class EntityOperations implements ContainerInjectionInterface {
     // Sync translations.
     if ($entity->getEntityType()->hasKey('langcode')) {
       $entity_langcode = $entity->language()->getId();
-      if (!$content_moderation_state->hasTranslation($entity_langcode)) {
-        $content_moderation_state->addTranslation($entity_langcode);
+      if ($entity->isDefaultTranslation()) {
+        $content_moderation_state->langcode = $entity_langcode;
       }
-      if ($content_moderation_state->language()->getId() !== $entity_langcode) {
-        $content_moderation_state = $content_moderation_state->getTranslation($entity_langcode);
+      else {
+        if (!$content_moderation_state->hasTranslation($entity_langcode)) {
+          $content_moderation_state->addTranslation($entity_langcode);
+        }
+        if ($content_moderation_state->language()->getId() !== $entity_langcode) {
+          $content_moderation_state = $content_moderation_state->getTranslation($entity_langcode);
+        }
       }
     }
 
