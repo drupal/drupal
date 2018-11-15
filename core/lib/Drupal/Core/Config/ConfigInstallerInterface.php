@@ -76,6 +76,15 @@ interface ConfigInstallerInterface {
   public function setSourceStorage(StorageInterface $storage);
 
   /**
+   * Gets the configuration storage that provides the default configuration.
+   *
+   * @return \Drupal\Core\Config\StorageInterface|null
+   *   The configuration storage that provides the default configuration.
+   *   Returns null if the source storage has not been set.
+   */
+  public function getSourceStorage();
+
+  /**
    * Sets the status of the isSyncing flag.
    *
    * @param bool $status
