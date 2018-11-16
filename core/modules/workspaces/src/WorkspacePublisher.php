@@ -48,17 +48,27 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
   protected $workspaceAssociationStorage;
 
   /**
+   * The workspace manager.
+   *
+   * @var \Drupal\workspaces\WorkspaceManagerInterface
+   */
+  protected $workspaceManager;
+
+  /**
    * Constructs a new WorkspacePublisher.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Database\Connection $database
    *   Database connection.
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   *   The workspace manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceInterface $source) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceInterface $source) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
     $this->workspaceAssociationStorage = $entity_type_manager->getStorage('workspace_association');
+    $this->workspaceManager = $workspace_manager;
     $this->sourceWorkspace = $source;
     $this->targetWorkspace = $this->entityTypeManager->getStorage('workspace')->load(WorkspaceInterface::DEFAULT_WORKSPACE);
   }
@@ -75,18 +85,26 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
     try {
       // @todo Handle the publishing of a workspace with a batch operation in
       //   https://www.drupal.org/node/2958752.
-      foreach ($this->getDifferringRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
-        $entity_revisions = $this->entityTypeManager->getStorage($entity_type_id)
-          ->loadMultipleRevisions(array_keys($revision_difference));
-        /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-        foreach ($entity_revisions as $entity) {
-          // When pushing workspace-specific revisions to the default workspace
-          // (Live), we simply need to mark them as default revisions.
-          $entity->setSyncing(TRUE);
-          $entity->isDefaultRevision(TRUE);
-          $entity->save();
+      $this->workspaceManager->executeInWorkspace($this->targetWorkspace->id(), function () {
+        foreach ($this->getDifferringRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
+
+          $entity_revisions = $this->entityTypeManager->getStorage($entity_type_id)
+            ->loadMultipleRevisions(array_keys($revision_difference));
+          $default_revisions = $this->entityTypeManager->getStorage($entity_type_id)
+            ->loadMultiple(array_values($revision_difference));
+
+          /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+          foreach ($entity_revisions as $entity) {
+            // When pushing workspace-specific revisions to the default
+            // workspace (Live), we simply need to mark them as default
+            // revisions.
+            $entity->setSyncing(TRUE);
+            $entity->isDefaultRevision(TRUE);
+            $entity->original = $default_revisions[$entity->id()];
+            $entity->save();
+          }
         }
-      }
+      });
     }
     catch (\Exception $e) {
       $transaction->rollBack();

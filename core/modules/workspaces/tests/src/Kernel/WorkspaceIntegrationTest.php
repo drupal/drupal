@@ -755,4 +755,34 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $form_builder->setCache($built_form['#build_id'], $built_form, $form_state);
   }
 
+  /**
+   * Test a deployment with fields in dedicated table storage.
+   */
+  public function testPublishWorkspaceDedicatedTableStorage() {
+    $this->initializeWorkspacesModule();
+    $node_storage = $this->entityTypeManager->getStorage('node');
+
+    $this->switchToWorkspace('live');
+    $node = $node_storage->create([
+      'title' => 'Foo title',
+      // Use the body field on node as a test case because it requires dedicated
+      // table storage.
+      'body' => 'Foo body',
+      'type' => 'page',
+    ]);
+    $node->save();
+
+    $this->switchToWorkspace('stage');
+    $node->title = 'Bar title';
+    $node->body = 'Bar body';
+    $node->save();
+
+    $this->workspaces['stage']->publish();
+    $this->switchToWorkspace('live');
+
+    $reloaded = $node_storage->load($node->id());
+    $this->assertEquals('Bar title', $reloaded->title->value);
+    $this->assertEquals('Bar body', $reloaded->body->value);
+  }
+
 }

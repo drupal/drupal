@@ -6,7 +6,7 @@ services:
       - { name: service_id_collector, tag: workspace_negotiator }
   workspaces.operation_factory:
     class: Drupal\workspaces\WorkspaceOperationFactory
-    arguments: ['@entity_type.manager', '@database']
+    arguments: ['@entity_type.manager', '@database', '@workspaces.manager']
 
   workspaces.negotiator.default:
     class: Drupal\workspaces\Negotiator\DefaultWorkspaceNegotiator
