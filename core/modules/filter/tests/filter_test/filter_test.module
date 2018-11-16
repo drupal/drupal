@@ -6,14 +6,14 @@
  */
 
 /**
- * Implements hook_filter_format_insert().
+ * Implements hook_ENTITY_TYPE_insert().
  */
 function filter_test_filter_format_insert($format) {
   \Drupal::messenger()->addStatus('hook_filter_format_insert invoked.');
 }
 
 /**
- * Implements hook_filter_format_update().
+ * Implements hook_ENTITY_TYPE_update().
  */
 function filter_test_filter_format_update($format) {
   \Drupal::messenger()->addStatus('hook_filter_format_update invoked.');
