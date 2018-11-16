@@ -20,22 +20,6 @@ class ModuleHandlerTest extends KernelTestBase {
   public static $modules = ['system'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    // @todo ModuleInstaller calls system_rebuild_module_data which is part of
-    //   system.module, see https://www.drupal.org/node/2208429.
-    include_once $this->root . '/core/modules/system/system.module';
-
-    // Set up the state values so we know where to find the files when running
-    // drupal_get_filename().
-    // @todo Remove as part of https://www.drupal.org/node/2186491
-    system_rebuild_module_data();
-  }
-
-  /**
    * The basic functionality of retrieving enabled modules.
    */
   public function testModuleList() {
