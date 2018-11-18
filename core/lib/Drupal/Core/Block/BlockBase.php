@@ -11,7 +11,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\Core\Plugin\PluginWithFormsTrait;
-use Drupal\Core\Render\PlaceholderInterface;
+use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Transliteration\TransliterationInterface;
 
@@ -24,7 +24,7 @@ use Drupal\Component\Transliteration\TransliterationInterface;
  *
  * @ingroup block_api
  */
-abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginInterface, PluginWithFormsInterface, PlaceholderInterface {
+abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginInterface, PluginWithFormsInterface, PreviewFallbackInterface {
 
   use ContextAwarePluginAssignmentTrait;
   use MessengerTrait;
@@ -256,7 +256,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
   /**
    * {@inheritdoc}
    */
-  public function getPlaceholderString() {
+  public function getPreviewFallbackString() {
     return $this->t('Placeholder for the "@block" block', ['@block' => $this->label()]);
   }
 

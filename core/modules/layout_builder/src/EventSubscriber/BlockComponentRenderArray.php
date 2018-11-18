@@ -6,7 +6,7 @@ use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\PlaceholderInterface;
+use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\Access\LayoutPreviewAccessAllowed;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
@@ -100,8 +100,8 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         '#weight' => $event->getComponent()->getWeight(),
         'content' => $block->build(),
       ];
-      if ($event->inPreview() && Element::isEmpty($build['content']) && $block instanceof PlaceholderInterface) {
-        $build['content']['#markup'] = $block->getPlaceholderString();
+      if ($event->inPreview() && Element::isEmpty($build['content']) && $block instanceof PreviewFallbackInterface) {
+        $build['content']['#markup'] = $block->getPreviewFallbackString();
       }
       $event->setBuild($build);
     }
