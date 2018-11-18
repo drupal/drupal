@@ -1163,4 +1163,42 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertEquals($entity->id(), reset($result));
   }
 
+  /**
+   * Tests entity queries with condition on the revision metadata keys.
+   */
+  public function testConditionOnRevisionMetadataKeys() {
+    $this->installModule('entity_test_revlog');
+    $this->installEntitySchema('entity_test_revlog');
+
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
+    $entity_type = $entity_type_manager->getDefinition('entity_test_revlog');
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $entity_type_manager->getStorage('entity_test_revlog');
+
+    $revision_created_timestamp = time();
+    $revision_created_field_name = $entity_type->getRevisionMetadataKey('revision_created');
+    $entity = $storage->create([
+      'type' => 'entity_test',
+      $revision_created_field_name => $revision_created_timestamp,
+    ]);
+    $entity->save();
+
+    // Query only the default revision.
+    $result = $storage->getQuery()
+      ->condition($revision_created_field_name, $revision_created_timestamp)
+      ->execute();
+    $this->assertCount(1, $result);
+    $this->assertEquals($entity->id(), reset($result));
+
+    // Query all revisions.
+    $result = $storage->getQuery()
+      ->condition($revision_created_field_name, $revision_created_timestamp)
+      ->allRevisions()
+      ->execute();
+    $this->assertCount(1, $result);
+    $this->assertEquals($entity->id(), reset($result));
+  }
+
 }
