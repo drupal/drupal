@@ -184,6 +184,7 @@ class Tables implements TablesInterface {
         // finds the property first. The data table is preferred, which is why
         // it gets added before the base table.
         $entity_tables = [];
+        $revision_table = NULL;
         if ($all_revisions && $field_storage && $field_storage->isRevisionable()) {
           $data_table = $entity_type->getRevisionDataTable();
           $entity_base_table = $entity_type->getRevisionTable();
@@ -191,10 +192,17 @@ class Tables implements TablesInterface {
         else {
           $data_table = $entity_type->getDataTable();
           $entity_base_table = $entity_type->getBaseTable();
+
+          if ($field_storage && $field_storage->isRevisionable() && in_array($field_storage->getName(), $entity_type->getRevisionMetadataKeys())) {
+            $revision_table = $entity_type->getRevisionTable();
+          }
         }
         if ($data_table) {
           $this->sqlQuery->addMetaData('simple_query', FALSE);
           $entity_tables[$data_table] = $this->getTableMapping($data_table, $entity_type_id);
+        }
+        if ($revision_table) {
+          $entity_tables[$revision_table] = $this->getTableMapping($revision_table, $entity_type_id);
         }
         $entity_tables[$entity_base_table] = $this->getTableMapping($entity_base_table, $entity_type_id);
         $sql_column = $specifier;
