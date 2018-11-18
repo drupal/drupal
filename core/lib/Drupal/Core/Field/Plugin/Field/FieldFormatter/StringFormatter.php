@@ -124,7 +124,6 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
     $elements = [];
     $url = NULL;
     if ($this->getSetting('link_to_entity')) {
-      // For the default revision this falls back to 'canonical'.
       $url = $this->getEntityUrl($items->getEntity());
     }
 
@@ -173,8 +172,11 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
    *   The URI elements of the entity.
    */
   protected function getEntityUrl(EntityInterface $entity) {
-    // For the default revision this falls back to 'canonical'.
-    return $entity->toUrl('revision');
+    // For the default revision, the 'revision' link template falls back to
+    // 'canonical'.
+    // @see \Drupal\Core\Entity\Entity::toUrl()
+    $rel = $entity->getEntityType()->hasLinkTemplate('revision') ? 'revision' : 'canonical';
+    return $entity->toUrl($rel);
   }
 
 }
