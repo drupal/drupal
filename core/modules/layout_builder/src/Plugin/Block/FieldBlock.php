@@ -166,7 +166,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
   /**
    * {@inheritdoc}
    */
-  public function getPlaceholderString() {
+  public function getPreviewFallbackString() {
     return new TranslatableMarkup('Placeholder for the "@field" field', ['@field' => $this->getFieldDefinition()->getLabel()]);
   }
 
