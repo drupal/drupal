@@ -167,27 +167,12 @@ trait UiHelperTrait {
    *   @todo change $edit to disallow NULL as a value for Drupal 9.
    *     https://www.drupal.org/node/2802401
    * @param string $submit
-   *   Value of the submit button whose click is to be emulated. For example,
-   *   'Save'. The processing of the request depends on this value. For example,
-   *   a form may have one button with the value 'Save' and another button with
-   *   the value 'Delete', and execute different code depending on which one is
-   *   clicked.
-   *
-   *   This function can also be called to emulate an Ajax submission. In this
-   *   case, this value needs to be an array with the following keys:
-   *   - path: A path to submit the form values to for Ajax-specific processing.
-   *   - triggering_element: If the value for the 'path' key is a generic Ajax
-   *     processing path, this needs to be set to the name of the element. If
-   *     the name doesn't identify the element uniquely, then this should
-   *     instead be an array with a single key/value pair, corresponding to the
-   *     element name and value. The \Drupal\Core\Form\FormAjaxResponseBuilder
-   *     uses this to find the #ajax information for the element, including
-   *     which specific callback to use for processing the request.
-   *
-   *   This can also be set to NULL in order to emulate an Internet Explorer
-   *   submission of a form with a single text field, and pressing ENTER in that
-   *   textfield: under these conditions, no button information is added to the
-   *   POST data.
+   *   The id, name, label or value of the submit button which is to be clicked.
+   *   For example, 'Save'. The first element matched by
+   *   \Drupal\Tests\WebAssert::buttonExists() will be used. The processing of
+   *   the request depends on this value. For example, a form may have one
+   *   button with the value 'Save' and another button with the value 'Delete',
+   *   and execute different code depending on which one is clicked.
    * @param array $options
    *   Options to be forwarded to the url generator.
    * @param string|null $form_html_id
@@ -202,6 +187,8 @@ trait UiHelperTrait {
    *   (deprecated) The response content after submit form. It is necessary for
    *   backwards compatibility and will be removed before Drupal 9.0. You should
    *   just use the webAssert object for your assertions.
+   *
+   * @see \Drupal\Tests\WebAssert::buttonExists()
    */
   protected function drupalPostForm($path, $edit, $submit, array $options = [], $form_html_id = NULL) {
     if (is_object($submit)) {

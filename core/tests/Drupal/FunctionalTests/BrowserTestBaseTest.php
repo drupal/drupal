@@ -114,6 +114,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test drupalPostForm().
     $edit = ['bananas' => 'red'];
+    // Submit the form using the button label.
     $result = $this->drupalPostForm('form-test/object-builder', $edit, 'Save');
     $this->assertSame($this->getSession()->getPage()->getContent(), $result);
     $value = $config_factory->get('form_test.object')->get('bananas');
@@ -122,6 +123,20 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->drupalPostForm('form-test/object-builder', NULL, 'Save');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('', $value);
+
+    // Submit the form using the button id.
+    $edit = ['bananas' => 'blue'];
+    $result = $this->drupalPostForm('form-test/object-builder', $edit, 'edit-submit');
+    $this->assertSame($this->getSession()->getPage()->getContent(), $result);
+    $value = $config_factory->get('form_test.object')->get('bananas');
+    $this->assertSame('blue', $value);
+
+    // Submit the form using the button name.
+    $edit = ['bananas' => 'purple'];
+    $result = $this->drupalPostForm('form-test/object-builder', $edit, 'op');
+    $this->assertSame($this->getSession()->getPage()->getContent(), $result);
+    $value = $config_factory->get('form_test.object')->get('bananas');
+    $this->assertSame('purple', $value);
 
     // Test drupalPostForm() with no-html response.
     $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
