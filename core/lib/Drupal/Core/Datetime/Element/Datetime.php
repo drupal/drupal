@@ -96,7 +96,7 @@ class Datetime extends DateElementBase {
       ];
     }
     else {
-      $date = $element['#default_value'];
+      $date = isset($element['#default_value']) ? $element['#default_value'] : NULL;
       if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
         $input = [
           'date'   => $date->format($element['#date_date_format']),

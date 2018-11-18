@@ -64,6 +64,15 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface {
       '#date_date_callbacks' => [[$this, 'datetimecallback']],
     ];
 
+    // Element without specifying the default value.
+    $form['simple_datetime_element'] = [
+      '#type' => 'datetime',
+      '#date_date_format' => ['Y-m-d'],
+      '#date_time_format' => ['H:i:s'],
+      '#date_date_element' => 'HTML Date',
+      '#date_time_element' => 'HTML Time',
+    ];
+
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => t('Submit'),
