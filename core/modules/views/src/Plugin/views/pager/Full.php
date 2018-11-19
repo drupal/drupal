@@ -43,6 +43,7 @@ class Full extends SqlBase {
 
     $form['quantity'] = [
       '#type' => 'number',
+      '#min' => 0,
       '#title' => $this->t('Number of pager links visible'),
       '#description' => $this->t('Specify the number of links to pages to display in the pager.'),
       '#default_value' => $this->options['quantity'],
