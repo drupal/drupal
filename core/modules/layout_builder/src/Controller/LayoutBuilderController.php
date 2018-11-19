@@ -161,10 +161,32 @@ class LayoutBuilderController implements ContainerInjectionInterface {
   protected function buildAddSectionLink(SectionStorageInterface $section_storage, $delta) {
     $storage_type = $section_storage->getStorageType();
     $storage_id = $section_storage->getStorageId();
+
+    // If the delta and the count are the same, it is either the end of the
+    // layout or an empty layout.
+    if ($delta === count($section_storage)) {
+      if ($delta === 0) {
+        $title = $this->t('Add Section');
+      }
+      else {
+        $title = $this->t('Add Section <span class="visually-hidden">at end of layout</span>');
+      }
+    }
+    // If the delta and the count are different, it is either the beginning of
+    // the layout or in between two sections.
+    else {
+      if ($delta === 0) {
+        $title = $this->t('Add Section <span class="visually-hidden">at start of layout</span>');
+      }
+      else {
+        $title = $this->t('Add Section <span class="visually-hidden">between @first and @second</span>', ['@first' => $delta, '@second' => $delta + 1]);
+      }
+    }
+
     return [
       'link' => [
         '#type' => 'link',
-        '#title' => $this->t('Add Section'),
+        '#title' => $title,
         '#url' => Url::fromRoute('layout_builder.choose_section',
           [
             'section_storage_type' => $storage_type,
@@ -207,6 +229,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
     $build = $section->toRenderArray($this->getAvailableContexts($section_storage), TRUE);
     $layout_definition = $layout->getPluginDefinition();
 
+    $region_labels = $layout_definition->getRegionLabels();
     foreach ($layout_definition->getRegions() as $region => $info) {
       if (!empty($build[$region])) {
         foreach ($build[$region] as $uuid => $block) {
@@ -228,7 +251,8 @@ class LayoutBuilderController implements ContainerInjectionInterface {
 
       $build[$region]['layout_builder_add_block']['link'] = [
         '#type' => 'link',
-        '#title' => $this->t('Add Block'),
+        // Add one to the current delta since it is zero-indexed.
+        '#title' => $this->t('Add Block <span class="visually-hidden">in section @section, @region region</span>', ['@section' => $delta + 1, '@region' => $region_labels[$region]]),
         '#url' => Url::fromRoute('layout_builder.choose_block',
           [
             'section_storage_type' => $storage_type,
