@@ -4,6 +4,7 @@ namespace Drupal\Tests\aggregator\Functional;
 
 use Drupal\Core\Url;
 use Drupal\aggregator\Entity\Feed;
+use Drupal\aggregator\Entity\Item;
 
 /**
  * Tests the built-in feed parser with valid feed samples.
@@ -57,16 +58,17 @@ class FeedParserTest extends AggregatorTestBase {
     $this->assertText('Atom-Powered Robots Run Amok');
     $this->assertLinkByHref('http://example.org/2003/12/13/atom03');
     $this->assertText('Some text.');
-    $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', db_query('SELECT guid FROM {aggregator_item} WHERE link = :link', [':link' => 'http://example.org/2003/12/13/atom03'])->fetchField(), 'Atom entry id element is parsed correctly.');
+    $iids = \Drupal::entityQuery('aggregator_item')->condition('link', 'http://example.org/2003/12/13/atom03')->execute();
+    $item = Item::load(array_values($iids)[0]);
+    $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
 
     // Check for second feed entry.
     $this->assertText('We tried to stop them, but we failed.');
     $this->assertLinkByHref('http://example.org/2003/12/14/atom03');
     $this->assertText('Some other text.');
-    $db_guid = db_query('SELECT guid FROM {aggregator_item} WHERE link = :link', [
-      ':link' => 'http://example.org/2003/12/14/atom03',
-    ])->fetchField();
-    $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-bbbb-80da344efa6a', $db_guid, 'Atom entry id element is parsed correctly.');
+    $iids = \Drupal::entityQuery('aggregator_item')->condition('link', 'http://example.org/2003/12/14/atom03')->execute();
+    $item = Item::load(array_values($iids)[0]);
+    $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-bbbb-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
   }
 
   /**
