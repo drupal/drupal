@@ -501,7 +501,7 @@ function drupal_js_defaults($data = NULL) {
  *
  * Every condition is a key/value pair, whose key is a jQuery selector that
  * denotes another element on the page, and whose value is an array of
- * conditions, which must bet met on that element:
+ * conditions, which must be met on that element:
  * @code
  * array(
  *   'visible' => array(
