@@ -37,7 +37,7 @@ function bartik_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for page templates.
+ * Implements hook_preprocess_HOOK() for page title templates.
  */
 function bartik_preprocess_page_title(&$variables) {
   // Since the title and the shortcut link are both block level elements,
