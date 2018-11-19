@@ -2,30 +2,24 @@
 
 namespace Drupal\Core\Field\Plugin\migrate\field\d7;
 
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\field\Plugin\migrate\field\d7\EntityReference as EntityReferenceNew;
 
 /**
- * @MigrateField(
- *   id = "entityreference",
- *   type_map = {
- *     "entityreference" = "entity_reference",
- *   },
- *   core = {7},
- *   source_module = "entityreference",
- *   destination_module = "core"
- * )
+ * MigrateField plugin for Drupal 7 entity_reference fields.
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\field\Plugin\migrate\field\d7\EntityReference instead.
+ *
+ * @see https://www.drupal.org/node/3009286
  */
-class EntityReference extends FieldPluginBase {
+class EntityReference extends EntityReferenceNew {
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldFormatterMap() {
-    return [
-      'entityreference_label' => 'entity_reference_label',
-      'entityreference_entity_id' => 'entity_reference_entity_id',
-      'entityreference_entity_view' => 'entity_reference_entity_view',
-    ];
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__NAMESPACE__ . '\EntityReference is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\field\Plugin\migrate\field\d7\EntityReference instead. See https://www.drupal.org/node/3009286', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
 }

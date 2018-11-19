@@ -2,59 +2,24 @@
 
 namespace Drupal\Core\Field\Plugin\migrate\field;
 
-use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\field\Plugin\migrate\field\Email as EmailNew;
 
 /**
- * @MigrateField(
- *   id = "email",
- *   core = {6,7},
- *   type_map = {
- *     "email" = "email"
- *   },
- *   source_module = "email",
- *   destination_module = "core"
- * )
+ * MigrateField Plugin for Drupal 6 and 7 email fields.
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\field\Plugin\migrate\field\Email instead.
+ *
+ * @see https://www.drupal.org/node/3009286
  */
-class Email extends FieldPluginBase {
+class Email extends EmailNew {
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldWidgetMap() {
-    return [
-      'email_textfield' => 'email_default',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldFormatterMap() {
-    return [
-      'email_formatter_default' => 'email_mailto',
-      'email_formatter_contact' => 'basic_string',
-      'email_formatter_plain' => 'basic_string',
-      'email_formatter_spamspan' => 'basic_string',
-      'email_default' => 'email_mailto',
-      'email_contact' => 'basic_string',
-      'email_plain' => 'basic_string',
-      'email_spamspan' => 'basic_string',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
-    $process = [
-      'plugin' => 'sub_process',
-      'source' => $field_name,
-      'process' => [
-        'value' => 'email',
-      ],
-    ];
-    $migration->setProcessOfProperty($field_name, $process);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__NAMESPACE__ . '\Email is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\field\Plugin\migrate\field\Email instead. See https://www.drupal.org/node/3009286', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
 }
