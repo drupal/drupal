@@ -252,41 +252,45 @@ function check_url($uri) {
  *   A translated string representation of the size.
  */
 function format_size($size, $langcode = NULL) {
-  if ($size < Bytes::KILOBYTE) {
+  $absolute_size = abs($size);
+  if ($absolute_size < Bytes::KILOBYTE) {
     return \Drupal::translation()->formatPlural($size, '1 byte', '@count bytes', [], ['langcode' => $langcode]);
   }
-  else {
-    // Convert bytes to kilobytes.
-    $size = $size / Bytes::KILOBYTE;
-    $units = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    foreach ($units as $unit) {
-      if (round($size, 2) >= Bytes::KILOBYTE) {
-        $size = $size / Bytes::KILOBYTE;
-      }
-      else {
-        break;
-      }
+  // Create a multiplier to preserve the sign of $size.
+  $sign = $absolute_size / $size;
+  foreach (['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] as $unit) {
+    $absolute_size /= Bytes::KILOBYTE;
+    $rounded_size = round($absolute_size, 2);
+    if ($rounded_size < Bytes::KILOBYTE) {
+      break;
     }
-    $args = ['@size' => round($size, 2)];
-    $options = ['langcode' => $langcode];
-    switch ($unit) {
-      case 'KB':
-        return new TranslatableMarkup('@size KB', $args, $options);
-      case 'MB':
-        return new TranslatableMarkup('@size MB', $args, $options);
-      case 'GB':
-        return new TranslatableMarkup('@size GB', $args, $options);
-      case 'TB':
-        return new TranslatableMarkup('@size TB', $args, $options);
-      case 'PB':
-        return new TranslatableMarkup('@size PB', $args, $options);
-      case 'EB':
-        return new TranslatableMarkup('@size EB', $args, $options);
-      case 'ZB':
-        return new TranslatableMarkup('@size ZB', $args, $options);
-      case 'YB':
-        return new TranslatableMarkup('@size YB', $args, $options);
-    }
+  }
+  $args = ['@size' => $rounded_size * $sign];
+  $options = ['langcode' => $langcode];
+  switch ($unit) {
+    case 'KB':
+      return new TranslatableMarkup('@size KB', $args, $options);
+
+    case 'MB':
+      return new TranslatableMarkup('@size MB', $args, $options);
+
+    case 'GB':
+      return new TranslatableMarkup('@size GB', $args, $options);
+
+    case 'TB':
+      return new TranslatableMarkup('@size TB', $args, $options);
+
+    case 'PB':
+      return new TranslatableMarkup('@size PB', $args, $options);
+
+    case 'EB':
+      return new TranslatableMarkup('@size EB', $args, $options);
+
+    case 'ZB':
+      return new TranslatableMarkup('@size ZB', $args, $options);
+
+    case 'YB':
+      return new TranslatableMarkup('@size YB', $args, $options);
   }
 }
 
