@@ -63,6 +63,22 @@ class DrupalSqlBaseTest extends MigrateTestCase {
     }
   }
 
+  /**
+   * @covers ::checkRequirements
+   */
+  public function testSourceDatabaseError() {
+    $plugin_definition['requirements_met'] = TRUE;
+    $plugin_definition['source_module'] = 'module1';
+    /** @var \Drupal\Core\State\StateInterface $state */
+    $state = $this->getMock('Drupal\Core\State\StateInterface');
+    /** @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager */
+    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $plugin = new TestDrupalSqlBase([], 'test', $plugin_definition, $this->getMigration(), $state, $entity_manager);
+    $system_data = $plugin->getSystemData();
+    $this->setExpectedException(RequirementsException::class, 'No database connection configured for source plugin test');
+    $plugin->checkRequirements();
+  }
+
 }
 
 namespace Drupal\Tests\migrate_drupal\Unit\source;
