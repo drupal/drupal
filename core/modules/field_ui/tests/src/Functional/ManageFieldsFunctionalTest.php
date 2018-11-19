@@ -176,7 +176,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   /**
    * Tests adding a new field.
    *
-   * @todo Assert properties can bet set in the form and read back in
+   * @todo Assert properties can be set in the form and read back in
    * $field_storage and $fields.
    */
   public function createField() {
