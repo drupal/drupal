@@ -26,8 +26,8 @@ class PoMemoryWriter implements PoWriterInterface {
    */
   public function writeItem(PoItem $item) {
     if (is_array($item->getSource())) {
-      $item->setSource(implode(LOCALE_PLURAL_DELIMITER, $item->getSource()));
-      $item->setTranslation(implode(LOCALE_PLURAL_DELIMITER, $item->getTranslation()));
+      $item->setSource(implode(PoItem::DELIMITER, $item->getSource()));
+      $item->setTranslation(implode(PoItem::DELIMITER, $item->getTranslation()));
     }
     $context = $item->getContext();
     $this->items[$context != NULL ? $context : ''][$item->getSource()] = $item->getTranslation();

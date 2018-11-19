@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Component\Render\FormattableMarkup;
@@ -51,7 +52,7 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
         $source_strings[$string->source] = $string->context;
       }
 
-      $etx = LOCALE_PLURAL_DELIMITER;
+      $etx = PoItem::DELIMITER;
       // List of all strings that should be in the file.
       $test_strings = [
         'Standard Call t' => '',

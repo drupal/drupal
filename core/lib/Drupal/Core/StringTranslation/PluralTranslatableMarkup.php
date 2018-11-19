@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\StringTranslation;
 
+use Drupal\Component\Gettext\PoItem;
+
 /**
  * A class to hold plural translatable markup.
  */
@@ -13,8 +15,11 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    * This is the ETX (End of text) character and is used as a minimal means to
    * separate singular and plural variants in source and translation text. It
    * was found to be the most compatible delimiter for the supported databases.
+   *
+   * @deprecated in Drupal 8.7.x, will be removed before Drupal 9.0.0.
+   *   Use Drupal\Component\Gettext\PoItem::DELIMITER instead.
    */
-  const DELIMITER = "\03";
+  const DELIMITER = PoItem::DELIMITER;
 
   /**
    * The item count to display.
@@ -62,7 +67,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    */
   public function __construct($count, $singular, $plural, array $args = [], array $options = [], TranslationInterface $string_translation = NULL) {
     $this->count = $count;
-    $translatable_string = implode(static::DELIMITER, [$singular, $plural]);
+    $translatable_string = implode(PoItem::DELIMITER, [$singular, $plural]);
     parent::__construct($translatable_string, $args, $options, $string_translation);
   }
 
@@ -112,7 +117,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
 
     $arguments = $this->getArguments();
     $arguments['@count'] = $this->count;
-    $translated_array = explode(static::DELIMITER, $this->translatedString);
+    $translated_array = explode(PoItem::DELIMITER, $this->translatedString);
 
     if ($this->count == 1) {
       return $this->placeholderFormat($translated_array[0], $arguments);

@@ -8,6 +8,7 @@
  * a cached page are instead located in bootstrap.inc.
  */
 
+use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Html;
@@ -18,7 +19,6 @@ use Drupal\Core\Render\HtmlResponseAttachmentsProcessor;
 use Drupal\Core\Render\Element\Link;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 
@@ -127,10 +127,9 @@ const JS_THEME = 100;
  * The delimiter used to split plural strings.
  *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
- *   Use \Drupal\Core\StringTranslation\PluralTranslatableMarkup::DELIMITER
- *   instead.
+ *   Use Drupal\Component\Gettext\PoItem::DELIMITER instead.
  */
-const LOCALE_PLURAL_DELIMITER = PluralTranslatableMarkup::DELIMITER;
+const LOCALE_PLURAL_DELIMITER = PoItem::DELIMITER;
 
 /**
  * Prepares a 'destination' URL query parameter.

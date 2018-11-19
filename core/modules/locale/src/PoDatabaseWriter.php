@@ -188,8 +188,8 @@ class PoDatabaseWriter implements PoWriterInterface {
    */
   public function writeItem(PoItem $item) {
     if ($item->isPlural()) {
-      $item->setSource(implode(LOCALE_PLURAL_DELIMITER, $item->getSource()));
-      $item->setTranslation(implode(LOCALE_PLURAL_DELIMITER, $item->getTranslation()));
+      $item->setSource(implode(PoItem::DELIMITER, $item->getSource()));
+      $item->setTranslation(implode(PoItem::DELIMITER, $item->getTranslation()));
     }
     $this->importString($item);
   }

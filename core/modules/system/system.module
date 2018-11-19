@@ -5,6 +5,7 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
+use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
@@ -747,7 +748,7 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
     }
   }
   if (!isset($settings['pluralDelimiter'])) {
-    $settings['pluralDelimiter'] = LOCALE_PLURAL_DELIMITER;
+    $settings['pluralDelimiter'] = PoItem::DELIMITER;
   }
   // Add the theme token to ajaxPageState, ensuring the database is available
   // before doing so. Also add the loaded libraries to ajaxPageState.

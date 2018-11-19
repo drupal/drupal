@@ -11,6 +11,15 @@ namespace Drupal\Component\Gettext;
 class PoItem {
 
   /**
+   * The delimiter used to split plural strings.
+   *
+   * This is the ETX (End of text) character and is used as a minimal means to
+   * separate singular and plural variants in source and translation text. It
+   * was found to be the most compatible delimiter for the supported databases.
+   */
+  const DELIMITER = "\03";
+
+  /**
    * The language code this translation is in.
    *
    * @var string
@@ -186,9 +195,9 @@ class PoItem {
       $this->setComment($values['comment']);
     }
     if (isset($this->source) &&
-        strpos($this->source, LOCALE_PLURAL_DELIMITER) !== FALSE) {
-      $this->setSource(explode(LOCALE_PLURAL_DELIMITER, $this->source));
-      $this->setTranslation(explode(LOCALE_PLURAL_DELIMITER, $this->translation));
+        strpos($this->source, self::DELIMITER) !== FALSE) {
+      $this->setSource(explode(self::DELIMITER, $this->source));
+      $this->setTranslation(explode(self::DELIMITER, $this->translation));
       $this->setPlural(count($this->source) > 1);
     }
   }

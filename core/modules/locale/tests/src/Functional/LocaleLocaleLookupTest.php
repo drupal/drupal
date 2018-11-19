@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Component\Gettext\PoItem;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -93,7 +93,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   public function providerTestFixOldPluralStyle() {
     return [
       'non-plural translation' => ['@count[2] non-plural test', '@count[2] non-plural test'],
-      'plural translation' => ['@count[2] plural test' . PluralTranslatableMarkup::DELIMITER, '@count plural test'],
+      'plural translation' => ['@count[2] plural test' . PoItem::DELIMITER, '@count plural test'],
     ];
   }
 

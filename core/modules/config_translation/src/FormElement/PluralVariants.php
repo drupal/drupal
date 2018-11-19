@@ -2,6 +2,7 @@
 
 namespace Drupal\config_translation\FormElement;
 
+use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Language\LanguageInterface;
@@ -17,7 +18,7 @@ class PluralVariants extends FormElementBase {
    */
   protected function getSourceElement(LanguageInterface $source_language, $source_config) {
     $plurals = $this->getNumberOfPlurals($source_language->getId());
-    $values = explode(LOCALE_PLURAL_DELIMITER, $source_config);
+    $values = explode(PoItem::DELIMITER, $source_config);
     $element = [
       '#type' => 'fieldset',
       '#title' => new FormattableMarkup('@label <span class="visually-hidden">(@source_language)</span>', [
@@ -46,7 +47,7 @@ class PluralVariants extends FormElementBase {
    */
   protected function getTranslationElement(LanguageInterface $translation_language, $source_config, $translation_config) {
     $plurals = $this->getNumberOfPlurals($translation_language->getId());
-    $values = explode(LOCALE_PLURAL_DELIMITER, $translation_config);
+    $values = explode(PoItem::DELIMITER, $translation_config);
     $element = [
       '#type' => 'fieldset',
       '#title' => new FormattableMarkup('@label <span class="visually-hidden">(@translation_language)</span>', [
@@ -72,7 +73,7 @@ class PluralVariants extends FormElementBase {
    * {@inheritdoc}
    */
   public function setConfig(Config $base_config, LanguageConfigOverride $config_translation, $config_values, $base_key = NULL) {
-    $config_values = implode(LOCALE_PLURAL_DELIMITER, $config_values);
+    $config_values = implode(PoItem::DELIMITER, $config_values);
     parent::setConfig($base_config, $config_translation, $config_values, $base_key);
   }
 

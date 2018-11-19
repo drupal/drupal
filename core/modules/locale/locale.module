@@ -10,6 +10,7 @@
  * object files are supported.
  */
 
+use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
@@ -1184,7 +1185,7 @@ function _locale_parse_js_file($filepath) {
   // Add string from Drupal.formatPlural().
   foreach ($plural_matches[1] as $key => $string) {
     $matches[] = [
-      'source'  => _locale_strip_quotes($string) . LOCALE_PLURAL_DELIMITER . _locale_strip_quotes($plural_matches[2][$key]),
+      'source'  => _locale_strip_quotes($string) . PoItem::DELIMITER . _locale_strip_quotes($plural_matches[2][$key]),
       'context' => _locale_strip_quotes($plural_matches[3][$key]),
     ];
   }

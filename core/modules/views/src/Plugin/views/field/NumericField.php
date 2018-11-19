@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\views\ResultRow;
@@ -30,7 +31,7 @@ class NumericField extends FieldPluginBase {
     $options['decimal'] = ['default' => '.'];
     $options['separator'] = ['default' => ','];
     $options['format_plural'] = ['default' => FALSE];
-    $options['format_plural_string'] = ['default' => '1' . LOCALE_PLURAL_DELIMITER . '@count'];
+    $options['format_plural_string'] = ['default' => '1' . PoItem::DELIMITER . '@count'];
     $options['prefix'] = ['default' => ''];
     $options['suffix'] = ['default' => ''];
 
@@ -93,7 +94,7 @@ class NumericField extends FieldPluginBase {
       '#default_value' => $this->options['format_plural_string'],
     ];
 
-    $plural_array = explode(LOCALE_PLURAL_DELIMITER, $this->options['format_plural_string']);
+    $plural_array = explode(PoItem::DELIMITER, $this->options['format_plural_string']);
     $plurals = $this->getNumberOfPlurals($this->view->storage->get('langcode'));
     for ($i = 0; $i < $plurals; $i++) {
       $form['format_plural_values'][$i] = [
@@ -139,7 +140,7 @@ class NumericField extends FieldPluginBase {
     // Merge plural format options into one string and drop the individual
     // option values.
     $options = &$form_state->getValue('options');
-    $options['format_plural_string'] = implode(LOCALE_PLURAL_DELIMITER, $options['format_plural_values']);
+    $options['format_plural_string'] = implode(PoItem::DELIMITER, $options['format_plural_values']);
     unset($options['format_plural_values']);
     parent::submitOptionsForm($form, $form_state);
   }
