@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Session;
+namespace Drupal\Tests\system\Functional\Session;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Drupal session handling tests.
  *
  * @group Session
  */
-class SessionTest extends WebTestBase {
+class SessionTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -36,12 +36,15 @@ class SessionTest extends WebTestBase {
     $user = $this->drupalCreateUser();
 
     // Enable sessions.
-    $this->sessionReset($user->id());
+    $this->sessionReset();
 
-    // Make sure the session cookie is set as HttpOnly.
-    $this->drupalLogin($user);
+    // Make sure the session cookie is set as HttpOnly. We can only test this in
+    // the header, with the test setup
+    // \GuzzleHttp\Cookie\SetCookie::getHttpOnly() always returns FALSE.
+    // Start a new session by setting a message.
+    $this->drupalGet('session-test/set-message');
+    $this->assertSessionCookie(TRUE);
     $this->assertTrue(preg_match('/HttpOnly/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie is set as HttpOnly.');
-    $this->drupalLogout();
 
     // Verify that the session is regenerated if a module calls exit
     // in hook_user_login().
@@ -49,15 +52,15 @@ class SessionTest extends WebTestBase {
     $user->save();
     $this->drupalGet('session-test/id');
     $matches = [];
-    preg_match('/\s*session_id:(.*)\n/', $this->getRawContent(), $matches);
+    preg_match('/\s*session_id:(.*)\n/', $this->getSession()->getPage()->getContent(), $matches);
     $this->assertTrue(!empty($matches[1]), 'Found session ID before logging in.');
     $original_session = $matches[1];
 
     // We cannot use $this->drupalLogin($user); because we exit in
     // session_test_user_login() which breaks a normal assertion.
     $edit = [
-      'name' => $user->getUsername(),
-      'pass' => $user->pass_raw,
+      'name' => $user->getAccountName(),
+      'pass' => $user->passRaw,
     ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
     $this->drupalGet('user');
@@ -66,7 +69,7 @@ class SessionTest extends WebTestBase {
 
     $this->drupalGet('session-test/id');
     $matches = [];
-    preg_match('/\s*session_id:(.*)\n/', $this->getRawContent(), $matches);
+    preg_match('/\s*session_id:(.*)\n/', $this->getSession()->getPage()->getContent(), $matches);
     $this->assertTrue(!empty($matches[1]), 'Found session ID after logging in.');
     $this->assertTrue($matches[1] != $original_session, 'Session ID changed after login.');
   }
@@ -91,14 +94,22 @@ class SessionTest extends WebTestBase {
     // properly, val_1 will still be set.
     $value_2 = $this->randomMachineName();
     $this->drupalGet('session-test/no-set/' . $value_2);
+    $session = $this->getSession();
     $this->assertText($value_2, 'The session value was correctly passed to session-test/no-set.', 'Session');
     $this->drupalGet('session-test/get');
     $this->assertText($value_1, 'Session data is not saved for drupal_save_session(FALSE).', 'Session');
 
     // Switch browser cookie to anonymous user, then back to user 1.
-    $this->sessionReset();
-    $this->sessionReset($user->id());
+    $session_cookie_name = $this->getSessionName();
+    $session_cookie_value = $session->getCookie($session_cookie_name);
+    $session->restart();
+    $this->initFrontPage();
+    // Session restart always resets all the cookies by design, so we need to
+    // add the old session cookie again.
+    $session->setCookie($session_cookie_name, $session_cookie_value);
+    $this->drupalGet('session-test/get');
     $this->assertText($value_1, 'Session data persists through browser close.', 'Session');
+    $this->mink->setDefaultSessionName('default');
 
     // Logout the user and make sure the stored value no longer persists.
     $this->drupalLogout();
@@ -242,8 +253,6 @@ class SessionTest extends WebTestBase {
     $this->assertEqual($times4->timestamp, $times3->timestamp, 'Sessions table was not updated.');
 
     // Force updating of users and sessions table once per second.
-    $this->settingsSet('session_write_interval', 0);
-    // Write that value also into the test settings.php file.
     $settings['settings']['session_write_interval'] = (object) [
       'value' => 0,
       'required' => TRUE,
@@ -270,8 +279,7 @@ class SessionTest extends WebTestBase {
     // Send a blank sid in the session cookie, and the session should no longer
     // be valid. Closing the curl handler will stop the previous session ID
     // from persisting.
-    $this->curlClose();
-    $this->additionalCurlOptions[CURLOPT_COOKIE] = rawurlencode($this->getSessionName()) . '=;';
+    $this->mink->resetSessions();
     $this->drupalGet('session-test/id-from-cookie');
     $this->assertRaw("session_id:\n", 'Session ID is blank as sent from cookie header.');
     // Assert that we have an anonymous session now.
@@ -281,19 +289,13 @@ class SessionTest extends WebTestBase {
 
   /**
    * Reset the cookie file so that it refers to the specified user.
-   *
-   * @param $uid
-   *   User id to set as the active session.
    */
-  public function sessionReset($uid = 0) {
+  public function sessionReset() {
     // Close the internal browser.
-    $this->curlClose();
+    $this->mink->resetSessions();
     $this->loggedInUser = FALSE;
 
     // Change cookie file for user.
-    $this->cookieFile = \Drupal::service('stream_wrapper_manager')->getViaScheme('temporary')->getDirectoryPath() . '/cookie.' . $uid . '.txt';
-    $this->additionalCurlOptions[CURLOPT_COOKIEFILE] = $this->cookieFile;
-    $this->additionalCurlOptions[CURLOPT_COOKIESESSION] = TRUE;
     $this->drupalGet('session-test/get');
     $this->assertResponse(200, 'Session test module is correctly enabled.', 'Session');
   }
@@ -303,10 +305,10 @@ class SessionTest extends WebTestBase {
    */
   public function assertSessionCookie($sent) {
     if ($sent) {
-      $this->assertNotNull($this->sessionId, 'Session cookie was sent.');
+      $this->assertNotEmpty($this->getSessionCookies()->count(), 'Session cookie was sent.');
     }
     else {
-      $this->assertNull($this->sessionId, 'Session cookie was not sent.');
+      $this->assertEmpty($this->getSessionCookies()->count(), 'Session cookie was not sent.');
     }
   }
 

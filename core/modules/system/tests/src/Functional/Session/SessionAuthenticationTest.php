@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\system\Tests\Session;
+namespace Drupal\Tests\system\Functional\Session;
 
 use Drupal\Core\Url;
-use Drupal\basic_auth\Tests\BasicAuthTestTrait;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\basic_auth\Traits\BasicAuthTestTrait;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests if sessions are correctly handled when a user authenticates.
  *
  * @group Session
  */
-class SessionAuthenticationTest extends WebTestBase {
+class SessionAuthenticationTest extends BrowserTestBase {
 
   use BasicAuthTestTrait;
 
@@ -52,20 +52,22 @@ class SessionAuthenticationTest extends WebTestBase {
 
     // Test that the route is not accessible as an anonymous user.
     $this->drupalGet($protected_url);
+    $session = $this->getSession();
     $this->assertResponse(401, 'An anonymous user cannot access a route protected with basic authentication.');
 
     // We should be able to access the route with basic authentication.
-    $this->basicAuthGet($protected_url, $this->user->getUsername(), $this->user->pass_raw);
+    $this->basicAuthGet($protected_url, $this->user->getAccountName(), $this->user->passRaw);
     $this->assertResponse(200, 'A route protected with basic authentication can be accessed by an authenticated user.');
 
     // Check that the correct user is logged in.
-    $this->assertEqual($this->user->id(), json_decode($this->getRawContent())->user, 'The correct user is authenticated on a route with basic authentication.');
+    $this->assertEqual($this->user->id(), json_decode($session->getPage()->getContent())->user, 'The correct user is authenticated on a route with basic authentication.');
+    $session->restart();
 
     // If we now try to access a page without basic authentication then we
     // should no longer be logged in.
     $this->drupalGet($unprotected_url);
     $this->assertResponse(200, 'An unprotected route can be accessed without basic authentication.');
-    $this->assertFalse(json_decode($this->getRawContent())->user, 'The user is no longer authenticated after visiting a page without basic authentication.');
+    $this->assertFalse(json_decode($session->getPage()->getContent())->user, 'The user is no longer authenticated after visiting a page without basic authentication.');
 
     // If we access the protected page again without basic authentication we
     // should get 401 Unauthorized.
@@ -113,20 +115,24 @@ class SessionAuthenticationTest extends WebTestBase {
     $no_cookie_url = Url::fromRoute('session_test.get_session_basic_auth');
 
     // A route that is authorized with standard cookie authentication.
-    $cookie_url = '<front>';
+    $cookie_url = 'user/login';
 
     // If we authenticate with a third party authentication system then no
     // session cookie should be set, the third party system is responsible for
     // sustaining the session.
-    $this->basicAuthGet($no_cookie_url, $this->user->getUsername(), $this->user->pass_raw);
+    $this->basicAuthGet($no_cookie_url, $this->user->getAccountName(), $this->user->passRaw);
     $this->assertResponse(200, 'The user is successfully authenticated using basic authentication.');
-    $this->assertFalse($this->drupalGetHeader('set-cookie', TRUE), 'No cookie is set on a route protected with basic authentication.');
+    $this->assertEmpty($this->getSessionCookies());
+    // Mink stores some information in the session that breaks the next check if
+    // not reset.
+    $this->getSession()->restart();
 
     // On the other hand, authenticating using Cookie sets a cookie.
-    $edit = ['name' => $this->user->getUsername(), 'pass' => $this->user->pass_raw];
+    $this->drupalGet($cookie_url);
+    $this->assertEmpty($this->getSessionCookies());
+    $edit = ['name' => $this->user->getAccountName(), 'pass' => $this->user->passRaw];
     $this->drupalPostForm($cookie_url, $edit, t('Log in'));
-    $this->assertResponse(200, 'The user is successfully authenticated using cookie authentication.');
-    $this->assertTrue($this->drupalGetHeader('set-cookie', TRUE), 'A cookie is set on a route protected with cookie authentication.');
+    $this->assertNotEmpty($this->getSessionCookies());
   }
 
 }
