@@ -70,9 +70,9 @@ abstract class AggregatorTestBase extends WebTestBase {
     $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'aggregator/sources/']);
     $this->assert(isset($view_link), 'The message area contains a link to a feed');
 
-    $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE title = :title AND url = :url", [':title' => $edit['title[0][value]'], ':url' => $edit['url[0][value]']])->fetchField();
-    $this->assertTrue(!empty($fid), 'The feed found in database.');
-    return Feed::load($fid);
+    $fids = \Drupal::entityQuery('aggregator_feed')->condition('title', $edit['title[0][value]'])->condition('url', $edit['url[0][value]'])->execute();
+    $this->assertNotEmpty($fids, 'The feed found in database.');
+    return Feed::load(array_values($fids)[0]);
   }
 
   /**
@@ -179,10 +179,10 @@ abstract class AggregatorTestBase extends WebTestBase {
     $this->clickLink('Update items');
 
     // Ensure we have the right number of items.
-    $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', [':fid' => $feed->id()]);
+    $iids = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->execute();
     $feed->items = [];
-    foreach ($result as $item) {
-      $feed->items[] = $item->iid;
+    foreach ($iids as $iid) {
+      $feed->items[] = $iid;
     }
 
     if ($expected_count !== NULL) {
@@ -211,11 +211,12 @@ abstract class AggregatorTestBase extends WebTestBase {
    *   Expected number of feed items.
    */
   public function updateAndDelete(FeedInterface $feed, $expected_count) {
+    $count_query = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->count();
     $this->updateFeedItems($feed, $expected_count);
-    $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', [':fid' => $feed->id()])->fetchField();
+    $count = $count_query->execute();
     $this->assertTrue($count);
     $this->deleteFeedItems($feed);
-    $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', [':fid' => $feed->id()])->fetchField();
+    $count = $count_query->execute();
     $this->assertTrue($count == 0);
   }
 
@@ -231,7 +232,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    *   TRUE if feed is unique.
    */
   public function uniqueFeed($feed_name, $feed_url) {
-    $result = db_query("SELECT COUNT(*) FROM {aggregator_feed} WHERE title = :title AND url = :url", [':title' => $feed_name, ':url' => $feed_url])->fetchField();
+    $result = \Drupal::entityQuery('aggregator_feed')->condition('title', $feed_name)->condition('url', $feed_url)->count()->execute();
     return (1 == $result);
   }
 
