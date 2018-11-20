@@ -199,7 +199,31 @@ class ExposedFormTest extends ViewTestBase {
     $view = Views::getView('test_exposed_block');
     $view->setDisplay('page_1');
     $block = $this->drupalPlaceBlock('views_exposed_filter_block:test_exposed_block-page_1');
+
+    // Set label to display on the exposed filter form block.
+    $block->getPlugin()->setConfigurationValue('label_display', TRUE);
+    $block->save();
+
+    // Test that the block label is found.
     $this->drupalGet('test_exposed_block');
+    $this->assertText($view->getTitle(), 'Block title found.');
+
+    // Set a custom label on the exposed filter form block.
+    $block->getPlugin()->setConfigurationValue('views_label', '<strong>Custom</strong> title<script>alert("hacked!");</script>');
+    $block->save();
+
+    // Test that the custom block label is found.
+    $this->drupalGet('test_exposed_block');
+    $this->assertRaw('<strong>Custom</strong> titlealert("hacked!");', 'Custom block title found.');
+
+    // Set label to hidden on the exposed filter form block.
+    $block->getPlugin()->setConfigurationValue('label_display', FALSE);
+    $block->save();
+
+    // Test that the label is removed.
+    $this->drupalGet('test_exposed_block');
+    $this->assertNoRaw('<strong>Custom</strong> titlealert("hacked!");', 'Custom title was not displayed.');
+    $this->assertNoText($view->getTitle(), 'Block title was not displayed.');
 
     // Test there is an exposed form in a block.
     $xpath = $this->buildXPathQuery('//div[@id=:id]/form/@id', [':id' => Html::getUniqueId('block-' . $block->id())]);

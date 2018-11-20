@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\Block;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Provides a 'Views Exposed Filter' block.
@@ -46,6 +47,14 @@ class ViewsExposedFilterBlock extends ViewsBlockBase {
     // Before returning the block output, convert it to a renderable array with
     // contextual links.
     $this->addContextualLinks($output, 'exposed_filter');
+
+    // Set the blocks title.
+    if (!empty($this->configuration['label_display']) && ($this->view->getTitle() || !empty($this->configuration['views_label']))) {
+      $output['#title'] = [
+        '#markup' => empty($this->configuration['views_label']) ? $this->view->getTitle() : $this->configuration['views_label'],
+        '#allowed_tags' => Xss::getHtmlTagList(),
+      ];
+    }
 
     return $output;
   }
