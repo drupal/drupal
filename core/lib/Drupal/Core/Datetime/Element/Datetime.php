@@ -61,7 +61,7 @@ class Datetime extends DateElementBase {
       '#date_time_callbacks' => [],
       '#date_year_range' => '1900:2050',
       '#date_increment' => 1,
-      '#date_timezone' => '',
+      '#date_timezone' => drupal_get_user_timezone(),
     ];
   }
 
@@ -74,7 +74,6 @@ class Datetime extends DateElementBase {
       $time_input = $element['#date_time_element'] != 'none' && !empty($input['time']) ? $input['time'] : '';
       $date_format = $element['#date_date_element'] != 'none' ? static::getHtml5DateFormat($element) : '';
       $time_format = $element['#date_time_element'] != 'none' ? static::getHtml5TimeFormat($element) : '';
-      $timezone = !empty($element['#date_timezone']) ? $element['#date_timezone'] : NULL;
 
       // Seconds will be omitted in a post in case there's no entry.
       if (!empty($time_input) && strlen($time_input) == 5) {
@@ -84,7 +83,7 @@ class Datetime extends DateElementBase {
       try {
         $date_time_format = trim($date_format . ' ' . $time_format);
         $date_time_input = trim($date_input . ' ' . $time_input);
-        $date = DrupalDateTime::createFromFormat($date_time_format, $date_time_input, $timezone);
+        $date = DrupalDateTime::createFromFormat($date_time_format, $date_time_input, $element['#date_timezone']);
       }
       catch (\Exception $e) {
         $date = NULL;
@@ -98,6 +97,7 @@ class Datetime extends DateElementBase {
     else {
       $date = isset($element['#default_value']) ? $element['#default_value'] : NULL;
       if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
+        $date->setTimezone(new \DateTimeZone($element['#date_timezone']));
         $input = [
           'date'   => $date->format($element['#date_date_format']),
           'time'   => $date->format($element['#date_time_format']),
@@ -188,12 +188,8 @@ class Datetime extends DateElementBase {
    *     "seconds"-component will not be shown in the input. Used for HTML5 step
    *     values and jQueryUI datepicker settings. Defaults to 1 to show every
    *     second.
-   *   - #date_timezone: The local timezone to use when creating dates. Generally
-   *     this should be left empty and it will be set correctly for the user using
-   *     the form. Useful if the default value is empty to designate a desired
-   *     timezone for dates created in form processing. If a default date is
-   *     provided, this value will be ignored, the timezone in the default date
-   *     takes precedence. Defaults to the value returned by
+   *   - #date_timezone: The local timezone to use when displaying or
+   *     interpreting dates. Defaults to the value returned by
    *     drupal_get_user_timezone().
    *
    * Example usage:
@@ -221,14 +217,6 @@ class Datetime extends DateElementBase {
     $format_settings = [];
     // The value callback has populated the #value array.
     $date = !empty($element['#value']['object']) ? $element['#value']['object'] : NULL;
-
-    // Set a fallback timezone.
-    if ($date instanceof DrupalDateTime) {
-      $element['#date_timezone'] = $date->getTimezone()->getName();
-    }
-    elseif (empty($element['#timezone'])) {
-      $element['#date_timezone'] = drupal_get_user_timezone();
-    }
 
     $element['#tree'] = TRUE;
 

@@ -33,7 +33,7 @@ class Datelist extends DateElementBase {
       '#date_year_range' => '1900:2050',
       '#date_increment' => 1,
       '#date_date_callbacks' => [],
-      '#date_timezone' => '',
+      '#date_timezone' => drupal_get_user_timezone(),
     ];
   }
 
@@ -60,9 +60,8 @@ class Datelist extends DateElementBase {
           }
           unset($input['ampm']);
         }
-        $timezone = !empty($element['#date_timezone']) ? $element['#date_timezone'] : NULL;
         try {
-          $date = DrupalDateTime::createFromArray($input, $timezone);
+          $date = DrupalDateTime::createFromArray($input, $element['#date_timezone']);
         }
         catch (\Exception $e) {
           $form_state->setError($element, t('Selected combination of day and month is not valid.'));
@@ -77,6 +76,7 @@ class Datelist extends DateElementBase {
       if (!empty($element['#default_value'])) {
         $date = $element['#default_value'];
         if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
+          $date->setTimezone(new \DateTimeZone($element['#date_timezone']));
           static::incrementRound($date, $increment);
           foreach ($parts as $part) {
             switch ($part) {
@@ -147,12 +147,8 @@ class Datelist extends DateElementBase {
    *   - #date_increment: The increment to use for minutes and seconds, i.e.
    *     '15' would show only :00, :15, :30 and :45. Defaults to 1 to show every
    *     minute.
-   *   - #date_timezone: The local timezone to use when creating dates. Generally
-   *     this should be left empty and it will be set correctly for the user using
-   *     the form. Useful if the default value is empty to designate a desired
-   *     timezone for dates created in form processing. If a default date is
-   *     provided, this value will be ignored, the timezone in the default date
-   *     takes precedence. Defaults to the value returned by
+   *   - #date_timezone: The local timezone to use when displaying or
+   *     interpreting dates. Defaults to the value returned by
    *     drupal_get_user_timezone().
    *
    * Example usage:
@@ -182,17 +178,6 @@ class Datelist extends DateElementBase {
 
     // The value callback has populated the #value array.
     $date = !empty($element['#value']['object']) ? $element['#value']['object'] : NULL;
-
-    // Set a fallback timezone.
-    if ($date instanceof DrupalDateTime) {
-      $element['#date_timezone'] = $date->getTimezone()->getName();
-    }
-    elseif (!empty($element['#timezone'])) {
-      $element['#date_timezone'] = $element['#date_timezone'];
-    }
-    else {
-      $element['#date_timezone'] = drupal_get_user_timezone();
-    }
 
     $element['#tree'] = TRUE;
 
