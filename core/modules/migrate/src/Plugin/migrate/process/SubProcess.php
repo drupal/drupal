@@ -17,6 +17,13 @@ use Drupal\migrate\Row;
  *   - process: the plugin(s) that will process each element of the source.
  *   - key: runs the process pipeline for the key to determine a new dynamic
  *     name.
+ *   - include_source: (optional) If TRUE, all source plugin configuration and
+ *     values will be copied into the sub-processed row in a new property named
+ *     for the source_key configuration value (see below). Defaults to FALSE.
+ *   - source_key: (optional) If include_source is TRUE, this
+ *     is the name of the property of the sub-processed row which will contain
+ *     the source configuration and values. Ignored if include_source is
+ *     FALSE. Defaults to 'source' if no value is provided.
  *
  * Example 1:
  *
@@ -164,13 +171,37 @@ use Drupal\migrate\Row;
 class SubProcess extends ProcessPluginBase {
 
   /**
+   * SubProcess constructor.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    $configuration += [
+      'include_source' => FALSE,
+      'source_key' => 'source',
+    ];
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    $return = [];
+    $return = $source = [];
+
+    if ($this->configuration['include_source']) {
+      $key = $this->configuration['source_key'];
+      $source[$key] = $row->getSource();
+    }
+
     if (is_array($value) || $value instanceof \Traversable) {
       foreach ($value as $key => $new_value) {
-        $new_row = new Row($new_value, []);
+        $new_row = new Row($new_value + $source);
         $migrate_executable->processRow($new_row, $this->configuration['process']);
         $destination = $new_row->getDestination();
         if (array_key_exists('key', $this->configuration)) {
