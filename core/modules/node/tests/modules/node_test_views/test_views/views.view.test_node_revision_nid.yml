@@ -44,13 +44,6 @@ display:
           plugin_id: field
           entity_type: node
           entity_field: nid
-        langcode:
-          id: langcode
-          table: node_field_revision
-          field: langcode
-          plugin_id: field
-          entity_type: node
-          entity_field: langcode
       arguments:
         nid:
           id: nid

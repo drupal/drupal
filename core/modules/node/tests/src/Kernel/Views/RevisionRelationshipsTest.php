@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\node\Kernel\Views;
 
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -21,12 +20,7 @@ class RevisionRelationshipsTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
-    'node',
-    'node_test_views',
-    'language',
-    'content_translation',
-  ];
+  public static $modules = ['node' , 'node_test_views'];
 
   /**
    * {@inheritdoc}
@@ -38,8 +32,6 @@ class RevisionRelationshipsTest extends ViewsKernelTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-
-    ConfigurableLanguage::createFromLangcode('fr')->save();
 
     ViewTestData::createTestViews(get_class($this), ['node_test_views']);
   }
@@ -59,22 +51,16 @@ class RevisionRelationshipsTest extends ViewsKernelTestBase {
     $type->save();
     $node = Node::create(['type' => 'page', 'title' => 'test', 'uid' => 1]);
     $node->save();
-
-    // Add a translation.
-    $translation = $node->addTranslation('fr', $node->toArray());
-    $translation->save();
     // Create revision of the node.
     $node->setNewRevision(TRUE);
     $node->save();
-
     $column_map = [
       'vid' => 'vid',
       'node_field_data_node_field_revision_nid' => 'node_node_revision_nid',
       'nid_1' => 'nid_1',
-      'node_field_revision_langcode' => 'node_field_revision_langcode',
     ];
 
-    // Here should be two rows for each translation.
+    // Here should be two rows.
     $view_nid = Views::getView('test_node_revision_nid');
     $this->executeView($view_nid, [$node->id()]);
     $resultset_nid = [
@@ -82,32 +68,17 @@ class RevisionRelationshipsTest extends ViewsKernelTestBase {
         'vid' => '1',
         'node_node_revision_nid' => '1',
         'nid_1' => '1',
-        'node_field_revision_langcode' => 'fr',
-      ],
-      [
-        'vid' => '1',
-        'node_node_revision_nid' => '1',
-        'nid_1' => '1',
-        'node_field_revision_langcode' => 'en',
       ],
       [
         'vid' => '2',
         'node_revision_nid' => '1',
         'node_node_revision_nid' => '1',
         'nid_1' => '1',
-        'node_field_revision_langcode' => 'fr',
-      ],
-      [
-        'vid' => '2',
-        'node_revision_nid' => '1',
-        'node_node_revision_nid' => '1',
-        'nid_1' => '1',
-        'node_field_revision_langcode' => 'en',
       ],
     ];
     $this->assertIdenticalResultset($view_nid, $resultset_nid, $column_map);
 
-    // There should be one row with active revision 2 for each translation.
+    // There should be only one row with active revision 2.
     $view_vid = Views::getView('test_node_revision_vid');
     $this->executeView($view_vid, [$node->id()]);
     $resultset_vid = [
@@ -115,13 +86,6 @@ class RevisionRelationshipsTest extends ViewsKernelTestBase {
         'vid' => '2',
         'node_node_revision_nid' => '1',
         'nid_1' => '1',
-        'node_field_revision_langcode' => 'en',
-      ],
-      [
-        'vid' => '2',
-        'node_node_revision_nid' => '1',
-        'nid_1' => '1',
-        'node_field_revision_langcode' => 'fr',
       ],
     ];
     $this->assertIdenticalResultset($view_vid, $resultset_vid, $column_map);

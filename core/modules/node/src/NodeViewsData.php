@@ -216,10 +216,6 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_revision']['nid']['relationship']['base field'] = 'nid';
     $data['node_field_revision']['nid']['relationship']['title'] = $this->t('Content');
     $data['node_field_revision']['nid']['relationship']['label'] = $this->t('Get the actual content from a content revision.');
-    $data['node_field_revision']['nid']['relationship']['extra'][] = [
-      'field' => 'langcode',
-      'left_field' => 'langcode',
-    ];
 
     $data['node_field_revision']['vid'] = [
       'argument' => [
@@ -232,12 +228,6 @@ class NodeViewsData extends EntityViewsData {
         'base field' => 'vid',
         'title' => $this->t('Content'),
         'label' => $this->t('Get the actual content from a content revision.'),
-        'extra' => [
-          [
-            'field' => 'langcode',
-            'left_field' => 'langcode',
-          ],
-        ],
       ],
     ] + $data['node_field_revision']['vid'];
 

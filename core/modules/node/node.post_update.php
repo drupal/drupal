@@ -27,10 +27,3 @@ function node_post_update_configure_status_field_widget() {
     ])->save();
   }
 }
-
-/**
- * Clear caches due to updated views data.
- */
-function node_post_update_node_revision_views_data() {
-  // Empty post-update hook.
-}
