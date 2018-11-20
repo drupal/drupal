@@ -49,8 +49,11 @@
   {{ exposed }}
   {{ attachment_before }}
 
-  {{ rows }}
-  {{ empty }}
+  {% if rows -%}
+    {{ rows }}
+  {% elseif empty -%}
+    {{ empty }}
+  {% endif %}
   {{ pager }}
 
   {{ attachment_after }}
