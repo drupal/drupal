@@ -272,6 +272,17 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       }
     }
 
+    // Gather entities from a 'preload' method. This method can invoke a hook to
+    // be used by modules that need, for example, to swap the default revision
+    // of an entity with a different one. Even though the base entity storage
+    // class does not actually invoke any preload hooks, we need to call the
+    // method here so we can add the pre-loaded entity objects to the static
+    // cache below.
+    $preloaded_entities = $this->preLoad($ids);
+    if (!empty($preloaded_entities)) {
+      $entities += $preloaded_entities;
+    }
+
     // Load any remaining entities from the database. This is the case if $ids
     // is set to NULL (so we load all entities) or if there are any ids left to
     // load.
@@ -288,7 +299,11 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     }
 
     if ($this->entityType->isStaticallyCacheable()) {
-      // Add entities to the cache.
+      // Add pre-loaded entities to the cache.
+      if (!empty($preloaded_entities)) {
+        $this->setStaticCache($preloaded_entities);
+      }
+      // Add queried entities to the cache.
       if (!empty($queried_entities)) {
         $this->setStaticCache($queried_entities);
       }
@@ -322,6 +337,20 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *   Associative array of entities, keyed on the entity ID.
    */
   abstract protected function doLoadMultiple(array $ids = NULL);
+
+  /**
+   * Gathers entities from a 'preload' step.
+   *
+   * @param array|null &$ids
+   *   If not empty, return entities that match these IDs. IDs that were found
+   *   will be removed from the list.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface[]
+   *   Associative array of entities, keyed by the entity ID.
+   */
+  protected function preLoad(array &$ids = NULL) {
+    return [];
+  }
 
   /**
    * Attaches data to entities upon loading.

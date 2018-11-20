@@ -176,6 +176,13 @@ function entity_crud_hook_test_user_insert() {
 }
 
 /**
+ * Implements hook_entity_preload().
+ */
+function entity_crud_hook_test_entity_preload(array $entities, $type) {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+}
+
+/**
  * Implements hook_entity_load().
  */
 function entity_crud_hook_test_entity_load(array $entities, $type) {

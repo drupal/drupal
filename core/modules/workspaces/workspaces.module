@@ -66,12 +66,12 @@ function workspaces_field_info_alter(&$definitions) {
 }
 
 /**
- * Implements hook_entity_load().
+ * Implements hook_entity_preload().
  */
-function workspaces_entity_load(array &$entities, $entity_type_id) {
+function workspaces_entity_preload(array $ids, $entity_type_id) {
   return \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityLoad($entities, $entity_type_id);
+    ->entityPreload($ids, $entity_type_id);
 }
 
 /**

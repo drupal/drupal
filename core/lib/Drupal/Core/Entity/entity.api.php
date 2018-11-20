@@ -959,6 +959,32 @@ function hook_ENTITY_TYPE_revision_create(Drupal\Core\Entity\EntityInterface $ne
 }
 
 /**
+ * Act on an array of entity IDs before they are loaded.
+ *
+ * This hook can be used by modules that need, for example, to return a
+ * different revision than the default one.
+ *
+ * @param array $ids
+ *   An array of entity IDs that have to be loaded.
+ * @param string $entity_type_id
+ *   The type of entities being loaded (i.e. node, user, comment).
+ *
+ * @return \Drupal\Core\Entity\EntityInterface[]
+ *   An array of pre-loaded entity objects.
+ *
+ * @ingroup entity_crud
+ */
+function hook_entity_preload(array $ids, $entity_type_id) {
+  $entities = [];
+
+  foreach ($ids as $id) {
+    $entities[] = mymodule_swap_revision($id);
+  }
+
+  return $entities;
+}
+
+/**
  * Act on entities when loaded.
  *
  * This is a generic load hook called for all entity types loaded via the

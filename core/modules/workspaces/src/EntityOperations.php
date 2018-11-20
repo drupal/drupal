@@ -57,23 +57,24 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Acts on entities when loaded.
+   * Acts on entity IDs before they are loaded.
    *
-   * @see hook_entity_load()
+   * @see hook_entity_preload()
    */
-  public function entityLoad(array &$entities, $entity_type_id) {
+  public function entityPreload(array $ids, $entity_type_id) {
+    $entities = [];
+
     // Only run if the entity type can belong to a workspace and we are in a
     // non-default workspace.
     if (!$this->workspaceManager->shouldAlterOperations($this->entityTypeManager->getDefinition($entity_type_id))) {
-      return;
+      return $entities;
     }
 
     // Get a list of revision IDs for entities that have a revision set for the
     // current active workspace. If an entity has multiple revisions set for a
     // workspace, only the one with the highest ID is returned.
-    $entity_ids = array_keys($entities);
     $max_revision_id = 'max_target_entity_revision_id';
-    $results = $this->entityTypeManager
+    $query = $this->entityTypeManager
       ->getStorage('workspace_association')
       ->getAggregateQuery()
       ->accessCheck(FALSE)
@@ -81,21 +82,13 @@ class EntityOperations implements ContainerInjectionInterface {
       ->aggregate('target_entity_revision_id', 'MAX', NULL, $max_revision_id)
       ->groupBy('target_entity_id')
       ->condition('target_entity_type_id', $entity_type_id)
-      ->condition('target_entity_id', $entity_ids, 'IN')
-      ->condition('workspace', $this->workspaceManager->getActiveWorkspace()->id())
-      ->execute();
+      ->condition('workspace', $this->workspaceManager->getActiveWorkspace()->id());
 
-    // Since hook_entity_load() is called on both regular entity load as well as
-    // entity revision load, we need to prevent infinite recursion by checking
-    // whether the default revisions were already swapped with the workspace
-    // revision.
-    // @todo This recursion protection should be removed when
-    //   https://www.drupal.org/project/drupal/issues/2928888 is resolved.
-    if ($results) {
-      $results = array_filter($results, function ($result) use ($entities, $max_revision_id) {
-        return $entities[$result['target_entity_id']]->getRevisionId() != $result[$max_revision_id];
-      });
+    if ($ids) {
+      $query->condition('target_entity_id', $ids, 'IN');
     }
+
+    $results = $query->execute();
 
     if ($results) {
       /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
@@ -108,6 +101,8 @@ class EntityOperations implements ContainerInjectionInterface {
         $entities[$revision->id()] = $revision;
       }
     }
+
+    return $entities;
   }
 
   /**

@@ -475,6 +475,39 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * {@inheritdoc}
    */
+  protected function preLoad(array &$ids = NULL) {
+    $entities = [];
+
+    // Call hook_entity_preload().
+    $preload_ids = $ids ?: [];
+    $preload_entities = $this->moduleHandler()->invokeAll('entity_preload', [$preload_ids, $this->entityTypeId]);
+    foreach ((array) $preload_entities as $entity) {
+      $entities[$entity->id()] = $entity;
+    }
+
+    if ($entities) {
+      // If any entities were pre-loaded, remove them from the IDs still to
+      // load.
+      if ($ids !== NULL) {
+        $ids = array_keys(array_diff_key(array_flip($ids), $entities));
+      }
+      // If we had to load all the entities ($ids was set to NULL), get an array
+      // of IDs that still need to be loaded.
+      else {
+        $result = $this->getQuery()
+          ->accessCheck(FALSE)
+          ->condition($this->entityType->getKey('id'), array_keys($entities), 'NOT IN')
+          ->execute();
+        $ids = array_values($result);
+      }
+    }
+
+    return $entities;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function loadRevision($revision_id) {
     $revisions = $this->loadMultipleRevisions([$revision_id]);
 
@@ -975,6 +1008,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * {@inheritdoc}
    */
   public function loadUnchanged($id) {
+    $entities = [];
     $ids = [$id];
 
     // The cache invalidation in the parent has the side effect that loading the
@@ -983,13 +1017,21 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     // by explicitly removing the entity from the static cache.
     parent::resetCache($ids);
 
+    // Gather entities from a 'preload' hook. This hook can be used by modules
+    // that need, for example, to return a different revision than the default
+    // one for revisionable entity types.
+    $preloaded_entities = $this->preLoad($ids);
+    if (!empty($preloaded_entities)) {
+      $entities += $preloaded_entities;
+    }
+
     // The default implementation in the parent class unsets the current cache
     // and then reloads the entity. That is slow, especially if this is done
     // repeatedly in the same request, e.g. when validating and then saving
     // an entity. Optimize this for content entities by trying to load them
     // directly from the persistent cache again, as in contrast to the static
     // cache the persistent one will never be changed until the entity is saved.
-    $entities = $this->getFromPersistentCache($ids);
+    $entities += $this->getFromPersistentCache($ids);
 
     if (!$entities) {
       $entities[$id] = $this->load($id);
