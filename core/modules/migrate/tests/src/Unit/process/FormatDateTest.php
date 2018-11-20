@@ -57,6 +57,20 @@ class FormatDateTest extends MigrateProcessTestCase {
   }
 
   /**
+   * Tests that an unexpected date value will throw an exception.
+   */
+  public function testMigrateExceptionUnexpectedValue() {
+    $configuration = [
+      'from_format' => 'm/d/Y',
+      'to_format' => 'Y-m-d',
+    ];
+
+    $this->setExpectedException(MigrateException::class, 'Format date plugin could not transform "01/05/55" using the format "m/d/Y" for destination "field_date". Error: The created date does not match the input value.');
+    $this->plugin = new FormatDate($configuration, 'test_format_date', []);
+    $this->plugin->transform('01/05/55', $this->migrateExecutable, $this->row, 'field_date');
+  }
+
+  /**
    * Tests that "timezone" configuration key triggers deprecation error.
    *
    * @covers ::transform
