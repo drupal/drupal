@@ -70,7 +70,7 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase im
    * {@inheritdoc}
    */
   public function setContextValue($name, $value) {
-    $this->context[$name] = Context::createFromContext($this->getContext($name), $value);
+    $this->setContext($name, Context::createFromContext($this->getContext($name), $value));
     return $this;
   }
 
