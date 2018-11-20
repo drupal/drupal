@@ -24,6 +24,17 @@ function test_theme_settings_form_system_theme_settings_alter(&$form, FormStateI
     ],
   ];
 
+  $form['multi_file'] = [
+    '#type' => 'managed_file',
+    '#title' => t('Multiple file field with all file extensions'),
+    '#multiple' => TRUE,
+    '#default_value' => theme_get_setting('multi_file'),
+    '#upload_location' => 'public://test',
+    '#upload_validators'  => [
+      'file_validate_extensions' => [],
+    ],
+  ];
+
   $form['#submit'][] = 'test_theme_settings_form_system_theme_settings_submit';
 }
 
