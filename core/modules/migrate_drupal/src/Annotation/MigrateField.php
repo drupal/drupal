@@ -71,4 +71,15 @@ class MigrateField extends Plugin {
    */
   public $destination_module;
 
+  /**
+   * The weight of this plugin relative to other plugins.
+   *
+   * The weight of this plugin relative to other plugins servicing the same
+   * field type and core version.  The lowest weighted applicable plugin will be
+   * used for each field.
+   *
+   * @var int
+   */
+  public $weight = 0;
+
 }

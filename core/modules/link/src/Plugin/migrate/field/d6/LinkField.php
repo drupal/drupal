@@ -10,7 +10,7 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *   id = "link",
  *   core = {6},
  *   type_map = {
- *     "link_field" = "link"
+ *     "link" = "link",
  *   },
  *   source_module = "link",
  *   destination_module = "link"

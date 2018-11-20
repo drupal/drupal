@@ -33,7 +33,8 @@ class User extends FieldMigration {
           }
           if ($this->fieldPluginManager->hasDefinition($field_type)) {
             if (!isset($this->fieldPluginCache[$field_type])) {
-              $this->fieldPluginCache[$field_type] = $this->fieldPluginManager->createInstance($field_type, [], $this);
+              $plugin_id = $this->fieldPluginManager->getPluginIdFromFieldType($field_type, [], $this);
+              $this->fieldPluginCache[$field_type] = $this->fieldPluginManager->createInstance($plugin_id, [], $this);
             }
             $info = $row->getSource();
             $this->fieldPluginCache[$field_type]
