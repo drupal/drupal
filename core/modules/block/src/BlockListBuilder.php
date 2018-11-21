@@ -354,6 +354,23 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
 
     if (isset($operations['delete'])) {
       $operations['delete']['title'] = $this->t('Remove');
+      // Block operation links should have the `block-placement` query string
+      // parameter removed to ensure that JavaScript does not receive a block
+      // name that has been recently removed.
+      foreach ($operations as $operation) {
+        /** @var \Drupal\Core\Url $url */
+        $url = $operation['url'];
+        $query = $url->getOption('query');
+        $destination = $query['destination'];
+
+        $destinationUrl = Url::fromUserInput($destination);
+        $destinationQuery = $destinationUrl->getOption('query');
+        unset($destinationQuery['block-placement']);
+
+        $destinationUrl->setOption('query', $destinationQuery);
+        $query['destination'] = $destinationUrl->toString();
+        $url->setOption('query', $query);
+      }
     }
     return $operations;
   }

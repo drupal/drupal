@@ -41,7 +41,7 @@
 
   Drupal.behaviors.blockHighlightPlacement = {
     attach: function attach(context, settings) {
-      if (settings.blockPlacement) {
+      if (settings.blockPlacement && $('.js-block-placed').length) {
         $(context).find('[data-drupal-selector="edit-blocks"]').once('block-highlight').each(function () {
           var $container = $(this);
 
