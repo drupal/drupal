@@ -93,7 +93,8 @@
    */
   Drupal.behaviors.blockHighlightPlacement = {
     attach(context, settings) {
-      if (settings.blockPlacement) {
+      // Ensure that the block we are attempting to scroll to actually exists.
+      if (settings.blockPlacement && $('.js-block-placed').length) {
         $(context)
           .find('[data-drupal-selector="edit-blocks"]')
           .once('block-highlight')
