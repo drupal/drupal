@@ -107,6 +107,32 @@ class MailTest extends BrowserTestBase {
     $this->assertEquals('Drépal this is a very long test sentence to te <simpletest@example.com>', Unicode::mimeHeaderDecode($sent_message['headers']['From']), 'From header is correctly encoded.');
     $this->assertFalse(isset($sent_message['headers']['Reply-to']), 'Message reply-to is not set if not specified.');
     $this->assertFalse(isset($sent_message['headers']['Errors-To']), 'Errors-to header must not be set, it is deprecated.');
+
+    // Test RFC-2822 rules are respected for 'display-name' component of
+    // 'From:' header. Specials characters are not allowed, so randomly add one
+    // of them to the site name and check the string is wrapped in quotes. Also
+    // hardcode some double-quotes and backslash to validate these are escaped
+    // properly too.
+    $specials = '()<>[]:;@\,."';
+    $site_name = 'Drupal' . $specials[rand(0, strlen($specials) - 1)] . ' "si\te"';
+    $this->config('system.site')->set('name', $site_name)->save();
+    // Send an email and check that the From-header contains the site name
+    // within double-quotes. Also make sure double-quotes and "\" are escaped.
+    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'from_test', 'from_test@example.com', $language);
+    $captured_emails = \Drupal::state()->get('system.test_mail_collector');
+    $sent_message = end($captured_emails);
+    $escaped_site_name = str_replace(['\\', '"'], ['\\\\', '\\"'], $site_name);
+    $this->assertEquals('"' . $escaped_site_name . '" <simpletest@example.com>', $sent_message['headers']['From'], 'From header is correctly quoted.');
+
+    // Make sure display-name is not quoted nor escaped if part on an encoding.
+    $site_name = 'Drépal, "si\te"';
+    $this->config('system.site')->set('name', $site_name)->save();
+    // Send an email and check that the From-header contains the site name.
+    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'from_test', 'from_test@example.com', $language);
+    $captured_emails = \Drupal::state()->get('system.test_mail_collector');
+    $sent_message = end($captured_emails);
+    $this->assertEquals('=?UTF-8?B?RHLDqXBhbCwgInNpXHRlIg==?= <simpletest@example.com>', $sent_message['headers']['From'], 'From header is correctly encoded.');
+    $this->assertEquals($site_name . ' <simpletest@example.com>', Unicode::mimeHeaderDecode($sent_message['headers']['From']), 'From header is correctly encoded.');
   }
 
   /**
