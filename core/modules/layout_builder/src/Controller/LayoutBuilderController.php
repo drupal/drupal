@@ -305,7 +305,7 @@ class LayoutBuilderController implements ContainerInjectionInterface {
       ],
       'remove' => [
         '#type' => 'link',
-        '#title' => $this->t('Remove section'),
+        '#title' => $this->t('Remove section <span class="visually-hidden">@section</span>', ['@section' => $delta + 1]),
         '#url' => Url::fromRoute('layout_builder.remove_section', [
           'section_storage_type' => $storage_type,
           'section_storage' => $storage_id,
