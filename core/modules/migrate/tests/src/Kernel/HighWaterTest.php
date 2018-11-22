@@ -137,6 +137,72 @@ class HighWaterTest extends MigrateTestBase {
   }
 
   /**
+   * Tests that the high water value can be 0.
+   */
+  public function testZeroHighwater() {
+    // Assert all of the nodes have been imported.
+    $this->assertNodeExists('Item 1');
+    $this->assertNodeExists('Item 2');
+    $this->assertNodeExists('Item 3');
+    $migration = $this->container->get('plugin.manager.migration')->CreateInstance('high_water_test', []);
+    $source = $migration->getSourcePlugin();
+    $source->rewind();
+    $count = 0;
+    while ($source->valid()) {
+      $count++;
+      $source->next();
+    }
+
+    // Expect no rows as everything is below the high water mark.
+    $this->assertSame(0, $count);
+
+    // Test resetting the high water mark to 0.
+    $this->container->get('keyvalue')->get('migrate:high_water')->set('high_water_test', 0);
+    $migration = $this->container->get('plugin.manager.migration')->CreateInstance('high_water_test', []);
+    $source = $migration->getSourcePlugin();
+    $source->rewind();
+    $count = 0;
+    while ($source->valid()) {
+      $count++;
+      $source->next();
+    }
+    $this->assertSame(3, $count);
+  }
+
+  /**
+   * Tests that deleting the high water value causes all rows to be reimported.
+   */
+  public function testNullHighwater() {
+    // Assert all of the nodes have been imported.
+    $this->assertNodeExists('Item 1');
+    $this->assertNodeExists('Item 2');
+    $this->assertNodeExists('Item 3');
+    $migration = $this->container->get('plugin.manager.migration')->CreateInstance('high_water_test', []);
+    $source = $migration->getSourcePlugin();
+    $source->rewind();
+    $count = 0;
+    while ($source->valid()) {
+      $count++;
+      $source->next();
+    }
+
+    // Expect no rows as everything is below the high water mark.
+    $this->assertSame(0, $count);
+
+    // Test resetting the high water mark.
+    $this->container->get('keyvalue')->get('migrate:high_water')->delete('high_water_test');
+    $migration = $this->container->get('plugin.manager.migration')->CreateInstance('high_water_test', []);
+    $source = $migration->getSourcePlugin();
+    $source->rewind();
+    $count = 0;
+    while ($source->valid()) {
+      $count++;
+      $source->next();
+    }
+    $this->assertSame(3, $count);
+  }
+
+  /**
    * Tests high water property of SqlBase when rows marked for update.
    */
   public function testHighWaterUpdate() {

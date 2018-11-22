@@ -108,6 +108,11 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->state = $state;
+    // If we are using high water, but haven't yet set a high water mark, skip
+    // joining the map table, as we want to get all available records.
+    if ($this->getHighWaterProperty() && $this->getHighWater() === NULL) {
+      $this->configuration['ignore_map'] = TRUE;
+    }
   }
 
   /**
@@ -322,7 +327,9 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       if ($this->getHighWaterProperty()) {
         $high_water_field = $this->getHighWaterField();
         $high_water = $this->getHighWater();
-        if ($high_water) {
+        // We check against NULL because 0 is an acceptable value for the high
+        // water mark.
+        if ($high_water !== NULL) {
           $conditions->condition($high_water_field, $high_water, '>');
           $condition_added = TRUE;
         }
