@@ -82,7 +82,8 @@ use Drupal\migrate\Row;
  * @endcode
  *
  * If the source value was '2004-12-19T10:19:42-0600' the transformed value
- * would be 2004-12-19T10:19:42.
+ * would be 2004-12-19T10:19:42. Set validate_format to false if your source
+ * value is '0000-00-00 00:00:00'.
  *
  * @see \DateTime::createFromFormat()
  * @see \Drupal\Component\Datetime\DateTimePlus::__construct()
@@ -99,7 +100,7 @@ class FormatDate extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if (empty($value)) {
+    if (empty($value) && $value !== '0' && $value !== 0) {
       return '';
     }
 
