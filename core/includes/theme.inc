@@ -23,6 +23,7 @@ use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Utility\TableSort;
 
 /**
  * @defgroup content_flags Content markers
@@ -944,7 +945,7 @@ function template_preprocess_table(&$variables) {
   $ts = [];
   $header_columns = 0;
   if (!empty($variables['header'])) {
-    $ts = tablesort_init($variables['header']);
+    $ts = TableSort::getContextFromRequest($variables['header'], \Drupal::request());
 
     // Use a separate index with responsive classes as headers
     // may be associative.
@@ -988,9 +989,9 @@ function template_preprocess_table(&$variables) {
           }
         }
 
-        tablesort_header($cell_content, $cell, $variables['header'], $ts);
+        TableSort::header($cell_content, $cell, $variables['header'], $ts);
 
-        // tablesort_header() removes the 'sort' and 'field' keys.
+        // TableSort::header() removes the 'sort' and 'field' keys.
         $cell_attributes = new Attribute($cell);
       }
       $variables['header'][$col_key] = [];
