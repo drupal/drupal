@@ -19,6 +19,7 @@ use Drupal\layout_builder\Plugin\Block\ExtraFieldBlock;
 use Drupal\layout_builder\InlineBlockEntityOperations;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 
 /**
  * Implements hook_help().
@@ -62,8 +63,8 @@ function layout_builder_entity_type_alter(array &$entity_types) {
 function layout_builder_form_entity_form_display_edit_form_alter(&$form, FormStateInterface $form_state) {
   // Hides the Layout Builder field. It is rendered directly in
   // \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::buildMultiple().
-  unset($form['fields']['layout_builder__layout']);
-  $key = array_search('layout_builder__layout', $form['#fields']);
+  unset($form['fields'][OverridesSectionStorage::FIELD_NAME]);
+  $key = array_search(OverridesSectionStorage::FIELD_NAME, $form['#fields']);
   if ($key !== FALSE) {
     unset($form['#fields'][$key]);
   }

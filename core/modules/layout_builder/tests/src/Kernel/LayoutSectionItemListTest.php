@@ -4,6 +4,7 @@ namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\entity_test\Entity\EntityTestBaseFieldDisplay;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 
 /**
  * Tests the field type for Layout Sections.
@@ -42,10 +43,10 @@ class LayoutSectionItemListTest extends SectionStorageTestBase {
     }, $section_data);
     $entity = EntityTestBaseFieldDisplay::create([
       'name' => 'The test entity',
-      'layout_builder__layout' => $section_data,
+      OverridesSectionStorage::FIELD_NAME => $section_data,
     ]);
     $entity->save();
-    return $entity->get('layout_builder__layout');
+    return $entity->get(OverridesSectionStorage::FIELD_NAME);
   }
 
 }

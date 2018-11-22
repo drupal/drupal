@@ -9,6 +9,7 @@ use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorage\SectionStorageTrait;
@@ -110,10 +111,10 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       $bundle = $this->getTargetBundle();
 
       if ($new_value) {
-        $this->addSectionField($entity_type_id, $bundle, 'layout_builder__layout');
+        $this->addSectionField($entity_type_id, $bundle, OverridesSectionStorage::FIELD_NAME);
       }
       else {
-        $this->removeSectionField($entity_type_id, $bundle, 'layout_builder__layout');
+        $this->removeSectionField($entity_type_id, $bundle, OverridesSectionStorage::FIELD_NAME);
       }
     }
 
@@ -274,8 +275,8 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    *   The sections.
    */
   protected function getRuntimeSections(FieldableEntityInterface $entity) {
-    if ($this->isOverridable() && !$entity->get('layout_builder__layout')->isEmpty()) {
-      return $entity->get('layout_builder__layout')->getSections();
+    if ($this->isOverridable() && !$entity->get(OverridesSectionStorage::FIELD_NAME)->isEmpty()) {
+      return $entity->get(OverridesSectionStorage::FIELD_NAME)->getSections();
     }
 
     return $this->getSections();

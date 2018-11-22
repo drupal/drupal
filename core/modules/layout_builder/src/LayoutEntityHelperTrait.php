@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
+use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 
 /**
  * Methods to help with entities using the layout builder.
@@ -65,7 +66,7 @@ trait LayoutEntityHelperTrait {
       return $entity->getSections();
     }
     elseif ($this->isEntityUsingFieldOverride($entity)) {
-      return $entity->get('layout_builder__layout')->getSections();
+      return $entity->get(OverridesSectionStorage::FIELD_NAME)->getSections();
     }
     return NULL;
   }
@@ -102,7 +103,7 @@ trait LayoutEntityHelperTrait {
    *   TRUE if the entity is using a field for a layout override.
    */
   protected function isEntityUsingFieldOverride(EntityInterface $entity) {
-    return $entity instanceof FieldableEntityInterface && $entity->hasField('layout_builder__layout');
+    return $entity instanceof FieldableEntityInterface && $entity->hasField(OverridesSectionStorage::FIELD_NAME);
   }
 
 }
