@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -46,6 +47,13 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
+
+  /**
+   * The entity memory cache service.
+   *
+   * @var \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface
+   */
+  protected $entityMemoryCache;
 
   /**
    * The current user.
@@ -96,6 +104,8 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    *   The request stack.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $entity_memory_cache
+   *   The entity memory cache service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user.
    * @param \Drupal\Core\State\StateInterface $state
@@ -107,9 +117,10 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * @param array $negotiator_ids
    *   The workspace negotiator service IDs.
    */
-  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, array $negotiator_ids) {
+  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, array $negotiator_ids) {
     $this->requestStack = $request_stack;
     $this->entityTypeManager = $entity_type_manager;
+    $this->entityMemoryCache = $entity_memory_cache;
     $this->currentUser = $current_user;
     $this->state = $state;
     $this->logger = $logger;
@@ -204,10 +215,11 @@ class WorkspaceManager implements WorkspaceManagerInterface {
 
     $this->activeWorkspace = $workspace;
 
-    $supported_entity_types = $this->getSupportedEntityTypes();
-    foreach ($supported_entity_types as $supported_entity_type) {
-      $this->entityTypeManager->getStorage($supported_entity_type->id())->resetCache();
-    }
+    // Clear the static entity cache for the supported entity types.
+    $cache_tags_to_invalidate = array_map(function ($entity_type_id) {
+      return 'entity.memory_cache:' . $entity_type_id;
+    }, array_keys($this->getSupportedEntityTypes()));
+    $this->entityMemoryCache->invalidateTags($cache_tags_to_invalidate);
   }
 
   /**
