@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field_ui\Form\EntityViewDisplayEditForm;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
+use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\SectionStorageInterface;
 
 /**
@@ -48,8 +49,8 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
     $form = parent::form($form, $form_state);
 
     // Remove the Layout Builder field from the list.
-    $form['#fields'] = array_diff($form['#fields'], ['layout_builder__layout']);
-    unset($form['fields']['layout_builder__layout']);
+    $form['#fields'] = array_diff($form['#fields'], [OverridesSectionStorage::FIELD_NAME]);
+    unset($form['fields'][OverridesSectionStorage::FIELD_NAME]);
 
     $is_enabled = $this->entity->isLayoutBuilderEnabled();
     if ($is_enabled) {
@@ -133,7 +134,7 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
 
     $entity_type = $this->entityTypeManager->getDefinition($display->getTargetEntityTypeId());
     $query = $this->entityTypeManager->getStorage($display->getTargetEntityTypeId())->getQuery()
-      ->exists('layout_builder__layout');
+      ->exists(OverridesSectionStorage::FIELD_NAME);
     if ($bundle_key = $entity_type->getKey('bundle')) {
       $query->condition($bundle_key, $display->getTargetBundle());
     }
