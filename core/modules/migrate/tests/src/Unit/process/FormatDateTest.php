@@ -175,6 +175,42 @@ class FormatDateTest extends MigrateProcessTestCase {
         // converted from Australia/Sydney to America/Managua timezone.
         'expected' => '2004-12-18 17:19:42 America/Managua',
       ],
+      'integer_0' => [
+        'configuration' => [
+          'from_format' => 'U',
+          'to_format' => 'Y-m-d',
+        ],
+        'value' => 0,
+        'expected' => '1970-01-01',
+      ],
+      'string_0' => [
+        'configuration' => [
+          'from_format' => 'U',
+          'to_format' => 'Y-m-d',
+        ],
+        'value' => '0',
+        'expected' => '1970-01-01',
+      ],
+      'zeros' => [
+        'configuration' => [
+          'from_format' => 'Y-m-d H:i:s',
+          'to_format' => 'Y-m-d H:i:s e',
+          'settings' => ['validate_format' => FALSE],
+        ],
+        'value' => '0000-00-00 00:00:00',
+        'expected' => '-0001-11-30 00:00:00 Australia/Sydney',
+      ],
+      'zeros_same_timezone' => [
+        'configuration' => [
+          'from_format' => 'Y-m-d H:i:s',
+          'to_format' => 'Y-m-d H:i:s',
+          'settings' => ['validate_format' => FALSE],
+          'from_timezone' => 'UTC',
+          'to_timezone' => 'UTC',
+        ],
+        'value' => '0000-00-00 00:00:00',
+        'expected' => '-0001-11-30 00:00:00',
+      ],
     ];
   }
 
