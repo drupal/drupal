@@ -144,6 +144,20 @@ display:
           expose:
             label: ''
           granularity: second
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          entity_type: node
+          entity_field: nid
+          plugin_id: standard
       title: 'More featured articles'
       header: {  }
       footer: {  }
