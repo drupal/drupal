@@ -60,7 +60,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * Retrieves the fid of the last inserted file.
    */
   public function getLastFileId() {
-    return (int) db_query('SELECT MAX(fid) FROM {file_managed}')->fetchField();
+    return (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
   }
 
   /**

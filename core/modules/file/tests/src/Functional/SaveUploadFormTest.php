@@ -66,7 +66,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->phpfile = current($this->drupalGetTestFiles('php'));
     $this->assertTrue(is_file($this->phpfile->uri), 'The PHP file we are going to upload exists.');
 
-    $this->maxFidBefore = db_query('SELECT MAX(fid) AS fid FROM {file_managed}')->fetchField();
+    $this->maxFidBefore = (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
@@ -89,7 +89,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
    * Tests the _file_save_upload_from_form() function.
    */
   public function testNormal() {
-    $max_fid_after = db_query('SELECT MAX(fid) AS fid FROM {file_managed}')->fetchField();
+    $max_fid_after = (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
     $this->assertTrue($max_fid_after > $this->maxFidBefore, 'A new file was created.');
     $file1 = File::load($max_fid_after);
     $this->assertTrue($file1, 'Loaded the file.');
@@ -107,7 +107,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
     $this->assertRaw(t('You WIN!'));
-    $max_fid_after = db_query('SELECT MAX(fid) AS fid FROM {file_managed}')->fetchField();
+    $max_fid_after = (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
 
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(['validate', 'insert']);

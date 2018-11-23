@@ -74,7 +74,8 @@ class UserPictureTest extends BrowserTestBase {
 
     // Call file_cron() to clean up the file. Make sure the timestamp
     // of the file is older than the system.file.temporary_maximum_age
-    // configuration value.
+    // configuration value. We use an UPDATE statement because using the API
+    // would set the timestamp.
     Database::getConnection()->update('file_managed')
       ->fields([
         'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
