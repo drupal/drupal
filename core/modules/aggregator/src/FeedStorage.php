@@ -18,7 +18,7 @@ class FeedStorage extends SqlContentEntityStorage implements FeedStorageInterfac
   public function getFeedIdsToRefresh() {
     return $this->database->query('SELECT fid FROM {' . $this->getBaseTable() . '} WHERE queued = 0 AND checked + refresh < :time AND refresh <> :never', [
       ':time' => REQUEST_TIME,
-      ':never' => AGGREGATOR_CLEAR_NEVER,
+      ':never' => static::CLEAR_NEVER,
     ])->fetchCol();
   }
 

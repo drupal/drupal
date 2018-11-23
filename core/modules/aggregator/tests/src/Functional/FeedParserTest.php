@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\aggregator\Functional;
 
+use Drupal\aggregator\FeedStorageInterface;
 use Drupal\Core\Url;
 use Drupal\aggregator\Entity\Feed;
 use Drupal\aggregator\Entity\Item;
@@ -21,7 +22,7 @@ class FeedParserTest extends AggregatorTestBase {
     // Do not delete old aggregator items during these tests, since our sample
     // feeds have hardcoded dates in them (which may be expired when this test
     // is run).
-    $this->config('aggregator.settings')->set('items.expire', AGGREGATOR_CLEAR_NEVER)->save();
+    $this->config('aggregator.settings')->set('items.expire', FeedStorageInterface::CLEAR_NEVER)->save();
   }
 
   /**

@@ -4,6 +4,7 @@ namespace Drupal\aggregator\Plugin\aggregator\processor;
 
 use Drupal\aggregator\Entity\Item;
 use Drupal\aggregator\FeedInterface;
+use Drupal\aggregator\FeedStorageInterface;
 use Drupal\aggregator\ItemStorageInterface;
 use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
@@ -123,7 +124,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
     }, array_combine($counts, $counts));
     $intervals = [3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800];
     $period = array_map([$this->dateFormatter, 'formatInterval'], array_combine($intervals, $intervals));
-    $period[AGGREGATOR_CLEAR_NEVER] = t('Never');
+    $period[FeedStorageInterface::CLEAR_NEVER] = t('Never');
 
     $form['processors'][$info['id']] = [];
     // Only wrap into details if there is a basic configuration.
@@ -254,7 +255,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   public function postProcess(FeedInterface $feed) {
     $aggregator_clear = $this->configuration['items']['expire'];
 
-    if ($aggregator_clear != AGGREGATOR_CLEAR_NEVER) {
+    if ($aggregator_clear != FeedStorageInterface::CLEAR_NEVER) {
       // Delete all items that are older than flush item timer.
       $age = REQUEST_TIME - $aggregator_clear;
       $result = $this->itemStorage->getQuery()

@@ -2,6 +2,7 @@
 
 namespace Drupal\aggregator\Entity;
 
+use Drupal\aggregator\FeedStorageInterface;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -170,7 +171,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
 
     $intervals = [900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200];
     $period = array_map([\Drupal::service('date.formatter'), 'formatInterval'], array_combine($intervals, $intervals));
-    $period[AGGREGATOR_CLEAR_NEVER] = t('Never');
+    $period[FeedStorageInterface::CLEAR_NEVER] = t('Never');
 
     $fields['refresh'] = BaseFieldDefinition::create('list_integer')
       ->setLabel(t('Update interval'))
