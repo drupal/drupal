@@ -105,55 +105,31 @@ class PhpTransliteration implements TransliterationInterface {
    * {@inheritdoc}
    */
   public function transliterate($string, $langcode = 'en', $unknown_character = '?', $max_length = NULL) {
-    $results = [];
+    $result = '';
     $length = 0;
-
-    // Split on words to handle mixed case per word.
-    $words = explode(' ', $string);
-    foreach ($words as $key => $word) {
-      $results[$key] = '';
-
-      // String is mixed case if it consists of both uppercase and lowercase
-      // letters. To accurately check this, remove any numbers and check that
-      // remaining characters are not all uppercase and not all lowercase.
-      $alpha_string = preg_replace('/\\d/', '', $word);
-      $mixed_case = (strlen($alpha_string) > 1 && mb_strtolower($alpha_string) !== $alpha_string && mb_strtoupper($alpha_string) !== $alpha_string);
-
-      // Split into Unicode characters and transliterate each one.
-      foreach (preg_split('//u', $word, 0, PREG_SPLIT_NO_EMPTY) as $character) {
-        $code = self::ordUTF8($character);
-        if ($code == -1) {
-          $to_add = $unknown_character;
-        }
-        else {
-          $to_add = $this->replace($code, $langcode, $unknown_character);
-        }
-
-        // Check if this exceeds the maximum allowed length.
-        if (isset($max_length)) {
-          $length += strlen($to_add);
-          if ($length > $max_length) {
-            // There is no more space.
-            $results = array_filter($results);
-            return implode(' ', $results);
-          }
-        }
-
-        // If this is a capitalised letter of a mixed case word, only capitalise
-        // the first letter and lowercase any subsequent letters.
-        if ($mixed_case && strlen($to_add) > 1 && mb_strtoupper($to_add) === $to_add) {
-          $to_add = ucfirst(strtolower($to_add));
-        }
-
-        $results[$key] .= $to_add;
+    // Split into Unicode characters and transliterate each one.
+    foreach (preg_split('//u', $string, 0, PREG_SPLIT_NO_EMPTY) as $character) {
+      $code = self::ordUTF8($character);
+      if ($code == -1) {
+        $to_add = $unknown_character;
+      }
+      else {
+        $to_add = $this->replace($code, $langcode, $unknown_character);
       }
 
-      // Add space to count for max length.
-      $length++;
+      // Check if this exceeds the maximum allowed length.
+      if (isset($max_length)) {
+        $length += strlen($to_add);
+        if ($length > $max_length) {
+          // There is no more space.
+          return $result;
+        }
+      }
+
+      $result .= $to_add;
     }
 
-    $results = array_filter($results);
-    return implode(' ', $results);
+    return $result;
   }
 
   /**
