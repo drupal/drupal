@@ -146,19 +146,6 @@ class PhpTransliterationTest extends TestCase {
       ['en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '?'],
       // Max length.
       ['de', $two_byte, 'Ae Oe', '?', 5],
-      // Test strings with mixed case words where a single capital character
-      // results in multiple characters. The first character should remain
-      // capitalised but subsequent resulting characters should be lowercase.
-      // For example a result of the transliteration should be 'Shtrikhkod'
-      // not 'SHtrikhkod'. Numbers should not be used in determining whether a
-      // string is mixed case.
-      ['ru', 'Штрихкод', 'Shtrikhkod'],
-      ['bg', 'Щастие', 'Schastie'],
-      ['bg', 'Щ1', 'SCH1'],
-      ['bg', 'Щ1Щ', 'SCH1SCH'],
-      ['bg', 'Щ1щ', 'Sch1sch'],
-      ['bg', 'Щастие ЩЩЩ', 'Schastie SCHSCHSCH'],
-      ['bg', 'Щастие ЩЩЩ. Щастие! Щастие', 'Schastie SCHSCHSCH. Schastie! Schastie'],
     ];
   }
 
