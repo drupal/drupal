@@ -220,3 +220,17 @@ function comment_update_8700() {
   $definition_update_manager->updateEntityType($entity_type);
   $definition_update_manager->updateFieldStorageDefinition($definition_update_manager->getFieldStorageDefinition('uid', 'comment'));
 }
+
+/**
+ * Make the 'entity_type' and 'field_name' comment fields required.
+ */
+function comment_update_8701() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $field_definition = $definition_update_manager->getFieldStorageDefinition('entity_type', 'comment');
+  $field_definition->setRequired(TRUE);
+  $definition_update_manager->updateFieldStorageDefinition($field_definition);
+
+  $field_definition = $definition_update_manager->getFieldStorageDefinition('field_name', 'comment');
+  $field_definition->setRequired(TRUE);
+  $definition_update_manager->updateFieldStorageDefinition($field_definition);
+}

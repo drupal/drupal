@@ -45,6 +45,7 @@ class CommentViewsFieldAccessTest extends FieldFieldAccessTestBase {
       'subject' => 'My comment title',
       'uid' => $user->id(),
       'entity_type' => 'entity_test',
+      'field_name' => 'comment',
       'entity_id' => $host->id(),
       'comment_type' => 'entity_test',
     ]);
@@ -57,6 +58,7 @@ class CommentViewsFieldAccessTest extends FieldFieldAccessTestBase {
       'mail' => 'test@example.com',
       'homepage' => 'https://example.com',
       'entity_type' => 'entity_test',
+      'field_name' => 'comment',
       'entity_id' => $host->id(),
       'comment_type' => 'entity_test',
       'created' => 123456,

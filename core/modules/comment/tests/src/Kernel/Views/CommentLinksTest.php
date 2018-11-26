@@ -51,6 +51,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
     $comment = $this->commentStorage->create([
       'uid' => $this->adminUser->id(),
       'entity_type' => 'entity_test',
+      'field_name' => 'comment',
       'entity_id' => $host->id(),
       'comment_type' => 'entity_test',
       'status' => 0,

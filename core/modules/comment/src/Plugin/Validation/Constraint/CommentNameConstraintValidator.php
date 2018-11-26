@@ -72,8 +72,10 @@ class CommentNameConstraintValidator extends ConstraintValidator implements Cont
       }
     }
 
-    // Anonymous account might be required - depending on field settings.
-    if ($owner_id === 0 && empty($author_name) &&
+    // Anonymous account might be required - depending on field settings. We
+    // can't validate this without a valid commented entity, which will fail
+    // the validation elsewhere.
+    if ($owner_id === 0 && empty($author_name) && $entity->getCommentedEntity() && $entity->getFieldName() &&
       $this->getAnonymousContactDetailsSetting($entity) === COMMENT_ANONYMOUS_MUST_CONTACT) {
       $this->context->buildViolation($constraint->messageRequired)
         ->atPath('name')

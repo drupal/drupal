@@ -70,6 +70,7 @@ class CommentItemTest extends FieldKernelTestBase {
    */
   public function testCommentAuthorName() {
     $this->installEntitySchema('comment');
+    $this->addDefaultCommentField('entity_test', 'entity_test', 'comment');
 
     $host = EntityTest::create(['name' => $this->randomString()]);
     $host->save();
@@ -81,6 +82,7 @@ class CommentItemTest extends FieldKernelTestBase {
       'name' => 'entity-test',
       'mail' => 'entity@localhost',
       'entity_type' => 'entity_test',
+      'field_name' => 'comment',
       'entity_id' => $host->id(),
       'comment_type' => 'entity_test',
       'status' => 1,
@@ -99,6 +101,7 @@ class CommentItemTest extends FieldKernelTestBase {
       'mail' => 'test@example.com',
       'homepage' => 'https://example.com',
       'entity_type' => 'entity_test',
+      'field_name' => 'comment',
       'entity_id' => $host->id(),
       'comment_type' => 'entity_test',
       'status' => 1,

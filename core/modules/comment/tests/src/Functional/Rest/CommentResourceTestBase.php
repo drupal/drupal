@@ -291,35 +291,17 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     // DX: 422 when missing 'entity_type' field.
     $request_options[RequestOptions::BODY] = $this->serializer->encode(array_diff_key($this->getNormalizedPostEntity(), ['entity_type' => TRUE]), static::$format);
     $response = $this->request('POST', $url, $request_options);
-    // @todo Uncomment, remove next 3 lines in https://www.drupal.org/node/2820364.
-    $this->assertSame(500, $response->getStatusCode());
-    $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
-    $this->assertStringStartsWith('The website encountered an unexpected error. Please try again later.</br></br><em class="placeholder">Symfony\Component\HttpKernel\Exception\HttpException</em>: Internal Server Error in <em class="placeholder">Drupal\rest\Plugin\rest\resource\EntityResource-&gt;post()</em>', (string) $response->getBody());
-    // $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nentity_type: This value should not be null.\n", $response);
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nentity_type: This value should not be null.\n", $response);
 
     // DX: 422 when missing 'entity_id' field.
     $request_options[RequestOptions::BODY] = $this->serializer->encode(array_diff_key($this->getNormalizedPostEntity(), ['entity_id' => TRUE]), static::$format);
-    // @todo Remove the try/catch in favor of the two commented lines in
-    // https://www.drupal.org/node/2820364.
-    try {
-      $response = $this->request('POST', $url, $request_options);
-      // This happens on DrupalCI.
-      // $this->assertSame(500, $response->getStatusCode());
-    }
-    catch (\Exception $e) {
-      // This happens on Wim's local machine.
-      // $this->assertSame("Error: Call to a member function get() on null\nDrupal\\comment\\Plugin\\Validation\\Constraint\\CommentNameConstraintValidator->getAnonymousContactDetailsSetting()() (Line: 96)\n", $e->getMessage());
-    }
-    // $response = $this->request('POST', $url, $request_options);
-    // $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nentity_type: This value should not be null.\n", $response);
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nentity_id: This value should not be null.\n", $response);
 
-    // DX: 422 when missing 'entity_type' field.
+    // DX: 422 when missing 'field_name' field.
     $request_options[RequestOptions::BODY] = $this->serializer->encode(array_diff_key($this->getNormalizedPostEntity(), ['field_name' => TRUE]), static::$format);
     $response = $this->request('POST', $url, $request_options);
-    // @todo Uncomment, remove next 2 lines in https://www.drupal.org/node/2820364.
-    $this->assertSame(500, $response->getStatusCode());
-    $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
-    // $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nfield_name: This value should not be null.\n", $response);
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nfield_name: This value should not be null.\n", $response);
   }
 
   /**
