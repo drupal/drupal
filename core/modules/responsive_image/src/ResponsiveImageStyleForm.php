@@ -81,8 +81,8 @@ class ResponsiveImageStyleForm extends EntityForm {
     ];
 
     $image_styles = image_style_options(TRUE);
-    $image_styles[RESPONSIVE_IMAGE_ORIGINAL_IMAGE] = $this->t('- None (original image) -');
-    $image_styles[RESPONSIVE_IMAGE_EMPTY_IMAGE] = $this->t('- empty image -');
+    $image_styles[ResponsiveImageStyleInterface::ORIGINAL_IMAGE] = $this->t('- None (original image) -');
+    $image_styles[ResponsiveImageStyleInterface::EMPTY_IMAGE] = $this->t('- empty image -');
 
     if ((bool) $responsive_image_style->id() && $this->operation != 'duplicate') {
       $description = $this->t('Select a breakpoint group from the installed themes and modules. Below you can select which breakpoints to use from this group. You can also select which image style or styles to use for each breakpoint you use.') . ' ' . $this->t("Warning: if you change the breakpoint group you lose all your image style selections for each breakpoint.");

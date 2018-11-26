@@ -7,6 +7,7 @@ use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
 use Drupal\responsive_image\Plugin\Field\FieldFormatter\ResponsiveImageFormatter;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
+use Drupal\responsive_image\ResponsiveImageStyleInterface;
 use Drupal\Tests\image\Functional\ImageFieldTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
@@ -123,7 +124,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
         // Test the output of an empty image.
         ->addImageStyleMapping('responsive_image_test_module.mobile', '1x', [
           'image_mapping_type' => 'image_style',
-          'image_mapping' => RESPONSIVE_IMAGE_EMPTY_IMAGE,
+          'image_mapping' => ResponsiveImageStyleInterface::EMPTY_IMAGE,
         ])
         // Test the output with a 1.5x multiplier.
         ->addImageStyleMapping('responsive_image_test_module.mobile', '1.5x', [
@@ -149,7 +150,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
         // Test the output of the original image.
         ->addImageStyleMapping('responsive_image_test_module.wide', '3x', [
           'image_mapping_type' => 'image_style',
-          'image_mapping' => RESPONSIVE_IMAGE_ORIGINAL_IMAGE,
+          'image_mapping' => ResponsiveImageStyleInterface::ORIGINAL_IMAGE,
         ])
         ->save();
     }
@@ -358,7 +359,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       // Test the output of an empty media query.
       ->addImageStyleMapping('responsive_image_test_module.empty', '1x', [
         'image_mapping_type' => 'image_style',
-        'image_mapping' => RESPONSIVE_IMAGE_EMPTY_IMAGE,
+        'image_mapping' => ResponsiveImageStyleInterface::EMPTY_IMAGE,
       ])
       // Test the output with a 1.5x multiplier.
       ->addImageStyleMapping('responsive_image_test_module.mobile', '1x', [

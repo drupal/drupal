@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\responsive_image\Functional;
 
+use Drupal\responsive_image\ResponsiveImageStyleInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -73,7 +74,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
       ['wide', '2x'],
     ];
     $image_styles = array_merge(
-      [RESPONSIVE_IMAGE_EMPTY_IMAGE, RESPONSIVE_IMAGE_ORIGINAL_IMAGE],
+      [ResponsiveImageStyleInterface::EMPTY_IMAGE, ResponsiveImageStyleInterface::ORIGINAL_IMAGE],
       array_keys(image_style_options(FALSE))
     );
     foreach ($cases as $case) {

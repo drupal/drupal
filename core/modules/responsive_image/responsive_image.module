@@ -10,6 +10,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
+use Drupal\responsive_image\ResponsiveImageStyleInterface;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\breakpoint\BreakpointInterface;
 
@@ -488,7 +489,7 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
  */
 function responsive_image_get_image_dimensions($image_style_name, array $dimensions, $uri) {
   // Determine the dimensions of the styled image.
-  if ($image_style_name == RESPONSIVE_IMAGE_EMPTY_IMAGE) {
+  if ($image_style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
     $dimensions = [
       'width' => 1,
       'height' => 1,
@@ -513,12 +514,12 @@ function responsive_image_get_image_dimensions($image_style_name, array $dimensi
  *   The MIME type of the image after the image style is applied.
  */
 function responsive_image_get_mime_type($image_style_name, $extension) {
-  if ($image_style_name == RESPONSIVE_IMAGE_EMPTY_IMAGE) {
+  if ($image_style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
     return 'image/gif';
   }
   // The MIME type guesser needs a full path, not just an extension, but the
   // file doesn't have to exist.
-  if ($image_style_name === RESPONSIVE_IMAGE_ORIGINAL_IMAGE) {
+  if ($image_style_name === ResponsiveImageStyleInterface::ORIGINAL_IMAGE) {
     $fake_path = 'responsive_image.' . $extension;
   }
   else {
@@ -531,7 +532,7 @@ function responsive_image_get_mime_type($image_style_name, $extension) {
  * Wrapper around image_style_url() so we can return an empty image.
  */
 function _responsive_image_image_style_url($style_name, $path) {
-  if ($style_name == RESPONSIVE_IMAGE_EMPTY_IMAGE) {
+  if ($style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
     // The smallest data URI for a 1px square transparent GIF image.
     // http://probablyprogramming.com/2009/03/15/the-tiniest-gif-ever
     return 'data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
