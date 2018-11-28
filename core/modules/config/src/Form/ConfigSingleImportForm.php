@@ -339,11 +339,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     if (!$form_state->getErrors()) {
       $source_storage = new StorageReplaceDataWrapper($this->configStorage);
       $source_storage->replaceData($config_name, $data);
-      $storage_comparer = new StorageComparer(
-        $source_storage,
-        $this->configStorage,
-        $this->configManager
-      );
+      $storage_comparer = new StorageComparer($source_storage, $this->configStorage);
 
       if (!$storage_comparer->createChangelist()->hasChanges()) {
         $form_state->setErrorByName('import', $this->t('There are no changes to import.'));

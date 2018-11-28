@@ -38,13 +38,12 @@ class ConfigSnapshotTest extends KernelTestBase {
     $active = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
     $snapshot = $this->container->get('config.storage.snapshot');
-    $config_manager = $this->container->get('config.manager');
     $config_name = 'config_test.system';
     $config_key = 'foo';
     $new_data = 'foobar';
 
-    $active_snapshot_comparer = new StorageComparer($active, $snapshot, $config_manager);
-    $sync_snapshot_comparer = new StorageComparer($sync, $snapshot, $config_manager);
+    $active_snapshot_comparer = new StorageComparer($active, $snapshot);
+    $sync_snapshot_comparer = new StorageComparer($sync, $snapshot);
 
     // Verify that we have an initial snapshot that matches the active
     // configuration. This has to be true as no config should be installed.

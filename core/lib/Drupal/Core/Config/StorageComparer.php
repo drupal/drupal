@@ -41,13 +41,6 @@ class StorageComparer implements StorageComparerInterface {
   protected $targetStorages;
 
   /**
-   * The configuration manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
    * List of changes to between the source storage and the target storage.
    *
    * The list is keyed by storage collection name.
@@ -96,9 +89,9 @@ class StorageComparer implements StorageComparerInterface {
    * @param \Drupal\Core\Config\StorageInterface $target_storage
    *   Storage object used to write configuration.
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
-   *   The configuration manager.
+   *   (deprecated) The configuration manager. The $config_manager parameter is deprecated since version 8.7.0 and will be removed in 9.0.0.
    */
-  public function __construct(StorageInterface $source_storage, StorageInterface $target_storage, ConfigManagerInterface $config_manager) {
+  public function __construct(StorageInterface $source_storage, StorageInterface $target_storage, ConfigManagerInterface $config_manager = NULL) {
     // Wrap the storages in a static cache so that multiple reads of the same
     // raw configuration object are not costly.
     $this->sourceCacheStorage = new MemoryBackend();
@@ -111,8 +104,11 @@ class StorageComparer implements StorageComparerInterface {
       $target_storage,
       $this->targetCacheStorage
     );
-    $this->configManager = $config_manager;
     $this->changelist[StorageInterface::DEFAULT_COLLECTION] = $this->getEmptyChangelist();
+
+    if ($config_manager !== NULL) {
+      @trigger_error('The storage comparer does not need a config manager. The parameter is deprecated since version 8.7.0 and will be removed in 9.0.0. Omit the third parameter. See https://www.drupal.org/node/2993271.', E_USER_DEPRECATED);
+    }
   }
 
   /**
