@@ -22,6 +22,13 @@ class Query extends QueryBase implements QueryInterface {
   protected $sqlQuery;
 
   /**
+   * The Tables object for this query.
+   *
+   * @var \Drupal\Core\Entity\Query\Sql\TablesInterface
+   */
+  protected $tables;
+
+  /**
    * An array of fields keyed by the field alias.
    *
    * Each entry correlates to the arguments of
@@ -101,6 +108,9 @@ class Query extends QueryBase implements QueryInterface {
       $simple_query = FALSE;
     }
     $this->sqlQuery = $this->connection->select($base_table, 'base_table', ['conjunction' => $this->conjunction]);
+    // Reset the tables structure, as it might have been built for a previous
+    // execution of this query.
+    $this->tables = NULL;
     $this->sqlQuery->addMetaData('entity_type', $this->entityTypeId);
     $id_field = $this->entityType->getKey('id');
     // Add the key field for fetchAllKeyed().
