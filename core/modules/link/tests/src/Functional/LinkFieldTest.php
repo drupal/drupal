@@ -147,7 +147,7 @@ class LinkFieldTest extends BrowserTestBase {
 
     // Define some invalid URLs.
     $validation_error_1 = "The path '@link_path' is invalid.";
-    $validation_error_2 = 'Manually entered paths should start with /, ? or #.';
+    $validation_error_2 = 'Manually entered paths should start with one of the following characters: / ? #';
     $validation_error_3 = "The path '@link_path' is inaccessible.";
     $invalid_external_entries = [
       // Invalid protocol
