@@ -144,7 +144,7 @@ function system_requirements($phase) {
         'title' => t('Apache version'),
         'value' => $apache_version_string,
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('The minimum version of Apache needed to run Drupal without mod_rewrite enabled is 2.2.16. See the <a href=":link">enabling clean URLs</a> page for more information on mod_rewrite.', [':link' => 'http://drupal.org/node/15365']),
+        'description' => t('The minimum version of Apache needed to run Drupal without mod_rewrite enabled is 2.2.16. See the <a href=":link">enabling clean URLs</a> page for more information on mod_rewrite.', [':link' => 'http://drupal.org/docs/8/clean-urls-in-drupal-8']),
       ];
     }
 
@@ -153,7 +153,7 @@ function system_requirements($phase) {
         'title' => t('Clean URLs'),
         'value' => t('Disabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('Your server is capable of using clean URLs, but it is not enabled. Using clean URLs gives an improved user experience and is recommended. <a href=":link">Enable clean URLs</a>', [':link' => 'http://drupal.org/node/15365']),
+        'description' => t('Your server is capable of using clean URLs, but it is not enabled. Using clean URLs gives an improved user experience and is recommended. <a href=":link">Enable clean URLs</a>', [':link' => 'http://drupal.org/docs/8/clean-urls-in-drupal-8']),
       ];
     }
   }
@@ -308,7 +308,7 @@ function system_requirements($phase) {
         }
       }
       $args = [
-        ':drupal-php' => 'https://www.drupal.org/docs/7/system-requirements/php#csprng',
+        ':drupal-php' => 'https://www.drupal.org/docs/8/system-requirements/php-requirements',
         '%exception_message' => $e->getMessage(),
       ];
       if ($open_basedir_blocks_urandom) {

@@ -177,7 +177,7 @@ class FileTransferAuthorizeForm extends FormBase {
         // database connection form in the installer.
         $form_state->setErrorByName('connection_settings', $this->t('Failed to connect to the server. The server reports the following message: <p class="error">@message</p> For more help installing or updating code on your server, see the <a href=":handbook_url">handbook</a>.', [
           '@message' => $e->getMessage(),
-          ':handbook_url' => 'https://www.drupal.org/documentation/install/modules-themes',
+          ':handbook_url' => 'https://www.drupal.org/docs/8/extending-drupal-8/overview',
         ]));
       }
     }

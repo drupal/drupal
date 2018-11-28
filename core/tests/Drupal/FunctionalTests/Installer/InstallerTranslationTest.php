@@ -52,7 +52,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     parent::setUpSettings();
 
     // Ensure that the error message translation is working.
-    $this->assertRaw('Beheben Sie alle Probleme unten, um die Installation fortzusetzen. Informationen zur Konfiguration der Datenbankserver finden Sie in der <a href="https://www.drupal.org/getting-started/install">Installationshandbuch</a>, oder kontaktieren Sie Ihren Hosting-Anbieter.');
+    $this->assertRaw('Beheben Sie alle Probleme unten, um die Installation fortzusetzen. Informationen zur Konfiguration der Datenbankserver finden Sie in der <a href="https://www.drupal.org/docs/8/install">Installationshandbuch</a>, oder kontaktieren Sie Ihren Hosting-Anbieter.');
     $this->assertRaw('<strong>CREATE</strong> ein Test-Tabelle auf Ihrem Datenbankserver mit dem Befehl <em class="placeholder">CREATE TABLE {drupal_install_test} (id int NOT NULL PRIMARY KEY)</em> fehlgeschlagen.');
 
     // Now do it successfully.
@@ -143,8 +143,8 @@ msgstr "Save and continue $langcode"
 msgid "Anonymous"
 msgstr "Anonymous $langcode"
 
-msgid "Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/getting-started/install">installation handbook</a>, or contact your hosting provider."
-msgstr "Beheben Sie alle Probleme unten, um die Installation fortzusetzen. Informationen zur Konfiguration der Datenbankserver finden Sie in der <a href="https://www.drupal.org/getting-started/install">Installationshandbuch</a>, oder kontaktieren Sie Ihren Hosting-Anbieter."
+msgid "Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/docs/8/install">installation handbook</a>, or contact your hosting provider."
+msgstr "Beheben Sie alle Probleme unten, um die Installation fortzusetzen. Informationen zur Konfiguration der Datenbankserver finden Sie in der <a href="https://www.drupal.org/docs/8/install">Installationshandbuch</a>, oder kontaktieren Sie Ihren Hosting-Anbieter."
 
 msgid "Failed to <strong>CREATE</strong> a test table on your database server with the command %query. The server reports the following message: %error.<p>Are you sure the configured username has the necessary permissions to create tables in the database?</p>"
 msgstr "<strong>CREATE</strong> ein Test-Tabelle auf Ihrem Datenbankserver mit dem Befehl %query fehlgeschlagen."

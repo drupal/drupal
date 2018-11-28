@@ -238,7 +238,7 @@ INSTALLATION
    maintenance account on a "Welcome" page. If the default Drupal theme is not
    displaying properly and links on the page result in "Page Not Found" errors,
    you may be experiencing problems with clean URLs. Visit
-   https://www.drupal.org/getting-started/clean-urls to troubleshoot.
+   https://www.drupal.org/docs/8/clean-urls-in-drupal-8 to troubleshoot.
 
 5. Change file system storage settings (optional).
 
@@ -448,7 +448,7 @@ accessible to other sites, the setup would look like this:
     modules/custom_module
 
 For more information about multiple virtual hosts or the configuration
-settings, consult https://www.drupal.org/documentation/install/multi-site
+settings, consult https://www.drupal.org/docs/8/multisite
 
 For more information on configuring Drupal's file system path in a multisite
 configuration, see step 6 above.
@@ -460,4 +460,4 @@ By default, Drupal is installed in one language, and further languages may be
 installed later.
 
 For detailed instructions, visit
-https://www.drupal.org/documentation/multilingual
+https://www.drupal.org/docs/8/multilingual

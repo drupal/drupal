@@ -190,7 +190,7 @@ class SiteSettingsForm extends FormBase {
     if (count($errors)) {
       $error_message = [
         '#type' => 'inline_template',
-        '#template' => '{% trans %}Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/getting-started/install">installation handbook</a>, or contact your hosting provider.{% endtrans%}{{ errors }}',
+        '#template' => '{% trans %}Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/docs/8/install">installation handbook</a>, or contact your hosting provider.{% endtrans%}{{ errors }}',
         '#context' => [
           'errors' => [
             '#theme' => 'item_list',
