@@ -557,4 +557,26 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains($block_content);
   }
 
+  /**
+   * Tests the Block UI when Layout Builder is installed.
+   */
+  public function testBlockUiListing() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer blocks',
+    ]));
+
+    $this->drupalGet('admin/structure/block');
+    $page->clickLink('Place block');
+
+    // Ensure that blocks expected to appear are available.
+    $assert_session->pageTextContains('Test HTML block');
+    $assert_session->pageTextContains('Block test');
+    // Ensure that blocks not expected to appear are not available.
+    $assert_session->pageTextNotContains('Body');
+    $assert_session->pageTextNotContains('Content fields');
+  }
+
 }

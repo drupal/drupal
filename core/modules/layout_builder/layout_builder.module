@@ -203,3 +203,21 @@ function layout_builder_block_content_access(EntityInterface $entity, $operation
   }
   return AccessResult::forbidden();
 }
+
+/**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ */
+function layout_builder_plugin_filter_block__block_ui_alter(array &$definitions, array $extra) {
+  foreach ($definitions as $id => $definition) {
+    // Filter out any layout_builder definition with required contexts.
+    if ($definition['provider'] === 'layout_builder' && !empty($definition['context'])) {
+      /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */
+      foreach ($definition['context'] as $context) {
+        if ($context->isRequired()) {
+          unset($definitions[$id]);
+          break;
+        }
+      }
+    }
+  }
+}
