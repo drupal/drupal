@@ -60,6 +60,49 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests functionality of Layout Builder for overrides.
+   */
+  public function testOverrides() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    // From the manage display page, go to manage the layout.
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalPostForm(NULL, ['layout[allow_custom]' => TRUE], 'Save');
+    // @todo This should not be necessary.
+    $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
+
+    // Add a block with a custom label.
+    $this->drupalGet('node/1');
+    $page->clickLink('Layout');
+    $page->clickLink('Add Block');
+    $page->clickLink('Powered by Drupal');
+    $page->fillField('settings[label]', 'This is an override');
+    $page->checkField('settings[label_display]');
+    $page->pressButton('Add Block');
+    $page->clickLink('Save Layout');
+    $assert_session->pageTextContains('This is an override');
+
+    // Get the UUID of the component.
+    $components = Node::load(1)->get('layout_builder__layout')->getSection(0)->getComponents();
+    end($components);
+    $uuid = key($components);
+
+    $this->drupalGet('layout_builder/update/block/overrides/node.1/0/content/' . $uuid);
+    $page->uncheckField('settings[label_display]');
+    $page->pressButton('Update');
+    $assert_session->pageTextNotContains('This is an override');
+    $page->clickLink('Save Layout');
+    $assert_session->pageTextNotContains('This is an override');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function testLayoutBuilderUi() {

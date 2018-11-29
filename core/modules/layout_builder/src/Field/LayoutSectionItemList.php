@@ -3,6 +3,8 @@
 namespace Drupal\layout_builder\Field;
 
 use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageTrait;
 
@@ -53,6 +55,23 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
     // Ensure the entity is updated with the latest value.
     $entity->set($this->getName(), $this->getValue());
     return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function equals(FieldItemListInterface $list_to_compare) {
+    if (!$list_to_compare instanceof LayoutSectionItemList) {
+      return FALSE;
+    }
+
+    // Convert arrays of section objects to array values for comparison.
+    $convert = function (LayoutSectionItemList $list) {
+      return array_map(function (Section $section) {
+        return $section->toArray();
+      }, $list->getSections());
+    };
+    return $convert($this) === $convert($list_to_compare);
   }
 
 }
