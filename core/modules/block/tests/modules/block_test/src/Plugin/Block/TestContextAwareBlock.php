@@ -12,7 +12,7 @@ use Drupal\user\UserInterface;
  * @Block(
  *   id = "test_context_aware",
  *   admin_label = @Translation("Test context-aware block"),
- *   context = {
+ *   context_definitions = {
  *     "user" = @ContextDefinition("entity:user", required = FALSE)
  *   }
  * )

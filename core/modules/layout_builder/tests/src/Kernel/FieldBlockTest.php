@@ -206,7 +206,7 @@ class FieldBlockTest extends EntityKernelTestBase {
       'category' => 'Test',
       'admin_label' => 'Test Block',
       'bundles' => ['entity_test'],
-      'context' => [
+      'context_definitions' => [
         'entity' => EntityContextDefinition::fromEntityTypeId('entity_test')->setLabel('Test'),
       ],
     ];

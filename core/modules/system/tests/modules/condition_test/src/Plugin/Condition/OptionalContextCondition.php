@@ -13,7 +13,7 @@ use Drupal\Core\Condition\ConditionPluginBase;
  * @Condition(
  *   id = "condition_test_optional_context",
  *   label = @Translation("Optional context"),
- *   context = {
+ *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"), required = FALSE),
  *   }
  * )

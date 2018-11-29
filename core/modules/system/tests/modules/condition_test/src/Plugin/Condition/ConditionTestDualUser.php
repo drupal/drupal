@@ -10,7 +10,7 @@ use Drupal\Core\Condition\ConditionPluginBase;
  * @Condition(
  *   id = "condition_test_dual_user",
  *   label = @Translation("Dual user"),
- *   context = {
+ *   context_definitions = {
  *     "user1" = @ContextDefinition("entity:user", label = @Translation("User 1")),
  *     "user2" = @ContextDefinition("entity:user", label = @Translation("User 2"))
  *   }

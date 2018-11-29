@@ -10,7 +10,7 @@ use Drupal\Core\Block\BlockBase;
  * @Block(
  *   id = "test_context_aware_unsatisfied",
  *   admin_label = @Translation("Test context-aware unsatisfied block"),
- *   context = {
+ *   context_definitions = {
  *     "user" = @ContextDefinition("entity:foobar")
  *   }
  * )

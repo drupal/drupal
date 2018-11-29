@@ -220,7 +220,7 @@ class ContextHandlerTest extends UnitTestCase {
     $data[] = [FALSE, $plugins, $plugins];
 
     $plugins = [
-      'expected_array_plugin' => ['context' => []],
+      'expected_array_plugin' => ['context_definitions' => []],
       'expected_object_plugin' => new ContextAwarePluginDefinition(),
     ];
     // No context, all plugins available.
@@ -228,7 +228,7 @@ class ContextHandlerTest extends UnitTestCase {
 
     $plugins = [
       'expected_array_plugin' => [
-        'context' => ['context1' => new ContextDefinition('string')],
+        'context_definitions' => ['context1' => new ContextDefinition('string')],
       ],
       'expected_object_plugin' => (new ContextAwarePluginDefinition())
         ->addContextDefinition('context1', new ContextDefinition('string')),
@@ -241,7 +241,7 @@ class ContextHandlerTest extends UnitTestCase {
     $mismatched_context_definition = (new ContextDefinition('expected_data_type'))->setConstraints(['mismatched_constraint_name' => 'mismatched_constraint_value']);
     $plugins = [
       'expected_array_plugin' => [
-        'context' => ['context1' => $mismatched_context_definition],
+        'context_definitions' => ['context1' => $mismatched_context_definition],
       ],
       'expected_object_plugin' => (new ContextAwarePluginDefinition())
         ->addContextDefinition('context1', $mismatched_context_definition),
@@ -253,7 +253,7 @@ class ContextHandlerTest extends UnitTestCase {
     $optional_mismatched_context_definition->setRequired(FALSE);
     $plugins = [
       'expected_array_plugin' => [
-        'context' => ['context1' => $optional_mismatched_context_definition],
+        'context_definitions' => ['context1' => $optional_mismatched_context_definition],
       ],
       'expected_object_plugin' => (new ContextAwarePluginDefinition())
         ->addContextDefinition('context1', $optional_mismatched_context_definition),
@@ -264,7 +264,7 @@ class ContextHandlerTest extends UnitTestCase {
     $expected_context_definition = (new ContextDefinition('string'))->setConstraints(['Blank' => []]);
     $plugins = [
       'expected_array_plugin' => [
-        'context' => ['context1' => $expected_context_definition],
+        'context_definitions' => ['context1' => $expected_context_definition],
       ],
       'expected_object_plugin' => (new ContextAwarePluginDefinition())
         ->addContextDefinition('context1', $expected_context_definition),
@@ -276,7 +276,7 @@ class ContextHandlerTest extends UnitTestCase {
     $optional_expected_context_definition->setRequired(FALSE);
     $plugins = [
       'expected_array_plugin' => [
-        'context' => ['context1' => $optional_expected_context_definition],
+        'context_definitions' => ['context1' => $optional_expected_context_definition],
       ],
       'expected_object_plugin' => (new ContextAwarePluginDefinition())
         ->addContextDefinition('context1', $optional_expected_context_definition),
@@ -287,10 +287,10 @@ class ContextHandlerTest extends UnitTestCase {
     $unexpected_context_definition = (new ContextDefinition('unexpected_data_type'))->setConstraints(['mismatched_constraint_name' => 'mismatched_constraint_value']);
     $plugins = [
       'unexpected_array_plugin' => [
-        'context' => ['context1' => $unexpected_context_definition],
+        'context_definitions' => ['context1' => $unexpected_context_definition],
       ],
       'expected_array_plugin' => [
-        'context' => ['context2' => new ContextDefinition('string')],
+        'context_definitions' => ['context2' => new ContextDefinition('string')],
       ],
       'unexpected_object_plugin' => (new ContextAwarePluginDefinition())
         ->addContextDefinition('context1', $unexpected_context_definition),

@@ -14,14 +14,14 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * interactions through providing limits, and mapping contexts to appropriate
  * plugins. Context definitions can be provided as such:
  * @code
- *   context = {
+ *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node")
  *   }
  * @endcode
  *
  * To add a label to a context definition use the "label" key:
  * @code
- *   context = {
+ *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   }
  * @endcode
@@ -29,7 +29,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Contexts are required unless otherwise specified. To make an optional
  * context use the "required" key:
  * @code
- *   context = {
+ *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", required = FALSE, label = @Translation("Node"))
  *   }
  * @endcode
@@ -37,7 +37,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * To define multiple contexts, simply provide different key names in the
  * context array:
  * @code
- *   context = {
+ *   context_definitions = {
  *     "artist" = @ContextDefinition("entity:node", label = @Translation("Artist")),
  *     "album" = @ContextDefinition("entity:node", label = @Translation("Album"))
  *   }
@@ -45,7 +45,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *
  * Specifying a default value for the context definition:
  * @code
- *   context = {
+ *   context_definitions = {
  *     "message" = @ContextDefinition("string",
  *       label = @Translation("Message"),
  *       default_value = @Translation("Checkout complete! Thank you for your purchase.")

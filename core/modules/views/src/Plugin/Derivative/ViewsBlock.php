@@ -115,7 +115,7 @@ class ViewsBlock implements ContainerDeriverInterface {
           foreach ($display->getHandlers('argument') as $argument_name => $argument) {
             /** @var \Drupal\views\Plugin\views\argument\ArgumentPluginBase $argument */
             if ($context_definition = $argument->getContextDefinition()) {
-              $this->derivatives[$delta]['context'][$argument_name] = $context_definition;
+              $this->derivatives[$delta]['context_definitions'][$argument_name] = $context_definition;
             }
           }
 

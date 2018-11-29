@@ -72,7 +72,7 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
       return $definition->getContextDefinitions();
     }
     else {
-      return !empty($definition['context']) ? $definition['context'] : [];
+      return !empty($definition['context_definitions']) ? $definition['context_definitions'] : [];
     }
   }
 
@@ -86,8 +86,8 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
         return $definition->getContextDefinition($name);
       }
     }
-    elseif (!empty($definition['context'][$name])) {
-      return $definition['context'][$name];
+    elseif (!empty($definition['context_definitions'][$name])) {
+      return $definition['context_definitions'][$name];
     }
     throw new ContextException(sprintf("The %s context is not a valid context.", $name));
   }

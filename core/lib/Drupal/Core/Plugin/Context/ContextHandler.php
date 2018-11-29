@@ -43,8 +43,8 @@ class ContextHandler implements ContextHandlerInterface {
     if ($plugin_definition instanceof ContextAwarePluginDefinitionInterface) {
       return $plugin_definition->getContextDefinitions();
     }
-    if (is_array($plugin_definition) && isset($plugin_definition['context'])) {
-      return $plugin_definition['context'];
+    if (is_array($plugin_definition) && isset($plugin_definition['context_definitions'])) {
+      return $plugin_definition['context_definitions'];
     }
     return NULL;
   }

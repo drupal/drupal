@@ -54,8 +54,21 @@ class Condition extends Plugin {
    * The array is keyed by context names.
    *
    * @var \Drupal\Core\Annotation\ContextDefinition[]
+   *
+   * @deprecated Providing context definitions via the "context" key is
+   *   deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use
+   *   the "context_definitions" key instead.
    */
   public $context = [];
+
+  /**
+   * An array of context definitions describing the context used by the plugin.
+   *
+   * The array is keyed by context names.
+   *
+   * @var \Drupal\Core\Annotation\ContextDefinition[]
+   */
+  public $context_definitions = [];
 
   /**
    * The category under which the condition should listed in the UI.

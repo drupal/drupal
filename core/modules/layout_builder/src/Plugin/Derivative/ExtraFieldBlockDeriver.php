@@ -100,7 +100,7 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
 
           $context_definition = EntityContextDefinition::fromEntityType($entity_type)
             ->addConstraint('Bundle', [$bundle_id]);
-          $derivative['context'] = [
+          $derivative['context_definitions'] = [
             'entity' => $context_definition,
           ];
 

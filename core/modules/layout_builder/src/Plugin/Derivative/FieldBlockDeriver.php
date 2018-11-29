@@ -120,7 +120,7 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
 
           $context_definition = EntityContextDefinition::fromEntityTypeId($entity_type_id)->setLabel($entity_type_labels[$entity_type_id]);
           $context_definition->addConstraint('Bundle', [$bundle]);
-          $derivative['context'] = [
+          $derivative['context_definitions'] = [
             'entity' => $context_definition,
           ];
 
