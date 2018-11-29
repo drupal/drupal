@@ -4,6 +4,7 @@ namespace Drupal\path\Plugin\Field\FieldType;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\ComputedItemListTrait;
 
@@ -26,12 +27,18 @@ class PathFieldItemList extends FieldItemList {
 
     $entity = $this->getEntity();
     if (!$entity->isNew()) {
-      // @todo Support loading language neutral aliases in
-      //   https://www.drupal.org/node/2511968.
-      $alias = \Drupal::service('path.alias_storage')->load([
+      $conditions = [
         'source' => '/' . $entity->toUrl()->getInternalPath(),
         'langcode' => $this->getLangcode(),
-      ]);
+      ];
+      $alias = \Drupal::service('path.alias_storage')->load($conditions);
+      if ($alias === FALSE) {
+        // Fall back to non-specific language.
+        if ($this->getLangcode() !== LanguageInterface::LANGCODE_NOT_SPECIFIED) {
+          $conditions['langcode'] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+          $alias = \Drupal::service('path.alias_storage')->load($conditions);
+        }
+      }
 
       if ($alias) {
         $value = $alias;

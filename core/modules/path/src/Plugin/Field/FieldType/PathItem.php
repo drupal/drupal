@@ -63,10 +63,15 @@ class PathItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function postSave($update) {
+    // If specified, rely on the langcode property for the language, so that the
+    // existing language of an alias can be kept. That could for example be
+    // unspecified even if the field/entity has a specific langcode.
+    $alias_langcode = ($this->langcode && $this->pid) ? $this->langcode : $this->getLangcode();
+
     if (!$update) {
       if ($this->alias) {
         $entity = $this->getEntity();
-        if ($path = \Drupal::service('path.alias_storage')->save('/' . $entity->urlInfo()->getInternalPath(), $this->alias, $this->getLangcode())) {
+        if ($path = \Drupal::service('path.alias_storage')->save('/' . $entity->urlInfo()->getInternalPath(), $this->alias, $alias_langcode)) {
           $this->pid = $path['pid'];
         }
       }
@@ -79,7 +84,7 @@ class PathItem extends FieldItemBase {
       // Only save a non-empty alias.
       elseif ($this->alias) {
         $entity = $this->getEntity();
-        \Drupal::service('path.alias_storage')->save('/' . $entity->urlInfo()->getInternalPath(), $this->alias, $this->getLangcode(), $this->pid);
+        \Drupal::service('path.alias_storage')->save('/' . $entity->urlInfo()->getInternalPath(), $this->alias, $alias_langcode, $this->pid);
       }
     }
   }
