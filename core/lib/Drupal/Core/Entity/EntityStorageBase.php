@@ -161,7 +161,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *   If not empty, return entities that match these IDs.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]
-   *   Array of entities from the entity cache.
+   *   Array of entities from the entity cache, keyed by entity ID.
    */
   protected function getFromStaticCache(array $ids) {
     $entities = [];
@@ -259,17 +259,15 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // Create a new variable which is either a prepared version of the $ids
     // array for later comparison with the entity cache, or FALSE if no $ids
     // were passed. The $ids array is reduced as items are loaded from cache,
-    // and we need to know if it's empty for this reason to avoid querying the
+    // and we need to know if it is empty for this reason to avoid querying the
     // database when all requested entities are loaded from cache.
-    $passed_ids = !empty($ids) ? array_flip($ids) : FALSE;
+    $flipped_ids = $ids ? array_flip($ids) : FALSE;
     // Try to load entities from the static cache, if the entity type supports
     // static caching.
-    if ($this->entityType->isStaticallyCacheable() && $ids) {
+    if ($ids) {
       $entities += $this->getFromStaticCache($ids);
-      // If any entities were loaded, remove them from the ids still to load.
-      if ($passed_ids) {
-        $ids = array_keys(array_diff_key($passed_ids, $entities));
-      }
+      // If any entities were loaded, remove them from the IDs still to load.
+      $ids = array_keys(array_diff_key($flipped_ids, $entities));
     }
 
     // Gather entities from a 'preload' method. This method can invoke a hook to
@@ -281,10 +279,13 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $preloaded_entities = $this->preLoad($ids);
     if (!empty($preloaded_entities)) {
       $entities += $preloaded_entities;
+
+      // Add pre-loaded entities to the cache.
+      $this->setStaticCache($preloaded_entities);
     }
 
     // Load any remaining entities from the database. This is the case if $ids
-    // is set to NULL (so we load all entities) or if there are any ids left to
+    // is set to NULL (so we load all entities) or if there are any IDs left to
     // load.
     if ($ids === NULL || $ids) {
       $queried_entities = $this->doLoadMultiple($ids);
@@ -296,28 +297,17 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     if (!empty($queried_entities)) {
       $this->postLoad($queried_entities);
       $entities += $queried_entities;
-    }
 
-    if ($this->entityType->isStaticallyCacheable()) {
-      // Add pre-loaded entities to the cache.
-      if (!empty($preloaded_entities)) {
-        $this->setStaticCache($preloaded_entities);
-      }
       // Add queried entities to the cache.
-      if (!empty($queried_entities)) {
-        $this->setStaticCache($queried_entities);
-      }
+      $this->setStaticCache($queried_entities);
     }
 
     // Ensure that the returned array is ordered the same as the original
-    // $ids array if this was passed in and remove any invalid ids.
-    if ($passed_ids) {
-      // Remove any invalid ids from the array.
-      $passed_ids = array_intersect_key($passed_ids, $entities);
-      foreach ($entities as $entity) {
-        $passed_ids[$entity->id()] = $entity;
-      }
-      $entities = $passed_ids;
+    // $ids array if this was passed in and remove any invalid IDs.
+    if ($flipped_ids) {
+      // Remove any invalid IDs from the array and preserve the order passed in.
+      $flipped_ids = array_intersect_key($flipped_ids, $entities);
+      $entities = array_replace($flipped_ids, $entities);
     }
 
     return $entities;

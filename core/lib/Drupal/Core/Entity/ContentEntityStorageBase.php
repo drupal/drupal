@@ -1042,12 +1042,10 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       // entity directly from the persistent cache.
       $this->postLoad($entities);
 
-      if ($this->entityType->isStaticallyCacheable()) {
-        // As we've removed the entity from the static cache already we have to
-        // put the loaded unchanged entity there to simulate the behavior of the
-        // parent.
-        $this->setStaticCache($entities);
-      }
+      // As we've removed the entity from the static cache already we have to
+      // put the loaded unchanged entity there to simulate the behavior of the
+      // parent.
+      $this->setStaticCache($entities);
     }
 
     return $entities[$id];
