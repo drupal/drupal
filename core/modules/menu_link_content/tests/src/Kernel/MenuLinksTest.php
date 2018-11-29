@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\Tests\menu_link_content\Functional;
+namespace Drupal\Tests\menu_link_content\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\system\Entity\Menu;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -14,14 +14,14 @@ use Drupal\user\Entity\User;
  *
  * @group Menu
  */
-class LinksTest extends BrowserTestBase {
+class MenuLinksTest extends KernelTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['router_test', 'menu_link_content'];
+  public static $modules = ['link', 'menu_link_content', 'router_test', 'system', 'user'];
 
   /**
    * The menu link plugin manager.
@@ -37,6 +37,11 @@ class LinksTest extends BrowserTestBase {
     parent::setUp();
 
     $this->menuLinkManager = \Drupal::service('plugin.manager.menu.link');
+
+    $this->installSchema('system', ['sequences']);
+    $this->installSchema('user', ['users_data']);
+    $this->installEntitySchema('menu_link_content');
+    $this->installEntitySchema('user');
 
     Menu::create([
       'id' => 'menu_test',
@@ -250,6 +255,40 @@ class LinksTest extends BrowserTestBase {
 
     // @todo Figure out what makes sense to test in terms of automatic
     //   re-parenting. https://www.drupal.org/node/2309531
+  }
+
+  /**
+   * Tests the MenuLinkContent::preDelete function.
+   */
+  public function testMenuLinkContentReparenting() {
+    // Add new menu items in a hierarchy.
+    $parent = MenuLinkContent::create([
+      'title' => $this->randomMachineName(8),
+      'link' => [['uri' => 'internal:/']],
+      'menu_name' => 'main',
+    ]);
+    $parent->save();
+    $child1 = MenuLinkContent::create([
+      'title' => $this->randomMachineName(8),
+      'link' => [['uri' => 'internal:/']],
+      'menu_name' => 'main',
+      'parent' => 'menu_link_content:' . $parent->uuid(),
+    ]);
+    $child1->save();
+    $child2 = MenuLinkContent::create([
+      'title' => $this->randomMachineName(8),
+      'link' => [['uri' => 'internal:/']],
+      'menu_name' => 'main',
+      'parent' => 'menu_link_content:' . $child1->uuid(),
+    ]);
+    $child2->save();
+
+    // Delete the middle child.
+    $child1->delete();
+    // Refresh $child2.
+    $child2 = MenuLinkContent::load($child2->id());
+    // Test the reference in the child.
+    $this->assertSame('menu_link_content:' . $parent->uuid(), $child2->getParentId());
   }
 
   /**
