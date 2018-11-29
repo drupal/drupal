@@ -198,7 +198,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
    *   The menu link ID.
    */
   protected function getUuid() {
-    $this->getDerivativeId();
+    return $this->getDerivativeId();
   }
 
   /**
