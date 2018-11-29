@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\content_moderation\Functional;
 
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
@@ -24,7 +26,13 @@ class ModeratedContentViewTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['content_moderation', 'node', 'views'];
+  public static $modules = [
+    'content_moderation',
+    'node',
+    'views',
+    'language',
+    'content_translation',
+  ];
 
   /**
    * {@inheritdoc}
@@ -126,6 +134,36 @@ class ModeratedContentViewTest extends BrowserTestBase {
     $assert_sesison->linkByHrefNotExists('node/' . $nodes['published_then_draft_article']->id() . '/edit');
     $assert_sesison->linkByHrefNotExists('node/' . $nodes['published_then_archived_article']->id() . '/edit');
     $assert_sesison->linkByHrefNotExists('node/' . $nodes['draft_article']->id() . '/edit');
+  }
+
+  /**
+   * Test the moderated content page with multilingual content.
+   */
+  public function testModeratedContentPageMultilingual() {
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+
+    $node = $this->drupalCreateNode([
+      'type' => 'article',
+      'moderation_state' => 'published',
+      'title' => 'en article published',
+    ]);
+
+    $node->title = 'en draft revision';
+    $node->moderation_state = 'draft';
+    $node->save();
+
+    $translation = Node::load($node->id())->addTranslation('fr');
+    $translation->title = 'fr draft revision';
+    $translation->moderation_state = 'draft';
+    $translation->save();
+
+    $this->drupalLogin($this->adminUser);
+
+    // The moderated content view should show both the pending en draft revision
+    // and the pending fr draft revision.
+    $this->drupalGet('admin/content/moderated');
+    $this->assertSession()->linkExists('fr draft revision');
+    $this->assertSession()->linkExists('en draft revision');
   }
 
 }

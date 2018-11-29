@@ -501,10 +501,10 @@ display:
           entity_type: node
           plugin_id: entity_operations
       filters:
-        latest_revision:
-          id: latest_revision
+        latest_translation_affected_revision:
+          id: latest_translation_affected_revision
           table: node_revision
-          field: latest_revision
+          field: latest_translation_affected_revision
           relationship: none
           group_type: group
           admin_label: ''
@@ -537,7 +537,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           entity_type: node
-          plugin_id: latest_revision
+          plugin_id: latest_translation_affected_revision
         title:
           id: title
           table: node_field_revision

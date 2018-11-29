@@ -7,6 +7,7 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Site\Settings;
+use Drupal\views\Entity\View;
 use Drupal\workflows\Entity\Workflow;
 
 /**
@@ -109,4 +110,31 @@ function content_moderation_post_update_set_default_moderation_state(&$sandbox) 
     }
     return FALSE;
   });
+}
+
+/**
+ * Set the filter on the moderation view to be the latest translation affected.
+ */
+function content_moderation_post_update_set_views_filter_latest_translation_affected_revision(&$sandbox) {
+  $original_plugin_name = 'latest_revision';
+  $new_plugin_name = 'latest_translation_affected_revision';
+
+  // Check that views is installed and the moderated content view exists.
+  if (\Drupal::moduleHandler()->moduleExists('views') && $view = View::load('moderated_content')) {
+    $display = &$view->getDisplay('default');
+    if (!isset($display['display_options']['filters'][$original_plugin_name])) {
+      return;
+    }
+
+    $translation_affected_filter = [
+      'id' => $new_plugin_name,
+      'field' => $new_plugin_name,
+      'plugin_id' => $new_plugin_name,
+    ] + $display['display_options']['filters'][$original_plugin_name];
+
+    $display['display_options']['filters'] = [$new_plugin_name => $translation_affected_filter] + $display['display_options']['filters'];
+    unset($display['display_options']['filters'][$original_plugin_name]);
+
+    $view->save();
+  }
 }
