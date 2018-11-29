@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\path\Functional;
 
+use Drupal\Core\Language\LanguageInterface;
+
 /**
  * Confirm that the Path module user interface works with languages.
  *
@@ -76,6 +78,38 @@ class PathLanguageUiTest extends PathTestBase {
 
     $this->drupalGet('fr/' . $name);
     $this->assertText(t('Filter aliases'), 'Foreign URL alias works');
+  }
+
+  /**
+   * Test that language unspecific aliases are shown and saved in the node form.
+   */
+  public function testNotSpecifiedNode() {
+    // Create test node.
+    $node = $this->drupalCreateNode();
+
+    // Create a language-unspecific alias in the admin UI, ensure that is
+    // displayed and the langcode is not changed when saving.
+    $edit = [
+      'source' => '/node/' . $node->id(),
+      'alias' => '/' . $this->getRandomGenerator()->word(8),
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ];
+    $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
+
+    $this->drupalGet($node->toUrl('edit-form'));
+    $this->assertSession()->fieldValueEquals('path[0][alias]', $edit['alias']);
+    $this->drupalPostForm(NULL, [], t('Save'));
+
+    $this->drupalGet('admin/config/search/path');
+    $this->assertSession()->pageTextContains('None');
+    $this->assertSession()->pageTextNotContains('English');
+
+    // Create another node, with no alias, to ensure non-language specific
+    // aliases are loaded correctly.
+    $node = $this->drupalCreateNode();
+    $this->drupalget($node->toUrl('edit-form'));
+    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->assertSession()->pageTextNotContains(t('The alias is already in use.'));
   }
 
 }
