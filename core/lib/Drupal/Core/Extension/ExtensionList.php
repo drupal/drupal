@@ -11,6 +11,12 @@ use Drupal\Core\State\StateInterface;
  * Provides available extensions.
  *
  * The extension list is per extension type, like module, theme and profile.
+ *
+ * @internal
+ *   This class is not yet stable and therefore there are no guarantees that the
+ *   internal implementations including constructor signature and protected
+ *   properties / methods will not change over time. This will be reviewed after
+ *   https://www.drupal.org/project/drupal/issues/2940481
  */
 abstract class ExtensionList {
 
@@ -305,15 +311,7 @@ abstract class ExtensionList {
 
     // Read info files for each extension.
     foreach ($extensions as $extension_name => $extension) {
-      // Look for the info file.
-      $extension->info = $this->infoParser->parse($extension->getPathname());
-
-      // Add the info file modification time, so it becomes available for
-      // contributed extensions to use for ordering extension lists.
-      $extension->info['mtime'] = $extension->getMTime();
-
-      // Merge extension type-specific defaults.
-      $extension->info += $this->defaults;
+      $extension->info = $this->createExtensionInfo($extension);
 
       // Invoke hook_system_info_alter() to give installed modules a chance to
       // modify the data in the .info.yml files if necessary.
@@ -539,6 +537,28 @@ abstract class ExtensionList {
    */
   public function getPath($extension_name) {
     return dirname($this->getPathname($extension_name));
+  }
+
+  /**
+   * Creates the info value for an extension object.
+   *
+   * @param \Drupal\Core\Extension\Extension $extension
+   *   The extension whose info is to be altered.
+   *
+   * @return array
+   *   The extension info array.
+   */
+  protected function createExtensionInfo(Extension $extension) {
+    $info = $this->infoParser->parse($extension->getPathname());
+
+    // Add the info file modification time, so it becomes available for
+    // contributed extensions to use for ordering extension lists.
+    $info['mtime'] = $extension->getMTime();
+
+    // Merge extension type-specific defaults.
+    $info += $this->defaults;
+
+    return $info;
   }
 
 }

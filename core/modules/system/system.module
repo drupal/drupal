@@ -11,7 +11,6 @@ use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Extension\Extension;
@@ -963,38 +962,20 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
  *   array is returned.
  *
  * @see system_rebuild_module_data()
- * @see \Drupal\Core\Extension\ThemeHandlerInterface::rebuildThemeData()
+ * @see \Drupal\Core\Extension\ThemeExtensionList
  */
 function system_get_info($type, $name = NULL) {
-  if ($type == 'module') {
-    /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
-    $module_list = \Drupal::service('extension.list.module');
-    if (isset($name)) {
-      try {
-        return $module_list->getExtensionInfo($name);
-      }
-      catch (UnknownExtensionException $e) {
-        return [];
-      }
+  /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
+  $extension_list = \Drupal::service('extension.list.' . $type);
+  if (isset($name)) {
+    try {
+      return $extension_list->getExtensionInfo($name);
     }
-    else {
-      return $module_list->getAllInstalledInfo();
+    catch (\InvalidArgumentException $e) {
+      return [];
     }
   }
-  else {
-    // @todo move into ThemeExtensionList https://www.drupal.org/node/2659940
-    $info = [];
-    $list = system_list($type);
-    foreach ($list as $shortname => $item) {
-      if (!empty($item->status)) {
-        $info[$shortname] = $item->info;
-      }
-    }
-    if (isset($name)) {
-      return isset($info[$name]) ? $info[$name] : [];
-    }
-    return $info;
-  }
+  return $extension_list->getAllInstalledInfo();
 }
 
 /**

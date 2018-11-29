@@ -169,8 +169,8 @@ class Extension implements \Serializable {
       'filename' => $this->filename,
     ];
 
-    // @todo ThemeHandler::listInfo(), ThemeHandler::rebuildThemeData(), and
-    //   system_list() are adding custom properties to the Extension object.
+    // @todo \Drupal\Core\Extension\ThemeExtensionList is adding custom
+    //   properties to the Extension object.
     $info = new \ReflectionObject($this);
     foreach ($info->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
       $data[$property->getName()] = $property->getValue($this);

@@ -4,7 +4,6 @@ namespace Drupal\Tests\system\Kernel\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Component\Render\MarkupInterface;
-use Drupal\test_theme\ThemeClass;
 
 /**
  * Tests low-level theme functions.
@@ -144,13 +143,6 @@ class ThemeTest extends KernelTestBase {
       ],
     ];
     $this->assertThemeOutput('theme_test_render_element_children', $element, 'Foo', 'drupal_render() avoids #theme_wrappers recursion loop when rendering a render element.');
-  }
-
-  /**
-   * Tests theme can provide classes.
-   */
-  public function testClassLoading() {
-    new ThemeClass();
   }
 
   /**

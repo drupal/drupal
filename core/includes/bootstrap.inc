@@ -10,12 +10,12 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
-use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
  * Minimum supported version of PHP.
@@ -223,10 +223,6 @@ function config_get_config_directory($type) {
  *   The filename of the requested item or NULL if the item is not found.
  */
 function drupal_get_filename($type, $name, $filename = NULL) {
-  // The location of files will not change during the request, so do not use
-  // drupal_static().
-  static $files = [];
-
   // Type 'core' only exists to simplify application-level logic; it always maps
   // to the /core directory, whereas $name is ignored. It is only requested via
   // drupal_get_path(). /core/core.info.yml does not exist, but is required
@@ -235,45 +231,31 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     return 'core/core.info.yml';
   }
 
-  if ($type === 'module' || $type === 'profile') {
-    $service_id = 'extension.list.' . $type;
+  try {
     /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
-    $extension_list = \Drupal::service($service_id);
+    $extension_list = \Drupal::service("extension.list.$type");
     if (isset($filename)) {
       // Manually add the info file path of an extension.
       $extension_list->setPathname($name, $filename);
     }
-    try {
-      return $extension_list->getPathname($name);
-    }
-    catch (UnknownExtensionException $e) {
-      // Catch the exception. This will result in triggering an error.
-    }
+    return $extension_list->getPathname($name);
   }
-  else {
-
-    if (!isset($files[$type])) {
-      $files[$type] = [];
-    }
-
-    if (isset($filename)) {
-      $files[$type][$name] = $filename;
-    }
-    elseif (!isset($files[$type][$name])) {
-      // If still unknown, retrieve the file list prepared in state by
-      // \Drupal\Core\Extension\ExtensionList() and
-      // \Drupal\Core\Extension\ThemeHandlerInterface::rebuildThemeData().
-      if (!isset($files[$type][$name]) && \Drupal::hasService('state')) {
-        $files[$type] += \Drupal::state()->get('system.' . $type . '.files', []);
-      }
-    }
-
-    if (isset($files[$type][$name])) {
-      return $files[$type][$name];
-    }
+  catch (ServiceNotFoundException $e) {
+    // Catch the exception. This will result in triggering an error.
+    // If the service is unknown, create a user-level error message.
+    trigger_error(
+      sprintf('Unknown type specified: "%s". Must be one of: "core", "profile", "module", "theme", or "theme_engine".', $type),
+      E_USER_WARNING
+    );
   }
-  // If the filename is still unknown, create a user-level error message.
-  trigger_error(new FormattableMarkup('The following @type is missing from the file system: @name', ['@type' => $type, '@name' => $name]), E_USER_WARNING);
+  catch (\InvalidArgumentException $e) {
+    // Catch the exception. This will result in triggering an error.
+    // If the filename is still unknown, create a user-level error message.
+    trigger_error(
+      sprintf('The following %s is missing from the file system: %s', $type, $name),
+      E_USER_WARNING
+    );
+  }
 }
 
 /**

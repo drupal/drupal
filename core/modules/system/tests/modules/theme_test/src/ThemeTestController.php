@@ -158,4 +158,14 @@ class ThemeTestController extends ControllerBase {
     ];
   }
 
+  /**
+   * Controller for testing a namespaced class in a theme.
+   */
+  public function testThemeClass() {
+    return [
+      '#theme' => 'theme_test_theme_class',
+      '#title' => 'Testing loading a class from a .theme file',
+    ];
+  }
+
 }

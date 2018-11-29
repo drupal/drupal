@@ -161,7 +161,7 @@ class ActiveTheme {
   /**
    * Returns the path to the theme engine for root themes.
    *
-   * @see \Drupal\Core\Extension\ThemeHandler::rebuildThemeData
+   * @see \Drupal\Core\Extension\ThemeExtensionList::doList()
    *
    * @return mixed
    */

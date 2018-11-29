@@ -56,8 +56,8 @@ interface ThemeHandlerInterface {
    *
    * @return \Drupal\Core\Extension\Extension[]
    *   An associative array of the currently installed themes. The keys are the
-   *   themes' machine names and the values are objects having the following
-   *   properties:
+   *   themes' machine names and the values are Extension objects having the
+   *   following properties:
    *   - filename: The filepath and name of the .info.yml file.
    *   - name: The machine name of the theme.
    *   - status: 1 for installed, 0 for uninstalled themes.

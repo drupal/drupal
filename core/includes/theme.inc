@@ -99,7 +99,7 @@ function theme_get_registry($complete = TRUE) {
 /**
  * Returns an array of default theme features.
  *
- * @see \Drupal\Core\Extension\ThemeHandler::$defaultFeatures
+ * @see \Drupal\Core\Extension\ThemeExtensionList::$defaults
  */
 function _system_default_theme_features() {
   return [

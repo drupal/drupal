@@ -70,6 +70,11 @@ function theme_test_theme($existing, $type, $theme, $path) {
     'render element' => 'content',
     'base hook' => 'container',
   ];
+  $items['theme_test_theme_class'] = [
+    'variables' => [
+      'message' => '',
+    ],
+  ];
   return $items;
 }
 

@@ -517,6 +517,12 @@ services:
   extension.list.profile:
     class: Drupal\Core\Extension\ProfileExtensionList
     arguments: ['@app.root', 'profile', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
+  extension.list.theme:
+    class: Drupal\Core\Extension\ThemeExtensionList
+    arguments: ['@app.root', 'theme', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.theme_engine', '%install_profile%']
+  extension.list.theme_engine:
+    class: Drupal\Core\Extension\ThemeEngineExtensionList
+    arguments: ['@app.root', 'theme_engine', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
   content_uninstall_validator:
     class: Drupal\Core\Entity\ContentUninstallValidator
     tags:
@@ -531,7 +537,7 @@ services:
     lazy: true
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
-    arguments: ['@app.root', '@config.factory', '@module_handler', '@state', '@info_parser']
+    arguments: ['@app.root', '@config.factory', '@extension.list.theme']
   theme_installer:
     class: Drupal\Core\Extension\ThemeInstaller
     arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state']

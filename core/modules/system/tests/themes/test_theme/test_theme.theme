@@ -154,3 +154,15 @@ function test_theme_preprocess_theme_test_preprocess_suggestions__kitten__flamin
 function test_theme_preprocess_theme_test_preprocess_suggestions__kitten__meerkat__tarsier__moose(&$variables) {
   $variables['bar'] = 'Moose';
 }
+
+/**
+ * Tests that a class can be loaded within a .theme file.
+ */
+function test_theme_preprocess_theme_test_theme_class(&$variables) {
+  if (class_exists('\Drupal\test_theme\ThemeClass')) {
+    $variables['message'] = 'Loading ThemeClass was successful.';
+  }
+  else {
+    $variables['message'] = 'Loading ThemeClass failed.';
+  }
+}

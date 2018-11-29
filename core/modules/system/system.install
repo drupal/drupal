@@ -1829,7 +1829,8 @@ function system_update_8014() {
   $theme_handler->refreshInfo();
   foreach ($theme_handler->listInfo() as $theme) {
     // We first check that a base theme is set because if it's set to false then
-    // it's unset in \Drupal\Core\Extension\ThemeHandler::rebuildThemeData().
+    // it's unset in
+    // \Drupal\Core\Extension\ThemeExtensionList::createExtensionInfo().
     if (isset($theme->info['base theme']) && $theme->info['base theme'] == 'stable') {
       $theme_handler->install(['stable']);
       return;

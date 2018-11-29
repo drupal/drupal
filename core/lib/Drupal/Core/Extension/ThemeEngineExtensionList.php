@@ -3,7 +3,7 @@
 namespace Drupal\Core\Extension;
 
 /**
- * Provides a list of installation profiles.
+ * Provides a list of available theme engines.
  *
  * @internal
  *   This class is not yet stable and therefore there are no guarantees that the
@@ -11,14 +11,13 @@ namespace Drupal\Core\Extension;
  *   properties / methods will not change over time. This will be reviewed after
  *   https://www.drupal.org/project/drupal/issues/2940481
  */
-class ProfileExtensionList extends ExtensionList {
+class ThemeEngineExtensionList extends ExtensionList {
 
   /**
    * {@inheritdoc}
    */
   protected $defaults = [
     'dependencies' => [],
-    'install' => [],
     'description' => '',
     'package' => 'Other',
     'version' => NULL,
@@ -29,7 +28,9 @@ class ProfileExtensionList extends ExtensionList {
    * {@inheritdoc}
    */
   protected function getInstalledExtensionNames() {
-    return [$this->installProfile];
+    // Theme engines do not have an 'install' state, so return names of all
+    // discovered theme engines.
+    return array_keys($this->extensions);
   }
 
 }
