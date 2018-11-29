@@ -4,7 +4,7 @@ namespace Drupal\Tests\aggregator\Functional;
 
 use Drupal\aggregator\Entity\Feed;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Database\Database;
+use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\aggregator\FeedInterface;
 
@@ -147,9 +147,16 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    *   Number of feed items on default feed created by createFeed().
    */
   public function getDefaultFeedItemCount() {
-    // Our tests are based off of rss.xml, so let's find out how many elements should be related.
-    $feed_count = Database::getConnection()->queryRange('SELECT COUNT(DISTINCT nid) FROM {node_field_data} n WHERE n.promote = 1 AND n.status = 1', 0, $this->config('system.rss')->get('items.limit'))->fetchField();
-    return $feed_count > 10 ? 10 : $feed_count;
+    // Our tests are based off of rss.xml, so let's find out how many elements
+    // should be related.
+    $feed_count = \Drupal::entityQuery('node')
+      ->condition('promote', NodeInterface::PROMOTED)
+      ->condition('status', NodeInterface::PUBLISHED)
+      ->accessCheck(FALSE)
+      ->range(0, $this->config('system.rss')->get('items.limit'))
+      ->count()
+      ->execute();
+    return min($feed_count, 10);
   }
 
   /**
