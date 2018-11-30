@@ -33,7 +33,6 @@ class ThemeExtensionListTest extends KernelTestBase {
     $extensions = $theme_extension_list->getList();
 
     $this->assertArrayHasKey('test_theme', $extensions);
-    $this->assertEquals(0, $extensions['test_theme']->weight);
   }
 
 }

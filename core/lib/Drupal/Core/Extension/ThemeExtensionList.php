@@ -130,9 +130,8 @@ class ThemeExtensionList extends ExtensionList {
       if (!empty($theme->info['base theme'])) {
         $sub_themes[] = $name;
       }
-      // Add weight and status.
+      // Add status.
       $theme->status = (int) isset($this->installedThemes[$name]);
-      $theme->weight = isset($this->installedThemes[$name]) ? $this->installedThemes[$name] : 0;
     }
 
     // Build dependencies.
