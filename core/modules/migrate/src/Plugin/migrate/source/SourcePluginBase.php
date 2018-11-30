@@ -353,7 +353,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
 
       $row_data = $this->getIterator()->current() + $this->configuration;
       $this->fetchNextRow();
-      $row = new Row($row_data, $this->migration->getSourcePlugin()->getIds(), $this->migration->getDestinationIds());
+      $row = new Row($row_data, $this->getIds());
 
       // Populate the source key for this row.
       $this->currentSourceIds = $row->getSourceIdValues();
