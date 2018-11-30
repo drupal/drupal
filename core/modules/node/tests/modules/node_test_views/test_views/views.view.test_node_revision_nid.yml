@@ -44,6 +44,13 @@ display:
           plugin_id: field
           entity_type: node
           entity_field: nid
+        langcode:
+          id: langcode
+          table: node_field_revision
+          field: langcode
+          plugin_id: field
+          entity_type: node
+          entity_field: langcode
       arguments:
         nid:
           id: nid
@@ -61,6 +68,21 @@ display:
           plugin_id: field
           entity_type: node
           entity_field: vid
+        langcode:
+          id: langcode
+          table: node_field_revision
+          field: langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          entity_type: node
+          entity_field: langcode
+          plugin_id: standard
+      display_extenders: {  }
     display_plugin: default
     display_title: Master
     id: default
