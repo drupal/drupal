@@ -5,7 +5,6 @@ namespace Drupal\Tests\inline_form_errors\Unit;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Utility\LinkGeneratorInterface;
 use Drupal\inline_form_errors\FormErrorHandler;
 use Drupal\Tests\UnitTestCase;
 
@@ -48,11 +47,10 @@ class FormErrorHandlerTest extends UnitTestCase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->linkGenerator = $this->createMock(LinkGeneratorInterface::class);
     $this->renderer = $this->createMock(RendererInterface::class);
     $this->messenger = $this->createMock(MessengerInterface::class);
 
-    $this->formErrorHandler = new FormErrorHandler($this->getStringTranslationStub(), $this->linkGenerator, $this->renderer, $this->messenger);
+    $this->formErrorHandler = new FormErrorHandler($this->getStringTranslationStub(), $this->renderer, $this->messenger);
   }
 
   /**
@@ -60,11 +58,6 @@ class FormErrorHandlerTest extends UnitTestCase {
    * @covers ::displayErrorMessages
    */
   public function testDisplayErrorMessagesInline() {
-
-    $this->linkGenerator->expects($this->any())
-      ->method('generate')
-      ->willReturnArgument(0);
-
     $this->messenger->expects($this->at(0))
       ->method('addError')
       ->with('no title given');
@@ -81,7 +74,11 @@ class FormErrorHandlerTest extends UnitTestCase {
     $this->renderer->expects($this->any())
       ->method('renderPlain')
       ->will($this->returnCallback(function ($render_array) {
-        return $render_array[0]['#markup'] . '<ul-comma-list-mock><li-mock>' . implode(array_map('htmlspecialchars', $render_array[1]['#items']), '</li-mock><li-mock>') . '</li-mock></ul-comma-list-mock>';
+        $links = [];
+        foreach ($render_array[1]['#items'] as $item) {
+          $links[] = htmlspecialchars($item['#title']);
+        }
+        return $render_array[0]['#markup'] . '<ul-comma-list-mock><li-mock>' . implode($links, '</li-mock><li-mock>') . '</li-mock></ul-comma-list-mock>';
       }));
 
     $form = [
