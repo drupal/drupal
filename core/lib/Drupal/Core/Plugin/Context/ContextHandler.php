@@ -97,7 +97,7 @@ class ContextHandler implements ContextHandlerInterface {
 
         // Pass the value to the plugin if there is one.
         if ($contexts[$context_id]->hasContextValue()) {
-          $plugin->setContext($plugin_context_id, $contexts[$context_id]);
+          $plugin->setContextValue($plugin_context_id, $contexts[$context_id]->getContextData());
         }
         elseif ($plugin_context_definition->isRequired()) {
           // Collect required contexts that exist but are missing a value.

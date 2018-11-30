@@ -20,6 +20,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextHandler;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\Plugin\DataType\StringData;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\Tests\UnitTestCase;
@@ -312,11 +314,20 @@ class ContextHandlerTest extends UnitTestCase {
    * @covers ::applyContextMapping
    */
   public function testApplyContextMapping() {
+    $context_hit_data = StringData::createInstance(DataDefinition::create('string'));
+    $context_hit_data->setValue('foo');
     $context_hit = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
+    $context_hit->expects($this->atLeastOnce())
+      ->method('getContextData')
+      ->will($this->returnValue($context_hit_data));
+    $context_miss_data = StringData::createInstance(DataDefinition::create('string'));
+    $context_miss_data->setValue('bar');
     $context_hit->expects($this->atLeastOnce())
       ->method('hasContextValue')
       ->willReturn(TRUE);
     $context_miss = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
+    $context_miss->expects($this->never())
+      ->method('getContextData');
 
     $contexts = [
       'hit' => $context_hit,
@@ -333,8 +344,8 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('getContextDefinitions')
       ->will($this->returnValue(['hit' => $context_definition]));
     $plugin->expects($this->once())
-      ->method('setContext')
-      ->with('hit', $context_hit);
+      ->method('setContextValue')
+      ->with('hit', $context_hit_data);
 
     // Make sure that the cacheability metadata is passed to the plugin context.
     $plugin_context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -374,7 +385,7 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('getContextDefinitions')
       ->will($this->returnValue(['hit' => $context_definition]));
     $plugin->expects($this->never())
-      ->method('setContext');
+      ->method('setContextValue');
 
     // No context, so no cacheability metadata can be passed along.
     $plugin->expects($this->never())
@@ -409,7 +420,7 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('getContextDefinitions')
       ->will($this->returnValue(['optional' => $context_definition]));
     $plugin->expects($this->never())
-      ->method('setContext');
+      ->method('setContextValue');
 
     // No context, so no cacheability metadata can be passed along.
     $plugin->expects($this->never())
@@ -446,7 +457,7 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('getContextDefinitions')
       ->will($this->returnValue(['hit' => $context_definition]));
     $plugin->expects($this->never())
-      ->method('setContext');
+      ->method('setContextValue');
 
     $this->setExpectedException(MissingValueContextException::class, 'Required contexts without a value: hit');
     $this->contextHandler->applyContextMapping($plugin, $contexts);
@@ -480,7 +491,7 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('getContextDefinitions')
       ->will($this->returnValue(['hit' => $context_definition]));
     $plugin->expects($this->never())
-      ->method('setContext');
+      ->method('setContextValue');
 
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
@@ -489,7 +500,12 @@ class ContextHandlerTest extends UnitTestCase {
    * @covers ::applyContextMapping
    */
   public function testApplyContextMappingConfigurableAssigned() {
+    $context_data = StringData::createInstance(DataDefinition::create('string'));
+    $context_data->setValue('foo');
     $context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
+    $context->expects($this->atLeastOnce())
+      ->method('getContextData')
+      ->will($this->returnValue($context_data));
     $context->expects($this->atLeastOnce())
       ->method('hasContextValue')
       ->willReturn(TRUE);
@@ -508,8 +524,8 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('getContextDefinitions')
       ->will($this->returnValue(['hit' => $context_definition]));
     $plugin->expects($this->once())
-      ->method('setContext')
-      ->with('hit', $context);
+      ->method('setContextValue')
+      ->with('hit', $context_data);
 
     // Make sure that the cacheability metadata is passed to the plugin context.
     $plugin_context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -546,7 +562,7 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('getContextDefinitions')
       ->will($this->returnValue(['hit' => $context_definition]));
     $plugin->expects($this->never())
-      ->method('setContext');
+      ->method('setContextValue');
 
     $this->setExpectedException(ContextException::class, 'Assigned contexts were not satisfied: miss');
     $this->contextHandler->applyContextMapping($plugin, $contexts, ['miss' => 'name']);
