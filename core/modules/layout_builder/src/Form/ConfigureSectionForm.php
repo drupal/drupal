@@ -194,4 +194,14 @@ class ConfigureSectionForm extends FormBase {
     throw new \InvalidArgumentException(sprintf('The "%s" layout does not provide a configuration form', $layout->getPluginId()));
   }
 
+  /**
+   * Retrieve the section storage property.
+   *
+   * @return \Drupal\layout_builder\SectionStorageInterface
+   *   The section storage for the current form.
+   */
+  public function getSectionStorage() {
+    return $this->sectionStorage;
+  }
+
 }

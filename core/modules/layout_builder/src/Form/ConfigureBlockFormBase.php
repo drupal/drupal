@@ -7,6 +7,7 @@ use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
@@ -27,7 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
-abstract class ConfigureBlockFormBase extends FormBase {
+abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInterface {
 
   use AjaxFormHelperTrait;
   use ContextAwarePluginAssignmentTrait;
@@ -137,6 +138,13 @@ abstract class ConfigureBlockFormBase extends FormBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getBaseFormId() {
+    return 'layout_builder_configure_block';
+  }
+
+  /**
    * Builds the form for the block.
    *
    * @param array $form
@@ -240,6 +248,36 @@ abstract class ConfigureBlockFormBase extends FormBase {
       return $this->pluginFormFactory->createInstance($block, 'configure');
     }
     return $block;
+  }
+
+  /**
+   * Retrieves the section storage object.
+   *
+   * @return \Drupal\layout_builder\SectionStorageInterface
+   *   The section storage for the current form.
+   */
+  public function getSectionStorage() {
+    return $this->sectionStorage;
+  }
+
+  /**
+   * Retrieves the current layout section being edited by the form.
+   *
+   * @return \Drupal\layout_builder\Section
+   *   The current layout section.
+   */
+  public function getCurrentSection() {
+    return $this->sectionStorage->getSection($this->delta);
+  }
+
+  /**
+   * Retrieves the current component being edited by the form.
+   *
+   * @return \Drupal\layout_builder\SectionComponent
+   *   The current section component.
+   */
+  public function getCurrentComponent() {
+    return $this->getCurrentSection()->getComponent($this->uuid);
   }
 
 }

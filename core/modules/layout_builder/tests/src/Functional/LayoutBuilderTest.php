@@ -558,6 +558,32 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that hook_form_alter() has access to the Layout Builder info.
+   */
+  public function testFormAlter() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+      'administer node fields',
+    ]));
+
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $page->checkField('layout[enabled]');
+    $page->pressButton('Save');
+
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add Block');
+    $page->clickLink('Powered by Drupal');
+    $assert_session->pageTextContains('Layout Builder Storage: node.bundle_with_section_field.default');
+    $assert_session->pageTextContains('Layout Builder Section: layout_onecol');
+    $assert_session->pageTextContains('Layout Builder Component: system_powered_by_block');
+  }
+
+  /**
    * Tests the usage of placeholders for empty blocks.
    *
    * @see \Drupal\Core\Block\BlockPluginInterface::getPlaceholderString()

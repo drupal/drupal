@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
@@ -57,4 +58,25 @@ function layout_builder_test_node_view(array &$build, EntityInterface $entity, E
       '#markup' => 'Extra, Extra read all about it.',
     ];
   }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for layout_builder_configure_block.
+ */
+function layout_builder_test_form_layout_builder_configure_block_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\layout_builder\Form\ConfigureBlockFormBase $form_object */
+  $form_object = $form_state->getFormObject();
+
+  $form['layout_builder_test']['storage'] = [
+    '#type' => 'item',
+    '#title' => 'Layout Builder Storage: ' . $form_object->getSectionStorage()->getStorageId(),
+  ];
+  $form['layout_builder_test']['section'] = [
+    '#type' => 'item',
+    '#title' => 'Layout Builder Section: ' . $form_object->getCurrentSection()->getLayoutId(),
+  ];
+  $form['layout_builder_test']['component'] = [
+    '#type' => 'item',
+    '#title' => 'Layout Builder Component: ' . $form_object->getCurrentComponent()->getPluginId(),
+  ];
 }
