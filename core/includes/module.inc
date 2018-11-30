@@ -44,8 +44,15 @@ function system_list($type) {
 
 /**
  * Resets all system_list() caches.
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. There
+ *   is no direct replacement. Call each
+ *   \Drupal::service('extension.list.TYPE')->reset() as necessary.
+ *
+ * @see https://www.drupal.org/node/2709919
  */
 function system_list_reset() {
+  @trigger_error("system_list_reset() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. There is no direct replacement. Call each \Drupal::service('extension.list.TYPE')->reset() as necessary. See https://www.drupal.org/node/2709919.", E_USER_DEPRECATED);
   \Drupal::service('extension.list.profile')->reset();
   \Drupal::service('extension.list.module')->reset();
   \Drupal::service('extension.list.theme_engine')->reset();

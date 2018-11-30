@@ -112,10 +112,11 @@ function update_check_requirements() {
  */
 function update_set_schema($module, $schema_version) {
   \Drupal::keyValue('system.schema')->set($module, $schema_version);
-  // system_list_reset() is in module.inc but that would only be available
-  // once the variable bootstrap is done.
-  require_once __DIR__ . '/module.inc';
-  system_list_reset();
+  \Drupal::service('extension.list.profile')->reset();
+  \Drupal::service('extension.list.module')->reset();
+  \Drupal::service('extension.list.theme_engine')->reset();
+  \Drupal::service('extension.list.theme')->reset();
+  drupal_static_reset('drupal_get_installed_schema_version');
 }
 
 /**

@@ -43,6 +43,7 @@ class SystemListTest extends KernelTestBase {
    * Tests installing a theme.
    *
    * @expectedDeprecation system_list() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::service('theme_handler')->listInfo() instead. See https://www.drupal.org/node/2709919
+   * @expectedDeprecation system_list_reset() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. There is no direct replacement. Call each \Drupal::service('extension.list.TYPE')->reset() as necessary. See https://www.drupal.org/node/2709919.
    */
   public function testSystemList() {
     // Verifies that no themes are listed by default.
@@ -63,6 +64,9 @@ class SystemListTest extends KernelTestBase {
 
     $this->assertEmpty(system_list('theme'));
     $this->assertEmpty(system_list('filepaths'));
+
+    // Call system_list_reset() to test deprecation and ensure it is not broken.
+    system_list_reset();
   }
 
 }
