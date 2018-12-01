@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
@@ -130,6 +131,16 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook', '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
 
     $this->assertEmpty($plugin_manager->getDefinition('cherry', FALSE), 'Plugin information is available');
+  }
+
+  /**
+   * Tests the plugin manager behavior for a missing plugin ID.
+   */
+  public function testGetDefinitionPluginNotFoundException() {
+    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions);
+
+    $this->setExpectedException(PluginNotFoundException::class, 'The "missing" plugin does not exist. Valid plugin IDs for Drupal\Tests\Core\Plugin\TestPluginManager are: apple, banana');
+    $plugin_manager->getDefinition('missing');
   }
 
   /**

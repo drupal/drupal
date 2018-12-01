@@ -49,7 +49,8 @@ trait DiscoveryTrait {
       return NULL;
     }
 
-    throw new PluginNotFoundException($plugin_id, sprintf('The "%s" plugin does not exist.', $plugin_id));
+    $valid_ids = implode(', ', array_keys($definitions));
+    throw new PluginNotFoundException($plugin_id, sprintf('The "%s" plugin does not exist. Valid plugin IDs for %s are: %s', $plugin_id, static::class, $valid_ids));
   }
 
   /**
