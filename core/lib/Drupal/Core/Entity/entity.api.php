@@ -811,10 +811,10 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  *   An associative array of all entity bundles, keyed by the entity
  *   type name, and then the bundle name, with the following keys:
  *   - label: The human-readable name of the bundle.
- *   - uri_callback: The same as the 'uri_callback' key defined for the entity
- *     type in the EntityManager, but for the bundle only. When determining
- *     the URI of an entity, if a 'uri_callback' is defined for both the
- *     entity type and the bundle, the one for the bundle is used.
+ *   - uri_callback: (optional) The same as the 'uri_callback' key defined for
+ *     the entity type in the EntityManager, but for the bundle only. When
+ *     determining the URI of an entity, if a 'uri_callback' is defined for both
+ *     the entity type and the bundle, the one for the bundle is used.
  *   - translatable: (optional) A boolean value specifying whether this bundle
  *     has translation support enabled. Defaults to FALSE.
  *
