@@ -110,7 +110,8 @@ function hook_user_cancel_methods_alter(&$methods) {
  *
  * Called by $account->getDisplayName() to allow modules to alter the username
  * that is displayed. Can be used to ensure user privacy in situations where
- * $account->getDisplayName() is too revealing.
+ * $account->getDisplayName() is too revealing. This hook is invoked both for
+ * user entities and the anonymous user session object.
  *
  * @param string|Drupal\Component\Render\MarkupInterface $name
  *   The username that is displayed for a user. If a hook implementation changes
@@ -118,7 +119,14 @@ function hook_user_cancel_methods_alter(&$methods) {
  *   the implementation to ensure the user's name is escaped properly. String
  *   values will be autoescaped.
  * @param \Drupal\Core\Session\AccountInterface $account
- *   The user object on which the operation is being performed.
+ *   The object on which the operation is being performed. This object may be a
+ *   user entity. If the object is an implementation of UserInterface you can
+ *   use instanceof operator before accessing user entity methods. For example:
+ *   @code
+ *   if ($account instanceof UserInterface) {
+ *      // Access user entity methods.
+ *   }
+ *   @endcode
  *
  * @see \Drupal\Core\Session\AccountInterface::getDisplayName()
  * @see sanitization
