@@ -59,6 +59,8 @@ class MediaSourceImageTest extends MediaSourceTestBase {
 
     // Make sure the thumbnail is displayed from uploaded image.
     $assert_session->elementAttributeContains('css', '.image-style-thumbnail', 'src', 'example_1.jpeg');
+    // Ensure the thumbnail has the correct alt attribute.
+    $assert_session->elementAttributeContains('css', '.image-style-thumbnail', 'alt', 'Image Alt Text 1');
 
     // Load the media and check that all fields are properly populated.
     $media = Media::load(1);

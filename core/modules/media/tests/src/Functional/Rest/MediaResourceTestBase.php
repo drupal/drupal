@@ -167,13 +167,13 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
       ],
       'thumbnail' => [
         [
-          'alt' => 'Thumbnail',
+          'alt' => '',
           'width' => 180,
           'height' => 180,
           'target_id' => (int) $thumbnail->id(),
           'target_type' => 'file',
           'target_uuid' => $thumbnail->uuid(),
-          'title' => 'Llama',
+          'title' => NULL,
           'url' => $thumbnail->url(),
         ],
       ],
