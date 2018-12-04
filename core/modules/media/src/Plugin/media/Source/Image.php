@@ -22,7 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Image"),
  *   description = @Translation("Use local images for reusable media."),
  *   allowed_field_types = {"image"},
- *   default_thumbnail_filename = "no-thumbnail.png"
+ *   default_thumbnail_filename = "no-thumbnail.png",
+ *   thumbnail_alt_metadata_attribute = "thumbnail_alt_value"
  * )
  */
 class Image extends File {
@@ -138,6 +139,9 @@ class Image extends File {
 
       case 'thumbnail_uri':
         return $uri;
+
+      case 'thumbnail_alt_value':
+        return $media->get($this->configuration['source_field'])->alt ?: parent::getMetadata($media, $name);
     }
 
     return parent::getMetadata($media, $name);

@@ -371,7 +371,7 @@ class ContentEntityTest extends KernelTestBase {
     $values = $media_source->current()->getSource();
     $this->assertEquals(1, $values['mid']);
     $this->assertEquals('Foo media', $values['name'][0]['value']);
-    $this->assertEquals('Foo media', $values['thumbnail'][0]['title']);
+    $this->assertNull($values['thumbnail'][0]['title']);
     $this->assertEquals(1, $values['uid'][0]['target_id']);
     $this->assertEquals('image', $values['bundle'][0]['target_id']);
   }
