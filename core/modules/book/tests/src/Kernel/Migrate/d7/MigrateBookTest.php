@@ -19,7 +19,6 @@ class MigrateBookTest extends MigrateDrupal7TestBase {
     'book',
     'menu_ui',
     'node',
-    'taxonomy',
     'text',
   ];
 
@@ -28,15 +27,11 @@ class MigrateBookTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('node');
-    $this->installEntitySchema('taxonomy_term');
-    $this->installConfig(['node']);
     $this->installSchema('book', ['book']);
     $this->installSchema('node', ['node_access']);
+    $this->migrateUsers(FALSE);
+    $this->migrateContentTypes();
     $this->executeMigrations([
-      'd7_user_role',
-      'd7_user',
-      'd7_node_type',
       'd7_node',
       'd7_book',
     ]);

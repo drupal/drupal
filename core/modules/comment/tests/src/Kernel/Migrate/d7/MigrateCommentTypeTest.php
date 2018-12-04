@@ -23,8 +23,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(['comment']);
-    $this->executeMigration('d7_comment_type');
+    $this->migrateCommentTypes();
   }
 
   /**

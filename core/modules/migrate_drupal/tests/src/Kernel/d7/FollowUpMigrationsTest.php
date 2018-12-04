@@ -21,7 +21,6 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
     'content_translation',
     'comment',
     'datetime',
-    'file',
     'image',
     'language',
     'link',
@@ -42,22 +41,15 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
 
     $this->fileMigrationSetup();
 
-    $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
-    $this->installEntitySchema('taxonomy_term');
-    $this->installConfig(static::$modules);
     $this->installSchema('node', ['node_access']);
 
+    $this->migrateUsers();
+    $this->migrateFields();
     $this->executeMigrations([
       'language',
-      'd7_user_role',
-      'd7_user',
-      'd7_node_type',
       'd7_language_content_settings',
-      'd7_comment_type',
       'd7_taxonomy_vocabulary',
-      'd7_field',
-      'd7_field_instance',
       'd7_node',
       'd7_node_translation',
     ]);

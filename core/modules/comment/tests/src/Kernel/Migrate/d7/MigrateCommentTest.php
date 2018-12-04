@@ -39,23 +39,16 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-
-    $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installEntitySchema('taxonomy_term');
-    $this->installConfig(['comment', 'node']);
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installSchema('node', ['node_access']);
+    $this->migrateContent();
     $this->executeMigrations([
       'language',
       'd7_node_type',
       'd7_language_content_settings',
-      'd7_user_role',
-      'd7_user',
-      'd7_node_type',
-      'd7_node',
       'd7_node_translation',
-      'd7_comment_type',
       'd7_comment_field',
       'd7_comment_field_instance',
       'd7_comment_entity_display',

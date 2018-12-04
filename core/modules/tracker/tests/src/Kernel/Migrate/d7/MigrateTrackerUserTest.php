@@ -33,10 +33,9 @@ class MigrateTrackerUserTest extends MigrateDrupal7TestBase {
     $this->installSchema('node', ['node_access']);
     $this->installSchema('tracker', ['tracker_node', 'tracker_user']);
 
+    $this->migrateContentTypes();
+    $this->migrateUsers(FALSE);
     $this->executeMigrations([
-      'd7_user_role',
-      'd7_user',
-      'd7_node_type',
       'd7_node',
       'd7_tracker_node',
     ]);

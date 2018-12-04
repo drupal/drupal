@@ -17,7 +17,6 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     'comment',
     'content_translation',
     'datetime',
-    'forum',
     'image',
     'language',
     'link',
@@ -43,20 +42,13 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('comment');
-    $this->installEntitySchema('node');
-    $this->installEntitySchema('taxonomy_term');
-    $this->installConfig(static::$modules);
+    $this->installEntitySchema('file');
 
+    $this->migrateTaxonomyTerms();
     $this->executeMigrations([
       'language',
       'd7_user_role',
       'd7_user',
-      'd7_node_type',
-      'd7_comment_type',
-      'd7_field',
-      'd7_taxonomy_vocabulary',
-      'd7_field_instance',
-      'd7_taxonomy_term',
       'd7_entity_translation_settings',
       'd7_taxonomy_term_entity_translation',
     ]);

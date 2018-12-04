@@ -2,6 +2,12 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
+/**
+ * @deprecated in Drupal 8.7.x, will be removed before Drupal 9.0.0. Use
+ *   \Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase::migrateFields()
+ *   instead.
+ */
+
 use Drupal\comment\Entity\CommentType;
 use Drupal\node\Entity\NodeType;
 
@@ -20,6 +26,8 @@ trait NodeCommentCombinationTrait {
    *   comment_node_{type}.
    */
   protected function createNodeCommentCombination($node_type, $comment_type = NULL) {
+    @trigger_error('NodeCommentCombinationTrait::createNodeCommentCombination() is deprecated in Drupal 8.7.x, will be removed before Drupal 9.0.0. Use \Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase::migrateFields() instead.', E_USER_DEPRECATED);
+
     if (!$comment_type) {
       $comment_type = "comment_node_$node_type";
     }

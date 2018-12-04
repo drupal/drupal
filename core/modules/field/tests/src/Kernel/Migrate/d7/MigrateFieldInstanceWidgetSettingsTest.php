@@ -21,15 +21,13 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
   public static $modules = [
     'comment',
     'datetime',
-    'field',
-    'file',
     'image',
     'link',
+    'menu_ui',
     'node',
     'taxonomy',
     'telephone',
     'text',
-    'menu_ui',
   ];
 
   /**
@@ -37,20 +35,8 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-
-    $this->installEntitySchema('node');
-    $this->installEntitySchema('comment');
-    $this->installEntitySchema('taxonomy_term');
-    $this->installConfig(static::$modules);
-
-    $this->executeMigrations([
-      'd7_node_type',
-      'd7_comment_type',
-      'd7_taxonomy_vocabulary',
-      'd7_field',
-      'd7_field_instance',
-      'd7_field_instance_widget_settings',
-    ]);
+    $this->migrateFields();
+    $this->executeMigration('d7_field_instance_widget_settings');
   }
 
   /**

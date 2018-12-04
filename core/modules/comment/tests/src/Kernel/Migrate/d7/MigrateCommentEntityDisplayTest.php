@@ -23,10 +23,9 @@ class MigrateCommentEntityDisplayTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(['comment', 'node']);
+    $this->migrateContentTypes();
+    $this->migrateCommentTypes();
     $this->executeMigrations([
-      'd7_node_type',
-      'd7_comment_type',
       'd7_comment_field',
       'd7_comment_field_instance',
       'd7_comment_entity_display',

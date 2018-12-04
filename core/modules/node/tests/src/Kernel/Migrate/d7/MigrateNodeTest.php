@@ -24,9 +24,6 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     'content_translation',
     'comment',
     'datetime',
-    'file',
-    'filter',
-    'forum',
     'image',
     'language',
     'link',
@@ -47,27 +44,18 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
 
     $this->fileMigrationSetup();
 
-    $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installEntitySchema('taxonomy_term');
-    $this->installConfig(static::$modules);
     $this->installSchema('comment', ['comment_entity_statistics']);
-    $this->installSchema('forum', ['forum', 'forum_index']);
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('system', ['sequences']);
 
+    $this->migrateUsers();
+    $this->migrateFields();
     $this->executeMigrations([
       'language',
-      'd7_user_role',
-      'd7_user',
-      'd7_node_type',
       'd7_language_content_settings',
-      'd7_comment_type',
       'd7_comment_field',
       'd7_comment_field_instance',
-      'd7_taxonomy_vocabulary',
-      'd7_field',
-      'd7_field_instance',
       'd7_node',
       'd7_node_translation',
       'd7_entity_translation_settings',

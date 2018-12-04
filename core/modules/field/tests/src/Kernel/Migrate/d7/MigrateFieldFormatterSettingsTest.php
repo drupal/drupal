@@ -2,13 +2,9 @@
 
 namespace Drupal\Tests\field\Kernel\Migrate\d7;
 
-use Drupal\comment\Entity\CommentType;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use Drupal\node\Entity\NodeType;
 
 /**
  * Tests migration of D7 field formatter settings.
@@ -20,9 +16,9 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
   public static $modules = [
     'comment',
     'datetime',
-    'file',
     'image',
     'link',
+    'menu_ui',
     'node',
     'taxonomy',
     'telephone',
@@ -34,121 +30,8 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-
-    $this->installEntitySchema('node');
-    $this->installEntitySchema('comment');
-    $this->installEntitySchema('taxonomy_term');
-
-    CommentType::create([
-      'id' => 'comment_node_page',
-      'label' => $this->randomMachineName(),
-    ])->save();
-    CommentType::create([
-      'id' => 'comment_node_article',
-      'label' => $this->randomMachineName(),
-    ])->save();
-    CommentType::create([
-      'id' => 'comment_node_blog',
-      'label' => $this->randomMachineName(),
-    ])->save();
-    CommentType::create([
-      'id' => 'comment_node_book',
-      'label' => $this->randomMachineName(),
-    ])->save();
-    CommentType::create([
-      'id' => 'comment_forum',
-      'label' => $this->randomMachineName(),
-    ])->save();
-    CommentType::create([
-      'id' => 'comment_node_test_content_type',
-      'label' => $this->randomMachineName(),
-    ])->save();
-
-    NodeType::create([
-      'type' => 'page',
-      'label' => $this->randomMachineName(),
-    ])->save();
-    NodeType::create([
-      'type' => 'article',
-      'label' => $this->randomMachineName(),
-    ])->save();
-    NodeType::create([
-      'type' => 'blog',
-      'label' => $this->randomMachineName(),
-    ])->save();
-    NodeType::create([
-      'type' => 'book',
-      'label' => $this->randomMachineName(),
-    ])->save();
-    NodeType::create([
-      'type' => 'forum',
-      'label' => $this->randomMachineName(),
-    ])->save();
-    NodeType::create([
-      'type' => 'test_content_type',
-      'label' => $this->randomMachineName(),
-    ])->save();
-
-    Vocabulary::create(['vid' => 'test_vocabulary'])->save();
-
-    // Give one unfortunate field instance invalid display settings to ensure
-    // that the migration provides an empty array as a default (thus avoiding
-    // an "unsupported operand types" fatal).
-    Database::getConnection('default', 'migrate')
-      ->update('field_config_instance')
-      ->fields([
-        'data' => serialize([
-          'label' => 'Body',
-          'widget' =>
-             [
-              'type' => 'text_textarea_with_summary',
-              'settings' =>
-                 [
-                  'rows' => 20,
-                  'summary_rows' => 5,
-                ],
-              'weight' => -4,
-              'module' => 'text',
-            ],
-          'settings' =>
-             [
-              'display_summary' => TRUE,
-              'text_processing' => 1,
-              'user_register_form' => FALSE,
-            ],
-          'display' =>
-             [
-              'default' =>
-                 [
-                  'label' => 'hidden',
-                  'type' => 'text_default',
-                  'settings' => [],
-                  'module' => 'text',
-                  'weight' => 0,
-                ],
-              'teaser' =>
-                 [
-                  'label' => 'hidden',
-                  'type' => 'text_summary_or_trimmed',
-                  // settings is always expected to be an array. Making it NULL
-                  // causes a fatal.
-                  'settings' => NULL,
-                  'module' => 'text',
-                  'weight' => 0,
-                ],
-            ],
-          'required' => FALSE,
-          'description' => '',
-        ]),
-      ])
-      ->condition('entity_type', 'node')
-      ->condition('bundle', 'article')
-      ->condition('field_name', 'body')
-      ->execute();
-
+    $this->migrateFields();
     $this->executeMigrations([
-      'd7_field',
-      'd7_field_instance',
       'd7_view_modes',
       'd7_field_formatter_settings',
     ]);

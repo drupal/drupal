@@ -2,9 +2,6 @@
 
 namespace Drupal\Tests\taxonomy\Kernel\Migrate\d7;
 
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
@@ -15,9 +12,8 @@ use Drupal\node\NodeInterface;
 class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
 
   public static $modules = [
+    'comment',
     'datetime',
-    'field',
-    'filter',
     'image',
     'link',
     'menu_ui',
@@ -33,37 +29,11 @@ class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('node');
-    $this->installEntitySchema('taxonomy_term');
-    $this->installConfig(static::$modules);
-    $this->installSchema('node', ['node_access']);
-    $this->installSchema('system', ['sequences']);
+    $this->installEntitySchema('file');
 
-    $this->executeMigration('d7_node_type');
-
-    FieldStorageConfig::create([
-      'type' => 'entity_reference',
-      'field_name' => 'field_tags',
-      'entity_type' => 'node',
-      'settings' => [
-        'target_type' => 'taxonomy_term',
-      ],
-      'cardinality' => FieldStorageConfigInterface::CARDINALITY_UNLIMITED,
-    ])->save();
-
-    FieldConfig::create([
-      'entity_type' => 'node',
-      'field_name' => 'field_tags',
-      'bundle' => 'article',
-    ])->save();
-
-    $this->executeMigrations([
-      'd7_taxonomy_vocabulary',
-      'd7_taxonomy_term',
-      'd7_user_role',
-      'd7_user',
-      'd7_node:article',
-    ]);
+    $this->migrateTaxonomyTerms();
+    $this->migrateUsers(FALSE);
+    $this->executeMigration('d7_node:article');
   }
 
   /**
