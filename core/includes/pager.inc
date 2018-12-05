@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Component\Utility\Html;
 
 /**
  * Returns the current page being requested for display within a pager.
@@ -278,6 +279,7 @@ function template_preprocess_pager(&$variables) {
   }
 
   $variables['items'] = $items;
+  $variables['heading_id'] = Html::getUniqueId('pagination-heading');
 
   // The rendered link needs to play well with any other query parameter used
   // on the page, like exposed filters, so for the cacheability all query
