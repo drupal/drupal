@@ -129,6 +129,9 @@
           autoResize,
         );
       }
+      // Force the dialog & dialog-overlay to render on top.
+      $element.dialog('widget').css('zIndex', 601);
+      $('.ui-widget-overlay').css('zIndex', 600);
     },
     'dialog:beforeclose': function(event, dialog, $element) {
       $(window).off('.dialogResize');

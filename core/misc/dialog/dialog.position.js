@@ -60,6 +60,9 @@
         $(window).on('resize.dialogResize scroll.dialogResize', eventData, autoResize).trigger('resize.dialogResize');
         $(document).on('drupalViewportOffsetChange.dialogResize', eventData, autoResize);
       }
+
+      $element.dialog('widget').css('zIndex', 601);
+      $('.ui-widget-overlay').css('zIndex', 600);
     },
     'dialog:beforeclose': function dialogBeforeclose(event, dialog, $element) {
       $(window).off('.dialogResize');
