@@ -32,6 +32,7 @@ class StatusMessages extends RenderElement {
       '#pre_render' => [
         get_class() . '::generatePlaceholder',
       ],
+      '#include_fallback' => FALSE,
     ];
   }
 
@@ -45,7 +46,7 @@ class StatusMessages extends RenderElement {
    *   The updated renderable array containing the placeholder.
    */
   public static function generatePlaceholder(array $element) {
-    $element = [
+    $build = [
       '#lazy_builder' => [get_class() . '::renderMessages', [$element['#display']]],
       '#create_placeholder' => TRUE,
     ];
@@ -53,7 +54,17 @@ class StatusMessages extends RenderElement {
     // Directly create a placeholder as we need this to be placeholdered
     // regardless if this is a POST or GET request.
     // @todo remove this when https://www.drupal.org/node/2367555 lands.
-    return \Drupal::service('render_placeholder_generator')->createPlaceholder($element);
+    $build = \Drupal::service('render_placeholder_generator')->createPlaceholder($build);
+
+    if ($element['#include_fallback']) {
+      return [
+        'fallback' => [
+          '#markup' => '<div data-drupal-messages-fallback class="hidden"></div>',
+        ],
+        'messages' => $build,
+      ];
+    }
+    return $build;
   }
 
   /**

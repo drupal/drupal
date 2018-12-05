@@ -177,6 +177,7 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
       $build['content']['messages'] = [
         '#weight' => -1000,
         '#type' => 'status_messages',
+        '#include_fallback' => TRUE,
       ];
     }
 

@@ -233,6 +233,14 @@ drupal.machine-name:
     - core/drupalSettings
     - core/drupal.form
 
+drupal.message:
+  version: VERSION
+  js:
+    misc/message.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.announce
+
 drupal.progress:
   version: VERSION
   js:

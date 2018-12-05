@@ -54,6 +54,7 @@ class SimplePageVariant extends VariantBase implements PageVariantInterface {
         'messages' => [
           '#type' => 'status_messages',
           '#weight' => -1000,
+          '#include_fallback' => TRUE,
         ],
         'page_title' => [
           '#type' => 'page_title',

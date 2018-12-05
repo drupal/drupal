@@ -1,0 +1,7 @@
+js_message_test.links:
+  path: '/js_message_test_link'
+  defaults:
+    _controller: '\Drupal\js_message_test\Controller\JSMessageTestController::messageLinks'
+    _title: 'JsMessageLinks'
+  requirements:
+    _access: 'TRUE'

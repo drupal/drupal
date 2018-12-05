@@ -1,22 +1,7 @@
 {#
 /**
  * @file
- * Theme override for status messages.
- *
- * Displays status, error, and warning messages, grouped by type.
- *
- * An invisible heading identifies the messages for assistive technology.
- * Sighted users see a colored box. See http://www.w3.org/TR/WCAG-TECHS/H69.html
- * for info.
- *
- * Add an ARIA label to the contentinfo area so that assistive technology
- * user agents will better describe this landmark.
- *
- * Available variables:
- * - message_list: List of messages to be displayed, grouped by type.
- * - status_headings: List of all status types.
- * - attributes: HTML attributes for the element, including:
- *   - class: HTML classes.
+ * Test templates file with extra messages div.
  */
 #}
 <div data-drupal-messages>
@@ -53,3 +38,4 @@
 {% endfor %}
 {% endblock messages %}
 </div>
+<div data-drupal-messages-other></div>

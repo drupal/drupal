@@ -1,0 +1,6 @@
+name: 'Theme test messages'
+type: theme
+description: 'Test theme which provides another div for messages.'
+version: VERSION
+core: 8.x
+base theme: classy
