@@ -9,4 +9,5 @@ queue_thumbnail_downloads: false
 new_revision: true
 source_configuration:
   source_field: field_media_audio_file
-field_map: {  }
+field_map:
+  name: name

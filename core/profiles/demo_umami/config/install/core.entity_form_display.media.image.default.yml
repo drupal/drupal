@@ -27,14 +27,6 @@ content:
     type: image_image
     weight: 0
     region: content
-  name:
-    type: string_textfield
-    weight: -5
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   path:
     type: path
     weight: 4
@@ -59,3 +51,4 @@ content:
     third_party_settings: {  }
 hidden:
   moderation_state: true
+  name: true

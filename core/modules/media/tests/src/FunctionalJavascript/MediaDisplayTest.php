@@ -68,9 +68,8 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     // In the standard profile, there are some pre-cooked types. Make sure the
     // elements configured on their displays are the expected ones.
     $this->drupalGet('media/add/image');
-    $image_media_name = 'Fantastic image asset!';
-    $page->fillField('name[0][value]', $image_media_name);
-    $page->attachFileToField('files[field_media_image_0]', $this->root . '/core/modules/media/tests/fixtures/example_1.jpeg');
+    $image_media_name = 'example_1.jpeg';
+    $page->attachFileToField('files[field_media_image_0]', $this->root . '/core/modules/media/tests/fixtures/' . $image_media_name);
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->fillField('field_media_image[0][alt]', 'Image Alt Text 1');
@@ -86,6 +85,8 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     // Go to the media entity view.
     $this->drupalGet('/media/' . $image_media_id);
 
+    // Check if the default media name is generated as expected.
+    $assert_session->elementTextContains('css', 'h1', $image_media_name);
     // Here we expect to see only the image, nothing else.
     // Assert only one element in the content region.
     $this->assertSame(1, count($page->findAll('css', '.media--type-image > div')));
@@ -101,7 +102,6 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $test_filepath = 'public://' . $test_filename;
     file_put_contents($test_filepath, $this->randomMachineName());
     $this->drupalGet("media/add/file");
-    $page->fillField('name[0][value]', 'File media 1');
     $page->attachFileToField("files[field_media_file_0]", \Drupal::service('file_system')->realpath($test_filepath));
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
@@ -110,6 +110,8 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     // Go to the media entity view.
     $this->drupalGet($this->assertLinkToCreatedMedia());
 
+    // Check if the default media name is generated as expected.
+    $assert_session->elementTextContains('css', 'h1', $test_filename);
     // Here we expect to see only the linked filename.
     // Assert only one element in the content region.
     $this->assertSame(1, count($page->findAll('css', 'article.media--type-file > div')));

@@ -1,0 +1,15 @@
+{
+  "type": "video",
+  "version": "1.0",
+  "provider_name": "YouTube",
+  "provider_url": "https:\/\/www.youtube.com\/",
+  "title": "Everyday I'm Drupalin' Drupal Rap (Rick Ross - Hustlin)",
+  "author_name": "Mirakolous",
+  "author_url": "https:\/\/www.youtube.com\/user\/Mirakolous",
+  "html": "<h1>By the power of Greyskull, YouTube works!</h1>",
+  "width": 480,
+  "height": 270,
+  "thumbnail_url": "internal:\/core\/misc\/druplicon.png",
+  "thumbnail_width": 480,
+  "thumbnail_height": 360
+}

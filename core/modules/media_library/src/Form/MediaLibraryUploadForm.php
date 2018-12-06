@@ -176,8 +176,19 @@ class MediaLibraryUploadForm extends FormBase {
             '#uri' => $thumbnail_uri,
           ];
         }
-        EntityFormDisplay::collectRenderDisplay($media, 'media_library')
-          ->buildForm($media, $element['fields'], $form_state);
+
+        $form_display = EntityFormDisplay::collectRenderDisplay($media, 'media_library');
+        // When the name is not added to the form as a editable field, output
+        // the name as a fixed element to confirm the right file was uploaded.
+        if (!$form_display->getComponent('name')) {
+          $element['fields']['name'] = [
+            '#type' => 'item',
+            '#title' => $this->t('Name'),
+            '#markup' => $media->getName(),
+          ];
+        }
+        $form_display->buildForm($media, $element['fields'], $form_state);
+
         // We hide certain elements in the image widget with CSS.
         if (isset($element['fields'][$source_field])) {
           $element['fields'][$source_field]['#attributes']['class'][] = 'media-library-upload__source-field';

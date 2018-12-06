@@ -24,14 +24,6 @@ content:
     type: file_generic
     weight: 0
     region: content
-  name:
-    type: string_textfield
-    weight: -5
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
@@ -48,4 +40,5 @@ content:
       placeholder: ''
     region: content
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  name: true
