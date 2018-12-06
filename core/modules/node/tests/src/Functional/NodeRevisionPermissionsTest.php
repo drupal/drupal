@@ -153,7 +153,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     foreach ($permutations as $case) {
       // Skip this test if there are no revisions for the node.
       if (!($revision->isDefaultRevision() && (db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid', [':nid' => $revision->id()])->fetchField() == 1 || $case['op'] == 'update' || $case['op'] == 'delete'))) {
-        if (!empty($case['account']->is_admin) || $case['account']->hasPermission($this->typeMap[$case['op']], $case['account'])) {
+        if (!empty($case['account']->is_admin) || $case['account']->hasPermission($this->typeMap[$case['op']])) {
           $this->assertTrue($node_revision_access->checkAccess($revision, $case['account'], $case['op']), "{$this->typeMap[$case['op']]} granted.");
         }
         else {

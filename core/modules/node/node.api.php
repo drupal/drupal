@@ -338,19 +338,19 @@ function hook_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Se
       return AccessResult::allowedIfHasPermission($account, 'create ' . $type . ' content');
 
     case 'update':
-      if ($account->hasPermission('edit any ' . $type . ' content', $account)) {
+      if ($account->hasPermission('edit any ' . $type . ' content')) {
         return AccessResult::allowed()->cachePerPermissions();
       }
       else {
-        return AccessResult::allowedIf($account->hasPermission('edit own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))->cachePerPermissions()->cachePerUser()->addCacheableDependency($node);
+        return AccessResult::allowedIf($account->hasPermission('edit own ' . $type . ' content') && ($account->id() == $node->getOwnerId()))->cachePerPermissions()->cachePerUser()->addCacheableDependency($node);
       }
 
     case 'delete':
-      if ($account->hasPermission('delete any ' . $type . ' content', $account)) {
+      if ($account->hasPermission('delete any ' . $type . ' content')) {
         return AccessResult::allowed()->cachePerPermissions();
       }
       else {
-        return AccessResult::allowedIf($account->hasPermission('delete own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))->cachePerPermissions()->cachePerUser()->addCacheableDependency($node);
+        return AccessResult::allowedIf($account->hasPermission('delete own ' . $type . ' content') && ($account->id() == $node->getOwnerId()))->cachePerPermissions()->cachePerUser()->addCacheableDependency($node);
       }
 
     default:
