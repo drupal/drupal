@@ -45,7 +45,7 @@ class RdfMapping extends DrupalSqlBase {
    */
   public function fields() {
     return [
-      'type' => $this->t('The name of the entity type a mapping applies to (node, user, comment, etc.'),
+      'type' => $this->t('The name of the entity type a mapping applies to (node, user, comment, etc.)'),
       'bundle' => $this->t('The name of the bundle a mapping applies to.'),
       'mapping' => $this->t('The serialized mapping of the bundle type and fields to RDF terms.'),
       'types' => $this->t('RDF types.'),
