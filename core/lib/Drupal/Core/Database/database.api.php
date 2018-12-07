@@ -248,18 +248,15 @@ use Drupal\Core\Database\Query\Condition;
  *
  * The following keys are defined:
  *   - 'description': A string in non-markup plain text describing this table
- *     and its purpose. References to other tables should be enclosed in
- *     curly-brackets. For example, the node_field_revision table
- *     description field might contain "Stores per-revision title and
- *     body data for each {node}."
+ *     and its purpose. References to other tables should be enclosed in curly
+ *     brackets.
  *   - 'fields': An associative array ('fieldname' => specification)
  *     that describes the table's database columns. The specification
  *     is also an array. The following specification parameters are defined:
  *     - 'description': A string in non-markup plain text describing this field
- *       and its purpose. References to other tables should be enclosed in
- *       curly-brackets. For example, the node table vid field
- *       description might contain "Always holds the largest (most
- *       recent) {node_field_revision}.vid value for this nid."
+ *       and its purpose. References to other tables should be enclosed in curly
+ *       brackets. For example, the users_data table 'uid' field description
+ *       might contain "The {users}.uid this record affects."
  *     - 'type': The generic datatype: 'char', 'varchar', 'text', 'blob', 'int',
  *       'float', 'numeric', or 'serial'. Most types just map to the according
  *       database engine specific data types. Use 'serial' for auto incrementing
@@ -322,64 +319,70 @@ use Drupal\Core\Database\Query\Condition;
  *    key column specifiers (see below) that form an index on the
  *    table.
  *
- * A key column specifier is either a string naming a column or an
- * array of two elements, column name and length, specifying a prefix
- * of the named column.
+ * A key column specifier is either a string naming a column or an array of two
+ * elements, column name and length, specifying a prefix of the named column.
  *
- * As an example, here is a SUBSET of the schema definition for
- * Drupal's 'node' table. It show four fields (nid, vid, type, and
- * title), the primary key on field 'nid', a unique key named 'vid' on
- * field 'vid', and two indexes, one named 'nid' on field 'nid' and
- * one named 'node_title_type' on the field 'title' and the first four
- * bytes of the field 'type':
+ * As an example, this is the schema definition for the 'users_data' table. It
+ * shows five fields ('uid', 'module', 'name', 'value', and 'serialized'), the
+ * primary key (on the 'uid', 'module', and 'name' fields), and two indexes (the
+ * 'module' index on the 'module' field and the 'name' index on the 'name'
+ * field).
  *
  * @code
- * $schema['node'] = array(
- *   'description' => 'The base table for nodes.',
- *   'fields' => array(
- *     'nid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
- *     'vid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,'default' => 0),
- *     'type'      => array('type' => 'varchar','length' => 32,'not null' => TRUE, 'default' => ''),
- *     'language'  => array('type' => 'varchar','length' => 12,'not null' => TRUE,'default' => ''),
- *     'title'     => array('type' => 'varchar','length' => 255,'not null' => TRUE, 'default' => ''),
- *     'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
- *     'status'    => array('type' => 'int', 'not null' => TRUE, 'default' => 1),
- *     'created'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
- *     'changed'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
- *     'comment'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
- *     'promote'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
- *     'moderate'  => array('type' => 'int', 'not null' => TRUE,'default' => 0),
- *     'sticky'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
- *     'translate' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
- *   ),
- *   'indexes' => array(
- *     'node_changed'        => array('changed'),
- *     'node_created'        => array('created'),
- *     'node_moderate'       => array('moderate'),
- *     'node_frontpage'      => array('promote', 'status', 'sticky', 'created'),
- *     'node_status_type'    => array('status', 'type', 'nid'),
- *     'node_title_type'     => array('title', array('type', 4)),
- *     'node_type'           => array(array('type', 4)),
- *     'uid'                 => array('uid'),
- *     'translate'           => array('translate'),
- *   ),
- *   'unique keys' => array(
- *     'vid' => array('vid'),
- *   ),
+ * $schema['users_data'] = [
+ *   'description' => 'Stores module data as key/value pairs per user.',
+ *   'fields' => [
+ *     'uid' => [
+ *       'description' => 'The {users}.uid this record affects.',
+ *       'type' => 'int',
+ *       'unsigned' => TRUE,
+ *       'not null' => TRUE,
+ *       'default' => 0,
+ *     ],
+ *     'module' => [
+ *       'description' => 'The name of the module declaring the variable.',
+ *       'type' => 'varchar_ascii',
+ *       'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
+ *       'not null' => TRUE,
+ *       'default' => '',
+ *     ],
+ *     'name' => [
+ *       'description' => 'The identifier of the data.',
+ *       'type' => 'varchar_ascii',
+ *       'length' => 128,
+ *       'not null' => TRUE,
+ *       'default' => '',
+ *     ],
+ *     'value' => [
+ *       'description' => 'The value.',
+ *       'type' => 'blob',
+ *       'not null' => FALSE,
+ *       'size' => 'big',
+ *     ],
+ *     'serialized' => [
+ *       'description' => 'Whether value is serialized.',
+ *       'type' => 'int',
+ *       'size' => 'tiny',
+ *       'unsigned' => TRUE,
+ *       'default' => 0,
+ *     ],
+ *   ],
+ *   'primary key' => ['uid', 'module', 'name'],
+ *   'indexes' => [
+ *     'module' => ['module'],
+ *     'name' => ['name'],
+ *   ],
  *   // For documentation purposes only; foreign keys are not created in the
  *   // database.
- *   'foreign keys' => array(
- *     'node_revision' => array(
- *       'table' => 'node_field_revision',
- *       'columns' => array('vid' => 'vid'),
- *      ),
- *     'node_author' => array(
+ *   'foreign keys' => [
+ *     'data_user' => [
  *       'table' => 'users',
- *       'columns' => array('uid' => 'uid'),
- *      ),
- *    ),
- *   'primary key' => array('nid'),
- * );
+ *       'columns' => [
+ *         'uid' => 'uid',
+ *       ],
+ *     ],
+ *   ],
+ * ];
  * @endcode
  *
  * @see drupal_install_schema()
@@ -490,60 +493,61 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
  * @ingroup schemaapi
  */
 function hook_schema() {
-  $schema['node'] = [
-    // Example (partial) specification for table "node".
-    'description' => 'The base table for nodes.',
+  $schema['users_data'] = [
+    'description' => 'Stores module data as key/value pairs per user.',
     'fields' => [
-      'nid' => [
-        'description' => 'The primary identifier for a node.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ],
-      'vid' => [
-        'description' => 'The current {node_field_revision}.vid version identifier.',
+      'uid' => [
+        'description' => 'The {users}.uid this record affects.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ],
-      'type' => [
-        'description' => 'The type of this node.',
-        'type' => 'varchar',
-        'length' => 32,
+      'module' => [
+        'description' => 'The name of the module declaring the variable.',
+        'type' => 'varchar_ascii',
+        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
         'not null' => TRUE,
         'default' => '',
       ],
-      'title' => [
-        'description' => 'The node title.',
-        'type' => 'varchar',
-        'length' => 255,
+      'name' => [
+        'description' => 'The identifier of the data.',
+        'type' => 'varchar_ascii',
+        'length' => 128,
         'not null' => TRUE,
         'default' => '',
+      ],
+      'value' => [
+        'description' => 'The value.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+      ],
+      'serialized' => [
+        'description' => 'Whether value is serialized.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'default' => 0,
       ],
     ],
+    'primary key' => ['uid', 'module', 'name'],
     'indexes' => [
-      'node_changed'        => ['changed'],
-      'node_created'        => ['created'],
-    ],
-    'unique keys' => [
-      'nid_vid' => ['nid', 'vid'],
-      'vid'     => ['vid'],
+      'module' => ['module'],
+      'name' => ['name'],
     ],
     // For documentation purposes only; foreign keys are not created in the
     // database.
     'foreign keys' => [
-      'node_revision' => [
-        'table' => 'node_field_revision',
-        'columns' => ['vid' => 'vid'],
-      ],
-      'node_author' => [
+      'data_user' => [
         'table' => 'users',
-        'columns' => ['uid' => 'uid'],
+        'columns' => [
+          'uid' => 'uid',
+        ],
       ],
     ],
-    'primary key' => ['nid'],
   ];
+
   return $schema;
 }
 
