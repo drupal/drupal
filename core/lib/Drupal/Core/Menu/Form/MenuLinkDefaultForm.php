@@ -130,7 +130,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     $form['expanded'] = [
       '#type' => 'checkbox',
       '#title' => t('Show as expanded'),
-      '#description' => $this->t('If selected and this menu link has children, the menu will always appear expanded.'),
+      '#description' => $this->t('If selected and this menu link has children, the menu will always appear expanded. This option may be overridden for the entire menu tree when placing a menu block.'),
       '#default_value' => $this->menuLink->isExpanded(),
     ];
 

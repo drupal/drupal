@@ -283,6 +283,76 @@ class SystemMenuBlockTest extends KernelTestBase {
   }
 
   /**
+   * Tests the config expanded option.
+   *
+   * @dataProvider configExpandedTestCases
+   */
+  public function testConfigExpanded($active_route, $menu_block_level, $expected_items) {
+    $block = $this->blockManager->createInstance('system_menu_block:' . $this->menu->id(), [
+      'region' => 'footer',
+      'id' => 'machinename',
+      'theme' => 'stark',
+      'level' => $menu_block_level,
+      'depth' => 0,
+      'expand_all_items' => TRUE,
+    ]);
+
+    $route = $this->container->get('router.route_provider')->getRouteByName($active_route);
+    $request = new Request();
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, $active_route);
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $route);
+    $this->container->get('request_stack')->push($request);
+
+    $block_build = $block->build();
+    $items = isset($block_build['#items']) ? $block_build['#items'] : [];
+    $this->assertEquals($expected_items, $this->convertBuiltMenuToIdTree($items));
+  }
+
+  /**
+   * @return array
+   */
+  public function configExpandedTestCases() {
+    return [
+      'All levels' => [
+        'example5',
+        1,
+        [
+          'test.example1' => [],
+          'test.example2' => [
+            'test.example3' => [
+              'test.example4' => [],
+            ],
+          ],
+          'test.example5' => [
+            'test.example7' => [],
+          ],
+          'test.example6' => [],
+          'test.example8' => [],
+        ],
+      ],
+      'Level two in "example 5" branch' => [
+        'example5',
+        2,
+        [
+          'test.example7' => [],
+        ],
+      ],
+      'Level three in "example 5" branch' => [
+        'example5',
+        3,
+        [],
+      ],
+      'Level three in "example 4" branch' => [
+        'example4',
+        3,
+        [
+          'test.example4' => [],
+        ],
+      ],
+    ];
+  }
+
+  /**
    * Helper method to allow for easy menu link tree structure assertions.
    *
    * Converts the result of MenuLinkTree::build() in a "menu link ID tree".

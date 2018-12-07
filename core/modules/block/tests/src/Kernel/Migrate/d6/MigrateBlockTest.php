@@ -120,6 +120,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'provider' => 'system',
       'label_display' => 'visible',
       'level' => 1,
+      'expand_all_items' => FALSE,
       'depth' => 0,
     ];
     $this->assertEntity('user_1', $visibility, 'sidebar_first', 'bartik', -11, $settings);

@@ -865,6 +865,47 @@ class MenuUiTest extends BrowserTestBase {
   }
 
   /**
+   * Test the "expand all items" feature.
+   */
+  public function testExpandAllItems() {
+    $this->drupalLogin($this->adminUser);
+    $menu = $this->addCustomMenu();
+    $node = $this->drupalCreateNode(['type' => 'article']);
+
+    // Create three menu items, none of which are expanded.
+    $parent = $this->addMenuLink('', $node->toUrl()->toString(), $menu->id(), FALSE);
+    $child_1 = $this->addMenuLink($parent->getPluginId(), $node->toUrl()->toString(), $menu->id(), FALSE);
+    $child_2 = $this->addMenuLink($parent->getPluginId(), $node->toUrl()->toString(), $menu->id(), FALSE);
+
+    // The menu will not automatically show all levels of depth.
+    $this->drupalGet('<front>');
+    $this->assertSession()->linkExists($parent->getTitle());
+    $this->assertSession()->linkNotExists($child_1->getTitle());
+    $this->assertSession()->linkNotExists($child_2->getTitle());
+
+    // Update the menu block to show all levels of depth as expanded.
+    $block_id = $this->blockPlacements[$menu->id()];
+    $this->drupalGet('admin/structure/block/manage/' . $block_id);
+    $this->assertSession()->checkboxNotChecked('settings[expand_all_items]');
+    $this->drupalPostForm(NULL, [
+      'settings[depth]' => 2,
+      'settings[level]' => 1,
+      'settings[expand_all_items]' => 1,
+    ], t('Save block'));
+
+    // Ensure the setting is persisted.
+    $this->drupalGet('admin/structure/block/manage/' . $block_id);
+    $this->assertSession()->checkboxChecked('settings[expand_all_items]');
+
+    // Ensure all three links are shown, including the children which would
+    // usually be hidden without the "expand all items" setting.
+    $this->drupalGet('<front>');
+    $this->assertSession()->linkExists($parent->getTitle());
+    $this->assertSession()->linkExists($child_1->getTitle());
+    $this->assertSession()->linkExists($child_2->getTitle());
+  }
+
+  /**
    * Returns standard menu link.
    *
    * @return \Drupal\Core\Menu\MenuLinkInterface

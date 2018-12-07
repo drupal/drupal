@@ -348,7 +348,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
 
     $fields['expanded'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Show as expanded'))
-      ->setDescription(t('If selected and this menu link has children, the menu will always appear expanded.'))
+      ->setDescription(t('If selected and this menu link has children, the menu will always appear expanded. This option may be overridden for the entire menu tree when placing a menu block.'))
       ->setDefaultValue(FALSE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
