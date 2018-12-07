@@ -44,7 +44,7 @@ class File extends FormElement {
    */
   public static function processFile(&$element, FormStateInterface $form_state, &$complete_form) {
     if ($element['#multiple']) {
-      $element['#attributes'] = ['multiple' => 'multiple'];
+      $element['#attributes']['multiple'] = 'multiple';
       $element['#name'] .= '[]';
     }
     return $element;
