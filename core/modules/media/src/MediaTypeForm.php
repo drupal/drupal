@@ -304,6 +304,17 @@ class MediaTypeForm extends EntityForm {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
+
+    // If the media source has not been chosen yet, turn the submit button into
+    // a button. This rebuilds the form with the media source's configuration
+    // form visible, instead of saving the media type. This allows users to
+    // create a media type without JavaScript enabled. With JavaScript enabled,
+    // this rebuild occurs during an AJAX request.
+    // @see \Drupal\media\MediaTypeForm::ajaxHandlerData()
+    if (empty($this->getEntity()->get('source'))) {
+      $actions['submit']['#type'] = 'button';
+    }
+
     $actions['submit']['#value'] = $this->t('Save');
     $actions['delete']['#value'] = $this->t('Delete');
     $actions['delete']['#access'] = $this->entity->access('delete');
