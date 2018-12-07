@@ -184,10 +184,6 @@ function system_post_update_states_clear_cache() {
  */
 function system_post_update_add_expand_all_items_key_in_system_menu_block(&$sandbox = NULL) {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'block', function ($block) {
-    if (strpos($block->getPluginId(), 'system_menu_block:') === 0) {
-      $block->set('settings.expand_all_items', FALSE);
-      return TRUE;
-    }
-    return FALSE;
+    return strpos($block->getPluginId(), 'system_menu_block:') === 0;
   });
 }

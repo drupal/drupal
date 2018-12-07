@@ -32,7 +32,9 @@ class MenuBlockPostUpdateTest extends UpdatePathTestBase {
   public function testPostUpdateMenuBlockFields() {
     $this->assertArrayNotHasKey('expand_all_items', Block::load('bartik_account_menu')->get('settings'));
     $this->runUpdates();
-    $this->assertArrayHasKey('expand_all_items', Block::load('bartik_account_menu')->get('settings'));
+    $settings = Block::load('bartik_account_menu')->get('settings');
+    $this->assertArrayHasKey('expand_all_items', $settings);
+    $this->assertFalse($settings['expand_all_items']);
   }
 
 }
