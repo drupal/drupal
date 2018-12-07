@@ -127,6 +127,10 @@ class MenuTreeParameters {
    * @return $this
    */
   public function addExpandedParents(array $parents) {
+    $parents = array_filter($parents, function ($item) {
+        return (int)$item > 0;
+    });
+    
     $this->expandedParents = array_merge($this->expandedParents, $parents);
     $this->expandedParents = array_unique($this->expandedParents);
     return $this;
