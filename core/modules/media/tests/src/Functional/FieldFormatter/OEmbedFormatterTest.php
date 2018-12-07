@@ -33,6 +33,13 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
   protected function setUp() {
     parent::setUp();
     $this->lockHttpClientToFixtures();
+
+    \Drupal::configFactory()
+      ->getEditable('media.settings')
+      ->set('standalone_url', TRUE)
+      ->save(TRUE);
+
+    $this->container->get('router.builder')->rebuild();
   }
 
   /**

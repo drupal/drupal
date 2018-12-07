@@ -18,3 +18,13 @@ function media_post_update_collection_route() {
 function media_post_update_storage_handler() {
   // Empty post-update hook.
 }
+
+/**
+ * Keep media items viewable at /media/{id}.
+ */
+function media_post_update_enable_standalone_url() {
+  \Drupal::configFactory()
+    ->getEditable('media.settings')
+    ->set('standalone_url', TRUE)
+    ->save(TRUE);
+}

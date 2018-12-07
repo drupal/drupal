@@ -1,18 +1,5 @@
-entity.media.canonical:
-  title: View
-  route_name: entity.media.canonical
-  base_route: entity.media.canonical
-
-entity.media.edit_form:
-  title: Edit
-  route_name: entity.media.edit_form
-  base_route: entity.media.canonical
-
-entity.media.delete_form:
-  title: Delete
-  route_name: entity.media.delete_form
-  base_route: entity.media.canonical
-  weight: 10
+media.tasks:
+  deriver: 'Drupal\media\Plugin\Derivative\DynamicLocalTasks'
 
 entity.media_type.edit_form:
   title: Edit

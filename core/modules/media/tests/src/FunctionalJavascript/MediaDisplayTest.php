@@ -30,6 +30,14 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $this->container->get('config.installer')->installOptionalConfig($storage, '');
     // Reset all the static caches and list caches.
     $this->container->get('config.factory')->reset();
+
+    // This test is going to test the display, so we need the standalone URL.
+    \Drupal::configFactory()
+      ->getEditable('media.settings')
+      ->set('standalone_url', TRUE)
+      ->save(TRUE);
+
+    $this->container->get('router.builder')->rebuild();
   }
 
   /**

@@ -2,7 +2,11 @@
 
 namespace Drupal\Tests\media\FunctionalJavascript;
 
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\media_test_oembed\Controller\ResourceController;
+use Drupal\node\Entity\Node;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
 /**
@@ -34,6 +38,42 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
    * increases the performance of this test.
    */
   public function testMediaSources() {
+    $storage = FieldStorageConfig::create([
+      'entity_type' => 'node',
+      'field_name' => 'field_related_media',
+      'type' => 'entity_reference',
+      'settings' => [
+        'target_type' => 'media',
+      ],
+    ]);
+    $storage->save();
+
+    FieldConfig::create([
+      'field_storage' => $storage,
+      'entity_type' => 'node',
+      'bundle' => 'article',
+      'label' => 'Related media',
+      'settings' => [
+        'handler_settings' => [
+          'target_bundles' => [
+            'image' => 'image',
+            'video' => 'video',
+            'remote_video' => 'remote_video',
+            'audio' => 'audio',
+            'file' => 'file',
+          ],
+        ],
+      ],
+    ])->save();
+
+    $display = EntityViewDisplay::load('node.article.default');
+    $display->setComponent('field_related_media', [
+      'type' => 'entity_reference_entity_view',
+      'settings' => [
+        'view_mode' => 'full',
+      ],
+    ])->save();
+
     $this->audioTest();
     $this->fileTest();
     $this->imageTest();
@@ -77,10 +117,22 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->execute();
     $audio_media_id = reset($audio_media_id);
 
-    $this->drupalGet('media/' . $audio_media_id);
+    // Reference the created media using an entity_reference field and make sure
+    // the output is what we expect.
+    $node = Node::create([
+      'title' => 'Host node',
+      'type' => 'article',
+      'field_related_media' => [
+        'target_id' => $audio_media_id,
+      ],
+    ]);
+    $node->save();
+
+    $this->drupalGet('/node/' . $node->id());
 
     // Check if the default media name is generated as expected.
-    $assert_session->elementTextContains('css', 'h1', $test_filename);
+    $media = \Drupal::entityTypeManager()->getStorage('media')->loadUnchanged($audio_media_id);
+    $this->assertSame($test_filename, $media->label());
 
     // Here we expect to see only the linked filename. Assert only one element
     // in the content region.
@@ -103,10 +155,11 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
 
-    $this->drupalGet('media/' . $audio_media_id);
+    $this->drupalGet('/node/' . $node->id());
 
     // Check if the default media name is updated as expected.
-    $assert_session->elementTextContains('css', 'h1', $test_filename_updated);
+    $media = \Drupal::entityTypeManager()->getStorage('media')->loadUnchanged($audio_media_id);
+    $this->assertSame($test_filename_updated, $media->label());
 
     // Again we expect to see only the linked filename. Assert only one element
     // in the content region.
@@ -149,10 +202,22 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->execute();
     $image_media_id = reset($image_media_id);
 
-    $this->drupalGet('media/' . $image_media_id);
+    // Reference the created media using an entity_reference field and make sure
+    // the output is what we expect.
+    $node = Node::create([
+      'title' => 'Host node',
+      'type' => 'article',
+      'field_related_media' => [
+        'target_id' => $image_media_id,
+      ],
+    ]);
+    $node->save();
+
+    $this->drupalGet('/node/' . $node->id());
 
     // Check if the default media name is generated as expected.
-    $assert_session->elementTextContains('css', 'h1', $image_media_name);
+    $media = \Drupal::entityTypeManager()->getStorage('media')->loadUnchanged($image_media_id);
+    $this->assertSame($image_media_name, $media->label());
 
     // Here we expect to see only the image, nothing else. Assert only one
     // element in the content region.
@@ -177,10 +242,11 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $page->fillField("{$source_field_id}[0][alt]", 'Image Alt Text 2');
     $page->pressButton('Save');
 
-    $this->drupalGet('media/' . $image_media_id);
+    $this->drupalGet('/node/' . $node->id());
 
     // Check if the default media name is updated as expected.
-    $assert_session->elementTextContains('css', 'h1', $image_media_name_updated);
+    $media = \Drupal::entityTypeManager()->getStorage('media')->loadUnchanged($image_media_id);
+    $this->assertSame($image_media_name_updated, $media->label());
 
     // Again we expect to see only the image, nothing else. Assert only one
     // element in the content region.
@@ -229,10 +295,22 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->execute();
     $file_media_id = reset($file_media_id);
 
-    $this->drupalGet('media/' . $file_media_id);
+    // Reference the created media using an entity_reference field and make sure
+    // the output is what we expect.
+    $node = Node::create([
+      'title' => 'Host node',
+      'type' => 'article',
+      'field_related_media' => [
+        'target_id' => $file_media_id,
+      ],
+    ]);
+    $node->save();
+
+    $this->drupalGet('/node/' . $node->id());
 
     // Check if the default media name is generated as expected.
-    $assert_session->elementTextContains('css', 'h1', $test_filename);
+    $media = \Drupal::entityTypeManager()->getStorage('media')->loadUnchanged($file_media_id);
+    $this->assertSame($test_filename, $media->label());
 
     // Here we expect to see only the linked filename. Assert only one element
     // in the content region.
@@ -254,10 +332,11 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
 
-    $this->drupalGet('media/' . $file_media_id);
+    $this->drupalGet('/node/' . $node->id());
 
     // Check if the default media name is updated as expected.
-    $assert_session->elementTextContains('css', 'h1', $test_filename_updated);
+    $media = \Drupal::entityTypeManager()->getStorage('media')->loadUnchanged($file_media_id);
+    $this->assertSame($test_filename_updated, $media->label());
 
     // Again we expect to see only the linked filename. Assert only one element
     // in the content region.
@@ -303,10 +382,22 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->execute();
     $remote_video_media_id = reset($remote_video_media_id);
 
-    $this->drupalGet('media/' . $remote_video_media_id);
+    // Reference the created media using an entity_reference field and make sure
+    // the output is what we expect.
+    $node = Node::create([
+      'title' => 'Host node',
+      'type' => 'article',
+      'field_related_media' => [
+        'target_id' => $remote_video_media_id,
+      ],
+    ]);
+    $node->save();
+
+    $this->drupalGet('/node/' . $node->id());
 
     // Check if the default media name is generated as expected.
-    $assert_session->elementTextContains('css', 'h1', $video_title);
+    $media = \Drupal::entityTypeManager()->getStorage('media')->loadUnchanged($remote_video_media_id);
+    $this->assertSame($video_title, $media->label());
 
     // Here we expect to see only the video iframe. Assert only one element in
     // the content region.
@@ -329,10 +420,11 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $page->fillField("{$source_field_id}[0][value]", $video_url_updated);
     $page->pressButton('Save');
 
-    $this->drupalGet('media/' . $remote_video_media_id);
+    $this->drupalGet('/node/' . $node->id());
 
     // Check if the default media name is updated as expected.
-    $assert_session->elementTextContains('css', 'h1', $video_title_updated);
+    $media = \Drupal::entityTypeManager()->getStorage('media')->loadUnchanged($remote_video_media_id);
+    $this->assertSame($video_title_updated, $media->label());
 
     // Again we expect to see only the video iframe. Assert only one element in
     // the content region.
@@ -386,10 +478,22 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->execute();
     $video_media_id = reset($video_media_id);
 
-    $this->drupalGet('media/' . $video_media_id);
+    // Reference the created media using an entity_reference field and make sure
+    // the output is what we expect.
+    $node = Node::create([
+      'title' => 'Host node',
+      'type' => 'article',
+      'field_related_media' => [
+        'target_id' => $video_media_id,
+      ],
+    ]);
+    $node->save();
+
+    $this->drupalGet('/node/' . $node->id());
 
     // Check if the default media name is generated as expected.
-    $assert_session->elementTextContains('css', 'h1', $test_filename);
+    $media = \Drupal::entityTypeManager()->getStorage('media')->loadUnchanged($video_media_id);
+    $this->assertSame($test_filename, $media->label());
 
     // Here we expect to see only the linked filename. Assert only one element
     // in the content region.
@@ -412,10 +516,11 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
 
-    $this->drupalGet('media/' . $video_media_id);
+    $this->drupalGet('/node/' . $node->id());
 
     // Check if the default media name is updated as expected.
-    $assert_session->elementTextContains('css', 'h1', $test_filename_updated);
+    $media = \Drupal::entityTypeManager()->getStorage('media')->loadUnchanged($video_media_id);
+    $this->assertSame($test_filename_updated, $media->label());
 
     // Again we expect to see only the linked filename. Assert only one element
     // in the content region.

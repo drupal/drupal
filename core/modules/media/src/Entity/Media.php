@@ -43,7 +43,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *     "views_data" = "Drupal\media\MediaViewsData",
  *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
+ *       "html" = "Drupal\media\Routing\MediaRouteProvider",
  *     }
  *   },
  *   base_table = "media",
@@ -75,7 +75,7 @@ use Drupal\user\EntityOwnerTrait;
  *   links = {
  *     "add-page" = "/media/add",
  *     "add-form" = "/media/add/{media_type}",
- *     "canonical" = "/media/{media}",
+ *     "canonical" = "/media/{media}/edit",
  *     "collection" = "/admin/content/media",
  *     "delete-form" = "/media/{media}/delete",
  *     "delete-multiple-form" = "/media/delete",

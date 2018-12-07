@@ -19,3 +19,8 @@ services:
   media.oembed.iframe_url_helper:
     class: Drupal\media\IFrameUrlHelper
     arguments: ['@router.request_context', '@private_key']
+  media.config_subscriber:
+    class: Drupal\media\EventSubscriber\MediaConfigSubscriber
+    arguments: ['@router.builder', '@cache_tags.invalidator', '@entity_type.manager']
+    tags:
+      - { name: event_subscriber }

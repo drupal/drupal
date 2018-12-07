@@ -11,6 +11,9 @@ media.settings:
     oembed_providers_url:
       type: uri
       label: 'The URL of the oEmbed providers database in JSON format'
+    standalone_url:
+      type: boolean
+      label: 'Allow media items to be viewed standalone at /media/{id}'
 
 media.type.*:
   type: config_entity

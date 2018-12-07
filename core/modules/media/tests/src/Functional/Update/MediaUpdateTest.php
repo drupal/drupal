@@ -3,6 +3,8 @@
 namespace Drupal\Tests\media\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use Drupal\media\Entity\Media;
+use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\user\Entity\Role;
 
 /**
@@ -12,6 +14,8 @@ use Drupal\user\Entity\Role;
  * @group legacy
  */
 class MediaUpdateTest extends UpdatePathTestBase {
+
+  use MediaTypeCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -78,6 +82,36 @@ class MediaUpdateTest extends UpdatePathTestBase {
     // Check that the entity key exists and it has the correct value.
     $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('media');
     $this->assertEquals('uid', $entity_type->getKey('owner'));
+  }
+
+  /**
+   * Tests that the standalone URL is still accessible.
+   *
+   * @see media_post_update_enable_standalone_url()
+   */
+  public function testEnableStandaloneUrl() {
+    $this->container->get('module_installer')->install(['media_test_source']);
+
+    // Create a media type.
+    $media_type = $this->createMediaType('test');
+
+    // Run updates.
+    $this->runUpdates();
+
+    // Create a media item.
+    $media = Media::create([
+      'bundle' => $media_type->id(),
+      'name' => 'Unnamed',
+    ]);
+    $media->save();
+
+    $user = $this->drupalCreateUser([
+      'administer media',
+    ]);
+    $this->drupalLogin($user);
+
+    $this->drupalGet('media/' . $media->id());
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

@@ -12,6 +12,22 @@ use Drupal\media\Entity\MediaType;
 abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Let's set the canonical flag in the base class of the source tests,
+    // because every source test has to check the output on the view page.
+    \Drupal::configFactory()
+      ->getEditable('media.settings')
+      ->set('standalone_url', TRUE)
+      ->save(TRUE);
+
+    $this->container->get('router.builder')->rebuild();
+  }
+
+  /**
    * Creates storage and field instance, attached to a given media type.
    *
    * @param string $field_name

@@ -44,6 +44,20 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  public function setUp() {
+    parent::setUp();
+
+    \Drupal::configFactory()
+      ->getEditable('media.settings')
+      ->set('standalone_url', TRUE)
+      ->save(TRUE);
+
+    $this->container->get('router.builder')->rebuild();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':

@@ -60,7 +60,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $assert_session->statusCodeEquals(200);
     $this->drupalGet('media/' . $user_media->id());
     $this->assertCacheContext('user.permissions');
-    $assert_session->statusCodeEquals(200);
+    $assert_session->statusCodeEquals(404);
     $this->drupalGet('media/' . $user_media->id() . '/edit');
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);
@@ -72,17 +72,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     /** @var \Drupal\user\RoleInterface $role */
     $role = Role::load(RoleInterface::AUTHENTICATED_ID);
 
-    // Test 'view media' permission.
     user_role_revoke_permissions($role->id(), ['view media']);
-    $this->drupalGet('media/' . $media->id());
-    $this->assertCacheContext('user.permissions');
-    $assert_session->statusCodeEquals(403);
-    $access_result = $media->access('view', NULL, TRUE);
-    $this->assertSame("The 'view media' permission is required and the media item must be published.", $access_result->getReason());
-    $this->grantPermissions($role, ['view media']);
-    $this->drupalGet('media/' . $media->id());
-    $this->assertCacheContext('user.permissions');
-    $assert_session->statusCodeEquals(200);
 
     // Test 'create BUNDLE media' permission.
     $this->drupalGet('media/add/' . $media_type->id());
@@ -169,6 +159,50 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $assert_session->pageTextContains($this->nonAdminUser->getDisplayName());
     $assert_session->linkByHrefExists('/media/' . $media->id());
     $assert_session->linkByHrefExists('/media/' . $user_media->id());
+  }
+
+  /**
+   * Test view access control on the canonical page.
+   */
+  public function testCanonicalMediaAccess() {
+    $media_type = $this->createMediaType('test');
+    $assert_session = $this->assertSession();
+
+    \Drupal::configFactory()
+      ->getEditable('media.settings')
+      ->set('standalone_url', TRUE)
+      ->save(TRUE);
+
+    $this->container->get('router.builder')->rebuild();
+
+    // Create media.
+    $media = Media::create([
+      'bundle' => $media_type->id(),
+      'name' => 'Unnamed',
+    ]);
+    $media->save();
+    $user_media = Media::create([
+      'bundle' => $media_type->id(),
+      'name' => 'Unnamed',
+      'uid' => $this->nonAdminUser->id(),
+    ]);
+    $user_media->save();
+
+    $this->drupalLogin($this->nonAdminUser);
+    /** @var \Drupal\user\RoleInterface $role */
+    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
+
+    user_role_revoke_permissions($role->id(), ['view media']);
+
+    $this->drupalGet('media/' . $media->id());
+    $this->assertCacheContext('user.permissions');
+    $assert_session->statusCodeEquals(403);
+    $access_result = $media->access('view', NULL, TRUE);
+    $this->assertSame("The 'view media' permission is required and the media item must be published.", $access_result->getReason());
+    $this->grantPermissions($role, ['view media']);
+    $this->drupalGet('media/' . $media->id());
+    $this->assertCacheContext('user.permissions');
+    $assert_session->statusCodeEquals(200);
   }
 
 }

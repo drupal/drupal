@@ -3,7 +3,6 @@
 namespace Drupal\Tests\media\Functional;
 
 use Behat\Mink\Element\NodeElement;
-use Drupal\media\Entity\Media;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
@@ -71,8 +70,6 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       ->loadUnchanged($media_id);
     $this->assertSame($media->getRevisionLogMessage(), $revision_log_message);
     $this->assertSame($media->getName(), $media_name);
-    $this->drupalGet('media/' . $media_id);
-    $assert_session->titleEquals($media_name . ' | Drupal');
 
     // Tests media edit form.
     $media_type->setNewRevision(FALSE);
@@ -88,8 +85,6 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       ->getStorage('media')
       ->loadUnchanged($media_id);
     $this->assertSame($media->getName(), $media_name2);
-    $this->drupalGet('media/' . $media_id);
-    $assert_session->titleEquals($media_name2 . ' | Drupal');
 
     // Test that there is no empty vertical tabs element, if the container is
     // empty (see #2750697).
@@ -116,7 +111,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $page->fillField('revision_log_message[0][value]', $revision_log_message);
     $page->pressButton('Save');
     $this->drupalGet('media/' . $media_id);
-    $assert_session->titleEquals($media_name . ' | Drupal');
+    $assert_session->statusCodeEquals(404);
     /** @var \Drupal\media\MediaInterface $media */
     $media = $this->container->get('entity_type.manager')
       ->getStorage('media')
@@ -144,7 +139,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Tests the "media/add" and "media/mid" pages.
+   * Tests the "media/add" page.
    *
    * Tests if the "media/add" page gives you a selecting option if there are
    * multiple media types available.
@@ -167,23 +162,6 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     // Checks for the second media type.
     $assert_session->pageTextContains($second_media_type->label());
     $assert_session->pageTextContains($second_media_type->getDescription());
-
-    // Continue testing media type filter.
-    $first_media_item = Media::create(['bundle' => $first_media_type->id()]);
-    $first_media_item->save();
-    $second_media_item = Media::create(['bundle' => $second_media_type->id()]);
-    $second_media_item->save();
-
-    // Go to first media item.
-    $this->drupalGet('media/' . $first_media_item->id());
-    $assert_session->statusCodeEquals(200);
-    $assert_session->pageTextContains($first_media_item->getName());
-    $assert_session->elementsCount('css', '.media--view-mode-full', 1);
-
-    // Go to second media item.
-    $this->drupalGet('media/' . $second_media_item->id());
-    $assert_session->statusCodeEquals(200);
-    $assert_session->pageTextContains($second_media_item->getName());
   }
 
   /**
@@ -463,7 +441,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       ->getQuery()
       ->execute();
     $media_id = reset($media_id);
-    $assert_session->addressEquals('media/' . $media_id);
+    $assert_session->addressEquals("media/$media_id/edit");
 
     // Test a redirect to the media overview for a user with the 'access media
     // overview' permission.

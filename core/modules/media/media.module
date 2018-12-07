@@ -347,3 +347,14 @@ function _media_get_add_url($allowed_bundles) {
 
   return FALSE;
 }
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function media_entity_type_alter(array &$entity_types) {
+  if (\Drupal::config('media.settings')->get('standalone_url')) {
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
+    $entity_type = $entity_types['media'];
+    $entity_type->setLinkTemplate('canonical', '/media/{media}');
+  }
+}
