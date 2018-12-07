@@ -270,7 +270,7 @@ class ContextDefinition implements ContextDefinitionInterface {
   public function setConstraints(array $constraints) {
     // If the backwards compatibility layer is present, delegate to that.
     if ($this->entityContextDefinition) {
-      $this->entityContextDefinition->setConstraint();
+      $this->entityContextDefinition->setConstraints($constraints);
     }
 
     $this->constraints = $constraints;
