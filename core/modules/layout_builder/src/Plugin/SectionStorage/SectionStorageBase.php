@@ -2,7 +2,7 @@
 
 namespace Drupal\layout_builder\Plugin\SectionStorage;
 
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Plugin\ContextAwarePluginBase;
 use Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListInterface;
@@ -16,23 +16,29 @@ use Drupal\layout_builder\SectionStorageInterface;
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
  */
-abstract class SectionStorageBase extends PluginBase implements SectionStorageInterface {
+abstract class SectionStorageBase extends ContextAwarePluginBase implements SectionStorageInterface {
 
   use LayoutBuilderRoutesTrait;
 
   /**
-   * The section storage instance.
+   * Sets the section list on the storage.
    *
-   * @var \Drupal\layout_builder\SectionListInterface|null
-   */
-  protected $sectionList;
-
-  /**
-   * {@inheritdoc}
+   * @param \Drupal\layout_builder\SectionListInterface $section_list
+   *   The section list.
+   *
+   * @internal
+   *   As of Drupal 8.7.0, this method should no longer be used. It previously
+   *   should only have been used during storage instantiation.
+   *
+   * @throws \Exception
+   *
+   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. This
+   *   method should no longer be used. The section list should be derived from
+   *   context. See https://www.drupal.org/node/3016262.
    */
   public function setSectionList(SectionListInterface $section_list) {
-    $this->sectionList = $section_list;
-    return $this;
+    @trigger_error('\Drupal\layout_builder\SectionStorageInterface::setSectionList() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. This method should no longer be used. The section list should be derived from context. See https://www.drupal.org/node/3016262.', E_USER_DEPRECATED);
+    throw new \Exception('\Drupal\layout_builder\SectionStorageInterface::setSectionList() must no longer be called. The section list should be derived from context. See https://www.drupal.org/node/3016262.');
   }
 
   /**
@@ -40,16 +46,8 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
    *
    * @return \Drupal\layout_builder\SectionListInterface
    *   The section list.
-   *
-   * @throws \RuntimeException
-   *   Thrown if ::setSectionList() is not called first.
    */
-  protected function getSectionList() {
-    if (!$this->sectionList) {
-      throw new \RuntimeException(sprintf('%s::setSectionList() must be called first', static::class));
-    }
-    return $this->sectionList;
-  }
+  abstract protected function getSectionList();
 
   /**
    * {@inheritdoc}
@@ -101,6 +99,13 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
   public function removeSection($delta) {
     $this->getSectionList()->removeSection($delta);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContextsDuringPreview() {
+    return $this->getContexts();
   }
 
 }
