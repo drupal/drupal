@@ -58,3 +58,10 @@ function layout_builder_post_update_add_extra_fields(&$sandbox = NULL) {
     return $result;
   });
 }
+
+/**
+ * Clear caches due to changes to section storage annotation changes.
+ */
+function layout_builder_post_update_section_storage_context_definitions() {
+  // Empty post-update hook.
+}

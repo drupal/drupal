@@ -63,6 +63,10 @@ class OverridesSectionStorageTest extends UnitTestCase {
    * @covers ::extractIdFromRoute
    *
    * @dataProvider providerTestExtractIdFromRoute
+   *
+   * @expectedDeprecation \Drupal\layout_builder\SectionStorageInterface::extractIdFromRoute() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute() should be used instead. See https://www.drupal.org/node/3016262.
+   *
+   * @group legacy
    */
   public function testExtractIdFromRoute($expected, $value, array $defaults) {
     $result = $this->plugin->extractIdFromRoute($value, [], 'the_parameter_name', $defaults);
@@ -104,6 +108,10 @@ class OverridesSectionStorageTest extends UnitTestCase {
    * @covers ::getSectionListFromId
    *
    * @dataProvider providerTestGetSectionListFromId
+   *
+   * @expectedDeprecation \Drupal\layout_builder\SectionStorageInterface::getSectionListFromId() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. The section list should be derived from context. See https://www.drupal.org/node/3016262.
+   *
+   * @group legacy
    */
   public function testGetSectionListFromId($success, $expected_entity_type_id, $id) {
     $defaults['the_parameter_name'] = $id;
@@ -156,6 +164,88 @@ class OverridesSectionStorageTest extends UnitTestCase {
       FALSE,
       NULL,
       '',
+    ];
+    return $data;
+  }
+
+  /**
+   * @covers ::extractEntityFromRoute
+   *
+   * @dataProvider providerTestExtractEntityFromRoute
+   *
+   * @param bool $success
+   *   Whether a successful result is expected.
+   * @param string|null $expected_entity_type_id
+   *   The expected entity type ID.
+   * @param string $value
+   *   The value to pass to ::extractEntityFromRoute().
+   * @param array $defaults
+   *   The defaults to pass to ::extractEntityFromRoute().
+   */
+  public function testExtractEntityFromRoute($success, $expected_entity_type_id, $value, array $defaults) {
+    if ($expected_entity_type_id) {
+      $entity_storage = $this->prophesize(EntityStorageInterface::class);
+
+      $entity_without_layout = $this->prophesize(FieldableEntityInterface::class);
+      $entity_without_layout->hasField(OverridesSectionStorage::FIELD_NAME)->willReturn(FALSE);
+      $entity_storage->load('entity_without_layout')->willReturn($entity_without_layout->reveal());
+
+      $entity_with_layout = $this->prophesize(FieldableEntityInterface::class);
+      $entity_with_layout->hasField(OverridesSectionStorage::FIELD_NAME)->willReturn(TRUE);
+      $entity_storage->load('entity_with_layout')->willReturn($entity_with_layout->reveal());
+      $this->entityTypeManager->getStorage($expected_entity_type_id)->willReturn($entity_storage->reveal());
+    }
+    else {
+      $this->entityTypeManager->getStorage(Argument::any())->shouldNotBeCalled();
+    }
+
+    $method = new \ReflectionMethod($this->plugin, 'extractEntityFromRoute');
+    $method->setAccessible(TRUE);
+    $result = $method->invoke($this->plugin, $value, $defaults);
+    if ($success) {
+      $this->assertInstanceOf(FieldableEntityInterface::class, $result);
+    }
+    else {
+      $this->assertNull($result);
+    }
+  }
+
+  /**
+   * Provides data for ::testExtractEntityFromRoute().
+   */
+  public function providerTestExtractEntityFromRoute() {
+    // Data provider values are:
+    // - whether a successful result is expected
+    // - the expected entity ID
+    // - the value to pass to ::extractEntityFromRoute()
+    // - the defaults to pass to ::extractEntityFromRoute().
+    $data = [];
+    $data['with value, with layout'] = [
+      TRUE,
+      'my_entity_type',
+      'my_entity_type.entity_with_layout',
+      [],
+    ];
+    $data['with value, without layout'] = [
+      FALSE,
+      'my_entity_type',
+      'my_entity_type.entity_without_layout',
+      [],
+    ];
+    $data['empty value, populated defaults'] = [
+      TRUE,
+      'my_entity_type',
+      '',
+      [
+        'entity_type_id' => 'my_entity_type',
+        'my_entity_type' => 'entity_with_layout',
+      ],
+    ];
+    $data['empty value, empty defaults'] = [
+      FALSE,
+      NULL,
+      '',
+      [],
     ];
     return $data;
   }

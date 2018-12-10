@@ -32,7 +32,9 @@ class LayoutTempstoreParamConverterTest extends UnitTestCase {
     $expected = 'the_return_value';
 
     $section_storage_manager->hasDefinition('my_type')->willReturn(TRUE);
-    $section_storage_manager->loadFromRoute('my_type', $value, $definition, $name, $defaults)->willReturn($section_storage);
+    $section_storage_manager->loadEmpty('my_type')->willReturn($section_storage->reveal());
+    $section_storage->deriveContextsFromRoute($value, $definition, $name, $defaults)->willReturn([]);
+    $section_storage_manager->load('my_type', [])->willReturn($section_storage->reveal());
 
     $layout_tempstore_repository->get($section_storage->reveal())->willReturn($expected);
 
@@ -55,6 +57,7 @@ class LayoutTempstoreParamConverterTest extends UnitTestCase {
 
     $section_storage_manager->hasDefinition()->shouldNotBeCalled();
     $section_storage_manager->loadFromRoute()->shouldNotBeCalled();
+    $section_storage_manager->load()->shouldNotBeCalled();
     $layout_tempstore_repository->get()->shouldNotBeCalled();
 
     $result = $converter->convert($value, $definition, $name, $defaults);
@@ -76,6 +79,7 @@ class LayoutTempstoreParamConverterTest extends UnitTestCase {
 
     $section_storage_manager->hasDefinition('invalid')->willReturn(FALSE);
     $section_storage_manager->loadFromRoute()->shouldNotBeCalled();
+    $section_storage_manager->load()->shouldNotBeCalled();
     $layout_tempstore_repository->get()->shouldNotBeCalled();
 
     $result = $converter->convert($value, $definition, $name, $defaults);

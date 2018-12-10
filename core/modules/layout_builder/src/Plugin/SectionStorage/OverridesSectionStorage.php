@@ -7,14 +7,12 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
-use Drupal\layout_builder\SectionListInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -23,6 +21,10 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @SectionStorage(
  *   id = "overrides",
+ *   context_definitions = {
+ *     "entity" = @ContextDefinition("entity"),
+ *     "view_mode" = @ContextDefinition("string", required = FALSE),
+ *   }
  * )
  *
  * @internal
@@ -86,12 +88,8 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
   /**
    * {@inheritdoc}
    */
-  public function setSectionList(SectionListInterface $section_list) {
-    if (!$section_list instanceof FieldItemListInterface) {
-      throw new \InvalidArgumentException('Overrides expect a field-based section list');
-    }
-
-    return parent::setSectionList($section_list);
+  protected function getSectionList() {
+    return $this->getEntity()->get(static::FIELD_NAME);
   }
 
   /**
@@ -101,7 +99,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    *   The entity storing the overrides.
    */
   protected function getEntity() {
-    return $this->getSectionList()->getEntity();
+    return $this->getContextValue('entity');
   }
 
   /**
@@ -116,6 +114,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    * {@inheritdoc}
    */
   public function extractIdFromRoute($value, $definition, $name, array $defaults) {
+    @trigger_error('\Drupal\layout_builder\SectionStorageInterface::extractIdFromRoute() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute() should be used instead. See https://www.drupal.org/node/3016262.', E_USER_DEPRECATED);
     if (strpos($value, '.') !== FALSE) {
       return $value;
     }
@@ -131,6 +130,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    * {@inheritdoc}
    */
   public function getSectionListFromId($id) {
+    @trigger_error('\Drupal\layout_builder\SectionStorageInterface::getSectionListFromId() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. The section list should be derived from context. See https://www.drupal.org/node/3016262.', E_USER_DEPRECATED);
     if (strpos($id, '.') !== FALSE) {
       list($entity_type_id, $entity_id) = explode('.', $id, 2);
       $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($entity_id);
@@ -139,6 +139,50 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       }
     }
     throw new \InvalidArgumentException(sprintf('The "%s" ID for the "%s" section storage type is invalid', $id, $this->getStorageType()));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deriveContextsFromRoute($value, $definition, $name, array $defaults) {
+    $contexts = [];
+
+    if ($entity = $this->extractEntityFromRoute($value, $defaults)) {
+      $contexts['entity'] = EntityContext::fromEntity($entity);
+    }
+    return $contexts;
+  }
+
+  /**
+   * Extracts an entity from the route values.
+   *
+   * @param mixed $value
+   *   The raw value from the route.
+   * @param array $defaults
+   *   The route defaults array.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface|null
+   *   The entity for the route, or NULL if none exist.
+   *
+   * @see \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute()
+   * @see \Drupal\Core\ParamConverter\ParamConverterInterface::convert()
+   */
+  private function extractEntityFromRoute($value, array $defaults) {
+    if (strpos($value, '.') !== FALSE) {
+      list($entity_type_id, $entity_id) = explode('.', $value, 2);
+    }
+    elseif (isset($defaults['entity_type_id']) && !empty($defaults[$defaults['entity_type_id']])) {
+      $entity_type_id = $defaults['entity_type_id'];
+      $entity_id = $defaults[$entity_type_id];
+    }
+    else {
+      return NULL;
+    }
+
+    $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($entity_id);
+    if ($entity instanceof FieldableEntityInterface && $entity->hasField(static::FIELD_NAME)) {
+      return $entity;
+    }
   }
 
   /**
@@ -257,9 +301,14 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
   /**
    * {@inheritdoc}
    */
-  public function getContexts() {
-    $entity = $this->getEntity();
-    $contexts['layout_builder.entity'] = EntityContext::fromEntity($entity);
+  public function getContextsDuringPreview() {
+    $contexts = parent::getContextsDuringPreview();
+
+    // @todo Remove this in https://www.drupal.org/node/3018782.
+    if (isset($contexts['entity'])) {
+      $contexts['layout_builder.entity'] = $contexts['entity'];
+      unset($contexts['entity']);
+    }
     return $contexts;
   }
 

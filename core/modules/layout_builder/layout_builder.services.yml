@@ -13,6 +13,7 @@ services:
   plugin.manager.layout_builder.section_storage:
     class: Drupal\layout_builder\SectionStorage\SectionStorageManager
     parent: default_plugin_manager
+    arguments: ['@context.handler']
   layout_builder.routes:
     class: Drupal\layout_builder\Routing\LayoutBuilderRoutes
     arguments: ['@plugin.manager.layout_builder.section_storage']
