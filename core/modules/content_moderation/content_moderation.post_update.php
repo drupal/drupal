@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Site\Settings;
 use Drupal\views\Entity\View;
 use Drupal\workflows\Entity\Workflow;
@@ -137,4 +138,35 @@ function content_moderation_post_update_set_views_filter_latest_translation_affe
 
     $view->save();
   }
+}
+
+/**
+ * Update the dependencies of entity displays to include associated workflow.
+ */
+function content_moderation_post_update_entity_display_dependencies(&$sandbox) {
+  /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
+  $moderation_info = \Drupal::service('content_moderation.moderation_information');
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+  $entity_type_manager = \Drupal::service('entity_type.manager');
+
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_form_display', function (EntityFormDisplay $entity_form_display) use ($moderation_info, $entity_type_manager) {
+    $associated_entity_type = $entity_type_manager->getDefinition($entity_form_display->getTargetEntityTypeId());
+
+    if ($moderation_info->isModeratedEntityType($associated_entity_type)) {
+      $entity_form_display->calculateDependencies();
+      return TRUE;
+    }
+    elseif ($moderation_state_component = $entity_form_display->getComponent('moderation_state')) {
+      // Remove the component from the entity form display, then manually delete
+      // it from the hidden components list, completely purging it.
+      $entity_form_display->removeComponent('moderation_state');
+      $hidden_components = $entity_form_display->get('hidden');
+      unset($hidden_components['moderation_state']);
+      $entity_form_display->set('hidden', $hidden_components);
+      $entity_form_display->calculateDependencies();
+      return TRUE;
+    }
+
+    return FALSE;
+  });
 }

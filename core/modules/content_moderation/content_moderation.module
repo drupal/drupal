@@ -21,6 +21,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\views\Plugin\views\filter\Broken;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 use Drupal\workflows\WorkflowInterface;
 use Drupal\Core\Action\Plugin\Action\PublishAction;
 use Drupal\Core\Action\Plugin\Action\UnpublishAction;
@@ -62,6 +65,20 @@ function content_moderation_entity_base_field_info(EntityTypeInterface $entity_t
   return \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityTypeInfo::class)
     ->entityBaseFieldInfo($entity_type);
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function content_moderation_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  if (isset($base_field_definitions['moderation_state'])) {
+    // Add the target bundle to the moderation state field. Since each bundle
+    // can be attached to a different moderation workflow, adding this
+    // information to the field definition allows the associated workflow to be
+    // derived where a field definition is present.
+    $base_field_definitions['moderation_state']->setTargetBundle($bundle);
+    return $base_field_definitions;
+  }
 }
 
 /**
@@ -316,6 +333,10 @@ function content_moderation_workflow_insert(WorkflowInterface $entity) {
   \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
   // Clear field cache so extra field is added or removed.
   \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+  // Clear the views data cache so the extra field is available in views.
+  if (\Drupal::moduleHandler()->moduleExists('views')) {
+    Views::viewsData()->clear();
+  }
 }
 
 /**
@@ -327,4 +348,22 @@ function content_moderation_workflow_update(WorkflowInterface $entity) {
   \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
   // Clear field cache so extra field is added or removed.
   \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+  // Clear the views data cache so the extra field is available in views.
+  if (\Drupal::moduleHandler()->moduleExists('views')) {
+    Views::viewsData()->clear();
+  }
+}
+
+/**
+ * Implements hook_views_post_execute().
+ */
+function content_moderation_views_post_execute(ViewExecutable $view) {
+  // @todo, remove this once broken handlers in views configuration result in
+  // a view no longer returning results. https://www.drupal.org/node/2907954.
+  foreach ($view->filter as $id => $filter) {
+    if (strpos($id, 'moderation_state') === 0 && $filter instanceof Broken) {
+      $view->result = [];
+      break;
+    }
+  }
 }

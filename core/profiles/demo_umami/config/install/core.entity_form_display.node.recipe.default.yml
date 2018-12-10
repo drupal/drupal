@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.recipe.field_tags
     - image.style.thumbnail
     - node.type.recipe
+    - workflows.workflow.editorial
   module:
     - content_moderation
     - image

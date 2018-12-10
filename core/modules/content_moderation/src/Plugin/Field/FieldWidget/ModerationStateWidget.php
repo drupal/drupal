@@ -178,4 +178,15 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
     return is_a($field_definition->getClass(), ModerationStateFieldItemList::class, TRUE);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+    if ($workflow = $this->moderationInformation->getWorkflowForEntityTypeAndBundle($this->fieldDefinition->getTargetEntityTypeId(), $this->fieldDefinition->getTargetBundle())) {
+      $dependencies[$workflow->getConfigDependencyKey()][] = $workflow->getConfigDependencyName();
+    }
+    return $dependencies;
+  }
+
 }

@@ -4,7 +4,9 @@ namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\content_moderation\Entity\Handler\ModerationHandler;
 use Drupal\content_moderation\EntityTypeInfo;
+use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\EntityTypeInfo
@@ -12,6 +14,8 @@ use Drupal\KernelTests\KernelTestBase;
  * @group content_moderation
  */
 class EntityTypeInfoTest extends KernelTestBase {
+
+  use ContentModerationTestTrait;
 
   /**
    * Modules to enable.
@@ -43,8 +47,11 @@ class EntityTypeInfoTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
     $this->entityTypeInfo = $this->container->get('class_resolver')->getInstanceFromDefinition(EntityTypeInfo::class);
     $this->entityTypeManager = $this->container->get('entity_type.manager');
+
+    $this->installConfig(['content_moderation']);
   }
 
   /**
@@ -54,6 +61,7 @@ class EntityTypeInfoTest extends KernelTestBase {
     $definition = $this->entityTypeManager->getDefinition('entity_test');
     $definition->setHandlerClass('moderation', ModerationHandler::class);
 
+    $this->enableModeration('entity_test', 'entity_test');
     $base_fields = $this->entityTypeInfo->entityBaseFieldInfo($definition);
 
     $this->assertFalse($base_fields['moderation_state']->isReadOnly());
@@ -89,6 +97,36 @@ class EntityTypeInfoTest extends KernelTestBase {
     $tests['internal_non_revisionable'] = ['entity_test_no_label', FALSE];
     $tests['internal_revisionable'] = ['content_moderation_state', FALSE];
     return $tests;
+  }
+
+  /**
+   * @covers ::entityBaseFieldInfo
+   */
+  public function testBaseFieldOnlyAddedToModeratedEntityTypes() {
+    $definition = $this->entityTypeManager->getDefinition('entity_test_with_bundle');
+
+    EntityTestBundle::create([
+      'id' => 'moderated',
+    ])->save();
+    EntityTestBundle::create([
+      'id' => 'unmoderated',
+    ])->save();
+
+    $base_fields = $this->entityTypeInfo->entityBaseFieldInfo($definition);
+    $this->assertFalse(isset($base_fields['moderation_state']));
+
+    $this->enableModeration('entity_test_with_bundle', 'moderated');
+    $base_fields = $this->entityTypeInfo->entityBaseFieldInfo($definition);
+    $this->assertTrue(isset($base_fields['moderation_state']));
+  }
+
+  /**
+   * Add moderation to an entity type and bundle.
+   */
+  protected function enableModeration($entity_type_id, $bundle) {
+    $workflow = $this->createEditorialWorkflow();
+    $workflow->getTypePlugin()->addEntityTypeAndBundle($entity_type_id, $bundle);
+    $workflow->save();
   }
 
 }

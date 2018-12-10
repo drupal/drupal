@@ -47,7 +47,6 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
     $this->installEntitySchema('content_moderation_state');
     $this->installEntitySchema('entity_test_no_bundle');
     $this->installSchema('node', 'node_access');
-    $this->installConfig('content_moderation_test_views');
     $this->installConfig('content_moderation');
 
     $node_type = NodeType::create([
@@ -65,6 +64,14 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
     ]);
     $node_type->save();
 
+    $workflow = $this->createEditorialWorkflow();
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
+    $workflow->save();
+
+    // Install the test views after moderation has been enabled on the example
+    // bundle, so the moderation_state field exists.
+    $this->installConfig('content_moderation_test_views');
+
     ConfigurableLanguage::createFromLangcode('fr')->save();
   }
 
@@ -72,7 +79,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
    * Tests the content moderation state filter.
    */
   public function testStateFilterViewsRelationship() {
-    $workflow = $this->createEditorialWorkflow();
+    $workflow = Workflow::load('editorial');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->getTypePlugin()->addState('translated_draft', 'Bar');
     $configuration = $workflow->getTypePlugin()->getConfiguration();
@@ -159,7 +166,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
    * Test the moderation filter with a non-translatable entity type.
    */
   public function testNonTranslatableEntityType() {
-    $workflow = $this->createEditorialWorkflow();
+    $workflow = Workflow::load('editorial');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_no_bundle', 'entity_test_no_bundle');
     $workflow->save();
 
@@ -181,11 +188,13 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
    */
   public function testStateFilterStatesList() {
     // By default a view of nodes will not have states to filter.
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->removeEntityTypeAndBundle('node', 'example');
+    $workflow->save();
     $this->assertPluginStates([]);
 
     // Adding a content type to the editorial workflow will enable all of the
     // editorial states.
-    $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->save();
     $this->assertPluginStates([

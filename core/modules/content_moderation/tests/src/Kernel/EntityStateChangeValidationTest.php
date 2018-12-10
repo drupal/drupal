@@ -161,6 +161,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $workflow->save();
 
     // Validate the invalid state.
+    $node = Node::load($node->id());
     $node->moderation_state->value = 'invalid_state';
     $violations = $node->validate();
     $this->assertCount(1, $violations);

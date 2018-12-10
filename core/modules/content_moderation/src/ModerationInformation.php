@@ -59,6 +59,14 @@ class ModerationInformation implements ModerationInformationInterface {
   /**
    * {@inheritdoc}
    */
+  public function isModeratedEntityType(EntityTypeInterface $entity_type) {
+    $bundles = $this->bundleInfo->getBundleInfo($entity_type->id());
+    return !empty(array_column($bundles, 'workflow'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function canModerateEntitiesOfEntityType(EntityTypeInterface $entity_type) {
     return $entity_type->hasHandlerClass('moderation');
   }
@@ -206,10 +214,17 @@ class ModerationInformation implements ModerationInformationInterface {
    * {@inheritdoc}
    */
   public function getWorkflowForEntity(ContentEntityInterface $entity) {
-    $bundles = $this->bundleInfo->getBundleInfo($entity->getEntityTypeId());
-    if (isset($bundles[$entity->bundle()]['workflow'])) {
-      return $this->entityTypeManager->getStorage('workflow')->load($bundles[$entity->bundle()]['workflow']);
-    };
+    return $this->getWorkflowForEntityTypeAndBundle($entity->getEntityTypeId(), $entity->bundle());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWorkflowForEntityTypeAndBundle($entity_type_id, $bundle_id) {
+    $bundles = $this->bundleInfo->getBundleInfo($entity_type_id);
+    if (isset($bundles[$bundle_id]['workflow'])) {
+      return $this->entityTypeManager->getStorage('workflow')->load($bundles[$bundle_id]['workflow']);
+    }
     return NULL;
   }
 

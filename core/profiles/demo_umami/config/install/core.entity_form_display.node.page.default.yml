@@ -4,6 +4,7 @@ dependencies:
   config:
     - field.field.node.page.body
     - node.type.page
+    - workflows.workflow.editorial
   module:
     - content_moderation
     - path

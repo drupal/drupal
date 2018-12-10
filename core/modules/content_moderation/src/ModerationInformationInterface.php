@@ -48,6 +48,17 @@ interface ModerationInformationInterface {
   public function shouldModerateEntitiesOfBundle(EntityTypeInterface $entity_type, $bundle);
 
   /**
+   * Determines if an entity type has at least one moderated bundle.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition to check.
+   *
+   * @return bool
+   *   TRUE if an entity type has a moderated bundle, FALSE otherwise.
+   */
+  public function isModeratedEntityType(EntityTypeInterface $entity_type);
+
+  /**
    * Loads the latest revision of a specific entity.
    *
    * @param string $entity_type_id
@@ -162,6 +173,19 @@ interface ModerationInformationInterface {
    *   The workflow entity. NULL if there is no workflow.
    */
   public function getWorkflowForEntity(ContentEntityInterface $entity);
+
+  /**
+   * Gets the workflow for the given entity type and bundle.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param string $bundle_id
+   *   The entity bundle ID.
+   *
+   * @return \Drupal\workflows\WorkflowInterface|null
+   *   The associated workflow. NULL if there is no workflow.
+   */
+  public function getWorkflowForEntityTypeAndBundle($entity_type_id, $bundle_id);
 
   /**
    * Gets unsupported features for a given entity type.

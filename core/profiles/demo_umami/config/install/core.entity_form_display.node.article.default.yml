@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.article.field_tags
     - image.style.thumbnail
     - node.type.article
+    - workflows.workflow.editorial
   module:
     - content_moderation
     - image
