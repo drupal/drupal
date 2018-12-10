@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\layout_builder\Functional;
 
-use Drupal\layout_builder\Section;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\views\Entity\View;
@@ -647,32 +646,6 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Ensure that blocks not expected to appear are not available.
     $assert_session->pageTextNotContains('Body');
     $assert_session->pageTextNotContains('Content fields');
-  }
-
-  /**
-   * Tests a config-based implementation of Layout Builder.
-   *
-   * @see \Drupal\layout_builder_test\Plugin\SectionStorage\SimpleConfigSectionStorage
-   */
-  public function testSimpleConfigBasedLayout() {
-    $assert_session = $this->assertSession();
-
-    $this->drupalLogin($this->createUser(['configure any layout']));
-
-    // Prepare an object with a pre-existing section.
-    $this->container->get('config.factory')->getEditable('layout_builder_test.test_simple_config.existing')
-      ->set('sections', [(new Section('layout_twocol'))->toArray()])
-      ->save();
-
-    // The pre-existing section is found.
-    $this->drupalGet('layout-builder-test-simple-config/existing');
-    $assert_session->elementsCount('css', '.layout', 1);
-    $assert_session->elementsCount('css', '.layout--twocol', 1);
-
-    // The default layout is selected for a new object.
-    $this->drupalGet('layout-builder-test-simple-config/new');
-    $assert_session->elementsCount('css', '.layout', 1);
-    $assert_session->elementsCount('css', '.layout--onecol', 1);
   }
 
 }

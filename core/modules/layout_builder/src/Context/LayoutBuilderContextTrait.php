@@ -46,7 +46,7 @@ trait LayoutBuilderContextTrait {
     });
 
     // Add in the per-section_storage contexts.
-    $contexts += $section_storage->getContextsDuringPreview();
+    $contexts += $section_storage->getContexts();
     return $contexts;
   }
 

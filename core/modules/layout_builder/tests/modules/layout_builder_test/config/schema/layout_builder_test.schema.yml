@@ -1,7 +1,0 @@
-layout_builder_test.test_simple_config.*:
-  type: config_object
-  mapping:
-    sections:
-      type: sequence
-      sequence:
-        type: layout_builder.section

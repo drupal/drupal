@@ -15,32 +15,6 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 interface SectionStorageManagerInterface extends DiscoveryInterface {
 
   /**
-   * Loads a section storage with the provided contexts applied.
-   *
-   * @param string $type
-   *   The section storage type.
-   * @param \Drupal\Component\Plugin\Context\ContextInterface[] $contexts
-   *   (optional) The contexts available for this storage to use.
-   *
-   * @return \Drupal\layout_builder\SectionStorageInterface|null
-   *   The section storage or NULL if its context requirements are not met.
-   */
-  public function load($type, array $contexts = []);
-
-  /**
-   * Finds the section storage to load based on available contexts.
-   *
-   * @param string $operation
-   *   The access operation. See \Drupal\Core\Access\AccessibleInterface.
-   * @param \Drupal\Component\Plugin\Context\ContextInterface[] $contexts
-   *   The contexts which should be used to determine which storage to return.
-   *
-   * @return \Drupal\layout_builder\SectionStorageInterface|null
-   *   The section storage if one matched all contexts, or NULL otherwise.
-   */
-  public function findByContext($operation, array $contexts);
-
-  /**
    * Loads a section storage with no associated section list.
    *
    * @param string $id
@@ -48,12 +22,6 @@ interface SectionStorageManagerInterface extends DiscoveryInterface {
    *
    * @return \Drupal\layout_builder\SectionStorageInterface
    *   The section storage.
-   *
-   * @internal
-   *   Section storage relies on context to load section lists. Use ::load()
-   *   when that context is available. This method is intended for use by
-   *   collaborators of the plugins in build-time situations when section
-   *   storage type must be consulted.
    */
   public function loadEmpty($id);
 
@@ -70,10 +38,6 @@ interface SectionStorageManagerInterface extends DiscoveryInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if the ID is invalid.
-   *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
-   *   \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::load()
-   *   should be used instead. See https://www.drupal.org/node/3012353.
    */
   public function loadFromStorageId($type, $id);
 
@@ -95,11 +59,6 @@ interface SectionStorageManagerInterface extends DiscoveryInterface {
    *   The section storage if it could be loaded, or NULL otherwise.
    *
    * @see \Drupal\Core\ParamConverter\ParamConverterInterface::convert()
-   *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
-   *   \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute()
-   *   and \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::load()
-   *   should be used instead. See https://www.drupal.org/node/3012353.
    */
   public function loadFromRoute($type, $value, $definition, $name, array $defaults);
 

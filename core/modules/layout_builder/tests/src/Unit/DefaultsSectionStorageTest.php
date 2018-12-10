@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
@@ -39,13 +38,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   protected $entityTypeManager;
 
   /**
-   * The sample entity generator.
-   *
-   * @var \Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator
-   */
-  protected $sampleEntityGenerator;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -53,13 +45,13 @@ class DefaultsSectionStorageTest extends UnitTestCase {
 
     $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
     $entity_type_bundle_info = $this->prophesize(EntityTypeBundleInfoInterface::class);
-    $this->sampleEntityGenerator = $this->prophesize(LayoutBuilderSampleEntityGenerator::class);
+    $sample_entity_generator = $this->prophesize(LayoutBuilderSampleEntityGenerator::class);
 
     $definition = new SectionStorageDefinition([
       'id' => 'defaults',
       'class' => DefaultsSectionStorage::class,
     ]);
-    $this->plugin = new DefaultsSectionStorage([], '', $definition, $this->entityTypeManager->reveal(), $entity_type_bundle_info->reveal(), $this->sampleEntityGenerator->reveal());
+    $this->plugin = new DefaultsSectionStorage([], '', $definition, $this->entityTypeManager->reveal(), $entity_type_bundle_info->reveal(), $sample_entity_generator->reveal());
   }
 
   /**
@@ -69,12 +61,8 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   public function testThirdPartySettings() {
     // Set an initial value on the section list.
     $section_list = $this->prophesize(LayoutEntityDisplayInterface::class);
-
-    $context = $this->prophesize(ContextInterface::class);
-    $context->getContextValue()->willReturn($section_list->reveal());
-    $this->plugin->setContext('display', $context->reveal());
-
     $section_list->getThirdPartySetting('the_module', 'the_key', NULL)->willReturn('value 1');
+    $this->plugin->setSectionList($section_list->reveal());
 
     // The plugin returns the initial value.
     $this->assertSame('value 1', $this->plugin->getThirdPartySetting('the_module', 'the_key'));
@@ -94,10 +82,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
    * @covers ::extractIdFromRoute
    *
    * @dataProvider providerTestExtractIdFromRoute
-   *
-   * @expectedDeprecation \Drupal\layout_builder\SectionStorageInterface::extractIdFromRoute() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute() should be used instead. See https://www.drupal.org/node/3016262.
-   *
-   * @group legacy
    */
   public function testExtractIdFromRoute($expected, $value, array $defaults) {
     $result = $this->plugin->extractIdFromRoute($value, [], 'the_parameter_name', $defaults);
@@ -145,10 +129,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
    * @covers ::getSectionListFromId
    *
    * @dataProvider providerTestGetSectionListFromId
-   *
-   * @expectedDeprecation \Drupal\layout_builder\SectionStorageInterface::getSectionListFromId() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. The section list should be derived from context. See https://www.drupal.org/node/3016262.
-   *
-   * @group legacy
    */
   public function testGetSectionListFromId($success, $expected_entity_id, $value) {
     if ($expected_entity_id) {
@@ -193,10 +173,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
 
   /**
    * @covers ::getSectionListFromId
-   *
-   * @expectedDeprecation \Drupal\layout_builder\SectionStorageInterface::getSectionListFromId() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. The section list should be derived from context. See https://www.drupal.org/node/3016262.
-   *
-   * @group legacy
    */
   public function testGetSectionListFromIdCreate() {
     $expected = 'the_return_value';
@@ -215,115 +191,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
     $this->entityTypeManager->getStorage('entity_view_display')->willReturn($entity_storage->reveal());
 
     $result = $this->plugin->getSectionListFromId($value);
-    $this->assertSame($expected, $result);
-  }
-
-  /**
-   * @covers ::extractEntityFromRoute
-   *
-   * @dataProvider providerTestExtractEntityFromRoute
-   *
-   * @param bool $success
-   *   Whether a successful result is expected.
-   * @param string|null $expected_entity_id
-   *   The expected entity ID.
-   * @param string $value
-   *   The value to pass to ::extractEntityFromRoute().
-   * @param array $defaults
-   *   The defaults to pass to ::extractEntityFromRoute().
-   */
-  public function testExtractEntityFromRoute($success, $expected_entity_id, $value, array $defaults) {
-    if ($expected_entity_id) {
-      $entity_storage = $this->prophesize(EntityStorageInterface::class);
-      $entity_storage->load($expected_entity_id)->willReturn('the_return_value');
-
-      $this->entityTypeManager->getDefinition('entity_view_display')->willReturn(new EntityType(['id' => 'entity_view_display']));
-      $this->entityTypeManager->getStorage('entity_view_display')->willReturn($entity_storage->reveal());
-    }
-    else {
-      $this->entityTypeManager->getDefinition('entity_view_display')->shouldNotBeCalled();
-      $this->entityTypeManager->getStorage('entity_view_display')->shouldNotBeCalled();
-    }
-
-    $method = new \ReflectionMethod($this->plugin, 'extractEntityFromRoute');
-    $method->setAccessible(TRUE);
-    $result = $method->invoke($this->plugin, $value, $defaults);
-    if ($success) {
-      $this->assertEquals('the_return_value', $result);
-    }
-    else {
-      $this->assertNull($result);
-    }
-  }
-
-  /**
-   * Provides data for ::testExtractEntityFromRoute().
-   */
-  public function providerTestExtractEntityFromRoute() {
-    // Data provider values are:
-    // - whether a successful result is expected
-    // - the expected entity ID
-    // - the value to pass to ::extractEntityFromRoute()
-    // - the defaults to pass to ::extractEntityFromRoute().
-    $data = [];
-    $data['with value'] = [
-      TRUE,
-      'foo.bar.baz',
-      'foo.bar.baz',
-      [],
-    ];
-    $data['empty value, without bundle'] = [
-      TRUE,
-      'my_entity_type.bundle_name.default',
-      '',
-      [
-        'entity_type_id' => 'my_entity_type',
-        'view_mode_name' => 'default',
-        'bundle_key' => 'my_bundle',
-        'my_bundle' => 'bundle_name',
-      ],
-    ];
-    $data['empty value, with bundle'] = [
-      TRUE,
-      'my_entity_type.bundle_name.default',
-      '',
-      [
-        'entity_type_id' => 'my_entity_type',
-        'view_mode_name' => 'default',
-        'bundle' => 'bundle_name',
-      ],
-    ];
-    $data['without value, empty defaults'] = [
-      FALSE,
-      NULL,
-      '',
-      [],
-    ];
-    return $data;
-  }
-
-  /**
-   * @covers ::extractEntityFromRoute
-   */
-  public function testExtractEntityFromRouteCreate() {
-    $expected = 'the_return_value';
-    $value = 'foo.bar.baz';
-    $expected_create_values = [
-      'targetEntityType' => 'foo',
-      'bundle' => 'bar',
-      'mode' => 'baz',
-      'status' => TRUE,
-    ];
-    $entity_storage = $this->prophesize(EntityStorageInterface::class);
-    $entity_storage->load($value)->willReturn(NULL);
-    $entity_storage->create($expected_create_values)->willReturn($expected);
-
-    $this->entityTypeManager->getDefinition('entity_view_display')->willReturn(new EntityType(['id' => 'entity_view_display']));
-    $this->entityTypeManager->getStorage('entity_view_display')->willReturn($entity_storage->reveal());
-
-    $method = new \ReflectionMethod($this->plugin, 'extractEntityFromRoute');
-    $method->setAccessible(TRUE);
-    $result = $method->invoke($this->plugin, $value, []);
     $this->assertSame($expected, $result);
   }
 
