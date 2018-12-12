@@ -239,6 +239,13 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertText('User context found.');
     $this->assertRaw($expected_text);
 
+    // Test context mapping form element is not visible if there are no valid
+    // context options for the block (the test_context_aware_no_valid_context_options
+    // block has one context defined which is not available for it on the
+    // Block Layout interface).
+    $this->drupalGet('admin/structure/block/add/test_context_aware_no_valid_context_options/classy');
+    $this->assertSession()->fieldNotExists('edit-settings-context-mapping-email');
+
     // Test context mapping allows empty selection for optional contexts.
     $this->drupalGet('admin/structure/block/manage/testcontextawareblock');
     $edit = [
