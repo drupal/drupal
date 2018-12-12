@@ -867,14 +867,6 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
       $this->exposedTranslate($form[$value], 'value');
 
-      if (!empty($form['#type']) && ($form['#type'] == 'checkboxes' || ($form['#type'] == 'select' && !empty($form['#multiple'])))) {
-        unset($form[$value]['#default_value']);
-      }
-
-      if (!empty($form['#type']) && $form['#type'] == 'select' && empty($form['#multiple'])) {
-        $form[$value]['#default_value'] = 'All';
-      }
-
       if ($value != 'value') {
         unset($form['value']);
       }
