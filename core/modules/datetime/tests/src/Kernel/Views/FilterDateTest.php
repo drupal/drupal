@@ -71,6 +71,15 @@ class FilterDateTest extends DateTimeHandlerTestBase {
       $node->save();
       $this->nodes[] = $node;
     }
+
+    // Add a node where the date field is empty.
+    $node = Node::create([
+      'title' => $this->randomMachineName(8),
+      'type' => 'page',
+      'field_date' => [],
+    ]);
+    $node->save();
+    $this->nodes[] = $node;
   }
 
   /**
@@ -127,6 +136,30 @@ class FilterDateTest extends DateTimeHandlerTestBase {
       $this->executeView($view);
       $expected_result = [
         ['nid' => $this->nodes[0]->id()],
+      ];
+      $this->assertIdenticalResultset($view, $expected_result, $this->map);
+      $view->destroy();
+
+      // Test the empty operator.
+      $view->initHandlers();
+      $view->filter[$field]->operator = 'empty';
+      $view->setDisplay('default');
+      $this->executeView($view);
+      $expected_result = [
+        ['nid' => $this->nodes[3]->id()],
+      ];
+      $this->assertIdenticalResultset($view, $expected_result, $this->map);
+      $view->destroy();
+
+      // Test the not empty operator.
+      $view->initHandlers();
+      $view->filter[$field]->operator = 'not empty';
+      $view->setDisplay('default');
+      $this->executeView($view);
+      $expected_result = [
+        ['nid' => $this->nodes[0]->id()],
+        ['nid' => $this->nodes[1]->id()],
+        ['nid' => $this->nodes[2]->id()],
       ];
       $this->assertIdenticalResultset($view, $expected_result, $this->map);
       $view->destroy();
