@@ -65,6 +65,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       // migration creates 12 comment types, one per node type.
       'comment_type' => 13,
       'contact_form' => 5,
+      'contact_message' => 0,
       'configurable_language' => 5,
       'editor' => 2,
       'field_config' => 90,
@@ -73,7 +74,6 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'filter_format' => 7,
       'image_style' => 5,
       'language_content_settings' => 10,
-      'migration' => 105,
       'node' => 18,
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.

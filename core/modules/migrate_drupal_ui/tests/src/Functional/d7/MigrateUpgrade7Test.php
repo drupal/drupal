@@ -70,6 +70,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
       // and 'fr'.
       'configurable_language' => 5,
       'contact_form' => 3,
+      'contact_message' => 0,
       'editor' => 2,
       'field_config' => 67,
       'field_storage_config' => 50,
@@ -77,7 +78,6 @@ class MigrateUpgrade7Test extends MigrateUpgradeExecuteTestBase {
       'filter_format' => 7,
       'image_style' => 6,
       'language_content_settings' => 6,
-      'migration' => 73,
       'node' => 5,
       'node_type' => 6,
       'rdf_mapping' => 8,

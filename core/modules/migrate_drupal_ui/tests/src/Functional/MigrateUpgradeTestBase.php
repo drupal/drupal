@@ -232,9 +232,18 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     // Have to reset all the statics after migration to ensure entities are
     // loadable.
     $this->resetAll();
-    foreach (array_keys(\Drupal::entityTypeManager()->getDefinitions()) as $entity_type) {
+    // Check that the expected number of entities is the same as the actual
+    // number of entities.
+    $entity_definitions = array_keys(\Drupal::entityTypeManager()->getDefinitions());
+    $expected_count_keys = array_keys($expected_counts);
+    sort($entity_definitions);
+    sort($expected_count_keys);
+    $this->assertSame($expected_count_keys, $entity_definitions);
+
+    // Assert the correct number of entities exist.
+    foreach ($entity_definitions as $entity_type) {
       $real_count = (int) \Drupal::entityQuery($entity_type)->count()->execute();
-      $expected_count = isset($expected_counts[$entity_type]) ? $expected_counts[$entity_type] : 0;
+      $expected_count = $expected_counts[$entity_type];
       $this->assertSame($expected_count, $real_count, "Found $real_count $entity_type entities, expected $expected_count.");
     }
 
