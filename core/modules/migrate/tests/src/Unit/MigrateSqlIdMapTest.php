@@ -529,14 +529,14 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       $this->fail('Too many source IDs should throw');
     }
     catch (MigrateException $e) {
-      $this->assertEquals("Extra unknown items in source IDs: array (\n  0 => 3,\n)", $e->getMessage());
+      $this->assertEquals("Extra unknown items for map migrate_map_sql_idmap_test in source IDs: array (\n  0 => 3,\n)", $e->getMessage());
     }
     try {
       $id_map->lookupDestinationIds(['nid' => 1, 'aaa' => '2']);
       $this->fail('Unknown source ID key should throw');
     }
     catch (MigrateException $e) {
-      $this->assertEquals("Extra unknown items in source IDs: array (\n  'aaa' => '2',\n)", $e->getMessage());
+      $this->assertEquals("Extra unknown items for map migrate_map_sql_idmap_test in source IDs: array (\n  'aaa' => '2',\n)", $e->getMessage());
     }
 
     // Verify that we are looking up by source_id_hash when all source IDs are

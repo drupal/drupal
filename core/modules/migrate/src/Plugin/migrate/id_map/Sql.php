@@ -584,7 +584,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
 
     if (!empty($source_id_values)) {
       $var_dump = var_export($source_id_values, TRUE);
-      throw new MigrateException(sprintf("Extra unknown items in source IDs: %s", $var_dump));
+      throw new MigrateException(sprintf("Extra unknown items for map %s in source IDs: %s", $this->mapTableName(), $var_dump));
     }
 
     $query = $this->getDatabase()->select($this->mapTableName(), 'map')
