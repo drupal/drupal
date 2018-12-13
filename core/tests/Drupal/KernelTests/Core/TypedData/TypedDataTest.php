@@ -132,18 +132,20 @@ class TypedDataTest extends KernelTestBase {
     $typed_data->setValue('invalid');
     $this->assertEqual($typed_data->validate()->count(), 1, 'Validation detected invalid value.');
 
-    // Date Time type.
+    // Date Time type; values with timezone offset.
     $value = '2014-01-01T20:00:00+00:00';
     $typed_data = $this->createTypedData(['type' => 'datetime_iso8601'], $value);
     $this->assertTrue($typed_data instanceof DateTimeInterface, 'Typed data object is an instance of DateTimeInterface.');
     $this->assertTrue($typed_data->getValue() == $value, 'Date value was fetched.');
     $this->assertEqual($typed_data->getValue(), $typed_data->getDateTime()->format('c'), 'Value representation of a date is ISO 8601');
+    $this->assertSame('+00:00', $typed_data->getDateTime()->getTimezone()->getName());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = '2014-01-02T20:00:00+00:00';
     $typed_data->setValue($new_value);
     $this->assertTrue($typed_data->getDateTime()->format('c') === $new_value, 'Date value was changed and set by an ISO8601 date.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $this->assertTrue($typed_data->getDateTime()->format('Y-m-d') == '2014-01-02', 'Date value was changed and set by date string.');
+    $this->assertSame('+00:00', $typed_data->getDateTime()->getTimezone()->getName());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getDateTime(), 'Date wrapper is null-able.');
@@ -153,8 +155,46 @@ class TypedDataTest extends KernelTestBase {
     // Check implementation of DateTimeInterface.
     $typed_data = $this->createTypedData(['type' => 'datetime_iso8601'], '2014-01-01T20:00:00+00:00');
     $this->assertTrue($typed_data->getDateTime() instanceof DrupalDateTime);
+    $this->assertSame('+00:00', $typed_data->getDateTime()->getTimezone()->getName());
     $typed_data->setDateTime(new DrupalDateTime('2014-01-02T20:00:00+00:00'));
+    $this->assertSame('+00:00', $typed_data->getDateTime()->getTimezone()->getName());
     $this->assertEqual($typed_data->getValue(), '2014-01-02T20:00:00+00:00');
+    $typed_data->setValue(NULL);
+    $this->assertNull($typed_data->getDateTime());
+
+    // Date Time type; values without timezone offset.
+    $value = '2014-01-01T20:00';
+    $typed_data = $this->createTypedData(['type' => 'datetime_iso8601'], $value);
+    $this->assertTrue($typed_data instanceof DateTimeInterface, 'Typed data object is an instance of DateTimeInterface.');
+    $this->assertTrue($typed_data->getValue() == $value, 'Date value was fetched.');
+    // @todo Uncomment this assertion in https://www.drupal.org/project/drupal/issues/2716891.
+    // $this->assertEqual($typed_data->getValue(), $typed_data->getDateTime()->format('c'), 'Value representation of a date is ISO 8601');
+    $this->assertSame('UTC', $typed_data->getDateTime()->getTimezone()->getName());
+    $this->assertEqual($typed_data->validate()->count(), 0);
+    $new_value = '2014-01-02T20:00';
+    $typed_data->setValue($new_value);
+    // @todo Uncomment this assertion in https://www.drupal.org/project/drupal/issues/2716891.
+    // $this->assertTrue($typed_data->getDateTime()->format('c') === $new_value, 'Date value was changed and set by an ISO8601 date.');
+    $this->assertEqual($typed_data->validate()->count(), 0);
+    $this->assertTrue($typed_data->getDateTime()->format('Y-m-d') == '2014-01-02', 'Date value was changed and set by date string.');
+    $this->assertSame('UTC', $typed_data->getDateTime()->getTimezone()->getName());
+    $this->assertEqual($typed_data->validate()->count(), 0);
+    $typed_data->setValue(NULL);
+    $this->assertNull($typed_data->getDateTime(), 'Date wrapper is null-able.');
+    $this->assertEqual($typed_data->validate()->count(), 0);
+    $typed_data->setValue('invalid');
+    $this->assertEqual($typed_data->validate()->count(), 1, 'Validation detected invalid value.');
+    // Check implementation of DateTimeInterface.
+    $typed_data = $this->createTypedData(['type' => 'datetime_iso8601'], '2014-01-01T20:00:00');
+    $this->assertTrue($typed_data->getDateTime() instanceof DrupalDateTime);
+    $this->assertSame('UTC', $typed_data->getDateTime()->getTimezone()->getName());
+    // When setting datetime without a timezone offset, the default timezone is
+    // used (Australia/Sydney). DateTimeIso8601::setDateTime() converts this
+    // DrupalDateTime object to a string using ::format('c'), it gets converted
+    // to an offset. The offset for Australia/Sydney is +11:00.
+    $typed_data->setDateTime(new DrupalDateTime('2014-01-02T20:00:00'));
+    $this->assertSame('+11:00', $typed_data->getDateTime()->getTimezone()->getName());
+    $this->assertEqual($typed_data->getValue(), '2014-01-02T20:00:00+11:00');
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getDateTime());
 
