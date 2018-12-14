@@ -277,7 +277,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node = $node_storage->load($nid);
     $file = $node->{$field_name}->entity;
 
-    $url = file_url_transform_relative(file_create_url(ImageStyle::load('medium')->buildUrl($file->getFileUri())));
+    $url = file_url_transform_relative(ImageStyle::load('medium')->buildUrl($file->getFileUri()));
     $this->assertTrue($this->cssSelect('img[width=40][height=20][class=image-style-medium][src="' . $url . '"]'));
 
     // Add alt/title fields to the image and verify that they are displayed.

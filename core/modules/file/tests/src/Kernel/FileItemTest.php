@@ -99,7 +99,6 @@ class FileItemTest extends FieldKernelTestBase {
     $this->assertEqual($entity->file_test->display, 1);
     $this->assertEqual($entity->file_test->description, $description);
     $this->assertEqual($entity->file_test->entity->getFileUri(), $this->file->getFileUri());
-    $this->assertEqual($entity->file_test->entity->url(), $url = file_create_url($this->file->getFileUri()));
     $this->assertEqual($entity->file_test->entity->id(), $this->file->id());
     $this->assertEqual($entity->file_test->entity->uuid(), $this->file->uuid());
 

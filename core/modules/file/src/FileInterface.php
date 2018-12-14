@@ -51,6 +51,20 @@ interface FileInterface extends ContentEntityInterface, EntityChangedInterface, 
   public function setFileUri($uri);
 
   /**
+   * Creates a file URL for the URI of this file.
+   *
+   * @param bool $relative
+   *   (optional) Whether the URL should be root-relative, defaults to TRUE.
+   *
+   * @return string
+   *   A string containing a URL that may be used to access the file.
+   *
+   * @see file_create_url()
+   * @see file_url_transform_relative()
+   */
+  public function createFileUrl($relative = TRUE);
+
+  /**
    * Returns the MIME type of the file.
    *
    * @return string

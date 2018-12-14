@@ -196,7 +196,7 @@ abstract class FileMediaFormatterBase extends FileFormatterBase implements FileM
       if (static::mimeTypeApplies($file->getMimeType())) {
         $source_attributes = new Attribute();
         $source_attributes
-          ->setAttribute('src', file_url_transform_relative(file_create_url($file->getFileUri())))
+          ->setAttribute('src', $file->createFileUrl())
           ->setAttribute('type', $file->getMimeType());
         if ($this->getSetting('multiple_file_display_type') === 'tags') {
           $source_files[] = [

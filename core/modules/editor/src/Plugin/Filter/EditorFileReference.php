@@ -5,6 +5,7 @@ namespace Drupal\editor\Plugin\Filter;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\file\FileInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -76,8 +77,8 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
         // URL. This ensures the URL works even after the file location changes.
         if ($node->hasAttribute('src')) {
           $file = $this->entityManager->loadEntityByUuid('file', $uuid);
-          if ($file) {
-            $node->setAttribute('src', file_url_transform_relative(file_create_url($file->getFileUri())));
+          if ($file instanceof FileInterface) {
+            $node->setAttribute('src', $file->createFileUrl());
           }
         }
 
@@ -86,7 +87,7 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
           $processed_uuids[$uuid] = TRUE;
 
           $file = $this->entityManager->loadEntityByUuid('file', $uuid);
-          if ($file) {
+          if ($file instanceof FileInterface) {
             $result->addCacheTags($file->getCacheTags());
           }
         }

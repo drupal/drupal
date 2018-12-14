@@ -76,11 +76,23 @@ class File extends ContentEntityBase implements FileInterface {
 
   /**
    * {@inheritdoc}
+   */
+  public function createFileUrl($relative = TRUE) {
+    $url = file_create_url($this->getFileUri());
+    if ($relative && $url) {
+      $url = file_url_transform_relative($url);
+    }
+    return $url;
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * @see file_url_transform_relative()
    */
   public function url($rel = 'canonical', $options = []) {
-    return file_create_url($this->getFileUri());
+    @trigger_error('File entities returning the URL to the physical file in File::url() is deprecated, use $file->createFileUrl() instead. See https://www.drupal.org/node/3019830', E_USER_DEPRECATED);
+    return $this->createFileUrl(FALSE);
   }
 
   /**

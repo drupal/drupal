@@ -176,7 +176,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
           'target_id' => (int) $file->id(),
           'target_type' => 'file',
           'target_uuid' => $file->uuid(),
-          'url' => $file->url(),
+          'url' => $file->createFileUrl(FALSE),
         ],
       ],
       'thumbnail' => [
@@ -188,7 +188,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
           'target_type' => 'file',
           'target_uuid' => $thumbnail->uuid(),
           'title' => NULL,
-          'url' => $thumbnail->url(),
+          'url' => $thumbnail->createFileUrl(FALSE),
         ],
       ],
       'status' => [

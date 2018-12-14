@@ -92,7 +92,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertFileExists($node_file, 'New file saved to disk on node creation.');
 
       // Ensure the file can be downloaded.
-      $this->drupalGet(file_create_url($node_file->getFileUri()));
+      $this->drupalGet($node_file->createFileUrl());
       $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the shipped file.');
 
       // Ensure the edit page has a remove button instead of an upload button.
@@ -322,7 +322,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertFileExists($node_file, 'New file saved to disk on node creation.');
 
     // Ensure the private file is available to the user who uploaded it.
-    $this->drupalGet(file_create_url($node_file->getFileUri()));
+    $this->drupalGet($node_file->createFileUrl());
     $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the shipped file.');
 
     // Ensure we can't change 'uri_scheme' field settings while there are some
@@ -388,14 +388,14 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $comment_file = $comment->{'field_' . $name}->entity;
     $this->assertFileExists($comment_file, 'New file saved to disk on node creation.');
     // Test authenticated file download.
-    $url = file_create_url($comment_file->getFileUri());
+    $url = $comment_file->createFileUrl();
     $this->assertNotEqual($url, NULL, 'Confirmed that the URL is valid');
-    $this->drupalGet(file_create_url($comment_file->getFileUri()));
+    $this->drupalGet($url);
     $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the shipped file.');
 
     // Test anonymous file download.
     $this->drupalLogout();
-    $this->drupalGet(file_create_url($comment_file->getFileUri()));
+    $this->drupalGet($url);
     $this->assertResponse(403, 'Confirmed that access is denied for the file without the needed permission.');
 
     // Unpublishes node.
@@ -405,7 +405,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Ensures normal user can no longer download the file.
     $this->drupalLogin($user);
-    $this->drupalGet(file_create_url($comment_file->getFileUri()));
+    $this->drupalGet($url);
     $this->assertResponse(403, 'Confirmed that access is denied for the file without the needed permission.');
   }
 
@@ -575,7 +575,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertEqual($attacker_user->id(), $node_file->getOwnerId(), 'New file belongs to the attacker.');
 
       // Ensure the file can be downloaded.
-      $this->drupalGet(file_create_url($node_file->getFileUri()));
+      $this->drupalGet($node_file->createFileUrl());
       $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the shipped file.');
 
       // "Click" the remove button (emulating either a nojs or js submission).

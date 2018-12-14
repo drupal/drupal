@@ -83,7 +83,7 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
     // back to the old behavior because it relies on said hack, not just to
     // generate the value for the 'uri' field of a file (see ::normalize()), but
     // also for the HAL normalization's '_links' value.
-    return file_create_url($entity->getFileUri());
+    return $entity->createFileUrl(FALSE);
   }
 
 }

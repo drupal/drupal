@@ -1171,7 +1171,7 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           // tokens are also often used in e-mails, it's better to keep absolute
           // file URLs. The 'url.site' cache context is associated to ensure the
           // correct absolute URL is used in case of a multisite setup.
-          $replacements[$original] = file_create_url($file->getFileUri());
+          $replacements[$original] = $file->createFileUrl(FALSE);
           $bubbleable_metadata->addCacheContexts(['url.site']);
           break;
 
@@ -1431,7 +1431,7 @@ function template_preprocess_file_link(&$variables) {
   // to ensure different file URLs are generated for different sites in a
   // multisite setup, including HTTP and HTTPS versions of the same site.
   // Fix in https://www.drupal.org/node/2646744.
-  $url = file_create_url($file_entity->getFileUri());
+  $url = $file_entity->createFileUrl(FALSE);
   $variables['#cache']['contexts'][] = 'url.site';
 
   $mime_type = $file->getMimeType();
