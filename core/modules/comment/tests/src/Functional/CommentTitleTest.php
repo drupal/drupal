@@ -37,7 +37,7 @@ class CommentTitleTest extends CommentTestBase {
     $this->assertNull($comment->mail->value);
 
     // Confirm that the comment was created.
-    $regex = '/<a id="comment-' . $comment->id() . '"(.*?)';
+    $regex = '/<article(.*?)id="comment-' . $comment->id() . '"(.*?)';
     $regex .= $comment->comment_body->value . '(.*?)';
     $regex .= '/s';
     $this->assertPattern($regex, 'Comment is created successfully');

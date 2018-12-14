@@ -173,8 +173,6 @@ class CommentViewBuilder extends EntityViewBuilder {
         $prefix .= $build['#comment_indent'] <= 0 ? str_repeat('</div>', abs($build['#comment_indent'])) : "\n" . '<div class="indented">';
       }
 
-      // Add anchor for each comment.
-      $prefix .= "<a id=\"comment-{$comment->id()}\"></a>\n";
       $build['#prefix'] = $prefix;
 
       // Close all open divs.

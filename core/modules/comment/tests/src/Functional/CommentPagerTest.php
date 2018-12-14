@@ -214,7 +214,7 @@ class CommentPagerTest extends CommentTestBase {
       $expected_cids[] = $comments[$key]->id();
     }
 
-    $comment_anchors = $this->xpath('//a[starts-with(@id,"comment-")]');
+    $comment_anchors = $this->xpath('//article[starts-with(@id,"comment-")]');
     $result_order = [];
     foreach ($comment_anchors as $anchor) {
       $result_order[] = substr($anchor->getAttribute('id'), 8);

@@ -724,6 +724,8 @@ function template_preprocess_comment(&$variables) {
 
   // Add comment author user ID. Necessary for the comment-by-viewer library.
   $variables['attributes']['data-comment-user-id'] = $comment->getOwnerId();
+  // Add anchor for each comment.
+  $variables['attributes']['id'] = 'comment-' . $comment->id();
 }
 
 /**
