@@ -85,7 +85,15 @@ class QuickStartTest extends TestCase {
   public function testQuickStartCommand() {
     // Install a site using the standard profile to ensure the one time login
     // link generation works.
-    $install_command = "{$this->php} core/scripts/drupal quick-start standard --site-name='Test site {$this->testDb->getDatabasePrefix()}' --suppress-login";
+
+    $install_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'quick-start',
+      'standard',
+      "--site-name='Test site {$this->testDb->getDatabasePrefix()}'",
+      '--suppress-login',
+    ];
     $process = new Process($install_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
     $process->inheritEnvironmentVariables();
     $process->setTimeout(500);
@@ -129,7 +137,13 @@ class QuickStartTest extends TestCase {
    */
   public function testQuickStartInstallAndServerCommands() {
     // Install a site.
-    $install_command = "{$this->php} core/scripts/drupal install testing --site-name='Test site {$this->testDb->getDatabasePrefix()}'";
+    $install_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'install',
+      'testing',
+      "--site-name='Test site {$this->testDb->getDatabasePrefix()}'",
+    ];
     $install_process = new Process($install_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
     $install_process->inheritEnvironmentVariables();
     $install_process->setTimeout(500);
@@ -139,7 +153,12 @@ class QuickStartTest extends TestCase {
     $this->assertSame(0, $result);
 
     // Run the PHP built-in webserver.
-    $server_command = "{$this->php} core/scripts/drupal server --suppress-login";
+    $server_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'server',
+      '--suppress-login',
+    ];
     $server_process = new Process($server_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
     $server_process->inheritEnvironmentVariables();
     $server_process->start();
@@ -173,7 +192,13 @@ class QuickStartTest extends TestCase {
     $this->assertContains('Test site ' . $this->testDb->getDatabasePrefix(), $content);
 
     // Try to re-install over the top of an existing site.
-    $install_command = "{$this->php} core/scripts/drupal install testing --site-name='Test another site {$this->testDb->getDatabasePrefix()}'";
+    $install_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'install',
+      'testing',
+      "--site-name='Test another site {$this->testDb->getDatabasePrefix()}'",
+    ];
     $install_process = new Process($install_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
     $install_process->inheritEnvironmentVariables();
     $install_process->setTimeout(500);
@@ -196,7 +221,13 @@ class QuickStartTest extends TestCase {
   public function testQuickStartCommandProfileValidation() {
     // Install a site using the standard profile to ensure the one time login
     // link generation works.
-    $install_command = "{$this->php} core/scripts/drupal quick-start umami --site-name='Test site {$this->testDb->getDatabasePrefix()}' --suppress-login";
+    $install_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'quick-start',
+      'umami',
+      "--site-name='Test site {$this->testDb->getDatabasePrefix()}' --suppress-login",
+    ];
     $process = new Process($install_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
     $process->inheritEnvironmentVariables();
     $process->run();
@@ -207,7 +238,12 @@ class QuickStartTest extends TestCase {
    * Tests the server command when there is no installation.
    */
   public function testServerWithNoInstall() {
-    $server_command = "{$this->php} core/scripts/drupal server --suppress-login";
+    $server_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'server',
+      '--suppress-login',
+    ];
     $server_process = new Process($server_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
     $server_process->inheritEnvironmentVariables();
     $server_process->run();
