@@ -7,7 +7,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use Drupal\search\Entity\SearchPage;
 
 /**
- * Upgrade search rank settings to search.page.*.yml.
+ * Upgrade search page variables.
  *
  * @group migrate_drupal_6
  */

@@ -2,32 +2,28 @@
 
 namespace Drupal\search\Plugin\migrate\process\d6;
 
-use Drupal\migrate\ProcessPluginBase;
-use Drupal\migrate\MigrateExecutableInterface;
-use Drupal\migrate\Row;
+use Drupal\search\Plugin\migrate\process\SearchConfigurationRankings as BaseSearchConfigurationRankings;
 
 /**
  * Generate configuration rankings.
  *
+ * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.x. Use
+ *   \Drupal\search\Plugin\migrate\process\SearchConfigurationRankings instead.
+ *
  * @MigrateProcessPlugin(
  *   id = "d6_search_configuration_rankings"
  * )
+ *
+ * @see https://www.drupal.org/node/3009364
  */
-class SearchConfigurationRankings extends ProcessPluginBase {
+class SearchConfigurationRankings extends BaseSearchConfigurationRankings {
 
   /**
    * {@inheritdoc}
-   *
-   * Generate the configuration rankings.
    */
-  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    $return = [];
-    foreach ($row->getSource() as $name => $rank) {
-      if (substr($name, 0, 10) == 'node_rank_' && $rank) {
-        $return[substr($name, 10)] = $rank;
-      }
-    }
-    return $return;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error('SearchConfigurationRankings is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use Drupal\search\Plugin\migrate\process\SearchConfigurationRankings instead. See https://www.drupal.org/node/3009364.', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
 }

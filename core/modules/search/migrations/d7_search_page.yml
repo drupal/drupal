@@ -1,0 +1,47 @@
+id: d7_search_page
+label: Search page configuration
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: d7_search_page
+  variables:
+    - node_rank_comments
+    - node_rank_promote
+    - node_rank_relevance
+    - node_rank_sticky
+    - node_rank_views
+  constants:
+    suffix: _search
+process:
+  module: module
+  module_exists:
+    -
+      plugin: skip_on_empty
+      method: row
+      source: module_exists
+  status:
+    -
+      plugin: static_map
+      source: status
+      map:
+        node: true
+        user: true
+      default_value: false
+  id:
+    -
+      plugin: concat
+      source:
+        - module
+        - 'constants/suffix'
+  plugin:
+    -
+      plugin: concat
+      source:
+        - module
+        - 'constants/suffix'
+  path: module
+  'configuration/rankings':
+    plugin: search_configuration_rankings
+destination:
+  plugin: entity:search_page

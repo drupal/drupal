@@ -7,7 +7,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\search\Entity\SearchPage;
 
 /**
- * Upgrade search rank settings to search.page.*.yml.
+ * Tests migration of search page status and settings.
  *
  * @group migrate_drupal_7
  */
@@ -18,34 +18,50 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
    *
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'search'];
+  public static $modules = ['search'];
 
   /**
-   * {@inheritdoc}
+   * Asserts various aspects of an SearchPage entity.
+   *
+   * @param string $id
+   *   The expected search page ID.
+   * @param string $path
+   *   The expected path of the search page.
+   * @param bool $status
+   *   The expected status of the search page.
+   * @param array $expected_config
+   *   An array of expected configuration for the search page.
    */
-  protected function setUp() {
-    parent::setUp();
-    $this->executeMigration('search_page');
+  protected function assertEntity($id, $path, $status = FALSE, array $expected_config = NULL) {
+    /** @var \Drupal\search\Entity\SearchPage $search_page */
+    $search_page = SearchPage::load($id);
+    $this->assertSame($id, $search_page->id());
+    $this->assertSame($path, $search_page->getPath());
+    $this->assertSame($status, $search_page->status());
+    if (isset($expected_config)) {
+      $configuration = $search_page->getPlugin()->getConfiguration();
+      $this->assertSame($expected_config, $configuration);
+    }
   }
 
   /**
-   * Tests Drupal 7 search ranking to Drupal 8 search page entity migration.
+   * Tests migration of search status and settings to search page entity.
    */
   public function testSearchPage() {
-    $id = 'node_search';
-    /** @var \Drupal\search\Entity\SearchPage $search_page */
-    $search_page = SearchPage::load($id);
-    $this->assertIdentical($id, $search_page->id());
-    $configuration = $search_page->getPlugin()->getConfiguration();
-    $expected_rankings = [
-      'comments' => 0,
-      'promote' => 0,
-      'relevance' => 2,
-      'sticky' => 0,
-      'views' => 0,
+    $this->enableModules(['node']);
+    $this->installConfig(['search']);
+    $this->executeMigration('d7_search_page');
+    $configuration = [
+      'rankings' => [
+        'comments' => 0,
+        'promote' => 0,
+        'relevance' => 2,
+        'sticky' => 0,
+        'views' => 0,
+      ],
     ];
-    $this->assertIdentical($expected_rankings, $configuration['rankings']);
-    $this->assertIdentical('node', $search_page->getPath());
+    $this->assertEntity('node_search', 'node', TRUE, $configuration);
+    $this->assertEntity('user_search', 'user');
 
     // Test that we can re-import using the EntitySearchPage destination.
     Database::getConnection('default', 'migrate')
@@ -55,13 +71,37 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
       ->execute();
 
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
-    $migration = $this->getMigration('search_page');
+    $migration = $this->getMigration('d7_search_page');
     // Indicate we're rerunning a migration that's already run.
     $migration->getIdMap()->prepareUpdate();
     $this->executeMigration($migration);
+    $configuration['rankings']['comments'] = 4;
+    $this->assertEntity('node_search', 'node', TRUE, $configuration);
+  }
 
-    $configuration = SearchPage::load($id)->getPlugin()->getConfiguration();
-    $this->assertIdentical(4, $configuration['rankings']['comments']);
+  /**
+   * Tests that search page is only migrated for modules enabled on D8 site.
+   */
+  public function testModuleExists() {
+    $this->installConfig(['search']);
+    $this->executeMigration('d7_search_page');
+
+    $this->assertNull(SearchPage::load('node_search'));
+    $this->assertEntity('user_search', 'user');
+  }
+
+  /**
+   * Tests that a search page will be created if it does not exist.
+   */
+  public function testUserSearchCreate() {
+    $this->enableModules(['node']);
+    $this->installConfig(['search']);
+    /** @var \Drupal\search\Entity\SearchPage $search_page */
+    $search_page = SearchPage::load('user_search');
+    $search_page->delete();
+    $this->executeMigration('d7_search_page');
+
+    $this->assertEntity('user_search', 'user');
   }
 
 }

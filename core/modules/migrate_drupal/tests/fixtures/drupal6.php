@@ -46123,7 +46123,7 @@ $connection->insert('system')
   'name' => 'search',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'throttle' => '0',
   'bootstrap' => '0',
   'schema_version' => '-1',
