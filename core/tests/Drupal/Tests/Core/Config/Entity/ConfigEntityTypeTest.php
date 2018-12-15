@@ -193,6 +193,9 @@ class ConfigEntityTypeTest extends UnitTestCase {
 
   /**
    * @covers ::getPropertiesToExport
+   *
+   * @group legacy
+   * @expectedDeprecation Entity type "example_config_entity_type" is using config schema as a fallback for a missing `config_export` definition is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. See https://www.drupal.org/node/2949023.
    */
   public function testGetPropertiesToExportSchemaFallback() {
     $this->typedConfigManager->expects($this->once())

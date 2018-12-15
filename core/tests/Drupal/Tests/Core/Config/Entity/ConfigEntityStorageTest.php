@@ -118,6 +118,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
         'uuid' => 'uuid',
         'langcode' => 'langcode',
       ],
+      'config_export' => [
+        'id',
+      ],
       'list_cache_tags' => [$this->entityTypeId . '_list'],
     ]);
 
@@ -254,7 +257,14 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $immutable_config_object->isNew()->willReturn(TRUE);
 
     $config_object = $this->prophesize(Config::class);
-    $config_object->setData(['id' => 'foo', 'uuid' => 'bar', 'dependencies' => []])
+    $config_object
+      ->setData([
+        'id' => 'foo',
+        'uuid' => 'bar',
+        'dependencies' => [],
+        'langcode' => 'hu',
+        'status' => TRUE,
+      ])
       ->shouldBeCalled();
     $config_object->save(FALSE)->shouldBeCalled();
     $config_object->get()->willReturn([]);
@@ -299,7 +309,14 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $immutable_config_object->isNew()->willReturn(FALSE);
 
     $config_object = $this->prophesize(Config::class);
-    $config_object->setData(['id' => 'foo', 'uuid' => 'bar', 'dependencies' => []])
+    $config_object
+      ->setData([
+        'id' => 'foo',
+        'uuid' => 'bar',
+        'dependencies' => [],
+        'langcode' => 'hu',
+        'status' => TRUE,
+      ])
       ->shouldBeCalled();
     $config_object->save(FALSE)->shouldBeCalled();
     $config_object->get()->willReturn([]);
@@ -347,7 +364,14 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $immutable_config_object->isNew()->willReturn(FALSE);
 
     $config_object = $this->prophesize(Config::class);
-    $config_object->setData(['id' => 'bar', 'uuid' => 'bar', 'dependencies' => []])
+    $config_object
+      ->setData([
+        'id' => 'bar',
+        'uuid' => 'bar',
+        'dependencies' => [],
+        'langcode' => 'hu',
+        'status' => TRUE,
+      ])
       ->shouldBeCalled();
     $config_object->save(FALSE)
       ->shouldBeCalled();
@@ -443,7 +467,14 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
     $config_object = $this->prophesize(Config::class);
     $config_object->get()->willReturn([]);
-    $config_object->setData(['id' => 'foo', 'uuid' => NULL, 'dependencies' => []])
+    $config_object
+      ->setData([
+        'id' => 'foo',
+        'uuid' => NULL,
+        'dependencies' => [],
+        'langcode' => 'en',
+        'status' => TRUE,
+      ])
       ->shouldBeCalled();
     $config_object->save(FALSE)->shouldBeCalled();
 

@@ -26,6 +26,13 @@ use Drupal\language\ContentLanguageSettingsInterface;
  *   entity_keys = {
  *     "id" = "id"
  *   },
+ *   config_export = {
+ *     "id",
+ *     "target_entity_type_id",
+ *     "target_bundle",
+ *     "default_langcode",
+ *     "language_alterable",
+ *   },
  *   list_cache_tags = { "rendered" }
  * )
  */

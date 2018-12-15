@@ -34,6 +34,13 @@ use Drupal\responsive_image\ResponsiveImageStyleInterface;
  *     "id" = "id",
  *     "label" = "label"
  *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "image_style_mappings",
+ *     "breakpoint_group",
+ *     "fallback_image_style",
+ *   },
  *   links = {
  *     "edit-form" = "/admin/config/media/responsive-image-style/{responsive_image_style}",
  *     "duplicate-form" = "/admin/config/media/responsive-image-style/{responsive_image_style}/duplicate",

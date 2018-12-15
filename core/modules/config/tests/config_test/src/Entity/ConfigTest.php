@@ -28,6 +28,15 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "label" = "label",
  *     "status" = "status"
  *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "weight",
+ *     "style",
+ *     "size",
+ *     "size_value",
+ *     "protected_property",
+ *   },
  *   links = {
  *     "edit-form" = "/admin/structure/config_test/manage/{config_test}",
  *     "delete-form" = "/admin/structure/config_test/manage/{config_test}/delete",
