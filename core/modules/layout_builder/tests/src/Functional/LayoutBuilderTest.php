@@ -317,6 +317,11 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->fillField('id', 'myothermenu');
     $page->pressButton('Save');
 
+    $page->clickLink('Add link');
+    $page->fillField('title[0][value]', 'My link');
+    $page->fillField('link[0][uri]', '/');
+    $page->pressButton('Save');
+
     $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display', ['layout[enabled]' => TRUE], 'Save');
     $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
