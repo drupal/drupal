@@ -231,6 +231,7 @@ class SectionRenderTest extends UnitTestCase {
    * @covers ::toRenderArray
    */
   public function testContextAwareBlock() {
+    $block_content = ['#markup' => 'The block content.'];
     $render_array = [
       '#theme' => 'block',
       '#weight' => 0,
@@ -238,7 +239,7 @@ class SectionRenderTest extends UnitTestCase {
       '#plugin_id' => 'block_plugin_id',
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
-      'content' => [],
+      'content' => $block_content,
       '#cache' => [
         'contexts' => [],
         'tags' => [],
@@ -251,7 +252,7 @@ class SectionRenderTest extends UnitTestCase {
 
     $access_result = AccessResult::allowed();
     $block->access($this->account->reveal(), TRUE)->willReturn($access_result);
-    $block->build()->willReturn([]);
+    $block->build()->willReturn($block_content);
     $block->getCacheContexts()->willReturn([]);
     $block->getCacheTags()->willReturn([]);
     $block->getCacheMaxAge()->willReturn(Cache::PERMANENT);

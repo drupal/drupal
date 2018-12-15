@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
+use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\Access\LayoutPreviewAccessAllowed;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
@@ -242,6 +243,98 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
         'contexts' => [],
         'tags' => ['test'],
         'max-age' => 0,
+      ],
+    ];
+
+    $subscriber->onBuildRender($event);
+    $result = $event->getBuild();
+    $this->assertEquals($expected_build, $result);
+    $event->getCacheableMetadata()->applyTo($result);
+    $this->assertEquals($expected_cache, $result);
+  }
+
+  /**
+   * @covers ::onBuildRender
+   */
+  public function testOnBuildRenderInPreviewEmptyBuild() {
+    $block = $this->prophesize(BlockPluginInterface::class)->willImplement(PreviewFallbackInterface::class);
+
+    $block->access($this->account->reveal(), TRUE)->shouldNotBeCalled();
+    $block->getCacheContexts()->willReturn([]);
+    $block->getCacheTags()->willReturn(['test']);
+    $block->getCacheMaxAge()->willReturn(Cache::PERMANENT);
+    $block->getConfiguration()->willReturn([]);
+    $block->getPluginId()->willReturn('block_plugin_id');
+    $block->getBaseId()->willReturn('block_plugin_id');
+    $block->getDerivativeId()->willReturn(NULL);
+    $placeholder_string = 'The placeholder string';
+    $block->getPreviewFallbackString()->willReturn($placeholder_string);
+
+    $block_content = [];
+    $block->build()->willReturn($block_content);
+    $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
+
+    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $event = new SectionComponentBuildRenderArrayEvent($component, [], TRUE);
+
+    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+
+    $expected_build = [
+      '#theme' => 'block',
+      '#weight' => 0,
+      '#configuration' => [],
+      '#plugin_id' => 'block_plugin_id',
+      '#base_plugin_id' => 'block_plugin_id',
+      '#derivative_plugin_id' => NULL,
+      'content' => $block_content,
+    ];
+    $expected_build['content']['#markup'] = $placeholder_string;
+
+    $expected_cache = $expected_build + [
+      '#cache' => [
+        'contexts' => [],
+        'tags' => ['test'],
+        'max-age' => 0,
+      ],
+    ];
+
+    $subscriber->onBuildRender($event);
+    $result = $event->getBuild();
+    $this->assertEquals($expected_build, $result);
+    $event->getCacheableMetadata()->applyTo($result);
+    $this->assertEquals($expected_cache, $result);
+  }
+
+  /**
+   * @covers ::onBuildRender
+   */
+  public function testOnBuildRenderEmptyBuild() {
+    $block = $this->prophesize(BlockPluginInterface::class);
+    $access_result = AccessResult::allowed();
+    $block->access($this->account->reveal(), TRUE)->willReturn($access_result)->shouldBeCalled();
+    $block->getCacheContexts()->willReturn([]);
+    $block->getCacheTags()->willReturn(['test']);
+    $block->getCacheMaxAge()->willReturn(Cache::PERMANENT);
+    $block->getConfiguration()->willReturn([]);
+    $block->getPluginId()->willReturn('block_plugin_id');
+    $block->getBaseId()->willReturn('block_plugin_id');
+    $block->getDerivativeId()->willReturn(NULL);
+
+    $block->build()->willReturn([]);
+    $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
+
+    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $event = new SectionComponentBuildRenderArrayEvent($component, [], FALSE);
+
+    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+
+    $expected_build = [];
+
+    $expected_cache = $expected_build + [
+      '#cache' => [
+        'contexts' => [],
+        'tags' => ['test'],
+        'max-age' => -1,
       ],
     ];
 
