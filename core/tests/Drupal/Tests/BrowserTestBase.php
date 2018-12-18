@@ -239,11 +239,6 @@ abstract class BrowserTestBase extends TestCase {
     ]);
     $session = new Session($driver, $selectors_handler);
     $cookies = $this->extractCookiesFromRequest(\Drupal::request());
-    // If there are any cookies, then first start the session before setting
-    // them.
-    if ($cookies && !$session->isStarted()) {
-      $session->start();
-    }
     foreach ($cookies as $cookie_name => $values) {
       foreach ($values as $value) {
         $session->setCookie($cookie_name, $value);
