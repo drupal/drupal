@@ -238,18 +238,22 @@ abstract class BrowserTestBase extends TestCase {
       'hidden_field_selector' => new HiddenFieldSelector(),
     ]);
     $session = new Session($driver, $selectors_handler);
-    $cookies = $this->extractCookiesFromRequest(\Drupal::request());
-    foreach ($cookies as $cookie_name => $values) {
-      foreach ($values as $value) {
-        $session->setCookie($cookie_name, $value);
-      }
-    }
     $this->mink = new Mink();
     $this->mink->registerSession('default', $session);
     $this->mink->setDefaultSessionName('default');
     $this->registerSessions();
 
     $this->initFrontPage();
+
+    // Copies cookies from the current environment, for example, XDEBUG_SESSION
+    // in order to support Xdebug.
+    // @see BrowserTestBase::initFrontPage()
+    $cookies = $this->extractCookiesFromRequest(\Drupal::request());
+    foreach ($cookies as $cookie_name => $values) {
+      foreach ($values as $value) {
+        $session->setCookie($cookie_name, $value);
+      }
+    }
 
     return $session;
   }
