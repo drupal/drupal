@@ -6,13 +6,12 @@
  */
 
 use Drupal\Component\FileSystem\FileSystem as ComponentFileSystem;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Bytes;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\File\FileSystem;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\Core\StreamWrapper\PrivateStream;
 
 /**
  * Default mode for new directories. See drupal_chmod().
@@ -315,30 +314,15 @@ function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS)
 
 /**
  * Creates a .htaccess file in each Drupal files directory if it is missing.
+ *
+ * @deprecated in Drupal 8.7.x, will be removed before Drupal 9.0.0. Use
+ * \Drupal\Core\File\HtaccessWriterInterface::ensure() instead.
+ *
+ * @see https://www.drupal.org/node/2940126
  */
 function file_ensure_htaccess() {
-  file_save_htaccess('public://', FALSE);
-  $private_path = PrivateStream::basePath();
-  if (!empty($private_path)) {
-    file_save_htaccess('private://', TRUE);
-  }
-  file_save_htaccess('temporary://', TRUE);
-
-  // If a staging directory exists then it should contain a .htaccess file.
-  // @todo https://www.drupal.org/node/2696103 catch a more specific exception
-  //   and simplify this code.
-  try {
-    $staging = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
-  }
-  catch (\Exception $e) {
-    $staging = FALSE;
-  }
-  if ($staging) {
-    // Note that we log an error here if we can't write the .htaccess file. This
-    // can occur if the staging directory is read-only. If it is then it is the
-    // user's responsibility to create the .htaccess file.
-    file_save_htaccess($staging, TRUE);
-  }
+  @trigger_error("file_ensure_htaccess() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\HtaccessWriter::ensure() instead. See https://www.drupal.org/node/2940126", E_USER_DEPRECATED);
+  \Drupal::service('file.htaccess_writer')->ensure();
 }
 
 /**
@@ -352,31 +336,18 @@ function file_ensure_htaccess() {
  * @param bool $force_overwrite
  *   (Optional) Set to TRUE to attempt to overwrite the existing .htaccess file
  *   if one is already present. Defaults to FALSE.
+ *
+ * @return bool
+ *   TRUE when file exists or created successfully, FALSE otherwise.
+ *
+ * @deprecated in Drupal 8.7.x, will be removed before Drupal 9.0.0. Use
+ *   \Drupal\Core\File\HtaccessWriterInterface::save() instead.
+ *
+ * @see https://www.drupal.org/node/2940126
  */
 function file_save_htaccess($directory, $private = TRUE, $force_overwrite = FALSE) {
-  if (\Drupal::service('file_system')->uriScheme($directory)) {
-    $htaccess_path = file_stream_wrapper_uri_normalize($directory . '/.htaccess');
-  }
-  else {
-    $directory = rtrim($directory, '/\\');
-    $htaccess_path = $directory . '/.htaccess';
-  }
-
-  if (file_exists($htaccess_path) && !$force_overwrite) {
-    // Short circuit if the .htaccess file already exists.
-    return TRUE;
-  }
-  $htaccess_lines = FileStorage::htaccessLines($private);
-
-  // Write the .htaccess file.
-  if (file_exists($directory) && is_writable($directory) && file_put_contents($htaccess_path, $htaccess_lines)) {
-    return drupal_chmod($htaccess_path, 0444);
-  }
-  else {
-    $variables = ['%directory' => $directory, '@htaccess' => $htaccess_lines];
-    \Drupal::logger('security')->error("Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <pre><code>@htaccess</code></pre>", $variables);
-    return FALSE;
-  }
+  @trigger_error('file_save_htaccess() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\HtaccessWriter::save() instead. See https://www.drupal.org/node/2940126', E_USER_DEPRECATED);
+  return \Drupal::service('file.htaccess_writer')->save($directory, $private, $force_overwrite);
 }
 
 /**
@@ -560,7 +531,7 @@ function file_unmanaged_prepare($source, &$destination = NULL, $replace = FILE_E
     return FALSE;
   }
   // Make sure the .htaccess files are present.
-  file_ensure_htaccess();
+  \Drupal::service('file.htaccess_writer')->ensure();
   return TRUE;
 }
 

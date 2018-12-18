@@ -79,12 +79,26 @@ class FileStorage implements StorageInterface {
     $success = file_prepare_directory($dir, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     // Only create .htaccess file in root directory.
     if ($dir == $this->directory) {
-      $success = $success && file_save_htaccess($this->directory, TRUE, TRUE);
+      $success = $success && $this->createHtaccess($this->directory);
     }
     if (!$success) {
       throw new StorageException('Failed to create config directory ' . $dir);
     }
     return $this;
+  }
+
+  /**
+   * Creates a .htaccess file in the given directory.
+   *
+   * @param string $directory
+   *   The directory.
+   *
+   * @return bool
+   *   TRUE if the .htaccess file was saved or already exists, FALSE otherwise.
+   */
+  private function createHtaccess($directory) {
+    // @todo Properly inject services https://www.drupal.org/node/2940135
+    return \Drupal::service('file.htaccess_writer')->save($directory, TRUE, TRUE);
   }
 
   /**

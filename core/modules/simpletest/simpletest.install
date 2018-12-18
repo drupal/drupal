@@ -72,7 +72,7 @@ function simpletest_requirements($phase) {
       ]),
     ];
   }
-  elseif (!file_save_htaccess(\Drupal::root() . '/' . $site_directory, FALSE)) {
+  elseif (!\Drupal::service('file.htaccess_writer')->save(\Drupal::root() . '/' . $site_directory, FALSE)) {
     $requirements['simpletest_site_directory'] = [
       'title' => t('Simpletest site directory'),
       'value' => t('Not protected'),

@@ -929,13 +929,15 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
     $logger->error('The directory %directory exists but is not writable and could not be made writable.', ['%directory' => $directory]);
   }
   elseif (is_dir($directory)) {
+    /** @var \Drupal\Core\File\HtaccessWriterInterface $htaccess */
+    $htaccess = \Drupal::service('file.htaccess_writer');
     if ($form_element['#name'] == 'file_public_path') {
       // Create public .htaccess file.
-      file_save_htaccess($directory, FALSE);
+      $htaccess->save($directory, FALSE);
     }
     else {
       // Create private .htaccess file.
-      file_save_htaccess($directory);
+      $htaccess->save($directory);
     }
   }
 

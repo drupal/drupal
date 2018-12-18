@@ -490,23 +490,10 @@ function system_requirements($phase) {
   if ($phase == 'runtime') {
     // Try to write the .htaccess files first, to prevent false alarms in case
     // (for example) the /tmp directory was wiped.
-    file_ensure_htaccess();
-    $file_system = \Drupal::service('file_system');
-    $htaccess_files['public://.htaccess'] = [
-      'title' => t('Public files directory'),
-      'directory' => $file_system->realpath('public://'),
-    ];
-    if (PrivateStream::basePath()) {
-      $htaccess_files['private://.htaccess'] = [
-        'title' => t('Private files directory'),
-        'directory' => $file_system->realpath('private://'),
-      ];
-    }
-    $htaccess_files['temporary://.htaccess'] = [
-      'title' => t('Temporary files directory'),
-      'directory' => $file_system->realpath('temporary://'),
-    ];
-    foreach ($htaccess_files as $htaccess_file => $info) {
+    /** @var \Drupal\Core\File\HtaccessWriterInterface $htaccessWriter */
+    $htaccessWriter = \Drupal::service("file.htaccess_writer");
+    $htaccessWriter->ensure();
+    foreach ($htaccessWriter->getHtaccessFiles() as $htaccess_file => $info) {
       // Check for the string which was added to the recommended .htaccess file
       // in the latest security update.
       if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || strpos($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003') === FALSE) {
