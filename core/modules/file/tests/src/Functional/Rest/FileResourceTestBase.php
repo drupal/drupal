@@ -218,6 +218,9 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
+      if ($method === 'DELETE') {
+        return 'Only the file owner can update or delete the file entity.';
+      }
       return parent::getExpectedUnauthorizedAccessMessage($method);
     }
 
