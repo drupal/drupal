@@ -169,10 +169,6 @@ class FileStorage implements StorageInterface {
    */
   public function delete($name) {
     if (!$this->exists($name)) {
-      $dir = $this->getCollectionDirectory();
-      if (!file_exists($dir)) {
-        throw new StorageException($dir . '/ not found.');
-      }
       return FALSE;
     }
     $this->fileCache->delete($this->getFilePath($name));
@@ -185,7 +181,7 @@ class FileStorage implements StorageInterface {
   public function rename($name, $new_name) {
     $status = @rename($this->getFilePath($name), $this->getFilePath($new_name));
     if ($status === FALSE) {
-      throw new StorageException('Failed to rename configuration file from: ' . $this->getFilePath($name) . ' to: ' . $this->getFilePath($new_name));
+      return FALSE;
     }
     $this->fileCache->delete($this->getFilePath($name));
     $this->fileCache->delete($this->getFilePath($new_name));
@@ -242,8 +238,8 @@ class FileStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function deleteAll($prefix = '') {
-    $success = TRUE;
     $files = $this->listAll($prefix);
+    $success = !empty($files);
     foreach ($files as $name) {
       if (!$this->delete($name) && $success) {
         $success = FALSE;
