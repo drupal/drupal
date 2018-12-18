@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\action\Plugin\Action;
+namespace Drupal\Core\Action\Plugin\Action;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;

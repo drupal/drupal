@@ -1,0 +1,14 @@
+uuid: 741d330c-9260-45f8-8a81-67d2cd430f4a
+langcode: en
+status: true
+dependencies:
+  module:
+    - action
+id: send_email_2815379
+label: 'Send email'
+type: system
+plugin: action_send_email_action
+configuration:
+  recipient: drupal@example.com
+  subject: Subject
+  message: Message

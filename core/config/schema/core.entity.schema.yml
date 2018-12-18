@@ -379,3 +379,33 @@ block.settings.field_block:*:*:*:
 action.configuration.entity:*:*:
   type: action_configuration_default
   label: 'Entity action'
+
+action.configuration.action_send_email_action:
+  type: mapping
+  label: 'Send email configuration'
+  mapping:
+    recipient:
+      type: string
+      label: 'Recipient'
+    subject:
+      type: label
+      label: 'Subject'
+    message:
+      type: text
+      label: 'Message'
+
+action.configuration.action_goto_action:
+  type: mapping
+  label: 'Redirect to URL configuration'
+  mapping:
+    url:
+      type: string
+      label: 'URL'
+
+action.configuration.action_message_action:
+  type: mapping
+  label: 'Display a message to the user configuration'
+  mapping:
+    message:
+      type: text
+      label: 'Message'

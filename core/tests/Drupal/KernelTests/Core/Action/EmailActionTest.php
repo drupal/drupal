@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\action\Kernel\Plugin\Action;
+namespace Drupal\KernelTests\Core\Action;
 
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\KernelTestBase;
@@ -16,7 +16,7 @@ class EmailActionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'user', 'action', 'dblog'];
+  public static $modules = ['system', 'user', 'dblog'];
 
   /**
    * {@inheritdoc}

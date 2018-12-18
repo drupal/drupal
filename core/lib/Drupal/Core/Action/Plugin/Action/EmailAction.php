@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\action\Plugin\Action;
+namespace Drupal\Core\Action\Plugin\Action;
 
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\EmailValidatorInterface;
