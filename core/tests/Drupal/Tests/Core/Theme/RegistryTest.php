@@ -111,7 +111,7 @@ class RegistryTest extends UnitTestCase {
       'libraries_extend' => [],
       'libraries' => [],
       'extension' => '.twig',
-      'base_themes' => [],
+      'base_theme_extensions' => [],
     ]);
 
     $test_stable = new ActiveTheme([
@@ -124,7 +124,7 @@ class RegistryTest extends UnitTestCase {
       'libraries_extend' => [],
       'libraries' => [],
       'extension' => '.twig',
-      'base_themes' => [],
+      'base_theme_extensions' => [],
     ]);
 
     $this->themeManager->expects($this->exactly(2))
@@ -192,7 +192,7 @@ class RegistryTest extends UnitTestCase {
     static::$functions['user'] = $defined_functions;
 
     $theme = $this->prophesize(ActiveTheme::class);
-    $theme->getBaseThemes()->willReturn([]);
+    $theme->getBaseThemeExtensions()->willReturn([]);
     $theme->getName()->willReturn('test');
     $theme->getEngine()->willReturn('twig');
 

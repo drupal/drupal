@@ -342,7 +342,7 @@ class Registry implements DestructableInterface {
     // Process each base theme.
     // Ensure that we start with the root of the parents, so that both CSS files
     // and preprocess functions comes first.
-    foreach (array_reverse($this->theme->getBaseThemes()) as $base) {
+    foreach (array_reverse($this->theme->getBaseThemeExtensions()) as $base) {
       // If the base theme uses a theme engine, process its hooks.
       $base_path = $base->getPath();
       if ($this->theme->getEngine()) {
@@ -684,7 +684,7 @@ class Registry implements DestructableInterface {
     // Gather prefixes. This will be used to limit the found functions to the
     // expected naming conventions.
     $prefixes = array_keys((array) $this->moduleHandler->getModuleList());
-    foreach (array_reverse($theme->getBaseThemes()) as $base) {
+    foreach (array_reverse($theme->getBaseThemeExtensions()) as $base) {
       $prefixes[] = $base->getName();
     }
     if ($theme->getEngine()) {

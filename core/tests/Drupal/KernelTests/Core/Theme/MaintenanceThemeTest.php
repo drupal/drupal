@@ -25,14 +25,9 @@ class MaintenanceThemeTest extends KernelTestBase {
     $active_theme = \Drupal::theme()->getActiveTheme();
     $this->assertEquals('seven', $active_theme->getName());
 
-    $base_themes = $active_theme->getBaseThemes();
+    $base_themes = $active_theme->getBaseThemeExtensions();
     $base_theme_names = array_keys($base_themes);
     $this->assertSame(['classy', 'stable'], $base_theme_names);
-
-    // Ensure Classy has the correct base themes and amount of base themes.
-    $classy_base_themes = $base_themes['classy']->getBaseThemes();
-    $classy_base_theme_names = array_keys($classy_base_themes);
-    $this->assertSame(['stable'], $classy_base_theme_names);
   }
 
 }
