@@ -287,7 +287,6 @@ Migrate
 - Michael Lutz 'mikelutz' https://www.drupal.org/u/mikelutz
 - Markus Sipilä 'masipila' https://www.drupal.org/u/masipila
 - Vicki Spagnolo 'quietone' https://www.drupal.org/u/quietone
-- Maxime Turcotte 'maxocub' https://www.drupal.org/u/maxocub
 
 Node
 - Tim Millwood 'timmillwood' https://www.drupal.org/u/timmillwood
