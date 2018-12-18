@@ -424,9 +424,6 @@ services:
   logger.channel.form:
     parent: logger.channel_base
     arguments: ['form']
-  logger.channel.security:
-    parent: logger.channel_base
-    arguments: ['security']
   logger.log_message_parser:
     class: Drupal\Core\Logger\LogMessageParser
 
@@ -1653,9 +1650,6 @@ services:
       - { name: twig.loader, priority: -100 }
   element_info:
     alias: plugin.manager.element_info
-  file.htaccess_writer:
-    class: Drupal\Core\File\HtaccessWriter
-    arguments: ['@file_system', '@logger.channel.security']
   file.mime_type.guesser:
     class: Drupal\Core\File\MimeType\MimeTypeGuesser
     arguments: ['@stream_wrapper_manager']
