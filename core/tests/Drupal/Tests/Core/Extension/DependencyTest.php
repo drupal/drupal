@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Extension;
 
+use Drupal\Component\Version\Constraint;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Tests\UnitTestCase;
 
@@ -98,6 +99,21 @@ class DependencyTest extends UnitTestCase {
     $dependency = new Dependency('views', 'drupal', '>8.x-1.1');
     $this->setExpectedException(\BadMethodCallException::class, 'Drupal\Core\Extension\Dependency::offsetSet() is not supported');
     $dependency['name'] = 'foo';
+  }
+
+  /**
+   * Ensures that constraint objects are not serialized.
+   *
+   * @covers ::__sleep
+   */
+  public function testSerialization() {
+    $dependency = new Dependency('paragraphs_demo', 'paragraphs', '>8.x-1.1');
+    $this->assertTrue($dependency->isCompatible('1.2'));
+    $this->assertInstanceOf(Constraint::class, $this->getObjectAttribute($dependency, 'constraint'));
+    $dependency = unserialize(serialize($dependency));
+    $this->assertNull($this->getObjectAttribute($dependency, 'constraint'));
+    $this->assertTrue($dependency->isCompatible('1.2'));
+    $this->assertInstanceOf(Constraint::class, $this->getObjectAttribute($dependency, 'constraint'));
   }
 
 }
