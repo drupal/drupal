@@ -293,8 +293,8 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
           'forbidden',
         ],
       ];
-      return $cases;
     }
+    return $cases;
   }
 
 }
