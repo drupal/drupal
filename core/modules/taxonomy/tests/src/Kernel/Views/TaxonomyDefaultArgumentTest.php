@@ -55,7 +55,7 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
    * Tests the relationship.
    */
   public function testNodePath() {
-    $view = $this->initViewWithRequest($this->nodes[0]->url());
+    $view = $this->initViewWithRequest($this->nodes[0]->toUrl()->toString());
 
     $expected = implode(',', [$this->term1->id(), $this->term2->id()]);
     $this->assertEqual($expected, $view->argument['tid']->getDefaultArgument());
@@ -77,14 +77,14 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
     ]);
     $field->save();
 
-    $view = $this->initViewWithRequest($this->nodes[0]->url());
+    $view = $this->initViewWithRequest($this->nodes[0]->toUrl()->toString());
 
     $expected = implode(',', [$this->term1->id(), $this->term2->id()]);
     $this->assertEqual($expected, $view->argument['tid']->getDefaultArgument());
   }
 
   public function testTermPath() {
-    $view = $this->initViewWithRequest($this->term1->url());
+    $view = $this->initViewWithRequest($this->term1->toUrl()->toString());
 
     $expected = $this->term1->id();
     $this->assertEqual($expected, $view->argument['tid']->getDefaultArgument());

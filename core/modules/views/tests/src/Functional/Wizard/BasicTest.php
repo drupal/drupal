@@ -85,9 +85,9 @@ class BasicTest extends WizardTestBase {
     $this->assertEquals('2.0', $this->getSession()->getDriver()->getAttribute('//rss', 'version'));
     // The feed should have the same title and nodes as the page.
     $this->assertText($view2['page[title]']);
-    $this->assertRaw($node1->url('canonical', ['absolute' => TRUE]));
+    $this->assertRaw($node1->toUrl('canonical', ['absolute' => TRUE])->toString());
     $this->assertText($node1->label());
-    $this->assertRaw($node2->url('canonical', ['absolute' => TRUE]));
+    $this->assertRaw($node2->toUrl('canonical', ['absolute' => TRUE])->toString());
     $this->assertText($node2->label());
 
     // Go back to the views page and check if this view is there.

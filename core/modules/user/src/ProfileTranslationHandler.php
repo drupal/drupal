@@ -48,7 +48,7 @@ class ProfileTranslationHandler extends ContentTranslationHandler {
       // We need a redirect here, otherwise we would get an access denied page
       // since the current URL would be preserved and we would try to add a
       // translation for a language that already has a translation.
-      $form_state->setRedirectUrl($entity->urlInfo());
+      $form_state->setRedirectUrl($entity->toUrl());
     }
   }
 

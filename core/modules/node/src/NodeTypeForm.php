@@ -230,7 +230,7 @@ class NodeTypeForm extends BundleEntityFormBase {
     elseif ($status == SAVED_NEW) {
       node_add_body_field($type);
       $this->messenger()->addStatus($this->t('The content type %name has been added.', $t_args));
-      $context = array_merge($t_args, ['link' => $type->link($this->t('View'), 'collection')]);
+      $context = array_merge($t_args, ['link' => $type->toLink($this->t('View'), 'collection')->toString()]);
       $this->logger('node')->notice('Added content type %name.', $context);
     }
 
@@ -253,7 +253,7 @@ class NodeTypeForm extends BundleEntityFormBase {
     }
 
     $this->entityManager->clearCachedFieldDefinitions();
-    $form_state->setRedirectUrl($type->urlInfo('collection'));
+    $form_state->setRedirectUrl($type->toUrl('collection'));
   }
 
 }

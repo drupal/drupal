@@ -165,14 +165,14 @@ class ViewListBuilder extends ConfigEntityListBuilder {
       $operations['duplicate'] = [
         'title' => $this->t('Duplicate'),
         'weight' => 15,
-        'url' => $entity->urlInfo('duplicate-form'),
+        'url' => $entity->toUrl('duplicate-form'),
       ];
     }
 
     // Add AJAX functionality to enable/disable operations.
     foreach (['enable', 'disable'] as $op) {
       if (isset($operations[$op])) {
-        $operations[$op]['url'] = $entity->urlInfo($op);
+        $operations[$op]['url'] = $entity->toUrl($op);
         // Enable and disable operations should use AJAX.
         $operations[$op]['attributes']['class'][] = 'use-ajax';
       }

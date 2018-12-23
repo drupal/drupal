@@ -125,7 +125,7 @@ function taxonomy_page_attachments_alter(array &$page) {
       $page['#attached']['html_head_link'][] = [
         [
           'rel' => $rel,
-          'href' => $term->url($rel),
+          'href' => $term->toUrl($rel)->toString(),
         ],
         TRUE,
       ];
@@ -136,7 +136,7 @@ function taxonomy_page_attachments_alter(array &$page) {
         $page['#attached']['html_head_link'][] = [
           [
             'rel' => 'shortlink',
-            'href' => $term->url($rel, ['alias' => TRUE]),
+            'href' => $term->toUrl($rel, ['alias' => TRUE])->toString(),
           ],
           TRUE,
         ];
@@ -256,7 +256,7 @@ function template_preprocess_taxonomy_term(&$variables) {
   /** @var \Drupal\taxonomy\TermInterface $term */
   $term = $variables['term'];
 
-  $variables['url'] = $term->url();
+  $variables['url'] = $term->toUrl()->toString();
   // We use name here because that is what appears in the UI.
   $variables['name'] = $variables['elements']['name'];
   unset($variables['elements']['name']);

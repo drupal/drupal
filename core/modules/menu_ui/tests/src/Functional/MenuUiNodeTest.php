@@ -189,7 +189,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $link = MenuLinkContent::load($link_id);
     $link->set('enabled', FALSE);
     $link->save();
-    $this->drupalPostForm($node->urlInfo('edit-form'), $edit, t('Save'));
+    $this->drupalPostForm($node->toUrl('edit-form'), $edit, t('Save'));
     $link = MenuLinkContent::load($link_id);
     $this->assertFalse($link->isEnabled(), 'Saving a node with a disabled menu link keeps the menu link disabled.');
 

@@ -79,7 +79,7 @@ class Rss extends RssPluginBase {
       return;
     }
 
-    $comment->link = $comment->url('canonical', ['absolute' => TRUE]);
+    $comment->link = $comment->toUrl('canonical', ['absolute' => TRUE])->toString();
     $comment->rss_namespaces = [];
     $comment->rss_elements = [
       [

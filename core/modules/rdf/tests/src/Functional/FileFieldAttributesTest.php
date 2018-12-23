@@ -84,7 +84,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
     $base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
     $parser->parse($graph, $html, 'rdfa', $base_uri);
 
-    $node_uri = $this->node->url('canonical', ['absolute' => TRUE]);
+    $node_uri = $this->node->toUrl('canonical', ['absolute' => TRUE])->toString();
     $file_uri = file_create_url($this->file->getFileUri());
 
     // Node relation to attached file.

@@ -407,7 +407,7 @@ function shortcut_toolbar() {
         'tab' => [
           '#type' => 'link',
           '#title' => t('Shortcuts'),
-          '#url' => $shortcut_set->urlInfo('collection'),
+          '#url' => $shortcut_set->toUrl('collection'),
           '#attributes' => [
             'title' => t('Shortcuts'),
             'class' => ['toolbar-icon', 'toolbar-icon-shortcut'],

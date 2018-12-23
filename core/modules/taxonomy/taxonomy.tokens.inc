@@ -116,7 +116,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'url':
-          $replacements[$original] = $term->url('canonical', ['absolute' => TRUE]);
+          $replacements[$original] = $term->toUrl('canonical', ['absolute' => TRUE])->toString();
           break;
 
         case 'node-count':

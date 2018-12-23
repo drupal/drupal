@@ -134,7 +134,7 @@ class ViewEditForm extends ViewFormBase {
       $lock_message_substitutions = [
         '@user' => \Drupal::service('renderer')->render($username),
         '@age' => $this->dateFormatter->formatTimeDiffSince($view->lock->updated),
-        ':url' => $view->url('break-lock-form'),
+        ':url' => $view->toUrl('break-lock-form')->toString(),
       ];
       $form['locked'] = [
         '#type' => 'container',
@@ -343,7 +343,7 @@ class ViewEditForm extends ViewFormBase {
     // Remove this view from cache so edits will be lost.
     $view = $this->entity;
     $this->tempStore->delete($view->id());
-    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
+    $form_state->setRedirectUrl($this->entity->toUrl('collection'));
   }
 
   /**
@@ -662,7 +662,7 @@ class ViewEditForm extends ViewFormBase {
 
     // Redirect to the top-level edit page. The first remaining display will
     // become the active display.
-    $form_state->setRedirectUrl($view->urlInfo('edit-form'));
+    $form_state->setRedirectUrl($view->toUrl('edit-form'));
   }
 
   /**
@@ -718,7 +718,7 @@ class ViewEditForm extends ViewFormBase {
         ],
         'duplicate' => [
           'title' => $this->t('Duplicate view'),
-          'url' => $view->urlInfo('duplicate-form'),
+          'url' => $view->toUrl('duplicate-form'),
         ],
         'reorder' => [
           'title' => $this->t('Reorder displays'),
@@ -731,7 +731,7 @@ class ViewEditForm extends ViewFormBase {
     if ($view->access('delete')) {
       $element['extra_actions']['#links']['delete'] = [
         'title' => $this->t('Delete view'),
-        'url' => $view->urlInfo('delete-form'),
+        'url' => $view->toUrl('delete-form'),
       ];
     }
 
@@ -743,13 +743,13 @@ class ViewEditForm extends ViewFormBase {
         $element['extra_actions']['#links']['revert'] = [
           'title' => $this->t('Revert view'),
           'href' => "admin/structure/views/view/{$view->id()}/revert",
-          'query' => ['destination' => $view->url('edit-form')],
+          'query' => ['destination' => $view->toUrl('edit-form')->toString()],
         ];
       }
       else {
         $element['extra_actions']['#links']['delete'] = [
           'title' => $this->t('Delete view'),
-          'url' => $view->urlInfo('delete-form'),
+          'url' => $view->toUrl('delete-form'),
         ];
       }
     }

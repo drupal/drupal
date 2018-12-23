@@ -56,7 +56,7 @@ class UserAdminTest extends BrowserTestBase {
     $this->assertText($admin_user->getAccountName(), 'Found Admin user on admin users page');
 
     // Test for existence of edit link in table.
-    $link = $user_a->link(t('Edit'), 'edit-form', ['query' => ['destination' => $user_a->url('collection')]]);
+    $link = $user_a->toLink(t('Edit'), 'edit-form', ['query' => ['destination' => $user_a->toUrl('collection')->toString()]])->toString();
     $this->assertRaw($link, 'Found user A edit link on admin users page');
 
     // Test exposed filter elements.

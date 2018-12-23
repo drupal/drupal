@@ -60,7 +60,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertIdentical($empty->getEntityTypeId(), 'config_test');
     // The URI can only be checked after saving.
     try {
-      $empty->urlInfo();
+      $empty->toUrl();
       $this->fail('EntityMalformedException was thrown.');
     }
     catch (EntityMalformedException $e) {
@@ -119,7 +119,7 @@ class ConfigEntityTest extends BrowserTestBase {
     }
 
     // The entity path can only be checked after saving.
-    $this->assertIdentical($config_test->url(), Url::fromRoute('entity.config_test.edit_form', ['config_test' => $expected['id']])->toString());
+    $this->assertIdentical($config_test->toUrl()->toString(), Url::fromRoute('entity.config_test.edit_form', ['config_test' => $expected['id']])->toString());
 
     // Verify that the correct status is returned and properties did not change.
     $this->assertIdentical($status, SAVED_NEW);

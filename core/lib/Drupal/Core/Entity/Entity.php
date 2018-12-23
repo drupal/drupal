@@ -178,6 +178,7 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function urlInfo($rel = 'canonical', array $options = []) {
+    @trigger_error('EntityInterface::urlInfo() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toUrl() instead. See https://www.drupal.org/node/2614344', E_USER_DEPRECATED);
     return $this->toUrl($rel, $options);
   }
 
@@ -266,6 +267,7 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function link($text = NULL, $rel = 'canonical', array $options = []) {
+    @trigger_error("EntityInterface::link() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toLink() instead. Note, the default relationship for configuration entities changes from 'edit-form' to 'canonical'. See https://www.drupal.org/node/2614344", E_USER_DEPRECATED);
     return $this->toLink($text, $rel, $options)->toString();
   }
 
@@ -286,6 +288,7 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function url($rel = 'canonical', $options = []) {
+    @trigger_error('EntityInterface::url() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toUrl() instead. Note, a \Drupal\Core\Url object is returned. See https://www.drupal.org/node/2614344', E_USER_DEPRECATED);
     // While self::toUrl() will throw an exception if the entity has no id,
     // the expected result for a URL is always a string.
     if ($this->id() === NULL || !$this->hasLinkTemplate($rel)) {

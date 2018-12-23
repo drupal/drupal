@@ -169,14 +169,14 @@ class CommentLazyBuilders {
       if ($entity->access('delete')) {
         $links['comment-delete'] = [
           'title' => t('Delete'),
-          'url' => $entity->urlInfo('delete-form'),
+          'url' => $entity->toUrl('delete-form'),
         ];
       }
 
       if ($entity->access('update')) {
         $links['comment-edit'] = [
           'title' => t('Edit'),
-          'url' => $entity->urlInfo('edit-form'),
+          'url' => $entity->toUrl('edit-form'),
         ];
       }
       if ($entity->access('create')) {
@@ -205,7 +205,7 @@ class CommentLazyBuilders {
     if ($this->moduleHandler->moduleExists('content_translation') && $this->access($entity)->isAllowed()) {
       $links['comment-translations'] = [
         'title' => t('Translate'),
-        'url' => $entity->urlInfo('drupal:content-translation-overview'),
+        'url' => $entity->toUrl('drupal:content-translation-overview'),
       ];
     }
 

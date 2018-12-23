@@ -2139,7 +2139,7 @@ function hook_mail($key, &$message, $params) {
     $node = $params['node'];
     $variables += [
       '%uid' => $node->getOwnerId(),
-      '%url' => $node->url('canonical', ['absolute' => TRUE]),
+      '%url' => $node->toUrl('canonical', ['absolute' => TRUE])->toString(),
       '%node_type' => node_get_type_label($node),
       '%title' => $node->getTitle(),
       '%teaser' => $node->teaser,

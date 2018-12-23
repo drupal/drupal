@@ -58,7 +58,7 @@ class VocabularyResetForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->entity->urlInfo('overview-form');
+    return $this->entity->toUrl('overview-form');
   }
 
   /**

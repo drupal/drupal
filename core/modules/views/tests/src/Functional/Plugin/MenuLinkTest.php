@@ -90,7 +90,7 @@ class MenuLinkTest extends ViewTestBase {
 
     // Go to the node page and ensure that both the first and second level items
     // are visible.
-    $this->drupalGet($node->urlInfo());
+    $this->drupalGet($node->toUrl());
     $this->assertText('Primary level node');
     $this->assertText('Secondary level view page');
   }

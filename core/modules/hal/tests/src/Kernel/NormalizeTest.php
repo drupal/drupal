@@ -201,7 +201,7 @@ class NormalizeTest extends NormalizerTestBase {
    *   The entity URI.
    */
   protected function getEntityUri(EntityInterface $entity) {
-    $url = $entity->urlInfo('canonical', ['absolute' => TRUE]);
+    $url = $entity->toUrl('canonical', ['absolute' => TRUE]);
     return $url->setRouteParameter('_format', 'hal_json')->toString();
   }
 

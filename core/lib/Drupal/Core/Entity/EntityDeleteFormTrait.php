@@ -78,11 +78,11 @@ trait EntityDeleteFormTrait {
     $entity = $this->getEntity();
     if ($entity->hasLinkTemplate('collection')) {
       // If available, return the collection URL.
-      return $entity->urlInfo('collection');
+      return $entity->toUrl('collection');
     }
     else {
       // Otherwise fall back to the default link template.
-      return $entity->urlInfo();
+      return $entity->toUrl();
     }
   }
 
@@ -96,7 +96,7 @@ trait EntityDeleteFormTrait {
     $entity = $this->getEntity();
     if ($entity->hasLinkTemplate('collection')) {
       // If available, return the collection URL.
-      return $entity->urlInfo('collection');
+      return $entity->toUrl('collection');
     }
     else {
       // Otherwise fall back to the front page.

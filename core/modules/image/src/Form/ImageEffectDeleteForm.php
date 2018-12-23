@@ -45,7 +45,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->imageStyle->urlInfo('edit-form');
+    return $this->imageStyle->toUrl('edit-form');
   }
 
   /**
@@ -71,7 +71,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->imageStyle->deleteImageEffect($this->imageEffect);
     $this->messenger()->addStatus($this->t('The image effect %name has been deleted.', ['%name' => $this->imageEffect->label()]));
-    $form_state->setRedirectUrl($this->imageStyle->urlInfo('edit-form'));
+    $form_state->setRedirectUrl($this->imageStyle->toUrl('edit-form'));
   }
 
 }

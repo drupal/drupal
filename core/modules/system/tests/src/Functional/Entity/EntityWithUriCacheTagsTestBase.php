@@ -20,7 +20,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
    * - "<entity_type>:<entity ID>"
    */
   public function testEntityUri() {
-    $entity_url = $this->entity->urlInfo();
+    $entity_url = $this->entity->toUrl();
     $entity_type = $this->entity->getEntityTypeId();
 
     // Selects the view mode that will be used.

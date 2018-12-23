@@ -118,7 +118,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
 
     // Check that translation permissions allow the associated operations.
     $ops = ['create' => t('Add'), 'update' => t('Edit'), 'delete' => t('Delete')];
-    $translations_url = $this->entity->urlInfo('drupal:content-translation-overview');
+    $translations_url = $this->entity->toUrl('drupal:content-translation-overview');
     foreach ($ops as $current_op => $item) {
       $user = $this->drupalCreateUser([$this->getTranslatePermission(), "$current_op content translations", 'view test entity']);
       $this->drupalLogin($user);
@@ -159,19 +159,19 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     $this->drupalLogin($user);
 
     // Check whether the user is allowed to access the entity form in edit mode.
-    $edit_url = $this->entity->urlInfo('edit-form', $options);
+    $edit_url = $this->entity->toUrl('edit-form', $options);
     $this->drupalGet($edit_url, $options);
     $this->assertResponse($expected_status['edit'], new FormattableMarkup('The @user_label has the expected edit access.', $args));
 
     // Check whether the user is allowed to access the entity delete form.
-    $delete_url = $this->entity->urlInfo('delete-form', $options);
+    $delete_url = $this->entity->toUrl('delete-form', $options);
     $this->drupalGet($delete_url, $options);
     $this->assertResponse($expected_status['delete'], new FormattableMarkup('The @user_label has the expected delete access.', $args));
 
     // Check whether the user is allowed to access the translation overview.
     $langcode = $this->langcodes[1];
     $options['language'] = $languages[$langcode];
-    $translations_url = $this->entity->url('drupal:content-translation-overview', $options);
+    $translations_url = $this->entity->toUrl('drupal:content-translation-overview', $options)->toString();
     $this->drupalGet($translations_url);
     $this->assertResponse($expected_status['overview'], new FormattableMarkup('The @user_label has the expected translation overview access.', $args));
 
@@ -203,7 +203,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
         $this->clickLink('Edit', 2);
         // An editor should be pointed to the entity form in multilingual mode.
         // We need a new expected edit path with a new language.
-        $expected_edit_path = $this->entity->url('edit-form', $options);
+        $expected_edit_path = $this->entity->toUrl('edit-form', $options)->toString();
         $this->assertUrl($expected_edit_path, [], 'The translation overview points to the edit form for editors when editing translations.');
       }
       else {
@@ -232,7 +232,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
         // An editor should be pointed to the entity deletion form in
         // multilingual mode. We need a new expected delete path with a new
         // language.
-        $expected_delete_path = $this->entity->url('delete-form', $options);
+        $expected_delete_path = $this->entity->toUrl('delete-form', $options)->toString();
         $this->assertUrl($expected_delete_path, [], 'The translation overview points to the delete form for editors when deleting translations.');
       }
       else {

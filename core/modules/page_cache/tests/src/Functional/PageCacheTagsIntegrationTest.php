@@ -82,7 +82,7 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
     ];
 
     // Full node page 1.
-    $this->assertPageCacheContextsAndTags($node_1->urlInfo(), $cache_contexts, [
+    $this->assertPageCacheContextsAndTags($node_1->toUrl(), $cache_contexts, [
       'http_response',
       'rendered',
       'block_view',
@@ -124,7 +124,7 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
     $cache_contexts[] = 'languages:' . LanguageInterface::TYPE_CONTENT;
 
     // Full node page 2.
-    $this->assertPageCacheContextsAndTags($node_2->urlInfo(), $cache_contexts, [
+    $this->assertPageCacheContextsAndTags($node_2->toUrl(), $cache_contexts, [
       'http_response',
       'rendered',
       'block_view',

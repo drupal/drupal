@@ -80,8 +80,8 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:title]'] = Html::escape($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
     $tests['[comment:langcode]'] = $comment->language()->getId();
-    $tests['[comment:url]'] = $comment->url('canonical', $url_options + ['fragment' => 'comment-' . $comment->id()]);
-    $tests['[comment:edit-url]'] = $comment->url('edit-form', $url_options);
+    $tests['[comment:url]'] = $comment->toUrl('canonical', $url_options + ['fragment' => 'comment-' . $comment->id()])->toString();
+    $tests['[comment:edit-url]'] = $comment->toUrl('edit-form', $url_options)->toString();
     $tests['[comment:created]'] = \Drupal::service('date.formatter')->format($comment->getCreatedTime(), 'medium', ['langcode' => $language_interface->getId()]);
     $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getCreatedTime(), ['langcode' => $language_interface->getId()]);
     $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getChangedTimeAcrossTranslations(), ['langcode' => $language_interface->getId()]);

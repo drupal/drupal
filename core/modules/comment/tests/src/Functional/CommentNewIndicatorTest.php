@@ -117,7 +117,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
     $expected = [
       $this->node->id() => [
         'new_comment_count' => 1,
-        'first_new_comment_link' => $this->node->url('canonical', ['fragment' => 'new']),
+        'first_new_comment_link' => $this->node->toUrl('canonical', ['fragment' => 'new'])->toString(),
       ],
     ];
     $this->assertIdentical($expected, $json);

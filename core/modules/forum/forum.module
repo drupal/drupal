@@ -452,7 +452,7 @@ function template_preprocess_forums(&$variables) {
         }
         else {
           $variables['topics'][$id]->moved = FALSE;
-          $variables['topics'][$id]->title_link = \Drupal::l($topic->getTitle(), $topic->urlInfo());
+          $variables['topics'][$id]->title_link = \Drupal::l($topic->getTitle(), $topic->toUrl());
           $variables['topics'][$id]->message = '';
         }
         $forum_submitted = [

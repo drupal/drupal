@@ -72,7 +72,7 @@ class ResourceTest extends BrowserTestBase {
     ])->save();
 
     // Verify that accessing the resource returns 406.
-    $this->drupalGet($this->entity->urlInfo()->setRouteParameter('_format', 'hal_json'));
+    $this->drupalGet($this->entity->toUrl()->setRouteParameter('_format', 'hal_json'));
     // \Drupal\Core\Routing\RequestFormatRouteFilter considers the canonical,
     // non-REST route a match, but a lower quality one: no format restrictions
     // means there's always a match and hence when there is no matching REST
@@ -98,7 +98,7 @@ class ResourceTest extends BrowserTestBase {
     ])->save();
 
     // Verify that accessing the resource returns 401.
-    $this->drupalGet($this->entity->urlInfo()->setRouteParameter('_format', 'hal_json'));
+    $this->drupalGet($this->entity->toUrl()->setRouteParameter('_format', 'hal_json'));
     // \Drupal\Core\Routing\RequestFormatRouteFilter considers the canonical,
     // non-REST route a match, but a lower quality one: no format restrictions
     // means there's always a match and hence when there is no matching REST

@@ -54,7 +54,7 @@ class UserAttributesTest extends BrowserTestBase {
 
     /** @var \Drupal\user\UserInterface[] $authors */
     foreach ($authors as $author) {
-      $account_uri = $author->url('canonical', ['absolute' => TRUE]);
+      $account_uri = $author->toUrl('canonical', ['absolute' => TRUE])->toString();
 
       // Parses the user profile page where the default bundle mapping for user
       // should be used.

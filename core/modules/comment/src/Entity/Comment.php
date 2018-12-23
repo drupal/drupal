@@ -211,7 +211,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public function permalink() {
-    $uri = $this->urlInfo();
+    $uri = $this->toUrl();
     $uri->setOption('fragment', 'comment-' . $this->id());
     return $uri;
   }

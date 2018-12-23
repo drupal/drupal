@@ -276,7 +276,7 @@ class OverviewTerms extends FormBase {
         '#prefix' => !empty($indentation) ? \Drupal::service('renderer')->render($indentation) : '',
         '#type' => 'link',
         '#title' => $term->getName(),
-        '#url' => $term->urlInfo(),
+        '#url' => $term->toUrl(),
       ];
       if ($vocabulary_hierarchy != VocabularyInterface::HIERARCHY_MULTIPLE && count($tree) > 1) {
         $parent_fields = TRUE;
@@ -496,7 +496,7 @@ class OverviewTerms extends FormBase {
   public function submitReset(array &$form, FormStateInterface $form_state) {
     /** @var $vocabulary \Drupal\taxonomy\VocabularyInterface */
     $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
-    $form_state->setRedirectUrl($vocabulary->urlInfo('reset-form'));
+    $form_state->setRedirectUrl($vocabulary->toUrl('reset-form'));
   }
 
 }

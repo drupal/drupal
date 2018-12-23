@@ -331,8 +331,8 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    */
   public function testReferencedEntity() {
     $entity_type = $this->entity->getEntityTypeId();
-    $referencing_entity_url = $this->referencingEntity->urlInfo('canonical');
-    $non_referencing_entity_url = $this->nonReferencingEntity->urlInfo('canonical');
+    $referencing_entity_url = $this->referencingEntity->toUrl('canonical');
+    $non_referencing_entity_url = $this->nonReferencingEntity->toUrl('canonical');
     $listing_url = Url::fromRoute('entity.entity_test.collection_referencing_entities', [
       'entity_reference_field_name' => $entity_type . '_reference',
       'referenced_entity_type' => $entity_type,

@@ -47,7 +47,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     // Link the node to itself to test that it's only indexed once. The content
     // also needs the word "pizza" so we can use it as the search keyword.
     $body_key = 'body[0][value]';
-    $edit[$body_key] = \Drupal::l($node->label(), $node->urlInfo()) . ' pizza sandwich';
+    $edit[$body_key] = \Drupal::l($node->label(), $node->toUrl()) . ' pizza sandwich';
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();

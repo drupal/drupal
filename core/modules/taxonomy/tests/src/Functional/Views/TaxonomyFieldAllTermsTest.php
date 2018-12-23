@@ -28,13 +28,13 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
     $this->executeView($view);
     $this->drupalGet('taxonomy_all_terms_test');
 
-    $actual = $this->xpath('//a[@href="' . $this->term1->url() . '"]');
+    $actual = $this->xpath('//a[@href="' . $this->term1->toUrl()->toString() . '"]');
     $this->assertEqual(count($actual), 2, 'Correct number of taxonomy term1 links');
     $this->assertEqual($actual[0]->getText(), $this->term1->label());
     $this->assertEqual($actual[1]->getText(), $this->term1->label());
     $this->assertEscaped($this->term1->label());
 
-    $actual = $this->xpath('//a[@href="' . $this->term2->url() . '"]');
+    $actual = $this->xpath('//a[@href="' . $this->term2->toUrl()->toString() . '"]');
     $this->assertEqual(count($actual), 2, 'Correct number of taxonomy term2 links');
     $this->assertEqual($actual[0]->getText(), $this->term2->label());
     $this->assertEqual($actual[1]->getText(), $this->term2->label());

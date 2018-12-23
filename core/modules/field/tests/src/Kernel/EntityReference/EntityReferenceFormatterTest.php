@@ -353,8 +353,8 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $expected_item_1 = [
       '#type' => 'link',
       '#title' => $this->referencedEntity->label(),
-      '#url' => $this->referencedEntity->urlInfo(),
-      '#options' => $this->referencedEntity->urlInfo()->getOptions(),
+      '#url' => $this->referencedEntity->toUrl(),
+      '#options' => $this->referencedEntity->toUrl()->getOptions(),
       '#cache' => [
         'contexts' => [
           'user.permissions',

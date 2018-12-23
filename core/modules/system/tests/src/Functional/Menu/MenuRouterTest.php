@@ -233,11 +233,11 @@ class MenuRouterTest extends BrowserTestBase {
 
     $this->drupalGet('user/login');
     // Check that we got to 'user'.
-    $this->assertUrl($this->loggedInUser->url('canonical', ['absolute' => TRUE]));
+    $this->assertUrl($this->loggedInUser->toUrl('canonical', ['absolute' => TRUE])->toString());
 
     // user/register should redirect to user/UID/edit.
     $this->drupalGet('user/register');
-    $this->assertUrl($this->loggedInUser->url('edit-form', ['absolute' => TRUE]));
+    $this->assertUrl($this->loggedInUser->toUrl('edit-form', ['absolute' => TRUE])->toString());
   }
 
   /**

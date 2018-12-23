@@ -102,7 +102,7 @@ trait BookTestTrait {
     // Check previous, up, and next links.
     if ($previous) {
       /** @var \Drupal\Core\Url $url */
-      $url = $previous->urlInfo();
+      $url = $previous->toUrl();
       $url->setOptions(['attributes' => ['rel' => ['prev'], 'title' => t('Go to previous page')]]);
       $text = new FormattableMarkup('<b>‹</b> @label', ['@label' => $previous->label()]);
       $this->assertRaw(\Drupal::l($text, $url), 'Previous page link found.');
@@ -110,14 +110,14 @@ trait BookTestTrait {
 
     if ($up) {
       /** @var \Drupal\Core\Url $url */
-      $url = $up->urlInfo();
+      $url = $up->toUrl();
       $url->setOptions(['attributes' => ['title' => t('Go to parent page')]]);
       $this->assertRaw(\Drupal::l('Up', $url), 'Up page link found.');
     }
 
     if ($next) {
       /** @var \Drupal\Core\Url $url */
-      $url = $next->urlInfo();
+      $url = $next->toUrl();
       $url->setOptions(['attributes' => ['rel' => ['next'], 'title' => t('Go to next page')]]);
       $text = new FormattableMarkup('@label <b>›</b>', ['@label' => $next->label()]);
       $this->assertRaw(\Drupal::l($text, $url), 'Next page link found.');
@@ -127,7 +127,7 @@ trait BookTestTrait {
     $expected_breadcrumb = [];
     $expected_breadcrumb[] = \Drupal::url('<front>');
     foreach ($breadcrumb as $a_node) {
-      $expected_breadcrumb[] = $a_node->url();
+      $expected_breadcrumb[] = $a_node->toUrl()->toString();
     }
 
     // Fetch links in the current breadcrumb.

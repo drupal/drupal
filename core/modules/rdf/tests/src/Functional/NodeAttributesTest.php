@@ -47,7 +47,7 @@ class NodeAttributesTest extends NodeTestBase {
       'title' => $this->randomMachineName(8) . "'",
     ]);
 
-    $node_uri = $node->url('canonical', ['absolute' => TRUE]);
+    $node_uri = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
     $base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
 
     // Parses front page where the node is displayed in its teaser form.

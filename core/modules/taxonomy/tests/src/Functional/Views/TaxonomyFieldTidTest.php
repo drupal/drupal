@@ -29,7 +29,7 @@ class TaxonomyFieldTidTest extends TaxonomyTestBase {
     $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
       return $view->field['name']->advancedRender($view->result[0]);
     });
-    $expected = \Drupal::l($this->term1->label(), $this->term1->urlInfo());
+    $expected = \Drupal::l($this->term1->label(), $this->term1->toUrl());
 
     $this->assertEqual($expected, $actual);
   }

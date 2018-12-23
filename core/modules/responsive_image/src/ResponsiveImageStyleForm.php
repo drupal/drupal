@@ -287,7 +287,7 @@ class ResponsiveImageStyleForm extends EntityForm {
       );
     }
     else {
-      $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
+      $form_state->setRedirectUrl($this->entity->toUrl('collection'));
     }
   }
 

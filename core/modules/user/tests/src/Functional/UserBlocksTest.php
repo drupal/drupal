@@ -108,7 +108,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalPostForm('http://example.com/', $edit, t('Log in'), ['external' => FALSE]);
     // Check that we remain on the site after login.
-    $this->assertUrl($user->url('canonical', ['absolute' => TRUE]), [], 'Redirected to user profile page after login from the frontpage');
+    $this->assertUrl($user->toUrl('canonical', ['absolute' => TRUE])->toString(), [], 'Redirected to user profile page after login from the frontpage');
 
     // Verify that form validation errors are displayed immediately for forms
     // in blocks and not on subsequent page requests.

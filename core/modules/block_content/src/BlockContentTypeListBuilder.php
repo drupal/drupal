@@ -38,7 +38,7 @@ class BlockContentTypeListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['type'] = $entity->link();
+    $row['type'] = $entity->toLink(NULL, 'edit-form')->toString();
     $row['description']['data']['#markup'] = $entity->getDescription();
     return $row + parent::buildRow($entity);
   }

@@ -198,7 +198,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
           $link = $this->l($date, new Url('entity.node.revision', ['node' => $node->id(), 'node_revision' => $vid]));
         }
         else {
-          $link = $node->link($date);
+          $link = $node->toLink($date)->toString();
           $current_revision_displayed = TRUE;
         }
 

@@ -149,7 +149,7 @@ class CommentManager implements CommentManagerInterface {
         $destination = ['destination' => Url::fromRoute('comment.reply', $comment_reply_parameters, ['fragment' => 'comment-form'])->toString()];
       }
       else {
-        $destination = ['destination' => $entity->url('canonical', ['fragment' => 'comment-form'])];
+        $destination = ['destination' => $entity->toUrl('canonical', ['fragment' => 'comment-form'])->toString()];
       }
 
       if ($this->userConfig->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {

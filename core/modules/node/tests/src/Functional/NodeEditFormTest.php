@@ -70,7 +70,7 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Check that "edit" link points to correct page.
     $this->clickLink(t('Edit'));
-    $this->assertUrl($node->url('edit-form', ['absolute' => TRUE]));
+    $this->assertUrl($node->toUrl('edit-form', ['absolute' => TRUE])->toString());
 
     // Check that the title and body fields are displayed with the correct values.
     // @todo Ideally assertLink would support HTML, but it doesn't.

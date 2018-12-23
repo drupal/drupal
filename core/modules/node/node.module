@@ -221,7 +221,7 @@ function node_title_list(StatementInterface $result, $title = NULL) {
   $num_rows = FALSE;
   $nids = [];
   foreach ($result as $row) {
-    // Do not use $node->label() or $node->urlInfo() here, because we only have
+    // Do not use $node->label() or $node->toUrl() here, because we only have
     // database rows, not actual nodes.
     $nids[] = $row->nid;
     $options = !empty($row->comment_count) ? ['attributes' => ['title' => \Drupal::translation()->formatPlural($row->comment_count, '1 comment', '@count comments')]] : [];
@@ -614,9 +614,7 @@ function template_preprocess_node(&$variables) {
   $variables['author_name'] = \Drupal::service('renderer')->render($variables['elements']['uid']);
   unset($variables['elements']['uid']);
 
-  $variables['url'] = $node->url('canonical', [
-    'language' => $node->language(),
-  ]);
+  $variables['url'] = !$node->isNew() ? $node->toUrl('canonical')->toString() : NULL;
   $variables['label'] = $variables['elements']['title'];
   unset($variables['elements']['title']);
   // The 'page' variable is set to TRUE in two occasions:

@@ -89,7 +89,7 @@ function tracker_page($account = NULL) {
         'title' => [
           'data' => [
             '#type' => 'link',
-            '#url' => $node->urlInfo(),
+            '#url' => $node->toUrl(),
             '#title' => $node->getTitle(),
           ],
           'data-history-node-id' => $node->id(),

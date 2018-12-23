@@ -168,7 +168,7 @@ class ContentTranslationController extends ControllerBase {
           $source = $metadata->getSource() ?: LanguageInterface::LANGCODE_NOT_SPECIFIED;
           $is_original = $langcode == $original;
           $label = $entity->getTranslation($langcode)->label();
-          $link = isset($links->links[$langcode]['url']) ? $links->links[$langcode] : ['url' => $entity->urlInfo()];
+          $link = isset($links->links[$langcode]['url']) ? $links->links[$langcode] : ['url' => $entity->toUrl()];
           if (!empty($link['url'])) {
             $link['url']->setOption('language', $language);
             $row_title = $this->l($label, $link['url']);
@@ -187,7 +187,7 @@ class ContentTranslationController extends ControllerBase {
             ->merge(CacheableMetadata::createFromObject($update_access))
             ->merge(CacheableMetadata::createFromObject($translation_access));
           if ($update_access->isAllowed() && $entity_type->hasLinkTemplate('edit-form')) {
-            $links['edit']['url'] = $entity->urlInfo('edit-form');
+            $links['edit']['url'] = $entity->toUrl('edit-form');
             $links['edit']['language'] = $language;
           }
           elseif (!$is_original && $translation_access->isAllowed()) {
@@ -228,7 +228,7 @@ class ContentTranslationController extends ControllerBase {
               if ($delete_access->isAllowed() && $entity_type->hasLinkTemplate('delete-form')) {
                 $links['delete'] = [
                   'title' => $this->t('Delete'),
-                  'url' => $entity->urlInfo('delete-form'),
+                  'url' => $entity->toUrl('delete-form'),
                   'language' => $language,
                 ];
               }

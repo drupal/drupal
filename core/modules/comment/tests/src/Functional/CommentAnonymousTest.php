@@ -41,7 +41,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $body = 'comment body with skip comment approval';
     $edit['subject[0][value]'] = $title;
     $edit['comment_body[0][value]'] = $body;
-    $this->drupalPostForm($this->node->urlInfo(), $edit, t('Preview'));
+    $this->drupalPostForm($this->node->toUrl(), $edit, t('Preview'));
     // Cannot use assertRaw here since both title and body are in the form.
     $preview = (string) $this->cssSelect('.preview')[0]->getHtml();
     $this->assertTrue(strpos($preview, $title) !== FALSE, 'Anonymous user can preview comment title.');
@@ -54,7 +54,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $body = 'comment body without skip comment approval';
     $edit['subject[0][value]'] = $title;
     $edit['comment_body[0][value]'] = $body;
-    $this->drupalPostForm($this->node->urlInfo(), $edit, t('Preview'));
+    $this->drupalPostForm($this->node->toUrl(), $edit, t('Preview'));
     // Cannot use assertRaw here since both title and body are in the form.
     $preview = (string) $this->cssSelect('.preview')[0]->getHtml();
     $this->assertTrue(strpos($preview, $title) !== FALSE, 'Anonymous user can preview comment title.');

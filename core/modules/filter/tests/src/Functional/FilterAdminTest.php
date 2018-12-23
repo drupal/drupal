@@ -412,13 +412,13 @@ class FilterAdminTest extends BrowserTestBase {
 
     // The format is used and we should see the static text instead of the body
     // value.
-    $this->drupalGet($node->urlInfo());
+    $this->drupalGet($node->toUrl());
     $this->assertText('filtered text');
 
     // Disable the format.
     $format->disable()->save();
 
-    $this->drupalGet($node->urlInfo());
+    $this->drupalGet($node->toUrl());
 
     // The format is not used anymore.
     $this->assertNoText('filtered text');
@@ -437,7 +437,7 @@ class FilterAdminTest extends BrowserTestBase {
     $format_id = $this->randomMachineName();
     $node->body->format = $format_id;
     $node->save();
-    $this->drupalGet($node->urlInfo());
+    $this->drupalGet($node->toUrl());
     // The text is not displayed unfiltered or escaped.
     $this->assertNoRaw($body_value);
     $this->assertNoEscaped($body_value);

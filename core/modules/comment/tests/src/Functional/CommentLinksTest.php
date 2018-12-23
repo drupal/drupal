@@ -105,7 +105,7 @@ class CommentLinksTest extends CommentTestBase {
     entity_get_display('comment', 'comment', 'default')
       ->setComponent('links', ['weight' => -100])
       ->save();
-    $this->drupalGet($this->node->urlInfo());
+    $this->drupalGet($this->node->toUrl());
     $element = $this->cssSelect('article.js-comment > div');
     // Get last child element.
     $element = end($element);
@@ -115,7 +115,7 @@ class CommentLinksTest extends CommentTestBase {
     entity_get_display('comment', 'comment', 'default')
       ->setComponent('links', ['weight' => 100])
       ->save();
-    $this->drupalGet($this->node->urlInfo());
+    $this->drupalGet($this->node->toUrl());
     $element = $this->cssSelect('article.js-comment > div');
     // Get last child element.
     $element = end($element);
@@ -125,7 +125,7 @@ class CommentLinksTest extends CommentTestBase {
     entity_get_display('node', $this->node->bundle(), 'default')
       ->removeComponent('links')
       ->save();
-    $this->drupalGet($this->node->urlInfo());
+    $this->drupalGet($this->node->toUrl());
     $this->assertNoLink('1 comment');
     $this->assertNoLink('Add new comment');
 

@@ -362,14 +362,13 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
       $extra = $this->moduleHandler->invokeAll('node_search_result', [$node]);
 
-      $language = $this->languageManager->getLanguage($item->langcode);
       $username = [
         '#theme' => 'username',
         '#account' => $node->getOwner(),
       ];
 
       $result = [
-        'link' => $node->url('canonical', ['absolute' => TRUE, 'language' => $language]),
+        'link' => $node->toUrl('canonical', ['absolute' => TRUE])->toString(),
         'type' => $type->label(),
         'title' => $node->label(),
         'node' => $node,

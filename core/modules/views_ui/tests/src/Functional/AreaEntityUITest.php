@@ -31,7 +31,7 @@ class AreaEntityUITest extends UITestBase {
     $id = $default['id'];
     $view = View::load($id);
 
-    $this->drupalGet($view->urlInfo('edit-form'));
+    $this->drupalGet($view->toUrl('edit-form'));
 
     // Add a global NULL argument to the view for testing argument placeholders.
     $this->drupalPostForm("admin/structure/views/nojs/add-handler/$id/page_1/argument", ['name[views.null]' => TRUE], 'Add and configure contextual filters');

@@ -67,8 +67,8 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     $tests['[node:body]'] = $node->body->processed;
     $tests['[node:summary]'] = $node->body->summary_processed;
     $tests['[node:langcode]'] = $node->language()->getId();
-    $tests['[node:url]'] = $node->url('canonical', $url_options);
-    $tests['[node:edit-url]'] = $node->url('edit-form', $url_options);
+    $tests['[node:url]'] = $node->toUrl('canonical', $url_options)->toString();
+    $tests['[node:edit-url]'] = $node->toUrl('edit-form', $url_options)->toString();
     $tests['[node:author]'] = $account->getAccountName();
     $tests['[node:author:uid]'] = $node->getOwnerId();
     $tests['[node:author:name]'] = $account->getAccountName();

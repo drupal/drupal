@@ -81,7 +81,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
     $this->messenger()->addStatus($this->t('Saved the %label @entity-type.', ['%label' => $this->entity->label(), '@entity-type' => $this->entityType->getLowercaseLabel()]));
     $this->entity->save();
     \Drupal::entityManager()->clearCachedFieldDefinitions();
-    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
+    $form_state->setRedirectUrl($this->entity->toUrl('collection'));
   }
 
 }

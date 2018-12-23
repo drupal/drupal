@@ -167,7 +167,7 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
       $counter_output = $view->style_plugin->getField($index, 'counter');
       $this->assertEqual($counter_output, $expected);
 
-      $node_url = $node->url();
+      $node_url = $node->toUrl()->toString();
       $expected = "<a href=\"$node_url\"><span class=\"da-title\">{$node->label()}</span> <span class=\"counter\">$counter_output</span></a>";
       $output = $view->style_plugin->getField($index, 'title');
       $this->assertEqual($output, $expected);

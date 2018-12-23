@@ -207,10 +207,10 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
             $query = $page_number ? ['page' => $page_number] : NULL;
             $value = [
               'new_comment_count' => (int) $new_comments,
-              'first_new_comment_link' => $entity->url('canonical', [
+              'first_new_comment_link' => $entity->toUrl('canonical', [
                 'query' => $query,
                 'fragment' => 'new',
-              ]),
+              ])->toString(),
             ];
             $parents = ['comment', 'newCommentsLinks', $entity->getEntityTypeId(), $field_name, $entity->id()];
             NestedArray::setValue($entity_links['comment__' . $field_name]['#attached']['drupalSettings'], $parents, $value);

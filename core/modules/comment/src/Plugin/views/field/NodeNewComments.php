@@ -180,7 +180,7 @@ class NodeNewComments extends NumericField {
       $page_number = $entity_manager->getStorage('comment')
         ->getNewCommentPageNumber($this->getValue($values, 'comment_count'), $this->getValue($values), $node, $comment_field_name);
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['url'] = $node->urlInfo();
+      $this->options['alter']['url'] = $node->toUrl();
       $this->options['alter']['query'] = $page_number ? ['page' => $page_number] : NULL;
       $this->options['alter']['fragment'] = 'new';
     }

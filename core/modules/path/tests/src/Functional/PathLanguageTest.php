@@ -118,7 +118,7 @@ class PathLanguageTest extends PathTestBase {
     // many levels, and we need to clear those caches.
     $this->container->get('language_manager')->reset();
     $languages = $this->container->get('language_manager')->getLanguages();
-    $url = $english_node_french_translation->url('canonical', ['language' => $languages['fr']]);
+    $url = $english_node_french_translation->toUrl('canonical', ['language' => $languages['fr']])->toString();
 
     $this->assertTrue(strpos($url, $edit['path[0][alias]']), 'URL contains the path alias.');
 

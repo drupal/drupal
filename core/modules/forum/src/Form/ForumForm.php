@@ -79,7 +79,7 @@ class ForumForm extends TermForm {
     $route_name = $this->urlStub == 'container' ? 'entity.taxonomy_term.forum_edit_container_form' : 'entity.taxonomy_term.forum_edit_form';
     $route_parameters = ['taxonomy_term' => $term->id()];
     $link = $this->l($this->t('Edit'), new Url($route_name, $route_parameters));
-    $view_link = $term->link($term->getName());
+    $view_link = $term->toLink($term->getName())->toString();
     switch ($status) {
       case SAVED_NEW:
         $this->messenger()->addStatus($this->t('Created new @type %term.', ['%term' => $view_link, '@type' => $this->forumFormType]));
@@ -104,7 +104,7 @@ class ForumForm extends TermForm {
     $actions = parent::actions($form, $form_state);
 
     if (!$this->entity->isNew() && $this->entity->hasLinkTemplate('forum-delete-form')) {
-      $actions['delete']['#url'] = $this->entity->urlInfo('forum-delete-form');
+      $actions['delete']['#url'] = $this->entity->toUrl('forum-delete-form');
     }
     else {
       unset($actions['delete']);

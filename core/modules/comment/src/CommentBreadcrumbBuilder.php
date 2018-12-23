@@ -48,7 +48,7 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
 
     $entity = $route_match->getParameter('entity');
-    $breadcrumb->addLink(new Link($entity->label(), $entity->urlInfo()));
+    $breadcrumb->addLink(new Link($entity->label(), $entity->toUrl()));
     $breadcrumb->addCacheableDependency($entity);
 
     if (($pid = $route_match->getParameter('pid')) && ($comment = $this->storage->load($pid))) {
@@ -56,7 +56,7 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $breadcrumb->addCacheableDependency($comment);
       // Display link to parent comment.
       // @todo Clean-up permalink in https://www.drupal.org/node/2198041
-      $breadcrumb->addLink(new Link($comment->getSubject(), $comment->urlInfo()));
+      $breadcrumb->addLink(new Link($comment->getSubject(), $comment->toUrl()));
     }
 
     return $breadcrumb;

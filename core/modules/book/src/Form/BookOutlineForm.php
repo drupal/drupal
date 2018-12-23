@@ -122,7 +122,7 @@ class BookOutlineForm extends ContentEntityForm {
       if (isset($this->entity->book['parent_mismatch']) && $this->entity->book['parent_mismatch']) {
         // This will usually only happen when JS is disabled.
         $this->messenger()->addStatus($this->t('The post has been added to the selected book. You may now position it relative to other pages.'));
-        $form_state->setRedirectUrl($this->entity->urlInfo('book-outline-form'));
+        $form_state->setRedirectUrl($this->entity->toUrl('book-outline-form'));
       }
       else {
         $this->messenger()->addStatus($this->t('The book outline has been updated.'));

@@ -62,8 +62,8 @@ class UserTokenReplaceTest extends BrowserTestBase {
     $tests['[user:account-name]'] = $account->getAccountName();
     $tests['[user:display-name]'] = $account->getDisplayName();
     $tests['[user:mail]'] = $account->getEmail();
-    $tests['[user:url]'] = $account->url('canonical', $url_options);
-    $tests['[user:edit-url]'] = $account->url('edit-form', $url_options);
+    $tests['[user:url]'] = $account->toUrl('canonical', $url_options)->toString();
+    $tests['[user:edit-url]'] = $account->toUrl('edit-form', $url_options)->toString();
     $tests['[user:last-login]'] = format_date($account->getLastLoginTime(), 'medium', '', NULL, $language_interface->getId());
     $tests['[user:last-login:short]'] = format_date($account->getLastLoginTime(), 'short', '', NULL, $language_interface->getId());
     $tests['[user:created]'] = format_date($account->getCreatedTime(), 'medium', '', NULL, $language_interface->getId());

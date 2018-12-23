@@ -19,7 +19,7 @@ class MenuLinkContentDeleteForm extends ContentEntityDeleteForm {
     if ($this->moduleHandler->moduleExists('menu_ui')) {
       return new Url('entity.menu.edit_form', ['menu' => $this->entity->getMenuName()]);
     }
-    return $this->entity->urlInfo();
+    return $this->entity->toUrl();
   }
 
   /**

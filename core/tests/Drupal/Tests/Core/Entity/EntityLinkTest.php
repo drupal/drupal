@@ -118,7 +118,7 @@ class EntityLinkTest extends UnitTestCase {
       ->with($this->equalTo($expected_link))
       ->willReturn($expected);
 
-    $this->assertSame($expected, $entity->link($link_text, $link_rel, $link_options));
+    $this->assertSame($expected, $entity->toLink($link_text, $link_rel, $link_options)->toString());
   }
 
   /**

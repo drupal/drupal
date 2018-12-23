@@ -97,7 +97,7 @@ class BlockContentTypeForm extends BundleEntityFormBase {
     $block_type = $this->entity;
     $status = $block_type->save();
 
-    $edit_link = $this->entity->link($this->t('Edit'));
+    $edit_link = $this->entity->toLink($this->t('Edit'), 'edit-form')->toString();
     $logger = $this->logger('block_content');
     if ($status == SAVED_UPDATED) {
       $this->messenger()->addStatus(t('Custom block type %label has been updated.', ['%label' => $block_type->label()]));
@@ -109,7 +109,7 @@ class BlockContentTypeForm extends BundleEntityFormBase {
       $logger->notice('Custom block type %label has been added.', ['%label' => $block_type->label(), 'link' => $edit_link]);
     }
 
-    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
+    $form_state->setRedirectUrl($this->entity->toUrl('collection'));
   }
 
 }

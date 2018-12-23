@@ -81,7 +81,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $tests['[term:tid]'] = $term1->id();
     $tests['[term:name]'] = $term1->getName();
     $tests['[term:description]'] = $term1->description->processed;
-    $tests['[term:url]'] = $term1->url('canonical', ['absolute' => TRUE]);
+    $tests['[term:url]'] = $term1->toUrl('canonical', ['absolute' => TRUE])->toString();
     $tests['[term:node-count]'] = 0;
     $tests['[term:parent:name]'] = '[term:parent:name]';
     $tests['[term:vocabulary:name]'] = $this->vocabulary->label();
@@ -112,10 +112,10 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $tests['[term:tid]'] = $term2->id();
     $tests['[term:name]'] = $term2->getName();
     $tests['[term:description]'] = $term2->description->processed;
-    $tests['[term:url]'] = $term2->url('canonical', ['absolute' => TRUE]);
+    $tests['[term:url]'] = $term2->toUrl('canonical', ['absolute' => TRUE])->toString();
     $tests['[term:node-count]'] = 1;
     $tests['[term:parent:name]'] = $term1->getName();
-    $tests['[term:parent:url]'] = $term1->url('canonical', ['absolute' => TRUE]);
+    $tests['[term:parent:url]'] = $term1->toUrl('canonical', ['absolute' => TRUE])->toString();
     $tests['[term:parent:parent:name]'] = '[term:parent:parent:name]';
     $tests['[term:vocabulary:name]'] = $this->vocabulary->label();
 

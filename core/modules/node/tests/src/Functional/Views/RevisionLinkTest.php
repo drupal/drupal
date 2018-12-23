@@ -46,7 +46,7 @@ class RevisionLinkTest extends NodeTestBase {
     $this->assertResponse(200, 'Test view can be accessed in the path expected');
     // The first node revision should link to the node directly as you get an
     // access denied if you link to the revision.
-    $url = $nodes[0]->urlInfo()->toString();
+    $url = $nodes[0]->toUrl()->toString();
     $this->assertLinkByHref($url);
     $this->assertNoLinkByHref($url . '/revisions/' . $nodes[0]->getRevisionId() . '/view');
     $this->assertNoLinkByHref($url . '/revisions/' . $nodes[0]->getRevisionId() . '/delete');
@@ -54,7 +54,7 @@ class RevisionLinkTest extends NodeTestBase {
 
     // For the second node the current revision got set to the last revision, so
     // the first one should also link to the node page itself.
-    $url = $nodes[1]->urlInfo()->toString();
+    $url = $nodes[1]->toUrl()->toString();
     $this->assertLinkByHref($url);
     $this->assertLinkByHref($url . '/revisions/' . $first_revision . '/view');
     $this->assertLinkByHref($url . '/revisions/' . $first_revision . '/delete');
@@ -69,7 +69,7 @@ class RevisionLinkTest extends NodeTestBase {
       'delete' => $this->drupalCreateUser(['delete all revisions', 'delete any page content']),
     ];
 
-    $url = $nodes[1]->urlInfo()->toString();
+    $url = $nodes[1]->toUrl()->toString();
     // Render the view with users which can only delete/revert revisions.
     foreach ($accounts as $allowed_operation => $account) {
       $this->drupalLogin($account);

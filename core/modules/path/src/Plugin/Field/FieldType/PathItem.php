@@ -71,7 +71,7 @@ class PathItem extends FieldItemBase {
     if (!$update) {
       if ($this->alias) {
         $entity = $this->getEntity();
-        if ($path = \Drupal::service('path.alias_storage')->save('/' . $entity->urlInfo()->getInternalPath(), $this->alias, $alias_langcode)) {
+        if ($path = \Drupal::service('path.alias_storage')->save('/' . $entity->toUrl()->getInternalPath(), $this->alias, $alias_langcode)) {
           $this->pid = $path['pid'];
         }
       }
@@ -84,7 +84,7 @@ class PathItem extends FieldItemBase {
       // Only save a non-empty alias.
       elseif ($this->alias) {
         $entity = $this->getEntity();
-        \Drupal::service('path.alias_storage')->save('/' . $entity->urlInfo()->getInternalPath(), $this->alias, $alias_langcode, $this->pid);
+        \Drupal::service('path.alias_storage')->save('/' . $entity->toUrl()->getInternalPath(), $this->alias, $alias_langcode, $this->pid);
       }
     }
   }

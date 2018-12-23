@@ -161,7 +161,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
       // statuses are (un)published accordingly.
       foreach ($this->langcodes as $langcode) {
         $options = ['language' => $languages[$langcode]];
-        $url = $entity->urlInfo('edit-form', $options);
+        $url = $entity->toUrl('edit-form', $options);
         $this->drupalPostForm($url, ['status[value]' => $value], t('Save') . $this->getFormSubmitSuffix($entity, $langcode), $options);
       }
       $storage->resetCache([$this->entityId]);
@@ -204,7 +204,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         'promote[value]' => $values[$langcode]['promote'],
       ];
       $options = ['language' => $languages[$langcode]];
-      $url = $entity->urlInfo('edit-form', $options);
+      $url = $entity->toUrl('edit-form', $options);
       $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode), $options);
     }
 
@@ -353,7 +353,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->doTestTranslations('node/' . $node->id(), $values);
 
     // Test that the node page has the correct alternate hreflang links.
-    $this->doTestAlternateHreflangLinks($node->urlInfo());
+    $this->doTestAlternateHreflangLinks($node->toUrl());
   }
 
   /**
@@ -440,7 +440,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
       // We only want to test the title for non-english translations.
       if ($langcode != 'en') {
         $options = ['language' => $languages[$langcode]];
-        $url = $entity->urlInfo('edit-form', $options);
+        $url = $entity->toUrl('edit-form', $options);
         $this->drupalGet($url);
 
         $title = t('<em>Edit @type</em> @title [%language translation]', [

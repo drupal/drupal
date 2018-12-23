@@ -47,7 +47,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->entity->urlInfo();
+    return $this->entity->toUrl();
   }
 
   /**
@@ -142,7 +142,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     if (!$form_state->isValueEmpty('access') && $form_state->isValueEmpty('user_cancel_confirm') && $this->entity->id() != $this->currentUser()->id()) {
       user_cancel($form_state->getValues(), $this->entity->id(), $form_state->getValue('user_cancel_method'));
 
-      $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
+      $form_state->setRedirectUrl($this->entity->toUrl('collection'));
     }
     else {
       // Store cancelling method and whether to notify the user in

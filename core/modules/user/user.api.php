@@ -150,11 +150,11 @@ function hook_user_login(UserInterface $account) {
   if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
     \Drupal::messenger()
       ->addStatus(t('Configure your <a href=":user-edit">account time zone setting</a>.', [
-        ':user-edit' => $account->url('edit-form', [
+        ':user-edit' => $account->toUrl('edit-form', [
           'query' => \Drupal::destination()
             ->getAsArray(),
           'fragment' => 'edit-timezone',
-        ]),
+        ])->toString(),
       ]));
   }
 }

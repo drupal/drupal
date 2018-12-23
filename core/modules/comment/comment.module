@@ -240,7 +240,7 @@ function comment_entity_view(array &$build, EntityInterface $entity, EntityViewD
         ];
         $entity->rss_elements[] = [
           'key' => 'comments',
-          'value' => $entity->url('canonical', $options),
+          'value' => $entity->toUrl('canonical', $options)->toString(),
         ];
       }
     }

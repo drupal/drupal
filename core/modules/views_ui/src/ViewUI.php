@@ -264,7 +264,7 @@ class ViewUI implements ViewEntityInterface {
       $this->cacheSet();
     }
 
-    $form_state->setRedirectUrl($this->urlInfo('edit-form'));
+    $form_state->setRedirectUrl($this->toUrl('edit-form'));
   }
 
   /**
@@ -993,7 +993,7 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function urlInfo($rel = 'edit-form', array $options = []) {
-    return $this->storage->urlInfo($rel, $options);
+    return $this->storage->toUrl($rel, $options);
   }
 
   /**

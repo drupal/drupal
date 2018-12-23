@@ -118,11 +118,11 @@ function user_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           break;
 
         case 'url':
-          $replacements[$original] = $account->id() ? $account->url('canonical', $url_options) : t('not yet assigned');
+          $replacements[$original] = $account->id() ? $account->toUrl('canonical', $url_options)->toString() : t('not yet assigned');
           break;
 
         case 'edit-url':
-          $replacements[$original] = $account->id() ? $account->url('edit-form', $url_options) : t('not yet assigned');
+          $replacements[$original] = $account->id() ? $account->toUrl('edit-form', $url_options)->toString() : t('not yet assigned');
           break;
 
         // These tokens are default variations on the chained tokens handled below.

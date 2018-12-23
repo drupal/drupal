@@ -118,7 +118,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Assert the current revision message.
     $date = format_date($nodes[1]->revision_timestamp->value, 'short');
-    $this->assertRaw($nodes[1]->link($date) . ' by ' . $editor . '<p class="revision-log">' . $revision_log . '</p>');
+    $this->assertRaw($nodes[1]->toLink($date)->toString() . ' by ' . $editor . '<p class="revision-log">' . $revision_log . '</p>');
   }
 
   /**

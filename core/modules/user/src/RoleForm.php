@@ -55,7 +55,7 @@ class RoleForm extends EntityForm {
     $entity->set('label', trim($entity->label()));
     $status = $entity->save();
 
-    $edit_link = $this->entity->link($this->t('Edit'));
+    $edit_link = $this->entity->toLink($this->t('Edit'), 'edit-form')->toString();
     if ($status == SAVED_UPDATED) {
       $this->messenger()->addStatus($this->t('Role %label has been updated.', ['%label' => $entity->label()]));
       $this->logger('user')->notice('Role %label has been updated.', ['%label' => $entity->label(), 'link' => $edit_link]);

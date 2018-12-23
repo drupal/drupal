@@ -103,7 +103,7 @@ class Rss extends RssPluginBase {
       return;
     }
 
-    $node->link = $node->url('canonical', ['absolute' => TRUE]);
+    $node->link = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
     $node->rss_namespaces = [];
     $node->rss_elements = [
       [

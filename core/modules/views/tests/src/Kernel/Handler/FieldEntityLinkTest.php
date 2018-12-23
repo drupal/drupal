@@ -135,7 +135,7 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
       foreach ($expected_results as $template => $expected_result) {
         $expected_link = '';
         if ($expected_result) {
-          $path = $entity->url($info[$template]['relationship'], $info[$template]['options']);
+          $path = $entity->toUrl($info[$template]['relationship'], $info[$template]['options'])->toString();
           $destination = $info[$template]['destination'] ? '?destination=/' : '';
           if ($info[$template]['link']) {
             $expected_link = '<a href="' . $path . $destination . '" hreflang="en">' . $info[$template]['label'] . '</a>';

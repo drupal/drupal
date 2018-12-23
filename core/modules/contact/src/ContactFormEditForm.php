@@ -163,8 +163,8 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
     $status = $contact_form->save();
     $contact_settings = $this->config('contact.settings');
 
-    $edit_link = $this->entity->link($this->t('Edit'));
-    $view_link = $contact_form->link($contact_form->label(), 'canonical');
+    $edit_link = $this->entity->toLink($this->t('Edit'))->toString();
+    $view_link = $contact_form->toLink($contact_form->label(), 'canonical')->toString();
     if ($status == SAVED_UPDATED) {
       $this->messenger()->addStatus($this->t('Contact form %label has been updated.', ['%label' => $view_link]));
       $this->logger('contact')->notice('Contact form %label has been updated.', ['%label' => $contact_form->label(), 'link' => $edit_link]);
@@ -187,7 +187,7 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
         ->save();
     }
 
-    $form_state->setRedirectUrl($contact_form->urlInfo('collection'));
+    $form_state->setRedirectUrl($contact_form->toUrl('collection'));
   }
 
 }

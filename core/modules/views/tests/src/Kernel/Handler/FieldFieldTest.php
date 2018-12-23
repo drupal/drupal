@@ -329,7 +329,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
       $this->assertEqual((string) ($i + 1), $executable->getStyle()->getField($i, 'id'));
       $this->assertEqual('test ' . $i, $executable->getStyle()->getField($i, 'name'));
       $entity = EntityTest::load($i + 1);
-      $this->assertEqual('<a href="' . $entity->url() . '" hreflang="' . $entity->language()->getId() . '">test ' . $i . '</a>', (string) $executable->getStyle()->getField($i, 'name_alias'));
+      $this->assertEqual('<a href="' . $entity->toUrl()->toString() . '" hreflang="' . $entity->language()->getId() . '">test ' . $i . '</a>', (string) $executable->getStyle()->getField($i, 'name_alias'));
     }
   }
 

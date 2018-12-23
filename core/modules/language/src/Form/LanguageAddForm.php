@@ -95,7 +95,7 @@ class LanguageAddForm extends LanguageFormBase {
       // to their theme so they can switch between the languages.
       $this->messenger()->addStatus($this->t('Use one of the language switcher blocks to allow site visitors to switch between languages. You can enable these blocks on the <a href=":block-admin">block administration page</a>.', [':block-admin' => $this->url('block.admin_display')]));
     }
-    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
+    $form_state->setRedirectUrl($this->entity->toUrl('collection'));
   }
 
   /**

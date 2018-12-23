@@ -758,7 +758,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     $entity = $form_object->getEntity();
     $entity_type_id = $entity->getEntityTypeId();
     if ($entity->access('delete') && $this->entityType->hasLinkTemplate('delete-form')) {
-      $form_state->setRedirectUrl($entity->urlInfo('delete-form'));
+      $form_state->setRedirectUrl($entity->toUrl('delete-form'));
     }
     else {
       $form_state->setRedirect("entity.$entity_type_id.content_translation_delete", [

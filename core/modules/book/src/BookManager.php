@@ -104,7 +104,7 @@ class BookManager implements BookManagerInterface {
       foreach ($book_links as $link) {
         $nid = $link['nid'];
         if (isset($nodes[$nid]) && $nodes[$nid]->status) {
-          $link['url'] = $nodes[$nid]->urlInfo();
+          $link['url'] = $nodes[$nid]->toUrl();
           $link['title'] = $nodes[$nid]->label();
           $link['type'] = $nodes[$nid]->bundle();
           $this->books[$link['bid']] = $link;
@@ -577,7 +577,7 @@ class BookManager implements BookManagerInterface {
       $element['attributes'] = new Attribute();
       $element['title'] = $data['link']['title'];
       $node = $this->entityManager->getStorage('node')->load($data['link']['nid']);
-      $element['url'] = $node->urlInfo();
+      $element['url'] = $node->toUrl();
       $element['localized_options'] = !empty($data['link']['localized_options']) ? $data['link']['localized_options'] : [];
       $element['localized_options']['set_active_class'] = TRUE;
       $element['below'] = $data['below'] ? $this->buildItems($data['below']) : [];

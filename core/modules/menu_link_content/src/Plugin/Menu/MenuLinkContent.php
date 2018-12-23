@@ -174,21 +174,21 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function getDeleteRoute() {
-    return $this->getEntity()->urlInfo('delete-form');
+    return $this->getEntity()->toUrl('delete-form');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getEditRoute() {
-    return $this->getEntity()->urlInfo();
+    return $this->getEntity()->toUrl();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getTranslateRoute() {
-    return $this->getEntity()->urlInfo('drupal:content-translation-overview');
+    return $this->getEntity()->toUrl('drupal:content-translation-overview');
   }
 
   /**

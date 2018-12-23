@@ -169,7 +169,7 @@ class LanguageListBuilder extends DraggableListBuilder {
     $this->messenger->addStatus($this->t('Configuration saved.'));
     // Force the redirection to the page with the language we have just
     // selected as default.
-    $form_state->setRedirectUrl($this->entities[$new_id]->urlInfo('collection', ['language' => $this->entities[$new_id]]));
+    $form_state->setRedirectUrl($this->entities[$new_id]->toUrl('collection', ['language' => $this->entities[$new_id]]));
   }
 
 }

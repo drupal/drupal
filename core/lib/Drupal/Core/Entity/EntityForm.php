@@ -246,7 +246,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
     ];
 
     if (!$this->entity->isNew() && $this->entity->hasLinkTemplate('delete-form')) {
-      $route_info = $this->entity->urlInfo('delete-form');
+      $route_info = $this->entity->toUrl('delete-form');
       if ($this->getRequest()->query->has('destination')) {
         $query = $route_info->getOption('query');
         $query['destination'] = $this->getRequest()->query->get('destination');

@@ -25,7 +25,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalLogin($this->adminUser);
     // Make sure that comment field title is not displayed when there's no
     // comments posted.
-    $this->drupalGet($this->node->urlInfo());
+    $this->drupalGet($this->node->toUrl());
     $this->assertSession()->responseNotMatches('@<h2[^>]*>Comments</h2>@', 'Comments title is not displayed.');
 
     // Set comments to have subject and preview disabled.
@@ -48,7 +48,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Test the comment field title is displayed when there's comments.
-    $this->drupalGet($this->node->urlInfo());
+    $this->drupalGet($this->node->toUrl());
     $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments title is displayed.');
 
     // Set comments to have subject and preview to required.

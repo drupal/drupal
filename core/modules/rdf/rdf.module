@@ -241,7 +241,7 @@ function rdf_comment_storage_load($comments) {
     // bubbleable metadata, because it can be outside of a render context.
     $comment->rdf_data['entity_uri'] = $entity->toUrl()->toString(TRUE)->getGeneratedUrl();
     if ($comment->hasParentComment()) {
-      $comment->rdf_data['pid_uri'] = $comment->getParentComment()->url();
+      $comment->rdf_data['pid_uri'] = $comment->getParentComment()->toUrl()->toString();
     }
   }
 }
@@ -360,7 +360,7 @@ function rdf_preprocess_node(&$variables) {
 function rdf_preprocess_user(&$variables) {
   /** @var $account \Drupal\user\UserInterface */
   $account = $variables['elements']['#user'];
-  $uri = $account->urlInfo();
+  $uri = $account->toUrl();
   $mapping = rdf_get_mapping('user', 'user');
   $bundle_mapping = $mapping->getPreparedBundleMapping();
 
@@ -368,7 +368,7 @@ function rdf_preprocess_user(&$variables) {
   // will automatically describe the user.
   if (!empty($bundle_mapping['types'])) {
     $variables['attributes']['typeof'] = $bundle_mapping['types'];
-    $variables['attributes']['about'] = $account->url();
+    $variables['attributes']['about'] = $account->toUrl()->toString();
   }
   // If we are on the user account page, add the relationship between the
   // sioc:UserAccount and the foaf:Person who holds the account.
@@ -380,7 +380,7 @@ function rdf_preprocess_user(&$variables) {
       $username_meta = [
         '#tag' => 'meta',
         '#attributes' => [
-          'about' => $account->url(),
+          'about' => $account->toUrl()->toString(),
           'property' => $name_mapping['properties'],
           'content' => $account->getDisplayName(),
           'lang' => '',
@@ -454,7 +454,7 @@ function rdf_preprocess_comment(&$variables) {
     // the URI of the resource described within the HTML element, while the
     // typeof attribute indicates its RDF type (e.g., sioc:Post, foaf:Document,
     // and so on.)
-    $variables['attributes']['about'] = $comment->url();
+    $variables['attributes']['about'] = $comment->toUrl()->toString();
     $variables['attributes']['typeof'] = $bundle_mapping['types'];
   }
 
@@ -549,7 +549,7 @@ function rdf_preprocess_taxonomy_term(&$variables) {
   $term = $variables['term'];
   $mapping = rdf_get_mapping('taxonomy_term', $term->bundle());
   $bundle_mapping = $mapping->getPreparedBundleMapping();
-  $variables['attributes']['about'] = $term->url();
+  $variables['attributes']['about'] = $term->toUrl()->toString();
   $variables['attributes']['typeof'] = empty($bundle_mapping['types']) ? NULL : $bundle_mapping['types'];
 
   // Add RDFa markup for the taxonomy term name as metadata, if present.

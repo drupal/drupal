@@ -66,7 +66,7 @@ class CommentRssTest extends CommentTestBase {
       'user:3',
     ]));
 
-    $raw = '<comments>' . $this->node->url('canonical', ['fragment' => 'comments', 'absolute' => TRUE]) . '</comments>';
+    $raw = '<comments>' . $this->node->toUrl('canonical', ['fragment' => 'comments', 'absolute' => TRUE])->toString() . '</comments>';
     $this->assertRaw($raw, 'Comments as part of RSS feed.');
 
     // Hide comments from RSS feed and check presence.

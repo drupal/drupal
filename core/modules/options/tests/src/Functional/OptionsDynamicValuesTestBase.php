@@ -72,7 +72,7 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
       'label' => $this->entity->label(),
       'uuid' => $this->entity->uuid(),
       'bundle' => $this->entity->bundle(),
-      'uri' => $this->entity->url(),
+      'uri' => $this->entity->toUrl()->toString(),
     ];
   }
 

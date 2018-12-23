@@ -134,7 +134,7 @@ function _node_mass_update_batch_process(array $nodes, array $updates, $langcode
     $node = _node_mass_update_helper($node, $updates, $langcode);
 
     // Store result for post-processing in the finished callback.
-    $context['results'][] = \Drupal::l($node->label(), $node->urlInfo());
+    $context['results'][] = \Drupal::l($node->label(), $node->toUrl());
 
     // Update our progress information.
     $context['sandbox']['progress']++;

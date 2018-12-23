@@ -146,7 +146,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
     foreach ($accounts as $account) {
       $result = [
         'title' => $account->getDisplayName(),
-        'link' => $account->url('canonical', ['absolute' => TRUE]),
+        'link' => $account->toUrl('canonical', ['absolute' => TRUE])->toString(),
       ];
       if ($this->currentUser->hasPermission('administer users')) {
         $result['title'] .= ' (' . $account->getEmail() . ')';

@@ -83,7 +83,7 @@ class BreakLockForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->entity->urlInfo('edit-form');
+    return $this->entity->toUrl('edit-form');
   }
 
   /**
@@ -109,7 +109,7 @@ class BreakLockForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->tempStore->delete($this->entity->id());
-    $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
+    $form_state->setRedirectUrl($this->entity->toUrl('edit-form'));
     $this->messenger()->addStatus($this->t('The lock has been broken and you may now edit this view.'));
   }
 

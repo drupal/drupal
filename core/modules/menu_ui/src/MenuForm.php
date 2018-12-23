@@ -164,7 +164,7 @@ class MenuForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $menu = $this->entity;
     $status = $menu->save();
-    $edit_link = $this->entity->link($this->t('Edit'));
+    $edit_link = $this->entity->toLink($this->t('Edit'), 'edit-form')->toString();
     if ($status == SAVED_UPDATED) {
       $this->messenger()->addStatus($this->t('Menu %label has been updated.', ['%label' => $menu->label()]));
       $this->logger('menu')->notice('Menu %label has been updated.', ['%label' => $menu->label(), 'link' => $edit_link]);
@@ -174,7 +174,7 @@ class MenuForm extends EntityForm {
       $this->logger('menu')->notice('Menu %label has been added.', ['%label' => $menu->label(), 'link' => $edit_link]);
     }
 
-    $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
+    $form_state->setRedirectUrl($this->entity->toUrl('edit-form'));
   }
 
   /**
@@ -269,7 +269,7 @@ class MenuForm extends EntityForm {
 
     $form['links']['#empty'] = $this->t('There are no menu links yet. <a href=":url">Add link</a>.', [
       ':url' => $this->url('entity.menu.add_link_form', ['menu' => $this->entity->id()], [
-        'query' => ['destination' => $this->entity->url('edit-form')],
+        'query' => ['destination' => $this->entity->toUrl('edit-form')->toString()],
       ]),
     ]);
     $links = $this->buildOverviewTreeForm($tree, $delta);

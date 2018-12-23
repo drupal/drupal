@@ -127,7 +127,7 @@ function contact_mail($key, &$message, $params) {
     '@sender-name' => $sender->getDisplayName(),
   ];
   if ($sender->isAuthenticated()) {
-    $variables['@sender-url'] = $sender->url('canonical', ['absolute' => TRUE, 'language' => $language]);
+    $variables['@sender-url'] = $sender->toUrl('canonical', ['absolute' => TRUE, 'language' => $language])->toString();
   }
   else {
     $variables['@sender-url'] = $params['sender']->getEmail();
@@ -153,7 +153,7 @@ function contact_mail($key, &$message, $params) {
     case 'user_copy':
       $variables += [
         '@recipient-name' => $params['recipient']->getDisplayName(),
-        '@recipient-edit-url' => $params['recipient']->url('edit-form', ['absolute' => TRUE, 'language' => $language]),
+        '@recipient-edit-url' => $params['recipient']->toUrl('edit-form', ['absolute' => TRUE, 'language' => $language])->toString(),
       ];
       $message['subject'] .= t('[@site-name] @subject', $variables, $options);
       $message['body'][] = t('Hello @recipient-name,', $variables, $options);

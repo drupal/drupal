@@ -115,7 +115,7 @@ class AggregatorController extends ControllerBase {
     /** @var \Drupal\aggregator\FeedInterface[] $feeds */
     foreach ($feeds as $feed) {
       $row = [];
-      $row[] = $feed->link();
+      $row[] = $feed->toLink()->toString();
       $row[] = $this->formatPlural($entity_manager->getStorage('aggregator_item')->getItemCount($feed), '1 item', '@count items');
       $last_checked = $feed->getLastCheckedTime();
       $refresh_rate = $feed->getRefreshRate();

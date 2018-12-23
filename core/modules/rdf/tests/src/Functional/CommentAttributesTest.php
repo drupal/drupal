@@ -54,7 +54,7 @@ class CommentAttributesTest extends CommentTestBase {
 
     // Prepares commonly used URIs.
     $this->baseUri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
-    $this->nodeUri = $this->node->url('canonical', ['absolute' => TRUE]);
+    $this->nodeUri = $this->node->toUrl('canonical', ['absolute' => TRUE])->toString();
 
     // Set relation between node and comment.
     $article_mapping = rdf_get_mapping('node', 'article');
@@ -211,11 +211,11 @@ class CommentAttributesTest extends CommentTestBase {
     $this->drupalLogin($this->webUser);
     $comment_1 = $this->saveComment($this->node->id(), $this->webUser->id());
 
-    $comment_1_uri = $comment_1->url('canonical', ['absolute' => TRUE]);
+    $comment_1_uri = $comment_1->toUrl('canonical', ['absolute' => TRUE])->toString();
 
     // Posts a reply to the first comment.
     $comment_2 = $this->saveComment($this->node->id(), $this->webUser->id(), NULL, $comment_1->id());
-    $comment_2_uri = $comment_2->url('canonical', ['absolute' => TRUE]);
+    $comment_2_uri = $comment_2->toUrl('canonical', ['absolute' => TRUE])->toString();
 
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
@@ -252,7 +252,7 @@ class CommentAttributesTest extends CommentTestBase {
    *   An array containing information about an anonymous user.
    */
   public function _testBasicCommentRdfaMarkup($graph, CommentInterface $comment, $account = []) {
-    $comment_uri = $comment->url('canonical', ['absolute' => TRUE]);
+    $comment_uri = $comment->toUrl('canonical', ['absolute' => TRUE])->toString();
 
     // Comment type.
     $expected_value = [

@@ -33,7 +33,7 @@ class ContactFormListBuilder extends ConfigEntityListBuilder {
       $row['selected'] = t('No');
     }
     else {
-      $row['form'] = $entity->link(NULL, 'canonical');
+      $row['form'] = $entity->toLink(NULL, 'canonical')->toString();
       $row['recipients']['data'] = [
         '#theme' => 'item_list',
         '#items' => $entity->getRecipients(),

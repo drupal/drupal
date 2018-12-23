@@ -369,7 +369,7 @@ class CommentForm extends ContentEntityForm {
     $comment = $this->entity;
     $entity = $comment->getCommentedEntity();
     $field_name = $comment->getFieldName();
-    $uri = $entity->urlInfo();
+    $uri = $entity->toUrl();
     $logger = $this->logger('comment');
 
     if ($this->currentUser->hasPermission('post comments') && ($this->currentUser->hasPermission('administer comments') || $entity->{$field_name}->status == CommentItemInterface::OPEN)) {
@@ -379,7 +379,7 @@ class CommentForm extends ContentEntityForm {
       // Add a log entry.
       $logger->notice('Comment posted: %subject.', [
           '%subject' => $comment->getSubject(),
-          'link' => $this->l(t('View'), $comment->urlInfo()->setOption('fragment', 'comment-' . $comment->id())),
+          'link' => $this->l(t('View'), $comment->toUrl()->setOption('fragment', 'comment-' . $comment->id())),
         ]);
 
       // Explain the approval queue if necessary.

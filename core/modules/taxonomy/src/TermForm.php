@@ -129,8 +129,8 @@ class TermForm extends ContentEntityForm {
 
     $result = $term->save();
 
-    $edit_link = $term->link($this->t('Edit'), 'edit-form');
-    $view_link = $term->link($term->getName());
+    $edit_link = $term->toLink($this->t('Edit'), 'edit-form')->toString();
+    $view_link = $term->toLink()->toString();
     switch ($result) {
       case SAVED_NEW:
         $this->messenger()->addStatus($this->t('Created new term %term.', ['%term' => $view_link]));

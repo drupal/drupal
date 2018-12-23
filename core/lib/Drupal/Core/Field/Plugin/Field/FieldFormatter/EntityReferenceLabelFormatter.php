@@ -65,7 +65,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
       // link.
       if ($output_as_link && !$entity->isNew()) {
         try {
-          $uri = $entity->urlInfo();
+          $uri = $entity->toUrl();
         }
         catch (UndefinedLinkTemplateException $e) {
           // This exception is thrown by \Drupal\Core\Entity\Entity::urlInfo()

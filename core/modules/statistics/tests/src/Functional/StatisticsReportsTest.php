@@ -57,7 +57,7 @@ class StatisticsReportsTest extends StatisticsTestBase {
     $this->assertCacheContexts($contexts);
 
     // Check if the node link is displayed.
-    $this->assertRaw(\Drupal::l($node->label(), $node->urlInfo('canonical')), 'Found link to visited node.');
+    $this->assertRaw(\Drupal::l($node->label(), $node->toUrl('canonical')), 'Found link to visited node.');
   }
 
 }

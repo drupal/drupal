@@ -206,7 +206,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
     if ($this->getSetting('image_link') == 'content') {
       $entity = $items->getEntity();
       if (!$entity->isNew()) {
-        $url = $entity->urlInfo();
+        $url = $entity->toUrl();
       }
     }
     elseif ($this->getSetting('image_link') == 'file') {

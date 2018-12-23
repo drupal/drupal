@@ -158,7 +158,7 @@ class CommentTypeForm extends EntityForm {
     $comment_type = $this->entity;
     $status = $comment_type->save();
 
-    $edit_link = $this->entity->link($this->t('Edit'));
+    $edit_link = $this->entity->toLink($this->t('Edit'), 'edit-form')->toString();
     if ($status == SAVED_UPDATED) {
       $this->messenger()->addStatus(t('Comment type %label has been updated.', ['%label' => $comment_type->label()]));
       $this->logger->notice('Comment type %label has been updated.', ['%label' => $comment_type->label(), 'link' => $edit_link]);
@@ -169,7 +169,7 @@ class CommentTypeForm extends EntityForm {
       $this->logger->notice('Comment type %label has been added.', ['%label' => $comment_type->label(), 'link' => $edit_link]);
     }
 
-    $form_state->setRedirectUrl($comment_type->urlInfo('collection'));
+    $form_state->setRedirectUrl($comment_type->toUrl('collection'));
   }
 
 }

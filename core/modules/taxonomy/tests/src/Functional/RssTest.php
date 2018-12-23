@@ -95,7 +95,7 @@ class RssTest extends TaxonomyTestBase {
     $this->drupalGet('rss.xml');
     $test_element = sprintf(
       '<category %s>%s</category>',
-      'domain="' . $term1->url('canonical', ['absolute' => TRUE]) . '"',
+      'domain="' . $term1->toUrl('canonical', ['absolute' => TRUE])->toString() . '"',
       $term1->getName()
     );
     $this->assertRaw($test_element, 'Term is displayed when viewing the rss feed.');

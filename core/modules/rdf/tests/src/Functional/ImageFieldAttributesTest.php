@@ -97,7 +97,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
     $parser->parse($graph, $html, 'rdfa', $base_uri);
 
     // Construct the node and image URIs for testing.
-    $node_uri = $this->node->url('canonical', ['absolute' => TRUE]);
+    $node_uri = $this->node->toUrl('canonical', ['absolute' => TRUE])->toString();
     $image_uri = ImageStyle::load('medium')->buildUrl($this->file->getFileUri());
 
     // Test relations from node to image.

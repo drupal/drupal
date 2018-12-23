@@ -44,7 +44,7 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
    */
   public function testTaxonomyTermRdfaAttributes() {
     $term = $this->createTerm($this->vocabulary);
-    $term_uri = $term->url('canonical', ['absolute' => TRUE]);
+    $term_uri = $term->toUrl('canonical', ['absolute' => TRUE])->toString();
 
     // Parses the term's page and checks that the RDF output is correct.
     $parser = new \EasyRdf_Parser_Rdfa();

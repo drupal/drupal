@@ -507,7 +507,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
       case 'content':
         // Make sure the link to the node is present.
-        $this->assertPattern('/<a(.*?)href="' . preg_quote($node->url(), '/') . '"(.*?)>\s*<picture/');
+        $this->assertPattern('/<a(.*?)href="' . preg_quote($node->toUrl()->toString(), '/') . '"(.*?)>\s*<picture/');
         break;
     }
   }

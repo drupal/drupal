@@ -144,7 +144,7 @@ class ConfigTestForm extends EntityForm {
       $this->messenger()->addStatus(format_string('%label configuration has been created.', ['%label' => $entity->label()]));
     }
 
-    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
+    $form_state->setRedirectUrl($this->entity->toUrl('collection'));
   }
 
   /**

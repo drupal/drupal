@@ -274,7 +274,7 @@ function content_translation_entity_operation(EntityInterface $entity) {
   if ($entity->hasLinkTemplate('drupal:content-translation-overview') && content_translation_translate_access($entity)->isAllowed()) {
     $operations['translate'] = [
       'title' => t('Translate'),
-      'url' => $entity->urlInfo('drupal:content-translation-overview'),
+      'url' => $entity->toUrl('drupal:content-translation-overview'),
       'weight' => 50,
     ];
   }

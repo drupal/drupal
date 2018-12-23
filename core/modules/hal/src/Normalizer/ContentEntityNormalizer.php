@@ -186,10 +186,9 @@ class ContentEntityNormalizer extends NormalizerBase {
    *   The entity URI.
    */
   protected function getEntityUri(EntityInterface $entity, array $context = []) {
-    // Some entity types don't provide a canonical link template, at least call
-    // out to ->url().
+    // Some entity types don't provide a canonical link template.
     if ($entity->isNew() || !$entity->hasLinkTemplate('canonical')) {
-      return $entity->url('canonical', []);
+      return '';
     }
     $url = $entity->toUrl('canonical', ['absolute' => TRUE]);
     if (!$url->isExternal()) {

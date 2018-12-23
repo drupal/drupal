@@ -212,7 +212,7 @@ class SearchController extends ControllerBase {
       $this->messenger()->addStatus($this->t('The %label search page has been disabled.', ['%label' => $search_page->label()]));
     }
 
-    $url = $search_page->urlInfo('collection');
+    $url = $search_page->toUrl('collection');
     return $this->redirect($url->getRouteName(), $url->getRouteParameters(), $url->getOptions());
   }
 

@@ -35,7 +35,7 @@ class ConfigTestController extends ControllerBase {
    */
   public function enable(ConfigTest $config_test) {
     $config_test->enable()->save();
-    return new RedirectResponse($config_test->url('collection', ['absolute' => TRUE]));
+    return new RedirectResponse($config_test->toUrl('collection', ['absolute' => TRUE])->toString());
   }
 
   /**
@@ -49,7 +49,7 @@ class ConfigTestController extends ControllerBase {
    */
   public function disable(ConfigTest $config_test) {
     $config_test->disable()->save();
-    return new RedirectResponse($config_test->url('collection', ['absolute' => TRUE]));
+    return new RedirectResponse($config_test->toUrl('collection', ['absolute' => TRUE])->toString());
   }
 
 }

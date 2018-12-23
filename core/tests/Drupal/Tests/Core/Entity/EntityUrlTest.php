@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\GeneratedUrl;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
@@ -386,6 +387,9 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::urlInfo
    *
    * @dataProvider providerTestUrlInfo
+   *
+   * @group legacy
+   * @expectedDeprecation EntityInterface::urlInfo() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toUrl() instead. See https://www.drupal.org/node/2614344
    */
   public function testUrlInfo($rel, $options) {
     $entity = $this->getEntity(Entity::class, [], ['toUrl']);
@@ -394,6 +398,30 @@ class EntityUrlTest extends UnitTestCase {
       ->with($rel, $options);
 
     $entity->urlInfo($rel, $options);
+  }
+
+  /**
+   * Tests the link() method.
+   *
+   * @covers ::urlInfo
+   *
+   * @group legacy
+   * @expectedDeprecation EntityInterface::link() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toLink() instead. Note, the default relationship for configuration entities changes from 'edit-form' to 'canonical'. See https://www.drupal.org/node/2614344
+   */
+  public function testLink() {
+
+    $link = $this->createMock(Link::class);
+    $link->expects($this->once())
+      ->method('toString')
+      ->willReturn('<a href="/foo">The link</a>');
+
+    $entity = $this->getEntity(Entity::class, [], ['toLink']);
+    $entity->expects($this->once())
+      ->method('toLink')
+      ->with(NULL, 'canonical')
+      ->willReturn($link);
+
+    $this->assertEquals('<a href="/foo">The link</a>', $entity->link());
   }
 
   /**
@@ -423,6 +451,9 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::linkTemplates
    *
    * @dataProvider providerTestUrl
+   *
+   * @group legacy
+   * @expectedDeprecation EntityInterface::url() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toUrl() instead. Note, a \Drupal\Core\Url object is returned. See https://www.drupal.org/node/2614344
    */
   public function testUrlEmpty($rel) {
     $entity = $this->getEntity(Entity::class, []);
@@ -461,6 +492,9 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::linkTemplates
    *
    * @dataProvider providerTestUrl
+   *
+   * @group legacy
+   * @expectedDeprecation EntityInterface::url() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toUrl() instead. Note, a \Drupal\Core\Url object is returned. See https://www.drupal.org/node/2614344
    */
   public function testUrl($rel, $options, $default_options, $expected_options) {
     $entity = $this->getEntity(Entity::class, ['id' => $this->entityId], ['toUrl']);

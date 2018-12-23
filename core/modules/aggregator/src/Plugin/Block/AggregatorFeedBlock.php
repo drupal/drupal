@@ -146,13 +146,13 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
         foreach ($items as $item) {
           $build['list']['#items'][$item->id()] = [
             '#type' => 'link',
-            '#url' => $item->urlInfo(),
+            '#url' => $item->toUrl(),
             '#title' => $item->label(),
           ];
         }
         $build['more_link'] = [
           '#type' => 'more_link',
-          '#url' => $feed->urlInfo(),
+          '#url' => $feed->toUrl(),
           '#attributes' => ['title' => $this->t("View this feed's recent news.")],
         ];
         return $build;

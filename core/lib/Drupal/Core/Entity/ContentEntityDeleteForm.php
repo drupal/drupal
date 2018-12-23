@@ -67,7 +67,7 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
       $untranslated_entity = $entity->getUntranslated();
       $untranslated_entity->removeTranslation($entity->language()->getId());
       $untranslated_entity->save();
-      $form_state->setRedirectUrl($untranslated_entity->urlInfo('canonical'));
+      $form_state->setRedirectUrl($untranslated_entity->toUrl('canonical'));
     }
     else {
       $entity->delete();
@@ -84,7 +84,7 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
   public function getCancelUrl() {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->getEntity();
-    return $entity->isDefaultTranslation() ? $this->traitGetCancelUrl() : $entity->urlInfo('canonical');
+    return $entity->isDefaultTranslation() ? $this->traitGetCancelUrl() : $entity->toUrl('canonical');
   }
 
   /**

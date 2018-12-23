@@ -58,7 +58,7 @@ class ShortcutSetForm extends BundleEntityFormBase {
     else {
       $this->messenger()->addStatus($this->t('Updated set name to %set-name.', ['%set-name' => $entity->label()]));
     }
-    $form_state->setRedirectUrl($this->entity->urlInfo('customize-form'));
+    $form_state->setRedirectUrl($this->entity->toUrl('customize-form'));
   }
 
 }

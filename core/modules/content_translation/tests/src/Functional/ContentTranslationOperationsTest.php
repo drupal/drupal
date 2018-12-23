@@ -86,7 +86,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
       ]
     );
     $this->drupalLogin($this->baseUser1);
-    $this->drupalGet($node->urlInfo('drupal:content-translation-overview'));
+    $this->drupalGet($node->toUrl('drupal:content-translation-overview'));
     $this->assertResponse(403);
 
     // Ensure that the translation overview is also not accessible when the user
@@ -99,7 +99,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
       ]
     );
     $node->setUnpublished()->save();
-    $this->drupalGet($node->urlInfo('drupal:content-translation-overview'));
+    $this->drupalGet($node->toUrl('drupal:content-translation-overview'));
     $this->assertResponse(403);
     $this->drupalLogout();
 

@@ -46,7 +46,7 @@ function options_test_dynamic_values_callback(FieldStorageDefinitionInterface $d
     $cacheable = FALSE;
     $values = [
       $entity->label(),
-      $entity->url(),
+      $entity->toUrl()->toString(),
       $entity->uuid(),
       $entity->bundle(),
     ];

@@ -100,7 +100,7 @@ class ContactLinkTest extends ViewTestBase {
     foreach ($names as $name) {
       $account = $accounts[$name];
 
-      $result = $this->xpath('//div[contains(@class, "views-field-contact")]//a[contains(@href, :url)]', [':url' => $account->url('contact-form')]);
+      $result = $this->xpath('//div[contains(@class, "views-field-contact")]//a[contains(@href, :url)]', [':url' => $account->toUrl('contact-form')->toString()]);
       $this->assertTrue(count($result));
     }
   }

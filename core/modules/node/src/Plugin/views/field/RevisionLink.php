@@ -24,7 +24,7 @@ class RevisionLink extends LinkBase {
     // Current revision uses the node view path.
     return !$node->isDefaultRevision() ?
       Url::fromRoute('entity.node.revision', ['node' => $node->id(), 'node_revision' => $node->getRevisionId()]) :
-      $node->urlInfo();
+      $node->toUrl();
   }
 
   /**

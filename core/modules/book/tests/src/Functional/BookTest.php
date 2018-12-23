@@ -81,23 +81,23 @@ class BookTest extends BrowserTestBase {
     $this->drupalLogin($this->bookAuthor);
 
     // On non-node route.
-    $this->drupalGet($this->adminUser->urlInfo());
+    $this->drupalGet($this->adminUser->toUrl());
     $this->assertRaw('[route.book_navigation]=book.none');
 
     // On non-book node route.
-    $this->drupalGet($page->urlInfo());
+    $this->drupalGet($page->toUrl());
     $this->assertRaw('[route.book_navigation]=book.none');
 
     // On book node route.
-    $this->drupalGet($book_nodes[0]->urlInfo());
+    $this->drupalGet($book_nodes[0]->toUrl());
     $this->assertRaw('[route.book_navigation]=0|2|3');
-    $this->drupalGet($book_nodes[1]->urlInfo());
+    $this->drupalGet($book_nodes[1]->toUrl());
     $this->assertRaw('[route.book_navigation]=0|2|3|4');
-    $this->drupalGet($book_nodes[2]->urlInfo());
+    $this->drupalGet($book_nodes[2]->toUrl());
     $this->assertRaw('[route.book_navigation]=0|2|3|5');
-    $this->drupalGet($book_nodes[3]->urlInfo());
+    $this->drupalGet($book_nodes[3]->toUrl());
     $this->assertRaw('[route.book_navigation]=0|2|6');
-    $this->drupalGet($book_nodes[4]->urlInfo());
+    $this->drupalGet($book_nodes[4]->toUrl());
     $this->assertRaw('[route.book_navigation]=0|2|7');
   }
 
@@ -366,11 +366,11 @@ class BookTest extends BrowserTestBase {
     // Tests directly deleting a book parent.
     $nodes = $this->createBook();
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet($this->book->urlInfo('delete-form'));
+    $this->drupalGet($this->book->toUrl('delete-form'));
     $this->assertRaw(t('%title is part of a book outline, and has associated child pages. If you proceed with deletion, the child pages will be relocated automatically.', ['%title' => $this->book->label()]));
     // Delete parent, and visit a child page.
-    $this->drupalPostForm($this->book->urlInfo('delete-form'), [], t('Delete'));
-    $this->drupalGet($nodes[0]->urlInfo());
+    $this->drupalPostForm($this->book->toUrl('delete-form'), [], t('Delete'));
+    $this->drupalGet($nodes[0]->toUrl());
     $this->assertResponse(200);
     $this->assertText($nodes[0]->label());
     // The book parents should be updated.

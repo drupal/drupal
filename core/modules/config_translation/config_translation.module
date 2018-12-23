@@ -167,7 +167,7 @@ function config_translation_entity_operation(EntityInterface $entity) {
     $operations['translate'] = [
       'title' => t('Translate'),
       'weight' => 50,
-      'url' => $entity->urlInfo($link_template),
+      'url' => $entity->toUrl($link_template),
     ];
   }
 

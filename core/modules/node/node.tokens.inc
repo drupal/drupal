@@ -166,11 +166,11 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           break;
 
         case 'url':
-          $replacements[$original] = $node->url('canonical', $url_options);
+          $replacements[$original] = $node->toUrl('canonical', $url_options)->toString();
           break;
 
         case 'edit-url':
-          $replacements[$original] = $node->url('edit-form', $url_options);
+          $replacements[$original] = $node->toUrl('edit-form', $url_options)->toString();
           break;
 
         // Default values for the chained tokens handled below.

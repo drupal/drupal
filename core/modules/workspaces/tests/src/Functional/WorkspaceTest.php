@@ -136,7 +136,7 @@ class WorkspaceTest extends BrowserTestBase {
     $this->assertEquals('1', $live_workspace->getRevisionId());
 
     // Re-save the live workspace via the UI to create revision 3.
-    $this->drupalPostForm($live_workspace->url('edit-form'), [], 'Save');
+    $this->drupalPostForm($live_workspace->toUrl('edit-form')->toString(), [], 'Save');
     $live_workspace = $storage->loadUnchanged('live');
     $this->assertEquals('3', $live_workspace->getRevisionId());
   }

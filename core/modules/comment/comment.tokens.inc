@@ -180,12 +180,12 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
         // Comment related URLs.
         case 'url':
           $url_options['fragment'] = 'comment-' . $comment->id();
-          $replacements[$original] = $comment->url('canonical', $url_options);
+          $replacements[$original] = $comment->toUrl('canonical', $url_options)->toString();
           break;
 
         case 'edit-url':
           $url_options['fragment'] = NULL;
-          $replacements[$original] = $comment->url('edit-form', $url_options);
+          $replacements[$original] = $comment->toUrl('edit-form', $url_options)->toString();
           break;
 
         case 'author':

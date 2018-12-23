@@ -190,7 +190,7 @@ class ViewAddForm extends ViewFormBase {
     }
     $this->entity->save();
     $this->messenger()->addStatus($this->t('The view %name has been saved.', ['%name' => $form_state->getValue('label')]));
-    $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
+    $form_state->setRedirectUrl($this->entity->toUrl('edit-form'));
   }
 
   /**
