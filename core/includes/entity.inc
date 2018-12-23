@@ -11,8 +11,17 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
 /**
  * Clears the entity render cache for all entity types.
+ *
+ * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Instead,
+ *   use \Drupal\Core\Entity\EntityViewBuilderInterface::resetCache() on the
+ *   required entity types or invalidate specific cache tags.
+ *
+ * @see https://www.drupal.org/node/3000037
+ * @see \Drupal\Core\Entity\EntityViewBuilderInterface::resetCache()
+ * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getDefinitions()
  */
 function entity_render_cache_clear() {
+  @trigger_error(__FUNCTION__ . '() is deprecated. Use \Drupal\Core\Entity\EntityViewBuilderInterface::resetCache() on the required entity types or invalidate specific cache tags instead. See https://www.drupal.org/node/3000037', E_USER_DEPRECATED);
   $entity_manager = Drupal::entityManager();
   foreach ($entity_manager->getDefinitions() as $entity_type => $info) {
     if ($entity_manager->hasHandler($entity_type, 'view_builder')) {
