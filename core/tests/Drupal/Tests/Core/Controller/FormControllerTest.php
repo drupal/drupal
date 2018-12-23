@@ -20,6 +20,9 @@ class FormControllerTest extends UnitTestCase {
    * @group legacy
    */
   public function testControllerResolverDeprecation() {
+    if (!in_array('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface', class_implements('Symfony\Component\HttpKernel\Controller\ControllerResolver'))) {
+      $this->markTestSkipped("Do not test ::getArguments() method when it is not implemented by Symfony's ControllerResolver.");
+    }
     $controller_resolver = $this->getMockBuilder(ControllerResolver::class)->disableOriginalConstructor()->getMock();
     $form_builder = $this->getMockBuilder(FormBuilderInterface::class)->getMock();
     $class_resolver = $this->getMockBuilder(ClassResolverInterface::class)->getMock();

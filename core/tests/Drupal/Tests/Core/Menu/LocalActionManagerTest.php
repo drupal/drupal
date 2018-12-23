@@ -386,6 +386,10 @@ class LocalActionManagerTest extends UnitTestCase {
    * @group legacy
    */
   public function testControllerResolverDeprecation() {
+    if (!in_array('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface', class_implements('Symfony\Component\HttpKernel\Controller\ControllerResolver'))) {
+      $this->markTestSkipped("Do not test ::getArguments() method when it is not implemented by Symfony's ControllerResolver.");
+    }
+
     $controller_resolver = $this->getMockBuilder(ControllerResolver::class)->disableOriginalConstructor()->getMock();
     $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
     $request_stack = new RequestStack();
