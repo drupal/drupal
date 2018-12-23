@@ -934,6 +934,7 @@ function file_unmanaged_delete_recursive($path, $callback = NULL) {
  * @see https://www.drupal.org/node/2418133
  */
 function drupal_move_uploaded_file($filename, $uri) {
+  @trigger_error('drupal_move_uploaded_file() is deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::moveUploadedFile(). See https://www.drupal.org/node/2418133.', E_USER_DEPRECATED);
   return \Drupal::service('file_system')->moveUploadedFile($filename, $uri);
 }
 

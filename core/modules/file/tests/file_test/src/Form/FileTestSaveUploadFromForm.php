@@ -145,9 +145,9 @@ class FileTestSaveUploadFromForm extends FormBase {
       $validators['file_validate_extensions'] = [$form_state->getValue('extensions')];
     }
 
-    // The test for drupal_move_uploaded_file() triggering a warning is
-    // unavoidable. We're interested in what happens afterwards in
-    // _file_save_upload_from_form().
+    // The test for \Drupal::service('file_system')->moveUploadedFile()
+    // triggering a warning is unavoidable. We're interested in what happens
+    // afterwards in _file_save_upload_from_form().
     if ($this->state->get('file_test.disable_error_collection')) {
       define('SIMPLETEST_COLLECT_ERRORS', FALSE);
     }
