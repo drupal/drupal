@@ -1563,7 +1563,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @return bool
    *   TRUE if the Host header is trusted, FALSE otherwise.
    *
-   * @see https://www.drupal.org/node/1992030
+   * @see https://www.drupal.org/docs/8/install/trusted-host-settings
    * @see \Drupal\Core\Http\TrustedHostsRequestFactory
    */
   protected static function setupTrustedHosts(Request $request, $host_patterns) {

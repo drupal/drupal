@@ -911,7 +911,7 @@ function system_requirements($phase) {
       $requirements['trusted_host_patterns'] = [
         'title' => t('Trusted Host Settings'),
         'value' => t('Not enabled'),
-        'description' => t('The trusted_host_patterns setting is not configured in settings.php. This can lead to security vulnerabilities. It is <strong>highly recommended</strong> that you configure this. See <a href=":url">Protecting against HTTP HOST Header attacks</a> for more information.', [':url' => 'https://www.drupal.org/node/1992030']),
+        'description' => t('The trusted_host_patterns setting is not configured in settings.php. This can lead to security vulnerabilities. It is <strong>highly recommended</strong> that you configure this. See <a href=":url">Protecting against HTTP HOST Header attacks</a> for more information.', [':url' => 'https://www.drupal.org/docs/8/install/trusted-host-settings']),
         'severity' => REQUIREMENT_ERROR,
       ];
     }
