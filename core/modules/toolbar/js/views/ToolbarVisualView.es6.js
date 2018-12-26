@@ -145,9 +145,9 @@
       onTabClick(event) {
         // If this tab has a tray associated with it, it is considered an
         // activatable tab.
-        if (event.target.hasAttribute('data-toolbar-tray')) {
+        if (event.currentTarget.hasAttribute('data-toolbar-tray')) {
           const activeTab = this.model.get('activeTab');
-          const clickedTab = event.target;
+          const clickedTab = event.currentTarget;
 
           // Set the event target as the active item if it is not already.
           this.model.set(

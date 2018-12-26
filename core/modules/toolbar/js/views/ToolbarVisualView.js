@@ -62,9 +62,9 @@
       return this;
     },
     onTabClick: function onTabClick(event) {
-      if (event.target.hasAttribute('data-toolbar-tray')) {
+      if (event.currentTarget.hasAttribute('data-toolbar-tray')) {
         var activeTab = this.model.get('activeTab');
-        var clickedTab = event.target;
+        var clickedTab = event.currentTarget;
 
         this.model.set('activeTab', !activeTab || clickedTab !== activeTab ? clickedTab : null);
 
