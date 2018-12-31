@@ -183,6 +183,9 @@ function system_post_update_states_clear_cache() {
  * Initialize 'expand_all_items' values to system_menu_block.
  */
 function system_post_update_add_expand_all_items_key_in_system_menu_block(&$sandbox = NULL) {
+  if (!\Drupal::moduleHandler()->moduleExists('block')) {
+    return;
+  }
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'block', function ($block) {
     return strpos($block->getPluginId(), 'system_menu_block:') === 0;
   });
