@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\layout_builder\Kernel;
 
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
@@ -10,7 +12,6 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionListInterface;
-use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
 
 /**
  * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage
@@ -47,7 +48,8 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->installSchema('system', ['key_value_expire']);
     $this->installEntitySchema('entity_test');
 
-    $this->plugin = OverridesSectionStorage::create($this->container, [], 'overrides', new SectionStorageDefinition());
+    $definition = $this->container->get('plugin.manager.layout_builder.section_storage')->getDefinition('overrides');
+    $this->plugin = OverridesSectionStorage::create($this->container, [], 'overrides', $definition);
   }
 
   /**
@@ -81,6 +83,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $entity->save();
 
     $this->plugin->setContext('entity', EntityContext::fromEntity($entity));
+    $this->plugin->setContext('view_mode', new Context(new ContextDefinition('string'), 'default'));
     $result = $this->plugin->access($operation);
     $this->assertSame($expected, $result);
   }
@@ -118,8 +121,13 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $context = EntityContext::fromEntity($entity);
     $this->plugin->setContext('entity', $context);
 
-    $expected = ['entity' => $context];
-    $this->assertSame($expected, $this->plugin->getContexts());
+    $expected = [
+      'entity',
+      'view_mode',
+    ];
+    $result = $this->plugin->getContexts();
+    $this->assertEquals($expected, array_keys($result));
+    $this->assertSame($context, $result['entity']);
   }
 
   /**
@@ -132,8 +140,13 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $context = EntityContext::fromEntity($entity);
     $this->plugin->setContext('entity', $context);
 
-    $expected = ['layout_builder.entity' => $context];
-    $this->assertSame($expected, $this->plugin->getContextsDuringPreview());
+    $expected = [
+      'view_mode',
+      'layout_builder.entity',
+    ];
+    $result = $this->plugin->getContextsDuringPreview();
+    $this->assertEquals($expected, array_keys($result));
+    $this->assertSame($context, $result['layout_builder.entity']);
   }
 
   /**

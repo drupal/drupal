@@ -3,11 +3,14 @@
 namespace Drupal\layout_builder\Plugin\SectionStorage;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -19,11 +22,18 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Defines the 'overrides' section storage type.
  *
+ * OverridesSectionStorage uses a negative weight because:
+ * - It must be picked before
+ *   \Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage.
+ * - The default weight is 0, so custom implementations will not take
+ *   precedence unless otherwise specified.
+ *
  * @SectionStorage(
  *   id = "overrides",
+ *   weight = -20,
  *   context_definitions = {
  *     "entity" = @ContextDefinition("entity"),
- *     "view_mode" = @ContextDefinition("string", required = FALSE),
+ *     "view_mode" = @ContextDefinition("string"),
  *   }
  * )
  *
@@ -149,6 +159,9 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
 
     if ($entity = $this->extractEntityFromRoute($value, $defaults)) {
       $contexts['entity'] = EntityContext::fromEntity($entity);
+      // @todo Expand to work for all view modes in
+      //   https://www.drupal.org/node/2907413.
+      $contexts['view_mode'] = new Context(new ContextDefinition('string'), 'full');
     }
     return $contexts;
   }
@@ -277,9 +290,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    * {@inheritdoc}
    */
   public function getDefaultSectionStorage() {
-    // @todo Expand to work for all view modes in
-    //   https://www.drupal.org/node/2907413.
-    return LayoutBuilderEntityViewDisplay::collectRenderDisplay($this->getEntity(), 'full');
+    return LayoutBuilderEntityViewDisplay::collectRenderDisplay($this->getEntity(), $this->getContextValue('view_mode'));
   }
 
   /**
@@ -333,6 +344,16 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
     $default_section_storage = $this->getDefaultSectionStorage();
     $result = AccessResult::allowedIf($default_section_storage->isLayoutBuilderEnabled())->addCacheableDependency($default_section_storage);
     return $return_as_object ? $result : $result->isAllowed();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isApplicable(RefinableCacheableDependencyInterface $cacheability) {
+    $default_section_storage = $this->getDefaultSectionStorage();
+    $cacheability->addCacheableDependency($default_section_storage)->addCacheableDependency($this);
+    // Check that overrides are enabled and have at least one section.
+    return $default_section_storage->isOverridable() && count($this);
   }
 
 }

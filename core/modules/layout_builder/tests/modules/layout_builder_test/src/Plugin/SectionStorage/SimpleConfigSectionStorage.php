@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder_test\Plugin\SectionStorage;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\Context;
@@ -211,6 +212,13 @@ class SimpleConfigSectionStorage extends ContextAwarePluginBase implements Secti
   public function extractIdFromRoute($value, $definition, $name, array $defaults) {
     @trigger_error('\Drupal\layout_builder\SectionStorageInterface::extractIdFromRoute() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute() should be used instead. See https://www.drupal.org/node/3016262.', E_USER_DEPRECATED);
     return $value ?: $defaults['id'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isApplicable(RefinableCacheableDependencyInterface $cacheability) {
+    return TRUE;
   }
 
 }

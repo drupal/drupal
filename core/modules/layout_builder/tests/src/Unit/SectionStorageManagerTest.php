@@ -6,6 +6,8 @@ use Drupal\Component\Plugin\Context\ContextInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Plugin\Factory\FactoryInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\Context;
@@ -203,10 +205,11 @@ class SectionStorageManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestFindByContext
    *
-   * @param bool $plugin_access
-   *   The result for the plugin's access method to return.
+   * @param bool $plugin_is_applicable
+   *   The result for the plugin's isApplicable() method to return.
    */
-  public function testFindByContext($plugin_access) {
+  public function testFindByContext($plugin_is_applicable) {
+    $cacheability = new CacheableMetadata();
     $contexts = [
       'foo' => new Context(new ContextDefinition('foo')),
     ];
@@ -218,10 +221,10 @@ class SectionStorageManagerTest extends UnitTestCase {
     $this->discovery->getDefinitions()->willReturn($definitions);
 
     $provider_access = $this->prophesize(SectionStorageInterface::class);
-    $provider_access->access('test_operation')->willReturn($plugin_access);
+    $provider_access->isApplicable($cacheability)->willReturn($plugin_is_applicable);
 
     $no_access = $this->prophesize(SectionStorageInterface::class);
-    $no_access->access('test_operation')->willReturn(FALSE);
+    $no_access->isApplicable($cacheability)->willReturn(FALSE);
 
     $missing_contexts = $this->prophesize(SectionStorageInterface::class);
 
@@ -235,8 +238,8 @@ class SectionStorageManagerTest extends UnitTestCase {
     $this->factory->createInstance('missing_contexts', [])->willReturn($missing_contexts->reveal());
     $this->factory->createInstance('provider_access', [])->willReturn($provider_access->reveal());
 
-    $result = $this->manager->findByContext('test_operation', $contexts);
-    if ($plugin_access) {
+    $result = $this->manager->findByContext($contexts, $cacheability);
+    if ($plugin_is_applicable) {
       $this->assertSame($provider_access->reveal(), $result);
     }
     else {
@@ -249,11 +252,59 @@ class SectionStorageManagerTest extends UnitTestCase {
    */
   public function providerTestFindByContext() {
     // Data provider values are:
-    // - the result for the plugin's access method to return.
+    // - the result for the plugin's isApplicable() method to return.
     $data = [];
     $data['plugin access: true'] = [TRUE];
     $data['plugin access: false'] = [FALSE];
     return $data;
+  }
+
+  /**
+   * @covers ::findByContext
+   */
+  public function testFindByContextCacheableSectionStorage() {
+    $cacheability = new CacheableMetadata();
+    $contexts = [
+      'foo' => new Context(new ContextDefinition('foo')),
+    ];
+
+    $definitions = [
+      'first' => new SectionStorageDefinition(),
+      'second' => new SectionStorageDefinition(),
+    ];
+    $this->discovery->getDefinitions()->willReturn($definitions);
+
+    // Create a plugin that has cacheability info itself as a cacheable object
+    // and from within ::isApplicable() but is not applicable.
+    $first_plugin = $this->prophesize(SectionStorageInterface::class);
+    $first_plugin->willImplement(CacheableDependencyInterface::class);
+    $first_plugin->getCacheContexts()->shouldNotBeCalled();
+    $first_plugin->getCacheTags()->shouldNotBeCalled();
+    $first_plugin->getCacheMaxAge()->shouldNotBeCalled();
+    $first_plugin->isApplicable($cacheability)->will(function ($arguments) {
+      $arguments[0]->addCacheTags(['first_plugin']);
+      return FALSE;
+    });
+
+    // Create a plugin that adds cacheability info from within ::isApplicable()
+    // and is applicable.
+    $second_plugin = $this->prophesize(SectionStorageInterface::class);
+    $second_plugin->isApplicable($cacheability)->will(function ($arguments) {
+      $arguments[0]->addCacheTags(['second_plugin']);
+      return TRUE;
+    });
+
+    $this->factory->createInstance('first', [])->willReturn($first_plugin->reveal());
+    $this->factory->createInstance('second', [])->willReturn($second_plugin->reveal());
+
+    // Do not do any filtering based on context.
+    $this->contextHandler->filterPluginDefinitionsByContexts($contexts, $definitions)->willReturnArgument(1);
+    $this->contextHandler->applyContextMapping($first_plugin, $contexts)->shouldBeCalled();
+    $this->contextHandler->applyContextMapping($second_plugin, $contexts)->shouldBeCalled();
+
+    $result = $this->manager->findByContext($contexts, $cacheability);
+    $this->assertSame($second_plugin->reveal(), $result);
+    $this->assertSame(['first_plugin', 'second_plugin'], $cacheability->getCacheTags());
   }
 
 }

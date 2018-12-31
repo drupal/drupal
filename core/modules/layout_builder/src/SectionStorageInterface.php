@@ -4,6 +4,7 @@ namespace Drupal\layout_builder;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Access\AccessibleInterface;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -163,5 +164,24 @@ interface SectionStorageInterface extends SectionListInterface, PluginInspection
    *   performed.
    */
   public function save();
+
+  /**
+   * Determines if this section storage is applicable for the current contexts.
+   *
+   * @param \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability
+   *   Refinable cacheability object, typically provided by the section storage
+   *   manager. When implementing this method, populate $cacheability with any
+   *   information that affects whether this storage is applicable.
+   *
+   * @return bool
+   *   TRUE if this section storage is applicable, FALSE otherwise.
+   *
+   * @internal
+   *   This method is intended to be called by
+   *   \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::findByContext().
+   *
+   * @see \Drupal\Core\Cache\RefinableCacheableDependencyInterface
+   */
+  public function isApplicable(RefinableCacheableDependencyInterface $cacheability);
 
 }

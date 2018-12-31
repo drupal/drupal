@@ -2,10 +2,14 @@
 
 namespace Drupal\layout_builder\Entity;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\Entity\EntityViewDisplay as BaseEntityViewDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -48,7 +52,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    * {@inheritdoc}
    */
   public function isOverridable() {
-    return $this->getThirdPartySetting('layout_builder', 'allow_custom', FALSE);
+    return $this->isLayoutBuilderEnabled() && $this->getThirdPartySetting('layout_builder', 'allow_custom', FALSE);
   }
 
   /**
@@ -63,6 +67,12 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    * {@inheritdoc}
    */
   public function isLayoutBuilderEnabled() {
+    // To prevent infinite recursion, Layout Builder must not be enabled for the
+    // '_custom' view mode that is used for on-the-fly rendering of fields in
+    // isolation from the entity.
+    if ($this->getOriginalMode() === static::CUSTOM_MODE) {
+      return FALSE;
+    }
     return (bool) $this->getThirdPartySetting('layout_builder', 'enabled');
   }
 
@@ -234,35 +244,74 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   public function buildMultiple(array $entities) {
     $build_list = parent::buildMultiple($entities);
-    if (!$this->isLayoutBuilderEnabled()) {
-      return $build_list;
-    }
 
-    /** @var \Drupal\Core\Entity\EntityInterface $entity */
     foreach ($entities as $id => $entity) {
-      $sections = $this->getRuntimeSections($entity);
-      if ($sections) {
+      $build_list[$id]['_layout_builder'] = $this->buildSections($entity);
+
+      // If there are any sections, remove all fields with configurable display
+      // from the existing build. These fields are replicated within sections as
+      // field blocks by ::setComponent().
+      if (!Element::isEmpty($build_list[$id]['_layout_builder'])) {
         foreach ($build_list[$id] as $name => $build_part) {
           $field_definition = $this->getFieldDefinition($name);
           if ($field_definition && $field_definition->isDisplayConfigurable($this->displayContext)) {
             unset($build_list[$id][$name]);
           }
         }
-
-        // Bypass ::getContexts() in order to use the runtime entity, not a
-        // sample entity.
-        $contexts = $this->contextRepository()->getAvailableContexts();
-        $label = new TranslatableMarkup('@entity being viewed', [
-          '@entity' => $entity->getEntityType()->getSingularLabel(),
-        ]);
-        $contexts['layout_builder.entity'] = EntityContext::fromEntity($entity, $label);
-        foreach ($sections as $delta => $section) {
-          $build_list[$id]['_layout_builder'][$delta] = $section->toRenderArray($contexts);
-        }
       }
     }
 
     return $build_list;
+  }
+
+  /**
+   * Builds the render array for the sections of a given entity.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   The entity.
+   *
+   * @return array
+   *   The render array representing the sections of the entity.
+   */
+  protected function buildSections(FieldableEntityInterface $entity) {
+    $contexts = $this->getContextsForEntity($entity);
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3018782.
+    $label = new TranslatableMarkup('@entity being viewed', [
+      '@entity' => $entity->getEntityType()->getSingularLabel(),
+    ]);
+    $contexts['layout_builder.entity'] = EntityContext::fromEntity($entity, $label);
+
+    $cacheability = new CacheableMetadata();
+    $storage = $this->sectionStorageManager()->findByContext($contexts, $cacheability);
+
+    $build = [];
+    if ($storage) {
+      foreach ($storage->getSections() as $delta => $section) {
+        $build[$delta] = $section->toRenderArray($contexts);
+      }
+    }
+    // The render array is built based on decisions made by @SectionStorage
+    // plugins and therefore it needs to depend on the accumulated
+    // cacheability of those decisions.
+    $cacheability->applyTo($build);
+    return $build;
+  }
+
+  /**
+   * Gets the available contexts for a given entity.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   The entity.
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextInterface[]
+   *   An array of context objects for a given entity.
+   */
+  protected function getContextsForEntity(FieldableEntityInterface $entity) {
+    return [
+      'view_mode' => new Context(ContextDefinition::create('string'), $this->getMode()),
+      'entity' => EntityContext::fromEntity($entity),
+      'display' => EntityContext::fromEntity($this),
+    ] + $this->contextRepository()->getAvailableContexts();
   }
 
   /**
@@ -273,13 +322,20 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    *
    * @return \Drupal\layout_builder\Section[]
    *   The sections.
+   *
+   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+   *   \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::findByContext()
+   *   should be used instead. See https://www.drupal.org/node/3022574.
    */
   protected function getRuntimeSections(FieldableEntityInterface $entity) {
-    if ($this->isOverridable() && !$entity->get(OverridesSectionStorage::FIELD_NAME)->isEmpty()) {
-      return $entity->get(OverridesSectionStorage::FIELD_NAME)->getSections();
-    }
-
-    return $this->getSections();
+    @trigger_error('\Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::getRuntimeSections() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::findByContext() should be used instead. See https://www.drupal.org/node/3022574.', E_USER_DEPRECATED);
+    // For backwards compatibility, mimic the functionality of ::buildSections()
+    // by constructing a cacheable metadata object and retrieving the
+    // entity-based contexts.
+    $cacheability = new CacheableMetadata();
+    $contexts = $this->getContextsForEntity($entity);
+    $storage = $this->sectionStorageManager()->findByContext($contexts, $cacheability);
+    return $storage ? $storage->getSections() : [];
   }
 
   /**
@@ -397,6 +453,16 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
     // Return the first section.
     return $this->getSection(0);
+  }
+
+  /**
+   * Gets the section storage manager.
+   *
+   * @return \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface
+   *   The section storage manager.
+   */
+  private function sectionStorageManager() {
+    return \Drupal::service('plugin.manager.layout_builder.section_storage');
   }
 
 }

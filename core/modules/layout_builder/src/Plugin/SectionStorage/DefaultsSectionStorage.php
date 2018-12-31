@@ -4,6 +4,7 @@ namespace Drupal\layout_builder\Plugin\SectionStorage;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -21,8 +22,15 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Defines the 'defaults' section storage type.
  *
+ * DefaultsSectionStorage uses a positive weight because:
+ * - It must be picked after
+ *   \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage.
+ * - The default weight is 0, so other custom implementations will also take
+ *   precedence unless otherwise specified.
+ *
  * @SectionStorage(
  *   id = "defaults",
+ *   weight = 20,
  *   context_definitions = {
  *     "display" = @ContextDefinition("entity:entity_view_display"),
  *   },
@@ -442,6 +450,14 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
   public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
     $result = AccessResult::allowedIf($this->isLayoutBuilderEnabled());
     return $return_as_object ? $result : $result->isAllowed();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isApplicable(RefinableCacheableDependencyInterface $cacheability) {
+    $cacheability->addCacheableDependency($this);
+    return $this->isLayoutBuilderEnabled();
   }
 
 }

@@ -65,3 +65,10 @@ function layout_builder_post_update_add_extra_fields(&$sandbox = NULL) {
 function layout_builder_post_update_section_storage_context_definitions() {
   // Empty post-update hook.
 }
+
+/**
+ * Clear caches due to changes to annotation changes to the Overrides plugin.
+ */
+function layout_builder_post_update_overrides_view_mode_annotation() {
+  // Empty post-update hook.
+}

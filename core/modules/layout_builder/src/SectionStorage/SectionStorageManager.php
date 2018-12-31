@@ -4,6 +4,7 @@ namespace Drupal\layout_builder\SectionStorage;
 
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -92,12 +93,16 @@ class SectionStorageManager extends DefaultPluginManager implements SectionStora
   /**
    * {@inheritdoc}
    */
-  public function findByContext($operation, array $contexts) {
+  public function findByContext(array $contexts, RefinableCacheableDependencyInterface $cacheability) {
     $storage_types = array_keys($this->contextHandler->filterPluginDefinitionsByContexts($contexts, $this->getDefinitions()));
+
+    // Add the manager as a cacheable dependency in order to vary by changes to
+    // the plugin definitions.
+    $cacheability->addCacheableDependency($this);
 
     foreach ($storage_types as $type) {
       $plugin = $this->load($type, $contexts);
-      if ($plugin && $plugin->access($operation)) {
+      if ($plugin && $plugin->isApplicable($cacheability)) {
         return $plugin;
       }
     }
