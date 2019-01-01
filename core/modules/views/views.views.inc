@@ -595,9 +595,8 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
           $filter = 'boolean';
         }
         break;
-      case 'text':
       case 'blob':
-        // It does not make sense to sort by blob or text.
+        // It does not make sense to sort by blob.
         $allow_sort = FALSE;
       default:
         $filter = 'string';

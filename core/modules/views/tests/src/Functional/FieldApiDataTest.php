@@ -4,6 +4,7 @@ namespace Drupal\Tests\views\Functional;
 
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\Node;
@@ -39,6 +40,12 @@ class FieldApiDataTest extends FieldTestBase {
     parent::setUp($import_test_views);
 
     $field_names = $this->setUpFieldStorages(4);
+    $this->fieldStorages['string_long'] = FieldStorageConfig::create([
+      'field_name' => 'string_long',
+      'entity_type' => 'node',
+      'type' => 'string_long',
+    ]);
+    $this->fieldStorages['string_long']->save();
 
     // Attach the field to nodes only.
     $field = [
@@ -48,6 +55,14 @@ class FieldApiDataTest extends FieldTestBase {
       'label' => 'GiraffeA" label',
     ];
     FieldConfig::create($field)->save();
+
+    // Attach the string_long field to the page node type.
+    FieldConfig::create([
+      'field_name' => 'string_long',
+      'entity_type' => 'node',
+      'bundle' => 'page',
+      'label' => 'string_long label',
+    ])->save();
 
     // Attach the same field to a different bundle with a different label.
     $this->drupalCreateContentType(['type' => 'article']);
@@ -209,10 +224,15 @@ class FieldApiDataTest extends FieldTestBase {
     ];
     $this->assertEqual($expected_join, $data[$revision_table]['table']['join']['node_field_revision']);
 
-    // Test click sortable.
+    // Test click sortable for string field.
     $this->assertTrue($data[$current_table][$field_storage->getName()]['field']['click sortable'], 'String field is click sortable.');
     // Click sort should only be on the primary field.
     $this->assertTrue(empty($data[$revision_table][$field_storage->getName()]['field']['click sortable']), 'Non-primary fields are not click sortable');
+    // Test click sortable for long text field.
+    $data_long = $this->getViewsData('string_long');
+    $field_storage_long = $this->fieldStorages['string_long'];
+    $current_table_long = $table_mapping->getDedicatedDataTableName($field_storage_long);
+    $this->assertTrue($data_long[$current_table_long][$field_storage_long->getName()]['field']['click sortable'], 'Long text field is click sortable.');
 
     $this->assertTrue($data[$current_table][$field_storage->getName()]['help'] instanceof MarkupInterface);
     $this->assertEqual($data[$current_table][$field_storage->getName()]['help'], 'Appears in: page, article. Also known as: Content: GiraffeB&quot; label');
@@ -247,7 +267,7 @@ class FieldApiDataTest extends FieldTestBase {
    *
    * @return array
    */
-  protected function getViewsData() {
+  protected function getViewsData($field_storage_key = 0) {
     $views_data = $this->container->get('views.views_data');
     $data = [];
 
@@ -255,8 +275,8 @@ class FieldApiDataTest extends FieldTestBase {
     // Attached to node only.
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = \Drupal::entityManager()->getStorage('node')->getTableMapping();
-    $current_table = $table_mapping->getDedicatedDataTableName($this->fieldStorages[0]);
-    $revision_table = $table_mapping->getDedicatedRevisionTableName($this->fieldStorages[0]);
+    $current_table = $table_mapping->getDedicatedDataTableName($this->fieldStorages[$field_storage_key]);
+    $revision_table = $table_mapping->getDedicatedRevisionTableName($this->fieldStorages[$field_storage_key]);
     $data[$current_table] = $views_data->get($current_table);
     $data[$revision_table] = $views_data->get($revision_table);
     return $data;
