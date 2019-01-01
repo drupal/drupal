@@ -147,11 +147,11 @@ class Datetime extends DateElementBase {
    *   - #date_date_format: A date format string that describes the format that
    *     should be displayed to the end user for the date. When using HTML5
    *     elements the format MUST use the appropriate HTML5 format for that
-   *     element, no other format will work. See the format_date() function for a
-   *     list of the possible formats and HTML5 standards for the HTML5
-   *     requirements. Defaults to the right HTML5 format for the chosen element
-   *     if a HTML5 element is used, otherwise defaults to
-   *     DateFormat::load('html_date')->getPattern().
+   *     element, no other format will work. See the
+   *     DateFormatterInterface::format() function for a list of the possible
+   *     formats and HTML5 standards for the HTML5 requirements. Defaults to the
+   *     right HTML5 format for the chosen element if a HTML5 element is used,
+   *     otherwise defaults to DateFormat::load('html_date')->getPattern().
    *   - #date_date_element: The date element. Options are:
    *     - datetime: Use the HTML5 datetime element type.
    *     - datetime-local: Use the HTML5 datetime-local element type.
@@ -167,11 +167,11 @@ class Datetime extends DateElementBase {
    *   - #date_time_format: A date format string that describes the format that
    *     should be displayed to the end user for the time. When using HTML5
    *     elements the format MUST use the appropriate HTML5 format for that
-   *     element, no other format will work. See the format_date() function for
-   *     a list of the possible formats and HTML5 standards for the HTML5
-   *     requirements. Defaults to the right HTML5 format for the chosen element
-   *     if a HTML5 element is used, otherwise defaults to
-   *     DateFormat::load('html_time')->getPattern().
+   *     element, no other format will work. See the
+   *     DateFormatterInterface::format() function for a list of the possible
+   *     formats and HTML5 standards for the HTML5 requirements. Defaults to the
+   *     right HTML5 format for the chosen element if a HTML5 element is used,
+   *     otherwise defaults to DateFormat::load('html_time')->getPattern().
    *   - #date_time_callbacks: An array of optional callbacks for the time
    *     element. Can be used to add a jQuery timepicker or an 'All day' checkbox.
    *   - #date_year_range: A description of the range of years to allow, like
@@ -212,6 +212,8 @@ class Datetime extends DateElementBase {
    *
    * @return array
    *   The form element whose value has been processed.
+   *
+   * @see \Drupal\Core\Datetime\DateFormatterInterface::format()
    */
   public static function processDatetime(&$element, FormStateInterface $form_state, &$complete_form) {
     $format_settings = [];

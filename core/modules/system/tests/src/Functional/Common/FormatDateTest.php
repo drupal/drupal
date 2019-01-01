@@ -5,14 +5,14 @@ namespace Drupal\Tests\system\Functional\Common;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the format_date() function.
+ * Tests the DateFormatterInterface::format() function.
  *
  * @group Common
  */
 class FormatDateTest extends BrowserTestBase {
 
   /**
-   * Tests admin-defined formats in format_date().
+   * Tests admin-defined formats in DateFormatterInterface::format().
    */
   public function testAdminDefinedFormatDate() {
     // Create and log in an admin user.
@@ -35,10 +35,13 @@ class FormatDateTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
     $this->assertText(t('Custom date format added.'));
 
+    /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+    $date_formatter = $this->container->get('date.formatter');
+
     $timestamp = strtotime('2007-03-10T00:00:00+00:00');
-    $this->assertIdentical(format_date($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07');
-    $this->assertIdentical(format_date($timestamp, 'example_style_uppercase', '', 'America/Los_Angeles'), '9 Mar 2007');
-    $this->assertIdentical(format_date($timestamp, 'undefined_style'), format_date($timestamp, 'fallback'), 'Test format_date() defaulting to `fallback` when $type not found.');
+    $this->assertIdentical($date_formatter->format($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07');
+    $this->assertIdentical($date_formatter->format($timestamp, 'example_style_uppercase', '', 'America/Los_Angeles'), '9 Mar 2007');
+    $this->assertIdentical($date_formatter->format($timestamp, 'undefined_style'), $date_formatter->format($timestamp, 'fallback'), 'Test DateFormatterInterface::format() defaulting to `fallback` when $type not found.');
   }
 
 }

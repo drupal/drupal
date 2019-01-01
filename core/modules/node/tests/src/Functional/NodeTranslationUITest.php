@@ -196,10 +196,12 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         'sticky' => (bool) mt_rand(0, 1),
         'promote' => (bool) mt_rand(0, 1),
       ];
+      /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+      $date_formatter = $this->container->get('date.formatter');
       $edit = [
         'uid[0][target_id]' => $user->getAccountName(),
-        'created[0][value][date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
-        'created[0][value][time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
+        'created[0][value][date]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'Y-m-d'),
+        'created[0][value][time]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'H:i:s'),
         'sticky[value]' => $values[$langcode]['sticky'],
         'promote[value]' => $values[$langcode]['promote'],
       ];

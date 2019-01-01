@@ -144,7 +144,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    */
   public function revisionPageTitle($node_revision) {
     $node = $this->entityManager()->getStorage('node')->loadRevision($node_revision);
-    return $this->t('Revision of %title from %date', ['%title' => $node->label(), '%date' => format_date($node->getRevisionCreationTime())]);
+    return $this->t('Revision of %title from %date', ['%title' => $node->label(), '%date' => $this->dateFormatter->format($node->getRevisionCreationTime())]);
   }
 
   /**

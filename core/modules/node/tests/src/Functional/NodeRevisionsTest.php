@@ -164,7 +164,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', [
       '@type' => 'Basic page',
       '%title' => $nodes[1]->label(),
-      '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
+      '%revision-date' => $this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime()),
     ]), 'Revision reverted.');
     $node_storage->resetCache([$node->id()]);
     $reverted_node = $node_storage->load($node->id());
@@ -181,7 +181,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // Confirm revisions delete properly.
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", [], t('Delete'));
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.', [
-      '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
+      '%revision-date' => $this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime()),
       '@type' => 'Basic page',
       '%title' => $nodes[1]->label(),
     ]), 'Revision deleted.');
@@ -202,7 +202,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', [
       '@type' => 'Basic page',
       '%title' => $nodes[2]->label(),
-      '%revision-date' => format_date($old_revision_date),
+      '%revision-date' => $this->container->get('date.formatter')->format($old_revision_date),
     ]));
 
     // Make a new revision and set it to not be default.

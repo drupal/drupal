@@ -162,10 +162,12 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
         'uid' => $user->id(),
         'created' => REQUEST_TIME - mt_rand(0, 1000),
       ];
+      /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+      $date_formatter = $this->container->get('date.formatter');
       $edit = [
         'uid' => $user->getAccountName() . ' (' . $user->id() . ')',
-        'date[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
-        'date[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
+        'date[date]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'Y-m-d'),
+        'date[time]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'H:i:s'),
       ];
       $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
     }

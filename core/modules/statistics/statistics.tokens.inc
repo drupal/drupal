@@ -52,7 +52,7 @@ function statistics_tokens($type, $tokens, array $data, array $options, Bubbleab
       }
       elseif ($name == 'last-view') {
         $statistics = statistics_get($node->id());
-        $replacements[$original] = format_date($statistics['timestamp']);
+        $replacements[$original] = \Drupal::service('date.formatter')->format($statistics['timestamp']);
       }
     }
 

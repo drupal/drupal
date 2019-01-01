@@ -55,6 +55,9 @@ class UserTokenReplaceTest extends BrowserTestBase {
     $account = User::load($user1->id());
     $global_account = User::load(\Drupal::currentUser()->id());
 
+    /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+    $date_formatter = $this->container->get('date.formatter');
+
     // Generate and test tokens.
     $tests = [];
     $tests['[user:uid]'] = $account->id();
@@ -64,10 +67,10 @@ class UserTokenReplaceTest extends BrowserTestBase {
     $tests['[user:mail]'] = $account->getEmail();
     $tests['[user:url]'] = $account->toUrl('canonical', $url_options)->toString();
     $tests['[user:edit-url]'] = $account->toUrl('edit-form', $url_options)->toString();
-    $tests['[user:last-login]'] = format_date($account->getLastLoginTime(), 'medium', '', NULL, $language_interface->getId());
-    $tests['[user:last-login:short]'] = format_date($account->getLastLoginTime(), 'short', '', NULL, $language_interface->getId());
-    $tests['[user:created]'] = format_date($account->getCreatedTime(), 'medium', '', NULL, $language_interface->getId());
-    $tests['[user:created:short]'] = format_date($account->getCreatedTime(), 'short', '', NULL, $language_interface->getId());
+    $tests['[user:last-login]'] = $date_formatter->format($account->getLastLoginTime(), 'medium', '', NULL, $language_interface->getId());
+    $tests['[user:last-login:short]'] = $date_formatter->format($account->getLastLoginTime(), 'short', '', NULL, $language_interface->getId());
+    $tests['[user:created]'] = $date_formatter->format($account->getCreatedTime(), 'medium', '', NULL, $language_interface->getId());
+    $tests['[user:created:short]'] = $date_formatter->format($account->getCreatedTime(), 'short', '', NULL, $language_interface->getId());
     $tests['[current-user:name]'] = $global_account->getAccountName();
     $tests['[current-user:account-name]'] = $global_account->getAccountName();
     $tests['[current-user:display-name]'] = $global_account->getDisplayName();

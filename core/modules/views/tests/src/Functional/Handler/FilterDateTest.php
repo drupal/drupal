@@ -31,8 +31,16 @@ class FilterDateTest extends ViewTestBase {
    */
   public static $modules = ['node', 'views_ui', 'datetime'];
 
+  /**
+   * The date formatter.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  public $dateFormatter;
+
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
+    $this->dateFormatter = $this->container->get('date.formatter');
 
     // Add a date field so we can test datetime handling.
     NodeType::create([
@@ -119,8 +127,8 @@ class FilterDateTest extends ViewTestBase {
     // Test between with min and max.
     $view->initHandlers();
     $view->filter['created']->operator = 'between';
-    $view->filter['created']->value['min'] = format_date(150000, 'custom', 'Y-m-d H:i:s');
-    $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
+    $view->filter['created']->value['min'] = $this->dateFormatter->format(150000, 'custom', 'Y-m-d H:i:s');
+    $view->filter['created']->value['max'] = $this->dateFormatter->format(200000, 'custom', 'Y-m-d H:i:s');
     $view->executeDisplay('default');
     $expected_result = [
       ['nid' => $this->nodes[1]->id()],
@@ -131,7 +139,7 @@ class FilterDateTest extends ViewTestBase {
     // Test between with just max.
     $view->initHandlers();
     $view->filter['created']->operator = 'between';
-    $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
+    $view->filter['created']->value['max'] = $this->dateFormatter->format(200000, 'custom', 'Y-m-d H:i:s');
     $view->executeDisplay('default');
     $expected_result = [
       ['nid' => $this->nodes[0]->id()],
@@ -143,8 +151,8 @@ class FilterDateTest extends ViewTestBase {
     // Test not between with min and max.
     $view->initHandlers();
     $view->filter['created']->operator = 'not between';
-    $view->filter['created']->value['min'] = format_date(100000, 'custom', 'Y-m-d H:i:s');
-    $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
+    $view->filter['created']->value['min'] = $this->dateFormatter->format(100000, 'custom', 'Y-m-d H:i:s');
+    $view->filter['created']->value['max'] = $this->dateFormatter->format(200000, 'custom', 'Y-m-d H:i:s');
 
     $view->executeDisplay('default');
     $expected_result = [
@@ -157,7 +165,7 @@ class FilterDateTest extends ViewTestBase {
     // Test not between with just max.
     $view->initHandlers();
     $view->filter['created']->operator = 'not between';
-    $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
+    $view->filter['created']->value['max'] = $this->dateFormatter->format(200000, 'custom', 'Y-m-d H:i:s');
     $view->executeDisplay('default');
     $expected_result = [
       ['nid' => $this->nodes[2]->id()],
@@ -204,8 +212,8 @@ class FilterDateTest extends ViewTestBase {
     $edit['options[group_info][group_items][2][value][max]'] = '+2 days';
     $edit['options[group_info][group_items][3][title]'] = 'between-date';
     $edit['options[group_info][group_items][3][operator]'] = 'between';
-    $edit['options[group_info][group_items][3][value][min]'] = format_date(150000, 'custom', 'Y-m-d H:i:s');
-    $edit['options[group_info][group_items][3][value][max]'] = format_date(250000, 'custom', 'Y-m-d H:i:s');
+    $edit['options[group_info][group_items][3][value][min]'] = $this->dateFormatter->format(150000, 'custom', 'Y-m-d H:i:s');
+    $edit['options[group_info][group_items][3][value][max]'] = $this->dateFormatter->format(250000, 'custom', 'Y-m-d H:i:s');
 
     $this->drupalPostForm(NULL, $edit, t('Apply'));
 
@@ -250,7 +258,7 @@ class FilterDateTest extends ViewTestBase {
     $edit = [];
     $edit['options[operator]'] = '>';
     $edit['options[value][type]'] = 'date';
-    $edit['options[value][value]'] = format_date(350000, 'custom', 'Y-m-d H:i:s');
+    $edit['options[value][value]'] = $this->dateFormatter->format(350000, 'custom', 'Y-m-d H:i:s');
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->drupalPostForm('admin/structure/views/view/test_filter_date_between', [], t('Save'));
     $this->assertConfigSchemaByName('views.view.test_filter_date_between');
@@ -260,7 +268,9 @@ class FilterDateTest extends ViewTestBase {
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertEqual(count($results), 1);
     $this->assertEqual($results[0]->getText(), $this->nodes[3]->id());
-    $this->drupalPostForm(NULL, ['created' => format_date(250000, 'custom', 'Y-m-d H:i:s')], 'Apply');
+    $this->drupalPostForm(NULL, [
+      'created' => $this->dateFormatter->format(250000, 'custom', 'Y-m-d H:i:s'),
+    ], 'Apply');
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertEqual(count($results), 2);
     $this->assertEqual($results[0]->getText(), $this->nodes[2]->id());
@@ -289,8 +299,8 @@ class FilterDateTest extends ViewTestBase {
     $edit['options[group_info][group_items][2][value][max]'] = '+2 days';
     $edit['options[group_info][group_items][3][title]'] = 'between-date';
     $edit['options[group_info][group_items][3][operator]'] = 'between';
-    $edit['options[group_info][group_items][3][value][min]'] = format_date(150000, 'custom', 'Y-m-d H:i:s');
-    $edit['options[group_info][group_items][3][value][max]'] = format_date(250000, 'custom', 'Y-m-d H:i:s');
+    $edit['options[group_info][group_items][3][value][min]'] = $this->dateFormatter->format(150000, 'custom', 'Y-m-d H:i:s');
+    $edit['options[group_info][group_items][3][value][max]'] = $this->dateFormatter->format(250000, 'custom', 'Y-m-d H:i:s');
 
     $this->drupalPostForm(NULL, $edit, t('Apply'));
 

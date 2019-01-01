@@ -9,8 +9,9 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Tests date formatting.
  *
  * @group Common
+ * @coversDefaultClass \Drupal\Core\Datetime\DateFormatter
  */
-class FormatDateTest extends KernelTestBase {
+class DateFormatterTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -46,9 +47,11 @@ class FormatDateTest extends KernelTestBase {
   }
 
   /**
-   * Tests the format_date() function.
+   * Tests DateFormatter::format().
+   *
+   * @covers ::format
    */
-  public function testFormatDate() {
+  public function testFormat() {
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $formatter */
     $formatter = $this->container->get('date.formatter');
     /** @var \Drupal\Core\Language\LanguageManagerInterface $language_manager */

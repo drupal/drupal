@@ -358,7 +358,7 @@ class StandardProfileTest extends BrowserTestBase {
     // Created date.
     $expected_value = [
       'type' => 'literal',
-      'value' => format_date($node->get('created')->value, 'custom', 'c', 'UTC'),
+      'value' => $this->container->get('date.formatter')->format($node->get('created')->value, 'custom', 'c', 'UTC'),
       'lang' => 'en',
     ];
     $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/dateCreated', $expected_value), "$message_prefix created date was found (schema:dateCreated) in teaser.");
@@ -447,7 +447,7 @@ class StandardProfileTest extends BrowserTestBase {
     // Comment created date.
     $expected_value = [
       'type' => 'literal',
-      'value' => format_date($this->articleComment->get('created')->value, 'custom', 'c', 'UTC'),
+      'value' => $this->container->get('date.formatter')->format($this->articleComment->get('created')->value, 'custom', 'c', 'UTC'),
       'lang' => 'en',
     ];
     $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/dateCreated', $expected_value), 'Article comment created date was found (schema:dateCreated).');

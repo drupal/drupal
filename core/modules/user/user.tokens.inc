@@ -129,14 +129,14 @@ function user_tokens($type, $tokens, array $data, array $options, BubbleableMeta
         case 'last-login':
           $date_format = DateFormat::load('medium');
           $bubbleable_metadata->addCacheableDependency($date_format);
-          $replacements[$original] = $account->getLastLoginTime() ? format_date($account->getLastLoginTime(), 'medium', '', NULL, $langcode) : t('never');
+          $replacements[$original] = $account->getLastLoginTime() ? \Drupal::service('date.formatter')->format($account->getLastLoginTime(), 'medium', '', NULL, $langcode) : t('never');
           break;
 
         case 'created':
           $date_format = DateFormat::load('medium');
           $bubbleable_metadata->addCacheableDependency($date_format);
           // In the case of user_presave the created date may not yet be set.
-          $replacements[$original] = $account->getCreatedTime() ? format_date($account->getCreatedTime(), 'medium', '', NULL, $langcode) : t('not yet created');
+          $replacements[$original] = $account->getCreatedTime() ? \Drupal::service('date.formatter')->format($account->getCreatedTime(), 'medium', '', NULL, $langcode) : t('not yet created');
           break;
       }
     }

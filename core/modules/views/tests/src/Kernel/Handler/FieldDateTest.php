@@ -96,27 +96,30 @@ class FieldDateTest extends ViewsKernelTestBase {
       'America/New_York',
     ];
 
+    /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+    $date_formatter = $this->container->get('date.formatter');
+
     // Check each date/time in various timezones.
     foreach ($timezones as $timezone) {
       $dates = [
-        'short' => format_date($time, 'short', '', $timezone),
-        'medium' => format_date($time, 'medium', '', $timezone),
-        'long' => format_date($time, 'long', '', $timezone),
-        'custom' => format_date($time, 'custom', 'c', $timezone),
-        'fallback' => format_date($time, 'fallback', '', $timezone),
-        'html_date' => format_date($time, 'html_date', '', $timezone),
-        'html_datetime' => format_date($time, 'html_datetime', '', $timezone),
-        'html_month' => format_date($time, 'html_month', '', $timezone),
-        'html_time' => format_date($time, 'html_time', '', $timezone),
-        'html_week' => format_date($time, 'html_week', '', $timezone),
-        'html_year' => format_date($time, 'html_year', '', $timezone),
-        'html_yearless_date' => format_date($time, 'html_yearless_date', '', $timezone),
+        'short' => $date_formatter->format($time, 'short', '', $timezone),
+        'medium' => $date_formatter->format($time, 'medium', '', $timezone),
+        'long' => $date_formatter->format($time, 'long', '', $timezone),
+        'custom' => $date_formatter->format($time, 'custom', 'c', $timezone),
+        'fallback' => $date_formatter->format($time, 'fallback', '', $timezone),
+        'html_date' => $date_formatter->format($time, 'html_date', '', $timezone),
+        'html_datetime' => $date_formatter->format($time, 'html_datetime', '', $timezone),
+        'html_month' => $date_formatter->format($time, 'html_month', '', $timezone),
+        'html_time' => $date_formatter->format($time, 'html_time', '', $timezone),
+        'html_week' => $date_formatter->format($time, 'html_week', '', $timezone),
+        'html_year' => $date_formatter->format($time, 'html_year', '', $timezone),
+        'html_yearless_date' => $date_formatter->format($time, 'html_yearless_date', '', $timezone),
       ];
       $this->assertRenderedDatesEqual($view, $dates, $timezone);
     }
 
     // Check times in the past.
-    $time_since = $this->container->get('date.formatter')->formatTimeDiffSince($time);
+    $time_since = $date_formatter->formatTimeDiffSince($time);
     $intervals = [
       'raw time ago' => $time_since,
       'time ago' => t('%time ago', ['%time' => $time_since]),
@@ -128,7 +131,7 @@ class FieldDateTest extends ViewsKernelTestBase {
 
     // Check times in the future.
     $time = gmmktime(0, 0, 0, 1, 1, 2050);
-    $formatted = $this->container->get('date.formatter')->formatTimeDiffUntil($time);
+    $formatted = $date_formatter->formatTimeDiffUntil($time);
     $intervals = [
       'raw time span' => "-$formatted",
       'time span' => t('%time hence', [

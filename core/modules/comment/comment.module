@@ -623,6 +623,8 @@ function comment_preprocess_block(&$variables) {
  *     Array keys: #comment, #commented_entity.
  */
 function template_preprocess_comment(&$variables) {
+  /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+  $date_formatter = \Drupal::service('date.formatter');
   /** @var \Drupal\comment\CommentInterface $comment */
   $comment = $variables['elements']['#comment'];
   $commented_entity = $comment->getCommentedEntity();
@@ -638,13 +640,13 @@ function template_preprocess_comment(&$variables) {
   $variables['author'] = \Drupal::service('renderer')->render($username);
   $variables['author_id'] = $comment->getOwnerId();
   $variables['new_indicator_timestamp'] = $comment->getChangedTime();
-  $variables['created'] = format_date($comment->getCreatedTime());
-  // Avoid calling format_date() twice on the same timestamp.
+  $variables['created'] = $date_formatter->format($comment->getCreatedTime());
+  // Avoid calling DateFormatterInterface::format() twice on the same timestamp.
   if ($comment->getChangedTime() == $comment->getCreatedTime()) {
     $variables['changed'] = $variables['created'];
   }
   else {
-    $variables['changed'] = format_date($comment->getChangedTime());
+    $variables['changed'] = $date_formatter->format($comment->getChangedTime());
   }
 
   if (theme_get_setting('features.comment_user_picture')) {
@@ -682,13 +684,13 @@ function template_preprocess_comment(&$variables) {
       '#account' => $account_parent,
     ];
     $variables['parent_author'] = \Drupal::service('renderer')->render($username);
-    $variables['parent_created'] = format_date($comment_parent->getCreatedTime());
-    // Avoid calling format_date() twice on the same timestamp.
+    $variables['parent_created'] = $date_formatter->format($comment_parent->getCreatedTime());
+    // Avoid calling DateFormatterInterface::format() twice on same timestamp.
     if ($comment_parent->getChangedTime() == $comment_parent->getCreatedTime()) {
       $variables['parent_changed'] = $variables['parent_created'];
     }
     else {
-      $variables['parent_changed'] = format_date($comment_parent->getChangedTime());
+      $variables['parent_changed'] = $date_formatter->format($comment_parent->getChangedTime());
     }
     $permalink_uri_parent = $comment_parent->permalink();
     $attributes = $permalink_uri_parent->getOption('attributes') ?: [];

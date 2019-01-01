@@ -2,6 +2,7 @@
 
 namespace Drupal\datetime\Plugin\views\argument;
 
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\views\FieldAPIHandlerTrait;
@@ -37,8 +38,8 @@ class Date extends NumericDate {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_match);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, DateFormatterInterface $date_formatter) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_match, $date_formatter);
 
     $definition = $this->getFieldStorageDefinition();
     if ($definition->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {

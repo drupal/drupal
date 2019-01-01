@@ -495,7 +495,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
       // Formatting the date 8 / 27 / 1985 @ 13:37 EST with pattern D should
       // display "Tue".
-      $formatted_date = format_date(494015820, $id, NULL, 'America/New_York', 'fr');
+      $formatted_date = $this->container->get('date.formatter')->format(494015820, $id, NULL, 'America/New_York', 'fr');
       $this->assertEqual($formatted_date, 'Tue', 'Got the right formatted date using the date format translation pattern.');
     }
   }

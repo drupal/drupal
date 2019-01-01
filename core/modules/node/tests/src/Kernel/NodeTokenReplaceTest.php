@@ -72,8 +72,10 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     $tests['[node:author]'] = $account->getAccountName();
     $tests['[node:author:uid]'] = $node->getOwnerId();
     $tests['[node:author:name]'] = $account->getAccountName();
-    $tests['[node:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getCreatedTime(), ['langcode' => $this->interfaceLanguage->getId()]);
-    $tests['[node:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime(), ['langcode' => $this->interfaceLanguage->getId()]);
+    /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+    $date_formatter = $this->container->get('date.formatter');
+    $tests['[node:created:since]'] = $date_formatter->formatTimeDiffSince($node->getCreatedTime(), ['langcode' => $this->interfaceLanguage->getId()]);
+    $tests['[node:changed:since]'] = $date_formatter->formatTimeDiffSince($node->getChangedTime(), ['langcode' => $this->interfaceLanguage->getId()]);
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($node);
 

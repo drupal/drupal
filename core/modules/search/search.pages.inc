@@ -43,7 +43,7 @@ function template_preprocess_search_result(&$variables) {
     $info['user'] = $result['user'];
   }
   if (!empty($result['date'])) {
-    $info['date'] = format_date($result['date'], 'short');
+    $info['date'] = \Drupal::service('date.formatter')->format($result['date'], 'short');
   }
   if (isset($result['extra']) && is_array($result['extra'])) {
     $info = array_merge($info, $result['extra']);

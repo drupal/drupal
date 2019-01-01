@@ -3,6 +3,7 @@
 namespace Drupal\node\Form;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -45,6 +46,13 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
   protected $connection;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
    * Constructs a new NodeRevisionDeleteForm.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
@@ -53,11 +61,14 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
    *   The node type storage.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
    */
-  public function __construct(EntityStorageInterface $node_storage, EntityStorageInterface $node_type_storage, Connection $connection) {
+  public function __construct(EntityStorageInterface $node_storage, EntityStorageInterface $node_type_storage, Connection $connection, DateFormatterInterface $date_formatter) {
     $this->nodeStorage = $node_storage;
     $this->nodeTypeStorage = $node_type_storage;
     $this->connection = $connection;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -68,7 +79,8 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
     return new static(
       $entity_manager->getStorage('node'),
       $entity_manager->getStorage('node_type'),
-      $container->get('database')
+      $container->get('database'),
+      $container->get('date.formatter')
     );
   }
 
@@ -83,7 +95,9 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the revision from %revision-date?', ['%revision-date' => format_date($this->revision->getRevisionCreationTime())]);
+    return t('Are you sure you want to delete the revision from %revision-date?', [
+      '%revision-date' => $this->dateFormatter->format($this->revision->getRevisionCreationTime()),
+    ]);
   }
 
   /**
@@ -120,7 +134,7 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
     $node_type = $this->nodeTypeStorage->load($this->revision->bundle())->label();
     $this->messenger()
       ->addStatus($this->t('Revision from %revision-date of @type %title has been deleted.', [
-        '%revision-date' => format_date($this->revision->getRevisionCreationTime()),
+        '%revision-date' => $this->dateFormatter->format($this->revision->getRevisionCreationTime()),
         '@type' => $node_type,
         '%title' => $this->revision->label(),
       ]));

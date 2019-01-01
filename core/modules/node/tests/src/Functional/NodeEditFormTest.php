@@ -217,7 +217,7 @@ class NodeEditFormTest extends NodeTestBase {
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet("node/" . $node->id() . "/edit");
     $this->assertNoText('Published');
-    $this->assertNoText(format_date($node->getChangedTime(), 'short'));
+    $this->assertNoText($this->container->get('date.formatter')->format($node->getChangedTime(), 'short'));
 
     // Check that users with the 'administer nodes' permission can see the meta
     // information.
@@ -233,7 +233,7 @@ class NodeEditFormTest extends NodeTestBase {
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet("node/" . $node->id() . "/edit");
     $this->assertText('Published');
-    $this->assertText(format_date($node->getChangedTime(), 'short'));
+    $this->assertText($this->container->get('date.formatter')->format($node->getChangedTime(), 'short'));
   }
 
   /**
