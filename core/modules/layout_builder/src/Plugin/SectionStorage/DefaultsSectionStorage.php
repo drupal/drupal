@@ -58,13 +58,6 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
   protected $entityTypeBundleInfo;
 
   /**
-   * {@inheritdoc}
-   *
-   * @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface
-   */
-  protected $sectionList;
-
-  /**
    * The sample entity generator.
    *
    * @var \Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator

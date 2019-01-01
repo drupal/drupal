@@ -67,13 +67,6 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
 
   /**
    * {@inheritdoc}
-   *
-   * @var \Drupal\layout_builder\SectionListInterface|\Drupal\Core\Field\FieldItemListInterface
-   */
-  protected $sectionList;
-
-  /**
-   * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
