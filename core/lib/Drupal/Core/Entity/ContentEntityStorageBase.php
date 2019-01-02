@@ -539,6 +539,13 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       $this->postLoad($entities);
     }
 
+    // Ensure that the returned array is ordered the same as the original
+    // $ids array if this was passed in and remove any invalid IDs.
+    if ($revision_ids) {
+      $flipped_ids = array_intersect_key(array_flip($revision_ids), $revisions);
+      $revisions = array_replace($flipped_ids, $revisions);
+    }
+
     return $revisions;
   }
 

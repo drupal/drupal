@@ -135,6 +135,65 @@ class EntityApiTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests that the Entity storage loads the entities in the correct order.
+   *
+   * Entities should be returned in the same order as the passed IDs.
+   */
+  public function testLoadMultiple() {
+    // Entity load.
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
+
+    $ids = [];
+    $entity = $storage->create(['name' => 'test']);
+    $entity->save();
+    $ids[] = $entity->id();
+
+    $entity = $storage->create(['name' => 'test2']);
+    $entity->save();
+    $ids[] = $entity->id();
+
+    // We load the entities in an initial and reverse order, with both static
+    // cache in place and reset, to ensure we always get the same result.
+    $entities = $storage->loadMultiple($ids);
+    $this->assertEquals($ids, array_keys($entities));
+    // Reverse the order and load again.
+    $ids = array_reverse($ids);
+    $entities = $storage->loadMultiple($ids);
+    $this->assertEquals($ids, array_keys($entities));
+    // Reverse the order again, reset the cache and load again.
+    $storage->resetCache();
+    $ids = array_reverse($ids);
+    $entities = $storage->loadMultiple($ids);
+    $this->assertEquals($ids, array_keys($entities));
+
+    // Entity revision load.
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test_rev');
+
+    $ids = [];
+    $entity = $storage->create(['name' => 'test_rev']);
+    $entity->save();
+    $ids[] = $entity->getRevisionId();
+
+    $revision = $storage->createRevision($entity, TRUE);
+    $revision->save();
+    $ids[] = $revision->getRevisionId();
+
+    $entities = $storage->loadMultipleRevisions($ids);
+    $this->assertEquals($ids, array_keys($entities));
+
+    // Reverse the order and load again.
+    $ids = array_reverse($ids);
+    $entities = $storage->loadMultipleRevisions($ids);
+    $this->assertEquals($ids, array_keys($entities));
+
+    // Reverse the order again, reset the cache and load again.
+    $ids = array_reverse($ids);
+    $storage->resetCache();
+    $entities = $storage->loadMultipleRevisions($ids);
+    $this->assertEquals($ids, array_keys($entities));
+  }
+
+  /**
    * Tests that exceptions are thrown when saving or deleting an entity.
    */
   public function testEntityStorageExceptionHandling() {
