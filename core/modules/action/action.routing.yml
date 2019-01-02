@@ -10,7 +10,7 @@ action.admin_add:
   path: '/admin/config/system/actions/add/{action_id}'
   defaults:
     _entity_form: 'action.add'
-    _title: 'Add'
+    _title: 'Add action'
   requirements:
     _permission: 'administer actions'
 
@@ -18,7 +18,7 @@ entity.action.edit_form:
   path: '/admin/config/system/actions/configure/{action}'
   defaults:
     _entity_form: 'action.edit'
-    _title: 'Edit'
+    _title: 'Edit action'
   requirements:
     _permission: 'administer actions'
 
@@ -26,6 +26,6 @@ entity.action.delete_form:
   path: '/admin/config/system/actions/configure/{action}/delete'
   defaults:
     _entity_form: 'action.delete'
-    _title: 'Delete'
+    _title: 'Delete action'
   requirements:
     _permission: 'administer actions'
