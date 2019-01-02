@@ -101,14 +101,6 @@ const INSTALL_TASK_RUN_IF_NOT_COMPLETED = 3;
  * @see install_state_defaults()
  */
 function install_drupal($class_loader, $settings = [], callable $callback = NULL) {
-  // Support the old way of calling this function with just a settings array.
-  // @todo Remove this when Drush is updated in the Drupal testing
-  //   infrastructure in https://www.drupal.org/node/2389243
-  if (is_array($class_loader) && $settings === []) {
-    $settings = $class_loader;
-    $class_loader = require __DIR__ . '/../../autoload.php';
-  }
-
   global $install_state;
   // Initialize the installation state with the settings that were passed in,
   // as well as a boolean indicating whether or not this is an interactive
