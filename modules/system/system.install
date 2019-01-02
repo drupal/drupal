@@ -2870,7 +2870,7 @@ function system_update_7061(&$sandbox) {
     if (!db_table_exists('system_update_7061')) {
       $table = array(
         'description' => t('Stores temporary data for system_update_7061.'),
-        'fields' => array('vid' => array('type' => 'int')),
+        'fields' => array('vid' => array('type' => 'int', 'not null' => TRUE)),
         'primary key' => array('vid'),
       );
       db_create_table('system_update_7061', $table);
