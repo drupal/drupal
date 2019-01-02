@@ -193,6 +193,9 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     if ($this->request->query->has('block-placement')) {
       $placement = $this->request->query->get('block-placement');
       $form['#attached']['drupalSettings']['blockPlacement'] = $placement;
+      // Remove the block placement from the current request so that it is not
+      // passed on to any redirect destinations.
+      $this->request->query->remove('block-placement');
     }
 
     // Loop over each region and build blocks.
@@ -354,23 +357,6 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
 
     if (isset($operations['delete'])) {
       $operations['delete']['title'] = $this->t('Remove');
-      // Block operation links should have the `block-placement` query string
-      // parameter removed to ensure that JavaScript does not receive a block
-      // name that has been recently removed.
-      foreach ($operations as $operation) {
-        /** @var \Drupal\Core\Url $url */
-        $url = $operation['url'];
-        $query = $url->getOption('query');
-        $destination = $query['destination'];
-
-        $destinationUrl = Url::fromUserInput($destination);
-        $destinationQuery = $destinationUrl->getOption('query');
-        unset($destinationQuery['block-placement']);
-
-        $destinationUrl->setOption('query', $destinationQuery);
-        $query['destination'] = $destinationUrl->toString();
-        $url->setOption('query', $query);
-      }
     }
     return $operations;
   }
@@ -395,9 +381,6 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       $entity->save();
     }
     $this->messenger->addStatus($this->t('The block settings have been updated.'));
-
-    // Remove any previously set block placement.
-    $this->request->query->remove('block-placement');
   }
 
   /**
