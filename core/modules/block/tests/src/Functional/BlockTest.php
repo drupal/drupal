@@ -239,30 +239,6 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
-   * Tests the block operation links.
-   */
-  public function testBlockOperationLinks() {
-    $this->drupalGet('admin/structure/block');
-    // Go to the select block form.
-    $this->clickLink('Place block');
-    // Select the first available block.
-    $this->clickLink('Place block');
-    // Finally place the block
-    $this->submitForm([], 'Save block');
-
-    $url = $this->getUrl();
-    $parsed = parse_url($url);
-    $this->assertContains('block-placement', $parsed['query']);
-
-    $this->clickLink('Remove');
-    $this->submitForm([], 'Remove');
-
-    $url = $this->getUrl();
-    $parsed = parse_url($url);
-    $this->assertTrue(empty($parsed['query']));
-  }
-
-  /**
    * Tests that the block form has a theme selector when not passed via the URL.
    */
   public function testBlockThemeSelector() {

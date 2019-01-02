@@ -3,6 +3,8 @@
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\Component\Utility\Html;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -288,6 +290,24 @@ class BlockUiTest extends BrowserTestBase {
    * Tests the block placement indicator.
    */
   public function testBlockPlacementIndicator() {
+    // Test the block placement indicator with using the domain as URL language
+    // indicator. This causes destination query parameters to be absolute URLs.
+    \Drupal::service('module_installer')->install(['language', 'locale']);
+    $this->container = \Drupal::getContainer();
+    ConfigurableLanguage::createFromLangcode('it')->save();
+    $config = $this->config('language.types');
+    $config->set('negotiation.language_interface.enabled', [
+      LanguageNegotiationUrl::METHOD_ID => -10,
+    ]);
+    $config->save();
+    $config = $this->config('language.negotiation');
+    $config->set('url.source', LanguageNegotiationUrl::CONFIG_DOMAIN);
+    $config->set('url.domains', [
+      'en' => \Drupal::request()->getHost(),
+      'it' => 'it.example.com',
+    ]);
+    $config->save();
+
     // Select the 'Powered by Drupal' block to be placed.
     $block = [];
     $block['id'] = strtolower($this->randomMachineName());
@@ -296,11 +316,30 @@ class BlockUiTest extends BrowserTestBase {
 
     // After adding a block, it will indicate which block was just added.
     $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
-    $this->assertUrl('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
+    $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
 
-    // Resaving the block page will remove the block indicator.
+    // Resaving the block page will remove the block placement indicator.
     $this->drupalPostForm(NULL, [], t('Save blocks'));
-    $this->assertUrl('admin/structure/block/list/classy');
+    $this->assertSession()->addressEquals('admin/structure/block/list/classy');
+
+    // Place another block and test the remove functionality works with the
+    // block placement indicator. Click the first 'Place block' link to bring up
+    // the list of blocks to place in the first available region.
+    $this->clickLink('Place block');
+    // Select the first available block.
+    $this->clickLink('Place block');
+    $block = [];
+    $block['id'] = strtolower($this->randomMachineName());
+    $block['theme'] = 'classy';
+    $this->submitForm([], 'Save block');
+    $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
+
+    // Removing a block will remove the block placement indicator.
+    $this->clickLink('Remove');
+    $this->submitForm([], 'Remove');
+    // @todo https://www.drupal.org/project/drupal/issues/2980527 this should be
+    //   'admin/structure/block/list/classy' but there is a bug.
+    $this->assertSession()->addressEquals('admin/structure/block');
   }
 
   /**
