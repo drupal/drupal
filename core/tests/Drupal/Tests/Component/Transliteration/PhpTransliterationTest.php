@@ -142,8 +142,6 @@ class PhpTransliterationTest extends TestCase {
       // Test strings in some other languages.
       // Turkish, provided by drupal.org user Kartagis.
       ['tr', 'Abayı serdiler bize. Söyleyeceğim yüzlerine. Sanırım hepimiz aynı şeyi düşünüyoruz.', 'Abayi serdiler bize. Soyleyecegim yuzlerine. Sanirim hepimiz ayni seyi dusunuyoruz.'],
-      // Illegal/unknown unicode.
-      ['en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '?'],
       // Max length.
       ['de', $two_byte, 'Ae Oe', '?', 5],
     ];
@@ -162,6 +160,60 @@ class PhpTransliterationTest extends TestCase {
 
     $this->assertSame($trunc_output, $transliteration->transliterate($input, 'de', '?', 17), 'Truncating to 17 characters works');
     $this->assertSame($trunc_output, $transliteration->transliterate($input, 'de', '?', 18), 'Truncating to 18 characters works');
+  }
+
+  /**
+   * Tests the unknown character replacement.
+   *
+   * @param string $langcode
+   *   The language code to test.
+   * @param string $original
+   *   The original string.
+   * @param string $expected
+   *   The expected return from PhpTransliteration::transliterate().
+   * @param string $unknown_character
+   *   The character to substitute for characters in $string without
+   *   transliterated equivalents.
+   * @param int $max_length
+   *   The maximum length of the string that returns the transliteration.
+   *
+   * @dataProvider providerTestTransliterationUnknownCharacter
+   */
+  public function testTransliterationUnknownCharacter($langcode, $original, $expected, $unknown_character = '?', $max_length = NULL) {
+    $transliteration = new PhpTransliteration();
+    $actual = $transliteration->transliterate($original, $langcode, $unknown_character, $max_length);
+    $this->assertSame($expected, $actual);
+  }
+
+  /**
+   * Provides data for self::testTransliterationUnknownCharacter().
+   *
+   * @return array
+   *   An array of arrays, each containing the parameters for
+   *   self::testTransliterationUnknownCharacter().
+   */
+  public function providerTestTransliterationUnknownCharacter() {
+    return [
+      // Each test case is (language code, input, output, unknown character, max
+      // length).
+
+      // Illegal/unknown unicode.
+      ['en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '?????'],
+      ['en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '-----', '-'],
+      ['en', 'Hel' . chr(0x80) . 'o World', 'Hel?o World'],
+      ['en', 'Hell' . chr(0x80) . ' World', 'Hell? World'],
+      // Non default replacement.
+      ['en', chr(0x80) . 'ello World', '_ello World', '_'],
+      // Keep the original question marks.
+      ['en', chr(0xF8) . '?' . chr(0x80), '???'],
+      ['en', chr(0x80) . 'ello ? World?', '_ello ? World?', '_'],
+      ['pl', 'aąeę' . chr(0x80) . 'oółżźz ?', 'aaee?oolzzz ?'],
+      // Non-US-ASCII replacement.
+      ['en', chr(0x80) . 'ello World?', 'Oello World?', 'Ö'],
+      ['pl', chr(0x80) . 'óóść', 'ooosc', 'ó'],
+      // Ensure question marks are replaced when max length used.
+      ['en', chr(0x80) . 'ello ? World?', '_ello ?', '_', 7],
+    ];
   }
 
   /**
