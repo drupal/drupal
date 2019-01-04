@@ -24,9 +24,9 @@
 
 .block-type-banner-block .field--name-field-content-link a {
   display: inline-block;
-  padding: 0.5em 1.5em 0.4em;
-  border: 0;
-  border-radius: 4px;
+  padding: 0.7em 1.3em;
+  border: 2px solid #d93760;
+  border-radius: 3px;
   background-color: #d93760;
   color: #fff;
   cursor: pointer;
@@ -40,10 +40,11 @@
 
 .block-type-banner-block .field--name-field-content-link a:focus,
 .block-type-banner-block .field--name-field-content-link a:hover {
-  background-color: #00836d;
-  color: #fff;
-  box-shadow: 0 0 0 2px currentColor inset;
-  outline: none;
+  background-color: #fcece7;
+  color: #000;
+  border-color: #d93760;
+  outline-offset: 2px;
+  outline-color: #fff;
 }
 
 /* 768px */

@@ -14,18 +14,22 @@
 
 .menu-footer__item {
   list-style: none;
+  margin-bottom: 0.5em;
 }
 
 .menu-footer .menu-footer__link {
-  background-color: transparent;
-  font-weight: 700;
+  background-color: inherit;
   color: #fff;
+  font-weight: 700;
+  text-decoration: none;
 }
 
 .menu-footer .menu-footer__link:active,
 .menu-footer .menu-footer__link:focus,
 .menu-footer .menu-footer__link:hover {
-  background-color: transparent;
+  background-color: #000;
+  outline-color: #fff;
+  text-decoration: underline;
 }
 
 @media screen and (min-width: 60rem) {

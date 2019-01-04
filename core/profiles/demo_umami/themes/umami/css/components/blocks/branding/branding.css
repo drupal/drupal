@@ -20,7 +20,8 @@
   max-width: 205px;
   background-color: inherit;
 }
-.site-logo:hover {
+.site-logo:hover,
+.site-logo:focus {
   background-color: inherit;
 }
 

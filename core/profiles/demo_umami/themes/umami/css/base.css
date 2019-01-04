@@ -13,6 +13,13 @@ html {
   margin-top: 0; /* This allows us to ensure that items side-by-side line up nicely. */
 }
 
+*:focus {
+  outline-offset: 2px; /* Not supported in IE11 but greatly improves outline visibility in newer browsers. */
+  outline-color: #00836d;
+  outline-style: dotted;
+  outline-width: 1px;
+}
+
 a {
   color: #00836d;
   text-decoration: underline;
@@ -20,9 +27,7 @@ a {
 a:hover,
 a:focus {
   background-color: #e6eee0;
-  color: #444;
-  text-decoration: none;
-  outline-offset: 1px;
+  color: #cc2a00;
 }
 
 body {
@@ -55,20 +60,27 @@ blockquote a:focus {
   background-color: #fdfcf9;
 }
 
-.button {
+button,
+.button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  display: inline-block;
+  padding: 0.7rem 1.3rem;
+  border: 2px solid #00836d;
+  border-radius: 3px;
   background-color: #00836d;
-  border: 3px solid #00836d;
-  border-radius: 4px;
   color: #fff;
   cursor: pointer;
-  display: inline-block;
-  padding: 0.4em 1.5em;
   text-align: center;
   text-decoration: none;
   font-family: 'Scope One', Georgia, serif;
   font-size: 1.2rem;
   font-weight: 400;
   transition: background-color 0.5s ease;
+  min-width: inherit;
+  max-width: inherit;
+  margin: 0;
 }
 button:hover,
 button:active,
@@ -77,7 +89,6 @@ button:focus,
 .button:active,
 .button:focus {
   background-color: #e6eee0;
-  border: 3px solid #00836d;
   color: #000;
   text-decoration: none;
   transition: background-color 0.5s ease;
@@ -196,8 +207,11 @@ input {
   padding: 0.8rem 0.4rem;
 }
 input:focus {
-  border: 3px solid #00836d;
-  margin-bottom: 2px;
+  border: 2px solid #00836d;
+}
+input[type='checkbox'] {
+  min-width: inherit;
+  max-width: none;
 }
 
 textarea {
@@ -206,8 +220,7 @@ textarea {
   padding: 0.8rem 0.4rem;
 }
 textarea:focus {
-  border: 3px solid #00836d;
-  margin-bottom: 2px;
+  border: 2px solid #00836d;
 }
 
 label {

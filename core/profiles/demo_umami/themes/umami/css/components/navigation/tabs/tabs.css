@@ -35,4 +35,5 @@
 .tabs a:focus,
 .tabs a:hover {
   background-color: #fff;
+  outline-offset: -5px;
 }

@@ -25,3 +25,16 @@
     justify-content: space-between;
   }
 }
+
+.footer a {
+  background-color: inherit;
+  color: #fff;
+  font-weight: 400;
+}
+
+.footer a:active,
+.footer a:focus,
+.footer a:hover {
+  background-color: #000;
+  outline-color: #fff;
+}

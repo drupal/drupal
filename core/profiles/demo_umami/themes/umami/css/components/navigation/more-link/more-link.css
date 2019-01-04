@@ -4,17 +4,22 @@
  */
 
 .read-more__link {
+  box-sizing: border-box;
   background-color: inherit;
   position: relative;
   display: inline-block;
   padding-right: 20px;
   text-decoration: none;
   text-transform: uppercase;
+  border-bottom: 1px solid transparent;
 }
 
 .read-more__link:focus,
 .read-more__link:hover {
-  text-decoration: underline;
+  background-color: inherit;
+  text-decoration: none;
+  color: #00836d;
+  border-bottom: 1px solid #00836d;
 }
 
 .read-more__link:before {

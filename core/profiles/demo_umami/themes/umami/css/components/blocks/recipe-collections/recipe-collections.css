@@ -34,9 +34,10 @@
   color: #fff;
   font-weight: bold;
 }
+.block-views-blockrecipe-collections-block .views-row a:active,
 .block-views-blockrecipe-collections-block .views-row a:focus,
 .block-views-blockrecipe-collections-block .views-row a:hover {
   text-decoration: underline;
   background: transparent;
+  outline-color: #fff;
 }
-

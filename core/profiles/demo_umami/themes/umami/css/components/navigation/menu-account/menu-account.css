@@ -13,7 +13,6 @@
     text-align: left;
   }
 }
-
 .menu-account {
   display: inline-flex;
   margin: 0;
@@ -29,11 +28,13 @@
   margin-right: 1em;
 }
 .menu-account__link,
-.menu-account__link:hover {
+.menu-account__link:hover,
+.menu-account__link:focus {
   text-decoration: none;
   color: inherit;
   background-color: inherit;
 }
-.menu-account__link:hover {
+.menu-account__link:hover,
+.menu-account__link:focus {
   text-decoration: underline;
 }
