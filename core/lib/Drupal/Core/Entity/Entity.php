@@ -76,6 +76,7 @@ abstract class Entity implements EntityInterface {
    *   correct interface or service.
    */
   protected function entityManager() {
+    @trigger_error('Entity::getEntityManager() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use ::getEntityTypeManager() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return \Drupal::entityManager();
   }
 

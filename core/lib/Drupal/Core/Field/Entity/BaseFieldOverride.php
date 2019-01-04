@@ -163,7 +163,7 @@ class BaseFieldOverride extends FieldConfigBase {
    */
   protected function getBaseFieldDefinition() {
     if (!isset($this->baseFieldDefinition)) {
-      $fields = $this->entityManager()->getBaseFieldDefinitions($this->entity_type);
+      $fields = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($this->entity_type);
       $this->baseFieldDefinition = $fields[$this->getName()];
     }
     return $this->baseFieldDefinition;
@@ -204,7 +204,7 @@ class BaseFieldOverride extends FieldConfigBase {
       $previous_definition = $this->original;
     }
     // Notify the entity storage.
-    $this->entityManager()->getStorage($this->getTargetEntityTypeId())->onFieldDefinitionUpdate($this, $previous_definition);
+    $this->entityTypeManager()->getStorage($this->getTargetEntityTypeId())->onFieldDefinitionUpdate($this, $previous_definition);
   }
 
   /**

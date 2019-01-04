@@ -289,7 +289,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    */
   public function calculateDependencies() {
     parent::calculateDependencies();
-    $target_entity_type = $this->entityManager()->getDefinition($this->targetEntityType);
+    $target_entity_type = $this->entityTypeManager()->getDefinition($this->targetEntityType);
 
     // Create dependency on the bundle.
     $bundle_config_dependency = $target_entity_type->getBundleConfigDependency($this->bundle);
@@ -300,7 +300,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     // field overrides, since the field still exists without them.
     if (\Drupal::moduleHandler()->moduleExists('field')) {
       $components = $this->content + $this->hidden;
-      $field_definitions = $this->entityManager()->getFieldDefinitions($this->targetEntityType, $this->bundle);
+      $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($this->targetEntityType, $this->bundle);
       foreach (array_intersect_key($field_definitions, $components) as $field_name => $field_definition) {
         if ($field_definition instanceof ConfigEntityInterface && $field_definition->getEntityTypeId() == 'field_config') {
           $this->addDependency('config', $field_definition->getConfigDependencyName());
@@ -310,7 +310,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
 
     // Depend on configured modes.
     if ($this->mode != 'default') {
-      $mode_entity = $this->entityManager()->getStorage('entity_' . $this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
+      $mode_entity = $this->entityTypeManager()->getStorage('entity_' . $this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
       $this->addDependency('config', $mode_entity->getConfigDependencyName());
     }
     return $this;

@@ -296,7 +296,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     if (!$this->fieldStorage) {
       $field_storage_definition = NULL;
 
-      $field_storage_definitions = $this->entityManager()->getFieldStorageDefinitions($this->entity_type);
+      $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($this->entity_type);
       if (isset($field_storage_definitions[$this->field_name])) {
         $field_storage_definition = $field_storage_definitions[$this->field_name];
       }

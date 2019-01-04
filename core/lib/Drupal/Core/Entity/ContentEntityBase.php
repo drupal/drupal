@@ -429,7 +429,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   public function isTranslatable() {
     // Check the bundle is translatable, the entity has a language defined, and
     // the site has more than one language.
-    $bundles = $this->entityManager()->getBundleInfo($this->entityTypeId);
+    $bundles = $this->entityTypeBundleInfo()->getBundleInfo($this->entityTypeId);
     return !empty($bundles[$this->bundle()]['translatable']) && !$this->getUntranslated()->language()->isLocked() && $this->languageManager()->isMultilingual();
   }
 
@@ -679,7 +679,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    */
   public function getFieldDefinitions() {
     if (!isset($this->fieldDefinitions)) {
-      $this->fieldDefinitions = $this->entityManager()->getFieldDefinitions($this->entityTypeId, $this->bundle());
+      $this->fieldDefinitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($this->entityTypeId, $this->bundle());
     }
     return $this->fieldDefinitions;
   }
@@ -700,11 +700,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    */
   public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($operation == 'create') {
-      return $this->entityManager()
+      return $this->entityTypeManager()
         ->getAccessControlHandler($this->entityTypeId)
         ->createAccess($this->bundle(), $account, [], $return_as_object);
     }
-    return $this->entityManager()
+    return $this->entityTypeManager()
       ->getAccessControlHandler($this->entityTypeId)
       ->access($this, $operation, $account, $return_as_object);
   }
@@ -960,7 +960,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
 
     // Initialize the translation object.
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
-    $storage = $this->entityManager()->getStorage($this->getEntityTypeId());
+    $storage = $this->entityTypeManager()->getStorage($this->getEntityTypeId());
     $this->translations[$langcode]['status'] = !isset($this->translations[$langcode]['status_existed']) ? static::TRANSLATION_CREATED : static::TRANSLATION_EXISTING;
     return $storage->createTranslation($this, $langcode, $values);
   }
@@ -1411,7 +1411,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
 
     if (!$original) {
       $id = $this->getOriginalId() !== NULL ? $this->getOriginalId() : $this->id();
-      $original = $this->entityManager()->getStorage($this->getEntityTypeId())->loadUnchanged($id);
+      $original = $this->entityTypeManager()->getStorage($this->getEntityTypeId())->loadUnchanged($id);
     }
 
     // If the current translation has just been added, we have a change.

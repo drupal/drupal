@@ -246,7 +246,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     $this->addDependencies($definition['class']::calculateDependencies($this));
 
     // Create dependency on the bundle.
-    $bundle_config_dependency = $this->entityManager()->getDefinition($this->entity_type)->getBundleConfigDependency($this->bundle);
+    $bundle_config_dependency = $this->entityTypeManager()->getDefinition($this->entity_type)->getBundleConfigDependency($this->bundle);
     $this->addDependency($bundle_config_dependency['type'], $bundle_config_dependency['name']);
 
     return $this;
@@ -283,12 +283,12 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     // Clear the cache.
-    $this->entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Invalidate the render cache for all affected entities.
     $entity_type = $this->getFieldStorageDefinition()->getTargetEntityTypeId();
-    if ($this->entityManager()->hasHandler($entity_type, 'view_builder')) {
-      $this->entityManager()->getViewBuilder($entity_type)->resetCache();
+    if ($this->entityTypeManager()->hasHandler($entity_type, 'view_builder')) {
+      $this->entityTypeManager()->getViewBuilder($entity_type)->resetCache();
     }
   }
 
