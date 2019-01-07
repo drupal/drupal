@@ -117,6 +117,9 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
     $entity = $this->prophesize(EntityInterface::class);
     $entity->hasLinkTemplate('canonical')
       ->willReturn(TRUE);
+    $entity->isNew()
+      ->willReturn(FALSE)
+      ->shouldBeCalled();
     $entity->toUrl('canonical')
       ->willReturn($url)
       ->shouldBeCalled();
@@ -154,6 +157,61 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
       'target_type' => 'test_type',
       'target_uuid' => '080e3add-f9d5-41ac-9821-eea55b7b42fb',
       'url' => $test_url,
+    ];
+    $this->assertSame($expected, $normalized);
+  }
+
+  public function testNormalizeWithNewEntityReference() {
+    $test_url = '/test/100';
+
+    $generated_url = (new GeneratedUrl())->setGeneratedUrl($test_url);
+
+    $url = $this->prophesize(Url::class);
+    $url->toString(TRUE)
+      ->willReturn($generated_url);
+
+    $entity = $this->prophesize(EntityInterface::class);
+    $entity->hasLinkTemplate('canonical')
+      ->willReturn(TRUE);
+    $entity->isNew()
+      ->willReturn(TRUE)
+      ->shouldBeCalled();
+    $entity->uuid()
+      ->willReturn('080e3add-f9d5-41ac-9821-eea55b7b42fb')
+      ->shouldBeCalled();
+    $entity->getEntityTypeId()
+      ->willReturn('test_type')
+      ->shouldBeCalled();
+    $entity->toUrl('canonical')
+      ->willReturn($url)
+      ->shouldNotBeCalled();
+
+    $entity_reference = $this->prophesize(TypedDataInterface::class);
+    $entity_reference->getValue()
+      ->willReturn($entity->reveal())
+      ->shouldBeCalled();
+
+    $field_definition = $this->prophesize(FieldDefinitionInterface::class);
+    $field_definition->getSetting('target_type')
+      ->willReturn('test_type');
+
+    $this->fieldItem->getFieldDefinition()
+      ->willReturn($field_definition->reveal());
+
+    $this->fieldItem->get('entity')
+      ->willReturn($entity_reference)
+      ->shouldBeCalled();
+
+    $this->fieldItem->getProperties(TRUE)
+      ->willReturn(['target_id' => $this->getTypedDataProperty(FALSE)])
+      ->shouldBeCalled();
+
+    $normalized = $this->normalizer->normalize($this->fieldItem->reveal());
+
+    $expected = [
+      'target_id' => 'test',
+      'target_type' => 'test_type',
+      'target_uuid' => '080e3add-f9d5-41ac-9821-eea55b7b42fb',
     ];
     $this->assertSame($expected, $normalized);
   }

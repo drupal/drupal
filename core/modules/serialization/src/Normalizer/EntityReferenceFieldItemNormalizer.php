@@ -53,7 +53,7 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
       // Add a 'url' value if there is a reference and a canonical URL. Hard
       // code 'canonical' here as config entities override the default $rel
       // parameter value to 'edit-form.
-      if ($entity->hasLinkTemplate('canonical') && $url = $entity->toUrl('canonical')->toString(TRUE)) {
+      if ($entity->hasLinkTemplate('canonical') && !$entity->isNew() && $url = $entity->toUrl('canonical')->toString(TRUE)) {
         $this->addCacheableDependency($context, $url);
         $values['url'] = $url->getGeneratedUrl();
       }
