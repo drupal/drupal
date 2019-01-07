@@ -10062,6 +10062,22 @@ $connection->insert('i18n_strings')
   'objectindex' => '14',
   'format' => '0',
 ))
+->values(array(
+  'lid' => '1695',
+  'objectid' => 'profile_count_trees',
+  'type' => 'field',
+  'property' => 'title',
+  'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1696',
+  'objectid' => 'profile_count_trees',
+  'type' => 'field',
+  'property' => 'options',
+  'objectindex' => '0',
+  'format' => '0',
+))
 ->execute();
 $connection->schema()->createTable('i18n_variable', array(
   'fields' => array(
@@ -22649,6 +22665,20 @@ $connection->insert('locales_source')
   'source' => 'The home of Captain Christopher Pike.',
   'version' => '1',
 ))
+->values(array(
+  'lid' => '1695',
+  'location' => 'field:profile_:title',
+  'textgroup' => 'profile',
+  'source' => 'Number of trees',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1696',
+  'location' => 'field:profile_:options',
+  'textgroup' => 'profile',
+  'source' => "10\r\n20\r\n50\r\n100\r\n1000",
+  'version' => '1',
+))
 ->execute();
 $connection->schema()->createTable('locales_target', array(
   'fields' => array(
@@ -27709,40 +27739,8 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
-  'lid' => '1672',
-  'translation' => 'fr - Type',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
   'lid' => '1678',
   'translation' => 'fr - I really, really, really love migrating ',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '1690',
-  'translation' => 'Noir',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '1692',
-  'translation' => 'fr - Talos IV',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '1694',
-  'translation' => 'fr - The home of Captain Christopher Pike.',
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -27877,9 +27875,33 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
+  'lid' => '1690',
+  'translation' => 'Noir',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
   'lid' => '1691',
   'translation' => 'Mhlophe',
   'language' => 'zu',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1672',
+  'translation' => 'fr - Type',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1692',
+  'translation' => 'fr - Talos IV',
+  'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
   'i18n_status' => '0',
@@ -27896,6 +27918,22 @@ $connection->insert('locales_target')
   'lid' => '1694',
   'translation' => 'zu - The home of Captain Christopher Pike.',
   'language' => 'zu',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1694',
+  'translation' => 'fr - The home of Captain Christopher Pike.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1696',
+  'translation' => "fr - 10\r\nfr - 20\r\nfr - 50\r\nfr - 100\r\nfr - 1000",
+  'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
   'i18n_status' => '0',
@@ -45449,6 +45487,21 @@ $connection->insert('profile_fields')
   'visibility' => '2',
   'autocomplete' => '0',
   'options' => '',
+))
+->values(array(
+  'fid' => '17',
+  'title' => 'Number of trees',
+  'name' => 'profile_count_trees',
+  'explanation' => '',
+  'category' => 'Personal information',
+  'page' => '',
+  'type' => 'selection',
+  'weight' => '0',
+  'required' => '0',
+  'register' => '0',
+  'visibility' => '2',
+  'autocomplete' => '0',
+  'options' => "10\r\n20\r\n50\r\n100\r\n1000",
 ))
 ->execute();
 $connection->schema()->createTable('profile_values', array(
