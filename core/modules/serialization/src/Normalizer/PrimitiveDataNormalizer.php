@@ -10,9 +10,7 @@ use Drupal\Core\TypedData\PrimitiveInterface;
 class PrimitiveDataNormalizer extends NormalizerBase {
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var string
+   * {@inheritdoc}
    */
   protected $supportedInterfaceOrClass = PrimitiveInterface::class;
 

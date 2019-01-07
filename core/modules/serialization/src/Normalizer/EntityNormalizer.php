@@ -15,11 +15,9 @@ class EntityNormalizer extends ComplexDataNormalizer implements DenormalizerInte
   use FieldableEntityNormalizerTrait;
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = [EntityInterface::class];
+  protected $supportedInterfaceOrClass = EntityInterface::class;
 
   /**
    * Constructs an EntityNormalizer object.

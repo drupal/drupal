@@ -12,11 +12,9 @@ use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 class FieldItemNormalizer extends NormalizerBase {
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = 'Drupal\Core\Field\FieldItemInterface';
+  protected $supportedInterfaceOrClass = FieldItemInterface::class;
 
   /**
    * {@inheritdoc}

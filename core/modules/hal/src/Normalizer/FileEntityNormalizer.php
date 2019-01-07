@@ -17,11 +17,9 @@ use Drupal\hal\LinkManager\LinkManagerInterface;
 class FileEntityNormalizer extends ContentEntityNormalizer {
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = 'Drupal\file\FileInterface';
+  protected $supportedInterfaceOrClass = FileInterface::class;
 
   /**
    * The HTTP client.

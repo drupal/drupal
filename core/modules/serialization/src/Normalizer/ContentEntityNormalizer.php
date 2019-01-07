@@ -2,6 +2,7 @@
 
 namespace Drupal\serialization\Normalizer;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
 
 /**
@@ -12,7 +13,7 @@ class ContentEntityNormalizer extends EntityNormalizer {
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = ['Drupal\Core\Entity\ContentEntityInterface'];
+  protected $supportedInterfaceOrClass = ContentEntityInterface::class;
 
   /**
    * {@inheritdoc}

@@ -15,9 +15,7 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
   use EntityReferenceFieldItemNormalizerTrait;
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var string
+   * {@inheritdoc}
    */
   protected $supportedInterfaceOrClass = EntityReferenceItem::class;
 

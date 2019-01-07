@@ -3,6 +3,7 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -19,11 +20,9 @@ class ContentEntityNormalizer extends NormalizerBase {
   use FieldableEntityNormalizerTrait;
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = 'Drupal\Core\Entity\ContentEntityInterface';
+  protected $supportedInterfaceOrClass = ContentEntityInterface::class;
 
   /**
    * The hypermedia link manager.

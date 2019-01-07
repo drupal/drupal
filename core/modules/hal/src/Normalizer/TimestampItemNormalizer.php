@@ -14,9 +14,7 @@ class TimestampItemNormalizer extends FieldItemNormalizer {
   use TimeStampItemNormalizerTrait;
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var string
+   * {@inheritdoc}
    */
   protected $supportedInterfaceOrClass = TimestampItem::class;
 

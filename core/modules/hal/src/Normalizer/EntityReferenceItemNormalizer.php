@@ -19,11 +19,9 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
   use EntityReferenceFieldItemNormalizerTrait;
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
+  protected $supportedInterfaceOrClass = EntityReferenceItem::class;
 
   /**
    * The hypermedia link manager.
