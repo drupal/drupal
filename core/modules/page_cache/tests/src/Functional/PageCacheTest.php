@@ -242,7 +242,7 @@ class PageCacheTest extends BrowserTestBase {
     // Fill the cache.
     $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'bar']]);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
-    $this->assertEqual(strtolower($this->drupalGetHeader('Vary')), 'cookie,accept-encoding', 'Vary header was sent.');
+    $this->assertContains('cookie', explode(',', strtolower($this->drupalGetHeader('Vary'))), 'Vary header was sent.', TRUE);
     // Symfony's Response logic determines a specific order for the subvalues
     // of the Cache-Control header, even if they are explicitly passed in to
     // the response header bag in a different order.
@@ -253,7 +253,7 @@ class PageCacheTest extends BrowserTestBase {
     // Check cache.
     $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'bar']]);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
-    $this->assertEqual(strtolower($this->drupalGetHeader('Vary')), 'cookie,accept-encoding', 'Vary: Cookie header was sent.');
+    $this->assertContains('cookie', explode(',', strtolower($this->drupalGetHeader('Vary'))), 'Vary header was sent.', TRUE);
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=300, public', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
@@ -262,7 +262,7 @@ class PageCacheTest extends BrowserTestBase {
     $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Expires', 'value' => 'Fri, 19 Nov 2008 05:00:00 GMT']]);
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Fri, 19 Nov 2008 05:00:00 GMT', 'Default header was replaced.');
     $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Vary', 'value' => 'User-Agent']]);
-    $this->assertEqual(strtolower($this->drupalGetHeader('Vary')), 'user-agent,accept-encoding', 'Default header was replaced.');
+    $this->assertContains('user-agent', explode(',', strtolower($this->drupalGetHeader('Vary'))), 'Default header was replaced.');
 
     // Check that authenticated users bypass the cache.
     $user = $this->drupalCreateUser();
@@ -583,10 +583,6 @@ class PageCacheTest extends BrowserTestBase {
       [
         $url . '?z=z&a=a',
         $url . '?a=a&z=z',
-      ],
-      [
-        $url . '?',
-        $url . '',
       ],
       [
         $url . '?a=b+c',
