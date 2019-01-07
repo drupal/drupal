@@ -1,9 +1,6 @@
 /*
  * @file
  * Provides the layout styles for layout_twocol.
- *
- * @todo Using display: flex requires https://www.drupal.org/node/2842298 to be
- * in before this can be marked as stable.
  */
 
 .layout--twocol {

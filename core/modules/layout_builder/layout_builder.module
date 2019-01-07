@@ -234,3 +234,35 @@ function layout_builder_layout_builder_section_storage_alter(array &$definitions
   $definitions['overrides']->getContextDefinition('entity')
     ->addConstraint('EntityHasField', OverridesSectionStorage::FIELD_NAME);
 }
+
+/**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ */
+function layout_builder_plugin_filter_layout__layout_builder_alter(array &$definitions, array $extra) {
+  // Remove layouts provide by layout discovery that are not needed because of
+  // layouts provided by this module.
+  $duplicate_layouts = [
+    'layout_twocol',
+    'layout_twocol_bricks',
+    'layout_threecol_25_50_25',
+    'layout_threecol_33_34_33',
+  ];
+
+  foreach ($duplicate_layouts as $duplicate_layout) {
+    /** @var \Drupal\Core\Layout\LayoutDefinition[] $definitions */
+    if (isset($definitions[$duplicate_layout])) {
+      if ($definitions[$duplicate_layout]->getProvider() === 'layout_discovery') {
+        unset($definitions[$duplicate_layout]);
+      }
+    }
+  }
+
+  // Move the one column layout to the top.
+  if (isset($definitions['layout_onecol']) && $definitions['layout_onecol']->getProvider() === 'layout_discovery') {
+    $one_col = $definitions['layout_onecol'];
+    unset($definitions['layout_onecol']);
+    $definitions = [
+      'layout_onecol' => $one_col,
+    ] + $definitions;
+  }
+}

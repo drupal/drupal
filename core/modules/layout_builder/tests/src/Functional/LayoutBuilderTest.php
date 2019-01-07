@@ -192,8 +192,11 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     // Add a new section.
     $this->clickLink('Add Section');
+    $this->assertCorrectLayouts();
     $assert_session->linkExists('Two column');
     $this->clickLink('Two column');
+    $assert_session->buttonExists('Add section');
+    $page->pressButton('Add section');
     $assert_session->linkExists('Save Layout');
     $this->clickLink('Save Layout');
     $assert_session->pageTextNotContains('The first node body');
@@ -518,7 +521,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->clickLink('Add Section', 1);
     $assert_session->linkExists('Two column');
     $this->clickLink('Two column');
-
+    $assert_session->buttonExists('Add section');
+    $this->getSession()->getPage()->pressButton('Add section');
     // Add a new block to second section.
     $this->clickLink('Add Block', 1);
 
@@ -678,6 +682,33 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->drupalGet('layout-builder-test-simple-config/new');
     $assert_session->elementsCount('css', '.layout', 1);
     $assert_session->elementsCount('css', '.layout--onecol', 1);
+  }
+
+  /**
+   * Asserts that the correct layouts are available.
+   */
+  protected function assertCorrectLayouts() {
+    $assert_session = $this->assertSession();
+    // Ensure the layouts provided by layout_builder are available.
+    $expected_layouts_hrefs = [
+      'layout_builder/add/section/overrides/node.1/0/layout_onecol',
+      'layout_builder/configure/section/overrides/node.1/0/layout_twocol_section',
+      'layout_builder/configure/section/overrides/node.1/0/layout_threecol_section',
+      'layout_builder/add/section/overrides/node.1/0/layout_fourcol_section',
+    ];
+    foreach ($expected_layouts_hrefs as $expected_layouts_href) {
+      $assert_session->linkByHrefExists($expected_layouts_href);
+    }
+    // Ensure the layout_discovery module's layouts were removed.
+    $unexpected_layouts = [
+      'twocol',
+      'twocol_bricks',
+      'threecol_25_50_25',
+      'threecol_33_34_33',
+    ];
+    foreach ($unexpected_layouts as $unexpected_layout) {
+      $assert_session->linkByHrefNotExists("layout_builder/add/section/overrides/node.1/0/$unexpected_layout");
+    }
   }
 
 }
