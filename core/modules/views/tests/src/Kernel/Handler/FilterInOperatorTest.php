@@ -2,7 +2,11 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
 /**
@@ -11,6 +15,7 @@ use Drupal\views\Views;
  * @group views
  */
 class FilterInOperatorTest extends ViewsKernelTestBase {
+  use StringTranslationTrait;
 
   public static $modules = ['system'];
 
@@ -193,6 +198,36 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
       ],
     ];
     return $filters;
+  }
+
+  /**
+   * Tests that the InOperator filter can handle TranslateableMarkup.
+   */
+  public function testFilterOptionAsMarkup() {
+    $view = $this->prophesize(ViewExecutable::class);
+    $display = $this->prophesize(DisplayPluginBase::class);
+    $display->getOption('relationships')->willReturn(FALSE);
+    $view->display_handler = $display->reveal();
+
+    /** @var \Drupal\views\Plugin\ViewsHandlerManager $manager */
+    $manager = $this->container->get('plugin.manager.views.filter');
+    /** @var \Drupal\views\Plugin\views\filter\InOperator $operator */
+    $operator = $manager->createInstance('in_operator');
+    $options = ['value' => ['foo' => [], 'baz' => []]];
+    $operator->init($view->reveal(), $display->reveal(), $options);
+
+    $input_options = [
+      'foo' => 'bar',
+      'baz' => $this->t('qux'),
+      'quux' => (object) ['option' => ['quux' => 'corge']],
+    ];
+    $reduced_values = $operator->reduceValueOptions($input_options);
+
+    $this->assertSame(['foo', 'baz'], array_keys($reduced_values));
+    $this->assertInstanceOf(TranslatableMarkup::class, $reduced_values['baz']);
+    $this->assertSame('qux', (string) $reduced_values['baz']);
+    $this->assertSame('bar', $reduced_values['foo']);
+
   }
 
 }

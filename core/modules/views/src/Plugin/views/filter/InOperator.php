@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -263,15 +264,15 @@ class InOperator extends FilterPluginBase {
     }
 
     // Because options may be an array of strings, or an array of mixed arrays
-    // and strings (optgroups) or an array of objects, we have to
-    // step through and handle each one individually.
+    // and strings (optgroups), or an array of objects, or a form of Markup, we
+    // have to step through and handle each one individually.
     $options = [];
     foreach ($input as $id => $option) {
       if (is_array($option)) {
         $options[$id] = $this->reduceValueOptions($option);
         continue;
       }
-      elseif (is_object($option)) {
+      elseif (is_object($option) && !$option instanceof MarkupInterface) {
         $keys = array_keys($option->option);
         $key = array_shift($keys);
         if (isset($this->options['value'][$key])) {
