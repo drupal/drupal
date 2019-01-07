@@ -69,7 +69,7 @@ class NumberFieldTestCase extends DrupalWebTestCase {
     preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
-    $this->assertRaw(round($value, 2), 'Value is displayed.');
+    $this->assertRaw($value, 'Value is displayed.');
 
     // Try to create entries with more than one decimal separator; assert fail.
     $wrong_entries = array(
