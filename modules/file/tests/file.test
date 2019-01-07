@@ -1875,3 +1875,60 @@ class FileFieldAnonymousSubmission extends FileFieldTestCase {
   }
 
 }
+
+/**
+ * Tests the file_scan_directory() function.
+ */
+class FileScanDirectory extends FileFieldTestCase {
+
+  /**
+   * @var string
+   */
+  protected $path;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'File ScanDirectory',
+      'description' => 'Tests the file_scan_directory() function.',
+      'group' => 'File',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function setUp() {
+    parent::setUp();
+
+    $this->path = 'modules/file/tests/fixtures/file_scan_ignore';
+  }
+
+  /**
+   * Tests file_scan_directory() obeys 'file_scan_ignore_directories' setting.
+   * If nomask is not passed as argument, it should use the default settings.
+   * If nomask is passed as argument, it should obey this rule.
+   */
+  public function testNoMask() {
+    $files = file_scan_directory($this->path, '/\.txt$/');
+    $this->assertEqual(3, count($files), '3 text files found when not ignoring directories.');
+
+    global $conf;
+    $conf['file_scan_ignore_directories'] = array('frontend_framework');
+
+    $files = file_scan_directory($this->path, '/\.txt$/');
+    $this->assertEqual(1, count($files), '1 text files found when ignoring directories called "frontend_framework".');
+
+    // Make that directories specified by default still work when a new nomask is provided.
+    $files = file_scan_directory($this->path, '/\.txt$/', ['nomask' => '/^c.txt/']);
+    $this->assertEqual(2, count($files), '2 text files found when an "nomask" option is passed in.');
+
+    // Ensure that the directories in file_scan_ignore_directories are escaped using preg_quote.
+    $conf['file_scan_ignore_directories'] = array('frontend.*');
+    $files = file_scan_directory($this->path, '/\.txt$/');
+    $this->assertEqual(3, count($files), '2 text files found when ignoring a directory that is not there.');
+  }
+
+}

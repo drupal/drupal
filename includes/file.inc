@@ -2130,9 +2130,33 @@ function file_download_access($uri) {
  *   'filename', and 'name' members corresponding to the matching files.
  */
 function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
+  // Default nomask option.
+  $nomask = '/(\.\.?|CVS)$/';
+
+  // Overrides the $nomask variable accordingly if $options['nomask'] is set.
+  //
+  // Allow directories specified in settings.php to be ignored. You can use this
+  // to not check for files in common special-purpose directories. For example,
+  // node_modules and bower_components. Ignoring irrelevant directories is a
+  // performance boost.
+  if (!isset($options['nomask'])) {
+    $ignore_directories = variable_get(
+      'file_scan_ignore_directories',
+      array()
+    );
+
+    foreach ($ignore_directories as $index => $ignore_directory) {
+      $ignore_directories[$index] = preg_quote($ignore_directory, '/');
+    }
+
+    if (!empty($ignore_directories)) {
+      $nomask = '/^(\.\.?)|CVS|' . implode('|', $ignore_directories) . '$/';
+    }
+  }
+
   // Merge in defaults.
   $options += array(
-    'nomask' => '/(\.\.?|CVS)$/',
+    'nomask' => $nomask,
     'callback' => 0,
     'recurse' => TRUE,
     'key' => 'uri',
