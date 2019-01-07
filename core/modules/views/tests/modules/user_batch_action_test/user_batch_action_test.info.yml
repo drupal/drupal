@@ -1,0 +1,9 @@
+name: 'User batch action test'
+type: module
+description: 'Support module for user batch action testing.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - views
+  - user
