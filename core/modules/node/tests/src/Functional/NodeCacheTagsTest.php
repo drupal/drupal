@@ -44,6 +44,7 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   protected function getDefaultCacheContexts() {
     $defaults = parent::getDefaultCacheContexts();
     // @see \Drupal\node\Controller\NodeViewController::view()
+    $defaults[] = 'url.site';
     $defaults[] = 'user.roles:anonymous';
     return $defaults;
   }

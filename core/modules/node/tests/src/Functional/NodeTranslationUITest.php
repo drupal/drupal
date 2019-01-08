@@ -26,6 +26,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     'timezone',
     'url.path.parent',
     'url.query_args:_wrapper_format',
+    'url.site',
     'user.roles',
     'url.path.is_front',
     // These two cache contexts are added by BigPipe.

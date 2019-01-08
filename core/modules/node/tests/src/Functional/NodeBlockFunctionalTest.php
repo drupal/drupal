@@ -158,14 +158,14 @@ class NodeBlockFunctionalTest extends NodeTestBase {
 
     $this->drupalGet('node/' . $node1->id());
     $this->assertText($label, 'Block was displayed on the node/N when node is of type article.');
-    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user', 'route', 'timezone']);
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user', 'route', 'timezone']);
     $this->assertSame('MISS', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
     $this->drupalGet('node/' . $node1->id());
     $this->assertSame('HIT', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
 
     $this->drupalGet('node/' . $node5->id());
     $this->assertNoText($label, 'Block was not displayed on nodes of type page.');
-    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user', 'route', 'timezone']);
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user', 'route', 'timezone']);
     $this->assertSame('MISS', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
     $this->drupalGet('node/' . $node5->id());
     $this->assertSame('HIT', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));

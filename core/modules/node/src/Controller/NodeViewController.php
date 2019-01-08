@@ -55,7 +55,7 @@ class NodeViewController extends EntityViewController {
     $build = parent::view($node, $view_mode, $langcode);
 
     foreach ($node->uriRelationships() as $rel) {
-      $url = $node->toUrl($rel);
+      $url = $node->toUrl($rel)->setAbsolute(TRUE);
       // Add link relationships if the user is authenticated or if the anonymous
       // user has access. Access checking must be done for anonymous users to
       // avoid traffic to inaccessible pages from web crawlers. For
@@ -88,6 +88,9 @@ class NodeViewController extends EntityViewController {
         ];
       }
     }
+
+    // Since this generates absolute URLs, it can only be cached "per site".
+    $build['#cache']['contexts'][] = 'url.site';
 
     // Given this varies by $this->currentUser->isAuthenticated(), add a cache
     // context based on the anonymous role.

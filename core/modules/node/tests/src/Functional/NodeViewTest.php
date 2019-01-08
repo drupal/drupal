@@ -21,7 +21,7 @@ class NodeViewTest extends NodeTestBase {
     $this->drupalGet($node->toUrl());
 
     $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl()->toString());
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl()->setAbsolute()->toString());
 
     // Link relations are checked for access for anonymous users.
     $result = $this->xpath('//link[@rel = "version-history"]');
@@ -34,14 +34,14 @@ class NodeViewTest extends NodeTestBase {
     $this->drupalGet($node->toUrl());
 
     $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl()->toString());
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl()->setAbsolute()->toString());
 
     // Link relations are present regardless of access for authenticated users.
     $result = $this->xpath('//link[@rel = "version-history"]');
-    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('version-history')->toString());
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('version-history')->setAbsolute()->toString());
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
-    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('edit-form')->toString());
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('edit-form')->setAbsolute()->toString());
 
     // Give anonymous users access to edit the node. Do this through the UI to
     // ensure caches are handled properly.
@@ -56,13 +56,13 @@ class NodeViewTest extends NodeTestBase {
     // version-history link.
     $this->drupalGet($node->toUrl());
     $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl()->toString());
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl()->setAbsolute()->toString());
 
     $result = $this->xpath('//link[@rel = "version-history"]');
     $this->assertFalse($result, 'Version history not present for anonymous users without access.');
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
-    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('edit-form')->toString());
+    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('edit-form')->setAbsolute()->toString());
   }
 
   /**
@@ -72,9 +72,9 @@ class NodeViewTest extends NodeTestBase {
     $node = $this->drupalCreateNode();
 
     $expected = [
-      '<' . Html::escape($node->toUrl('canonical')->toString()) . '>; rel="canonical"',
-      '<' . Html::escape($node->toUrl('canonical')->toString(), ['alias' => TRUE]) . '>; rel="shortlink"',
-      '<' . Html::escape($node->toUrl('revision')->toString()) . '>; rel="revision"',
+      '<' . Html::escape($node->toUrl('canonical')->setAbsolute()->toString()) . '>; rel="canonical"',
+      '<' . Html::escape($node->toUrl('canonical')->setAbsolute()->toString(), ['alias' => TRUE]) . '>; rel="shortlink"',
+      '<' . Html::escape($node->toUrl('revision')->setAbsolute()->toString()) . '>; rel="revision"',
     ];
 
     $this->drupalGet($node->toUrl());
