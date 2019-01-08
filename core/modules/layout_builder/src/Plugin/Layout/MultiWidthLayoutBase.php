@@ -5,7 +5,6 @@ namespace Drupal\layout_builder\Plugin\Layout;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Base class of layouts with configurable widths.
@@ -16,8 +15,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *   See https://www.drupal.org/core/experimental for more information.
  */
 abstract class MultiWidthLayoutBase extends LayoutDefault implements PluginFormInterface {
-
-  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
