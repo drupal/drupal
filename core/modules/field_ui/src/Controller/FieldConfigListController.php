@@ -25,7 +25,7 @@ class FieldConfigListController extends EntityListController {
    *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function listing($entity_type_id = NULL, $bundle = NULL, RouteMatchInterface $route_match = NULL) {
-    return $this->entityManager()->getListBuilder('field_config')->render($entity_type_id, $bundle);
+    return $this->entityTypeManager()->getListBuilder('field_config')->render($entity_type_id, $bundle);
   }
 
 }

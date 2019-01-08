@@ -59,7 +59,7 @@ class ContactController extends ControllerBase {
 
     // Use the default form if no form has been passed.
     if (empty($contact_form)) {
-      $contact_form = $this->entityManager()
+      $contact_form = $this->entityTypeManager()
         ->getStorage('contact_form')
         ->load($config->get('default_form'));
       // If there are no forms, do not display the form.
@@ -76,7 +76,7 @@ class ContactController extends ControllerBase {
       }
     }
 
-    $message = $this->entityManager()
+    $message = $this->entityTypeManager()
       ->getStorage('contact_message')
       ->create([
         'contact_form' => $contact_form->id(),
@@ -109,7 +109,7 @@ class ContactController extends ControllerBase {
       throw new NotFoundHttpException();
     }
 
-    $message = $this->entityManager()->getStorage('contact_message')->create([
+    $message = $this->entityTypeManager()->getStorage('contact_message')->create([
       'contact_form' => 'personal',
       'recipient' => $user->id(),
     ]);

@@ -84,7 +84,7 @@ class DbLogController extends ControllerBase {
     $this->moduleHandler = $module_handler;
     $this->dateFormatter = $date_formatter;
     $this->formBuilder = $form_builder;
-    $this->userStorage = $this->entityManager()->getStorage('user');
+    $this->userStorage = $this->entityTypeManager()->getStorage('user');
   }
 
   /**

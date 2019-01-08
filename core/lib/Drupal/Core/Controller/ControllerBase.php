@@ -129,6 +129,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    *   instead.
    */
   protected function entityManager() {
+    @trigger_error('ControllerBase::getEntityManager() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use ::getEntityTypeManager() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     if (!$this->entityManager) {
       $this->entityManager = $this->container()->get('entity.manager');
     }

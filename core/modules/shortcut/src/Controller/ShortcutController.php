@@ -21,7 +21,7 @@ class ShortcutController extends ControllerBase {
    *   The shortcut add form.
    */
   public function addForm(ShortcutSetInterface $shortcut_set) {
-    $shortcut = $this->entityManager()->getStorage('shortcut')->create(['shortcut_set' => $shortcut_set->id()]);
+    $shortcut = $this->entityTypeManager()->getStorage('shortcut')->create(['shortcut_set' => $shortcut_set->id()]);
     return $this->entityFormBuilder()->getForm($shortcut, 'add');
   }
 

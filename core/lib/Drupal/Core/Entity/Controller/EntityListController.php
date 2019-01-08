@@ -20,7 +20,7 @@ class EntityListController extends ControllerBase {
    *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function listing($entity_type) {
-    return $this->entityManager()->getListBuilder($entity_type)->render();
+    return $this->entityTypeManager()->getListBuilder($entity_type)->render();
   }
 
 }

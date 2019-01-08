@@ -63,7 +63,7 @@ class ConfigTranslationListController extends ControllerBase {
     // controller defined, use it. Other mappers, for examples the ones for
     // node_type and block, fallback to the generic configuration translation
     // list controller.
-    $build = $this->entityManager()
+    $build = $this->entityTypeManager()
       ->getHandler($entity_type, 'config_translation_list')
       ->setMapperDefinition($mapper_definition)
       ->render();

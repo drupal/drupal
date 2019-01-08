@@ -70,7 +70,7 @@ class EditorController extends ControllerBase {
     $original_format_id = $request->request->get('original_format_id');
     $original_format = NULL;
     if (isset($original_format_id)) {
-      $original_format = $this->entityManager()
+      $original_format = $this->entityTypeManager()
         ->getStorage('filter_format')
         ->load($original_format_id);
     }

@@ -3,9 +3,10 @@
 namespace Drupal\Core\Entity\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -13,13 +14,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines a generic controller to render a single entity.
  */
 class EntityViewController implements ContainerInjectionInterface {
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * The entity manager
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The renderer service.
@@ -31,13 +38,13 @@ class EntityViewController implements ContainerInjectionInterface {
   /**
    * Creates an EntityViewController object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, RendererInterface $renderer) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->renderer = $renderer;
   }
 
@@ -46,7 +53,7 @@ class EntityViewController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('renderer')
     );
   }
@@ -92,7 +99,7 @@ class EntityViewController implements ContainerInjectionInterface {
    *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function view(EntityInterface $_entity, $view_mode = 'full') {
-    $page = $this->entityManager
+    $page = $this->entityTypeManager
       ->getViewBuilder($_entity->getEntityTypeId())
       ->view($_entity, $view_mode);
 

@@ -4,7 +4,8 @@ namespace Drupal\node\Controller;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Controller\EntityViewController;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,19 +23,33 @@ class NodeViewController extends EntityViewController {
   protected $currentUser;
 
   /**
+   * The entity repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * Creates an NodeViewController object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user. For backwards compatibility this is optional, however
    *   this will be removed before Drupal 9.0.0.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    */
-  public function __construct(EntityManagerInterface $entity_manager, RendererInterface $renderer, AccountInterface $current_user = NULL) {
-    parent::__construct($entity_manager, $renderer);
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer, AccountInterface $current_user = NULL, EntityRepositoryInterface $entity_repository = NULL) {
+    parent::__construct($entity_type_manager, $renderer);
     $this->currentUser = $current_user ?: \Drupal::currentUser();
+    if (!$entity_repository) {
+      @trigger_error('The entity.repository service must be passed to NodeViewController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_repository = \Drupal::service('entity.repository');
+    }
+    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -42,9 +57,10 @@ class NodeViewController extends EntityViewController {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('renderer'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('entity.repository')
     );
   }
 
@@ -109,7 +125,7 @@ class NodeViewController extends EntityViewController {
    *   The page title.
    */
   public function title(EntityInterface $node) {
-    return $this->entityManager->getTranslationFromContext($node)->label();
+    return $this->entityRepository->getTranslationFromContext($node)->label();
   }
 
 }

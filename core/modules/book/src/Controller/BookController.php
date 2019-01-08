@@ -122,7 +122,7 @@ class BookController extends ControllerBase {
       '#theme' => 'item_list',
       '#items' => $book_list,
       '#cache' => [
-        'tags' => \Drupal::entityManager()->getDefinition('node')->getListCacheTags(),
+        'tags' => $this->entityTypeManager()->getDefinition('node')->getListCacheTags(),
       ],
     ];
   }

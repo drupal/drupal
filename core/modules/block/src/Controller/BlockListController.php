@@ -57,7 +57,7 @@ class BlockListController extends EntityListController {
       throw new NotFoundHttpException();
     }
 
-    return $this->entityManager()->getListBuilder('block')->render($theme, $request);
+    return $this->entityTypeManager()->getListBuilder('block')->render($theme, $request);
   }
 
 }

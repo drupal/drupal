@@ -7,6 +7,7 @@ use Drupal\content_translation\ContentTranslationManagerInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -25,20 +26,37 @@ class ContentTranslationController extends ControllerBase {
   protected $manager;
 
   /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * Initializes a content translation controller.
    *
    * @param \Drupal\content_translation\ContentTranslationManagerInterface $manager
    *   A content translation manager instance.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager service.
    */
-  public function __construct(ContentTranslationManagerInterface $manager) {
+  public function __construct(ContentTranslationManagerInterface $manager, EntityFieldManagerInterface $entity_field_manager = NULL) {
     $this->manager = $manager;
+    if (!$entity_field_manager) {
+      @trigger_error('The entity_field.manager service must be passed to ContentTranslationController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+    }
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('content_translation.manager'));
+    return new static(
+      $container->get('content_translation.manager'),
+      $container->get('entity_field.manager')
+    );
   }
 
   /**
@@ -62,7 +80,7 @@ class ContentTranslationController extends ControllerBase {
     }
 
     /** @var \Drupal\user\UserInterface $user */
-    $user = $this->entityManager()->getStorage('user')->load($this->currentUser()->id());
+    $user = $this->entityTypeManager()->getStorage('user')->load($this->currentUser()->id());
     $metadata = $this->manager->getTranslationMetadata($target_translation);
 
     // Update the translation author to current user, as well the translation
@@ -85,7 +103,7 @@ class ContentTranslationController extends ControllerBase {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $route_match->getParameter($entity_type_id);
     $account = $this->currentUser();
-    $handler = $this->entityManager()->getHandler($entity_type_id, 'translation');
+    $handler = $this->entityTypeManager()->getHandler($entity_type_id, 'translation');
     $manager = $this->manager;
     $entity_type = $entity->getEntityType();
     $use_latest_revisions = $entity_type->isRevisionable() && ContentTranslationManager::isPendingRevisionSupportEnabled($entity_type_id, $entity->bundle());
@@ -108,7 +126,7 @@ class ContentTranslationController extends ControllerBase {
     if ($this->languageManager()->isMultilingual()) {
       // Determine whether the current entity is translatable.
       $translatable = FALSE;
-      foreach ($this->entityManager->getFieldDefinitions($entity_type_id, $entity->bundle()) as $instance) {
+      foreach ($this->entityFieldManager->getFieldDefinitions($entity_type_id, $entity->bundle()) as $instance) {
         if ($instance->isTranslatable()) {
           $translatable = TRUE;
           break;

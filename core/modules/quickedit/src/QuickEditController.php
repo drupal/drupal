@@ -3,6 +3,7 @@
 namespace Drupal\quickedit;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\quickedit\Ajax\FieldFormCommand;
 use Drupal\quickedit\Ajax\FieldFormSavedCommand;
 use Drupal\quickedit\Ajax\FieldFormValidationErrorsCommand;
@@ -51,6 +53,20 @@ class QuickEditController extends ControllerBase {
   protected $renderer;
 
   /**
+   * The entity display repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $entityDisplayRepository;
+
+  /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * Constructs a new QuickEditController.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
@@ -61,12 +77,26 @@ class QuickEditController extends ControllerBase {
    *   The in-place editor selector.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display repository service.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    */
-  public function __construct(PrivateTempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector, RendererInterface $renderer) {
+  public function __construct(PrivateTempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector, RendererInterface $renderer, EntityDisplayRepositoryInterface $entity_display_repository, EntityRepositoryInterface $entity_repository) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->metadataGenerator = $metadata_generator;
     $this->editorSelector = $editor_selector;
     $this->renderer = $renderer;
+    if (!$entity_display_repository) {
+      @trigger_error('The entity_display.repository service must be passed to QuickEditController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_display_repository = \Drupal::service('entity_display.repository');
+    }
+    $this->entityDisplayRepository = $entity_display_repository;
+    if (!$entity_repository) {
+      @trigger_error('The entity.repository service must be passed to QuickEditController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_repository = \Drupal::service('entity.repository');
+    }
+    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -77,7 +107,9 @@ class QuickEditController extends ControllerBase {
       $container->get('tempstore.private'),
       $container->get('quickedit.metadata.generator'),
       $container->get('quickedit.editor.selector'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('entity_display.repository'),
+      $container->get('entity.repository')
     );
   }
 
@@ -103,10 +135,10 @@ class QuickEditController extends ControllerBase {
       list($entity_type, $entity_id, $field_name, $langcode, $view_mode) = explode('/', $field);
 
       // Load the entity.
-      if (!$entity_type || !$this->entityManager()->getDefinition($entity_type)) {
+      if (!$entity_type || !$this->entityTypeManager()->getDefinition($entity_type)) {
         throw new NotFoundHttpException();
       }
-      $entity = $this->entityManager()->getStorage($entity_type)->load($entity_id);
+      $entity = $this->entityTypeManager()->getStorage($entity_type)->load($entity_id);
       if (!$entity) {
         throw new NotFoundHttpException();
       }
@@ -256,9 +288,9 @@ class QuickEditController extends ControllerBase {
    * @see hook_quickedit_render_field()
    */
   protected function renderField(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
-    $entity_view_mode_ids = array_keys($this->entityManager()->getViewModes($entity->getEntityTypeId()));
+    $entity_view_mode_ids = array_keys($this->entityDisplayRepository->getViewModes($entity->getEntityTypeId()));
     if (in_array($view_mode_id, $entity_view_mode_ids)) {
-      $entity = \Drupal::entityManager()->getTranslationFromContext($entity, $langcode);
+      $entity = $this->entityRepository->getTranslationFromContext($entity, $langcode);
       $output = $entity->get($field_name)->view($view_mode_id);
     }
     else {

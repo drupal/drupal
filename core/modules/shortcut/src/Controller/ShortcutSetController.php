@@ -55,7 +55,7 @@ class ShortcutSetController extends ControllerBase {
     $link = $request->query->get('link');
     $name = $request->query->get('name');
     if (parse_url($link, PHP_URL_SCHEME) === NULL && $this->pathValidator->isValid($link)) {
-      $shortcut = $this->entityManager()->getStorage('shortcut')->create([
+      $shortcut = $this->entityTypeManager()->getStorage('shortcut')->create([
         'title' => $name,
         'shortcut_set' => $shortcut_set->id(),
         'link' => [

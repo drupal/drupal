@@ -48,7 +48,7 @@ class AggregatorController extends ControllerBase {
    *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function feedAdd() {
-    $feed = $this->entityManager()->getStorage('aggregator_feed')->create();
+    $feed = $this->entityTypeManager()->getStorage('aggregator_feed')->create();
     return $this->entityFormBuilder()->getForm($feed);
   }
 
@@ -71,7 +71,7 @@ class AggregatorController extends ControllerBase {
     ];
     $build['feed_source'] = is_array($feed_source) ? $feed_source : ['#markup' => $feed_source];
     if ($items) {
-      $build['items'] = $this->entityManager()->getViewBuilder('aggregator_item')
+      $build['items'] = $this->entityTypeManager()->getViewBuilder('aggregator_item')
         ->viewMultiple($items, 'default');
       $build['pager'] = ['#type' => 'pager'];
     }
@@ -106,8 +106,8 @@ class AggregatorController extends ControllerBase {
    *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function adminOverview() {
-    $entity_manager = $this->entityManager();
-    $feeds = $entity_manager->getStorage('aggregator_feed')
+    $entity_type_manager = $this->entityTypeManager();
+    $feeds = $entity_type_manager->getStorage('aggregator_feed')
       ->loadMultiple();
 
     $header = [$this->t('Title'), $this->t('Items'), $this->t('Last update'), $this->t('Next update'), $this->t('Operations')];
@@ -116,7 +116,7 @@ class AggregatorController extends ControllerBase {
     foreach ($feeds as $feed) {
       $row = [];
       $row[] = $feed->toLink()->toString();
-      $row[] = $this->formatPlural($entity_manager->getStorage('aggregator_item')->getItemCount($feed), '1 item', '@count items');
+      $row[] = $this->formatPlural($entity_type_manager->getStorage('aggregator_item')->getItemCount($feed), '1 item', '@count items');
       $last_checked = $feed->getLastCheckedTime();
       $refresh_rate = $feed->getRefreshRate();
 
@@ -173,7 +173,7 @@ class AggregatorController extends ControllerBase {
    *   The rendered list of items for the feed.
    */
   public function pageLast() {
-    $items = $this->entityManager()->getStorage('aggregator_item')->loadAll(20);
+    $items = $this->entityTypeManager()->getStorage('aggregator_item')->loadAll(20);
     $build = $this->buildPageList($items);
     $build['#attached']['feed'][] = ['aggregator/rss', $this->config('system.site')->get('name') . ' ' . $this->t('aggregator')];
     return $build;

@@ -5,6 +5,7 @@ namespace Drupal\image\Controller;
 use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Render\Element\StatusMessages;
@@ -42,6 +43,13 @@ class QuickEditImageController extends ControllerBase {
   protected $imageFactory;
 
   /**
+   * The entity display repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $entityDisplayRepository;
+
+  /**
    * Constructs a new QuickEditImageController.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -50,11 +58,18 @@ class QuickEditImageController extends ControllerBase {
    *   The image factory.
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display repository service.
    */
-  public function __construct(RendererInterface $renderer, ImageFactory $image_factory, PrivateTempStoreFactory $temp_store_factory) {
+  public function __construct(RendererInterface $renderer, ImageFactory $image_factory, PrivateTempStoreFactory $temp_store_factory, EntityDisplayRepositoryInterface $entity_display_repository = NULL) {
     $this->renderer = $renderer;
     $this->imageFactory = $image_factory;
     $this->tempStore = $temp_store_factory->get('quickedit');
+    if (!$entity_display_repository) {
+      @trigger_error('The entity_display.repository service must be passed to QuickEditImageController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_display_repository = \Drupal::service('entity_display.repository');
+    }
+    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**
@@ -64,7 +79,8 @@ class QuickEditImageController extends ControllerBase {
     return new static(
       $container->get('renderer'),
       $container->get('image.factory'),
-      $container->get('tempstore.private')
+      $container->get('tempstore.private'),
+      $container->get('entity_display.repository')
     );
   }
 
@@ -115,7 +131,7 @@ class QuickEditImageController extends ControllerBase {
       $entity->$field_name->setValue($value);
 
       // Render the new image using the correct formatter settings.
-      $entity_view_mode_ids = array_keys($this->entityManager()->getViewModes($entity->getEntityTypeId()));
+      $entity_view_mode_ids = array_keys($this->entityDisplayRepository->getViewModes($entity->getEntityTypeId()));
       if (in_array($view_mode_id, $entity_view_mode_ids, TRUE)) {
         $output = $entity->$field_name->view($view_mode_id);
       }

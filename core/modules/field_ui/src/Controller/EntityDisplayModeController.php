@@ -18,7 +18,7 @@ class EntityDisplayModeController extends ControllerBase {
    */
   public function viewModeTypeSelection() {
     $entity_types = [];
-    foreach ($this->entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+    foreach ($this->entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
       if ($entity_type->get('field_ui_base_route') && $entity_type->hasViewBuilderClass()) {
         $entity_types[$entity_type_id] = [
           'title' => $entity_type->getLabel(),
@@ -41,7 +41,7 @@ class EntityDisplayModeController extends ControllerBase {
    */
   public function formModeTypeSelection() {
     $entity_types = [];
-    foreach ($this->entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+    foreach ($this->entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
       if ($entity_type->get('field_ui_base_route') && $entity_type->hasFormClasses()) {
         $entity_types[$entity_type_id] = [
           'title' => $entity_type->getLabel(),
