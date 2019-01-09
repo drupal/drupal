@@ -1922,7 +1922,7 @@ class FileScanDirectory extends FileFieldTestCase {
     $this->assertEqual(1, count($files), '1 text files found when ignoring directories called "frontend_framework".');
 
     // Make that directories specified by default still work when a new nomask is provided.
-    $files = file_scan_directory($this->path, '/\.txt$/', ['nomask' => '/^c.txt/']);
+    $files = file_scan_directory($this->path, '/\.txt$/', array('nomask' => '/^c.txt/'));
     $this->assertEqual(2, count($files), '2 text files found when an "nomask" option is passed in.');
 
     // Ensure that the directories in file_scan_ignore_directories are escaped using preg_quote.
