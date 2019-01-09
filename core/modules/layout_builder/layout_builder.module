@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
@@ -14,7 +15,6 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplayStorage;
 use Drupal\layout_builder\Form\LayoutBuilderEntityViewDisplayForm;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\Plugin\Block\ExtraFieldBlock;
 use Drupal\layout_builder\InlineBlockEntityOperations;
 use Drupal\Core\Session\AccountInterface;
@@ -106,7 +106,9 @@ function layout_builder_field_config_delete(FieldConfigInterface $field_config) 
  * @see layout_builder_module_implements_alter()
  */
 function layout_builder_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  if ($display instanceof LayoutEntityDisplayInterface) {
+  // Only replace extra fields when Layout Builder has been used to alter the
+  // build. See \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::buildMultiple().
+  if (isset($build['_layout_builder']) && !Element::isEmpty($build['_layout_builder'])) {
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
     $field_manager = \Drupal::service('entity_field.manager');
     $extra_fields = $field_manager->getExtraFields($entity->getEntityTypeId(), $entity->bundle());
