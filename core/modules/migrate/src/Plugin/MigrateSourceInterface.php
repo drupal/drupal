@@ -29,7 +29,7 @@ interface MigrateSourceInterface extends \Countable, \Iterator, PluginInspection
   /**
    * Adds additional data to the row.
    *
-   * @param \Drupal\Migrate\Row $row
+   * @param \Drupal\migrate\Row $row
    *   The row object.
    *
    * @return bool

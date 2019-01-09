@@ -99,7 +99,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
   /**
    * Reacts to map message event.
    *
-   * @param \Drupal\Migrate\Event\MigrateIdMapMessageEvent $event
+   * @param \Drupal\migrate\Event\MigrateIdMapMessageEvent $event
    *   The migration event.
    * @param string $name
    *   The event name.

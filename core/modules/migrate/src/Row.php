@@ -85,7 +85,7 @@ class Row {
   protected $emptyDestinationProperties = [];
 
   /**
-   * Constructs a \Drupal\Migrate\Row object.
+   * Constructs a \Drupal\migrate\Row object.
    *
    * @param array $values
    *   An array of values to add as properties on the object.

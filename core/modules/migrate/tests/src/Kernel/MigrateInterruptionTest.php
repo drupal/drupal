@@ -69,7 +69,7 @@ class MigrateInterruptionTest extends KernelTestBase {
   /**
    * Reacts to post-row-save event.
    *
-   * @param \Drupal\Migrate\Event\MigratePostRowSaveEvent $event
+   * @param \Drupal\migrate\Event\MigratePostRowSaveEvent $event
    *   The migration event.
    * @param string $name
    *   The event name.
