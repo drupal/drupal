@@ -14,7 +14,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
-use Drupal\media_library\Form\MediaLibraryUploadForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -43,13 +42,6 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
   protected $entityTypeManager;
 
   /**
-   * Indicates whether or not the add button should be shown.
-   *
-   * @var bool
-   */
-  protected $addAccess = FALSE;
-
-  /**
    * Constructs a MediaLibraryWidget widget.
    *
    * @param string $plugin_id
@@ -64,30 +56,23 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
    *   Any third party settings.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity type manager service.
-   * @param bool $add_access
-   *   Indicates whether or not the add button should be shown.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, $add_access) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
     $this->entityTypeManager = $entity_type_manager;
-    $this->addAccess = $add_access;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $settings = $configuration['field_definition']->getSettings()['handler_settings'];
-    $target_bundles = isset($settings['target_bundles']) ? $settings['target_bundles'] : NULL;
     return new static(
       $plugin_id,
       $plugin_definition,
       $configuration['field_definition'],
       $configuration['settings'],
       $configuration['third_party_settings'],
-      $container->get('entity_type.manager'),
-      // @todo Use URL access in https://www.drupal.org/node/2956747
-      MediaLibraryUploadForm::create($container)->access($target_bundles)->isAllowed()
+      $container->get('entity_type.manager')
     );
   }
 
@@ -247,7 +232,7 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     // Add a button that will load the Media library in a modal using AJAX.
     $element['media_library_open_button'] = [
       '#type' => 'link',
-      '#title' => $this->t('Browse media'),
+      '#title' => $this->t('Add media'),
       '#name' => $field_name . '-media-library-open-button' . $id_suffix,
       // @todo Make the view configurable in https://www.drupal.org/project/drupal/issues/2971209
       '#url' => Url::fromRoute('view.media_library.widget', [], [
@@ -261,23 +246,6 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       // Prevent errors in other widgets from preventing addition.
       '#limit_validation_errors' => $limit_validation_errors,
       '#access' => $cardinality_unlimited || $remaining > 0,
-    ];
-
-    $element['media_library_add_button'] = [
-      '#type' => 'link',
-      '#title' => $this->t('Add media'),
-      '#name' => $field_name . '-media-library-add-button' . $id_suffix,
-      '#url' => Url::fromRoute('media_library.upload', [], [
-        'query' => $query,
-      ]),
-      '#attributes' => [
-        'class' => ['button', 'use-ajax', 'media-library-add-button'],
-        'data-dialog-type' => 'modal',
-        'data-dialog-options' => $dialog_options,
-      ],
-      // Prevent errors in other widgets from preventing addition.
-      '#limit_validation_errors' => $limit_validation_errors,
-      '#access' => $this->addAccess && ($cardinality_unlimited || $remaining > 0),
     ];
 
     // This hidden field and button are used to add new items to the widget.

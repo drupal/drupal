@@ -341,12 +341,12 @@ class MediaLibraryTest extends WebDriverTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = $this->container->get('file_system');
 
-    // Ensure that the add button is not present if no media can be created.
-    $assert_session->elementNotExists('css', '.media-library-add-button[href*="field_noadd_media"]');
-
-    // Add to the twin media field using the add button directly on the widget.
-    $twin_button = $assert_session->elementExists('css', '.media-library-add-button[href*="field_twin_media"]');
+    // Add to the twin media field.
+    $twin_button = $assert_session->elementExists('css', '.media-library-open-button[href*="field_twin_media"]');
     $twin_button->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Media library');
+    $assert_session->elementExists('css', '#drupal-modal')->clickLink('Add media');
     $assert_session->assertWaitOnAjaxRequest();
 
     $page->attachFileToField('Upload', $this->container->get('file_system')->realpath($png_image->uri));
@@ -376,8 +376,11 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextContains($png_image->filename);
 
     // Also make sure that we can upload to the unlimited cardinality field.
-    $unlimited_button = $assert_session->elementExists('css', '.media-library-add-button[href*="field_unlimited_media"]');
+    $unlimited_button = $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]');
     $unlimited_button->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Media library');
+    $assert_session->elementExists('css', '#drupal-modal')->clickLink('Add media');
     $assert_session->assertWaitOnAjaxRequest();
 
     // Multiple uploads should be allowed.
