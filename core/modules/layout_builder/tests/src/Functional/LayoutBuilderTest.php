@@ -483,6 +483,23 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that extra fields work before and after enabling Layout Builder.
+   */
+  public function testExtraFields() {
+    $assert_session = $this->assertSession();
+
+    $this->drupalLogin($this->drupalCreateUser(['administer node display']));
+
+    $this->drupalGet('node');
+    $assert_session->linkExists('Read more');
+
+    $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display/default', ['layout[enabled]' => TRUE], 'Save');
+
+    $this->drupalGet('node');
+    $assert_session->linkExists('Read more');
+  }
+
+  /**
    * Tests that deleting a View block used in Layout Builder works.
    */
   public function testDeletedView() {
