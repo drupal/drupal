@@ -32,8 +32,6 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     'block',
     'node',
     'contextual',
-    // @todo Remove after https://www.drupal.org/project/drupal/issues/2901792.
-    'no_transitions_css',
   ];
 
   /**
