@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\ConfigValueException;
 use Drupal\Core\Config\InstallStorage;
@@ -38,20 +39,44 @@ class ConfigCRUDTest extends KernelTestBase {
    * Tests CRUD operations.
    */
   public function testCRUD() {
+    $event_dispatcher = $this->container->get('event_dispatcher');
+    $typed_config_manager = $this->container->get('config.typed');
+
     $storage = $this->container->get('config.storage');
+    $collection_storage = $storage->createCollection('test_collection');
+
     $config_factory = $this->container->get('config.factory');
     $name = 'config_test.crud';
 
+    // Create a new configuration object in the default collection.
     $config = $this->config($name);
     $this->assertIdentical($config->isNew(), TRUE);
 
-    // Create a new configuration object.
     $config->set('value', 'initial');
     $config->save();
     $this->assertIdentical($config->isNew(), FALSE);
 
     // Verify the active configuration contains the saved value.
     $actual_data = $storage->read($name);
+    $this->assertIdentical($actual_data, ['value' => 'initial']);
+
+    // Verify the config factory contains the saved value.
+    $actual_data = $config_factory->get($name)->getRawData();
+    $this->assertIdentical($actual_data, ['value' => 'initial']);
+
+    // Create another instance of the config object using a custom collection.
+    $collection_config = new Config(
+      $name,
+      $collection_storage,
+      $event_dispatcher,
+      $typed_config_manager
+    );
+    $collection_config->set('value', 'overridden');
+    $collection_config->save();
+
+    // Verify that the config factory still returns the right value, from the
+    // config instance in the default collection.
+    $actual_data = $config_factory->get($name)->getRawData();
     $this->assertIdentical($actual_data, ['value' => 'initial']);
 
     // Update the configuration object instance.
@@ -70,6 +95,14 @@ class ConfigCRUDTest extends KernelTestBase {
 
     // Pollute the config factory static cache.
     $config_factory->getEditable($name);
+
+    // Delete the config object that uses a custom collection. This should not
+    // affect the instance returned by the config factory which depends on the
+    // default collection storage.
+    $collection_config->delete();
+    $actual_config = $config_factory->get($name);
+    $this->assertIdentical($actual_config->isNew(), FALSE);
+    $this->assertIdentical($actual_config->getRawData(), ['value' => 'instance-update']);
 
     // Delete the configuration object.
     $config->delete();
