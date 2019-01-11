@@ -335,10 +335,18 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *   The configuration event.
    */
   public function onConfigSave(ConfigCrudEvent $event) {
+    $saved_config = $event->getConfig();
+
+    // We are only concerned with config objects that belong to the collection
+    // that matches the storage we depend on. Skip if the event was fired for a
+    // config object belonging to a different collection.
+    if ($saved_config->getStorage()->getCollectionName() !== $this->storage->getCollectionName()) {
+      return;
+    }
+
     // Ensure that the static cache contains up to date configuration objects by
     // replacing the data on any entries for the configuration object apart
     // from the one that references the actual config object being saved.
-    $saved_config = $event->getConfig();
     foreach ($this->getConfigCacheKeys($saved_config->getName()) as $cache_key) {
       $cached_config = $this->cache[$cache_key];
       if ($cached_config !== $saved_config) {
@@ -356,8 +364,17 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *   The configuration event.
    */
   public function onConfigDelete(ConfigCrudEvent $event) {
+    $deleted_config = $event->getConfig();
+
+    // We are only concerned with config objects that belong to the collection
+    // that matches the storage we depend on. Skip if the event was fired for a
+    // config object belonging to a different collection.
+    if ($deleted_config->getStorage()->getCollectionName() !== $this->storage->getCollectionName()) {
+      return;
+    }
+
     // Ensure that the static cache does not contain deleted configuration.
-    foreach ($this->getConfigCacheKeys($event->getConfig()->getName()) as $cache_key) {
+    foreach ($this->getConfigCacheKeys($deleted_config->getName()) as $cache_key) {
       unset($this->cache[$cache_key]);
     }
   }
