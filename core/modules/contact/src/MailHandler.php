@@ -2,7 +2,7 @@
 
 namespace Drupal\contact;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -56,15 +56,15 @@ class MailHandler implements MailHandlerInterface {
    *   A logger instance.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   String translation service.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   Entity manager service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(MailManagerInterface $mail_manager, LanguageManagerInterface $language_manager, LoggerInterface $logger, TranslationInterface $string_translation, EntityManagerInterface $entity_manager) {
+  public function __construct(MailManagerInterface $mail_manager, LanguageManagerInterface $language_manager, LoggerInterface $logger, TranslationInterface $string_translation, EntityTypeManagerInterface $entity_type_manager) {
     $this->languageManager = $language_manager;
     $this->mailManager = $mail_manager;
     $this->logger = $logger;
     $this->stringTranslation = $string_translation;
-    $this->userStorage = $entity_manager->getStorage('user');
+    $this->userStorage = $entity_type_manager->getStorage('user');
   }
 
   /**

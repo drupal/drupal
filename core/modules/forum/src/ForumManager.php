@@ -5,7 +5,9 @@ namespace Drupal\forum;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -21,6 +23,12 @@ class ForumManager implements ForumManagerInterface {
     __wakeup as defaultWakeup;
     __sleep as defaultSleep;
   }
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Forum sort order, newest first.
@@ -50,11 +58,18 @@ class ForumManager implements ForumManagerInterface {
   protected $configFactory;
 
   /**
-   * Entity manager service
+   * Entity field manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
-  protected $entityManager;
+  protected $entityFieldManager;
+
+  /**
+   * Entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * Database connection
@@ -110,21 +125,28 @@ class ForumManager implements ForumManagerInterface {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Database\Connection $connection
    *   The current database connection.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager service.
    * @param \Drupal\comment\CommentManagerInterface $comment_manager
    *   The comment manager service.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager, EntityFieldManagerInterface $entity_field_manager = NULL) {
     $this->configFactory = $config_factory;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
     $this->connection = $connection;
     $this->stringTranslation = $string_translation;
     $this->commentManager = $comment_manager;
+    if (!$entity_field_manager) {
+      @trigger_error('The entity_field.manager service must be passed to ForumManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+    }
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -173,7 +195,7 @@ class ForumManager implements ForumManagerInterface {
       $nids[] = $record->nid;
     }
     if ($nids) {
-      $nodes = $this->entityManager->getStorage('node')->loadMultiple($nids);
+      $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
 
       $query = $this->connection->select('node_field_data', 'n')
         ->extend('Drupal\Core\Database\Query\TableSortExtender');
@@ -400,7 +422,7 @@ class ForumManager implements ForumManagerInterface {
       return $this->forumChildren[$tid];
     }
     $forums = [];
-    $_forums = $this->entityManager->getStorage('taxonomy_term')->loadTree($vid, $tid, NULL, TRUE);
+    $_forums = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid, $tid, NULL, TRUE);
     foreach ($_forums as $forum) {
       // Merge in the topic and post counters.
       if (($count = $this->getForumStatistics($forum->id()))) {
@@ -430,7 +452,7 @@ class ForumManager implements ForumManagerInterface {
     }
 
     $vid = $this->configFactory->get('forum.settings')->get('vocabulary');
-    $index = $this->entityManager->getStorage('taxonomy_term')->create([
+    $index = $this->entityTypeManager->getStorage('taxonomy_term')->create([
       'tid' => 0,
       'container' => 1,
       'parents' => [],
@@ -458,7 +480,7 @@ class ForumManager implements ForumManagerInterface {
    * {@inheritdoc}
    */
   public function getParents($tid) {
-    return $this->entityManager->getStorage('taxonomy_term')->loadAllParents($tid);
+    return $this->entityTypeManager->getStorage('taxonomy_term')->loadAllParents($tid);
   }
 
   /**
@@ -466,7 +488,7 @@ class ForumManager implements ForumManagerInterface {
    */
   public function checkNodeType(NodeInterface $node) {
     // Fetch information about the forum field.
-    $field_definitions = $this->entityManager->getFieldDefinitions('node', $node->bundle());
+    $field_definitions = $this->entityFieldManager->getFieldDefinitions('node', $node->bundle());
     return !empty($field_definitions['taxonomy_forums']);
   }
 

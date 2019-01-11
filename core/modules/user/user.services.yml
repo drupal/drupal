@@ -37,17 +37,17 @@ services:
       - { name: event_subscriber }
   user_last_access_subscriber:
     class: Drupal\user\EventSubscriber\UserRequestSubscriber
-    arguments: ['@current_user', '@entity.manager']
+    arguments: ['@current_user', '@entity_type.manager']
     tags:
       - { name: event_subscriber }
   theme.negotiator.admin_theme:
     class: Drupal\user\Theme\AdminNegotiator
-    arguments: ['@current_user', '@config.factory', '@entity.manager', '@router.admin_context']
+    arguments: ['@current_user', '@config.factory', '@entity_type.manager', '@router.admin_context']
     tags:
       - { name: theme_negotiator, priority: -40 }
   user.auth:
     class: Drupal\user\UserAuth
-    arguments: ['@entity.manager', '@password']
+    arguments: ['@entity_type.manager', '@password']
   user.private_tempstore:
     class: Drupal\user\PrivateTempStoreFactory
     arguments: ['@keyvalue.expirable', '@lock', '@current_user', '@request_stack', '%tempstore.expire%']
@@ -65,7 +65,7 @@ services:
     arguments: ['@module_handler', '@string_translation', '@controller_resolver']
   user.current_user_context:
     class: Drupal\user\ContextProvider\CurrentUserContext
-    arguments: ['@current_user', '@entity.manager']
+    arguments: ['@current_user', '@entity_type.manager']
     tags:
       - { name: 'context_provider' }
   user.toolbar_link_builder:

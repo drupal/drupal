@@ -3,7 +3,8 @@
 namespace Drupal\field_ui\Access;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -15,22 +16,28 @@ use Symfony\Component\Routing\Route;
  * @see \Drupal\Core\Entity\Entity\EntityFormMode
  */
 class FormModeAccessCheck implements AccessInterface {
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityManager;
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * Creates a new FormModeAccessCheck.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -60,7 +67,7 @@ class FormModeAccessCheck implements AccessInterface {
     $access = AccessResult::neutral();
     if ($entity_type_id = $route->getDefault('entity_type_id')) {
       if (empty($bundle)) {
-        $entity_type = $this->entityManager->getDefinition($entity_type_id);
+        $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         $bundle = $route_match->getRawParameter($entity_type->getBundleEntityType());
       }
 
@@ -68,7 +75,7 @@ class FormModeAccessCheck implements AccessInterface {
       if ($form_mode_name == 'default') {
         $visibility = TRUE;
       }
-      elseif ($entity_display = $this->entityManager->getStorage('entity_form_display')->load($entity_type_id . '.' . $bundle . '.' . $form_mode_name)) {
+      elseif ($entity_display = $this->entityTypeManager->getStorage('entity_form_display')->load($entity_type_id . '.' . $bundle . '.' . $form_mode_name)) {
         $visibility = $entity_display->status();
       }
 

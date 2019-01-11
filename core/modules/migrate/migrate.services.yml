@@ -17,7 +17,7 @@ services:
     arguments: [process, '@container.namespaces', '@cache.discovery', '@module_handler', 'Drupal\migrate\Annotation\MigrateProcessPlugin']
   plugin.manager.migrate.destination:
     class: Drupal\migrate\Plugin\MigrateDestinationPluginManager
-    arguments: [destination, '@container.namespaces', '@cache.discovery', '@module_handler', '@entity.manager']
+    arguments: [destination, '@container.namespaces', '@cache.discovery', '@module_handler', '@entity_type.manager']
   plugin.manager.migrate.id_map:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [id_map, '@container.namespaces', '@cache.discovery', '@module_handler']

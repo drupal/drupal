@@ -7,5 +7,5 @@ services:
     class: Drupal\filter\FilterUninstallValidator
     tags:
       - { name: module_install.uninstall_validator }
-    arguments: ['@plugin.manager.filter', '@entity.manager', '@string_translation']
+    arguments: ['@plugin.manager.filter', '@entity_type.manager', '@string_translation']
     lazy: true

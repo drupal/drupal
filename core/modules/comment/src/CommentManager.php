@@ -4,8 +4,10 @@ namespace Drupal\comment;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -21,13 +23,26 @@ use Drupal\user\RoleInterface;
  */
 class CommentManager implements CommentManagerInterface {
   use StringTranslationTrait;
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * The entity manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityManager;
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * Whether the \Drupal\user\RoleInterface::AUTHENTICATED_ID can post comments.
@@ -60,8 +75,8 @@ class CommentManager implements CommentManagerInterface {
   /**
    * Construct the CommentManager object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
@@ -70,25 +85,32 @@ class CommentManager implements CommentManagerInterface {
    *   The module handler service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler, AccountInterface $current_user, EntityFieldManagerInterface $entity_field_manager = NULL) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->userConfig = $config_factory->get('user.settings');
     $this->stringTranslation = $string_translation;
     $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
+    if (!$entity_field_manager) {
+      @trigger_error('The entity_field.manager service must be passed to CommentManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+    }
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFields($entity_type_id) {
-    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       return [];
     }
 
-    $map = $this->entityManager->getFieldMapByFieldType('comment');
+    $map = $this->entityFieldManager->getFieldMapByFieldType('comment');
     return isset($map[$entity_type_id]) ? $map[$entity_type_id] : [];
   }
 
@@ -98,7 +120,7 @@ class CommentManager implements CommentManagerInterface {
   public function addBodyField($comment_type_id) {
     if (!FieldConfig::loadByName('comment', $comment_type_id, 'comment_body')) {
       // Attaches the body field by default.
-      $field = $this->entityManager->getStorage('field_config')->create([
+      $field = $this->entityTypeManager->getStorage('field_config')->create([
         'label' => 'Comment',
         'bundle' => $comment_type_id,
         'required' => TRUE,
@@ -131,7 +153,7 @@ class CommentManager implements CommentManagerInterface {
     if (!isset($this->authenticatedCanPostComments)) {
       // We only output a link if we are certain that users will get the
       // permission to post comments by logging in.
-      $this->authenticatedCanPostComments = $this->entityManager
+      $this->authenticatedCanPostComments = $this->entityTypeManager
         ->getStorage('user_role')
         ->load(RoleInterface::AUTHENTICATED_ID)
         ->hasPermission('post comments');
@@ -196,7 +218,7 @@ class CommentManager implements CommentManagerInterface {
       $timestamp = ($timestamp > HISTORY_READ_LIMIT ? $timestamp : HISTORY_READ_LIMIT);
 
       // Use the timestamp to retrieve the number of new comments.
-      $query = $this->entityManager->getStorage('comment')->getQuery()
+      $query = $this->entityTypeManager->getStorage('comment')->getQuery()
         ->condition('entity_type', $entity->getEntityTypeId())
         ->condition('entity_id', $entity->id())
         ->condition('created', $timestamp, '>')

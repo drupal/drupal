@@ -5,4 +5,4 @@ services:
 
   search.search_page_repository:
     class: Drupal\search\SearchPageRepository
-    arguments: ['@config.factory', '@entity.manager']
+    arguments: ['@config.factory', '@entity_type.manager']

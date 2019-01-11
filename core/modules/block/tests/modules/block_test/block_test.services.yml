@@ -1,6 +1,6 @@
 services:
   block_test.multiple_static_context:
     class: Drupal\block_test\ContextProvider\MultipleStaticContext
-    arguments: ['@current_user', '@entity.manager']
+    arguments: ['@current_user', '@entity_type.manager']
     tags:
       - { name: 'context_provider' }

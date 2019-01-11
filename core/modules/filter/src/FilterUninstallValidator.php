@@ -3,7 +3,7 @@
 namespace Drupal\filter;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -34,14 +34,14 @@ class FilterUninstallValidator implements ModuleUninstallValidatorInterface {
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $filter_manager
    *   The filter plugin manager.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(PluginManagerInterface $filter_manager, EntityManagerInterface $entity_manager, TranslationInterface $string_translation) {
+  public function __construct(PluginManagerInterface $filter_manager, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
     $this->filterManager = $filter_manager;
-    $this->filterStorage = $entity_manager->getStorage('filter_format');
+    $this->filterStorage = $entity_type_manager->getStorage('filter_format');
     $this->stringTranslation = $string_translation;
   }
 

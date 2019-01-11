@@ -2,7 +2,7 @@
 
 namespace Drupal\field_ui\Routing;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\Routing\Route;
@@ -14,27 +14,27 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteSubscriber extends RouteSubscriberBase {
 
   /**
-   * The entity type manager
+   * The entity type manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $manager;
+  protected $entityTypeManager;
 
   /**
    * Constructs a RouteSubscriber object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $manager
-   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct(EntityManagerInterface $manager) {
-    $this->manager = $manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection) {
-    foreach ($this->manager->getDefinitions() as $entity_type_id => $entity_type) {
+    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       if ($route_name = $entity_type->get('field_ui_base_route')) {
         // Try to get the route from the current collection.
         if (!$entity_route = $collection->get($route_name)) {

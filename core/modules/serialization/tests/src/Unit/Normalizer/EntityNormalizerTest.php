@@ -2,6 +2,9 @@
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\serialization\Normalizer\EntityNormalizer;
@@ -15,11 +18,25 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 class EntityNormalizerTest extends UnitTestCase {
 
   /**
-   * The mock entity manager.
+   * The mock entity field manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityFieldManager;
+
+  /**
+   * The mock entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The mock entity type repository.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityTypeRepository;
 
   /**
    * The mock serializer.
@@ -39,8 +56,15 @@ class EntityNormalizerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $this->entityNormalizer = new EntityNormalizer($this->entityManager);
+    $this->entityFieldManager = $this->createMock(EntityFieldManagerInterface::class);
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
+    $this->entityTypeRepository = $this->createMock(EntityTypeRepositoryInterface::class);
+
+    $this->entityNormalizer = new EntityNormalizer(
+      $this->entityTypeManager,
+      $this->entityTypeRepository,
+      $this->entityFieldManager
+    );
   }
 
   /**
@@ -141,11 +165,11 @@ class EntityNormalizerTest extends UnitTestCase {
       'test_type' => $entity_type_definition,
     ];
 
-    $this->entityManager->expects($this->at(0))
+    $this->entityTypeManager->expects($this->at(0))
       ->method('getDefinition')
       ->with('test')
       ->will($this->returnValue($entity_type));
-    $this->entityManager->expects($this->at(1))
+    $this->entityFieldManager->expects($this->at(0))
       ->method('getBaseFieldDefinitions')
       ->with('test')
       ->will($this->returnValue($base_definitions));
@@ -160,7 +184,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->method('getQuery')
       ->will($this->returnValue($entity_query_mock));
 
-    $this->entityManager->expects($this->at(2))
+    $this->entityTypeManager->expects($this->at(1))
       ->method('getStorage')
       ->with('test_bundle')
       ->will($this->returnValue($entity_type_storage));
@@ -189,7 +213,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->with($expected_test_data)
       ->will($this->returnValue($entity));
 
-    $this->entityManager->expects($this->at(3))
+    $this->entityTypeManager->expects($this->at(2))
       ->method('getStorage')
       ->with('test')
       ->will($this->returnValue($storage));
@@ -262,11 +286,11 @@ class EntityNormalizerTest extends UnitTestCase {
       'test_type' => $entity_type_definition,
     ];
 
-    $this->entityManager->expects($this->at(0))
+    $this->entityTypeManager->expects($this->at(0))
       ->method('getDefinition')
       ->with('test')
       ->will($this->returnValue($entity_type));
-    $this->entityManager->expects($this->at(1))
+    $this->entityFieldManager->expects($this->at(0))
       ->method('getBaseFieldDefinitions')
       ->with('test')
       ->will($this->returnValue($base_definitions));
@@ -281,7 +305,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->method('getQuery')
       ->will($this->returnValue($entity_query_mock));
 
-    $this->entityManager->expects($this->at(2))
+    $this->entityTypeManager->expects($this->at(1))
       ->method('getStorage')
       ->with('test_bundle')
       ->will($this->returnValue($entity_type_storage));
@@ -313,7 +337,7 @@ class EntityNormalizerTest extends UnitTestCase {
     $entity_type->expects($this->never())
       ->method('getKey');
 
-    $this->entityManager->expects($this->once())
+    $this->entityTypeManager->expects($this->once())
       ->method('getDefinition')
       ->with('test')
       ->will($this->returnValue($entity_type));
@@ -337,12 +361,12 @@ class EntityNormalizerTest extends UnitTestCase {
       ->with([])
       ->will($this->returnValue($entity));
 
-    $this->entityManager->expects($this->once())
+    $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with('test')
       ->will($this->returnValue($storage));
 
-    $this->entityManager->expects($this->never())
+    $this->entityFieldManager->expects($this->never())
       ->method('getBaseFieldDefinitions');
 
     // Setup expectations for the serializer. This will be called for each field
@@ -383,7 +407,7 @@ class EntityNormalizerTest extends UnitTestCase {
     $entity_type->expects($this->never())
       ->method('getKey');
 
-    $this->entityManager->expects($this->once())
+    $this->entityTypeManager->expects($this->once())
       ->method('getDefinition')
       ->with('test')
       ->will($this->returnValue($entity_type));
@@ -394,12 +418,12 @@ class EntityNormalizerTest extends UnitTestCase {
       ->with($test_data)
       ->will($this->returnValue($this->getMock('Drupal\Core\Entity\EntityInterface')));
 
-    $this->entityManager->expects($this->once())
+    $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with('test')
       ->will($this->returnValue($storage));
 
-    $this->entityManager->expects($this->never())
+    $this->entityFieldManager->expects($this->never())
       ->method('getBaseFieldDefinitions');
 
     $this->assertNotNull($this->entityNormalizer->denormalize($test_data, 'Drupal\Core\Entity\ContentEntityBase', NULL, ['entity_type' => 'test']));

@@ -5,7 +5,8 @@ namespace Drupal\forum\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -15,11 +16,17 @@ use Drupal\forum\ForumManagerInterface;
 /**
  * Provides a forum breadcrumb base class.
  *
- * This just holds the dependency-injected config, entity manager, and forum
- * manager objects.
+ * This just holds the dependency-injected config, entity type manager, and
+ * forum manager objects.
  */
 abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Configuration object for this builder.
@@ -29,11 +36,11 @@ abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface 
   protected $config;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The forum manager service.
@@ -52,8 +59,8 @@ abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface 
   /**
    * Constructs a forum breadcrumb builder object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    * @param \Drupal\forum\ForumManagerInterface $forum_manager
@@ -61,12 +68,12 @@ abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface 
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, ForumManagerInterface $forum_manager, TranslationInterface $string_translation) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, ForumManagerInterface $forum_manager, TranslationInterface $string_translation) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->config = $config_factory->get('forum.settings');
     $this->forumManager = $forum_manager;
     $this->setStringTranslation($string_translation);
-    $this->termStorage = $entity_manager->getStorage('taxonomy_term');
+    $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
   }
 
   /**
@@ -78,7 +85,7 @@ abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface 
 
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
 
-    $vocabulary = $this->entityManager
+    $vocabulary = $this->entityTypeManager
       ->getStorage('taxonomy_vocabulary')
       ->load($this->config->get('vocabulary'));
     $breadcrumb->addCacheableDependency($vocabulary);

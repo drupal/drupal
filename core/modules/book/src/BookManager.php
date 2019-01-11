@@ -4,7 +4,8 @@ namespace Drupal\book;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -19,6 +20,12 @@ use Drupal\node\NodeInterface;
  */
 class BookManager implements BookManagerInterface {
   use StringTranslationTrait;
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Defines the maximum supported depth of the book tree.
@@ -26,11 +33,11 @@ class BookManager implements BookManagerInterface {
   const BOOK_MAX_DEPTH = 9;
 
   /**
-   * Entity manager Service Object.
+   * Entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * Config Factory Service Object.
@@ -69,9 +76,20 @@ class BookManager implements BookManagerInterface {
 
   /**
    * Constructs a BookManager object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
+   *   The string translation service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Drupal\book\BookOutlineStorageInterface $book_outline_storage
+   *   The book outline storage.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(EntityManagerInterface $entity_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, BookOutlineStorageInterface $book_outline_storage, RendererInterface $renderer) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, BookOutlineStorageInterface $book_outline_storage, RendererInterface $renderer) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->stringTranslation = $translation;
     $this->configFactory = $config_factory;
     $this->bookOutlineStorage = $book_outline_storage;
@@ -97,7 +115,7 @@ class BookManager implements BookManagerInterface {
 
     if ($nids) {
       $book_links = $this->bookOutlineStorage->loadMultiple($nids);
-      $nodes = $this->entityManager->getStorage('node')->loadMultiple($nids);
+      $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
       // @todo: Sort by weight and translated title.
 
       // @todo: use route name for links, not system path.
@@ -413,7 +431,7 @@ class BookManager implements BookManagerInterface {
       }
     }
 
-    $nodes = $this->entityManager->getStorage('node')->loadMultiple($nids);
+    $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
 
     foreach ($tree as $data) {
       $nid = $data['link']['nid'];
@@ -449,7 +467,7 @@ class BookManager implements BookManagerInterface {
     if ($nid == $original['bid']) {
       // Handle deletion of a top-level post.
       $result = $this->bookOutlineStorage->loadBookChildren($nid);
-      $children = $this->entityManager->getStorage('node')->loadMultiple(array_keys($result));
+      $children = $this->entityTypeManager->getStorage('node')->loadMultiple(array_keys($result));
       foreach ($children as $child) {
         $child->book['bid'] = $child->id();
         $this->updateOutline($child);
@@ -576,7 +594,7 @@ class BookManager implements BookManagerInterface {
       // Allow book-specific theme overrides.
       $element['attributes'] = new Attribute();
       $element['title'] = $data['link']['title'];
-      $node = $this->entityManager->getStorage('node')->load($data['link']['nid']);
+      $node = $this->entityTypeManager->getStorage('node')->load($data['link']['nid']);
       $element['url'] = $node->toUrl();
       $element['localized_options'] = !empty($data['link']['localized_options']) ? $data['link']['localized_options'] : [];
       $element['localized_options']['set_active_class'] = TRUE;
@@ -995,14 +1013,14 @@ class BookManager implements BookManagerInterface {
     $node = NULL;
     // Access will already be set in the tree functions.
     if (!isset($link['access'])) {
-      $node = $this->entityManager->getStorage('node')->load($link['nid']);
+      $node = $this->entityTypeManager->getStorage('node')->load($link['nid']);
       $link['access'] = $node && $node->access('view');
     }
     // For performance, don't localize a link the user can't access.
     if ($link['access']) {
       // @todo - load the nodes en-mass rather than individually.
       if (!$node) {
-        $node = $this->entityManager->getStorage('node')
+        $node = $this->entityTypeManager->getStorage('node')
           ->load($link['nid']);
       }
       // The node label will be the value for the current user's language.

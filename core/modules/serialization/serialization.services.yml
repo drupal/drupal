@@ -6,17 +6,17 @@ services:
     class: Drupal\serialization\Normalizer\ConfigEntityNormalizer
     tags:
       - { name: normalizer }
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager', '@entity_type.repository', '@entity_field.manager']
   serializer.normalizer.content_entity:
-      class: Drupal\serialization\Normalizer\ContentEntityNormalizer
-      tags:
-        - { name: normalizer }
-      arguments: ['@entity.manager']
+    class: Drupal\serialization\Normalizer\ContentEntityNormalizer
+    tags:
+      - { name: normalizer }
+    arguments: ['@entity_type.manager', '@entity_type.repository', '@entity_field.manager']
   serializer.normalizer.entity:
     class: Drupal\serialization\Normalizer\EntityNormalizer
     tags:
       - { name: normalizer }
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager', '@entity_type.repository', '@entity_field.manager']
   serializer.normalizer.primitive_data:
     class: Drupal\serialization\Normalizer\PrimitiveDataNormalizer
     tags:

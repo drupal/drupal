@@ -2,7 +2,8 @@
 
 namespace Drupal\user\EventSubscriber;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -13,6 +14,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Updates the current user's last access time.
  */
 class UserRequestSubscriber implements EventSubscriberInterface {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The current account.
@@ -22,23 +29,23 @@ class UserRequestSubscriber implements EventSubscriberInterface {
   protected $account;
 
   /**
-   * The entity manager.
+   * The entity type manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * Constructs a new UserRequestSubscriber.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct(AccountInterface $account, EntityManagerInterface $entity_manager) {
+  public function __construct(AccountInterface $account, EntityTypeManagerInterface $entity_type_manager) {
     $this->account = $account;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -51,7 +58,7 @@ class UserRequestSubscriber implements EventSubscriberInterface {
     if ($this->account->isAuthenticated() && REQUEST_TIME - $this->account->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
       // Do that no more than once per 180 seconds.
       /** @var \Drupal\user\UserStorageInterface $storage */
-      $storage = $this->entityManager->getStorage('user');
+      $storage = $this->entityTypeManager->getStorage('user');
       $storage->updateLastAccessTimestamp($this->account, REQUEST_TIME);
     }
   }

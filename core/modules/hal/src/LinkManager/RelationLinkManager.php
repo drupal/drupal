@@ -5,12 +5,21 @@ namespace Drupal\hal\LinkManager;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class RelationLinkManager extends LinkManagerBase implements RelationLinkManagerInterface {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * @var \Drupal\Core\Cache\CacheBackendInterface
@@ -18,11 +27,25 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
   protected $cache;
 
   /**
-   * Entity manager.
+   * The entity field manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
-  protected $entityManager;
+  protected $entityFieldManager;
+
+  /**
+   * The entity bundle info.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * Module handler service.
@@ -36,18 +59,32 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache of relation URIs and their associated Typed Data IDs.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
    */
-  public function __construct(CacheBackendInterface $cache, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, RequestStack $request_stack) {
+  public function __construct(CacheBackendInterface $cache, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, RequestStack $request_stack, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, EntityFieldManagerInterface $entity_field_manager = NULL) {
     $this->cache = $cache;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
+    if (!$entity_type_bundle_info) {
+      @trigger_error('The entity_type.bundle.info service must be passed to RelationLinkManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
+    }
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    if (!$entity_field_manager) {
+      @trigger_error('The entity_field.manager service must be passed to RelationLinkManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+    }
+    $this->entityFieldManager = $entity_field_manager;
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->requestStack = $request_stack;
@@ -123,7 +160,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
 
     // @todo https://www.drupal.org/node/2716163 Remove this in Drupal 9.0.
     foreach ($data as $relation_uri => $ids) {
-      $data[$relation_uri]['entity_type'] = $this->entityManager->getDefinition($ids['entity_type_id']);
+      $data[$relation_uri]['entity_type'] = $this->entityTypeManager->getDefinition($ids['entity_type_id']);
     }
     return $data;
   }
@@ -145,10 +182,10 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
   protected function writeCache($context = []) {
     $data = [];
 
-    foreach ($this->entityManager->getDefinitions() as $entity_type) {
+    foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
       if ($entity_type instanceof ContentEntityTypeInterface) {
-        foreach ($this->entityManager->getBundleInfo($entity_type->id()) as $bundle => $bundle_info) {
-          foreach ($this->entityManager->getFieldDefinitions($entity_type->id(), $bundle) as $field_definition) {
+        foreach ($this->entityTypeBundleInfo->getBundleInfo($entity_type->id()) as $bundle => $bundle_info) {
+          foreach ($this->entityFieldManager->getFieldDefinitions($entity_type->id(), $bundle) as $field_definition) {
             $relation_uri = $this->getRelationUri($entity_type->id(), $bundle, $field_definition->getName(), $context);
             $data[$relation_uri] = [
               'entity_type_id' => $entity_type->id(),

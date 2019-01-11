@@ -10,17 +10,17 @@ services:
       - { name: backend_overridable }
   access_check.node.revision:
     class: Drupal\node\Access\NodeRevisionAccessCheck
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager']
     tags:
       - { name: access_check, applies_to: _access_node_revision }
   access_check.node.add:
     class: Drupal\node\Access\NodeAddAccessCheck
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager']
     tags:
       - { name: access_check, applies_to: _node_add_access }
   access_check.node.preview:
     class: Drupal\node\Access\NodePreviewAccessCheck
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager']
     tags:
       - { name: access_check, applies_to: _node_preview_access }
   node.admin_path.route_subscriber:

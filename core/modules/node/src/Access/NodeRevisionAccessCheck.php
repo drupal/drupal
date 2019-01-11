@@ -3,7 +3,7 @@
 namespace Drupal\node\Access;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
@@ -40,12 +40,12 @@ class NodeRevisionAccessCheck implements AccessInterface {
   /**
    * Constructs a new NodeRevisionAccessCheck.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->nodeStorage = $entity_manager->getStorage('node');
-    $this->nodeAccess = $entity_manager->getAccessControlHandler('node');
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->nodeStorage = $entity_type_manager->getStorage('node');
+    $this->nodeAccess = $entity_type_manager->getAccessControlHandler('node');
   }
 
   /**

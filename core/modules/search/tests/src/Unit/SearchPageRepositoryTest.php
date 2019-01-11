@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\search\Unit;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\search\Entity\SearchPage;
 use Drupal\search\SearchPageRepository;
 use Drupal\Tests\UnitTestCase;
@@ -56,13 +57,14 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->method('getQuery')
       ->will($this->returnValue($this->query));
 
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $entity_manager->expects($this->any())
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject $entity_type_manager */
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $entity_type_manager->expects($this->any())
       ->method('getStorage')
       ->will($this->returnValue($this->storage));
 
     $this->configFactory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
-    $this->searchPageRepository = new SearchPageRepository($this->configFactory, $entity_manager);
+    $this->searchPageRepository = new SearchPageRepository($this->configFactory, $entity_type_manager);
   }
 
   /**

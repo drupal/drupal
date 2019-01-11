@@ -4,7 +4,7 @@ namespace Drupal\comment;
 
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Breadcrumb\Breadcrumb;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -25,11 +25,11 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * Constructs the CommentBreadcrumbBuilder.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->storage = $entity_manager->getStorage('comment');
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->storage = $entity_type_manager->getStorage('comment');
   }
 
   /**

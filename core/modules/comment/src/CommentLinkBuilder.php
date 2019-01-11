@@ -4,7 +4,8 @@ namespace Drupal\comment;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -20,6 +21,12 @@ use Drupal\Core\Url;
 class CommentLinkBuilder implements CommentLinkBuilderInterface {
 
   use StringTranslationTrait;
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Current user.
@@ -43,11 +50,11 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
   protected $moduleHandler;
 
   /**
-   * The entity manager service.
+   * The entity type manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * Constructs a new CommentLinkBuilder object.
@@ -60,15 +67,15 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
    *   Module handler service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   String translation service.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(AccountInterface $current_user, CommentManagerInterface $comment_manager, ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, EntityManagerInterface $entity_manager) {
+  public function __construct(AccountInterface $current_user, CommentManagerInterface $comment_manager, ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, EntityTypeManagerInterface $entity_type_manager) {
     $this->currentUser = $current_user;
     $this->commentManager = $comment_manager;
     $this->moduleHandler = $module_handler;
     $this->stringTranslation = $string_translation;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -201,7 +208,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
           $entity_links['comment__' . $field_name]['#attached']['drupalSettings']['history']['lastReadTimestamps'][$entity->id()] = (int) history_read($entity->id());
           $new_comments = $this->commentManager->getCountNewComments($entity);
           if ($new_comments > 0) {
-            $page_number = $this->entityManager
+            $page_number = $this->entityTypeManager
               ->getStorage('comment')
               ->getNewCommentPageNumber($entity->{$field_name}->comment_count, $new_comments, $entity, $field_name);
             $query = $page_number ? ['page' => $page_number] : NULL;

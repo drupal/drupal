@@ -5,11 +5,20 @@ namespace Drupal\hal\LinkManager;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterface {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Injected cache backend.
@@ -33,6 +42,13 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
   protected $bundleInfoService;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
@@ -45,13 +61,21 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
    *   The request stack.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info_service
    *   The bundle info service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, RequestStack $request_stack, EntityTypeBundleInfoInterface $bundle_info_service) {
+  public function __construct(CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, RequestStack $request_stack, EntityTypeBundleInfoInterface $bundle_info_service, EntityTypeManagerInterface $entity_type_manager = NULL) {
     $this->cache = $cache;
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->requestStack = $request_stack;
     $this->bundleInfoService = $bundle_info_service;
+
+    if (!$entity_type_manager) {
+      @trigger_error('The entity_type.manager service must be passed to TypeLinkManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_type_manager = \Drupal::service('entity_type.manager.manager');
+    }
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -123,7 +147,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
 
     // Type URIs correspond to bundles. Iterate through the bundles to get the
     // URI and data for them.
-    $entity_types = \Drupal::entityManager()->getDefinitions();
+    $entity_types = $this->entityTypeManager->getDefinitions();
     foreach ($this->bundleInfoService->getAllBundleInfo() as $entity_type_id => $bundles) {
       // Only content entities are supported currently.
       // @todo Consider supporting config entities.

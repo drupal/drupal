@@ -4,7 +4,7 @@ namespace Drupal\book;
 
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -34,13 +34,13 @@ class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * Constructs the BookBreadcrumbBuilder.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user account.
    */
-  public function __construct(EntityManagerInterface $entity_manager, AccountInterface $account) {
-    $this->nodeStorage = $entity_manager->getStorage('node');
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $account) {
+    $this->nodeStorage = $entity_type_manager->getStorage('node');
     $this->account = $account;
   }
 

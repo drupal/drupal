@@ -1,21 +1,21 @@
 services:
   field_ui.subscriber:
     class: Drupal\field_ui\Routing\RouteSubscriber
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager']
     tags:
      - { name: event_subscriber }
   field_ui.route_enhancer:
     class: Drupal\field_ui\Routing\FieldUiRouteEnhancer
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager']
     tags:
       - { name: route_enhancer }
   access_check.field_ui.view_mode:
     class: Drupal\field_ui\Access\ViewModeAccessCheck
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager']
     tags:
      - { name: access_check, applies_to: _field_ui_view_mode_access }
   access_check.field_ui.form_mode:
     class: Drupal\field_ui\Access\FormModeAccessCheck
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager']
     tags:
      - { name: access_check, applies_to: _field_ui_form_mode_access }

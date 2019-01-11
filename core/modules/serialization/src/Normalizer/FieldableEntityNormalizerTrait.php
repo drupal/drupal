@@ -16,11 +16,25 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 trait FieldableEntityNormalizerTrait {
 
   /**
-   * The entity manager.
+   * The entity field manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
-  protected $entityManager;
+  protected $entityFieldManager;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The entity type repository.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeRepositoryInterface
+   */
+  protected $entityTypeRepository;
 
   /**
    * Determines the entity type ID to denormalize as.
@@ -35,7 +49,7 @@ trait FieldableEntityNormalizerTrait {
    */
   protected function determineEntityTypeId($class, $context) {
     // Get the entity type ID while letting context override the $class param.
-    return !empty($context['entity_type']) ? $context['entity_type'] : $this->entityManager->getEntityTypeFromClass($class);
+    return !empty($context['entity_type']) ? $context['entity_type'] : $this->getEntityTypeRepository()->getEntityTypeFromClass($class);
   }
 
   /**
@@ -52,7 +66,7 @@ trait FieldableEntityNormalizerTrait {
   protected function getEntityTypeDefinition($entity_type_id) {
     /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type_definition */
     // Get the entity type definition.
-    $entity_type_definition = $this->entityManager->getDefinition($entity_type_id, FALSE);
+    $entity_type_definition = $this->getEntityTypeManager()->getDefinition($entity_type_id, FALSE);
 
     // Don't try to create an entity without an entity type id.
     if (!$entity_type_definition) {
@@ -78,7 +92,7 @@ trait FieldableEntityNormalizerTrait {
   protected function extractBundleData(array &$data, EntityTypeInterface $entity_type_definition) {
     $bundle_key = $entity_type_definition->getKey('bundle');
     // Get the base field definitions for this entity type.
-    $base_field_definitions = $this->entityManager->getBaseFieldDefinitions($entity_type_definition->id());
+    $base_field_definitions = $this->getEntityFieldManager()->getBaseFieldDefinitions($entity_type_definition->id());
 
     // Get the ID key from the base field definition for the bundle key or
     // default to 'value'.
@@ -91,7 +105,7 @@ trait FieldableEntityNormalizerTrait {
 
     // Get the bundle entity type from the entity type definition.
     $bundle_type_id = $entity_type_definition->getBundleEntityType();
-    $bundle_types = $bundle_type_id ? $this->entityManager->getStorage($bundle_type_id)->getQuery()->execute() : [];
+    $bundle_types = $bundle_type_id ? $this->getEntityTypeManager()->getStorage($bundle_type_id)->getQuery()->execute() : [];
 
     // Make sure a bundle has been provided.
     if (!is_string($bundle_value)) {
@@ -135,6 +149,48 @@ trait FieldableEntityNormalizerTrait {
         $this->serializer->denormalize($field_data, $field_item_list_class, $format, $context);
       }
     }
+  }
+
+  /**
+   * Returns the entity type repository.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeRepositoryInterface
+   *   The entity type repository.
+   */
+  protected function getEntityTypeRepository() {
+    if (!$this->entityTypeRepository) {
+      @trigger_error('The entityTypeRepository property must be set on the FieldEntityNormalizerTrait, it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $this->entityTypeRepository = \Drupal::service('entity_type.repository');
+    }
+    return $this->entityTypeRepository;
+  }
+
+  /**
+   * Returns the entity field manager.
+   *
+   * @return \Drupal\Core\Entity\EntityFieldManagerInterface
+   *   The entity field manager.
+   */
+  protected function getEntityFieldManager() {
+    if (!$this->entityFieldManager) {
+      @trigger_error('The entityFieldManager property must be set on the FieldEntityNormalizerTrait, it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $this->entityFieldManager = \Drupal::service('entity_field.manager');
+    }
+    return $this->entityFieldManager;
+  }
+
+  /**
+   * Returns the entity type manager.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   *   The entity type manager.
+   */
+  protected function getEntityTypeManager() {
+    if (!$this->entityTypeManager) {
+      @trigger_error('The entityTypeManager property must be set on the FieldEntityNormalizerTrait, it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::service('entity_type.manager');
+    }
+    return $this->entityTypeManager;
   }
 
 }

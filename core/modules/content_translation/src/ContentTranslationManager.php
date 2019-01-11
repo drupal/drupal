@@ -2,21 +2,36 @@
 
 namespace Drupal\content_translation;
 
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\workflows\Entity\Workflow;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Provides common functionality for content translation.
  */
 class ContentTranslationManager implements ContentTranslationManagerInterface, BundleTranslationSettingsInterface {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * The entity type bundle info provider.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
 
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The updates manager.
@@ -28,21 +43,28 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
   /**
    * Constructs a ContentTranslationManageAccessCheck object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\content_translation\ContentTranslationUpdatesManager $updates_manager
    *   The updates manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info provider.
    */
-  public function __construct(EntityManagerInterface $manager, ContentTranslationUpdatesManager $updates_manager) {
-    $this->entityManager = $manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentTranslationUpdatesManager $updates_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->updatesManager = $updates_manager;
+    if (!$entity_type_bundle_info) {
+      @trigger_error('The entity_type.bundle.info service must be passed to ContentTranslationManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
+    }
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getTranslationHandler($entity_type_id) {
-    return $this->entityManager->getHandler($entity_type_id, 'translation');
+    return $this->entityTypeManager->getHandler($entity_type_id, 'translation');
   }
 
   /**
@@ -59,7 +81,7 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
    * {@inheritdoc}
    */
   public function isSupported($entity_type_id) {
-    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     return $entity_type->isTranslatable() && ($entity_type->hasLinkTemplate('drupal:content-translation-overview') || $entity_type->get('content_translation_ui_skip'));
   }
 
@@ -68,7 +90,7 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
    */
   public function getSupportedEntityTypes() {
     $supported_types = [];
-    foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
+    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       if ($this->isSupported($entity_type_id)) {
         $supported_types[$entity_type_id] = $entity_type;
       }
@@ -82,7 +104,7 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
   public function setEnabled($entity_type_id, $bundle, $value) {
     $config = $this->loadContentLanguageSettings($entity_type_id, $bundle);
     $config->setThirdPartySetting('content_translation', 'enabled', $value)->save();
-    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $this->updatesManager->updateDefinitions([$entity_type_id => $entity_type]);
   }
 
@@ -93,7 +115,7 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
     $enabled = FALSE;
 
     if ($this->isSupported($entity_type_id)) {
-      $bundles = !empty($bundle) ? [$bundle] : array_keys($this->entityManager->getBundleInfo($entity_type_id));
+      $bundles = !empty($bundle) ? [$bundle] : array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type_id));
       foreach ($bundles as $bundle) {
         $config = $this->loadContentLanguageSettings($entity_type_id, $bundle);
         if ($config->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
@@ -139,9 +161,9 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
     if ($entity_type_id == NULL || $bundle == NULL) {
       return NULL;
     }
-    $config = $this->entityManager->getStorage('language_content_settings')->load($entity_type_id . '.' . $bundle);
+    $config = $this->entityTypeManager->getStorage('language_content_settings')->load($entity_type_id . '.' . $bundle);
     if ($config == NULL) {
-      $config = $this->entityManager->getStorage('language_content_settings')->create(['target_entity_type_id' => $entity_type_id, 'target_bundle' => $bundle]);
+      $config = $this->entityTypeManager->getStorage('language_content_settings')->create(['target_entity_type_id' => $entity_type_id, 'target_bundle' => $bundle]);
     }
     return $config;
   }

@@ -10,6 +10,7 @@ namespace Drupal\Tests\block\Unit;
 use Drupal\block\BlockRepository;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -66,12 +67,13 @@ class BlockRepositoryTest extends UnitTestCase {
 
     $this->contextHandler = $this->getMock('Drupal\Core\Plugin\Context\ContextHandlerInterface');
     $this->blockStorage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $entity_manager->expects($this->any())
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject $entity_type_manager */
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $entity_type_manager->expects($this->any())
       ->method('getStorage')
       ->willReturn($this->blockStorage);
 
-    $this->blockRepository = new BlockRepository($entity_manager, $theme_manager, $this->contextHandler);
+    $this->blockRepository = new BlockRepository($entity_type_manager, $theme_manager, $this->contextHandler);
   }
 
   /**

@@ -2,9 +2,10 @@
 
 namespace Drupal\field_ui\Routing;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Routing\EnhancerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -12,22 +13,28 @@ use Symfony\Component\Routing\Route;
  * Enhances Field UI routes by adding proper information about the bundle name.
  */
 class FieldUiRouteEnhancer implements EnhancerInterface {
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityManager;
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * Constructs a FieldUiRouteEnhancer object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -37,8 +44,7 @@ class FieldUiRouteEnhancer implements EnhancerInterface {
     if (!$this->applies($defaults[RouteObjectInterface::ROUTE_OBJECT])) {
       return $defaults;
     }
-
-    if (($bundle = $this->entityManager->getDefinition($defaults['entity_type_id'])->getBundleEntityType()) && isset($defaults[$bundle])) {
+    if (($bundle = $this->entityTypeManager->getDefinition($defaults['entity_type_id'])->getBundleEntityType()) && isset($defaults[$bundle])) {
       // Field UI forms only need the actual name of the bundle they're dealing
       // with, not an upcasted entity object, so provide a simple way for them
       // to get it.

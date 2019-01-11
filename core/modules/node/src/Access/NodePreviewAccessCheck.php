@@ -2,7 +2,8 @@
 
 namespace Drupal\node\Access;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
@@ -13,22 +14,28 @@ use Drupal\node\NodeInterface;
  * @ingroup node_access
  */
 class NodePreviewAccessCheck implements AccessInterface {
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityManager;
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * Constructs a EntityCreateAccessCheck object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -44,7 +51,7 @@ class NodePreviewAccessCheck implements AccessInterface {
    */
   public function access(AccountInterface $account, NodeInterface $node_preview) {
     if ($node_preview->isNew()) {
-      $access_controller = $this->entityManager->getAccessControlHandler('node');
+      $access_controller = $this->entityTypeManager->getAccessControlHandler('node');
       return $access_controller->createAccess($node_preview->bundle(), $account, [], TRUE);
     }
     else {

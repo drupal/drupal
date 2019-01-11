@@ -6,7 +6,7 @@ services:
     arguments: ['@config.factory', '@user.data']
   contact.mail_handler:
     class: Drupal\contact\MailHandler
-    arguments: ['@plugin.manager.mail', '@language_manager', '@logger.channel.contact', '@string_translation', '@entity.manager']
+    arguments: ['@plugin.manager.mail', '@language_manager', '@logger.channel.contact', '@string_translation', '@entity_type.manager']
   logger.channel.contact:
     class: Drupal\Core\Logger\LoggerChannel
     factory: logger.factory:get

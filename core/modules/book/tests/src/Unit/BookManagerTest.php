@@ -3,6 +3,7 @@
 namespace Drupal\Tests\book\Unit;
 
 use Drupal\book\BookManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -57,7 +58,7 @@ class BookManagerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->translation = $this->getStringTranslationStub();
     $this->configFactory = $this->getConfigFactoryStub([]);
     $this->bookOutlineStorage = $this->getMock('Drupal\book\BookOutlineStorageInterface');

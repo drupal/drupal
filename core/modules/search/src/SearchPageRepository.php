@@ -3,7 +3,7 @@
 namespace Drupal\search;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Provides a repository for Search Page config entities.
@@ -29,12 +29,12 @@ class SearchPageRepository implements SearchPageRepositoryInterface {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager) {
     $this->configFactory = $config_factory;
-    $this->storage = $entity_manager->getStorage('search_page');
+    $this->storage = $entity_type_manager->getStorage('search_page');
   }
 
   /**

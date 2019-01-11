@@ -6,6 +6,7 @@ use Drupal\content_translation\Access\ContentTranslationManageAccessCheck;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
@@ -54,8 +55,8 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
       ->method('getTranslationAccess')
       ->will($this->returnValue(AccessResult::allowed()));
 
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $entity_manager->expects($this->once())
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $entity_type_manager->expects($this->once())
       ->method('getHandler')
       ->withAnyParameters()
       ->will($this->returnValue($translation_handler));
@@ -121,7 +122,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
 
     // The access check under test.
-    $check = new ContentTranslationManageAccessCheck($entity_manager, $language_manager);
+    $check = new ContentTranslationManageAccessCheck($entity_type_manager, $language_manager);
 
     // The request params.
     $language = 'en';

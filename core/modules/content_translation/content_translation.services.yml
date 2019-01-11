@@ -1,7 +1,7 @@
 services:
   content_translation.synchronizer:
     class: Drupal\content_translation\FieldTranslationSynchronizer
-    arguments: ['@entity.manager', '@plugin.manager.field.field_type']
+    arguments: ['@entity_type.manager', '@plugin.manager.field.field_type']
 
   content_translation.subscriber:
     class: Drupal\content_translation\Routing\ContentTranslationRouteSubscriber
@@ -17,22 +17,22 @@ services:
 
   content_translation.overview_access:
     class: Drupal\content_translation\Access\ContentTranslationOverviewAccess
-    arguments: ['@entity.manager']
+    arguments: ['@entity_type.manager']
     tags:
       - { name: access_check, applies_to: _access_content_translation_overview }
 
   content_translation.manage_access:
     class: Drupal\content_translation\Access\ContentTranslationManageAccessCheck
-    arguments: ['@entity.manager', '@language_manager']
+    arguments: ['@entity_type.manager', '@language_manager']
     tags:
       - { name: access_check, applies_to: _access_content_translation_manage }
 
   content_translation.manager:
     class: Drupal\content_translation\ContentTranslationManager
-    arguments: ['@entity.manager', '@content_translation.updates_manager']
+    arguments: ['@entity_type.manager', '@content_translation.updates_manager', '@entity_type.bundle.info']
 
   content_translation.updates_manager:
     class: Drupal\content_translation\ContentTranslationUpdatesManager
-    arguments: ['@entity.manager', '@entity.definition_update_manager']
+    arguments: ['@entity_type.manager', '@entity.definition_update_manager', '@entity_field.manager', '@entity.last_installed_schema.repository']
     tags:
       - { name: event_subscriber }

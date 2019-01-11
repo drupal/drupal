@@ -5,6 +5,7 @@ namespace Drupal\Tests\contact\Unit;
 use Drupal\contact\MailHandler;
 use Drupal\contact\MailHandlerException;
 use Drupal\contact\MessageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
@@ -51,11 +52,11 @@ class MailHandlerTest extends UnitTestCase {
   protected $contactForm;
 
   /**
-   * The entity manager service.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The user storage handler.
@@ -72,15 +73,15 @@ class MailHandlerTest extends UnitTestCase {
     $this->mailManager = $this->getMock('\Drupal\Core\Mail\MailManagerInterface');
     $this->languageManager = $this->getMock('\Drupal\Core\Language\LanguageManagerInterface');
     $this->logger = $this->getMock('\Psr\Log\LoggerInterface');
-    $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->userStorage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->with('user')
       ->willReturn($this->userStorage);
 
     $string_translation = $this->getStringTranslationStub();
-    $this->contactMailHandler = new MailHandler($this->mailManager, $this->languageManager, $this->logger, $string_translation, $this->entityManager);
+    $this->contactMailHandler = new MailHandler($this->mailManager, $this->languageManager, $this->logger, $string_translation, $this->entityTypeManager);
     $language = new Language(['id' => 'en']);
 
     $this->languageManager->expects($this->any())

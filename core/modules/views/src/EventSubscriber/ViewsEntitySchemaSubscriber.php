@@ -2,10 +2,11 @@
 
 namespace Drupal\views\EventSubscriber;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeEventSubscriberTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeListenerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\views\Views;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -16,6 +17,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventSubscriberInterface {
 
   use EntityTypeEventSubscriberTrait;
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Indicates that a base table got renamed.
@@ -68,20 +75,20 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
   const REVISION_DATA_TABLE_REMOVAL = 9;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * Constructs a ViewsEntitySchemaSubscriber.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -99,7 +106,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
 
     // We implement a specific logic for table updates, which is bound to the
     // default sql content entity storage.
-    if (!$this->entityManager->getStorage($entity_type->id()) instanceof SqlContentEntityStorage) {
+    if (!$this->entityTypeManager->getStorage($entity_type->id()) instanceof SqlContentEntityStorage) {
       return;
     }
 
@@ -150,7 +157,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
     }
 
     /** @var \Drupal\views\Entity\View[] $all_views */
-    $all_views = $this->entityManager->getStorage('view')->loadMultiple(NULL);
+    $all_views = $this->entityTypeManager->getStorage('view')->loadMultiple(NULL);
 
     foreach ($changes as $change) {
       switch ($change) {
@@ -207,7 +214,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
       $entity_type->getRevisionDataTable(),
     ];
 
-    $all_views = $this->entityManager->getStorage('view')->loadMultiple(NULL);
+    $all_views = $this->entityTypeManager->getStorage('view')->loadMultiple(NULL);
     /** @var \Drupal\views\Entity\View $view */
     foreach ($all_views as $id => $view) {
 
@@ -314,7 +321,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
   protected function dataTableAddition($all_views, EntityTypeInterface $entity_type, $new_data_table, $base_table) {
     /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage */
     $entity_type_id = $entity_type->id();
-    $storage = $this->entityManager->getStorage($entity_type_id);
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
     $storage->setEntityType($entity_type);
     $table_mapping = $storage->getTableMapping();
     $data_table_fields = $table_mapping->getFieldNames($new_data_table);
