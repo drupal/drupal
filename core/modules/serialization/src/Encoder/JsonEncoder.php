@@ -28,12 +28,42 @@ class JsonEncoder extends BaseJsonEncoder implements EncoderInterface, DecoderIn
    * {@inheritdoc}
    */
   public function __construct(JsonEncode $encodingImpl = NULL, JsonDecode $decodingImpl = NULL) {
+    $this->encodingImpl = $encodingImpl ?: $this->getJsonEncode();
+    $this->decodingImpl = $decodingImpl ?: $this->getJsonDecode();
+  }
+
+  /**
+   * Instantiates a JsonEncode instance.
+   *
+   * @internal this exists to bridge Symfony 3 to Symfony 4, and can be removed
+   *   once Drupal requires Symfony 4.2 or higher.
+   */
+  private function getJsonEncode() {
+    // defined() does not trigger the autoloader, so do that first.
+    class_exists('JsonEncode');
     // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be
     // embedded into HTML.
     // @see \Symfony\Component\HttpFoundation\JsonResponse
     $json_encoding_options = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
-    $this->encodingImpl = $encodingImpl ?: new JsonEncode($json_encoding_options);
-    $this->decodingImpl = $decodingImpl ?: new JsonDecode(TRUE);
+    if (defined('JsonEncode::OPTIONS')) {
+      return new JsonEncode([JsonEncode::OPTIONS => $json_encoding_options]);
+    }
+    return new JsonEncode($json_encoding_options);
+  }
+
+  /**
+   * Instantiates a JsonDecode instance.
+   *
+   * @internal this exists to bridge Symfony 3 to Symfony 4, and can be removed
+   *   once Drupal requires Symfony 4.2 or higher.
+   */
+  private function getJsonDecode() {
+    // defined() does not trigger the autoloader, so do that first.
+    class_exists('JsonDecode');
+    if (defined('JsonDecode::OPTIONS')) {
+      return new JsonDecode([JsonDecode::OPTIONS => [JsonDecode::ASSOCIATIVE => TRUE]]);
+    }
+    return new JsonDecode(TRUE);
   }
 
   /**
