@@ -211,11 +211,12 @@ function layout_builder_block_content_access(EntityInterface $entity, $operation
  */
 function layout_builder_plugin_filter_block__block_ui_alter(array &$definitions, array $extra) {
   foreach ($definitions as $id => $definition) {
-    // Filter out any layout_builder definition with required contexts.
-    if ($definition['provider'] === 'layout_builder' && !empty($definition['context'])) {
-      /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */
-      foreach ($definition['context'] as $context) {
-        if ($context->isRequired()) {
+    // Filter out any layout_builder-provided block that has required context
+    // definitions.
+    if ($definition['provider'] === 'layout_builder' && !empty($definition['context_definitions'])) {
+      /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context_definition */
+      foreach ($definition['context_definitions'] as $context_definition) {
+        if ($context_definition->isRequired()) {
           unset($definitions[$id]);
           break;
         }
