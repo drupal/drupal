@@ -22,11 +22,11 @@
 }
 
 .quickedit-image-dropzone.upload .quickedit-image-icon {
-  background-image: url('../../../images/image/upload.svg');
+  background-image: url("../../../images/image/upload.svg");
 }
 
 .quickedit-image-dropzone.error .quickedit-image-icon {
-  background-image: url('../../../images/image/error.svg');
+  background-image: url("../../../images/image/error.svg");
 }
 
 .quickedit-image-dropzone.loading .quickedit-image-icon {

@@ -67,7 +67,7 @@
 }
 
 .comment__content:before {
-  content: '';
+  content: "";
   position: absolute;
   right: 100%; /* LTR */
   top: 20px;
@@ -82,7 +82,7 @@
   border-left: 20px solid #d3d7d9;
 }
 .comment__content:after {
-  content: '';
+  content: "";
   position: absolute;
   right: 100%; /* LTR */
   top: 20px;

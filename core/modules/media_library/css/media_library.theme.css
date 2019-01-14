@@ -181,7 +181,7 @@
   height: 24px;
   margin: 5px;
   padding: 0;
-  background: url('../../../misc/icons/787878/ex.svg') #fff center no-repeat;
+  background: url("../../../misc/icons/787878/ex.svg") #fff center no-repeat;
   background-size: 16px 16px;
   border: 2px solid #ccc;
   border-radius: 20px;

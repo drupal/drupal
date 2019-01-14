@@ -48,7 +48,7 @@
   position: absolute;
   top: 0;
   right: -20px; /* LTR */
-  content: '';
+  content: "";
   display: block;
   width: 16px;
   height: 16px;

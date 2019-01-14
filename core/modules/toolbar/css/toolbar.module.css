@@ -189,7 +189,7 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
 }
 .toolbar-oriented .toolbar-tray-vertical > .toolbar-lining:before {
   bottom: 0;
-  content: '';
+  content: "";
   display: block;
   left: 0; /* LTR */
   position: fixed;

@@ -29,8 +29,8 @@
   width: 14px;
   height: 14px;
   margin-top: -7px;
-  content: '';
-  background-image: url('../../../../images/svg/pointer.svg');
+  content: "";
+  background-image: url("../../../../images/svg/pointer.svg");
   background-repeat: no-repeat;
   background-position: 0 0;
   background-size: contain;

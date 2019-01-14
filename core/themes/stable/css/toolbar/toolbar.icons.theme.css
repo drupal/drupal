@@ -17,7 +17,7 @@
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 100% auto;
-  content: '';
+  content: "";
   display: block;
   height: 100%;
   left: 0.6667em; /* LTR */

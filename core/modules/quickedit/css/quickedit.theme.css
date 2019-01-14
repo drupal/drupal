@@ -99,7 +99,7 @@
  * Toolbars.
  */
 .quickedit-toolbar-container {
-  font-family: 'Source Sans Pro', 'Lucida Grande', sans-serif;
+  font-family: "Source Sans Pro", "Lucida Grande", sans-serif;
   padding-bottom: 7px;
   padding-top: 7px;
   -webkit-transition: all 1s;
@@ -159,16 +159,16 @@
   white-space: nowrap;
 }
 .quickedit-toolbar-label .field:after {
-  content: ' → '; /* LTR */
+  content: " → "; /* LTR */
 }
 
 [dir="rtl"] .quickedit-toolbar-label .field:after {
-  content: ' ← ';
+  content: " ← ";
 }
 
 /* The toolbar; these are not necessarily visible. */
 .quickedit-toolbar {
-  font-family: 'Droid sans', 'Lucida Grande', sans-serif;
+  font-family: "Droid sans", "Lucida Grande", sans-serif;
 }
 .quickedit-toolbar-entity {
   padding: 0.1667em 0.2em;

@@ -12,7 +12,7 @@
 }
 
 .block-type-banner-block .field--name-field-title {
-  font-family: 'Scope One', Georgia, serif;
+  font-family: "Scope One", Georgia, serif;
   font-size: 1.424rem;
   font-weight: 400;
   margin: 0 0 1.07em 0;
@@ -32,7 +32,7 @@
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  font-family: 'Scope One', Georgia, serif;
+  font-family: "Scope One", Georgia, serif;
   font-size: 1.2rem;
   font-weight: 400;
   transition: background-color 0.5s ease;

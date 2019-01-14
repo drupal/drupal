@@ -7,7 +7,7 @@
 #drupal-off-canvas *,
 #drupal-off-canvas *:not(div) {
   background: #444;
-  font-family: "Lucida Grande", 'Lucida Sans Unicode', 'liberation sans', sans-serif;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
   color: #ddd;
 }
 
@@ -15,7 +15,7 @@
 #drupal-off-canvas a,
 #drupal-off-canvas .link {
   border-bottom: none;
-  font-family: "Lucida Grande", 'Lucida Sans Unicode', 'liberation sans', sans-serif;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
   font-size: inherit;
   font-weight: normal;
   color: #85bef4;
@@ -190,10 +190,10 @@
   margin: 0 0 10px 0;
 }
 #drupal-off-canvas small .admin-link:before {
-  content: ' [';
+  content: " [";
 }
 #drupal-off-canvas small .admin-link:after {
-  content: ']';
+  content: "]";
 }
 
 /* Override jQuery UI */

@@ -7,7 +7,7 @@
 }
 .is-collapse-enabled .tabs:before,
 .is-horizontal .tabs:before {
-  content: '';
+  content: "";
   display: block;
   background-color: #a6a6a6;
   height: 1px;

@@ -54,12 +54,12 @@
   background: url(../../../../misc/icons/000000/chevron-right.svg) right no-repeat, linear-gradient(to bottom, #0e69be, #2a93ef);
 }
 .node-preview-backlink::before {
-  content: '';
+  content: "";
   width: 10px;
   display: inline-block;
 }
 [dir="rtl"] .node-preview-backlink::after {
-  content: '';
+  content: "";
   width: 10px;
   display: inline-block;
 }

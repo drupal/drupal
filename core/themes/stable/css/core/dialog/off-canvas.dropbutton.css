@@ -238,7 +238,7 @@
 
 /* Put pencil icon in place of hidden 'edit' text on single buttons. */
 #drupal-off-canvas td .dropbutton-single .edit:before {
-  content: '.';
+  content: ".";
   display: block;
   color: transparent;
   background: transparent url(../../../images/core/icons/ffffff/pencil.svg) no-repeat center;

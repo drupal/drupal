@@ -70,7 +70,7 @@ th > a {
 
 /* 1. Must match negative bottom padding of the parent <th> */
 th > a:after {
-  content: '';
+  content: "";
   display: block;
   position: absolute;
   top: 0;

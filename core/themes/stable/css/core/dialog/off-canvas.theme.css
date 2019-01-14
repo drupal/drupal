@@ -61,7 +61,7 @@
   /* Ensure that long titles do not overlap the close button. */
   max-width: 210px;
   font-size: 16px;
-  font-family: "Lucida Grande", 'Lucida Sans Unicode', 'liberation sans', sans-serif;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
   text-align: left; /* LTR */
 }
 [dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
@@ -73,7 +73,7 @@
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-title:before {
   background: transparent url(../../../images/core/icons/ffffff/pencil.svg) no-repeat scroll center center;
   background-size: 100% auto;
-  content: '';
+  content: "";
   display: block;
   height: 100%;
   position: absolute;

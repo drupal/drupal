@@ -4,7 +4,7 @@
  */
 
 #drupal-off-canvas table * {
-  font-family: "Lucida Grande", 'Lucida Sans Unicode', 'liberation sans', sans-serif;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
 }
 #drupal-off-canvas table {
   display: table;

@@ -67,10 +67,10 @@
  * Quick inline admin links.
  */
 small .admin-link:before {
-  content: ' [';
+  content: " [";
 }
 small .admin-link:after {
-  content: ']';
+  content: "]";
 }
 
 /**

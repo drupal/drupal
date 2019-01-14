@@ -7,7 +7,7 @@
   display: none;
 }
 .cke_dialog:before {
-  content: '';
+  content: "";
   position: fixed;
   top: 0;
   left: 0;

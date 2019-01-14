@@ -38,5 +38,5 @@ a.block-demo-backlink:hover {
   display: inline;
 }
 .block-form .form-item-settings-admin-label label:after {
-  content: ':';
+  content: ":";
 }

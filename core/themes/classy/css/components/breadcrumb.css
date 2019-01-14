@@ -22,7 +22,7 @@
 }
 /* IE8 does not support :not() and :last-child. */
 .breadcrumb li:before {
-  content: ' \BB ';
+  content: " \BB ";
 }
 .breadcrumb li:first-child:before {
   content: none;

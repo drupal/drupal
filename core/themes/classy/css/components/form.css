@@ -71,7 +71,7 @@ label.option {
   color: #e00;
 }
 .form-required:after {
-  content: '';
+  content: "";
   vertical-align: super;
   display: inline-block;
   /* Use a background image to prevent screen readers from announcing the text. */
@@ -94,7 +94,7 @@ abbr.ajax-changed {
 
 /* Inline error messages. */
 .form-item--error-message:before {
-  content: '';
+  content: "";
   display: inline-block;
   height: 14px;
   width: 14px;
