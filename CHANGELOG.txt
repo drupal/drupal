@@ -1,3 +1,9 @@
+Drupal 7.62, 2019-01-15
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2019-001
+   - SA-CORE-2019-002
+
 Drupal 7.61, 2018-11-07
 -----------------------
 - File upload validation functions and hook_file_validate() implementations are
