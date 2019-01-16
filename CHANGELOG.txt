@@ -1,3 +1,7 @@
+Drupal 7.63, 2019-01-16
+-----------------------
+- Fixed a fatal error for some Drush users introduced by SA-CORE-2019-002.
+
 Drupal 7.62, 2019-01-15
 -----------------------
 - Fixed security issues:
