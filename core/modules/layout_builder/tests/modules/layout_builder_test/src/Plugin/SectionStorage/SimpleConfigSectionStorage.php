@@ -160,9 +160,9 @@ class SimpleConfigSectionStorage extends ContextAwarePluginBase implements Secti
       'title' => $this->t('Save Layout'),
       'parent_id' => "layout_builder_ui:layout_builder.$type.view",
     ];
-    $local_tasks["layout_builder.$type.cancel"] = $base_plugin_definition + [
-      'route_name' => "layout_builder.$type.cancel",
-      'title' => $this->t('Cancel Layout'),
+    $local_tasks["layout_builder.$type.discard_changes"] = $base_plugin_definition + [
+      'route_name' => "layout_builder.$type.discard_changes",
+      'title' => $this->t('Discard changes'),
       'parent_id' => "layout_builder_ui:layout_builder.$type.view",
       'weight' => 5,
     ];

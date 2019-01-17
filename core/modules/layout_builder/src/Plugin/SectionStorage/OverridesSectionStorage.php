@@ -233,9 +233,9 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
         'parent_id' => "layout_builder_ui:layout_builder.overrides.$entity_type_id.view",
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
       ];
-      $local_tasks["layout_builder.overrides.$entity_type_id.cancel"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.overrides.$entity_type_id.cancel",
-        'title' => $this->t('Cancel Layout'),
+      $local_tasks["layout_builder.overrides.$entity_type_id.discard_changes"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.overrides.$entity_type_id.discard_changes",
+        'title' => $this->t('Discard changes'),
         'parent_id' => "layout_builder_ui:layout_builder.overrides.$entity_type_id.view",
         'weight' => 5,
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],

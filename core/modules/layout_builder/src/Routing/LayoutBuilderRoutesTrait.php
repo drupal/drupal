@@ -77,13 +77,13 @@ trait LayoutBuilderRoutesTrait {
       ->setOptions($options);
     $collection->add("$route_name_prefix.save", $route);
 
-    $cancel_defaults = $defaults;
-    $cancel_defaults['_controller'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout';
-    $route = (new Route("$path/cancel"))
-      ->setDefaults($cancel_defaults)
+    $discard_changes_defaults = $defaults;
+    $discard_changes_defaults['_form'] = '\Drupal\layout_builder\Form\DiscardLayoutChangesForm';
+    $route = (new Route("$path/discard-changes"))
+      ->setDefaults($discard_changes_defaults)
       ->setRequirements($requirements)
       ->setOptions($options);
-    $collection->add("$route_name_prefix.cancel", $route);
+    $collection->add("$route_name_prefix.discard_changes", $route);
 
     if (is_subclass_of($definition->getClass(), OverridesSectionStorageInterface::class)) {
       $revert_defaults = $defaults;

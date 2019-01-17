@@ -344,21 +344,4 @@ class LayoutBuilderController implements ContainerInjectionInterface {
     return new RedirectResponse($section_storage->getRedirectUrl()->setAbsolute()->toString());
   }
 
-  /**
-   * Cancels the layout.
-   *
-   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
-   *   The section storage.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   A redirect response.
-   */
-  public function cancelLayout(SectionStorageInterface $section_storage) {
-    $this->layoutTempstoreRepository->delete($section_storage);
-
-    $this->messenger->addMessage($this->t('The changes to the layout have been discarded.'));
-
-    return new RedirectResponse($section_storage->getRedirectUrl()->setAbsolute()->toString());
-  }
-
 }

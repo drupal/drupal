@@ -72,3 +72,10 @@ function layout_builder_post_update_section_storage_context_definitions() {
 function layout_builder_post_update_overrides_view_mode_annotation() {
   // Empty post-update hook.
 }
+
+/**
+ * Clear caches due to routing changes for the new discard changes form.
+ */
+function layout_builder_post_update_cancel_link_to_discard_changes_form() {
+  // Empty post-update hook.
+}

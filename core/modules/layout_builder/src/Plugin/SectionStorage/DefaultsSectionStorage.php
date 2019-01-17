@@ -210,9 +210,9 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
         'title' => $this->t('Save Layout'),
         'parent_id' => "layout_builder_ui:layout_builder.defaults.$entity_type_id.view",
       ];
-      $local_tasks["layout_builder.defaults.$entity_type_id.cancel"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.defaults.$entity_type_id.cancel",
-        'title' => $this->t('Cancel Layout'),
+      $local_tasks["layout_builder.defaults.$entity_type_id.discard_changes"] = $base_plugin_definition + [
+        'route_name' => "layout_builder.defaults.$entity_type_id.discard_changes",
+        'title' => $this->t('Discard changes'),
         'weight' => 5,
         'parent_id' => "layout_builder_ui:layout_builder.defaults.$entity_type_id.view",
       ];

@@ -124,7 +124,7 @@ class InlineBlockTest extends InlineBlockTestBase {
       $page->pressButton($confirm_button_text);
     }
     $this->drupalGet('node/1');
-    $this->assertEmpty($this->blockStorage->loadMultiple(), 'No entity blocks were created when layout is canceled.');
+    $this->assertEmpty($this->blockStorage->loadMultiple(), 'No entity blocks were created when layout changes are discarded.');
     $assert_session->pageTextNotContains('The block body');
 
     $this->drupalGet('node/1/layout');
@@ -150,10 +150,10 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->drupalGet('node/1');
 
     $blocks = $this->blockStorage->loadMultiple();
-    // When reverting or canceling the update block should not be on the page.
+    // When reverting or discarding the update block should not be on the page.
     $assert_session->pageTextNotContains('The block updated body');
-    if ($operation === 'cancel') {
-      // When canceling the original block body should appear.
+    if ($operation === 'discard_changes') {
+      // When discarding the original block body should appear.
       $assert_session->pageTextContains('The block body');
 
       $this->assertEquals(count($blocks), 1);
@@ -173,10 +173,10 @@ class InlineBlockTest extends InlineBlockTestBase {
    */
   public function layoutNoSaveProvider() {
     return [
-      'cancel' => [
-        'cancel',
-        'Cancel Layout',
-        NULL,
+      'discard_changes' => [
+        'discard_changes',
+        'Discard changes',
+        'Confirm',
       ],
       'revert' => [
         'revert',

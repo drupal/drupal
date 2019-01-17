@@ -306,7 +306,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->clickLink('Manage layout');
     // Confirm the body field only is shown once.
     $assert_session->elementsCount('css', '.field--name-body', 1);
-    $this->clickLink('Cancel Layout');
+    $this->clickLink('Discard changes');
+    $page->pressButton('Confirm');
 
     $this->clickLink('Teaser');
     // Enabling Layout Builder for the default mode does not affect the teaser.
@@ -321,7 +322,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementsCount('css', '.field--name-body', 1);
 
     // Enable a disabled view mode.
-    $page->clickLink('Cancel Layout');
+    $page->clickLink('Discard changes');
+    $page->pressButton('Confirm');
     $assert_session->addressEquals("$field_ui_prefix/display/teaser");
     $page->clickLink('Default');
     $assert_session->addressEquals("$field_ui_prefix/display");
@@ -451,7 +453,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('This is the default view mode');
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextContains('This is the default view mode');
-    $this->clickLink('Cancel Layout');
+    $this->clickLink('Discard changes');
+    $page->pressButton('Confirm');
 
     // Enable the full view mode and customize it.
     $this->drupalPostForm("$field_ui_prefix/display/default", ['display_modes_custom[full]' => TRUE], 'Save');
@@ -470,7 +473,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('This is the full view mode');
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextContains('This is the full view mode');
-    $this->clickLink('Cancel Layout');
+    $this->clickLink('Discard changes');
+    $page->pressButton('Confirm');
 
     // Disable the full view mode, the default should be used again.
     $this->drupalPostForm("$field_ui_prefix/display/default", ['display_modes_custom[full]' => FALSE], 'Save');
@@ -478,7 +482,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('This is the default view mode');
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextContains('This is the default view mode');
-    $this->clickLink('Cancel Layout');
+    $this->clickLink('Discard changes');
+    $page->pressButton('Confirm');
   }
 
   /**

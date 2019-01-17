@@ -343,13 +343,13 @@ class OverridesSectionStorageTest extends UnitTestCase {
           '_layout_builder' => TRUE,
         ]
       ),
-      'layout_builder.overrides.with_string_id.cancel' => new Route(
-        '/entity/{entity}/layout/cancel',
+      'layout_builder.overrides.with_string_id.discard_changes' => new Route(
+        '/entity/{entity}/layout/discard-changes',
         [
           'entity_type_id' => 'with_string_id',
           'section_storage_type' => 'overrides',
           'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
+          '_form' => '\Drupal\layout_builder\Form\DiscardLayoutChangesForm',
         ],
         [
           '_has_layout_section' => 'true',
@@ -427,13 +427,13 @@ class OverridesSectionStorageTest extends UnitTestCase {
           '_layout_builder' => TRUE,
         ]
       ),
-      'layout_builder.overrides.with_integer_id.cancel' => new Route(
-        '/entity/{entity}/layout/cancel',
+      'layout_builder.overrides.with_integer_id.discard_changes' => new Route(
+        '/entity/{entity}/layout/discard-changes',
         [
           'entity_type_id' => 'with_integer_id',
           'section_storage_type' => 'overrides',
           'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
+          '_form' => '\Drupal\layout_builder\Form\DiscardLayoutChangesForm',
         ],
         [
           '_has_layout_section' => 'true',

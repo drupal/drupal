@@ -419,14 +419,14 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           '_admin_route' => FALSE,
         ]
       ),
-      'layout_builder.defaults.with_bundle_key.cancel' => new Route(
-        '/admin/entity/whatever/display-layout/{view_mode_name}/cancel',
+      'layout_builder.defaults.with_bundle_key.discard_changes' => new Route(
+        '/admin/entity/whatever/display-layout/{view_mode_name}/discard-changes',
         [
           'entity_type_id' => 'with_bundle_key',
           'bundle_key' => 'my_bundle_type',
           'section_storage_type' => 'defaults',
           'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
+          '_form' => '\Drupal\layout_builder\Form\DiscardLayoutChangesForm',
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_key display',
@@ -505,13 +505,13 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           '_admin_route' => FALSE,
         ]
       ),
-      'layout_builder.defaults.with_bundle_parameter.cancel' => new Route(
-        '/admin/entity/{bundle}/display-layout/{view_mode_name}/cancel',
+      'layout_builder.defaults.with_bundle_parameter.discard_changes' => new Route(
+        '/admin/entity/{bundle}/display-layout/{view_mode_name}/discard-changes',
         [
           'entity_type_id' => 'with_bundle_parameter',
           'section_storage_type' => 'defaults',
           'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::cancelLayout',
+          '_form' => '\Drupal\layout_builder\Form\DiscardLayoutChangesForm',
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
