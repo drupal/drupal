@@ -157,7 +157,6 @@ class ArchiveTar
      * @var string
      */
     public $_fmt ='';
-
     /**
      * Archive_Tar Class constructor. This flavour of the constructor only
      * declare a new Archive_Tar object, identifying it by the name of the
@@ -264,6 +263,7 @@ class ArchiveTar
                 return false;
             }
         }
+
 
         if (version_compare(PHP_VERSION, "5.5.0-dev") < 0) {
             $this->_fmt = "a100filename/a8mode/a8uid/a8gid/a12size/a12mtime/" .
@@ -1411,6 +1411,7 @@ class ArchiveTar
         if ($p_stored_filename == '') {
             $p_stored_filename = $p_filename;
         }
+
         $v_reduced_filename = $this->_pathReduction($p_stored_filename);
 
         if (strlen($v_reduced_filename) > 99) {
@@ -1423,6 +1424,7 @@ class ArchiveTar
         if (@is_link($p_filename)) {
             $v_linkname = readlink($p_filename);
         }
+
         if (strlen($v_linkname) > 99) {
             if (!$this->_writeLongHeader($v_linkname, true)) {
                 return false;
@@ -1463,11 +1465,11 @@ class ArchiveTar
 
         $v_devmajor = '';
         $v_devminor = '';
-
         $v_prefix = '';
 
         $v_binary_data_first = pack(
             "a100a8a8a8a12a12",
+            $v_reduced_filename,
             $v_perms,
             $v_uid,
             $v_gid,
@@ -1740,6 +1742,7 @@ class ArchiveTar
         $v_checksum += array_sum(array_map('ord', array(' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',)));
         $v_checksum += array_sum(array_map('ord', array_slice($v_binary_split, 156, 512)));
 
+
         $v_data = unpack($this->_fmt, $v_binary_data);
 
         if (strlen($v_data["prefix"]) > 0) {
@@ -1828,7 +1831,6 @@ class ArchiveTar
             return OctDec(trim($tar_size));
         }
     }
-
 
     /**
      * Detect and report a malicious file name
