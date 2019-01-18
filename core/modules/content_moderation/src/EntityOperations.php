@@ -235,11 +235,10 @@ class EntityOperations implements ContainerInjectionInterface {
    * @see hook_entity_revision_delete()
    */
   public function entityRevisionDelete(EntityInterface $entity) {
-    if ($content_moderation_state = ContentModerationStateEntity::loadFromModeratedEntity($entity)) {
-      if ($content_moderation_state->isDefaultRevision()) {
-        $content_moderation_state->delete();
-      }
-      else {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    if (!$entity->isDefaultRevision()) {
+      $content_moderation_state = ContentModerationStateEntity::loadFromModeratedEntity($entity);
+      if ($content_moderation_state) {
         $this->entityTypeManager
           ->getStorage('content_moderation_state')
           ->deleteRevision($content_moderation_state->getRevisionId());
