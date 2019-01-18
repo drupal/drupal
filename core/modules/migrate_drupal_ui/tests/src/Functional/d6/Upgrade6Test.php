@@ -2,19 +2,23 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
+use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
+use Drupal\user\Entity\User;
 
 /**
- * Tests Drupal 6 upgrade without translations.
+ * Tests Drupal 6 upgrade using the migrate UI.
  *
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
  * @group migrate_drupal_ui
  */
-class MigrateUpgrade6NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
+class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   public static $modules = [
     'language',
@@ -26,6 +30,9 @@ class MigrateUpgrade6NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
     'book',
     'forum',
     'statistics',
+    'migration_provider_test',
+    // Required for translation migrations.
+    'migrate_drupal_multilingual',
   ];
 
   /**
@@ -53,21 +60,21 @@ class MigrateUpgrade6NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
       'block' => 35,
       'block_content' => 2,
       'block_content_type' => 1,
-      'comment' => 6,
+      'comment' => 8,
       // The 'standard' profile provides the 'comment' comment type, and the
       // migration creates 12 comment types, one per node type.
       'comment_type' => 13,
       'contact_form' => 5,
       'configurable_language' => 5,
       'editor' => 2,
-      'field_config' => 89,
-      'field_storage_config' => 63,
-      'file' => 8,
+      'field_config' => 91,
+      'field_storage_config' => 65,
+      'file' => 7,
       'filter_format' => 7,
       'image_style' => 5,
-      'language_content_settings' => 3,
+      'language_content_settings' => 10,
       'migration' => 105,
-      'node' => 17,
+      'node' => 18,
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.
       'node_type' => 13,
@@ -77,12 +84,12 @@ class MigrateUpgrade6NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
       'shortcut_set' => 1,
       'action' => 23,
       'menu' => 8,
-      'taxonomy_term' => 8,
+      'taxonomy_term' => 15,
       'taxonomy_vocabulary' => 7,
-      'tour' => 4,
+      'tour' => 5,
       'user' => 7,
       'user_role' => 6,
-      'menu_link_content' => 8,
+      'menu_link_content' => 10,
       'view' => 16,
       'date_format' => 11,
       'entity_form_display' => 29,
@@ -99,11 +106,13 @@ class MigrateUpgrade6NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
   protected function getEntityCountsIncremental() {
     $counts = $this->getEntityCounts();
     $counts['block_content'] = 3;
-    $counts['comment'] = 7;
-    $counts['file'] = 9;
-    $counts['menu_link_content'] = 9;
-    $counts['node'] = 18;
-    $counts['taxonomy_term'] = 9;
+    $counts['comment'] = 9;
+    $counts['entity_view_display'] = 55;
+    $counts['entity_view_mode'] = 14;
+    $counts['file'] = 8;
+    $counts['menu_link_content'] = 11;
+    $counts['node'] = 19;
+    $counts['taxonomy_term'] = 16;
     $counts['user'] = 8;
     $counts['view'] = 16;
     return $counts;
@@ -126,6 +135,13 @@ class MigrateUpgrade6NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
       'filefield',
       'filter',
       'forum',
+      'i18n',
+      'i18nblocks',
+      'i18ncck',
+      'i18nmenu',
+      'i18nprofile',
+      'i18nstrings',
+      'i18ntaxonomy',
       'imagecache',
       'imagefield',
       'language',
@@ -151,8 +167,6 @@ class MigrateUpgrade6NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
       'date_api',
       'date_timezone',
       'event',
-      'i18n',
-      'i18nstrings',
       'imageapi',
       'number',
       'php',
@@ -166,46 +180,40 @@ class MigrateUpgrade6NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
-      'i18nblocks',
-      'i18ncck',
       'i18ncontent',
-      'i18nmenu',
-      'i18nprofile',
     ];
   }
 
   /**
-   * {@inheritdoc}
+   * Executes all steps of migrations upgrade.
    */
   public function testMigrateUpgradeExecute() {
-    $connection_options = $this->sourceDatabase->getConnectionOptions();
-    $this->drupalGet('/upgrade');
-    $session = $this->assertSession();
-    $session->responseContains('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
+    parent::testMigrateUpgradeExecute();
 
-    $button = $session->buttonExists('Continue');
-    $button->click();
-    $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
+    // Ensure migrated users can log in.
+    $user = User::load(2);
+    $user->passRaw = 'john.doe_pass';
+    $this->drupalLogin($user);
+    $this->assertFollowUpMigrationResults();
+  }
 
-    $driver = $connection_options['driver'];
-    $connection_options['prefix'] = $connection_options['prefix']['default'];
+  /**
+   * Tests that follow-up migrations have been run successfully.
+   */
+  protected function assertFollowUpMigrationResults() {
+    $node = Node::load(10);
+    $this->assertSame('12', $node->get('field_reference')->target_id);
+    $this->assertSame('12', $node->get('field_reference_2')->target_id);
+    $translation = $node->getTranslation('fr');
+    $this->assertSame('12', $translation->get('field_reference')->target_id);
+    $this->assertSame('12', $translation->get('field_reference_2')->target_id);
 
-    // Use the driver connection form to get the correct options out of the
-    // database settings. This supports all of the databases we test against.
-    $drivers = drupal_get_database_types();
-    $form = $drivers[$driver]->getFormOptions($connection_options);
-    $connection_options = array_intersect_key($connection_options, $form + $form['advanced_options']);
-    $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
-    $edit = [
-      $driver => $connection_options,
-      'version' => $version,
-    ];
-    if (count($drivers) !== 1) {
-      $edit['driver'] = $driver;
-    }
-    $edits = $this->translatePostValues($edit);
-    $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
-    $session->pageTextContains("Install migrate_drupal_multilingual to run migration 'd6_system_maintenance_translation'.");
+    $node = Node::load(12)->getTranslation('en');
+    $this->assertSame('10', $node->get('field_reference')->target_id);
+    $this->assertSame('10', $node->get('field_reference_2')->target_id);
+    $translation = $node->getTranslation('fr');
+    $this->assertSame('10', $translation->get('field_reference')->target_id);
+    $this->assertSame('10', $translation->get('field_reference_2')->target_id);
   }
 
 }

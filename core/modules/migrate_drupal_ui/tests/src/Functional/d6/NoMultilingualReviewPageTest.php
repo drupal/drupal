@@ -2,23 +2,24 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
-use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeReviewPageTestBase;
+use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
 
 /**
- * Tests migrate upgrade review page for Drupal 6.
+ * Tests migrate upgrade review page for Drupal 6 without translations.
+ *
+ * Tests with the translation modules and migrate_drupal_multilingual module
+ * disabled.
  *
  * @group migrate_drupal_6
  * @group migrate_drupal_ui
  */
-class MigrateUpgrade6ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
+class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
 
   /**
    * {@inheritdoc}
    */
   public static $modules = [
     'language',
-    'content_translation',
-    'config_translation',
     'telephone',
     'aggregator',
     'book',
@@ -27,8 +28,6 @@ class MigrateUpgrade6ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
     'syslog',
     'tracker',
     'update',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**
@@ -63,13 +62,6 @@ class MigrateUpgrade6ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'filefield',
       'filter',
       'forum',
-      'i18n',
-      'i18nblocks',
-      'i18ncck',
-      'i18nmenu',
-      'i18nprofile',
-      'i18nstrings',
-      'i18ntaxonomy',
       'imagecache',
       'imagefield',
       'language',
@@ -113,6 +105,7 @@ class MigrateUpgrade6ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'fieldgroup',
       'filefield_meta',
       'help',
+      'i18nstrings',
       'imageapi',
       'imageapi_gd',
       'imageapi_imagemagick',
@@ -143,9 +136,15 @@ class MigrateUpgrade6ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'devel',
       'devel_generate',
       'devel_node_access',
+      'i18n',
+      'i18nblocks',
+      'i18ncck',
       'i18ncontent',
+      'i18nmenu',
       'i18npoll',
+      'i18nprofile',
       'i18nsync',
+      'i18ntaxonomy',
       'i18nviews',
       'phone',
       'views',

@@ -6,8 +6,10 @@ use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
 /**
  * Provides a base class for testing the review step of the Upgrade form.
+ *
+ * When using this test class, enable translation modules.
  */
-abstract class MigrateUpgradeReviewPageTestBase extends MigrateUpgradeTestBase {
+abstract class MultilingualReviewPageTestBase extends MigrateUpgradeTestBase {
 
   use CreateTestContentEntitiesTrait;
 

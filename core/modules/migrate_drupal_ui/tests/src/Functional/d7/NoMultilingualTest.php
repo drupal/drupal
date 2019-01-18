@@ -11,7 +11,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
  *
  * @group migrate_drupal_ui
  */
-class MigrateUpgrade7NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
+class NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
 
   /**
    * {@inheritdoc}
