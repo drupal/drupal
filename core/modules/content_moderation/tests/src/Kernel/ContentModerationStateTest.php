@@ -239,6 +239,30 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
+   * Tests removal of content moderation state entities for preexisting content.
+   */
+  public function testExistingContentModerationStateDataRemoval() {
+    $storage = $this->entityTypeManager->getStorage('entity_test_mulrevpub');
+
+    $entity = $storage->create([]);
+    $entity->save();
+    $original_revision_id = $entity->getRevisionId();
+
+    $workflow = $this->createEditorialWorkflow();
+    $workflow->getTypePlugin()->addEntityTypeAndBundle($entity->getEntityTypeId(), $entity->bundle());
+    $workflow->save();
+
+    $entity->moderation_state = 'draft';
+    $entity->save();
+
+    $storage->deleteRevision($entity->getRevisionId());
+
+    $entity = $this->reloadEntity($entity);
+    $this->assertEquals('published', $entity->moderation_state->value);
+    $this->assertEquals($original_revision_id, $storage->getLatestRevisionId($entity->id()));
+  }
+
+  /**
    * Tests removal of content moderation state translations.
    *
    * @dataProvider basicModerationTestCases
