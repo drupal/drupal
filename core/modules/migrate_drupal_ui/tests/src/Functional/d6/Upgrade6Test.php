@@ -13,7 +13,7 @@ use Drupal\user\Entity\User;
  *
  * @group migrate_drupal_ui
  */
-class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
+class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
   /**
    * Modules to enable.
