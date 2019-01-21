@@ -77,7 +77,9 @@ function content_moderation_entity_bundle_field_info(EntityTypeInterface $entity
     // information to the field definition allows the associated workflow to be
     // derived where a field definition is present.
     $base_field_definitions['moderation_state']->setTargetBundle($bundle);
-    return $base_field_definitions;
+    return [
+      'moderation_state' => $base_field_definitions['moderation_state'],
+    ];
   }
 }
 

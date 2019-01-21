@@ -43,6 +43,13 @@ class EntityTypeInfoTest extends KernelTestBase {
   protected $entityTypeInfo;
 
   /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -50,6 +57,7 @@ class EntityTypeInfoTest extends KernelTestBase {
 
     $this->entityTypeInfo = $this->container->get('class_resolver')->getInstanceFromDefinition(EntityTypeInfo::class);
     $this->entityTypeManager = $this->container->get('entity_type.manager');
+    $this->entityFieldManager = $this->container->get('entity_field.manager');
 
     $this->installConfig(['content_moderation']);
   }
@@ -118,6 +126,17 @@ class EntityTypeInfoTest extends KernelTestBase {
     $this->enableModeration('entity_test_with_bundle', 'moderated');
     $base_fields = $this->entityTypeInfo->entityBaseFieldInfo($definition);
     $this->assertTrue(isset($base_fields['moderation_state']));
+  }
+
+  /**
+   * Test entity base field provider.
+   */
+  public function testEntityBaseFieldProvider() {
+    $this->enableModeration('entity_test_mulrev', 'entity_test_mulrev');
+    $this->container->get('state')->set('entity_test.field_test_item', TRUE);
+
+    $field_definitions = $this->entityFieldManager->getFieldDefinitions('entity_test_mulrev', 'entity_test_mulrev');
+    $this->assertEquals('entity_test', $field_definitions['field_test_item']->getProvider());
   }
 
   /**
