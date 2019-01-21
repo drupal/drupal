@@ -39,13 +39,12 @@ class JsonEncoder extends BaseJsonEncoder implements EncoderInterface, DecoderIn
    *   once Drupal requires Symfony 4.2 or higher.
    */
   private function getJsonEncode() {
-    // defined() does not trigger the autoloader, so do that first.
-    class_exists('JsonEncode');
     // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be
     // embedded into HTML.
     // @see \Symfony\Component\HttpFoundation\JsonResponse
     $json_encoding_options = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
-    if (defined('JsonEncode::OPTIONS')) {
+    $reflection = new \ReflectionClass(JsonEncode::class);
+    if (array_key_exists('OPTIONS', $reflection->getConstants())) {
       return new JsonEncode([JsonEncode::OPTIONS => $json_encoding_options]);
     }
     return new JsonEncode($json_encoding_options);
@@ -58,10 +57,9 @@ class JsonEncoder extends BaseJsonEncoder implements EncoderInterface, DecoderIn
    *   once Drupal requires Symfony 4.2 or higher.
    */
   private function getJsonDecode() {
-    // defined() does not trigger the autoloader, so do that first.
-    class_exists('JsonDecode');
-    if (defined('JsonDecode::OPTIONS')) {
-      return new JsonDecode([JsonDecode::OPTIONS => [JsonDecode::ASSOCIATIVE => TRUE]]);
+    $reflection = new \ReflectionClass(JsonDecode::class);
+    if (array_key_exists('ASSOCIATIVE', $reflection->getConstants())) {
+      return new JsonDecode([JsonDecode::ASSOCIATIVE => TRUE]);
     }
     return new JsonDecode(TRUE);
   }
