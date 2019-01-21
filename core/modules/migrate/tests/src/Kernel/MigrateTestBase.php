@@ -180,6 +180,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
     array_walk($ids, function ($id) use ($manager) {
       // This is possibly a base plugin ID and we want to run all derivatives.
       $instances = $manager->createInstances($id);
+      $this->assertNotEmpty($instances, sprintf("No migrations created for id '%s'.", $id));
       array_walk($instances, [$this, 'executeMigration']);
     });
   }
