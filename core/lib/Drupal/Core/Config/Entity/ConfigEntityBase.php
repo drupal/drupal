@@ -348,8 +348,11 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   public function __sleep() {
     $keys_to_unset = [];
     if ($this instanceof EntityWithPluginCollectionInterface) {
+      // Get the plugin collections first, so that the properties are
+      // initialized in $vars and can be found later.
+      $plugin_collections = $this->getPluginCollections();
       $vars = get_object_vars($this);
-      foreach ($this->getPluginCollections() as $plugin_config_key => $plugin_collection) {
+      foreach ($plugin_collections as $plugin_config_key => $plugin_collection) {
         // Save any changes to the plugin configuration to the entity.
         $this->set($plugin_config_key, $plugin_collection->getConfiguration());
         // If the plugin collections are stored as properties on the entity,

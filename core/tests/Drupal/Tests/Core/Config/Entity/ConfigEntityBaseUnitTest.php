@@ -322,6 +322,12 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $plugin_manager = $this->prophesize(PluginManagerInterface::class);
     $plugin_manager->createInstance($instance_id, ['id' => $instance_id])->willReturn($instance);
 
+    // Also set up a container with the plugin manager so that we can assert
+    // that the plugin manager itself is also not serialized.
+    $container = new ContainerBuilder();
+    $container->set('plugin.manager.foo', $plugin_manager);
+    \Drupal::setContainer($container);
+
     $entity_values = ['the_plugin_collection_config' => [$instance_id => ['foo' => 'original_value']]];
     $entity = new TestConfigEntityWithPluginCollections($entity_values, $this->entityTypeId);
     $entity->setPluginManager($plugin_manager->reveal());
@@ -334,8 +340,11 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $expected_plugin_config = [$instance_id => ['foo' => 'original_value']];
     $this->assertSame($expected_plugin_config, $entity->get('the_plugin_collection_config'));
 
-    // Ensure the plugin collection is not stored.
-    $this->assertNotContains('pluginCollection', $entity->__sleep());
+    // Ensure the plugin collection and manager is not stored.
+    $vars = $entity->__sleep();
+    $this->assertNotContains('pluginCollection', $vars);
+    $this->assertNotContains('pluginManager', $vars);
+    $this->assertSame(['pluginManager' => 'plugin.manager.foo'], $entity->get('_serviceIds'));
 
     $expected_plugin_config = [$instance_id => ['foo' => 'new_value']];
     // Ensure the updated values are stored in the entity.
@@ -603,14 +612,19 @@ class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCo
 
   protected $pluginCollection;
 
+  protected $pluginManager;
+
   public function setPluginManager(PluginManagerInterface $plugin_manager) {
-    $this->pluginCollection = new DefaultLazyPluginCollection($plugin_manager, ['the_instance_id' => ['id' => 'the_instance_id']]);
+    $this->pluginManager = $plugin_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getPluginCollections() {
+    if (!$this->pluginCollection) {
+      $this->pluginCollection = new DefaultLazyPluginCollection($this->pluginManager, ['the_instance_id' => ['id' => 'the_instance_id']]);
+    }
     return ['the_plugin_collection_config' => $this->pluginCollection];
   }
 
