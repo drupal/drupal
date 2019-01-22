@@ -509,4 +509,16 @@ class FilterAPITest extends EntityKernelTestBase {
     $this->assertFalse(isset($filters['filter_test_restrict_tags_and_attributes']), 'The filter plugin filter_test_restrict_tags_and_attributes is not configured by the filtered_html filter format.');
   }
 
+  /**
+   * Tests that format entities are serialized without their plugin collection.
+   */
+  public function testSleep() {
+    $filter_format = FilterFormat::load('filtered_html');
+
+    $this->assertNull($filter_format->get('filterCollection'));
+    $vars = $filter_format->__sleep();
+    $this->assertContains('filters', $vars);
+    $this->assertNotContains('filterCollection', $vars);
+  }
+
 }
