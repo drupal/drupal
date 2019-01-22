@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Kernel\Theme;
 
+use Drupal\Core\Extension\Extension;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -118,6 +119,41 @@ class TwigFilterTest extends KernelTestBase {
     foreach ($elements as $element) {
       $this->assertRaw($element['expected'], $element['message']);
     }
+  }
+
+  /**
+   * Test "twig_without" filter function.
+   *
+   * @expectedDeprecation twig_without() is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Template\TwigExtension::withoutFilter(). See https://www.drupal.org/node/3011154.
+   * @group legacy
+   */
+  public function testLegacyTwigWithoutFunction() {
+    // Load the twig engine to ensure twig_without() exists.
+    $twig_engine = new Extension($this->root, 'theme_engine', 'core/themes/engines/twig/twig.info.yml', 'twig.engine');
+    $twig_engine->load();
+
+    $filter_test = [
+      'red' => '#F00',
+      'green' => '#0F0',
+      'blue' => '#00F',
+    ];
+
+    // Filter out red key.
+    $result_without_red = twig_without($filter_test, 'red');
+    $expected_without_red = $filter_test;
+    unset($expected_without_red['red']);
+    $this->assertSame($expected_without_red, $result_without_red);
+
+    // Filter nothing and check the array is unaltered.
+    $result_unaltered = twig_without($filter_test);
+    $this->assertSame($filter_test, $result_unaltered);
+
+    // Filter out blue and green.
+    $result_without_blue_green = twig_without($filter_test, 'blue', 'green');
+    $expected_without_blue_green = $filter_test;
+    unset($expected_without_blue_green['blue']);
+    unset($expected_without_blue_green['green']);
+    $this->assertSame($expected_without_blue_green, $result_without_blue_green);
   }
 
 }

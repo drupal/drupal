@@ -60,6 +60,7 @@ class TwigEnvironment extends \Twig_Environment {
 
     // Ensure that twig.engine is loaded, given that it is needed to render a
     // template because functions like TwigExtension::escapeFilter() are called.
+    // @todo remove in Drupal 9.0.0 https://www.drupal.org/node/3011393.
     require_once $root . '/core/themes/engines/twig/twig.engine';
 
     $this->templateClasses = [];

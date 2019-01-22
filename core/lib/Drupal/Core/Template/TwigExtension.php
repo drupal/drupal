@@ -177,7 +177,7 @@ class TwigExtension extends \Twig_Extension {
       new \Twig_SimpleFilter('safe_join', [$this, 'safeJoin'], ['needs_environment' => TRUE, 'is_safe' => ['html']]),
 
       // Array filters.
-      new \Twig_SimpleFilter('without', 'twig_without'),
+      new \Twig_SimpleFilter('without', [$this, 'withoutFilter']),
 
       // CSS class and ID filters.
       new \Twig_SimpleFilter('clean_class', '\Drupal\Component\Utility\Html::getClass'),
@@ -639,6 +639,39 @@ class TwigExtension extends \Twig_Extension {
    */
   public function createAttribute(array $attributes = []) {
     return new Attribute($attributes);
+  }
+
+  /**
+   * Removes child elements from a copy of the original array.
+   *
+   * Creates a copy of the renderable array and removes child elements by key
+   * specified through filter's arguments. The copy can be printed without these
+   * elements. The original renderable array is still available and can be used
+   * to print child elements in their entirety in the twig template.
+   *
+   * @param array|object $element
+   *   The parent renderable array to exclude the child items.
+   * @param string[] ...
+   *   The string keys of $element to prevent printing.
+   *
+   * @return array
+   *   The filtered renderable array.
+   */
+  public function withoutFilter($element) {
+    if ($element instanceof \ArrayAccess) {
+      $filtered_element = clone $element;
+    }
+    else {
+      $filtered_element = $element;
+    }
+    $args = func_get_args();
+    unset($args[0]);
+    foreach ($args as $arg) {
+      if (isset($filtered_element[$arg])) {
+        unset($filtered_element[$arg]);
+      }
+    }
+    return $filtered_element;
   }
 
 }

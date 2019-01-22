@@ -133,20 +133,14 @@ function twig_render_template($template_file, array $variables) {
  *
  * @return array
  *   The filtered renderable array.
+ *
+ * @deprecated in Drupal 8.7.x and will be removed before 9.0.0. Use
+ *   \Drupal\Core\Template\TwigExtension::withoutFilter() instead.
  */
 function twig_without($element) {
-  if ($element instanceof ArrayAccess) {
-    $filtered_element = clone $element;
-  }
-  else {
-    $filtered_element = $element;
-  }
-  $args = func_get_args();
-  unset($args[0]);
-  foreach ($args as $arg) {
-    if (isset($filtered_element[$arg])) {
-      unset($filtered_element[$arg]);
-    }
-  }
-  return $filtered_element;
+  @trigger_error('twig_without() is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Template\TwigExtension::withoutFilter(). See https://www.drupal.org/node/3011154.', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Template\TwigExtension $extension */
+  $extension = \Drupal::service('twig.extension');
+
+  return call_user_func_array([$extension, 'withoutFilter'], func_get_args());
 }
