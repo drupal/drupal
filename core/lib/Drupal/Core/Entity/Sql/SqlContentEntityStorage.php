@@ -821,13 +821,14 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if ($update) {
         $default_revision = $entity->isDefaultRevision();
         if ($default_revision) {
+          $id = $record->{$this->idKey};
           // Remove the ID from the record to enable updates on SQL variants
           // that prevent updating serial columns, for example, mssql.
           unset($record->{$this->idKey});
           $this->database
             ->update($this->baseTable)
             ->fields((array) $record)
-            ->condition($this->idKey, $entity->get($this->idKey)->value)
+            ->condition($this->idKey, $id)
             ->execute();
         }
         if ($this->revisionTable) {
