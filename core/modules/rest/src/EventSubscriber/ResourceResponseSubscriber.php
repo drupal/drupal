@@ -207,7 +207,9 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
     $final_response->setContent($response->getContent());
     $final_response->setStatusCode($response->getStatusCode());
     $final_response->setProtocolVersion($response->getProtocolVersion());
-    $final_response->setCharset($response->getCharset());
+    if ($response->getCharset()) {
+      $final_response->setCharset($response->getCharset());
+    }
     $final_response->headers = clone $response->headers;
     if ($final_response instanceof CacheableResponseInterface) {
       $final_response->addCacheableDependency($response->getCacheableMetadata());
