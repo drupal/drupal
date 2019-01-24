@@ -126,8 +126,6 @@ trait DeprecationListenerTrait {
       // is a Windows only deprecation. Remove when core no longer uses
       // WinCacheClassLoader in \Drupal\Core\DrupalKernel::initializeSettings().
       'The Symfony\Component\ClassLoader\WinCacheClassLoader class is deprecated since Symfony 3.3 and will be removed in 4.0. Use `composer install --apcu-autoloader` instead.',
-      'The Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler class is deprecated since Symfony 3.4 and will be removed in 4.0. Implement `SessionUpdateTimestampHandlerInterface` or extend `AbstractSessionHandler` instead.',
-      'The "session_handler.write_check" service relies on the deprecated "Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler" class. It should either be deprecated or its implementation upgraded.',
       'Not setting the strict option of the Choice constraint to true is deprecated since Symfony 3.4 and will throw an exception in 4.0.',
     ];
   }

@@ -1549,10 +1549,6 @@ services:
     arguments: ['@request_stack', '@database']
     tags:
       - { name: backend_overridable }
-  session_handler.write_check:
-    class: Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler
-    tags:
-      - { name: session_handler_proxy, priority: 100 }
   session_handler.write_safe:
     class: Drupal\Core\Session\WriteSafeSessionHandler
     tags:
