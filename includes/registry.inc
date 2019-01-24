@@ -33,6 +33,11 @@ function _registry_update() {
   require_once DRUPAL_ROOT . '/includes/database/select.inc';
   require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/query.inc';
 
+  // During the first registry rebuild in a request, we check all the files.
+  // During subsequent rebuilds, we only add new files. It makes the rebuilding
+  // process faster during installation of modules.
+  static $check_existing_files = TRUE;
+
   // Get current list of modules and their files.
   $modules = db_query("SELECT * FROM {system} WHERE type = 'module'")->fetchAll();
   // Get the list of files we are going to parse.
@@ -66,7 +71,14 @@ function _registry_update() {
     foreach (registry_get_parsed_files() as $filename => $file) {
       // Add the hash for those files we have already parsed.
       if (isset($files[$filename])) {
-        $files[$filename]['hash'] = $file['hash'];
+        if ($check_existing_files === TRUE) {
+          $files[$filename]['hash'] = $file['hash'];
+        }
+        else {
+          // Ignore that file for this request, it has been parsed previously
+          // and it is unlikely it has changed.
+          unset($files[$filename]);
+        }
       }
       else {
         // Flush the registry of resources in files that are no longer on disc
@@ -101,6 +113,10 @@ function _registry_update() {
     watchdog_exception('registry', $e);
     throw $e;
   }
+
+  // During the next run in this request, don't bother re-checking existing
+  // files.
+  $check_existing_files = FALSE;
 
   // We have some unchanged resources, warm up the cache - no need to pay
   // for looking them up again.
