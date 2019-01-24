@@ -52,7 +52,7 @@ class BigPipeController {
 
     $response = new LocalRedirectResponse($request->query->get('destination'));
     // Set cookie without httpOnly, so that JavaScript can delete it.
-    $response->headers->setCookie(new Cookie(BigPipeStrategy::NOJS_COOKIE, TRUE, 0, '/', NULL, FALSE, FALSE));
+    $response->headers->setCookie(new Cookie(BigPipeStrategy::NOJS_COOKIE, TRUE, 0, '/', NULL, FALSE, FALSE, FALSE, NULL));
     $response->addCacheableDependency((new CacheableMetadata())->addCacheContexts(['cookies:' . BigPipeStrategy::NOJS_COOKIE, 'session.exists']));
     return $response;
   }
