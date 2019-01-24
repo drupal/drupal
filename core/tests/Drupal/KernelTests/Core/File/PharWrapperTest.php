@@ -3,8 +3,6 @@
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\KernelTests\KernelTestBase;
-use Symfony\Component\Process\PhpExecutableFinder;
-use Symfony\Component\Process\Process;
 
 /**
  * Tests that the phar stream wrapper works.
@@ -30,27 +28,6 @@ class PharWrapperTest extends KernelTestBase {
     // exception for files without the .phar extension.
     $this->setExpectedException('TYPO3\PharStreamWrapper\Exception');
     file_exists("phar://$base/image-2.jpg/index.php");
-  }
-
-  /**
-   * Tests phar files not ending in .phar can be executed using the CLI.
-   */
-  public function testCliPharFile() {
-    $php = (new PhpExecutableFinder())->find();
-    $process = new Process("$php cli_phar", __DIR__ . '/fixtures');
-    $process->run();
-
-    $expected_output = <<<EOF
-Can access phar files without .phar extension if they are the CLI command.
-Can access phar files with .phar extension.
-Cannot access other phar files without .phar extension.
-Shutdown functions work in phar files without a .phar extension.
-Shutdown functions cannot access other phar files without .phar extension.
-
-EOF;
-
-    $this->assertSame($expected_output, $process->getOutput());
-    $this->assertSame(0, $process->getExitCode());
   }
 
 }
