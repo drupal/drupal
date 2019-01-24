@@ -34,6 +34,7 @@ class NodeTitleTest extends NodeTestBase {
   protected function setUp() {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalPlaceBlock('page_title_block');
 
     $this->adminUser = $this->drupalCreateUser(['administer nodes', 'create article content', 'create page content', 'post comments']);
     $this->drupalLogin($this->adminUser);
@@ -80,7 +81,7 @@ class NodeTitleTest extends NodeTestBase {
     $this->assertTitle(0 . ' | Drupal', 'Page title is equal to 0.', 'Node');
     // Test that 0 appears in the template <h1>.
     $xpath = '//h1';
-    $this->assertEqual(current($this->xpath($xpath)), 0, 'Node title is displayed as 0.', 'Node');
+    $this->assertSame('0', $this->xpath($xpath)[0]->getText(), 'Node title is displayed as 0.');
 
     // Test edge case where node title contains special characters.
     $edge_case_title = 'article\'s "title".';
