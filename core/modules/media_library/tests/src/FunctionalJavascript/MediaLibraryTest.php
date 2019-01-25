@@ -186,6 +186,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Cat');
     $assert_session->pageTextContains('Bear');
     // Remove "Dog" (happens to be the first remove button on the page).
+    $assert_session->elementAttributeContains('css', '.media-library-item__remove', 'aria-label', 'Remove Dog');
     $assert_session->elementExists('css', '.media-library-item__remove')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Dog');

@@ -165,14 +165,14 @@
   margin: 0.75em;
 }
 
-.media-library-item__remove,
-.media-library-item__remove:hover,
-.media-library-item__remove:focus,
-.media-library-item__remove.button,
-.media-library-item__remove.button:disabled,
-.media-library-item__remove.button:disabled:active,
-.media-library-item__remove.button:hover,
-.media-library-item__remove.button:focus {
+.media-library-item .media-library-item__remove,
+.media-library-item .media-library-item__remove:hover,
+.media-library-item .media-library-item__remove:focus,
+.media-library-item .media-library-item__remove.button,
+.media-library-item .media-library-item__remove.button:disabled,
+.media-library-item .media-library-item__remove.button:disabled:active,
+.media-library-item .media-library-item__remove.button:hover,
+.media-library-item .media-library-item__remove.button:focus {
   position: absolute;
   z-index: 1;
   top: 0;
@@ -190,11 +190,11 @@
   transition: 0.2s border-color;
 }
 
-.media-library-item__remove:hover,
-.media-library-item__remove:focus,
-.media-library-item__remove.button:hover,
-.media-library-item__remove.button:focus,
-.media-library-item__remove.button:disabled:active {
+.media-library-item .media-library-item__remove:hover,
+.media-library-item .media-library-item__remove:focus,
+.media-library-item .media-library-item__remove.button:hover,
+.media-library-item .media-library-item__remove.button:focus,
+.media-library-item .media-library-item__remove.button:disabled:active {
   border-color: #40b6ff;
 }
 
