@@ -93,14 +93,15 @@ function _registry_update() {
         $unchanged_resources[$key] = $file;
       }
     }
-    module_implements('', FALSE, TRUE);
-    _registry_check_code(REGISTRY_RESET_LOOKUP_CACHE);
   }
   catch (Exception $e) {
     $transaction->rollback();
     watchdog_exception('registry', $e);
     throw $e;
   }
+
+  module_implements('', FALSE, TRUE);
+  _registry_check_code(REGISTRY_RESET_LOOKUP_CACHE);
 
   // We have some unchanged resources, warm up the cache - no need to pay
   // for looking them up again.
