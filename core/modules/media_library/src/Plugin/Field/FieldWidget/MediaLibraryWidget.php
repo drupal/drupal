@@ -139,16 +139,6 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       ],
     ];
 
-    $element['selection'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => [
-          'js-media-library-selection',
-          'media-library-selection',
-        ],
-      ],
-    ];
-
     if (empty($referenced_entities)) {
       $element['empty_selection'] = [
         '#markup' => $this->t('<p>No media items are selected.</p>'),
@@ -170,6 +160,16 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       ];
     }
 
+    $element['selection'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'js-media-library-selection',
+          'media-library-selection',
+        ],
+      ],
+    ];
+
     foreach ($referenced_entities as $delta => $media_item) {
       $element['selection'][$delta] = [
         '#type' => 'container',
@@ -181,14 +181,13 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
         ],
         'preview' => [
           '#type' => 'container',
-          // @todo Make the view mode configurable in https://www.drupal.org/project/drupal/issues/2971209
-          'rendered_entity' => $view_builder->view($media_item, 'media_library'),
           'remove_button' => [
             '#type' => 'submit',
             '#name' => $field_name . '-' . $delta . '-media-library-remove-button' . $id_suffix,
             '#value' => $this->t('Remove'),
             '#attributes' => [
               'class' => ['media-library-item__remove'],
+              'aria-label' => $this->t('Remove @label', ['@label' => $media_item->label()]),
             ],
             '#ajax' => [
               'callback' => [static::class, 'updateWidget'],
@@ -198,6 +197,8 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
             // Prevent errors in other widgets from preventing removal.
             '#limit_validation_errors' => $limit_validation_errors,
           ],
+          // @todo Make the view mode configurable in https://www.drupal.org/project/drupal/issues/2971209
+          'rendered_entity' => $view_builder->view($media_item, 'media_library'),
         ],
         'target_id' => [
           '#type' => 'hidden',
