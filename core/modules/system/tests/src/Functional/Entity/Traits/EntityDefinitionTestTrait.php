@@ -15,7 +15,6 @@ trait EntityDefinitionTestTrait {
    */
   protected function enableNewEntityType() {
     $this->state->set('entity_test_new', TRUE);
-    $this->entityManager->clearCachedDefinitions();
     $this->entityDefinitionUpdateManager->applyUpdates();
   }
 
@@ -24,7 +23,6 @@ trait EntityDefinitionTestTrait {
    */
   protected function resetEntityType() {
     $this->state->set('entity_test_update.entity_type', NULL);
-    $this->entityManager->clearCachedDefinitions();
     $this->entityDefinitionUpdateManager->applyUpdates();
   }
 
@@ -32,7 +30,7 @@ trait EntityDefinitionTestTrait {
    * Updates the 'entity_test_update' entity type to revisionable.
    */
   protected function updateEntityTypeToRevisionable() {
-    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
 
     $keys = $entity_type->getKeys();
     $keys['revision'] = 'revision_id';
@@ -46,7 +44,7 @@ trait EntityDefinitionTestTrait {
    * Updates the 'entity_test_update' entity type not revisionable.
    */
   protected function updateEntityTypeToNotRevisionable() {
-    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
 
     $keys = $entity_type->getKeys();
     unset($keys['revision']);
@@ -60,7 +58,7 @@ trait EntityDefinitionTestTrait {
    * Updates the 'entity_test_update' entity type to translatable.
    */
   protected function updateEntityTypeToTranslatable() {
-    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
 
     $entity_type->set('translatable', TRUE);
     $entity_type->set('data_table', 'entity_test_update_data');
@@ -76,7 +74,7 @@ trait EntityDefinitionTestTrait {
    * Updates the 'entity_test_update' entity type to not translatable.
    */
   protected function updateEntityTypeToNotTranslatable() {
-    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
 
     $entity_type->set('translatable', FALSE);
     $entity_type->set('data_table', NULL);
@@ -93,7 +91,7 @@ trait EntityDefinitionTestTrait {
    * translatable.
    */
   protected function updateEntityTypeToRevisionableAndTranslatable() {
-    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
 
     $keys = $entity_type->getKeys();
     $keys['revision'] = 'revision_id';
@@ -165,7 +163,7 @@ trait EntityDefinitionTestTrait {
    * Promotes a field to an entity key.
    */
   protected function makeBaseFieldEntityKey() {
-    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
     $entity_keys = $entity_type->getKeys();
     $entity_keys['new_base_field'] = 'new_base_field';
     $entity_type->set('entity_keys', $entity_keys);
@@ -249,7 +247,7 @@ trait EntityDefinitionTestTrait {
    * Renames the base table to 'entity_test_update_new'.
    */
   protected function renameBaseTable() {
-    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
 
     $entity_type->set('base_table', 'entity_test_update_new');
 
@@ -260,7 +258,7 @@ trait EntityDefinitionTestTrait {
    * Renames the data table to 'entity_test_update_data_new'.
    */
   protected function renameDataTable() {
-    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
 
     $entity_type->set('data_table', 'entity_test_update_data_new');
 
@@ -271,7 +269,7 @@ trait EntityDefinitionTestTrait {
    * Renames the revision table to 'entity_test_update_revision_new'.
    */
   protected function renameRevisionBaseTable() {
-    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
 
     $entity_type->set('revision_table', 'entity_test_update_revision_new');
 
@@ -282,7 +280,7 @@ trait EntityDefinitionTestTrait {
    * Renames the revision data table to 'entity_test_update_revision_data_new'.
    */
   protected function renameRevisionDataTable() {
-    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
 
     $entity_type->set('revision_data_table', 'entity_test_update_revision_data_new');
 

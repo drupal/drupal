@@ -90,8 +90,6 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
     $field_config->setThirdPartySetting('content_translation', 'translation_sync', $property_settings);
     $field_config->save();
 
-    $this->entityManager->clearCachedDefinitions();
-
     $this->contentTranslationManager = $this->container->get('content_translation.manager');
     $this->contentTranslationManager->setEnabled($entity_type_id, $entity_type_id, TRUE);
 

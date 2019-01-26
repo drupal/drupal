@@ -548,9 +548,6 @@ services:
     # rely on this service and they would fail with deprecation warnings.
     class: Drupal\Core\Entity\EntityManager
     parent: container.trait
-    # @todo Remove this tag in https://www.drupal.org/node/2549143.
-    tags:
-      - { name: plugin_manager_cache_clear }
   entity.memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
   entity_type.manager:

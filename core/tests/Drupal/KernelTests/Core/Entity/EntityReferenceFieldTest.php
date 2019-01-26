@@ -384,7 +384,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
         ->setSetting('handler', 'default'),
     ];
     $this->state->set('entity_test_update.additional_base_field_definitions', $definitions);
-    $this->entityManager->clearCachedDefinitions();
+    $this->entityTypeManager->clearCachedDefinitions();
     $this->installEntitySchema($entity_type->id());
 
     // Create the target entity.

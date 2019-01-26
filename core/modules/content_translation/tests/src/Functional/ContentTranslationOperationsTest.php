@@ -50,7 +50,6 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     // picked up.
     \Drupal::service('content_translation.manager')->setEnabled('node', 'article', TRUE);
     drupal_static_reset();
-    \Drupal::entityManager()->clearCachedDefinitions();
     \Drupal::service('router.builder')->rebuild();
     \Drupal::service('entity.definition_update_manager')->applyUpdates();
 

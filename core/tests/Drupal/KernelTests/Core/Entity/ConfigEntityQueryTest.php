@@ -629,7 +629,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
    */
   public function testLookupKeys() {
     \Drupal::service('state')->set('config_test.lookup_keys', TRUE);
-    \Drupal::entityManager()->clearCachedDefinitions();
+    \Drupal::entityTypeManager()->clearCachedDefinitions();
     $key_value = $this->container->get('keyvalue')->get(QueryFactory::CONFIG_LOOKUP_PREFIX . 'config_test');
 
     $test_entities = [];

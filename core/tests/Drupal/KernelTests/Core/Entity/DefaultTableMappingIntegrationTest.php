@@ -46,8 +46,7 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
       ->setRevisionable(FALSE);
     $this->state->set('entity_test_mulrev.additional_base_field_definitions', $definitions);
 
-    $this->entityManager->clearCachedDefinitions();
-    $this->tableMapping = $this->entityManager->getStorage('entity_test_mulrev')->getTableMapping();
+    $this->tableMapping = $this->entityTypeManager->getStorage('entity_test_mulrev')->getTableMapping();
 
     // Ensure that the tables for the new field are created.
     \Drupal::entityDefinitionUpdateManager()->applyUpdates();

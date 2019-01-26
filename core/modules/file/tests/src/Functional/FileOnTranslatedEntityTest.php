@@ -74,7 +74,6 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
       "settings[node][page][fields][$this->fieldName]" => 1,
     ];
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
-    \Drupal::entityManager()->clearCachedDefinitions();
   }
 
   /**

@@ -35,7 +35,6 @@ class EntitySchemaTest extends EntityKernelTestBase {
   public function testCustomFieldCreateDelete() {
     // Install the module which adds the field.
     $this->installModule('entity_schema_test');
-    $this->entityManager->clearCachedDefinitions();
     $storage_definitions = $this->entityManager->getFieldStorageDefinitions('entity_test');
     $this->assertNotNull($storage_definitions['custom_base_field'], 'Base field definition found.');
     $this->assertNotNull($storage_definitions['custom_bundle_field'], 'Bundle field definition found.');
@@ -67,7 +66,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
   protected function updateEntityType($alter) {
     $entity_test_id = 'entity_test';
     $original = $this->entityManager->getDefinition($entity_test_id);
-    $this->entityManager->clearCachedDefinitions();
+    $this->entityTypeManager->clearCachedDefinitions();
     $this->state->set('entity_schema_update', $alter);
     $entity_type = $this->entityManager->getDefinition($entity_test_id);
     $this->entityManager->onEntityTypeUpdate($entity_type, $original);

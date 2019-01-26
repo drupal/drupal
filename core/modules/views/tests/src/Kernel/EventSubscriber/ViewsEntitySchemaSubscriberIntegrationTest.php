@@ -50,11 +50,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   protected $eventSubscriber;
 
   /**
-   * The entity manager service.
+   * The entity type manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The state service.
@@ -72,14 +72,14 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->eventDispatcher = $this->container->get('event_dispatcher');
     $this->eventSubscriber = $this->container->get('views.entity_schema_subscriber');
     $this->entityDefinitionUpdateManager = $this->container->get('entity.definition_update_manager');
-    $this->entityManager = $this->container->get('entity.manager');
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->state = $this->container->get('state');
 
     $this->database = $this->container->get('database');
 
     // Install every entity type's schema that wasn't installed in the parent
     // method.
-    foreach (array_diff_key($this->entityManager->getDefinitions(), array_flip(['user', 'entity_test'])) as $entity_type_id => $entity_type) {
+    foreach (array_diff_key($this->entityTypeManager->getDefinitions(), array_flip(['user', 'entity_test'])) as $entity_type_id => $entity_type) {
       $this->installEntitySchema($entity_type_id);
     }
   }
@@ -88,7 +88,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that views are disabled when an entity type is deleted.
    */
   public function testDeleteEntityType() {
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
 
     // Make the test entity type revisionable.
     $this->updateEntityTypeToRevisionable();
@@ -102,7 +102,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->assertTrue(isset($views['test_view_entity_test_data']));
     $this->assertTrue(isset($views['test_view_entity_test_additional_base_field']));
 
-    $event = new EntityTypeEvent($this->entityManager->getDefinition('entity_test_update'));
+    $event = new EntityTypeEvent($this->entityTypeManager->getDefinition('entity_test_update'));
     $this->eventDispatcher->dispatch(EntityTypeEvents::DELETE, $event);
 
     // We expect that views which use 'entity_test_update' as base tables are
@@ -131,7 +131,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->entityDefinitionUpdateManager->applyUpdates();
 
     /** @var \Drupal\views\Entity\View $view */
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
     $view = $entity_storage->load('test_view_entity_test');
 
     // Ensure the base table got renamed, so also the views fields.
@@ -148,7 +148,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->updateEntityTypeToTranslatable();
     $this->entityDefinitionUpdateManager->applyUpdates();
 
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
     $view = $entity_storage->load('test_view_entity_test_data');
     $this->assertEqual('entity_test_update', $view->get('base_table'));
     $display = $view->getDisplay('default');
@@ -160,7 +160,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->entityDefinitionUpdateManager->applyUpdates();
 
     /** @var \Drupal\views\Entity\View $view */
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
     $view = $entity_storage->load('test_view_entity_test_data');
 
     // Ensure the data table got renamed, so also the views fields.
@@ -178,7 +178,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->entityDefinitionUpdateManager->applyUpdates();
 
     /** @var \Drupal\views\Entity\View $view */
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
     $view = $entity_storage->load('test_view_entity_test_revision');
     $this->assertEqual('entity_test_update_revision', $view->get('base_table'));
     $display = $view->getDisplay('default');
@@ -189,7 +189,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->entityDefinitionUpdateManager->applyUpdates();
 
     /** @var \Drupal\views\Entity\View $view */
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
     $view = $entity_storage->load('test_view_entity_test_revision');
 
     // Ensure the base table got renamed, so also the views fields.
@@ -206,12 +206,12 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->updateEntityTypeToRevisionable();
     // Multiple changes, so we have to invalidate the caches, otherwise
     // the second update will revert the first.
-    $this->entityManager->clearCachedDefinitions();
+    $this->entityTypeManager->clearCachedDefinitions();
     $this->updateEntityTypeToTranslatable();
     $this->entityDefinitionUpdateManager->applyUpdates();
 
     /** @var \Drupal\views\Entity\View $view */
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
     $view = $entity_storage->load('test_view_entity_test_revision');
     $this->assertEqual('entity_test_update_revision', $view->get('base_table'));
     $display = $view->getDisplay('default');
@@ -222,7 +222,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->entityDefinitionUpdateManager->applyUpdates();
 
     /** @var \Drupal\views\Entity\View $view */
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
     $view = $entity_storage->load('test_view_entity_test_revision');
 
     // Ensure the base table got renamed, so also the views fields.
@@ -240,7 +240,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->entityDefinitionUpdateManager->applyUpdates();
 
     /** @var \Drupal\views\Entity\View $view */
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
     $view = $entity_storage->load('test_view_entity_test');
 
     // Ensure the data table got renamed, so also the views fields.
@@ -258,7 +258,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->entityDefinitionUpdateManager->applyUpdates();
 
     /** @var \Drupal\views\Entity\View $view */
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
     $view = $entity_storage->load('test_view_entity_test');
 
     // Ensure that nothing happens.
@@ -279,7 +279,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->entityDefinitionUpdateManager->applyUpdates();
 
     /** @var \Drupal\views\Entity\View $view */
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
     $view = $entity_storage->load('test_view_entity_test_revision');
 
     $this->assertFalse($view->status());
@@ -415,7 +415,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->updateEntityTypeToRevisionable();
     // Multiple changes, so we have to invalidate the caches, otherwise
     // the second update will revert the first.
-    $this->entityManager->clearCachedDefinitions();
+    $this->entityTypeManager->clearCachedDefinitions();
 
     list($view, $display) = $this->getUpdatedViewAndDisplay(TRUE);
 
@@ -452,7 +452,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    *   An array with the view as first item, and the display as second.
    */
   protected function getUpdatedViewAndDisplay($revision = FALSE) {
-    $entity_storage = $this->entityManager->getStorage('view');
+    $entity_storage = $this->entityTypeManager->getStorage('view');
     /** @var \Drupal\views\Entity\View $view */
     $view = $entity_storage->load($revision ? 'test_view_entity_test_revision' : 'test_view_entity_test');
     $display = $view->getDisplay('default');

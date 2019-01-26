@@ -13,6 +13,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityManager
  * @group Entity
+ * @group legacy
  */
 class EntityManagerTest extends UnitTestCase {
 
@@ -76,6 +77,8 @@ class EntityManagerTest extends UnitTestCase {
    * Tests the clearCachedDefinitions() method.
    *
    * @covers ::clearCachedDefinitions
+   *
+   * @expectedDeprecation EntityManagerInterface::clearCachedDefinitions() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeManagerInterface::clearCachedDefinitions() instead. See https://www.drupal.org/node/2549139.
    */
   public function testClearCachedDefinitions() {
     $this->entityTypeManager->clearCachedDefinitions()->shouldBeCalled();
