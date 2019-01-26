@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\Core\Plugin;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 
@@ -71,7 +71,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
 
 }
 
-class ConfigurablePlugin extends PluginBase implements ConfigurablePluginInterface {
+class ConfigurablePlugin extends PluginBase implements ConfigurableInterface {
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -89,10 +89,6 @@ class ConfigurablePlugin extends PluginBase implements ConfigurablePluginInterfa
 
   public function setConfiguration(array $configuration) {
     $this->configuration = $configuration;
-  }
-
-  public function calculateDependencies() {
-    return [];
   }
 
 }

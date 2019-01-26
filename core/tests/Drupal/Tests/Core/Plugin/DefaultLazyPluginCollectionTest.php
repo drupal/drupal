@@ -14,7 +14,7 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
   /**
    * Stores all setup plugin instances.
    *
-   * @var \Drupal\Component\Plugin\ConfigurablePluginInterface[]
+   * @var \Drupal\Component\Plugin\ConfigurableInterface[]
    */
   protected $pluginInstances;
 

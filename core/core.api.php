@@ -1383,7 +1383,8 @@
  *   instantiated. Usually this interface will extend one or more of the
  *   following interfaces:
  *   - \Drupal\Component\Plugin\PluginInspectionInterface
- *   - \Drupal\Component\Plugin\ConfigurablePluginInterface
+ *   - \Drupal\Component\Plugin\ConfigurableInterface
+ *   - \Drupal\Component\Plugin\DependentPluginInterface
  *   - \Drupal\Component\Plugin\ContextAwarePluginInterface
  *   - \Drupal\Core\Plugin\PluginFormInterface
  *   - \Drupal\Core\Executable\ExecutableInterface

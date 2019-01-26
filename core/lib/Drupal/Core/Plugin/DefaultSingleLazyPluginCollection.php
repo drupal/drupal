@@ -4,7 +4,6 @@ namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Plugin\LazyPluginCollection;
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -67,7 +66,7 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
    */
   public function getConfiguration() {
     $plugin = $this->get($this->instanceId);
-    if ($plugin instanceof ConfigurablePluginInterface) {
+    if ($plugin && $plugin->isConfigurable()) {
       return $plugin->getConfiguration();
     }
     else {
@@ -81,7 +80,7 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
   public function setConfiguration($configuration) {
     $this->configuration = $configuration;
     $plugin = $this->get($this->instanceId);
-    if ($plugin instanceof ConfigurablePluginInterface) {
+    if ($plugin && $plugin->isConfigurable()) {
       $plugin->setConfiguration($configuration);
     }
     return $this;

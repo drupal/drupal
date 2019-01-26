@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Plugin;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\ContextAwarePluginBase as ComponentContextAwarePluginBase;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Cache\Cache;
@@ -78,7 +77,7 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase im
    * {@inheritdoc}
    */
   public function getContextMapping() {
-    $configuration = $this instanceof ConfigurablePluginInterface ? $this->getConfiguration() : $this->configuration;
+    $configuration = $this->isConfigurable() ? $this->getConfiguration() : $this->configuration;
     return isset($configuration['context_mapping']) ? $configuration['context_mapping'] : [];
   }
 
@@ -86,7 +85,7 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase im
    * {@inheritdoc}
    */
   public function setContextMapping(array $context_mapping) {
-    if ($this instanceof ConfigurablePluginInterface) {
+    if ($this->isConfigurable()) {
       $configuration = $this->getConfiguration();
       $configuration['context_mapping'] = array_filter($context_mapping);
       $this->setConfiguration($configuration);

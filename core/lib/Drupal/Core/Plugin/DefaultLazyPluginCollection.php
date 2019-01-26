@@ -5,7 +5,6 @@ namespace Drupal\Core\Plugin;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Plugin\LazyPluginCollection;
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -112,7 +111,7 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
     $this->instanceIDs = $this->originalOrder + $current_order;
 
     foreach ($this as $instance_id => $instance) {
-      if ($instance instanceof ConfigurablePluginInterface) {
+      if ($instance->isConfigurable()) {
         $instances[$instance_id] = $instance->getConfiguration();
       }
       else {
@@ -158,7 +157,7 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
   public function setInstanceConfiguration($instance_id, array $configuration) {
     $this->configurations[$instance_id] = $configuration;
     $instance = $this->get($instance_id);
-    if ($instance instanceof ConfigurablePluginInterface) {
+    if ($instance->isConfigurable()) {
       $instance->setConfiguration($configuration);
     }
   }

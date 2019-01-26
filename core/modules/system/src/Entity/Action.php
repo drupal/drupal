@@ -7,7 +7,6 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\system\ActionConfigEntityInterface;
 use Drupal\Core\Action\ActionPluginCollection;
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
 /**
  * Defines the configured action entity.
@@ -133,7 +132,7 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
    * {@inheritdoc}
    */
   public function isConfigurable() {
-    return $this->getPlugin() instanceof ConfigurablePluginInterface;
+    return $this->getPlugin()->isConfigurable();
   }
 
   /**

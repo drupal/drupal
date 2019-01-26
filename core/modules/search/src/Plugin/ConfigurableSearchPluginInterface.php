@@ -2,13 +2,15 @@
 
 namespace Drupal\search\Plugin;
 
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 
 /**
  * Provides an interface for a configurable Search plugin.
  */
-interface ConfigurableSearchPluginInterface extends ConfigurablePluginInterface, PluginFormInterface, SearchInterface {
+interface ConfigurableSearchPluginInterface extends ConfigurableInterface, DependentPluginInterface, ConfigurablePluginInterface, PluginFormInterface, SearchInterface {
 
   /**
    * Sets the ID for the search page using this plugin.
