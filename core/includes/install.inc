@@ -524,7 +524,7 @@ function drupal_install_config_directories() {
     // have to write out the README rather than just adding it to the drupal core
     // repo.
     $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration/sync.' . ' For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
-    file_put_contents(config_get_config_directory(CONFIG_SYNC_DIRECTORY) . '/README.txt', $text);
+    file_put_contents(config_get_config_directory(CONFIG_SYNC_DIRECTORY) . '/README.txt', "$text\n");
   }
 }
 
