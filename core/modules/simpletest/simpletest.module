@@ -161,7 +161,7 @@ function simpletest_run_tests($test_list) {
   ];
   batch_set($batch);
 
-  \Drupal::moduleHandler()->invokeAllDeprecated('Convert your test to a PHPUnit-based one and implement test listeners. See https://www.drupal.org/node/2934242', 'test_group_started');
+  \Drupal::moduleHandler()->invokeAll('test_group_started');
 
   return $test_id;
 }
@@ -428,7 +428,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   else {
     $test = new $test_class($test_id);
     $test->run();
-    \Drupal::moduleHandler()->invokeAllDeprecated('Convert your test to a PHPUnit-based one and implement test listeners. See https://www.drupal.org/node/2934242', 'test_finished', [$test->results]);
+    \Drupal::moduleHandler()->invokeAll('test_finished', [$test->results]);
     $test_results[$test_class] = $test->results;
   }
   $size = count($test_list);
@@ -490,7 +490,7 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
     \Drupal::messenger()->addError(t('The test run did not successfully finish.'));
     \Drupal::messenger()->addWarning(t('Use the <em>Clean environment</em> button to clean-up temporary files and tables.'));
   }
-  \Drupal::moduleHandler()->invokeAllDeprecated('Convert your test to a PHPUnit-based one and implement test listeners. See https://www.drupal.org/node/2934242', 'test_group_finished');
+  \Drupal::moduleHandler()->invokeAll('test_group_finished');
 }
 
 /**

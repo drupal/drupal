@@ -36,14 +36,6 @@ function hook_simpletest_alter(&$groups) {
  * A test group has started.
  *
  * This hook is called just once at the beginning of a test group.
- *
- * This hook is only invoked by the Simpletest UI form runner. It will not be
- * invoked by run-tests.sh or the phpunit tool.
- *
- * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Convert
- *   your test to a PHPUnit-based one and implement test listeners.
- *
- * @see https://www.drupal.org/node/2934242
  */
 function hook_test_group_started() {
 }
@@ -52,14 +44,6 @@ function hook_test_group_started() {
  * A test group has finished.
  *
  * This hook is called just once at the end of a test group.
- *
- * This hook is only invoked by the Simpletest UI form runner. It will not be
- * invoked by run-tests.sh or the phpunit tool.
- *
- * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Convert
- *   your test to a PHPUnit-based one and implement test listeners.
- *
- * @see https://www.drupal.org/node/2934242
  */
 function hook_test_group_finished() {
 }
@@ -69,19 +53,11 @@ function hook_test_group_finished() {
  *
  * This hook is called when an individual test has finished.
  *
- * This hook is only invoked by the Simpletest UI form runner. It will not be
- * invoked by run-tests.sh or the phpunit tool.
- *
  * @param
  *   $results The results of the test as gathered by
  *   \Drupal\simpletest\WebTestBase.
  *
  * @see \Drupal\simpletest\WebTestBase::results()
- *
- * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Convert
- *   your test to a PHPUnit-based one and implement test listeners.
- *
- * @see https://www.drupal.org/node/2934242
  */
 function hook_test_finished($results) {
 }
