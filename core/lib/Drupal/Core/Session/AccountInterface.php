@@ -115,6 +115,8 @@ interface AccountInterface {
    * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    *   Use \Drupal\Core\Session\AccountInterface::getAccountName() or
    *   \Drupal\user\UserInterface::getDisplayName() instead.
+   *
+   * @see https://www.drupal.org/node/2572493
    */
   public function getUsername();
 
