@@ -4,9 +4,9 @@
 
 * Run the functional tests:
   ```
-  export SIMPLETEST_DB='mysql://root@localhost/dev_d8'
-  export SIMPLETEST_BASE_URL='http://d8.dev'
-  ./vendor/bin/phpunit -c core --testsuite functional
+  export SIMPLETEST_DB='mysql://root@localhost/dev_d8';
+  export SIMPLETEST_BASE_URL='http://d8.dev';
+  ./vendor/bin/phpunit -c core --testsuite functional;
   ```
 
 Note: functional tests have to be invoked with a user in the same group as the
@@ -50,8 +50,8 @@ For help installing and starting selenium, see http://mink.behat.org/en/latest/d
 Example for Mac:
 
 ```
-brew install selenium-server-standalone
-brew install chromedriver
+brew install selenium-server-standalone;
+brew install chromedriver;
 ```
 
 * Before running tests make sure that selenium-server is running
@@ -61,24 +61,24 @@ selenium-server -port 4444
 
 * Set the correct driver args and run the tests:
 ```
-export MINK_DRIVER_ARGS_WEBDRIVER='["chrome", null, "http://localhost:4444/wd/hub"]'
-./vendor/bin/phpunit -c core --testsuite functional-javascript
+export MINK_DRIVER_ARGS_WEBDRIVER='["chrome", null, "http://localhost:4444/wd/hub"]';
+./vendor/bin/phpunit -c core --testsuite functional-javascript;
 ```
 
 * It is possible to use alternate browsers if the required dependencies are
 installed. For example to use Firefox:
 
 ```
-export MINK_DRIVER_ARGS_WEBDRIVER='["firefox", null, "http://localhost:4444/wd/hub"]'
-./vendor/bin/phpunit -c core --testsuite functional-javascript
+export MINK_DRIVER_ARGS_WEBDRIVER='["firefox", null, "http://localhost:4444/wd/hub"]';
+./vendor/bin/phpunit -c core --testsuite functional-javascript;
 ```
 
 * To force all BrowserTestBase (including legacy JavascriptTestBase) tests to use
 webdriver:
 
 ```
-export MINK_DRIVER_CLASS='Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver'
-./vendor/bin/phpunit -c core --testsuite functional-javascript
+export MINK_DRIVER_CLASS='Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver';
+./vendor/bin/phpunit -c core --testsuite functional-javascript;
 ```
 
 ## Running legacy javascript tests
@@ -93,7 +93,7 @@ have to install and start PhantomJS.
 
 * Then you can run the test:
 ```
-./vendor/bin/phpunit -c core --testsuite functional-javascript
+./vendor/bin/phpunit -c core --testsuite functional-javascript;
 ```
 
 ## Running tests with a different user
@@ -102,10 +102,10 @@ If the default user is e.g. `www-data`, the above functional tests will have to
 be invoked with sudo instead:
 
 ```
-export SIMPLETEST_DB='mysql://root@localhost/dev_d8'
-export SIMPLETEST_BASE_URL='http://d8.dev'
-sudo -u www-data -E ./vendor/bin/phpunit -c core --testsuite functional
-sudo -u www-data -E ./vendor/bin/phpunit -c core --testsuite functional-javascript
+export SIMPLETEST_DB='mysql://root@localhost/dev_d8';
+export SIMPLETEST_BASE_URL='http://d8.dev';
+sudo -u www-data -E ./vendor/bin/phpunit -c core --testsuite functional;
+sudo -u www-data -E ./vendor/bin/phpunit -c core --testsuite functional-javascript;
 ```
 
 ## Nightwatch tests
