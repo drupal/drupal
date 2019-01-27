@@ -20,8 +20,8 @@ class DefaultContentFilesAccessTest extends BrowserTestBase {
     $this->assertNotSame('demo_umami', \Drupal::installProfile());
 
     $files_to_test = [
-      'images/chocolate-brownie-umami.jpg',
-      'recipe_instructions/chocolate-brownie-umami.html',
+      'images/heritage-carrots.jpg',
+      'recipe_instructions/mediterranean-quiche-umami.html',
       'article_body/lets-hear-it-for-carrots.html',
       'articles.csv',
     ];
