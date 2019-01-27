@@ -4,6 +4,7 @@ namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -83,6 +84,8 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
       ->willReturn(new \ArrayIterator(['target_id' => []]));
 
     $this->fieldDefinition = $this->prophesize(FieldDefinitionInterface::class);
+    $this->fieldDefinition->getItemDefinition()
+      ->willReturn($this->prophesize(FieldItemDataDefinition::class)->reveal());
 
   }
 

@@ -1575,18 +1575,43 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // Some top-level keys in the normalization may not be fields on the
       // entity (for example '_links' and '_embedded' in the HAL normalization).
       if ($modified_entity->hasField($field_name)) {
-        $field_type = $modified_entity->get($field_name)->getFieldDefinition()->getType();
-        // Fields are stored in the database, when read they are represented
-        // as strings in PHP memory. The exception: field types that are
-        // stored in a serialized way. Hence we need to cast most expected
-        // field normalizations to strings.
-        $expected_field_normalization = ($field_type !== 'map')
-          ? static::castToString($field_normalization)
-          : $field_normalization;
+        $field_definition = $modified_entity->get($field_name)->getFieldDefinition();
+        $property_definitions = $field_definition->getItemDefinition()->getPropertyDefinitions();
+        $expected_stored_data = [];
+        // Some fields don't have any property definitions, so there's nothing
+        // to denormalize.
+        if (empty($property_definitions)) {
+          $expected_stored_data = $field_normalization;
+        }
+        else {
+          // Denormalize every sent field item property to make it possible to
+          // compare against the stored value.
+          $denormalization_context = ['field_definition' => $field_definition];
+          foreach ($field_normalization as $delta => $expected_field_item_normalization) {
+            foreach ($property_definitions as $property_name => $property_definition) {
+              // Not every property is required to be sent.
+              if (!array_key_exists($property_name, $field_normalization[$delta])) {
+                continue;
+              }
+              // Computed properties are not stored.
+              if ($property_definition->isComputed()) {
+                continue;
+              }
+              $property_value = $field_normalization[$delta][$property_name];
+              $property_value_class = $property_definitions[$property_name]->getClass();
+              $expected_stored_data[$delta][$property_name] = $this->serializer->supportsDenormalization($property_value, $property_value_class, NULL, $denormalization_context)
+                ? $this->serializer->denormalize($property_value, $property_value_class, NULL, $denormalization_context)
+                : $property_value;
+            }
+          }
+          // Fields are stored in the database, when read they are represented
+          // as strings in PHP memory.
+          $expected_stored_data = static::castToString($expected_stored_data);
+        }
         // Subset, not same, because we can e.g. send just the target_id for the
         // bundle in a PATCH or POST request; the response will include more
         // properties.
-        $this->assertArraySubset($expected_field_normalization, $modified_entity->get($field_name)->getValue(), TRUE);
+        $this->assertArraySubset($expected_stored_data, $modified_entity->get($field_name)->getValue(), TRUE);
       }
     }
   }

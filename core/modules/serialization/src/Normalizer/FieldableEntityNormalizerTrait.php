@@ -4,6 +4,8 @@ namespace Drupal\serialization\Normalizer;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\Field\TypedData\FieldItemDataDefinitionInterface;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
@@ -191,6 +193,69 @@ trait FieldableEntityNormalizerTrait {
       $this->entityTypeManager = \Drupal::service('entity_type.manager');
     }
     return $this->entityTypeManager;
+  }
+
+  /**
+   * Build the field item value using the incoming data.
+   *
+   * Most normalizers that extend this class can simply use this method to
+   * construct the denormalized value without having to override denormalize()
+   * and reimplementing its validation logic or its call to set the field value.
+   *
+   * It's recommended to not override this and instead provide a (de)normalizer
+   * at the DataType level.
+   *
+   * @param mixed $data
+   *   The incoming data for this field item.
+   * @param array $context
+   *   The context passed into the Normalizer.
+   *
+   * @return mixed
+   *   The value to use in Entity::setValue().
+   */
+  protected function constructValue($data, $context) {
+    $field_item = $context['target_instance'];
+
+    // Get the property definitions.
+    assert($field_item instanceof FieldItemInterface);
+    $field_definition = $field_item->getFieldDefinition();
+    $item_definition = $field_definition->getItemDefinition();
+    assert($item_definition instanceof FieldItemDataDefinitionInterface);
+    $property_definitions = $item_definition->getPropertyDefinitions();
+
+    if (!is_array($data)) {
+      $property_value = $data;
+      $property_value_class = $property_definitions[$item_definition->getMainPropertyName()]->getClass();
+      if ($this->serializer->supportsDenormalization($property_value, $property_value_class, NULL, $context)) {
+        return $this->serializer->denormalize($property_value, $property_value_class, NULL, $context);
+      }
+      else {
+        return $property_value;
+      }
+    }
+
+    $data_internal = [];
+    if (!empty($property_definitions)) {
+      foreach ($property_definitions as $property_name => $property_definition) {
+        // Not every property is required to be sent.
+        if (!array_key_exists($property_name, $data)) {
+          continue;
+        }
+        $property_value = $data[$property_name];
+        $property_value_class = $property_definition->getClass();
+        if ($this->serializer->supportsDenormalization($property_value, $property_value_class, NULL, $context)) {
+          $data_internal[$property_name] = $this->serializer->denormalize($property_value, $property_value_class, NULL, $context);
+        }
+        else {
+          $data_internal[$property_name] = $property_value;
+        }
+      }
+    }
+    else {
+      $data_internal = $data;
+    }
+
+    return $data_internal;
   }
 
 }

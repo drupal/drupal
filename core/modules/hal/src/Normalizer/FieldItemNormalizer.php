@@ -4,12 +4,15 @@ namespace Drupal\hal\Normalizer;
 
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
+use Drupal\serialization\Normalizer\FieldableEntityNormalizerTrait;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
 /**
  * Converts the Drupal field item object structure to HAL array structure.
  */
 class FieldItemNormalizer extends NormalizerBase {
+
+  use FieldableEntityNormalizerTrait;
 
   /**
    * {@inheritdoc}
@@ -55,21 +58,6 @@ class FieldItemNormalizer extends NormalizerBase {
 
     $field_item->setValue($this->constructValue($data, $context));
     return $field_item;
-  }
-
-  /**
-   * Build the field item value using the incoming data.
-   *
-   * @param $data
-   *   The incoming data for this field item.
-   * @param $context
-   *   The context passed into the Normalizer.
-   *
-   * @return mixed
-   *   The value to use in Entity::setValue().
-   */
-  protected function constructValue($data, $context) {
-    return $data;
   }
 
   /**

@@ -1,0 +1,6 @@
+services:
+  serializer.normalizer.boolean.fieldtype.emoji:
+    class: Drupal\test_fieldtype_boolean_emoji_normalizer\Normalizer\BooleanItemNormalizer
+    tags:
+      # The priority must be higher than serialization.normalizer.field_item.
+      - { name: normalizer , priority: 1000 }
