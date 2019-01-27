@@ -47,24 +47,34 @@ class Schema extends DatabaseSchema {
   /**
    * Make sure to limit identifiers according to PostgreSQL compiled in length.
    *
-   * PostgreSQL allows in standard configuration no longer identifiers than 63
+   * PostgreSQL allows in standard configuration identifiers no longer than 63
    * chars for table/relation names, indexes, primary keys, and constraints. So
    * we map all identifiers that are too long to drupal_base64hash_tag, where
    * tag is one of:
    *   - idx for indexes
    *   - key for constraints
    *   - pkey for primary keys
+   *   - seq for sequences
    *
-   * @param $identifiers
-   *   The arguments to build the identifier string
-   * @return
-   *   The index/constraint/pkey identifier
+   * @param string $table_identifier_part
+   *   The first argument used to build the identifier string. This usually
+   *   refers to a table/relation name.
+   * @param string $column_identifier_part
+   *   The second argument used to build the identifier string. This usually
+   *   refers to one or more column names.
+   * @param string $tag
+   *   The identifier tag. It can be one of 'idx', 'key', 'pkey' or 'seq'.
+   * @param string $separator
+   *   (optional) The separator used to glue together the aforementioned
+   *   identifier parts. Defaults to '__'.
+   *
+   * @return string
+   *   The index/constraint/pkey identifier.
    */
-  protected function ensureIdentifiersLength($identifier) {
-    $args = func_get_args();
-    $info = $this->getPrefixInfo($identifier);
-    $args[0] = $info['table'];
-    $identifierName = implode('__', $args);
+  protected function ensureIdentifiersLength($table_identifier_part, $column_identifier_part, $tag, $separator = '__') {
+    $info = $this->getPrefixInfo($table_identifier_part);
+    $table_identifier_part = $info['table'];
+    $identifierName = implode($separator, [$table_identifier_part, $column_identifier_part, $tag]);
 
     // Retrieve the max identifier length which is usually 63 characters
     // but can be altered before PostgreSQL is compiled so we need to check.
@@ -73,7 +83,7 @@ class Schema extends DatabaseSchema {
     }
 
     if (strlen($identifierName) > $this->maxIdentifierLength) {
-      $saveIdentifier = '"drupal_' . $this->hashBase64($identifierName) . '_' . $args[2] . '"';
+      $saveIdentifier = '"drupal_' . $this->hashBase64($identifierName) . '_' . $tag . '"';
     }
     else {
       $saveIdentifier = $identifierName;
@@ -194,19 +204,31 @@ EOD;
   }
 
   /**
-   * Fetch the list of CHECK constraints used on a field.
+   * Fetches the list of constraints used on a field.
    *
    * We introspect the database to collect the information required by field
    * alteration.
    *
-   * @param $table
+   * @param string $table
    *   The non-prefixed name of the table.
-   * @param $field
+   * @param string $field
    *   The name of the field.
-   * @return
-   *   An array of all the checks for the field.
+   * @param string $constraint_type
+   *   (optional) The type of the constraint. This can be one of the following:
+   *   - c: check constraint;
+   *   - f: foreign key constraint;
+   *   - p: primary key constraint;
+   *   - u: unique constraint;
+   *   - t: constraint trigger;
+   *   - x: exclusion constraint.
+   *   Defaults to 'c' for a CHECK constraint.
+   *   @see https://www.postgresql.org/docs/current/catalog-pg-constraint.html
+   *
+   * @return array
+   *   An array containing all the constraint names for the field.
    */
-  public function queryFieldInformation($table, $field) {
+  public function queryFieldInformation($table, $field, $constraint_type = 'c') {
+    assert(in_array($constraint_type, ['c', 'f', 'p', 'u', 't', 'x']));
     $prefixInfo = $this->getPrefixInfo($table, TRUE);
 
     // Split the key into schema and table for querying.
@@ -216,7 +238,8 @@ EOD;
     $this->connection->addSavepoint();
 
     try {
-      $checks = $this->connection->query("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = 'c' AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", [
+      $checks = $this->connection->query("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = :constraint_type AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", [
+        ':constraint_type' => $constraint_type,
         ':schema' => $schema,
         ':table' => $table_name,
         ':column' => $field,
@@ -561,12 +584,22 @@ EOD;
     // Ensure the new table name does not include schema syntax.
     $prefixInfo = $this->getPrefixInfo($new_name);
 
-    // Rename sequences if there's a serial fields.
+    // Rename sequences if the table contains serial fields.
     $info = $this->queryTableInformation($table);
     if (!empty($info->serial_fields)) {
       foreach ($info->serial_fields as $field) {
-        $old_sequence = $this->prefixNonTable($table, $field, 'seq');
-        $new_sequence = $this->prefixNonTable($new_name, $field, 'seq');
+        // The initial name of the sequence is generated automatically by
+        // PostgreSQL when the table is created, so we need to use
+        // pg_get_serial_sequence() to retrieve it.
+        $old_sequence = $this->connection->query("SELECT pg_get_serial_sequence('" . $old_full_name . "', '" . $field . "')")->fetchField();
+
+        // If the new sequence name exceeds the maximum identifier length limit,
+        // it will not match the pattern that is automatically applied by
+        // PostgreSQL on table creation, but that's ok because
+        // pg_get_serial_sequence() will return our non-standard name on
+        // subsequent table renames.
+        $new_sequence = $this->ensureIdentifiersLength($new_name, $field, 'seq', '_');
+
         $this->connection->query('ALTER SEQUENCE ' . $old_sequence . ' RENAME TO ' . $new_sequence);
       }
     }
@@ -929,7 +962,7 @@ EOD;
       // Type "serial" is known to PostgreSQL, but *only* during table creation,
       // not when altering. Because of that, the sequence needs to be created
       // and initialized by hand.
-      $seq = "{" . $table . "}_" . $field_new . "_seq";
+      $seq = $this->connection->makeSequenceName($table, $field_new);
       $this->connection->query("CREATE SEQUENCE " . $seq);
       // Set sequence to maximal field value to not conflict with existing
       // entries.

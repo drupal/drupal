@@ -479,6 +479,12 @@ abstract class Connection {
    * This information is exposed to all database drivers, although it is only
    * useful on some of them. This method is table prefix-aware.
    *
+   * Note that if a sequence was generated automatically by the database, its
+   * name might not match the one returned by this function. Therefore, in those
+   * cases, it is generally advised to use a database-specific way of retrieving
+   * the name of an auto-created sequence. For example, PostgreSQL provides a
+   * dedicated function for this purpose: pg_get_serial_sequence().
+   *
    * @param string $table
    *   The table name to use for the sequence.
    * @param string $field
