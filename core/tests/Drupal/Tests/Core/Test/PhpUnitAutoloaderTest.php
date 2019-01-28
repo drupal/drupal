@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\simpletest\Unit;
+namespace Drupal\Tests\Core\Test;
 
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests that classes are correctly loaded during PHPUnit initialization.
  *
- * @group simpletest
+ * @group Test
  */
 class PhpUnitAutoloaderTest extends UnitTestCase {
 

@@ -3,6 +3,8 @@
 namespace Drupal\Tests\simpletest\Unit;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Core\DependencyInjection\Container;
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\simpletest\Exception\MissingGroupException;
@@ -274,6 +276,18 @@ EOT;
 class FunctionalExampleTest {}
 EOF;
 
+    $test_profile_info = <<<EOF
+name: Testing
+type: profile
+core: 8.x
+EOF;
+
+    $test_module_info = <<<EOF
+name: Testing
+type: module
+core: 8.x
+EOF;
+
     vfsStream::create([
       'modules' => [
         'test_module' => [
@@ -288,6 +302,23 @@ EOF;
                 'KernelExampleTestBase.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTestBase', '@group example2'], $test_file),
                 'KernelExampleTrait.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTrait', '@group example2'], $test_file),
                 'KernelExampleInterface.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleInterface', '@group example2'], $test_file),
+              ],
+            ],
+          ],
+        ],
+      ],
+      'profiles' => [
+        'test_profile' => [
+          'test_profile.info.yml' => $test_profile_info,
+          'modules' => [
+            'test_profile_module' => [
+              'test_profile_module.info.yml' => $test_module_info,
+              'tests' => [
+                'src' => [
+                  'Kernel' => [
+                    'KernelExampleTest4.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTest4', '@group example3'], $test_file),
+                  ],
+                ],
               ],
             ],
           ],
@@ -350,10 +381,11 @@ EOF;
 
     $extensions = [
       'test_module' => new Extension('vfs://drupal', 'module', 'modules/test_module/test_module.info.yml'),
+      'test_profile_module' => new Extension('vfs://drupal', 'profile', 'profiles/test_profile/modules/test_profile_module/test_profile_module.info.yml'),
     ];
     $test_discovery->setExtensions($extensions);
     $result = $test_discovery->getTestClasses(NULL, ['PHPUnit-Kernel']);
-    $this->assertCount(2, $result);
+    $this->assertCount(3, $result);
     $this->assertEquals([
       'example' => [],
       'example2' => [
@@ -364,7 +396,44 @@ EOF;
           'type' => 'PHPUnit-Kernel',
         ],
       ],
+      'example3' => [
+        'Drupal\Tests\test_profile_module\Kernel\KernelExampleTest4' => [
+          'name' => 'Drupal\Tests\test_profile_module\Kernel\KernelExampleTest4',
+          'description' => 'Test description',
+          'group' => 'example3',
+          'type' => 'PHPUnit-Kernel',
+        ],
+      ],
     ], $result);
+  }
+
+  /**
+   * @covers ::getTestClasses
+   */
+  public function testGetTestsInProfiles() {
+    $this->setupVfsWithTestClasses();
+    $class_loader = $this->prophesize(ClassLoader::class);
+    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
+
+    $container = new Container();
+    $container->set('kernel', new DrupalKernel('prod', new ClassLoader()));
+    $container->set('site.path', 'sites/default');
+    \Drupal::setContainer($container);
+
+    $test_discovery = new TestDiscovery('vfs://drupal', $class_loader->reveal(), $module_handler->reveal());
+
+    $result = $test_discovery->getTestClasses(NULL, ['PHPUnit-Kernel']);
+    $expected = [
+      'example3' => [
+        'Drupal\Tests\test_profile_module\Kernel\KernelExampleTest4' => [
+          'name' => 'Drupal\Tests\test_profile_module\Kernel\KernelExampleTest4',
+          'description' => 'Test description',
+          'group' => 'example3',
+          'type' => 'PHPUnit-Kernel',
+        ],
+      ],
+    ];
+    $this->assertEquals($expected, $result);
   }
 
   /**

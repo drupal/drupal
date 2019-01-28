@@ -1,18 +1,13 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\simpletest\Unit\AssertContentTraitTest.
- */
+namespace Drupal\Tests\Core\Test;
 
-namespace Drupal\Tests\simpletest\Unit;
-
-use Drupal\simpletest\AssertContentTrait;
+use Drupal\KernelTests\AssertContentTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\simpletest\AssertContentTrait
- * @group simpletest
+ * @coversDefaultClass \Drupal\KernelTests\AssertContentTrait
+ * @group Test
  */
 class AssertContentTraitTest extends UnitTestCase {
 

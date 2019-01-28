@@ -8,6 +8,7 @@ use Drupal\Tests\UnitTestCase;
  * @requires extension curl
  * @coversDefaultClass \Drupal\simpletest\TestBase
  * @group simpletest
+ * @group TestBase
  */
 class TestBaseTest extends UnitTestCase {
 

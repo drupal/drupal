@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\simpletest\Tests;
+namespace Drupal\FunctionalTests\Core\Test;
 
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests batch operations during tests execution.
@@ -11,13 +11,12 @@ use Drupal\simpletest\WebTestBase;
  * This demonstrates that a batch will be successfully executed during module
  * installation when running tests.
  *
- * @group simpletest
- * @group WebTestBase
+ * @group Test
  * @group FunctionalTestSetupTrait
  *
- * @see \Drupal\FunctionalTests\Core\Test\ModuleInstallBatchTest
+ * @see \Drupal\simpletest\Tests\SimpleTestInstallBatchTest
  */
-class SimpleTestInstallBatchTest extends WebTestBase {
+class ModuleInstallBatchTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -30,10 +29,9 @@ class SimpleTestInstallBatchTest extends WebTestBase {
    * Tests loading entities created in a batch in test_batch_test_install().
    */
   public function testLoadingEntitiesCreatedInBatch() {
-    $entity1 = EntityTest::load(1);
-    $this->assertNotNull($entity1, 'Successfully loaded entity 1.');
-    $entity2 = EntityTest::load(2);
-    $this->assertNotNull($entity2, 'Successfully loaded entity 2.');
+    foreach ([1, 2] as $id) {
+      $this->assertNotNull(EntityTest::load($id), 'Successfully loaded entity ' . $id);
+    }
   }
 
 }

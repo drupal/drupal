@@ -8,6 +8,7 @@ use Drupal\simpletest\WebTestBase;
  * Tests the internal browser of the testing framework.
  *
  * @group simpletest
+ * @group WebTestBase
  */
 class BrowserTest extends WebTestBase {
 

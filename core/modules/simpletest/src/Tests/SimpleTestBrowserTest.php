@@ -4,12 +4,12 @@ namespace Drupal\simpletest\Tests;
 
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Tests\simpletest\Functional\ThroughUITest;
 
 /**
- * Tests the Simpletest UI internal browser.
+ * Tests the WebTestBase internal browser.
  *
  * @group simpletest
+ * @group WebTestBase
  */
 class SimpleTestBrowserTest extends WebTestBase {
 
@@ -114,35 +114,6 @@ class SimpleTestBrowserTest extends WebTestBase {
     $this->assertResponse(403, 'Requesting http.php with a normal User-Agent fails.');
     $this->drupalGet($https_path);
     $this->assertResponse(403, 'Requesting https.php with a normal User-Agent fails.');
-  }
-
-  /**
-   * Tests that PHPUnit and KernelTestBase tests work through the UI.
-   */
-  public function testTestingThroughUI() {
-    $this->drupalGet('admin/config/development/testing');
-    $this->assertTrue(strpos($this->drupalSettings['simpleTest']['images'][0], 'core/misc/menu-collapsed.png') > 0, 'drupalSettings contains a link to core/misc/menu-collapsed.png.');
-    // We can not test WebTestBase tests here since they require a valid .htkey
-    // to be created. However this scenario is covered by the testception of
-    // \Drupal\simpletest\Tests\SimpleTestTest.
-
-    $tests = [
-      // A KernelTestBase test.
-      'Drupal\KernelTests\KernelTestBaseTest',
-      // A PHPUnit unit test.
-      'Drupal\Tests\action\Unit\Menu\ActionLocalTasksTest',
-      // A PHPUnit functional test.
-      ThroughUITest::class,
-    ];
-
-    foreach ($tests as $test) {
-      $this->drupalGet('admin/config/development/testing');
-      $edit = [
-        "tests[$test]" => TRUE,
-      ];
-      $this->drupalPostForm(NULL, $edit, t('Run tests'));
-      $this->assertText('0 fails, 0 exceptions');
-    }
   }
 
 }

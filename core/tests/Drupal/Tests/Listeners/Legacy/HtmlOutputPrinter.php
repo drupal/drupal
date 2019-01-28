@@ -15,7 +15,7 @@ class HtmlOutputPrinter extends \PHPUnit_TextUI_ResultPrinter {
   /**
    * {@inheritdoc}
    */
-  public function __construct($out, $verbose, $colors, $debug, $numberOfColumns) {
+  public function __construct($out = NULL, $verbose = FALSE, $colors = self::COLOR_DEFAULT, $debug = FALSE, $numberOfColumns = 80) {
     parent::__construct($out, $verbose, $colors, $debug, $numberOfColumns);
 
     $this->setUpHtmlOutput();

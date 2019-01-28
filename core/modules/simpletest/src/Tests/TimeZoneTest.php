@@ -5,9 +5,10 @@ namespace Drupal\simpletest\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * This test will check SimpleTest's default time zone handling.
+ * This test will check WebTestBase's default time zone handling.
  *
  * @group simpletest
+ * @group WebTestBase
  */
 class TimeZoneTest extends WebTestBase {
 

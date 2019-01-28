@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\simpletest\Traits;
+namespace Drupal\Tests\system\Traits;
 
 /**
  * A nothing trait, but declared in the Drupal\Tests namespace.
@@ -8,7 +8,7 @@ namespace Drupal\Tests\simpletest\Traits;
  * We use this trait to test autoloading of traits outside of the normal test
  * suite namespaces.
  *
- * @see \Drupal\Tests\simpletest\Unit\TraitAccessTest
+ * @see \Drupal\Tests\system\Unit\TraitAccessTest
  */
 trait TestTrait {
 

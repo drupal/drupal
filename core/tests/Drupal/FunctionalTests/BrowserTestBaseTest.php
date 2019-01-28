@@ -641,14 +641,20 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests the assumption that local time is in 'Australia/Sydney'.
    */
   public function testLocalTimeZone() {
+    $expected = 'Australia/Sydney';
     // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php
-    $this->assertEquals('Australia/Sydney', date_default_timezone_get());
+    $this->assertEquals($expected, date_default_timezone_get());
 
     // The 'Australia/Sydney' time zone is also set in
     // FunctionalTestSetupTrait::initConfig().
     $config_factory = $this->container->get('config.factory');
     $value = $config_factory->get('system.date')->get('timezone.default');
-    $this->assertEquals('Australia/Sydney', $value);
+    $this->assertEquals($expected, $value);
+
+    // Test that users have the correct time zone set.
+    $this->assertEquals($expected, $this->rootUser->getTimeZone());
+    $admin_user = $this->drupalCreateUser(['administer site configuration']);
+    $this->assertEquals($expected, $admin_user->getTimeZone());
   }
 
   /**
@@ -682,6 +688,23 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->setExpectedException(\InvalidArgumentException::class, 'The module demo_umami_content does not exist.');
     $this->assertFileExists('core/profiles/demo_umami/modules/demo_umami_content/demo_umami_content.info.yml');
     \Drupal::service('extension.list.module')->getPathname('demo_umami_content');
+  }
+
+  /**
+   * Test the protections provided by .htkey.
+   */
+  public function testHtkey() {
+    // Remove the Simpletest private key file so we can test the protection
+    // against requests that forge a valid testing user agent to gain access
+    // to the installer.
+    // @see drupal_valid_test_ua()
+    // Not using File API; a potential error must trigger a PHP warning.
+    $install_url = Url::fromUri('base:core/install.php', ['external' => TRUE, 'absolute' => TRUE])->toString();
+    $this->drupalGet($install_url);
+    $this->assertSession()->statusCodeEquals(200);
+    unlink($this->siteDirectory . '/.htkey');
+    $this->drupalGet($install_url);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }
