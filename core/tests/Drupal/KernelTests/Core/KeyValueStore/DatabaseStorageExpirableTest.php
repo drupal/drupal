@@ -153,6 +153,12 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
     foreach (['troubles', 'still'] as $key) {
       $this->assertTrue(!empty($all[$key]));
     }
+
+    // Test DatabaseStorageExpirable::setWithExpireIfNotExists() will overwrite
+    // expired items.
+    $this->assertNull($stores[0]->get('yesterday'));
+    $stores[0]->setWithExpireIfNotExists('yesterday', 'Oh, yesterday came suddenly', $day);
+    $this->assertSame('Oh, yesterday came suddenly', $stores[0]->get('yesterday'));
   }
 
 }
