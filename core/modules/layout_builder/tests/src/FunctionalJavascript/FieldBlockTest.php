@@ -91,7 +91,7 @@ class FieldBlockTest extends WebDriverTestBase {
     $assert_session->fieldNotExists('settings[formatter][settings][format_type]');
     $assert_session->fieldExists('settings[formatter][settings][granularity]');
     $page->pressButton('Save block');
-    $assert_session->pageTextContains('The block configuration has been saved.');
+    $this->assertTrue($assert_session->waitForText('The block configuration has been saved.'));
 
     // Configure the block and change the formatter again.
     $this->clickLink('Configure');
@@ -101,7 +101,7 @@ class FieldBlockTest extends WebDriverTestBase {
     $page->selectFieldOption('settings[formatter][settings][format_type]', 'long');
 
     $page->pressButton('Save block');
-    $assert_session->pageTextContains('The block configuration has been saved.');
+    $this->assertTrue($assert_session->waitForText('The block configuration has been saved.'));
 
     // Assert that the field value is updated.
     $this->clickLink('Configure');
