@@ -102,6 +102,26 @@ JS;
   }
 
   /**
+   * Waits for the specified text and returns its element when available.
+   *
+   * @param string $text
+   *   The text to wait for.
+   * @param int $timeout
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
+   *
+   * @return \Behat\Mink\Element\NodeElement|null
+   *   The page element node if found and visible, NULL if not.
+   */
+  public function waitForText($text, $timeout = 10000) {
+    $page = $this->session->getPage();
+    return $page->waitFor($timeout / 1000, function () use ($page, $text) {
+      $actual = preg_replace('/\s+/u', ' ', $page->getText());
+      $regex = '/' . preg_quote($text, '/') . '/ui';
+      return (bool) preg_match($regex, $actual);
+    });
+  }
+
+  /**
    * Waits for a button (input[type=submit|image|button|reset], button) with
    * specified locator and returns it.
    *
