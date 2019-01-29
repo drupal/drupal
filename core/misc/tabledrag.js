@@ -285,10 +285,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         case 38:
         case 63232:
           {
-            var $previousRow = $(self.rowObject.element).prev('tr:first-of-type');
+            var $previousRow = $(self.rowObject.element).prev('tr').eq(0);
             var previousRow = $previousRow.get(0);
             while (previousRow && $previousRow.is(':hidden')) {
-              $previousRow = $(previousRow).prev('tr:first-of-type');
+              $previousRow = $(previousRow).prev('tr').eq(0);
               previousRow = $previousRow.get(0);
             }
             if (previousRow) {
@@ -299,7 +299,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               if ($(item).is('.tabledrag-root')) {
                 groupHeight = 0;
                 while (previousRow && $previousRow.find('.js-indentation').length) {
-                  $previousRow = $(previousRow).prev('tr:first-of-type');
+                  $previousRow = $(previousRow).prev('tr').eq(0);
                   previousRow = $previousRow.get(0);
                   groupHeight += $previousRow.is(':hidden') ? 0 : previousRow.offsetHeight;
                 }
@@ -329,10 +329,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         case 40:
         case 63233:
           {
-            var $nextRow = $(self.rowObject.group).eq(-1).next('tr:first-of-type');
+            var $nextRow = $(self.rowObject.group).eq(-1).next('tr').eq(0);
             var nextRow = $nextRow.get(0);
             while (nextRow && $nextRow.is(':hidden')) {
-              $nextRow = $(nextRow).next('tr:first-of-type');
+              $nextRow = $(nextRow).next('tr').eq(0);
               nextRow = $nextRow.get(0);
             }
             if (nextRow) {
