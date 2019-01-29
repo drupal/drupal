@@ -7,7 +7,7 @@ use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
 /**
  * Provides methods for an entity to support translation.
  */
-interface TranslatableInterface extends TranslatableDataInterface {
+interface TranslatableInterface extends TranslatableDataInterface, EntityInterface {
 
   /**
    * Determines if the current translation of the entity has unsaved changes.

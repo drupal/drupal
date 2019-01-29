@@ -12,9 +12,9 @@ namespace Drupal\Core\Entity;
  * entity types implementing this interface in order to disallow concurrent
  * editing.
  *
- * @see Drupal\Core\Entity\Plugin\Validation\Constraint\EntityChangedConstraint
+ * @see \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityChangedConstraint
  */
-interface EntityChangedInterface {
+interface EntityChangedInterface extends EntityInterface {
 
   /**
    * Gets the timestamp of the last entity change for the current translation.

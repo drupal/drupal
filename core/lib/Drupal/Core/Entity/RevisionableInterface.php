@@ -20,7 +20,7 @@ namespace Drupal\Core\Entity;
  * @see https://www.drupal.org/docs/8/api/entity-api/structure-of-an-entity-annotation
  * @see https://www.drupal.org/docs/8/api/entity-api/making-an-entity-revisionable
  */
-interface RevisionableInterface {
+interface RevisionableInterface extends EntityInterface {
 
   /**
    * Determines whether a new revision should be created on save.

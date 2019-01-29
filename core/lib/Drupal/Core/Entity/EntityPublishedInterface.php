@@ -5,7 +5,7 @@ namespace Drupal\Core\Entity;
 /**
  * Provides an interface for access to an entity's published state.
  */
-interface EntityPublishedInterface {
+interface EntityPublishedInterface extends EntityInterface {
 
   /**
    * Returns whether or not the entity is published.

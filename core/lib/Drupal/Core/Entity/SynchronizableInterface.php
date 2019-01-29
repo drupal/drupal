@@ -5,7 +5,7 @@ namespace Drupal\Core\Entity;
 /**
  * Defines methods for an entity that supports synchronization.
  */
-interface SynchronizableInterface {
+interface SynchronizableInterface extends EntityInterface {
 
   /**
    * Sets the status of the synchronization flag.
