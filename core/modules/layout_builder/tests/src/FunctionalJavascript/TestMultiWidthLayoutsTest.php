@@ -100,6 +100,12 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
         $page->findField('layout_settings[column_widths]')->setValue($width);
         $page->pressButton("Update");
         $this->assertWidthClassApplied($width_class);
+
+        // Save the layout and return to the Layout Builder UI for more changes.
+        $assert_session->pageTextContains('You have unsaved changes.');
+        $page->clickLink('Save Layout');
+        $assert_session->pageTextNotContains('You have unsaved changes.');
+        $this->clickLink('Manage layout');
       }
       $assert_session->linkExists('Remove section');
       $this->clickLink('Remove section');
