@@ -1,7 +1,0 @@
-tabledrag_test.test_form:
-  path: '/tabledrag_test'
-  defaults:
-    _form: '\Drupal\tabledrag_test\Form\TableDragTestForm'
-    _title: 'Draggable table test'
-  requirements:
-    _access: 'TRUE'
