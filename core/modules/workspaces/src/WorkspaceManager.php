@@ -30,8 +30,8 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * @var string[]
    */
   protected $blacklist = [
-    'workspace_association',
-    'workspace',
+    'workspace_association' => 'workspace_association',
+    'workspace' => 'workspace',
   ];
 
   /**
@@ -132,11 +132,17 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * {@inheritdoc}
    */
   public function isEntityTypeSupported(EntityTypeInterface $entity_type) {
-    if (!isset($this->blacklist[$entity_type->id()])
-      && $entity_type->entityClassImplements(EntityPublishedInterface::class)
-      && $entity_type->isRevisionable()) {
+    // First, check if we already determined whether this entity type is
+    // supported or not.
+    if (isset($this->blacklist[$entity_type->id()])) {
+      return FALSE;
+    }
+
+    if ($entity_type->entityClassImplements(EntityPublishedInterface::class) && $entity_type->isRevisionable()) {
       return TRUE;
     }
+
+    // This entity type can not belong to a workspace, add it to the blacklist.
     $this->blacklist[$entity_type->id()] = $entity_type->id();
     return FALSE;
   }
