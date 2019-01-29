@@ -558,14 +558,10 @@
         case 38:
         // Safari up arrow.
         case 63232: {
-          let $previousRow = $(self.rowObject.element)
-            .prev('tr')
-            .eq(0);
+          let $previousRow = $(self.rowObject.element).prev('tr:first-of-type');
           let previousRow = $previousRow.get(0);
           while (previousRow && $previousRow.is(':hidden')) {
-            $previousRow = $(previousRow)
-              .prev('tr')
-              .eq(0);
+            $previousRow = $(previousRow).prev('tr:first-of-type');
             previousRow = $previousRow.get(0);
           }
           if (previousRow) {
@@ -581,9 +577,7 @@
                 previousRow &&
                 $previousRow.find('.js-indentation').length
               ) {
-                $previousRow = $(previousRow)
-                  .prev('tr')
-                  .eq(0);
+                $previousRow = $(previousRow).prev('tr:first-of-type');
                 previousRow = $previousRow.get(0);
                 groupHeight += $previousRow.is(':hidden')
                   ? 0
@@ -624,13 +618,10 @@
         case 63233: {
           let $nextRow = $(self.rowObject.group)
             .eq(-1)
-            .next('tr')
-            .eq(0);
+            .next('tr:first-of-type');
           let nextRow = $nextRow.get(0);
           while (nextRow && $nextRow.is(':hidden')) {
-            $nextRow = $(nextRow)
-              .next('tr')
-              .eq(0);
+            $nextRow = $(nextRow).next('tr:first-of-type');
             nextRow = $nextRow.get(0);
           }
           if (nextRow) {
