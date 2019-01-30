@@ -62,7 +62,7 @@ class EntityDeleteMultipleAccessCheck implements AccessInterface {
    *   Allowed or forbidden, neutral if tempstore is empty.
    */
   public function access(AccountInterface $account, $entity_type_id) {
-    if (!$this->requestStack->getCurrentRequest()->getSession()) {
+    if (!$this->requestStack->getCurrentRequest()->hasSession()) {
       return AccessResult::neutral();
     }
     $selection = $this->tempStore->get($account->id() . ':' . $entity_type_id);

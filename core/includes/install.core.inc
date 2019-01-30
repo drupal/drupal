@@ -145,8 +145,8 @@ function install_drupal($class_loader, $settings = [], callable $callback = NULL
   // next page.
   if ($state['interactive']) {
     // If a session has been initiated in this request, make sure to save it.
-    if ($session = \Drupal::request()->getSession()) {
-      $session->save();
+    if (\Drupal::request()->hasSession()) {
+      \Drupal::request()->getSession()->save();
     }
     if ($state['parameters_changed']) {
       // Redirect to the correct page if the URL parameters have changed.
@@ -657,8 +657,8 @@ function install_run_task($task, &$install_state) {
       $url = Url::fromUri('base:install.php', ['query' => $install_state['parameters'], 'script' => '']);
       $response = batch_process($url, clone $url);
       if ($response instanceof Response) {
-        if ($session = \Drupal::request()->getSession()) {
-          $session->save();
+        if (\Drupal::request()->hasSession()) {
+          \Drupal::request()->getSession()->save();
         }
         // Send the response.
         $response->send();
