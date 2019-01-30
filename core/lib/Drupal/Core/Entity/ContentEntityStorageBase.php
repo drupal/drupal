@@ -164,7 +164,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * Checks whether any entity revision is translated.
    *
-   * @param \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\TranslatableInterface $entity
+   * @param \Drupal\Core\Entity\TranslatableInterface $entity
    *   The entity object to be checked.
    *
    * @return bool
@@ -186,7 +186,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * the entity has any translation in the storage and thus should be considered
    * as multilingual.
    *
-   * @param \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\TranslatableInterface $entity
+   * @param \Drupal\Core\Entity\TranslatableInterface $entity
    *   The entity object to be checked.
    *
    * @return bool

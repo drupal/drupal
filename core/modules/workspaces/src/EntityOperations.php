@@ -245,11 +245,10 @@ class EntityOperations implements ContainerInjectionInterface {
    * the new information. Otherwise, a new WorkspaceAssociation entity is created to
    * store the passed-in entity's information.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\RevisionableInterface $entity
    *   The entity to update or create from.
    */
-  protected function trackEntity(EntityInterface $entity) {
-    /** @var \Drupal\Core\Entity\RevisionableInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
+  protected function trackEntity(RevisionableInterface $entity) {
     // If the entity is not new, check if there's an existing
     // WorkspaceAssociation entity for it.
     $workspace_association_storage = $this->entityTypeManager->getStorage('workspace_association');

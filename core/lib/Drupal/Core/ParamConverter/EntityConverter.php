@@ -152,12 +152,12 @@ class EntityConverter implements ParamConverterInterface {
   /**
    * Returns the ID of the latest revision translation of the specified entity.
    *
-   * @param \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface $entity
+   * @param \Drupal\Core\Entity\RevisionableInterface $entity
    *   The default revision of the entity being converted.
    * @param string $langcode
    *   The language of the revision translation to be loaded.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface
+   * @return \Drupal\Core\Entity\RevisionableInterface
    *   The latest translation-affecting revision for the specified entity, or
    *   just the latest revision, if the specified entity is not translatable or
    *   does not have a matching translation yet.
@@ -179,7 +179,6 @@ class EntityConverter implements ParamConverterInterface {
       // revision. In this particular case the latest revision is always going
       // to be the default revision, since pending revisions would not be
       // supported.
-      /** @var \Drupal\Core\Entity\TranslatableRevisionableInterface $revision */
       $revision = $revision_id ? $this->loadRevision($entity, $revision_id) : NULL;
       if (!$revision || ($revision->wasDefaultRevision() && !$revision->isDefaultRevision())) {
         $revision = NULL;
@@ -201,18 +200,19 @@ class EntityConverter implements ParamConverterInterface {
   /**
    * Loads the specified entity revision.
    *
-   * @param \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface $entity
+   * @param \Drupal\Core\Entity\RevisionableInterface $entity
    *   The default revision of the entity being converted.
    * @param string $revision_id
    *   The identifier of the revision to be loaded.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface
+   * @return \Drupal\Core\Entity\RevisionableInterface
    *   An entity revision object.
    */
   protected function loadRevision(RevisionableInterface $entity, $revision_id) {
     // We explicitly perform a loose equality check, since a revision ID may
     // be returned as an integer or a string.
     if ($entity->getLoadedRevisionId() != $revision_id) {
+      /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
       $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
       return $storage->loadRevision($revision_id);
     }

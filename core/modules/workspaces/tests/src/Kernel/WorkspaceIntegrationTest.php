@@ -582,7 +582,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $published_key = $entity_keys['published'];
 
     // Check \Drupal\Core\Entity\EntityStorageInterface::loadMultiple().
-    /** @var \Drupal\Core\Entity\EntityInterface[]|\Drupal\Core\Entity\RevisionableInterface[]|\Drupal\Core\Entity\EntityPublishedInterface[] $entities */
+    /** @var \Drupal\Core\Entity\RevisionableInterface[]|\Drupal\Core\Entity\EntityPublishedInterface[] $entities */
     $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadMultiple(array_column($expected_default_revisions, $id_key));
     foreach ($expected_default_revisions as $expected_default_revision) {
       $entity_id = $expected_default_revision[$id_key];
@@ -593,7 +593,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     // Check \Drupal\Core\Entity\EntityStorageInterface::loadUnchanged().
     foreach ($expected_default_revisions as $expected_default_revision) {
-      /** @var \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
+      /** @var \Drupal\Core\Entity\RevisionableInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
       $entity = $this->entityTypeManager->getStorage($entity_type_id)->loadUnchanged($expected_default_revision[$id_key]);
       $this->assertEquals($expected_default_revision[$revision_key], $entity->getRevisionId());
       $this->assertEquals($expected_default_revision[$label_key], $entity->label());
@@ -616,7 +616,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $label_key = $entity_keys['label'];
     $published_key = $entity_keys['published'];
 
-    /** @var \Drupal\Core\Entity\EntityInterface[]|\Drupal\Core\Entity\RevisionableInterface[]|\Drupal\Core\Entity\EntityPublishedInterface[] $entities */
+    /** @var \Drupal\Core\Entity\RevisionableInterface[]|\Drupal\Core\Entity\EntityPublishedInterface[] $entities */
     $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadMultipleRevisions(array_column($expected_values, $revision_key));
     foreach ($expected_values as $expected_revision) {
       $revision_id = $expected_revision[$revision_key];

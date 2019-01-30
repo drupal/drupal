@@ -13,7 +13,7 @@ class ContentTranslationMetadataWrapper implements ContentTranslationMetadataWra
   /**
    * The wrapped entity translation.
    *
-   * @var \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\FieldableEntityInterface|\Drupal\Core\TypedData\TranslatableInterface
+   * @var \Drupal\Core\Entity\FieldableEntityInterface|\Drupal\Core\TypedData\TranslatableInterface
    */
   protected $translation;
 
