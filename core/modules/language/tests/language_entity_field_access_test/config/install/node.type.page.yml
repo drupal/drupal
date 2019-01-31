@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies: {  }
+name: page
+type: page
+description: ''
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: false
