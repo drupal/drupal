@@ -123,7 +123,7 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
     else {
       // If we're sure the transition exists, make sure the user has permission
       // to use it.
-      if (!$this->stateTransitionValidation->isTransitionValid($workflow, $original_state, $new_state, $this->currentUser)) {
+      if (!$this->stateTransitionValidation->isTransitionValid($workflow, $original_state, $new_state, $this->currentUser, $entity)) {
         $this->context->addViolation($constraint->invalidTransitionAccess, [
           '%original_state' => $original_state->label(),
           '%new_state' => $new_state->label(),
