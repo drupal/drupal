@@ -52,7 +52,10 @@ class StateTransitionValidation implements StateTransitionValidationInterface {
   /**
    * {@inheritdoc}
    */
-  public function isTransitionValid(WorkflowInterface $workflow, StateInterface $original_state, StateInterface $new_state, AccountInterface $user) {
+  public function isTransitionValid(WorkflowInterface $workflow, StateInterface $original_state, StateInterface $new_state, AccountInterface $user, ContentEntityInterface $entity = NULL) {
+    if ($entity === NULL) {
+      @trigger_error(sprintf('Omitting the $entity parameter from %s is deprecated and will be required in Drupal 9.0.0.', __METHOD__), E_USER_DEPRECATED);
+    }
     $transition = $workflow->getTypePlugin()->getTransitionFromStateToState($original_state->id(), $new_state->id());
     return $user->hasPermission('use ' . $workflow->id() . ' transition ' . $transition->id());
   }
