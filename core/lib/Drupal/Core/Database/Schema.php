@@ -239,7 +239,7 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @param $table
    *   The name of the table in drupal (no prefixing).
-   * @param $name
+   * @param $column
    *   The name of the column.
    *
    * @return
