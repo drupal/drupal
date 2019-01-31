@@ -339,7 +339,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   };
 
   Drupal.Ajax.prototype.beforeSerialize = function (element, options) {
-    if (this.$form) {
+    if (this.$form && document.contains(this.$form.get(0))) {
       var settings = this.settings || drupalSettings;
       Drupal.detachBehaviors(this.$form.get(0), settings, 'serialize');
     }
@@ -451,7 +451,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
     }
 
-    if (this.$form) {
+    if (this.$form && document.contains(this.$form.get(0))) {
       var settings = this.settings || drupalSettings;
       Drupal.attachBehaviors(this.$form.get(0), settings);
     }
@@ -493,7 +493,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     $(this.element).prop('disabled', false);
 
-    if (this.$form) {
+    if (this.$form && document.contains(this.$form.get(0))) {
       var settings = this.settings || drupalSettings;
       Drupal.attachBehaviors(this.$form.get(0), settings);
     }
