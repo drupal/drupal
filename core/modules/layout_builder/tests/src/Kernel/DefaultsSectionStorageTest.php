@@ -25,6 +25,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
   protected static $modules = [
     'layout_discovery',
     'layout_builder',
+    'layout_builder_defaults_test',
     'entity_test',
     'field',
     'system',
@@ -44,11 +45,25 @@ class DefaultsSectionStorageTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
+    entity_test_create_bundle('bundle_with_extra_fields');
     $this->installSchema('system', ['key_value_expire']);
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
+    $this->installConfig(['layout_builder_defaults_test']);
 
     $this->plugin = DefaultsSectionStorage::create($this->container, [], 'defaults', new SectionStorageDefinition());
+  }
+
+  /**
+   * Tests installing defaults via config install.
+   */
+  public function testConfigInstall() {
+    /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface $display */
+    $display = LayoutBuilderEntityViewDisplay::load('entity_test.bundle_with_extra_fields.default');
+    $section = $display->getSection(0);
+    $this->assertInstanceOf(Section::class, $section);
+    $this->assertEquals('layout_twocol_section', $section->getLayoutId());
+    $this->assertEquals(['column_widths' => '50-50'], $section->getLayoutSettings());
   }
 
   /**

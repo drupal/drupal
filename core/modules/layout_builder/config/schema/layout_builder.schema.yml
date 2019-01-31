@@ -64,3 +64,16 @@ inline_block:
 
 block.settings.inline_block:*:
   type: inline_block
+
+layout_builder_multi_width:
+  type: layout_plugin.settings
+  mapping:
+    column_widths:
+      type: string
+      label: 'Column widths'
+
+layout_plugin.settings.layout_twocol_section:
+  type: layout_builder_multi_width
+
+layout_plugin.settings.layout_threecol_section:
+  type: layout_builder_multi_width
