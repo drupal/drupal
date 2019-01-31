@@ -42,13 +42,7 @@ class FilterCriteriaTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    // Use the 'And/Or Rearrange' link for fields to open a dialog.
-    $dropbutton = $page->find('css', '.views-ui-display-tab-bucket.filter .dropbutton-toggle button');
-    $dropbutton->click();
-    $add_link = $page->findById('views-rearrange-filter');
-    $this->assertTrue($add_link->isVisible(), 'And/Or Rearrange button found.');
-    $add_link->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->openFilterDialog();
 
     // Add a new filter group.
     $create_new_filter_group = $page->findById('views-add-group-link');
@@ -71,6 +65,38 @@ class FilterCriteriaTest extends WebDriverTestBase {
     $this->drupalGet('admin/structure/views/view/who_s_online');
     $page = $this->getSession()->getPage();
     $this->assertNotNull($page->findLink('User: Last access (>= -15 minutes)'));
+
+    // Add group again to test drag-n-drop.
+    $this->openFilterDialog();
+
+    $this->assertSession()->waitForLink('Create new filter group', 20000);
+    $create_new_filter_group = $page->findLink('Create new filter group');
+    $this->assertTrue($create_new_filter_group->isVisible(), 'Add group link found.');
+    $create_new_filter_group->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Validate dragging works correctly and the new group will contain the new
+    // filter.
+    $dragged = $page->find('css', ".tabledrag-handle");
+    $target = $page->find('css', '.filter-group-operator-row');
+    $dragged->dragTo($target);
+
+    $remove_link = $page->findLink('Remove group');
+    $this->assertFalse($remove_link->isVisible(), 'Remove group should be invisible after drag.');
+  }
+
+  /**
+   * Uses the 'And/Or Rearrange' link for filters to open a dialog.
+   */
+  protected function openFilterDialog() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $dropbutton = $page->find('css', '.views-ui-display-tab-bucket.filter .dropbutton-toggle button');
+    $dropbutton->click();
+    $add_link = $page->findById('views-rearrange-filter');
+    $this->assertTrue($add_link->isVisible(), 'And/Or Rearrange button found.');
+    $add_link->click();
+    $assert_session->assertWaitOnAjaxRequest();
   }
 
 }

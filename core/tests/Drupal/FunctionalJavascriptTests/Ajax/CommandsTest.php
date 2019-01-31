@@ -37,14 +37,20 @@ class CommandsTest extends WebDriverTestBase {
     $this->assertWaitPageContains('<div id="after_div">Something can be inserted after this</div>This will be placed after');
 
     // Tests the 'alert' command.
-    $test_alert_command = <<<JS
-window.alert = function() {
-  document.body.innerHTML += '<div class="alert-command">Alert</div>';
-};
-JS;
-    $session->executeScript($test_alert_command);
     $page->pressButton("AJAX 'Alert': Click to alert");
-    $this->assertWaitPageContains('<div class="alert-command">Alert</div>');
+    // Wait for the alert to appear.
+    $page->waitFor(10, function () use ($session) {
+      try {
+        $session->getDriver()->getWebDriverSession()->getAlert_text();
+        return TRUE;
+      }
+      catch (\Exception $e) {
+        return FALSE;
+      }
+    });
+    $alert_text = $this->getSession()->getDriver()->getWebDriverSession()->getAlert_text();
+    $this->assertEquals('Alert', $alert_text);
+    $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
 
     // Tests the 'append' command.
     $page->pressButton("AJAX 'Append': Click to append something");
