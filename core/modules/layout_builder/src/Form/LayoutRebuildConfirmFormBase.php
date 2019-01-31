@@ -3,7 +3,6 @@
 namespace Drupal\layout_builder\Form;
 
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
@@ -47,12 +46,9 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
    *
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
    *   The layout tempstore repository.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
-   *   The class resolver.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, ClassResolverInterface $class_resolver) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
-    $this->classResolver = $class_resolver;
   }
 
   /**
@@ -60,8 +56,7 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('layout_builder.tempstore_repository'),
-      $container->get('class_resolver')
+      $container->get('layout_builder.tempstore_repository')
     );
   }
 

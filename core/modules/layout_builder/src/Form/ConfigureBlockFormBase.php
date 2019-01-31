@@ -6,7 +6,6 @@ use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Block\BlockPluginInterface;
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -109,17 +108,14 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
    *   The block manager.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid
    *   The UUID generator.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
-   *   The class resolver.
    * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $plugin_form_manager
    *   The plugin form manager.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, ContextRepositoryInterface $context_repository, BlockManagerInterface $block_manager, UuidInterface $uuid, ClassResolverInterface $class_resolver, PluginFormFactoryInterface $plugin_form_manager) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, ContextRepositoryInterface $context_repository, BlockManagerInterface $block_manager, UuidInterface $uuid, PluginFormFactoryInterface $plugin_form_manager) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
     $this->contextRepository = $context_repository;
     $this->blockManager = $block_manager;
     $this->uuidGenerator = $uuid;
-    $this->classResolver = $class_resolver;
     $this->pluginFormFactory = $plugin_form_manager;
   }
 
@@ -132,7 +128,6 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
       $container->get('context.repository'),
       $container->get('plugin.manager.block'),
       $container->get('uuid'),
-      $container->get('class_resolver'),
       $container->get('plugin_form.factory')
     );
   }
