@@ -44,7 +44,7 @@ class ChangedItem extends CreatedItem {
       /** @var \Drupal\Core\Entity\ContentEntityInterface $original */
       $original = $entity->original;
       $langcode = $entity->language()->getId();
-      if (!$entity->isNew() && $original->hasTranslation($langcode)) {
+      if (!$entity->isNew() && $original && $original->hasTranslation($langcode)) {
         $original_value = $original->getTranslation($langcode)->get($this->getFieldDefinition()->getName())->value;
         if ($this->value == $original_value && $entity->hasTranslationChanges()) {
           $this->value = REQUEST_TIME;

@@ -244,6 +244,20 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   /**
    * {@inheritdoc}
    */
+  public function updateFieldableEntityType(EntityTypeInterface $entity_type, array $field_storage_definitions, array &$sandbox = NULL) {
+    $original = $this->getEntityType($entity_type->id());
+
+    if ($this->requiresEntityDataMigration($entity_type, $original) && $sandbox === NULL) {
+      throw new \InvalidArgumentException('The entity schema update for the ' . $entity_type->id() . ' entity type requires a data migration.');
+    }
+
+    $original_field_storage_definitions = $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type->id());
+    $this->entityTypeListener->onFieldableEntityTypeUpdate($entity_type, $original, $field_storage_definitions, $original_field_storage_definitions, $sandbox);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function installFieldStorageDefinition($name, $entity_type_id, $provider, FieldStorageDefinitionInterface $storage_definition) {
     // @todo Pass a mutable field definition interface when we have one. See
     //   https://www.drupal.org/node/2346329.
@@ -440,6 +454,22 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   protected function requiresFieldStorageSchemaChanges(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
     $storage = $this->entityTypeManager->getStorage($storage_definition->getTargetEntityTypeId());
     return ($storage instanceof DynamicallyFieldableEntityStorageSchemaInterface) && $storage->requiresFieldStorageSchemaChanges($storage_definition, $original);
+  }
+
+  /**
+   * Checks if existing data would be lost if the schema changes were applied.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The updated entity type definition.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $original
+   *   The original entity type definition.
+   *
+   * @return bool
+   *   TRUE if data migration is required, FALSE otherwise.
+   */
+  protected function requiresEntityDataMigration(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    $storage = $this->entityTypeManager->getStorage($entity_type->id());
+    return ($storage instanceof EntityStorageSchemaInterface) && $storage->requiresEntityDataMigration($entity_type, $original);
   }
 
   /**

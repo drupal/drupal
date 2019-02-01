@@ -409,7 +409,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->method('getRevisionMetadataKeys')
       ->will($this->returnValue([]));
 
-    $this->storage->expects($this->exactly(2))
+    $this->storage->expects($this->exactly(1))
       ->method('getRevisionTable')
       ->will($this->returnValue('entity_test_revision'));
 
@@ -505,6 +505,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'id' => 'id',
         'langcode' => 'langcode',
       ],
+      'translatable' => TRUE,
     ]);
 
     $this->storage->expects($this->any())
@@ -622,24 +623,22 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             'revision' => 'revision_id',
             'langcode' => 'langcode',
           ],
+          'revision_data_table' => 'entity_test_revision_field_data',
         ],
       ])
-      ->setMethods(['getRevisionMetadataKeys'])
+      ->setMethods(['isRevisionable', 'isTranslatable', 'getRevisionMetadataKeys'])
       ->getMock();
 
     $this->entityType->expects($this->any())
-      ->method('getRevisionMetadataKeys')
-      ->will($this->returnValue([]));
+      ->method('isRevisionable')
+      ->will($this->returnValue(TRUE));
+    $this->entityType->expects($this->any())
+      ->method('isTranslatable')
+      ->will($this->returnValue(TRUE));
 
-    $this->storage->expects($this->exactly(3))
+    $this->storage->expects($this->exactly(2))
       ->method('getRevisionTable')
       ->will($this->returnValue('entity_test_revision'));
-    $this->storage->expects($this->once())
-      ->method('getDataTable')
-      ->will($this->returnValue('entity_test_field_data'));
-    $this->storage->expects($this->once())
-      ->method('getRevisionDataTable')
-      ->will($this->returnValue('entity_test_revision_field_data'));
 
     $this->setUpStorageDefinition('revision_id', [
       'columns' => [

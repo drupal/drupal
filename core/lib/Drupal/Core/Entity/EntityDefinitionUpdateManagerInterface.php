@@ -145,6 +145,20 @@ interface EntityDefinitionUpdateManagerInterface {
   public function uninstallEntityType(EntityTypeInterface $entity_type);
 
   /**
+   * Applies any change performed to a fieldable entity type definition.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The updated entity type definition.
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $field_storage_definitions
+   *   The updated field storage definitions, including possibly new ones.
+   * @param array &$sandbox
+   *   (optional) A sandbox array provided by a hook_update_N() implementation
+   *   or a Batch API callback. If the entity schema update requires a data
+   *   migration, this parameter is mandatory. Defaults to NULL.
+   */
+  public function updateFieldableEntityType(EntityTypeInterface $entity_type, array $field_storage_definitions, array &$sandbox = NULL);
+
+  /**
    * Returns a field storage definition ready to be manipulated.
    *
    * When needing to apply updates to existing field storage definitions, this

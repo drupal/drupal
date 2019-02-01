@@ -790,6 +790,57 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * {@inheritdoc}
    */
+  public function restore(EntityInterface $entity) {
+    $transaction = $this->database->startTransaction();
+    try {
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+      // Allow code to run before saving.
+      $entity->preSave($this);
+      $this->invokeFieldMethod('preSave', $entity);
+
+      // Insert the entity data in the base and data tables only for default
+      // revisions.
+      if ($entity->isDefaultRevision()) {
+        $record = $this->mapToStorageRecord($entity->getUntranslated(), $this->baseTable);
+        $this->database
+          ->insert($this->baseTable)
+          ->fields((array) $record)
+          ->execute();
+
+        if ($this->dataTable) {
+          $this->saveToSharedTables($entity);
+        }
+      }
+
+      // Insert the entity data in the revision and revision data tables.
+      if ($this->revisionTable) {
+        $record = $this->mapToStorageRecord($entity->getUntranslated(), $this->revisionTable);
+        $this->database
+          ->insert($this->revisionTable)
+          ->fields((array) $record)
+          ->execute();
+
+        if ($this->revisionDataTable) {
+          $this->saveToSharedTables($entity, $this->revisionDataTable);
+        }
+      }
+
+      // Insert the entity data in the dedicated tables.
+      $this->saveToDedicatedTables($entity, FALSE, []);
+
+      // Ignore replica server temporarily.
+      \Drupal::service('database.replica_kill_switch')->trigger();
+    }
+    catch (\Exception $e) {
+      $transaction->rollBack();
+      watchdog_exception($this->entityTypeId, $e);
+      throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function doSaveFieldItems(ContentEntityInterface $entity, array $names = []) {
     $full_save = empty($names);
     $update = !$full_save || !$entity->isNew();
@@ -1422,6 +1473,15 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   public function onEntityTypeDelete(EntityTypeInterface $entity_type) {
     $this->wrapSchemaException(function () use ($entity_type) {
       $this->getStorageSchema()->onEntityTypeDelete($entity_type);
+    });
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL) {
+    $this->wrapSchemaException(function () use ($entity_type, $original, $field_storage_definitions, $original_field_storage_definitions, &$sandbox) {
+      $this->getStorageSchema()->onFieldableEntityTypeUpdate($entity_type, $original, $field_storage_definitions, $original_field_storage_definitions, $sandbox);
     });
   }
 

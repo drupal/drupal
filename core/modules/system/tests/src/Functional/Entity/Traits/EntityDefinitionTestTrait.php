@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Functional\Entity\Traits;
 
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\entity_test\FieldStorageDefinition;
 
 /**
@@ -292,6 +293,133 @@ trait EntityDefinitionTestTrait {
    */
   protected function deleteEntityType() {
     $this->state->set('entity_test_update.entity_type', 'null');
+  }
+
+  /**
+   * Returns an entity type definition, possibly updated to be rev or mul.
+   *
+   * @param bool $revisionable
+   *   (optional) Whether the entity type should be revisionable or not.
+   *   Defaults to FALSE.
+   * @param bool $translatable
+   *   (optional) Whether the entity type should be translatable or not.
+   *   Defaults to FALSE.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeInterface
+   *   An entity type definition.
+   */
+  protected function getUpdatedEntityTypeDefinition($revisionable = FALSE, $translatable = FALSE) {
+    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+
+    if ($revisionable) {
+      $keys = $entity_type->getKeys();
+      $keys['revision'] = 'revision_id';
+      $entity_type->set('entity_keys', $keys);
+      $entity_type->set('revision_table', 'entity_test_update_revision');
+    }
+    else {
+      $keys = $entity_type->getKeys();
+      $keys['revision'] = '';
+      $entity_type->set('entity_keys', $keys);
+      $entity_type->set('revision_table', NULL);
+    }
+
+    if ($translatable) {
+      $entity_type->set('translatable', TRUE);
+      $entity_type->set('data_table', 'entity_test_update_data');
+    }
+    else {
+      $entity_type->set('translatable', FALSE);
+      $entity_type->set('data_table', NULL);
+    }
+
+    if ($revisionable && $translatable) {
+      $entity_type->set('revision_data_table', 'entity_test_update_revision_data');
+    }
+    else {
+      $entity_type->set('revision_data_table', NULL);
+    }
+
+    $this->state->set('entity_test_update.entity_type', $entity_type);
+
+    $this->container->get('entity_type.manager')->clearCachedDefinitions();
+    $this->container->get('entity_type.bundle.info')->clearCachedBundles();
+    $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
+    $this->container->get('entity_type.repository')->clearCachedDefinitions();
+
+    return $entity_type;
+  }
+
+  /**
+   * Returns the required rev / mul field definitions for an entity type.
+   *
+   * @param bool $revisionable
+   *   (optional) Whether the entity type should be revisionable or not.
+   *   Defaults to FALSE.
+   * @param bool $translatable
+   *   (optional) Whether the entity type should be translatable or not.
+   *   Defaults to FALSE.
+   *
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
+   *   An array of field storage definition objects.
+   */
+  protected function getUpdatedFieldStorageDefinitions($revisionable = FALSE, $translatable = FALSE) {
+    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions('entity_test_update');
+
+    if ($revisionable) {
+      // The 'langcode' is already available for the 'entity_test_update' entity
+      // type because it has the 'langcode' entity key defined.
+      $field_storage_definitions['langcode']->setRevisionable(TRUE);
+
+      $field_storage_definitions['revision_id'] = BaseFieldDefinition::create('integer')
+        ->setName('revision_id')
+        ->setTargetEntityTypeId('entity_test_update')
+        ->setTargetBundle(NULL)
+        ->setLabel(new TranslatableMarkup('Revision ID'))
+        ->setReadOnly(TRUE)
+        ->setSetting('unsigned', TRUE);
+
+      $field_storage_definitions['revision_default'] = BaseFieldDefinition::create('boolean')
+        ->setName('revision_default')
+        ->setTargetEntityTypeId('entity_test_update')
+        ->setTargetBundle(NULL)
+        ->setLabel(new TranslatableMarkup('Default revision'))
+        ->setDescription(new TranslatableMarkup('A flag indicating whether this was a default revision when it was saved.'))
+        ->setStorageRequired(TRUE)
+        ->setInternal(TRUE)
+        ->setTranslatable(FALSE)
+        ->setRevisionable(TRUE);
+    }
+
+    if ($translatable) {
+      // The 'langcode' is already available for the 'entity_test_update' entity
+      // type because it has the 'langcode' entity key defined.
+      $field_storage_definitions['langcode']->setTranslatable(TRUE);
+
+      $field_storage_definitions['default_langcode'] = BaseFieldDefinition::create('boolean')
+        ->setName('default_langcode')
+        ->setTargetEntityTypeId('entity_test_update')
+        ->setTargetBundle(NULL)
+        ->setLabel(new TranslatableMarkup('Default translation'))
+        ->setDescription(new TranslatableMarkup('A flag indicating whether this is the default translation.'))
+        ->setTranslatable(TRUE)
+        ->setRevisionable(TRUE)
+        ->setDefaultValue(TRUE);
+    }
+
+    if ($revisionable && $translatable) {
+      $field_storage_definitions['revision_translation_affected'] = BaseFieldDefinition::create('boolean')
+        ->setName('revision_translation_affected')
+        ->setTargetEntityTypeId('entity_test_update')
+        ->setTargetBundle(NULL)
+        ->setLabel(new TranslatableMarkup('Revision translation affected'))
+        ->setDescription(new TranslatableMarkup('Indicates if the last edit of a translation belongs to current revision.'))
+        ->setReadOnly(TRUE)
+        ->setRevisionable(TRUE)
+        ->setTranslatable(TRUE);
+    }
+
+    return $field_storage_definitions;
   }
 
 }

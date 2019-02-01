@@ -155,6 +155,23 @@ interface EntityStorageInterface {
   public function save(EntityInterface $entity);
 
   /**
+   * Restores a previously saved entity.
+   *
+   * Note that the entity is assumed to be in a valid state for the storage, so
+   * the restore process does not invoke any hooks, nor does it perform any
+   * post-save operations.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to restore.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures, an exception is thrown.
+   *
+   * @internal
+   */
+  public function restore(EntityInterface $entity);
+
+  /**
    * Determines if the storage contains any data.
    *
    * @return bool
