@@ -85,7 +85,24 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       if (!isset($values[$this->bundleKey])) {
         throw new EntityStorageException('Missing bundle for entity type ' . $this->entityTypeId);
       }
-      $bundle = $values[$this->bundleKey];
+
+      // Normalize the bundle value. This is an optimized version of
+      // \Drupal\Core\Field\FieldInputValueNormalizerTrait::normalizeValue()
+      // because we just need the scalar value.
+      $bundle_value = $values[$this->bundleKey];
+      if (!is_array($bundle_value)) {
+        // The bundle value is a scalar, use it as-is.
+        $bundle = $bundle_value;
+      }
+      elseif (is_numeric(array_keys($bundle_value)[0])) {
+        // The bundle value is a field item list array, keyed by delta.
+        $bundle = reset($bundle_value[0]);
+      }
+      else {
+        // The bundle value is a field item array, keyed by the field's main
+        // property name.
+        $bundle = reset($bundle_value);
+      }
     }
     $entity = new $this->entityClass([], $this->entityTypeId, $bundle);
     $this->initFieldValues($entity, $values);
