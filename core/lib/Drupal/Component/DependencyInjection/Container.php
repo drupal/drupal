@@ -145,7 +145,7 @@ class Container implements ContainerInterface, ResettableContainerInterface {
 
     if (!$definition && $invalid_behavior === ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
       if (!$id) {
-        throw new ServiceNotFoundException($id);
+        throw new ServiceNotFoundException('');
       }
 
       throw new ServiceNotFoundException($id, NULL, NULL, $this->getServiceAlternatives($id));
@@ -368,7 +368,7 @@ class Container implements ContainerInterface, ResettableContainerInterface {
   public function getParameter($name) {
     if (!(isset($this->parameters[$name]) || array_key_exists($name, $this->parameters))) {
       if (!$name) {
-        throw new ParameterNotFoundException($name);
+        throw new ParameterNotFoundException('');
       }
 
       throw new ParameterNotFoundException($name, NULL, NULL, NULL, $this->getParameterAlternatives($name));
