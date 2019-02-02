@@ -158,10 +158,13 @@ class SiteConfigureForm extends ConfigFormBase {
       '#weight' => -20,
       '#access' => empty($install_state['config_install_path']),
     ];
+    // Use the default site mail if one is already configured, or fall back to
+    // PHP's configured sendmail_from.
+    $default_site_mail = $this->config('system.site')->get('mail') ?: ini_get('sendmail_from');
     $form['site_information']['site_mail'] = [
       '#type' => 'email',
       '#title' => $this->t('Site email address'),
-      '#default_value' => ini_get('sendmail_from'),
+      '#default_value' => $default_site_mail,
       '#description' => $this->t("Automated emails, such as registration information, will be sent from this address. Use an address ending in your site's domain to help prevent these emails from being flagged as spam."),
       '#required' => TRUE,
       '#weight' => -15,
@@ -208,11 +211,14 @@ class SiteConfigureForm extends ConfigFormBase {
       '#weight' => 0,
       '#access' => empty($install_state['config_install_path']),
     ];
+    // Use the default site timezone if one is already configured, or fall back
+    // to the system timezone if set (and avoid throwing a warning in
+    // PHP >=5.4).
+    $default_timezone = $this->config('system.date')->get('timezone.default') ?: @date_default_timezone_get();
     $form['regional_settings']['date_default_timezone'] = [
       '#type' => 'select',
       '#title' => $this->t('Default time zone'),
-      // Use system timezone if set, but avoid throwing a warning in PHP >=5.4
-      '#default_value' => @date_default_timezone_get(),
+      '#default_value' => $default_timezone,
       '#options' => system_time_zones(NULL, TRUE),
       '#description' => $this->t('By default, dates in this site will be displayed in the chosen time zone.'),
       '#weight' => 5,
