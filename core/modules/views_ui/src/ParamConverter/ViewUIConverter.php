@@ -89,7 +89,7 @@ class ViewUIConverter extends AdminPathConfigEntityConverter implements ParamCon
       else {
         $view->disable();
       }
-      $view->lock = $store->getMetadata($value);
+      $view->setLock($store->getMetadata($value));
     }
     // Otherwise, decorate the existing view for use in the UI.
     else {

@@ -215,7 +215,7 @@ class SharedTempStore {
    * @param string $key
    *   The key of the data to store.
    *
-   * @return mixed
+   * @return \Drupal\Core\TempStore\Lock|null
    *   An object with the owner and updated time if the key has a value, or
    *   NULL otherwise.
    */
@@ -225,7 +225,7 @@ class SharedTempStore {
     if ($object) {
       // Don't keep the data itself in memory.
       unset($object->data);
-      return $object;
+      return new Lock($object->owner, $object->updated);
     }
   }
 

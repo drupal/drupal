@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\TempStore;
 
+use Drupal\Core\TempStore\Lock;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\TempStoreException;
@@ -182,11 +183,43 @@ class PrivateTempStoreTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
 
     $metadata = $this->tempStore->getMetadata('test');
-    $this->assertObjectHasAttribute('owner', $metadata);
+    $this->assertInstanceOf(Lock::class, $metadata);
+    $this->assertObjectHasAttribute('ownerId', $metadata);
+    $this->assertObjectHasAttribute('updated', $metadata);
     // Data should get removed.
     $this->assertObjectNotHasAttribute('data', $metadata);
 
     $this->assertNull($this->tempStore->getMetadata('test'));
+  }
+
+  /**
+   * @covers ::getMetadata
+   * @expectedDeprecation Using the "owner" public property of a TempStore lock is deprecated in Drupal 8.7.0 and will not be allowed in Drupal 9.0.0. Use \Drupal\Core\TempStore\Lock::getOwnerId() instead. See https://www.drupal.org/node/3025869.
+   * @group legacy
+   */
+  public function testGetMetadataOwner() {
+    $this->keyValue->expects($this->once())
+      ->method('get')
+      ->with('1:test')
+      ->will($this->returnValue($this->ownObject));
+
+    $metadata = $this->tempStore->getMetadata('test');
+    $this->assertSame(1, $metadata->owner);
+  }
+
+  /**
+   * @covers ::getMetadata
+   * @expectedDeprecation Using the "updated" public property of a TempStore lock is deprecated in Drupal 8.7.0 and will not be allowed in Drupal 9.0.0. Use \Drupal\Core\TempStore\Lock::getUpdated() instead. See https://www.drupal.org/node/3025869.
+   * @group legacy
+   */
+  public function testGetMetadataUpdated() {
+    $this->keyValue->expects($this->once())
+      ->method('get')
+      ->with('1:test')
+      ->will($this->returnValue($this->ownObject));
+
+    $metadata = $this->tempStore->getMetadata('test');
+    $this->assertSame($metadata->getUpdated(), $metadata->updated);
   }
 
   /**

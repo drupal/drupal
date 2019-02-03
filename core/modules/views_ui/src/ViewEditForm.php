@@ -87,6 +87,7 @@ class ViewEditForm extends ViewFormBase {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\views_ui\ViewUI $view */
     $view = $this->entity;
     $display_id = $this->displayID;
     // Do not allow the form to be cached, because $form_state->get('view') can become
@@ -127,20 +128,16 @@ class ViewEditForm extends ViewFormBase {
     $form['#attributes']['class'] = ['form-edit'];
 
     if ($view->isLocked()) {
-      $username = [
-        '#theme' => 'username',
-        '#account' => $this->entityManager->getStorage('user')->load($view->lock->owner),
-      ];
-      $lock_message_substitutions = [
-        '@user' => \Drupal::service('renderer')->render($username),
-        '@age' => $this->dateFormatter->formatTimeDiffSince($view->lock->updated),
-        ':url' => $view->toUrl('break-lock-form')->toString(),
-      ];
       $form['locked'] = [
         '#type' => 'container',
         '#attributes' => ['class' => ['view-locked', 'messages', 'messages--warning']],
-        '#children' => $this->t('This view is being edited by user @user, and is therefore locked from editing by others. This lock is @age old. Click here to <a href=":url">break this lock</a>.', $lock_message_substitutions),
         '#weight' => -10,
+        'message' => [
+          '#type' => 'break_lock_link',
+          '#label' => $view->getEntityType()->getSingularLabel(),
+          '#lock' => $view->getLock(),
+          '#url' => $view->toUrl('break-lock-form'),
+        ],
       ];
     }
     else {
