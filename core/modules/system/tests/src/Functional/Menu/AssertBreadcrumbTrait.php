@@ -60,6 +60,10 @@ trait AssertBreadcrumbTrait {
     // Compare paths with actual breadcrumb.
     $parts = $this->getBreadcrumbParts();
     $pass = TRUE;
+    // Fail if there is no breadcrumb and we have a trail.
+    if (!empty($trail) && empty($parts)) {
+      $pass = FALSE;
+    }
     // There may be more than one breadcrumb on the page. If $trail is empty
     // this test would go into an infinite loop, so we need to check that too.
     while ($trail && !empty($parts)) {

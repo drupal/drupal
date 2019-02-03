@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Menu;
 
+use Drupal\block\Entity\Block;
 use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
@@ -379,6 +380,55 @@ class BreadcrumbTest extends BrowserTestBase {
     $this->drupalGet('menu-test/breadcrumb1/breadcrumb2/breadcrumb3');
     $this->assertRaw('<script>alert(12);</script>');
     $this->assertEscaped('<script>alert(123);</script>');
+  }
+
+  /**
+   * Tests AssertBreadcrumbTrait works as expected.
+   */
+  public function testAssertBreadcrumbTrait() {
+    // Ensure the test trait works as expected using menu_test routes.
+    $home = ['' => 'Home'];
+    $trail = $home + ['menu-test' => t('Menu test root')];
+
+    // Test a passing assertion.
+    $this->assertBreadcrumb('menu-test/breadcrumb1', $trail);
+
+    // If there is no trail, this assert should fail.
+    $message = 'Breadcrumb assertion should fail with empty trail.';
+    try {
+      $this->assertBreadcrumb('menu-test/breadcrumb1', []);
+      $this->fail($message);
+    }
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+      $this->assertTrue(TRUE, $message);
+    }
+
+    // If the trail is incorrect, this assert should fail.
+    $message = 'Breadcrumb assertion should fail with incorrect trail.';
+    try {
+      $this->assertBreadcrumb('menu-test/breadcrumb1', $home);
+      $this->fail($message);
+    }
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+      $this->assertTrue(TRUE, $message);
+    }
+
+    // Remove the breadcrumb block to test the trait when breadcrumbs are not
+    // shown.
+    Block::load('bartik_breadcrumbs')->delete();
+
+    // If there is no trail, this should pass as there is no breadcrumb.
+    $this->assertBreadcrumb('menu-test/breadcrumb1', []);
+
+    // If there is a trail, this should fail as there is no breadcrumb.
+    $message = 'Breadcrumb assertion should fail when breadcrumb block deleted and there is a trail.';
+    try {
+      $this->assertBreadcrumb('menu-test/breadcrumb1', $trail);
+      $this->fail($message);
+    }
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+      $this->assertTrue(TRUE, $message);
+    }
   }
 
 }
