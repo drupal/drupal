@@ -46,4 +46,16 @@ class FileLegacyTest extends FieldKernelTestBase {
     $this->assertEquals($file->createFileUrl(FALSE), $file->url());
   }
 
+  /**
+   * @expectedDeprecation file_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::loadMultiple(). See https://www.drupal.org/node/2266845
+   */
+  public function testEntityLegacyCode() {
+    file_put_contents('public://example.txt', $this->randomMachineName());
+    $this->assertCount(0, file_load_multiple());
+    File::create(['uri' => 'public://example.txt'])->save();
+    $this->assertCount(1, file_load_multiple());
+    File::create(['uri' => 'public://example.txt'])->save();
+    $this->assertCount(2, file_load_multiple());
+  }
+
 }

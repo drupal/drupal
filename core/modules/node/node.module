@@ -443,13 +443,13 @@ function node_type_update_nodes($old_id, $new_id) {
  * @return \Drupal\node\NodeInterface[]
  *   An array of node entities indexed by nid.
  *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
- *   Use \Drupal\node\Entity\Node::loadMultiple().
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\node\Entity\Node::loadMultiple().
  *
- * @see entity_load_multiple()
- * @see \Drupal\Core\Entity\Query\EntityQueryInterface
+ * @see https://www.drupal.org/node/2266845
  */
 function node_load_multiple(array $nids = NULL, $reset = FALSE) {
+  @trigger_error('node_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\node\Entity\Node::loadMultiple(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if ($reset) {
     \Drupal::entityManager()->getStorage('node')->resetCache($nids);
   }

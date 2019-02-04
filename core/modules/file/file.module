@@ -77,15 +77,13 @@ function file_field_widget_info_alter(array &$info) {
  * @return array
  *   An array of file entities, indexed by fid.
  *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
- *   Use \Drupal\file\Entity\File::loadMultiple().
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\file\Entity\File::loadMultiple().
  *
- * @see hook_ENTITY_TYPE_load()
- * @see file_load()
- * @see entity_load()
- * @see \Drupal\Core\Entity\Query\EntityQueryInterface
+ * @see https://www.drupal.org/node/2266845
  */
 function file_load_multiple(array $fids = NULL, $reset = FALSE) {
+  @trigger_error('file_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::loadMultiple(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if ($reset) {
     \Drupal::entityManager()->getStorage('file')->resetCache($fids);
   }

@@ -200,16 +200,13 @@ function user_entity_extra_field_info() {
  * @return array
  *   An array of user objects, indexed by uid.
  *
- * @see entity_load_multiple()
- * @see \Drupal\user\Entity\User::load()
- * @see user_load_by_mail()
- * @see user_load_by_name()
- * @see \Drupal\Core\Entity\Query\QueryInterface
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\user\Entity\User::loadMultiple().
  *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
- *   Use \Drupal\user\Entity\User::loadMultiple().
+ * @see https://www.drupal.org/node/2266845
  */
 function user_load_multiple(array $uids = NULL, $reset = FALSE) {
+  @trigger_error('user_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\user\Entity\User::loadMultiple(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if ($reset) {
     \Drupal::entityManager()->getStorage('user')->resetCache($uids);
   }
