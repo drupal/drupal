@@ -1,19 +1,21 @@
 <?php
 
-namespace Drupal\field_ui\Tests;
+namespace Drupal\Tests\field_ui\Functional;
 
+use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\Entity\NodeType;
-use Drupal\simpletest\WebTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
  * Tests the Field UI "Manage display" and "Manage form display" screens.
  *
  * @group field_ui
  */
-class ManageDisplayTest extends WebTestBase {
+class ManageDisplayTest extends BrowserTestBase {
 
   use FieldUiTestTrait;
 
@@ -232,33 +234,21 @@ class ManageDisplayTest extends WebTestBase {
    *   Message to display.
    * @param $not_exists
    *   TRUE if this text should not exist, FALSE if it should.
-   *
-   * @return
-   *   TRUE on pass, FALSE on fail.
    */
   public function assertNodeViewTextHelper(EntityInterface $node, $view_mode, $text, $message, $not_exists) {
     // Make sure caches on the tester side are refreshed after changes
     // submitted on the tested side.
     \Drupal::entityManager()->clearCachedFieldDefinitions();
 
-    // Save current content so that we can restore it when we're done.
-    $old_content = $this->getRawContent();
-
     // Render a cloned node, so that we do not alter the original.
     $clone = clone $node;
     $element = node_view($clone, $view_mode);
-    $output = \Drupal::service('renderer')->renderRoot($element);
+    $output = (string) \Drupal::service('renderer')->renderRoot($element);
     $this->verbose(t('Rendered node - view mode: @view_mode', ['@view_mode' => $view_mode]) . '<hr />' . $output);
 
-    // Assign content so that WebTestBase functions can be used.
-    $this->setRawContent($output);
-    $method = ($not_exists ? 'assertNoText' : 'assertText');
-    $return = $this->{$method}((string) $text, $message);
+    $method = $not_exists ? 'assertNotContains' : 'assertContains';
 
-    // Restore previous content.
-    $this->setRawContent($old_content);
-
-    return $return;
+    $this->{$method}((string) $text, $output, $message);
   }
 
   /**
@@ -268,9 +258,6 @@ class ManageDisplayTest extends WebTestBase {
    *   The field name.
    * @param array $expected_options
    *   An array of expected options.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertFieldSelectOptions($name, array $expected_options) {
     $xpath = $this->buildXPathQuery('//select[@name=:name]', [':name' => $name]);
@@ -282,27 +269,27 @@ class ManageDisplayTest extends WebTestBase {
       sort($options);
       sort($expected_options);
 
-      return $this->assertIdentical($options, $expected_options);
+      $this->assertIdentical($options, $expected_options);
     }
     else {
-      return $this->fail('Unable to find field ' . $name);
+      $this->fail('Unable to find field ' . $name);
     }
   }
 
   /**
    * Extracts all options from a select element.
    *
-   * @param \SimpleXMLElement $element
+   * @param Behat\Mink\Element\NodeElement $element
    *   The select element field information.
    *
    * @return array
    *   An array of option values as strings.
    */
-  protected function getAllOptionsList(\SimpleXMLElement $element) {
+  protected function getAllOptionsList(NodeElement $element) {
     $options = [];
     // Add all options items.
     foreach ($element->option as $option) {
-      $options[] = (string) $option['value'];
+      $options[] = $option->getValue();
     }
 
     // Loops trough all the option groups
