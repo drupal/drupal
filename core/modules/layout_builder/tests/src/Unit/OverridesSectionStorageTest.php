@@ -10,6 +10,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
+use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 use Symfony\Component\Routing\Route;
@@ -51,12 +52,13 @@ class OverridesSectionStorageTest extends UnitTestCase {
 
     $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
     $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class);
+    $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
 
     $definition = new SectionStorageDefinition([
       'id' => 'overrides',
       'class' => OverridesSectionStorage::class,
     ]);
-    $this->plugin = new OverridesSectionStorage([], 'overrides', $definition, $this->entityTypeManager->reveal(), $this->entityFieldManager->reveal());
+    $this->plugin = new OverridesSectionStorage([], 'overrides', $definition, $this->entityTypeManager->reveal(), $this->entityFieldManager->reveal(), $section_storage_manager->reveal());
   }
 
   /**

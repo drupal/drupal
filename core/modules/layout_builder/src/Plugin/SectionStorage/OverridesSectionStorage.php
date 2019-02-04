@@ -16,6 +16,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
+use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -66,13 +67,21 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
   protected $entityFieldManager;
 
   /**
+   * The section storage manager.
+   *
+   * @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface
+   */
+  protected $sectionStorageManager;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, SectionStorageManagerInterface $section_storage_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
+    $this->sectionStorageManager = $section_storage_manager;
   }
 
   /**
@@ -84,7 +93,8 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('plugin.manager.layout_builder.section_storage')
     );
   }
 
@@ -283,7 +293,8 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    * {@inheritdoc}
    */
   public function getDefaultSectionStorage() {
-    return LayoutBuilderEntityViewDisplay::collectRenderDisplay($this->getEntity(), $this->getContextValue('view_mode'));
+    $display = LayoutBuilderEntityViewDisplay::collectRenderDisplay($this->getEntity(), $this->getContextValue('view_mode'));
+    return $this->sectionStorageManager->load('defaults', ['display' => EntityContext::fromEntity($display)]);
   }
 
   /**

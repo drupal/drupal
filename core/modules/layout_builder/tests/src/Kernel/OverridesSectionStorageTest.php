@@ -7,6 +7,7 @@ use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\layout_builder\DefaultsSectionStorageInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
@@ -159,6 +160,17 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $section_list = $this->prophesize(SectionListInterface::class);
     $this->setExpectedException(\Exception::class, '\Drupal\layout_builder\SectionStorageInterface::setSectionList() must no longer be called. The section list should be derived from context. See https://www.drupal.org/node/3016262.');
     $this->plugin->setSectionList($section_list->reveal());
+  }
+
+  /**
+   * @covers ::getDefaultSectionStorage
+   */
+  public function testGetDefaultSectionStorage() {
+    $entity = EntityTest::create();
+    $entity->save();
+    $this->plugin->setContext('entity', EntityContext::fromEntity($entity));
+    $this->plugin->setContext('view_mode', new Context(ContextDefinition::create('string'), 'default'));
+    $this->assertInstanceOf(DefaultsSectionStorageInterface::class, $this->plugin->getDefaultSectionStorage());
   }
 
 }
