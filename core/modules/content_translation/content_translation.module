@@ -462,18 +462,11 @@ function content_translation_form_field_config_edit_form_alter(array &$form, For
  * Implements hook_entity_presave().
  */
 function content_translation_entity_presave(EntityInterface $entity) {
-  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && !$entity->isNew()) {
+  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && !$entity->isNew() && isset($entity->original)) {
     /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
     $manager = \Drupal::service('content_translation.manager');
     if (!$manager->isEnabled($entity->getEntityTypeId(), $entity->bundle())) {
       return;
-    }
-    // If we are creating a new translation we need to use the source language
-    // as original language, since source values are the only ones available to
-    // compare against.
-    if (!isset($entity->original)) {
-      $entity->original = \Drupal::entityTypeManager()
-        ->getStorage($entity->entityType())->loadUnchanged($entity->id());
     }
     $langcode = $entity->language()->getId();
     $source_langcode = !$entity->original->hasTranslation($langcode) ? $manager->getTranslationMetadata($entity)->getSource() : NULL;
