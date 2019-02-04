@@ -489,12 +489,6 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    */
   public function getColumns() {
     $schema = $this->getSchema();
-    // A typical use case for the method is to iterate on the columns, while
-    // some other use cases rely on identifying the first column with the key()
-    // function. Since the schema is persisted in the Field object, we take care
-    // of resetting the array pointer so that the former does not interfere with
-    // the latter.
-    reset($schema['columns']);
     return $schema['columns'];
   }
 
