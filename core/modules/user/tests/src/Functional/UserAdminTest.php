@@ -5,6 +5,7 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Tests user administration page functionality.
@@ -167,7 +168,7 @@ class UserAdminTest extends BrowserTestBase {
     // Allow users to register with admin approval.
     $config
       ->set('verify_mail', TRUE)
-      ->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)
+      ->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)
       ->save();
     // Set the site and notification email addresses.
     $system = $this->config('system.site');

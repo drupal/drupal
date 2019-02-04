@@ -5,8 +5,9 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\Core\Url;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\ResourceTestBase;
-use GuzzleHttp\RequestOptions;
 use Drupal\Core\Test\AssertMailTrait;
+use Drupal\user\UserInterface;
+use GuzzleHttp\RequestOptions;
 
 /**
  * Tests user registration via REST resource.
@@ -70,7 +71,7 @@ class RestRegisterUserTest extends ResourceTestBase {
 
     // Test out different setting User Registration and Email Verification.
     // Allow visitors to register with no email verification.
-    $config->set('register', USER_REGISTER_VISITORS);
+    $config->set('register', UserInterface::REGISTER_VISITORS);
     $config->set('verify_mail', 0);
     $config->save();
     $user = $this->registerUser('Palmer.Eldritch');
@@ -85,14 +86,14 @@ class RestRegisterUserTest extends ResourceTestBase {
     $this->assertResourceErrorResponse(422, "No password provided.", $response);
 
     // Attempt to register with a password when e-mail verification is on.
-    $config->set('register', USER_REGISTER_VISITORS);
+    $config->set('register', UserInterface::REGISTER_VISITORS);
     $config->set('verify_mail', 1);
     $config->save();
     $response = $this->registerRequest('Estraven', TRUE);
     $this->assertResourceErrorResponse(422, 'A Password cannot be specified. It will be generated on login.', $response);
 
     // Allow visitors to register with email verification.
-    $config->set('register', USER_REGISTER_VISITORS);
+    $config->set('register', UserInterface::REGISTER_VISITORS);
     $config->set('verify_mail', 1);
     $config->save();
     $name = 'Jason.Taverner';
@@ -104,7 +105,7 @@ class RestRegisterUserTest extends ResourceTestBase {
     $this->assertMailString('body', 'You may now log in by clicking this link', 1);
 
     // Allow visitors to register with Admin approval and no email verification.
-    $config->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
+    $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
     $config->set('verify_mail', 0);
     $config->save();
     $name = 'Argaven';
@@ -116,7 +117,7 @@ class RestRegisterUserTest extends ResourceTestBase {
     $this->assertMailString('body', 'Argaven has applied for an account', 2);
 
     // Allow visitors to register with Admin approval and e-mail verification.
-    $config->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
+    $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
     $config->set('verify_mail', 1);
     $config->save();
     $name = 'Bob.Arctor';

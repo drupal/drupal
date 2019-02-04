@@ -7,31 +7,10 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
 use Drupal\user\Plugin\rest\resource\UserRegistrationResource;
+use Drupal\user\UserInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-
-/**
- * Only administrators can create user accounts.
- */
-if (!defined('USER_REGISTER_ADMINISTRATORS_ONLY')) {
-  define('USER_REGISTER_ADMINISTRATORS_ONLY', 'admin_only');
-}
-
-/**
- * Visitors can create their own accounts.
- */
-if (!defined('USER_REGISTER_VISITORS')) {
-  define('USER_REGISTER_VISITORS', 'visitors');
-}
-
-/**
- * Visitors can create accounts, but they don't become active without
- * administrative approval.
- */
-if (!defined('USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL')) {
-  define('USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL', 'visitors_admin_approval');
-}
 
 /**
  * Tests User Registration REST resource.
@@ -118,7 +97,7 @@ class UserRegistrationResourceTest extends UnitTestCase {
    */
   public function testRegistrationAdminOnlyPost() {
 
-    $this->userSettings->get('register')->willReturn(USER_REGISTER_ADMINISTRATORS_ONLY);
+    $this->userSettings->get('register')->willReturn(UserInterface::REGISTER_ADMINISTRATORS_ONLY);
 
     $this->currentUser->isAnonymous()->willReturn(TRUE);
 

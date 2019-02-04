@@ -3,6 +3,7 @@
 namespace Drupal\Tests\minimal\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\UserInterface;
 
 /**
  * Tests Minimal installation profile expectations.
@@ -40,7 +41,7 @@ class MinimalTest extends BrowserTestBase {
 
     // Ensure special configuration overrides are correct.
     $this->assertFalse($this->config('system.theme.global')->get('features.node_user_picture'), 'Configuration system.theme.global:features.node_user_picture is FALSE.');
-    $this->assertEquals(USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL, $this->config('user.settings')->get('register'));
+    $this->assertEquals(UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL, $this->config('user.settings')->get('register'));
   }
 
 }

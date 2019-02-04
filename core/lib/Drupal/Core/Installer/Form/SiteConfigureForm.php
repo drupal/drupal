@@ -9,6 +9,7 @@ use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\user\UserStorageInterface;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -178,7 +179,7 @@ class SiteConfigureForm extends ConfigFormBase {
     $form['admin_account']['account']['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Username'),
-      '#maxlength' => USERNAME_MAX_LENGTH,
+      '#maxlength' => UserInterface::USERNAME_MAX_LENGTH,
       '#description' => $this->t("Several special characters are allowed, including space, period (.), hyphen (-), apostrophe ('), underscore (_), and the @ sign."),
       '#required' => TRUE,
       '#attributes' => ['class' => ['username']],

@@ -8,6 +8,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\UserInterface;
 
 /**
  * Tests registration of user under different configurations.
@@ -29,12 +30,12 @@ class UserRegistrationTest extends BrowserTestBase {
     $config->set('verify_mail', TRUE)->save();
 
     // Set registration to administrator only.
-    $config->set('register', USER_REGISTER_ADMINISTRATORS_ONLY)->save();
+    $config->set('register', UserInterface::REGISTER_ADMINISTRATORS_ONLY)->save();
     $this->drupalGet('user/register');
     $this->assertResponse(403, 'Registration page is inaccessible when only administrators can create accounts.');
 
     // Allow registration by site visitors without administrator approval.
-    $config->set('register', USER_REGISTER_VISITORS)->save();
+    $config->set('register', UserInterface::REGISTER_VISITORS)->save();
     $edit = [];
     $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
@@ -51,7 +52,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->assertTitle(t('Set password | Drupal'), 'Page title is "Set password".');
 
     // Allow registration by site visitors, but require administrator approval.
-    $config->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
+    $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
     $edit = [];
     $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
@@ -68,7 +69,7 @@ class UserRegistrationTest extends BrowserTestBase {
     // without administrator approval.
     $config
       ->set('verify_mail', FALSE)
-      ->set('register', USER_REGISTER_VISITORS)
+      ->set('register', UserInterface::REGISTER_VISITORS)
       ->save();
 
     $edit = [];
@@ -94,7 +95,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->drupalLogout();
 
     // Allow registration by site visitors, but require administrator approval.
-    $config->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
+    $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
     $edit = [];
     $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
@@ -133,7 +134,7 @@ class UserRegistrationTest extends BrowserTestBase {
     // without administrator approval.
     $this->config('user.settings')
       ->set('verify_mail', FALSE)
-      ->set('register', USER_REGISTER_VISITORS)
+      ->set('register', UserInterface::REGISTER_VISITORS)
       ->save();
 
     // Set up a user to check for duplicates.
@@ -195,7 +196,7 @@ class UserRegistrationTest extends BrowserTestBase {
     // without administrator approval.
     $this->config('user.settings')
       ->set('verify_mail', FALSE)
-      ->set('register', USER_REGISTER_VISITORS)
+      ->set('register', UserInterface::REGISTER_VISITORS)
       ->save();
 
     $edit = [];
@@ -228,7 +229,7 @@ class UserRegistrationTest extends BrowserTestBase {
     // without administrator approval.
     $config_user_settings = $this->config('user.settings')
       ->set('verify_mail', FALSE)
-      ->set('register', USER_REGISTER_VISITORS)
+      ->set('register', UserInterface::REGISTER_VISITORS)
       ->save();
 
     // Set the default timezone to Brussels.
@@ -255,7 +256,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->assertEqual($new_user->getAccountName(), $name, 'Username matches.');
     $this->assertEqual($new_user->getEmail(), $mail, 'Email address matches.');
     $this->assertTrue(($new_user->getCreatedTime() > REQUEST_TIME - 20), 'Correct creation time.');
-    $this->assertEqual($new_user->isActive(), $config_user_settings->get('register') == USER_REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
+    $this->assertEqual($new_user->isActive(), $config_user_settings->get('register') == UserInterface::REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
     $this->assertEqual($new_user->getTimezone(), $config_system_date->get('timezone.default'), 'Correct time zone field.');
     $this->assertEqual($new_user->langcode->value, \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Correct language field.');
     $this->assertEqual($new_user->preferred_langcode->value, \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Correct preferred language field.');

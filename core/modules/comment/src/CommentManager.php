@@ -17,6 +17,7 @@ use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\user\RoleInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Comment manager contains common functions to manage comment fields.
@@ -174,7 +175,7 @@ class CommentManager implements CommentManagerInterface {
         $destination = ['destination' => $entity->toUrl('canonical', ['fragment' => 'comment-form'])->toString()];
       }
 
-      if ($this->userConfig->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
+      if ($this->userConfig->get('register') != UserInterface::REGISTER_ADMINISTRATORS_ONLY) {
         // Users can register themselves.
         return $this->t('<a href=":login">Log in</a> or <a href=":register">register</a> to post comments', [
           ':login' => Url::fromRoute('user.login', [], ['query' => $destination])->toString(),

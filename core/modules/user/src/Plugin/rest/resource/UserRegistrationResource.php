@@ -102,7 +102,7 @@ class UserRegistrationResource extends ResourceBase {
 
     // Only activate new users if visitors are allowed to register and no email
     // verification required.
-    if ($this->userSettings->get('register') == USER_REGISTER_VISITORS && !$this->userSettings->get('verify_mail')) {
+    if ($this->userSettings->get('register') == UserInterface::REGISTER_VISITORS && !$this->userSettings->get('verify_mail')) {
       $account->activate();
     }
     else {
@@ -147,7 +147,7 @@ class UserRegistrationResource extends ResourceBase {
     }
 
     // Verify that the current user can register a user account.
-    if ($this->userSettings->get('register') == USER_REGISTER_ADMINISTRATORS_ONLY) {
+    if ($this->userSettings->get('register') == UserInterface::REGISTER_ADMINISTRATORS_ONLY) {
       throw new AccessDeniedHttpException('You cannot register a new user account.');
     }
 
@@ -175,14 +175,14 @@ class UserRegistrationResource extends ResourceBase {
   protected function sendEmailNotifications(UserInterface $account) {
     $approval_settings = $this->userSettings->get('register');
     // No e-mail verification is required. Activating the user.
-    if ($approval_settings == USER_REGISTER_VISITORS) {
+    if ($approval_settings == UserInterface::REGISTER_VISITORS) {
       if ($this->userSettings->get('verify_mail')) {
         // No administrator approval required.
         _user_mail_notify('register_no_approval_required', $account);
       }
     }
     // Administrator approval required.
-    elseif ($approval_settings == USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) {
+    elseif ($approval_settings == UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) {
       _user_mail_notify('register_pending_approval', $account);
     }
   }

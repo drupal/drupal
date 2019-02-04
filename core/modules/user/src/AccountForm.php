@@ -104,7 +104,7 @@ abstract class AccountForm extends ContentEntityForm {
     $form['account']['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Username'),
-      '#maxlength' => USERNAME_MAX_LENGTH,
+      '#maxlength' => UserInterface::USERNAME_MAX_LENGTH,
       '#description' => $this->t("Several special characters are allowed, including space, period (.), hyphen (-), apostrophe ('), underscore (_), and the @ sign."),
       '#required' => TRUE,
       '#attributes' => [
@@ -184,7 +184,7 @@ abstract class AccountForm extends ContentEntityForm {
       $status = $account->get('status')->value;
     }
     else {
-      $status = $config->get('register') == USER_REGISTER_VISITORS ? 1 : 0;
+      $status = $config->get('register') == UserInterface::REGISTER_VISITORS ? 1 : 0;
     }
 
     $form['account']['status'] = [
