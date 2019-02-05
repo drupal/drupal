@@ -41,6 +41,37 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
       'administer node display',
       'administer node fields',
     ]));
+
+    // Enable layout builder.
+    $this->drupalPostForm(
+      static::FIELD_UI_PREFIX . '/display/default',
+      ['layout[enabled]' => TRUE],
+      'Save'
+    );
+  }
+
+  /**
+   * Tests that after removing sections reloading the page does not re-add them.
+   */
+  public function testReloadWithNoSections() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Remove all of the sections from the page.
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display-layout/default');
+    $page->clickLink('Remove section');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Remove');
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert that there are no sections on the page.
+    $assert_session->pageTextNotContains('Remove section');
+    $assert_session->pageTextNotContains('Add Block');
+
+    // Reload the page.
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display-layout/default');
+    // Assert that there are no sections on the page.
+    $assert_session->pageTextNotContains('Remove section');
+    $assert_session->pageTextNotContains('Add Block');
   }
 
   /**
@@ -49,13 +80,6 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
   public function testUnsavedChangesMessage() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-
-    // Enable layout builder.
-    $this->drupalPostForm(
-      static::FIELD_UI_PREFIX . '/display/default',
-      ['layout[enabled]' => TRUE],
-      'Save'
-    );
 
     // Make and then discard changes.
     $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display-layout/default');

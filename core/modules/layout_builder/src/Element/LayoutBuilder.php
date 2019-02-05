@@ -78,7 +78,6 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
   public function getInfo() {
     return [
       '#section_storage' => NULL,
-      '#is_rebuilding' => FALSE,
       '#pre_render' => [
         [$this, 'preRender'],
       ],
@@ -90,7 +89,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
    */
   public function preRender($element) {
     if ($element['#section_storage'] instanceof SectionStorageInterface) {
-      $element['layout_builder'] = $this->layout($element['#section_storage'], $element['#is_rebuilding']);
+      $element['layout_builder'] = $this->layout($element['#section_storage']);
     }
     return $element;
   }
@@ -100,14 +99,12 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
    *   The section storage.
-   * @param bool $is_rebuilding
-   *   Indicates if the layout is rebuilding.
    *
    * @return array
    *   A render array.
    */
-  protected function layout(SectionStorageInterface $section_storage, $is_rebuilding) {
-    $this->prepareLayout($section_storage, $is_rebuilding);
+  protected function layout(SectionStorageInterface $section_storage) {
+    $this->prepareLayout($section_storage);
 
     $output = [];
     if ($this->isAjax()) {
@@ -135,17 +132,14 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
    *   The section storage.
-   * @param bool $is_rebuilding
-   *   Indicates if the layout is rebuilding.
    */
-  protected function prepareLayout(SectionStorageInterface $section_storage, $is_rebuilding) {
+  protected function prepareLayout(SectionStorageInterface $section_storage) {
     // If the layout has pending changes, add a warning.
     if ($this->layoutTempstoreRepository->has($section_storage)) {
       $this->messenger->addWarning($this->t('You have unsaved changes.'));
     }
-
     // Only add sections if the layout is new and empty.
-    if (!$is_rebuilding && $section_storage->count() === 0) {
+    elseif ($section_storage->count() === 0) {
       $sections = [];
       // If this is an empty override, copy the sections from the corresponding
       // default.

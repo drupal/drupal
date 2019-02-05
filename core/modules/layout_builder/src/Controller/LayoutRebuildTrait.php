@@ -45,7 +45,6 @@ trait LayoutRebuildTrait {
     $layout = [
       '#type' => 'layout_builder',
       '#section_storage' => $section_storage,
-      '#is_rebuilding' => TRUE,
     ];
     $response->addCommand(new ReplaceCommand('#layout-builder', $layout));
     return $response;

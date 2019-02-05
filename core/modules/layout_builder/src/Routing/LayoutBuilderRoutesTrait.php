@@ -60,7 +60,6 @@ trait LayoutBuilderRoutesTrait {
     }
 
     $main_defaults = $defaults;
-    $main_defaults['is_rebuilding'] = FALSE;
     $main_defaults['_controller'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::layout';
     $main_defaults['_title_callback'] = '\Drupal\layout_builder\Controller\LayoutBuilderController::title';
     $route = (new Route($path))

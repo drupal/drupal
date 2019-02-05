@@ -79,17 +79,14 @@ class LayoutBuilderController implements ContainerInjectionInterface {
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
    *   The section storage.
-   * @param bool $is_rebuilding
-   *   (optional) Indicates if the layout is rebuilding, defaults to FALSE.
    *
    * @return array
    *   A render array.
    */
-  public function layout(SectionStorageInterface $section_storage, $is_rebuilding = FALSE) {
+  public function layout(SectionStorageInterface $section_storage) {
     return [
       '#type' => 'layout_builder',
       '#section_storage' => $section_storage,
-      '#is_rebuilding' => $is_rebuilding,
     ];
   }
 

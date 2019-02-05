@@ -79,3 +79,10 @@ function layout_builder_post_update_overrides_view_mode_annotation() {
 function layout_builder_post_update_cancel_link_to_discard_changes_form() {
   // Empty post-update hook.
 }
+
+/**
+ * Clear caches due to the removal of the layout_is_rebuilding query string.
+ */
+function layout_builder_post_update_remove_layout_is_rebuilding() {
+  // Empty post-update hook.
+}
