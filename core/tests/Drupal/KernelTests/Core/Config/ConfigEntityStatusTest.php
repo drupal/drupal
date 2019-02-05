@@ -35,7 +35,7 @@ class ConfigEntityStatusTest extends KernelTestBase {
     $entity->enable()->save();
     $this->assertTrue($entity->status(), 'Entity is enabled after enabling.');
 
-    $entity = entity_load('config_test', $entity->id());
+    $entity = \Drupal::entityTypeManager()->getStorage('config_test')->load($entity->id());
     $this->assertTrue($entity->status(), 'Status is enabled after reload.');
   }
 

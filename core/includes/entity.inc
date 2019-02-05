@@ -71,22 +71,13 @@ function entity_get_bundles($entity_type = NULL) {
  * @return \Drupal\Core\Entity\EntityInterface|null
  *   The entity object, or NULL if there is no entity with the given ID.
  *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
- *   The method overriding Entity::load() for the entity type, e.g.
- *   \Drupal\node\Entity\Node::load() if the entity type is known. If the
- *   entity type is variable, use the entity manager service to load the entity
- *   from the entity storage:
- *   @code
- *     \Drupal::entityTypeManager()->getStorage($entity_type)->load($id);
- *   @endcode
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 9.0.0. Use the
+ *   entity type storage's load() method.
  *
- * @see \Drupal\Core\Entity\EntityInterface::load()
- * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
- * @see \Drupal\Core\Entity\EntityStorageInterface::load()
- * @see \Drupal\Core\Entity\Sql\SqlContentEntityStorage
- * @see \Drupal\Core\Entity\Query\QueryInterface
+ * @see https://www.drupal.org/node/2266845
  */
 function entity_load($entity_type, $id, $reset = FALSE) {
+  @trigger_error('entity_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage\'s load() method. See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   $controller = \Drupal::entityManager()->getStorage($entity_type);
   if ($reset) {
     $controller->resetCache([$id]);

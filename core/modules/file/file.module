@@ -102,13 +102,13 @@ function file_load_multiple(array $fids = NULL, $reset = FALSE) {
  * @return \Drupal\file\FileInterface|null
  *   A file entity or NULL if the file was not found.
  *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
- *   Use \Drupal\file\Entity\File::load().
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\file\Entity\File::load().
  *
- * @see hook_ENTITY_TYPE_load()
- * @see file_load_multiple()
+ * @see https://www.drupal.org/node/2266845
  */
 function file_load($fid, $reset = FALSE) {
+  @trigger_error('file_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::load(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if ($reset) {
     \Drupal::entityManager()->getStorage('file')->resetCache([$fid]);
   }

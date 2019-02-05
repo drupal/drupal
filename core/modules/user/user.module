@@ -226,12 +226,13 @@ function user_load_multiple(array $uids = NULL, $reset = FALSE) {
  *   A fully-loaded user object upon successful user load, or NULL if the user
  *   cannot be loaded.
  *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
- *   Use \Drupal\user\Entity\User::load().
+ * @deprecated iin Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ *   Drupal\user\Entity\User::load().
  *
- * @see \Drupal\user\Entity\User::loadMultiple()
+ * @see https://www.drupal.org/node/2266845
  */
 function user_load($uid, $reset = FALSE) {
+  @trigger_error('user_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\user\Entity\User::load(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if ($reset) {
     \Drupal::entityManager()->getStorage('user')->resetCache([$uid]);
   }

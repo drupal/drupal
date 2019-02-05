@@ -96,9 +96,9 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // - a multi-dimensional array keyed by the workspace ID, then by the entity
     //   ID and finally by the revision ID.
     // - 'default_revision' indicates the entity revision that should be
-    //   returned by entity_load(), non-revision entity queries and non-revision
-    //   views *in a given workspace*, it does not indicate what is actually
-    //   stored in the base and data entity tables.
+    //   returned when loading an entity, non-revision entity queries and
+    //   non-revision views *in a given workspace*, it does not indicate what is
+    //   actually stored in the base and data entity tables.
     $test_scenarios = [];
 
     // The $expected_workspace_association array holds the revision IDs which

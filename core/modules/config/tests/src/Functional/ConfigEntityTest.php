@@ -316,7 +316,8 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertLinkByHref('admin/structure/config_test/manage/0');
     $this->assertLinkByHref('admin/structure/config_test/manage/0/delete');
     $this->drupalPostForm('admin/structure/config_test/manage/0/delete', [], 'Delete');
-    $this->assertFalse(entity_load('config_test', '0'), 'Test entity deleted');
+    $storage = \Drupal::entityTypeManager()->getStorage('config_test');
+    $this->assertNull($storage->load(0), 'Test entity deleted');
 
     // Create a configuration entity with a property that uses AJAX to show
     // extra form elements. Test this scenario in a non-JS case by using a
@@ -343,7 +344,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $edit += ['size_value' => 'medium'];
     $this->drupalPostForm(NULL, $edit, 'Save');
 
-    $entity = entity_load('config_test', $id);
+    $entity = $storage->load($id);
     $this->assertEqual($entity->get('size'), 'custom');
     $this->assertEqual($entity->get('size_value'), 'medium');
   }

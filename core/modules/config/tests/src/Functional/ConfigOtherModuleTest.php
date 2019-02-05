@@ -26,7 +26,7 @@ class ConfigOtherModuleTest extends BrowserTestBase {
     // Install the module that provides the entity type. This installs the
     // default configuration.
     $this->installModule('config_test');
-    $this->assertTrue(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration has been installed.');
+    $this->assertTrue($this->getStorage()->load('other_module_test'), 'Default configuration has been installed.');
 
     // Uninstall the module that provides the entity type. This will remove the
     // default configuration.
@@ -37,7 +37,7 @@ class ConfigOtherModuleTest extends BrowserTestBase {
     // Install the module that provides the entity type again. This installs the
     // default configuration.
     $this->installModule('config_test');
-    $other_module_config_entity = entity_load('config_test', 'other_module_test', TRUE);
+    $other_module_config_entity = $this->getStorage()->load('other_module_test');
     $this->assertTrue($other_module_config_entity, "Default configuration has been recreated.");
 
     // Update the default configuration to test that the changes are preserved
@@ -47,10 +47,10 @@ class ConfigOtherModuleTest extends BrowserTestBase {
 
     // Uninstall the module that provides the default configuration.
     $this->uninstallModule('config_other_module_config_test');
-    $this->assertTrue(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration for other modules is not removed when the module that provides it is uninstalled.');
+    $this->assertTrue($this->getStorage()->load('other_module_test'), 'Default configuration for other modules is not removed when the module that provides it is uninstalled.');
 
     // Default configuration provided by config_test should still exist.
-    $this->assertTrue(entity_load('config_test', 'dotted.default', TRUE), 'The configuration is not deleted.');
+    $this->assertTrue($this->getStorage()->load('dotted.default'), 'The configuration is not deleted.');
 
     // Re-enable module to test that pre-existing optional configuration does
     // not throw an error.
@@ -59,17 +59,16 @@ class ConfigOtherModuleTest extends BrowserTestBase {
 
     // Ensure that optional configuration with unmet dependencies is only
     // installed once all the dependencies are met.
-    $this->assertNull(entity_load('config_test', 'other_module_test_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_unmet whose dependencies are not met is not created.');
-    $this->assertNull(entity_load('config_test', 'other_module_test_optional_entity_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are not met is not created.');
-    $this->installModule('config_test_language');
-    $this->assertNull(entity_load('config_test', 'other_module_test_optional_entity_unmet2', TRUE), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet2 whose dependencies are not met is not created.');
+    $this->assertNull($this->getStorage()->load('other_module_test_unmet'), 'The optional configuration config_test.dynamic.other_module_test_unmet whose dependencies are not met is not created.');
+    $this->assertNull($this->getStorage()->load('other_module_test_optional_entity_unmet'), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are not met is not created.');    $this->installModule('config_test_language');
+    $this->assertNull($this->getStorage()->load('other_module_test_optional_entity_unmet'), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are met is not created.');
     $this->installModule('config_install_dependency_test');
-    $this->assertTrue(entity_load('config_test', 'other_module_test_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_unmet whose dependencies are met is now created.');
+    $this->assertTrue($this->getStorage()->load('other_module_test_unmet'), 'The optional configuration config_test.dynamic.other_module_test_unmet whose dependencies are met is now created.');
     // The following configuration entity's dependencies are now met. It is
     // indirectly dependent on the config_install_dependency_test module because
     // it has a dependency on the config_test.dynamic.dependency_for_unmet2
     // configuration provided by that module and, therefore, should be created.
-    $this->assertTrue(entity_load('config_test', 'other_module_test_optional_entity_unmet2', TRUE), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet2 whose dependencies are met is now created.');
+    $this->assertTrue($this->getStorage()->load('other_module_test_optional_entity_unmet2'), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet2 whose dependencies are met is now created.');
 
     // The following configuration entity's dependencies are now met even though
     // it has no direct dependency on the module. It is indirectly dependent on
@@ -77,14 +76,14 @@ class ConfigOtherModuleTest extends BrowserTestBase {
     // the config_test.dynamic.other_module_test_unmet configuration that is
     // dependent on the config_install_dependency_test module and, therefore,
     // should be created.
-    $entity = entity_load('config_test', 'other_module_test_optional_entity_unmet', TRUE);
+    $entity = $this->getStorage()->load('other_module_test_optional_entity_unmet');
     $this->assertTrue($entity, 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are met is created.');
     $entity->delete();
 
     // Install another module to ensure the configuration just deleted is not
     // recreated.
     $this->installModule('config');
-    $this->assertFalse(entity_load('config_test', 'other_module_test_optional_entity_unmet', TRUE), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are met is not installed when an unrelated module is installed.');
+    $this->assertFalse($this->getStorage()->load('other_module_test_optional_entity_unmet'), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are met is not installed when an unrelated module is installed.');
   }
 
   /**
@@ -92,10 +91,10 @@ class ConfigOtherModuleTest extends BrowserTestBase {
    */
   public function testInstallConfigEntityModuleFirst() {
     $this->installModule('config_test');
-    $this->assertFalse(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration provided by config_other_module_config_test does not exist.');
+    $this->assertFalse($this->getStorage()->load('other_module_test'), 'Default configuration provided by config_other_module_config_test does not exist.');
 
     $this->installModule('config_other_module_config_test');
-    $this->assertTrue(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration provided by config_other_module_config_test has been installed.');
+    $this->assertTrue($this->getStorage()->load('other_module_test'), 'Default configuration provided by config_other_module_config_test has been installed.');
   }
 
   /**
@@ -103,16 +102,11 @@ class ConfigOtherModuleTest extends BrowserTestBase {
    */
   public function testUninstall() {
     $this->installModule('views');
-    $storage = $this->container->get('entity_type.manager')->getStorage('view');
-    $storage->resetCache(['frontpage']);
-    $this->assertTrue($storage->load('frontpage') === NULL, 'After installing Views, frontpage view which is dependant on the Node and Views modules does not exist.');
+    $this->assertTrue($this->getStorage('view')->load('frontpage') === NULL, 'After installing Views, frontpage view which is dependant on the Node and Views modules does not exist.');
     $this->installModule('node');
-    $storage->resetCache(['frontpage']);
-    $this->assertTrue($storage->load('frontpage') !== NULL, 'After installing Node, frontpage view which is dependant on the Node and Views modules exists.');
+    $this->assertTrue($this->getStorage('view')->load('frontpage') !== NULL, 'After installing Node, frontpage view which is dependant on the Node and Views modules exists.');
     $this->uninstallModule('node');
-    $storage = $this->container->get('entity_type.manager')->getStorage('view');
-    $storage->resetCache(['frontpage']);
-    $this->assertTrue($storage->load('frontpage') === NULL, 'After uninstalling Node, frontpage view which is dependant on the Node and Views modules does not exist.');
+    $this->assertTrue($this->getStorage('view')->load('frontpage') === NULL, 'After uninstalling Node, frontpage view which is dependant on the Node and Views modules does not exist.');
   }
 
   /**
@@ -135,6 +129,20 @@ class ConfigOtherModuleTest extends BrowserTestBase {
   protected function uninstallModule($module) {
     $this->container->get('module_installer')->uninstall([$module]);
     $this->container = \Drupal::getContainer();
+  }
+
+  /**
+   * Gets the provided entity type's storage.
+   *
+   * @param string $entity_type_id
+   *   (optional) The entity type ID to get a storage for. Defaults to
+   *   'config_test'.
+   *
+   * @return \Drupal\Core\Entity\EntityStorageInterface
+   *   The entity type's storage.
+   */
+  protected function getStorage($entity_type_id = 'config_test') {
+    return \Drupal::entityTypeManager()->getStorage($entity_type_id);
   }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\file\Kernel;
 
+use Drupal\file\FileInterface;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\file\Entity\File;
 
@@ -48,6 +49,7 @@ class FileLegacyTest extends FieldKernelTestBase {
 
   /**
    * @expectedDeprecation file_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::loadMultiple(). See https://www.drupal.org/node/2266845
+   * @expectedDeprecation file_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::load(). See https://www.drupal.org/node/2266845
    */
   public function testEntityLegacyCode() {
     file_put_contents('public://example.txt', $this->randomMachineName());
@@ -56,6 +58,9 @@ class FileLegacyTest extends FieldKernelTestBase {
     $this->assertCount(1, file_load_multiple());
     File::create(['uri' => 'public://example.txt'])->save();
     $this->assertCount(2, file_load_multiple());
+
+    $this->assertNull(file_load(300));
+    $this->assertInstanceOf(FileInterface::class, file_load(1));
   }
 
 }

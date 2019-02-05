@@ -246,7 +246,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
    */
   protected function saveEntity(EntityInterface $entity) {
     $entity->save();
-    $entity = entity_test_mul_load($entity->id(), TRUE);
+    $entity = \Drupal::entityTypeManager()->getStorage('entity_test_mul')->loadUnchanged($entity->id());
     return $entity;
   }
 

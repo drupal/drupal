@@ -399,25 +399,25 @@ function taxonomy_vocabulary_load_multiple(array $vids = NULL) {
 /**
  * Return the taxonomy vocabulary entity matching a vocabulary ID.
  *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
- *   Use \Drupal\taxonomy\Entity\Vocabulary::load().
- *
  * @param int $vid
  *   The vocabulary's ID.
  *
  * @return \Drupal\taxonomy\Entity\Vocabulary|null
  *   The taxonomy vocabulary entity, if exists, NULL otherwise. Results are
  *   statically cached.
+ *
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\taxonomy\Entity\Vocabulary::load().
+ *
+ * @see https://www.drupal.org/node/2266845
  */
 function taxonomy_vocabulary_load($vid) {
+  @trigger_error('taxonomy_vocabulary_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\taxonomy\Entity\Vocabulary::load(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   return Vocabulary::load($vid);
 }
 
 /**
  * Return the taxonomy term entity matching a term ID.
- *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
- *   Use \Drupal\taxonomy\Entity\Term::load().
  *
  * @param $tid
  *   A term's ID
@@ -425,8 +425,14 @@ function taxonomy_vocabulary_load($vid) {
  * @return \Drupal\taxonomy\Entity\Term|null
  *   A taxonomy term entity, or NULL if the term was not found. Results are
  *   statically cached.
+ *
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ *   Drupal\taxonomy\Entity\Term::load().
+ *
+ * @see https://www.drupal.org/node/2266845
  */
 function taxonomy_term_load($tid) {
+  @trigger_error('taxonomy_term_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\taxonomy\Entity\Term::load(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if (!is_numeric($tid)) {
     return NULL;
   }

@@ -3,6 +3,8 @@
 namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\taxonomy\TermInterface;
+use Drupal\taxonomy\VocabularyInterface;
 use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
 
 /**
@@ -33,6 +35,8 @@ class TaxonomyLegacyTest extends KernelTestBase {
   /**
    * @expectedDeprecation taxonomy_term_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\taxonomy\Entity\Term::loadMultiple(). See https://www.drupal.org/node/2266845
    * @expectedDeprecation taxonomy_vocabulary_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\taxonomy\Entity\Vocabulary::loadMultiple(). See https://www.drupal.org/node/2266845
+   * @expectedDeprecation taxonomy_term_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\taxonomy\Entity\Term::load(). See https://www.drupal.org/node/2266845
+   * @expectedDeprecation taxonomy_vocabulary_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\taxonomy\Entity\Vocabulary::load(). See https://www.drupal.org/node/2266845
    */
   public function testEntityLegacyCode() {
     $this->assertCount(0, taxonomy_term_load_multiple());
@@ -45,6 +49,11 @@ class TaxonomyLegacyTest extends KernelTestBase {
     $this->createTerm($vocab);
     $this->assertCount(3, taxonomy_term_load_multiple());
     $this->assertCount(2, taxonomy_vocabulary_load_multiple());
+
+    $this->assertNull(taxonomy_term_load(3000));
+    $this->assertInstanceOf(TermInterface::class, taxonomy_term_load(1));
+    $this->assertNull(taxonomy_vocabulary_load('not_a_vocab'));
+    $this->assertInstanceOf(VocabularyInterface::class, taxonomy_vocabulary_load($vocab->id()));
   }
 
 }
