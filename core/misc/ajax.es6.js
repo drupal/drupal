@@ -1337,6 +1337,26 @@
     },
 
     /**
+     * Command to provide triggers audio UAs to read the supplied text.
+     *
+     * @param {Drupal.Ajax} [ajax]
+     *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
+     * @param {object} response
+     *   The JSON response from the Ajax request.
+     * @param {string} [response.text]
+     *   The text that will be read.
+     * @param {string} [response.priority]
+     *   An optional priority that will be used for the announcement.
+     */
+    announce(ajax, response) {
+      if (response.priority) {
+        Drupal.announce(response.text, response.priority);
+      } else {
+        Drupal.announce(response.text);
+      }
+    },
+
+    /**
      * Command to set the window.location, redirecting the browser.
      *
      * @param {Drupal.Ajax} [ajax]

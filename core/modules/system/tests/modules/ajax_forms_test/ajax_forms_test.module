@@ -9,6 +9,7 @@ use Drupal\Core\Ajax\AddCssCommand;
 use Drupal\Core\Ajax\AfterCommand;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\AlertCommand;
+use Drupal\Core\Ajax\AnnounceCommand;
 use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Core\Ajax\BeforeCommand;
 use Drupal\Core\Ajax\ChangedCommand;
@@ -41,6 +42,35 @@ function ajax_forms_test_advanced_commands_alert_callback($form, FormStateInterf
   $response = new AjaxResponse();
   $response->addCommand(new AlertCommand('Alert'));
   return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'announce' with no priority specified.
+ */
+function ajax_forms_test_advanced_commands_announce_callback($form, FormStateInterface $form_state) {
+  return (new AjaxResponse())->addCommand(new AnnounceCommand('Default announcement.'));
+}
+
+/**
+ * Ajax form callback: Selects 'announce' with 'polite' priority.
+ */
+function ajax_forms_test_advanced_commands_announce_polite_callback($form, FormStateInterface $form_state) {
+  return (new AjaxResponse())->addCommand(new AnnounceCommand('Polite announcement.', 'polite'));
+}
+
+/**
+ * Ajax form callback: Selects 'announce' with 'assertive' priority.
+ */
+function ajax_forms_test_advanced_commands_announce_assertive_callback($form, FormStateInterface $form_state) {
+  return (new AjaxResponse())->addCommand(new AnnounceCommand('Assertive announcement.', 'assertive'));
+}
+
+/**
+ * Ajax form callback: Selects 'announce' with two announce commands returned.
+ */
+function ajax_forms_test_advanced_commands_double_announce_callback($form, FormStateInterface $form_state) {
+  return (new AjaxResponse())->addCommand(new AnnounceCommand('Assertive announcement.', 'assertive'))
+    ->addCommand(new AnnounceCommand('Another announcement.'));
 }
 
 /**
