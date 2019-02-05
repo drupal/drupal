@@ -109,4 +109,70 @@ class ImageStyleIntegrationTest extends KernelTestBase {
     $this->assertSame('', $widget['settings']['preview_image_style']);
   }
 
+  /**
+   * Tests renaming the ImageStyle.
+   */
+  public function testEntityDisplayDependencyRename() {
+    // Create an image style.
+    /** @var \Drupal\image\ImageStyleInterface $style */
+    $style = ImageStyle::create(['name' => 'main_style']);
+    $style->save();
+
+    // Create a node-type, named 'note'.
+    $node_type = NodeType::create(['type' => 'note']);
+    $node_type->save();
+
+    // Create an image field and attach it to the 'note' node-type.
+    FieldStorageConfig::create([
+      'entity_type' => 'node',
+      'field_name' => 'sticker',
+      'type' => 'image',
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => 'node',
+      'field_name' => 'sticker',
+      'bundle' => 'note',
+    ])->save();
+
+    // Create the default entity view display and set the 'sticker' field to use
+    // the 'main_style' images style in formatter.
+    /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display */
+    $view_display = EntityViewDisplay::create([
+      'targetEntityType' => 'node',
+      'bundle' => 'note',
+      'mode' => 'default',
+      'status' => TRUE,
+    ])->setComponent('sticker', ['settings' => ['image_style' => 'main_style']]);
+    $view_display->save();
+
+    // Create the default entity form display and set the 'sticker' field to use
+    // the 'main_style' images style in the widget.
+    /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
+    $form_display = EntityFormDisplay::create([
+      'targetEntityType' => 'node',
+      'bundle' => 'note',
+      'mode' => 'default',
+      'status' => TRUE,
+    ])->setComponent('sticker', ['settings' => ['preview_image_style' => 'main_style']]);
+    $form_display->save();
+
+    // Check that the entity displays exists before dependency renaming.
+    $this->assertNotNull(EntityViewDisplay::load($view_display->id()));
+    $this->assertNotNull(EntityFormDisplay::load($form_display->id()));
+
+    // Rename the 'main_style' image style.
+    $style->setName('main_style_renamed');
+    $style->save();
+
+    // Check that the entity displays exists after dependency renaming.
+    $this->assertNotNull($view_display = EntityViewDisplay::load($view_display->id()));
+    $this->assertNotNull($form_display = EntityFormDisplay::load($form_display->id()));
+    // Check that the 'sticker' formatter component exists in both displays.
+    $this->assertNotNull($formatter = $view_display->getComponent('sticker'));
+    $this->assertNotNull($widget = $form_display->getComponent('sticker'));
+    // Check that both displays are using now 'main_style_renamed' for images.
+    $this->assertSame('main_style_renamed', $formatter['settings']['image_style']);
+    $this->assertSame('main_style_renamed', $widget['settings']['preview_image_style']);
+  }
+
 }
