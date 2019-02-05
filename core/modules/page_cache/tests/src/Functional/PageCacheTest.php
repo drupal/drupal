@@ -60,7 +60,7 @@ class PageCacheTest extends BrowserTestBase {
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->drupalGet($path);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
-    $cid_parts = [\Drupal::url('system_test.cache_tags_page', [], ['absolute' => TRUE]), 'html'];
+    $cid_parts = [\Drupal::url('system_test.cache_tags_page', [], ['absolute' => TRUE]), ''];
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);
@@ -95,7 +95,7 @@ class PageCacheTest extends BrowserTestBase {
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->drupalGet($path);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
-    $cid_parts = [\Drupal::url('system_test.cache_tags_page', [], ['absolute' => TRUE]), 'html'];
+    $cid_parts = [\Drupal::url('system_test.cache_tags_page', [], ['absolute' => TRUE]), ''];
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);
@@ -389,7 +389,7 @@ class PageCacheTest extends BrowserTestBase {
       $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
 
       // Ensure the 'expire' field on the cache entry uses cache_ttl_4xx.
-      $cache_item = \Drupal::service('cache.page')->get($this->getUrl() . ':html');
+      $cache_item = \Drupal::service('cache.page')->get($this->getUrl() . ':');
       $difference = $cache_item->expire - (int) $cache_item->created;
       // Given that a second might have passed we cannot be sure that
       // $difference will exactly equal the default cache_ttl_4xx setting.

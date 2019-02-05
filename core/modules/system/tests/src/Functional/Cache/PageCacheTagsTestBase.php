@@ -49,7 +49,7 @@ abstract class PageCacheTagsTestBase extends BrowserTestBase {
 
     if ($hit_or_miss === 'HIT' && is_array($tags)) {
       $absolute_url = $url->setAbsolute()->toString();
-      $cid_parts = [$absolute_url, 'html'];
+      $cid_parts = [$absolute_url, ''];
       $cid = implode(':', $cid_parts);
       $cache_entry = \Drupal::cache('page')->get($cid);
       sort($cache_entry->tags);

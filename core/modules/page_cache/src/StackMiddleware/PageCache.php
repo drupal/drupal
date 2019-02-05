@@ -48,6 +48,13 @@ class PageCache implements HttpKernelInterface {
   protected $responsePolicy;
 
   /**
+   * The cache ID for the (master) request.
+   *
+   * @var string
+   */
+  protected $cid;
+
+  /**
    * Constructs a PageCache object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
@@ -339,11 +346,20 @@ class PageCache implements HttpKernelInterface {
    *   The cache ID for this request.
    */
   protected function getCacheId(Request $request) {
-    $cid_parts = [
-      $request->getSchemeAndHttpHost() . $request->getRequestUri(),
-      $request->getRequestFormat(),
-    ];
-    return implode(':', $cid_parts);
+    // Once a cache ID is determined for the request, reuse it for the duration
+    // of the request. This ensures that when the cache is written, it is only
+    // keyed on request data that was available when it was read. For example,
+    // the request format might be NULL during cache lookup and then set during
+    // routing, in which case we want to key on NULL during writing, since that
+    // will be the value during lookups for subsequent requests.
+    if (!isset($this->cid)) {
+      $cid_parts = [
+        $request->getSchemeAndHttpHost() . $request->getRequestUri(),
+        $request->getRequestFormat(NULL),
+      ];
+      $this->cid = implode(':', $cid_parts);
+    }
+    return $this->cid;
   }
 
 }
