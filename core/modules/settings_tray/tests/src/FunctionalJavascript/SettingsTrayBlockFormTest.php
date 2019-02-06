@@ -30,6 +30,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
 
     $user = $this->createUser([
       'administer blocks',
+      'access administration pages',
       'access contextual links',
       'access toolbar',
       'administer nodes',
