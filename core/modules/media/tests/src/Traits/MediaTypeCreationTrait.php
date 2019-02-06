@@ -48,22 +48,21 @@ trait MediaTypeCreationTrait {
 
     /** @var \Drupal\media\MediaTypeInterface $media_type */
     $media_type = MediaType::create($values);
-    $this->assertSame(SAVED_NEW, $media_type->save());
 
     $source = $media_type->getSource();
     $source_field = $source->createSourceField($media_type);
+    $source_configuration = $source->getConfiguration();
+    $source_configuration['source_field'] = $source_field->getName();
+    $source->setConfiguration($source_configuration);
+
+    $this->assertSame(SAVED_NEW, $media_type->save());
+
     // The media type form creates a source field if it does not exist yet. The
     // same must be done in a kernel test, since it does not use that form.
     // @see \Drupal\media\MediaTypeForm::save()
     $source_field->getFieldStorageDefinition()->save();
     // The source field storage has been created, now the field can be saved.
     $source_field->save();
-
-    $source_configuration = $source->getConfiguration();
-    $source_configuration['source_field'] = $source_field->getName();
-    $source->setConfiguration($source_configuration);
-
-    $this->assertSame(SAVED_UPDATED, $media_type->save());
 
     // Add the source field to the form display for the media type.
     $form_display = entity_get_form_display('media', $media_type->id(), 'default');

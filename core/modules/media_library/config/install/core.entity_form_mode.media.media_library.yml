@@ -3,7 +3,7 @@ status: true
 dependencies:
   enforced:
     module:
-    - media_library
+      - media_library
   module:
     - media
 id: media.media_library

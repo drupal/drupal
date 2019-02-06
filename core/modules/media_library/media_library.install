@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the media_library module.
  */
 
+use Drupal\image\Entity\ImageStyle;
+use Drupal\media\Entity\MediaType;
 use Drupal\views\Entity\View;
 
 /**
@@ -19,6 +21,12 @@ function media_library_install() {
       $display['display_options']['path'] = 'admin/content/media-table';
       unset($display['display_options']['menu']);
       $view->trustData()->save();
+    }
+  }
+  if (!\Drupal::isConfigSyncing()) {
+    foreach (MediaType::loadMultiple() as $type) {
+      _media_library_configure_form_display($type);
+      _media_library_configure_view_display($type);
     }
   }
 }
@@ -46,4 +54,25 @@ function media_library_uninstall() {
       $view->trustData()->save();
     }
   }
+}
+
+/**
+ * Create the 'media_library' image style.
+ */
+function media_library_update_8701() {
+  $image_style = ImageStyle::create([
+    'name' => 'media_library',
+    'label' => 'Media Library (220x220)',
+  ]);
+  // Add a scale effect.
+  $image_style->addImageEffect([
+    'id' => 'image_scale',
+    'weight' => 0,
+    'data' => [
+      'width' => 220,
+      'height' => 220,
+      'upscale' => FALSE,
+    ],
+  ]);
+  $image_style->save();
 }

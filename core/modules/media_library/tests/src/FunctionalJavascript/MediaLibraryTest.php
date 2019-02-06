@@ -106,7 +106,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $page->pressButton('Apply Filters');
     $assert_session->assertWaitOnAjaxRequest();
     // This tests that anchor tags clicked inside the preview are suppressed.
-    $this->getSession()->executeScript('jQuery(".js-click-to-select-trigger a")[0].click()');
+    $this->getSession()->executeScript('jQuery(".js-click-to-select-trigger a")[4].click()');
     $this->submitForm([], 'Apply to selected items');
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextNotContains('Cat');

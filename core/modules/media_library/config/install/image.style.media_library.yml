@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - media_library
+name: media_library
+label: 'Media Library thumbnail (220x220)'
+effects:
+  75b076a8-1234-4b42-85db-bf377c4d8d5f:
+    uuid: 75b076a8-1234-4b42-85db-bf377c4d8d5f
+    id: image_scale
+    weight: 0
+    data:
+      width: 220
+      height: 220
+      upscale: false
