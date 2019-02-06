@@ -129,6 +129,14 @@ function views_views_data() {
     ],
   ];
 
+  $data['views']['display_link'] = [
+    'title' => t('Link to display'),
+    'help' => t('Displays a link to a path-based display of this view while keeping the filter criteria, sort criteria, pager settings and contextual filters.'),
+    'area' => [
+      'id' => 'display_link',
+    ],
+  ];
+
   // Registers an entity area handler per entity type.
   foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
     // Excludes entity types, which cannot be rendered.
