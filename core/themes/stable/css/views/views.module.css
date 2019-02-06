@@ -17,3 +17,7 @@
   float: left;
   width: 100%;
 }
+/* Provide some space between display links. */
+.views-display-link + .views-display-link {
+  margin-left: 0.5em;
+}
