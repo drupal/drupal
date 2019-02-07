@@ -110,9 +110,9 @@ use Drupal\Core\Language\LanguageInterface;
  * translation in the user interface:
  * @code
  * // PHP code
- * t('May', array(), array('context' => 'Long month name');
+ * t('May', [], ['context' => 'Long month name']);
  * \Drupal::translation()->formatPlural($count, '1 something',
- *   '@count somethings', array(), array('context' => 'My context'));
+ *   '@count somethings', [], ['context' => 'My context']);
  *
  * // JavaScript code
  * Drupal.t('May', {}, {'context': 'Long month name'});
