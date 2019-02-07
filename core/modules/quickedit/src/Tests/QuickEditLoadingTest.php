@@ -438,20 +438,6 @@ class QuickEditLoadingTest extends WebTestBase {
   }
 
   /**
-   * Tests that Quick Edit doesn't make fields rendered with display options
-   * editable.
-   */
-  public function testDisplayOptions() {
-    $node = Node::load('1');
-    $display_settings = [
-      'label' => 'inline',
-    ];
-    $build = $node->body->view($display_settings);
-    $output = \Drupal::service('renderer')->renderRoot($build);
-    $this->assertFalse(strpos($output, 'data-quickedit-field-id'), 'data-quickedit-field-id attribute not added when rendering field using dynamic display options.');
-  }
-
-  /**
    * Tests that Quick Edit works with custom render pipelines.
    */
   public function testCustomPipeline() {
