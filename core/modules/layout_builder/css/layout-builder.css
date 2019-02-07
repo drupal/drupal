@@ -92,6 +92,7 @@
   padding-left: 44px;
   font-size: 16px;
   color: #eee;
+  border-bottom: 1px solid #333;
   background: url(../../../misc/icons/bebebe/plus.svg) transparent 16px no-repeat;
 }
 
