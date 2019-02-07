@@ -9,6 +9,7 @@
  */
 
 use Drupal\Component\Graph\Graph;
+use Drupal\Core\Update\UpdateKernel;
 use Drupal\Core\Utility\Error;
 
 /**
@@ -29,6 +30,10 @@ function update_fix_compatibility() {
     $extension_config->set('module', module_config_sort($extension_config->get('module')));
     $extension_config->save();
   }
+
+  // Fix extension objects if the update is being done via Drush 8. In non-Drush
+  // environments this will already be fixed by the UpdateKernel this point.
+  UpdateKernel::fixSerializedExtensionObjects(\Drupal::getContainer());
 }
 
 /**
