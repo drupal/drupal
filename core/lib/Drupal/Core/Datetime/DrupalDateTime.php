@@ -16,7 +16,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * DrupalDateTime::createFromArray( array('year' => 2010, 'month' => 9, 'day' => 28) )
  *
- * @see \Drupal/Component/Datetime/DateTimePlus.php
+ * @see \Drupal\Component\Datetime\DateTimePlus
  */
 class DrupalDateTime extends DateTimePlus {
 
