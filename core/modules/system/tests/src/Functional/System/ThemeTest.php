@@ -244,6 +244,28 @@ class ThemeTest extends BrowserTestBase {
   }
 
   /**
+   * Tests the 'rendered' cache tag is cleared when saving theme settings.
+   */
+  public function testThemeSettingsRenderCacheClear() {
+    $this->container->get('theme_handler')->install(['bartik']);
+    // Ensure the frontpage is cached for anonymous users. The render cache will
+    // cleared by installing a theme.
+    $this->drupalLogout();
+    $this->drupalGet('');
+    $this->assertEquals('MISS', $this->getSession()->getResponseHeader('X-Drupal-Cache'));
+    $this->drupalGet('');
+    $this->assertEquals('HIT', $this->getSession()->getResponseHeader('X-Drupal-Cache'));
+
+    $this->drupalLogin($this->adminUser);
+    // Save Bartik's theme settings which should invalidate the 'rendered' cache
+    // tag in \Drupal\system\EventSubscriber\ConfigCacheTag.
+    $this->drupalPostForm('admin/appearance/settings/bartik', [], t('Save configuration'));
+    $this->drupalLogout();
+    $this->drupalGet('');
+    $this->assertEquals('MISS', $this->getSession()->getResponseHeader('X-Drupal-Cache'));
+  }
+
+  /**
    * Test the administration theme functionality.
    */
   public function testAdministrationTheme() {

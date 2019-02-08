@@ -47,24 +47,25 @@ class ConfigCacheTag implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onSave(ConfigCrudEvent $event) {
+    $config_name = $event->getConfig()->getName();
     // Changing the site settings may mean a different route is selected for the
     // front page. Additionally a change to the site name or similar must
     // invalidate the render cache since this could be used anywhere.
-    if ($event->getConfig()->getName() === 'system.site') {
+    if ($config_name === 'system.site') {
       $this->cacheTagsInvalidator->invalidateTags(['route_match', 'rendered']);
     }
 
     // Theme configuration and global theme settings.
-    if (in_array($event->getConfig()->getName(), ['system.theme', 'system.theme.global'], TRUE)) {
+    if (in_array($config_name, ['system.theme', 'system.theme.global'], TRUE)) {
       $this->cacheTagsInvalidator->invalidateTags(['rendered']);
     }
 
     // Theme-specific settings, check if this matches a theme settings
-    // configuration object, in that case, clear the rendered cache tag.
-    foreach (array_keys($this->themeHandler->listInfo()) as $theme_name) {
-      if ($theme_name == $event->getConfig()->getName()) {
+    // configuration object (THEME_NAME.settings), in that case, clear the
+    // rendered cache tag.
+    if (preg_match('/^([^\.]*)\.settings$/', $config_name, $matches)) {
+      if ($this->themeHandler->themeExists($matches[1])) {
         $this->cacheTagsInvalidator->invalidateTags(['rendered']);
-        break;
       }
     }
   }
