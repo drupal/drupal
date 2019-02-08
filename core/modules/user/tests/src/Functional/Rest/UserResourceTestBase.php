@@ -326,4 +326,15 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
       ->addCacheTags(['user:3']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedCacheContexts() {
+    return [
+      'url.site',
+      // Due to the 'mail' field's access varying by user.
+      'user',
+    ];
+  }
+
 }

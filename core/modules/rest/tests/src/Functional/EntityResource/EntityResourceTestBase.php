@@ -535,13 +535,14 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // 200 for well-formed HEAD request.
     $response = $this->request('HEAD', $url, $request_options);
-    $this->assertResourceResponse(200, '', $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
+    $is_cacheable_by_dynamic_page_cache = empty(array_intersect(['user', 'session'], $this->getExpectedCacheContexts()));
+    $this->assertResourceResponse(200, '', $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
     $head_headers = $response->getHeaders();
 
     // 200 for well-formed GET request. Page Cache hit because of HEAD request.
     // Same for Dynamic Page Cache hit.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'HIT', static::$auth ? 'HIT' : 'MISS');
+    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'HIT', $is_cacheable_by_dynamic_page_cache ? (static::$auth ? 'HIT' : 'MISS') : 'UNCACHEABLE');
     // Assert that Dynamic Page Cache did not store a ResourceResponse object,
     // which needs serialization after every cache hit. Instead, it should
     // contain a flattened response. Otherwise performance suffers.
@@ -551,30 +552,35 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         ':pattern' => '%[route]=rest.%',
       ])
       ->fetchAllAssoc('cid');
-    $this->assertTrue(count($cache_items) >= 2);
-    $found_cache_redirect = FALSE;
-    $found_cached_200_response = FALSE;
-    $other_cached_responses_are_4xx = TRUE;
-    foreach ($cache_items as $cid => $cache_item) {
-      $cached_data = unserialize($cache_item->data);
-      if (!isset($cached_data['#cache_redirect'])) {
-        $cached_response = $cached_data['#response'];
-        if ($cached_response->getStatusCode() === 200) {
-          $found_cached_200_response = TRUE;
-        }
-        elseif (!$cached_response->isClientError()) {
-          $other_cached_responses_are_4xx = FALSE;
-        }
-        $this->assertNotInstanceOf(ResourceResponseInterface::class, $cached_response);
-        $this->assertInstanceOf(CacheableResponseInterface::class, $cached_response);
-      }
-      else {
-        $found_cache_redirect = TRUE;
-      }
+    if (!$is_cacheable_by_dynamic_page_cache) {
+      $this->assertCount(0, $cache_items);
     }
-    $this->assertTrue($found_cache_redirect);
-    $this->assertTrue($found_cached_200_response);
-    $this->assertTrue($other_cached_responses_are_4xx);
+    else {
+      $this->assertCount(2, $cache_items);
+      $found_cache_redirect = FALSE;
+      $found_cached_200_response = FALSE;
+      $other_cached_responses_are_4xx = TRUE;
+      foreach ($cache_items as $cid => $cache_item) {
+        $cached_data = unserialize($cache_item->data);
+        if (!isset($cached_data['#cache_redirect'])) {
+          $cached_response = $cached_data['#response'];
+          if ($cached_response->getStatusCode() === 200) {
+            $found_cached_200_response = TRUE;
+          }
+          elseif (!$cached_response->isClientError()) {
+            $other_cached_responses_are_4xx = FALSE;
+          }
+          $this->assertNotInstanceOf(ResourceResponseInterface::class, $cached_response);
+          $this->assertInstanceOf(CacheableResponseInterface::class, $cached_response);
+        }
+        else {
+          $found_cache_redirect = TRUE;
+        }
+      }
+      $this->assertTrue($found_cache_redirect);
+      $this->assertTrue($found_cached_200_response);
+      $this->assertTrue($other_cached_responses_are_4xx);
+    }
 
     // Sort the serialization data first so we can do an identical comparison
     // for the keys with the array order the same (it needs to match with
@@ -648,7 +654,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->rebuildAll();
 
       $response = $this->request('GET', $url, $request_options);
-      $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
+      $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
 
       // Again do an identical comparison, but this time transform the expected
       // normalized entity's values to strings. This ensures the BC layer for
@@ -680,7 +686,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->rebuildAll();
 
       $response = $this->request('GET', $url, $request_options);
-      $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
+      $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
 
       // This ensures the BC layer for bc_timestamp_normalizer_unix works as
       // expected. This method should be using
@@ -734,7 +740,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     if (!static::$auth && in_array('user.permissions', $expected_cache_contexts, TRUE)) {
       $expected_cache_tags = Cache::mergeTags($expected_cache_tags, ['config:user.role.anonymous']);
     }
-    $this->assertResourceResponse(200, FALSE, $response, $expected_cache_tags, $expected_cache_contexts, static::$auth ? FALSE : 'MISS', 'MISS');
+    $this->assertResourceResponse(200, FALSE, $response, $expected_cache_tags, $expected_cache_contexts, static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
 
     $this->resourceConfigStorage->load(static::$resourceConfigId)->disable()->save();
     $this->refreshTestStateAfterRestConfigChange();
@@ -747,7 +753,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: upon re-enabling a resource, immediate 200.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response, $expected_cache_tags, $expected_cache_contexts, static::$auth ? FALSE : 'MISS', 'MISS');
+    $this->assertResourceResponse(200, FALSE, $response, $expected_cache_tags, $expected_cache_contexts, static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
 
     $this->resourceConfigStorage->load(static::$resourceConfigId)->delete();
     $this->refreshTestStateAfterRestConfigChange();

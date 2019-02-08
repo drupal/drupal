@@ -120,7 +120,7 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
         // Allow view access to own mail address and other personalization
         // settings.
         if ($operation == 'view') {
-          return $is_own_account ? AccessResult::allowed()->cachePerUser() : AccessResult::neutral();
+          return AccessResult::allowedIf($is_own_account)->cachePerUser();
         }
         // Anyone that can edit the user can also edit this field.
         return AccessResult::allowed()->cachePerPermissions();
