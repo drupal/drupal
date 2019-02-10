@@ -52,7 +52,7 @@ class EntityFormTest extends UnitTestCase {
   public function testFormId($expected, $definition) {
     $this->entityType->set('entity_keys', ['bundle' => $definition['bundle']]);
 
-    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', [[], $definition['entity_type']], '', TRUE, TRUE, TRUE, ['getEntityType', 'bundle']);
+    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityBase', [[], $definition['entity_type']], '', TRUE, TRUE, TRUE, ['getEntityType', 'bundle']);
 
     $entity->expects($this->any())
       ->method('getEntityType')

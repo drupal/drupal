@@ -464,7 +464,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->will($this->returnValue($new_uuid));
 
     $duplicate = $this->entity->createDuplicate();
-    $this->assertInstanceOf('\Drupal\Core\Entity\Entity', $duplicate);
+    $this->assertInstanceOf('\Drupal\Core\Entity\EntityBase', $duplicate);
     $this->assertNotSame($this->entity, $duplicate);
     $this->assertFalse($this->entity->isNew());
     $this->assertTrue($duplicate->isNew());

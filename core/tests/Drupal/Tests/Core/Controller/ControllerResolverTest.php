@@ -80,7 +80,7 @@ class ControllerResolverTest extends UnitTestCase {
     }
     $controller = function (EntityInterface $entity, $user, RouteMatchInterface $route_match, ServerRequestInterface $psr_7) {
     };
-    $mock_entity = $this->getMockBuilder('Drupal\Core\Entity\Entity')
+    $mock_entity = $this->getMockBuilder('Drupal\Core\Entity\EntityBase')
       ->disableOriginalConstructor()
       ->getMock();
     $mock_account = $this->getMock('Drupal\Core\Session\AccountInterface');

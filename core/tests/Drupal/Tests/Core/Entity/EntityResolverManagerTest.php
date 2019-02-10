@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity;
 
-use Drupal\Core\Entity\Entity;
+use Drupal\Core\Entity\EntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityResolverManager;
 use Drupal\Core\Form\FormBase;
@@ -500,7 +500,7 @@ class BasicControllerClass {
 /**
  * A concrete entity.
  */
-class SimpleTestEntity extends Entity {
+class SimpleTestEntity extends EntityBase {
 
 }
 

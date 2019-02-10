@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\Entity;
+use Drupal\Core\Entity\EntityBase;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -101,7 +101,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::toUrl
    */
   public function testToUrlNoId() {
-    $entity = $this->getEntity(Entity::class, []);
+    $entity = $this->getEntity(EntityBase::class, []);
 
     $this->setExpectedException(EntityMalformedException::class, 'The "' . $this->entityTypeId . '" entity cannot have a URI as it does not have an ID');
     $entity->toUrl();
@@ -123,7 +123,7 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function testToUrlLinkTemplates($link_template, $expected_route_name) {
     $values = ['id' => $this->entityId, 'langcode' => $this->langcode];
-    $entity = $this->getEntity(Entity::class, $values);
+    $entity = $this->getEntity(EntityBase::class, $values);
     $this->registerLinkTemplate($link_template);
 
     /** @var \Drupal\Core\Url $url */
@@ -218,7 +218,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::urlRouteParameters
    */
   public function testToUrlLinkTemplateNoId($link_template, $expected_route_name) {
-    $entity = $this->getEntity(Entity::class, ['id' => $this->entityId]);
+    $entity = $this->getEntity(EntityBase::class, ['id' => $this->entityId]);
     $this->registerLinkTemplate($link_template);
 
     /** @var \Drupal\Core\Url $url */
@@ -263,7 +263,7 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function testToUrlLinkTemplateAddForm($has_bundle_key, $bundle_entity_type, $bundle_key, $expected_route_parameters) {
     $values = ['id' => $this->entityId, 'langcode' => $this->langcode];
-    $entity = $this->getEntity(Entity::class, $values);
+    $entity = $this->getEntity(EntityBase::class, $values);
     $this->entityType->hasKey('bundle')->willReturn($has_bundle_key);
     $this->entityType->getBundleEntityType()->willReturn($bundle_entity_type);
     $this->entityType->getKey('bundle')->willReturn($bundle_key);
@@ -308,7 +308,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::linkTemplates
    */
   public function testToUrlUriCallbackUndefined(array $bundle_info, $uri_callback) {
-    $entity = $this->getEntity(Entity::class, ['id' => $this->entityId]);
+    $entity = $this->getEntity(EntityBase::class, ['id' => $this->entityId]);
 
     $this->registerBundleInfo($bundle_info);
     $this->entityType->getUriCallback()->willReturn($uri_callback);
@@ -348,7 +348,7 @@ class EntityUrlTest extends UnitTestCase {
    * @dataProvider providerTestToUrlUriCallback
    */
   public function testToUrlUriCallback(array $bundle_info, $uri_callback) {
-    $entity = $this->getEntity(Entity::class, ['id' => $this->entityId, 'langcode' => $this->langcode]);
+    $entity = $this->getEntity(EntityBase::class, ['id' => $this->entityId, 'langcode' => $this->langcode]);
 
     $this->registerBundleInfo($bundle_info);
     $this->entityType->getUriCallback()->willReturn($uri_callback);
@@ -392,7 +392,7 @@ class EntityUrlTest extends UnitTestCase {
    * @expectedDeprecation EntityInterface::urlInfo() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toUrl() instead. See https://www.drupal.org/node/2614344
    */
   public function testUrlInfo($rel, $options) {
-    $entity = $this->getEntity(Entity::class, [], ['toUrl']);
+    $entity = $this->getEntity(EntityBase::class, [], ['toUrl']);
     $entity->expects($this->once())
       ->method('toUrl')
       ->with($rel, $options);
@@ -415,7 +415,7 @@ class EntityUrlTest extends UnitTestCase {
       ->method('toString')
       ->willReturn('<a href="/foo">The link</a>');
 
-    $entity = $this->getEntity(Entity::class, [], ['toLink']);
+    $entity = $this->getEntity(EntityBase::class, [], ['toLink']);
     $entity->expects($this->once())
       ->method('toLink')
       ->with(NULL, 'canonical')
@@ -456,7 +456,7 @@ class EntityUrlTest extends UnitTestCase {
    * @expectedDeprecation EntityInterface::url() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toUrl() instead. Note, a \Drupal\Core\Url object is returned. See https://www.drupal.org/node/2614344
    */
   public function testUrlEmpty($rel) {
-    $entity = $this->getEntity(Entity::class, []);
+    $entity = $this->getEntity(EntityBase::class, []);
     $this->assertEquals('', $entity->url($rel));
   }
 
@@ -497,7 +497,7 @@ class EntityUrlTest extends UnitTestCase {
    * @expectedDeprecation EntityInterface::url() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toUrl() instead. Note, a \Drupal\Core\Url object is returned. See https://www.drupal.org/node/2614344
    */
   public function testUrl($rel, $options, $default_options, $expected_options) {
-    $entity = $this->getEntity(Entity::class, ['id' => $this->entityId], ['toUrl']);
+    $entity = $this->getEntity(EntityBase::class, ['id' => $this->entityId], ['toUrl']);
     $this->registerLinkTemplate($rel);
 
     $uri = $this->prophesize(Url::class);
@@ -540,7 +540,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::uriRelationships
    */
   public function testUriRelationships() {
-    $entity = $this->getEntity(Entity::class, ['id' => $this->entityId]);
+    $entity = $this->getEntity(EntityBase::class, ['id' => $this->entityId]);
 
     $container_builder = new ContainerBuilder();
     $url_generator = $this->createMock(UrlGeneratorInterface::class);
@@ -658,4 +658,4 @@ class EntityUrlTest extends UnitTestCase {
 
 }
 
-abstract class RevisionableEntity extends Entity implements RevisionableInterface {}
+abstract class RevisionableEntity extends EntityBase implements RevisionableInterface {}

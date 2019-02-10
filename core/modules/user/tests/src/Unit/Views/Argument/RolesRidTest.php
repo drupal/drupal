@@ -66,7 +66,7 @@ class RolesRidTest extends UnitTestCase {
       ->with($this->equalTo('user_role'))
       ->will($this->returnValue($role_storage));
 
-    // Set up a minimal container to satisfy Drupal\Core\Entity\Entity's
+    // Set up a minimal container to satisfy Drupal\Core\Entity\EntityBase's
     // dependency on it.
     $container = new ContainerBuilder();
     $container->set('entity.manager', $entity_manager);

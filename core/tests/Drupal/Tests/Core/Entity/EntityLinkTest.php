@@ -101,7 +101,7 @@ class EntityLinkTest extends UnitTestCase {
       ->will($this->returnValue($entity_type));
 
     /** @var \Drupal\Core\Entity\Entity $entity */
-    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', [
+    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityBase', [
       ['id' => $entity_id, 'label' => $entity_label, 'langcode' => 'es'],
       $entity_type_id,
     ]);
@@ -170,7 +170,7 @@ class EntityLinkTest extends UnitTestCase {
       ->will($this->returnValue($entity_type));
 
     /** @var \Drupal\Core\Entity\Entity $entity */
-    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', [
+    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityBase', [
       ['id' => $entity_id, 'label' => $entity_label, 'langcode' => 'es'],
       $entity_type_id,
     ]);
