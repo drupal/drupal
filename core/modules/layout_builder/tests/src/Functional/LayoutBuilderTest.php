@@ -537,6 +537,26 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that sections can provide custom attributes.
+   */
+  public function testCustomSectionAttributes() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display/default', ['layout[enabled]' => TRUE], 'Save');
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add Section');
+    $page->clickLink('Layout Builder Test Plugin');
+    // See \Drupal\layout_builder_test\Plugin\Layout\LayoutBuilderTestPlugin::build().
+    $assert_session->elementExists('css', '.go-birds');
+  }
+
+  /**
    * Tests the usage of placeholders for empty blocks.
    *
    * @see \Drupal\Core\Block\BlockPluginInterface::getPlaceholderString()
