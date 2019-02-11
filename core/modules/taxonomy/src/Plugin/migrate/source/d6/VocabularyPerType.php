@@ -34,7 +34,7 @@ class VocabularyPerType extends Vocabulary {
     // 2 - Predefined language for a vocabulary and its terms.
     // 3 - Per-language terms, translatable (referencing terms with different
     // languages) but not localizable.
-    $i18ntaxonomy_vocab = $this->variableGet('i18ntaxonomy_vocabulary', NULL);
+    $i18ntaxonomy_vocab = $this->variableGet('i18ntaxonomy_vocabulary', []);
     $vid = $row->getSourceProperty('vid');
     $i18ntaxonomy_vocabulary = FALSE;
     if (array_key_exists($vid, $i18ntaxonomy_vocab)) {
