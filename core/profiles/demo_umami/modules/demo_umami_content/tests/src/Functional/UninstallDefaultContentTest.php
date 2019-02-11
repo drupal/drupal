@@ -73,7 +73,6 @@ class UninstallDefaultContentTest extends BrowserTestBase {
     $this->assertRecipesImported($node_storage);
     $this->assertArticlesImported($node_storage);
     $this->assertImportedCustomBlock($block_storage);
-
   }
 
   /**
@@ -120,16 +119,19 @@ class UninstallDefaultContentTest extends BrowserTestBase {
    */
   protected function assertImportedCustomBlock(EntityStorageInterface $block_storage) {
     $assert = $this->assertSession();
-    $this->drupalGet('/recipes');
     foreach ($this->expectedBlocks() as $block_info) {
+      $this->drupalGet($block_info['path']);
+
       // Verify that the block is placed.
       $assert->pageTextContains($block_info['unique_text']);
+
       // For blocks that have image alt text, also verify the presence of the
       // expected alt text.
       if (isset($block_info['image_alt_text'])) {
         $img_alt_text = $assert->elementExists('css', $block_info['image_css_selector'])->getAttribute('alt');
         $this->assertEquals($block_info['image_alt_text'], $img_alt_text);
       }
+
       // Verify that the block can be loaded.
       $count = $block_storage->getQuery()
         ->condition('type', $block_info['type'])
@@ -147,18 +149,29 @@ class UninstallDefaultContentTest extends BrowserTestBase {
   protected function expectedBlocks() {
     return [
       [
+        'path' => '<front>',
         'type' => 'banner_block',
-        'uuid' => '4c7d58a3-a45d-412d-9068-259c57e40541',
+        'uuid' => '9aadf4a1-ded6-4017-a10d-a5e043396edf',
         'unique_text' => 'A wholesome pasta bake is the ultimate comfort food.',
-        'image_css_selector' => '#block-umami-banner-recipes img',
+        'image_css_selector' => '#block-umami-banner-home img',
         'image_alt_text' => 'Mouth watering vegetarian pasta bake with rich tomato sauce and cheese toppings',
       ],
       [
+        'path' => '/recipes',
+        'type' => 'banner_block',
+        'uuid' => '4c7d58a3-a45d-412d-9068-259c57e40541',
+        'unique_text' => 'These sumptuous brownies should be gooey on the inside and crisp on the outside. A perfect indulgence!',
+        'image_css_selector' => '#block-umami-banner-recipes img',
+        'image_alt_text' => 'A stack of chocolate and pecan brownies, sprinkled with pecan crumbs and crushed walnut, fresh out of the oven',
+      ],
+      [
+        'path' => '/recipes',
         'type' => 'disclaimer_block',
         'uuid' => '9b4dcd67-99f3-48d0-93c9-2c46648b29de',
         'unique_text' => 'is a fictional magazine and publisher for illustrative purposes only',
       ],
       [
+        'path' => '/recipes',
         'type' => 'footer_promo_block',
         'uuid' => '924ab293-8f5f-45a1-9c7f-2423ae61a241',
         'unique_text' => 'Magazine exclusive articles, recipes and plenty of reasons to get your copy today.',

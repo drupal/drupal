@@ -329,9 +329,9 @@ class InstallHelper implements ContainerInjectionInterface {
   protected function importBlockContent() {
     $module_path = $this->moduleHandler->getModule('demo_umami_content')->getPath();
     $block_content_entities = [
-      'umami_recipes_banner' => [
-        'uuid' => '4c7d58a3-a45d-412d-9068-259c57e40541',
-        'info' => 'Umami Recipes Banner',
+      'umami_home_banner' => [
+        'uuid' => '9aadf4a1-ded6-4017-a10d-a5e043396edf',
+        'info' => 'Umami Home Banner',
         'type' => 'banner_block',
         'field_title' => [
           'value' => 'Super easy vegetarian pasta bake',
@@ -342,7 +342,7 @@ class InstallHelper implements ContainerInjectionInterface {
             $node = reset($nodes);
             return $this->aliasManager->getAliasByPath('/node/' . $node->id());
           }),
-          'title' => 'Super easy vegetarian pasta bake',
+          'title' => 'View recipe',
         ],
         'field_summary' => [
           'value' => 'A wholesome pasta bake is the ultimate comfort food. This delicious bake is super quick to prepare and an ideal midweek meal for all the family.',
@@ -350,6 +350,29 @@ class InstallHelper implements ContainerInjectionInterface {
         'field_banner_image' => [
           'target_id' => $this->createFileEntity($module_path . '/default_content/images/veggie-pasta-bake-hero-umami.jpg'),
           'alt' => 'Mouth watering vegetarian pasta bake with rich tomato sauce and cheese toppings',
+        ],
+      ],
+      'umami_recipes_banner' => [
+        'uuid' => '4c7d58a3-a45d-412d-9068-259c57e40541',
+        'info' => 'Umami Recipes Banner',
+        'type' => 'banner_block',
+        'field_title' => [
+          'value' => 'Vegan chocolate and nut brownies',
+        ],
+        'field_content_link' => [
+          'uri' => 'internal:' . call_user_func(function () {
+            $nodes = $this->entityTypeManager->getStorage('node')->loadByProperties(['title' => 'Vegan chocolate and nut brownies']);
+            $node = reset($nodes);
+            return $this->aliasManager->getAliasByPath('/node/' . $node->id());
+          }),
+          'title' => 'View recipe',
+        ],
+        'field_summary' => [
+          'value' => 'These sumptuous brownies should be gooey on the inside and crisp on the outside. A perfect indulgence!',
+        ],
+        'field_banner_image' => [
+          'target_id' => $this->createFileEntity($module_path . '/default_content/images/vegan-brownies-hero-umami.jpg'),
+          'alt' => 'A stack of chocolate and pecan brownies, sprinkled with pecan crumbs and crushed walnut, fresh out of the oven',
         ],
       ],
       'umami_disclaimer' => [
