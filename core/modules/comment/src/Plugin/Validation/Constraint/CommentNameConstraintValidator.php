@@ -76,7 +76,7 @@ class CommentNameConstraintValidator extends ConstraintValidator implements Cont
     // can't validate this without a valid commented entity, which will fail
     // the validation elsewhere.
     if ($owner_id === 0 && empty($author_name) && $entity->getCommentedEntity() && $entity->getFieldName() &&
-      $this->getAnonymousContactDetailsSetting($entity) === COMMENT_ANONYMOUS_MUST_CONTACT) {
+      $this->getAnonymousContactDetailsSetting($entity) === CommentInterface::ANONYMOUS_MUST_CONTACT) {
       $this->context->buildViolation($constraint->messageRequired)
         ->atPath('name')
         ->addViolation();

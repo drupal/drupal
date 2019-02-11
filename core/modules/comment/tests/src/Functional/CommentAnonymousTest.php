@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\comment\CommentInterface;
 use Drupal\user\RoleInterface;
 
 /**
@@ -32,7 +33,7 @@ class CommentAnonymousTest extends CommentTestBase {
    */
   public function testAnonymous() {
     $this->drupalLogin($this->adminUser);
-    $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAYNOT_CONTACT);
+    $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MAYNOT_CONTACT);
     $this->drupalLogout();
 
     // Preview comments (with `skip comment approval` permission).
@@ -77,7 +78,7 @@ class CommentAnonymousTest extends CommentTestBase {
 
     // Allow contact info.
     $this->drupalLogin($this->adminUser);
-    $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAY_CONTACT);
+    $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MAY_CONTACT);
 
     // Attempt to edit anonymous comment.
     $this->drupalGet('comment/' . $anonymous_comment1->id() . '/edit');
@@ -110,7 +111,7 @@ class CommentAnonymousTest extends CommentTestBase {
 
     // Require contact info.
     $this->drupalLogin($this->adminUser);
-    $this->setCommentAnonymous(COMMENT_ANONYMOUS_MUST_CONTACT);
+    $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MUST_CONTACT);
     $this->drupalLogout();
 
     // Try to post comment with contact info (required).

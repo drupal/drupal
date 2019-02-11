@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\comment\Kernel;
 
+use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Tests\CommentTestTrait;
@@ -142,7 +143,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     // Change the second field's anonymous contact setting.
     $instance = FieldConfig::loadByName('entity_test', 'entity_test', 'comment_other');
     // Default is 'May not contact', for this field - they may contact.
-    $instance->setSetting('anonymous', COMMENT_ANONYMOUS_MAY_CONTACT);
+    $instance->setSetting('anonymous', CommentInterface::ANONYMOUS_MAY_CONTACT);
     $instance->save();
 
     // Create three "Comments". One is owned by our edit-enabled user.

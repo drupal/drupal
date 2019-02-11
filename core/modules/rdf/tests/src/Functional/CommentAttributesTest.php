@@ -46,7 +46,7 @@ class CommentAttributesTest extends CommentTestBase {
       'skip comment approval' => TRUE,
     ]);
     // Allows anonymous to leave their contact information.
-    $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAY_CONTACT);
+    $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MAY_CONTACT);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);

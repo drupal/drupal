@@ -126,7 +126,7 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
         $commented_entity = $entity->getCommentedEntity();
         $anonymous_contact = $commented_entity->get($entity->getFieldName())->getFieldDefinition()->getSetting('anonymous');
         $admin_access = AccessResult::allowedIfHasPermission($account, 'administer comments');
-        $anonymous_access = AccessResult::allowedIf($entity->isNew() && $account->isAnonymous() && ($anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT || $is_name) && $account->hasPermission('post comments'))
+        $anonymous_access = AccessResult::allowedIf($entity->isNew() && $account->isAnonymous() && ($anonymous_contact != CommentInterface::ANONYMOUS_MAYNOT_CONTACT || $is_name) && $account->hasPermission('post comments'))
           ->cachePerPermissions()
           ->addCacheableDependency($entity)
           ->addCacheableDependency($field_definition->getConfig($commented_entity->bundle()))

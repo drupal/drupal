@@ -2,6 +2,7 @@
 
 namespace Drupal\comment\Plugin\Field\FieldType;
 
+use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -44,7 +45,7 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       'default_mode' => CommentManagerInterface::COMMENT_MODE_THREADED,
       'per_page' => 50,
       'form_location' => CommentItemInterface::FORM_BELOW,
-      'anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
+      'anonymous' => CommentInterface::ANONYMOUS_MAYNOT_CONTACT,
       'preview' => DRUPAL_OPTIONAL,
     ] + parent::defaultFieldSettings();
   }
@@ -124,9 +125,9 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       '#title' => t('Anonymous commenting'),
       '#default_value' => $settings['anonymous'],
       '#options' => [
-        COMMENT_ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
-        COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
-        COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information'),
+        CommentInterface::ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
+        CommentInterface::ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
+        CommentInterface::ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information'),
       ],
       '#access' => $anonymous_user->hasPermission('post comments'),
     ];
