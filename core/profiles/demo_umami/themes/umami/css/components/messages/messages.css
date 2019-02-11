@@ -17,9 +17,12 @@
   margin-top: 1.538em;
 }
 .messages__content {
+  padding-left: 24px; /* LTR */
   background: no-repeat 0 center; /* LTR */
 }
 [dir=rtl] .messages__content {
+  padding-right: 24px;
+  padding-left: 0;
   background-position: right;
 }
 .messages--status {
@@ -50,13 +53,6 @@
   list-style: none;
   padding: 0;
   margin: 0;
-}
-.messages__item {
-  margin-left: 24px; /* LTR */
-}
-[dir=rtl] .messages__item {
-  margin-left: 0;
-  margin-right: 24px;
 }
 .messages__item + .messages__item {
   margin-top: 0.769em;
