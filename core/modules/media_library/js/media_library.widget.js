@@ -36,32 +36,4 @@
       $('.js-media-library-item-weight', context).once('media-library-toggle').parent().hide();
     }
   };
-
-  Drupal.behaviors.MediaLibraryWidgetWarn = {
-    attach: function attach(context) {
-      $('.js-media-library-item a[href]', context).once('media-library-warn-link').on('click', function (e) {
-        var message = Drupal.t('Unsaved changes to the form will be lost. Are you sure you want to leave?');
-        var confirmation = window.confirm(message);
-        if (!confirmation) {
-          e.preventDefault();
-        }
-      });
-    }
-  };
-
-  Drupal.behaviors.MediaLibraryWidgetRemaining = {
-    attach: function attach(context, settings) {
-      var $view = $('.js-media-library-view', context).once('media-library-remaining');
-      $view.find('.js-media-library-item input[type="checkbox"]').on('change', function () {
-        if (settings.media_library && settings.media_library.selection_remaining) {
-          var $checkboxes = $view.find('.js-media-library-item input[type="checkbox"]');
-          if ($checkboxes.filter(':checked').length === settings.media_library.selection_remaining) {
-            $checkboxes.not(':checked').prop('disabled', true).closest('.js-media-library-item').addClass('media-library-item--disabled');
-          } else {
-            $checkboxes.prop('disabled', false).closest('.js-media-library-item').removeClass('media-library-item--disabled');
-          }
-        }
-      });
-    }
-  };
 })(jQuery, Drupal);

@@ -5,6 +5,11 @@
 (($, Drupal) => {
   /**
    * Allows users to select an element which checks a hidden checkbox.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior for selecting media library item.
    */
   Drupal.behaviors.ClickToSelect = {
     attach(context) {

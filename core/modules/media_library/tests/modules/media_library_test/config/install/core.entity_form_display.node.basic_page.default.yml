@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - field.field.node.basic_page.field_twin_media
+    - field.field.node.basic_page.field_single_media_type
     - field.field.node.basic_page.field_unlimited_media
     - field.field.node.basic_page.field_noadd_media
     - node.type.basic_page
@@ -22,6 +23,12 @@ content:
   field_twin_media:
     type: media_library_widget
     weight: 122
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_single_media_type:
+    type: media_library_widget
+    weight: 124
     settings: {  }
     third_party_settings: {  }
     region: content

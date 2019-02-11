@@ -27,8 +27,14 @@ widget:
   js:
     js/media_library.widget.js: {}
   dependencies:
-    - core/drupal.ajax
     - core/jquery.ui.sortable
+    - core/jquery.once
+
+ui:
+  version: VERSION
+  js:
+    js/media_library.ui.js: {}
+  dependencies:
+    - core/drupal.ajax
     - media_library/view
-    - core/drupal.announce
     - core/jquery.once

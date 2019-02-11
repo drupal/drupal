@@ -4,13 +4,15 @@
 (($, Drupal) => {
   /**
    * Adds hover effect to media items.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior to add a class when hovering over media items.
    */
   Drupal.behaviors.MediaLibraryHover = {
     attach(context) {
-      $(
-        '.media-library-item .js-click-to-select-trigger,.media-library-item .js-click-to-select-checkbox',
-        context,
-      )
+      $('.js-click-to-select-trigger, .js-click-to-select-checkbox', context)
         .once('media-library-item-hover')
         .on('mouseover mouseout', ({ currentTarget, type }) => {
           $(currentTarget)
@@ -22,10 +24,15 @@
 
   /**
    * Adds focus effect to media items.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior to add a focus effect to media items.
    */
   Drupal.behaviors.MediaLibraryFocus = {
     attach(context) {
-      $('.media-library-item .js-click-to-select-checkbox input', context)
+      $('.js-click-to-select-checkbox input', context)
         .once('media-library-item-focus')
         .on('focus blur', ({ currentTarget, type }) => {
           $(currentTarget)
@@ -37,10 +44,15 @@
 
   /**
    * Adds checkbox to select all items in the library.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior to select all media items.
    */
   Drupal.behaviors.MediaLibrarySelectAll = {
     attach(context) {
-      const $view = $('.media-library-view', context).once(
+      const $view = $('.js-media-library-view', context).once(
         'media-library-select-all',
       );
       if ($view.length && $view.find('.media-library-item').length) {

@@ -1,0 +1,4 @@
+services:
+  media_library.ui_builder:
+    class: Drupal\media_library\MediaLibraryUiBuilder
+    arguments: ['@entity_type.manager', '@request_stack', '@views.executable']

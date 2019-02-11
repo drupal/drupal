@@ -1,0 +1,10 @@
+field.widget.settings.media_library_widget:
+  type: mapping
+  label: 'Media library widget settings'
+  mapping:
+    media_types:
+      type: sequence
+      label: 'Allowed media types, in display order'
+      sequence:
+        type: string
+        label: 'Media type ID'

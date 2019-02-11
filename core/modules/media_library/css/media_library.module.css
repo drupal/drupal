@@ -2,6 +2,22 @@
 * @file media_library.module.css
 */
 
+.media-library-wrapper {
+  display: flex;
+}
+
+.media-library-menu {
+  margin: 0;
+  padding: 0;
+}
+
+/* @todo Use a class instead of the li element.
+     https://www.drupal.org/project/drupal/issues/3029227 */
+.media-library-menu li {
+  list-style: none;
+  padding: 0;
+}
+
 .media-library-views-form > .form-actions {
   flex-basis: 100%;
 }
@@ -33,10 +49,10 @@
 
 .media-library-item .js-click-to-select-checkbox {
   position: absolute;
-  display: block;
   z-index: 1;
   top: 5px;
   right: 0;
+  display: block;
 }
 
 .media-library-item__status {
@@ -67,6 +83,15 @@
 .media-library-widget .media-library-item__name a,
 .media-library-view.view-display-id-widget .media-library-item__name a {
   pointer-events: none;
+}
+
+.media-library-widget-modal .ui-dialog-buttonpane {
+  display: flex;
+  align-items: center;
+}
+
+.media-library-widget-modal .ui-dialog-buttonpane .form-actions {
+  flex: 1;
 }
 
 @media screen and (max-width: 600px) {

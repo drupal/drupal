@@ -8,10 +8,11 @@ use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\media_library\MediaLibraryState;
+use Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ResultRow;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Defines a field that outputs a checkbox and form for selecting media.
@@ -45,10 +46,9 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    *   The current state of the form.
    */
   public function viewsForm(array &$form, FormStateInterface $form_state) {
-    // Only add the bulk form options and buttons if there are results.
-    if (empty($this->view->result)) {
-      return;
-    }
+    $form['#attributes'] = [
+      'class' => ['media-library-views-form', 'js-media-library-views-form'],
+    ];
 
     // Render checkboxes for all rows.
     $form[$this->options['id']]['#tree'] = TRUE;
@@ -63,6 +63,17 @@ class MediaLibrarySelectForm extends FieldPluginBase {
         '#return_value' => $entity->id(),
       ];
     }
+
+    // The selection is persistent across different pages in the media library
+    // and populated via JavaScript.
+    $selection_field_id = $this->options['id'] . '_selection';
+    $form[$selection_field_id] = [
+      '#type' => 'hidden',
+      '#attributes' => [
+        // This is used to identify the hidden field in the form via JavaScript.
+        'id' => 'media-library-modal-selection',
+      ],
+    ];
 
     // @todo Remove in https://www.drupal.org/project/drupal/issues/2504115
     // Currently the default URL for all AJAX form elements is the current URL,
@@ -80,7 +91,10 @@ class MediaLibrarySelectForm extends FieldPluginBase {
     ];
 
     $form['actions']['submit']['#value'] = $this->t('Select media');
-    $form['actions']['submit']['#field_id'] = $this->options['id'];
+    $form['actions']['submit']['#field_id'] = $selection_field_id;
+    $form['actions']['submit']['#attributes'] = [
+      'class' => ['media-library-select'],
+    ];
   }
 
   /**
@@ -95,17 +109,22 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    *   A command to send the selection to the current field widget.
    */
   public static function updateWidget(array &$form, FormStateInterface $form_state) {
-    $widget_id = \Drupal::request()->query->get('media_library_widget_id');
-    if (!$widget_id || !is_string($widget_id)) {
-      throw new BadRequestHttpException('The "media_library_widget_id" query parameter is required and must be a string.');
-    }
     $field_id = $form_state->getTriggeringElement()['#field_id'];
-    $selected = array_values(array_filter($form_state->getValue($field_id, [])));
-    // Pass the selection to the field widget based on the current widget ID.
-    return (new AjaxResponse())
-      ->addCommand(new InvokeCommand("[data-media-library-widget-value=\"$widget_id\"]", 'val', [implode(',', $selected)]))
-      ->addCommand(new InvokeCommand("[data-media-library-widget-update=\"$widget_id\"]", 'trigger', ['mousedown']))
-      ->addCommand(new CloseDialogCommand());
+    $selected = array_filter(explode(',', $form_state->getValue($field_id, [])));
+
+    $response = new AjaxResponse();
+    $response->addCommand(new CloseDialogCommand());
+
+    $ids = implode(',', $selected);
+
+    $opener_id = MediaLibraryState::fromRequest(\Drupal::request())->getOpenerId();
+    if ($field_id = MediaLibraryWidget::getOpenerFieldId($opener_id)) {
+      $response
+        ->addCommand(new InvokeCommand("[data-media-library-widget-value=\"$field_id\"]", 'val', [$ids]))
+        ->addCommand(new InvokeCommand("[data-media-library-widget-update=\"$field_id\"]", 'trigger', ['mousedown']));
+    }
+
+    return $response;
   }
 
   /**

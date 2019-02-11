@@ -22,10 +22,9 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaTypeForm;
 use Drupal\media\MediaTypeInterface;
+use Drupal\media_library\MediaLibraryState;
 use Drupal\views\Form\ViewsForm;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
-use Drupal\views\Plugin\views\query\QueryPluginBase;
-use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -90,11 +89,7 @@ function media_library_views_post_render(ViewExecutable $view, &$output, CachePl
   if ($view->id() === 'media_library') {
     $output['#attached']['library'][] = 'media_library/view';
     if ($view->current_display === 'widget') {
-      $query = array_intersect_key(\Drupal::request()->query->all(), array_flip([
-        'media_library_widget_id',
-        'media_library_allowed_types',
-        'media_library_remaining',
-      ]));
+      $query = MediaLibraryState::fromRequest(\Drupal::request())->all();
       // If the current query contains any parameters we use to contextually
       // filter the view, ensure they persist across AJAX rebuilds.
       // The ajax_path is shared for all AJAX views on the page, but our query
@@ -218,49 +213,6 @@ function _media_library_media_type_form_submit(array &$form, FormStateInterface 
 }
 
 /**
- * Implements hook_views_query_alter().
- *
- * Alters the widget view's query to only show media that can be selected,
- * based on what types are allowed in the field settings.
- *
- * @todo Remove in https://www.drupal.org/node/2983454
- */
-function media_library_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
-  if ($query instanceof Sql && $view->id() === 'media_library' && $view->current_display === 'widget') {
-    $types = _media_library_get_allowed_types();
-    if ($types) {
-      $entity_type = \Drupal::entityTypeManager()->getDefinition('media');
-      $group = $query->setWhereGroup();
-      $query->addWhere($group, $entity_type->getDataTable() . '.' . $entity_type->getKey('bundle'), $types, 'in');
-    }
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- *
- * Limits the types available in the exposed filter to avoid users trying to
- * filter by a type that is un-selectable.
- *
- * @see media_library_views_query_alter()
- *
- * @todo Remove in https://www.drupal.org/node/2983454
- */
-function media_library_form_views_exposed_form_alter(array &$form, FormStateInterface $form_state) {
-  if (isset($form['#id']) && $form['#id'] === 'views-exposed-form-media-library-widget') {
-    $types = _media_library_get_allowed_types();
-    if ($types && isset($form['type']['#options'])) {
-      $keys = array_flip($types);
-      // Ensure that the default value (by default "All") persists.
-      if (isset($form['type']['#default_value'])) {
-        $keys[$form['type']['#default_value']] = TRUE;
-      }
-      $form['type']['#options'] = array_intersect_key($form['type']['#options'], $keys);
-    }
-  }
-}
-
-/**
  * Implements hook_field_ui_preconfigured_options_alter().
  */
 function media_library_field_ui_preconfigured_options_alter(array &$options, $field_type) {
@@ -301,20 +253,6 @@ function media_library_image_style_access(EntityInterface $entity, $operation, A
   if ($operation === 'delete' && $entity->id() === 'media_library') {
     return AccessResult::forbidden();
   }
-}
-
-/**
- * Determines what types are allowed based on the current request.
- *
- * @return array
- *   An array of allowed types.
- */
-function _media_library_get_allowed_types() {
-  $types = \Drupal::request()->query->get('media_library_allowed_types');
-  if ($types && is_array($types)) {
-    return array_filter($types, 'is_string');
-  }
-  return [];
 }
 
 /**

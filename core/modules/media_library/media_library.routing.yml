@@ -4,3 +4,9 @@ media_library.upload:
     _form: '\Drupal\media_library\Form\MediaLibraryUploadForm'
   requirements:
     _custom_access: '\Drupal\media_library\Form\MediaLibraryUploadForm::access'
+media_library.ui:
+  path: '/media-library'
+  defaults:
+    _controller: 'media_library.ui_builder:buildUi'
+  requirements:
+    _custom_access: 'media_library.ui_builder:checkAccess'

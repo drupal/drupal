@@ -4,6 +4,11 @@
 (($, Drupal) => {
   /**
    * Allows users to re-order their selection with drag+drop.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior to re-order selected media items.
    */
   Drupal.behaviors.MediaLibraryWidgetSortable = {
     attach(context) {
@@ -30,6 +35,11 @@
 
   /**
    * Allows selection order to be set without drag+drop for accessibility.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior to toggle the weight field for media items.
    */
   Drupal.behaviors.MediaLibraryWidgetToggleWeight = {
     attach(context) {
@@ -58,63 +68,6 @@
         .once('media-library-toggle')
         .parent()
         .hide();
-    },
-  };
-
-  /**
-   * Warn users when clicking outgoing links from the library or widget.
-   */
-  Drupal.behaviors.MediaLibraryWidgetWarn = {
-    attach(context) {
-      $('.js-media-library-item a[href]', context)
-        .once('media-library-warn-link')
-        .on('click', e => {
-          const message = Drupal.t(
-            'Unsaved changes to the form will be lost. Are you sure you want to leave?',
-          );
-          const confirmation = window.confirm(message);
-          if (!confirmation) {
-            e.preventDefault();
-          }
-        });
-    },
-  };
-
-  /**
-   * Prevent users from selecting more items than allowed in the view.
-   */
-  Drupal.behaviors.MediaLibraryWidgetRemaining = {
-    attach(context, settings) {
-      const $view = $('.js-media-library-view', context).once(
-        'media-library-remaining',
-      );
-      $view
-        .find('.js-media-library-item input[type="checkbox"]')
-        .on('change', () => {
-          if (
-            settings.media_library &&
-            settings.media_library.selection_remaining
-          ) {
-            const $checkboxes = $view.find(
-              '.js-media-library-item input[type="checkbox"]',
-            );
-            if (
-              $checkboxes.filter(':checked').length ===
-              settings.media_library.selection_remaining
-            ) {
-              $checkboxes
-                .not(':checked')
-                .prop('disabled', true)
-                .closest('.js-media-library-item')
-                .addClass('media-library-item--disabled');
-            } else {
-              $checkboxes
-                .prop('disabled', false)
-                .closest('.js-media-library-item')
-                .removeClass('media-library-item--disabled');
-            }
-          }
-        });
     },
   };
 })(jQuery, Drupal);

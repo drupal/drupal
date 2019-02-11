@@ -22,6 +22,15 @@ content:
       link: false
     third_party_settings: {  }
     region: content
+  field_single_media_type:
+    type: entity_reference_entity_view
+    weight: 101
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
   field_unlimited_media:
     type: entity_reference_entity_view
     weight: 101

@@ -14,6 +14,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
+use Drupal\media_library\MediaLibraryUiBuilder;
+use Drupal\media_library\MediaLibraryState;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -40,6 +42,13 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
+
+  /**
+   * The prefix to use with a field ID for media library opener IDs.
+   *
+   * @var string
+   */
+  protected static $openerIdPrefix = 'field:';
 
   /**
    * Constructs a MediaLibraryWidget widget.
@@ -86,6 +95,155 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
+  public static function defaultSettings() {
+    return [
+      'media_types' => [],
+    ] + parent::defaultSettings();
+  }
+
+  /**
+   * Get the enabled media type IDs sorted by weight.
+   *
+   * @return string[]
+   *   The media type IDs sorted by weight.
+   */
+  protected function getAllowedMediaTypeIdsSorted() {
+    // Get the media type IDs sorted by the user in the settings form.
+    $sorted_media_type_ids = $this->getSetting('media_types');
+
+    // Get the configured media types from the field storage.
+    $handler_settings = $this->getFieldSetting('handler_settings');
+    $allowed_media_type_ids = !empty($handler_settings['target_bundles']) ? $handler_settings['target_bundles'] : [];
+
+    // When no target bundles are configured for the field, all are allowed.
+    if (!$allowed_media_type_ids) {
+      $allowed_media_type_ids = $this->entityTypeManager->getStorage('media_type')->getQuery()->execute();
+    }
+
+    // When the user did not sort the media types, return the media type IDs
+    // configured for the field.
+    if (empty($sorted_media_type_ids)) {
+      return $allowed_media_type_ids;
+    }
+
+    // Some of the media types may no longer exist, and new media types may have
+    // been added that we don't yet know about. We need to make sure new media
+    // types are added to the list and remove media types that are no longer
+    // configured for the field.
+    $new_media_type_ids = array_diff($allowed_media_type_ids, $sorted_media_type_ids);
+    // Add new media type IDs to the list.
+    $sorted_media_type_ids = array_merge($sorted_media_type_ids, array_values($new_media_type_ids));
+    // Remove media types that are no longer available.
+    $sorted_media_type_ids = array_intersect($sorted_media_type_ids, $allowed_media_type_ids);
+
+    // Make sure the keys are numeric.
+    return array_values($sorted_media_type_ids);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $media_type_ids = $this->getAllowedMediaTypeIdsSorted();
+
+    if (count($media_type_ids) <= 1) {
+      return $form;
+    }
+
+    $form['media_types'] = [
+      '#type' => 'table',
+      '#header' => [
+        $this->t('Tab order'),
+        $this->t('Weight'),
+      ],
+      '#tabledrag' => [
+        [
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'weight',
+        ],
+      ],
+      '#value_callback' => [static::class, 'setMediaTypesValue'],
+    ];
+
+    $media_types = $this->entityTypeManager->getStorage('media_type')->loadMultiple($media_type_ids);
+    $weight = 0;
+    foreach ($media_types as $media_type_id => $media_type) {
+      $label = $media_type->label();
+      $form['media_types'][$media_type_id] = [
+        'label' => ['#markup' => $label],
+        'weight' => [
+          '#type' => 'weight',
+          '#title' => t('Weight for @title', ['@title' => $label]),
+          '#title_display' => 'invisible',
+          '#default_value' => $weight,
+          '#attributes' => ['class' => ['weight']],
+        ],
+        '#weight' => $weight,
+        '#attributes' => ['class' => ['draggable']],
+      ];
+      $weight++;
+    }
+
+    return $form;
+  }
+
+  /**
+   * Value callback to optimize the way the media type weights are stored.
+   *
+   * The tabledrag functionality needs a specific weight field, but we don't
+   * want to store this extra weight field in our settings.
+   *
+   * @param array $element
+   *   An associative array containing the properties of the element.
+   * @param mixed $input
+   *   The incoming input to populate the form element. If this is FALSE,
+   *   the element's default value should be returned.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return mixed
+   *   The value to assign to the element.
+   */
+  public static function setMediaTypesValue(array &$element, $input, FormStateInterface $form_state) {
+    if ($input === FALSE) {
+      return isset($element['#default_value']) ? $element['#default_value'] : [];
+    }
+
+    // Sort the media types by weight value and set the value in the form state.
+    uasort($input, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+    $sorted_media_type_ids = array_keys($input);
+    $form_state->setValue($element['#parents'], $sorted_media_type_ids);
+
+    // We have to unset the child elements containing the weight fields for each
+    // media type to stop FormBuilder::doBuildForm() from processing the weight
+    // fields as well.
+    foreach ($sorted_media_type_ids as $media_type_id) {
+      unset($element[$media_type_id]);
+    }
+
+    return $sorted_media_type_ids;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = [];
+    $media_type_labels = [];
+    $media_types = $this->entityTypeManager->getStorage('media_type')->loadMultiple($this->getAllowedMediaTypeIdsSorted());
+    if (count($media_types) !== 1) {
+      foreach ($media_types as $media_type) {
+        $media_type_labels[] = $media_type->label();
+      }
+      $summary[] = t('Tab order: @order', ['@order' => implode(', ', $media_type_labels)]);
+    }
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function form(FieldItemListInterface $items, array &$form, FormStateInterface $form_state, $get_delta = NULL) {
     // Load the items for form rebuilds from the field state.
     $field_state = static::getWidgetState($form['#parents'], $this->fieldDefinition->getName(), $form_state);
@@ -106,7 +264,7 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     $view_builder = $this->entityTypeManager->getViewBuilder('media');
     $field_name = $this->fieldDefinition->getName();
     $parents = $form['#parents'];
-    $id_suffix = '-' . implode('-', $parents);
+    $id_suffix = $parents ? '-' . implode('-', $parents) : '';
     $wrapper_id = $field_name . '-media-library-wrapper' . $id_suffix;
     $limit_validation_errors = [array_merge($parents, [$field_name])];
 
@@ -218,26 +376,24 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       $element['#description'] .= '<br />' . $cardinality_message;
     }
 
-    $query = [
-      'media_library_widget_id' => $field_name . $id_suffix,
-      'media_library_allowed_types' => $element['#target_bundles'],
-      'media_library_remaining' => $cardinality_unlimited ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : $remaining,
-    ];
-    $dialog_options = Json::encode([
-      'dialogClass' => 'media-library-widget-modal',
-      'height' => '75%',
-      'width' => '75%',
-      'title' => $this->t('Media library'),
-    ]);
+    // Create a new media library URL with the correct state parameters.
+    $allowed_media_type_ids = $this->getAllowedMediaTypeIdsSorted();
+    $selected_type_id = reset($allowed_media_type_ids);
+    $remaining = $cardinality_unlimited ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : $remaining;
+    // The opener ID is used by the select form and the upload form to add the
+    // selected/uploaded media items to the widget.
+    $opener_id = static::$openerIdPrefix . $field_name . $id_suffix;
+
+    $state = MediaLibraryState::create($opener_id, $allowed_media_type_ids, $selected_type_id, $remaining);
+    $dialog_options = Json::encode(MediaLibraryUiBuilder::dialogOptions());
 
     // Add a button that will load the Media library in a modal using AJAX.
     $element['media_library_open_button'] = [
       '#type' => 'link',
       '#title' => $this->t('Add media'),
       '#name' => $field_name . '-media-library-open-button' . $id_suffix,
-      // @todo Make the view configurable in https://www.drupal.org/project/drupal/issues/2971209
-      '#url' => Url::fromRoute('view.media_library.widget', [], [
-        'query' => $query,
+      '#url' => $url = Url::fromRoute('media_library.ui', [], [
+        'query' => $state->all(),
       ]),
       '#attributes' => [
         'class' => ['button', 'use-ajax', 'media-library-open-button'],
@@ -419,13 +575,15 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
 
     $media = static::getNewMediaItems($element, $form_state);
     if (!empty($media)) {
-      $weight = count($field_state['items']);
+      // Get the weight of the last items and count from there.
+      $last_element = end($field_state['items']);
+      $weight = $last_element ? $last_element['weight'] : 0;
       foreach ($media as $media_item) {
         // Any ID can be passed to the widget, so we have to check access.
         if ($media_item->access('view')) {
           $field_state['items'][] = [
             'target_id' => $media_item->id(),
-            'weight' => $weight++,
+            'weight' => ++$weight,
           ];
         }
       }
@@ -503,6 +661,25 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
    */
   protected static function setFieldState(array $element, FormStateInterface $form_state, array $field_state) {
     static::setWidgetState($element['#field_parents'], $element['#field_name'], $form_state, $field_state);
+  }
+
+  /**
+   * Get the field ID of the widget from an opener ID.
+   *
+   * @param string $opener_id
+   *   The opener ID of the media library.
+   *
+   * @return string|null
+   *   The field ID or NULL if the opener ID is not valid for the widget.
+   *
+   * @see \Drupal\media_library\MediaLibraryState
+   */
+  public static function getOpenerFieldId($opener_id) {
+    // Media library widget opener IDs are always prefixed with 'field:' in .
+    if (preg_match('/^' . static::$openerIdPrefix . '([a-z0-9_-]+)$/', $opener_id, $matches)) {
+      return $matches[1];
+    }
+    return NULL;
   }
 
 }

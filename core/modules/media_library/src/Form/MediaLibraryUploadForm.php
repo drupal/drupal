@@ -18,6 +18,8 @@ use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
+use Drupal\media_library\MediaLibraryState;
+use Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -312,26 +314,24 @@ class MediaLibraryUploadForm extends FormBase {
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   A command to send the selection to the current field widget.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-   *   If the "media_library_widget_id" query parameter is not present.
    */
   public function updateWidget(array &$form, FormStateInterface $form_state) {
     if ($form_state->getErrors()) {
       return $form;
     }
-    $widget_id = $this->getRequest()->query->get('media_library_widget_id');
-    if (!$widget_id || !is_string($widget_id)) {
-      throw new BadRequestHttpException('The "media_library_widget_id" query parameter is required and must be a string.');
-    }
+
     $mids = array_map(function (MediaInterface $media) {
       return $media->id();
     }, $this->media);
+
     // Pass the selection to the field widget based on the current widget ID.
-    return (new AjaxResponse())
-      ->addCommand(new InvokeCommand("[data-media-library-widget-value=\"$widget_id\"]", 'val', [implode(',', $mids)]))
-      ->addCommand(new InvokeCommand("[data-media-library-widget-update=\"$widget_id\"]", 'trigger', ['mousedown']))
-      ->addCommand(new CloseDialogCommand());
+    $opener_id = MediaLibraryState::fromRequest($this->getRequest())->getOpenerId();
+    if ($field_id = MediaLibraryWidget::getOpenerFieldId($opener_id)) {
+      return (new AjaxResponse())
+        ->addCommand(new InvokeCommand("[data-media-library-widget-value=\"$field_id\"]", 'val', [implode(',', $mids)]))
+        ->addCommand(new InvokeCommand("[data-media-library-widget-update=\"$field_id\"]", 'trigger', ['mousedown']))
+        ->addCommand(new CloseDialogCommand());
+    }
   }
 
   /**
@@ -484,9 +484,11 @@ class MediaLibraryUploadForm extends FormBase {
     if (!isset($this->types)) {
       $media_type_storage = $this->entityTypeManager->getStorage('media_type');
       if (!$allowed_types) {
-        $allowed_types = _media_library_get_allowed_types() ?: NULL;
+        $types = $media_type_storage->loadMultiple(MediaLibraryState::fromRequest($this->getRequest())->getAllowedTypeIds());
       }
-      $types = $media_type_storage->loadMultiple($allowed_types);
+      else {
+        $types = $media_type_storage->loadMultiple($allowed_types);
+      }
       $types = $this->filterTypesWithFileSource($types);
       $types = $this->filterTypesWithCreateAccess($types);
       $this->types = $types;
