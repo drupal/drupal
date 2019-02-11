@@ -53,7 +53,7 @@ process:
     source:
       - widget_type
       - widget_settings
-
+  translatable: translatable
 destination:
   plugin: entity:field_config
 migration_dependencies:

@@ -207,6 +207,15 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     ]);
     $node = Node::load(2);
     $this->assertIdentical($title, $node->getTitle());
+
+    // Test synchronized field.
+    $value = 'jsmith@example.com';
+    $node = Node::load(21);
+    $this->assertSame($value, $node->field_sync->value);
+    $this->assertArrayNotHasKey('field_sync', $node->getTranslatableFields());
+
+    $node = $node->getTranslation('fr');
+    $this->assertSame($value, $node->field_sync->value);
   }
 
   /**

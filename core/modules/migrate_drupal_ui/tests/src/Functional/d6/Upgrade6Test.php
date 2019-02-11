@@ -68,8 +68,8 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'contact_message' => 0,
       'configurable_language' => 5,
       'editor' => 2,
-      'field_config' => 91,
-      'field_storage_config' => 65,
+      'field_config' => 92,
+      'field_storage_config' => 66,
       'file' => 7,
       'filter_format' => 7,
       'image_style' => 5,
@@ -94,7 +94,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'date_format' => 11,
       'entity_form_display' => 29,
       'entity_form_mode' => 1,
-      'entity_view_display' => 55,
+      'entity_view_display' => 57,
       'entity_view_mode' => 14,
       'base_field_override' => 38,
     ];
@@ -107,7 +107,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts = $this->getEntityCounts();
     $counts['block_content'] = 3;
     $counts['comment'] = 9;
-    $counts['entity_view_display'] = 55;
+    $counts['entity_view_display'] = 57;
     $counts['entity_view_mode'] = 14;
     $counts['file'] = 8;
     $counts['menu_link_content'] = 11;

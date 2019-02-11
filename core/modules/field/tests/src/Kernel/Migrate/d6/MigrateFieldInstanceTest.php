@@ -161,6 +161,11 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertSame('user', $field->getSetting('target_type'));
     $this->assertSame([], $field->getDefaultValueLiteral());
     $this->assertTrue($field->isTranslatable());
+
+    // Test a synchronized field is not translatable.
+    $field = FieldConfig::load('node.employee.field_sync');
+    $this->assertInstanceOf(FieldConfig::class, $field);
+    $this->assertFalse($field->isTranslatable());
   }
 
   /**

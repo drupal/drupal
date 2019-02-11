@@ -82,6 +82,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
       'filefield_meta',
       'help',
       'i18nstrings',
+      'i18nsync',
       'imageapi',
       'imageapi_gd',
       'imageapi_imagemagick',

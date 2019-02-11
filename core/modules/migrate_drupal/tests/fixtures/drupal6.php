@@ -2803,6 +2803,18 @@ $connection->insert('content_node_field')
   'locked' => '0',
 ))
 ->values(array(
+  'field_name' => 'field_sync',
+  'type' => 'email',
+  'global_settings' => 'a:0:{}',
+  'required' => '0',
+  'multiple' => '0',
+  'db_storage' => '1',
+  'module' => 'email',
+  'db_columns' => 'a:1:{s:5:"email";a:4:{s:4:"type";s:7:"varchar";s:6:"length";i:255;s:8:"not null";b:0;s:8:"sortable";b:1;}}',
+  'active' => '1',
+  'locked' => '0',
+))
+->values(array(
   'field_name' => 'field_test',
   'type' => 'text',
   'global_settings' => 'a:4:{s:15:"text_processing";s:1:"1";s:10:"max_length";s:0:"";s:14:"allowed_values";s:0:"";s:18:"allowed_values_php";s:0:"";}',
@@ -3220,6 +3232,18 @@ $connection->insert('content_node_field_instance')
   'widget_active' => '1',
 ))
 ->values(array(
+  'field_name' => 'field_sync',
+  'type_name' => 'employee',
+  'weight' => '35',
+  'label' => 'email_sync',
+  'widget_type' => 'email_textfield',
+  'widget_settings' => 'a:3:{s:4:"size";s:2:"60";s:13:"default_value";a:1:{i:0;a:1:{s:5:"email";s:0:"";}}s:17:"default_value_php";N;}',
+  'display_settings' => 'a:7:{s:5:"label";a:2:{s:6:"format";s:5:"above";s:7:"exclude";i:0;}i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:6:"teaser";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:2;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:3;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
+  'description' => '',
+  'widget_module' => 'email',
+  'widget_active' => '1',
+))
+->values(array(
   'field_name' => 'field_test',
   'type_name' => 'story',
   'weight' => '1',
@@ -3530,6 +3554,11 @@ $connection->schema()->createTable('content_type_employee', array(
       'size' => 'normal',
       'unsigned' => TRUE,
     ),
+    'field_sync_email' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '255',
+    ),
   ),
   'primary key' => array(
     'vid',
@@ -3558,6 +3587,7 @@ $connection->insert('content_type_employee')
   'field_commander_uid',
   'field_company_2_nid',
   'field_company_3_nid',
+  'field_sync_email',
 ))
 ->values(array(
   'vid' => '21',
@@ -3565,6 +3595,7 @@ $connection->insert('content_type_employee')
   'field_commander_uid' => '8',
   'field_company_2_nid' => '15',
   'field_company_3_nid' => '16',
+  'field_sync_email' => NULL,
 ))
 ->values(array(
   'vid' => '2002',
@@ -3572,6 +3603,7 @@ $connection->insert('content_type_employee')
   'field_commander_uid' => NULL,
   'field_company_2_nid' => NULL,
   'field_company_3_nid' => NULL,
+  'field_sync_email' => 'jsmith@example.com',
 ))
 ->values(array(
   'vid' => '2003',
@@ -3579,6 +3611,7 @@ $connection->insert('content_type_employee')
   'field_commander_uid' => NULL,
   'field_company_2_nid' => NULL,
   'field_company_3_nid' => NULL,
+  'field_sync_email' => 'jsmith@example.com',
 ))
 ->execute();
 $connection->schema()->createTable('content_type_page', array(
@@ -46764,11 +46797,11 @@ $connection->insert('system')
   'name' => 'i18nsync',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'throttle' => '0',
   'bootstrap' => '0',
-  'schema_version' => '-1',
-  'weight' => '0',
+  'schema_version' => '0',
+  'weight' => '100',
   'info' => 'a:10:{s:4:"name";s:24:"Synchronize translations";s:11:"description";s:74:"Synchronizes taxonomy and fields accross translations of the same content.";s:12:"dependencies";a:1:{i:0;s:4:"i18n";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
@@ -48226,7 +48259,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'comment_controls_employee',
-  'value' => 'i:3;',
+  'value' => 's:1:"3";',
 ))
 ->values(array(
   'name' => 'comment_controls_page',
@@ -48266,7 +48299,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'comment_default_mode_employee',
-  'value' => 'i:4;',
+  'value' => 's:1:"4";',
 ))
 ->values(array(
   'name' => 'comment_default_mode_page',
@@ -48306,7 +48339,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'comment_default_order_employee',
-  'value' => 'i:1;',
+  'value' => 's:1:"1";',
 ))
 ->values(array(
   'name' => 'comment_default_order_page',
@@ -48346,7 +48379,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'comment_default_per_page_employee',
-  'value' => 'i:50;',
+  'value' => 's:2:"50";',
 ))
 ->values(array(
   'name' => 'comment_default_per_page_page',
@@ -48377,6 +48410,10 @@ $connection->insert('variable')
   'value' => 'i:50;',
 ))
 ->values(array(
+  'name' => 'comment_employee',
+  'value' => 's:1:"2";',
+))
+->values(array(
   'name' => 'comment_form_location_article',
   'value' => 'i:0;',
 ))
@@ -48386,7 +48423,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'comment_form_location_employee',
-  'value' => 'i:0;',
+  'value' => 's:1:"0";',
 ))
 ->values(array(
   'name' => 'comment_form_location_page',
@@ -48430,7 +48467,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'comment_preview_employee',
-  'value' => 'i:1;',
+  'value' => 's:1:"1";',
 ))
 ->values(array(
   'name' => 'comment_preview_page',
@@ -48474,7 +48511,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'comment_subject_field_employee',
-  'value' => 'i:1;',
+  'value' => 's:1:"1";',
 ))
 ->values(array(
   'name' => 'comment_subject_field_page',
@@ -48841,6 +48878,10 @@ $connection->insert('variable')
   'value' => 's:5:"never";',
 ))
 ->values(array(
+  'name' => 'event_nodeapi_employee',
+  'value' => 's:5:"never";',
+))
+->values(array(
   'name' => 'event_nodeapi_event',
   'value' => 's:3:"all";',
 ))
@@ -48909,6 +48950,10 @@ $connection->insert('variable')
   'value' => 's:48:"form-jFw2agRukPxjG5dG-N6joZLyoxXmCoxTzua0HUciqK0";',
 ))
 ->values(array(
+  'name' => 'form_build_id_employee',
+  'value' => 's:48:"form-q42bJnZxCCHxcx5FjxjEOd8OaEAg9wnK8nX1hBjtT4M";',
+))
+->values(array(
   'name' => 'forum_block_num_0',
   'value' => 's:1:"3";',
 ))
@@ -48937,12 +48982,32 @@ $connection->insert('variable')
   'value' => 'a:2:{i:0;i:1;i:1;i:2;}',
 ))
 ->values(array(
+  'name' => 'i18nsync_nodeapi_employee',
+  'value' => 'a:1:{i:0;s:10:"field_sync";}',
+))
+->values(array(
   'name' => 'i18ntaxonomy_vocabulary',
   'value' => 'a:4:{i:1;s:1:"3";i:2;s:1:"2";i:3;s:1:"3";i:5;s:1:"1";}',
 ))
 ->values(array(
   'name' => 'i18n_lock_node_article',
   'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'i18n_lock_node_employee',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'i18n_newnode_current_employee',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'i18n_node_employee',
+  'value' => 's:1:"1";',
+))
+->values(array(
+  'name' => 'i18n_required_node_employee',
+  'value' => 'i:0;',
 ))
 ->values(array(
   'name' => 'image_jpeg_quality',
@@ -49018,6 +49083,10 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'node_options_company',
+  'value' => 'a:2:{i:0;s:6:"status";i:1;s:7:"promote";}',
+))
+->values(array(
+  'name' => 'node_options_employee',
   'value' => 'a:2:{i:0;s:6:"status";i:1;s:7:"promote";}',
 ))
 ->values(array(
