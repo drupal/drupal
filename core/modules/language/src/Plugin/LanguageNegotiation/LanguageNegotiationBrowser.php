@@ -35,12 +35,13 @@ class LanguageNegotiationBrowser extends LanguageNegotiationMethodBase {
       $langcodes = array_keys($this->languageManager->getLanguages());
       $mappings = $this->config->get('language.mappings')->get('map');
       $langcode = UserAgent::getBestMatchingLangcode($http_accept_language, $langcodes, $mappings);
-      // Internal page cache with multiple languages and browser negotiation
-      // could lead to wrong cached sites. Therefore disabling the internal
-      // page cache.
-      // @todo Solve more elegantly in https://www.drupal.org/node/2430335.
-      \Drupal::service('page_cache_kill_switch')->trigger();
     }
+
+    // Internal page cache with multiple languages and browser negotiation
+    // could lead to wrong cached sites. Therefore disabling the internal page
+    // cache.
+    // @todo Solve more elegantly in https://www.drupal.org/node/2430335.
+    \Drupal::service('page_cache_kill_switch')->trigger();
 
     return $langcode;
   }
