@@ -352,7 +352,7 @@
     if (e.trigger) {
       if (e.value) {
         var label = 'label' + (e.target.id ? '[for=' + e.target.id + ']' : '');
-        var $label = $(e.target).attr({ required: 'required', 'aria-required': 'aria-required' }).closest('.js-form-item, .js-form-wrapper').find(label);
+        var $label = $(e.target).attr({ required: 'required', 'aria-required': 'true' }).closest('.js-form-item, .js-form-wrapper').find(label);
 
         if (!$label.hasClass('js-form-required').length) {
           $label.addClass('js-form-required form-required');
