@@ -99,7 +99,7 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
   }
 
   /**
-   * Gets the entity storing the overrides.
+   * Gets the entity storing the defaults.
    *
    * @return \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface
    *   The entity storing the defaults.
