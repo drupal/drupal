@@ -154,8 +154,9 @@ class ChooseBlockController implements ContainerInjectionInterface {
     ]);
     $blocks = $this->blockManager->getGroupedDefinitions($definitions);
     $build = [];
-    if (isset($blocks['Inline blocks'])) {
-      $build['links'] = $this->getBlockLinks($section_storage, $delta, $region, $blocks['Inline blocks']);
+    $inline_blocks_category = (string) $this->t('Inline blocks');
+    if (isset($blocks[$inline_blocks_category])) {
+      $build['links'] = $this->getBlockLinks($section_storage, $delta, $region, $blocks[$inline_blocks_category]);
       $build['links']['#attributes']['class'][] = 'inline-block-list';
       foreach ($build['links']['#links'] as &$link) {
         $link['attributes']['class'][] = 'inline-block-list__item';
