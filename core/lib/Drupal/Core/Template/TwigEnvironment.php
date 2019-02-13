@@ -36,6 +36,11 @@ class TwigEnvironment extends \Twig_Environment {
    */
   protected $templateClasses;
 
+  /**
+   * The template cache filename prefix.
+   *
+   * @var string
+   */
   protected $twigCachePrefix = '';
 
   /**
@@ -55,7 +60,7 @@ class TwigEnvironment extends \Twig_Environment {
    * @param array $options
    *   The options for the Twig environment.
    */
-  public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, StateInterface $state, \Twig_LoaderInterface $loader = NULL, $options = []) {
+  public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, StateInterface $state, \Twig_LoaderInterface $loader = NULL, array $options = []) {
     $this->state = $state;
 
     // Ensure that twig.engine is loaded, given that it is needed to render a
@@ -73,11 +78,6 @@ class TwigEnvironment extends \Twig_Environment {
     ];
     // Ensure autoescaping is always on.
     $options['autoescape'] = 'html';
-
-    $policy = new TwigSandboxPolicy();
-    $sandbox = new \Twig_Extension_Sandbox($policy, TRUE);
-    $this->addExtension($sandbox);
-
     if ($options['cache'] === TRUE) {
       $current = $state->get(static::CACHE_PREFIX_METADATA_KEY, ['twig_extension_hash' => '']);
       if ($current['twig_extension_hash'] !== $twig_extension_hash || empty($current['twig_cache_prefix'])) {
@@ -94,8 +94,11 @@ class TwigEnvironment extends \Twig_Environment {
       $options['cache'] = new TwigPhpStorageCache($cache, $this->twigCachePrefix);
     }
 
-    $this->loader = $loader;
-    parent::__construct($this->loader, $options);
+    $this->setLoader($loader);
+    parent::__construct($this->getLoader(), $options);
+    $policy = new TwigSandboxPolicy();
+    $sandbox = new \Twig_Extension_Sandbox($policy, TRUE);
+    $this->addExtension($sandbox);
   }
 
   /**
@@ -106,7 +109,6 @@ class TwigEnvironment extends \Twig_Environment {
   public function invalidate() {
     PhpStorageFactory::get('twig')->deleteAll();
     $this->templateClasses = [];
-    $this->loadedTemplates = [];
     $this->state->delete(static::CACHE_PREFIX_METADATA_KEY);
   }
 
@@ -138,7 +140,7 @@ class TwigEnvironment extends \Twig_Environment {
     // node.html.twig for the output of each node and the same compiled class.
     $cache_index = $name . (NULL === $index ? '' : '_' . $index);
     if (!isset($this->templateClasses[$cache_index])) {
-      $this->templateClasses[$cache_index] = $this->templateClassPrefix . hash('sha256', $this->loader->getCacheKey($name)) . (NULL === $index ? '' : '_' . $index);
+      $this->templateClasses[$cache_index] = parent::getTemplateClass($name, $index);
     }
     return $this->templateClasses[$cache_index];
   }
@@ -168,7 +170,7 @@ class TwigEnvironment extends \Twig_Environment {
   public function renderInline($template_string, array $context = []) {
     // Prefix all inline templates with a special comment.
     $template_string = '{# inline_template_start #}' . $template_string;
-    return Markup::create($this->loadTemplate($template_string, NULL)->render($context));
+    return Markup::create($this->createTemplate($template_string)->render($context));
   }
 
 }

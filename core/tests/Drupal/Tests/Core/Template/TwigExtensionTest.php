@@ -331,7 +331,8 @@ class TwigExtensionTest extends UnitTestCase {
    * @covers ::createAttribute
    */
   public function testCreateAttribute() {
-    $loader = new StringLoader();
+    $name = '__string_template_test_1__';
+    $loader = new \Twig_Loader_Array([$name => "{% for iteration in iterations %}<div{{ create_attribute(iteration) }}></div>{% endfor %}"]);
     $twig = new \Twig_Environment($loader);
     $twig->addExtension($this->systemUnderTest);
 
@@ -340,12 +341,15 @@ class TwigExtensionTest extends UnitTestCase {
       ['id' => 'puppies', 'data-value' => 'foo', 'data-lang' => 'en'],
       [],
     ];
-    $result = $twig->render("{% for iteration in iterations %}<div{{ create_attribute(iteration) }}></div>{% endfor %}", ['iterations' => $iterations]);
+    $result = $twig->render($name, ['iterations' => $iterations]);
     $expected = '<div class="kittens" data-toggle="modal" data-lang="es"></div><div id="puppies" data-value="foo" data-lang="en"></div><div></div>';
     $this->assertEquals($expected, $result);
 
     // Test default creation of empty attribute object and using its method.
-    $result = $twig->render("<div{{ create_attribute().addClass('meow') }}></div>");
+    $name = '__string_template_test_2__';
+    $loader = new \Twig_Loader_Array([$name => "<div{{ create_attribute().addClass('meow') }}></div>"]);
+    $twig->setLoader($loader);
+    $result = $twig->render($name);
     $expected = '<div class="meow"></div>';
     $this->assertEquals($expected, $result);
   }

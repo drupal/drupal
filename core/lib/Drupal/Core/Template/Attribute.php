@@ -262,6 +262,20 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   }
 
   /**
+   * Gets the class attribute value if set.
+   *
+   * This method is implemented to take precedence over hasClass() for Twig 2.0.
+   *
+   * @return \Drupal\Core\Template\AttributeValueBase
+   *   The class attribute value if set.
+   *
+   * @see twig_get_attribute()
+   */
+  public function getClass() {
+    return $this->offsetGet('class');
+  }
+
+  /**
    * Checks if the class array has the given CSS class.
    *
    * @param string $class

@@ -216,7 +216,7 @@ TWIG;
     // Manually change $templateClassPrefix to force a different template
     // classname, as the other class is still loaded. This wouldn't be a problem
     // on a real site where you reload the page.
-    $reflection = new \ReflectionClass($environment);
+    $reflection = new \ReflectionClass(\Twig_Environment::class);
     $property_reflection = $reflection->getProperty('templateClassPrefix');
     $property_reflection->setAccessible(TRUE);
     $property_reflection->setValue($environment, 'otherPrefix');
