@@ -32,7 +32,7 @@ class InlineBlockTest extends InlineBlockTestBase {
       'Save'
     );
     $this->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display-layout/default');
+    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
     // Add a basic block with the body field set.
     $this->addInlineBlockToLayout('Block title', 'The DEFAULT block body');
     $this->assertSaveLayout();
@@ -89,7 +89,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $assert_session->pageTextNotContains('The 2nd NEW block body!');
 
     // The default layout entity block should be changed.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display-layout/default');
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     $assert_session->pageTextContains('The DEFAULT block body');
     // Confirm default layout still only has 1 entity block.
     $assert_session->elementsCount('css', static::INLINE_BLOCK_LOCATOR, 1);
@@ -284,7 +284,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     // Add a block to default layout.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
     $this->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display-layout/default');
+    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
     $this->addInlineBlockToLayout('Block title', 'The DEFAULT block body');
     $this->assertSaveLayout();
 
@@ -312,7 +312,7 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
     $this->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display-layout/default');
+    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
 
     $this->assertNotEmpty($this->blockStorage->load($default_block_id));
     $this->assertNotEmpty($usage->getUsage($default_block_id));
@@ -349,7 +349,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     // Add another block to the default.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
     $this->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display-layout/default');
+    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
     $this->addInlineBlockToLayout('Title 2', 'Body 2');
     $this->assertSaveLayout();
     $cron->run();
@@ -456,7 +456,7 @@ class InlineBlockTest extends InlineBlockTestBase {
       'Save'
     );
 
-    $layout_default_path = 'admin/structure/types/manage/bundle_with_section_field/display-layout/default';
+    $layout_default_path = 'admin/structure/types/manage/bundle_with_section_field/display/default/layout';
     $this->drupalGet($layout_default_path);
     // Add a basic block with the body field set.
     $page->clickLink('Add Block');

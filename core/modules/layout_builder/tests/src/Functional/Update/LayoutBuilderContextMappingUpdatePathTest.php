@@ -38,7 +38,7 @@ class LayoutBuilderContextMappingUpdatePathTest extends UpdatePathTestBase {
       // Overrides.
       'node/1',
       // Defaults.
-      'admin/structure/types/manage/article/display-layout/default',
+      'admin/structure/types/manage/article/display/default/layout',
     ];
     foreach ($paths as $path) {
       $this->drupalGet($path);

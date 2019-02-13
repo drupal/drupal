@@ -58,7 +58,7 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
     );
 
     $this->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display-layout/default');
+    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
 
     $width_options = [
       [

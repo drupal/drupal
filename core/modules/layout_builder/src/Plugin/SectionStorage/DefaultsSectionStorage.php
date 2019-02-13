@@ -151,7 +151,7 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
         continue;
       }
 
-      $path = $entity_route->getPath() . '/display-layout/{view_mode_name}';
+      $path = $entity_route->getPath() . '/display/{view_mode_name}/layout';
 
       $defaults = [];
       $defaults['entity_type_id'] = $entity_type_id;

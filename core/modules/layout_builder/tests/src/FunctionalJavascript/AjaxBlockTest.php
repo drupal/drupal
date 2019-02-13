@@ -63,7 +63,7 @@ class AjaxBlockTest extends WebDriverTestBase {
     $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
     $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
-    $assert_session->addressEquals("$field_ui_prefix/display-layout/default");
+    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
     // The body field is present.
     $assert_session->elementExists('css', '.field--name-body');
 

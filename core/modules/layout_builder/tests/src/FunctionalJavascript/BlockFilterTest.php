@@ -50,7 +50,7 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
     $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
-    $assert_session->addressEquals("$field_ui_prefix/display-layout/default");
+    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
 
     // Open the block listing.
     $assert_session->linkExists('Add Block');

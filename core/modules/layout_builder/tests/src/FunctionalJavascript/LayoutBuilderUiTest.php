@@ -58,7 +58,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
 
     // Remove all of the sections from the page.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display-layout/default');
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     $page->clickLink('Remove section');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Remove');
@@ -68,7 +68,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Add Block');
 
     // Reload the page.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display-layout/default');
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     // Assert that there are no sections on the page.
     $assert_session->pageTextNotContains('Remove section');
     $assert_session->pageTextNotContains('Add Block');
@@ -82,13 +82,13 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
 
     // Make and then discard changes.
-    $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display-layout/default');
+    $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display/default/layout');
     $page->clickLink('Discard changes');
     $page->pressButton('Confirm');
     $assert_session->pageTextNotContains('You have unsaved changes.');
 
     // Make and then save changes.
-    $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display-layout/default');
+    $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display/default/layout');
     $page->pressButton('Save layout');
     $assert_session->pageTextNotContains('You have unsaved changes.');
   }

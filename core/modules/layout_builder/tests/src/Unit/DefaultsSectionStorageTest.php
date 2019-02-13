@@ -385,7 +385,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
       'known' => new Route('/admin/entity/whatever', [], [], ['_admin_route' => TRUE]),
       'with_bundle' => new Route('/admin/entity/{bundle}'),
       'layout_builder.defaults.with_bundle_key.view' => new Route(
-        '/admin/entity/whatever/display-layout/{view_mode_name}',
+        '/admin/entity/whatever/display/{view_mode_name}/layout',
         [
           'entity_type_id' => 'with_bundle_key',
           'bundle_key' => 'my_bundle_type',
@@ -410,7 +410,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ]
       ),
       'layout_builder.defaults.with_bundle_key.discard_changes' => new Route(
-        '/admin/entity/whatever/display-layout/{view_mode_name}/discard-changes',
+        '/admin/entity/whatever/display/{view_mode_name}/layout/discard-changes',
         [
           'entity_type_id' => 'with_bundle_key',
           'bundle_key' => 'my_bundle_type',
@@ -432,7 +432,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ]
       ),
       'layout_builder.defaults.with_bundle_key.disable' => new Route(
-        '/admin/entity/whatever/display-layout/{view_mode_name}/disable',
+        '/admin/entity/whatever/display/{view_mode_name}/layout/disable',
         [
           'entity_type_id' => 'with_bundle_key',
           'bundle_key' => 'my_bundle_type',
@@ -452,7 +452,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ]
       ),
       'layout_builder.defaults.with_bundle_parameter.view' => new Route(
-        '/admin/entity/{bundle}/display-layout/{view_mode_name}',
+        '/admin/entity/{bundle}/display/{view_mode_name}/layout',
         [
           'entity_type_id' => 'with_bundle_parameter',
           'section_storage_type' => 'defaults',
@@ -474,7 +474,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ]
       ),
       'layout_builder.defaults.with_bundle_parameter.discard_changes' => new Route(
-        '/admin/entity/{bundle}/display-layout/{view_mode_name}/discard-changes',
+        '/admin/entity/{bundle}/display/{view_mode_name}/layout/discard-changes',
         [
           'entity_type_id' => 'with_bundle_parameter',
           'section_storage_type' => 'defaults',
@@ -495,7 +495,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ]
       ),
       'layout_builder.defaults.with_bundle_parameter.disable' => new Route(
-        '/admin/entity/{bundle}/display-layout/{view_mode_name}/disable',
+        '/admin/entity/{bundle}/display/{view_mode_name}/layout/disable',
         [
           'entity_type_id' => 'with_bundle_parameter',
           'section_storage_type' => 'defaults',

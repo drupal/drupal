@@ -5,9 +5,12 @@
  * Provides hook implementations for Layout Builder.
  */
 
+use Drupal\Core\Breadcrumb\Breadcrumb;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -286,5 +289,24 @@ function layout_builder_plugin_filter_layout__layout_builder_alter(array &$defin
     $definitions = [
       'layout_onecol' => $one_col,
     ] + $definitions;
+  }
+}
+
+/**
+ * Implements hook_system_breadcrumb_alter().
+ */
+function layout_builder_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context) {
+  // Remove the extra 'Manage display' breadcrumb for Layout Builder defaults.
+  if ($route_match->getRouteObject()->hasOption('_layout_builder') && $route_match->getParameter('section_storage_type') === 'defaults') {
+    $links = array_filter($breadcrumb->getLinks(), function (Link $link) use ($route_match) {
+      $entity_type_id = $route_match->getParameter('entity_type_id');
+      return $link->getUrl()->getRouteName() !== "entity.entity_view_display.$entity_type_id.default";
+    });
+    // Links cannot be removed from an existing breadcrumb object. Create a new
+    // object but carry over the cacheable metadata.
+    $cacheability = CacheableMetadata::createFromObject($breadcrumb);
+    $breadcrumb = new Breadcrumb();
+    $breadcrumb->setLinks($links);
+    $breadcrumb->addCacheableDependency($cacheability);
   }
 }

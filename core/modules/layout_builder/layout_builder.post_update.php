@@ -93,3 +93,10 @@ function layout_builder_post_update_remove_layout_is_rebuilding() {
 function layout_builder_post_update_routing_entity_form() {
   // Empty post-update hook.
 }
+
+/**
+ * Clear caches due to routing changes to changing the URLs for defaults.
+ */
+function layout_builder_post_update_routing_defaults() {
+  // Empty post-update hook.
+}
