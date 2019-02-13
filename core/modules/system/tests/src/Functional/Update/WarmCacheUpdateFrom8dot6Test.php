@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Update;
 
+use Drupal\Core\Database\Database;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -37,6 +38,41 @@ class WarmCacheUpdateFrom8dot6Test extends UpdatePathTestBase {
     $this->assertSame(FALSE, $this->config('system.performance')->get('css.preprocess'));
     $this->assertSame(FALSE, $this->config('system.performance')->get('js.preprocess'));
     $this->assertSame('Australia/Sydney', $this->config('system.date')->get('timezone.default'));
+  }
+
+  /**
+   * Tests system_update_8601().
+   */
+  public function testWithMissingProfile() {
+    // Remove the install profile from the module list to simulate how Drush 8
+    // and update_fix_compatibility() worked together to remove the install
+    // profile. See https://www.drupal.org/project/drupal/issues/3031740.
+    $connection = Database::getConnection();
+    $config = $connection->select('config')
+      ->fields('config', ['data'])
+      ->condition('collection', '')
+      ->condition('name', 'core.extension')
+      ->execute()
+      ->fetchField();
+    $config = unserialize($config);
+    unset($config['module']['minimal']);
+    $connection->update('config')
+      ->fields([
+        'data' => serialize($config),
+        'collection' => '',
+        'name' => 'core.extension',
+      ])
+      ->condition('collection', '')
+      ->condition('name', 'core.extension')
+      ->execute();
+
+    $this->runUpdates();
+    $this->assertSession()->pageTextContains('The minimal install profile has been added to the installed module list.');
+
+    // Login and check that the status report is working correctly.
+    $this->drupalLogin($this->rootUser);
+    $this->drupalGet('admin/reports/status');
+    $this->assertSession()->pageTextContains("Installation Profile Minimal");
   }
 
   /**
