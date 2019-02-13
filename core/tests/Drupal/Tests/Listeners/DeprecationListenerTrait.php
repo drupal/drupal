@@ -13,21 +13,9 @@ use PHPUnit\Framework\TestCase;
  *   fixed.
  */
 trait DeprecationListenerTrait {
-
   use ExpectDeprecationTrait;
 
-  /**
-   * The previous error handler.
-   *
-   * @var callable
-   */
-  private $previousHandler;
-
   protected function deprecationStartTest($test) {
-    // @todo comment
-    if ('disabled' !== getenv('SYMFONY_DEPRECATIONS_HELPER')) {
-      $this->registerErrorHandler($test);
-    }
     if ($test instanceof \PHPUnit_Framework_TestCase || $test instanceof TestCase) {
       if ($this->willBeIsolated($test)) {
         putenv('DRUPAL_EXPECTED_DEPRECATIONS_SERIALIZE=' . tempnam(sys_get_temp_dir(), 'exdep'));
@@ -138,44 +126,7 @@ trait DeprecationListenerTrait {
       // is a Windows only deprecation. Remove when core no longer uses
       // WinCacheClassLoader in \Drupal\Core\DrupalKernel::initializeSettings().
       'The Symfony\Component\ClassLoader\WinCacheClassLoader class is deprecated since Symfony 3.3 and will be removed in 4.0. Use `composer install --apcu-autoloader` instead.',
-      // The following deprecation message is skipped for testing purposes.
-      '\Drupal\Tests\SkippedDeprecationTest deprecation',
     ];
-  }
-
-  /**
-   * Registers an error handler that wraps Symfony's DeprecationErrorHandler.
-   *
-   * @see \Symfony\Bridge\PhpUnit\DeprecationErrorHandler
-   * @see \Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerTrait
-   */
-  protected function registerErrorHandler($test) {
-    if ($this->previousHandler) {
-      return;
-    }
-
-    $deprecation_handler = function ($type, $msg, $file, $line, $context = []) {
-      // Skip listed deprecations.
-      if ($type === E_USER_DEPRECATED && in_array($msg, self::getSkippedDeprecations(), TRUE)) {
-        return;
-      }
-      return call_user_func($this->previousHandler, $type, $msg, $file, $line, $context);
-    };
-    $this->previousHandler = set_error_handler($deprecation_handler);
-
-    // Register another listener so that we can remove the error handler before
-    // Symfony's DeprecationErrorHandler checks that it is the currently
-    // registered handler. Note this is done like this to ensure the error
-    // handler is removed after SymfonyTestsListenerTrait::endTest() is called.
-    // SymfonyTestsListenerTrait has its own error handler that needs to be
-    // removed before this one.
-    $test_result_object = $test->getTestResultObject();
-    $reflection_class = new \ReflectionClass($test_result_object);
-    $reflection_property = $reflection_class->getProperty('listeners');
-    $reflection_property->setAccessible(TRUE);
-    $listeners = $reflection_property->getValue($test_result_object);
-    $listeners[] = new AfterSymfonyListener();
-    $reflection_property->setValue($test_result_object, $listeners);
   }
 
 }
