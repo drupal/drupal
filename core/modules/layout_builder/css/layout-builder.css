@@ -5,7 +5,6 @@
   padding: 1.5em 0;
   text-align: center;
   margin-bottom: 1.5em;
-  transition: visually-hidden 2s ease-out, height 2s ease-in;
 }
 
 .new-section__link,
