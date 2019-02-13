@@ -311,12 +311,12 @@ class SchemaTest extends KernelTestBase {
       ],
       'primary key' => ['id', 'test_field_1'],
       'unique keys' => [
-        '2' => ['test_field_2'],
-        '3_4' => ['test_field_3', 'test_field_4'],
+        'test_field_2' => ['test_field_2'],
+        'test_field_3_test_field_4' => ['test_field_3', 'test_field_4'],
       ],
       'indexes' => [
-        '4' => ['test_field_4'],
-        '4_5' => ['test_field_4', 'test_field_5'],
+        'test_field_4' => ['test_field_4'],
+        'test_field_4_test_field_5' => ['test_field_4', 'test_field_5'],
       ],
     ];
 
