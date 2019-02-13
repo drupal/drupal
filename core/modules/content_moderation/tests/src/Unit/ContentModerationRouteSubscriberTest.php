@@ -187,6 +187,28 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
           ],
         ],
       ],
+      'Parameter without type is unchanged' => [
+        [
+          '_entity_form' => 'entity_test_rev.edit',
+        ],
+        [
+          'entity_test_rev' => [
+            'type' => 'entity:entity_test_rev',
+          ],
+          'unrelated_param' => [
+            'foo' => 'bar',
+          ],
+        ],
+        [
+          'entity_test_rev' => [
+            'type' => 'entity:entity_test_rev',
+            'load_latest_revision' => TRUE,
+          ],
+          'unrelated_param' => [
+            'foo' => 'bar',
+          ],
+        ],
+      ],
     ];
   }
 
