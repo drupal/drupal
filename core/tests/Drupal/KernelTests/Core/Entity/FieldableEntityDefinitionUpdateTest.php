@@ -27,6 +27,20 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   protected $entityDefinitionUpdateManager;
 
   /**
+   * The last installed schema repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface
+   */
+  protected $lastInstalledSchemaRepository;
+
+  /**
+   * The key-value collection for tracking installed storage schema.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $installedStorageSchema;
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -55,6 +69,13 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   protected $entityTypeId = 'entity_test_update';
 
   /**
+   * An array of entities are created during the test.
+   *
+   * @var \Drupal\entity_test_update\Entity\EntityTestUpdate[]
+   */
+  protected $testEntities = [];
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -67,6 +88,8 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   protected function setUp() {
     parent::setUp();
     $this->entityDefinitionUpdateManager = $this->container->get('entity.definition_update_manager');
+    $this->lastInstalledSchemaRepository = $this->container->get('entity.last_installed_schema.repository');
+    $this->installedStorageSchema = $this->container->get('keyvalue')->get('entity.storage_schema.sql');
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->entityFieldManager = $this->container->get('entity_field.manager');
     $this->database = $this->container->get('database');
@@ -255,6 +278,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       $entity = $storage->create([
         'id' => $i,
         'name' => 'test entity - ' . $i . ' - en',
+        'test_multiple_properties' => [
+          'value1' => 'shared table - ' . $i . ' - value 1 - en',
+          'value2' => 'shared table - ' . $i . ' - value 2 - en',
+        ],
         'test_multiple_properties_multiple_values' => [
           'value1' => 'dedicated table - ' . $i . ' - value 1 - en',
           'value2' => 'dedicated table - ' . $i . ' - value 2 - en',
@@ -265,6 +292,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       if ($translatable) {
         $translation = $entity->addTranslation('ro', [
           'name' => 'test entity - ' . $i . ' - ro',
+          'test_multiple_properties' => [
+            'value1' => 'shared table - ' . $i . ' - value 1 - ro',
+            'value2' => 'shared table - ' . $i . ' - value 2 - ro',
+          ],
           'test_multiple_properties_multiple_values' => [
             'value1' => 'dedicated table - ' . $i . ' - value 1 - ro',
             'value2' => 'dedicated table - ' . $i . ' - value 2 - ro',
@@ -272,6 +303,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         ]);
         $translation->save();
       }
+      $this->testEntities[$entity->id()] = $entity;
 
       if ($revisionable) {
         // Create a new pending revision.
@@ -490,6 +522,156 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertFalse($database_schema->tableExists($entity_type->getDataTable()));
     $this->assertFalse($database_schema->tableExists($entity_type->getRevisionTable()));
     $this->assertFalse($database_schema->tableExists($entity_type->getRevisionDataTable()));
+  }
+
+  /**
+   * Tests that a failed entity schema update preserves the existing data.
+   */
+  public function testFieldableEntityTypeUpdatesErrorHandling() {
+    // First, convert the entity type to be translatable for better coverage and
+    // insert some initial data.
+    $entity_type = $this->getUpdatedEntityTypeDefinition(FALSE, TRUE);
+    $field_storage_definitions = $this->getUpdatedFieldStorageDefinitions(FALSE, TRUE);
+    $this->entityDefinitionUpdateManager->updateFieldableEntityType($entity_type, $field_storage_definitions);
+    $this->assertEntityTypeSchema(FALSE, TRUE);
+    $this->insertData(FALSE, TRUE);
+
+    $original_entity_type = $this->lastInstalledSchemaRepository->getLastInstalledDefinition('entity_test_update');
+    $original_storage_definitions = $this->lastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions('entity_test_update');
+
+    $original_entity_schema_data = $this->installedStorageSchema->get('entity_test_update.entity_schema_data', []);
+    $original_field_schema_data = [];
+    foreach ($original_storage_definitions as $storage_definition) {
+      $original_field_schema_data[$storage_definition->getName()] = $this->installedStorageSchema->get('entity_test_update.field_schema_data.' . $storage_definition->getName(), []);
+    }
+
+    // Check that entity type is not revisionable prior to running the update
+    // process.
+    $this->assertFalse($entity_type->isRevisionable());
+
+    // Make the update throw an exception during the entity save process.
+    \Drupal::state()->set('entity_test_update.throw_exception', TRUE);
+    $this->setExpectedException(EntityStorageException::class, 'The entity update process failed while processing the entity type entity_test_update, ID: 1.');
+
+    try {
+      $updated_entity_type = $this->getUpdatedEntityTypeDefinition(TRUE, TRUE);
+      $updated_field_storage_definitions = $this->getUpdatedFieldStorageDefinitions(TRUE, TRUE);
+
+      // Simulate a batch run since we are converting the entities one by one.
+      $sandbox = [];
+      do {
+        $this->entityDefinitionUpdateManager->updateFieldableEntityType($updated_entity_type, $updated_field_storage_definitions, $sandbox);
+      } while ($sandbox['#finished'] != 1);
+    }
+    catch (EntityStorageException $e) {
+      throw $e;
+    }
+    // Allow other tests to be performed after the exception has been thrown.
+    finally {
+      $this->assertSame('Peekaboo!', $e->getPrevious()->getMessage());
+
+      // Check that the last installed entity type definition is kept as
+      // non-revisionable.
+      $new_entity_type = $this->lastInstalledSchemaRepository->getLastInstalledDefinition('entity_test_update');
+      $this->assertFalse($new_entity_type->isRevisionable(), 'The entity type is kept unchanged.');
+
+      // Check that the last installed field storage definitions did not change by
+      // looking at the 'langcode' field, which is updated automatically.
+      $new_storage_definitions = $this->lastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions('entity_test_update');
+      $langcode_key = $original_entity_type->getKey('langcode');
+      $this->assertEquals($original_storage_definitions[$langcode_key]->isRevisionable(), $new_storage_definitions[$langcode_key]->isRevisionable(), "The 'langcode' field is kept unchanged.");
+
+      /** @var \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $storage */
+      $storage = $this->entityTypeManager->getStorage('entity_test_update');
+      $table_mapping = $storage->getTableMapping();
+
+      // Check that installed storage schema did not change.
+      $new_entity_schema_data = $this->installedStorageSchema->get('entity_test_update.entity_schema_data', []);
+      $this->assertEquals($original_entity_schema_data, $new_entity_schema_data);
+
+      foreach ($new_storage_definitions as $storage_definition) {
+        $new_field_schema_data[$storage_definition->getName()] = $this->installedStorageSchema->get('entity_test_update.field_schema_data.' . $storage_definition->getName(), []);
+      }
+      $this->assertEquals($original_field_schema_data, $new_field_schema_data);
+
+      // Check that temporary tables have been removed.
+      $schema = $this->database->schema();
+      $temporary_table_names = $storage->getCustomTableMapping($new_entity_type, $new_storage_definitions, 'tmp_')->getTableNames();
+      $current_table_names = $storage->getCustomTableMapping($new_entity_type, $new_storage_definitions)->getTableNames();
+      foreach (array_combine($temporary_table_names, $current_table_names) as $temp_table_name => $table_name) {
+        $this->assertTrue($schema->tableExists($table_name));
+        $this->assertFalse($schema->tableExists($temp_table_name));
+      }
+
+      // Check that the original tables still exist and their data is intact.
+      $this->assertTrue($schema->tableExists('entity_test_update'));
+      $this->assertTrue($schema->tableExists('entity_test_update_data'));
+
+      // Check that the revision tables have not been created.
+      $this->assertFalse($schema->tableExists('entity_test_update_revision'));
+      $this->assertFalse($schema->tableExists('entity_test_update_revision_data'));
+
+      $base_table_count = $this->database->select('entity_test_update')
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      $this->assertEquals(3, $base_table_count);
+
+      $data_table_count = $this->database->select('entity_test_update_data')
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      // There are two records for each entity, one for English and one for
+      // Romanian.
+      $this->assertEquals(6, $data_table_count);
+
+      $base_table_row = $this->database->select('entity_test_update')
+        ->fields('entity_test_update')
+        ->condition('id', 1, '=')
+        ->condition('langcode', 'en', '=')
+        ->execute()
+        ->fetchAllAssoc('id');
+      $this->assertEquals($this->testEntities[1]->uuid(), $base_table_row[1]->uuid);
+
+      $data_table_row = $this->database->select('entity_test_update_data')
+        ->fields('entity_test_update_data')
+        ->condition('id', 1, '=')
+        ->condition('langcode', 'en', '=')
+        ->execute()
+        ->fetchAllAssoc('id');
+      $this->assertEquals('test entity - 1 - en', $data_table_row[1]->name);
+      $this->assertEquals('shared table - 1 - value 1 - en', $data_table_row[1]->test_multiple_properties__value1);
+      $this->assertEquals('shared table - 1 - value 2 - en', $data_table_row[1]->test_multiple_properties__value2);
+
+      $data_table_row = $this->database->select('entity_test_update_data')
+        ->fields('entity_test_update_data')
+        ->condition('id', 1, '=')
+        ->condition('langcode', 'ro', '=')
+        ->execute()
+        ->fetchAllAssoc('id');
+      $this->assertEquals('test entity - 1 - ro', $data_table_row[1]->name);
+      $this->assertEquals('shared table - 1 - value 1 - ro', $data_table_row[1]->test_multiple_properties__value1);
+      $this->assertEquals('shared table - 1 - value 2 - ro', $data_table_row[1]->test_multiple_properties__value2);
+
+      $dedicated_table_name = $table_mapping->getFieldTableName('test_multiple_properties_multiple_values');
+      $dedicated_table_row = $this->database->select($dedicated_table_name)
+        ->fields($dedicated_table_name)
+        ->condition('entity_id', 1, '=')
+        ->condition('langcode', 'en', '=')
+        ->execute()
+        ->fetchAllAssoc('entity_id');
+      $this->assertEquals('dedicated table - 1 - value 1 - en', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value1);
+      $this->assertEquals('dedicated table - 1 - value 2 - en', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value2);
+
+      $dedicated_table_row = $this->database->select($dedicated_table_name)
+        ->fields($dedicated_table_name)
+        ->condition('entity_id', 1, '=')
+        ->condition('langcode', 'ro', '=')
+        ->execute()
+        ->fetchAllAssoc('entity_id');
+      $this->assertEquals('dedicated table - 1 - value 1 - ro', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value1);
+      $this->assertEquals('dedicated table - 1 - value 2 - ro', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value2);
+    }
   }
 
 }

@@ -49,6 +49,17 @@ class EntityTestUpdate extends ContentEntityBase {
   /**
    * {@inheritdoc}
    */
+  public function preSave(EntityStorageInterface $storage) {
+    // Simulate an error during the 'restore' process of a test entity.
+    if (\Drupal::state()->get('entity_test_update.throw_exception', FALSE)) {
+      throw new \Exception('Peekaboo!');
+    }
+    parent::preSave($storage);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     // This entity type is used for generating database dumps from Drupal
     // 8.0.0-rc1, which didn't have the entity key base fields defined in
