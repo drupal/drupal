@@ -3,6 +3,7 @@
 namespace Drupal\Tests\taxonomy\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use Drupal\Tests\Core\Database\SchemaIntrospectionTestTrait;
 
 /**
  * Tests that the 'hierarchy' property is removed from vocabularies.
@@ -12,6 +13,8 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @group legacy
  */
 class TaxonomyVocabularyHierarchyUpdateTest extends UpdatePathTestBase {
+
+  use SchemaIntrospectionTestTrait;
 
   /**
    * {@inheritdoc}
@@ -32,15 +35,18 @@ class TaxonomyVocabularyHierarchyUpdateTest extends UpdatePathTestBase {
     $hierarchy = \Drupal::config('taxonomy.vocabulary.test_vocabulary')->get('hierarchy');
     $this->assertSame(1, $hierarchy);
 
+    // We can not test whether an index on the 'bundle' column existed before
+    // running the updates because the 'taxonomy_term__parent' table itself is
+    // created by an update function.
+
     // Run updates.
     $this->runUpdates();
 
     $hierarchy = \Drupal::config('taxonomy.vocabulary.test_vocabulary')->get('hierarchy');
     $this->assertNull($hierarchy);
 
-    $database = \Drupal::database();
-    $this->assertFalse($database->schema()->indexExists('taxonomy_term__parent', 'bundle'));
-    $this->assertTrue($database->schema()->indexExists('taxonomy_term__parent', 'bundle_delta_target_id'));
+    $this->assertNoIndexOnColumns('taxonomy_term__parent', ['bundle']);
+    $this->assertIndexOnColumns('taxonomy_term__parent', ['bundle', 'delta', 'parent_target_id']);
   }
 
 }

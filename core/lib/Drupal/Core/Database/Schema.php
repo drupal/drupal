@@ -546,6 +546,28 @@ abstract class Schema implements PlaceholderInterface {
   abstract public function dropIndex($table, $name);
 
   /**
+   * Finds the columns for the primary key, unique keys and indexes of a table.
+   *
+   * @param string $table
+   *   The name of the table.
+   *
+   * @return array
+   *   A schema array with the following keys: 'primary key', 'unique keys' and
+   *   'indexes', and values as arrays of database columns.
+   *
+   * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
+   *   If the specified table doesn't exist.
+   * @throws \RuntimeException
+   *   If the driver does not implement this method.
+   */
+  protected function introspectIndexSchema($table) {
+    if (!$this->tableExists($table)) {
+      throw new SchemaObjectDoesNotExistException("The table $table doesn't exist.");
+    }
+    throw new \RuntimeException("The '{$this->connection->driver()}' database driver does not implement " . __METHOD__);
+  }
+
+  /**
    * Change a field definition.
    *
    * IMPORTANT NOTE: To maintain database portability, you have to explicitly

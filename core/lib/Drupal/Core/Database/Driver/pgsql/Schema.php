@@ -884,6 +884,38 @@ EOD;
   /**
    * {@inheritdoc}
    */
+  protected function introspectIndexSchema($table) {
+    if (!$this->tableExists($table)) {
+      throw new SchemaObjectDoesNotExistException("The table $table doesn't exist.");
+    }
+
+    $index_schema = [
+      'primary key' => [],
+      'unique keys' => [],
+      'indexes' => [],
+    ];
+
+    $result = $this->connection->query("SELECT i.relname AS index_name, a.attname AS column_name FROM pg_class t, pg_class i, pg_index ix, pg_attribute a WHERE t.oid = ix.indrelid AND i.oid = ix.indexrelid AND a.attrelid = t.oid AND a.attnum = ANY(ix.indkey) AND t.relkind = 'r' AND t.relname = :table_name ORDER BY index_name ASC, column_name ASC", [
+      ':table_name' => $this->connection->prefixTables('{' . $table . '}'),
+    ])->fetchAll();
+    foreach ($result as $row) {
+      if (preg_match('/_pkey$/', $row->index_name)) {
+        $index_schema['primary key'][] = $row->column_name;
+      }
+      elseif (preg_match('/_key$/', $row->index_name)) {
+        $index_schema['unique keys'][$row->index_name][] = $row->column_name;
+      }
+      elseif (preg_match('/_idx$/', $row->index_name)) {
+        $index_schema['indexes'][$row->index_name][] = $row->column_name;
+      }
+    }
+
+    return $index_schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function changeField($table, $field, $field_new, $spec, $new_keys = []) {
     if (!$this->fieldExists($table, $field)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot change the definition of field @table.@name: field doesn't exist.", ['@table' => $table, '@name' => $field]));

@@ -615,6 +615,36 @@ class Schema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
+  protected function introspectIndexSchema($table) {
+    if (!$this->tableExists($table)) {
+      throw new SchemaObjectDoesNotExistException("The table $table doesn't exist.");
+    }
+
+    $index_schema = [
+      'primary key' => [],
+      'unique keys' => [],
+      'indexes' => [],
+    ];
+
+    $result = $this->connection->query('SHOW INDEX FROM {' . $table . '}')->fetchAll();
+    foreach ($result as $row) {
+      if ($row->Key_name === 'PRIMARY') {
+        $index_schema['primary key'][] = $row->Column_name;
+      }
+      elseif ($row->Non_unique == 0) {
+        $index_schema['unique keys'][$row->Key_name][] = $row->Column_name;
+      }
+      else {
+        $index_schema['indexes'][$row->Key_name][] = $row->Column_name;
+      }
+    }
+
+    return $index_schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function changeField($table, $field, $field_new, $spec, $keys_new = []) {
     if (!$this->fieldExists($table, $field)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot change the definition of field @table.@name: field doesn't exist.", ['@table' => $table, '@name' => $field]));
