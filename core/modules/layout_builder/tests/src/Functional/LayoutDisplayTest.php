@@ -63,8 +63,7 @@ class LayoutDisplayTest extends BrowserTestBase {
     $assert_session->linkExists('Powered by Drupal');
     $this->clickLink('Powered by Drupal');
     $page->pressButton('Add Block');
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save');
     $assert_session->pageTextContains('Powered by Drupal');
 
     // Add a new view mode.

@@ -87,7 +87,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->fillField('settings[label]', 'This is an override');
     $page->checkField('settings[label_display]');
     $page->pressButton('Add Block');
-    $page->clickLink('Save Layout');
+    $page->pressButton('Save layout');
     $assert_session->pageTextContains('This is an override');
 
     // Get the UUID of the component.
@@ -99,7 +99,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->uncheckField('settings[label_display]');
     $page->pressButton('Update');
     $assert_session->pageTextNotContains('This is an override');
-    $page->clickLink('Save Layout');
+    $page->pressButton('Save layout');
     $assert_session->pageTextNotContains('This is an override');
   }
 
@@ -137,8 +137,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // The extra field is only present once.
     $assert_session->pageTextContainsOnce('Placeholder for the "Extra label" field');
     // Save the defaults.
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
     $assert_session->addressEquals("$field_ui_prefix/display/default");
 
     // Load the default layouts again after saving to confirm fields are only
@@ -165,8 +164,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->addressEquals("$field_ui_prefix/display-layout/default");
 
     // Save the defaults.
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
     $assert_session->pageTextContains('The layout has been saved.');
     $assert_session->addressEquals("$field_ui_prefix/display/default");
 
@@ -197,8 +195,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->clickLink('Two column');
     $assert_session->buttonExists('Add section');
     $page->pressButton('Add section');
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save');
     $assert_session->pageTextNotContains('The first node body');
     $assert_session->pageTextNotContains('Powered by Drupal');
     $assert_session->pageTextNotContains('Extra, Extra read all about it.');
@@ -218,7 +215,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->pressButton('Add Block');
     // The title field is present.
     $assert_session->elementExists('css', '.field--name-title');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
 
     // View the other node, which is still using the defaults.
     $this->drupalGet('node/2');
@@ -380,8 +377,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->clickLink('Layout plugin (with dependencies)');
     $assert_session->elementExists('css', '.layout--layout-test-dependencies-plugin');
     $assert_session->elementExists('css', '.field--name-body');
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
     $this->drupalPostForm('admin/structure/menu/manage/myothermenu/delete', [], 'Delete');
     $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display-layout/default');
     $assert_session->elementNotExists('css', '.layout--layout-test-dependencies-plugin');
@@ -405,8 +401,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextContains('My Menu');
     $assert_session->elementExists('css', '.block.menu--mymenu');
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
 
     // Delete the menu.
     $this->drupalPostForm('admin/structure/menu/manage/mymenu/delete', [], 'Delete');
@@ -446,7 +441,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->checkField('settings[label_display]');
     $page->pressButton('Add Block');
     $assert_session->pageTextContains('This is the default view mode');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
 
     // The default view mode is used for both the node display and layout UI.
     $this->drupalGet('node/1');
@@ -466,7 +461,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->checkField('settings[label_display]');
     $page->pressButton('Add Block');
     $assert_session->pageTextContains('This is the full view mode');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
 
     // The full view mode is now used for both the node display and layout UI.
     $this->drupalGet('node/1');
@@ -579,7 +574,7 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     $assert_session->pageTextContains('Test Block View');
     $assert_session->elementExists('css', '.block-views-blocktest-block-view-block-1');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save');
     $assert_session->pageTextContains('Test Block View');
     $assert_session->elementExists('css', '.block-views-blocktest-block-view-block-1');
 
@@ -677,6 +672,39 @@ class LayoutBuilderTest extends BrowserTestBase {
     // The block placeholder is no longer displayed and the content is visible.
     $assert_session->pageTextNotContains($placeholder_content);
     $assert_session->pageTextContains($block_content);
+  }
+
+  /**
+   * Tests a custom alter of the overrides form.
+   */
+  public function testOverridesFormAlter() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+      'administer nodes',
+    ]));
+
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    // Enable overrides.
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => TRUE], 'Save');
+    $this->drupalGet('node/1');
+
+    // The status checkbox should be checked by default.
+    $page->clickLink('Layout');
+    $assert_session->checkboxChecked('status[value]');
+    $page->pressButton('Save layout');
+    $assert_session->pageTextContains('The layout override has been saved.');
+
+    // Unchecking the status checkbox will unpublish the entity.
+    $page->clickLink('Layout');
+    $page->uncheckField('status[value]');
+    $page->pressButton('Save layout');
+    $assert_session->statusCodeEquals(403);
+    $assert_session->pageTextContains('The layout override has been saved.');
   }
 
   /**

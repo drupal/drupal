@@ -71,7 +71,7 @@ class LayoutBuilderSectionStorageTest extends BrowserTestBase {
     $page->fillField('settings[label]', 'Defaults block title');
     $page->checkField('settings[label_display]');
     $page->pressButton('Add Block');
-    $page->clickLink('Save Layout');
+    $page->pressButton('Save layout');
 
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('Defaults block title');

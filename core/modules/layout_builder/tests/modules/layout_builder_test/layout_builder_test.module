@@ -5,6 +5,7 @@
  * Provides hook implementations for Layout Builder tests.
  */
 
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -79,4 +80,16 @@ function layout_builder_test_form_layout_builder_configure_block_alter(&$form, F
     '#type' => 'item',
     '#title' => 'Layout Builder Component: ' . $form_object->getCurrentComponent()->getPluginId(),
   ];
+}
+
+/**
+ * Implements hook_layout_builder_overrides_entity_form_display_alter().
+ */
+function layout_builder_test_layout_builder_overrides_entity_form_display_alter(EntityFormDisplayInterface $display) {
+  $display->setComponent('status', [
+    'type' => 'boolean_checkbox',
+    'settings' => [
+      'display_label' => TRUE,
+    ],
+  ]);
 }

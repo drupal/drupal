@@ -86,3 +86,10 @@ function layout_builder_post_update_cancel_link_to_discard_changes_form() {
 function layout_builder_post_update_remove_layout_is_rebuilding() {
   // Empty post-update hook.
 }
+
+/**
+ * Clear caches due to routing changes to move the Layout Builder UI to forms.
+ */
+function layout_builder_post_update_routing_entity_form() {
+  // Empty post-update hook.
+}

@@ -41,7 +41,7 @@ use Symfony\Component\Routing\RouteCollection;
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
  */
-class DefaultsSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, DefaultsSectionStorageInterface, SectionStorageLocalTaskProviderInterface {
+class DefaultsSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, DefaultsSectionStorageInterface {
 
   /**
    * The entity type manager.
@@ -172,7 +172,14 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
       $options = $entity_route->getOptions();
       $options['_admin_route'] = FALSE;
 
-      $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), $path, $defaults, $requirements, $options, $entity_type_id);
+      $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), $path, $defaults, $requirements, $options, $entity_type_id, 'entity_view_display');
+
+      // Set field_ui.route_enhancer to run on the manage layout form.
+      if (isset($defaults['bundle_key'])) {
+        $collection->get("layout_builder.defaults.$entity_type_id.view")
+          ->setOption('_field_ui', TRUE)
+          ->setDefault('bundle', '');
+      }
 
       $route_names = [
         "entity.entity_view_display.{$entity_type_id}.default",
@@ -195,32 +202,6 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function buildLocalTasks($base_plugin_definition) {
-    $local_tasks = [];
-    foreach ($this->getEntityTypes() as $entity_type_id => $entity_type) {
-      $local_tasks["layout_builder.defaults.$entity_type_id.view"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.defaults.$entity_type_id.view",
-        'title' => $this->t('Manage layout'),
-        'base_route' => "layout_builder.defaults.$entity_type_id.view",
-      ];
-      $local_tasks["layout_builder.defaults.$entity_type_id.save"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.defaults.$entity_type_id.save",
-        'title' => $this->t('Save Layout'),
-        'parent_id' => "layout_builder_ui:layout_builder.defaults.$entity_type_id.view",
-      ];
-      $local_tasks["layout_builder.defaults.$entity_type_id.discard_changes"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.defaults.$entity_type_id.discard_changes",
-        'title' => $this->t('Discard changes'),
-        'weight' => 5,
-        'parent_id' => "layout_builder_ui:layout_builder.defaults.$entity_type_id.view",
-      ];
-    }
-    return $local_tasks;
-  }
-
-  /**
    * Returns an array of relevant entity types.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface[]
@@ -228,7 +209,7 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
    */
   protected function getEntityTypes() {
     return array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $entity_type) {
-      return $entity_type->entityClassImplements(FieldableEntityInterface::class) && $entity_type->hasViewBuilderClass() && $entity_type->get('field_ui_base_route');
+      return $entity_type->entityClassImplements(FieldableEntityInterface::class) && $entity_type->hasHandlerClass('form', 'layout_builder') && $entity_type->hasViewBuilderClass() && $entity_type->get('field_ui_base_route');
     });
   }
 

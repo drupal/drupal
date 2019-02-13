@@ -330,6 +330,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   /**
    * @covers ::buildRoutes
    * @covers ::getEntityTypes
+   * @covers \Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::buildLayoutRoutes
    */
   public function testBuildRoutes() {
     $entity_types = [];
@@ -338,25 +339,34 @@ class DefaultsSectionStorageTest extends UnitTestCase {
     $not_fieldable->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
     $entity_types['not_fieldable'] = $not_fieldable->reveal();
 
+    $no_layout_builder_form = $this->prophesize(EntityTypeInterface::class);
+    $no_layout_builder_form->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $no_layout_builder_form->hasHandlerClass('form', 'layout_builder')->willReturn(FALSE);
+    $entity_types['no_layout_builder_form'] = $no_layout_builder_form->reveal();
+
     $no_view_builder = $this->prophesize(EntityTypeInterface::class);
     $no_view_builder->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $no_view_builder->hasHandlerClass('form', 'layout_builder')->willReturn(TRUE);
     $no_view_builder->hasViewBuilderClass()->willReturn(FALSE);
     $entity_types['no_view_builder'] = $no_view_builder->reveal();
 
     $no_field_ui_route = $this->prophesize(EntityTypeInterface::class);
     $no_field_ui_route->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $no_field_ui_route->hasHandlerClass('form', 'layout_builder')->willReturn(TRUE);
     $no_field_ui_route->hasViewBuilderClass()->willReturn(TRUE);
     $no_field_ui_route->get('field_ui_base_route')->willReturn(NULL);
     $entity_types['no_field_ui_route'] = $no_field_ui_route->reveal();
 
     $unknown_field_ui_route = $this->prophesize(EntityTypeInterface::class);
     $unknown_field_ui_route->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $unknown_field_ui_route->hasHandlerClass('form', 'layout_builder')->willReturn(TRUE);
     $unknown_field_ui_route->hasViewBuilderClass()->willReturn(TRUE);
     $unknown_field_ui_route->get('field_ui_base_route')->willReturn('unknown');
     $entity_types['unknown_field_ui_route'] = $unknown_field_ui_route->reveal();
 
     $with_bundle_key = $this->prophesize(EntityTypeInterface::class);
     $with_bundle_key->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $with_bundle_key->hasHandlerClass('form', 'layout_builder')->willReturn(TRUE);
     $with_bundle_key->hasViewBuilderClass()->willReturn(TRUE);
     $with_bundle_key->get('field_ui_base_route')->willReturn('known');
     $with_bundle_key->hasKey('bundle')->willReturn(TRUE);
@@ -365,6 +375,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
 
     $with_bundle_parameter = $this->prophesize(EntityTypeInterface::class);
     $with_bundle_parameter->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $with_bundle_parameter->hasHandlerClass('form', 'layout_builder')->willReturn(TRUE);
     $with_bundle_parameter->hasViewBuilderClass()->willReturn(TRUE);
     $with_bundle_parameter->get('field_ui_base_route')->willReturn('with_bundle');
     $entity_types['with_bundle_parameter'] = $with_bundle_parameter->reveal();
@@ -378,9 +389,10 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         [
           'entity_type_id' => 'with_bundle_key',
           'bundle_key' => 'my_bundle_type',
+          'bundle' => '',
           'section_storage_type' => 'defaults',
           'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::layout',
+          '_entity_form' => 'entity_view_display.layout_builder',
           '_title_callback' => '\Drupal\layout_builder\Controller\LayoutBuilderController::title',
         ],
         [
@@ -394,28 +406,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           ],
           '_layout_builder' => TRUE,
           '_admin_route' => FALSE,
-        ]
-      ),
-      'layout_builder.defaults.with_bundle_key.save' => new Route(
-        '/admin/entity/whatever/display-layout/{view_mode_name}/save',
-        [
-          'entity_type_id' => 'with_bundle_key',
-          'bundle_key' => 'my_bundle_type',
-          'section_storage_type' => 'defaults',
-          'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout',
-        ],
-        [
-          '_field_ui_view_mode_access' => 'administer with_bundle_key display',
-          '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
-        ],
-        [
-          'parameters' => [
-            'section_storage' => ['layout_builder_tempstore' => TRUE],
-          ],
-          '_layout_builder' => TRUE,
-          '_admin_route' => FALSE,
+          '_field_ui' => TRUE,
         ]
       ),
       'layout_builder.defaults.with_bundle_key.discard_changes' => new Route(
@@ -466,29 +457,8 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           'entity_type_id' => 'with_bundle_parameter',
           'section_storage_type' => 'defaults',
           'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::layout',
+          '_entity_form' => 'entity_view_display.layout_builder',
           '_title_callback' => '\Drupal\layout_builder\Controller\LayoutBuilderController::title',
-        ],
-        [
-          '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
-          '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
-        ],
-        [
-          'parameters' => [
-            'section_storage' => ['layout_builder_tempstore' => TRUE],
-          ],
-          '_layout_builder' => TRUE,
-          '_admin_route' => FALSE,
-        ]
-      ),
-      'layout_builder.defaults.with_bundle_parameter.save' => new Route(
-        '/admin/entity/{bundle}/display-layout/{view_mode_name}/save',
-        [
-          'entity_type_id' => 'with_bundle_parameter',
-          'section_storage_type' => 'defaults',
-          'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout',
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',

@@ -4,6 +4,7 @@ namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -132,9 +133,13 @@ class OverridesSectionStorageTest extends UnitTestCase {
       $entity_storage->load('entity_with_layout')->willReturn($entity_with_layout->reveal());
 
       $this->entityTypeManager->getStorage($expected_entity_type_id)->willReturn($entity_storage->reveal());
+
+      $entity_type = new EntityType(['id' => $expected_entity_type_id]);
+      $this->entityTypeManager->getDefinition($expected_entity_type_id)->willReturn($entity_type);
     }
     else {
       $this->entityTypeManager->getStorage(Argument::any())->shouldNotBeCalled();
+      $this->entityTypeManager->getDefinition(Argument::any())->shouldNotBeCalled();
     }
 
     if (!$success) {
@@ -196,6 +201,10 @@ class OverridesSectionStorageTest extends UnitTestCase {
       $entity_with_layout->hasField(OverridesSectionStorage::FIELD_NAME)->willReturn(TRUE);
       $entity_storage->load('entity_with_layout')->willReturn($entity_with_layout->reveal());
       $this->entityTypeManager->getStorage($expected_entity_type_id)->willReturn($entity_storage->reveal());
+      $entity_type = new EntityType([
+        'id' => $expected_entity_type_id,
+      ]);
+      $this->entityTypeManager->getDefinition($expected_entity_type_id)->willReturn($entity_type);
     }
     else {
       $this->entityTypeManager->getStorage(Argument::any())->shouldNotBeCalled();
@@ -256,6 +265,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
    * @covers ::buildRoutes
    * @covers ::hasIntegerId
    * @covers ::getEntityTypes
+   * @covers \Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::buildLayoutRoutes
    */
   public function testBuildRoutes() {
     $entity_types = [];
@@ -264,15 +274,23 @@ class OverridesSectionStorageTest extends UnitTestCase {
     $not_fieldable->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
     $entity_types['not_fieldable'] = $not_fieldable->reveal();
 
+    $no_layout_builder_form = $this->prophesize(EntityTypeInterface::class);
+    $no_layout_builder_form->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
+    $no_layout_builder_form->hasHandlerClass('form', 'layout_builder')->willReturn(FALSE);
+    $entity_types['no_layout_builder_form'] = $no_layout_builder_form->reveal();
+    $this->entityFieldManager->getFieldStorageDefinitions('no_layout_builder_form')->shouldNotBeCalled();
+
     $no_view_builder = $this->prophesize(EntityTypeInterface::class);
     $no_view_builder->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
     $no_view_builder->hasViewBuilderClass()->willReturn(FALSE);
+    $no_view_builder->hasHandlerClass('form', 'layout_builder')->willReturn(TRUE);
     $entity_types['no_view_builder'] = $no_view_builder->reveal();
 
     $no_canonical_link = $this->prophesize(EntityTypeInterface::class);
     $no_canonical_link->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
     $no_canonical_link->hasViewBuilderClass()->willReturn(TRUE);
     $no_canonical_link->hasLinkTemplate('canonical')->willReturn(FALSE);
+    $no_canonical_link->hasHandlerClass('form', 'layout_builder')->willReturn(TRUE);
     $entity_types['no_canonical_link'] = $no_canonical_link->reveal();
     $this->entityFieldManager->getFieldStorageDefinitions('no_canonical_link')->shouldNotBeCalled();
 
@@ -281,6 +299,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
     $with_string_id->hasViewBuilderClass()->willReturn(TRUE);
     $with_string_id->hasLinkTemplate('canonical')->willReturn(TRUE);
     $with_string_id->getLinkTemplate('canonical')->willReturn('/entity/{entity}');
+    $with_string_id->hasHandlerClass('form', 'layout_builder')->willReturn(TRUE);
     $with_string_id->id()->willReturn('with_string_id');
     $with_string_id->getKey('id')->willReturn('id');
     $entity_types['with_string_id'] = $with_string_id->reveal();
@@ -293,6 +312,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
     $with_integer_id->hasViewBuilderClass()->willReturn(TRUE);
     $with_integer_id->hasLinkTemplate('canonical')->willReturn(TRUE);
     $with_integer_id->getLinkTemplate('canonical')->willReturn('/entity/{entity}');
+    $with_integer_id->hasHandlerClass('form', 'layout_builder')->willReturn(TRUE);
     $with_integer_id->id()->willReturn('with_integer_id');
     $with_integer_id->getKey('id')->willReturn('id');
     $entity_types['with_integer_id'] = $with_integer_id->reveal();
@@ -309,28 +329,8 @@ class OverridesSectionStorageTest extends UnitTestCase {
           'entity_type_id' => 'with_string_id',
           'section_storage_type' => 'overrides',
           'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::layout',
           '_title_callback' => '\Drupal\layout_builder\Controller\LayoutBuilderController::title',
-        ],
-        [
-          '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
-        ],
-        [
-          'parameters' => [
-            'section_storage' => ['layout_builder_tempstore' => TRUE],
-            'with_string_id' => ['type' => 'entity:with_string_id'],
-          ],
-          '_layout_builder' => TRUE,
-        ]
-      ),
-      'layout_builder.overrides.with_string_id.save' => new Route(
-        '/entity/{entity}/layout/save',
-        [
-          'entity_type_id' => 'with_string_id',
-          'section_storage_type' => 'overrides',
-          'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout',
+          '_entity_form' => 'with_string_id.layout_builder',
         ],
         [
           '_has_layout_section' => 'true',
@@ -390,29 +390,8 @@ class OverridesSectionStorageTest extends UnitTestCase {
           'entity_type_id' => 'with_integer_id',
           'section_storage_type' => 'overrides',
           'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::layout',
           '_title_callback' => '\Drupal\layout_builder\Controller\LayoutBuilderController::title',
-        ],
-        [
-          '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
-          'with_integer_id' => '\d+',
-        ],
-        [
-          'parameters' => [
-            'section_storage' => ['layout_builder_tempstore' => TRUE],
-            'with_integer_id' => ['type' => 'entity:with_integer_id'],
-          ],
-          '_layout_builder' => TRUE,
-        ]
-      ),
-      'layout_builder.overrides.with_integer_id.save' => new Route(
-        '/entity/{entity}/layout/save',
-        [
-          'entity_type_id' => 'with_integer_id',
-          'section_storage_type' => 'overrides',
-          'section_storage' => '',
-          '_controller' => '\Drupal\layout_builder\Controller\LayoutBuilderController::saveLayout',
+          '_entity_form' => 'with_integer_id.layout_builder',
         ],
         [
           '_has_layout_section' => 'true',

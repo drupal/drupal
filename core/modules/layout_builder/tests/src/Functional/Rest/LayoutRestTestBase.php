@@ -84,7 +84,7 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
     $page->fillField('settings[label]', 'This is an override');
     $page->checkField('settings[label_display]');
     $page->pressButton('Add Block');
-    $page->clickLink('Save Layout');
+    $page->pressButton('Save layout');
     $assert_session->pageTextContains('This is an override');
 
     $this->nodeStorage = $this->container->get('entity_type.manager')->getStorage('node');

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -13,7 +14,9 @@ use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplayStorage;
+use Drupal\layout_builder\Form\DefaultsEntityForm;
 use Drupal\layout_builder\Form\LayoutBuilderEntityViewDisplayForm;
+use Drupal\layout_builder\Form\OverridesEntityForm;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\layout_builder\Plugin\Block\ExtraFieldBlock;
 use Drupal\layout_builder\InlineBlockEntityOperations;
@@ -54,7 +57,15 @@ function layout_builder_entity_type_alter(array &$entity_types) {
   $entity_types['entity_view_display']
     ->setClass(LayoutBuilderEntityViewDisplay::class)
     ->setStorageClass(LayoutBuilderEntityViewDisplayStorage::class)
+    ->setFormClass('layout_builder', DefaultsEntityForm::class)
     ->setFormClass('edit', LayoutBuilderEntityViewDisplayForm::class);
+
+  // Ensure every fieldable entity type has a layout form.
+  foreach ($entity_types as $entity_type) {
+    if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
+      $entity_type->setFormClass('layout_builder', OverridesEntityForm::class);
+    }
+  }
 }
 
 /**

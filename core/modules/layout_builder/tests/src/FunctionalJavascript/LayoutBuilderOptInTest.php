@@ -116,8 +116,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
     $page->selectFieldOption('settings[formatter][type]', 'text_trimmed');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Update');
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
 
     $this->drupalGet($layout_builder_ui);
     $assert_session->fieldValueEquals('settings[formatter][type]', 'text_trimmed');

@@ -220,7 +220,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       $options['parameters'][$entity_type_id]['type'] = 'entity:' . $entity_type_id;
 
       $template = $entity_type->getLinkTemplate('canonical') . '/layout';
-      $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), $template, $defaults, $requirements, $options, $entity_type_id);
+      $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), $template, $defaults, $requirements, $options, $entity_type_id, $entity_type_id);
     }
   }
 
@@ -235,28 +235,6 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
         'weight' => 15,
         'title' => $this->t('Layout'),
         'base_route' => "entity.$entity_type_id.canonical",
-        'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
-      ];
-      $local_tasks["layout_builder.overrides.$entity_type_id.save"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.overrides.$entity_type_id.save",
-        'title' => $this->t('Save Layout'),
-        'parent_id' => "layout_builder_ui:layout_builder.overrides.$entity_type_id.view",
-        'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
-      ];
-      $local_tasks["layout_builder.overrides.$entity_type_id.discard_changes"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.overrides.$entity_type_id.discard_changes",
-        'title' => $this->t('Discard changes'),
-        'parent_id' => "layout_builder_ui:layout_builder.overrides.$entity_type_id.view",
-        'weight' => 5,
-        'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
-      ];
-      // @todo This link should be conditionally displayed, see
-      //   https://www.drupal.org/node/2917777.
-      $local_tasks["layout_builder.overrides.$entity_type_id.revert"] = $base_plugin_definition + [
-        'route_name' => "layout_builder.overrides.$entity_type_id.revert",
-        'title' => $this->t('Revert to defaults'),
-        'parent_id' => "layout_builder_ui:layout_builder.overrides.$entity_type_id.view",
-        'weight' => 10,
         'cache_contexts' => ['layout_builder_is_active:' . $entity_type_id],
       ];
     }
@@ -285,7 +263,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    */
   protected function getEntityTypes() {
     return array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $entity_type) {
-      return $entity_type->entityClassImplements(FieldableEntityInterface::class) && $entity_type->hasViewBuilderClass() && $entity_type->hasLinkTemplate('canonical');
+      return $entity_type->entityClassImplements(FieldableEntityInterface::class) && $entity_type->hasHandlerClass('form', 'layout_builder') && $entity_type->hasViewBuilderClass() && $entity_type->hasLinkTemplate('canonical');
     });
   }
 

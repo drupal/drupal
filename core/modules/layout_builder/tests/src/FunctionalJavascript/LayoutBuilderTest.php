@@ -140,8 +140,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Powered by Drupal');
 
     // Save the layout, and the new block is visible.
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
     $assert_session->addressEquals($node_url);
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextContains('This is the label');
@@ -177,8 +176,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->elementTextContains('css', '.layout__region--second', 'Powered by Drupal');
 
     // Ensure the dragged block is still in the correct position after save.
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
     $assert_session->elementExists('css', '.layout__region--second .block-system-powered-by-block');
     $assert_session->elementTextContains('css', '.layout__region--second', 'Powered by Drupal');
 
@@ -212,8 +210,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->addressEquals($layout_url);
     $this->assertPageNotReloaded();
 
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
     $assert_session->elementExists('css', '.layout');
 
     // Test deriver-based blocks.
@@ -242,8 +239,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->linkNotExists('Add Block');
     $this->assertPageNotReloaded();
 
-    $assert_session->linkExists('Save Layout');
-    $this->clickLink('Save Layout');
+    $page->pressButton('Save layout');
 
     // Removing all sections results in the default layout display being used.
     $assert_session->addressEquals($node_url);

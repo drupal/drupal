@@ -89,7 +89,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
 
     // Make and then save changes.
     $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display-layout/default');
-    $page->clickLink('Save Layout');
+    $page->pressButton('Save layout');
     $assert_session->pageTextNotContains('You have unsaved changes.');
   }
 
