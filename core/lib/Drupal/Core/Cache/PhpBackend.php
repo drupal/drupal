@@ -112,7 +112,7 @@ class PhpBackend implements CacheBackendInterface {
    * as appropriate.
    *
    * @param object $cache
-   *   An item loaded from cache_get() or cache_get_multiple().
+   *   An item loaded from self::get() or self::getMultiple().
    * @param bool $allow_invalid
    *   If FALSE, the method returns FALSE if the cache item is not valid.
    *

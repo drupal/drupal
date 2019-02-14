@@ -65,7 +65,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
    * as appropriate.
    *
    * @param object $cache
-   *   An item loaded from cache_get() or cache_get_multiple().
+   *   An item loaded from self::get() or self::getMultiple().
    * @param bool $allow_invalid
    *   (optional) If TRUE, cache items may be returned even if they have expired
    *   or been invalidated.
