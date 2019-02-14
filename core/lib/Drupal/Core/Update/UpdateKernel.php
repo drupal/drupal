@@ -218,7 +218,18 @@ class UpdateKernel extends DrupalKernel {
     // created by Drupal <= 8.6.7 then when it is read by Drupal >= 8.6.8 there
     // will be PHP warnings. This silently fixes Drupal so that the update can
     // continue.
-    $callable = function () use ($container) {
+    $clear_caches = FALSE;
+    $callable = function ($errno, $errstr) use ($container, &$clear_caches) {
+      if ($errstr === 'Class Drupal\Core\Extension\Extension has no unserializer') {
+        $clear_caches = TRUE;
+      }
+    };
+
+    set_error_handler($callable, E_ERROR | E_WARNING);
+    $container->get('state')->get('system.theme.data', []);
+    restore_error_handler();
+
+    if ($clear_caches) {
       // Reset static caches in profile list so the module list is rebuilt
       // correctly.
       $container->get('extension.list.profile')->reset();
@@ -227,11 +238,7 @@ class UpdateKernel extends DrupalKernel {
       }
       // Also rebuild themes because it uses state as cache.
       $container->get('theme_handler')->refreshInfo();
-    };
-
-    set_error_handler($callable, E_ERROR | E_WARNING);
-    $container->get('state')->get('system.theme.data', []);
-    restore_error_handler();
+    }
   }
 
 }
