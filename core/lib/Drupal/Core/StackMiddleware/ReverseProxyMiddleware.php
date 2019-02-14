@@ -58,24 +58,35 @@ class ReverseProxyMiddleware implements HttpKernelInterface {
   public static function setSettingsOnRequest(Request $request, Settings $settings) {
     // Initialize proxy settings.
     if ($settings->get('reverse_proxy', FALSE)) {
-      $ip_header = $settings->get('reverse_proxy_header', 'X_FORWARDED_FOR');
-      $request::setTrustedHeaderName($request::HEADER_X_FORWARDED_FOR, $ip_header);
-
-      $proto_header = $settings->get('reverse_proxy_proto_header', 'X_FORWARDED_PROTO');
-      $request::setTrustedHeaderName($request::HEADER_X_FORWARDED_PROTO, $proto_header);
-
-      $host_header = $settings->get('reverse_proxy_host_header', 'X_FORWARDED_HOST');
-      $request::setTrustedHeaderName($request::HEADER_X_FORWARDED_HOST, $host_header);
-
-      $port_header = $settings->get('reverse_proxy_port_header', 'X_FORWARDED_PORT');
-      $request::setTrustedHeaderName($request::HEADER_X_FORWARDED_PORT, $port_header);
-
-      $forwarded_header = $settings->get('reverse_proxy_forwarded_header', 'FORWARDED');
-      $request::setTrustedHeaderName($request::HEADER_FORWARDED, $forwarded_header);
-
       $proxies = $settings->get('reverse_proxy_addresses', []);
       if (count($proxies) > 0) {
-        $request::setTrustedProxies($proxies, Request::HEADER_X_FORWARDED_ALL | Request::HEADER_FORWARDED);
+        $deprecated_settings = [
+          'reverse_proxy_header' => Request::HEADER_X_FORWARDED_FOR,
+          'reverse_proxy_proto_header' => Request::HEADER_X_FORWARDED_PROTO,
+          'reverse_proxy_host_header' => Request::HEADER_X_FORWARDED_HOST,
+          'reverse_proxy_port_header' => Request::HEADER_X_FORWARDED_PORT,
+          'reverse_proxy_forwarded_header' => Request::HEADER_FORWARDED,
+        ];
+
+        $all = $settings->getAll();
+        // Set the default value. This is the most relaxed setting possible and
+        // not recommended for production.
+        $trusted_header_set = Request::HEADER_X_FORWARDED_ALL | Request::HEADER_FORWARDED;
+        foreach ($deprecated_settings as $deprecated_setting => $bit_value) {
+          if (array_key_exists($deprecated_setting, $all)) {
+            @trigger_error(sprintf("The '%s' setting in settings.php is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use the 'reverse_proxy_trusted_headers' setting instead. See https://www.drupal.org/node/3030558", $deprecated_setting), E_USER_DEPRECATED);
+            $request::setTrustedHeaderName($bit_value, $all[$deprecated_setting]);
+            if ($all[$deprecated_setting] === NULL) {
+              // If the value is NULL do not trust the header.
+              $trusted_header_set &= ~$bit_value;
+            }
+          }
+        }
+
+        $request::setTrustedProxies(
+          $proxies,
+          $settings->get('reverse_proxy_trusted_headers', $trusted_header_set)
+        );
       }
     }
   }
