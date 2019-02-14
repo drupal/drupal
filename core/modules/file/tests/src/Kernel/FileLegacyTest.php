@@ -50,17 +50,31 @@ class FileLegacyTest extends FieldKernelTestBase {
   /**
    * @expectedDeprecation file_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::loadMultiple(). See https://www.drupal.org/node/2266845
    * @expectedDeprecation file_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::load(). See https://www.drupal.org/node/2266845
+   * @expectedDeprecation file_delete() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::delete() instead. See https://www.drupal.org/node/3021663.
+   * @expectedDeprecation file_delete_multiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::delete() instead. See https://www.drupal.org/node/3021663.
    */
   public function testEntityLegacyCode() {
+    // Test deprecation of file_load_multiple().
     file_put_contents('public://example.txt', $this->randomMachineName());
     $this->assertCount(0, file_load_multiple());
     File::create(['uri' => 'public://example.txt'])->save();
     $this->assertCount(1, file_load_multiple());
     File::create(['uri' => 'public://example.txt'])->save();
     $this->assertCount(2, file_load_multiple());
+    File::create(['uri' => 'public://example.txt'])->save();
+    $this->assertCount(3, file_load_multiple());
 
+    // Test deprecation of file_load().
     $this->assertNull(file_load(300));
-    $this->assertInstanceOf(FileInterface::class, file_load(1));
+    $file_entity = file_load(1);
+    $this->assertInstanceOf(FileInterface::class, $file_entity);
+
+    // Test deprecation of file_delete().
+    $this->assertNull(file_delete($file_entity->id()));
+
+    // Test deprecation of file_delete_multiple().
+    $this->assertNull(file_delete_multiple(array_keys(file_load_multiple())));
+    $this->assertFileNotExists('public://example.txt');
   }
 
 }

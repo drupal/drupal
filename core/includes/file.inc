@@ -819,10 +819,16 @@ function file_create_filename($basename, $directory) {
  * @param $fid
  *   The file id.
  *
+ * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\Entity\EntityStorageInterface::delete() instead.
+ *
  * @see file_unmanaged_delete()
  * @see \Drupal\file\FileUsage\FileUsageBase::delete()
+ * @see \Drupal\Core\Entity\EntityStorageInterface::delete()
+ * @see https://www.drupal.org/node/3021663
  */
 function file_delete($fid) {
+  @trigger_error('file_delete() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::delete() instead. See https://www.drupal.org/node/3021663.', E_USER_DEPRECATED);
   return file_delete_multiple([$fid]);
 }
 
@@ -833,14 +839,22 @@ function file_delete($fid) {
  * file usages instead. That will automatically mark the file as temporary and
  * remove it during cleanup.
  *
- * @param $fid
- *   The file id.
+ * @param $fids
+ *   An array of file ids.
+ *
+ * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\Entity\EntityStorageInterface::delete() instead.
  *
  * @see file_unmanaged_delete()
  * @see \Drupal\file\FileUsage\FileUsageBase::delete()
+ * @see \Drupal\Core\Entity\EntityStorageInterface::delete()
+ * @see https://www.drupal.org/node/3021663
  */
 function file_delete_multiple(array $fids) {
-  entity_delete_multiple('file', $fids);
+  @trigger_error('file_delete_multiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::delete() instead. See https://www.drupal.org/node/3021663.', E_USER_DEPRECATED);
+  $storage = \Drupal::entityTypeManager()->getStorage('file');
+  $entities = $storage->loadMultiple($fids);
+  $storage->delete($entities);
 }
 
 /**
