@@ -531,9 +531,9 @@ use Drupal\node\Entity\NodeType;
  * implementing \Drupal\Core\Entity\EntityStorageInterface that you can
  * retrieve with:
  * @code
- * $storage = \Drupal::entityManager()->getStorage('your_entity_type');
+ * $storage = \Drupal::entityTypeManager()->getStorage('your_entity_type');
  * // Or if you have a $container variable:
- * $storage = $container->get('entity.manager')->getStorage('your_entity_type');
+ * $storage = $container->get('entity_type.manager')->getStorage('your_entity_type');
  * @endcode
  * Here, 'your_entity_type' is the machine name of your entity type ('id'
  * annotation property on the entity class), and note that you should use
@@ -622,7 +622,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @see i18n
  * @see entity_crud
- * @see \Drupal\Core\Entity\EntityManagerInterface::getTranslationFromContext()
+ * @see \Drupal\Core\Entity\EntityRepositoryInterface::getTranslationFromContext()
  * @}
  */
 
@@ -798,8 +798,8 @@ function hook_entity_type_alter(array &$entity_types) {
  * @param array $view_modes
  *   An array of view modes, keyed first by entity type, then by view mode name.
  *
- * @see \Drupal\Core\Entity\EntityManagerInterface::getAllViewModes()
- * @see \Drupal\Core\Entity\EntityManagerInterface::getViewModes()
+ * @see \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getAllViewModes()
+ * @see \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewModes()
  */
 function hook_entity_view_mode_info_alter(&$view_modes) {
   $view_modes['user']['full']['status'] = TRUE;
@@ -813,7 +813,7 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  *   type name, and then the bundle name, with the following keys:
  *   - label: The human-readable name of the bundle.
  *   - uri_callback: (optional) The same as the 'uri_callback' key defined for
- *     the entity type in the EntityManager, but for the bundle only. When
+ *     the entity type in the EntityTypeManager, but for the bundle only. When
  *     determining the URI of an entity, if a 'uri_callback' is defined for both
  *     the entity type and the bundle, the one for the bundle is used.
  *   - translatable: (optional) A boolean value specifying whether this bundle
@@ -1827,7 +1827,7 @@ function hook_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDi
  * @see hook_entity_bundle_field_info()
  * @see hook_entity_bundle_field_info_alter()
  * @see \Drupal\Core\Field\FieldDefinitionInterface
- * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
+ * @see \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldDefinitions()
  */
 function hook_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'node') {
@@ -1888,7 +1888,7 @@ function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityT
  * @see hook_entity_bundle_field_info_alter()
  * @see \Drupal\Core\Field\FieldDefinitionInterface
  * @see \Drupal\Core\Field\FieldDefinition
- * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
+ * @see \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldDefinitions()
  *
  * @todo WARNING: This hook will be changed in
  * https://www.drupal.org/node/2346347.
