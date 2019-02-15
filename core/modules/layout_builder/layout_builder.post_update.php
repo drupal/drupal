@@ -7,6 +7,7 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
+use Drupal\layout_builder\TempStoreIdentifierInterface;
 
 /**
  * Rebuild plugin dependencies for all entity view displays.
@@ -99,4 +100,49 @@ function layout_builder_post_update_routing_entity_form() {
  */
 function layout_builder_post_update_routing_defaults() {
   // Empty post-update hook.
+}
+
+/**
+ * Fix Layout Builder tempstore keys of existing entries.
+ */
+function layout_builder_post_update_fix_tempstore_keys() {
+  /** @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager */
+  $section_storage_manager = \Drupal::service('plugin.manager.layout_builder.section_storage');
+  /** @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_factory */
+  $key_value_factory = \Drupal::service('keyvalue.expirable');
+
+  // Loop through each section storage type.
+  foreach (array_keys($section_storage_manager->getDefinitions()) as $section_storage_type) {
+    $key_value = $key_value_factory->get("tempstore.shared.layout_builder.section_storage.$section_storage_type");
+    foreach ($key_value->getAll() as $key => $value) {
+      $contexts = $section_storage_manager->loadEmpty($section_storage_type)->deriveContextsFromRoute($key, [], '', []);
+      if ($section_storage = $section_storage_manager->load($section_storage_type, $contexts)) {
+
+        // Some overrides were stored with an incorrect view mode value. Update
+        // the view mode on the temporary section storage, if necessary.
+        if ($section_storage_type === 'overrides') {
+          $view_mode = $value->data['section_storage']->getContextValue('view_mode');
+          $new_view_mode = $section_storage->getContextValue('view_mode');
+          if ($view_mode !== $new_view_mode) {
+            $value->data['section_storage']->setContextValue('view_mode', $new_view_mode);
+            $key_value->set($key, $value);
+          }
+        }
+
+        // The previous tempstore key names were exact matches with the section
+        // storage ID. Attempt to load the corresponding section storage and
+        // rename the tempstore entry if the section storage provides a more
+        // granular tempstore key.
+        if ($section_storage instanceof TempStoreIdentifierInterface) {
+          $new_key = $section_storage->getTempstoreKey();
+          if ($key !== $new_key) {
+            if ($key_value->has($new_key)) {
+              $key_value->delete($new_key);
+            }
+            $key_value->rename($key, $new_key);
+          }
+        }
+      }
+    }
+  }
 }

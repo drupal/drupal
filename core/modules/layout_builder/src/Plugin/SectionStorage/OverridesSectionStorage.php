@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
@@ -126,6 +127,22 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
   /**
    * {@inheritdoc}
    */
+  public function getTempstoreKey() {
+    $key = parent::getTempstoreKey();
+    $key .= '.' . $this->getContextValue('view_mode');
+
+    $entity = $this->getEntity();
+    // @todo Allow entities to provide this contextual information in
+    //   https://www.drupal.org/project/drupal/issues/3026957.
+    if ($entity instanceof TranslatableInterface) {
+      $key .= '.' . $entity->language()->getId();
+    }
+    return $key;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function extractIdFromRoute($value, $definition, $name, array $defaults) {
     @trigger_error('\Drupal\layout_builder\SectionStorageInterface::extractIdFromRoute() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute() should be used instead. See https://www.drupal.org/node/3016262.', E_USER_DEPRECATED);
     if (strpos($value, '.') !== FALSE) {
@@ -164,7 +181,11 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       $contexts['entity'] = EntityContext::fromEntity($entity);
       // @todo Expand to work for all view modes in
       //   https://www.drupal.org/node/2907413.
-      $contexts['view_mode'] = new Context(new ContextDefinition('string'), 'full');
+      $view_mode = 'full';
+      // Retrieve the actual view mode from the returned view display as the
+      // requested view mode may not exist and a fallback will be used.
+      $view_mode = LayoutBuilderEntityViewDisplay::collectRenderDisplay($entity, $view_mode)->getMode();
+      $contexts['view_mode'] = new Context(new ContextDefinition('string'), $view_mode);
     }
     return $contexts;
   }

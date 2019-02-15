@@ -173,4 +173,42 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->assertInstanceOf(DefaultsSectionStorageInterface::class, $this->plugin->getDefaultSectionStorage());
   }
 
+  /**
+   * @covers ::getTempstoreKey
+   */
+  public function testGetTempstoreKey() {
+    $entity = EntityTest::create();
+    $entity->save();
+    $this->plugin->setContext('entity', EntityContext::fromEntity($entity));
+    $this->plugin->setContext('view_mode', new Context(new ContextDefinition('string'), 'default'));
+
+    $result = $this->plugin->getTempstoreKey();
+    $this->assertSame('entity_test.1.default.en', $result);
+  }
+
+  /**
+   * @covers ::deriveContextsFromRoute
+   */
+  public function testDeriveContextsFromRoute() {
+    $display = LayoutBuilderEntityViewDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+    $display
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+
+    $entity = EntityTest::create();
+    $entity->save();
+    $entity = EntityTest::load($entity->id());
+
+    $result = $this->plugin->deriveContextsFromRoute('entity_test.1', [], '', []);
+    $this->assertSame(['entity', 'view_mode'], array_keys($result));
+    $this->assertSame($entity, $result['entity']->getContextValue());
+    $this->assertSame('default', $result['view_mode']->getContextValue());
+  }
+
 }

@@ -7,6 +7,7 @@ use Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListInterface;
 use Drupal\layout_builder\SectionStorageInterface;
+use Drupal\layout_builder\TempStoreIdentifierInterface;
 
 /**
  * Provides a base class for Section Storage types.
@@ -16,7 +17,7 @@ use Drupal\layout_builder\SectionStorageInterface;
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
  */
-abstract class SectionStorageBase extends ContextAwarePluginBase implements SectionStorageInterface {
+abstract class SectionStorageBase extends ContextAwarePluginBase implements SectionStorageInterface, TempStoreIdentifierInterface {
 
   use LayoutBuilderRoutesTrait;
 
@@ -106,6 +107,13 @@ abstract class SectionStorageBase extends ContextAwarePluginBase implements Sect
    */
   public function getContextsDuringPreview() {
     return $this->getContexts();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTempstoreKey() {
+    return $this->getStorageId();
   }
 
 }

@@ -178,4 +178,23 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     $this->plugin->setSectionList($section_list->reveal());
   }
 
+  /**
+   * @covers ::getTempstoreKey
+   */
+  public function testGetTempstoreKey() {
+    $display = LayoutBuilderEntityViewDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+    $display->save();
+
+    $context = EntityContext::fromEntity($display);
+    $this->plugin->setContext('display', $context);
+
+    $result = $this->plugin->getTempstoreKey();
+    $this->assertSame('entity_test.entity_test.default', $result);
+  }
+
 }
