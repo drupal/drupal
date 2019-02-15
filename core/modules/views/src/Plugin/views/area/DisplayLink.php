@@ -196,12 +196,8 @@ class DisplayLink extends AreaPluginBase {
       $classes[] = 'is-active';
     }
 
-    // By default, this element sets #theme so that the 'link' theme hook is
-    // used for rendering, with the 'views_display_link' suffix so that themes
-    // can override this specifically without overriding all link theming.
     return [
       '#type' => 'link',
-      '#theme' => 'link__views_display_link',
       '#title' => $this->options['label'],
       '#url' => $this->view->getUrl($this->view->args, $this->options['display_id'])->setOptions(['query' => $query]),
       '#options' => [

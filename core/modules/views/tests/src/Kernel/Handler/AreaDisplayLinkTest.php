@@ -6,10 +6,13 @@ use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -105,6 +108,19 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
     ];
     $default->setOption('header', $display_links);
     $view->save();
+
+    // Ensure that the theme system does not log any errors about missing theme
+    // hooks when rendering the link.
+    $logger = $this->prophesize(LoggerInterface::class);
+    $logger->log(
+      RfcLogLevel::WARNING,
+      'Theme hook %hook not found.',
+      Argument::withEntry('%hook', 'link')
+    )->shouldNotBeCalled();
+
+    $this->container->get('logger.factory')
+      ->get('theme')
+      ->addLogger($logger->reveal());
   }
 
   /**
