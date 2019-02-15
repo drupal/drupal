@@ -5,20 +5,20 @@ namespace Drupal\Tests\serialization\Unit\Normalizer;
 use Drupal\Core\Field\Plugin\Field\FieldType\CreatedItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\TimestampItem;
+use Drupal\Core\TypedData\DataDefinitionInterface;
+use Drupal\Core\TypedData\Plugin\DataType\Timestamp;
 use Drupal\serialization\Normalizer\TimestampItemNormalizer;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * Tests that entities can be serialized to supported core formats.
+ * Tests that TimestampItem (de)normalization uses Timestamp (de)normalization.
  *
  * @group serialization
  * @coversDefaultClass \Drupal\serialization\Normalizer\TimestampItemNormalizer
+ * @see \Drupal\serialization\Normalizer\TimestampNormalizer
  */
 class TimestampItemNormalizerTest extends UnitTestCase {
-
-  use InternalTypedDataTestTrait;
 
   /**
    * @var \Drupal\serialization\Normalizer\TimestampItemNormalizer
@@ -68,88 +68,76 @@ class TimestampItemNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the normalize function.
-   *
    * @covers ::normalize
+   * @see \Drupal\Tests\serialization\Unit\Normalizer\TimestampNormalizerTest
    */
   public function testNormalize() {
-    $expected = ['value' => '2016-11-06T09:02:00+00:00', 'format' => \DateTime::RFC3339];
-
+    // Mock TimestampItem @FieldType, which contains a Timestamp @DataType,
+    // which has a DataDefinition.
+    $data_definition = $this->prophesize(DataDefinitionInterface::class);
+    $data_definition->isInternal()
+      ->willReturn(FALSE)
+      ->shouldBeCalled();
+    $timestamp = $this->prophesize(Timestamp::class);
+    $timestamp->getDataDefinition()
+      ->willReturn($data_definition->reveal())
+      ->shouldBeCalled();
+    $timestamp = $timestamp->reveal();
     $timestamp_item = $this->createTimestampItemProphecy();
-    $timestamp_item->getIterator()
-      ->willReturn(new \ArrayIterator(['value' => 1478422920]));
-
-    $value_property = $this->getTypedDataProperty(FALSE);
     $timestamp_item->getProperties(TRUE)
-      ->willReturn(['value' => $value_property])
+      ->willReturn(['value' => $timestamp])
       ->shouldBeCalled();
 
+    // Mock Serializer service, to assert that the Timestamp @DataType
+    // normalizer would be called.
+    $timestamp_datetype_normalization = $this->randomMachineName();
     $serializer_prophecy = $this->prophesize(Serializer::class);
-
-    $serializer_prophecy->normalize($value_property, NULL, [])
-      ->willReturn(1478422920)
+    // This is where \Drupal\serialization\Normalizer\TimestampNormalizer would
+    // be called.
+    $serializer_prophecy->normalize($timestamp, NULL, [])
+      ->willReturn($timestamp_datetype_normalization)
       ->shouldBeCalled();
 
     $this->normalizer->setSerializer($serializer_prophecy->reveal());
 
     $normalized = $this->normalizer->normalize($timestamp_item->reveal());
-    $this->assertSame($expected, $normalized);
+    $this->assertSame(['value' => $timestamp_datetype_normalization, 'format' => \DateTime::RFC3339], $normalized);
   }
 
   /**
-   * Tests the denormalize function with good data.
-   *
    * @covers ::denormalize
-   * @dataProvider providerTestDenormalizeValidFormats
    */
-  public function testDenormalizeValidFormats($value, $expected) {
-    $normalized = ['value' => $value];
+  public function testDenormalize() {
+    $timestamp_item_normalization = [
+      'value' => $this->randomMachineName(),
+      'format' => \DateTime::RFC3339,
+    ];
+    $timestamp_data_denormalization = $this->randomMachineName();
 
     $timestamp_item = $this->createTimestampItemProphecy();
-    // The field item should be set with the expected timestamp.
-    $timestamp_item->setValue(['value' => $expected])
+    // The field item should get the Timestamp @DataType denormalization set as
+    // a value, in FieldItemNormalizer::denormalize().
+    $timestamp_item->setValue(['value' => $timestamp_data_denormalization])
       ->shouldBeCalled();
 
-    $context = ['target_instance' => $timestamp_item->reveal()];
+    $context = [
+      'target_instance' => $timestamp_item->reveal(),
+      'datetime_allowed_formats' => [\DateTime::RFC3339],
+    ];
 
-    $denormalized = $this->normalizer->denormalize($normalized, TimestampItem::class, NULL, $context);
+    // Mock Serializer service, to assert that the Timestamp @DataType
+    // denormalizer would be called.
+    $serializer_prophecy = $this->prophesize(Serializer::class);
+    // This is where \Drupal\serialization\Normalizer\TimestampNormalizer would
+    // be called.
+    $serializer_prophecy->denormalize($timestamp_item_normalization['value'], Timestamp::class, NULL, $context)
+      ->willReturn($timestamp_data_denormalization)
+      ->shouldBeCalled();
+
+    $this->normalizer->setSerializer($serializer_prophecy->reveal());
+
+    $denormalized = $this->normalizer->denormalize($timestamp_item_normalization, TimestampItem::class, NULL, $context);
     $this->assertTrue($denormalized instanceof TimestampItem);
-  }
-
-  /**
-   * Data provider for testDenormalizeValidFormats.
-   *
-   * @return array
-   */
-  public function providerTestDenormalizeValidFormats() {
-    $expected_stamp = 1478422920;
-
-    $data = [];
-
-    $data['U'] = [$expected_stamp, $expected_stamp];
-    $data['RFC3339'] = ['2016-11-06T09:02:00+00:00', $expected_stamp];
-    $data['RFC3339 +0100'] = ['2016-11-06T09:02:00+01:00', $expected_stamp - 1 * 3600];
-    $data['RFC3339 -0600'] = ['2016-11-06T09:02:00-06:00', $expected_stamp + 6 * 3600];
-
-    $data['ISO8601'] = ['2016-11-06T09:02:00+0000', $expected_stamp];
-    $data['ISO8601 +0100'] = ['2016-11-06T09:02:00+0100', $expected_stamp - 1 * 3600];
-    $data['ISO8601 -0600'] = ['2016-11-06T09:02:00-0600', $expected_stamp + 6 * 3600];
-
-    return $data;
-  }
-
-  /**
-   * Tests the denormalize function with bad data.
-   *
-   * @covers ::denormalize
-   */
-  public function testDenormalizeException() {
-    $this->setExpectedException(UnexpectedValueException::class, 'The specified date "2016/11/06 09:02am GMT" is not in an accepted format: "U" (UNIX timestamp), "Y-m-d\TH:i:sO" (ISO 8601), "Y-m-d\TH:i:sP" (RFC 3339).');
-
-    $context = ['target_instance' => $this->createTimestampItemProphecy()->reveal()];
-
-    $normalized = ['value' => '2016/11/06 09:02am GMT'];
-    $this->normalizer->denormalize($normalized, TimestampItem::class, NULL, $context);
   }
 
   /**

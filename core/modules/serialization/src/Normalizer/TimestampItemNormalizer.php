@@ -3,14 +3,18 @@
 namespace Drupal\serialization\Normalizer;
 
 use Drupal\Core\Field\Plugin\Field\FieldType\TimestampItem;
-use Symfony\Component\Serializer\Exception\InvalidArgumentException;
+use Drupal\Core\TypedData\Plugin\DataType\Timestamp;
 
 /**
  * Converts values for TimestampItem to and from common formats.
+ *
+ * Overrides FieldItemNormalizer to use \Drupal\serialization\Normalizer\TimestampNormalizer
+ *
+ * Overrides FieldItemNormalizer to
+ * - during normalization, add the 'format' key to assist consumers
+ * - during denormalization, use \Drupal\serialization\Normalizer\TimestampNormalizer
  */
 class TimestampItemNormalizer extends FieldItemNormalizer {
-
-  use TimeStampItemNormalizerTrait;
 
   /**
    * {@inheritdoc}
@@ -20,21 +24,22 @@ class TimestampItemNormalizer extends FieldItemNormalizer {
   /**
    * {@inheritdoc}
    */
-  public function normalize($field_item, $format = NULL, array $context = []) {
-    $data = parent::normalize($field_item, $format, $context);
-
-    return $this->processNormalizedValues($data);
+  public function normalize($object, $format = NULL, array $context = []) {
+    return parent::normalize($object, $format, $context) + [
+      // 'format' is not a property on Timestamp objects. This is present to
+      // assist consumers of this data.
+      'format' => \DateTime::RFC3339,
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
-    if (empty($data['value'])) {
-      throw new InvalidArgumentException('No "value" attribute present');
+  protected function constructValue($data, $context) {
+    if (!empty($data['format'])) {
+      $context['datetime_allowed_formats'] = [$data['format']];
     }
-
-    return parent::denormalize($data, $class, $format, $context);
+    return ['value' => $this->serializer->denormalize($data['value'], Timestamp::class, NULL, $context)];
   }
 
 }
