@@ -18,7 +18,7 @@ class IndexTid extends ManyToOne {
     $titles = [];
     $terms = Term::loadMultiple($this->value);
     foreach ($terms as $term) {
-      $titles[] = \Drupal::entityManager()->getTranslationFromContext($term)->label();
+      $titles[] = \Drupal::service('entity.repository')->getTranslationFromContext($term)->label();
     }
     return $titles;
   }

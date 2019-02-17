@@ -93,7 +93,7 @@ class EditorImageDialog extends FormBase {
     }
     $max_filesize = min(Bytes::toInt($image_upload['max_size']), file_upload_max_size());
 
-    $existing_file = isset($image_element['data-entity-uuid']) ? \Drupal::entityManager()->loadEntityByUuid('file', $image_element['data-entity-uuid']) : NULL;
+    $existing_file = isset($image_element['data-entity-uuid']) ? \Drupal::service('entity.repository')->loadEntityByUuid('file', $image_element['data-entity-uuid']) : NULL;
     $fid = $existing_file ? $existing_file->id() : NULL;
 
     $form['fid'] = [

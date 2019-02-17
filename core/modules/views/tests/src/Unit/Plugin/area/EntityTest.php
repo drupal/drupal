@@ -2,6 +2,9 @@
 
 namespace Drupal\Tests\views\Unit\Plugin\area;
 
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\area\Entity;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -20,11 +23,25 @@ class EntityTest extends UnitTestCase {
   protected $entityHandler;
 
   /**
-   * The mocked entity manager.
+   * The mocked entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
+
+  /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityRepository;
+
+  /**
+   * The entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityDisplayRepository;
 
   /**
    * The mocked entity storage.
@@ -67,7 +84,9 @@ class EntityTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
+    $this->entityRepository = $this->createMock(EntityRepositoryInterface::class);
+    $this->entityDisplayRepository = $this->createMock(EntityDisplayRepositoryInterface::class);
     $this->entityStorage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
     $this->entityViewBuilder = $this->getMock('Drupal\Core\Entity\EntityViewBuilderInterface');
 
@@ -82,7 +101,7 @@ class EntityTest extends UnitTestCase {
       ->getMock();
     $this->executable->style_plugin = $this->stylePlugin;
 
-    $this->entityHandler = new Entity([], 'entity', ['entity_type' => 'entity_test'], $this->entityManager);
+    $this->entityHandler = new Entity([], 'entity', ['entity_type' => 'entity_test'], $this->entityTypeManager, $this->entityRepository, $this->entityDisplayRepository);
 
     $this->display->expects($this->any())
       ->method('getPlugin')
@@ -107,11 +126,11 @@ class EntityTest extends UnitTestCase {
    * Ensures that the entity manager returns an entity storage.
    */
   protected function setupEntityManager() {
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->with('entity_test')
       ->willReturn($this->entityStorage);
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getViewBuilder')
       ->with('entity_test')
       ->willReturn($this->entityViewBuilder);
@@ -151,7 +170,7 @@ class EntityTest extends UnitTestCase {
 
     $this->entityStorage->expects($this->never())
       ->method('loadByProperties');
-    $this->entityManager->expects($this->any())
+    $this->entityRepository->expects($this->any())
       ->method('loadEntityByConfigTarget')
       ->willReturn($entity);
     $this->entityViewBuilder->expects($this->once())
@@ -225,7 +244,7 @@ class EntityTest extends UnitTestCase {
 
     $this->entityStorage->expects($this->never())
       ->method('load');
-    $this->entityManager->expects($this->once())
+    $this->entityRepository->expects($this->once())
       ->method('loadEntityByConfigTarget')
       ->willReturn($entity);
     $this->entityViewBuilder->expects($this->once())
@@ -269,13 +288,13 @@ class EntityTest extends UnitTestCase {
       ->willReturn('entity_test:test-bundle:1d52762e-b9d8-4177-908f-572d1a5845a4');
     $this->entityStorage->expects($this->never())
       ->method('load');
-    $this->entityManager->expects($this->once())
+    $this->entityRepository->expects($this->once())
       ->method('loadEntityByConfigTarget')
       ->willReturn($entity);
     $entity_type->expects($this->once())
       ->method('getConfigDependencyKey')
       ->willReturn('content');
-    $this->entityManager->expects($this->once())
+    $this->entityTypeManager->expects($this->once())
       ->method('getDefinition')
       ->willReturn($entity_type);
 
@@ -298,7 +317,7 @@ class EntityTest extends UnitTestCase {
     $entity->expects($this->once())
       ->method('getConfigDependencyName')
       ->willReturn('entity_test:test-bundle:1d52762e-b9d8-4177-908f-572d1a5845a4');
-    $this->entityManager->expects($this->once())
+    $this->entityRepository->expects($this->once())
       ->method('loadEntityByConfigTarget')
       ->willReturn($entity);
     $this->entityStorage->expects($this->never())
@@ -306,7 +325,7 @@ class EntityTest extends UnitTestCase {
     $entity_type->expects($this->once())
       ->method('getConfigDependencyKey')
       ->willReturn('content');
-    $this->entityManager->expects($this->once())
+    $this->entityTypeManager->expects($this->once())
       ->method('getDefinition')
       ->willReturn($entity_type);
 

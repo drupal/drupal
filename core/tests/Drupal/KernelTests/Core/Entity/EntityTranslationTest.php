@@ -632,21 +632,21 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Check that retrieving the current translation works as expected.
     $entity = $this->reloadEntity($entity);
-    $translation = $this->entityManager->getTranslationFromContext($entity, $langcode2);
+    $translation = \Drupal::service('entity.repository')->getTranslationFromContext($entity, $langcode2);
     $this->assertEqual($translation->language()->getId(), $default_langcode, 'The current translation language matches the expected one.');
 
     // Check that language fallback respects language weight by default.
     $language = ConfigurableLanguage::load($languages[$langcode]->getId());
     $language->set('weight', -1);
     $language->save();
-    $translation = $this->entityManager->getTranslationFromContext($entity, $langcode2);
+    $translation = \Drupal::service('entity.repository')->getTranslationFromContext($entity, $langcode2);
     $this->assertEqual($translation->language()->getId(), $langcode, 'The current translation language matches the expected one.');
 
     // Check that the current translation is properly returned.
-    $translation = $this->entityManager->getTranslationFromContext($entity);
+    $translation = \Drupal::service('entity.repository')->getTranslationFromContext($entity);
     $this->assertEqual($langcode, $translation->language()->getId(), 'The current translation language matches the topmost language fallback candidate.');
     $entity->addTranslation($current_langcode, $values[$current_langcode]);
-    $translation = $this->entityManager->getTranslationFromContext($entity);
+    $translation = \Drupal::service('entity.repository')->getTranslationFromContext($entity);
     $this->assertEqual($current_langcode, $translation->language()->getId(), 'The current translation language matches the current language.');
 
     // Check that if the entity has no translation no fallback is applied.
@@ -655,7 +655,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $controller = $this->entityManager->getViewBuilder($entity_type);
     $entity2_build = $controller->view($entity2);
     $entity2_output = (string) $renderer->renderRoot($entity2_build);
-    $translation = $this->entityManager->getTranslationFromContext($entity2, $default_langcode);
+    $translation = \Drupal::service('entity.repository')->getTranslationFromContext($entity2, $default_langcode);
     $translation_build = $controller->view($translation);
     $translation_output = (string) $renderer->renderRoot($translation_build);
     $this->assertSame($entity2_output, $translation_output, 'When the entity has no translation no fallback is applied.');

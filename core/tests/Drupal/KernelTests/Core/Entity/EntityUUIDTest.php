@@ -72,8 +72,8 @@ class EntityUUIDTest extends EntityKernelTestBase {
     $entity_loaded = $storage->load($entity->id());
     $this->assertIdentical($entity_loaded->uuid(), $uuid);
 
-    // Verify that \Drupal::entityManager()->loadEntityByUuid() loads the same entity.
-    $entity_loaded_by_uuid = \Drupal::entityManager()->loadEntityByUuid($entity_type, $uuid, TRUE);
+    // Verify that \Drupal::service('entity.repository')->loadEntityByUuid() loads the same entity.
+    $entity_loaded_by_uuid = \Drupal::service('entity.repository')->loadEntityByUuid($entity_type, $uuid, TRUE);
     $this->assertIdentical($entity_loaded_by_uuid->uuid(), $uuid);
     $this->assertEqual($entity_loaded_by_uuid->id(), $entity_loaded->id());
 

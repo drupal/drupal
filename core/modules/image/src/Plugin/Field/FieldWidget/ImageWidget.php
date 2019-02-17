@@ -178,7 +178,7 @@ class ImageWidget extends FileWidget {
       $default_image = $this->fieldDefinition->getFieldStorageDefinition()->getSetting('default_image');
     }
     // Convert the stored UUID into a file ID.
-    if (!empty($default_image['uuid']) && $entity = \Drupal::entityManager()->loadEntityByUuid('file', $default_image['uuid'])) {
+    if (!empty($default_image['uuid']) && $entity = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid'])) {
       $default_image['fid'] = $entity->id();
     }
     $element['#default_image'] = !empty($default_image['fid']) ? $default_image : [];

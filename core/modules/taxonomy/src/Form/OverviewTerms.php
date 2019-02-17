@@ -3,7 +3,9 @@
 namespace Drupal\taxonomy\Form;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -18,6 +20,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class OverviewTerms extends FormBase {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The module handler service.
@@ -31,7 +39,7 @@ class OverviewTerms extends FormBase {
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The term storage handler.
@@ -55,21 +63,35 @@ class OverviewTerms extends FormBase {
   protected $renderer;
 
   /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * Constructs an OverviewTerms object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager, RendererInterface $renderer = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer = NULL, EntityRepositoryInterface $entity_repository = NULL) {
     $this->moduleHandler = $module_handler;
-    $this->entityManager = $entity_manager;
-    $this->storageController = $entity_manager->getStorage('taxonomy_term');
-    $this->termListBuilder = $entity_manager->getListBuilder('taxonomy_term');
+    $this->entityTypeManager = $entity_type_manager;
+    $this->storageController = $entity_type_manager->getStorage('taxonomy_term');
+    $this->termListBuilder = $entity_type_manager->getListBuilder('taxonomy_term');
     $this->renderer = $renderer ?: \Drupal::service('renderer');
+    if (!$entity_repository) {
+      @trigger_error('Calling OverviewTerms::__construct() with the $entity_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_repository = \Drupal::service('entity.repository');
+    }
+    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -78,8 +100,9 @@ class OverviewTerms extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
-      $container->get('entity.manager'),
-      $container->get('renderer')
+      $container->get('entity_type.manager'),
+      $container->get('renderer'),
+      $container->get('entity.repository')
     );
   }
 
@@ -231,7 +254,7 @@ class OverviewTerms extends FormBase {
     $errors = $form_state->getErrors();
     $row_position = 0;
     // Build the actual form.
-    $access_control_handler = $this->entityManager->getAccessControlHandler('taxonomy_term');
+    $access_control_handler = $this->entityTypeManager->getAccessControlHandler('taxonomy_term');
     $create_access = $access_control_handler->createAccess($taxonomy_vocabulary->id(), NULL, [], TRUE);
     if ($create_access->isAllowed()) {
       $empty = $this->t('No terms available. <a href=":link">Add term</a>.', [':link' => Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $taxonomy_vocabulary->id()])->toString()]);
@@ -263,7 +286,7 @@ class OverviewTerms extends FormBase {
         'weight' => [],
       ];
       /** @var $term \Drupal\Core\Entity\EntityInterface */
-      $term = $this->entityManager->getTranslationFromContext($term);
+      $term = $this->entityRepository->getTranslationFromContext($term);
       $form['terms'][$key]['#term'] = $term;
       $indentation = [];
       if (isset($term->depth) && $term->depth > 0) {
@@ -273,7 +296,7 @@ class OverviewTerms extends FormBase {
         ];
       }
       $form['terms'][$key]['term'] = [
-        '#prefix' => !empty($indentation) ? \Drupal::service('renderer')->render($indentation) : '',
+        '#prefix' => !empty($indentation) ? $this->renderer->render($indentation) : '',
         '#type' => 'link',
         '#title' => $term->getName(),
         '#url' => $term->toUrl(),

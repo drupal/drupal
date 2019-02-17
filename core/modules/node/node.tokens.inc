@@ -127,7 +127,7 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
 
         case 'body':
         case 'summary':
-          $translation = \Drupal::entityManager()->getTranslationFromContext($node, $langcode, ['operation' => 'node_tokens']);
+          $translation = \Drupal::service('entity.repository')->getTranslationFromContext($node, $langcode, ['operation' => 'node_tokens']);
           if ($translation->hasField('body') && ($items = $translation->get('body')) && !$items->isEmpty()) {
             $item = $items[0];
             // If the summary was requested and is not empty, use it.

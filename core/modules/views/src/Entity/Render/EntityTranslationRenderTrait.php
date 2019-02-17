@@ -49,7 +49,7 @@ trait EntityTranslationRenderTrait {
         $renderer = 'ConfigurableLanguageRenderer';
       }
       $class = '\Drupal\views\Entity\Render\\' . $renderer;
-      $entity_type = $this->getEntityManager()->getDefinition($this->getEntityTypeId());
+      $entity_type = $this->getEntityTypeManager()->getDefinition($this->getEntityTypeId());
       $this->entityTranslationRenderer = new $class($view, $this->getLanguageManager(), $entity_type, $langcode);
     }
     return $this->entityTranslationRenderer;
@@ -74,7 +74,7 @@ trait EntityTranslationRenderTrait {
     $translation = $entity;
     if ($entity instanceof TranslatableInterface && count($entity->getTranslationLanguages()) > 1) {
       $langcode = $this->getEntityTranslationRenderer()->getLangcode($row);
-      $translation = $this->getEntityManager()->getTranslationFromContext($entity, $langcode);
+      $translation = $this->getEntityRepository()->getTranslationFromContext($entity, $langcode);
     }
     return $translation;
   }
@@ -88,12 +88,26 @@ trait EntityTranslationRenderTrait {
   abstract public function getEntityTypeId();
 
   /**
-   * Returns the entity manager.
+   * Returns the entity type manager.
    *
-   * @return \Drupal\Core\Entity\EntityManagerInterface
-   *   The entity manager.
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   *   The entity type manager.
    */
-  abstract protected function getEntityManager();
+  protected function getEntityTypeManager() {
+    @trigger_error('Classes that use EntityTranslationRenderTrait must provide a getEntityTypeManager() method since drupal:8.7.0. This implementation will become abstract before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+    return \Drupal::entityTypeManager();
+  }
+
+  /**
+   * Returns the entity repository.
+   *
+   * @return \Drupal\Core\Entity\EntityRepositoryInterface
+   *   The entity repository.
+   */
+  protected function getEntityRepository() {
+    @trigger_error('Classes that use EntityTranslationRenderTrait must provide a getEntityRepository() method since drupal:8.7.0. This implementation will become abstract before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+    return \Drupal::service('entity.repository');
+  }
 
   /**
    * Returns the language manager.

@@ -73,7 +73,7 @@ class ConfigEntityUnitTest extends KernelTestBase {
     $entity->save();
 
     // Ensure that the configuration entity can be loaded by UUID.
-    $entity_loaded_by_uuid = \Drupal::entityManager()->loadEntityByUuid($entity_type->id(), $entity->uuid());
+    $entity_loaded_by_uuid = \Drupal::service('entity.repository')->loadEntityByUuid($entity_type->id(), $entity->uuid());
     if (!$entity_loaded_by_uuid) {
       $this->fail(sprintf("Failed to load '%s' entity ID '%s' by UUID '%s'.", $entity_type->id(), $entity->id(), $entity->uuid()));
     }

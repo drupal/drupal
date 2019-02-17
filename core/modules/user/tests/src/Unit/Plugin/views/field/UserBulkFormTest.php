@@ -3,6 +3,8 @@
 namespace Drupal\Tests\user\Unit\Plugin\views\field;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Plugin\views\field\UserBulkForm;
 
@@ -46,11 +48,13 @@ class UserBulkFormTest extends UnitTestCase {
       ->method('loadMultiple')
       ->will($this->returnValue($actions));
 
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $entity_manager->expects($this->once())
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $entity_type_manager->expects($this->once())
       ->method('getStorage')
       ->with('action')
       ->will($this->returnValue($entity_storage));
+
+    $entity_repository = $this->createMock(EntityRepositoryInterface::class);
 
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
 
@@ -86,7 +90,7 @@ class UserBulkFormTest extends UnitTestCase {
     $definition['title'] = '';
     $options = [];
 
-    $user_bulk_form = new UserBulkForm([], 'user_bulk_form', $definition, $entity_manager, $language_manager, $messenger);
+    $user_bulk_form = new UserBulkForm([], 'user_bulk_form', $definition, $entity_type_manager, $language_manager, $messenger, $entity_repository);
     $user_bulk_form->init($executable, $display, $options);
 
     $this->assertAttributeEquals(array_slice($actions, 0, -1, TRUE), 'actions', $user_bulk_form);

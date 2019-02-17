@@ -7,6 +7,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+@trigger_error(__NAMESPACE__ . '\SelectionTrait is deprecated in drupal:8.7.0 and will be removed before drupal:9.0.0. A custom constructor must be implemented instead. See https://www.drupal.org/node/3030634', E_USER_DEPRECATED);
+
 /**
  * Provides common methods and injects services for core selection handlers.
  */

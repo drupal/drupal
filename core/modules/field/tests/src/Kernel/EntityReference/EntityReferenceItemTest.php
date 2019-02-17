@@ -318,7 +318,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity = unserialize($entity);
     // And then the entity.
     $entity->save();
-    $term = \Drupal::entityManager()->loadEntityByUuid($term->getEntityTypeId(), $term->uuid());
+    $term = \Drupal::service('entity.repository')->loadEntityByUuid($term->getEntityTypeId(), $term->uuid());
     $this->assertEqual($entity->field_test_taxonomy_term->entity->id(), $term->id());
   }
 

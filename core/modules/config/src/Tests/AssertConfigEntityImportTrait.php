@@ -37,7 +37,7 @@ trait AssertConfigEntityImportTrait {
     // should recreate everything as necessary.
     $entity->delete();
     $this->configImporter()->reset()->import();
-    $imported_entity = \Drupal::entityManager()->loadEntityByUuid($entity_type_id, $entity_uuid);
+    $imported_entity = \Drupal::service('entity.repository')->loadEntityByUuid($entity_type_id, $entity_uuid);
     $this->assertIdentical($original_data, $imported_entity->toArray());
   }
 

@@ -415,7 +415,7 @@ class ImageItem extends FileItem {
     // Convert the stored UUID to a FID.
     $fids = [];
     $uuid = $settings['default_image']['uuid'];
-    if ($uuid && ($file = $this->getEntityManager()->loadEntityByUuid('file', $uuid))) {
+    if ($uuid && ($file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $uuid))) {
       $fids[0] = $file->id();
     }
     $element['default_image']['uuid'] = [

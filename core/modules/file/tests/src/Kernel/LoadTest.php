@@ -3,6 +3,7 @@
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 
 /**
  * Tests \Drupal\file\Entity\File::load().
@@ -89,13 +90,11 @@ class LoadTest extends FileManagedUnitTestBase {
     $file->save();
     file_test_reset();
 
-    $by_uuid_file = \Drupal::entityManager()->loadEntityByUuid('file', $file->uuid());
+    $by_uuid_file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $file->uuid());
     $this->assertFileHookCalled('load');
-    $this->assertTrue(is_object($by_uuid_file), '\Drupal::entityManager()->loadEntityByUuid() returned a file object.');
-    if (is_object($by_uuid_file)) {
-      $this->assertEqual($by_uuid_file->id(), $file->id(), 'Loading by UUID got the same fid.', 'File');
-      $this->assertTrue($by_uuid_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
-    }
+    $this->assertInstanceOf(FileInterface::class, $by_uuid_file);
+    $this->assertEqual($by_uuid_file->id(), $file->id(), 'Loading by UUID got the same fid.', 'File');
+    $this->assertTrue($by_uuid_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
   }
 
 }

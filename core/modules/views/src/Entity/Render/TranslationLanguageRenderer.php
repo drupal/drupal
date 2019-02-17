@@ -80,7 +80,7 @@ class TranslationLanguageRenderer extends EntityTranslationRendererBase {
    * {@inheritdoc}
    */
   public function preRender(array $result) {
-    $view_builder = $this->view->rowPlugin->entityManager->getViewBuilder($this->entityType->id());
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder($this->entityType->id());
 
     /** @var \Drupal\views\ResultRow $row */
     foreach ($result as $row) {

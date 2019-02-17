@@ -369,6 +369,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = []) {
+    @trigger_error('EntityManagerInterface::getTranslationFromContext() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepository::getTranslationFromContext() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity.repository')->getTranslationFromContext($entity, $langcode, $context);
   }
 
@@ -499,6 +500,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function loadEntityByUuid($entity_type_id, $uuid) {
+    @trigger_error('EntityManagerInterface::loadEntityByUuid() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepository::loadEntityByUuid() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity.repository')->loadEntityByUuid($entity_type_id, $uuid);
   }
 
@@ -512,6 +514,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function loadEntityByConfigTarget($entity_type_id, $target) {
+    @trigger_error('EntityManagerInterface::loadEntityByConfigTarget() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepository::loadEntityByConfigTarget() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity.repository')->loadEntityByConfigTarget($entity_type_id, $target);
   }
 

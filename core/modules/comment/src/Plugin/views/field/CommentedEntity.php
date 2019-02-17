@@ -38,7 +38,7 @@ class CommentedEntity extends EntityField {
       }
 
       foreach ($entity_ids_per_type as $type => $ids) {
-        $this->loadedCommentedEntities[$type] = $this->entityManager->getStorage($type)->loadMultiple($ids);
+        $this->loadedCommentedEntities[$type] = $this->entityTypeManager->getStorage($type)->loadMultiple($ids);
       }
     }
 

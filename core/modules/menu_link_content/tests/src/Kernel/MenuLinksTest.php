@@ -214,7 +214,7 @@ class MenuLinksTest extends KernelTestBase {
     $this->menuLinkManager->updateDefinition($links['child-1'], ['parent' => $links['child-2']]);
     // Verify that the entity was updated too.
     $menu_link_plugin = $this->menuLinkManager->createInstance($links['child-1']);
-    $entity = \Drupal::entityManager()->loadEntityByUuid('menu_link_content', $menu_link_plugin->getDerivativeId());
+    $entity = \Drupal::service('entity.repository')->loadEntityByUuid('menu_link_content', $menu_link_plugin->getDerivativeId());
     $this->assertEqual($entity->getParentId(), $links['child-2']);
 
     $expected_hierarchy = [

@@ -377,7 +377,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     \Drupal::entityManager()->clearCachedFieldDefinitions();
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $default_image = $field_storage->getSetting('default_image');
-    $file = \Drupal::entityManager()->loadEntityByUuid('file', $default_image['uuid']);
+    $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid']);
     $this->assertTrue($file->isPermanent(), 'The default image status is permanent.');
     $image = [
       '#theme' => 'image',
@@ -448,7 +448,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     $private_field_storage = FieldStorageConfig::loadByName('node', $private_field_name);
     $default_image = $private_field_storage->getSetting('default_image');
-    $file = \Drupal::entityManager()->loadEntityByUuid('file', $default_image['uuid']);
+    $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid']);
     $this->assertEqual('private', file_uri_scheme($file->getFileUri()), 'Default image uses private:// scheme.');
     $this->assertTrue($file->isPermanent(), 'The default image status is permanent.');
     // Create a new node with no image attached and ensure that default private

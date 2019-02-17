@@ -143,7 +143,7 @@ class TaxonomyIndexTid extends PrerenderList {
 
       foreach ($result as $node_nid => $data) {
         foreach ($data as $tid => $term) {
-          $this->items[$node_nid][$tid]['name'] = \Drupal::entityManager()->getTranslationFromContext($term)->label();
+          $this->items[$node_nid][$tid]['name'] = \Drupal::service('entity.repository')->getTranslationFromContext($term)->label();
           $this->items[$node_nid][$tid]['tid'] = $tid;
           $this->items[$node_nid][$tid]['vocabulary_vid'] = $term->bundle();
           $this->items[$node_nid][$tid]['vocabulary'] = $vocabularies[$term->bundle()]->label();

@@ -6,8 +6,11 @@ use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\FormatterPluginManager;
@@ -39,6 +42,12 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
 
   use FieldAPIHandlerTrait;
   use PluginDependencyTrait;
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * An array to store field renderable arrays for use by renderItems().
@@ -76,11 +85,25 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   protected $formatterOptions;
 
   /**
-   * The entity manager.
+   * The entity typemanager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * The entity repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
 
   /**
    * The field formatter plugin manager.
@@ -126,8 +149,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The field formatter plugin manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Field\FormatterPluginManager $formatter_plugin_manager
    *   The field formatter plugin manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager
@@ -136,11 +159,15 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    *   The language manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, FormatterPluginManager $formatter_plugin_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, LanguageManagerInterface $language_manager, RendererInterface $renderer) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, FormatterPluginManager $formatter_plugin_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, LanguageManagerInterface $language_manager, RendererInterface $renderer, EntityRepositoryInterface $entity_repository = NULL, EntityFieldManagerInterface $entity_field_manager = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
     $this->formatterPluginManager = $formatter_plugin_manager;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->languageManager = $language_manager;
@@ -151,6 +178,18 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     if (isset($this->definition['entity field'])) {
       $this->definition['field_name'] = $this->definition['entity field'];
     }
+
+    if (!$entity_repository) {
+      @trigger_error('Calling EntityField::__construct() with the $entity_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_repository = \Drupal::service('entity.repository');
+    }
+    $this->entityRepository = $entity_repository;
+
+    if (!$entity_field_manager) {
+      @trigger_error('Calling EntityField::__construct() with the $entity_field_manager argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+    }
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -161,11 +200,13 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('plugin.manager.field.formatter'),
       $container->get('plugin.manager.field.field_type'),
       $container->get('language_manager'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('entity.repository'),
+      $container->get('entity_field.manager')
     );
   }
 
@@ -205,15 +246,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   /**
    * {@inheritdoc}
    */
-  protected function getEntityManager() {
-    return $this->entityManager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function access(AccountInterface $account) {
-    $access_control_handler = $this->entityManager->getAccessControlHandler($this->getEntityType());
+    $access_control_handler = $this->entityTypeManager->getAccessControlHandler($this->getEntityType());
     return $access_control_handler->fieldAccess('view', $this->getFieldDefinition(), $account);
   }
 
@@ -323,7 +357,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    */
   protected function getFieldStorageDefinition() {
     $entity_type_id = $this->definition['entity_type'];
-    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
+    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id);
 
     // @todo Unify 'entity field'/'field_name' instead of converting back and
     //   forth. https://www.drupal.org/node/2410779
@@ -339,7 +373,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     // base fields, so we need to explicitly fetch a list of all base fields in
     // order to support them.
     // @see \Drupal\Core\Entity\EntityFieldManager::getFieldStorageDefinitions()
-    $base_fields = $this->entityManager->getBaseFieldDefinitions($entity_type_id);
+    $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type_id);
     if (isset($this->definition['field_name']) && isset($base_fields[$this->definition['field_name']])) {
       return $base_fields[$this->definition['field_name']]->getFieldStorageDefinition();
     }
@@ -798,8 +832,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
         }
       }
       if (!isset($this->entityFieldRenderer)) {
-        $entity_type = $this->entityManager->getDefinition($this->getEntityType());
-        $this->entityFieldRenderer = new EntityFieldRenderer($this->view, $this->relationship, $this->languageManager, $entity_type, $this->entityManager);
+        $entity_type = $this->entityTypeManager->getDefinition($this->getEntityType());
+        $this->entityFieldRenderer = new EntityFieldRenderer($this->view, $this->relationship, $this->languageManager, $entity_type, $this->entityTypeManager, $this->entityRepository);
       }
     }
     return $this->entityFieldRenderer;
@@ -1044,7 +1078,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    *   The table mapping.
    */
   protected function getTableMapping() {
-    return $this->entityManager->getStorage($this->definition['entity_type'])->getTableMapping();
+    return $this->entityTypeManager->getStorage($this->definition['entity_type'])->getTableMapping();
   }
 
   /**

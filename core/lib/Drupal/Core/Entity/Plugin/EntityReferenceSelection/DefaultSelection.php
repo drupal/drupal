@@ -4,10 +4,13 @@ namespace Drupal\Core\Entity\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
-use Drupal\Core\Entity\EntityReferenceSelection\SelectionTrait;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
@@ -15,6 +18,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\EntityOwnerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Default plugin implementation of the Entity Reference Selection plugin.
@@ -37,20 +41,118 @@ use Drupal\user\EntityOwnerInterface;
  * )
  */
 class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPluginInterface, SelectionWithAutocreateInterface {
+  use DeprecatedServicePropertyTrait;
 
-  use SelectionTrait {
-    // PHP 5.5.9 gets confused between SelectionPluginBase::__construct() and
-    // SelectionTrait::__construct() that's why we are renaming the
-    // SelectionTrait::__construct() to avoid the confusion.
-    // @todo Remove this in https://www.drupal.org/node/2670966.
-    SelectionTrait::__construct as private initialize;
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The entity field manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * Entity type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  public $entityTypeBundleInfo;
+
+  /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * Constructs a new DefaultSelection object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity manager service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info service.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, AccountInterface $current_user, EntityFieldManagerInterface $entity_field_manager = NULL, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, EntityRepositoryInterface $entity_repository = NULL) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->entityTypeManager = $entity_type_manager;
+    $this->moduleHandler = $module_handler;
+    $this->currentUser = $current_user;
+
+    if (!$entity_field_manager) {
+      @trigger_error('Calling DefaultSelection::__construct() with the $entity_field_manager argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+    }
+    $this->entityFieldManager = $entity_field_manager;
+
+    if (!$entity_type_bundle_info) {
+      @trigger_error('Calling DefaultSelection::__construct() with the $entity_type_bundle_info argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
+    }
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+
+    if (!$entity_repository) {
+      @trigger_error('Calling DefaultSelection::__construct() with the $entity_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_repository = \Drupal::service('entity.repository');
+    }
+    $this->entityRepository = $entity_repository;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
-    $this->initialize($configuration, $plugin_id, $plugin_definition, $entity_manager, $module_handler, $current_user);
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager'),
+      $container->get('module_handler'),
+      $container->get('current_user'),
+      $container->get('entity_field.manager'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('entity.repository')
+    );
   }
 
   /**
@@ -79,8 +181,8 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
 
     $configuration = $this->getConfiguration();
     $entity_type_id = $configuration['target_type'];
-    $entity_type = $this->entityManager->getDefinition($entity_type_id);
-    $bundles = $this->entityManager->getBundleInfo($entity_type_id);
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
 
     if ($entity_type->hasKey('bundle')) {
       $bundle_options = [];
@@ -122,7 +224,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       $fields = [];
       foreach (array_keys($bundles) as $bundle) {
-        $bundle_fields = array_filter($this->entityManager->getFieldDefinitions($entity_type_id, $bundle), function ($field_definition) {
+        $bundle_fields = array_filter($this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle), function ($field_definition) {
           return !$field_definition->isComputed();
         });
         foreach ($bundle_fields as $field_name => $field_definition) {
@@ -245,10 +347,10 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     }
 
     $options = [];
-    $entities = $this->entityManager->getStorage($target_type)->loadMultiple($result);
+    $entities = $this->entityTypeManager->getStorage($target_type)->loadMultiple($result);
     foreach ($entities as $entity_id => $entity) {
       $bundle = $entity->bundle();
-      $options[$bundle][$entity_id] = Html::escape($this->entityManager->getTranslationFromContext($entity)->label());
+      $options[$bundle][$entity_id] = Html::escape($this->entityRepository->getTranslationFromContext($entity)->label());
     }
 
     return $options;
@@ -271,7 +373,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     $result = [];
     if ($ids) {
       $target_type = $this->configuration['target_type'];
-      $entity_type = $this->entityManager->getDefinition($target_type);
+      $entity_type = $this->entityTypeManager->getDefinition($target_type);
       $query = $this->buildEntityQuery();
       $result = $query
         ->condition($entity_type->getKey('id'), $ids, 'IN')
@@ -285,11 +387,11 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
    * {@inheritdoc}
    */
   public function createNewEntity($entity_type_id, $bundle, $label, $uid) {
-    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $bundle_key = $entity_type->getKey('bundle');
     $label_key = $entity_type->getKey('label');
 
-    $entity = $this->entityManager->getStorage($entity_type_id)->create([
+    $entity = $this->entityTypeManager->getStorage($entity_type_id)->create([
       $bundle_key => $bundle,
       $label_key => $label,
     ]);
@@ -330,9 +432,9 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
   protected function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $configuration = $this->getConfiguration();
     $target_type = $configuration['target_type'];
-    $entity_type = $this->entityManager->getDefinition($target_type);
+    $entity_type = $this->entityTypeManager->getDefinition($target_type);
 
-    $query = $this->entityManager->getStorage($target_type)->getQuery();
+    $query = $this->entityTypeManager->getStorage($target_type)->getQuery();
 
     // If 'target_bundles' is NULL, all bundles are referenceable, no further
     // conditions are needed.

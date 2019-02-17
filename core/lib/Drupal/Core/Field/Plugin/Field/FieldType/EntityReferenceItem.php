@@ -473,7 +473,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     if ($default_value = $field_definition->getDefaultValueLiteral()) {
       foreach ($default_value as $value) {
         if (is_array($value) && isset($value['target_uuid'])) {
-          $entity = \Drupal::entityManager()->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
+          $entity = \Drupal::service('entity.repository')->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
           // If the entity does not exist do not create the dependency.
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
           if ($entity) {
@@ -522,7 +522,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     if ($default_value = $field_definition->getDefaultValueLiteral()) {
       foreach ($default_value as $key => $value) {
         if (is_array($value) && isset($value['target_uuid'])) {
-          $entity = $entity_manager->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
+          $entity = \Drupal::service('entity.repository')->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
           if ($entity && isset($dependencies[$entity->getConfigDependencyKey()][$entity->getConfigDependencyName()])) {
             unset($default_value[$key]);
