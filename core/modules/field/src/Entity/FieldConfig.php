@@ -162,7 +162,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
 
     if ($this->isNew()) {
       // Notify the entity storage.
-      $entity_manager->onFieldDefinitionCreate($this);
+      \Drupal::service('field_definition.listener')->onFieldDefinitionCreate($this);
     }
     else {
       // Some updates are always disallowed.
@@ -176,7 +176,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
         throw new FieldException("Cannot change an existing field's storage.");
       }
       // Notify the entity storage.
-      $entity_manager->onFieldDefinitionUpdate($this, $this->original);
+      \Drupal::service('field_definition.listener')->onFieldDefinitionUpdate($this, $this->original);
     }
 
     parent::preSave($storage);
@@ -223,12 +223,12 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    */
   public static function postDelete(EntityStorageInterface $storage, array $fields) {
     // Clear the cache upfront, to refresh the results of getBundles().
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Notify the entity storage.
     foreach ($fields as $field) {
       if (!$field->deleted) {
-        \Drupal::entityManager()->onFieldDefinitionDelete($field);
+        \Drupal::service('field_definition.listener')->onFieldDefinitionDelete($field);
       }
     }
 

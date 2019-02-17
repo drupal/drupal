@@ -61,7 +61,7 @@ abstract class ConfigEntityBundleBase extends ConfigEntityBase {
 
     foreach ($entities as $entity) {
       $entity->deleteDisplays();
-      \Drupal::entityManager()->onBundleDelete($entity->id(), $entity->getEntityType()->getBundleOf());
+      \Drupal::service('entity_bundle.listener')->onBundleDelete($entity->id(), $entity->getEntityType()->getBundleOf());
     }
   }
 

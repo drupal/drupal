@@ -735,14 +735,13 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *   The ID of the entity type.
    */
   protected function installEntitySchema($entity_type_id) {
-    /** @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager */
-    $entity_manager = $this->container->get('entity.manager');
-    $entity_type = $entity_manager->getDefinition($entity_type_id);
-    $entity_manager->onEntityTypeCreate($entity_type);
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $entity_type = $entity_type_manager->getDefinition($entity_type_id);
+    \Drupal::service('entity_type.listener')->onEntityTypeCreate($entity_type);
 
     // For test runs, the most common storage backend is a SQL database. For
     // this case, ensure the tables got created.
-    $storage = $entity_manager->getStorage($entity_type_id);
+    $storage = $entity_type_manager->getStorage($entity_type_id);
     if ($storage instanceof SqlEntityStorageInterface) {
       $tables = $storage->getTableMapping()->getTableNames();
       $db_schema = $this->container->get('database')->schema();

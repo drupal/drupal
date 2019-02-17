@@ -35,15 +35,15 @@ class EntitySchemaTest extends EntityKernelTestBase {
   public function testCustomFieldCreateDelete() {
     // Install the module which adds the field.
     $this->installModule('entity_schema_test');
-    $storage_definitions = $this->entityManager->getFieldStorageDefinitions('entity_test');
+    $storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('entity_test');
     $this->assertNotNull($storage_definitions['custom_base_field'], 'Base field definition found.');
     $this->assertNotNull($storage_definitions['custom_bundle_field'], 'Bundle field definition found.');
 
     // Make sure the field schema can be created.
-    $this->entityManager->onFieldStorageDefinitionCreate($storage_definitions['custom_base_field']);
-    $this->entityManager->onFieldStorageDefinitionCreate($storage_definitions['custom_bundle_field']);
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($storage_definitions['custom_base_field']);
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($storage_definitions['custom_bundle_field']);
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-    $table_mapping = $this->entityManager->getStorage('entity_test')->getTableMapping();
+    $table_mapping = $this->entityTypeManager->getStorage('entity_test')->getTableMapping();
     $base_table = current($table_mapping->getTableNames());
     $base_column = current($table_mapping->getColumnNames('custom_base_field'));
     $this->assertTrue($this->database->schema()->fieldExists($base_table, $base_column), 'Table column created');
@@ -51,8 +51,8 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $this->assertTrue($this->database->schema()->tableExists($table), 'Table created');
 
     // Make sure the field schema can be deleted.
-    $this->entityManager->onFieldStorageDefinitionDelete($storage_definitions['custom_base_field']);
-    $this->entityManager->onFieldStorageDefinitionDelete($storage_definitions['custom_bundle_field']);
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionDelete($storage_definitions['custom_base_field']);
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionDelete($storage_definitions['custom_bundle_field']);
     $this->assertFalse($this->database->schema()->fieldExists($base_table, $base_column), 'Table column dropped');
     $this->assertFalse($this->database->schema()->tableExists($table), 'Table dropped');
   }
@@ -69,7 +69,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $this->entityTypeManager->clearCachedDefinitions();
     $this->state->set('entity_schema_update', $alter);
     $entity_type = $this->entityManager->getDefinition($entity_test_id);
-    $this->entityManager->onEntityTypeUpdate($entity_type, $original);
+    \Drupal::service('entity_type.listener')->onEntityTypeUpdate($entity_type, $original);
   }
 
   /**
@@ -77,9 +77,9 @@ class EntitySchemaTest extends EntityKernelTestBase {
    */
   public function testEntitySchemaUpdate() {
     $this->installModule('entity_schema_test');
-    $storage_definitions = $this->entityManager->getFieldStorageDefinitions('entity_test');
-    $this->entityManager->onFieldStorageDefinitionCreate($storage_definitions['custom_base_field']);
-    $this->entityManager->onFieldStorageDefinitionCreate($storage_definitions['custom_bundle_field']);
+    $storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('entity_test');
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($storage_definitions['custom_base_field']);
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($storage_definitions['custom_bundle_field']);
     $schema_handler = $this->database->schema();
     $tables = ['entity_test', 'entity_test_revision', 'entity_test_field_data', 'entity_test_field_revision'];
     $dedicated_tables = ['entity_test__custom_bundle_field', 'entity_test_revision__custom_bundle_field'];

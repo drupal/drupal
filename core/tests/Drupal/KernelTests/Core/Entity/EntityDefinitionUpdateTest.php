@@ -754,27 +754,27 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $event_subscriber->enableEventTracking();
 
     // Test field storage definition events.
-    $storage_definition = current($this->entityManager->getFieldStorageDefinitions('entity_test_rev'));
+    $storage_definition = current(\Drupal::service('entity_field.manager')->getFieldStorageDefinitions('entity_test_rev'));
     $this->assertFalse($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::DELETE), 'Entity type delete was not dispatched yet.');
-    $this->entityManager->onFieldStorageDefinitionDelete($storage_definition);
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionDelete($storage_definition);
     $this->assertTrue($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::DELETE), 'Entity type delete event successfully dispatched.');
     $this->assertFalse($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::CREATE), 'Entity type create was not dispatched yet.');
-    $this->entityManager->onFieldStorageDefinitionCreate($storage_definition);
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($storage_definition);
     $this->assertTrue($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::CREATE), 'Entity type create event successfully dispatched.');
     $this->assertFalse($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::UPDATE), 'Entity type update was not dispatched yet.');
-    $this->entityManager->onFieldStorageDefinitionUpdate($storage_definition, $storage_definition);
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionUpdate($storage_definition, $storage_definition);
     $this->assertTrue($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::UPDATE), 'Entity type update event successfully dispatched.');
 
     // Test entity type events.
-    $entity_type = $this->entityManager->getDefinition('entity_test_rev');
+    $entity_type = $this->entityTypeManager->getDefinition('entity_test_rev');
     $this->assertFalse($event_subscriber->hasEventFired(EntityTypeEvents::CREATE), 'Entity type create was not dispatched yet.');
-    $this->entityManager->onEntityTypeCreate($entity_type);
+    \Drupal::service('entity_type.listener')->onEntityTypeCreate($entity_type);
     $this->assertTrue($event_subscriber->hasEventFired(EntityTypeEvents::CREATE), 'Entity type create event successfully dispatched.');
     $this->assertFalse($event_subscriber->hasEventFired(EntityTypeEvents::UPDATE), 'Entity type update was not dispatched yet.');
-    $this->entityManager->onEntityTypeUpdate($entity_type, $entity_type);
+    \Drupal::service('entity_type.listener')->onEntityTypeUpdate($entity_type, $entity_type);
     $this->assertTrue($event_subscriber->hasEventFired(EntityTypeEvents::UPDATE), 'Entity type update event successfully dispatched.');
     $this->assertFalse($event_subscriber->hasEventFired(EntityTypeEvents::DELETE), 'Entity type delete was not dispatched yet.');
-    $this->entityManager->onEntityTypeDelete($entity_type);
+    \Drupal::service('entity_type.listener')->onEntityTypeDelete($entity_type);
     $this->assertTrue($event_subscriber->hasEventFired(EntityTypeEvents::DELETE), 'Entity type delete event successfully dispatched.');
   }
 

@@ -394,7 +394,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
         if ($entity_type->getProvider() == $module) {
           foreach (array_keys($entity_manager->getBundleInfo($entity_type_id)) as $bundle) {
-            $entity_manager->onBundleDelete($bundle, $entity_type_id);
+            \Drupal::service('entity_bundle.listener')->onBundleDelete($bundle, $entity_type_id);
           }
         }
       }

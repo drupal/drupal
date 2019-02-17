@@ -337,7 +337,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     $this->module = $field_type['provider'];
 
     // Notify the entity manager.
-    $entity_manager->onFieldStorageDefinitionCreate($this);
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($this);
   }
 
   /**
@@ -366,7 +366,6 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    */
   protected function preSaveUpdated(EntityStorageInterface $storage) {
     $module_handler = \Drupal::moduleHandler();
-    $entity_manager = \Drupal::entityManager();
 
     // Some updates are always disallowed.
     if ($this->getType() != $this->original->getType()) {
@@ -383,7 +382,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // Notify the entity manager. A listener can reject the definition
     // update as invalid by raising an exception, which stops execution before
     // the definition is written to config.
-    $entity_manager->onFieldStorageDefinitionUpdate($this, $this->original);
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionUpdate($this, $this->original);
   }
 
   /**
@@ -436,7 +435,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // Notify the storage.
     foreach ($fields as $field) {
       if (!$field->deleted) {
-        \Drupal::entityManager()->onFieldStorageDefinitionDelete($field);
+        \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionDelete($field);
         $field->deleted = TRUE;
       }
     }

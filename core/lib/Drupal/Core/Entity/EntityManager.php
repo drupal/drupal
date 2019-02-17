@@ -258,6 +258,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function onFieldDefinitionCreate(FieldDefinitionInterface $field_definition) {
+    @trigger_error('EntityManagerInterface::onFieldDefinitionCreate() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Field\FieldDefinitionListenerInterface::onFieldDefinitionCreate() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('field_definition.listener')->onFieldDefinitionCreate($field_definition);
   }
 
@@ -271,6 +272,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function onFieldDefinitionUpdate(FieldDefinitionInterface $field_definition, FieldDefinitionInterface $original) {
+    @trigger_error('EntityManagerInterface::onFieldDefinitionUpdate() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Field\FieldDefinitionListenerInterface::onFieldDefinitionUpdate() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('field_definition.listener')->onFieldDefinitionUpdate($field_definition, $original);
   }
 
@@ -284,6 +286,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function onFieldDefinitionDelete(FieldDefinitionInterface $field_definition) {
+    @trigger_error('EntityManagerInterface::onFieldDefinitionDelete() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Field\FieldDefinitionListenerInterface::onFieldDefinitionDelete() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('field_definition.listener')->onFieldDefinitionDelete($field_definition);
   }
 
@@ -535,6 +538,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * {@inheritdoc}
    */
   public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
+    @trigger_error('EntityManagerInterface::onEntityTypeCreate() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeListenerInterface::onEntityTypeCreate() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('entity_type.listener')->onEntityTypeCreate($entity_type);
   }
 
@@ -548,6 +552,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    @trigger_error('EntityManagerInterface::onEntityTypeUpdate() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeListenerInterface::onEntityTypeUpdate() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('entity_type.listener')->onEntityTypeUpdate($entity_type, $original);
   }
 
@@ -574,6 +579,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function onEntityTypeDelete(EntityTypeInterface $entity_type) {
+    @trigger_error('EntityManagerInterface::onEntityTypeDelete() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeListenerInterface::onEntityTypeDelete() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('entity_type.listener')->onEntityTypeDelete($entity_type);
   }
 
@@ -587,6 +593,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition) {
+    @trigger_error('EntityManagerInterface::onFieldStorageDefinitionCreate() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Field\FieldStorageDefinitionListenerInterface::onFieldStorageDefinitionCreate() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('field_storage_definition.listener')->onFieldStorageDefinitionCreate($storage_definition);
   }
 
@@ -600,6 +607,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function onFieldStorageDefinitionUpdate(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
+    @trigger_error('EntityManagerInterface::onFieldStorageDefinitionUpdate() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Field\FieldStorageDefinitionListenerInterface::onFieldStorageDefinitionUpdate() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('field_storage_definition.listener')->onFieldStorageDefinitionUpdate($storage_definition, $original);
   }
 
@@ -613,6 +621,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition) {
+    @trigger_error('EntityManagerInterface::onFieldStorageDefinitionDelete() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Field\FieldStorageDefinitionListenerInterface::onFieldStorageDefinitionDelete() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('field_storage_definition.listener')->onFieldStorageDefinitionDelete($storage_definition);
   }
 
@@ -626,6 +635,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function onBundleCreate($bundle, $entity_type_id) {
+    @trigger_error('EntityManagerInterface::onBundleCreate() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityBundleListenerInterface::onBundleCreate() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('entity_bundle.listener')->onBundleCreate($bundle, $entity_type_id);
   }
 
@@ -639,6 +649,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function onBundleDelete($bundle, $entity_type_id) {
+    @trigger_error('EntityManagerInterface::onBundleDelete() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityBundleListenerInterface::onBundleDelete() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('entity_bundle.listener')->onBundleDelete($bundle, $entity_type_id);
   }
 
