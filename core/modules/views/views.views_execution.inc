@@ -25,3 +25,17 @@ function views_views_query_substitutions(ViewExecutable $view) {
 
   return $substitutions;
 }
+
+/**
+ * Implements hook_views_form_substitutions().
+ */
+function views_views_form_substitutions() {
+  $select_all = [
+    '#type' => 'checkbox',
+    '#default_value' => FALSE,
+    '#attributes' => ['class' => ['action-table-select-all']],
+  ];
+  return [
+    '<!--action-bulk-form-select-all-->' => \Drupal::service('renderer')->render($select_all),
+  ];
+}

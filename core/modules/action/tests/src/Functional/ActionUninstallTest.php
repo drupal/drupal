@@ -8,7 +8,8 @@ use Drupal\Tests\BrowserTestBase;
  * Tests that uninstalling actions does not remove other module's actions.
  *
  * @group action
- * @see \Drupal\action\Plugin\views\field\BulkForm
+ * @see \Drupal\views\Plugin\views\field\BulkForm
+ * @see \Drupal\user\Plugin\Action\BlockUser
  */
 class ActionUninstallTest extends BrowserTestBase {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\action\Functional;
+namespace Drupal\Tests\views\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\views\Views;
@@ -8,8 +8,8 @@ use Drupal\views\Views;
 /**
  * Tests the views bulk form test.
  *
- * @group action
- * @see \Drupal\action\Plugin\views\field\BulkForm
+ * @group views
+ * @see \Drupal\views\Plugin\views\field\BulkForm
  */
 class BulkFormTest extends BrowserTestBase {
 
