@@ -17,4 +17,4 @@ cardinality: 1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false
-custom_storage: false
+custom_storage: true
