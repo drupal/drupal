@@ -6,12 +6,10 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\Validation\TypedDataAwareValidatorTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\ChoiceValidator;
-use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 /**
  * Validates the AllowedValues constraint.
@@ -49,24 +47,9 @@ class AllowedValuesConstraintValidator extends ChoiceValidator implements Contai
    */
   public function validate($value, Constraint $constraint) {
     $typed_data = $this->getTypedData();
-
-    // In a better world where typed data just returns typed values, we could
-    // set a constraint callback to use the OptionsProviderInterface.
-    // This is not possible right now though because we do the typecasting
-    // further down.
-    if ($constraint->callback) {
-      if (!\is_callable($choices = [$this->context->getObject(), $constraint->callback])
-        && !\is_callable($choices = [$this->context->getClassName(), $constraint->callback])
-        && !\is_callable($choices = $constraint->callback)
-      ) {
-        throw new ConstraintDefinitionException('The AllowedValuesConstraint constraint expects a valid callback');
-      }
-      $allowed_values = \call_user_func($choices);
-      // parent::validate() does not need to invoke the callback again.
-      $constraint->callback = NULL;
-    }
-    elseif ($typed_data instanceof OptionsProviderInterface) {
+    if ($typed_data instanceof OptionsProviderInterface) {
       $allowed_values = $typed_data->getSettableValues($this->currentUser);
+      $constraint->choices = $allowed_values;
 
       // If the data is complex, we have to validate its main property.
       if ($typed_data instanceof ComplexDataInterface) {
@@ -84,22 +67,6 @@ class AllowedValuesConstraintValidator extends ChoiceValidator implements Contai
     // field points to an empty vocabulary.
     if (!isset($value)) {
       return;
-    }
-
-    if (isset($allowed_values)) {
-      $constraint->choices = $allowed_values;
-      // Make the types match for strict checking. We can't use typed data here
-      // because types are not enforced everywhere. For example,
-      // \Drupal\Core\Field\Plugin\Field\FieldType\BooleanItem::getSettableValues()
-      // uses 0 and 1 to represent possible Boolean values whilst
-      // \Drupal\Core\TypedData\Plugin\DataType\BooleanData::getCastedValue()
-      // will return a proper typed Boolean. Therefore assume that
-      // $allowed_values contains values of the same type and cast $value to
-      // match.
-      settype($value, gettype(reset($allowed_values)));
-    }
-    elseif ($typed_data instanceof PrimitiveInterface) {
-      $value = $typed_data->getCastedValue();
     }
 
     parent::validate($value, $constraint);
