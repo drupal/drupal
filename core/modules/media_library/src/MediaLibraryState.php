@@ -29,8 +29,9 @@ use Symfony\Component\HttpFoundation\Request;
  *   items can be selected.
  *
  * @internal
- *   This class is an internal part of the media library and should not be
- *   instantiated or used by external code.
+ *   Media Library is an experimental module and its internal code may be
+ *   subject to change in minor releases. External code should not instantiate
+ *   or extend this class.
  */
 class MediaLibraryState extends ParameterBag {
 

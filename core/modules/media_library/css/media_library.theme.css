@@ -83,6 +83,19 @@
   border-left: 0;
 }
 
+.media-library-add-form--without-input {
+  margin-bottom: 1em;
+  border-bottom: 1px solid #c0c0c0;
+}
+
+.media-library-add-form--without-input .form-item {
+  margin: 0 0 1em;
+}
+
+.media-library-add-form .file-upload-help {
+  margin: 8px 0 0;
+}
+
 .media-library-views-form__header .form-item {
   margin-right: 8px;
 }
@@ -276,31 +289,34 @@
   border-color: #40b6ff;
 }
 
-/* Style the wrappers around new media and files */
-.media-library-upload__media,
-.media-library-upload__file {
+/* Style the wrappers around new media and files. */
+.media-library-add-form__media {
   display: flex;
   padding: 20px 0 20px 0;
+  border-bottom: 1px solid #c0c0c0;
 }
 
-.media-library-upload__file {
-  align-items: center;
+/* Do not show the top padding for the first item. */
+.media-library-add-form__media:first-child {
+  padding-top: 0;
 }
 
-.media-library-upload__file-label {
-  margin-right: 10px;
+/* Do not show the bottom border and padding for the last item. */
+.media-library-add-form__media:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 
 /* @todo Remove in https://www.drupal.org/project/drupal/issues/2987921 */
-.media-library-upload__source-field .file,
-.media-library-upload__source-field .button,
-.media-library-upload__source-field .image-preview,
-.media-library-upload__source-field .form-type-managed-file > label,
-.media-library-upload__source-field .file-size {
+.media-library-add-form__source-field .file,
+.media-library-add-form__source-field .button,
+.media-library-add-form__source-field .image-preview,
+.media-library-add-form__source-field .form-type-managed-file > label,
+.media-library-add-form__source-field .file-size {
   display: none;
 }
 
-.media-library-upload__media-preview {
+.media-library-add-form__preview {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -308,13 +324,9 @@
   margin-right: 20px;
   background: #ebebeb;
 }
-[dir="rtl"] .media-library-upload__media-preview {
+[dir="rtl"] .media-library-add-form__preview {
   margin-right: 0;
   margin-left: 20px;
-}
-
-.media-library-upload__media-preview img {
-  display: block;
 }
 
 /* @todo Remove or re-work in https://www.drupal.org/node/2985168 */

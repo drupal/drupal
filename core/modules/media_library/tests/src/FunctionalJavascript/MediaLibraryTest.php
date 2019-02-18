@@ -150,8 +150,8 @@ class MediaLibraryTest extends WebDriverTestBase {
     $role->save();
 
     // Create a working state.
-    $allowed_types = ['type_one', 'type_two'];
-    $state = MediaLibraryState::create('test', $allowed_types, 'type_two', 2);
+    $allowed_types = ['type_one', 'type_two', 'type_three', 'type_four'];
+    $state = MediaLibraryState::create('test', $allowed_types, 'type_three', 2);
     $url_options = ['query' => $state->all()];
 
     // Verify that unprivileged users can't access the widget view.
@@ -169,6 +169,18 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.view-media-library');
     $this->drupalGet('media-library', $url_options);
     $assert_session->elementExists('css', '.view-media-library');
+    // Assert the user does not have access to the media add form if the user
+    // does not have the 'create media' permission.
+    $assert_session->fieldNotExists('files[upload][]');
+
+    // Assert users with the 'create media' permission can access the media add
+    // form.
+    $this->grantPermissions($role, [
+      'create media',
+    ]);
+    $this->drupalGet('media-library', $url_options);
+    $assert_session->elementExists('css', '.view-media-library');
+    $assert_session->fieldExists('Add files');
   }
 
   /**
@@ -258,7 +270,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextContains('Bear');
     $assert_session->pageTextNotContains('Turtle');
-    $assert_session->elementExists('named', ['link', 'Type Three'])->click();
+    $page->clickLink('Type Three');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->elementExists('named', ['link', 'Type Three (active tab)']);
     $assert_session->pageTextNotContains('Dog');
@@ -316,9 +328,9 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertFalse($checkboxes[3]->hasAttribute('disabled'));
     // The selection should be persisted when navigating to other media types in
     // the modal.
-    $assert_session->elementExists('named', ['link', 'Type Three'])->click();
+    $page->clickLink('Type Three');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->elementExists('named', ['link', 'Type One'])->click();
+    $page->clickLink('Type One');
     $assert_session->assertWaitOnAjaxRequest();
     $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
     $selected_checkboxes = [];
@@ -331,7 +343,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->hiddenFieldValueEquals('media-library-modal-selection', implode(',', $selected_checkboxes));
     $assert_session->elementTextContains('css', '.media-library-selected-count', '1 of 2 items selected');
     // Add to selection from another type.
-    $assert_session->elementExists('named', ['link', 'Type Two'])->click();
+    $page->clickLink('Type Two');
     $assert_session->assertWaitOnAjaxRequest();
     $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
     $checkboxes[0]->click();
@@ -345,7 +357,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertTrue($checkboxes[2]->hasAttribute('disabled'));
     $this->assertTrue($checkboxes[3]->hasAttribute('disabled'));
     // Assert the checkboxes are also disabled on other pages.
-    $assert_session->elementExists('named', ['link', 'Type One'])->click();
+    $page->clickLink('Type One');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertTrue($checkboxes[0]->hasAttribute('disabled'));
     $this->assertFalse($checkboxes[1]->hasAttribute('disabled'));
@@ -473,6 +485,7 @@ class MediaLibraryTest extends WebDriverTestBase {
    */
   public function testWidgetAnonymous() {
     $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
 
     $this->drupalLogout();
 
@@ -492,9 +505,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     // Select the first media item (should be Dog).
-    $checkbox_selector = '.media-library-view .js-click-to-select-checkbox input';
-    $checkboxes = $this->getSession()->getPage()->findAll('css', $checkbox_selector);
-    $checkboxes[0]->click();
+    $page->find('css', '.media-library-view .js-click-to-select-checkbox input')->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
     $assert_session->assertWaitOnAjaxRequest();
 
@@ -533,6 +544,44 @@ class MediaLibraryTest extends WebDriverTestBase {
       $this->fail('Expected test files not present.');
     }
 
+    // Create a user that can only add media of type four.
+    $user = $this->drupalCreateUser([
+      'access administration pages',
+      'access content',
+      'create basic_page content',
+      'create type_four media',
+      'view media',
+    ]);
+    $this->drupalLogin($user);
+
+    // Visit a node create page and open the media library.
+    $this->drupalGet('node/add/basic_page');
+    $assert_session->elementExists('css', '.media-library-open-button[href*="field_twin_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Media library');
+
+    // Assert the upload form is visible for type_four.
+    $page->clickLink('Type Four');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->fieldExists('Add files');
+    $assert_session->pageTextContains('Maximum 2 files.');
+
+    // Assert the upload form is not visible for type_three.
+    $page->clickLink('Type Three');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->fieldNotExists('files[upload][]');
+    $assert_session->pageTextNotContains('Maximum 2 files.');
+
+    // Create a user that can create media for all media types.
+    $user = $this->drupalCreateUser([
+      'access administration pages',
+      'access content',
+      'create basic_page content',
+      'create media',
+      'view media',
+    ]);
+    $this->drupalLogin($user);
+
     // Visit a node create page.
     $this->drupalGet('node/add/basic_page');
 
@@ -544,11 +593,19 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_twin_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Media library');
-    $assert_session->elementExists('css', '#drupal-modal')->clickLink('Add media');
-    $assert_session->assertWaitOnAjaxRequest();
 
-    $page->attachFileToField('Upload', $this->container->get('file_system')->realpath($png_image->uri));
+    // Assert the default tab for media type one does not have an upload form.
+    $assert_session->fieldNotExists('files[upload][]');
+
+    // Assert we can upload a file to media type three.
+    $page->clickLink('Type Three');
     $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementExists('css', '.media-library-add-form--without-input');
+    $assert_session->elementNotExists('css', '.media-library-add-form--with-input');
+    $page->attachFileToField('Add files', $this->container->get('file_system')->realpath($png_image->uri));
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementExists('css', '.media-library-add-form--with-input');
+    $assert_session->elementNotExists('css', '.media-library-add-form--without-input');
 
     // Files are temporary until the form is saved.
     $files = $file_storage->loadMultiple();
@@ -556,6 +613,11 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertSame('public://type-three-dir', $file_system->dirname($file->getFileUri()));
     $this->assertTrue($file->isTemporary());
 
+    // Assert the revision_log_message field is not shown.
+    $upload_form = $assert_session->elementExists('css', '.media-library-add-form');
+    $assert_session->fieldNotExists('Revision log message', $upload_form);
+
+    // Assert the name field contains the filename and the alt text is required.
     $this->assertSame($assert_session->fieldExists('Name')->getValue(), $png_image->filename);
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
     $assert_session->assertWaitOnAjaxRequest();
@@ -569,7 +631,23 @@ class MediaLibraryTest extends WebDriverTestBase {
     $file = array_pop($files);
     $this->assertFalse($file->isTemporary());
 
-    // Ensure the media item was added.
+    // Load the created media item.
+    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
+    $media_items = $media_storage->loadMultiple();
+    $added_media = array_pop($media_items);
+
+    // Ensure the media item was saved to the library and automatically
+    // selected. The added media items should be in the first position of the
+    // add form.
+    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains($png_image->filename);
+    $assert_session->fieldValueEquals('media_library_select_form[0]', $added_media->id());
+    $assert_session->checkboxChecked('media_library_select_form[0]');
+    $assert_session->pageTextContains('1 of 2 items selected');
+
+    // Ensure the created item is added in the widget.
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
+    $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Media library');
     $assert_session->pageTextContains($png_image->filename);
 
@@ -577,52 +655,77 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Media library');
-    $assert_session->elementExists('css', '#drupal-modal')->clickLink('Add media');
+
+    // Navigate to the media type three tab first.
+    $page->clickLink('Type Three');
     $assert_session->assertWaitOnAjaxRequest();
+
+    // Select a media item.
+    $page->find('css', '.media-library-view .js-click-to-select-checkbox input')->click();
+    $assert_session->pageTextContains('1 item selected');
 
     // Multiple uploads should be allowed.
     // @todo Add test when https://github.com/minkphp/Mink/issues/358 is closed
-    $this->assertTrue($assert_session->fieldExists('Upload')->hasAttribute('multiple'));
+    $this->assertTrue($assert_session->fieldExists('Add files')->hasAttribute('multiple'));
 
-    $page->attachFileToField('Upload', $this->container->get('file_system')->realpath($png_image->uri));
+    $page->attachFileToField('Add files', $this->container->get('file_system')->realpath($png_image->uri));
     $assert_session->assertWaitOnAjaxRequest();
     $page->fillField('Name', 'Unlimited Cardinality Image');
     $page->fillField('Alternative text', $this->randomString());
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
     $assert_session->assertWaitOnAjaxRequest();
 
-    // Ensure the media item was added.
+    // Load the created media item.
+    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
+    $media_items = $media_storage->loadMultiple();
+    $added_media = array_pop($media_items);
+
+    // Ensure the media item was saved to the library and automatically
+    // selected. The added media items should be in the first position of the
+    // add form.
+    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Unlimited Cardinality Image');
+    $assert_session->fieldValueEquals('media_library_select_form[0]', $added_media->id());
+    $assert_session->checkboxChecked('media_library_select_form[0]');
+
+    // Assert the item that was selected before uploading the file is still
+    // selected.
+    $assert_session->pageTextContains('2 items selected');
+    $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
+    $selected_checkboxes = [];
+    foreach ($checkboxes as $checkbox) {
+      if ($checkbox->isChecked()) {
+        $selected_checkboxes[] = $checkbox->getValue();
+      }
+    }
+    $this->assertCount(2, $selected_checkboxes);
+
+    // Ensure the created item is added in the widget.
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
+    $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Media library');
     $assert_session->pageTextContains('Unlimited Cardinality Image');
 
-    // Open the browser again to test type resolution.
+    // Verify we can only upload the files allowed by the media type.
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_twin_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Media library');
-    $assert_session->elementExists('css', '#drupal-modal')->clickLink('Add media');
+    $page->clickLink('Type Four');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $page->attachFileToField('Upload', $file_system->realpath($jpg_image->uri));
+    // Assert we can now only upload one more media item.
+    $this->assertFalse($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
+    $assert_session->pageTextContains('One file only.');
+
+    // Assert media type four should only allow jpg files by trying a png file
+    // first.
+    $page->attachFileToField('Add file', $file_system->realpath($png_image->uri));
     $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Only files with the following extensions are allowed');
 
-    $assert_session->pageTextContains('Select a media type for ' . $jpg_image->filename);
-
-    // Before the type is determined, the file lives in the default upload
-    // location (temporary://).
-    $files = $file_storage->loadMultiple();
-    $file = array_pop($files);
-    $this->assertSame('temporary', $file_system->uriScheme($file->getFileUri()));
-
-    // Both the type_three and type_four media types accept jpg images.
-    $assert_session->buttonExists('Type Three');
-    $assert_session->buttonExists('Type Four')->click();
+    // Assert that jpg files are accepted by type four.
+    $page->attachFileToField('Add file', $file_system->realpath($jpg_image->uri));
     $assert_session->assertWaitOnAjaxRequest();
-
-    // The file should have been moved when the type was selected.
-    $files = $file_storage->loadMultiple();
-    $file = array_pop($files);
-    $this->assertSame('public://type-four-dir', $file_system->dirname($file->getFileUri()));
-    $this->assertSame($assert_session->fieldExists('Name')->getValue(), $jpg_image->filename);
     $page->fillField('Alternative text', $this->randomString());
 
     // The type_four media type has another optional image field.
@@ -637,6 +740,14 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
     $assert_session->assertWaitOnAjaxRequest();
 
+    // Ensure the media item was saved to the library and automatically
+    // selected.
+    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains($jpg_image->filename);
+
+    // Ensure the created item is added in the widget.
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
+    $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Media library');
     $assert_session->pageTextContains($jpg_image->filename);
   }

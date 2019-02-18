@@ -16,6 +16,26 @@
   };
 
   /**
+   * Command to update the current media library selection.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   *   The Drupal Ajax object.
+   * @param {object} response
+   *   Object holding the server response.
+   * @param {number} [status]
+   *   The HTTP status code.
+   */
+  Drupal.AjaxCommands.prototype.updateMediaLibrarySelection = function(
+    ajax,
+    response,
+    status,
+  ) {
+    Object.values(response.mediaIds).forEach(value => {
+      Drupal.MediaLibrary.currentSelection.push(value);
+    });
+  };
+
+  /**
    * Warn users when clicking outgoing links from the library or widget.
    *
    * @type {Drupal~behavior}

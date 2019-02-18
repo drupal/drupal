@@ -20,6 +20,9 @@ use Drupal\views\ResultRow;
  * @ViewsField("media_library_select_form")
  *
  * @internal
+ *   Media Library is an experimental module and its internal code may be
+ *   subject to change in minor releases. External code should not instantiate
+ *   or extend this class.
  */
 class MediaLibrarySelectForm extends FieldPluginBase {
 

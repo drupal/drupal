@@ -10,6 +10,12 @@
     currentSelection: []
   };
 
+  Drupal.AjaxCommands.prototype.updateMediaLibrarySelection = function (ajax, response, status) {
+    Object.values(response.mediaIds).forEach(function (value) {
+      Drupal.MediaLibrary.currentSelection.push(value);
+    });
+  };
+
   Drupal.behaviors.MediaLibraryWidgetWarn = {
     attach: function attach(context) {
       $('.js-media-library-item a[href]', context).once('media-library-warn-link').on('click', function (e) {

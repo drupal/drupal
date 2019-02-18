@@ -3,6 +3,8 @@
 namespace Drupal\media_library;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Session\AccountInterface;
@@ -15,12 +17,20 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Service which builds the media library.
  *
  * @internal
- *   This class is an internal part of the media library and should not be
- *   instantiated or used by external code.
+ *   Media Library is an experimental module and its internal code may be
+ *   subject to change in minor releases. External code should not instantiate
+ *   or extend this class.
  */
 class MediaLibraryUiBuilder {
 
   use StringTranslationTrait;
+
+  /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
 
   /**
    * The entity type manager.
@@ -52,11 +62,14 @@ class MediaLibraryUiBuilder {
    *   The request stack.
    * @param \Drupal\views\ViewExecutableFactory $views_executable_factory
    *   The views executable factory.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The currently active request object.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack, ViewExecutableFactory $views_executable_factory) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack, ViewExecutableFactory $views_executable_factory, FormBuilderInterface $form_builder) {
     $this->entityTypeManager = $entity_type_manager;
     $this->request = $request_stack->getCurrentRequest();
     $this->viewsExecutableFactory = $views_executable_factory;
+    $this->formBuilder = $form_builder;
   }
 
   /**
@@ -77,11 +90,17 @@ class MediaLibraryUiBuilder {
   /**
    * Build the media library UI.
    *
+   * @param \Drupal\media_library\MediaLibraryState $state
+   *   (optional) The current state of the media library, derived from the
+   *   current request.
+   *
    * @return array
    *   The render array for the media library.
    */
-  public function buildUi() {
-    $state = MediaLibraryState::fromRequest($this->request);
+  public function buildUi(MediaLibraryState $state = NULL) {
+    if (!$state) {
+      $state = MediaLibraryState::fromRequest($this->request);
+    }
     // When navigating to a media type through the vertical tabs, we only want
     // to load the changed library content. This is not only more efficient, but
     // also provides a more accessible user experience for screen readers.
@@ -123,6 +142,7 @@ class MediaLibraryUiBuilder {
         'class' => ['media-library-content'],
         'tabindex' => -1,
       ],
+      'form' => $this->buildMediaTypeAddForm($state),
       'view' => $this->buildMediaLibraryView($state),
     ];
   }
@@ -178,13 +198,15 @@ class MediaLibraryUiBuilder {
       ],
     ];
 
-    // Get the state parameters but remove the wrapper format. Also add the
-    // 'media_library_content' argument to fetch only the updated content for
-    // the tab.
-    // @see self::buildUi()
-    $state->remove(MainContentViewSubscriber::WRAPPER_FORMAT);
-    $state->add(['media_library_content' => 1]);
+    // Get the state parameters but remove the wrapper format, AJAX form and
+    // form rebuild parameters. These are internal parameters that should never
+    // be part of the vertical tab links.
     $query = $state->all();
+    unset($query[MainContentViewSubscriber::WRAPPER_FORMAT], $query[FormBuilderInterface::AJAX_FORM_REQUEST], $query['_media_library_form_rebuild']);
+    // Add the 'media_library_content' parameter so the response will contain
+    // only the updated content for the tab.
+    // @see self::buildUi()
+    $query['media_library_content'] = 1;
 
     $allowed_types = $this->entityTypeManager->getStorage('media_type')->loadMultiple($allowed_type_ids);
 
@@ -214,6 +236,42 @@ class MediaLibraryUiBuilder {
     $menu['#links']['media-library-menu-' . $selected_type_id]['attributes']['class'][] = 'active';
 
     return $menu;
+  }
+
+  /**
+   * Get the add form for the selected media type.
+   *
+   * @param \Drupal\media_library\MediaLibraryState $state
+   *   The current state of the media library, derived from the current request.
+   *
+   * @return array
+   *   The render array for the media type add form.
+   */
+  protected function buildMediaTypeAddForm(MediaLibraryState $state) {
+    $selected_type_id = $state->getSelectedTypeId();
+
+    if (!$this->entityTypeManager->getAccessControlHandler('media')->createAccess($selected_type_id)) {
+      return [];
+    }
+
+    $selected_type = $this->entityTypeManager->getStorage('media_type')->load($selected_type_id);
+    $plugin_definition = $selected_type->getSource()->getPluginDefinition();
+
+    if (empty($plugin_definition['forms']['media_library_add'])) {
+      return [];
+    }
+
+    // After the form to add new media is submitted, we need to rebuild the
+    // media library with a new instance of the media add form. The form API
+    // allows us to do that by forcing empty user input.
+    // @see \Drupal\Core\Form\FormBuilder::doBuildForm()
+    $form_state = new FormState();
+    if ($state->get('_media_library_form_rebuild')) {
+      $form_state->setUserInput([]);
+      $state->remove('_media_library_form_rebuild');
+    }
+    $form_state->set('media_library_state', $state);
+    return $this->formBuilder->buildForm($plugin_definition['forms']['media_library_add'], $form_state);
   }
 
   /**
