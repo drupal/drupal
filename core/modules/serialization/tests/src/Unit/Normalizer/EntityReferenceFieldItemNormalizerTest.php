@@ -3,6 +3,7 @@
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -363,6 +364,33 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
         ->willReturn('test_type')
         ->shouldBeCalled();
     }
+
+    // Avoid a static method call by returning dummy property data.
+    $this->fieldDefinition
+      ->getFieldStorageDefinition()
+      ->willReturn()
+      ->shouldBeCalled();
+    $this->fieldDefinition
+      ->getName()
+      ->willReturn('field_reference')
+      ->shouldBeCalled();
+    $entity = $this->prophesize(EntityInterface::class);
+    $entity_type = $this->prophesize(EntityTypeInterface::class);
+    $entity->getEntityType()
+      ->willReturn($entity_type->reveal())
+      ->shouldBeCalled();
+    $this->fieldItem
+      ->getPluginDefinition()
+      ->willReturn([
+        'serialized_property_names' => [
+          'foo' => 'bar',
+        ],
+      ])
+      ->shouldBeCalled();
+    $this->fieldItem
+      ->getEntity()
+      ->willReturn($entity->reveal())
+      ->shouldBeCalled();
 
     $context = ['target_instance' => $this->fieldItem->reveal()];
     $denormalized = $this->normalizer->denormalize($data, EntityReferenceItem::class, 'json', $context);

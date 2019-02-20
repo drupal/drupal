@@ -219,6 +219,9 @@ class UpdateKernel extends DrupalKernel {
     // will be PHP warnings. This silently fixes Drupal so that the update can
     // continue.
     $callable = function () use ($container) {
+      // Reset static caches in profile list so the module list is rebuilt
+      // correctly.
+      $container->get('extension.list.profile')->reset();
       foreach ($container->getParameter('cache_bins') as $service_id => $bin) {
         $container->get($service_id)->deleteAll();
       }

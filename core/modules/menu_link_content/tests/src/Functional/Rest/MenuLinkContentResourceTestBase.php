@@ -204,7 +204,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
 
     switch ($method) {
       case 'DELETE':
-        return "You are not authorized to delete this menu_link_content entity.";
+        return "The 'administer menu' permission is required.";
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }

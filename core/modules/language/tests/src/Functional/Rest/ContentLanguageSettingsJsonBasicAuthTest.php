@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\language\Functional\Rest;
 
-use Drupal\Tests\rest\Functional\BasicAuthResourceWithInterfaceTranslationTestTrait;
+use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group rest
  */
 class ContentLanguageSettingsJsonBasicAuthTest extends ContentLanguageSettingsResourceTestBase {
 
-  use BasicAuthResourceWithInterfaceTranslationTestTrait;
+  use BasicAuthResourceTestTrait;
 
   /**
    * {@inheritdoc}

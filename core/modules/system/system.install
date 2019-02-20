@@ -18,6 +18,7 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
@@ -2172,4 +2173,68 @@ function system_update_8501() {
       }
     }
   }
+}
+
+/**
+* Fix missing install profile after updating to Drupal 8.6.9 with Drush 8.
+*/
+function system_update_8601() {
+  $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+  $install_profile = $extension_config->get('profile');
+  if (!$install_profile) {
+    // There's no install profile configured.
+    return;
+  }
+  $modules = $extension_config->get('module');
+  if (isset($modules[$install_profile])) {
+    // The install profile is already in the installed module list.
+    return;
+  }
+
+  // Ensure the install profile is available.
+  if (!\Drupal::service('extension.list.module')->exists($install_profile)) {
+    return t('The %install_profile install profile configured in core.extension is not available.', ['%install_profile' => $install_profile]);
+  }
+
+  // Add the install profile to the list of enabled modules.
+  $modules[$install_profile] = 1000;
+  $modules = module_config_sort($modules);
+  $extension_config
+    ->set('module', $modules)
+    ->save(TRUE);
+
+  // Build a module list from the updated extension configuration.
+  $current_module_filenames = \Drupal::moduleHandler()->getModuleList();
+  $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
+  $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
+  $module_filenames = [];
+  foreach ($current_modules as $name => $weight) {
+    if (isset($current_module_filenames[$name])) {
+      $module_filenames[$name] = $current_module_filenames[$name];
+    }
+    else {
+      $module_path = \Drupal::service('extension.list.module')->getPath($name);
+      $pathname = "$module_path/$name.info.yml";
+      $filename = file_exists($module_path . "/$name.module") ? "$name.module" : NULL;
+      $module_filenames[$name] = new Extension(\Drupal::root(), 'module', $pathname, $filename);
+    }
+  }
+
+  // Update the module handler list to contain the missing install profile.
+  \Drupal::moduleHandler()->setModuleList($module_filenames);
+  \Drupal::moduleHandler()->load($install_profile);
+
+  // Clear the static cache of the "extension.list.module" service to pick
+  // up the new install profile correctly.
+  \Drupal::service('extension.list.profile')->reset();
+
+  // Clear the static cache of the "extension.list.module" service to pick
+  // up the new module, since it merges the installation status of modules
+  // into its statically cached list.
+  \Drupal::service('extension.list.module')->reset();
+
+  // Update the kernel to include the missing profile.
+  \Drupal::service('kernel')->updateModules($module_filenames, $module_filenames);
+
+  return t('The %install_profile install profile has been added to the installed module list.', ['%install_profile' => $install_profile]);
 }

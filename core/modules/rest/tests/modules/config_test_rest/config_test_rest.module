@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
@@ -26,5 +27,9 @@ function config_test_rest_config_test_access(EntityInterface $entity, $operation
   // Add permission, so that EntityResourceTestBase's scenarios can test access
   // being denied. By default, all access is always allowed for the config_test
   // config entity.
-  return AccessResult::forbiddenIf(!$account->hasPermission('view config_test'))->cachePerPermissions();
+  $access_result = AccessResult::forbiddenIf(!$account->hasPermission('view config_test'))->cachePerPermissions();
+  if (!$access_result->isAllowed() && $access_result instanceof AccessResultReasonInterface) {
+    $access_result->setReason("The 'view config_test' permission is required.");
+  }
+  return $access_result;
 }
