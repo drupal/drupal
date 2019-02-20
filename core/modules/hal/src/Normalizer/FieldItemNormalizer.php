@@ -5,6 +5,7 @@ namespace Drupal\hal\Normalizer;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
 use Drupal\serialization\Normalizer\FieldableEntityNormalizerTrait;
+use Drupal\serialization\Normalizer\SerializedColumnNormalizerTrait;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
 /**
@@ -13,6 +14,7 @@ use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 class FieldItemNormalizer extends NormalizerBase {
 
   use FieldableEntityNormalizerTrait;
+  use SerializedColumnNormalizerTrait;
 
   /**
    * {@inheritdoc}
@@ -45,6 +47,7 @@ class FieldItemNormalizer extends NormalizerBase {
     }
 
     $field_item = $context['target_instance'];
+    $this->checkForSerializedStrings($data, $class, $field_item);
 
     // If this field is translatable, we need to create a translated instance.
     if (isset($data['lang'])) {

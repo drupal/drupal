@@ -359,7 +359,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
 
     // To still run the complete test coverage for POSTing a Media entity, we
     // must revoke the additional permissions that we granted.
-    $role = Role::load(static::$auth ? RoleInterface::AUTHENTICATED_ID : RoleInterface::AUTHENTICATED_ID);
+    $role = Role::load(static::$auth ? RoleInterface::AUTHENTICATED_ID : RoleInterface::ANONYMOUS_ID);
     $role->revokePermission('create camelids media');
     $role->trustData()->save();
   }

@@ -872,18 +872,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
 
-    // DX: 400 when no request body.
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(400, 'No entity content received.', $response);
-
-    $request_options[RequestOptions::BODY] = $unparseable_request_body;
-
-    // DX: 400 when unparseable request body.
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(400, 'Syntax error', $response);
-
-    $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
-
     if (static::$auth) {
       // DX: forgetting authentication: authentication provider-specific error
       // response.
@@ -895,15 +883,21 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('POST', $url, $request_options);
-    // @todo Remove this if-test in https://www.drupal.org/project/drupal/issues/2820364
-    if (static::$entityTypeId === 'media' && !static::$auth) {
-      $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nname: Name: this field cannot hold more than 1 values.\nfield_media_file.0: You do not have access to the referenced entity (file: 3).\n", $response);
-    }
-    else {
-      $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
-    }
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
 
     $this->setUpAuthorization('POST');
+
+    // DX: 400 when no request body.
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceErrorResponse(400, 'No entity content received.', $response);
+
+    $request_options[RequestOptions::BODY] = $unparseable_request_body;
+
+    // DX: 400 when unparseable request body.
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceErrorResponse(400, 'Syntax error', $response);
+
+    $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
 
     // DX: 422 when invalid entity: multiple values sent for single-value field.
     $response = $this->request('POST', $url, $request_options);

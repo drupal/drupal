@@ -2,6 +2,9 @@
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\CreatedItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\TimestampItem;
@@ -118,6 +121,29 @@ class TimestampItemNormalizerTest extends UnitTestCase {
     // The field item should get the Timestamp @DataType denormalization set as
     // a value, in FieldItemNormalizer::denormalize().
     $timestamp_item->setValue(['value' => $timestamp_data_denormalization])
+      ->shouldBeCalled();
+
+    // Avoid a static method call by returning dummy property data.
+    $field_definition = $this->prophesize(FieldDefinitionInterface::class);
+    $timestamp_item
+      ->getFieldDefinition()
+      ->willReturn($field_definition->reveal())
+      ->shouldBeCalled();
+    $timestamp_item->getPluginDefinition()
+      ->willReturn([
+        'serialized_property_names' => [
+          'foo' => 'bar',
+        ],
+      ])
+      ->shouldBeCalled();
+    $entity = $this->prophesize(EntityInterface::class);
+    $entity_type = $this->prophesize(EntityTypeInterface::class);
+    $entity->getEntityType()
+      ->willReturn($entity_type->reveal())
+      ->shouldBeCalled();
+    $timestamp_item
+      ->getEntity()
+      ->willReturn($entity->reveal())
       ->shouldBeCalled();
 
     $context = [

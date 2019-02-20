@@ -4,6 +4,7 @@ namespace Drupal\Tests\serialization\Kernel;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\entity_test\Entity\EntitySerializedField;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;

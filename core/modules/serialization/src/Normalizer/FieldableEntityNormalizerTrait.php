@@ -223,15 +223,24 @@ trait FieldableEntityNormalizerTrait {
     assert($item_definition instanceof FieldItemDataDefinitionInterface);
     $property_definitions = $item_definition->getPropertyDefinitions();
 
-    if (!is_array($data)) {
-      $property_value = $data;
-      $property_value_class = $property_definitions[$item_definition->getMainPropertyName()]->getClass();
+    $serialized_property_names = $this->getCustomSerializedPropertyNames($field_item);
+    $denormalize_property = function ($property_name, $property_value, $property_value_class, $context) use ($serialized_property_names) {
       if ($this->serializer->supportsDenormalization($property_value, $property_value_class, NULL, $context)) {
         return $this->serializer->denormalize($property_value, $property_value_class, NULL, $context);
       }
       else {
+        if (in_array($property_name, $serialized_property_names, TRUE)) {
+          $property_value = serialize($property_value);
+        }
         return $property_value;
       }
+    };
+
+    if (!is_array($data)) {
+      $property_value = $data;
+      $property_name = $item_definition->getMainPropertyName();
+      $property_value_class = $property_definitions[$property_name]->getClass();
+      return $denormalize_property($property_name, $property_value, $property_value_class, $context);
     }
 
     $data_internal = [];
@@ -243,12 +252,7 @@ trait FieldableEntityNormalizerTrait {
         }
         $property_value = $data[$property_name];
         $property_value_class = $property_definition->getClass();
-        if ($this->serializer->supportsDenormalization($property_value, $property_value_class, NULL, $context)) {
-          $data_internal[$property_name] = $this->serializer->denormalize($property_value, $property_value_class, NULL, $context);
-        }
-        else {
-          $data_internal[$property_name] = $property_value;
-        }
+        $data_internal[$property_name] = $denormalize_property($property_name, $property_value, $property_value_class, $context);
       }
     }
     else {

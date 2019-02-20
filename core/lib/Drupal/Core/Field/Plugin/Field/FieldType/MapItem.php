@@ -64,7 +64,12 @@ class MapItem extends FieldItemBase {
         $values = $values->getValue();
       }
       else {
-        $values = unserialize($values);
+        if (version_compare(PHP_VERSION, '7.0.0', '>=')) {
+          $values = unserialize($values, ['allowed_classes' => FALSE]);
+        }
+        else {
+          $values = unserialize($values);
+        }
       }
     }
 
