@@ -4,6 +4,8 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Access\AccessResultReasonInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Http\Exception\CacheableAccessDeniedHttpException;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -111,7 +113,12 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
       $request->attributes->set(AccessAwareRouterInterface::ACCESS_RESULT, $access_result);
     }
     if (!$access_result->isAllowed()) {
-      throw new AccessDeniedHttpException($access_result instanceof AccessResultReasonInterface ? $access_result->getReason() : NULL);
+      if ($access_result instanceof CacheableDependencyInterface && $request->isMethodCacheable()) {
+        throw new CacheableAccessDeniedHttpException($access_result, $access_result instanceof AccessResultReasonInterface ? $access_result->getReason() : NULL);
+      }
+      else {
+        throw new AccessDeniedHttpException($access_result instanceof AccessResultReasonInterface ? $access_result->getReason() : NULL);
+      }
     }
   }
 

@@ -12,6 +12,7 @@ use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Http\Exception\CacheableUnauthorizedHttpException;
 use Drupal\user\UserAuthInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * HTTP Basic authentication provider.
@@ -155,7 +156,9 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
     $cacheability = CacheableMetadata::createFromObject($site_config)
       ->addCacheTags(['config:user.role.anonymous'])
       ->addCacheContexts(['user.roles:anonymous']);
-    return new CacheableUnauthorizedHttpException($cacheability, (string) $challenge, 'No authentication credentials provided.', $previous);
+    return $request->isMethodCacheable()
+      ? new CacheableUnauthorizedHttpException($cacheability, (string) $challenge, 'No authentication credentials provided.', $previous)
+      : new UnauthorizedHttpException((string) $challenge, 'No authentication credentials provided.', $previous);
   }
 
 }

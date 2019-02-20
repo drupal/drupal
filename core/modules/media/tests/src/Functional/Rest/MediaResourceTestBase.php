@@ -246,10 +246,10 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
         return "The 'view media' permission is required and the media item must be published.";
 
       case 'PATCH':
-        return 'You are not authorized to update this media entity of bundle camelids.';
+        return "The following permissions are required: 'update any media' OR 'update own media' OR 'camelids: edit any media' OR 'camelids: edit own media'.";
 
       case 'DELETE':
-        return 'You are not authorized to delete this media entity of bundle camelids.';
+        return "The following permissions are required: 'delete any media' OR 'delete own media' OR 'camelids: delete any media' OR 'camelids: delete own media'.";
 
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
@@ -266,9 +266,9 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessCacheability() {
+  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
     // @see \Drupal\media\MediaAccessControlHandler::checkAccess()
-    return parent::getExpectedUnauthorizedAccessCacheability()
+    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)
       ->addCacheTags(['media:1']);
   }
 

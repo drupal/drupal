@@ -3,6 +3,7 @@
 namespace Drupal\Tests\hal\Kernel;
 
 use Drupal\Core\Url;
+use Drupal\entity_test\Entity\EntitySerializedField;
 use Drupal\field\Entity\FieldConfig;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 

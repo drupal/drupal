@@ -89,12 +89,15 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
   public function access(Request $request, AccountInterface $account) {
     $method = $request->getMethod();
 
+    // Read-only operations are always allowed.
+    if (in_array($method, ['GET', 'HEAD', 'OPTIONS', 'TRACE'], TRUE)) {
+      return AccessResult::allowed();
+    }
+
     // This check only applies if
-    // 1. this is a write operation
-    // 2. the user was successfully authenticated and
-    // 3. the request comes with a session cookie.
-    if (!in_array($method, ['GET', 'HEAD', 'OPTIONS', 'TRACE'])
-      && $account->isAuthenticated()
+    // 1. the user was successfully authenticated and
+    // 2. the request comes with a session cookie.
+    if ($account->isAuthenticated()
       && $this->sessionConfiguration->hasSession($request)
     ) {
       if (!$request->headers->has('X-CSRF-Token')) {
