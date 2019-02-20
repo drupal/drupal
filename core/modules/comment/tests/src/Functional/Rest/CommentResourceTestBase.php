@@ -335,8 +335,11 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
         return "The 'access comments' permission is required and the comment must be published.";
       case 'POST';
         return "The 'post comments' permission is required.";
-      default:
-        return parent::getExpectedUnauthorizedAccessMessage($method);
+      case 'PATCH';
+      case 'DELETE':
+        // \Drupal\comment\CommentAccessControlHandler::checkAccess() does not
+        // specify a reason for not allowing a comment to be updated or deleted.
+        return '';
     }
   }
 
@@ -376,9 +379,9 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessCacheability() {
+  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
     // @see \Drupal\comment\CommentAccessControlHandler::checkAccess()
-    return parent::getExpectedUnauthorizedAccessCacheability()
+    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)
       ->addCacheTags(['comment:1']);
   }
 

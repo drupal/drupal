@@ -125,6 +125,21 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Detect disallowed authentication methods on access denied exceptions.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   */
+  public function _onExceptionAccessDenied(GetResponseForExceptionEvent $event) {
+    if (isset($this->filter) && $event->isMasterRequest()) {
+      $request = $event->getRequest();
+      $exception = $event->getException();
+      if ($exception instanceof AccessDeniedHttpException && $this->authenticationProvider->applies($request) && !$this->filter->appliesToRoutedRequest($request, TRUE)) {
+        $event->setException(new AccessDeniedHttpException('The used authentication method is not allowed on this route.', $exception));
+      }
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
@@ -137,6 +152,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
     // Access check must be performed after routing.
     $events[KernelEvents::REQUEST][] = ['onKernelRequestFilterProvider', 31];
     $events[KernelEvents::EXCEPTION][] = ['onExceptionSendChallenge', 75];
+    $events[KernelEvents::EXCEPTION][] = ['_onExceptionAccessDenied', 80];
     return $events;
   }
 

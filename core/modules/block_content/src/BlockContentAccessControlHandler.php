@@ -22,7 +22,7 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler {
       return AccessResult::allowedIf($entity->isPublished())->addCacheableDependency($entity)
         ->orIf(AccessResult::allowedIfHasPermission($account, 'administer blocks'));
     }
-    return parent::checkAccess($entity, $operation, $account);
+    return parent::checkAccess($entity, $operation, $account)->addCacheableDependency($entity);
   }
 
 }

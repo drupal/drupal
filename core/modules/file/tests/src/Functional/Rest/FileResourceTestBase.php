@@ -213,6 +213,9 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
+      if ($method === 'DELETE') {
+        return '';
+      }
       return parent::getExpectedUnauthorizedAccessMessage($method);
     }
 
@@ -220,7 +223,10 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
       return "The 'access content' permission is required.";
     }
     if ($method === 'PATCH') {
-      return 'You are not authorized to update this file entity.';
+      return '';
+    }
+    if ($method === 'DELETE') {
+      return '';
     }
     return parent::getExpectedUnauthorizedAccessMessage($method);
   }

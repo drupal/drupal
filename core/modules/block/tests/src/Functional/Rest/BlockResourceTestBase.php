@@ -3,6 +3,7 @@
 namespace Drupal\Tests\block\Functional\Rest;
 
 use Drupal\block\Entity\Block;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 abstract class BlockResourceTestBase extends EntityResourceTestBase {
@@ -135,7 +136,7 @@ abstract class BlockResourceTestBase extends EntityResourceTestBase {
 
     switch ($method) {
       case 'GET':
-        return "You are not authorized to view this block entity.";
+        return "The block visibility condition 'user_role' denied access.";
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }
@@ -143,17 +144,25 @@ abstract class BlockResourceTestBase extends EntityResourceTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Fix this in https://www.drupal.org/node/2820315.
    */
   protected function getExpectedUnauthorizedAccessCacheability() {
-    // @see \Drupal\block\BlockAccessControlHandler::checkAccess()
-    return parent::getExpectedUnauthorizedAccessCacheability()
-      ->setCacheTags([
-        '4xx-response',
-        'config:block.block.llama',
-        'http_response',
-        static::$auth ? 'user:2' : 'user:0',
-      ])
+    return (new CacheableMetadata())
+      ->setCacheTags(['4xx-response', 'http_response'])
       ->setCacheContexts(['user.roles']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
+    // @see \Drupal\block\BlockAccessControlHandler::checkAccess()
+    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)
+      ->addCacheTags([
+        'config:block.block.llama',
+        $is_authenticated ? 'user:2' : 'user:0',
+      ]);
   }
 
 }

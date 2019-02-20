@@ -85,4 +85,20 @@ abstract class ShortcutSetResourceTestBase extends EntityResourceTestBase {
     // @todo Update in https://www.drupal.org/node/2300677.
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessMessage($method) {
+    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
+      return parent::getExpectedUnauthorizedAccessMessage($method);
+    }
+
+    switch ($method) {
+      case 'GET':
+        return "The 'access shortcuts' permission is required.";
+      default:
+        return parent::getExpectedUnauthorizedAccessMessage($method);
+    }
+  }
+
 }

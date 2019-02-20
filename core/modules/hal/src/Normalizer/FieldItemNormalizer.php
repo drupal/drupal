@@ -4,12 +4,15 @@ namespace Drupal\hal\Normalizer;
 
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
+use Drupal\serialization\Normalizer\SerializedColumnNormalizerTrait;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
 /**
  * Converts the Drupal field item object structure to HAL array structure.
  */
 class FieldItemNormalizer extends NormalizerBase {
+
+  use SerializedColumnNormalizerTrait;
 
   /**
    * The interface or class that this Normalizer supports.
@@ -44,6 +47,7 @@ class FieldItemNormalizer extends NormalizerBase {
     }
 
     $field_item = $context['target_instance'];
+    $this->checkForSerializedStrings($data, $class, $field_item);
 
     // If this field is translatable, we need to create a translated instance.
     if (isset($data['lang'])) {
@@ -71,6 +75,19 @@ class FieldItemNormalizer extends NormalizerBase {
    *   The value to use in Entity::setValue().
    */
   protected function constructValue($data, $context) {
+    /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
+    $field_item = $context['target_instance'];
+    $serialized_property_names = $this->getCustomSerializedPropertyNames($field_item);
+
+    // Explicitly serialize the input, unlike properties that rely on
+    // being automatically serialized, manually managed serialized properties
+    // expect to receive serialized input.
+    foreach ($serialized_property_names as $serialized_property_name) {
+      if (!empty($data[$serialized_property_name])) {
+        $data[$serialized_property_name] = serialize($data[$serialized_property_name]);
+      }
+    }
+
     return $data;
   }
 
