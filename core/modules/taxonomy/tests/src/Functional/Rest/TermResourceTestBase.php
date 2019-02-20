@@ -356,10 +356,10 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessCacheability() {
+  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
     // @see \Drupal\taxonomy\TermAccessControlHandler::checkAccess()
-    return parent::getExpectedUnauthorizedAccessCacheability()
-      ->addCacheTags(['taxonomy_term:1']);
+    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)
+      ->addCacheTags(['taxonomy_term:1']);;
   }
 
 }

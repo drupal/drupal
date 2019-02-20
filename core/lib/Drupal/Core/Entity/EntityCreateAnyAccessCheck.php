@@ -78,13 +78,15 @@ class EntityCreateAnyAccessCheck implements AccessInterface {
     if ($entity_type->getBundleEntityType()) {
       $access->addCacheTags($this->entityTypeManager->getDefinition($entity_type->getBundleEntityType())->getListCacheTags());
 
-      // Check if the user is allowed to create new bundles. If so, allow
-      // access, so the add page can show a link to create one.
-      // @see \Drupal\Core\Entity\Controller\EntityController::addPage()
-      $bundle_access_control_handler = $this->entityTypeManager->getAccessControlHandler($entity_type->getBundleEntityType());
-      $access = $access->orIf($bundle_access_control_handler->createAccess(NULL, $account, [], TRUE));
-      if ($access->isAllowed()) {
-        return $access;
+      if (empty($route->getOption('_ignore_create_bundle_access'))) {
+        // Check if the user is allowed to create new bundles. If so, allow
+        // access, so the add page can show a link to create one.
+        // @see \Drupal\Core\Entity\Controller\EntityController::addPage()
+        $bundle_access_control_handler = $this->entityTypeManager->getAccessControlHandler($entity_type->getBundleEntityType());
+        $access = $access->orIf($bundle_access_control_handler->createAccess(NULL, $account, [], TRUE));
+        if ($access->isAllowed()) {
+          return $access;
+        }
       }
     }
 

@@ -11,6 +11,8 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
  */
 class FieldItemNormalizer extends ComplexDataNormalizer implements DenormalizerInterface {
 
+  use SerializedColumnNormalizerTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -30,6 +32,7 @@ class FieldItemNormalizer extends ComplexDataNormalizer implements DenormalizerI
 
     /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
     $field_item = $context['target_instance'];
+    $this->checkForSerializedStrings($data, $class, $field_item);
 
     $field_item->setValue($this->constructValue($data, $context));
     return $field_item;
@@ -51,6 +54,19 @@ class FieldItemNormalizer extends ComplexDataNormalizer implements DenormalizerI
    *   The value to use in Entity::setValue().
    */
   protected function constructValue($data, $context) {
+    /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
+    $field_item = $context['target_instance'];
+    $serialized_property_names = $this->getCustomSerializedPropertyNames($field_item);
+
+    // Explicitly serialize the input, unlike properties that rely on
+    // being automatically serialized, manually managed serialized properties
+    // expect to receive serialized input.
+    foreach ($serialized_property_names as $serialized_property_name) {
+      if (!empty($data[$serialized_property_name])) {
+        $data[$serialized_property_name] = serialize($data[$serialized_property_name]);
+      }
+    }
+
     return $data;
   }
 

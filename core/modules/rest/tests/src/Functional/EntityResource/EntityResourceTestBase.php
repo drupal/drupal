@@ -380,6 +380,20 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
+   * The cacheability of unauthorized 'view' entity access.
+   *
+   * @param bool $is_authenticated
+   *   Whether the current request is authenticated or not. This matters for
+   *   some entity access control handlers, but not for most.
+   *
+   * @return \Drupal\Core\Cache\CacheableMetadata
+   *   The expected cacheability.
+   */
+  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
+    return new CacheableMetadata();
+  }
+
+  /**
    * The expected cache tags for the GET/HEAD response of the test entity.
    *
    * @see ::testGet
@@ -441,7 +455,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // response because ?_format query string is present.
     $response = $this->request('GET', $url, $request_options);
     if ($has_canonical_url) {
-      $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response);
+      $expected_cacheability = $this->getExpectedUnauthorizedAccessCacheability()
+        // @see \Drupal\Core\EventSubscriber\AnonymousUserResponseSubscriber::onRespond()
+        ->addCacheTags(['config:user.role.anonymous']);
+      $expected_cacheability->addCacheableDependency($this->getExpectedUnauthorizedEntityAccessCacheability(FALSE));
+      $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'MISS', FALSE);
     }
     else {
       $this->assertResourceErrorResponse(404, 'No route found for "GET ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
@@ -474,7 +492,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // First: single format. Drupal will automatically pick the only format.
     $this->provisionEntityResource(TRUE);
-    $expected_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability();
+    $expected_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability()
+      ->addCacheableDependency($this->getExpectedUnauthorizedEntityAccessCacheability(static::$auth !== FALSE));
     // DX: 403 because unauthorized single-format route, ?_format is omittable.
     $url->setOption('query', []);
     $response = $this->request('GET', $url, $request_options);
@@ -483,13 +502,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
     }
     else {
-      $this->assertResourceErrorResponse(403, FALSE, $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', 'MISS');
+      $this->assertResourceErrorResponse(403, FALSE, $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', FALSE);
     }
     $this->assertSame(static::$auth ? [] : ['MISS'], $response->getHeader('X-Drupal-Cache'));
     // DX: 403 because unauthorized.
     $url->setOption('query', ['_format' => static::$format]);
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(403, FALSE, $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', $has_canonical_url ? 'MISS' : 'HIT');
+    $this->assertResourceErrorResponse(403, FALSE, $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', FALSE);
 
     // Then, what we'll use for the remainder of the test: multiple formats.
     $this->provisionEntityResource();
@@ -509,7 +528,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 403 because unauthorized.
     $url->setOption('query', ['_format' => static::$format]);
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', 'HIT');
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', FALSE);
     $this->assertArrayNotHasKey('Link', $response->getHeaders());
 
     $this->setUpAuthorization('GET');
@@ -687,7 +706,15 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response);
+    $expected_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability();
+    // Permission checking now happens first, so it's the only cache context we
+    // could possibly vary by.
+    $expected_403_cacheability->setCacheContexts(['user.permissions']);
+    // @see \Drupal\Core\EventSubscriber\AnonymousUserResponseSubscriber::onRespond()
+    if (static::$auth === FALSE) {
+      $expected_403_cacheability->addCacheTags(['config:user.role.anonymous']);
+    }
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', FALSE);
 
     $this->grantPermissionsToTestedRole(['restful get entity:' . static::$entityTypeId]);
 
@@ -839,18 +866,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
 
-    // DX: 400 when no request body.
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(400, 'No entity content received.', $response);
-
-    $request_options[RequestOptions::BODY] = $unparseable_request_body;
-
-    // DX: 400 when unparseable request body.
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(400, 'Syntax error', $response);
-
-    $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
-
     if (static::$auth) {
       // DX: forgetting authentication: authentication provider-specific error
       // response.
@@ -862,15 +877,21 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when unauthorized.
     $response = $this->request('POST', $url, $request_options);
-    // @todo Remove this if-test in https://www.drupal.org/project/drupal/issues/2820364
-    if (static::$entityTypeId === 'media' && !static::$auth) {
-      $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nname: Name: this field cannot hold more than 1 values.\nfield_media_file.0: You do not have access to the referenced entity (file: 3).\n", $response);
-    }
-    else {
-      $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
-    }
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
 
     $this->setUpAuthorization('POST');
+
+    // DX: 400 when no request body.
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceErrorResponse(400, 'No entity content received.', $response);
+
+    $request_options[RequestOptions::BODY] = $unparseable_request_body;
+
+    // DX: 400 when unparseable request body.
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceErrorResponse(400, 'Syntax error', $response);
+
+    $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
 
     // DX: 422 when invalid entity: multiple values sent for single-value field.
     $response = $this->request('POST', $url, $request_options);
@@ -1074,18 +1095,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
 
-    // DX: 400 when no request body.
-    $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(400, 'No entity content received.', $response);
-
-    $request_options[RequestOptions::BODY] = $unparseable_request_body;
-
-    // DX: 400 when unparseable request body.
-    $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(400, 'Syntax error', $response);
-
-    $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
-
     if (static::$auth) {
       // DX: forgetting authentication: authentication provider-specific error
       // response.
@@ -1100,6 +1109,18 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('PATCH'), $response);
 
     $this->setUpAuthorization('PATCH');
+
+    // DX: 400 when no request body.
+    $response = $this->request('PATCH', $url, $request_options);
+    $this->assertResourceErrorResponse(400, 'No entity content received.', $response);
+
+    $request_options[RequestOptions::BODY] = $unparseable_request_body;
+
+    // DX: 400 when unparseable request body.
+    $response = $this->request('PATCH', $url, $request_options);
+    $this->assertResourceErrorResponse(400, 'Syntax error', $response);
+
+    $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
 
     // DX: 422 when invalid entity: multiple values sent for single-value field.
     $response = $this->request('PATCH', $url, $request_options);
