@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\layout_builder\Functional;
 
+use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -185,6 +186,37 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->drupalGet("$field_ui_prefix/display-layout/default");
     $assert_session->pageTextNotContains('My text field');
     $assert_session->elementNotExists('css', '.field--name-field-my-text');
+  }
+
+  /**
+   * Test that layout builder checks entity view access.
+   */
+  public function testAccess() {
+    $assert_session = $this->assertSession();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    // Allow overrides for the layout.
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => TRUE], 'Save');
+
+    $this->drupalLogin($this->drupalCreateUser(['configure any layout']));
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('The first node body');
+    $assert_session->pageTextNotContains('Powered by Drupal');
+    $node = Node::load(1);
+    $node->setUnpublished();
+    $node->save();
+    $this->drupalGet('node/1');
+    $assert_session->pageTextNotContains('The first node body');
+    $assert_session->pageTextContains('Access denied');
+
+    $this->drupalGet('node/1/layout');
+    $assert_session->pageTextNotContains('The first node body');
+    $assert_session->pageTextContains('Access denied');
   }
 
   /**
