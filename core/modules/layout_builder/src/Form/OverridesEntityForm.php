@@ -114,9 +114,28 @@ class OverridesEntityForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildEntity(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $section_storage_entity */
+    $section_storage_entity = $this->sectionStorage->getContextValue('entity');
+
+    // @todo Replace with new API in
+    //   https://www.drupal.org/project/drupal/issues/2942907.
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $active_entity */
+    $active_entity = $this->entityTypeManager->getStorage($section_storage_entity->getEntityTypeId())->load($section_storage_entity->id());
+
+    // Any fields that are not editable on this form should be updated with the
+    // value from the active entity for editing. This avoids overwriting fields
+    // that have been updated since the entity was stored in the section
+    // storage.
+    $edited_field_names = $this->getEditedFieldNames($form_state);
+    foreach ($section_storage_entity->getFieldDefinitions() as $field_name => $field_definition) {
+      if (!in_array($field_name, $edited_field_names) && !$field_definition->isReadOnly() && !$field_definition->isComputed()) {
+        $section_storage_entity->{$field_name} = $active_entity->{$field_name};
+      }
+    }
+
     // \Drupal\Core\Entity\EntityForm::buildEntity() clones the entity object.
     // Keep it in sync with the one used by the section storage.
-    $this->setEntity($this->sectionStorage->getContextValue('entity'));
+    $this->setEntity($section_storage_entity);
     $entity = parent::buildEntity($form, $form_state);
     $this->sectionStorage->setContextValue('entity', $entity);
     return $entity;
