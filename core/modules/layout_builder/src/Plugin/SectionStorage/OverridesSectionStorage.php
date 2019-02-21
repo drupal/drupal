@@ -146,13 +146,17 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    */
   public function buildRoutes(RouteCollection $collection) {
     foreach ($this->getEntityTypes() as $entity_type_id => $entity_type) {
+      // If the canonical route does not exist, do not provide any Layout
+      // Builder UI routes for this entity type.
+      if (!$collection->get("entity.$entity_type_id.canonical")) {
+        continue;
+      }
+
       $defaults = [];
       $defaults['entity_type_id'] = $entity_type_id;
 
-      $requirements = [];
-      if ($this->hasIntegerId($entity_type)) {
-        $requirements[$entity_type_id] = '\d+';
-      }
+      // Retrieve the requirements from the canonical route.
+      $requirements = $collection->get("entity.$entity_type_id.canonical")->getRequirements();
 
       $options = [];
       // Ensure that upcasting is run in the correct order.

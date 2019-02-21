@@ -237,6 +237,38 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Test that layout builder checks entity view access.
+   */
+  public function testAccess() {
+    $assert_session = $this->assertSession();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    // Allow overrides for the layout.
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => TRUE], 'Save');
+
+    $this->drupalLogin($this->drupalCreateUser(['configure any layout']));
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('The first node body');
+    $assert_session->pageTextNotContains('Powered by Drupal');
+    $node = Node::load(1);
+    $node->setUnpublished();
+    $node->save();
+    $this->drupalGet('node/1');
+    $assert_session->pageTextNotContains('The first node body');
+    $assert_session->pageTextContains('Access denied');
+
+    $this->drupalGet('node/1/layout');
+    $assert_session->pageTextNotContains('The first node body');
+    $assert_session->pageTextContains('Access denied');
+  }
+
+  /**
    * Tests that a non-default view mode works as expected.
    */
   public function testNonDefaultViewMode() {
