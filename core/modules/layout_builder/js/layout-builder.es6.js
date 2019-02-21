@@ -160,4 +160,39 @@
         });
     },
   };
+
+  /**
+   * Disables interactive elements in previewed blocks.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attach disabling interactive elements behavior to the Layout Builder UI.
+   */
+  behaviors.layoutBuilderDisableInteractiveElements = {
+    attach() {
+      // Disable interactive elements inside preview blocks.
+      const $blocks = $('#layout-builder [data-layout-block-uuid]');
+      $blocks.find('input, textarea, select').prop('disabled', true);
+      $blocks.find('a').on('click mouseup touchstart', e => {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+
+      /*
+       * In preview blocks, remove from the tabbing order all input elements
+       * and elements specifically assigned a tab index, other than those
+       * related to contextual links.
+       */
+      $blocks
+        .find(
+          'button, [href], input, select, textarea, iframe, [tabindex]:not([tabindex="-1"]):not(.tabbable)',
+        )
+        .not(
+          (index, element) =>
+            $(element).closest('[data-contextual-id]').length > 0,
+        )
+        .attr('tabindex', -1);
+    },
+  };
 })(jQuery, Drupal);

@@ -1,0 +1,4 @@
+layout_builder.disable_css_transitions:
+  css:
+    component:
+      css/layout_builder_test_css_transitions.test.css: {}

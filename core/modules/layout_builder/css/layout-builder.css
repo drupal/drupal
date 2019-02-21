@@ -51,10 +51,6 @@
   text-align: center;
 }
 
-.layout-section .layout-builder--layout__region .block {
-  padding: 1.5em;
-}
-
 .layout-section .remove-section {
   position: relative;
   background: url(../../../misc/icons/bebebe/ex.svg) #fff center center / 16px 16px no-repeat;
@@ -73,6 +69,14 @@
 
 .layout-section .remove-section:hover {
   background-image: url(../../../misc/icons/787878/ex.svg);
+}
+
+.layout-builder-block {
+  padding: 1.5em;
+}
+
+.layout-builder-block [tabindex="-1"] {
+  pointer-events: none;
 }
 
 #drupal-off-canvas .layout-selection li {

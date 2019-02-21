@@ -1,0 +1,7 @@
+/**
+ * Remove all transitions for testing.
+ */
+* {
+  /* CSS transitions. */
+  transition: none !important;
+}

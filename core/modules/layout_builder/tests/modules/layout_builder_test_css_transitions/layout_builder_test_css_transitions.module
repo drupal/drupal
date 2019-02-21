@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Attaches CSS to disable animations.
+ *
+ * CSS animations cause intermittent errors in some tests.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function layout_builder_test_css_transitions_page_attachments(array &$attachments) {
+  // Unconditionally attach an asset to the page.
+  $attachments['#attached']['library'][] = 'layout_builder_test_css_transitions/layout_builder.disable_css_transitions';
+}

@@ -40,6 +40,7 @@ function layout_builder_help($route_name, RouteMatchInterface $route_match) {
     else {
       $output .= '<p>' . t('To manage other areas of the page, use the block administration page.') . '</p>';
     }
+    $output .= '<p>' . t('Forms and links inside the content of the layout builder tool have been disabled.') . '</p>';
     return $output;
   }
 

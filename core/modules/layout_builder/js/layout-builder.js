@@ -76,4 +76,19 @@
       });
     }
   };
+
+  behaviors.layoutBuilderDisableInteractiveElements = {
+    attach: function attach() {
+      var $blocks = $('#layout-builder [data-layout-block-uuid]');
+      $blocks.find('input, textarea, select').prop('disabled', true);
+      $blocks.find('a').on('click mouseup touchstart', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+
+      $blocks.find('button, [href], input, select, textarea, iframe, [tabindex]:not([tabindex="-1"]):not(.tabbable)').not(function (index, element) {
+        return $(element).closest('[data-contextual-id]').length > 0;
+      }).attr('tabindex', -1);
+    }
+  };
 })(jQuery, Drupal);
