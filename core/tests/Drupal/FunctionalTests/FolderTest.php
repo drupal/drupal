@@ -1,14 +1,15 @@
 <?php
 
-namespace Drupal\Tests\simpletest\Functional;
+namespace Drupal\FunctionalTests;
 
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * This test will check SimpleTest's treatment of hook_install during setUp.
+ * This test will check BrowserTestBase's treatment of hook_install during
+ * setUp.
  * Image module is used for test.
  *
- * @group simpletest
+ * @group browsertestbase
  */
 class FolderTest extends BrowserTestBase {
 
