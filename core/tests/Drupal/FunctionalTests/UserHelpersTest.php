@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\simpletest\Functional;
+namespace Drupal\FunctionalTests;
 
 use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests User related helper methods of WebTestBase.
  *
- * @group simpletest
+ * @group browsertestbase
  */
 class UserHelpersTest extends BrowserTestBase {
 
