@@ -1,0 +1,6 @@
+name: 'UniqueField Constraint Test'
+type: module
+description: 'Support module for UniqueField Constraint testing.'
+package: Testing
+version: VERSION
+core: 8.x
