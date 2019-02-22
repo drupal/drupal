@@ -88,4 +88,21 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
   }
 
+  /**
+   * @covers \Drupal\content_moderation\Entity\Handler\NodeModerationHandler::enforceRevisionsBundleFormAlter
+   */
+  public function testEnforceRevisionsEntityFormAlter() {
+    $this->drupalLogin($this->adminUser);
+    $this->createContentTypeFromUi('Moderated', 'moderated');
+
+    // Ensure checkboxes in the 'workflow' section can be altered, even when
+    // 'revision' is enforced and disabled.
+    $this->drupalGet('admin/structure/types/manage/moderated');
+    $this->drupalPostForm('admin/structure/types/manage/moderated', [
+     'options[promote]' => TRUE,
+    ], 'Save content type');
+    $this->drupalGet('admin/structure/types/manage/moderated');
+    $this->assertSession()->checkboxChecked('options[promote]');
+  }
+
 }
