@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Contains unique_field_constraint_test.module
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function unique_field_constraint_test_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'entity_test_string_id') {
+    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
+    $fields['name']->addConstraint('UniqueField');
+  }
+}
