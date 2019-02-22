@@ -7,6 +7,7 @@ const collectedFolders = {
   Tests: [],
   Commands: [],
   Assertions: [],
+  Pages: [],
 };
 const searchDirectory = process.env.DRUPAL_NIGHTWATCH_SEARCH_DIRECTORY || '';
 
@@ -45,7 +46,7 @@ module.exports = {
   output_folder: process.env.DRUPAL_NIGHTWATCH_OUTPUT,
   custom_commands_path: collectedFolders.Commands,
   custom_assertions_path: collectedFolders.Assertions,
-  page_objects_path: '',
+  page_objects_path: collectedFolders.Pages,
   globals_path: 'tests/Drupal/Nightwatch/globals.js',
   selenium: {
     start_process: false,

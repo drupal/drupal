@@ -15,4 +15,13 @@ module.exports = {
       .assert.containsText('body', 'Test page text')
       .drupalLogAndEnd({ onlyOnError: false });
   },
+  'Page objects test page': browser => {
+    const testPage = browser.page.TestPage();
+
+    testPage
+      .drupalRelativeURL('/test-page')
+      .waitForElementVisible('@body', testPage.props.timeout)
+      .assert.containsText('@body', testPage.props.text)
+      .drupalLogAndEnd({ onlyOnError: false });
+  },
 };

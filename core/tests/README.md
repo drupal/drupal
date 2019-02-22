@@ -123,12 +123,14 @@ sudo -u www-data -E ./vendor/bin/phpunit -c core --testsuite functional-javascri
 - To skip running core tests, run `yarn test:nightwatch --skiptags core`
 - To run a single test, run e.g. `yarn test:nightwatch tests/Drupal/Nightwatch/Tests/exampleTest.js`
 
-Nightwatch tests can be placed in any folder with the pattern `**/tests/**/Nightwatch/(Tests|Commands|Assertions)`. For example:
+Nightwatch tests, as well as custom commands, assertions and pages, can be placed in any folder with the pattern `**/tests/**/Nightwatch/(Tests|Commands|Assertions|Pages)`. For example:
 ```
 tests/Nightwatch/Tests
 src/tests/Nightwatch/Tests
 tests/src/Nightwatch/Tests
 tests/Nightwatch/Commands
+tests/src/Nightwatch/Assertions
+tests/src/Nightwatch/Pages
 ```
 
 It's helpful to follow existing patterns for test placement, so for the action module they would go in `core/modules/action/tests/src/Nightwatch`.
