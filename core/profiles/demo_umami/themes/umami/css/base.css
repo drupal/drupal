@@ -15,13 +15,13 @@ html {
 
 *:focus {
   outline-offset: 2px; /* Not supported in IE11 but greatly improves outline visibility in newer browsers. */
-  outline-color: #00836d;
+  outline-color: #008068;
   outline-style: dotted;
   outline-width: 1px;
 }
 
 a {
-  color: #00836d;
+  color: #008068;
   text-decoration: underline;
 }
 a:hover,
@@ -67,9 +67,9 @@ button,
 [type="submit"] {
   display: inline-block;
   padding: 0.7rem 1.3rem;
-  border: 2px solid #00836d;
+  border: 2px solid #008068;
   border-radius: 3px;
-  background-color: #00836d;
+  background-color: #008068;
   color: #fff;
   cursor: pointer;
   text-align: center;
@@ -207,7 +207,7 @@ input {
   padding: 0.8rem 0.4rem;
 }
 input:focus {
-  border: 2px solid #00836d;
+  border: 2px solid #008068;
 }
 input[type="checkbox"] {
   min-width: inherit;
@@ -220,7 +220,7 @@ textarea {
   padding: 0.8rem 0.4rem;
 }
 textarea:focus {
-  border: 2px solid #00836d;
+  border: 2px solid #008068;
 }
 
 label {

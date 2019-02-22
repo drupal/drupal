@@ -106,7 +106,7 @@
 }
 
 .form-search:focus {
-  border: 2px solid #00836d;
+  border: 2px solid #008068;
   border-top-left-radius: 2px;  /* LTR */
   border-bottom-left-radius: 2px; /* LTR */
 }
@@ -118,7 +118,7 @@
 }
 
 .search-form .form-search:focus {
-  border: 1px solid #00836d;
+  border: 1px solid #008068;
 }
 
 .form-search::placeholder {
@@ -183,11 +183,11 @@
 .search-form .form-submit:hover {
   margin: 0;
   background-color: #e6eee0;
-  border: 2px solid #00836d;
+  border: 2px solid #008068;
   outline-offset: 2px;
 }
 
 .search-form .form-submit:focus,
 .search-form .form-submit:hover {
-  border: 1px solid #00836d;
+  border: 1px solid #008068;
 }
