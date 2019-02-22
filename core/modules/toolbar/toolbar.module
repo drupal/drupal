@@ -295,9 +295,10 @@ function toolbar_preprocess_html(&$variables) {
   if (!\Drupal::currentUser()->hasPermission('access toolbar')) {
     return;
   }
-
-  $variables['attributes'] = new Attribute($variables['attributes']);
-  $variables['attributes']->addClass(['toolbar-tray-open', 'toolbar-horizontal', 'toolbar-fixed', 'toolbar-loading']);
+  $variables['attributes']['class'][] = 'toolbar-tray-open';
+  $variables['attributes']['class'][] = 'toolbar-horizontal';
+  $variables['attributes']['class'][] = 'toolbar-fixed';
+  $variables['attributes']['class'][] = 'toolbar-loading';
 }
 
 /**
