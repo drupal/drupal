@@ -18,27 +18,27 @@ use Drupal\Core\Render\Element;
  *
  * Usage example:
  * @code
- * $form['needs_accommodation'] = array(
+ * $form['needs_accommodation'] = [
  *   '#type' => 'checkbox',
  *   '#title' => $this->t('Need Special Accommodations?'),
- * );
+ * ];
  *
- * $form['accommodation'] = array(
+ * $form['accommodation'] = [
  *   '#type' => 'container',
- *   '#attributes' => array(
- *     'class' => 'accommodation',
- *   ),
- *   '#states' => array(
- *     'invisible' => array(
- *       'input[name="needs_accommodation"]' => array('checked' => FALSE),
- *     ),
- *   ),
- * );
+ *   '#attributes' => [
+ *     'class' => ['accommodation'],
+ *   ],
+ *   '#states' => [
+ *     'invisible' => [
+ *       'input[name="needs_accommodation"]' => ['checked' => FALSE],
+ *     ],
+ *   ],
+ * ];
  *
- * $form['accommodation']['diet'] = array(
+ * $form['accommodation']['diet'] = [
  *   '#type' => 'textfield',
  *   '#title' => $this->t('Dietary Restrictions'),
- * );
+ * ];
  * @endcode
  *
  * @RenderElement("container")
