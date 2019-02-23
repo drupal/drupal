@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\UpdateException;
 
@@ -227,7 +226,7 @@ function hook_modules_installed($modules) {
 function hook_install() {
   // Create the styles directory and ensure it's writable.
   $directory = file_default_scheme() . '://styles';
-  \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 }
 
 /**
@@ -283,7 +282,7 @@ function hook_modules_uninstalled($modules) {
  */
 function hook_uninstall() {
   // Remove the styles directory and generated images.
-  \Drupal::service('file_system')->deleteRecursive(file_default_scheme() . '://styles');
+  file_unmanaged_delete_recursive(file_default_scheme() . '://styles');
 }
 
 /**

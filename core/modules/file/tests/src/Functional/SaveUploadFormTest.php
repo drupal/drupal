@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\file\Functional;
 
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
 use Drupal\Tests\TestFileCreationTrait;
 
@@ -303,7 +302,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $edit = [
-      'file_test_replace' => FileSystemInterface::EXISTS_RENAME,
+      'file_test_replace' => FILE_EXISTS_RENAME,
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));

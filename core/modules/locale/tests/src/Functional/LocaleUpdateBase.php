@@ -3,7 +3,6 @@
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
@@ -77,7 +76,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
    *   directory.
    */
   protected function setTranslationsDirectory($path) {
-    \Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    file_prepare_directory($path, FILE_CREATE_DIRECTORY);
     $this->config('locale.settings')->set('translation.path', $path)->save();
   }
 
@@ -131,7 +130,7 @@ EOF;
       }
     }
 
-    \Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    file_prepare_directory($path, FILE_CREATE_DIRECTORY);
     $file = File::create([
       'uid' => 1,
       'filename' => $filename,

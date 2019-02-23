@@ -41,10 +41,8 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     parent::setUp();
 
     // Copy test po files to the translations directory.
-    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-    $file_system = \Drupal::service('file_system');
-    $file_system->copy(__DIR__ . '/../../../tests/test.de.po', 'translations://', FILE_EXISTS_REPLACE);
-    $file_system->copy(__DIR__ . '/../../../tests/test.xx.po', 'translations://', FILE_EXISTS_REPLACE);
+    file_unmanaged_copy(__DIR__ . '/../../tests/test.de.po', 'translations://', FILE_EXISTS_REPLACE);
+    file_unmanaged_copy(__DIR__ . '/../../tests/test.xx.po', 'translations://', FILE_EXISTS_REPLACE);
 
     $this->adminUser = $this->drupalCreateUser(['administer languages', 'translate interface', 'access administration pages']);
     $this->adminUserAccessSiteReports = $this->drupalCreateUser(['administer languages', 'translate interface', 'access administration pages', 'access site reports']);

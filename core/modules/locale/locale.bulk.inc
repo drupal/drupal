@@ -5,7 +5,6 @@
  * Mass import-export and batch import functionality for Gettext .po files.
  */
 
-use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\file\FileInterface;
 use Drupal\locale\Gettext;
@@ -507,10 +506,8 @@ function locale_translate_delete_translation_files(array $projects = [], array $
   // Delete all translation files from the translations directory.
   if ($files = locale_translate_get_interface_translation_files($projects, $langcodes)) {
     foreach ($files as $file) {
-      try {
-        \Drupal::service('file_system')->delete($file->uri);
-      }
-      catch (FileException $e) {
+      $success = file_unmanaged_delete($file->uri);
+      if (!$success) {
         $fail = TRUE;
       }
     }

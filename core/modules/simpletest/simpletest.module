@@ -7,7 +7,6 @@
 
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Database\Database;
-use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\simpletest\TestBase;
@@ -144,12 +143,7 @@ function simpletest_run_tests($test_list) {
     ->execute();
 
   // Clear out the previous verbose files.
-  try {
-    \Drupal::service('file_system')->deleteRecursive('public://simpletest/verbose');
-  }
-  catch (FileException $e) {
-    // Ignore failed deletes.
-  }
+  file_unmanaged_delete_recursive('public://simpletest/verbose');
 
   // Get the info for the first test being run.
   $first_test = reset($test_list);
@@ -705,14 +699,9 @@ function simpletest_clean_temporary_directories() {
     foreach ($files as $file) {
       if ($file[0] != '.') {
         $path = DRUPAL_ROOT . '/sites/simpletest/' . $file;
-        try {
-          \Drupal::service('file_system')->deleteRecursive($path, function ($any_path) {
-            @chmod($any_path, 0700);
-          });
-        }
-        catch (FileException $e) {
-          // Ignore failed deletes.
-        }
+        file_unmanaged_delete_recursive($path, function ($any_path) {
+          @chmod($any_path, 0700);
+        });
         $count++;
       }
     }

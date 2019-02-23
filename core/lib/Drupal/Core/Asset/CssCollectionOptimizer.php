@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Asset;
 
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\State\StateInterface;
 
 /**
@@ -39,13 +38,6 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
   protected $state;
 
   /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
    * Constructs a CssCollectionOptimizer.
    *
    * @param \Drupal\Core\Asset\AssetCollectionGrouperInterface $grouper
@@ -56,19 +48,12 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
    *   The dumper for optimized CSS assets.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key/value store.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
-   *   The file system service.
    */
-  public function __construct(AssetCollectionGrouperInterface $grouper, AssetOptimizerInterface $optimizer, AssetDumperInterface $dumper, StateInterface $state, FileSystemInterface $file_system = NULL) {
+  public function __construct(AssetCollectionGrouperInterface $grouper, AssetOptimizerInterface $optimizer, AssetDumperInterface $dumper, StateInterface $state) {
     $this->grouper = $grouper;
     $this->optimizer = $optimizer;
     $this->dumper = $dumper;
     $this->state = $state;
-    if (!$file_system) {
-      @trigger_error('The file_system service must be passed to CssCollectionOptimizer::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3006851.', E_USER_DEPRECATED);
-      $file_system = \Drupal::service('file_system');
-    }
-    $this->fileSystem = $file_system;
   }
 
   /**
@@ -193,7 +178,7 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
     $delete_stale = function ($uri) {
       // Default stale file threshold is 30 days.
       if (REQUEST_TIME - filemtime($uri) > \Drupal::config('system.performance')->get('stale_file_threshold')) {
-        $this->fileSystem->delete($uri);
+        file_unmanaged_delete($uri);
       }
     };
     file_scan_directory('public://css', '/.*/', ['callback' => $delete_stale]);

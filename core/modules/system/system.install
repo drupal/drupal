@@ -11,7 +11,6 @@ use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Path\AliasStorage;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
@@ -629,7 +628,7 @@ function system_requirements($phase) {
       $directory = config_get_config_directory($type);
       // If we're installing Drupal try and create the config sync directory.
       if (!is_dir($directory) && $phase == 'install') {
-        \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+        file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
       }
       if (!is_dir($directory)) {
         if ($phase == 'install') {
@@ -666,7 +665,7 @@ function system_requirements($phase) {
       continue;
     }
     if ($phase == 'install') {
-      \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+      file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     }
     $is_writable = is_writable($directory);
     $is_directory = is_dir($directory);

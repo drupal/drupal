@@ -4,7 +4,6 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Serialization\Yaml;
 
 /**
@@ -45,6 +44,7 @@ class FileStorage implements StorageInterface {
   public function __construct($directory, $collection = StorageInterface::DEFAULT_COLLECTION) {
     $this->directory = $directory;
     $this->collection = $collection;
+
     // Use a NULL File Cache backend by default. This will ensure only the
     // internal static caching of FileCache is used and thus avoids blowing up
     // the APCu cache.
@@ -76,7 +76,7 @@ class FileStorage implements StorageInterface {
    */
   protected function ensureStorage() {
     $dir = $this->getCollectionDirectory();
-    $success = \Drupal::service('file_system')->prepareDirectory($dir, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+    $success = file_prepare_directory($dir, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     // Only create .htaccess file in root directory.
     if ($dir == $this->directory) {
       $success = $success && file_save_htaccess($this->directory, TRUE, TRUE);

@@ -8,6 +8,21 @@ use Drupal\migrate\Plugin\migrate\process\FileCopy;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
 
 /**
+ * Flag for dealing with existing files: Appends number until name is unique.
+ */
+define('FILE_EXISTS_RENAME', 0);
+
+/**
+ * Flag for dealing with existing files: Replace the existing file.
+ */
+define('FILE_EXISTS_REPLACE', 1);
+
+/**
+ * Flag for dealing with existing files: Do nothing and return FALSE.
+ */
+define('FILE_EXISTS_ERROR', 2);
+
+/**
  * Tests the file copy process plugin.
  *
  * @group migrate
@@ -38,8 +53,8 @@ class FileCopyTest extends MigrateProcessTestCase {
    */
   public function providerDeprecationNoticeRename() {
     return [
-      [['rename' => TRUE], FileSystemInterface::EXISTS_RENAME],
-      [['rename' => FALSE], FileSystemInterface::EXISTS_REPLACE],
+      [['rename' => TRUE], FILE_EXISTS_RENAME],
+      [['rename' => FALSE], FILE_EXISTS_REPLACE],
     ];
   }
 
@@ -64,8 +79,8 @@ class FileCopyTest extends MigrateProcessTestCase {
    */
   public function providerDeprecationNoticeReuse() {
     return [
-      [['reuse' => TRUE], FileSystemInterface::EXISTS_ERROR],
-      [['reuse' => FALSE], FileSystemInterface::EXISTS_REPLACE],
+      [['reuse' => TRUE], FILE_EXISTS_ERROR],
+      [['reuse' => FALSE], FILE_EXISTS_REPLACE],
     ];
   }
 
@@ -88,11 +103,11 @@ class FileCopyTest extends MigrateProcessTestCase {
    */
   public function providerFileProcessBaseConstructor() {
     return [
-      [['file_exists' => 'replace'], FileSystemInterface::EXISTS_REPLACE],
-      [['file_exists' => 'rename'], FileSystemInterface::EXISTS_RENAME],
-      [['file_exists' => 'use existing'], FileSystemInterface::EXISTS_ERROR],
-      [['file_exists' => 'foobar'], FileSystemInterface::EXISTS_REPLACE],
-      [[], FileSystemInterface::EXISTS_REPLACE],
+      [['file_exists' => 'replace'], FILE_EXISTS_REPLACE],
+      [['file_exists' => 'rename'], FILE_EXISTS_RENAME],
+      [['file_exists' => 'use existing'], FILE_EXISTS_ERROR],
+      [['file_exists' => 'foobar'], FILE_EXISTS_REPLACE],
+      [[], FILE_EXISTS_REPLACE],
     ];
   }
 

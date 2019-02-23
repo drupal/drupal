@@ -7,7 +7,7 @@ namespace Drupal\KernelTests\Core\File;
  *
  * @group File
  */
-class FileDeleteRecursiveTest extends FileTestBase {
+class UnmanagedDeleteRecursiveTest extends FileTestBase {
 
   /**
    * Delete a normal file.
@@ -18,7 +18,7 @@ class FileDeleteRecursiveTest extends FileTestBase {
     file_put_contents($filepath, '');
 
     // Delete the file.
-    $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($filepath), 'Function reported success.');
+    $this->assertTrue(file_unmanaged_delete_recursive($filepath), 'Function reported success.');
     $this->assertFalse(file_exists($filepath), 'Test file has been deleted.');
   }
 
@@ -30,7 +30,7 @@ class FileDeleteRecursiveTest extends FileTestBase {
     $directory = $this->createDirectory();
 
     // Delete the directory.
-    $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($directory), 'Function reported success.');
+    $this->assertTrue(file_unmanaged_delete_recursive($directory), 'Function reported success.');
     $this->assertFalse(file_exists($directory), 'Directory has been deleted.');
   }
 
@@ -46,7 +46,7 @@ class FileDeleteRecursiveTest extends FileTestBase {
     file_put_contents($filepathB, '');
 
     // Delete the directory.
-    $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($directory), 'Function reported success.');
+    $this->assertTrue(file_unmanaged_delete_recursive($directory), 'Function reported success.');
     $this->assertFalse(file_exists($filepathA), 'Test file A has been deleted.');
     $this->assertFalse(file_exists($filepathB), 'Test file B has been deleted.');
     $this->assertFalse(file_exists($directory), 'Directory has been deleted.');
@@ -65,7 +65,7 @@ class FileDeleteRecursiveTest extends FileTestBase {
     file_put_contents($filepathB, '');
 
     // Delete the directory.
-    $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($directory), 'Function reported success.');
+    $this->assertTrue(file_unmanaged_delete_recursive($directory), 'Function reported success.');
     $this->assertFalse(file_exists($filepathA), 'Test file A has been deleted.');
     $this->assertFalse(file_exists($filepathB), 'Test file B has been deleted.');
     $this->assertFalse(file_exists($subdirectory), 'Subdirectory has been deleted.');

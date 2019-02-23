@@ -5,16 +5,13 @@
  * Install, update and uninstall functions for the image module.
  */
 
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\FileSystemInterface;
-
 /**
  * Implements hook_install().
  */
 function image_install() {
   // Create the styles directory and ensure it's writable.
   $directory = file_default_scheme() . '://styles';
-  \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 }
 
 /**
@@ -22,14 +19,7 @@ function image_install() {
  */
 function image_uninstall() {
   // Remove the styles directory and generated images.
-  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-  $file_system = \Drupal::service('file_system');
-  try {
-    $file_system->deleteRecursive(file_default_scheme() . '://styles');
-  }
-  catch (FileException $e) {
-    // Ignore failed deletes.
-  }
+  file_unmanaged_delete_recursive(file_default_scheme() . '://styles');
 }
 
 /**

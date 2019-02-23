@@ -8,7 +8,6 @@ use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\MissingDependencyException;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
@@ -319,7 +318,7 @@ trait FunctionalTestSetupTrait {
     $config = $container->get('config.factory');
 
     // Manually create the private directory.
-    \Drupal::service('file_system')->prepareDirectory($this->privateFilesDirectory, FileSystemInterface::CREATE_DIRECTORY);
+    file_prepare_directory($this->privateFilesDirectory, FILE_CREATE_DIRECTORY);
 
     // Manually configure the test mail collector implementation to prevent
     // tests from sending out emails and collect them in state instead.
@@ -576,7 +575,7 @@ trait FunctionalTestSetupTrait {
 
     // Create test directory ahead of installation so fatal errors and debug
     // information can be logged during installation process.
-    \Drupal::service('file_system')->prepareDirectory($this->siteDirectory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+    file_prepare_directory($this->siteDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 
     // Prepare filesystem directory paths.
     $this->publicFilesDirectory = $this->siteDirectory . '/files';

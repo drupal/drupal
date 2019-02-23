@@ -415,7 +415,7 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Ensures test files are deletable.
+   * Ensures test files are deletable within file_unmanaged_delete_recursive().
    *
    * Some tests chmod generated files to be read only. During
    * BrowserTestBase::cleanupEnvironment() and other cleanup operations,
@@ -423,8 +423,6 @@ abstract class BrowserTestBase extends TestCase {
    *
    * @param string $path
    *   The file path.
-   *
-   * @see \Drupal\Core\File\FileSystemInterface::deleteRecursive()
    */
   public static function filePreDeleteCallback($path) {
     // When the webserver runs with the same system user as phpunit, we can
@@ -453,7 +451,7 @@ abstract class BrowserTestBase extends TestCase {
     }
 
     // Delete test site directory.
-    \Drupal::service('file_system')->deleteRecursive($this->siteDirectory, [$this, 'filePreDeleteCallback']);
+    file_unmanaged_delete_recursive($this->siteDirectory, [$this, 'filePreDeleteCallback']);
   }
 
   /**

@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Image;
 
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Site\Settings;
@@ -275,7 +274,7 @@ class ToolkitGdTest extends KernelTestBase {
 
     // Prepare a directory for test file results.
     $directory = Settings::get('file_public_path') . '/imagetest';
-    \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
+    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
 
     foreach ($files as $file) {
       foreach ($operations as $op => $values) {
@@ -451,7 +450,7 @@ class ToolkitGdTest extends KernelTestBase {
   public function testGifTransparentImages() {
     // Prepare a directory for test file results.
     $directory = Settings::get('file_public_path') . '/imagetest';
-    \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
+    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
 
     // Test loading an indexed GIF image with transparent color set.
     // Color at top-right pixel should be fully transparent.

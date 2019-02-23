@@ -7,7 +7,6 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Render\Element\StatusMessages;
 use Drupal\Core\Render\RendererInterface;
@@ -51,13 +50,6 @@ class QuickEditImageController extends ControllerBase {
   protected $entityDisplayRepository;
 
   /**
-   * The file system.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
    * Constructs a new QuickEditImageController.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -68,10 +60,8 @@ class QuickEditImageController extends ControllerBase {
    *   The tempstore factory.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository service.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
-   *   The file system.
    */
-  public function __construct(RendererInterface $renderer, ImageFactory $image_factory, PrivateTempStoreFactory $temp_store_factory, EntityDisplayRepositoryInterface $entity_display_repository = NULL, FileSystemInterface $file_system = NULL) {
+  public function __construct(RendererInterface $renderer, ImageFactory $image_factory, PrivateTempStoreFactory $temp_store_factory, EntityDisplayRepositoryInterface $entity_display_repository = NULL) {
     $this->renderer = $renderer;
     $this->imageFactory = $image_factory;
     $this->tempStore = $temp_store_factory->get('quickedit');
@@ -80,11 +70,6 @@ class QuickEditImageController extends ControllerBase {
       $entity_display_repository = \Drupal::service('entity_display.repository');
     }
     $this->entityDisplayRepository = $entity_display_repository;
-    if (!$file_system) {
-      @trigger_error('The file_system service must be passed to QuickEditImageController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3006851.', E_USER_DEPRECATED);
-      $file_system = \Drupal::service('file_system');
-    }
-    $this->fileSystem = $file_system;
   }
 
   /**
@@ -95,8 +80,7 @@ class QuickEditImageController extends ControllerBase {
       $container->get('renderer'),
       $container->get('image.factory'),
       $container->get('tempstore.private'),
-      $container->get('entity_display.repository'),
-      $container->get('file_system')
+      $container->get('entity_display.repository')
     );
   }
 
@@ -127,7 +111,7 @@ class QuickEditImageController extends ControllerBase {
     }
 
     // Create the destination directory if it does not already exist.
-    if (isset($destination) && !$this->fileSystem->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
+    if (isset($destination) && !file_prepare_directory($destination, FILE_CREATE_DIRECTORY)) {
       return new JsonResponse(['main_error' => $this->t('The destination directory could not be created.'), 'errors' => '']);
     }
 

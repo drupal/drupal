@@ -281,7 +281,7 @@ EOF;
 
     $path = 'public://valid-opml.xml';
     // Add the UTF-8 byte order mark.
-    return \Drupal::service('file_system')->saveData(chr(239) . chr(187) . chr(191) . $opml, $path);
+    return file_unmanaged_save_data(chr(239) . chr(187) . chr(191) . $opml, $path);
   }
 
   /**
@@ -298,7 +298,7 @@ EOF;
 EOF;
 
     $path = 'public://invalid-opml.xml';
-    return \Drupal::service('file_system')->saveData($opml, $path);
+    return file_unmanaged_save_data($opml, $path);
   }
 
   /**
@@ -320,7 +320,7 @@ EOF;
 EOF;
 
     $path = 'public://empty-opml.xml';
-    return \Drupal::service('file_system')->saveData($opml, $path);
+    return file_unmanaged_save_data($opml, $path);
   }
 
   /**

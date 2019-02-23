@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\file\Functional;
 
-use Drupal\Core\File\FileSystemInterface;
-
 /**
  * Tests for download/file transfer functions.
  *
@@ -145,9 +143,9 @@ class DownloadTest extends FileManagedTestBase {
     // Convert $filename to a valid filename, i.e. strip characters not
     // supported by the filesystem, and create the file in the specified
     // directory.
-    $filepath = \Drupal::service('file_system')->createFilename($filename, $directory);
+    $filepath = file_create_filename($filename, $directory);
     $directory_uri = $scheme . '://' . dirname($filepath);
-    \Drupal::service('file_system')->prepareDirectory($directory_uri, FileSystemInterface::CREATE_DIRECTORY);
+    file_prepare_directory($directory_uri, FILE_CREATE_DIRECTORY);
     $file = $this->createFile($filepath, NULL, $scheme);
 
     $url = file_create_url($file->getFileUri());

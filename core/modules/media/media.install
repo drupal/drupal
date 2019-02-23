@@ -5,13 +5,11 @@
  * Install, uninstall and update hooks for Media module.
  */
 
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
-use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use Drupal\user\Entity\Role;
 
 /**
  * Implements hook_install().
@@ -19,9 +17,7 @@ use Drupal\user\RoleInterface;
 function media_install() {
   $source = drupal_get_path('module', 'media') . '/images/icons';
   $destination = \Drupal::config('media.settings')->get('icon_base_uri');
-  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-  $file_system = \Drupal::service('file_system');
-  $file_system->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+  file_prepare_directory($destination, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 
   $files = file_scan_directory($source, '/.*\.(svg|png|jpg|jpeg|gif)$/');
   foreach ($files as $file) {
@@ -32,13 +28,7 @@ function media_install() {
     // referenced somewhere else. Since showing an error that it was not
     // possible to copy the files is also confusing, we silently do nothing.
     if (!file_exists($destination . DIRECTORY_SEPARATOR . $file->filename)) {
-      try {
-        $file_system->copy($file->uri, $destination, FileSystemInterface::EXISTS_ERROR);
-      }
-      catch (FileException $e) {
-        // Ignore and continue.
-      }
-
+      file_unmanaged_copy($file->uri, $destination, FILE_EXISTS_ERROR);
     }
   }
 
@@ -56,7 +46,7 @@ function media_requirements($phase) {
   $requirements = [];
   if ($phase == 'install') {
     $destination = 'public://media-icons/generic';
-    \Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+    file_prepare_directory($destination, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     $is_writable = is_writable($destination);
     $is_directory = is_dir($destination);
     if (!$is_writable || !$is_directory) {

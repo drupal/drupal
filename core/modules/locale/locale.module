@@ -15,8 +15,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -1300,17 +1298,8 @@ function _locale_rebuild_js($langcode = NULL) {
   // be saved.
   $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: [];
   $changed_hash = !isset($locale_javascripts[$language->getId()]) || ($locale_javascripts[$language->getId()] != $data_hash);
-
-  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-  $file_system = \Drupal::service('file_system');
-
   if (!empty($locale_javascripts[$language->getId()]) && (!$data || $changed_hash)) {
-    try {
-      $file_system->delete($dir . '/' . $language->getId() . '_' . $locale_javascripts[$language->getId()] . '.js');
-    }
-    catch (FileException $e) {
-      // Ignore.
-    }
+    file_unmanaged_delete($dir . '/' . $language->getId() . '_' . $locale_javascripts[$language->getId()] . '.js');
     $locale_javascripts[$language->getId()] = '';
     $status = 'deleted';
   }
@@ -1320,35 +1309,30 @@ function _locale_rebuild_js($langcode = NULL) {
   $dest = $dir . '/' . $language->getId() . '_' . $data_hash . '.js';
   if ($data && ($changed_hash || !file_exists($dest))) {
     // Ensure that the directory exists and is writable, if possible.
-    $file_system->prepareDirectory($dir, FileSystemInterface::CREATE_DIRECTORY);
+    file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
 
     // Save the file.
-    try {
-      if ($file_system->saveData($data, $dest)) {
-        $locale_javascripts[$language->getId()] = $data_hash;
-        // If we deleted a previous version of the file and we replace it with a
-        // new one we have an update.
-        if ($status == 'deleted') {
-          $status = 'updated';
-        }
-        // If the file did not exist previously and the data has changed we have
-        // a fresh creation.
-        elseif ($changed_hash) {
-          $status = 'created';
-        }
-        // If the data hash is unchanged the translation was lost and has to be
-        // rebuilt.
-        else {
-          $status = 'rebuilt';
-        }
+    if (file_unmanaged_save_data($data, $dest)) {
+      $locale_javascripts[$language->getId()] = $data_hash;
+      // If we deleted a previous version of the file and we replace it with a
+      // new one we have an update.
+      if ($status == 'deleted') {
+        $status = 'updated';
       }
+      // If the file did not exist previously and the data has changed we have
+      // a fresh creation.
+      elseif ($changed_hash) {
+        $status = 'created';
+      }
+      // If the data hash is unchanged the translation was lost and has to be
+      // rebuilt.
       else {
-        $locale_javascripts[$language->getId()] = '';
-        $status = 'error';
+        $status = 'rebuilt';
       }
     }
-    catch (FileException $e) {
-      // Do nothing.
+    else {
+      $locale_javascripts[$language->getId()] = '';
+      $status = 'error';
     }
   }
 

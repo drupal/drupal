@@ -7,7 +7,7 @@ namespace Drupal\KernelTests\Core\File;
  *
  * @group File
  */
-class RemoteFileUnmanagedCopyTest extends FileCopyTest {
+class RemoteFileUnmanagedCopyTest extends UnmanagedCopyTest {
 
   /**
    * Modules to enable.

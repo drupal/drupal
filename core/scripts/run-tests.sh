@@ -12,7 +12,6 @@ use Drupal\Component\Uuid\Php;
 use Drupal\Core\Composer\Composer;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Database\Database;
-use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRunnerKernel;
@@ -963,13 +962,8 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
     // simpletest_clean_temporary_directories() cannot be used here, since it
     // would also delete file directories of other tests that are potentially
     // running concurrently.
-    try {
-      \Drupal::service('file_system')->deleteRecursive($test_directory, ['Drupal\simpletest\TestBase', 'filePreDeleteCallback']);
-      $messages[] = "- Removed test site directory.";
-    }
-    catch (FileException $e) {
-      // Ignore failed deletes.
-    }
+    file_unmanaged_delete_recursive($test_directory, ['Drupal\simpletest\TestBase', 'filePreDeleteCallback']);
+    $messages[] = "- Removed test site directory.";
   }
 
   // Clear out all database tables from the test.
@@ -1571,7 +1565,7 @@ function simpletest_script_open_browser() {
   // Ensure we have assets verbose directory - tests with no verbose output will
   // not have created one.
   $directory = PublicStream::basePath() . '/simpletest/verbose';
-  \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
   $php = new Php();
   $uuid = $php->generate();
   $filename = $directory . '/results-' . $uuid . '.html';

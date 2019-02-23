@@ -6,8 +6,6 @@ use Drupal\Component\Utility\Random;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -346,22 +344,15 @@ class ImageItem extends FileItem {
     if (!isset($images[$extension][$min_resolution][$max_resolution]) || count($images[$extension][$min_resolution][$max_resolution]) <= 5) {
       $tmp_file = drupal_tempnam('temporary://', 'generateImage_');
       $destination = $tmp_file . '.' . $extension;
-      /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-      $file_system = \Drupal::service('file_system');
-      try {
-        $file_system->move($tmp_file, $destination);
-      }
-      catch (FileException $e) {
-        // Ignore failed move.
-      }
-      if ($path = $random->image($file_system->realpath($destination), $min_resolution, $max_resolution)) {
+      file_unmanaged_move($tmp_file, $destination);
+      if ($path = $random->image(\Drupal::service('file_system')->realpath($destination), $min_resolution, $max_resolution)) {
         $image = File::create();
         $image->setFileUri($path);
         $image->setOwnerId(\Drupal::currentUser()->id());
         $image->setMimeType(\Drupal::service('file.mime_type.guesser')->guess($path));
         $image->setFileName(drupal_basename($path));
         $destination_dir = static::doGetUploadLocation($settings);
-        $file_system->prepareDirectory($destination_dir, FileSystemInterface::CREATE_DIRECTORY);
+        file_prepare_directory($destination_dir, FILE_CREATE_DIRECTORY);
         $destination = $destination_dir . '/' . basename($path);
         $file = file_move($image, $destination);
         $images[$extension][$min_resolution][$max_resolution][$file->id()] = $file;
