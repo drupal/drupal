@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\image\Functional;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
@@ -35,13 +36,15 @@ class ImageDimensionsTest extends BrowserTestBase {
     // Create a working copy of the file.
     $files = $this->drupalGetTestFiles('image');
     $file = reset($files);
-    $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $original_uri = $file_system->copy($file->uri, 'public://', FileSystemInterface::EXISTS_RENAME);
 
     // Create a style.
     /** @var $style \Drupal\image\ImageStyleInterface */
     $style = ImageStyle::create(['name' => 'test', 'label' => 'Test']);
     $style->save();
-    $generated_uri = 'public://styles/test/public/' . \Drupal::service('file_system')->basename($original_uri);
+    $generated_uri = 'public://styles/test/public/' . $file_system->basename($original_uri);
     $url = file_url_transform_relative($style->buildUrl($original_uri));
 
     $variables = [
@@ -257,7 +260,7 @@ class ImageDimensionsTest extends BrowserTestBase {
       '#height' => 20,
     ];
     // PNG original image. Should be resized to 100x100.
-    $generated_uri = 'public://styles/test_uri/public/' . \Drupal::service('file_system')->basename($original_uri);
+    $generated_uri = 'public://styles/test_uri/public/' . $file_system->basename($original_uri);
     $url = file_url_transform_relative($style->buildUrl($original_uri));
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="100" height="100" alt="" class="image-style-test-uri" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -269,8 +272,8 @@ class ImageDimensionsTest extends BrowserTestBase {
     $this->assertEqual($image_file->getHeight(), 100);
     // GIF original image. Should be resized to 50x50.
     $file = $files[1];
-    $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
-    $generated_uri = 'public://styles/test_uri/public/' . \Drupal::service('file_system')->basename($original_uri);
+    $original_uri = $file_system->copy($file->uri, 'public://', FileSystemInterface::EXISTS_RENAME);
+    $generated_uri = 'public://styles/test_uri/public/' . $file_system->basename($original_uri);
     $url = file_url_transform_relative($style->buildUrl($original_uri));
     $variables['#uri'] = $original_uri;
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="50" height="50" alt="" class="image-style-test-uri" />');

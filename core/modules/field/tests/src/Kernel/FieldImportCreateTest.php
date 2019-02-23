@@ -94,11 +94,13 @@ class FieldImportCreateTest extends FieldKernelTestBase {
     // Add the new files to the sync directory.
     $src_dir = __DIR__ . '/../../modules/field_test_config/sync';
     $target_dir = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$field_storage_config_name.yml", "$target_dir/$field_storage_config_name.yml"));
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$field_config_name.yml", "$target_dir/$field_config_name.yml"));
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$field_storage_config_name_2.yml", "$target_dir/$field_storage_config_name_2.yml"));
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$field_config_name_2a.yml", "$target_dir/$field_config_name_2a.yml"));
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$field_config_name_2b.yml", "$target_dir/$field_config_name_2b.yml"));
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $this->assertTrue($file_system->copy("$src_dir/$field_storage_config_name.yml", "$target_dir/$field_storage_config_name.yml"));
+    $this->assertTrue($file_system->copy("$src_dir/$field_config_name.yml", "$target_dir/$field_config_name.yml"));
+    $this->assertTrue($file_system->copy("$src_dir/$field_storage_config_name_2.yml", "$target_dir/$field_storage_config_name_2.yml"));
+    $this->assertTrue($file_system->copy("$src_dir/$field_config_name_2a.yml", "$target_dir/$field_config_name_2a.yml"));
+    $this->assertTrue($file_system->copy("$src_dir/$field_config_name_2b.yml", "$target_dir/$field_config_name_2b.yml"));
 
     // Import the content of the sync directory.
     $this->configImporter()->import();

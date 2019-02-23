@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\image\Functional;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
@@ -46,7 +47,7 @@ class FileMoveTest extends BrowserTestBase {
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
     $desired_filepath = 'public://' . $this->randomMachineName();
-    $result = file_move(clone $file, $desired_filepath, FILE_EXISTS_ERROR);
+    $result = file_move(clone $file, $desired_filepath, FileSystemInterface::EXISTS_ERROR);
 
     // Check if image has been moved.
     $this->assertTrue(file_exists($result->getFileUri()), 'Make sure image is moved successfully.');

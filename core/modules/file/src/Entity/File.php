@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\File\Exception\FileException;
 use Drupal\file\FileInterface;
 use Drupal\user\EntityOwnerTrait;
 
@@ -206,7 +207,12 @@ class File extends ContentEntityBase implements FileInterface {
       // Delete the actual file. Failures due to invalid files and files that
       // were already deleted are logged to watchdog but ignored, the
       // corresponding file entity will be deleted.
-      file_unmanaged_delete($entity->getFileUri());
+      try {
+        \Drupal::service('file_system')->delete($entity->getFileUri());
+      }
+      catch (FileException $e) {
+        // Ignore and continue.
+      }
     }
   }
 

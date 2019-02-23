@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Environment;
+use Drupal\Core\File\Exception\FileException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -189,5 +190,11 @@ function simpletest_uninstall() {
     simpletest_clean_environment();
   }
   // Delete verbose test output and any other testing framework files.
-  file_unmanaged_delete_recursive('public://simpletest');
+  try {
+    \Drupal::service('file_system')->deleteRecursive('public://simpletest');
+  }
+  catch (FileException $e) {
+    // Ignore.
+  }
+
 }

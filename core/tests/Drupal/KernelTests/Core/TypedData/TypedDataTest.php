@@ -290,7 +290,7 @@ class TypedDataTest extends KernelTestBase {
     $files = [];
     for ($i = 0; $i < 3; $i++) {
       $path = "public://example_$i.png";
-      file_unmanaged_copy($this->root . '/core/misc/druplicon.png', $path);
+      \Drupal::service('file_system')->copy($this->root . '/core/misc/druplicon.png', $path);
       $image = File::create(['uri' => $path]);
       $image->save();
       $files[] = $image;

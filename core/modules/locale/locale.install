@@ -5,6 +5,8 @@
  * Install, update, and uninstall functions for the Locale module.
  */
 
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
 
 /**
@@ -17,7 +19,7 @@ function locale_install() {
     $directory = $site_path . '/files/translations';
     \Drupal::configFactory()->getEditable('locale.settings')->set('translation.path', $directory)->save();
   }
-  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 }
 
 /**
@@ -32,7 +34,12 @@ function locale_uninstall() {
     $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: [];
     foreach ($locale_javascripts as $langcode => $file_suffix) {
       if (!empty($file_suffix)) {
-        file_unmanaged_delete($locale_js_directory . '/' . $langcode . '_' . $file_suffix . '.js');
+        try {
+          \Drupal::service('file_system')->delete($locale_js_directory . '/' . $langcode . '_' . $file_suffix . '.js');
+        }
+        catch (FileException $e) {
+          // Ignore and continue.
+        }
       }
     }
     // Delete the JavaScript translations directory if empty.

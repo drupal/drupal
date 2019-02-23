@@ -9,6 +9,8 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
@@ -115,6 +117,13 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
   protected $iFrameUrlHelper;
 
   /**
+   * The file system.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Constructs a new OEmbed instance.
    *
    * @param array $configuration
@@ -143,8 +152,10 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    *   The oEmbed URL resolver service.
    * @param \Drupal\media\IFrameUrlHelper $iframe_url_helper
    *   The iFrame URL helper service.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper, FileSystemInterface $file_system = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $entity_field_manager, $field_type_manager, $config_factory);
     $this->logger = $logger;
     $this->messenger = $messenger;
@@ -152,6 +163,11 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     $this->resourceFetcher = $resource_fetcher;
     $this->urlResolver = $url_resolver;
     $this->iFrameUrlHelper = $iframe_url_helper;
+    if (!$file_system) {
+      @trigger_error('The file_system service must be passed to OEmbed::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3006851.', E_USER_DEPRECATED);
+      $file_system = \Drupal::service('file_system');
+    }
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -171,7 +187,8 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       $container->get('http_client'),
       $container->get('media.oembed.resource_fetcher'),
       $container->get('media.oembed.url_resolver'),
-      $container->get('media.oembed.iframe_url_helper')
+      $container->get('media.oembed.iframe_url_helper'),
+      $container->get('file_system')
     );
   }
 
@@ -381,32 +398,27 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     // The local thumbnail doesn't exist yet, so try to download it. First,
     // ensure that the destination directory is writable, and if it's not,
     // log an error and bail out.
-    if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
+    if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
       $this->logger->warning('Could not prepare thumbnail destination directory @dir for oEmbed media.', [
         '@dir' => $directory,
       ]);
       return NULL;
     }
 
-    $error_message = 'Could not download remote thumbnail from {url}.';
-    $error_context = [
-      'url' => $remote_thumbnail_url,
-    ];
     try {
       $response = $this->httpClient->get($remote_thumbnail_url);
       if ($response->getStatusCode() === 200) {
-        $success = file_unmanaged_save_data((string) $response->getBody(), $local_thumbnail_uri, FILE_EXISTS_REPLACE);
-
-        if ($success) {
-          return $local_thumbnail_uri;
-        }
-        else {
-          $this->logger->warning($error_message, $error_context);
-        }
+        $this->fileSystem->saveData((string) $response->getBody(), $local_thumbnail_uri, FileSystemInterface::EXISTS_REPLACE);
+        return $local_thumbnail_uri;
       }
     }
     catch (RequestException $e) {
       $this->logger->warning($e->getMessage());
+    }
+    catch (FileException $e) {
+      $this->logger->warning('Could not download remote thumbnail from {url}.', [
+        'url' => $remote_thumbnail_url,
+      ]);
     }
     return NULL;
   }

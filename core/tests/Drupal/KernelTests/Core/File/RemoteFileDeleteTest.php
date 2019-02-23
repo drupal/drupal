@@ -3,11 +3,11 @@
 namespace Drupal\KernelTests\Core\File;
 
 /**
- * Tests the unmanaged file move function.
+ * Tests the unmanaged file delete function.
  *
  * @group File
  */
-class RemoteFileUnmanagedMoveTest extends UnmanagedMoveTest {
+class RemoteFileDeleteTest extends FileDeleteTest {
 
   /**
    * Modules to enable.

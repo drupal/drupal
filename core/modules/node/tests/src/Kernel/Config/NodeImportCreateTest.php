@@ -61,7 +61,7 @@ class NodeImportCreateTest extends KernelTestBase {
     // Manually add new node type.
     $src_dir = __DIR__ . '/../../../modules/node_test_config/sync';
     $target_dir = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$node_type_config_name.yml", "$target_dir/$node_type_config_name.yml"));
+    $this->assertTrue(\Drupal::service('file_system')->copy("$src_dir/$node_type_config_name.yml", "$target_dir/$node_type_config_name.yml"));
 
     // Import the content of the sync directory.
     $this->configImporter()->import();

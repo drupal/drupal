@@ -168,7 +168,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $file = $this->container->get('entity_type.manager')->getStorage('file')->load($fid);
     $file->setPermanent();
     $file->save();
-    $this->assertTrue(file_unmanaged_delete($file->getFileUri()));
+    $this->assertTrue(\Drupal::service('file_system')->delete($file->getFileUri()));
     $file->save();
     $this->assertTrue($file->isPermanent());
     $file->delete();

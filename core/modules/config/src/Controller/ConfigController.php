@@ -7,6 +7,8 @@ use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Diff\DiffFormatter;
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Url;
 use Drupal\system\FileDownloadController;
@@ -54,6 +56,13 @@ class ConfigController implements ContainerInjectionInterface {
   protected $diffFormatter;
 
   /**
+   * The file system.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -62,7 +71,8 @@ class ConfigController implements ContainerInjectionInterface {
       $container->get('config.storage.sync'),
       $container->get('config.manager'),
       new FileDownloadController(),
-      $container->get('diff.formatter')
+      $container->get('diff.formatter'),
+      $container->get('file_system')
     );
   }
 
@@ -72,23 +82,35 @@ class ConfigController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Config\StorageInterface $target_storage
    *   The target storage.
    * @param \Drupal\Core\Config\StorageInterface $source_storage
-   *   The source storage
+   *   The source storage.
+   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   *   The config manager.
    * @param \Drupal\system\FileDownloadController $file_download_controller
    *   The file download controller.
+   * @param \Drupal\Core\Diff\DiffFormatter $diff_formatter
+   *   The diff formatter.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system.
    */
-  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller, DiffFormatter $diff_formatter) {
+  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller, DiffFormatter $diff_formatter, FileSystemInterface $file_system) {
     $this->targetStorage = $target_storage;
     $this->sourceStorage = $source_storage;
     $this->configManager = $config_manager;
     $this->fileDownloadController = $file_download_controller;
     $this->diffFormatter = $diff_formatter;
+    $this->fileSystem = $file_system;
   }
 
   /**
    * Downloads a tarball of the site configuration.
    */
   public function downloadExport() {
-    file_unmanaged_delete(file_directory_temp() . '/config.tar.gz');
+    try {
+      $this->fileSystem->delete(file_directory_temp() . '/config.tar.gz');
+    }
+    catch (FileException $e) {
+      // Ignore failed deletes.
+    }
 
     $archiver = new ArchiveTar(file_directory_temp() . '/config.tar.gz', 'gz');
     // Get raw configuration data without overrides.

@@ -5,12 +5,14 @@
  * Allows users to change the color scheme of themes.
  */
 
-use Drupal\Component\Utility\Color;
-use Drupal\Core\Asset\CssOptimizer;
 use Drupal\Component\Utility\Bytes;
+use Drupal\Component\Utility\Color;
 use Drupal\Component\Utility\Environment;
+use Drupal\Core\Asset\CssOptimizer;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element\Textfield;
@@ -440,8 +442,10 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
   $id = $theme . '-' . substr(hash('sha256', serialize($palette) . microtime()), 0, 8);
   $paths['color'] = 'public://color';
   $paths['target'] = $paths['color'] . '/' . $id;
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
   foreach ($paths as $path) {
-    file_prepare_directory($path, FILE_CREATE_DIRECTORY);
+    $file_system->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
   }
   $paths['target'] = $paths['target'] . '/';
   $paths['id'] = $id;
@@ -458,7 +462,12 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
   foreach ($info['copy'] as $file) {
     $base = drupal_basename($file);
     $source = $paths['source'] . $file;
-    $filepath = file_unmanaged_copy($source, $paths['target'] . $base);
+    try {
+      $filepath = $file_system->copy($source, $paths['target'] . $base);
+    }
+    catch (FileException $e) {
+      $filepath = FALSE;
+    }
     $paths['map'][$file] = $base;
     $paths['files'][] = $filepath;
   }
@@ -582,7 +591,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
  * Saves the rewritten stylesheet to disk.
  */
 function _color_save_stylesheet($file, $style, &$paths) {
-  $filepath = file_unmanaged_save_data($style, $file, FILE_EXISTS_REPLACE);
+  $filepath = \Drupal::service('file_system')->saveData($style, $file, FileSystemInterface::EXISTS_REPLACE);
   $paths['files'][] = $filepath;
 
   // Set standard file permissions for webserver-generated files.

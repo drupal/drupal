@@ -3,6 +3,8 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -57,6 +59,13 @@ class ThemeSettingsForm extends ConfigFormBase {
   protected $themeManager;
 
   /**
+   * The file system.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Constructs a ThemeSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -67,14 +76,23 @@ class ThemeSettingsForm extends ConfigFormBase {
    *   The theme handler.
    * @param \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $mime_type_guesser
    *   The MIME type guesser instance to use.
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   *   The theme manager.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, MimeTypeGuesserInterface $mime_type_guesser, ThemeManagerInterface $theme_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, MimeTypeGuesserInterface $mime_type_guesser, ThemeManagerInterface $theme_manager, FileSystemInterface $file_system = NULL) {
     parent::__construct($config_factory);
 
     $this->moduleHandler = $module_handler;
     $this->themeHandler = $theme_handler;
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->themeManager = $theme_manager;
+    if (!$file_system) {
+      @trigger_error('The file_system service must be passed to ThemeSettingsForm::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3006851.', E_USER_DEPRECATED);
+      $file_system = \Drupal::service('file_system');
+    }
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -86,7 +104,8 @@ class ThemeSettingsForm extends ConfigFormBase {
       $container->get('module_handler'),
       $container->get('theme_handler'),
       $container->get('file.mime_type.guesser'),
-      $container->get('theme.manager')
+      $container->get('theme.manager'),
+      $container->get('file_system')
     );
   }
 
@@ -442,16 +461,26 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     // If the user uploaded a new logo or favicon, save it to a permanent location
     // and use it in place of the default theme-provided file.
-    if (!empty($values['logo_upload'])) {
-      $filename = file_unmanaged_copy($values['logo_upload']->getFileUri());
-      $values['default_logo'] = 0;
-      $values['logo_path'] = $filename;
+    try {
+      if (!empty($values['logo_upload'])) {
+        $filename = $this->fileSystem->copy($values['logo_upload']->getFileUri());
+        $values['default_logo'] = 0;
+        $values['logo_path'] = $filename;
+      }
     }
-    if (!empty($values['favicon_upload'])) {
-      $filename = file_unmanaged_copy($values['favicon_upload']->getFileUri());
-      $values['default_favicon'] = 0;
-      $values['favicon_path'] = $filename;
-      $values['toggle_favicon'] = 1;
+    catch (FileException $e) {
+      // Ignore.
+    }
+    try {
+      if (!empty($values['favicon_upload'])) {
+        $filename = $this->fileSystem->copy($values['favicon_upload']->getFileUri());
+        $values['default_favicon'] = 0;
+        $values['favicon_path'] = $filename;
+        $values['toggle_favicon'] = 1;
+      }
+    }
+    catch (FileException $e) {
+      // Ignore.
     }
     unset($values['logo_upload']);
     unset($values['favicon_upload']);
@@ -488,7 +517,7 @@ class ThemeSettingsForm extends ConfigFormBase {
    */
   protected function validatePath($path) {
     // Absolute local file paths are invalid.
-    if (\Drupal::service('file_system')->realpath($path) == $path) {
+    if ($this->fileSystem->realpath($path) == $path) {
       return FALSE;
     }
     // A path relative to the Drupal root or a fully qualified URI is valid.

@@ -6,6 +6,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
+use Drupal\Core\File\Exception\FileWriteException;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -42,6 +44,13 @@ class FileUploadForm extends AddFormBase {
   protected $renderer;
 
   /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Constructs a new FileUploadForm.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -52,11 +61,14 @@ class FileUploadForm extends AddFormBase {
    *   The element info manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, ElementInfoManagerInterface $element_info, RendererInterface $renderer) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, ElementInfoManagerInterface $element_info, RendererInterface $renderer, FileSystemInterface $file_system) {
     parent::__construct($entity_type_manager, $library_ui_builder);
     $this->elementInfo = $element_info;
     $this->renderer = $renderer;
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -67,7 +79,8 @@ class FileUploadForm extends AddFormBase {
       $container->get('entity_type.manager'),
       $container->get('media_library.ui_builder'),
       $container->get('element_info'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('file_system')
     );
   }
 
@@ -209,8 +222,8 @@ class FileUploadForm extends AddFormBase {
     // Create a file item to get the upload location.
     $item = $this->createFileItem($media_type);
     $upload_location = $item->getUploadLocation();
-    if (!file_prepare_directory($upload_location, FILE_CREATE_DIRECTORY)) {
-      throw new \Exception("The destination directory '$upload_location' is not writable");
+    if (!$this->fileSystem->prepareDirectory($upload_location, FileSystemInterface::CREATE_DIRECTORY)) {
+      throw new FileWriteException("The destination directory '$upload_location' is not writable");
     }
     $file = file_move($file, $upload_location);
     if (!$file) {

@@ -11,6 +11,7 @@
  * ability to install contributed modules and themes via an user interface.
  */
 
+use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -826,7 +827,12 @@ function update_delete_file_if_stale($path) {
     $max_age = \Drupal::config('system.file')->get('temporary_maximum_age');
 
     if (REQUEST_TIME - $filectime > $max_age || (preg_match('/.*-dev\.(tar\.gz|zip)/i', $path) && REQUEST_TIME - $filectime > 300)) {
-      file_unmanaged_delete_recursive($path);
+      try {
+        \Drupal::service('file_system')->deleteRecursive($path);
+      }
+      catch (FileException $e) {
+        // Ignore failed deletes.
+      }
     }
   }
 }

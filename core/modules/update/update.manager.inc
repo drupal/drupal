@@ -36,6 +36,7 @@
  * root.
  */
 
+use Drupal\Core\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -165,7 +166,12 @@ function update_manager_archive_extract($file, $directory) {
 
   $extract_location = $directory . '/' . $project;
   if (file_exists($extract_location)) {
-    file_unmanaged_delete_recursive($extract_location);
+    try {
+      \Drupal::service('file_system')->deleteRecursive($extract_location);
+    }
+    catch (FileException $e) {
+      // Ignore failed deletes.
+    }
   }
 
   $archiver->extract($directory);

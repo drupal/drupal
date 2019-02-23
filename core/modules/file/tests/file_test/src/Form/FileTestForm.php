@@ -2,6 +2,7 @@
 
 namespace Drupal\file_test\Form;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -29,11 +30,11 @@ class FileTestForm implements FormInterface {
       '#type' => 'select',
       '#title' => t('Replace existing image'),
       '#options' => [
-        FILE_EXISTS_RENAME => t('Appends number until name is unique'),
-        FILE_EXISTS_REPLACE => t('Replace the existing file'),
-        FILE_EXISTS_ERROR => t('Fail with an error'),
+        FileSystemInterface::EXISTS_RENAME => t('Appends number until name is unique'),
+        FileSystemInterface::EXISTS_REPLACE => t('Replace the existing file'),
+        FileSystemInterface::EXISTS_ERROR => t('Fail with an error'),
       ],
-      '#default_value' => FILE_EXISTS_RENAME,
+      '#default_value' => FileSystemInterface::EXISTS_RENAME,
     ];
     $form['file_subdir'] = [
       '#type' => 'textfield',
@@ -79,7 +80,7 @@ class FileTestForm implements FormInterface {
     // form value for the $replace parameter.
     if (!$form_state->isValueEmpty('file_subdir')) {
       $destination = 'temporary://' . $form_state->getValue('file_subdir');
-      file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
+      \Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
     }
     else {
       $destination = FALSE;
