@@ -120,21 +120,21 @@ class Download extends FileProcessBase implements ContainerFactoryPluginInterfac
     list($source, $destination) = $value;
 
     // Modify the destination filename if necessary.
-    $final_destination = file_destination($destination, $this->configuration['file_exists']);
+    $final_destination = $this->fileSystem->getDestinationFilename($destination, $this->configuration['file_exists']);
 
     // Reuse if file exists.
     if (!$final_destination) {
       return $destination;
     }
 
-    // Try opening the file first, to avoid calling file_prepare_directory()
+    // Try opening the file first, to avoid calling prepareDirectory()
     // unnecessarily. We're suppressing fopen() errors because we want to try
     // to prepare the directory before we give up and fail.
     $destination_stream = @fopen($final_destination, 'w');
     if (!$destination_stream) {
       // If fopen didn't work, make sure there's a writable directory in place.
       $dir = $this->fileSystem->dirname($final_destination);
-      if (!file_prepare_directory($dir, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
+      if (!$this->fileSystem->prepareDirectory($dir, FileSystemInterface:: CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
         throw new MigrateException("Could not create or write to directory '$dir'");
       }
       // Let's try that fopen again.

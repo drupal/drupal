@@ -7,6 +7,8 @@
 
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -153,8 +155,10 @@ function file_load($fid, $reset = FALSE) {
  * @see hook_file_copy()
  */
 function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
   if (!file_valid_uri($destination)) {
-    if (($realpath = \Drupal::service('file_system')->realpath($source->getFileUri())) !== FALSE) {
+    if (($realpath = $file_system->realpath($source->getFileUri())) !== FALSE) {
       \Drupal::logger('file')->notice('File %file (%realpath) could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', ['%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination]);
     }
     else {
@@ -164,7 +168,8 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
     return FALSE;
   }
 
-  if ($uri = file_unmanaged_copy($source->getFileUri(), $destination, $replace)) {
+  try {
+    $uri = $file_system->copy($source->getFileUri(), $destination, $replace);
     $file = $source->createDuplicate();
     $file->setFileUri($uri);
     $file->setFilename(drupal_basename($uri));
@@ -193,7 +198,9 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
 
     return $file;
   }
-  return FALSE;
+  catch (FileException $e) {
+    return FALSE;
+  }
 }
 
 /**
@@ -224,12 +231,14 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
  * @return \Drupal\file\FileInterface|false
  *   Resulting file entity for success, or FALSE in the event of an error.
  *
- * @see file_unmanaged_move()
+ * @see \Drupal\Core\File\FileSystemInterface::move()
  * @see hook_file_move()
  */
 function file_move(FileInterface $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
   if (!file_valid_uri($destination)) {
-    if (($realpath = \Drupal::service('file_system')->realpath($source->getFileUri())) !== FALSE) {
+    if (($realpath = $file_system->realpath($source->getFileUri())) !== FALSE) {
       \Drupal::logger('file')->notice('File %file (%realpath) could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', ['%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination]);
     }
     else {
@@ -239,7 +248,8 @@ function file_move(FileInterface $source, $destination = NULL, $replace = FILE_E
     return FALSE;
   }
 
-  if ($uri = file_unmanaged_move($source->getFileUri(), $destination, $replace)) {
+  try {
+    $uri = $file_system->move($source->getFileUri(), $destination, $replace);
     $delete_source = FALSE;
 
     $file = clone $source;
@@ -272,7 +282,9 @@ function file_move(FileInterface $source, $destination = NULL, $replace = FILE_E
 
     return $file;
   }
-  return FALSE;
+  catch (FileException $e) {
+    return FALSE;
+  }
 }
 
 /**
@@ -555,7 +567,8 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
     return FALSE;
   }
 
-  if ($uri = file_unmanaged_save_data($data, $destination, $replace)) {
+  try {
+    $uri = \Drupal::service('file_system')->saveData($data, $destination, $replace);
     // Create a file entity.
     $file = File::create([
       'uri' => $uri,
@@ -583,7 +596,10 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
     $file->save();
     return $file;
   }
-  return FALSE;
+  catch (FileException $e) {
+    return FALSE;
+  }
+
 }
 
 /**
@@ -920,7 +936,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
  *
  * @see file_save_upload()
  */
-function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $validators = [], $destination = FALSE, $replace = FILE_EXISTS_RENAME) {
+function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $validators = [], $destination = FALSE, $replace = FileSystemInterface::EXISTS_REPLACE) {
   $user = \Drupal::currentUser();
   // Check for file upload errors and return FALSE for this file if a lower
   // level system error occurred. For a complete list of errors:
@@ -1020,9 +1036,11 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   if (substr($destination, -1) != '/') {
     $destination .= '/';
   }
-  $file->destination = file_destination($destination . $file->getFilename(), $replace);
-  // If file_destination() returns FALSE then $replace === FILE_EXISTS_ERROR and
-  // there's an existing file so we need to bail.
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
+  $file->destination = $file_system->getDestinationFilename($destination . $file->getFilename(), $replace);
+  // If the destination is FALSE then there is an existing file and $replace is
+  // set to return an error, so we need to exit.
   if ($file->destination === FALSE) {
     \Drupal::messenger()->addError(t('The file %source could not be uploaded because a file by that name already exists in the destination %directory.', ['%source' => $form_field_name, '%directory' => $destination]));
     return FALSE;
@@ -1053,7 +1071,7 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   }
 
   $file->setFileUri($file->destination);
-  if (!\Drupal::service('file_system')->moveUploadedFile($file_info->getRealPath(), $file->getFileUri())) {
+  if (!$file_system->moveUploadedFile($file_info->getRealPath(), $file->getFileUri())) {
     \Drupal::messenger()->addError(t('File upload error. Could not move uploaded file.'));
     \Drupal::logger('file')->notice('Upload error. Could not move uploaded file %file to destination %destination.', ['%file' => $file->getFilename(), '%destination' => $file->getFileUri()]);
     return FALSE;
@@ -1065,7 +1083,7 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   // If we are replacing an existing file re-use its database record.
   // @todo Do not create a new entity in order to update it. See
   //   https://www.drupal.org/node/2241865.
-  if ($replace == FILE_EXISTS_REPLACE) {
+  if ($replace == FileSystemInterface::EXISTS_REPLACE) {
     $existing_files = entity_load_multiple_by_properties('file', ['uri' => $file->getFileUri()]);
     if (count($existing_files)) {
       $existing = reset($existing_files);
@@ -1358,7 +1376,7 @@ function file_managed_file_save_upload($element, FormStateInterface $form_state)
   $file_upload = $all_files[$upload_name];
 
   $destination = isset($element['#upload_location']) ? $element['#upload_location'] : NULL;
-  if (isset($destination) && !file_prepare_directory($destination, FILE_CREATE_DIRECTORY)) {
+  if (isset($destination) && !\Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
     \Drupal::logger('file')->notice('The upload directory %directory for the file field %name could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', ['%directory' => $destination, '%name' => $element['#field_name']]);
     $form_state->setError($element, t('The file could not be uploaded.'));
     return FALSE;

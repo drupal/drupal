@@ -7,6 +7,7 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Test\TestDatabase;
@@ -903,7 +904,7 @@ abstract class TestBase {
       $this->verbose = TRUE;
       $this->verboseDirectory = PublicStream::basePath() . '/simpletest/verbose';
       $this->verboseDirectoryUrl = file_create_url($this->verboseDirectory);
-      if (file_prepare_directory($this->verboseDirectory, FILE_CREATE_DIRECTORY) && !file_exists($this->verboseDirectory . '/.htaccess')) {
+      if (\Drupal::service('file_system')->prepareDirectory($this->verboseDirectory, FileSystemInterface::CREATE_DIRECTORY) && !file_exists($this->verboseDirectory . '/.htaccess')) {
         file_put_contents($this->verboseDirectory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
       }
       $this->verboseClassName = str_replace("\\", "_", $class);
@@ -1125,7 +1126,7 @@ abstract class TestBase {
 
     // Create test directory ahead of installation so fatal errors and debug
     // information can be logged during installation process.
-    file_prepare_directory($this->siteDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    \Drupal::service('file_system')->prepareDirectory($this->siteDirectory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 
     // Prepare filesystem directory paths.
     $this->publicFilesDirectory = $this->siteDirectory . '/files';
@@ -1250,7 +1251,7 @@ abstract class TestBase {
     \Drupal::setContainer($this->originalContainer);
 
     // Delete test site directory.
-    file_unmanaged_delete_recursive($this->siteDirectory, [$this, 'filePreDeleteCallback']);
+    \Drupal::service('file_system')->deleteRecursive($this->siteDirectory, [$this, 'filePreDeleteCallback']);
 
     // Restore original database connection.
     Database::removeConnection('default');
@@ -1362,11 +1363,13 @@ abstract class TestBase {
   }
 
   /**
-   * Ensures test files are deletable within file_unmanaged_delete_recursive().
+   * Ensures test files are deletable.
    *
    * Some tests chmod generated files to be read only. During
    * TestBase::restoreEnvironment() and other cleanup operations, these files
    * need to get deleted too.
+   *
+   * @see \Drupal\Core\File\FileSystemInterface::deleteRecursive()
    */
   public static function filePreDeleteCallback($path) {
     // When the webserver runs with the same system user as the test runner, we

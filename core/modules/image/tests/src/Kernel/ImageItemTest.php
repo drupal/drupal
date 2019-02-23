@@ -67,7 +67,7 @@ class ImageItemTest extends FieldKernelTestBase {
         'file_extensions' => 'jpg',
       ],
     ])->save();
-    file_unmanaged_copy($this->root . '/core/misc/druplicon.png', 'public://example.jpg');
+    \Drupal::service('file_system')->copy($this->root . '/core/misc/druplicon.png', 'public://example.jpg');
     $this->image = File::create([
       'uri' => 'public://example.jpg',
     ]);
@@ -100,7 +100,7 @@ class ImageItemTest extends FieldKernelTestBase {
     $this->assertEqual($entity->image_test->entity->uuid(), $this->image->uuid());
 
     // Make sure the computed entity reflects updates to the referenced file.
-    file_unmanaged_copy($this->root . '/core/misc/druplicon.png', 'public://example-2.jpg');
+    \Drupal::service('file_system')->copy($this->root . '/core/misc/druplicon.png', 'public://example-2.jpg');
     $image2 = File::create([
       'uri' => 'public://example-2.jpg',
     ]);

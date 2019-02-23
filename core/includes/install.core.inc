@@ -15,6 +15,7 @@ use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Installer\Exception\AlreadyInstalledException;
 use Drupal\Core\Installer\Exception\InstallerException;
@@ -1106,7 +1107,7 @@ function install_base_system(&$install_state) {
     // configurable. The temporary directory needs to match what is set in each
     // test types ::prepareEnvironment() step.
     $temporary_directory = dirname(PublicStream::basePath()) . '/temp';
-    file_prepare_directory($temporary_directory, FILE_MODIFY_PERMISSIONS | FILE_CREATE_DIRECTORY);
+    \Drupal::service('file_system')->prepareDirectory($temporary_directory, FileSystemInterface::MODIFY_PERMISSIONS | FileSystemInterface::CREATE_DIRECTORY);
     \Drupal::configFactory()->getEditable('system.file')
       ->set('path.temporary', $temporary_directory)
       ->save();
@@ -1915,9 +1916,12 @@ function install_check_translations($langcode, $server_pattern) {
   $online = FALSE;
 
   // First attempt to create or make writable the files directory.
-  file_prepare_directory($files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
+  $file_system->prepareDirectory($files_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+
   // Then, attempt to create or make writable the translations directory.
-  file_prepare_directory($translations_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  $file_system->prepareDirectory($translations_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 
   // Get values so the requirements errors can be specific.
   if (drupal_verify_install_file($translations_directory, FILE_EXIST, 'dir')) {

@@ -2,12 +2,14 @@
 
 namespace Drupal\KernelTests\Core\File;
 
+use Drupal\Core\File\Exception\NotRegularFileException;
+
 /**
  * Tests the unmanaged file delete function.
  *
  * @group File
  */
-class UnmanagedDeleteTest extends FileTestBase {
+class FileDeleteTest extends FileTestBase {
 
   /**
    * Delete a normal file.
@@ -17,7 +19,7 @@ class UnmanagedDeleteTest extends FileTestBase {
     $uri = $this->createUri();
 
     // Delete a regular file
-    $this->assertTrue(file_unmanaged_delete($uri), 'Deleted worked.');
+    $this->assertTrue(\Drupal::service('file_system')->delete($uri), 'Deleted worked.');
     $this->assertFalse(file_exists($uri), 'Test file has actually been deleted.');
   }
 
@@ -26,7 +28,7 @@ class UnmanagedDeleteTest extends FileTestBase {
    */
   public function testMissing() {
     // Try to delete a non-existing file
-    $this->assertTrue(file_unmanaged_delete(file_default_scheme() . '/' . $this->randomMachineName()), 'Returns true when deleting a non-existent file.');
+    $this->assertTrue(\Drupal::service('file_system')->delete(file_default_scheme() . '/' . $this->randomMachineName()), 'Returns true when deleting a non-existent file.');
   }
 
   /**
@@ -36,8 +38,14 @@ class UnmanagedDeleteTest extends FileTestBase {
     // A directory to operate on.
     $directory = $this->createDirectory();
 
-    // Try to delete a directory
-    $this->assertFalse(file_unmanaged_delete($directory), 'Could not delete the delete directory.');
+    // Try to delete a directory.
+    try {
+      \Drupal::service('file_system')->delete($directory);
+      $this->fail('Expected NotRegularFileException');
+    }
+    catch (NotRegularFileException $e) {
+      // Ignore.
+    }
     $this->assertTrue(file_exists($directory), 'Directory has not been deleted.');
   }
 

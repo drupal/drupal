@@ -80,7 +80,7 @@ class MediaSourceFileTest extends MediaSourceTestBase {
 
     // Test the MIME type icon.
     $icon_base = \Drupal::config('media.settings')->get('icon_base_uri');
-    file_unmanaged_copy($icon_base . '/generic.png', $icon_base . '/text--plain.png');
+    \Drupal::service('file_system')->copy($icon_base . '/generic.png', $icon_base . '/text--plain.png');
     $this->drupalGet("media/add/{$media_type_id}");
     $page->attachFileToField("files[{$source_field_id}_0]", \Drupal::service('file_system')->realpath($test_filepath));
     $result = $assert_session->waitForButton('Remove');

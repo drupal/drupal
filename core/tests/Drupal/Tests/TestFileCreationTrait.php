@@ -71,7 +71,7 @@ trait TestFileCreationTrait {
       $original = drupal_get_path('module', 'simpletest') . '/files';
       $files = file_scan_directory($original, '/(html|image|javascript|php|sql)-.*/');
       foreach ($files as $file) {
-        file_unmanaged_copy($file->uri, PublicStream::basePath());
+        \Drupal::service('file_system')->copy($file->uri, PublicStream::basePath());
       }
 
       $this->generatedTestFiles = TRUE;

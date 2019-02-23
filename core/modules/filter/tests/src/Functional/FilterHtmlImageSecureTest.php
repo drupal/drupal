@@ -99,7 +99,7 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
     $special_filename = 'tést fïle nàme.png';
     $special_image = rawurlencode($special_filename);
     $special_uri = str_replace($test_images[0]->filename, $special_filename, $test_images[0]->uri);
-    file_unmanaged_copy($test_images[0]->uri, $special_uri);
+    \Drupal::service('file_system')->copy($test_images[0]->uri, $special_uri);
 
     // Create a list of test image sources.
     // The keys become the value of the IMG 'src' attribute, the values are the

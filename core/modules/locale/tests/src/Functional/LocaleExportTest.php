@@ -33,8 +33,8 @@ class LocaleExportTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Copy test po files to the translations directory.
-    file_unmanaged_copy(__DIR__ . '/../../tests/test.de.po', 'translations://', FILE_EXISTS_REPLACE);
-    file_unmanaged_copy(__DIR__ . '/../../tests/test.xx.po', 'translations://', FILE_EXISTS_REPLACE);
+    \Drupal::service('file_system')->copy(__DIR__ . '/../../../tests/test.de.po', 'translations://', FILE_EXISTS_REPLACE);
+    \Drupal::service('file_system')->copy(__DIR__ . '/../../../tests/test.xx.po', 'translations://', FILE_EXISTS_REPLACE);
   }
 
   /**

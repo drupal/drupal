@@ -42,7 +42,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     for ($i = 1; $i <= 10; $i++) {
       $filename = $this->randomMachineName() . "$i";
       $desired_filepath = 'public://' . $filename;
-      file_unmanaged_copy($files[0]->uri, $desired_filepath, FILE_EXISTS_ERROR);
+      \Drupal::service('file_system')->copy($files[0]->uri, $desired_filepath, FILE_EXISTS_ERROR);
       $file = File::create(['uri' => $desired_filepath, 'filename' => $filename, 'name' => $filename]);
       $file->save();
     }

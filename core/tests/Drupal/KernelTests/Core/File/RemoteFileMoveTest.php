@@ -3,11 +3,11 @@
 namespace Drupal\KernelTests\Core\File;
 
 /**
- * Tests the unmanaged file delete recursive function.
+ * Tests the unmanaged file move function.
  *
  * @group File
  */
-class RemoteFileUnmanagedDeleteRecursiveTest extends UnmanagedDeleteRecursiveTest {
+class RemoteFileMoveTest extends FileMoveTest {
 
   /**
    * Modules to enable.

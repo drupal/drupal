@@ -33,7 +33,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     if (!isset($file_path)) {
       $files = $this->drupalGetTestFiles('image');
       $file = reset($files);
-      $file_path = file_unmanaged_copy($file->uri);
+      $file_path = \Drupal::service('file_system')->copy($file->uri);
     }
 
     return $style->buildUrl($file_path) ? $file_path : FALSE;

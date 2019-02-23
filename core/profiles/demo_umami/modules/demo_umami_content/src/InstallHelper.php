@@ -2,13 +2,15 @@
 
 namespace Drupal\demo_umami_content;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Component\Utility\Html;
 
 /**
  * Defines a helper class for importing default content.
@@ -47,6 +49,13 @@ class InstallHelper implements ContainerInjectionInterface {
   protected $state;
 
   /**
+   * The file system.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Constructs a new InstallHelper object.
    *
    * @param \Drupal\Core\Path\AliasManagerInterface $aliasManager
@@ -57,12 +66,15 @@ class InstallHelper implements ContainerInjectionInterface {
    *   Module handler.
    * @param \Drupal\Core\State\StateInterface $state
    *   State service.
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
+   *   The file system.
    */
-  public function __construct(AliasManagerInterface $aliasManager, EntityTypeManagerInterface $entityTypeManager, ModuleHandlerInterface $moduleHandler, StateInterface $state) {
+  public function __construct(AliasManagerInterface $aliasManager, EntityTypeManagerInterface $entityTypeManager, ModuleHandlerInterface $moduleHandler, StateInterface $state, FileSystemInterface $fileSystem) {
     $this->aliasManager = $aliasManager;
     $this->entityTypeManager = $entityTypeManager;
     $this->moduleHandler = $moduleHandler;
     $this->state = $state;
+    $this->fileSystem = $fileSystem;
   }
 
   /**
@@ -73,7 +85,8 @@ class InstallHelper implements ContainerInjectionInterface {
       $container->get('path.alias_manager'),
       $container->get('entity_type.manager'),
       $container->get('module_handler'),
-      $container->get('state')
+      $container->get('state'),
+      $container->get('file_system')
     );
   }
 
@@ -513,7 +526,13 @@ class InstallHelper implements ContainerInjectionInterface {
    *   File ID.
    */
   protected function createFileEntity($path) {
-    $uri = $this->fileUnmanagedCopy($path);
+    $filename = basename($path);
+    try {
+      $uri = $this->fileSystem->copy($path, 'public://' . $filename, FileSystemInterface::EXISTS_REPLACE);
+    }
+    catch (FileException $e) {
+      $uri = FALSE;
+    }
     $file = $this->entityTypeManager->getStorage('file')->create([
       'uri' => $uri,
       'status' => 1,
@@ -533,20 +552,6 @@ class InstallHelper implements ContainerInjectionInterface {
   protected function storeCreatedContentUuids(array $uuids) {
     $uuids = $this->state->get('demo_umami_content_uuids', []) + $uuids;
     $this->state->set('demo_umami_content_uuids', $uuids);
-  }
-
-  /**
-   * Wrapper around file_unmanaged_copy().
-   *
-   * @param string $path
-   *   Path to image.
-   *
-   * @return string|false
-   *   The path to the new file, or FALSE in the event of an error.
-   */
-  protected function fileUnmanagedCopy($path) {
-    $filename = basename($path);
-    return file_unmanaged_copy($path, 'public://' . $filename, FILE_EXISTS_REPLACE);
   }
 
 }

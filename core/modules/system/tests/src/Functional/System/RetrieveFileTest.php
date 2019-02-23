@@ -33,7 +33,9 @@ class RetrieveFileTest extends BrowserTestBase {
     $this->assertEqual($retrieved_file, 'public://' . $encoded_filename, 'Sane path for downloaded file returned (public:// scheme).');
     $this->assertTrue(is_file($retrieved_file), 'Downloaded file does exist (public:// scheme).');
     $this->assertEqual(filesize($retrieved_file), 7, 'File size of downloaded file is correct (public:// scheme).');
-    file_unmanaged_delete($retrieved_file);
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $file_system->delete($retrieved_file);
 
     // Test downloading file to a different location.
     drupal_mkdir($targetdir = 'temporary://' . $this->randomMachineName());
@@ -41,10 +43,10 @@ class RetrieveFileTest extends BrowserTestBase {
     $this->assertEqual($retrieved_file, "$targetdir/$encoded_filename", 'Sane path for downloaded file returned (temporary:// scheme).');
     $this->assertTrue(is_file($retrieved_file), 'Downloaded file does exist (temporary:// scheme).');
     $this->assertEqual(filesize($retrieved_file), 7, 'File size of downloaded file is correct (temporary:// scheme).');
-    file_unmanaged_delete($retrieved_file);
+    $file_system->delete($retrieved_file);
 
-    file_unmanaged_delete_recursive($sourcedir);
-    file_unmanaged_delete_recursive($targetdir);
+    $file_system->deleteRecursive($sourcedir);
+    $file_system->deleteRecursive($targetdir);
   }
 
 }

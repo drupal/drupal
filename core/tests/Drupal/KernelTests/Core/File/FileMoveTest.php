@@ -2,6 +2,9 @@
 
 namespace Drupal\KernelTests\Core\File;
 
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\Exception\FileNotExistsException;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\File\FileSystem;
 
@@ -10,7 +13,7 @@ use Drupal\Core\File\FileSystem;
  *
  * @group File
  */
-class UnmanagedMoveTest extends FileTestBase {
+class FileMoveTest extends FileTestBase {
 
   /**
    * Move a normal file.
@@ -21,7 +24,9 @@ class UnmanagedMoveTest extends FileTestBase {
 
     // Moving to a new name.
     $desired_filepath = 'public://' . $this->randomMachineName();
-    $new_filepath = file_unmanaged_move($uri, $desired_filepath, FILE_EXISTS_ERROR);
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $new_filepath = $file_system->move($uri, $desired_filepath, FileSystemInterface::EXISTS_ERROR);
     $this->assertTrue($new_filepath, 'Move was successful.');
     $this->assertEqual($new_filepath, $desired_filepath, 'Returned expected filepath.');
     $this->assertTrue(file_exists($new_filepath), 'File exists at the new location.');
@@ -32,7 +37,7 @@ class UnmanagedMoveTest extends FileTestBase {
     $desired_filepath = 'public://' . $this->randomMachineName();
     $this->assertTrue(file_exists($new_filepath), 'File exists before moving.');
     $this->assertTrue(file_put_contents($desired_filepath, ' '), 'Created a file so a rename will have to happen.');
-    $newer_filepath = file_unmanaged_move($new_filepath, $desired_filepath, FILE_EXISTS_RENAME);
+    $newer_filepath = $file_system->move($new_filepath, $desired_filepath, FileSystemInterface::EXISTS_RENAME);
     $this->assertTrue($newer_filepath, 'Move was successful.');
     $this->assertNotEqual($newer_filepath, $desired_filepath, 'Returned expected filepath.');
     $this->assertTrue(file_exists($newer_filepath), 'File exists at the new location.');
@@ -48,8 +53,8 @@ class UnmanagedMoveTest extends FileTestBase {
    */
   public function testMissing() {
     // Move non-existent file.
-    $new_filepath = file_unmanaged_move($this->randomMachineName(), $this->randomMachineName());
-    $this->assertFalse($new_filepath, 'Moving a missing file fails.');
+    $this->expectException(FileNotExistsException::class);
+    \Drupal::service('file_system')->move($this->randomMachineName(), $this->randomMachineName());
   }
 
   /**
@@ -60,12 +65,15 @@ class UnmanagedMoveTest extends FileTestBase {
     $uri = $this->createUri();
 
     // Move the file onto itself without renaming shouldn't make changes.
-    $new_filepath = file_unmanaged_move($uri, $uri, FILE_EXISTS_REPLACE);
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $this->expectException(FileException::class);
+    $new_filepath = $file_system->move($uri, $uri, FileSystemInterface::EXISTS_REPLACE);
     $this->assertFalse($new_filepath, 'Moving onto itself without renaming fails.');
     $this->assertTrue(file_exists($uri), 'File exists after moving onto itself.');
 
     // Move the file onto itself with renaming will result in a new filename.
-    $new_filepath = file_unmanaged_move($uri, $uri, FILE_EXISTS_RENAME);
+    $new_filepath = $file_system->move($uri, $uri, FileSystemInterface::EXISTS_RENAME);
     $this->assertTrue($new_filepath, 'Moving onto itself with renaming works.');
     $this->assertFalse(file_exists($uri), 'Original file has been removed.');
     $this->assertTrue(file_exists($new_filepath), 'File exists after moving onto itself.');

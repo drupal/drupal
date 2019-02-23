@@ -3,6 +3,7 @@
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
@@ -62,7 +63,7 @@ class ImageThemeFunctionTest extends KernelTestBase {
       'field_name' => 'image_test',
       'bundle' => 'entity_test',
     ])->save();
-    file_unmanaged_copy($this->root . '/core/misc/druplicon.png', 'public://example.jpg');
+    \Drupal::service('file_system')->copy($this->root . '/core/misc/druplicon.png', 'public://example.jpg');
     $this->image = File::create([
       'uri' => 'public://example.jpg',
     ]);
@@ -80,7 +81,7 @@ class ImageThemeFunctionTest extends KernelTestBase {
     // Create an image.
     $files = $this->drupalGetTestFiles('image');
     $file = reset($files);
-    $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
+    $original_uri = \Drupal::service('file_system')->copy($file->uri, 'public://', FileSystemInterface::EXISTS_RENAME);
 
     // Create a style.
     $style = ImageStyle::create(['name' => 'test', 'label' => 'Test']);
@@ -142,7 +143,7 @@ class ImageThemeFunctionTest extends KernelTestBase {
     // Create an image.
     $files = $this->drupalGetTestFiles('image');
     $file = reset($files);
-    $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
+    $original_uri = \Drupal::service('file_system')->copy($file->uri, 'public://', FileSystemInterface::EXISTS_RENAME);
 
     // Create a style.
     $style = ImageStyle::create(['name' => 'image_test', 'label' => 'Test']);
