@@ -25,11 +25,19 @@ class SectionTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->section = new Section('layout_onecol', [], [
-      new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']),
-      (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-      (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
-    ]);
+    $this->section = new Section(
+      'layout_onecol',
+      [],
+      [
+        new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']),
+        (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+        (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      ],
+      [
+        'bad_judgement' => ['blink_speed' => 'fast', 'spin_direction' => 'clockwise'],
+        'hunt_and_peck' => ['delay' => '300ms'],
+      ]
+    );
   }
 
   /**
@@ -177,6 +185,177 @@ class SectionTest extends UnitTestCase {
     $result = $section->getComponents();
     $this->assertEquals($expected, $result);
     $this->assertSame(array_keys($expected), array_keys($result));
+  }
+
+  /**
+   * @covers ::getThirdPartySettings
+   * @dataProvider providerTestGetThirdPartySettings
+   */
+  public function testGetThirdPartySettings($provider, $expected) {
+    $this->assertSame($expected, $this->section->getThirdPartySettings($provider));
+  }
+
+  /**
+   * Provides test data for ::testGetThirdPartySettings().
+   */
+  public function providerTestGetThirdPartySettings() {
+    $data = [];
+    $data[] = [
+      'bad_judgement',
+      ['blink_speed' => 'fast', 'spin_direction' => 'clockwise'],
+    ];
+    $data[] = [
+      'hunt_and_peck',
+      ['delay' => '300ms'],
+    ];
+    $data[] = [
+      'non_existing_provider',
+      [],
+    ];
+    return $data;
+  }
+
+  /**
+   * @covers ::getThirdPartySetting
+   * @dataProvider providerTestGetThirdPartySetting
+   */
+  public function testGetThirdPartySetting($provider, $key, $expected, $default = FALSE) {
+    if ($default) {
+      $this->assertSame($expected, $this->section->getThirdPartySetting($provider, $key, $default));
+    }
+    else {
+      $this->assertSame($expected, $this->section->getThirdPartySetting($provider, $key));
+    }
+  }
+
+  /**
+   * Provides test data for ::testGetThirdPartySetting().
+   */
+  public function providerTestGetThirdPartySetting() {
+    $data = [];
+    $data[] = [
+      'bad_judgement',
+      'blink_speed',
+      'fast',
+    ];
+    $data[] = [
+      'hunt_and_peck',
+      'delay',
+      '300ms',
+    ];
+    $data[] = [
+      'hunt_and_peck',
+      'non_existing_key',
+      NULL,
+    ];
+    $data[] = [
+      'non_existing_provider',
+      'non_existing_key',
+      NULL,
+    ];
+    $data[] = [
+      'non_existing_provider',
+      'non_existing_key',
+      'default value',
+      'default value',
+    ];
+    return $data;
+  }
+
+  /**
+   * @covers ::setThirdPartySetting
+   * @dataProvider providerTestSetThirdPartySetting
+   */
+  public function testSetThirdPartySetting($provider, $key, $value, $expected) {
+    $this->section->setThirdPartySetting($provider, $key, $value);
+    $this->assertSame($expected, $this->section->getThirdPartySettings($provider));
+  }
+
+  /**
+   * Provides test data for ::testSetThirdPartySettings().
+   */
+  public function providerTestSetThirdPartySetting() {
+    $data = [];
+    $data[] = [
+      'bad_judgement',
+      'blink_speed',
+      'super fast',
+      [
+        'blink_speed' => 'super fast',
+        'spin_direction' => 'clockwise',
+      ],
+    ];
+    $data[] = [
+      'bad_judgement',
+      'new_setting',
+      'new_value',
+      [
+        'blink_speed' => 'fast',
+        'spin_direction' => 'clockwise',
+        'new_setting' => 'new_value',
+      ],
+    ];
+    $data[] = [
+      'new_provider',
+      'new_setting',
+      'new_value',
+      [
+        'new_setting' => 'new_value',
+      ],
+    ];
+    return $data;
+  }
+
+  /**
+   * @covers ::unsetThirdPartySetting
+   * @dataProvider providerTestUnsetThirdPartySetting
+   */
+  public function testUnsetThirdPartySetting() {
+    $this->section->unsetThirdPartySetting('bad_judgement', 'blink_speed');
+    $this->assertSame(['spin_direction' => 'clockwise'], $this->section->getThirdPartySettings('bad_judgement'));
+    $this->section->unsetThirdPartySetting('hunt_and_peck', 'delay');
+    $this->assertSame([], $this->section->getThirdPartySettings('hunt_and_peck'));
+    $this->section->unsetThirdPartySetting('bad_judgement', 'non_existing_key');
+    $this->section->unsetThirdPartySetting('non_existing_provider', 'non_existing_key');
+  }
+
+  /**
+   * Provides test data for ::testUnsetThirdPartySettings().
+   */
+  public function providerTestUnsetThirdPartySetting() {
+    $data = [];
+    $data[] = [
+      'bad_judgement',
+      'blink_speed',
+      [
+        'spin_direction' => 'clockwise',
+      ],
+    ];
+    $data[] = [
+      'hunt_and_peck',
+      'delay',
+      [],
+    ];
+    $data[] = [
+      'bad_judgement',
+      'non_existing_key',
+      [],
+    ];
+    $data[] = [
+      'non_existing_provider',
+      'non_existing_key',
+      [],
+    ];
+    return $data;
+  }
+
+  /**
+   * @covers ::getThirdPartyProviders
+   */
+  public function testGetThirdPartyProviders() {
+    $this->assertSame(['bad_judgement', 'hunt_and_peck'], $this->section->getThirdPartyProviders());
+    $this->section->unsetThirdPartySetting('hunt_and_peck', 'delay');
+    $this->assertSame(['bad_judgement'], $this->section->getThirdPartyProviders());
   }
 
 }

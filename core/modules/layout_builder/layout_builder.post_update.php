@@ -146,3 +146,10 @@ function layout_builder_post_update_fix_tempstore_keys() {
     }
   }
 }
+
+/**
+ * Clear caches due to config schema additions.
+ */
+function layout_builder_post_update_section_third_party_settings_schema() {
+  // Empty post-update hook.
+}

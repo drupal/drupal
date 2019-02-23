@@ -28,6 +28,11 @@ layout_builder.section:
       label: 'Components'
       sequence:
         type: layout_builder.component
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        type: '[%parent.%parent.%type].third_party.[%key]'
 
 layout_builder.component:
   type: mapping

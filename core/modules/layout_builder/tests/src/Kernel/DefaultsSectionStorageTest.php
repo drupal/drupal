@@ -103,9 +103,14 @@ class DefaultsSectionStorageTest extends KernelTestBase {
    */
   public function providerTestAccess() {
     $section_data = [
-      new Section('layout_onecol', [], [
-        'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
-      ]),
+      new Section(
+        'layout_onecol',
+        [],
+        [
+          'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo'], ['harold' => 'maude']),
+        ],
+        ['layout_builder_defaults_test' => ['which_party' => 'third']]
+      ),
     ];
 
     // Data provider values are:
