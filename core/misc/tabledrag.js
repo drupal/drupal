@@ -86,7 +86,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       self.makeDraggable(this);
     });
 
-    $table.before($('<button type="button" class="link tabledrag-toggle-weight"></button>').attr('title', Drupal.t('Re-order rows by numerical weight instead of dragging.')).on('click', $.proxy(function (e) {
+    $table.before($('<button type="button" class="link tabledrag-toggle-weight"></button>').on('click', $.proxy(function (e) {
       e.preventDefault();
       this.toggleColumns();
     }, this)).wrap('<div class="tabledrag-toggle-weight-wrapper"></div>').parent());

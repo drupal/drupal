@@ -301,7 +301,6 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
             'media-library-widget__toggle-weight',
             'js-media-library-widget-toggle-weight',
           ],
-          'title' => $this->t('Re-order media by numerical weight instead of dragging'),
         ],
       ];
     }

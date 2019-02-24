@@ -229,10 +229,6 @@
     // Add a link before the table for users to show or hide weight columns.
     $table.before(
       $('<button type="button" class="link tabledrag-toggle-weight"></button>')
-        .attr(
-          'title',
-          Drupal.t('Re-order rows by numerical weight instead of dragging.'),
-        )
         .on(
           'click',
           $.proxy(function(e) {
