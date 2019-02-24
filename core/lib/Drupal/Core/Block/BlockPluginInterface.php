@@ -2,10 +2,12 @@
 
 namespace Drupal\Core\Block;
 
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -20,7 +22,7 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @ingroup block_api
  */
-interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormInterface, PluginInspectionInterface, CacheableDependencyInterface, DerivativeInspectionInterface {
+interface BlockPluginInterface extends ConfigurableInterface, DependentPluginInterface, ConfigurablePluginInterface, PluginFormInterface, PluginInspectionInterface, CacheableDependencyInterface, DerivativeInspectionInterface {
 
   /**
    * Indicates the block label (title) should be displayed to end users.

@@ -2,7 +2,11 @@
 
 namespace Drupal\Tests\Core\Plugin;
 
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Plugin\DefaultLazyPluginCollection;
 use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
 
 /**
@@ -14,7 +18,7 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
   /**
    * Stores all setup plugin instances.
    *
-   * @var \Drupal\Component\Plugin\ConfigurablePluginInterface[]
+   * @var \Drupal\Component\Plugin\ConfigurableInterface[]
    */
   protected $pluginInstances;
 
@@ -231,6 +235,34 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
     $expected['cherry'] = ['value' => 'kiwi', 'id' => 'cherry'];
     $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame(['cherry' => ['value' => 'kiwi', 'id' => 'cherry']], $config);
+
+  }
+
+  /**
+   * Tests that plugin methods are correctly attached to interfaces.
+   *
+   * @covers ::getConfiguration
+   */
+  public function testConfigurableInterface() {
+    $configurable_plugin = $this->prophesize(ConfigurableInterface::class);
+    $configurable_config = ['id' => 'configurable', 'foo' => 'bar'];
+    $configurable_plugin->getConfiguration()->willReturn($configurable_config);
+
+    $nonconfigurable_plugin = $this->prophesize(PluginInspectionInterface::class);
+    $nonconfigurable_config = ['id' => 'non-configurable', 'baz' => 'qux'];
+    $nonconfigurable_plugin->configuration = $nonconfigurable_config;
+
+    $configurations = [
+      'configurable' => $configurable_config,
+      'non-configurable' => $nonconfigurable_config,
+    ];
+
+    $plugin_manager = $this->prophesize(PluginManagerInterface::class);
+    $plugin_manager->createInstance('configurable', $configurable_config)->willReturn($configurable_plugin->reveal());
+    $plugin_manager->createInstance('non-configurable', $nonconfigurable_config)->willReturn($nonconfigurable_plugin->reveal());
+
+    $collection = new DefaultLazyPluginCollection($plugin_manager->reveal(), $configurations);
+    $this->assertSame($configurations, $collection->getConfiguration());
 
   }
 
