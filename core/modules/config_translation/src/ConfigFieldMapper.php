@@ -26,7 +26,7 @@ class ConfigFieldMapper extends ConfigEntityMapper {
    */
   public function getBaseRouteParameters() {
     $parameters = parent::getBaseRouteParameters();
-    $base_entity_info = $this->entityManager->getDefinition($this->pluginDefinition['base_entity_type']);
+    $base_entity_info = $this->entityTypeManager->getDefinition($this->pluginDefinition['base_entity_type']);
     $bundle_parameter_key = $base_entity_info->getBundleEntityType() ?: 'bundle';
     $parameters[$bundle_parameter_key] = $this->entity->getTargetBundle();
     return $parameters;
@@ -43,7 +43,7 @@ class ConfigFieldMapper extends ConfigEntityMapper {
    * {@inheritdoc}
    */
   public function getTypeLabel() {
-    $base_entity_info = $this->entityManager->getDefinition($this->pluginDefinition['base_entity_type']);
+    $base_entity_info = $this->entityTypeManager->getDefinition($this->pluginDefinition['base_entity_type']);
     return $this->t('@label fields', ['@label' => $base_entity_info->getLabel()]);
   }
 
@@ -58,7 +58,7 @@ class ConfigFieldMapper extends ConfigEntityMapper {
       /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
       $field_storage = $this->entity->getFieldStorageDefinition();
       /** @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $entity_type_info */
-      $entity_type_info = $this->entityManager->getDefinition($field_storage->getEntityTypeId());
+      $entity_type_info = $this->entityTypeManager->getDefinition($field_storage->getEntityTypeId());
       $this->addConfigName($entity_type_info->getConfigPrefix() . '.' . $field_storage->id());
       return TRUE;
     }
