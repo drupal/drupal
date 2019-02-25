@@ -21,6 +21,7 @@ use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaTypeForm;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\Form\FileUploadForm;
+use Drupal\media_library\Form\OEmbedForm;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\views\Form\ViewsForm;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
@@ -48,6 +49,7 @@ function media_library_media_source_info_alter(array &$sources) {
   $sources['file']['forms']['media_library_add'] = FileUploadForm::class;
   $sources['image']['forms']['media_library_add'] = FileUploadForm::class;
   $sources['video_file']['forms']['media_library_add'] = FileUploadForm::class;
+  $sources['oembed:video']['forms']['media_library_add'] = OEmbedForm::class;
 }
 
 /**

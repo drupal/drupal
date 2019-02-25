@@ -5,6 +5,7 @@ namespace Drupal\Tests\media_library\Kernel;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media_library\Form\FileUploadForm;
+use Drupal\media_library\Form\OEmbedForm;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -72,20 +73,46 @@ class MediaLibraryAddFormTest extends KernelTestBase {
 
     // Assert the form class is added to the media source.
     $this->assertSame(FileUploadForm::class, $image_source_definition['forms']['media_library_add']);
-    $this->assertArrayNotHasKey('media_library_add', $remote_video_source_definition['forms']);
+    $this->assertSame(OEmbedForm::class, $remote_video_source_definition['forms']['media_library_add']);
 
     // Assert the media library UI does not contains the add form when the user
     // does not have access.
-    $state = MediaLibraryState::create('test', ['image', 'remote_video'], 'image', -1);
-    $library_ui = \Drupal::service('media_library.ui_builder')->buildUi($state);
-    $this->assertEmpty($library_ui['content']['form']);
+    $this->assertEmpty($this->buildLibraryUi('image')['content']['form']);
+    $this->assertEmpty($this->buildLibraryUi('remote_video')['content']['form']);
 
-    // Create a user that has access to the media add form.
+    // Create a user that has access to create the image media type but not the
+    // remote video media type.
     $this->setCurrentUser($this->createUser([
       'create image media',
     ]));
-    $library_ui = \Drupal::service('media_library.ui_builder')->buildUi($state);
-    $this->assertSame('managed_file', $library_ui['content']['form']['upload']['#type']);
+    // Assert the media library UI only contains the add form for the image
+    // media type.
+    $this->assertSame('managed_file', $this->buildLibraryUi('image')['content']['form']['upload']['#type']);
+    $this->assertEmpty($this->buildLibraryUi('remote_video')['content']['form']);
+
+    // Create a user that has access to create both media types.
+    $this->setCurrentUser($this->createUser([
+      'create image media',
+      'create remote_video media',
+    ]));
+    // Assert the media library UI only contains the add form for both media
+    // types.
+    $this->assertSame('managed_file', $this->buildLibraryUi('image')['content']['form']['upload']['#type']);
+    $this->assertSame('url', $this->buildLibraryUi('remote_video')['content']['form']['container']['url']['#type']);
+  }
+
+  /**
+   * Build the media library UI for a selected type.
+   *
+   * @param string $selected_type_id
+   *   The selected media type ID.
+   *
+   * @return array
+   *   The render array for the media library.
+   */
+  protected function buildLibraryUi($selected_type_id) {
+    $state = MediaLibraryState::create('test', ['image', 'remote_video'], $selected_type_id, -1);
+    return \Drupal::service('media_library.ui_builder')->buildUi($state);
   }
 
   /**

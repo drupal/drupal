@@ -1,0 +1,50 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.type_five.field_media_test_oembed_video
+    - media.type.type_five
+  module:
+    - media
+id: media.type_five.default
+targetEntityType: media
+bundle: type_five
+mode: default
+content:
+  created:
+    label: hidden
+    type: timestamp
+    weight: 0
+    region: content
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  field_media_test_oembed_video:
+    weight: 6
+    label: hidden
+    settings:
+      max_width: 0
+      max_height: 0
+    third_party_settings: {  }
+    type: oembed
+    region: content
+  thumbnail:
+    type: image
+    weight: 5
+    label: hidden
+    settings:
+      image_style: thumbnail
+      image_link: ''
+    region: content
+    third_party_settings: {  }
+  uid:
+    label: hidden
+    type: author
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  name: true

@@ -5,6 +5,8 @@ namespace Drupal\Tests\media_library\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
 use Drupal\media_library\MediaLibraryState;
+use Drupal\media_test_oembed\Controller\ResourceController;
+use Drupal\Tests\media\Traits\OEmbedTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -17,6 +19,7 @@ use Drupal\user\RoleInterface;
 class MediaLibraryTest extends WebDriverTestBase {
 
   use TestFileCreationTrait;
+  use OEmbedTestTrait;
 
   /**
    * {@inheritdoc}
@@ -28,6 +31,7 @@ class MediaLibraryTest extends WebDriverTestBase {
    */
   protected function setUp() {
     parent::setUp();
+    $this->lockHttpClientToFixtures();
 
     // Create a few example media items for use in selection.
     $media = [
@@ -618,7 +622,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->fieldNotExists('Revision log message', $upload_form);
 
     // Assert the name field contains the filename and the alt text is required.
-    $this->assertSame($assert_session->fieldExists('Name')->getValue(), $png_image->filename);
+    $assert_session->fieldValueEquals('Name', $png_image->filename);
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Alternative text field is required');
@@ -750,6 +754,105 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Media library');
     $assert_session->pageTextContains($jpg_image->filename);
+  }
+
+  /**
+   * Tests that oEmbed media can be added in the Media library's widget.
+   */
+  public function testWidgetOEmbed() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $video_title = "Everyday I'm Drupalin' Drupal Rap (Rick Ross - Hustlin)";
+    $video_url = 'https://www.youtube.com/watch?v=PWjcqE3QKBg';
+    ResourceController::setResourceUrl($video_url, $this->getFixturesDirectory() . '/video_youtube.json');
+
+    // Visit a node create page.
+    $this->drupalGet('node/add/basic_page');
+
+    // Add to the unlimited media field.
+    $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Media library');
+
+    // Assert the default tab for media type one does not have an oEmbed form.
+    $assert_session->fieldNotExists('Add Type Five via URL');
+
+    // Assert other media types don't have the oEmbed form fields.
+    $page->clickLink('Type Three');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->fieldNotExists('Add Type Five via URL');
+
+    // Assert we can add an oEmbed video to media type five.
+    $page->clickLink('Type Five');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->fillField('Add Type Five via URL', $video_url);
+    $assert_session->pageTextContains('Allowed providers: YouTube, Vimeo.');
+    $page->pressButton('Add');
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert the name field contains the remote video title.
+    $assert_session->fieldValueEquals('Name', $video_title);
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Load the created media item.
+    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
+    $media_items = $media_storage->loadMultiple();
+    $added_media = array_pop($media_items);
+
+    // Ensure the media item was saved to the library and automatically
+    // selected. The added media items should be in the first position of the
+    // add form.
+    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains($video_title);
+    $assert_session->fieldValueEquals('media_library_select_form[0]', $added_media->id());
+    $assert_session->checkboxChecked('media_library_select_form[0]');
+
+    // Assert the created oEmbed video is correctly added to the widget.
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextContains($video_title);
+
+    // Open the media library again for the unlimited field and go to the tab
+    // for media type five.
+    $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Media library');
+    $page->clickLink('Type Five');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Assert the video is available on the tab.
+    $assert_session->pageTextContains($video_title);
+
+    // Assert we can only add supported URLs.
+    $page->fillField('Add Type Five via URL', 'https://www.youtube.com/');
+    $page->pressButton('Add');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('No matching provider found.');
+    // Assert we can not add a video ID that doesn't exist. We need to use a
+    // video ID that will not be filtered by the regex, because otherwise the
+    // message 'No matching provider found.' will be returned.
+    $page->fillField('Add Type Five via URL', 'https://www.youtube.com/watch?v=PWjcqE3QKBg1');
+    $page->pressButton('Add');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Could not retrieve the oEmbed resource.');
+
+    // Assert we can add a oEmbed video with a custom name.
+    $page->fillField('Add Type Five via URL', $video_url);
+    $page->pressButton('Add');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->fillField('Name', 'Custom video title');
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Custom video title');
+
+    // Assert the created oEmbed video is correctly added to the widget.
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextContains('Custom video title');
   }
 
 }

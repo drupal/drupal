@@ -21,6 +21,7 @@ settings:
     target_bundles:
       type_one: type_one
       type_three: type_three
+      type_five: type_five
     sort:
       field: _none
     auto_create: false

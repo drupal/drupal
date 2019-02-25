@@ -308,10 +308,12 @@ abstract class AddFormBase extends FormBase {
    *   An unsaved media entity.
    */
   protected function createMediaFromValue(MediaTypeInterface $media_type, EntityStorageInterface $media_storage, $source_field_name, $source_field_value) {
-    return $media_storage->create([
+    $media = $media_storage->create([
       'bundle' => $media_type->id(),
       $source_field_name => $source_field_value,
     ]);
+    $media->setName($media->getName());
+    return $media;
   }
 
   /**

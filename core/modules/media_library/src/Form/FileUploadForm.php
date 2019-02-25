@@ -106,7 +106,7 @@ class FileUploadForm extends AddFormBase {
    * {@inheritdoc}
    */
   protected function buildInputElement(array $form, FormStateInterface $form_state) {
-    $form['#attributes']['class'][] = 'media-library-add-form-upload';
+    $form['#attributes']['class'][] = 'media-library-add-form--upload';
 
     // Create a file item to get the upload validators.
     $media_type = $this->getMediaType($form_state);
@@ -230,7 +230,7 @@ class FileUploadForm extends AddFormBase {
       throw new \RuntimeException("Unable to move file to '$upload_location'");
     }
 
-    return parent::createMediaFromValue($media_type, $media_storage, $source_field_name, $file)->setName($file->getFilename());
+    return parent::createMediaFromValue($media_type, $media_storage, $source_field_name, $file);
   }
 
   /**

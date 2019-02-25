@@ -83,17 +83,50 @@
   border-left: 0;
 }
 
+/* Generic media add form styles. */
 .media-library-add-form--without-input {
-  margin-bottom: 1em;
-  border-bottom: 1px solid #c0c0c0;
+  padding: 16px;
+  border: 1px solid #bfbfbf;
+  border-radius: 2px;
+  background: #fcfcfa;
 }
 
 .media-library-add-form--without-input .form-item {
   margin: 0 0 1em;
 }
 
+/* Style the media add upload form. */
+.media-library-add-form--upload.media-library-add-form--without-input .form-item-upload {
+  margin-bottom: 0;
+}
+
 .media-library-add-form .file-upload-help {
   margin: 8px 0 0;
+}
+
+/* Style the media add oEmbed form. */
+.media-library-add-form-oembed-wrapper {
+  display: flex;
+}
+
+@media screen and (max-width: 37.5em) {
+  .media-library-add-form-oembed-wrapper {
+    display: block;
+  }
+}
+
+.media-library-add-form--oembed.media-library-add-form--without-input .form-item-url {
+  margin-bottom: 0;
+}
+
+.media-library-add-form-oembed-url {
+  width: 100%;
+}
+
+/* @todo Remove .button when styles are moved to the seven theme in
+     https://www.drupal.org/project/drupal/issues/2980769 */
+.button.media-library-add-form-oembed-submit {
+  align-self: center;
 }
 
 .media-library-views-form__header .form-item {
@@ -313,8 +346,8 @@
 
 /* Do not show the bottom border and padding for the last item. */
 .media-library-add-form__media:last-child {
-  border-bottom: 0;
   padding-bottom: 0;
+  border-bottom: 0;
 }
 
 /* @todo Remove in https://www.drupal.org/project/drupal/issues/2987921 */
