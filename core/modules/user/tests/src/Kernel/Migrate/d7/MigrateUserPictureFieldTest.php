@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\user\Kernel\Migrate;
+namespace Drupal\Tests\user\Kernel\Migrate\d7;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigInterface;

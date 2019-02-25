@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\user\Kernel\Migrate;
+namespace Drupal\Tests\user\Kernel\Migrate\d7;
 
 use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\field\Entity\FieldConfig;
