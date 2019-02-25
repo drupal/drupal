@@ -292,7 +292,7 @@ class SiteConfigureForm extends ConfigFormBase {
     // Enable update.module if this option was selected.
     $update_status_module = $form_state->getValue('enable_update_status_module');
     if (empty($install_state['config_install_path']) && $update_status_module) {
-      $this->moduleInstaller->install(['update']);
+      $this->moduleInstaller->install(['file', 'update'], FALSE);
 
       // Add the site maintenance account's email address to the list of
       // addresses to be notified when updates are available, if selected.
