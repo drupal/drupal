@@ -287,7 +287,14 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
 
     if (empty($referenced_entities)) {
       $element['empty_selection'] = [
-        '#markup' => $this->t('<p>No media items are selected.</p>'),
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => $this->t('No media items are selected.'),
+        '#attributes' => [
+          'class' => [
+            'media-library-widget-empty-text',
+          ],
+        ],
       ];
     }
     else {

@@ -29,6 +29,7 @@ widget:
   dependencies:
     - core/jquery.ui.sortable
     - core/jquery.once
+    - media_library/style
 
 ui:
   version: VERSION
@@ -36,5 +37,5 @@ ui:
     js/media_library.ui.js: {}
   dependencies:
     - core/drupal.ajax
-    - media_library/view
     - core/jquery.once
+    - media_library/view

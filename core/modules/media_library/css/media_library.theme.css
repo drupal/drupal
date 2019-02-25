@@ -246,6 +246,16 @@
   position: relative;
 }
 
+.media-library-widget-empty-text {
+  margin-bottom: 0;
+}
+
+/* @todo Change to .media-library-open-button when styles are moved to the
+     seven theme in https://www.drupal.org/project/drupal/issues/2980769 */
+.button.media-library-open-button {
+  margin-left: 0;
+}
+
 .media-library-widget__toggle-weight {
   position: absolute;
   top: 5px;
