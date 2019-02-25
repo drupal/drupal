@@ -373,11 +373,13 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
-    $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'file; filename="example-✓.txt"']);
+    // It is important that the filename starts with a unicode character. See
+    // https://bugs.php.net/bug.php?id=77239.
+    $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'file; filename="Èxample-✓.txt"']);
     $this->assertSame(201, $response->getStatusCode());
-    $expected = $this->getExpectedNormalizedEntity(1, 'example-✓.txt', TRUE);
+    $expected = $this->getExpectedNormalizedEntity(1, 'Èxample-✓.txt', TRUE);
     $this->assertResponseData($expected, $response);
-    $this->assertSame($this->testFileData, file_get_contents('public://foobar/example-✓.txt'));
+    $this->assertSame($this->testFileData, file_get_contents('public://foobar/Èxample-✓.txt'));
   }
 
   /**

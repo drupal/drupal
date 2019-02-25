@@ -374,7 +374,7 @@ class FileUploadResource extends ResourceBase {
 
     // Make sure only the filename component is returned. Path information is
     // stripped as per https://tools.ietf.org/html/rfc6266#section-4.3.
-    return basename($filename);
+    return $this->fileSystem->basename($filename);
   }
 
   /**
