@@ -14804,6 +14804,876 @@ $connection->insert('i18n_string')
 ))
 ->values(array(
   'lid' => '76',
+  'textgroup' => 'field',
+  'context' => 'comment_body:comment_node_page:label',
+  'objectid' => 'comment_node_page',
+  'type' => 'comment_body',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '77',
+  'textgroup' => 'field',
+  'context' => 'comment_body:comment_node_article:label',
+  'objectid' => 'comment_node_article',
+  'type' => 'comment_body',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '78',
+  'textgroup' => 'field',
+  'context' => 'comment_body:comment_node_blog:label',
+  'objectid' => 'comment_node_blog',
+  'type' => 'comment_body',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '79',
+  'textgroup' => 'field',
+  'context' => 'comment_body:comment_node_book:label',
+  'objectid' => 'comment_node_book',
+  'type' => 'comment_body',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '80',
+  'textgroup' => 'field',
+  'context' => 'comment_body:comment_node_forum:label',
+  'objectid' => 'comment_node_forum',
+  'type' => 'comment_body',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '81',
+  'textgroup' => 'field',
+  'context' => 'comment_body:comment_node_test_content_type:label',
+  'objectid' => 'comment_node_test_content_type',
+  'type' => 'comment_body',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '82',
+  'textgroup' => 'field',
+  'context' => 'body:page:label',
+  'objectid' => 'page',
+  'type' => 'body',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '83',
+  'textgroup' => 'field',
+  'context' => 'body:article:label',
+  'objectid' => 'article',
+  'type' => 'body',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '84',
+  'textgroup' => 'field',
+  'context' => 'body:blog:label',
+  'objectid' => 'blog',
+  'type' => 'body',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '85',
+  'textgroup' => 'field',
+  'context' => 'body:book:label',
+  'objectid' => 'book',
+  'type' => 'body',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '86',
+  'textgroup' => 'field',
+  'context' => 'body:forum:label',
+  'objectid' => 'forum',
+  'type' => 'body',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '87',
+  'textgroup' => 'field',
+  'context' => 'field_tags:article:label',
+  'objectid' => 'article',
+  'type' => 'field_tags',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '88',
+  'textgroup' => 'field',
+  'context' => 'field_tags:article:description',
+  'objectid' => 'article',
+  'type' => 'field_tags',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '89',
+  'textgroup' => 'field',
+  'context' => 'field_image:article:label',
+  'objectid' => 'article',
+  'type' => 'field_image',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '90',
+  'textgroup' => 'field',
+  'context' => 'field_image:article:description',
+  'objectid' => 'article',
+  'type' => 'field_image',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '91',
+  'textgroup' => 'field',
+  'context' => 'taxonomy_forums:forum:label',
+  'objectid' => 'forum',
+  'type' => 'taxonomy_forums',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '92',
+  'textgroup' => 'field',
+  'context' => 'field_boolean:#allowed_values:0',
+  'objectid' => '#allowed_values',
+  'type' => 'field_boolean',
+  'property' => '0',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '93',
+  'textgroup' => 'field',
+  'context' => 'field_boolean:#allowed_values:1',
+  'objectid' => '#allowed_values',
+  'type' => 'field_boolean',
+  'property' => '1',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '94',
+  'textgroup' => 'field',
+  'context' => 'field_boolean:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_boolean',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '95',
+  'textgroup' => 'field',
+  'context' => 'field_boolean:test_content_type:description',
+  'objectid' => 'test_content_type',
+  'type' => 'field_boolean',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '96',
+  'textgroup' => 'field',
+  'context' => 'field_email:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_email',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '97',
+  'textgroup' => 'field',
+  'context' => 'field_email:test_content_type:description',
+  'objectid' => 'test_content_type',
+  'type' => 'field_email',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '98',
+  'textgroup' => 'field',
+  'context' => 'field_phone:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_phone',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '99',
+  'textgroup' => 'field',
+  'context' => 'field_date:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_date',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '100',
+  'textgroup' => 'field',
+  'context' => 'field_date_with_end_time:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_date_with_end_time',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '101',
+  'textgroup' => 'field',
+  'context' => 'field_file:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_file',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '102',
+  'textgroup' => 'field',
+  'context' => 'field_file:user:label',
+  'objectid' => 'user',
+  'type' => 'field_file',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '103',
+  'textgroup' => 'field',
+  'context' => 'field_float:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_float',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '104',
+  'textgroup' => 'field',
+  'context' => 'field_float:test_content_type:description',
+  'objectid' => 'test_content_type',
+  'type' => 'field_float',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '105',
+  'textgroup' => 'field',
+  'context' => 'field_images:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_images',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '106',
+  'textgroup' => 'field',
+  'context' => 'field_integer:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_integer',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '107',
+  'textgroup' => 'field',
+  'context' => 'field_integer:comment_node_test_content_type:label',
+  'objectid' => 'comment_node_test_content_type',
+  'type' => 'field_integer',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '108',
+  'textgroup' => 'field',
+  'context' => 'field_integer:test_vocabulary:label',
+  'objectid' => 'test_vocabulary',
+  'type' => 'field_integer',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '109',
+  'textgroup' => 'field',
+  'context' => 'field_integer:user:label',
+  'objectid' => 'user',
+  'type' => 'field_integer',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '110',
+  'textgroup' => 'field',
+  'context' => 'field_link:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_link',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '111',
+  'textgroup' => 'field',
+  'context' => 'field_link:test_content_type:title_value',
+  'objectid' => 'test_content_type',
+  'type' => 'field_link',
+  'property' => 'title_value',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '112',
+  'textgroup' => 'field',
+  'context' => 'field_link:article:label',
+  'objectid' => 'article',
+  'type' => 'field_link',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '113',
+  'textgroup' => 'field',
+  'context' => 'field_link:article:title_value',
+  'objectid' => 'article',
+  'type' => 'field_link',
+  'property' => 'title_value',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '114',
+  'textgroup' => 'field',
+  'context' => 'field_link:blog:label',
+  'objectid' => 'blog',
+  'type' => 'field_link',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '115',
+  'textgroup' => 'field',
+  'context' => 'field_link:blog:title_value',
+  'objectid' => 'blog',
+  'type' => 'field_link',
+  'property' => 'title_value',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '116',
+  'textgroup' => 'field',
+  'context' => 'field_text_list:#allowed_values:Some Text',
+  'objectid' => '#allowed_values',
+  'type' => 'field_text_list',
+  'property' => 'Some Text',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '117',
+  'textgroup' => 'field',
+  'context' => 'field_text_list:#allowed_values:Some more text',
+  'objectid' => '#allowed_values',
+  'type' => 'field_text_list',
+  'property' => 'Some more text',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '118',
+  'textgroup' => 'field',
+  'context' => 'field_text_list:#allowed_values:The key',
+  'objectid' => '#allowed_values',
+  'type' => 'field_text_list',
+  'property' => 'The key',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '119',
+  'textgroup' => 'field',
+  'context' => 'field_text_list:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_text_list',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '120',
+  'textgroup' => 'field',
+  'context' => 'field_integer_list:#allowed_values:1',
+  'objectid' => '#allowed_values',
+  'type' => 'field_integer_list',
+  'property' => '1',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '121',
+  'textgroup' => 'field',
+  'context' => 'field_integer_list:#allowed_values:2',
+  'objectid' => '#allowed_values',
+  'type' => 'field_integer_list',
+  'property' => '2',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '122',
+  'textgroup' => 'field',
+  'context' => 'field_integer_list:#allowed_values:3',
+  'objectid' => '#allowed_values',
+  'type' => 'field_integer_list',
+  'property' => '3',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '123',
+  'textgroup' => 'field',
+  'context' => 'field_integer_list:#allowed_values:6',
+  'objectid' => '#allowed_values',
+  'type' => 'field_integer_list',
+  'property' => '6',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '124',
+  'textgroup' => 'field',
+  'context' => 'field_integer_list:#allowed_values:7',
+  'objectid' => '#allowed_values',
+  'type' => 'field_integer_list',
+  'property' => '7',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '125',
+  'textgroup' => 'field',
+  'context' => 'field_integer_list:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_integer_list',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '126',
+  'textgroup' => 'field',
+  'context' => 'field_long_text:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_long_text',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '127',
+  'textgroup' => 'field',
+  'context' => 'field_term_reference:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_term_reference',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '128',
+  'textgroup' => 'field',
+  'context' => 'field_term_reference:test_vocabulary:label',
+  'objectid' => 'test_vocabulary',
+  'type' => 'field_term_reference',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '129',
+  'textgroup' => 'field',
+  'context' => 'field_text:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_text',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '130',
+  'textgroup' => 'field',
+  'context' => 'field_node_entityreference:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_node_entityreference',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '131',
+  'textgroup' => 'field',
+  'context' => 'field_user_entityreference:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_user_entityreference',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '132',
+  'textgroup' => 'field',
+  'context' => 'field_term_entityreference:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_term_entityreference',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '133',
+  'textgroup' => 'field',
+  'context' => 'field_private_file:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_private_file',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '134',
+  'textgroup' => 'field',
+  'context' => 'field_text_plain:article:label',
+  'objectid' => 'article',
+  'type' => 'field_text_plain',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '135',
+  'textgroup' => 'field',
+  'context' => 'field_text_plain:page:label',
+  'objectid' => 'page',
+  'type' => 'field_text_plain',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '136',
+  'textgroup' => 'field',
+  'context' => 'field_text_filtered:article:label',
+  'objectid' => 'article',
+  'type' => 'field_text_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '137',
+  'textgroup' => 'field',
+  'context' => 'field_text_filtered:page:label',
+  'objectid' => 'page',
+  'type' => 'field_text_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '138',
+  'textgroup' => 'field',
+  'context' => 'field_text_plain_filtered:article:label',
+  'objectid' => 'article',
+  'type' => 'field_text_plain_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '139',
+  'textgroup' => 'field',
+  'context' => 'field_text_plain_filtered:page:label',
+  'objectid' => 'page',
+  'type' => 'field_text_plain_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '140',
+  'textgroup' => 'field',
+  'context' => 'field_text_long_plain:article:label',
+  'objectid' => 'article',
+  'type' => 'field_text_long_plain',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '141',
+  'textgroup' => 'field',
+  'context' => 'field_text_long_plain:page:label',
+  'objectid' => 'page',
+  'type' => 'field_text_long_plain',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '142',
+  'textgroup' => 'field',
+  'context' => 'field_text_long_filtered:article:label',
+  'objectid' => 'article',
+  'type' => 'field_text_long_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '143',
+  'textgroup' => 'field',
+  'context' => 'field_text_long_filtered:page:label',
+  'objectid' => 'page',
+  'type' => 'field_text_long_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '144',
+  'textgroup' => 'field',
+  'context' => 'field_text_long_plain_filtered:article:label',
+  'objectid' => 'article',
+  'type' => 'field_text_long_plain_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '145',
+  'textgroup' => 'field',
+  'context' => 'field_text_long_plain_filtered:page:label',
+  'objectid' => 'page',
+  'type' => 'field_text_long_plain_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '146',
+  'textgroup' => 'field',
+  'context' => 'field_text_sum_plain:article:label',
+  'objectid' => 'article',
+  'type' => 'field_text_sum_plain',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '147',
+  'textgroup' => 'field',
+  'context' => 'field_text_sum_plain:page:label',
+  'objectid' => 'page',
+  'type' => 'field_text_sum_plain',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '148',
+  'textgroup' => 'field',
+  'context' => 'field_text_sum_filtered:article:label',
+  'objectid' => 'article',
+  'type' => 'field_text_sum_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '149',
+  'textgroup' => 'field',
+  'context' => 'field_text_sum_filtered:page:label',
+  'objectid' => 'page',
+  'type' => 'field_text_sum_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '150',
+  'textgroup' => 'field',
+  'context' => 'field_text_sum_plain_filtered:article:label',
+  'objectid' => 'article',
+  'type' => 'field_text_sum_plain_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '151',
+  'textgroup' => 'field',
+  'context' => 'field_text_sum_plain_filtered:page:label',
+  'objectid' => 'page',
+  'type' => 'field_text_sum_plain_filtered',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '152',
+  'textgroup' => 'field',
+  'context' => 'field_datetime_without_time:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_datetime_without_time',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '153',
+  'textgroup' => 'field',
+  'context' => 'field_date_without_time:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_date_without_time',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '154',
+  'textgroup' => 'field',
+  'context' => 'field_float_list:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'field_float_list',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '155',
+  'textgroup' => 'field',
+  'context' => 'field_reference:article:label',
+  'objectid' => 'article',
+  'type' => 'field_reference',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '156',
+  'textgroup' => 'field',
+  'context' => 'field_reference:user:label',
+  'objectid' => 'user',
+  'type' => 'field_reference',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '157',
+  'textgroup' => 'field',
+  'context' => 'field_reference_2:article:label',
+  'objectid' => 'article',
+  'type' => 'field_reference_2',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '158',
+  'textgroup' => 'field',
+  'context' => 'title_field:test_content_type:label',
+  'objectid' => 'test_content_type',
+  'type' => 'title_field',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '159',
+  'textgroup' => 'field',
+  'context' => 'subject_field:comment_node_article:label',
+  'objectid' => 'comment_node_article',
+  'type' => 'subject_field',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '160',
+  'textgroup' => 'field',
+  'context' => 'subject_field:comment_node_test_content_type:label',
+  'objectid' => 'comment_node_test_content_type',
+  'type' => 'subject_field',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '161',
+  'textgroup' => 'field',
+  'context' => 'name_field:test_vocabulary:label',
+  'objectid' => 'test_vocabulary',
+  'type' => 'name_field',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '162',
+  'textgroup' => 'field',
+  'context' => 'description_field:test_vocabulary:label',
+  'objectid' => 'test_vocabulary',
+  'type' => 'description_field',
+  'property' => 'label',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '163',
   'textgroup' => 'blocks',
   'context' => 'user:login:title',
   'objectid' => 'login',
@@ -15743,7 +16613,7 @@ $connection->insert('locales_source')
   'version' => '1',
 ))
 ->values(array(
-  'lid' => '76',
+  'lid' => '163',
   'location' => 'blocks:user:login:title',
   'textgroup' => 'blocks',
   'source' => 'User login title',
@@ -15823,7 +16693,47 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
-  'lid' => '76',
+  'lid' => '83',
+  'translation' => 'fr - Body',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '89',
+  'translation' => 'fr - Image',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '90',
+  'translation' => 'fr - Upload',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '97',
+  'translation' => 'fr - The email help text.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '113',
+  'translation' => 'fr - Link',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '163',
   'translation' => 'fr - User login title',
   'language' => 'fr',
   'plid' => '0',
@@ -15833,6 +16743,38 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '57',
   'translation' => 'is - Mildly amusing limerick of the day',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '95',
+  'translation' => 'is - Some helpful text.',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '96',
+  'translation' => 'is - Email',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '97',
+  'translation' => 'is - The email help text.',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '128',
+  'translation' => 'is - Term Reference',
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
@@ -49060,18 +50002,18 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:19:"Contact translation";s:11:"description";s:63:"Makes contact categories and replies available for translation.";s:12:"dependencies";a:2:{i:0;s:7:"contact";i:1;s:11:"i18n_string";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:19:"Contact translation";s:11:"description";s:63:"Makes contact categories and replies available for translation.";s:12:"dependencies";a:2:{i:0;s:7:"contact";i:1;s:11:"i18n_string";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:7:"version";s:8:"7.x-1.25";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1531342125";s:5:"mtime";i:1537747250;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18n_field/i18n_field.module',
   'name' => 'i18n_field',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:17:"Field translation";s:11:"description";s:26:"Translate field properties";s:12:"dependencies";a:2:{i:0;s:5:"field";i:1;s:11:"i18n_string";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:14:"i18n_field.inc";i:1;s:15:"i18n_field.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:17:"Field translation";s:11:"description";s:26:"Translate field properties";s:12:"dependencies";a:2:{i:0;s:5:"field";i:1;s:11:"i18n_string";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:14:"i18n_field.inc";i:1;s:15:"i18n_field.test";}s:7:"version";s:8:"7.x-1.25";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1531342125";s:5:"mtime";i:1537747250;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18n_forum/i18n_forum.module',
@@ -49137,18 +50079,18 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:19:"Multilingual select";s:11:"description";s:45:"API module for multilingual content selection";s:12:"dependencies";a:1:{i:0;s:4:"i18n";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:9:"configure";s:33:"admin/config/regional/i18n/select";s:5:"files";a:1:{i:0;s:16:"i18n_select.test";}s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:19:"Multilingual select";s:11:"description";s:45:"API module for multilingual content selection";s:12:"dependencies";a:1:{i:0;s:4:"i18n";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:9:"configure";s:33:"admin/config/regional/i18n/select";s:5:"files";a:1:{i:0;s:16:"i18n_select.test";}s:7:"version";s:8:"7.x-1.25";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1531342125";s:5:"mtime";i:1537747251;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18n_string/i18n_string.module',
   'name' => 'i18n_string',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:18:"String translation";s:11:"description";s:57:"Provides support for translation of user defined strings.";s:12:"dependencies";a:2:{i:0;s:6:"locale";i:1;s:4:"i18n";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:3:{i:0;s:21:"i18n_string.admin.inc";i:1;s:15:"i18n_string.inc";i:2;s:16:"i18n_string.test";}s:9:"configure";s:34:"admin/config/regional/i18n/strings";s:7:"version";s:8:"7.x-1.26";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1534531985";s:5:"mtime";i:1534531985;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:18:"String translation";s:11:"description";s:57:"Provides support for translation of user defined strings.";s:12:"dependencies";a:2:{i:0;s:6:"locale";i:1;s:4:"i18n";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:3:{i:0;s:21:"i18n_string.admin.inc";i:1;s:15:"i18n_string.inc";i:2;s:16:"i18n_string.test";}s:9:"configure";s:34:"admin/config/regional/i18n/strings";s:7:"version";s:8:"7.x-1.25";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1531342125";s:5:"mtime";i:1537747251;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18n_sync/i18n_sync.module',
