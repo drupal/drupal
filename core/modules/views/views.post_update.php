@@ -381,3 +381,11 @@ function views_post_update_exposed_filter_blocks_label_display(&$sandbox = NULL)
     return FALSE;
   });
 }
+
+/**
+ * Rebuild cache to allow placeholder texts to be translatable.
+ */
+function views_post_update_make_placeholders_translatable() {
+  // Empty update to cause a cache rebuild to allow placeholder texts to be
+  // translatable.
+}
