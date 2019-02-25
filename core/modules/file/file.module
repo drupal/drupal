@@ -1076,6 +1076,10 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
     }
   }
 
+  // Update the filename with any changes as a result of security or renaming
+  // due to an existing file.
+  $file->setFilename(\Drupal::service('file_system')->basename($file->destination));
+
   // If we made it this far it's safe to record this file in the database.
   $file->save();
 

@@ -259,7 +259,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       '%field' => $field_name,
       '@max' => $cardinality,
       '@count' => count($upload_files_node_creation) + count($upload_files_node_revision),
-      '%list' => implode(', ', array_fill(0, 3, $test_file->getFilename())),
+      '%list' => implode(', ', ['text-0_2.txt', 'text-0_3.txt', 'text-0_4.txt']),
     ];
     $this->assertRaw(t('Field %field can only hold @max values but there were @count uploaded. The following files have been omitted as a result: %list.', $args));
     $node_storage->resetCache([$nid]);
@@ -291,7 +291,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       '%field' => $field_name,
       '@max' => $cardinality,
       '@count' => count($upload_files),
-      '%list' => $test_file->getFileName(),
+      '%list' => 'text-0_12.txt',
     ];
     $this->assertRaw(t('Field %field can only hold @max values but there were @count uploaded. The following files have been omitted as a result: %list.', $args));
   }
