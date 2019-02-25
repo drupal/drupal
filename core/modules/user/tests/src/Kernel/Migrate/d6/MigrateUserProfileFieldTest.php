@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\user\Kernel\Migrate;
+namespace Drupal\Tests\user\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\user\Kernel\Migrate;
+namespace Drupal\Tests\user\Kernel\Migrate\d7;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
