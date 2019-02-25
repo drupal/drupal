@@ -139,7 +139,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
     $assert_session->pageTextContains('You are not authorized to access this page');
 
     $this->drupalGet('node/2/layout');
-    $file4 = $this->createPrivateFile('drupal.txt');
+    $file4 = $this->createPrivateFile('drupal_4.txt');
     $this->addInlineFileBlockToLayout('The file', $file4);
     $this->assertSaveLayout();
 
