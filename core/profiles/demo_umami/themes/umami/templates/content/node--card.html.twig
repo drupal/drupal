@@ -95,7 +95,9 @@
   </div>
 
   <div class="read-more">
-    <a class="read-more__link" href="{{ url }}">{% trans %}View {{ node.type.entity.label() }}{% endtrans %}</a>
+    <a class="read-more__link" href="{{ url }}">
+      {% trans %}View {{ node.type.entity.label() }}{% endtrans %} <span class="visually-hidden"> - {{ label }}</span>
+    </a>
   </div>
 
 </article>
