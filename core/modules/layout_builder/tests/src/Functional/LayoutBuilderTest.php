@@ -251,12 +251,13 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->linkExists('Revert to defaults');
     $this->clickLink('Revert to defaults');
     $page->pressButton('Revert');
+    $assert_session->addressEquals('node/1');
     $assert_session->pageTextContains('The layout has been reverted back to defaults.');
     $assert_session->elementExists('css', '.field--name-title');
     $assert_session->elementNotExists('css', '.field--name-nid');
     $assert_session->pageTextContains('The first node body');
     $assert_session->pageTextContains('Powered by Drupal');
-    $assert_session->pageTextContains('Placeholder for the "Extra label" field');
+    $assert_session->pageTextContains('Extra, Extra read all about it.');
 
     // Assert that overrides can be turned off now that all overrides are gone.
     $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => FALSE], 'Save');

@@ -111,7 +111,7 @@ class RevertOverridesForm extends ConfirmFormBase {
     $this->layoutTempstoreRepository->delete($this->sectionStorage);
 
     $this->messenger->addMessage($this->t('The layout has been reverted back to defaults.'));
-    $form_state->setRedirectUrl($this->getCancelUrl());
+    $form_state->setRedirectUrl($this->sectionStorage->getRedirectUrl());
   }
 
 }
