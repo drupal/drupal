@@ -20,7 +20,7 @@ trait SqlFieldableEntityTypeListenerTrait {
    */
   public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL) {
     /** @var \Drupal\Core\Entity\EntityStorageInterface $original_storage */
-    $original_storage = $this->entityManager->createHandlerInstance($original->getStorageClass(), $original);
+    $original_storage = $this->entityTypeManager->createHandlerInstance($original->getStorageClass(), $original);
     $has_data = $original_storage->hasData();
 
     // If 'progress' is not set, then this will be the first run of the batch.
@@ -59,7 +59,7 @@ trait SqlFieldableEntityTypeListenerTrait {
       }
 
       $sandbox['original_storage'] = $original_storage;
-      $sandbox['temporary_storage'] = $this->entityManager->createHandlerInstance($entity_type->getStorageClass(), $entity_type);
+      $sandbox['temporary_storage'] = $this->entityTypeManager->createHandlerInstance($entity_type->getStorageClass(), $entity_type);
 
       $this->preUpdateEntityTypeSchema($entity_type, $original, $field_storage_definitions, $original_field_storage_definitions, $sandbox);
     }

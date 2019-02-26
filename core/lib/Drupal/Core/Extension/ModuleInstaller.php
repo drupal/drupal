@@ -391,9 +391,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // provided by the module that is being uninstalled.
       // @todo Clean this up in https://www.drupal.org/node/2350111.
       $entity_manager = \Drupal::entityManager();
+      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
       foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
         if ($entity_type->getProvider() == $module) {
-          foreach (array_keys($entity_manager->getBundleInfo($entity_type_id)) as $bundle) {
+          foreach (array_keys($entity_type_bundle_info->getBundleInfo($entity_type_id)) as $bundle) {
             \Drupal::service('entity_bundle.listener')->onBundleDelete($bundle, $entity_type_id);
           }
         }

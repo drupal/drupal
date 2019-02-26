@@ -115,7 +115,7 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
       $plugin_definition,
       $migration,
       $container->get('entity.manager')->getStorage($entity_type_id),
-      array_keys($container->get('entity.manager')->getBundleInfo($entity_type_id))
+      array_keys($container->get('entity_type.bundle.info')->getBundleInfo($entity_type_id))
     );
   }
 

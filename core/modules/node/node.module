@@ -290,7 +290,7 @@ function node_type_get_types() {
 function node_type_get_names() {
   return array_map(function ($bundle_info) {
     return $bundle_info['label'];
-  }, \Drupal::entityManager()->getBundleInfo('node'));
+  }, \Drupal::service('entity_type.bundle.info')->getBundleInfo('node'));
 }
 
 /**

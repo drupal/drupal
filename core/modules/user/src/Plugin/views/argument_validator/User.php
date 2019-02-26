@@ -3,7 +3,8 @@
 namespace Drupal\user\Plugin\views\argument_validator;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\argument_validator\Entity;
@@ -27,10 +28,10 @@ class User extends Entity {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_manager);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $entity_type_bundle_info);
 
-    $this->userStorage = $entity_manager->getStorage('user');
+    $this->userStorage = $entity_type_manager->getStorage('user');
   }
 
   /**
@@ -102,7 +103,7 @@ class User extends Entity {
   public function calculateDependencies() {
     $dependencies = parent::calculateDependencies();
 
-    foreach ($this->entityManager->getStorage('user_role')->loadMultiple(array_keys($this->options['roles'])) as $role) {
+    foreach ($this->entityTypeManager->getStorage('user_role')->loadMultiple(array_keys($this->options['roles'])) as $role) {
       $dependencies[$role->getConfigDependencyKey()][] = $role->getConfigDependencyName();
     }
 

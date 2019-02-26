@@ -4,7 +4,7 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityDeleteForm;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\field_ui\FieldUI;
@@ -18,20 +18,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FieldConfigDeleteForm extends EntityDeleteForm {
 
   /**
-   * The entity manager.
+   * The entity type bundle info service.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
-  protected $entityManager;
+  protected $entityTypeBundleInfo;
 
   /**
    * Constructs a new FieldConfigDeleteForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info service.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeBundleInfoInterface $entity_type_bundle_info) {
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 
   /**
@@ -39,7 +39,7 @@ class FieldConfigDeleteForm extends EntityDeleteForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')
+      $container->get('entity_type.bundle.info')
     );
   }
 
@@ -93,7 +93,7 @@ class FieldConfigDeleteForm extends EntityDeleteForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $field_storage = $this->entity->getFieldStorageDefinition();
-    $bundles = $this->entityManager->getBundleInfo($this->entity->getTargetEntityTypeId());
+    $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
     $bundle_label = $bundles[$this->entity->getTargetBundle()]['label'];
 
     if ($field_storage && !$field_storage->isLocked()) {

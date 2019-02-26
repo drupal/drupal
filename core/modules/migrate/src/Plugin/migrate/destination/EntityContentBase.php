@@ -131,7 +131,7 @@ class EntityContentBase extends Entity implements HighestIdInterface {
       $plugin_definition,
       $migration,
       $container->get('entity.manager')->getStorage($entity_type),
-      array_keys($container->get('entity.manager')->getBundleInfo($entity_type)),
+      array_keys($container->get('entity_type.bundle.info')->getBundleInfo($entity_type)),
       $container->get('entity.manager'),
       $container->get('plugin.manager.field.field_type')
     );

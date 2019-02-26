@@ -9,17 +9,18 @@ namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\Sql\SqlContentEntityStorage
@@ -49,13 +50,6 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   protected $fieldDefinitions = [];
 
   /**
-   * The mocked entity manager used in this test.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $entityManager;
-
-  /**
    * The mocked entity type manager used in this test.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -63,11 +57,25 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   protected $entityTypeManager;
 
   /**
+   * The mocked entity type bundle info used in this test.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityTypeBundleInfo;
+
+  /**
    * The mocked entity field manager used in this test.
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityFieldManager;
+
+  /**
+   * The mocked entity last installed schema repository used in this test.
+   *
+   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityLastInstalledSchemaRepository;
 
   /**
    * The entity type ID.
@@ -123,12 +131,10 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->container = new ContainerBuilder();
     \Drupal::setContainer($this->container);
 
-    $this->entityManager = new EntityManager();
-    // Inject the container into entity.manager so it can defer to
-    // entity_type.manager and other services.
-    $this->entityManager->setContainer($this->container);
     $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
+    $this->entityTypeBundleInfo = $this->createMock(EntityTypeBundleInfoInterface::class);
     $this->entityFieldManager = $this->getMock(EntityFieldManagerInterface::class);
+    $this->entityLastInstalledSchemaRepository = $this->createMock(EntityLastInstalledSchemaRepositoryInterface::class);
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
@@ -139,7 +145,6 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->container->set('entity.manager', $this->entityManager);
     $this->container->set('entity_type.manager', $this->entityTypeManager);
     $this->container->set('entity_field.manager', $this->entityFieldManager);
   }
@@ -433,13 +438,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue($schema_handler));
 
     $storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager, new MemoryCache()])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->entityLastInstalledSchemaRepository])
       ->setMethods(['getStorageSchema'])
       ->getMock();
 
     $key_value = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
     $schema_handler = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityManager, $this->entityType, $storage, $this->connection])
+      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $storage, $this->connection, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository])
       ->setMethods(['installedStorageSchema', 'createSharedTableSchema'])
       ->getMock();
     $schema_handler
@@ -1075,9 +1080,6 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getCurrentLanguage')
       ->will($this->returnValue($language));
 
-    $this->container->set('language_manager', $language_manager);
-    $this->container->set('module_handler', $this->moduleHandler);
-
     $entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
       ->setMethods(['id'])
@@ -1178,7 +1180,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager, new MemoryCache());
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->entityLastInstalledSchemaRepository);
+    $this->entityStorage->setModuleHandler($this->moduleHandler);
   }
 
   /**
@@ -1253,7 +1256,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('set');
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager, new MemoryCache()])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->entityLastInstalledSchemaRepository])
       ->setMethods(['getFromStorage', 'invokeStorageLoadHook', 'initTableLayout'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')
@@ -1307,7 +1310,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->with($key, $entity, CacheBackendInterface::CACHE_PERMANENT, [$this->entityTypeId . '_values', 'entity_field_info']);
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager, new MemoryCache()])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->entityLastInstalledSchemaRepository])
       ->setMethods(['getFromStorage', 'invokeStorageLoadHook', 'initTableLayout'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')
@@ -1364,7 +1367,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityManager, $this->cache, $this->languageManager, new MemoryCache());
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->entityLastInstalledSchemaRepository);
 
     $result = $this->entityStorage->hasData();
 

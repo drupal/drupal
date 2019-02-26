@@ -21,7 +21,7 @@ class UserName extends User {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $entity_type = $this->entityManager->getDefinition('user');
+    $entity_type = $this->entityTypeManager->getDefinition('user');
 
     $form['multiple']['#options'] = [
       0 => $this->t('Single name', ['%type' => $entity_type->getLabel()]),

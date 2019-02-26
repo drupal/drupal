@@ -381,7 +381,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       return $this->vocabularyHierarchyType[$vid];
     }
 
-    $parent_field_storage = $this->entityManager->getFieldStorageDefinitions($this->entityTypeId)['parent'];
+    $parent_field_storage = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId)['parent'];
     $table_mapping = $this->getTableMapping();
 
     $target_id_column = $table_mapping->getFieldColumnName($parent_field_storage, 'target_id');

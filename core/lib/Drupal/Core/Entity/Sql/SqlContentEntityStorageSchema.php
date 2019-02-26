@@ -5,8 +5,11 @@ namespace Drupal\Core\Entity\Sql;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -28,16 +31,29 @@ use Drupal\Core\Language\LanguageInterface;
 class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorageSchemaInterface {
 
   use DependencySerializationTrait;
+  use DeprecatedServicePropertyTrait;
   use SqlFieldableEntityTypeListenerTrait {
     onFieldableEntityTypeUpdate as traitOnFieldableEntityTypeUpdate;
   }
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityManager;
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The entity last installed schema repository.
+   *
+   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface
+   */
+  protected $entityLastInstalledSchemaRepository;
 
   /**
    * The entity type this schema builder is responsible for.
@@ -99,21 +115,34 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   /**
    * Constructs a SqlContentEntityStorageSchema.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type
    *   The entity type.
    * @param \Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage
    *   The storage of the entity type. This must be an SQL-based storage.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
+   * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
+   *   The entity last installed schema repository.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ContentEntityTypeInterface $entity_type, SqlContentEntityStorage $storage, Connection $database) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentEntityTypeInterface $entity_type, SqlContentEntityStorage $storage, Connection $database, EntityFieldManagerInterface $entity_field_manager = NULL, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository = NULL) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->entityType = $entity_type;
-    $this->fieldStorageDefinitions = $entity_manager->getFieldStorageDefinitions($entity_type->id());
+    if (!$entity_field_manager) {
+      @trigger_error('Calling SqlContentEntityStorageSchema::__construct() with the $entity_field_manager argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+    }
+    $this->fieldStorageDefinitions = $entity_field_manager->getFieldStorageDefinitions($entity_type->id());
     $this->storage = $storage;
     $this->database = $database;
+    if (!$entity_last_installed_schema_repository) {
+      @trigger_error('Calling SqlContentEntityStorageSchema::__construct() with the $entity_last_installed_schema_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+    }
+    $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;
   }
 
   /**
@@ -290,7 +319,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     // Use the original entity type since the storage has not been updated.
-    $original_storage = $this->entityManager->createHandlerInstance($original_storage_class, $original);
+    $original_storage = $this->entityTypeManager->createHandlerInstance($original_storage_class, $original);
     return $original_storage->hasData();
   }
 
@@ -392,7 +421,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $this->checkEntityType($entity_type);
     $schema_handler = $this->database->schema();
 
-    $field_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type->id());
+    $field_storage_definitions = $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type->id());
     $table_mapping = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions);
 
     // Delete entity and field tables.
@@ -631,7 +660,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     // Retrieve a table mapping which contains the deleted field still.
-    $storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityType->id());
+    $storage_definitions = $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($this->entityType->id());
     $table_mapping = $this->storage->getTableMapping($storage_definitions);
     $field_table_name = $table_mapping->getFieldTableName($storage_definition->getName());
 
@@ -1603,7 +1632,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     $deleted_field_name = $storage_definition->getName();
     $table_mapping = $this->storage->getTableMapping(
-      $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityType->id())
+      $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($this->entityType->id())
     );
     $column_names = $table_mapping->getColumnNames($deleted_field_name);
     $schema_handler = $this->database->schema();
@@ -2011,7 +2040,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         // must use the last installed version of that, as the new field might
         // be created in an update function and the storage definition of the
         // "from" field might get changed later.
-        $last_installed_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityType->id());
+        $last_installed_storage_definitions = $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($this->entityType->id());
         if (!isset($last_installed_storage_definitions[$initial_value_field_name])) {
           throw new FieldException("Illegal initial value definition on {$storage_definition->getName()}: The field $initial_value_field_name does not exist.");
         }

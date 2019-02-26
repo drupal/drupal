@@ -69,7 +69,7 @@ class EntitySearchPage extends EntityConfigBase {
       $plugin_definition,
       $migration,
       $container->get('entity.manager')->getStorage($entity_type_id),
-      array_keys($container->get('entity.manager')->getBundleInfo($entity_type_id)),
+      array_keys($container->get('entity_type.bundle.info')->getBundleInfo($entity_type_id)),
       $container->get('language_manager'),
       $container->get('config.factory'),
       $container->get('module_handler')

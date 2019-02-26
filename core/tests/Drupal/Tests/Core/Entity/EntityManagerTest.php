@@ -101,6 +101,45 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
+   * Tests the getBundleInfo() method.
+   *
+   * @covers ::getBundleInfo
+   *
+   * @expectedDeprecation EntityManagerInterface::getBundleInfo() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getBundleInfo() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetBundleInfo() {
+    $return = ['article' => ['label' => 'Article']];
+    $this->entityTypeBundleInfo->getBundleInfo('node')->shouldBeCalled()->willReturn($return);
+
+    $this->assertEquals($return, $this->entityManager->getBundleInfo('node'));
+  }
+
+  /**
+   * Tests the getAllBundleInfo() method.
+   *
+   * @covers ::getAllBundleInfo
+   *
+   * @expectedDeprecation EntityManagerInterface::getAllBundleInfo() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getAllBundleInfo() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetAllBundleInfo() {
+    $return = ['node' => ['article' => ['label' => 'Article']]];
+    $this->entityTypeBundleInfo->getAllBundleInfo()->shouldBeCalled()->willReturn($return);
+    $this->assertEquals($return, $this->entityManager->getAllBundleInfo());
+  }
+
+  /**
+   * Tests the clearCachedBundles() method.
+   *
+   * @covers ::clearCachedBundles
+   *
+   * @expectedDeprecation EntityManagerInterface::clearCachedBundles() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::clearCachedBundles() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testClearCachedBundles() {
+    $this->entityTypeBundleInfo->clearCachedBundles()->shouldBeCalled();
+    $this->entityManager->clearCachedBundles();
+  }
+
+  /**
    * Tests the getTranslationFromContext() method.
    *
    * @covers ::getTranslationFromContext
@@ -110,7 +149,6 @@ class EntityManagerTest extends UnitTestCase {
   public function testGetTranslationFromContext() {
     $entity = $this->prophesize(EntityInterface::class);
     $this->entityRepository->getTranslationFromContext($entity->reveal(), 'de', ['example' => 'context'])->shouldBeCalled();
-
     $this->entityManager->getTranslationFromContext($entity->reveal(), 'de', ['example' => 'context']);
   }
 

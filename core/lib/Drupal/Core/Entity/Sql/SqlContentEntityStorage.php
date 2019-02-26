@@ -12,8 +12,11 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageBase;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityBundleListenerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
@@ -119,6 +122,20 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   protected $languageManager;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The entity last installed schema repository.
+   *
+   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface
+   */
+  protected $entityLastInstalledSchemaRepository;
+
+  /**
    * Whether this storage should use the temporary table mapping.
    *
    * @var bool
@@ -132,10 +149,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     return new static(
       $entity_type,
       $container->get('database'),
-      $container->get('entity.manager'),
+      $container->get('entity_field.manager'),
       $container->get('cache.entity'),
       $container->get('language_manager'),
-      $container->get('entity.memory_cache')
+      $container->get('entity.memory_cache'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('entity_type.manager'),
+      $container->get('entity.last_installed_schema.repository')
     );
   }
 
@@ -147,7 +167,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   name.
    */
   public function getFieldStorageDefinitions() {
-    return $this->entityManager->getBaseFieldDefinitions($this->entityTypeId);
+    return $this->entityFieldManager->getBaseFieldDefinitions($this->entityTypeId);
   }
 
   /**
@@ -157,19 +177,36 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The entity type definition.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend to be used.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface|null $memory_cache
    *   The memory cache backend to be used.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
+   *   The entity last installed schema repository.
    */
-  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache = NULL) {
-    parent::__construct($entity_type, $entity_manager, $cache, $memory_cache);
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache = NULL, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, EntityTypeManagerInterface $entity_type_manager = NULL, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository = NULL) {
+    parent::__construct($entity_type, $entity_field_manager, $cache, $memory_cache, $entity_type_bundle_info);
     $this->database = $database;
     $this->languageManager = $language_manager;
+    if (!$entity_last_installed_schema_repository) {
+      @trigger_error('Calling SqlContentEntityStorage::__construct() with the $entity_last_installed_schema_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+    }
+    $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;
+    if (!$entity_type_manager) {
+      @trigger_error('Calling SqlContentEntityStorage::__construct() with the $entity_type_manager argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_type_manager = \Drupal::entityTypeManager();
+    }
+    $this->entityTypeManager = $entity_type_manager;
+
     $this->initTableLayout();
   }
 
@@ -252,7 +289,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   protected function getStorageSchema() {
     if (!isset($this->storageSchema)) {
       $class = $this->entityType->getHandlerClass('storage_schema') ?: 'Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema';
-      $this->storageSchema = new $class($this->entityManager, $this->entityType, $this, $this->database);
+      $this->storageSchema = new $class($this->entityTypeManager, $this->entityType, $this, $this->database, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository);
     }
     return $this->storageSchema;
   }
@@ -320,7 +357,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // If we are using our internal storage definitions, which is our main use
     // case, we can statically cache the computed table mapping.
     if (!isset($this->tableMapping)) {
-      $storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->entityTypeId);
+      $storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
 
       $this->tableMapping = $this->getCustomTableMapping($this->entityType, $storage_definitions);
     }
@@ -851,7 +888,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
     else {
       $table_mapping = $this->getTableMapping();
-      $storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->entityTypeId);
+      $storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
       $shared_table_fields = FALSE;
       $dedicated_table_fields = [];
 
@@ -1180,7 +1217,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $definitions = [];
     $table_mapping = $this->getTableMapping();
     foreach ($bundles as $bundle => $v) {
-      $definitions[$bundle] = $this->entityManager->getFieldDefinitions($this->entityTypeId, $bundle);
+      $definitions[$bundle] = $this->entityFieldManager->getFieldDefinitions($this->entityTypeId, $bundle);
       foreach ($definitions[$bundle] as $field_name => $field_definition) {
         $storage_definition = $field_definition->getFieldStorageDefinition();
         if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
@@ -1268,7 +1305,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $original = !empty($entity->original) ? $entity->original : NULL;
 
     // Determine which fields should be actually stored.
-    $definitions = $this->entityManager->getFieldDefinitions($entity_type, $bundle);
+    $definitions = $this->entityFieldManager->getFieldDefinitions($entity_type, $bundle);
     if ($names) {
       $definitions = array_intersect_key($definitions, array_flip($names));
     }
@@ -1373,7 +1410,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   protected function deleteFromDedicatedTables(ContentEntityInterface $entity) {
     $table_mapping = $this->getTableMapping();
-    foreach ($this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle()) as $field_definition) {
+    foreach ($this->entityFieldManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle()) as $field_definition) {
       $storage_definition = $field_definition->getFieldStorageDefinition();
       if (!$table_mapping->requiresDedicatedTableStorage($storage_definition)) {
         continue;
@@ -1401,7 +1438,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $vid = $entity->getRevisionId();
     if (isset($vid)) {
       $table_mapping = $this->getTableMapping();
-      foreach ($this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle()) as $field_definition) {
+      foreach ($this->entityFieldManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle()) as $field_definition) {
         $storage_definition = $field_definition->getFieldStorageDefinition();
         if (!$table_mapping->requiresDedicatedTableStorage($storage_definition)) {
           continue;
@@ -1508,7 +1545,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition) {
     $table_mapping = $this->getTableMapping(
-      $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityType->id())
+      $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($this->entityType->id())
     );
 
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
@@ -1686,7 +1723,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // storage definition is added, so bypass the internal storage definitions
     // and fetch the table mapping using the passed in storage definition.
     // @todo Fix this in https://www.drupal.org/node/2705205.
-    $storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->entityTypeId);
+    $storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
     $storage_definitions[$storage_definition->getName()] = $storage_definition;
     $table_mapping = $this->getTableMapping($storage_definitions);
 

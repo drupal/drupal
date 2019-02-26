@@ -3,12 +3,14 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field_ui\FieldUI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for the field settings form.
@@ -27,13 +29,39 @@ class FieldConfigEditForm extends EntityForm {
   protected $entity;
 
   /**
+   * The entity type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
+
+  /**
+   * Constructs a new FieldConfigDeleteForm object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info service.
+   */
+  public function __construct(EntityTypeBundleInfoInterface $entity_type_bundle_info) {
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.bundle.info')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     $field_storage = $this->entity->getFieldStorageDefinition();
-    $bundles = $this->entityManager->getBundleInfo($this->entity->getTargetEntityTypeId());
+    $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
 
     $form_title = $this->t('%field settings for %bundle', [
       '%field' => $this->entity->getLabel(),

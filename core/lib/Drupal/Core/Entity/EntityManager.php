@@ -306,39 +306,42 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::clearCachedBundles()
    *   instead.
    *
    * @see https://www.drupal.org/node/2549139
    */
   public function clearCachedBundles() {
+    @trigger_error('EntityManagerInterface::clearCachedBundles() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::clearCachedBundles() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('entity_type.bundle.info')->clearCachedBundles();
   }
 
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getBundleInfo()
    *   instead.
    *
    * @see https://www.drupal.org/node/2549139
    */
   public function getBundleInfo($entity_type_id) {
+    @trigger_error('EntityManagerInterface::getBundleInfo() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getBundleInfo() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_type.bundle.info')->getBundleInfo($entity_type_id);
   }
 
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getAllBundleInfo()
    *   instead.
    *
    * @see https://www.drupal.org/node/2549139
    */
   public function getAllBundleInfo() {
+    @trigger_error('EntityManagerInterface::getAllBundleInfo() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getAllBundleInfo() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_type.bundle.info')->getAllBundleInfo();
   }
 

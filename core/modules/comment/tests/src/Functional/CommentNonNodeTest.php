@@ -61,7 +61,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->addDefaultCommentField('entity_test', 'entity_test');
 
     // Verify that bundles are defined correctly.
-    $bundles = \Drupal::entityManager()->getBundleInfo('comment');
+    $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('comment');
     $this->assertEqual($bundles['comment']['label'], 'Comment settings');
 
     // Create test user.
