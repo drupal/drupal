@@ -1,4 +1,4 @@
-.new-section {
+.layout-builder__add-section {
   background-color: #f7f7f7;
   width: 100%;
   outline: 2px dashed #979797;
@@ -7,51 +7,47 @@
   margin-bottom: 1.5em;
 }
 
-.new-section__link,
-.new-block__link {
+.layout-builder__link--add {
   color: #787878;
   border-bottom: none;
   padding-left: 24px;
   background: url(../../../misc/icons/787878/plus.svg) transparent top left / 16px 16px no-repeat;
 }
 
-.new-section__link:hover,
-.new-section__link:active,
-.new-section__link:focus,
-.new-block__link:hover,
-.new-block__link:active,
-.new-block__link:focus {
+.layout-builder__link--add:hover,
+.layout-builder__link--add:active,
+.layout-builder__link--add:focus {
   border-bottom-style: none;
   color: #000;
 }
 
-.layout-section {
+.layout-builder__section {
   margin-bottom: 1.5em;
 }
 
-.layout-section .ui-sortable-helper {
+.layout-builder__section .ui-sortable-helper {
   background-color: #fff;
   outline: 2px solid #f7f7f7;
 }
 
-.layout-section .ui-state-drop {
+.layout-builder__section .ui-state-drop {
   background-color: #ffd;
   outline: 2px dashed #fedb60;
   margin: 20px;
   padding: 30px;
 }
 
-.layout-section .layout-builder--layout__region {
+.layout-builder__region {
   outline: 2px dashed #2f91da;
 }
 
-.layout-section .layout-builder--layout__region .new-block {
+.layout-builder__add-block {
   background-color: #eff6fc;
   padding: 1.5em 0;
   text-align: center;
 }
 
-.layout-section .remove-section {
+.layout-builder__link--remove {
   position: relative;
   background: url(../../../misc/icons/bebebe/ex.svg) #fff center center / 16px 16px no-repeat;
   border: 1px solid #ccc;
@@ -67,7 +63,7 @@
   margin-left: -10px;
 }
 
-.layout-section .remove-section:hover {
+.layout-builder__link--remove:hover {
   background-image: url(../../../misc/icons/787878/ex.svg);
 }
 

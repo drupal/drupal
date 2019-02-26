@@ -123,6 +123,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     $output['#attached']['library'][] = 'layout_builder/drupal.layout_builder';
     $output['#type'] = 'container';
     $output['#attributes']['id'] = 'layout-builder';
+    $output['#attributes']['class'][] = 'layout-builder';
     // Mark this UI as uncacheable.
     $output['#cache']['max-age'] = 0;
     return $output;
@@ -208,7 +209,11 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
           ],
           [
             'attributes' => [
-              'class' => ['use-ajax', 'new-section__link'],
+              'class' => [
+                'use-ajax',
+                'layout-builder__link',
+                'layout-builder__link--add',
+              ],
               'data-dialog-type' => 'dialog',
               'data-dialog-renderer' => 'off_canvas',
             ],
@@ -217,7 +222,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       ],
       '#type' => 'container',
       '#attributes' => [
-        'class' => ['new-section'],
+        'class' => ['layout-builder__add-section'],
       ],
     ];
   }
@@ -275,7 +280,11 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
           ],
           [
             'attributes' => [
-              'class' => ['use-ajax', 'new-block__link'],
+              'class' => [
+                'use-ajax',
+                'layout-builder__link',
+                'layout-builder__link--add',
+              ],
               'data-dialog-type' => 'dialog',
               'data-dialog-renderer' => 'off_canvas',
             ],
@@ -283,10 +292,10 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
         ),
       ];
       $build[$region]['layout_builder_add_block']['#type'] = 'container';
-      $build[$region]['layout_builder_add_block']['#attributes'] = ['class' => ['new-block']];
+      $build[$region]['layout_builder_add_block']['#attributes'] = ['class' => ['layout-builder__add-block']];
       $build[$region]['layout_builder_add_block']['#weight'] = 1000;
       $build[$region]['#attributes']['data-region'] = $region;
-      $build[$region]['#attributes']['class'][] = 'layout-builder--layout__region';
+      $build[$region]['#attributes']['class'][] = 'layout-builder__region';
     }
 
     $build['#attributes']['data-layout-update-url'] = Url::fromRoute('layout_builder.move_block', [
@@ -294,12 +303,12 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       'section_storage' => $storage_id,
     ])->toString();
     $build['#attributes']['data-layout-delta'] = $delta;
-    $build['#attributes']['class'][] = 'layout-builder--layout';
+    $build['#attributes']['class'][] = 'layout-builder__layout';
 
     return [
       '#type' => 'container',
       '#attributes' => [
-        'class' => ['layout-section'],
+        'class' => ['layout-builder__section'],
       ],
       'configure' => [
         '#type' => 'link',
@@ -325,12 +334,16 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
           'delta' => $delta,
         ]),
         '#attributes' => [
-          'class' => ['use-ajax', 'remove-section'],
+          'class' => [
+            'use-ajax',
+            'layout-builder__link',
+            'layout-builder__link--remove',
+          ],
           'data-dialog-type' => 'dialog',
           'data-dialog-renderer' => 'off_canvas',
         ],
       ],
-      'layout-section' => $build,
+      'layout-builder__section' => $build,
     ];
   }
 

@@ -111,10 +111,10 @@
   behaviors.layoutBuilderBlockDrag = {
     attach(context) {
       $(context)
-        .find('.layout-builder--layout__region')
+        .find('.layout-builder__region')
         .sortable({
           items: '> .draggable',
-          connectWith: '.layout-builder--layout__region',
+          connectWith: '.layout-builder__region',
           placeholder: 'ui-state-drop',
 
           /**
@@ -128,7 +128,7 @@
           update(event, ui) {
             // Check if the region from the event and region for the item match.
             const itemRegion = ui.item.closest(
-              '.layout-builder--layout__region',
+              '.layout-builder__region',
             );
             if (event.target === itemRegion[0]) {
               // Find the destination delta.
