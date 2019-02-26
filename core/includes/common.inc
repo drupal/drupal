@@ -211,7 +211,7 @@ function valid_email_address($mail) {
  *   Drupal\Core\Template\Attribute, call
  *   \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() instead.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
  *   Use UrlHelper::stripDangerousProtocols() or UrlHelper::filterBadProtocol()
  *   instead. UrlHelper::stripDangerousProtocols() can be used in conjunction
  *   with \Drupal\Component\Render\FormattableMarkup and an @variable
@@ -225,6 +225,7 @@ function valid_email_address($mail) {
  * @see https://www.drupal.org/node/2560027
  */
 function check_url($uri) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use UrlHelper::stripDangerousProtocols() or UrlHelper::filterBadProtocol() instead. See https://www.drupal.org/node/2560027', E_USER_DEPRECATED);
   return Html::escape(UrlHelper::stripDangerousProtocols($uri));
 }
 
