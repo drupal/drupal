@@ -113,18 +113,6 @@ class OverridesEntityForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function buildEntity(array $form, FormStateInterface $form_state) {
-    // \Drupal\Core\Entity\EntityForm::buildEntity() clones the entity object.
-    // Keep it in sync with the one used by the section storage.
-    $this->setEntity($this->sectionStorage->getContextValue('entity'));
-    $entity = parent::buildEntity($form, $form_state);
-    $this->sectionStorage->setContextValue('entity', $entity);
-    return $entity;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function save(array $form, FormStateInterface $form_state) {
     $return = parent::save($form, $form_state);
 

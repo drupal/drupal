@@ -107,6 +107,53 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that the Layout Builder preserves entity values.
+   */
+  public function testPreserverEntityValues() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    // From the manage display page, go to manage the layout.
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalPostForm(NULL, ['layout[allow_custom]' => TRUE], 'Save');
+    // @todo This should not be necessary.
+    $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
+
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('The first node body');
+
+    // Create a layout override which will store the current node in the
+    // tempstore.
+    $page->clickLink('Layout');
+    $page->clickLink('Add Block');
+    $page->clickLink('Powered by Drupal');
+    $page->pressButton('Add Block');
+
+    // Update the node to make a change that is not in the tempstore version.
+    $node = Node::load(1);
+    $node->set('body', 'updated body');
+    $node->save();
+
+    $page->clickLink('View');
+    $assert_session->pageTextNotContains('The first node body');
+    $assert_session->pageTextContains('updated body');
+
+    $page->clickLink('Layout');
+    $page->pressButton('Save layout');
+
+    // Ensure that saving the layout does not revert other field values.
+    $assert_session->addressEquals('node/1');
+    $assert_session->pageTextNotContains('The first node body');
+    $assert_session->pageTextContains('updated body');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function testLayoutBuilderUi() {
