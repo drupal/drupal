@@ -323,13 +323,30 @@ function rdf_preprocess_node(&$variables) {
 
   // Adds RDFa markup for the date.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
-  if (!empty($created_mapping) && $variables['display_submitted']) {
+  if (!empty($created_mapping)) {
     $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->get('created')->first()->toArray());
     $rdf_metadata = [
       '#theme' => 'rdf_metadata',
       '#metadata' => [$date_attributes],
     ];
-    $variables['metadata'] = \Drupal::service('renderer')->render($rdf_metadata);
+
+    // Depending on whether custom preprocessing is enabled, the 'created'
+    // field may appear in either of two different places, so check both of
+    // those places here.
+    // @see template_preprocess_node.
+    if (!empty($variables['display_submitted'])) {
+      // If custom preprocessing is enabled, then detect if the 'created'
+      // field is displayed by checking the 'display_submitted' variable.  In
+      // this case, for back-compatibility, put the metadata into a special
+      // variable.
+      $variables['metadata'] = \Drupal::service('renderer')->render($rdf_metadata);
+    }
+    elseif (isset($variables['elements']['created'])) {
+      // Otherwise, detect if the 'created' field is displayed by checking if
+      // it is present in the 'elements variable.  Put the metadata into
+      // title_suffix, along with other metadata added by this module.
+      $variables['title_suffix']['rdf_meta_created'] = $rdf_metadata;
+    }
   }
 
   // Adds RDFa markup annotating the number of comments a node has.

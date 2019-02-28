@@ -602,11 +602,23 @@ function node_theme_suggestions_node(array $variables) {
  * inside "/core/modules/node/templates/node.html.twig". Look in there for the
  * full list of variables.
  *
+ * By default this function performs special preprocessing of some base fields
+ * so they are available as variables in the template. For example 'title'
+ * appears as 'label'. This preprocessing is skipped if:
+ * - a module makes the field's display configurable via the field UI by means
+ *   of BaseFieldDefinition::setDisplayConfigurable()
+ * - AND the additional entity type property
+ *   'enable_base_field_custom_preprocess_skipping' has been set using
+ *   hook_entity_type_build().
+ *
  * @param array $variables
  *   An associative array containing:
  *   - elements: An array of elements to display in view mode.
  *   - node: The node object.
  *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
+ *
+ * @see hook_entity_type_build()
+ * @see \Drupal\Core\Field\BaseFieldDefinition::setDisplayConfigurable()
  */
 function template_preprocess_node(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
@@ -615,14 +627,29 @@ function template_preprocess_node(&$variables) {
   $variables['node'] = $variables['elements']['#node'];
   /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['node'];
-  $variables['date'] = \Drupal::service('renderer')->render($variables['elements']['created']);
-  unset($variables['elements']['created']);
-  $variables['author_name'] = \Drupal::service('renderer')->render($variables['elements']['uid']);
-  unset($variables['elements']['uid']);
+  $skip_custom_preprocessing = $node->getEntityType()->get('enable_base_field_custom_preprocess_skipping');
+
+  // Make created, uid and title fields available separately. Skip this custom
+  // preprocessing if the field display is configurable and skipping has been
+  // enabled.
+  // @todo https://www.drupal.org/project/drupal/issues/3015623
+  //   In D9 delete this code and matching template lines. Using
+  //   $variables['content'] is more flexible and consistent.
+  $submitted_configurable = $node->getFieldDefinition('created')->isDisplayConfigurable('view') || $node->getFieldDefinition('uid')->isDisplayConfigurable('view');
+  if (!$skip_custom_preprocessing || !$submitted_configurable) {
+    $variables['date'] = \Drupal::service('renderer')->render($variables['elements']['created']);
+    unset($variables['elements']['created']);
+    $variables['author_name'] = \Drupal::service('renderer')->render($variables['elements']['uid']);
+    unset($variables['elements']['uid']);
+  }
+
+  if (!$skip_custom_preprocessing || !$node->getFieldDefinition('title')->isDisplayConfigurable('view')) {
+    $variables['label'] = $variables['elements']['title'];
+    unset($variables['elements']['title']);
+  }
 
   $variables['url'] = !$node->isNew() ? $node->toUrl('canonical')->toString() : NULL;
-  $variables['label'] = $variables['elements']['title'];
-  unset($variables['elements']['title']);
+
   // The 'page' variable is set to TRUE in two occasions:
   //   - The view mode is 'full' and we are on the 'node.view' route.
   //   - The node is in preview and view mode is either 'full' or 'default'.
@@ -634,17 +661,24 @@ function template_preprocess_node(&$variables) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 
-  // Display post information only on certain node types.
-  $node_type = $node->type->entity;
-  // Used by RDF to add attributes around the author and date submitted.
-  $variables['author_attributes'] = new Attribute();
-  $variables['display_submitted'] = $node_type->displaySubmitted();
-  if ($variables['display_submitted']) {
-    if (theme_get_setting('features.node_user_picture')) {
-      // To change user picture settings (e.g. image style), edit the 'compact'
-      // view mode on the User entity. Note that the 'compact' view mode might
-      // not be configured, so remember to always check the theme setting first.
-      $variables['author_picture'] = user_view($node->getOwner(), 'compact');
+  if (isset($variables['date'])) {
+    // Display post information on certain node types. This only occurs if
+    // custom preprocessing occurred for both of the created and uid fields.
+    // @todo https://www.drupal.org/project/drupal/issues/3015623
+    //   In D9 delete this code and matching template lines. Using a field
+    //   formatter is more flexible and consistent.
+    $node_type = $node->type->entity;
+    // Used by RDF to add attributes around the author and date submitted.
+    $variables['author_attributes'] = new Attribute();
+    $variables['display_submitted'] = $node_type->displaySubmitted();
+    if ($variables['display_submitted']) {
+      if (theme_get_setting('features.node_user_picture')) {
+        // To change user picture settings (e.g. image style), edit the
+        // 'compact' view mode on the User entity. Note that the 'compact'
+        // view mode might not be configured, so remember to always check the
+        // theme setting first.
+        $variables['author_picture'] = user_view($node->getOwner(), 'compact');
+      }
     }
   }
 
