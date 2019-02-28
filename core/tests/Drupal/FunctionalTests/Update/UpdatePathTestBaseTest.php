@@ -33,6 +33,9 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
    * Tests that the database was properly loaded.
    */
   public function testDatabaseLoaded() {
+    // Set a value in the cache to prove caches are cleared.
+    \Drupal::service('cache.default')->set(__CLASS__, 'Test');
+
     foreach (['user', 'node', 'system', 'update_test_schema'] as $module) {
       $this->assertEqual(drupal_get_installed_schema_version($module), 8000, new FormattableMarkup('Module @module schema is 8000', ['@module' => $module]));
     }
@@ -70,6 +73,8 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
       $this->assertEqual('on', $database->query("SHOW standard_conforming_strings")->fetchField());
       $this->assertEqual('escape', $database->query("SHOW bytea_output")->fetchField());
     }
+    // Ensure the test runners cache has been cleared.
+    $this->assertFalse(\Drupal::service('cache.default')->get(__CLASS__));
   }
 
   /**
@@ -129,6 +134,52 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->linkByHrefNotExists('/admin/structure');
     $this->assertSession()->linkByHrefExists('/admin-structure-alias');
+  }
+
+  /**
+   * Tests that test running environment is updated when module list changes.
+   *
+   * @see update_test_schema_update_8003()
+   */
+  public function testModuleListChange() {
+    // Set a value in the cache to prove caches are cleared.
+    \Drupal::service('cache.default')->set(__CLASS__, 'Test');
+
+    // Ensure that modules are installed and uninstalled as expected prior to
+    // running updates.
+    $extension_config = $this->config('core.extension')->get();
+    $this->assertArrayHasKey('page_cache', $extension_config['module']);
+    $this->assertArrayNotHasKey('module_test', $extension_config['module']);
+
+    $module_list = \Drupal::moduleHandler()->getModuleList();
+    $this->assertArrayHasKey('page_cache', $module_list);
+    $this->assertArrayNotHasKey('module_test', $module_list);
+
+    $namespaces = \Drupal::getContainer()->getParameter('container.namespaces');
+    $this->assertArrayHasKey('Drupal\page_cache', $namespaces);
+    $this->assertArrayNotHasKey('Drupal\module_test', $namespaces);
+
+    // Increment the schema version so that update_test_schema_update_8003()
+    // runs.
+    \Drupal::state()->set('update_test_schema_version', 8003);
+    $this->runUpdates();
+
+    // Ensure that test running environment has been updated with the changes to
+    // the module list.
+    $extension_config = $this->config('core.extension')->get();
+    $this->assertArrayNotHasKey('page_cache', $extension_config['module']);
+    $this->assertArrayHasKey('module_test', $extension_config['module']);
+
+    $module_list = \Drupal::moduleHandler()->getModuleList();
+    $this->assertArrayNotHasKey('page_cache', $module_list);
+    $this->assertArrayHasKey('module_test', $module_list);
+
+    $namespaces = \Drupal::getContainer()->getParameter('container.namespaces');
+    $this->assertArrayNotHasKey('Drupal\page_cache', $namespaces);
+    $this->assertArrayHasKey('Drupal\module_test', $namespaces);
+
+    // Ensure the test runners cache has been cleared.
+    $this->assertFalse(\Drupal::service('cache.default')->get(__CLASS__));
   }
 
 }

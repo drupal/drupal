@@ -20,25 +20,8 @@ class ResponsiveImageUpdateTest extends UpdatePathTestBase {
   public function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8-rc1.bare.standard.php.gz',
+      __DIR__ . '/../../../fixtures/update/drupal-8.responsive_image-enabled.php',
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    /** @var \Drupal\Core\State\StateInterface $state */
-    $state = $this->container->get('state');
-
-    // Enable responsive_image module without using the module installer to
-    // avoid installation of configuration shipped in module.
-    $system_module_files = $state->get('system.module.files', []);
-    $system_module_files += ['responsive_image' => 'core/modules/responsive_image/responsive_image.info.yml'];
-    $state->set('system.module.files', $system_module_files);
-    $this->config('core.extension')->set('module.responsive_image', 0)->save();
-    $this->container->get('module_handler')->addModule('responsive_image', 'core/modules/responsive_image');
   }
 
   /**
