@@ -493,7 +493,6 @@ Out-of-the-Box Initiative
 - Mark Conroy 'markconroy' https://www.drupal.org/u/markconroy
 - Gareth Goodwin 'smaz' https://www.drupal.org/u/smaz
 - Keith Jay 'kjay' https://www.drupal.org/u/kjay
-- Elliot Ward 'eli-t' https://www.drupal.org/u/eli-t
 
 PHPUnit Initiative
 - Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
