@@ -341,6 +341,7 @@ class InstallHelper implements ContainerInjectionInterface {
    */
   protected function importBlockContent() {
     $module_path = $this->moduleHandler->getModule('demo_umami_content')->getPath();
+    $copyright_message = '&copy; ' . date("Y") . ' Terms & Conditions';
     $block_content_entities = [
       'umami_home_banner' => [
         'uuid' => '9aadf4a1-ded6-4017-a10d-a5e043396edf',
@@ -397,7 +398,7 @@ class InstallHelper implements ContainerInjectionInterface {
           'format' => 'basic_html',
         ],
         'field_copyright' => [
-          'value' => '&copy; 2018 Terms & Conditions',
+          'value' => $copyright_message,
           'format' => 'basic_html',
         ],
       ],
