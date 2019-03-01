@@ -1046,7 +1046,7 @@
  *   more information.
  * - In configuration schema files, you can use the unique ID ('id' annotation)
  *   from any DataType plugin class as the 'type' value for an entry. See the
- *   @link config_api Confuration API topic @endlink for more information.
+ *   @link config_api Configuration API topic @endlink for more information.
  * - If you need to create a typed data object in code, first get the
  *   typed_data_manager service from the container or by calling
  *   \Drupal::typedDataManager(). Then pass the plugin ID to
