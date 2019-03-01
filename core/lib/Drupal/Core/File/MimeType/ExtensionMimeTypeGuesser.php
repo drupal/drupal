@@ -26,6 +26,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       5 => 'application/cu-seeme',
       6 => 'application/dsptype',
       350 => 'application/epub+zip',
+      359 => 'application/gzip',
       7 => 'application/hta',
       8 => 'application/java-archive',
       9 => 'application/java-serialized-object',
@@ -856,6 +857,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'weba' => 356,
       'webm' => 357,
       'vtt' => 358,
+      'gz' => 359,
     ],
   ];
 
