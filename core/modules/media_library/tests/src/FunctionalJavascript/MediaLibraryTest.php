@@ -201,6 +201,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Unlimited media');
     $assert_session->pageTextContains('Twin media');
     $assert_session->pageTextContains('Single media type');
+    $assert_session->pageTextContains('Empty types media');
 
     // Assert generic media library elements.
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]')->click();
@@ -215,10 +216,23 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $menu = $assert_session->elementExists('css', '.media-library-menu');
-    $assert_session->elementExists('named', ['link', 'Type One'], $menu);
-    $assert_session->elementNotExists('named', ['link', 'Type Two'], $menu);
-    $assert_session->elementExists('named', ['link', 'Type Three'], $menu);
-    $assert_session->elementNotExists('named', ['link', 'Type Four'], $menu);
+    $this->assertTrue($menu->hasLink('Type One'));
+    $this->assertFalse($menu->hasLink('Type Two'));
+    $this->assertTrue($menu->hasLink('Type Three'));
+    $this->assertFalse($menu->hasLink('Type Four'));
+    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Assert that the media type menu is available when no types are configured
+    // for the field. All types should be available in this case.
+    $assert_session->elementExists('css', '.media-library-open-button[href*="field_empty_types_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $menu = $assert_session->elementExists('css', '.media-library-menu');
+    $this->assertTrue($menu->hasLink('Type One'));
+    $this->assertTrue($menu->hasLink('Type Two'));
+    $this->assertTrue($menu->hasLink('Type Three'));
+    $this->assertTrue($menu->hasLink('Type Four'));
+    $this->assertTrue($menu->hasLink('Type Five'));
     $page->find('css', '.ui-dialog-titlebar-close')->click();
     $assert_session->assertWaitOnAjaxRequest();
 

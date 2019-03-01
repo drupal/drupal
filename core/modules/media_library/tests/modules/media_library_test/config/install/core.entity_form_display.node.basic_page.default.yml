@@ -44,6 +44,12 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  field_empty_types_media:
+    type: media_library_widget
+    weight: 125
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   promote:
     type: boolean_checkbox
     settings:
