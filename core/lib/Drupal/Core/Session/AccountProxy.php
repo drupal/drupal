@@ -34,7 +34,8 @@ class AccountProxy implements AccountProxyInterface {
    *
    * @var int
    *
-   * @deprecated Scheduled for removal in Drupal 8.4.x. Use $this->id instead.
+   * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0. Use
+   *   $this->id instead.
    */
   protected $initialAccountId;
 
