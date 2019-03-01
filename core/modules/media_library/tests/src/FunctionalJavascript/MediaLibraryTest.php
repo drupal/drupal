@@ -206,7 +206,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Assert generic media library elements.
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
     $this->assertFalse($assert_session->elementExists('css', '.media-library-select-all')->isVisible());
     $page->find('css', '.ui-dialog-titlebar-close')->click();
     $assert_session->assertWaitOnAjaxRequest();
@@ -386,7 +386,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     // Ensure that the selection completed successfully.
-    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextNotContains('Dog');
     $assert_session->pageTextContains('Cat');
     $assert_session->pageTextContains('Turtle');
@@ -473,7 +473,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Snake');
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
     // Select all media items of type one (should also contain Dog, again).
     $checkbox_selector = '.media-library-view .js-click-to-select-checkbox input';
     $checkboxes = $page->findAll('css', $checkbox_selector);
@@ -528,7 +528,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     // Ensure that the selection completed successfully.
-    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains('Dog');
 
     // Save the form.
@@ -576,7 +576,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->drupalGet('node/add/basic_page');
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_twin_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
 
     // Assert the upload form is visible for type_four.
     $page->clickLink('Type Four');
@@ -610,7 +610,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Add to the twin media field.
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_twin_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
 
     // Assert the default tab for media type one does not have an upload form.
     $assert_session->fieldNotExists('files[upload][]');
@@ -657,7 +657,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Ensure the media item was saved to the library and automatically
     // selected. The added media items should be in the first position of the
     // add form.
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
     $assert_session->pageTextContains($png_image->filename);
     $assert_session->fieldValueEquals('media_library_select_form[0]', $added_media->id());
     $assert_session->checkboxChecked('media_library_select_form[0]');
@@ -666,13 +666,13 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Ensure the created item is added in the widget.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains($png_image->filename);
 
     // Also make sure that we can upload to the unlimited cardinality field.
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
 
     // Navigate to the media type three tab first.
     $page->clickLink('Type Three');
@@ -701,7 +701,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Ensure the media item was saved to the library and automatically
     // selected. The added media items should be in the first position of the
     // add form.
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
     $assert_session->pageTextContains('Unlimited Cardinality Image');
     $assert_session->fieldValueEquals('media_library_select_form[0]', $added_media->id());
     $assert_session->checkboxChecked('media_library_select_form[0]');
@@ -721,13 +721,13 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Ensure the created item is added in the widget.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains('Unlimited Cardinality Image');
 
     // Verify we can only upload the files allowed by the media type.
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_twin_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
     $page->clickLink('Type Four');
     $assert_session->assertWaitOnAjaxRequest();
 
@@ -760,13 +760,13 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     // Ensure the media item was saved to the library and automatically
     // selected.
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
     $assert_session->pageTextContains($jpg_image->filename);
 
     // Ensure the created item is added in the widget.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains($jpg_image->filename);
   }
 
@@ -787,7 +787,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Add to the unlimited media field.
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
 
     // Assert the default tab for media type one does not have an oEmbed form.
     $assert_session->fieldNotExists('Add Type Five via URL');
@@ -817,7 +817,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Ensure the media item was saved to the library and automatically
     // selected. The added media items should be in the first position of the
     // add form.
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
     $assert_session->pageTextContains($video_title);
     $assert_session->fieldValueEquals('media_library_select_form[0]', $added_media->id());
     $assert_session->checkboxChecked('media_library_select_form[0]');
@@ -825,14 +825,14 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Assert the created oEmbed video is correctly added to the widget.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains($video_title);
 
     // Open the media library again for the unlimited field and go to the tab
     // for media type five.
     $assert_session->elementExists('css', '.media-library-open-button[href*="field_unlimited_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
     $page->clickLink('Type Five');
     $assert_session->assertWaitOnAjaxRequest();
 
@@ -859,13 +859,13 @@ class MediaLibraryTest extends WebDriverTestBase {
     $page->fillField('Name', 'Custom video title');
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Media library');
+    $assert_session->pageTextContains('Add or select media');
     $assert_session->pageTextContains('Custom video title');
 
     // Assert the created oEmbed video is correctly added to the widget.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextNotContains('Media library');
+    $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains('Custom video title');
   }
 

@@ -81,7 +81,7 @@ class MediaLibraryUiBuilder {
   public static function dialogOptions() {
     return [
       'dialogClass' => 'media-library-widget-modal',
-      'title' => t('Media library'),
+      'title' => t('Add or select media'),
       'height' => '75%',
       'width' => '75%',
     ];
