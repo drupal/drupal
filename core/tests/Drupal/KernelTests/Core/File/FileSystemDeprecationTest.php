@@ -90,4 +90,11 @@ class FileSystemDeprecationTest extends KernelTestBase {
     $this->assertNotNull(file_create_filename('', ''));
   }
 
+  /**
+   * @expectedDeprecation file_upload_max_size() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Component\Utility\Environment::getUploadMaxSize() instead. See https://www.drupal.org/node/3000058.
+   */
+  public function testDeprecatedFileUploadMaxSize() {
+    $this->assertNotNull(file_upload_max_size());
+  }
+
 }

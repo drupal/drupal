@@ -3,9 +3,10 @@
 namespace Drupal\simpletest;
 
 use Drupal\Component\Assertion\Handle;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\Environment;
 use Drupal\Core\Database\Database;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
@@ -1178,7 +1179,7 @@ abstract class TestBase {
       'container_yamls' => [],
     ]);
 
-    drupal_set_time_limit($this->timeLimit);
+    Environment::setTimeLimit($this->timeLimit);
   }
 
   /**

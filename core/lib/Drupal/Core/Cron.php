@@ -3,16 +3,17 @@
 namespace Drupal\Core;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Queue\QueueWorkerManagerInterface;
-use Drupal\Core\Queue\RequeueException;
-use Drupal\Core\State\StateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\QueueFactory;
-use Drupal\Core\Session\AnonymousUserSession;
-use Drupal\Core\Session\AccountSwitcherInterface;
+use Drupal\Core\Queue\QueueWorkerManagerInterface;
+use Drupal\Core\Queue\RequeueException;
 use Drupal\Core\Queue\SuspendQueueException;
+use Drupal\Core\Session\AccountSwitcherInterface;
+use Drupal\Core\Session\AnonymousUserSession;
+use Drupal\Core\State\StateInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -120,7 +121,7 @@ class Cron implements CronInterface {
     $this->accountSwitcher->switchTo(new AnonymousUserSession());
 
     // Try to allocate enough time to run all the hook_cron implementations.
-    drupal_set_time_limit(240);
+    Environment::setTimeLimit(240);
 
     $return = FALSE;
 

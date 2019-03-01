@@ -4,6 +4,7 @@ namespace Drupal\file\Plugin\rest\resource;
 
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Environment;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -527,7 +528,7 @@ class FileUploadResource extends ResourceBase {
     $settings = $field_definition->getSettings();
 
     // Cap the upload size according to the PHP limit.
-    $max_filesize = Bytes::toInt(file_upload_max_size());
+    $max_filesize = Bytes::toInt(Environment::getUploadMaxSize());
     if (!empty($settings['max_filesize'])) {
       $max_filesize = min($max_filesize, Bytes::toInt($settings['max_filesize']));
     }

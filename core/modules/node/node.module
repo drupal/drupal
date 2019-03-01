@@ -8,6 +8,7 @@
  * API pattern.
  */
 
+use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
@@ -1232,7 +1233,7 @@ function node_access_rebuild($batch_mode = FALSE) {
     }
     else {
       // Try to allocate enough time to rebuild node grants
-      drupal_set_time_limit(240);
+      Environment::setTimeLimit(240);
 
       // Rebuild newest nodes first so that recent content becomes available
       // quickly.

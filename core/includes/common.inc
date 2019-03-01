@@ -11,16 +11,17 @@
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Bytes;
+use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Render\HtmlResponseAttachmentsProcessor;
-use Drupal\Core\Render\Element\Link;
-use Drupal\Core\Render\Markup;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\Link;
+use Drupal\Core\Render\HtmlResponseAttachmentsProcessor;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * @defgroup php_wrappers PHP wrapper functions
@@ -407,15 +408,15 @@ function drupal_http_header_attributes(array $attributes = []) {
  *   indicates unlimited execution time.
  *
  * @ingroup php_wrappers
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\Core\Environment::setTimeLimit() instead.
+ *
+ * @see https://www.drupal.org/node/3000058
  */
 function drupal_set_time_limit($time_limit) {
-  if (function_exists('set_time_limit')) {
-    $current = ini_get('max_execution_time');
-    // Do not set time limit if it is currently unlimited.
-    if ($current != 0) {
-      @set_time_limit($time_limit);
-    }
-  }
+  @trigger_error('drupal_set_time_limit() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Environment::setTimeLimit() instead. See https://www.drupal.org/node/3000058.', E_USER_DEPRECATED);
+  Environment::setTimeLimit($time_limit);
 }
 
 /**

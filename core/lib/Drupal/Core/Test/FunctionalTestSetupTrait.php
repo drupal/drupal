@@ -4,6 +4,7 @@ namespace Drupal\Core\Test;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\Environment;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
@@ -620,7 +621,7 @@ trait FunctionalTestSetupTrait {
       'hash_salt' => $this->databasePrefix,
     ]);
 
-    drupal_set_time_limit($this->timeLimit);
+    Environment::setTimeLimit($this->timeLimit);
 
     // Save and clean the shutdown callbacks array because it is static cached
     // and will be changed by the test run. Otherwise it will contain callbacks

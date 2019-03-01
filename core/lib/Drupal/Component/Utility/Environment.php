@@ -37,4 +37,64 @@ class Environment {
     return ((!$memory_limit) || ($memory_limit == -1) || (Bytes::toInt($memory_limit) >= Bytes::toInt($required)));
   }
 
+  /**
+   * Attempts to set the PHP maximum execution time.
+   *
+   * This function is a wrapper around the PHP function set_time_limit(). When
+   * called, set_time_limit() restarts the timeout counter from zero. In other
+   * words, if the timeout is the default 30 seconds, and 25 seconds into script
+   * execution a call such as set_time_limit(20) is made, the script will run
+   * for a total of 45 seconds before timing out.
+   *
+   * If the current time limit is not unlimited it is possible to decrease the
+   * total time limit if the sum of the new time limit and the current time
+   * spent running the script is inferior to the original time limit. It is
+   * inherent to the way set_time_limit() works, it should rather be called with
+   * an appropriate value every time you need to allocate a certain amount of
+   * time to execute a task than only once at the beginning of the script.
+   *
+   * Before calling set_time_limit(), we check if this function is available
+   * because it could be disabled by the server administrator.
+   *
+   * @param int $time_limit
+   *   An integer time limit in seconds, or 0 for unlimited execution time.
+   *
+   * @return bool
+   *   Whether set_time_limit() was successful or not.
+   */
+  public static function setTimeLimit($time_limit) {
+    if (function_exists('set_time_limit')) {
+      $current = ini_get('max_execution_time');
+      // Do not set time limit if it is currently unlimited.
+      if ($current != 0) {
+        return set_time_limit($time_limit);
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Determines the maximum file upload size by querying the PHP settings.
+   *
+   * @return int
+   *   A file size limit in bytes based on the PHP upload_max_filesize and
+   *   post_max_size settings.
+   */
+  public static function getUploadMaxSize() {
+    static $max_size = -1;
+
+    if ($max_size < 0) {
+      // Start with post_max_size.
+      $max_size = Bytes::toInt(ini_get('post_max_size'));
+
+      // If upload_max_size is less, then reduce. Except if upload_max_size is
+      // zero, which indicates no limit.
+      $upload_max = Bytes::toInt(ini_get('upload_max_filesize'));
+      if ($upload_max > 0 && $upload_max < $max_size) {
+        $max_size = $upload_max;
+      }
+    }
+    return $max_size;
+  }
+
 }

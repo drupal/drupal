@@ -7,7 +7,7 @@
 
 use Drupal\Component\FileSystem\FileSystem as ComponentFileSystem;
 use Drupal\Component\PhpStorage\FileStorage;
-use Drupal\Component\Utility\Bytes;
+use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\FileWriteException;
@@ -1048,22 +1048,13 @@ function file_scan_directory($dir, $mask, $options = [], $depth = 0) {
  * @return
  *   A file size limit in bytes based on the PHP upload_max_filesize and
  *   post_max_size
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Component\Utility\Environment::getUploadMaxSize() instead.
  */
 function file_upload_max_size() {
-  static $max_size = -1;
-
-  if ($max_size < 0) {
-    // Start with post_max_size.
-    $max_size = Bytes::toInt(ini_get('post_max_size'));
-
-    // If upload_max_size is less, then reduce. Except if upload_max_size is
-    // zero, which indicates no limit.
-    $upload_max = Bytes::toInt(ini_get('upload_max_filesize'));
-    if ($upload_max > 0 && $upload_max < $max_size) {
-      $max_size = $upload_max;
-    }
-  }
-  return $max_size;
+  @trigger_error('file_upload_max_size() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Component\Utility\Environment::getUploadMaxSize() instead. See https://www.drupal.org/node/3000058.', E_USER_DEPRECATED);
+  return Environment::getUploadMaxSize();
 }
 
 /**

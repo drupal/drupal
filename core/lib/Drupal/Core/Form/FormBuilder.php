@@ -3,6 +3,7 @@
 namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
@@ -1390,7 +1391,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   based on the PHP upload_max_filesize and post_max_size.
    */
   protected function getFileUploadMaxSize() {
-    return file_upload_max_size();
+    return Environment::getUploadMaxSize();
   }
 
   /**

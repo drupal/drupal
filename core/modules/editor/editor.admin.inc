@@ -5,6 +5,7 @@
  * Administration functions for editor.module.
  */
 
+use Drupal\Component\Utility\Environment;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\editor\Entity\Editor;
 
@@ -77,7 +78,7 @@ function editor_image_upload_settings_form(Editor $editor) {
     '#states' => $show_if_image_uploads_enabled,
   ];
 
-  $default_max_size = format_size(file_upload_max_size());
+  $default_max_size = format_size(Environment::getUploadMaxSize());
   $form['max_size'] = [
     '#type' => 'textfield',
     '#default_value' => $image_upload['max_size'],
