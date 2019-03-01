@@ -69,8 +69,6 @@ class LibraryDiscoveryParser {
    *   Thrown when a js file defines a positive weight.
    */
   public function buildByExtension($extension) {
-    $libraries = [];
-
     if ($extension === 'core') {
       $path = 'core';
       $extension_type = 'core';
