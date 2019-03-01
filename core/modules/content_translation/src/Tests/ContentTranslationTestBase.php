@@ -174,7 +174,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
     // Enable translation for the current entity type and ensure the change is
     // picked up.
     \Drupal::service('content_translation.manager')->setEnabled($this->entityTypeId, $this->bundle, TRUE);
-    drupal_static_reset();
+
     \Drupal::entityManager()->clearCachedDefinitions();
     \Drupal::service('router.builder')->rebuild();
     \Drupal::service('entity.definition_update_manager')->applyUpdates();
