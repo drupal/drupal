@@ -3,7 +3,11 @@
 namespace Drupal\Tests\user\Traits;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\SchemaObjectExistsException;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
@@ -15,6 +19,112 @@ use Drupal\user\RoleInterface;
  * This trait is meant to be used only by test classes.
  */
 trait UserCreationTrait {
+
+  /**
+   * Creates a random user account and sets it as current user.
+   *
+   * Unless explicitly specified by setting the user ID to 1, a regular user
+   * account will be created and set as current, after creating user account 1.
+   * Additionally, this will ensure that at least the anonymous user account
+   * exists regardless of the specified user ID.
+   *
+   * @param array $values
+   *   (optional) An array of initial user field values.
+   * @param array $permissions
+   *   (optional) Array of permission names to assign to user. Note that the
+   *   user always has the default permissions derived from the "authenticated
+   *   users" role.
+   * @param bool $admin
+   *   (optional) Whether the user should be an administrator with all the
+   *   available permissions.
+   *
+   * @return \Drupal\user\UserInterface
+   *   A user account object.
+   *
+   * @throws \LogicException
+   *   If attempting to assign additional roles to the anonymous user account.
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   If the user could not be saved.
+   */
+  protected function setUpCurrentUser(array $values = [], array $permissions = [], $admin = FALSE) {
+    $values += [
+      'name' => $this->randomMachineName(),
+    ];
+
+    // In many cases the anonymous user account is fine for testing purposes,
+    // however, if we need to create a user with a non-empty ID, we need also
+    // the "sequences" table.
+    if (!\Drupal::moduleHandler()->moduleExists('system')) {
+      $values['uid'] = 0;
+    }
+    if ($this instanceof KernelTestBase && (!isset($values['uid']) || $values['uid'])) {
+      try {
+        $this->installSchema('system', ['sequences']);
+      }
+      catch (SchemaObjectExistsException $e) {
+      }
+    }
+
+    // Creating an administrator or assigning custom permissions would result in
+    // creating and assigning a new role to the user. This is not possible with
+    // the anonymous user account.
+    if (($admin || $permissions) && isset($values['uid']) && is_numeric($values['uid']) && $values['uid'] == 0) {
+      throw new \LogicException('The anonymous user account cannot have additional roles.');
+    }
+
+    $original_permissions = $permissions;
+    $original_admin = $admin;
+    $original_values = $values;
+    $autocreate_user_1 = !isset($values['uid']) || $values['uid'] > 1;
+
+    // No need to create user account 1 if it already exists.
+    try {
+      $autocreate_user_1 = $autocreate_user_1 && !User::load(1);
+    }
+    catch (DatabaseExceptionWrapper $e) {
+      // Missing schema, it will be created later on.
+    }
+
+    // Save the user entity object and created its schema if needed.
+    try {
+      if ($autocreate_user_1) {
+        $permissions = [];
+        $admin = FALSE;
+        $values = [];
+      }
+      $user = $this->createUser($permissions, NULL, $admin, $values);
+    }
+    catch (EntityStorageException $e) {
+      if ($this instanceof KernelTestBase) {
+        $this->installEntitySchema('user');
+        $user = $this->createUser($permissions, NULL, $admin, $values);
+      }
+      else {
+        throw $e;
+      }
+    }
+
+    // Ensure the anonymous user account exists.
+    if (!User::load(0)) {
+      $values = [
+        'uid' => 0,
+        'status' => 0,
+        'name' => '',
+      ];
+      User::create($values)->save();
+    }
+
+    // If we automatically created user account 1, we need to create a regular
+    // user account before setting up the current user service to avoid
+    // potential false positives caused by access control bypass.
+    if ($autocreate_user_1) {
+      $user = $this->createUser($original_permissions, NULL, $original_admin, $original_values);
+    }
+
+    $this->setCurrentUser($user);
+
+    return $user;
+  }
 
   /**
    * Switch the current logged in user.
@@ -37,12 +147,17 @@ trait UserCreationTrait {
    * @param bool $admin
    *   (optional) Whether the user should be an administrator
    *   with all the available permissions.
+   * @param array $values
+   *   (optional) An array of initial user field values.
    *
    * @return \Drupal\user\Entity\User|false
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   If the user creation fails.
    */
-  protected function createUser(array $permissions = [], $name = NULL, $admin = FALSE) {
+  protected function createUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []) {
     // Create a role with the given permission set, if any.
     $rid = FALSE;
     if ($permissions) {
@@ -53,11 +168,18 @@ trait UserCreationTrait {
     }
 
     // Create a user assigned to that role.
-    $edit = [];
-    $edit['name'] = !empty($name) ? $name : $this->randomMachineName();
-    $edit['mail'] = $edit['name'] . '@example.com';
-    $edit['pass'] = user_password();
-    $edit['status'] = 1;
+    $edit = $values;
+    if ($name) {
+      $edit['name'] = $name;
+    }
+    elseif (!isset($values['name'])) {
+      $edit['name'] = $this->randomMachineName();
+    }
+    $edit += [
+      'mail' => $edit['name'] . '@example.com',
+      'pass' => user_password(),
+      'status' => 1,
+    ];
     if ($rid) {
       $edit['roles'] = [$rid];
     }
@@ -69,8 +191,9 @@ trait UserCreationTrait {
     $account = User::create($edit);
     $account->save();
 
-    $this->assertTrue($account->id(), new FormattableMarkup('User created with name %name and pass %pass', ['%name' => $edit['name'], '%pass' => $edit['pass']]), 'User login');
-    if (!$account->id()) {
+    $valid_user = $account->id() !== NULL;
+    $this->assertTrue($valid_user, new FormattableMarkup('User created with name %name and pass %pass', ['%name' => $edit['name'], '%pass' => $edit['pass']]), 'User login');
+    if (!$valid_user) {
       return FALSE;
     }
 

@@ -6,6 +6,7 @@ use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Menu link migration.
@@ -14,6 +15,8 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
   const MENU_NAME = 'menu-test-menu';
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -35,6 +38,8 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->setUpCurrentUser();
     $this->installEntitySchema('menu_link_content');
     $this->installSchema('node', ['node_access']);
     $this->installConfig(static::$modules);

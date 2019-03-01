@@ -3,11 +3,11 @@
 namespace Drupal\Tests\migrate\Kernel\process;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\migrate\Plugin\migrate\process\Route;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\Plugin\migrate\process\Route;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
-use Drupal\user\Entity\User;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests the route process plugin.
@@ -17,6 +17,8 @@ use Drupal\user\Entity\User;
  * @group migrate
  */
 class RouteTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -195,15 +197,9 @@ class RouteTest extends KernelTestBase {
    * @dataProvider providerTestRouteWithParamQuery
    */
   public function testRouteWithParamQuery($value, $expected) {
-    $this->installSchema('system', ['sequences']);
-    $this->installEntitySchema('user');
-    $this->installConfig(['user']);
-
     // Create a user so that user/1/edit is a valid path.
-    $adminUser = User::create([
-      'name' => $this->randomMachineName(),
-    ]);
-    $adminUser->save();
+    $this->setUpCurrentUser();
+    $this->installConfig(['user']);
 
     $actual = $this->doTransform($value);
     $this->assertSame($expected, $actual);

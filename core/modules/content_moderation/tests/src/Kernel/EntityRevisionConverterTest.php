@@ -5,6 +5,7 @@ namespace Drupal\Tests\content_moderation\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\ParamConverter\EntityRevisionConverter
@@ -12,6 +13,8 @@ use Drupal\node\Entity\NodeType;
  * @group legacy
  */
 class EntityRevisionConverterTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -29,9 +32,10 @@ class EntityRevisionConverterTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->setUpCurrentUser();
+
     $this->installEntitySchema('node');
-    $this->installEntitySchema('user');
-    $this->installSchema('system', 'sequences');
     $this->installSchema('node', 'node_access');
   }
 

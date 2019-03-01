@@ -3,6 +3,7 @@
 namespace Drupal\Tests\node\Traits;
 
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
 
 /**
  * Provides methods to create node based on default settings.
@@ -75,8 +76,23 @@ trait NodeCreationTrait {
       ],
       'title'     => $this->randomMachineName(8),
       'type'      => 'page',
-      'uid'       => \Drupal::currentUser()->id(),
     ];
+
+    if (!array_key_exists('uid', $settings)) {
+      $user = User::load(\Drupal::currentUser()->id());
+      if ($user) {
+        $settings['uid'] = $user->id();
+      }
+      elseif (method_exists($this, 'setUpCurrentUser')) {
+        /** @var \Drupal\user\UserInterface $user */
+        $user = $this->setUpCurrentUser();
+        $settings['uid'] = $user->id();
+      }
+      else {
+        $settings['uid'] = 0;
+      }
+    }
+
     $node = Node::create($settings);
     $node->save();
 

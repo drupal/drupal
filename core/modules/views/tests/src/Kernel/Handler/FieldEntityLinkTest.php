@@ -4,9 +4,9 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\user\Entity\Role;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\user\Entity\Role;
 use Drupal\views\Views;
 
 /**
@@ -45,7 +45,9 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
   protected function setUpFixtures() {
     parent::setUpFixtures();
 
-    $this->installEntitySchema('user');
+    // Create the anonymous user account and set it as current user.
+    $this->setUpCurrentUser(['uid' => 0]);
+
     $this->installEntitySchema('entity_test');
     $this->installConfig(['user']);
 

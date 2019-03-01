@@ -2,12 +2,13 @@
 
 namespace Drupal\Tests\menu_link_content\Kernel\Plugin\migrate\process;
 
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\menu_link_content\Plugin\migrate\process\LinkUri;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\node\Entity\Node;
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests \Drupal\menu_link_content\Plugin\migrate\process\LinkUri.
@@ -17,6 +18,8 @@ use Drupal\KernelTests\KernelTestBase;
  * @coversDefaultClass \Drupal\menu_link_content\Plugin\migrate\process\LinkUri
  */
 class LinkUriTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * Modules to enable.
@@ -30,8 +33,8 @@ class LinkUriTest extends KernelTestBase {
    */
   public function setUp() {
     parent::setUp();
+    $this->setUpCurrentUser();
     $this->installEntitySchema('node');
-    $this->installEntitySchema('user');
   }
 
   /**

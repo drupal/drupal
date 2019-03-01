@@ -6,6 +6,7 @@ use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests the path validator.
@@ -16,16 +17,19 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class PathValidatorTest extends KernelTestBase {
 
+  use UserCreationTrait;
+
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['path', 'entity_test', 'user'];
+  public static $modules = ['path', 'entity_test', 'system', 'user'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+    $this->setUpCurrentUser();
     $this->installEntitySchema('entity_test');
   }
 
