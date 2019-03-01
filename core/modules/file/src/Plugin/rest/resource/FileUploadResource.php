@@ -322,8 +322,8 @@ class FileUploadResource extends ResourceBase {
       fclose($temp_file);
     }
     else {
-      // Close the file streams.
-      fclose($temp_file);
+      // Close the input file stream since we can't proceed with the upload.
+      // Don't try to close $temp_file since it's FALSE at this point.
       fclose($file_data);
       $this->logger->error('Temporary file "%path" could not be opened for file upload', ['%path' => $temp_file_path]);
       throw new HttpException(500, 'Temporary file could not be opened');
