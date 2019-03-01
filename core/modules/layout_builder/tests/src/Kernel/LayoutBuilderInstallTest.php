@@ -51,7 +51,7 @@ class LayoutBuilderInstallTest extends LayoutBuilderCompatibilityTestBase {
     $this->assertNotEmpty($this->cssSelect('.layout--onecol'));
 
     // Removing the layout restores the original rendering of the entity.
-    $this->entity->get(OverridesSectionStorage::FIELD_NAME)->removeSection(0);
+    $this->entity->get(OverridesSectionStorage::FIELD_NAME)->removeAllSections();
     $this->entity->save();
     $this->assertFieldAttributes($this->entity, $expected_fields);
 

@@ -96,6 +96,13 @@ function layout_builder_post_update_routing_entity_form() {
 }
 
 /**
+ * Clear caches to discover new blank layout plugin.
+ */
+function layout_builder_post_update_discover_blank_layout_plugin() {
+  // Empty post-update hook.
+}
+
+/**
  * Clear caches due to routing changes to changing the URLs for defaults.
  */
 function layout_builder_post_update_routing_defaults() {

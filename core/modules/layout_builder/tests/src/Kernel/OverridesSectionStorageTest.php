@@ -211,4 +211,36 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->assertSame('default', $result['view_mode']->getContextValue());
   }
 
+  /**
+   * @covers ::isOverridden
+   */
+  public function testIsOverridden() {
+    $display = LayoutBuilderEntityViewDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+    $display
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+
+    $entity = EntityTest::create();
+    $entity->set(OverridesSectionStorage::FIELD_NAME, [new Section('layout_default')]);
+    $entity->save();
+    $entity = EntityTest::load($entity->id());
+
+    $context = EntityContext::fromEntity($entity);
+    $this->plugin->setContext('entity', $context);
+
+    $this->assertTrue($this->plugin->isOverridden());
+    $this->plugin->removeSection(0);
+    $this->assertTrue($this->plugin->isOverridden());
+    $this->plugin->removeAllSections(TRUE);
+    $this->assertTrue($this->plugin->isOverridden());
+    $this->plugin->removeAllSections();
+    $this->assertFalse($this->plugin->isOverridden());
+  }
+
 }

@@ -869,10 +869,99 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementsCount('css', '.layout', 1);
     $assert_session->elementsCount('css', '.layout--twocol', 1);
 
-    // The default layout is selected for a new object.
+    // No layout is selected for a new object.
     $this->drupalGet('layout-builder-test-simple-config/new');
+    $assert_session->elementNotExists('css', '.layout');
+  }
+
+  /**
+   * Tests removing all sections from overrides and defaults.
+   */
+  public function testRemovingAllSections() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    // Enable overrides.
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => TRUE], 'Save');
+
+    // By default, there is one section.
+    $this->drupalGet('node/1');
     $assert_session->elementsCount('css', '.layout', 1);
-    $assert_session->elementsCount('css', '.layout--onecol', 1);
+    $assert_session->pageTextContains('The first node body');
+
+    $page->clickLink('Layout');
+    $assert_session->elementsCount('css', '.layout', 1);
+    $assert_session->elementsCount('css', '.layout-builder__add-block', 1);
+    $assert_session->elementsCount('css', '.layout-builder__add-section', 2);
+
+    // Remove the only section from the override.
+    $page->clickLink('Remove section');
+    $page->pressButton('Remove');
+    $assert_session->elementsCount('css', '.layout', 0);
+    $assert_session->elementsCount('css', '.layout-builder__add-block', 0);
+    $assert_session->elementsCount('css', '.layout-builder__add-section', 1);
+
+    // The override is still used instead of the default, despite being empty.
+    $page->pressButton('Save layout');
+    $assert_session->elementsCount('css', '.layout', 0);
+    $assert_session->pageTextNotContains('The first node body');
+
+    $page->clickLink('Layout');
+    $assert_session->elementsCount('css', '.layout', 0);
+    $assert_session->elementsCount('css', '.layout-builder__add-block', 0);
+    $assert_session->elementsCount('css', '.layout-builder__add-section', 1);
+
+    // Add one section to the override.
+    $page->clickLink('Add Section');
+    $page->clickLink('One column');
+    $assert_session->elementsCount('css', '.layout', 1);
+    $assert_session->elementsCount('css', '.layout-builder__add-block', 1);
+    $assert_session->elementsCount('css', '.layout-builder__add-section', 2);
+
+    $page->pressButton('Save layout');
+    $assert_session->elementsCount('css', '.layout', 1);
+    $assert_session->pageTextNotContains('The first node body');
+
+    // By default, the default has one section.
+    $this->drupalGet("$field_ui_prefix/display/default/layout");
+    $assert_session->elementsCount('css', '.layout', 1);
+    $assert_session->elementsCount('css', '.layout-builder__add-block', 1);
+    $assert_session->elementsCount('css', '.layout-builder__add-section', 2);
+
+    // Remove the only section from the default.
+    $page->clickLink('Remove section');
+    $page->pressButton('Remove');
+    $assert_session->elementsCount('css', '.layout', 0);
+    $assert_session->elementsCount('css', '.layout-builder__add-block', 0);
+    $assert_session->elementsCount('css', '.layout-builder__add-section', 1);
+
+    $page->pressButton('Save layout');
+    $page->clickLink('Manage layout');
+    $assert_session->elementsCount('css', '.layout', 0);
+    $assert_session->elementsCount('css', '.layout-builder__add-block', 0);
+    $assert_session->elementsCount('css', '.layout-builder__add-section', 1);
+
+    // The override is still in use.
+    $this->drupalGet('node/1');
+    $assert_session->elementsCount('css', '.layout', 1);
+    $assert_session->pageTextNotContains('The first node body');
+    $page->clickLink('Layout');
+    $assert_session->elementsCount('css', '.layout', 1);
+    $assert_session->elementsCount('css', '.layout-builder__add-block', 1);
+    $assert_session->elementsCount('css', '.layout-builder__add-section', 2);
+
+    // Revert the override.
+    $page->clickLink('Revert to defaults');
+    $page->pressButton('Revert');
+    $assert_session->elementsCount('css', '.layout', 0);
+    $assert_session->pageTextNotContains('The first node body');
   }
 
   /**

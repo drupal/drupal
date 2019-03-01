@@ -241,10 +241,10 @@ class LayoutBuilderTest extends WebDriverTestBase {
 
     $page->pressButton('Save layout');
 
-    // Removing all sections results in the default layout display being used.
+    // Removing all sections results in no layout being used.
     $assert_session->addressEquals($node_url);
-    $assert_session->elementExists('css', '.layout.layout--onecol');
-    $assert_session->pageTextContains('The node body');
+    $assert_session->elementNotExists('css', '.layout');
+    $assert_session->pageTextNotContains('The node body');
   }
 
   /**

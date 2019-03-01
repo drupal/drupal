@@ -294,6 +294,14 @@ function layout_builder_plugin_filter_layout__layout_builder_alter(array &$defin
 }
 
 /**
+ * Implements hook_plugin_filter_TYPE_alter().
+ */
+function layout_builder_plugin_filter_layout_alter(array &$definitions, array $extra, $consumer) {
+  // Hide the blank layout plugin from listings.
+  unset($definitions['layout_builder_blank']);
+}
+
+/**
  * Implements hook_system_breadcrumb_alter().
  */
 function layout_builder_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context) {

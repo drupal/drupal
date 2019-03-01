@@ -71,4 +71,19 @@ interface SectionListInterface extends \Countable {
    */
   public function removeSection($delta);
 
+  /**
+   * Removes all of the sections.
+   *
+   * @param bool $set_blank
+   *   (optional) The default implementation of section lists differentiates
+   *   between a list that has never contained any sections and a list that has
+   *   purposefully had all sections removed in order to remain blank. Passing
+   *   TRUE will mirror ::removeSection() by tracking this as a blank list.
+   *   Passing FALSE will reset the list as though it had never contained any
+   *   sections at all. Defaults to FALSE.
+   *
+   * @return $this
+   */
+  public function removeAllSections($set_blank = FALSE);
+
 }

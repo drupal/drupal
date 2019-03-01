@@ -360,7 +360,17 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
     $default_section_storage = $this->getDefaultSectionStorage();
     $cacheability->addCacheableDependency($default_section_storage)->addCacheableDependency($this);
     // Check that overrides are enabled and have at least one section.
-    return $default_section_storage->isOverridable() && count($this);
+    return $default_section_storage->isOverridable() && $this->isOverridden();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isOverridden() {
+    // If there are any sections at all, including a blank one, this section
+    // storage has been overridden. Do not use count() as it does not include
+    // blank sections.
+    return !empty($this->getSections());
   }
 
 }

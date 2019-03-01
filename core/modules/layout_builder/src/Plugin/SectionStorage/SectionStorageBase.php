@@ -105,6 +105,14 @@ abstract class SectionStorageBase extends ContextAwarePluginBase implements Sect
   /**
    * {@inheritdoc}
    */
+  public function removeAllSections($set_blank = FALSE) {
+    $this->getSectionList()->removeAllSections($set_blank);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getContextsDuringPreview() {
     return $this->getContexts();
   }

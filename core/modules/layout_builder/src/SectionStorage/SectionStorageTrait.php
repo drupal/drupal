@@ -31,6 +31,10 @@ trait SectionStorageTrait {
    * {@inheritdoc}
    */
   public function count() {
+    if ($this->hasBlankSection()) {
+      return 0;
+    }
+
     return count($this->getSections());
   }
 
@@ -76,6 +80,11 @@ trait SectionStorageTrait {
    * {@inheritdoc}
    */
   public function insertSection($delta, Section $section) {
+    // Clear the section list if there is currently a blank section.
+    if ($this->hasBlankSection()) {
+      $this->removeAllSections();
+    }
+
     if ($this->hasSection($delta)) {
       // @todo Use https://www.drupal.org/node/66183 once resolved.
       $start = array_slice($this->getSections(), 0, $delta);
@@ -89,12 +98,66 @@ trait SectionStorageTrait {
   }
 
   /**
+   * Adds a blank section to the list.
+   *
+   * @return $this
+   *
+   * @see \Drupal\layout_builder\Plugin\Layout\BlankLayout
+   */
+  protected function addBlankSection() {
+    if ($this->hasSection(0)) {
+      throw new \Exception('A blank section must only be added to an empty list');
+    }
+
+    $this->appendSection(new Section('layout_builder_blank'));
+    return $this;
+  }
+
+  /**
+   * Indicates if this section list contains a blank section.
+   *
+   * A blank section is used to differentiate the difference between a layout
+   * that has never been instantiated and one that has purposefully had all
+   * sections removed.
+   *
+   * @return bool
+   *   TRUE if the section list contains a blank section, FALSE otherwise.
+   *
+   * @see \Drupal\layout_builder\Plugin\Layout\BlankLayout
+   */
+  protected function hasBlankSection() {
+    // A blank section will only ever exist when the delta is 0, as added by
+    // ::removeSection().
+    return $this->hasSection(0) && $this->getSection(0)->getLayoutId() === 'layout_builder_blank';
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function removeSection($delta) {
+    // Clear the section list if there is currently a blank section.
+    if ($this->hasBlankSection()) {
+      $this->removeAllSections();
+    }
+
     $sections = $this->getSections();
     unset($sections[$delta]);
     $this->setSections($sections);
+    // Add a blank section when the last section is removed.
+    if (empty($sections)) {
+      $this->addBlankSection();
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeAllSections($set_blank = FALSE) {
+    $this->setSections([]);
+    if ($set_blank) {
+      $this->addBlankSection();
+    }
     return $this;
   }
 

@@ -23,4 +23,12 @@ interface OverridesSectionStorageInterface extends SectionStorageInterface {
    */
   public function getDefaultSectionStorage();
 
+  /**
+   * Indicates if overrides are in use.
+   *
+   * @return bool
+   *   TRUE if this overrides section storage is in use, otherwise FALSE.
+   */
+  public function isOverridden();
+
 }

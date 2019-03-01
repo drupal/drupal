@@ -12,7 +12,6 @@ use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
-use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -140,20 +139,10 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     if ($this->layoutTempstoreRepository->has($section_storage)) {
       $this->messenger->addWarning($this->t('You have unsaved changes.'));
     }
-    // Only add sections if the layout is new and empty.
-    elseif ($section_storage->count() === 0) {
-      $sections = [];
-      // If this is an empty override, copy the sections from the corresponding
-      // default.
-      if ($section_storage instanceof OverridesSectionStorageInterface) {
-        $sections = $section_storage->getDefaultSectionStorage()->getSections();
-      }
-
-      // For an empty layout, begin with a single section of one column.
-      if (!$sections) {
-        $sections[] = new Section('layout_onecol');
-      }
-
+    // If the layout is an override that has not yet been overridden, copy the
+    // sections from the corresponding default.
+    elseif ($section_storage instanceof OverridesSectionStorageInterface && !$section_storage->isOverridden()) {
+      $sections = $section_storage->getDefaultSectionStorage()->getSections();
       foreach ($sections as $section) {
         $section_storage->appendSection($section);
       }

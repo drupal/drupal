@@ -104,7 +104,14 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    * {@inheritdoc}
    */
   protected function setSections(array $sections) {
-    $this->setThirdPartySetting('layout_builder', 'sections', array_values($sections));
+    // Third-party settings must be completely unset instead of stored as an
+    // empty array.
+    if (!$sections) {
+      $this->unsetThirdPartySetting('layout_builder', 'sections');
+    }
+    else {
+      $this->setThirdPartySetting('layout_builder', 'sections', array_values($sections));
+    }
     return $this;
   }
 
@@ -143,9 +150,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       }
       else {
         // When being disabled, remove all existing section data.
-        while (count($this) > 0) {
-          $this->removeSection(0);
-        }
+        $this->removeAllSections();
       }
     }
   }

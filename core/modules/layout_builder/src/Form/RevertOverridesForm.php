@@ -104,10 +104,9 @@ class RevertOverridesForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Remove all sections.
-    while ($this->sectionStorage->count()) {
-      $this->sectionStorage->removeSection(0);
-    }
-    $this->sectionStorage->save();
+    $this->sectionStorage
+      ->removeAllSections()
+      ->save();
     $this->layoutTempstoreRepository->delete($this->sectionStorage);
 
     $this->messenger->addMessage($this->t('The layout has been reverted back to defaults.'));
