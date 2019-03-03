@@ -318,7 +318,7 @@ Quick Edit
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
 
 RDF
-- Stéphane Corlosquet 'scor' https://www.drupal.org/u/scor
+- ?
 
 Render API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
