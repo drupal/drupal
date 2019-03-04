@@ -13,6 +13,7 @@ use Drupal\Core\Composer\Composer;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRunnerKernel;
