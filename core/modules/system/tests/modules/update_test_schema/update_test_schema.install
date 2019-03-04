@@ -48,3 +48,19 @@ if ($schema_version >= 8001) {
   }
 
 }
+
+if ($schema_version >= 8003) {
+
+  /**
+   * Schema version 8003.
+   */
+  function update_test_schema_update_8003() {
+    // Uninstall a module with no dependencies installed by the Standard
+    // profile.
+    \Drupal::service('module_installer')->uninstall(['page_cache']);
+    // Install a test module that is not installed in any of the database
+    // dumps.
+    \Drupal::service('module_installer')->install(['module_test']);
+  }
+
+}

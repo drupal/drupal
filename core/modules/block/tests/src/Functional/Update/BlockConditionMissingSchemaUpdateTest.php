@@ -15,17 +15,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 class BlockConditionMissingSchemaUpdateTest extends UpdatePathTestBase {
 
   /**
-   * This test does not have a failed update but the configuration has missing
-   * schema so can not do the full post update testing offered by
-   * UpdatePathTestBase.
-   *
-   * @var bool
-   *
-   * @see \Drupal\system\Tests\Update\UpdatePathTestBase::runUpdates()
-   */
-  protected $checkFailedUpdates = FALSE;
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = ['block_test', 'language'];

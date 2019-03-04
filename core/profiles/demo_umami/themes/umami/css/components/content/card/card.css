@@ -34,6 +34,11 @@
   color: #000;
 }
 
+/* Need to fix IE11 cards height issue */
+.view-mode-card .node__content {
+  flex-shrink: 0;
+}
+
 .view-mode-card .field--name-field-image img {
   display: block;
   width: 100%;
