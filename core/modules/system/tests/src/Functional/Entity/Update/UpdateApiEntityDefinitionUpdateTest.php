@@ -21,13 +21,6 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
   protected static $modules = ['entity_test'];
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
    * The entity definition update manager.
    *
    * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
@@ -40,7 +33,6 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->entityManager = $this->container->get('entity.manager');
     $this->updatesManager = $this->container->get('entity.definition_update_manager');
 
     $admin = $this->drupalCreateUser([], FALSE, TRUE);
@@ -181,8 +173,8 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
    *   The reloaded entity object.
    */
   protected function reloadEntity(EntityTest $entity) {
-    $this->entityManager->useCaches(FALSE);
-    $this->entityManager->getStorage('entity_test')->resetCache([$entity->id()]);
+    \Drupal::entityTypeManager()->useCaches(FALSE);
+    \Drupal::service('entity_field.manager')->useCaches(FALSE);
     return EntityTest::load($entity->id());
   }
 

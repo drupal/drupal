@@ -411,7 +411,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
 
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $storage->getTableMapping();
-    $storage_definition = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id)['new_base_field'];
+    $storage_definition = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions($entity_type_id)['new_base_field'];
 
     // Save an entity with the base field populated.
     $entity = $storage->create(['new_base_field' => 'foo']);
@@ -574,7 +574,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
 
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $storage->getTableMapping();
-    $storage_definition = $this->entityManager->getLastInstalledFieldStorageDefinitions('entity_test_update')['new_bundle_field'];
+    $storage_definition = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions('entity_test_update')['new_bundle_field'];
 
     // Check that the bundle field has a dedicated table.
     $dedicated_table_name = $table_mapping->getDedicatedDataTableName($storage_definition);

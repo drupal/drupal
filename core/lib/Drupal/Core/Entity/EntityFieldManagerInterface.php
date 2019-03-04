@@ -108,10 +108,6 @@ interface EntityFieldManagerInterface {
    *
    * @param bool $use_caches
    *   FALSE to not use any caches.
-   *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
-   *
-   * @todo Remove in https://www.drupal.org/node/2549143.
    */
   public function useCaches($use_caches = FALSE);
 

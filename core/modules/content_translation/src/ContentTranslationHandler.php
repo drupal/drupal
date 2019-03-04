@@ -9,8 +9,9 @@ use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityChangesDetectionTrait;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -107,8 +108,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *   The language manager.
    * @param \Drupal\content_translation\ContentTranslationManagerInterface $manager
    *   The content translation manager service.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
@@ -116,14 +117,18 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    */
-  public function __construct(EntityTypeInterface $entity_type, LanguageManagerInterface $language_manager, ContentTranslationManagerInterface $manager, EntityManagerInterface $entity_manager, AccountInterface $current_user, MessengerInterface $messenger, DateFormatterInterface $date_formatter) {
+  public function __construct(EntityTypeInterface $entity_type, LanguageManagerInterface $language_manager, ContentTranslationManagerInterface $manager, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, MessengerInterface $messenger, DateFormatterInterface $date_formatter, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository = NULL) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->languageManager = $language_manager;
     $this->manager = $manager;
-    $this->entityTypeManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
-    $this->fieldStorageDefinitions = $entity_manager->getLastInstalledFieldStorageDefinitions($this->entityTypeId);
+    if (!$entity_last_installed_schema_repository) {
+      @trigger_error('Calling ContentTranslationHandler::__construct() with the $entity_last_installed_schema_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+    }
+    $this->fieldStorageDefinitions = $entity_last_installed_schema_repository->getLastInstalledFieldStorageDefinitions($this->entityTypeId);
     $this->messenger = $messenger;
     $this->dateFormatter = $date_formatter;
   }
@@ -136,10 +141,11 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $entity_type,
       $container->get('language_manager'),
       $container->get('content_translation.manager'),
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('current_user'),
       $container->get('messenger'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('entity.last_installed_schema.repository')
     );
   }
 

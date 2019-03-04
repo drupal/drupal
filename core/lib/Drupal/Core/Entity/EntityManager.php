@@ -362,6 +362,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getEntityTypeLabels($group = FALSE) {
+    @trigger_error('EntityManagerInterface::getEntityTypeLabels() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeRepositoryInterface::getEntityTypeLabels() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_type.repository')->getEntityTypeLabels($group);
   }
 
@@ -534,6 +535,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getEntityTypeFromClass($class_name) {
+    @trigger_error('EntityManagerInterface::getEntityTypeFromClass() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeRepositoryInterface::getEntityTypeFromClass() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_type.repository')->getEntityTypeFromClass($class_name);
   }
 
@@ -666,13 +668,22 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getLastInstalledDefinition($entity_type_id) {
+    @trigger_error('EntityManagerInterface::getLastInstalledDefinition() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface::getLastInstalledDefinition() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity.last_installed_schema.repository')->getLastInstalledDefinition($entity_type_id);
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @deprecated EntityManagerInterface::useCaches() is deprecated in 8.0.0 and
+   *   will be removed before Drupal 9.0.0. Use
+   *   \Drupal\Core\Entity\EntityTypeManagerInterface::useCaches() and/or
+   *   Drupal\Core\Entity\EntityFieldManagerInterface::useCaches() instead.
+   *
+   * @see https://www.drupal.org/node/2549139
    */
   public function useCaches($use_caches = FALSE) {
+    @trigger_error('EntityManagerInterface::useCaches() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeManagerInterface::useCaches() and/or Drupal\Core\Entity\EntityFieldManagerInterface::useCaches() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('entity_type.manager')->useCaches($use_caches);
 
     // @todo EntityFieldManager is not a plugin manager, and should not co-opt
@@ -690,6 +701,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getLastInstalledFieldStorageDefinitions($entity_type_id) {
+    @trigger_error('EntityManagerInterface::getLastInstalledFieldStorageDefinitions() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface::getLastInstalledFieldStorageDefinitions() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions($entity_type_id);
   }
 
@@ -729,6 +741,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function createInstance($plugin_id, array $configuration = []) {
+    @trigger_error('EntityManagerInterface::createInstance() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeManagerInterface::createInstance() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_type.manager')->createInstance($plugin_id, $configuration);
   }
 
@@ -742,6 +755,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getInstance(array $options) {
+    @trigger_error('EntityManagerInterface::getInstance() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeManagerInterface::getInstance() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_type.manager')->getInstance($options);
   }
 

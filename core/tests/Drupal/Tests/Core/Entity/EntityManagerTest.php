@@ -6,7 +6,9 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
@@ -62,6 +64,13 @@ class EntityManagerTest extends UnitTestCase {
   protected $entityRepository;
 
   /**
+   * The entity last installed schema repository.
+   *
+   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepository|\Prophecy\Prophecy\ProphecyInterface
+   */
+  protected $entityLastInstalledSchemaRepository;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -72,6 +81,7 @@ class EntityManagerTest extends UnitTestCase {
     $this->entityTypeBundleInfo = $this->prophesize(EntityTypeBundleInfoInterface::class);
     $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class);
     $this->entityRepository = $this->prophesize(EntityRepositoryInterface::class);
+    $this->entityLastInstalledSchemaRepository = $this->prophesize(EntityLastInstalledSchemaRepositoryInterface::class);
 
     $container = new ContainerBuilder();
     $container->set('entity_type.manager', $this->entityTypeManager->reveal());
@@ -79,6 +89,7 @@ class EntityManagerTest extends UnitTestCase {
     $container->set('entity_type.bundle.info', $this->entityTypeBundleInfo->reveal());
     $container->set('entity_field.manager', $this->entityFieldManager->reveal());
     $container->set('entity.repository', $this->entityRepository->reveal());
+    $container->set('entity.last_installed_schema.repository', $this->entityLastInstalledSchemaRepository->reveal());
 
     $this->entityManager = new EntityManager();
     $this->entityManager->setContainer($container);
@@ -178,6 +189,89 @@ class EntityManagerTest extends UnitTestCase {
     $this->entityRepository->loadEntityByConfigTarget('config_test', 'test')->shouldBeCalled()->willReturn($entity->reveal());
 
     $this->assertInstanceOf(EntityInterface::class, $this->entityManager->loadEntityByConfigTarget('config_test', 'test'));
+  }
+
+  /**
+   * Tests the getEntityTypeFromClass() method.
+   *
+   * @covers ::getEntityTypeFromClass
+   *
+   * @expectedDeprecation EntityManagerInterface::getEntityTypeFromClass() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeRepositoryInterface::getEntityTypeFromClass() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetEntityTypeFromClass() {
+    $class = '\Drupal\example\Entity\ExampleEntity';
+    $this->entityTypeRepository->getEntityTypeFromClass($class)->shouldBeCalled()->willReturn('example_entity_type');
+
+    $this->assertEquals('example_entity_type', $this->entityManager->getEntityTypeFromClass($class));
+  }
+
+  /**
+   * Tests the getLastInstalledDefinition() method.
+   *
+   * @covers ::getLastInstalledDefinition
+   *
+   * @expectedDeprecation EntityManagerInterface::getLastInstalledDefinition() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface::getLastInstalledDefinition() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetLastInstalledDefinition() {
+    $entity_type_id = 'example_entity_type';
+    $entity_type = new EntityType(['id' => $entity_type_id]);
+    $this->entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type_id)->shouldBeCalled()->willReturn($entity_type);
+
+    $this->assertEquals($entity_type, $this->entityManager->getLastInstalledDefinition($entity_type_id));
+  }
+
+  /**
+   * Tests the getLastInstalledFieldStorageDefinitions() method.
+   *
+   * @covers ::getLastInstalledFieldStorageDefinitions
+   *
+   * @expectedDeprecation EntityManagerInterface::getLastInstalledFieldStorageDefinitions() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface::getLastInstalledFieldStorageDefinitions() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetLastInstalledFieldStorageDefinitions() {
+    $entity_type_id = 'example_entity_type';
+    $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type_id)->shouldBeCalled()->willReturn([]);
+
+    $this->assertEquals([], $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id));
+  }
+
+  /**
+   * Tests the useCaches() method.
+   *
+   * @covers ::useCaches
+   *
+   * @expectedDeprecation EntityManagerInterface::useCaches() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeManagerInterface::useCaches() and/or Drupal\Core\Entity\EntityFieldManagerInterface::useCaches() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testUseCaches() {
+    $this->entityTypeManager->useCaches(TRUE)->shouldBeCalled();
+    $this->entityFieldManager->useCaches(TRUE)->shouldBeCalled();
+
+    $this->entityManager->useCaches(TRUE);
+  }
+
+  /**
+   * Tests the createInstance() method.
+   *
+   * @covers ::createInstance
+   *
+   * @expectedDeprecation EntityManagerInterface::createInstance() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeManagerInterface::createInstance() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testCreateInstance() {
+    $this->entityTypeManager->createInstance('plugin_id', ['example' => TRUE])->shouldBeCalled();
+
+    $this->entityManager->createInstance('plugin_id', ['example' => TRUE]);
+  }
+
+  /**
+   * Tests the getInstance() method.
+   *
+   * @covers ::getInstance
+   *
+   * @expectedDeprecation EntityManagerInterface::getInstance() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeManagerInterface::getInstance() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetInstance() {
+    $this->entityTypeManager->getInstance(['example' => TRUE])->shouldBeCalled();
+
+    $this->entityManager->getInstance(['example' => TRUE]);
   }
 
 }

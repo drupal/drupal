@@ -223,7 +223,7 @@ function content_translation_entity_base_field_info(EntityTypeInterface $entity_
   $entity_type_id = $entity_type->id();
   if ($manager->isSupported($entity_type_id)) {
     $definitions = $manager->getTranslationHandler($entity_type_id)->getFieldDefinitions();
-    $installed_storage_definitions = \Drupal::entityManager()->getLastInstalledFieldStorageDefinitions($entity_type_id);
+    $installed_storage_definitions = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions($entity_type_id);
     // We return metadata storage fields whenever content translation is enabled
     // or it was enabled before, so that we keep translation metadata around
     // when translation is disabled.
