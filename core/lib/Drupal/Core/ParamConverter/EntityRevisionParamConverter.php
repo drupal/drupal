@@ -2,8 +2,10 @@
 
 namespace Drupal\Core\ParamConverter;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\TranslatableInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -24,6 +26,8 @@ use Symfony\Component\Routing\Route;
  * @endcode
  */
 class EntityRevisionParamConverter implements ParamConverterInterface {
+
+  use DynamicEntityTypeParamConverterTrait;
 
   /**
    * The entity type manager.
@@ -56,9 +60,16 @@ class EntityRevisionParamConverter implements ParamConverterInterface {
    * {@inheritdoc}
    */
   public function convert($value, $definition, $name, array $defaults) {
-    list (, $entity_type_id) = explode(':', $definition['type'], 2);
+    $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
     $entity = $this->entityTypeManager->getStorage($entity_type_id)->loadRevision($value);
-    return $this->entityRepository->getTranslationFromContext($entity);
+
+    // If the entity type is translatable, ensure we return the proper
+    // translation object for the current context.
+    if ($entity instanceof EntityInterface && $entity instanceof TranslatableInterface) {
+      $entity = $this->entityRepository->getTranslationFromContext($entity, NULL, ['operation' => 'entity_upcast']);
+    }
+
+    return $entity;
   }
 
   /**

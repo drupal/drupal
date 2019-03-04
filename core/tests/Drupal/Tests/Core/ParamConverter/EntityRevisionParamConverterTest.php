@@ -2,11 +2,12 @@
 
 namespace Drupal\Tests\Core\ParamConverter;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\ParamConverter\EntityRevisionParamConverter;
+use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
 
@@ -19,7 +20,7 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
   /**
    * The tested entity revision param converter.
    *
-   * @var \Drupal\entity\ParamConverter\EntityRevisionParamConverter
+   * @var \Drupal\Core\ParamConverter\EntityRevisionParamConverter
    */
   protected $converter;
 
@@ -62,22 +63,74 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
   }
 
   /**
+   * Tests the convert() method.
+   *
+   * @dataProvider providerTestConvert
+   *
    * @covers ::convert
    */
-  public function testConvert() {
-    $entity = $this->prophesize(EntityInterface::class)->reveal();
+  public function testConvert($value, array $definition, array $defaults, $expected_result) {
     $storage = $this->prophesize(EntityStorageInterface::class);
-    $storage->loadRevision(1)->willReturn($entity);
+    $storage->loadRevision('valid_id')->willReturn((object) ['revision_id' => 'valid_id']);
+    $storage->loadRevision('invalid_id')->willReturn(NULL);
 
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
-    $entity_type_manager->getStorage('test')->willReturn($storage->reveal());
+    $entity_type_manager->getStorage('entity_test')->willReturn($storage->reveal());
     $entity_repository = $this->prophesize(EntityRepositoryInterface::class);
-    $entity_repository->getTranslationFromContext($entity)->willReturn($entity);
     $converter = new EntityRevisionParamConverter($entity_type_manager->reveal(), $entity_repository->reveal());
 
-    $route = $this->getTestRoute();
-    $result = $converter->convert(1, $route->getOption('parameters')['test_revision'], 'test_revision', ['test_revision' => 1]);
-    $this->assertSame($entity, $result);
+    $result = $converter->convert($value, $definition, 'test_revision', $defaults);
+    $this->assertEquals($expected_result, $result);
+  }
+
+  /**
+   * Provides test data for testConvert
+   */
+  public function providerTestConvert() {
+    $data = [];
+    // Existing entity type.
+    $data[] = ['valid_id', ['type' => 'entity_revision:entity_test'], ['test_revision' => 'valid_id'], (object) ['revision_id' => 'valid_id']];
+    // Invalid ID.
+    $data[] = ['invalid_id', ['type' => 'entity_revision:entity_test'], ['test_revision' => 'invalid_id'], NULL];
+    // Entity type placeholder.
+    $data[] = ['valid_id', ['type' => 'entity_revision:{entity_type}'], ['test_revision' => 'valid_id', 'entity_type' => 'entity_test'], (object) ['revision_id' => 'valid_id']];
+
+    return $data;
+  }
+
+  /**
+   * Tests the convert() method with an invalid entity type ID.
+   *
+   * @covers ::convert
+   */
+  public function testConvertWithInvalidEntityType() {
+    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
+    $entity_type_manager->getStorage('invalid_entity_type_id')->willThrow(new InvalidPluginDefinitionException('invalid_entity_type_id'));
+    $entity_repository = $this->prophesize(EntityRepositoryInterface::class);
+    $converter = new EntityRevisionParamConverter($entity_type_manager->reveal(), $entity_repository->reveal());
+
+    $this->setExpectedException(InvalidPluginDefinitionException::class);
+    $converter->convert('valid_id', ['type' => 'entity_revision:invalid_entity_type_id'], 'foo', ['foo' => 'valid_id']);
+  }
+
+  /**
+   * Tests the convert() method with an invalid dynamic entity type ID.
+   *
+   * @covers ::convert
+   */
+  public function testConvertWithInvalidType() {
+    $this->setExpectedException(ParamNotConvertedException::class, 'The type definition "entity_revision_{entity_type_id}" is invalid. The expected format is "entity_revision:<entity_type_id>".');
+    $this->converter->convert('valid_id', ['type' => 'entity_revision_{entity_type_id}'], 'foo', ['foo' => 'valid_id']);
+  }
+
+  /**
+   * Tests the convert() method with an invalid dynamic entity type ID.
+   *
+   * @covers ::convert
+   */
+  public function testConvertWithInvalidDynamicEntityType() {
+    $this->setExpectedException(ParamNotConvertedException::class, 'The "foo" parameter was not converted because the "invalid_entity_type_id" parameter is missing.');
+    $this->converter->convert('valid_id', ['type' => 'entity_revision:{invalid_entity_type_id}'], 'foo', ['foo' => 'valid_id']);
   }
 
 }
