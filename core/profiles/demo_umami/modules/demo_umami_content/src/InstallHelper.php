@@ -56,6 +56,17 @@ class InstallHelper implements ContainerInjectionInterface {
   protected $fileSystem;
 
   /**
+   * Term ID map.
+   *
+   * Used to store term IDs created in the import process against
+   * vocabulary and row in the source CSV files. This allows the created terms
+   * to be cross referenced when creating articles and recipes.
+   *
+   * @var array
+   */
+  protected $termIdMap;
+
+  /**
    * Constructs a new InstallHelper object.
    *
    * @param \Drupal\Core\Path\AliasManagerInterface $aliasManager
@@ -75,6 +86,7 @@ class InstallHelper implements ContainerInjectionInterface {
     $this->moduleHandler = $moduleHandler;
     $this->state = $state;
     $this->fileSystem = $fileSystem;
+    $this->termIdMap = [];
   }
 
   /**
@@ -92,13 +104,87 @@ class InstallHelper implements ContainerInjectionInterface {
 
   /**
    * Imports default contents.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function importContent() {
-    $this->importEditors()
+    $this->importTerms('tags', 'tags.csv')
+      ->importTerms('recipe_category', 'recipe_categories.csv')
+      ->importEditors()
       ->importArticles()
       ->importRecipes()
       ->importPages()
       ->importBlockContent();
+  }
+
+  /**
+   * Imports terms for a given vocabulary and filename.
+   *
+   * @param string $vocabulary
+   *   Machine name of vocabulary to which we should save terms.
+   * @param string $filename
+   *   Filename of the file containing the terms to import.
+   *
+   * @return $this
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function importTerms($vocabulary, $filename) {
+    $module_path = $this->moduleHandler->getModule('demo_umami_content')->getPath();
+    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
+    if (($handle = fopen($module_path . "/default_content/languages/en/$filename", 'r')) !== FALSE) {
+      $header = fgetcsv($handle);
+      while (($data = fgetcsv($handle)) !== FALSE) {
+        $data = array_combine($header, $data);
+        $term_name = trim($data['term']);
+
+        $term = $term_storage->create([
+          'name' => $term_name,
+          'vid' => $vocabulary,
+          'path' => ['alias' => '/' . Html::getClass($vocabulary) . '/' . Html::getClass($term_name)],
+        ]);
+        $term->save();
+        $this->storeCreatedContentUuids([$term->uuid() => 'taxonomy_term']);
+        $this->saveTermId($vocabulary, $data['id'], $term->id());
+      }
+    }
+    return $this;
+  }
+
+  /**
+   * Retrieves the Term ID of a term saved during the import process.
+   *
+   * @param string $vocabulary
+   *   Machine name of vocabulary to which it was saved.
+   * @param int $term_csv_id
+   *   The term's ID from the CSV file.
+   *
+   * @return int
+   *   Term ID, or 0 if Term ID could not be found.
+   */
+  protected function getTermId($vocabulary, $term_csv_id) {
+    if (array_key_exists($vocabulary, $this->termIdMap) && array_key_exists($term_csv_id, $this->termIdMap[$vocabulary])) {
+      return $this->termIdMap[$vocabulary][$term_csv_id];
+    }
+    return 0;
+  }
+
+  /**
+   * Saves a Term ID generated when saving a taxonomy term.
+   *
+   * @param string $vocabulary
+   *   Machine name of vocabulary to which it was saved.
+   * @param int $term_csv_id
+   *   The term's ID from the CSV file.
+   * @param int $tid
+   *   Term ID generated when saved in the Drupal database.
+   */
+  protected function saveTermId($vocabulary, $term_csv_id, $tid) {
+    $this->termIdMap[$vocabulary][$term_csv_id] = $tid;
   }
 
   /**
@@ -137,7 +223,7 @@ class InstallHelper implements ContainerInjectionInterface {
   protected function importArticles() {
     $module_path = $this->moduleHandler->getModule('demo_umami_content')
       ->getPath();
-    if (($handle = fopen($module_path . '/default_content/articles.csv', "r")) !== FALSE) {
+    if (($handle = fopen($module_path . '/default_content/languages/en/articles.csv', "r")) !== FALSE) {
       $uuids = [];
       $header = fgetcsv($handle);
       while (($data = fgetcsv($handle)) !== FALSE) {
@@ -151,7 +237,7 @@ class InstallHelper implements ContainerInjectionInterface {
         // Fields mapping starts.
         // Set Body Field.
         if (!empty($data['body'])) {
-          $body_path = $module_path . '/default_content/article_body/' . $data['body'];
+          $body_path = $module_path . '/default_content/languages/en/article_body/' . $data['body'];
           $body = file_get_contents($body_path);
           if ($body !== FALSE) {
             $values['body'] = [['value' => $body, 'format' => 'basic_html']];
@@ -165,8 +251,10 @@ class InstallHelper implements ContainerInjectionInterface {
         if (!empty($data['tags'])) {
           $values['field_tags'] = [];
           $tags = explode(',', $data['tags']);
-          foreach ($tags as $term) {
-            $values['field_tags'][] = ['target_id' => $this->getTerm($term)];
+          foreach ($tags as $tag_id) {
+            if ($tid = $this->getTermId('tags', $tag_id)) {
+              $values['field_tags'][] = ['target_id' => $tid];
+            }
           }
         }
         // Set article author.
@@ -201,7 +289,7 @@ class InstallHelper implements ContainerInjectionInterface {
   protected function importRecipes() {
     $module_path = $this->moduleHandler->getModule('demo_umami_content')->getPath();
 
-    if (($handle = fopen($module_path . '/default_content/recipes.csv', "r")) !== FALSE) {
+    if (($handle = fopen($module_path . '/default_content/languages/en/recipes.csv', "r")) !== FALSE) {
       $header = fgetcsv($handle);
       $uuids = [];
       while (($data = fgetcsv($handle)) !== FALSE) {
@@ -236,8 +324,10 @@ class InstallHelper implements ContainerInjectionInterface {
         if (!empty($data['recipe_category'])) {
           $values['field_recipe_category'] = [];
           $tags = array_filter(explode(',', $data['recipe_category']));
-          foreach ($tags as $term) {
-            $values['field_recipe_category'][] = ['target_id' => $this->getTerm($term, 'recipe_category')];
+          foreach ($tags as $tag_id) {
+            if ($tid = $this->getTermId('recipe_category', $tag_id)) {
+              $values['field_recipe_category'][] = ['target_id' => $tid];
+            }
           }
         }
         // Set field_preparation_time Field.
@@ -266,7 +356,7 @@ class InstallHelper implements ContainerInjectionInterface {
         }
         // Set field_recipe_instruction Field.
         if (!empty($data['recipe_instruction'])) {
-          $recipe_instruction_path = $module_path . '/default_content/recipe_instructions/' . $data['recipe_instruction'];
+          $recipe_instruction_path = $module_path . '/default_content/languages/en/recipe_instructions/' . $data['recipe_instruction'];
           $recipe_instructions = file_get_contents($recipe_instruction_path);
           if ($recipe_instructions !== FALSE) {
             $values['field_recipe_instruction'] = [['value' => $recipe_instructions, 'format' => 'basic_html']];
@@ -276,8 +366,10 @@ class InstallHelper implements ContainerInjectionInterface {
         if (!empty($data['tags'])) {
           $values['field_tags'] = [];
           $tags = array_filter(explode(',', $data['tags']));
-          foreach ($tags as $term) {
-            $values['field_tags'][] = ['target_id' => $this->getTerm($term)];
+          foreach ($tags as $tag_id) {
+            if ($tid = $this->getTermId('tags', $tag_id)) {
+              $values['field_tags'][] = ['target_id' => $tid];
+            }
           }
         }
 
@@ -297,7 +389,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return $this
    */
   protected function importPages() {
-    if (($handle = fopen($this->moduleHandler->getModule('demo_umami_content')->getPath() . '/default_content/pages.csv', "r")) !== FALSE) {
+    if (($handle = fopen($this->moduleHandler->getModule('demo_umami_content')->getPath() . '/default_content/languages/en/pages.csv', "r")) !== FALSE) {
       $headers = fgetcsv($handle);
       $uuids = [];
       while (($data = fgetcsv($handle)) !== FALSE) {
@@ -483,38 +575,6 @@ class InstallHelper implements ContainerInjectionInterface {
     }
     $user = reset($users);
     return $user->id();
-  }
-
-  /**
-   * Looks up a term by name, if it is missing the term is created.
-   *
-   * @param string $term_name
-   *   Term name.
-   * @param string $vocabulary_id
-   *   Vocabulary ID.
-   *
-   * @return int
-   *   Term ID.
-   */
-  protected function getTerm($term_name, $vocabulary_id = 'tags') {
-    $term_name = trim($term_name);
-    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
-    $terms = $term_storage->loadByProperties([
-      'name' => $term_name,
-      'vid' => $vocabulary_id,
-    ]);
-    if (!$terms) {
-      $term = $term_storage->create([
-        'name' => $term_name,
-        'vid' => $vocabulary_id,
-        'path' => ['alias' => '/' . Html::getClass($vocabulary_id) . '/' . Html::getClass($term_name)],
-      ]);
-      $term->save();
-      $this->storeCreatedContentUuids([$term->uuid() => 'taxonomy_term']);
-      return $term->id();
-    }
-    $term = reset($terms);
-    return $term->id();
   }
 
   /**
