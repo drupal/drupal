@@ -319,24 +319,31 @@ function file_test_validator(File $file, $errors) {
  *
  * @param string|null $filepath
  *   File path
+ * @param bool $reset
+ *   (optional) If to reset the internal memory cache. If TRUE is passed, the
+ *   first parameter has no effect. Defaults to FALSE.
+ *
  * @return array
  *   If $filepath is NULL, an array of all previous $filepath parameters
  */
-function file_test_file_scan_callback($filepath = NULL) {
-  $files = &drupal_static(__FUNCTION__, []);
-  if (isset($filepath)) {
+function file_test_file_scan_callback($filepath = NULL, $reset = FALSE) {
+  static $files = [];
+
+  if ($reset) {
+    $files = [];
+  }
+  elseif ($filepath) {
     $files[] = $filepath;
   }
-  else {
-    return $files;
-  }
+
+  return $files;
 }
 
 /**
  * Reset static variables used by file_test_file_scan_callback().
  */
 function file_test_file_scan_callback_reset() {
-  drupal_static_reset('file_test_file_scan_callback');
+  file_test_file_scan_callback(NULL, TRUE);
 }
 
 /**
