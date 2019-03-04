@@ -37,7 +37,7 @@ const DRUPAL_MINIMUM_PHP = '5.5.9';
  * @todo Move this to an appropriate autoloadable class. See
  *   https://www.drupal.org/project/drupal/issues/2908079
  */
-const DRUPAL_RECOMMENDED_PHP = '7.1';
+const DRUPAL_RECOMMENDED_PHP = '7.2';
 
 /**
  * Minimum recommended value of PHP memory_limit.
