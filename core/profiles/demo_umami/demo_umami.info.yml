@@ -42,6 +42,7 @@ install:
   - responsive_image
   - content_moderation
   - workflows
+  - demo_umami_tour
 themes:
   - seven
   - umami

@@ -12,6 +12,10 @@ libraries:
 libraries-override:
   classy/messages: false
 
+libraries-extend:
+  tour/tour-styling:
+    - umami/demo-umami-tour
+
 regions:
   pre_header: Pre-header
   header: Header

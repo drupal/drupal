@@ -1,0 +1,29 @@
+.joyride-tip-guide .tour-tip-label {
+  margin-top: 0;
+}
+
+.joyride-tip-guide h2 {
+  margin: 10px 0;
+  color: #fff;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", "DejaVu Sans", "Lucida Sans", sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 20px;
+}
+
+.joyride-tip-guide p {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.joyride-tip-guide .button {
+  padding: 4px 1.5em;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.joyride-tip-guide a:hover,
+.joyride-tip-guide a:focus {
+  background-color: #efefef;
+  color: #000;
+}
