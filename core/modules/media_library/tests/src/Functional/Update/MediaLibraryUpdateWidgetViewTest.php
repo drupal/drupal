@@ -26,7 +26,7 @@ class MediaLibraryUpdateWidgetViewTest extends UpdatePathTestBase {
   /**
    * Tests that the media library view config is updated.
    *
-   * @see media_library_update_8700()
+   * @see media_library_update_8702()
    */
   public function testMediaLibraryViewsConfig() {
     $config = $this->config('views.view.media_library');

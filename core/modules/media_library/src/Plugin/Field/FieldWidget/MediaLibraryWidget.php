@@ -328,6 +328,7 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
         '#attributes' => [
           'class' => [
             'media-library-item',
+            'media-library-item--grid',
             'js-media-library-item',
           ],
         ],

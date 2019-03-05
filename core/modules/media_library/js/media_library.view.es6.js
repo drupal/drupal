@@ -16,7 +16,7 @@
         .once('media-library-item-hover')
         .on('mouseover mouseout', ({ currentTarget, type }) => {
           $(currentTarget)
-            .closest('.media-library-item')
+            .closest('.js-media-library-item')
             .toggleClass('is-hover', type === 'mouseover');
         });
     },
@@ -36,7 +36,7 @@
         .once('media-library-item-focus')
         .on('focus blur', ({ currentTarget, type }) => {
           $(currentTarget)
-            .closest('.media-library-item')
+            .closest('.js-media-library-item')
             .toggleClass('is-focus', type === 'focus');
         });
     },
@@ -55,14 +55,14 @@
       const $view = $('.js-media-library-view', context).once(
         'media-library-select-all',
       );
-      if ($view.length && $view.find('.media-library-item').length) {
+      if ($view.length && $view.find('.js-media-library-item').length) {
         const $checkbox = $(
           '<input type="checkbox" class="form-checkbox" />',
         ).on('click', ({ currentTarget }) => {
           // Toggle all checkboxes.
           const $checkboxes = $(currentTarget)
             .closest('.media-library-view')
-            .find('.media-library-item input[type="checkbox"]');
+            .find('.js-media-library-item input[type="checkbox"]');
           $checkboxes
             .prop('checked', $(currentTarget).prop('checked'))
             .trigger('change');
@@ -79,7 +79,7 @@
         ).text(Drupal.t('Select all media'));
         $label.prepend($checkbox);
         $view
-          .find('.media-library-item')
+          .find('.js-media-library-item')
           .first()
           .before($label);
       }

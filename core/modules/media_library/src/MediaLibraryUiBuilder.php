@@ -117,8 +117,16 @@ class MediaLibraryUiBuilder {
         ],
         'menu' => $this->buildMediaTypeMenu($state),
         'content' => $this->buildLibraryContent($state),
+        // Attach the JavaScript for the media library UI. The number of
+        // available slots needs to be added to make sure users can't select
+        // more items than allowed.
         '#attached' => [
           'library' => ['media_library/ui'],
+          'drupalSettings' => [
+            'media_library' => [
+              'selection_remaining' => $state->getAvailableSlots(),
+            ],
+          ],
         ],
       ];
     }
@@ -289,6 +297,12 @@ class MediaLibraryUiBuilder {
     $view = $this->entityTypeManager->getStorage('view')->load('media_library');
     $view_executable = $this->viewsExecutableFactory->get($view);
     $display_id = 'widget';
+
+    // Make sure the state parameters are set in the request so the view can
+    // pass the parameters along in the pager, filters etc.
+    $view_request = $view_executable->getRequest();
+    $view_request->query->add($state->all());
+    $view_executable->setRequest($view_request);
 
     $args = [$state->getSelectedTypeId()];
 

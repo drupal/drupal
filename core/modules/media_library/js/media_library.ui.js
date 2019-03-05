@@ -75,6 +75,65 @@
     }
   };
 
+  Drupal.behaviors.MediaLibraryViewsDisplay = {
+    attach: function attach(context) {
+      var $view = $(context).hasClass('.js-media-library-view') ? $(context) : $('.js-media-library-view', context);
+
+      $view.closest('.views-element-container').attr('id', 'media-library-view');
+
+      $('.views-display-link-widget, .views-display-link-widget_table', context).once('media-library-views-display-link').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var $link = $(e.currentTarget);
+
+        var loadingAnnouncement = '';
+        var displayAnnouncement = '';
+        var focusSelector = '';
+        if ($link.hasClass('views-display-link-widget')) {
+          loadingAnnouncement = Drupal.t('Loading grid view.');
+          displayAnnouncement = Drupal.t('Changed to grid view.');
+          focusSelector = '.views-display-link-widget';
+        } else if ($link.hasClass('views-display-link-widget_table')) {
+          loadingAnnouncement = Drupal.t('Loading table view.');
+          displayAnnouncement = Drupal.t('Changed to table view.');
+          focusSelector = '.views-display-link-widget_table';
+        }
+
+        var ajaxObject = Drupal.ajax({
+          wrapper: 'media-library-view',
+          url: e.currentTarget.href,
+          dialogType: 'ajax',
+          progress: {
+            type: 'fullscreen',
+            message: loadingAnnouncement || Drupal.t('Please wait...')
+          }
+        });
+
+        if (displayAnnouncement || focusSelector) {
+          var success = ajaxObject.success;
+          ajaxObject.success = function (response, status) {
+            success.bind(this)(response, status);
+
+            if (focusSelector) {
+              $(focusSelector).focus();
+            }
+
+            if (displayAnnouncement) {
+              Drupal.announce(displayAnnouncement);
+            }
+          };
+        }
+
+        ajaxObject.execute();
+
+        if (loadingAnnouncement) {
+          Drupal.announce(loadingAnnouncement);
+        }
+      });
+    }
+  };
+
   Drupal.behaviors.MediaLibraryItemSelection = {
     attach: function attach(context, settings) {
       var $form = $('.js-media-library-views-form', context);

@@ -53,6 +53,10 @@ class MediaLibrarySelectForm extends FieldPluginBase {
       'class' => ['media-library-views-form', 'js-media-library-views-form'],
     ];
 
+    // Add the view to the form state so the opener ID can be fetched from the
+    // view request object in ::updateWidget().
+    $form_state->set('view', $this->view);
+
     // Render checkboxes for all rows.
     $form[$this->options['id']]['#tree'] = TRUE;
     foreach ($this->view->result as $row_index => $row) {
@@ -83,7 +87,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
     // not the form action. This causes bugs when this form is rendered from an
     // AJAX path like /views/ajax, which cannot process AJAX form submits.
     $url = parse_url($form['#action'], PHP_URL_PATH);
-    $query = \Drupal::request()->query->all();
+    $query = $this->view->getRequest()->query->all();
     $query[FormBuilderInterface::AJAX_FORM_REQUEST] = TRUE;
     $form['actions']['submit']['#ajax'] = [
       'url' => Url::fromUserInput($url),
@@ -120,7 +124,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
 
     $ids = implode(',', $selected);
 
-    $opener_id = MediaLibraryState::fromRequest(\Drupal::request())->getOpenerId();
+    $opener_id = MediaLibraryState::fromRequest($form_state->get('view')->getRequest())->getOpenerId();
     if ($field_id = MediaLibraryWidget::getOpenerFieldId($opener_id)) {
       $response
         ->addCommand(new InvokeCommand("[data-media-library-widget-value=\"$field_id\"]", 'val', [$ids]))

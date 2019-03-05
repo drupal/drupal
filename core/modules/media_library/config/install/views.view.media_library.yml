@@ -3,10 +3,12 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.media.media_library
+    - image.style.media_library
   enforced:
     module:
       - media_library
   module:
+    - image
     - media
     - media_library
     - user
@@ -72,7 +74,7 @@ display:
         type: default
         options:
           grouping: {  }
-          row_class: 'media-library-item js-media-library-item js-click-to-select'
+          row_class: 'media-library-item media-library-item--grid js-media-library-item js-click-to-select'
           default_row_class: true
       row:
         type: fields
@@ -532,6 +534,8 @@ display:
         filters: false
         filter_groups: false
         arguments: false
+        header: false
+        css_class: false
       display_description: ''
       access:
         type: perm
@@ -662,9 +666,271 @@ display:
           entity_type: media
           entity_field: bundle
           plugin_id: string
+      header:
+        display_link_grid:
+          id: display_link_grid
+          table: views
+          field: display_link
+          display_id: widget
+          label: 'Grid'
+          plugin_id: display_link
+          empty: true
+        display_link_table:
+          id: display_link_table
+          table: views
+          field: display_link
+          display_id: widget_table
+          label: 'Table'
+          plugin_id: display_link
+          empty: true
+      css_class: 'media-library-view js-media-library-view media-library-view--widget'
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'url.query_args:sort_by'
+        - user.permissions
+      tags: {  }
+  widget_table:
+    display_plugin: page
+    id: widget_table
+    display_title: 'Widget (table)'
+    position: 3
+    display_options:
+      display_extenders: {  }
+      path: admin/content/media-widget-table
+      style:
+        type: table
+        options:
+          row_class: 'media-library-item media-library-item--table js-media-library-item js-click-to-select'
+          default_row_class: true
+      defaults:
+        style: false
+        row: false
+        fields: false
+        access: false
+        filters: false
+        filter_groups: false
+        arguments: false
+        header: false
+        css_class: false
+      row:
+        type: fields
+      fields:
+        media_library_select_form:
+          id: media_library_select_form
+          label: ''
+          table: media
+          field: media_library_select_form
+          relationship: none
+          entity_type: media
+          plugin_id: media_library_select_form
+          element_wrapper_class: js-click-to-select-checkbox
+          element_class: ''
+        thumbnail__target_id:
+          id: thumbnail__target_id
+          label: Thumbnail
+          table: media_field_data
+          field: thumbnail__target_id
+          relationship: none
+          type: image
+          entity_type: media
+          entity_field: thumbnail
+          plugin_id: field
+          settings:
+            image_style: media_library
+            image_link: ''
+        name:
+          id: name
+          label: Name
+          table: media_field_data
+          field: name
+          relationship: none
+          type: string
+          entity_type: media
+          entity_field: name
+          plugin_id: field
+          settings:
+            link_to_entity: false
+        uid:
+          id: uid
+          label: Author
+          table: media_field_revision
+          field: uid
+          relationship: none
+          type: entity_reference_label
+          entity_type: media
+          entity_field: uid
+          plugin_id: field
+          settings:
+            link: true
+        changed:
+          id: changed
+          label: Updated
+          table: media_field_data
+          field: changed
+          relationship: none
+          type: timestamp
+          entity_type: media
+          entity_field: changed
+          plugin_id: field
+          settings:
+            date_format: short
+            custom_date_format: ''
+            timezone: ''
+      access:
+        type: perm
+        options:
+          perm: 'view media'
+      filters:
+        status:
+          id: status
+          table: media_field_data
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: media
+          entity_field: status
+          plugin_id: boolean
+        name:
+          id: name
+          table: media_field_data
+          field: name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: name_op
+            label: Name
+            description: ''
+            use_operator: false
+            operator: name_op
+            identifier: name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: media
+          entity_field: name
+          plugin_id: string
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      arguments:
+        bundle:
+          id: bundle
+          table: media_field_data
+          field: bundle
+          relationship: none
+          group_type: group
+          admin_label: ''
+          default_action: ignore
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: fixed
+          default_argument_options:
+            argument: ''
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            items_per_page: 25
+            override: false
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          glossary: false
+          limit: 0
+          case: none
+          path_case: none
+          transform_dash: false
+          break_phrase: false
+          entity_type: media
+          entity_field: bundle
+          plugin_id: string
+      header:
+        display_link_grid:
+          id: display_link_grid
+          table: views
+          field: display_link
+          display_id: widget
+          label: 'Grid'
+          plugin_id: display_link
+          empty: true
+        display_link_table:
+          id: display_link_table
+          table: views
+          field: display_link
+          display_id: widget_table
+          label: 'Table'
+          plugin_id: display_link
+          empty: true
+      css_class: 'media-library-view js-media-library-view media-library-view--widget'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args

@@ -69,8 +69,8 @@ function media_library_theme() {
 function media_library_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
   if ($view->id() === 'media_library') {
     $output['#attached']['library'][] = 'media_library/view';
-    if ($view->current_display === 'widget') {
-      $query = MediaLibraryState::fromRequest(\Drupal::request())->all();
+    if (strpos($view->current_display, 'widget') === 0) {
+      $query = MediaLibraryState::fromRequest($view->getRequest())->all();
       // If the current query contains any parameters we use to contextually
       // filter the view, ensure they persist across AJAX rebuilds.
       // The ajax_path is shared for all AJAX views on the page, but our query
@@ -81,9 +81,6 @@ function media_library_views_post_render(ViewExecutable $view, &$output, CachePl
         $parsed_url = UrlHelper::parse($ajax_path);
         $query = array_merge($query, $parsed_url['query']);
         $ajax_path = $parsed_url['path'] . '?' . UrlHelper::buildQuery($query);
-        if (isset($query['media_library_remaining'])) {
-          $output['#attached']['drupalSettings']['media_library']['selection_remaining'] = (int) $query['media_library_remaining'];
-        }
       }
     }
   }
@@ -148,7 +145,7 @@ function media_library_form_alter(array &$form, FormStateInterface $form_state, 
   }
 
   // Add after build to fix media library views exposed filter's submit button.
-  if ($form_id === 'views_exposed_form' && $form['#id'] === 'views-exposed-form-media-library-widget') {
+  if ($form_id === 'views_exposed_form' && strpos($form['#id'], 'views-exposed-form-media-library-widget') === 0) {
     $form['#after_build'][] = '_media_library_views_form_media_library_after_build';
   }
 
