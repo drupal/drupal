@@ -299,21 +299,6 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       '#attributes' => [
         'class' => ['layout-builder__section'],
       ],
-      'configure' => [
-        '#type' => 'link',
-        '#title' => $this->t('Configure section'),
-        '#access' => $layout instanceof PluginFormInterface,
-        '#url' => Url::fromRoute('layout_builder.configure_section', [
-          'section_storage_type' => $storage_type,
-          'section_storage' => $storage_id,
-          'delta' => $delta,
-        ]),
-        '#attributes' => [
-          'class' => ['use-ajax', 'configure-section'],
-          'data-dialog-type' => 'dialog',
-          'data-dialog-renderer' => 'off_canvas',
-        ],
-      ],
       'remove' => [
         '#type' => 'link',
         '#title' => $this->t('Remove section <span class="visually-hidden">@section</span>', ['@section' => $delta + 1]),
@@ -327,6 +312,25 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
             'use-ajax',
             'layout-builder__link',
             'layout-builder__link--remove',
+          ],
+          'data-dialog-type' => 'dialog',
+          'data-dialog-renderer' => 'off_canvas',
+        ],
+      ],
+      'configure' => [
+        '#type' => 'link',
+        '#title' => $this->t('Configure section'),
+        '#access' => $layout instanceof PluginFormInterface,
+        '#url' => Url::fromRoute('layout_builder.configure_section', [
+          'section_storage_type' => $storage_type,
+          'section_storage' => $storage_id,
+          'delta' => $delta,
+        ]),
+        '#attributes' => [
+          'class' => [
+            'use-ajax',
+            'layout-builder__link',
+            'layout-builder__link--configure',
           ],
           'data-dialog-type' => 'dialog',
           'data-dialog-renderer' => 'off_canvas',

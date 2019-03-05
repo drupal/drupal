@@ -61,6 +61,7 @@
   display: inline-block;
   border-radius: 26px;
   margin-left: -10px;
+  margin-right: 6px;
 }
 
 .layout-builder__link--remove:hover {
