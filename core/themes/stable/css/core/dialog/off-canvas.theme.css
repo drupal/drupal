@@ -63,6 +63,8 @@
   font-size: 16px;
   font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
   text-align: left; /* LTR */
+  /* Ensure that long titles are not truncated. */
+  white-space: normal;
 }
 [dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
   float: right;
