@@ -2239,3 +2239,11 @@ function system_update_8601() {
 
   return t('The %install_profile install profile has been added to the installed module list.', ['%install_profile' => $install_profile]);
 }
+
+/**
+ * Remove the unused 'system.theme.data' from state.
+ */
+function system_update_8701() {
+  // The system.theme.data key is no longer used in Drupal 8.7.x.
+  \Drupal::state()->delete('system.theme.data');
+}

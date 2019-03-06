@@ -25,19 +25,30 @@ class WarmCacheUpdateFrom8dot6Test extends UpdatePathTestBase {
   }
 
   /**
-   * Tests that the content and configuration were properly updated.
+   * Tests \Drupal\Core\Update\UpdateKernel::fixSerializedExtensionObjects().
    */
   public function testUpdatedSite() {
+    // The state API cannot be used because the value is corrupted.
+    $row_count = Database::getConnection()->select('key_value')
+      ->condition('collection', 'state')
+      ->condition('name', 'system.theme.data')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertSame('1', $row_count, 'The system.theme.data key exists in state.');
     $this->runUpdates();
     $this->drupalGet('');
 
-    $this->resetAll();
     // Ensure that drupal-8.test-config-init.php has run correctly.
     $this->assertSame('test_mail_collector', $this->config('system.mail')->get('interface.default'));
     $this->assertSame('verbose', $this->config('system.logging')->get('error_level'));
     $this->assertSame(FALSE, $this->config('system.performance')->get('css.preprocess'));
     $this->assertSame(FALSE, $this->config('system.performance')->get('js.preprocess'));
     $this->assertSame('Australia/Sydney', $this->config('system.date')->get('timezone.default'));
+
+    // Ensure \Drupal\Core\Update\UpdateKernel::fixSerializedExtensionObjects()
+    // has removed the corrupted state key.
+    $this->assertNull(\Drupal::state()->get('system.theme.data'), 'The system.theme.data key does not exist in state.');
   }
 
   /**

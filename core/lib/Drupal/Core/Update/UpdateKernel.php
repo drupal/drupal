@@ -236,6 +236,8 @@ class UpdateKernel extends DrupalKernel {
       foreach ($container->getParameter('cache_bins') as $service_id => $bin) {
         $container->get($service_id)->deleteAll();
       }
+      // The system.theme.data key is no longer used in Drupal 8.7.x.
+      $container->get('state')->delete('system.theme.data');
       // Also rebuild themes because it uses state as cache.
       $container->get('theme_handler')->refreshInfo();
     }
