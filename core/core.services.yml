@@ -564,7 +564,7 @@ services:
     arguments: ['@entity_type.manager', '@language_manager', '@module_handler', '@typed_data_manager', '@cache.discovery']
   entity.repository:
     class: Drupal\Core\Entity\EntityRepository
-    arguments: ['@entity_type.manager', '@language_manager']
+    arguments: ['@entity_type.manager', '@language_manager', '@context.repository']
   entity_display.repository:
     class: Drupal\Core\Entity\EntityDisplayRepository
     arguments: ['@entity_type.manager', '@module_handler', '@cache.discovery', '@language_manager']
@@ -1005,7 +1005,7 @@ services:
     class: Drupal\Core\ParamConverter\EntityConverter
     tags:
       - { name: paramconverter }
-    arguments: ['@entity_type.manager', '@language_manager', '@entity.repository']
+    arguments: ['@entity_type.manager', '@entity.repository']
   paramconverter.entity_revision:
     class: Drupal\Core\ParamConverter\EntityRevisionParamConverter
     tags:
@@ -1016,7 +1016,7 @@ services:
     tags:
       # Use a higher priority than EntityConverter, see the class for details.
       - { name: paramconverter, priority: 5 }
-    arguments: ['@entity_type.manager', '@config.factory', '@router.admin_context', '@language_manager', '@entity.repository']
+    arguments: ['@entity_type.manager', '@config.factory', '@router.admin_context', '@entity.repository']
     lazy: true
   route_subscriber.module:
     class: Drupal\Core\EventSubscriber\ModuleRouteSubscriber

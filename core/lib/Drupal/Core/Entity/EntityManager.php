@@ -383,6 +383,61 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
+   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Core\Entity\EntityRepositoryInterface::getActive() instead.
+   *
+   * @see https://www.drupal.org/node/2549139
+   */
+  public function getActive($entity_type_id, $entity_id, array $contexts = NULL) {
+    @trigger_error('EntityManagerInterface::getActive() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepositoryInterface::getActive() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+    return $this->container->get('entity.repository')->getActive($entity_type_id, $entity_id, $contexts);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Core\Entity\EntityRepositoryInterface::getActiveMultiple()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/2549139
+   */
+  public function getActiveMultiple($entity_type_id, array $entity_ids, array $contexts = NULL) {
+    @trigger_error('EntityManagerInterface::getActiveMultiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepositoryInterface::getActiveMultiple() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+    return $this->container->get('entity.repository')->getActiveMultiple($entity_type_id, $entity_ids, $contexts);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Core\Entity\EntityRepositoryInterface::getCanonical()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/2549139
+   */
+  public function getCanonical($entity_type_id, $entity_id, array $contexts = NULL) {
+    @trigger_error('EntityManagerInterface::getCanonical() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepositoryInterface::getCanonical() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+    return $this->container->get('entity.repository')->getCanonical($entity_type_id, $entity_id, $contexts);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Core\Entity\EntityRepositoryInterface::getCanonicalMultiple()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/2549139
+   */
+  public function getCanonicalMultiple($entity_type_id, array $entity_ids, array $contexts = NULL) {
+    @trigger_error('EntityManagerInterface::getCanonicalMultiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepositoryInterface::getCanonicalMultiple() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+    return $this->container->get('entity.repository')->getCanonicalMultiple($entity_type_id, $entity_ids, $contexts);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
    * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    *   Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getAllViewModes()
    *   instead.

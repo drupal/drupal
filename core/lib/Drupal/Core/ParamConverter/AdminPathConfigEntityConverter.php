@@ -2,13 +2,11 @@
 
 namespace Drupal\Core\ParamConverter;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\AdminContext;
 use Symfony\Component\Routing\Route;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Makes sure the unmodified ConfigEntity is loaded on admin pages.
@@ -50,13 +48,11 @@ class AdminPathConfigEntityConverter extends EntityConverter {
    *   The config factory.
    * @param \Drupal\Core\Routing\AdminContext $admin_context
    *   The route admin context service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, AdminContext $admin_context, LanguageManagerInterface $language_manager = NULL, EntityRepositoryInterface $entity_repository = NULL) {
-    parent::__construct($entity_type_manager, $language_manager, $entity_repository);
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, AdminContext $admin_context, $entity_repository = NULL) {
+    parent::__construct($entity_type_manager, $entity_repository);
 
     $this->configFactory = $config_factory;
     $this->adminContext = $admin_context;

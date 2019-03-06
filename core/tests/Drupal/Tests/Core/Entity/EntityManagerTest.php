@@ -3,11 +3,11 @@
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -57,7 +57,7 @@ class EntityManagerTest extends UnitTestCase {
   protected $entityFieldManager;
 
   /**
-   * The entity display repository.
+   * The entity repository.
    *
    * @var \Drupal\Core\Entity\EntityRepositoryInterface|\Prophecy\Prophecy\ProphecyInterface
    */
@@ -272,6 +272,66 @@ class EntityManagerTest extends UnitTestCase {
     $this->entityTypeManager->getInstance(['example' => TRUE])->shouldBeCalled();
 
     $this->entityManager->getInstance(['example' => TRUE]);
+  }
+
+  /**
+   * Tests the getActive() method.
+   *
+   * @covers ::getActive
+   *
+   * @expectedDeprecation EntityManagerInterface::getActive() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepositoryInterface::getActive() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetActive() {
+    $entity_type_id = 'entity_test';
+    $entity_id = 0;
+    $contexts = [];
+    $this->entityRepository->getActive($entity_type_id, $entity_id, $contexts)->shouldBeCalled($entity_type_id, $entity_id, $contexts);
+    $this->entityManager->getActive($entity_type_id, $entity_id, $contexts);
+  }
+
+  /**
+   * Tests the getActiveMultiple() method.
+   *
+   * @covers ::getActiveMultiple
+   *
+   * @expectedDeprecation EntityManagerInterface::getActiveMultiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepositoryInterface::getActiveMultiple() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testActiveMultiple() {
+    $entity_type_id = 'entity_test';
+    $entity_ids = [0];
+    $contexts = [];
+    $this->entityRepository->getActiveMultiple($entity_type_id, $entity_ids, $contexts)->shouldBeCalled($entity_type_id, $entity_ids, $contexts);
+    $this->entityManager->getActiveMultiple($entity_type_id, $entity_ids, $contexts);
+  }
+
+  /**
+   * Tests the getCanonical() method.
+   *
+   * @covers ::getCanonical
+   *
+   * @expectedDeprecation EntityManagerInterface::getCanonical() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepositoryInterface::getCanonical() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetCanonical() {
+    $entity_type_id = 'entity_test';
+    $entity_id = '';
+    $contexts = [];
+    $this->entityRepository->getCanonical($entity_type_id, $entity_id, $contexts)->shouldBeCalled($entity_type_id, $entity_id, $contexts);
+    $this->entityManager->getCanonical($entity_type_id, $entity_id, $contexts);
+  }
+
+  /**
+   * Tests the getCanonicalMultiple() method.
+   *
+   * @covers ::getCanonicalMultiple
+   *
+   * @expectedDeprecation EntityManagerInterface::getCanonicalMultiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepositoryInterface::getCanonicalMultiple() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetCanonicalMultiple() {
+    $entity_type_id = 'entity_test';
+    $entity_ids = [0];
+    $contexts = [];
+    $this->entityRepository->getCanonicalMultiple($entity_type_id, $entity_ids, $contexts)->shouldBeCalled($entity_type_id, $entity_ids, $contexts);
+    $this->entityManager->getCanonicalMultiple($entity_type_id, $entity_ids, $contexts);
   }
 
 }
