@@ -1,3 +1,10 @@
+.layout-builder {
+  background-color: #fff;
+  outline: 3px solid #2f91da;
+  padding: 1.5em 1.5em .5em;
+  outline-offset: -3px;
+}
+
 .layout-builder__add-section {
   background-color: #f7f7f7;
   width: 100%;
