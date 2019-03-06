@@ -81,7 +81,9 @@
     attach: function attach() {
       var $blocks = $('#layout-builder [data-layout-block-uuid]');
       $blocks.find('input, textarea, select').prop('disabled', true);
-      $blocks.find('a').on('click mouseup touchstart', function (e) {
+      $blocks.find('a').not(function (index, element) {
+        return $(element).closest('[data-contextual-id]').length > 0;
+      }).on('click mouseup touchstart', function (e) {
         e.preventDefault();
         e.stopPropagation();
       });

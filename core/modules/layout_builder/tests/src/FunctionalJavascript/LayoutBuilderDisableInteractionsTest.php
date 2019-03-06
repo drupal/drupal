@@ -214,6 +214,65 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     // contextual link initialization occurs.
     $this->clickContextualLink('.block-field-blocknodebundle-with-section-fieldbody [data-contextual-id^="layout_builder_block"]', 'Configure');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
+    $page->pressButton('Close');
+    $this->assertNoElementAfterWait('#drupal-off-canvas');
+    $this->assertContextualLinkRetainsMouseup();
+  }
+
+  /**
+   * Makes sure contextual links respond to mouseup event.
+   *
+   * Disabling interactive elements includes preventing defaults on the mouseup
+   * event for links. However, this should not happen with contextual links.
+   * This is confirmed by clicking a contextual link then moving the mouse
+   * pointer. If mouseup is working properly, the draggable element will not
+   * be moved by the pointer moving.
+   */
+  protected function assertContextualLinkRetainsMouseup() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $body_block = $page->find('css', '.block-field-blocknodebundle-with-section-fieldbody');
+    $this->assertNotEmpty($body_block);
+
+    // Get the current Y position of the body block.
+    $body_block_y_position = $this->getSession()->evaluateScript("document.getElementsByClassName('block-field-blocknodebundle-with-section-fieldbody')[0].getBoundingClientRect().top + window.pageYOffset");
+
+    $body_block_contextual_link_button = $body_block->find('css', '.trigger');
+    $this->assertNotEmpty($body_block_contextual_link_button);
+
+    // If the body block contextual link is hidden, make it visible.
+    if ($body_block_contextual_link_button->hasClass('visually-hidden')) {
+      $this->toggleContextualTriggerVisibility('.block-field-blocknodebundle-with-section-fieldbody');
+    }
+
+    // For the purposes of this test, the contextual link must be accessed with
+    // discrete steps instead of using ContextualLinkClickTrait.
+    $body_block->pressButton('Open configuration options');
+    $body_block->clickLink('Configure');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // After the contextual link opens the dialog, move the mouse pointer
+    // elsewhere on the page.
+    $this->movePointerTo('#iframe-that-should-be-disabled');
+
+    // If mouseup is working properly, the body block should be in the same
+    // position it was when $body_block_y_position was declared.
+    $new_body_block_y_position = $this->getSession()->evaluateScript("document.getElementsByClassName('block-field-blocknodebundle-with-section-fieldbody')[0].getBoundingClientRect().top + window.pageYOffset");
+    $this->assertEquals($body_block_y_position, $new_body_block_y_position);
+  }
+
+  /**
+   * Moves mouse pointer to location of $selector.
+   *
+   * @param string $selector
+   *   CSS selector.
+   */
+  protected function movePointerTo($selector) {
+    $driver_session = $this->getSession()->getDriver()->getWebDriverSession();
+    $element = $driver_session->element('css selector', $selector);
+    $driver_session->moveto(['element' => $element->getID()]);
   }
 
   /**

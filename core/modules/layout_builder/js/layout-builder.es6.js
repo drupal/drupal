@@ -127,9 +127,7 @@
            */
           update(event, ui) {
             // Check if the region from the event and region for the item match.
-            const itemRegion = ui.item.closest(
-              '.layout-builder__region',
-            );
+            const itemRegion = ui.item.closest('.layout-builder__region');
             if (event.target === itemRegion[0]) {
               // Find the destination delta.
               const deltaTo = ui.item
@@ -174,10 +172,18 @@
       // Disable interactive elements inside preview blocks.
       const $blocks = $('#layout-builder [data-layout-block-uuid]');
       $blocks.find('input, textarea, select').prop('disabled', true);
-      $blocks.find('a').on('click mouseup touchstart', e => {
-        e.preventDefault();
-        e.stopPropagation();
-      });
+      $blocks
+        .find('a')
+        // Don't disable contextual links.
+        // @see \Drupal\contextual\Element\ContextualLinksPlaceholder
+        .not(
+          (index, element) =>
+            $(element).closest('[data-contextual-id]').length > 0,
+        )
+        .on('click mouseup touchstart', e => {
+          e.preventDefault();
+          e.stopPropagation();
+        });
 
       /*
        * In preview blocks, remove from the tabbing order all input elements
