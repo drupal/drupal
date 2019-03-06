@@ -100,8 +100,7 @@ class InlineBlockTest extends InlineBlockTestBase {
    *
    * @dataProvider layoutNoSaveProvider
    */
-  public function testNoLayoutSave($operation, $no_save_link_text, $confirm_button_text) {
-
+  public function testNoLayoutSave($operation, $no_save_button_text, $confirm_button_text) {
     $this->drupalLogin($this->drupalCreateUser([
       'access contextual links',
       'configure any layout',
@@ -119,7 +118,7 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     $this->drupalGet('node/1/layout');
     $this->addInlineBlockToLayout('Block title', 'The block body');
-    $this->clickLink($no_save_link_text);
+    $page->pressButton($no_save_button_text);
     if ($confirm_button_text) {
       $page->pressButton($confirm_button_text);
     }
@@ -143,7 +142,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->drupalGet('node/1/layout');
     $this->configureInlineBlock('The block body', 'The block updated body');
 
-    $this->clickLink($no_save_link_text);
+    $page->pressButton($no_save_button_text);
     if ($confirm_button_text) {
       $page->pressButton($confirm_button_text);
     }

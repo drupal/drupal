@@ -132,20 +132,27 @@ class OverridesEntityForm extends ContentEntityForm {
     $actions['#weight'] = -1000;
 
     $actions['discard_changes'] = [
-      '#type' => 'link',
-      '#title' => $this->t('Discard changes'),
-      '#attributes' => ['class' => ['button']],
-      '#url' => $this->sectionStorage->getLayoutBuilderUrl('discard_changes'),
+      '#type' => 'submit',
+      '#value' => $this->t('Discard changes'),
+      '#submit' => ['::redirectOnSubmit'],
+      '#redirect' => 'discard_changes',
     ];
-    // @todo This link should be conditionally displayed, see
+    // @todo This button should be conditionally displayed, see
     //   https://www.drupal.org/node/2917777.
     $actions['revert'] = [
-      '#type' => 'link',
-      '#title' => $this->t('Revert to defaults'),
-      '#attributes' => ['class' => ['button']],
-      '#url' => $this->sectionStorage->getLayoutBuilderUrl('revert'),
+      '#type' => 'submit',
+      '#value' => $this->t('Revert to defaults'),
+      '#submit' => ['::redirectOnSubmit'],
+      '#redirect' => 'revert',
     ];
     return $actions;
+  }
+
+  /**
+   * Form submission handler.
+   */
+  public function redirectOnSubmit(array $form, FormStateInterface $form_state) {
+    $form_state->setRedirectUrl($this->sectionStorage->getLayoutBuilderUrl($form_state->getTriggeringElement()['#redirect']));
   }
 
   /**

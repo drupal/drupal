@@ -295,8 +295,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementExists('css', '.field--name-nid');
     $assert_session->pageTextContains('ID');
     $assert_session->pageTextContains('1');
-    $assert_session->linkExists('Revert to defaults');
-    $this->clickLink('Revert to defaults');
+    $page->pressButton('Revert to defaults');
     $page->pressButton('Revert');
     $assert_session->addressEquals('node/1');
     $assert_session->pageTextContains('The layout has been reverted back to defaults.');
@@ -386,7 +385,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->clickLink('Manage layout');
     // Confirm the body field only is shown once.
     $assert_session->elementsCount('css', '.field--name-body', 1);
-    $this->clickLink('Discard changes');
+    $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
 
     $this->clickLink('Teaser');
@@ -402,7 +401,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementsCount('css', '.field--name-body', 1);
 
     // Enable a disabled view mode.
-    $page->clickLink('Discard changes');
+    $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
     $assert_session->addressEquals("$field_ui_prefix/display/teaser");
     $page->clickLink('Default');
@@ -531,7 +530,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('This is the default view mode');
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextContains('This is the default view mode');
-    $this->clickLink('Discard changes');
+    $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
 
     // Enable the full view mode and customize it.
@@ -551,7 +550,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('This is the full view mode');
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextContains('This is the full view mode');
-    $this->clickLink('Discard changes');
+    $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
 
     // Disable the full view mode, the default should be used again.
@@ -560,7 +559,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('This is the default view mode');
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextContains('This is the default view mode');
-    $this->clickLink('Discard changes');
+    $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
   }
 
@@ -958,7 +957,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementsCount('css', '.layout-builder__add-section', 2);
 
     // Revert the override.
-    $page->clickLink('Revert to defaults');
+    $page->pressButton('Revert to defaults');
     $page->pressButton('Revert');
     $assert_session->elementsCount('css', '.layout', 0);
     $assert_session->pageTextNotContains('The first node body');

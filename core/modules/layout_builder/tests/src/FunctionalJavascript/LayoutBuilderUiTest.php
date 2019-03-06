@@ -83,7 +83,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
 
     // Make and then discard changes.
     $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display/default/layout');
-    $page->clickLink('Discard changes');
+    $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
     $assert_session->pageTextNotContains('You have unsaved changes.');
 
