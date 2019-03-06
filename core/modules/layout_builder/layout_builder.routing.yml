@@ -2,6 +2,7 @@ layout_builder.choose_section:
   path: '/layout_builder/choose/section/{section_storage_type}/{section_storage}/{delta}'
   defaults:
    _controller: '\Drupal\layout_builder\Controller\ChooseSectionController::build'
+   _title: 'Choose a layout for this section'
   requirements:
     _permission: 'configure any layout'
     _layout_builder_access: 'view'
@@ -58,6 +59,7 @@ layout_builder.choose_block:
   path: '/layout_builder/choose/block/{section_storage_type}/{section_storage}/{delta}/{region}'
   defaults:
     _controller: '\Drupal\layout_builder\Controller\ChooseBlockController::build'
+    _title: 'Choose a block'
   requirements:
     _permission: 'configure any layout'
     _layout_builder_access: 'view'
@@ -71,6 +73,7 @@ layout_builder.add_block:
   path: '/layout_builder/add/block/{section_storage_type}/{section_storage}/{delta}/{region}/{plugin_id}'
   defaults:
     _form: '\Drupal\layout_builder\Form\AddBlockForm'
+    _title: 'Configure block'
   requirements:
     _permission: 'configure any layout'
     _layout_builder_access: 'view'
@@ -97,6 +100,7 @@ layout_builder.update_block:
   path: '/layout_builder/update/block/{section_storage_type}/{section_storage}/{delta}/{region}/{uuid}'
   defaults:
     _form: '\Drupal\layout_builder\Form\UpdateBlockForm'
+    _title: 'Configure block'
   requirements:
     _permission: 'configure any layout'
     _layout_builder_access: 'view'

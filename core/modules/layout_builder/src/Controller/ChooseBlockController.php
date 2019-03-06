@@ -74,7 +74,6 @@ class ChooseBlockController implements ContainerInjectionInterface {
    *   A render array.
    */
   public function build(SectionStorageInterface $section_storage, $delta, $region) {
-    $build['#title'] = $this->t('Choose a block');
     if ($this->entityTypeManager->hasDefinition('block_content_type') && $types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple()) {
       if (count($types) === 1) {
         $type = reset($types);

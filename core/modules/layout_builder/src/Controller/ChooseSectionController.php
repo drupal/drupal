@@ -59,8 +59,6 @@ class ChooseSectionController implements ContainerInjectionInterface {
    *   The render array.
    */
   public function build(SectionStorageInterface $section_storage, $delta) {
-    $output['#title'] = $this->t('Choose a layout');
-
     $items = [];
     $definitions = $this->layoutManager->getFilteredDefinitions('layout_builder', [], ['section_storage' => $section_storage]);
     foreach ($definitions as $plugin_id => $definition) {
