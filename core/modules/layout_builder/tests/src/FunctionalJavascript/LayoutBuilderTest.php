@@ -200,7 +200,8 @@ class LayoutBuilderTest extends WebDriverTestBase {
     // Remove a block.
     $this->clickContextualLink('.block-system-powered-by-block', 'Remove block');
     $this->assertOffCanvasFormAfterWait('layout_builder_remove_block');
-
+    $assert_session->pageTextContains('Are you sure you want to remove the This is the new label block?');
+    $assert_session->pageTextContains('This action cannot be undone.');
     $page->pressButton('Remove');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertNoElementAfterWait('#drupal-off-canvas');
@@ -226,6 +227,8 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->linkExists('Remove section');
     $this->clickLink('Remove section');
     $this->assertOffCanvasFormAfterWait('layout_builder_remove_section');
+    $assert_session->pageTextContains('Are you sure you want to remove section 1?');
+    $assert_session->pageTextContains('This action cannot be undone.');
     $page->pressButton('Remove');
     $assert_session->assertWaitOnAjaxRequest();
 

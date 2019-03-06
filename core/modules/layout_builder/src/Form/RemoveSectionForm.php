@@ -23,7 +23,7 @@ class RemoveSectionForm extends LayoutRebuildConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to remove this section?');
+    return $this->t('Are you sure you want to remove section @section?', ['@section' => $this->delta + 1]);
   }
 
   /**

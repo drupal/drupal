@@ -30,7 +30,13 @@ class RemoveBlockForm extends LayoutRebuildConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to remove this block?');
+    $label = $this->sectionStorage
+      ->getSection($this->delta)
+      ->getComponent($this->uuid)
+      ->getPlugin()
+      ->label();
+
+    return $this->t('Are you sure you want to remove the %label block?', ['%label' => $label]);
   }
 
   /**
