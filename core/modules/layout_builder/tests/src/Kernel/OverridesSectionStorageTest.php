@@ -13,6 +13,7 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionListInterface;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage
@@ -20,6 +21,8 @@ use Drupal\layout_builder\SectionListInterface;
  * @group layout_builder
  */
 class OverridesSectionStorageTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -46,6 +49,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->setUpCurrentUser();
     $this->installSchema('system', ['key_value_expire']);
     $this->installEntitySchema('entity_test');
 

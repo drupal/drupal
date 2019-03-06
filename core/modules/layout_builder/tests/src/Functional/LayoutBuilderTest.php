@@ -631,6 +631,39 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests loading a pending revision in the Layout Builder UI.
+   */
+  public function testPendingRevision() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    // Enable overrides.
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => TRUE], 'Save');
+
+    $storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node = $storage->load(1);
+    // Create a pending revision.
+    $pending_revision = $storage->createRevision($node, FALSE);
+    $pending_revision->set('title', 'The pending title of the first node');
+    $pending_revision->save();
+
+    // The original node title is available when viewing the node, but the
+    // pending title is visible within the Layout Builder UI.
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('The first node title');
+    $page->clickLink('Layout');
+    $assert_session->pageTextNotContains('The first node title');
+    $assert_session->pageTextContains('The pending title of the first node');
+  }
+
+  /**
    * Tests that deleting a View block used in Layout Builder works.
    */
   public function testDeletedView() {

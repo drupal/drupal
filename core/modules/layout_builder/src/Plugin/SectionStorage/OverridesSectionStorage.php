@@ -5,6 +5,7 @@ namespace Drupal\layout_builder\Plugin\SectionStorage;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -75,14 +76,22 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
   protected $sectionStorageManager;
 
   /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, SectionStorageManagerInterface $section_storage_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, SectionStorageManagerInterface $section_storage_manager, EntityRepositoryInterface $entity_repository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->sectionStorageManager = $section_storage_manager;
+    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -95,7 +104,8 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       $plugin_definition,
       $container->get('entity_type.manager'),
       $container->get('entity_field.manager'),
-      $container->get('plugin.manager.layout_builder.section_storage')
+      $container->get('plugin.manager.layout_builder.section_storage'),
+      $container->get('entity.repository')
     );
   }
 
@@ -163,7 +173,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
     @trigger_error('\Drupal\layout_builder\SectionStorageInterface::getSectionListFromId() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. The section list should be derived from context. See https://www.drupal.org/node/3016262.', E_USER_DEPRECATED);
     if (strpos($id, '.') !== FALSE) {
       list($entity_type_id, $entity_id) = explode('.', $id, 2);
-      $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($entity_id);
+      $entity = $this->entityRepository->getActive($entity_type_id, $entity_id);
       if ($entity instanceof FieldableEntityInterface && $entity->hasField(static::FIELD_NAME)) {
         return $entity->get(static::FIELD_NAME);
       }
@@ -216,7 +226,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       return NULL;
     }
 
-    $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($entity_id);
+    $entity = $this->entityRepository->getActive($entity_type_id, $entity_id);
     if ($entity instanceof FieldableEntityInterface && $entity->hasField(static::FIELD_NAME)) {
       return $entity;
     }

@@ -3,7 +3,7 @@
 namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -46,6 +46,13 @@ class OverridesSectionStorageTest extends UnitTestCase {
   protected $entityFieldManager;
 
   /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -54,12 +61,13 @@ class OverridesSectionStorageTest extends UnitTestCase {
     $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
     $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class);
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
+    $this->entityRepository = $this->prophesize(EntityRepositoryInterface::class);
 
     $definition = new SectionStorageDefinition([
       'id' => 'overrides',
       'class' => OverridesSectionStorage::class,
     ]);
-    $this->plugin = new OverridesSectionStorage([], 'overrides', $definition, $this->entityTypeManager->reveal(), $this->entityFieldManager->reveal(), $section_storage_manager->reveal());
+    $this->plugin = new OverridesSectionStorage([], 'overrides', $definition, $this->entityTypeManager->reveal(), $this->entityFieldManager->reveal(), $section_storage_manager->reveal(), $this->entityRepository->reveal());
   }
 
   /**
@@ -120,19 +128,15 @@ class OverridesSectionStorageTest extends UnitTestCase {
     $defaults['the_parameter_name'] = $id;
 
     if ($expected_entity_type_id) {
-      $entity_storage = $this->prophesize(EntityStorageInterface::class);
-
       $entity_without_layout = $this->prophesize(FieldableEntityInterface::class);
       $entity_without_layout->hasField(OverridesSectionStorage::FIELD_NAME)->willReturn(FALSE);
       $entity_without_layout->get(OverridesSectionStorage::FIELD_NAME)->shouldNotBeCalled();
-      $entity_storage->load('entity_without_layout')->willReturn($entity_without_layout->reveal());
+      $this->entityRepository->getActive('my_entity_type', 'entity_without_layout')->willReturn($entity_without_layout->reveal());
 
       $entity_with_layout = $this->prophesize(FieldableEntityInterface::class);
       $entity_with_layout->hasField(OverridesSectionStorage::FIELD_NAME)->willReturn(TRUE);
       $entity_with_layout->get(OverridesSectionStorage::FIELD_NAME)->willReturn('the_return_value');
-      $entity_storage->load('entity_with_layout')->willReturn($entity_with_layout->reveal());
-
-      $this->entityTypeManager->getStorage($expected_entity_type_id)->willReturn($entity_storage->reveal());
+      $this->entityRepository->getActive('my_entity_type', 'entity_with_layout')->willReturn($entity_with_layout->reveal());
 
       $entity_type = new EntityType(['id' => $expected_entity_type_id]);
       $this->entityTypeManager->getDefinition($expected_entity_type_id)->willReturn($entity_type);
@@ -191,23 +195,21 @@ class OverridesSectionStorageTest extends UnitTestCase {
    */
   public function testExtractEntityFromRoute($success, $expected_entity_type_id, $value, array $defaults) {
     if ($expected_entity_type_id) {
-      $entity_storage = $this->prophesize(EntityStorageInterface::class);
-
       $entity_without_layout = $this->prophesize(FieldableEntityInterface::class);
       $entity_without_layout->hasField(OverridesSectionStorage::FIELD_NAME)->willReturn(FALSE);
-      $entity_storage->load('entity_without_layout')->willReturn($entity_without_layout->reveal());
+      $this->entityRepository->getActive($expected_entity_type_id, 'entity_without_layout')->willReturn($entity_without_layout->reveal());
 
       $entity_with_layout = $this->prophesize(FieldableEntityInterface::class);
       $entity_with_layout->hasField(OverridesSectionStorage::FIELD_NAME)->willReturn(TRUE);
-      $entity_storage->load('entity_with_layout')->willReturn($entity_with_layout->reveal());
-      $this->entityTypeManager->getStorage($expected_entity_type_id)->willReturn($entity_storage->reveal());
+      $this->entityRepository->getActive($expected_entity_type_id, 'entity_with_layout')->willReturn($entity_with_layout->reveal());
+
       $entity_type = new EntityType([
         'id' => $expected_entity_type_id,
       ]);
       $this->entityTypeManager->getDefinition($expected_entity_type_id)->willReturn($entity_type);
     }
     else {
-      $this->entityTypeManager->getStorage(Argument::any())->shouldNotBeCalled();
+      $this->entityRepository->getActive(Argument::any())->shouldNotBeCalled();
     }
 
     $method = new \ReflectionMethod($this->plugin, 'extractEntityFromRoute');
