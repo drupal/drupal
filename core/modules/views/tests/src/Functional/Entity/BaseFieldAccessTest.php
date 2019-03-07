@@ -34,9 +34,7 @@ class BaseFieldAccessTest extends ViewTestBase {
    */
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
-    /** @var \Drupal\Core\Entity\EntityDefinitionUpdateManager $update_manager */
-    $update_manager = $this->container->get('entity.definition_update_manager');
-    $update_manager->applyUpdates();
+
     ViewTestData::createTestViews(get_class($this), ['comment_test_views']);
     \Drupal::state()->set('entity_test.views_data', [
       'entity_test' => [

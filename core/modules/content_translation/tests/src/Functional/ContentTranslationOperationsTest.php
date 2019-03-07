@@ -51,7 +51,6 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     \Drupal::service('content_translation.manager')->setEnabled('node', 'article', TRUE);
 
     \Drupal::service('router.builder')->rebuild();
-    \Drupal::service('entity.definition_update_manager')->applyUpdates();
 
     $this->baseUser1 = $this->drupalCreateUser(['access content overview']);
     $this->baseUser2 = $this->drupalCreateUser(['access content overview', 'create content translations', 'update content translations', 'delete content translations']);

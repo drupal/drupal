@@ -22,6 +22,15 @@ class FileViewsDataTest extends ViewsKernelTestBase {
   public static $modules = ['file', 'views', 'entity_test', 'user', 'field'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
+    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('entity_test_mul');
+  }
+
+  /**
    * Tests views data generated for file field relationship.
    *
    * @see file_field_views_data()

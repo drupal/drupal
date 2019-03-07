@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Entity\Traits;
 
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\entity_test\FieldStorageDefinition;
@@ -12,97 +13,207 @@ use Drupal\entity_test\FieldStorageDefinition;
 trait EntityDefinitionTestTrait {
 
   /**
+   * Applies all the detected valid changes.
+   *
+   * Use this with care, as it will apply updates for any module, which will
+   * lead to unpredictable results.
+   *
+   * @param string $entity_type_id
+   *   (optional) Applies changes only for the specified entity type ID.
+   *   Defaults to NULL.
+   */
+  protected function applyEntityUpdates($entity_type_id = NULL) {
+    $complete_change_list = \Drupal::entityDefinitionUpdateManager()->getChangeList();
+    if ($complete_change_list) {
+      // In case there are changes, explicitly invalidate caches.
+      \Drupal::entityTypeManager()->clearCachedDefinitions();
+      \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+    }
+
+    if ($entity_type_id) {
+      $complete_change_list = array_intersect_key($complete_change_list, [$entity_type_id => TRUE]);
+    }
+
+    foreach ($complete_change_list as $entity_type_id => $change_list) {
+      // Process entity type definition changes before storage definitions ones
+      // this is necessary when you change an entity type from non-revisionable
+      // to revisionable and at the same time add revisionable fields to the
+      // entity type.
+      if (!empty($change_list['entity_type'])) {
+        $this->doEntityUpdate($change_list['entity_type'], $entity_type_id);
+      }
+
+      // Process field storage definition changes.
+      if (!empty($change_list['field_storage_definitions'])) {
+        $storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
+        $original_storage_definitions = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions($entity_type_id);
+
+        foreach ($change_list['field_storage_definitions'] as $field_name => $change) {
+          $storage_definition = isset($storage_definitions[$field_name]) ? $storage_definitions[$field_name] : NULL;
+          $original_storage_definition = isset($original_storage_definitions[$field_name]) ? $original_storage_definitions[$field_name] : NULL;
+          $this->doFieldUpdate($change, $storage_definition, $original_storage_definition);
+        }
+      }
+    }
+  }
+
+  /**
+   * Performs an entity type definition update.
+   *
+   * @param string $op
+   *   The operation to perform, either static::DEFINITION_CREATED or
+   *   static::DEFINITION_UPDATED.
+   * @param string $entity_type_id
+   *   The entity type ID.
+   */
+  protected function doEntityUpdate($op, $entity_type_id) {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+    $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
+    switch ($op) {
+      case EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED:
+        \Drupal::service('entity_type.listener')->onEntityTypeCreate($entity_type);
+        break;
+
+      case EntityDefinitionUpdateManagerInterface::DEFINITION_UPDATED:
+        $original = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledDefinition($entity_type_id);
+        $original_field_storage_definitions = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions($entity_type_id);
+
+        \Drupal::service('entity_type.listener')->onFieldableEntityTypeUpdate($entity_type, $original, $field_storage_definitions, $original_field_storage_definitions);
+        break;
+    }
+  }
+
+  /**
+   * Performs a field storage definition update.
+   *
+   * @param string $op
+   *   The operation to perform, possible values are static::DEFINITION_CREATED,
+   *   static::DEFINITION_UPDATED or static::DEFINITION_DELETED.
+   * @param array|null $storage_definition
+   *   The new field storage definition.
+   * @param array|null $original_storage_definition
+   *   The original field storage definition.
+   */
+  protected function doFieldUpdate($op, $storage_definition = NULL, $original_storage_definition = NULL) {
+    switch ($op) {
+      case EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED:
+        \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($storage_definition);
+        break;
+
+      case EntityDefinitionUpdateManagerInterface::DEFINITION_UPDATED:
+        \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionUpdate($storage_definition, $original_storage_definition);
+        break;
+
+      case EntityDefinitionUpdateManagerInterface::DEFINITION_DELETED:
+        \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionDelete($original_storage_definition);
+        break;
+    }
+  }
+
+  /**
    * Enables a new entity type definition.
    */
   protected function enableNewEntityType() {
     $this->state->set('entity_test_new', TRUE);
-    $this->entityDefinitionUpdateManager->applyUpdates();
+    $this->applyEntityUpdates('entity_test_new');
   }
 
   /**
    * Resets the entity type definition.
    */
   protected function resetEntityType() {
-    $this->state->set('entity_test_update.entity_type', NULL);
-    $this->entityDefinitionUpdateManager->applyUpdates();
+    $updated_entity_type = $this->getUpdatedEntityTypeDefinition(FALSE, FALSE);
+    $updated_field_storage_definitions = $this->getUpdatedFieldStorageDefinitions(FALSE, FALSE);
+    $this->entityDefinitionUpdateManager->updateFieldableEntityType($updated_entity_type, $updated_field_storage_definitions);
   }
 
   /**
    * Updates the 'entity_test_update' entity type to revisionable.
+   *
+   * @param bool $perform_update
+   *   (optional) Whether the change should be performed by the entity
+   *   definition update manager.
    */
-  protected function updateEntityTypeToRevisionable() {
-    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
+  protected function updateEntityTypeToRevisionable($perform_update = FALSE) {
+    $translatable = $this->entityDefinitionUpdateManager->getEntityType('entity_test_update')->isTranslatable();
 
-    $keys = $entity_type->getKeys();
-    $keys['revision'] = 'revision_id';
-    $entity_type->set('entity_keys', $keys);
-    $entity_type->set('revision_table', 'entity_test_update_revision');
+    $updated_entity_type = $this->getUpdatedEntityTypeDefinition(TRUE, $translatable);
+    $updated_field_storage_definitions = $this->getUpdatedFieldStorageDefinitions(TRUE, $translatable);
 
-    $this->state->set('entity_test_update.entity_type', $entity_type);
+    if ($perform_update) {
+      $this->entityDefinitionUpdateManager->updateFieldableEntityType($updated_entity_type, $updated_field_storage_definitions);
+    }
   }
 
   /**
    * Updates the 'entity_test_update' entity type not revisionable.
+   *
+   * @param bool $perform_update
+   *   (optional) Whether the change should be performed by the entity
+   *   definition update manager.
    */
-  protected function updateEntityTypeToNotRevisionable() {
-    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
+  protected function updateEntityTypeToNotRevisionable($perform_update = FALSE) {
+    $translatable = $this->entityDefinitionUpdateManager->getEntityType('entity_test_update')->isTranslatable();
 
-    $keys = $entity_type->getKeys();
-    unset($keys['revision']);
-    $entity_type->set('entity_keys', $keys);
-    $entity_type->set('revision_table', NULL);
+    $updated_entity_type = $this->getUpdatedEntityTypeDefinition(FALSE, $translatable);
+    $updated_field_storage_definitions = $this->getUpdatedFieldStorageDefinitions(FALSE, $translatable);
 
-    $this->state->set('entity_test_update.entity_type', $entity_type);
+    if ($perform_update) {
+      $this->entityDefinitionUpdateManager->updateFieldableEntityType($updated_entity_type, $updated_field_storage_definitions);
+    }
   }
 
   /**
    * Updates the 'entity_test_update' entity type to translatable.
+   *
+   * @param bool $perform_update
+   *   (optional) Whether the change should be performed by the entity
+   *   definition update manager.
    */
-  protected function updateEntityTypeToTranslatable() {
-    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
+  protected function updateEntityTypeToTranslatable($perform_update = FALSE) {
+    $revisionable = $this->entityDefinitionUpdateManager->getEntityType('entity_test_update')->isRevisionable();
 
-    $entity_type->set('translatable', TRUE);
-    $entity_type->set('data_table', 'entity_test_update_data');
+    $updated_entity_type = $this->getUpdatedEntityTypeDefinition($revisionable, TRUE);
+    $updated_field_storage_definitions = $this->getUpdatedFieldStorageDefinitions($revisionable, TRUE);
 
-    if ($entity_type->isRevisionable()) {
-      $entity_type->set('revision_data_table', 'entity_test_update_revision_data');
+    if ($perform_update) {
+      $this->entityDefinitionUpdateManager->updateFieldableEntityType($updated_entity_type, $updated_field_storage_definitions);
     }
-
-    $this->state->set('entity_test_update.entity_type', $entity_type);
   }
 
   /**
    * Updates the 'entity_test_update' entity type to not translatable.
+   *
+   * @param bool $perform_update
+   *   (optional) Whether the change should be performed by the entity
+   *   definition update manager.
    */
-  protected function updateEntityTypeToNotTranslatable() {
-    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
+  protected function updateEntityTypeToNotTranslatable($perform_update = FALSE) {
+    $revisionable = $this->entityDefinitionUpdateManager->getEntityType('entity_test_update')->isRevisionable();
 
-    $entity_type->set('translatable', FALSE);
-    $entity_type->set('data_table', NULL);
+    $updated_entity_type = $this->getUpdatedEntityTypeDefinition($revisionable, FALSE);
+    $updated_field_storage_definitions = $this->getUpdatedFieldStorageDefinitions($revisionable, FALSE);
 
-    if ($entity_type->isRevisionable()) {
-      $entity_type->set('revision_data_table', NULL);
+    if ($perform_update) {
+      $this->entityDefinitionUpdateManager->updateFieldableEntityType($updated_entity_type, $updated_field_storage_definitions);
     }
-
-    $this->state->set('entity_test_update.entity_type', $entity_type);
   }
 
   /**
    * Updates the 'entity_test_update' entity type to revisionable and
    * translatable.
+   *
+   * @param bool $perform_update
+   *   (optional) Whether the change should be performed by the entity
+   *   definition update manager.
    */
-  protected function updateEntityTypeToRevisionableAndTranslatable() {
-    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
+  protected function updateEntityTypeToRevisionableAndTranslatable($perform_update = FALSE) {
+    $updated_entity_type = $this->getUpdatedEntityTypeDefinition(TRUE, TRUE);
+    $updated_field_storage_definitions = $this->getUpdatedFieldStorageDefinitions(TRUE, TRUE);
 
-    $keys = $entity_type->getKeys();
-    $keys['revision'] = 'revision_id';
-    $entity_type->set('entity_keys', $keys);
-    $entity_type->set('translatable', TRUE);
-    $entity_type->set('data_table', 'entity_test_update_data');
-    $entity_type->set('revision_table', 'entity_test_update_revision');
-    $entity_type->set('revision_data_table', 'entity_test_update_revision_data');
-
-    $this->state->set('entity_test_update.entity_type', $entity_type);
+    if ($perform_update) {
+      $this->entityDefinitionUpdateManager->updateFieldableEntityType($updated_entity_type, $updated_field_storage_definitions);
+    }
   }
 
   /**
@@ -309,7 +420,7 @@ trait EntityDefinitionTestTrait {
    *   An entity type definition.
    */
   protected function getUpdatedEntityTypeDefinition($revisionable = FALSE, $translatable = FALSE) {
-    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_update');
 
     if ($revisionable) {
       $keys = $entity_type->getKeys();
@@ -364,7 +475,8 @@ trait EntityDefinitionTestTrait {
    *   An array of field storage definition objects.
    */
   protected function getUpdatedFieldStorageDefinitions($revisionable = FALSE, $translatable = FALSE) {
-    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions('entity_test_update');
+    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $field_storage_definitions */
+    $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('entity_test_update');
 
     if ($revisionable) {
       // The 'langcode' is already available for the 'entity_test_update' entity

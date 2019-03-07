@@ -5,19 +5,24 @@
  * Contains install and update hooks.
  */
 
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+
 /**
  * Implements hook_install().
  */
 function contact_storage_test_install() {
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_type = $entity_type_manager->getDefinition('contact_message');
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
 
-  // Recreate the original entity type definition, in order to notify the
-  // manager of what changed. The change of storage backend will trigger
-  // schema installation.
+  $original = $entity_definition_update_manager->getEntityType('contact_message');
+  $entity_definition_update_manager->uninstallEntityType($original);
+
+  // Update the entity type definition and make it use the default SQL storage.
   // @see contact_storage_test_entity_type_alter()
-  $original = clone $entity_type;
-  $original->setStorageClass('Drupal\Core\Entity\ContentEntityNullStorage');
-
-  \Drupal::service('entity_type.listener')->onEntityTypeUpdate($entity_type, $original);
+  $entity_type = clone $original;
+  $entity_type->setStorageClass(SqlContentEntityStorage::class);
+  $keys = $entity_type->getKeys();
+  $keys['id'] = 'id';
+  $entity_type->set('entity_keys', $keys);
+  $entity_type->set('base_table', 'contact_message');
+  $entity_definition_update_manager->installEntityType($entity_type);
 }

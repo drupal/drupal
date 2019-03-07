@@ -65,15 +65,15 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     $this->entityTypeManager = \Drupal::entityTypeManager();
 
-    $this->installConfig(['filter', 'node', 'system']);
-
-    $this->installSchema('system', ['key_value_expire', 'sequences']);
-    $this->installSchema('node', ['node_access']);
-
     $this->installEntitySchema('entity_test_mulrev');
     $this->installEntitySchema('entity_test_mulrevpub');
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
+
+    $this->installConfig(['filter', 'node', 'system']);
+
+    $this->installSchema('system', ['key_value_expire', 'sequences']);
+    $this->installSchema('node', ['node_access']);
 
     $this->createContentType(['type' => 'page']);
 

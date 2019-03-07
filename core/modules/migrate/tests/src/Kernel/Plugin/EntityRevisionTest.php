@@ -35,10 +35,10 @@ class EntityRevisionTest extends MigrateTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig('node');
-    $this->installSchema('node', ['node_access']);
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
+    $this->installConfig('node');
+    $this->installSchema('node', ['node_access']);
   }
 
   /**

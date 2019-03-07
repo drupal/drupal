@@ -24,8 +24,8 @@ class MigrateCustomBlockTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(static::$modules);
     $this->installEntitySchema('block_content');
+    $this->installConfig(static::$modules);
 
     $this->executeMigrations([
       'd7_filter_format',

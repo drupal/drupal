@@ -21,13 +21,13 @@ function field_test_entity_type_alter(array &$entity_types) {
 function field_test_entity_info_translatable($entity_type_id = NULL, $translatable = NULL) {
   $stored_value = &drupal_static(__FUNCTION__, []);
   if (isset($entity_type_id)) {
-    $entity_type_manager = \Drupal::entityTypeManager();
-    $original = $entity_type_manager->getDefinition($entity_type_id);
+    $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+    $entity_type = $entity_definition_update_manager->getEntityType($entity_type_id);
     $stored_value[$entity_type_id] = $translatable;
-    if ($translatable != $original->isTranslatable()) {
-      $entity_type_manager->clearCachedDefinitions();
-      $entity_type = $entity_type_manager->getDefinition($entity_type_id);
-      \Drupal::service('entity_type.listener')->onEntityTypeUpdate($entity_type, $original);
+    if ($translatable != $entity_type->isTranslatable()) {
+      $entity_definition_update_manager->uninstallEntityType($entity_type);
+      $entity_type->set('translatable', $translatable);
+      $entity_definition_update_manager->installEntityType($entity_type);
     }
   }
   return $stored_value;

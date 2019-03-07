@@ -30,6 +30,7 @@ class ViewsDataTest extends OptionsTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
 
+    $this->installEntitySchema('entity_test');
     $field_name = 'test_options';
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,

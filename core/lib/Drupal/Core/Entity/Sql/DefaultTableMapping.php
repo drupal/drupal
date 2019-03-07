@@ -184,6 +184,7 @@ class DefaultTableMapping implements TableMappingInterface {
     $all_fields = array_merge($key_fields, array_diff($all_fields, $key_fields));
 
     $revision_metadata_fields = $revisionable ? array_values($entity_type->getRevisionMetadataKeys()) : [];
+    $revision_metadata_fields = array_intersect($revision_metadata_fields, array_keys($storage_definitions));
 
     if (!$revisionable && !$translatable) {
       // The base layout stores all the base field values in the base table.

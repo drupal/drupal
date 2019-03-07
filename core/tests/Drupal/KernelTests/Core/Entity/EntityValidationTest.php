@@ -44,6 +44,13 @@ class EntityValidationTest extends EntityKernelTestBase {
     ConfigurableLanguage::createFromLangcode('de')
       ->save();
 
+    $this->installEntitySchema('entity_test_mul');
+    $this->installEntitySchema('entity_test_mul_langcode_key');
+    $this->installEntitySchema('entity_test_mul_changed');
+    $this->installEntitySchema('entity_test_rev');
+    $this->installEntitySchema('entity_test_mulrev');
+    $this->installEntitySchema('entity_test_mulrev_changed');
+
     // Create the test field.
     module_load_install('entity_test');
     entity_test_install();

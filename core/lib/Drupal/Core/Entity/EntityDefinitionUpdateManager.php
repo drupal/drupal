@@ -172,33 +172,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    * {@inheritdoc}
    */
   public function applyUpdates() {
-    $complete_change_list = $this->getChangeList();
-    if ($complete_change_list) {
-      // self::getChangeList() only disables the cache and does not invalidate.
-      // In case there are changes, explicitly invalidate caches.
-      $this->clearCachedDefinitions();
-    }
-    foreach ($complete_change_list as $entity_type_id => $change_list) {
-      // Process entity type definition changes before storage definitions ones
-      // this is necessary when you change an entity type from non-revisionable
-      // to revisionable and at the same time add revisionable fields to the
-      // entity type.
-      if (!empty($change_list['entity_type'])) {
-        $this->doEntityUpdate($change_list['entity_type'], $entity_type_id);
-      }
-
-      // Process field storage definition changes.
-      if (!empty($change_list['field_storage_definitions'])) {
-        $storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id);
-        $original_storage_definitions = $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type_id);
-
-        foreach ($change_list['field_storage_definitions'] as $field_name => $change) {
-          $storage_definition = isset($storage_definitions[$field_name]) ? $storage_definitions[$field_name] : NULL;
-          $original_storage_definition = isset($original_storage_definitions[$field_name]) ? $original_storage_definitions[$field_name] : NULL;
-          $this->doFieldUpdate($change, $storage_definition, $original_storage_definition);
-        }
-      }
-    }
+    trigger_error('EntityDefinitionUpdateManagerInterface::applyUpdates() is deprecated in 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface::getChangeList() and execute each entity type and field storage update manually instead. See https://www.drupal.org/node/3034742.', E_USER_DEPRECATED);
   }
 
   /**
@@ -298,69 +272,9 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   }
 
   /**
-   * Performs an entity type definition update.
-   *
-   * @param string $op
-   *   The operation to perform, either static::DEFINITION_CREATED or
-   *   static::DEFINITION_UPDATED.
-   * @param string $entity_type_id
-   *   The entity type ID.
+   * {@inheritdoc}
    */
-  protected function doEntityUpdate($op, $entity_type_id) {
-    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-    switch ($op) {
-      case static::DEFINITION_CREATED:
-        $this->entityTypeListener->onEntityTypeCreate($entity_type);
-        break;
-
-      case static::DEFINITION_UPDATED:
-        $original = $this->entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type_id);
-        $this->entityTypeListener->onEntityTypeUpdate($entity_type, $original);
-        break;
-    }
-  }
-
-  /**
-   * Performs a field storage definition update.
-   *
-   * @param string $op
-   *   The operation to perform, possible values are static::DEFINITION_CREATED,
-   *   static::DEFINITION_UPDATED or static::DEFINITION_DELETED.
-   * @param array|null $storage_definition
-   *   The new field storage definition.
-   * @param array|null $original_storage_definition
-   *   The original field storage definition.
-   */
-  protected function doFieldUpdate($op, $storage_definition = NULL, $original_storage_definition = NULL) {
-    switch ($op) {
-      case static::DEFINITION_CREATED:
-        $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($storage_definition);
-        break;
-
-      case static::DEFINITION_UPDATED:
-        $this->fieldStorageDefinitionListener->onFieldStorageDefinitionUpdate($storage_definition, $original_storage_definition);
-        break;
-
-      case static::DEFINITION_DELETED:
-        $this->fieldStorageDefinitionListener->onFieldStorageDefinitionDelete($original_storage_definition);
-        break;
-    }
-  }
-
-  /**
-   * Gets a list of changes to entity type and field storage definitions.
-   *
-   * @return array
-   *   An associative array keyed by entity type id of change descriptors. Every
-   *   entry is an associative array with the following optional keys:
-   *   - entity_type: a scalar having only the DEFINITION_UPDATED value.
-   *   - field_storage_definitions: an associative array keyed by field name of
-   *     scalars having one value among:
-   *     - DEFINITION_CREATED
-   *     - DEFINITION_UPDATED
-   *     - DEFINITION_DELETED
-   */
-  protected function getChangeList() {
+  public function getChangeList() {
     $this->entityTypeManager->useCaches(FALSE);
     $this->entityFieldManager->useCaches(FALSE);
     $change_list = [];
