@@ -22,7 +22,6 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
   public function testToolbarToggling() {
     $admin_user = $this->drupalCreateUser([
       'access toolbar',
-      'access administration pages',
       'administer site configuration',
       'access content overview',
     ]);
