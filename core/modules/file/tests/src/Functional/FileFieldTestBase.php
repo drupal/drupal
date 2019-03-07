@@ -20,11 +20,9 @@ abstract class FileFieldTestBase extends BrowserTestBase {
   }
 
   /**
-  * Modules to enable.
-  *
-  * @var array
-  */
-  public static $modules = ['node', 'file', 'file_module_test', 'field_ui'];
+   * {@inheritdoc}
+   */
+  protected static $modules = ['node', 'file', 'file_module_test', 'field_ui'];
 
   /**
    * An user with administration permissions.
@@ -33,6 +31,9 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser(['access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer permissions', 'administer content types', 'administer node fields', 'administer node display', 'administer nodes', 'bypass node access']);
@@ -44,6 +45,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * Retrieves a sample file of the specified type.
    *
    * @return \Drupal\file\FileInterface
+   *   The new unsaved file entity.
    */
   public function getTestFile($type_name, $size = NULL) {
     // Get a file to upload.
@@ -142,25 +144,30 @@ abstract class FileFieldTestBase extends BrowserTestBase {
       $node = $node_storage->load($nid);
       $this->assertNotEqual($nid, $node->getRevisionId(), 'Node revision exists.');
     }
+    $this->drupalGet("node/$nid/edit");
+    $page = $this->getSession()->getPage();
 
     // Attach files to the node.
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     // File input name depends on number of files already uploaded.
     $field_num = count($node->{$field_name});
-    $name = 'files[' . $field_name . "_$field_num]";
-    if ($field_storage->getCardinality() != 1) {
-      $name .= '[]';
-    }
-    foreach ($files as $file) {
+    foreach ($files as $i => $file) {
+      $delta = $field_num + $i;
       $file_path = $this->container->get('file_system')->realpath($file->getFileUri());
+      $name = 'files[' . $field_name . '_' . $delta . ']';
+      if ($field_storage->getCardinality() != 1) {
+        $name .= '[]';
+      }
       if (count($files) == 1) {
         $edit[$name] = $file_path;
       }
       else {
-        $edit[$name][] = $file_path;
+        $page->attachFileToField($name, $file_path);
+        $this->drupalPostForm(NULL, [], t('Upload'));
       }
     }
-    $this->drupalPostForm("node/$nid/edit", $edit, t('Save'));
+
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     return $nid;
   }
