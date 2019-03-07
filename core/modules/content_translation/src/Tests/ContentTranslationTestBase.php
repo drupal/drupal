@@ -177,7 +177,6 @@ abstract class ContentTranslationTestBase extends WebTestBase {
 
     \Drupal::entityManager()->clearCachedDefinitions();
     \Drupal::service('router.builder')->rebuild();
-    \Drupal::service('entity.definition_update_manager')->applyUpdates();
   }
 
   /**

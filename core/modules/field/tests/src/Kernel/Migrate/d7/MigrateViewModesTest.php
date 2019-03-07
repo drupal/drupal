@@ -13,7 +13,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateViewModesTest extends MigrateDrupal7TestBase {
 
-  public static $modules = ['comment', 'node', 'taxonomy'];
+  public static $modules = ['comment', 'node', 'taxonomy', 'text'];
 
   /**
    * {@inheritdoc}

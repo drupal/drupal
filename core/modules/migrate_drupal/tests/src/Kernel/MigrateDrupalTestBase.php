@@ -22,7 +22,21 @@ abstract class MigrateDrupalTestBase extends MigrateTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('user');
+
+    $module_handler = \Drupal::moduleHandler();
+    if ($module_handler->moduleExists('node')) {
+      $this->installEntitySchema('node');
+    }
+    if ($module_handler->moduleExists('comment')) {
+      $this->installEntitySchema('comment');
+    }
+    if ($module_handler->moduleExists('taxonomy')) {
+      $this->installEntitySchema('taxonomy_term');
+    }
+    if ($module_handler->moduleExists('user')) {
+      $this->installEntitySchema('user');
+    }
+
     $this->installConfig(['migrate_drupal', 'system']);
   }
 

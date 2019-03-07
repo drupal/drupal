@@ -102,7 +102,6 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
       ->save();
     drupal_static_reset();
     \Drupal::service('router.builder')->rebuild();
-    \Drupal::service('entity.definition_update_manager')->applyUpdates();
 
     $edit['title[0][value]'] = $translated_title = $this->randomMachineName();
 

@@ -80,6 +80,23 @@ interface EntityDefinitionUpdateManagerInterface {
   public function getChangeSummary();
 
   /**
+   * Gets a list of changes to entity type and field storage definitions.
+   *
+   * @return array
+   *   An associative array keyed by entity type ID of change descriptors. Every
+   *   entry is an associative array with the following optional keys:
+   *   - entity_type: a scalar having one value among:
+   *     - EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED
+   *     - EntityDefinitionUpdateManagerInterface::DEFINITION_UPDATED
+   *   - field_storage_definitions: an associative array keyed by field name of
+   *     scalars having one value among:
+   *     - EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED
+   *     - EntityDefinitionUpdateManagerInterface::DEFINITION_UPDATED
+   *     - EntityDefinitionUpdateManagerInterface::DEFINITION_DELETED
+   */
+  public function getChangeList();
+
+  /**
    * Applies all the detected valid changes.
    *
    * Use this with care, as it will apply updates for any module, which will
@@ -90,6 +107,12 @@ interface EntityDefinitionUpdateManagerInterface {
    *   unacceptable data loss. In such a case, the site administrator needs to
    *   apply some other process, such as a custom update function or a
    *   migration via the Migrate module.
+   *
+   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0. Use
+   *    \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface::getChangeList()
+   *    and execute each entity type and field storage update manually instead.
+   *
+   * @see https://www.drupal.org/node/3034742
    */
   public function applyUpdates();
 

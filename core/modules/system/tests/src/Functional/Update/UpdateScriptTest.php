@@ -43,7 +43,6 @@ class UpdateScriptTest extends BrowserTestBase {
     parent::setUp();
     $this->updateUrl = Url::fromRoute('system.db_update');
     $this->updateUser = $this->drupalCreateUser(['administer software updates', 'access site in maintenance mode']);
-    \Drupal::service('entity.definition_update_manager')->applyUpdates();
   }
 
   /**

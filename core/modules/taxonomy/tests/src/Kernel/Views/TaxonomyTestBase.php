@@ -78,6 +78,7 @@ abstract class TaxonomyTestBase extends ViewsKernelTestBase {
     parent::setUp($import_test_views);
 
     // Install node config to create body field.
+    $this->installEntitySchema('node');
     $this->installConfig(['node', 'filter']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('taxonomy_term');

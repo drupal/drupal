@@ -37,8 +37,8 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
     // Install the themes used for this test.
     $this->container->get('theme_installer')->install(['bartik', 'seven']);
 
-    $this->installConfig(static::$modules);
     $this->installEntitySchema('block_content');
+    $this->installConfig(static::$modules);
 
     // Set Bartik and Seven as the default public and admin theme.
     $config = $this->config('system.theme');

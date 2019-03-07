@@ -270,6 +270,7 @@ EOS;
     $this->enableModules(['field_test']);
 
     // Create a field.
+    $this->installEntitySchema('entity_test');
     $display = EntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',

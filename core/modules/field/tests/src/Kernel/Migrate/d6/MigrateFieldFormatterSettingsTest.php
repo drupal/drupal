@@ -15,7 +15,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['menu_ui'];
+  public static $modules = ['menu_ui', 'node'];
 
   /**
    * {@inheritdoc}

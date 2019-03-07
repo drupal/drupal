@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 
 /**
  * Tests the default table mapping class for content entities stored in SQL.
@@ -15,6 +16,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  * @group Entity
  */
 class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
+
+  use EntityDefinitionTestTrait;
 
   /**
    * The table mapping for the tested entity type.
@@ -49,7 +52,7 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
     $this->tableMapping = $this->entityTypeManager->getStorage('entity_test_mulrev')->getTableMapping();
 
     // Ensure that the tables for the new field are created.
-    \Drupal::entityDefinitionUpdateManager()->applyUpdates();
+    $this->applyEntityUpdates('entity_test_mulrev');
   }
 
   /**

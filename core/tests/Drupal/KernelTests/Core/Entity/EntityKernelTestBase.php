@@ -78,8 +78,8 @@ abstract class EntityKernelTestBase extends KernelTestBase {
             // enabled in. The comment, node and taxonomy config and the
             // taxonomy_term schema need to be installed before the forum config
             // which in turn needs to be installed before field config.
-            $this->installConfig(['comment', 'node', 'taxonomy']);
             $this->installEntitySchema('taxonomy_term');
+            $this->installConfig(['comment', 'node', 'taxonomy']);
             $this->installConfig(['forum']);
           }
         }

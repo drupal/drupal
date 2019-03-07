@@ -147,6 +147,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
     $this->container->set('entity_type.manager', $this->entityTypeManager);
     $this->container->set('entity_field.manager', $this->entityFieldManager);
+    $this->container->set('entity.last_installed_schema.repository', $this->entityLastInstalledSchemaRepository);
   }
 
   /**
@@ -874,6 +875,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->entityType->expects($this->any())
       ->method('getRevisionMetadataKeys')
       ->will($this->returnValue($revision_metadata_keys));
+
+    $this->fieldDefinitions = $this->mockFieldDefinitions(array_values($revision_metadata_keys), ['isRevisionable' => TRUE]);
 
     $this->setUpEntityStorage();
 

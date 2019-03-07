@@ -28,8 +28,8 @@ class MigrateCustomBlockContentTranslationTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(['block_content']);
     $this->installEntitySchema('block_content');
+    $this->installConfig(['block_content']);
     $this->executeMigrations([
       'language',
       'd6_filter_format',
