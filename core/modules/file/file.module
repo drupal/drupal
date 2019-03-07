@@ -172,7 +172,7 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
     $uri = $file_system->copy($source->getFileUri(), $destination, $replace);
     $file = $source->createDuplicate();
     $file->setFileUri($uri);
-    $file->setFilename(drupal_basename($uri));
+    $file->setFilename($file_system->basename($uri));
     // If we are replacing an existing file re-use its database record.
     // @todo Do not create a new entity in order to update it. See
     //   https://www.drupal.org/node/2241865.
@@ -188,7 +188,7 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
     // If we are renaming around an existing file (rather than a directory),
     // use its basename for the filename.
     elseif ($replace == FILE_EXISTS_RENAME && is_file($destination)) {
-      $file->setFilename(drupal_basename($destination));
+      $file->setFilename($file_system->basename($destination));
     }
 
     $file->save();
@@ -267,7 +267,7 @@ function file_move(FileInterface $source, $destination = NULL, $replace = FILE_E
     // If we are renaming around an existing file (rather than a directory),
     // use its basename for the filename.
     elseif ($replace == FILE_EXISTS_RENAME && is_file($destination)) {
-      $file->setFilename(drupal_basename($destination));
+      $file->setFilename(\Drupal::service('file_system')->basename($destination));
     }
 
     $file->save();
@@ -590,7 +590,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
     // If we are renaming around an existing file (rather than a directory),
     // use its basename for the filename.
     elseif ($replace == FILE_EXISTS_RENAME && is_file($destination)) {
-      $file->setFilename(drupal_basename($destination));
+      $file->setFilename(\Drupal::service('file_system')->basename($destination));
     }
 
     $file->save();
@@ -1078,7 +1078,7 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   }
 
   // Set the permissions on the new file.
-  drupal_chmod($file->getFileUri());
+  $file_system->chmod($file->getFileUri());
 
   // If we are replacing an existing file re-use its database record.
   // @todo Do not create a new entity in order to update it. See

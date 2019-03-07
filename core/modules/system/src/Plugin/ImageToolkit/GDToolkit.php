@@ -237,7 +237,7 @@ class GDToolkit extends ImageToolkitBase {
       $local_wrappers = $this->streamWrapperManager->getWrappers(StreamWrapperInterface::LOCAL);
       if (!isset($local_wrappers[$scheme])) {
         $permanent_destination = $destination;
-        $destination = drupal_tempnam('temporary://', 'gd_');
+        $destination = $this->fileSystem->tempnam('temporary://', 'gd_');
       }
       // Convert stream wrapper URI to normal path.
       $destination = $this->fileSystem->realpath($destination);

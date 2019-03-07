@@ -31,7 +31,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
 
     $test_file = $this->getTestFile('text');
     // Coping a file to test uploads with non-latin filenames.
-    $filename = drupal_dirname($test_file->getFileUri()) . '/текстовый файл.txt';
+    $filename = \Drupal::service('file_system')->dirname($test_file->getFileUri()) . '/текстовый файл.txt';
     $test_file = file_copy($test_file, $filename);
 
     // Create a new node with the uploaded file.

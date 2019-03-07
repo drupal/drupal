@@ -83,7 +83,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     $http_header_blah = ["Accept-Language" => "blah;q=1"];
 
     // Create a private file for testing accessible by the admin user.
-    drupal_mkdir($this->privateFilesDirectory . '/test');
+    \Drupal::service('file_system')->mkdir($this->privateFilesDirectory . '/test');
     $filepath = 'private://test/private-file-test.txt';
     $contents = "file_put_contents() doesn't seem to appreciate empty strings so let's put in some data.";
     file_put_contents($filepath, $contents);

@@ -235,7 +235,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       // make sure that access is denied.
       $file_noaccess = array_shift($files);
       $original_uri_noaccess = $file_system->copy($file_noaccess->uri, $scheme . '://', FileSystemInterface::EXISTS_RENAME);
-      $generated_uri_noaccess = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . drupal_basename($original_uri_noaccess);
+      $generated_uri_noaccess = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $file_system->basename($original_uri_noaccess);
       $this->assertFalse(file_exists($generated_uri_noaccess), 'Generated file does not exist.');
       $generate_url_noaccess = $this->style->buildUrl($original_uri_noaccess);
 

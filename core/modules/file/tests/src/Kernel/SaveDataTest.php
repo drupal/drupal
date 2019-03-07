@@ -21,7 +21,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertTrue($result, 'Unnamed file saved correctly.');
 
     $this->assertEqual(file_default_scheme(), file_uri_scheme($result->getFileUri()), "File was placed in Drupal's files directory.");
-    $this->assertEqual($result->getFilename(), drupal_basename($result->getFileUri()), "Filename was set to the file's basename.");
+    $this->assertEqual($result->getFilename(), \Drupal::service('file_system')->basename($result->getFileUri()), "Filename was set to the file's basename.");
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
     $this->assertEqual($result->getMimeType(), 'application/octet-stream', 'A MIME type was set.');
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
@@ -46,7 +46,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertTrue($result, 'Unnamed file saved correctly.');
 
     $this->assertEqual('public', file_uri_scheme($result->getFileUri()), "File was placed in Drupal's files directory.");
-    $this->assertEqual($filename, drupal_basename($result->getFileUri()), 'File was named correctly.');
+    $this->assertEqual($filename, \Drupal::service('file_system')->basename($result->getFileUri()), 'File was named correctly.');
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
     $this->assertEqual($result->getMimeType(), 'text/plain', 'A MIME type was set.');
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");

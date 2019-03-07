@@ -781,7 +781,7 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
     }
   }
 
-  if (@drupal_mkdir($file, $mod)) {
+  if (@\Drupal::service('file_system')->mkdir($file, $mod)) {
     return TRUE;
   }
   else {

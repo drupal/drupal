@@ -167,9 +167,9 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
   /**
    * Gets the name of the directory from a given path.
    *
-   * This method is usually accessed through drupal_dirname(), which wraps
-   * around the normal PHP dirname() function, which does not support stream
-   * wrappers.
+   * This method is usually accessed through
+   * \Drupal\Core\File\FileSystemInterface::dirname(), which wraps around the
+   * normal PHP dirname() function, which does not support stream wrappers.
    *
    * @param string $uri
    *   An optional URI.
@@ -177,7 +177,7 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
    * @return string
    *   A string containing the directory name, or FALSE if not applicable.
    *
-   * @see drupal_dirname()
+   * @see \Drupal\Core\File\FileSystemInterface::dirname()
    */
   public function dirname($uri = NULL);
 

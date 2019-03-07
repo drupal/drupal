@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Image;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Image\Image;
 use Drupal\Core\ImageToolkit\ImageToolkitInterface;
 use Drupal\Tests\UnitTestCase;
@@ -210,9 +211,19 @@ class ImageTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $image = $this->getMock('Drupal\Core\Image\Image', ['chmod'], [$toolkit, $this->image->getSource()]);
-    $image->expects($this->any())
-      ->method('chmod')
-      ->will($this->returnValue(TRUE));
+
+    $file_system = $this->prophesize(FileSystemInterface::class);
+    $file_system->chmod($this->image->getSource())
+      ->willReturn(TRUE);
+
+    $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+      ->setMethods(['get'])
+      ->getMock();
+    $container->expects($this->once())
+      ->method('get')
+      ->with('file_system')
+      ->willReturn($file_system->reveal());
+    \Drupal::setContainer($container);
 
     $image->save();
   }
@@ -242,9 +253,19 @@ class ImageTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $image = $this->getMock('Drupal\Core\Image\Image', ['chmod'], [$toolkit, $this->image->getSource()]);
-    $image->expects($this->any())
-      ->method('chmod')
-      ->will($this->returnValue(FALSE));
+
+    $file_system = $this->prophesize(FileSystemInterface::class);
+    $file_system->chmod($this->image->getSource())
+      ->willReturn(FALSE);
+
+    $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+      ->setMethods(['get'])
+      ->getMock();
+    $container->expects($this->once())
+      ->method('get')
+      ->with('file_system')
+      ->willReturn($file_system->reveal());
+    \Drupal::setContainer($container);
 
     $this->assertFalse($image->save());
   }

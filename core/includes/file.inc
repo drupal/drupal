@@ -18,21 +18,23 @@ use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
 
 /**
- * Default mode for new directories. See drupal_chmod().
+ * Default mode for new directories.
  *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
  *   Use \Drupal\Core\File\FileSystem::CHMOD_DIRECTORY.
  *
+ * @see \Drupal\Core\File\FileSystemInterface::chmod()
  * @see https://www.drupal.org/node/2418133
  */
 const FILE_CHMOD_DIRECTORY = FileSystem::CHMOD_DIRECTORY;
 
 /**
- * Default mode for new files. See drupal_chmod().
+ * Default mode for new files.
  *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
  *   Use \Drupal\Core\File\FileSystem::CHMOD_FILE.
  *
+ * @see \Drupal\Core\File\FileSystemInterface::chmod()
  * @see https://www.drupal.org/node/2418133
  */
 const FILE_CHMOD_FILE = FileSystem::CHMOD_FILE;
@@ -372,7 +374,7 @@ function file_save_htaccess($directory, $private = TRUE, $force_overwrite = FALS
 
   // Write the .htaccess file.
   if (file_exists($directory) && is_writable($directory) && file_put_contents($htaccess_path, $htaccess_lines)) {
-    return drupal_chmod($htaccess_path, 0444);
+    return \Drupal::service('file_system')->chmod($htaccess_path, 0444);
   }
   else {
     $variables = ['%directory' => $directory, '@htaccess' => $htaccess_lines];
@@ -527,17 +529,17 @@ function file_unmanaged_prepare($source, &$destination = NULL, $replace = FILE_E
 
   // Build a destination URI if necessary.
   if (!isset($destination)) {
-    $destination = file_build_uri(drupal_basename($source));
+    $destination = file_build_uri($file_system->basename($source));
   }
 
   // Prepare the destination directory.
   if (file_prepare_directory($destination)) {
     // The destination is already a directory, so append the source basename.
-    $destination = file_stream_wrapper_uri_normalize($destination . '/' . drupal_basename($source));
+    $destination = file_stream_wrapper_uri_normalize($destination . '/' . $file_system->basename($source));
   }
   else {
     // Perhaps $destination is a dir/file?
-    $dirname = drupal_dirname($destination);
+    $dirname = $file_system->dirname($destination);
     if (!file_prepare_directory($dirname)) {
       // The destination is not valid.
       $logger->notice('File %file could not be moved/copied because the destination directory %destination is not configured correctly.', ['%file' => $original_source, '%destination' => $dirname]);
@@ -1060,12 +1062,13 @@ function file_upload_max_size() {
 /**
  * Sets the permissions on a file or directory.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  *   Use \Drupal\Core\File\FileSystem::chmod().
  *
  * @see https://www.drupal.org/node/2418133
  */
 function drupal_chmod($uri, $mode = NULL) {
+  @trigger_error('drupal_chmod() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::chmod(). See https://www.drupal.org/node/2418133.', E_USER_DEPRECATED);
   return \Drupal::service('file_system')->chmod($uri, $mode);
 }
 
@@ -1096,24 +1099,26 @@ function drupal_realpath($uri) {
 /**
  * Gets the name of the directory from a given path.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
  *   Use \Drupal\Core\File\FileSystem::dirname().
  *
  * @see https://www.drupal.org/node/2418133
  */
 function drupal_dirname($uri) {
+  @trigger_error('drupal_dirname() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::dirname(). See https://www.drupal.org/node/2418133.', E_USER_DEPRECATED);
   return \Drupal::service('file_system')->dirname($uri);
 }
 
 /**
  * Gets the filename from a given path.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
  *   Use \Drupal\Core\File\FileSystem::basename().
  *
  * @see https://www.drupal.org/node/2418133
  */
 function drupal_basename($uri, $suffix = NULL) {
+  @trigger_error('drupal_basename() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::basename(). See https://www.drupal.org/node/2418133.', E_USER_DEPRECATED);
   return \Drupal::service('file_system')->basename($uri, $suffix);
 }
 
@@ -1121,36 +1126,39 @@ function drupal_basename($uri, $suffix = NULL) {
  * Creates a directory, optionally creating missing components in the path to
  * the directory.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
  *   Use \Drupal\Core\File\FileSystem::mkdir().
  *
  * @see https://www.drupal.org/node/2418133
  */
 function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
+  @trigger_error('drupal_mkdir() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::mkdir(). See https://www.drupal.org/node/2418133.', E_USER_DEPRECATED);
   return \Drupal::service('file_system')->mkdir($uri, $mode, $recursive, $context);
 }
 
 /**
  * Removes a directory.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
  *   Use \Drupal\Core\File\FileSystem::rmdir().
  *
  * @see https://www.drupal.org/node/2418133
  */
 function drupal_rmdir($uri, $context = NULL) {
+  @trigger_error('drupal_rmdir() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::rmdir(). See https://www.drupal.org/node/2418133.', E_USER_DEPRECATED);
   return \Drupal::service('file_system')->rmdir($uri, $context);
 }
 
 /**
  * Creates a file with a unique filename in the specified directory.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
  *   Use \Drupal\Core\File\FileSystem::tempnam().
  *
  * @see https://www.drupal.org/node/2418133
  */
 function drupal_tempnam($directory, $prefix) {
+  @trigger_error('tempnam() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::tempnam(). See https://www.drupal.org/node/2418133.', E_USER_DEPRECATED);
   return \Drupal::service('file_system')->tempnam($directory, $prefix);
 }
 

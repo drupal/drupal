@@ -919,13 +919,15 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
   }
 
   $logger = \Drupal::logger('file system');
-  if (!is_dir($directory) && !drupal_mkdir($directory, NULL, TRUE)) {
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
+  if (!is_dir($directory) && !$file_system->mkdir($directory, NULL, TRUE)) {
     // If the directory does not exist and cannot be created.
     $form_state->setErrorByName($form_element['#parents'][0], t('The directory %directory does not exist and could not be created.', ['%directory' => $directory]));
     $logger->error('The directory %directory does not exist and could not be created.', ['%directory' => $directory]);
   }
 
-  if (is_dir($directory) && !is_writable($directory) && !drupal_chmod($directory)) {
+  if (is_dir($directory) && !is_writable($directory) && !$file_system->chmod($directory)) {
     // If the directory is not writable and cannot be made so.
     $form_state->setErrorByName($form_element['#parents'][0], t('The directory %directory exists but is not writable and could not be made writable.', ['%directory' => $directory]));
     $logger->error('The directory %directory exists but is not writable and could not be made writable.', ['%directory' => $directory]);
@@ -1337,12 +1339,12 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
   if (!isset($destination)) {
-    $path = file_build_uri(drupal_basename($parsed_url['path']));
+    $path = file_build_uri(\Drupal::service('file_system')->basename($parsed_url['path']));
   }
   else {
     if (is_dir($file_system->realpath($destination))) {
       // Prevent URIs with triple slashes when glueing parts together.
-      $path = str_replace('///', '//', "$destination/") . drupal_basename($parsed_url['path']);
+      $path = str_replace('///', '//', "$destination/") . \Drupal::service('file_system')->basename($parsed_url['path']);
     }
     else {
       $path = $destination;

@@ -81,12 +81,12 @@ class FileCopyTest extends FileTestBase {
     $this->assertTrue(file_exists($uri), 'File exists after copying onto itself.');
 
     // Copy the file into same directory without renaming fails.
-    $new_filepath = $file_system->copy($uri, drupal_dirname($uri), FileSystemInterface::EXISTS_ERROR);
+    $new_filepath = $file_system->copy($uri, $file_system->dirname($uri), FileSystemInterface::EXISTS_ERROR);
     $this->assertFalse($new_filepath, 'Copying onto itself fails.');
     $this->assertTrue(file_exists($uri), 'File exists after copying onto itself.');
 
     // Copy the file into same directory with renaming works.
-    $new_filepath = $file_system->copy($uri, drupal_dirname($uri), FileSystemInterface::EXISTS_RENAME);
+    $new_filepath = $file_system->copy($uri, $file_system->dirname($uri), FileSystemInterface::EXISTS_RENAME);
     $this->assertTrue($new_filepath, 'Copying into same directory works.');
     $this->assertNotEqual($new_filepath, $uri, 'Copied file has a new name.');
     $this->assertTrue(file_exists($uri), 'Original file exists after copying onto itself.');

@@ -705,15 +705,21 @@ function update_verify_update_archive($project, $archive_file, $directory) {
     }
   }
 
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
   if (empty($files)) {
-    $errors[] = t('%archive_file does not contain any .info.yml files.', ['%archive_file' => drupal_basename($archive_file)]);
+    $errors[] = t('%archive_file does not contain any .info.yml files.', ['%archive_file' => $file_system->basename($archive_file)]);
   }
   elseif (!$compatible_project) {
     $errors[] = \Drupal::translation()->formatPlural(
       count($incompatible),
       '%archive_file contains a version of %names that is not compatible with Drupal @version.',
       '%archive_file contains versions of modules or themes that are not compatible with Drupal @version: %names',
-      ['@version' => \Drupal::CORE_COMPATIBILITY, '%archive_file' => drupal_basename($archive_file), '%names' => implode(', ', $incompatible)]
+      [
+        '@version' => \Drupal::CORE_COMPATIBILITY,
+        '%archive_file' => $file_system->basename($archive_file),
+        '%names' => implode(', ', $incompatible),
+      ]
     );
   }
 

@@ -16,7 +16,9 @@ class RetrieveFileTest extends BrowserTestBase {
    */
   public function testFileRetrieving() {
     // Test 404 handling by trying to fetch a randomly named file.
-    drupal_mkdir($sourcedir = 'public://' . $this->randomMachineName());
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $file_system->mkdir($sourcedir = 'public://' . $this->randomMachineName());
     $filename = 'Файл для тестирования ' . $this->randomMachineName();
     $url = file_create_url($sourcedir . '/' . $filename);
     $retrieved_file = system_retrieve_file($url);
@@ -38,7 +40,7 @@ class RetrieveFileTest extends BrowserTestBase {
     $file_system->delete($retrieved_file);
 
     // Test downloading file to a different location.
-    drupal_mkdir($targetdir = 'temporary://' . $this->randomMachineName());
+    $file_system->mkdir($targetdir = 'temporary://' . $this->randomMachineName());
     $retrieved_file = system_retrieve_file($url, $targetdir);
     $this->assertEqual($retrieved_file, "$targetdir/$encoded_filename", 'Sane path for downloaded file returned (temporary:// scheme).');
     $this->assertTrue(is_file($retrieved_file), 'Downloaded file does exist (temporary:// scheme).');

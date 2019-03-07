@@ -304,7 +304,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     }
 
     // Get the folder for the final location of this style.
-    $directory = drupal_dirname($derivative_uri);
+    $directory = \Drupal::service('file_system')->dirname($derivative_uri);
 
     // Build the destination folder tree if it doesn't already exist.
     if (!\Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {

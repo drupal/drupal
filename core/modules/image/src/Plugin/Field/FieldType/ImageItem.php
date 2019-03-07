@@ -344,10 +344,10 @@ class ImageItem extends FileItem {
     $extension = array_rand(array_combine($extensions, $extensions));
     // Generate a max of 5 different images.
     if (!isset($images[$extension][$min_resolution][$max_resolution]) || count($images[$extension][$min_resolution][$max_resolution]) <= 5) {
-      $tmp_file = drupal_tempnam('temporary://', 'generateImage_');
-      $destination = $tmp_file . '.' . $extension;
       /** @var \Drupal\Core\File\FileSystemInterface $file_system */
       $file_system = \Drupal::service('file_system');
+      $tmp_file = $file_system->tempnam('temporary://', 'generateImage_');
+      $destination = $tmp_file . '.' . $extension;
       try {
         $file_system->move($tmp_file, $destination);
       }
@@ -359,7 +359,7 @@ class ImageItem extends FileItem {
         $image->setFileUri($path);
         $image->setOwnerId(\Drupal::currentUser()->id());
         $image->setMimeType(\Drupal::service('file.mime_type.guesser')->guess($path));
-        $image->setFileName(drupal_basename($path));
+        $image->setFileName($file_system->basename($path));
         $destination_dir = static::doGetUploadLocation($settings);
         $file_system->prepareDirectory($destination_dir, FileSystemInterface::CREATE_DIRECTORY);
         $destination = $destination_dir . '/' . basename($path);

@@ -86,13 +86,15 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     $dirname = $this->randomMachineName();
     $dir = $site_path . '/files/' . $dirname;
     $readonlydir = $this->scheme . '://' . $dirname;
-    $this->assertFalse(@drupal_mkdir($readonlydir, 0775, 0), 'Unable to create directory with read-only stream wrapper.');
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $this->assertFalse(@$file_system->mkdir($readonlydir, 0775, 0), 'Unable to create directory with read-only stream wrapper.');
     // Create a temporary directory for testing purposes
-    $this->assertTrue(drupal_mkdir($dir), 'Test directory created.');
+    $this->assertTrue($file_system->mkdir($dir), 'Test directory created.');
     // Test the rmdir() function by attempting to remove the directory.
-    $this->assertFalse(@drupal_rmdir($readonlydir), 'Unable to delete directory with read-only stream wrapper.');
+    $this->assertFalse(@$file_system->rmdir($readonlydir), 'Unable to delete directory with read-only stream wrapper.');
     // Remove the temporary directory.
-    drupal_rmdir($dir);
+    $file_system->rmdir($dir);
   }
 
 }

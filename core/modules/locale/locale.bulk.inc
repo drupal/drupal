@@ -426,7 +426,7 @@ function locale_translate_batch_finished($success, array $results) {
  */
 function locale_translate_file_create($filepath) {
   $file = new stdClass();
-  $file->filename = drupal_basename($filepath);
+  $file->filename = \Drupal::service('file_system')->basename($filepath);
   $file->uri = $filepath;
   $file->timestamp = filemtime($file->uri);
   return $file;

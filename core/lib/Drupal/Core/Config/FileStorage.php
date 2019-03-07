@@ -156,7 +156,7 @@ class FileStorage implements StorageInterface {
       throw new StorageException('Failed to write configuration file: ' . $this->getFilePath($name));
     }
     else {
-      drupal_chmod($target);
+      \Drupal::service('file_system')->chmod($target);
     }
 
     $this->fileCache->set($target, $data);
@@ -248,7 +248,7 @@ class FileStorage implements StorageInterface {
     if ($success && $this->collection != StorageInterface::DEFAULT_COLLECTION) {
       // Remove empty directories.
       if (!(new \FilesystemIterator($this->getCollectionDirectory()))->valid()) {
-        drupal_rmdir($this->getCollectionDirectory());
+        \Drupal::service('file_system')->rmdir($this->getCollectionDirectory());
       }
     }
     return $success;

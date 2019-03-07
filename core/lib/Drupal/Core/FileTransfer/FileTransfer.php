@@ -272,7 +272,7 @@ abstract class FileTransfer {
    */
   protected function copyDirectoryJailed($source, $destination) {
     if ($this->isDirectory($destination)) {
-      $destination = $destination . '/' . drupal_basename($source);
+      $destination = $destination . '/' . \Drupal::service('file_system')->basename($source);
     }
     $this->createDirectory($destination);
     foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
@@ -364,7 +364,7 @@ abstract class FileTransfer {
     $chroot = '';
     while (count($parts)) {
       $check = implode($parts, '/');
-      if ($this->isFile($check . '/' . drupal_basename(__FILE__))) {
+      if ($this->isFile($check . '/' . \Drupal::service('file_system')->basename(__FILE__))) {
         // Remove the trailing slash.
         return substr($chroot, 0, -1);
       }

@@ -30,11 +30,13 @@ class ValidatorTest extends FileManagedUnitTestBase {
 
     $this->image = File::create();
     $this->image->setFileUri('core/misc/druplicon.png');
-    $this->image->setFilename(drupal_basename($this->image->getFileUri()));
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $this->image->setFilename($file_system->basename($this->image->getFileUri()));
 
     $this->nonImage = File::create();
     $this->nonImage->setFileUri('core/assets/vendor/jquery/jquery.min.js');
-    $this->nonImage->setFilename(drupal_basename($this->nonImage->getFileUri()));
+    $this->nonImage->setFilename($file_system->basename($this->nonImage->getFileUri()));
   }
 
   /**

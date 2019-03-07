@@ -32,7 +32,9 @@ class DirectoryTest extends FileTestBase {
     // Create the directories.
     $parent_path = $directory . DIRECTORY_SEPARATOR . $parent;
     $child_path = $parent_path . DIRECTORY_SEPARATOR . $child;
-    $this->assertTrue(drupal_mkdir($child_path, 0775, TRUE), t('No error reported when creating new local directories.'), 'File');
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $this->assertTrue($file_system->mkdir($child_path, 0775, TRUE), t('No error reported when creating new local directories.'), 'File');
 
     // Ensure new directories also exist.
     $this->assertTrue(is_dir($parent_path), t('New parent directory actually exists.'), 'File');
@@ -46,8 +48,8 @@ class DirectoryTest extends FileTestBase {
     $this->assertDirectoryPermissions($directory, $old_mode);
 
     // Check creating a directory using an absolute path.
-    $absolute_path = \Drupal::service('file_system')->realpath($directory) . DIRECTORY_SEPARATOR . $this->randomMachineName() . DIRECTORY_SEPARATOR . $this->randomMachineName();
-    $this->assertTrue(drupal_mkdir($absolute_path, 0775, TRUE), 'No error reported when creating new absolute directories.', 'File');
+    $absolute_path = $file_system->realpath($directory) . DIRECTORY_SEPARATOR . $this->randomMachineName() . DIRECTORY_SEPARATOR . $this->randomMachineName();
+    $this->assertTrue($file_system->mkdir($absolute_path, 0775, TRUE), 'No error reported when creating new absolute directories.', 'File');
     $this->assertDirectoryPermissions($absolute_path, 0775);
   }
 
@@ -77,7 +79,7 @@ class DirectoryTest extends FileTestBase {
       // in the directory on any recent version of Windows.
 
       // Make directory read only.
-      @drupal_chmod($directory, 0444);
+      @$file_system->chmod($directory, 0444);
       $this->assertFalse($file_system->prepareDirectory($directory, 0), 'Error reported for a non-writeable directory.', 'File');
 
       // Test directory permission modification.

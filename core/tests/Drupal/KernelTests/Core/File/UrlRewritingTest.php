@@ -76,19 +76,21 @@ class UrlRewritingTest extends FileTestBase {
     $uri = $this->createUri();
     $url = file_create_url($uri);
     $public_directory_path = \Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath();
-    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . $public_directory_path . '/' . drupal_basename($uri), $url, 'Correctly generated a CDN URL for a created file.');
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . $public_directory_path . '/' . $file_system->basename($uri), $url, 'Correctly generated a CDN URL for a created file.');
 
     // Test alteration of file URLs to use root-relative URLs.
     \Drupal::state()->set('file_test.hook_file_url_alter', 'root-relative');
     $uri = $this->createUri();
     $url = file_create_url($uri);
-    $this->assertEqual(base_path() . '/' . $public_directory_path . '/' . drupal_basename($uri), $url, 'Correctly generated a root-relative URL for a created file.');
+    $this->assertEqual(base_path() . '/' . $public_directory_path . '/' . $file_system->basename($uri), $url, 'Correctly generated a root-relative URL for a created file.');
 
     // Test alteration of file URLs to use a protocol-relative URLs.
     \Drupal::state()->set('file_test.hook_file_url_alter', 'protocol-relative');
     $uri = $this->createUri();
     $url = file_create_url($uri);
-    $this->assertEqual('/' . base_path() . '/' . $public_directory_path . '/' . drupal_basename($uri), $url, 'Correctly generated a protocol-relative URL for a created file.');
+    $this->assertEqual('/' . base_path() . '/' . $public_directory_path . '/' . $file_system->basename($uri), $url, 'Correctly generated a protocol-relative URL for a created file.');
   }
 
   /**
@@ -112,7 +114,7 @@ class UrlRewritingTest extends FileTestBase {
     $uri = $this->createUri();
     $url = file_create_url($uri);
     $public_directory_path = \Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath();
-    $this->assertSame(base_path() . $public_directory_path . '/' . rawurlencode(drupal_basename($uri)), file_url_transform_relative($url));
+    $this->assertSame(base_path() . $public_directory_path . '/' . rawurlencode(\Drupal::service('file_system')->basename($uri)), file_url_transform_relative($url));
   }
 
 }

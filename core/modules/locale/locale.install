@@ -44,7 +44,7 @@ function locale_uninstall() {
     }
     // Delete the JavaScript translations directory if empty.
     if (!file_scan_directory($locale_js_directory, '/.*/')) {
-      drupal_rmdir($locale_js_directory);
+      \Drupal::service('file_system')->rmdir($locale_js_directory);
     }
   }
 

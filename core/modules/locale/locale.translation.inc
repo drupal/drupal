@@ -271,7 +271,7 @@ function locale_translation_source_build($project, $langcode, $filename = NULL) 
       'version' => $project->version,
       'type' => LOCALE_TRANSLATION_LOCAL,
       'filename' => locale_translation_build_server_pattern($source, basename($source->server_pattern)),
-      'directory' => locale_translation_build_server_pattern($source, drupal_dirname($source->server_pattern)),
+      'directory' => locale_translation_build_server_pattern($source, \Drupal::service('file_system')->dirname($source->server_pattern)),
     ];
     $files[LOCALE_TRANSLATION_LOCAL]->uri = $files[LOCALE_TRANSLATION_LOCAL]->directory . '/' . $files[LOCALE_TRANSLATION_LOCAL]->filename;
   }

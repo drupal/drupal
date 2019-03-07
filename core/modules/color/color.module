@@ -88,7 +88,9 @@ function color_library_info_alter(&$libraries, $extension) {
               foreach ($color_paths as $color_path) {
                 // Color module currently requires unique file names to be used,
                 // which allows us to compare different file paths.
-                if (drupal_basename($path) == drupal_basename($color_path)) {
+                /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+                $file_system = \Drupal::service('file_system');
+                if ($file_system->basename($path) == $file_system->basename($color_path)) {
                   // Replace the path to the new css file.
                   // This keeps the order of the stylesheets intact.
                   $index = array_search($path, array_keys($libraries[$name]['css'][$category]));
@@ -429,7 +431,7 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
     }
   }
   if (isset($file) && $file = dirname($file)) {
-    @drupal_rmdir($file);
+    @\Drupal::service('file_system')->rmdir($file);
   }
 
   // No change in color config, use the standard theme from color.inc.
@@ -459,8 +461,10 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
     ->save();
 
   // Copy over neutral images.
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
   foreach ($info['copy'] as $file) {
-    $base = drupal_basename($file);
+    $base = $file_system->basename($file);
     $source = $paths['source'] . $file;
     try {
       $filepath = $file_system->copy($source, $paths['target'] . $base);
@@ -502,7 +506,7 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
 
       // Rewrite stylesheet with new colors.
       $style = _color_rewrite_stylesheet($theme, $info, $paths, $palette, $style);
-      $base_file = drupal_basename($file);
+      $base_file = $file_system->basename($file);
       $css[] = $paths['target'] . $base_file;
       _color_save_stylesheet($paths['target'] . $base_file, $style, $paths);
     }
@@ -595,7 +599,7 @@ function _color_save_stylesheet($file, $style, &$paths) {
   $paths['files'][] = $filepath;
 
   // Set standard file permissions for webserver-generated files.
-  drupal_chmod($file);
+  \Drupal::service('file_system')->chmod($file);
 }
 
 /**
@@ -645,8 +649,10 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
   // Cut out slices.
   foreach ($info['slices'] as $file => $coord) {
     list($x, $y, $width, $height) = $coord;
-    $base = drupal_basename($file);
-    $image = \Drupal::service('file_system')->realpath($paths['target'] . $base);
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $base = $file_system->basename($file);
+    $image = $file_system->realpath($paths['target'] . $base);
 
     // Cut out slice.
     if ($file == 'screenshot.png') {
@@ -666,8 +672,8 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
     imagedestroy($slice);
     $paths['files'][] = $image;
 
-    // Set standard file permissions for webserver-generated files
-    drupal_chmod($image);
+    // Set standard file permissions for webserver-generated files.
+    $file_system->chmod($image);
 
     // Build before/after map of image paths.
     $paths['map'][$file] = $base;

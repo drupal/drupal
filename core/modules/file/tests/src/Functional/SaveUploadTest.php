@@ -125,7 +125,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->drupalPostForm('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
     $this->assertRaw(t('You WIN!'));
-    $this->assertTrue(is_file('temporary://' . $dir . '/' . trim(drupal_basename($image3_realpath))));
+    $this->assertTrue(is_file('temporary://' . $dir . '/' . trim(\Drupal::service('file_system')->basename($image3_realpath))));
   }
 
   /**
@@ -346,12 +346,14 @@ class SaveUploadTest extends FileManagedTestBase {
   public function testDrupalMovingUploadedFileError() {
     // Create a directory and make it not writable.
     $test_directory = 'test_drupal_move_uploaded_file_fail';
-    drupal_mkdir('temporary://' . $test_directory, 0000);
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $file_system->mkdir('temporary://' . $test_directory, 0000);
     $this->assertTrue(is_dir('temporary://' . $test_directory));
 
     $edit = [
       'file_subdir' => $test_directory,
-      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
+      'files[file_test_upload]' => $file_system->realpath($this->image->getFileUri()),
     ];
 
     \Drupal::state()->set('file_test.disable_error_collection', TRUE);

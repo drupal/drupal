@@ -97,4 +97,46 @@ class FileSystemDeprecationTest extends KernelTestBase {
     $this->assertNotNull(file_upload_max_size());
   }
 
+  /**
+   * @expectedDeprecation drupal_chmod() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::chmod(). See https://www.drupal.org/node/2418133.
+   */
+  public function testDeprecatedDrupalChmod() {
+    $this->assertNotNull(drupal_chmod(''));
+  }
+
+  /**
+   * @expectedDeprecation drupal_dirname() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::dirname(). See https://www.drupal.org/node/2418133.
+   */
+  public function testDeprecatedDrupalDirname() {
+    $this->assertNotNull(drupal_dirname(''));
+  }
+
+  /**
+   * @expectedDeprecation drupal_basename() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::basename(). See https://www.drupal.org/node/2418133.
+   */
+  public function testDeprecatedDrupalBasename() {
+    $this->assertNotNull(drupal_basename(''));
+  }
+
+  /**
+   * @expectedDeprecation drupal_mkdir() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::mkdir(). See https://www.drupal.org/node/2418133.
+   */
+  public function testDeprecatedDrupalMkdir() {
+    $this->assertNotNull(drupal_mkdir('public://test.txt'));
+  }
+
+  /**
+   * @expectedDeprecation drupal_rmdir() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::rmdir(). See https://www.drupal.org/node/2418133.
+   */
+  public function testDeprecatedDrupalRmdir() {
+    $this->assertNotNull(drupal_rmdir('public://test.txt'));
+  }
+
+  /**
+   * @expectedDeprecation tempnam() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::tempnam(). See https://www.drupal.org/node/2418133.
+   */
+  public function testDeprecatedDrupalTempnam() {
+    $this->assertNotNull(drupal_tempnam('temporary://', 'file'));
+  }
+
 }
