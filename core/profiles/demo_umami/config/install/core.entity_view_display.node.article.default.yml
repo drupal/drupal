@@ -47,3 +47,4 @@ content:
     third_party_settings: {  }
 hidden:
   content_moderation_control: true
+  langcode: true

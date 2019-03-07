@@ -17,6 +17,12 @@ function content_translation_install() {
   // hook_module_implements_alter() is run among the last ones.
   module_set_weight('content_translation', 10);
 
+  // Skip the guidance messages about enabling translation features if the
+  // module was installed in the Drupal installation process.
+  if (drupal_installation_attempted()) {
+    return;
+  }
+
   // Translation works when at least two languages are added.
   if (count(\Drupal::languageManager()->getLanguages()) < 2) {
     $t_args = [
