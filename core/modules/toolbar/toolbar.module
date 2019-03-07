@@ -159,18 +159,6 @@ function toolbar_toolbar() {
     '#weight' => -20,
   ];
 
-  // If the current user cannot access administration pages, we can save a large
-  // amount of unnecessary work by ending here. It'd be better to actually know
-  // if the admin menu tree is empty for them, but trying to load that tree only
-  // happens in a #pre_render callback, and at that point, it's too late. The
-  // entire toolbar is rendered with the 'user.permissions' #cache context, so
-  // we can safely do this here and it'll still be cached correctly.
-  // @see toolbar_prerender_toolbar_administration_tray()
-  // @see toolbar_page_top()
-  if (!\Drupal::currentUser()->hasPermission('access administration pages')) {
-    return $items;
-  }
-
   // To conserve bandwidth, we only include the top-level links in the HTML.
   // The subtrees are fetched through a JSONP script that is generated at the
   // toolbar_subtrees route. We provide the JavaScript requesting that JSONP
