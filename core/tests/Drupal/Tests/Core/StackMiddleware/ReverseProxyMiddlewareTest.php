@@ -37,10 +37,10 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
 
     $middleware = new ReverseProxyMiddleware($this->mockHttpKernel, $settings);
     // Mock a request object.
-    $request = $this->getMock('Symfony\Component\HttpFoundation\Request', ['setTrustedHeaderName', 'setTrustedProxies']);
-    // setTrustedHeaderName() should never fire.
+    $request = $this->getMock('Symfony\Component\HttpFoundation\Request', ['setTrustedProxies']);
+    // setTrustedProxies() should never fire.
     $request->expects($this->never())
-      ->method('setTrustedHeaderName');
+      ->method('setTrustedProxies');
     // Actually call the check method.
     $middleware->handle($request);
   }
@@ -89,6 +89,9 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
    * @group legacy
    */
   public function testReverseProxyEnabledLegacy($provided_settings, $expected_trusted_header_set, array $expected_deprecations) {
+    if (!method_exists(Request::class, 'setTrustedHeaderName')) {
+      $this->markTestSkipped('The method \Symfony\Component\HttpFoundation\Request::setTrustedHeaderName() does not exist therefore testing on Symfony 4 or greater.');
+    }
     $this->expectedDeprecations($expected_deprecations);
     // Enable reverse proxy and add test values.
     $settings = new Settings(['reverse_proxy' => 1] + $provided_settings);
@@ -132,9 +135,8 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
   }
 
   /**
-   * Tests that trusted header methods are called.
+   * Tests that trusted headers are set correctly.
    *
-   * \Symfony\Component\HttpFoundation\Request::setTrustedHeaderName() and
    * \Symfony\Component\HttpFoundation\Request::setTrustedProxies() should
    * always be called when reverse proxy settings are enabled.
    *
