@@ -42,7 +42,12 @@ install:
   - responsive_image
   - content_moderation
   - workflows
+  - language
+  - locale
+  - config_translation
+  - content_translation
   - demo_umami_tour
 themes:
   - seven
   - umami
+keep_english: true

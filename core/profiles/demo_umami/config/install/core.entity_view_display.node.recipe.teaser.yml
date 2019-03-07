@@ -36,3 +36,4 @@ hidden:
   field_recipe_instruction: true
   field_summary: true
   field_tags: true
+  langcode: true

@@ -23,4 +23,5 @@ content:
     third_party_settings: {  }
     label: hidden
 hidden:
+  langcode: true
   member_for: true
