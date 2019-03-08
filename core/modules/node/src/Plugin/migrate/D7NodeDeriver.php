@@ -3,13 +3,11 @@
 namespace Drupal\node\Plugin\migrate;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrationDeriverTrait;
-use Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface;
-use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
+use Drupal\migrate_drupal\FieldDiscoveryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,34 +24,6 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
   protected $basePluginId;
 
   /**
-   * Already-instantiated cckfield plugins, keyed by ID.
-   *
-   * @var \Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface[]
-   */
-  protected $cckPluginCache;
-
-  /**
-   * The CCK plugin manager.
-   *
-   * @var \Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface
-   */
-  protected $cckPluginManager;
-
-  /**
-   * Already-instantiated field plugins, keyed by ID.
-   *
-   * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface[]
-   */
-  protected $fieldPluginCache;
-
-  /**
-   * The field plugin manager.
-   *
-   * @var \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface
-   */
-  protected $fieldPluginManager;
-
-  /**
    * Whether or not to include translations.
    *
    * @var bool
@@ -61,22 +31,26 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
   protected $includeTranslations;
 
   /**
+   * The migration field discovery service.
+   *
+   * @var \Drupal\migrate_drupal\FieldDiscoveryInterface
+   */
+  protected $fieldDiscovery;
+
+  /**
    * D7NodeDeriver constructor.
    *
    * @param string $base_plugin_id
    *   The base plugin ID for the plugin ID.
-   * @param \Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManagerInterface $cck_manager
-   *   The CCK plugin manager.
-   * @param \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface $field_manager
-   *   The field plugin manager.
    * @param bool $translations
    *   Whether or not to include translations.
+   * @param \Drupal\migrate_drupal\FieldDiscoveryInterface $field_discovery
+   *   The migration field discovery service.
    */
-  public function __construct($base_plugin_id, MigrateCckFieldPluginManagerInterface $cck_manager, MigrateFieldPluginManagerInterface $field_manager, $translations) {
+  public function __construct($base_plugin_id, $translations, FieldDiscoveryInterface $field_discovery) {
     $this->basePluginId = $base_plugin_id;
-    $this->cckPluginManager = $cck_manager;
-    $this->fieldPluginManager = $field_manager;
     $this->includeTranslations = $translations;
+    $this->fieldDiscovery = $field_discovery;
   }
 
   /**
@@ -86,9 +60,8 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
     // Translations don't make sense unless we have content_translation.
     return new static(
       $base_plugin_id,
-      $container->get('plugin.manager.migrate.cckfield'),
-      $container->get('plugin.manager.migrate.field'),
-      $container->get('module_handler')->moduleExists('content_translation')
+      $container->get('module_handler')->moduleExists('content_translation'),
+      $container->get('migrate_drupal.field_discovery')
     );
   }
 
@@ -109,24 +82,6 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
       // If the d7_node_type requirements failed, that means we do not have a
       // Drupal source database configured - there is nothing to generate.
       return $this->derivatives;
-    }
-
-    $fields = [];
-    try {
-      $source_plugin = static::getSourcePlugin('d7_field_instance');
-      $source_plugin->checkRequirements();
-
-      // Read all field instance definitions in the source database.
-      foreach ($source_plugin as $row) {
-        if ($row->getSourceProperty('entity_type') == 'node') {
-          $fields[$row->getSourceProperty('bundle')][$row->getSourceProperty('field_name')] = $row->getSource();
-        }
-      }
-    }
-    catch (RequirementsException $e) {
-      // If checkRequirements() failed then the field module did not exist and
-      // we do not have any fields. Therefore, $fields will be empty and below
-      // we'll create a migration just for the node properties.
     }
 
     try {
@@ -158,33 +113,9 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
           $values['migration_dependencies']['required'][] = 'd7_node:' . $node_type;
         }
 
+        /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
         $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($values);
-        if (isset($fields[$node_type])) {
-          foreach ($fields[$node_type] as $field_name => $info) {
-            $field_type = $info['type'];
-            try {
-              $plugin_id = $this->fieldPluginManager->getPluginIdFromFieldType($field_type, ['core' => 7], $migration);
-              if (!isset($this->fieldPluginCache[$field_type])) {
-                $this->fieldPluginCache[$field_type] = $this->fieldPluginManager->createInstance($plugin_id, ['core' => 7], $migration);
-              }
-              $this->fieldPluginCache[$field_type]
-                ->defineValueProcessPipeline($migration, $field_name, $info);
-            }
-            catch (PluginNotFoundException $ex) {
-              try {
-                $plugin_id = $this->cckPluginManager->getPluginIdFromFieldType($field_type, ['core' => 7], $migration);
-                if (!isset($this->cckPluginCache[$field_type])) {
-                  $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($plugin_id, ['core' => 7], $migration);
-                }
-                $this->cckPluginCache[$field_type]
-                  ->processCckFieldValues($migration, $field_name, $info);
-              }
-              catch (PluginNotFoundException $ex) {
-                $migration->setProcessOfProperty($field_name, $field_name);
-              }
-            }
-          }
-        }
+        $this->fieldDiscovery->addBundleFieldProcesses($migration, 'node', $node_type);
         $this->derivatives[$node_type] = $migration->getPluginDefinition();
       }
     }

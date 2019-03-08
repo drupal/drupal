@@ -16,47 +16,21 @@ class User extends FieldMigration {
   public function getProcess() {
     if (!$this->init) {
       $this->init = TRUE;
-      $definition['source'] = [
-        'entity_type' => 'user',
-        'ignore_map' => TRUE,
-      ] + $this->source;
-      $definition['destination']['plugin'] = 'null';
-      $definition['idMap']['plugin'] = 'null';
-      if (\Drupal::moduleHandler()->moduleExists('field')) {
-        $definition['source']['plugin'] = 'd7_field_instance';
-        $field_migration = $this->migrationPluginManager->createStubMigration($definition);
-        foreach ($field_migration->getSourcePlugin() as $row) {
-          $field_name = $row->getSourceProperty('field_name');
-          $field_type = $row->getSourceProperty('type');
-          if (empty($field_type)) {
-            continue;
-          }
-          if ($this->fieldPluginManager->hasDefinition($field_type)) {
-            if (!isset($this->fieldPluginCache[$field_type])) {
-              $plugin_id = $this->fieldPluginManager->getPluginIdFromFieldType($field_type, [], $this);
-              $this->fieldPluginCache[$field_type] = $this->fieldPluginManager->createInstance($plugin_id, [], $this);
-            }
-            $info = $row->getSource();
-            $this->fieldPluginCache[$field_type]
-              ->defineValueProcessPipeline($this, $field_name, $info);
-          }
-          else {
-            if ($this->cckPluginManager->hasDefinition($field_type)) {
-              if (!isset($this->cckPluginCache[$field_type])) {
-                $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($field_type, [], $this);
-              }
-              $info = $row->getSource();
-              $this->cckPluginCache[$field_type]
-                ->processCckFieldValues($this, $field_name, $info);
-            }
-            else {
-              $this->process[$field_name] = $field_name;
-            }
-          }
-        }
-      }
+      $this->fieldDiscovery->addEntityFieldProcesses($this, 'user');
+
+      $definition = [
+        'source' => [
+          'plugin' => 'profile_field',
+          'ignore_map' => TRUE,
+        ],
+        'idMap' => [
+          'plugin' => 'null',
+        ],
+        'destination' => [
+          'plugin' => 'null',
+        ],
+      ];
       try {
-        $definition['source']['plugin'] = 'profile_field';
         $profile_migration = $this->migrationPluginManager->createStubMigration($definition);
         // Ensure that Profile is enabled in the source DB.
         $profile_migration->checkRequirements();
