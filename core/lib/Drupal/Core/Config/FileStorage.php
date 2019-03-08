@@ -76,7 +76,7 @@ class FileStorage implements StorageInterface {
    */
   protected function ensureStorage() {
     $dir = $this->getCollectionDirectory();
-    $success = \Drupal::service('file_system')->prepareDirectory($dir, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+    $success = $this->getFileSystem()->prepareDirectory($dir, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
     // Only create .htaccess file in root directory.
     if ($dir == $this->directory) {
       $success = $success && file_save_htaccess($this->directory, TRUE, TRUE);
@@ -156,7 +156,7 @@ class FileStorage implements StorageInterface {
       throw new StorageException('Failed to write configuration file: ' . $this->getFilePath($name));
     }
     else {
-      \Drupal::service('file_system')->chmod($target);
+      $this->getFileSystem()->chmod($target);
     }
 
     $this->fileCache->set($target, $data);
@@ -172,7 +172,7 @@ class FileStorage implements StorageInterface {
       return FALSE;
     }
     $this->fileCache->delete($this->getFilePath($name));
-    return drupal_unlink($this->getFilePath($name));
+    return $this->getFileSystem()->unlink($this->getFilePath($name));
   }
 
   /**
@@ -248,7 +248,7 @@ class FileStorage implements StorageInterface {
     if ($success && $this->collection != StorageInterface::DEFAULT_COLLECTION) {
       // Remove empty directories.
       if (!(new \FilesystemIterator($this->getCollectionDirectory()))->valid()) {
-        \Drupal::service('file_system')->rmdir($this->getCollectionDirectory());
+        $this->getFileSystem()->rmdir($this->getCollectionDirectory());
       }
     }
     return $success;
@@ -356,6 +356,16 @@ class FileStorage implements StorageInterface {
       $dir = $this->directory . '/' . str_replace('.', '/', $this->collection);
     }
     return $dir;
+  }
+
+  /**
+   * Returns file system service.
+   *
+   * @return \Drupal\Core\File\FileSystemInterface
+   *   The file system service.
+   */
+  private function getFileSystem() {
+    return \Drupal::service('file_system');
   }
 
 }
