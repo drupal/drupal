@@ -47,16 +47,6 @@ class TaxonomyParentUpdateTest extends UpdatePathTestBase {
    * @see taxonomy_update_8503()
    */
   public function testTaxonomyUpdateParents() {
-    // Force the update hook to only run one term per batch.
-    drupal_rewrite_settings([
-      'settings' => [
-        'entity_update_batch_size' => (object) [
-          'value' => 1,
-          'required' => TRUE,
-        ],
-      ],
-    ]);
-
     // Run updates.
     $this->runUpdates();
 

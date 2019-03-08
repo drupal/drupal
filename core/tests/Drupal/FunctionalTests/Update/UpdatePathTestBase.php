@@ -266,6 +266,12 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
       'required' => TRUE,
     ];
 
+    // Force every update hook to only run one entity per batch.
+    $settings['entity_update_batch_size'] = (object) [
+      'value' => 1,
+      'required' => TRUE,
+    ];
+
     $this->writeSettings($settings);
   }
 
