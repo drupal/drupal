@@ -1,114 +1,76 @@
 # Running tests
 
-## Functional tests
+## Setting up
 
-* Run the functional tests:
+### PHP dependencies
+
+You need the Drupal core development dependencies installed, in order to run
+any tests. You can install them using Composer by running
   ```
-  export SIMPLETEST_DB='mysql://root@localhost/dev_d8';
-  export SIMPLETEST_BASE_URL='http://d8.dev';
-  ./vendor/bin/phpunit -c core --testsuite functional;
+  composer install
   ```
+in the Drupal root directory. These dependencies should not be installed on a
+production site.
 
-Note: functional tests have to be invoked with a user in the same group as the
-web server user. You can either configure Apache (or nginx) to run as your own
-system user or run tests as a privileged user instead.
+### Test directory
 
-Invoking tests with a user that is in the same group as the web server will
-require you to ensure Drupal keeps gid stickybits when creating new directories.
+Create a directory called sites/simpletest and make sure that it is writable by
+the web server and/or all users.
 
-`$settings['file_chmod_directory'] = 02775;`
+### PHPUnit configuration
 
-To develop locally, a straightforward - but also less secure - approach is to
-run tests as your own system user. To achieve that, change the default Apache
-user to run as your system user. Typically, you'd need to modify
-`/etc/apache2/envvars` on Linux or `/etc/apache2/httpd.conf` on Mac.
+Copy the core/phpunit.xml.dist file to phpunit.xml, and place it somewhere
+convenient (inside the core directory may not be the best spot, since that
+directory may be managed by Composer or Git). You can use the -c option on the
+command line to tell PHPUnit where this file is (use the full path).
 
-Example for Linux:
+Settings to change in this file:
+* SIMPLETEST_BASE_URL: The URL of your site
+* SIMPLETEST_DB: The URL of your Drupal database
+* The bootstrap attribute of the top-level phpunit tag, to take into account
+  the location of the file
+* BROWSERTEST_OUTPUT_DIRECTORY: Set to sites/simpletest/browser_output;
+  you will also want to uncomment the printerClass attribute of the
+  top-level phpunit tag.
 
+### Additional setup for JavaScript tests
+
+To run JavaScript tests  based on the
+\Drupal\FunctionalJavascriptTests\WebDriverTestBase base class, you will need to
+install the following additional software:
+
+* Google Chrome or Chromium browser
+* chromedriver (tested with version 2.45) -- see
+  https://sites.google.com/a/chromium.org/chromedriver/
+* PHP 7.1 or higher
+
+## Running unit, functional, and kernel tests
+
+The PHPUnit executable is vendor/bin/phpunit -- you will need to locate your
+vendor directory (which may be outside the Drupal root).
+
+Here are commands to run one test class, list groups, and run all the tests in a
+particular group:
 ```
-export APACHE_RUN_USER=<your-user>
-export APACHE_RUN_GROUP=<your-group>
-```
-
-Example for Mac:
-
-```
-User <your-user>
-Group <your-group>
-```
-
-## Functional javascript tests
-
-Javascript tests use the Selenium2Driver which allows you to control a
-big range of browsers. By default Drupal uses chromedriver to run tests.
-For help installing and starting selenium, see http://mink.behat.org/en/latest/drivers/selenium2.html
-
-* Make sure you have a recent version of chrome installed
-
-* Install selenium-server-standalone and chromedriver
-
-Example for Mac:
-
-```
-brew install selenium-server-standalone;
-brew install chromedriver;
-```
-
-* Before running tests make sure that selenium-server is running
-```
-selenium-server -port 4444
+./vendor/bin/phpunit -c /path/to/your/phpunit.xml path/to/your/class/file.php
+./vendor/bin/phpunit --list-groups
+./vendor/bin/phpunit -c /path/to/your/phpunit.xml --group Groupname
 ```
 
-* Set the correct driver args and run the tests:
-```
-export MINK_DRIVER_ARGS_WEBDRIVER='["chrome", null, "http://localhost:4444/wd/hub"]';
-./vendor/bin/phpunit -c core --testsuite functional-javascript;
-```
+More information on running tests can be found at
+https://www.drupal.org/docs/8/phpunit/running-phpunit-tests
 
-* It is possible to use alternate browsers if the required dependencies are
-installed. For example to use Firefox:
+## Running Functional JavaScript tests
 
+You can run JavaScript tests that are based on the
+\Drupal\FunctionalJavascriptTests\WebDriverTestBase base class in the same way
+as other PHPUnit tests, except that before you start, you will need to start
+chromedriver using port 4444, and keep it running:
 ```
-export MINK_DRIVER_ARGS_WEBDRIVER='["firefox", null, "http://localhost:4444/wd/hub"]';
-./vendor/bin/phpunit -c core --testsuite functional-javascript;
-```
-
-* To force all BrowserTestBase (including legacy JavascriptTestBase) tests to use
-webdriver:
-
-```
-export MINK_DRIVER_CLASS='Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver';
-./vendor/bin/phpunit -c core --testsuite functional-javascript;
+/path/to/chromedriver --port=4444
 ```
 
-## Running legacy javascript tests
-
-Older javascript test may use the PhantomJSDriver. To run these tests you will
-have to install and start PhantomJS.
-
-* Start PhantomJS:
-  ```
-  phantomjs --ssl-protocol=any --ignore-ssl-errors=true ./vendor/jcalderonzumba/gastonjs/src/Client/main.js 8510 1024 768 2>&1 >> /dev/null &
-  ```
-
-* Then you can run the test:
-```
-./vendor/bin/phpunit -c core --testsuite functional-javascript;
-```
-
-## Running tests with a different user
-
-If the default user is e.g. `www-data`, the above functional tests will have to
-be invoked with sudo instead:
-
-```
-export SIMPLETEST_DB='mysql://root@localhost/dev_d8';
-export SIMPLETEST_BASE_URL='http://d8.dev';
-sudo -u www-data -E ./vendor/bin/phpunit -c core --testsuite functional;
-sudo -u www-data -E ./vendor/bin/phpunit -c core --testsuite functional-javascript;
-```
-
-## Nightwatch tests
+## Running Nightwatch tests
 
 - Ensure your vendor directory is populated (e.g. by running `composer install`)
 - If you're running PHP 7.0 or greater you will need to upgrade PHPUnit with `composer run-script drupal-phpunit-upgrade`
@@ -140,3 +102,22 @@ If your core directory is located in a subfolder (e.g. `docroot`), then you can 
 Tests outside of the `core` folder will run in the version of node you have installed. If you want to transpile with babel (e.g. to use `import` statements) outside of core,
 then add your own babel config to the root of your project. For example, if core is located under `docroot/core`, then you could run `yarn add babel-preset-env` inside
 `docroot`, then copy the babel settings from `docroot/core/package.json` into `docroot/package.json`.
+
+## Troubleshooting test running
+
+If you run into file permission problems while running tests, you may need to
+invoke the phpunit executable with a user in the same group as the web server
+user, or with access to files owned by the web server user. For example:
+```
+sudo -u www-data ./vendor/bin/phpunit -c /path/to/your/phpunit.xml --group Groupname
+```
+
+If you have permission problems accessing files after running tests, try
+putting
+```
+$settings['file_chmod_directory'] = 02775;
+```
+in your settings.php or local.settings.php file.
+
+You may need to use absolute paths in your phpunit.xml file, and/or in your
+phpunit command arguments.
