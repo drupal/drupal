@@ -85,7 +85,7 @@
   {{ title_prefix }}
   {% if label and not page %}
     <h2{{ title_attributes.addClass('node__title') }}>
-      <a class="node__link" href="{{ url }}" rel="bookmark">{{ label }}</a>
+      {{ label }}
     </h2>
   {% endif %}
   {{ title_suffix }}
