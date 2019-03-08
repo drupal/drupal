@@ -6,10 +6,12 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\Validation\TypedDataAwareValidatorTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\ChoiceValidator;
+use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 /**
  * Validates the AllowedValues constraint.
@@ -47,6 +49,7 @@ class AllowedValuesConstraintValidator extends ChoiceValidator implements Contai
    */
   public function validate($value, Constraint $constraint) {
     $typed_data = $this->getTypedData();
+
     if ($typed_data instanceof OptionsProviderInterface) {
       $allowed_values = $typed_data->getSettableValues($this->currentUser);
       $constraint->choices = $allowed_values;
@@ -57,7 +60,8 @@ class AllowedValuesConstraintValidator extends ChoiceValidator implements Contai
         if (!isset($name)) {
           throw new \LogicException('Cannot validate allowed values for complex data without a main property.');
         }
-        $value = $typed_data->get($name)->getValue();
+        $typed_data = $typed_data->get($name);
+        $value = $typed_data->getValue();
       }
     }
 
@@ -67,6 +71,36 @@ class AllowedValuesConstraintValidator extends ChoiceValidator implements Contai
     // field points to an empty vocabulary.
     if (!isset($value)) {
       return;
+    }
+
+    // Get the value with the proper datatype in order to make strict
+    // comparisons using in_array().
+    if (!($typed_data instanceof PrimitiveInterface)) {
+      throw new \LogicException('The data type must be a PrimitiveInterface at this point.');
+    }
+    $value = $typed_data->getCastedValue();
+
+    // In a better world where typed data just returns typed values, we could
+    // set a constraint callback to use the OptionsProviderInterface.
+    // This is not possible right now though because we do the typecasting
+    // further down.
+    if ($constraint->callback) {
+      if (!\is_callable($choices = [$this->context->getObject(), $constraint->callback])
+        && !\is_callable($choices = [$this->context->getClassName(), $constraint->callback])
+        && !\is_callable($choices = $constraint->callback)
+      ) {
+        throw new ConstraintDefinitionException('The AllowedValuesConstraint constraint expects a valid callback');
+      }
+      $allowed_values = \call_user_func($choices);
+      $constraint->choices = $allowed_values;
+      // parent::validate() does not need to invoke the callback again.
+      $constraint->callback = NULL;
+    }
+
+    // Force the choices to be the same type as the value.
+    $type = gettype($value);
+    foreach ($constraint->choices as &$choice) {
+      settype($choice, $type);
     }
 
     parent::validate($value, $constraint);

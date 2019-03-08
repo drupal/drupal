@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 /**
  * Tests AllowedValues validation constraint with both valid and invalid values.
@@ -49,6 +50,66 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
     $this->assertEqual($violation->getMessage(), t('The value you selected is not a valid choice.'), 'The message for invalid value is correct.');
     $this->assertEqual($violation->getRoot(), $typed_data, 'Violation root is correct.');
     $this->assertEqual($violation->getInvalidValue(), 4, 'The invalid value is set correctly in the violation.');
+
+    // Test the validation when a value of an incorrect type is passed.
+    $typed_data = $this->typedData->create($definition, '1');
+    $violations = $typed_data->validate();
+    $this->assertEquals(0, $violations->count(), 'Value is coerced to the correct type and is valid.');
+  }
+
+  /**
+   * Tests the AllowedValuesConstraintValidator with callbacks.
+   */
+  public function testValidationCallback() {
+    // Create a definition that specifies some AllowedValues and a callback.
+    // This tests that callbacks have a higher priority than a supplied list of
+    // values and can be used to coerce the value to the correct type.
+    $definition = DataDefinition::create('string')
+      ->addConstraint('AllowedValues', ['choices' => [1, 2, 3], 'callback' => [static::class, 'allowedValueCallback']]);
+    $typed_data = $this->typedData->create($definition, 'a');
+    $violations = $typed_data->validate();
+    $this->assertEquals(0, $violations->count(), 'Validation passed for correct value.');
+
+    $typed_data = $this->typedData->create($definition, 1);
+    $violations = $typed_data->validate();
+    $this->assertEquals(0, $violations->count(), 'Validation passed for value that will be cast to the correct type.');
+
+    $typed_data = $this->typedData->create($definition, 2);
+    $violations = $typed_data->validate();
+    $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
+
+    $typed_data = $this->typedData->create($definition, 'd');
+    $violations = $typed_data->validate();
+    $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
+
+    $typed_data = $this->typedData->create($definition, 0);
+    $violations = $typed_data->validate();
+    $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
+  }
+
+  /**
+   * An AllowedValueConstraint callback.
+   *
+   * @return string[]
+   *   A list of allowed values.
+   */
+  public static function allowedValueCallback() {
+    return ['a', 'b', 'c', '1'];
+  }
+
+  /**
+   * Tests the AllowedValuesConstraintValidator with an invalid callback.
+   */
+  public function testValidationCallbackException() {
+    // Create a definition that specifies some AllowedValues and a callback.
+    // This tests that callbacks have a higher priority than a supplied list of
+    // values and can be used to coerce the value to the correct type.
+    $definition = DataDefinition::create('string')
+      ->addConstraint('AllowedValues', ['choices' => [1, 2, 3], 'callback' => [static::class, 'doesNotExist']]);
+    $typed_data = $this->typedData->create($definition, 1);
+
+    $this->setExpectedException(ConstraintDefinitionException::class, 'The AllowedValuesConstraint constraint expects a valid callback');
+    $typed_data->validate();
   }
 
 }

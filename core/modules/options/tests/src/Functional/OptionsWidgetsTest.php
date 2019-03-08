@@ -35,6 +35,13 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   protected $card2;
 
+  /**
+   * A field storage with float values to use in this test class.
+   *
+   * @var \Drupal\field\Entity\FieldStorageConfig
+   */
+  protected $float;
+
   protected function setUp() {
     parent::setUp();
 
@@ -75,6 +82,22 @@ class OptionsWidgetsTest extends FieldTestBase {
       ],
     ]);
     $this->card2->save();
+
+    // Field storage with list of float values.
+    $this->float = FieldStorageConfig::create([
+      'field_name' => 'float',
+      'entity_type' => 'entity_test',
+      'type' => 'list_float',
+      'cardinality' => 1,
+      'settings' => [
+        'allowed_values' => [
+          '0.0' => '0.0',
+          '1.5' => '1.5',
+          '2.0' => '2.0',
+        ],
+      ],
+    ]);
+    $this->float->save();
 
     // Create a web user.
     $this->drupalLogin($this->drupalCreateUser(['view test entity', 'administer entity_test content']));
@@ -445,6 +468,53 @@ class OptionsWidgetsTest extends FieldTestBase {
     $edit = ['card_2[]' => ['_none' => '_none']];
     $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_2', []);
+  }
+
+  /**
+   * Tests the 'options_select' widget (float values).
+   */
+  public function testSelectListFloat() {
+
+    // Create an instance of the 'float value' field.
+    $field = FieldConfig::create([
+      'field_storage' => $this->float,
+      'bundle' => 'entity_test',
+      'required' => TRUE,
+    ]);
+    $field->save();
+
+    $this->container
+      ->get('entity_type.manager')
+      ->getStorage('entity_form_display')
+      ->load('entity_test.entity_test.default')
+      ->setComponent($this->float->getName(), ['type' => 'options_select'])
+      ->save();
+
+    // Create an entity.
+    $entity = EntityTest::create([
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
+    ]);
+    $entity->save();
+
+    // Display form.
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+
+    // With no field data, nothing is selected.
+    $this->assertFalse($this->assertSession()->optionExists('float', 0)->isSelected());
+    $this->assertFalse($this->assertSession()->optionExists('float', 1.5)->isSelected());
+    $this->assertFalse($this->assertSession()->optionExists('float', 2)->isSelected());
+
+    // Submit form.
+    $edit = ['float' => 1.5];
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity, 'float', [1.5]);
+
+    // Display form: check that the right options are selected.
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertFalse($this->assertSession()->optionExists('float', 0)->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists('float', 1.5)->isSelected());
+    $this->assertFalse($this->assertSession()->optionExists('float', 2)->isSelected());
   }
 
   /**

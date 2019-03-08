@@ -126,7 +126,6 @@ trait DeprecationListenerTrait {
       // is a Windows only deprecation. Remove when core no longer uses
       // WinCacheClassLoader in \Drupal\Core\DrupalKernel::initializeSettings().
       'The Symfony\Component\ClassLoader\WinCacheClassLoader class is deprecated since Symfony 3.3 and will be removed in 4.0. Use `composer install --apcu-autoloader` instead.',
-      'Not setting the strict option of the Choice constraint to true is deprecated since Symfony 3.4 and will throw an exception in 4.0.',
     ];
   }
 
