@@ -463,6 +463,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $field_names = array_unique(array_merge($field_names, $this->tableMapping->getFieldNames($this->revisionTable)));
     }
 
+    $storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
     $values = [];
     foreach ($records as $id => $record) {
       $values[$id] = [];
@@ -473,9 +474,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $field_columns = $this->tableMapping->getColumnNames($field_name);
         // Handle field types that store several properties.
         if (count($field_columns) > 1) {
+          $definition_columns = $storage_definitions[$field_name]->getColumns();
           foreach ($field_columns as $property_name => $column_name) {
             if (property_exists($record, $column_name)) {
-              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = $record->{$column_name};
+              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = !empty($definition_columns[$property_name]['serialize']) ? unserialize($record->{$column_name}) : $record->{$column_name};
               unset($record->{$column_name});
             }
           }
@@ -484,7 +486,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         else {
           $column_name = reset($field_columns);
           if (property_exists($record, $column_name)) {
-            $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = $record->{$column_name};
+            $columns = $storage_definitions[$field_name]->getColumns();
+            $column = reset($columns);
+            $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = !empty($column['serialize']) ? unserialize($record->{$column_name}) : $record->{$column_name};
             unset($record->{$column_name});
           }
         }
@@ -578,6 +582,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $all_fields = $table_mapping->getFieldNames($this->dataTable);
       }
 
+      $storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
       $result = $query->execute();
       foreach ($result as $row) {
         $id = $row[$record_key];
@@ -589,14 +594,19 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $translations[$id][$langcode] = TRUE;
 
         foreach ($all_fields as $field_name) {
+          $storage_definition = $storage_definitions[$field_name];
+          $definition_columns = $storage_definition->getColumns();
           $columns = $table_mapping->getColumnNames($field_name);
           // Do not key single-column fields by property name.
           if (count($columns) == 1) {
-            $values[$id][$field_name][$langcode] = $row[reset($columns)];
+            $column_name = reset($columns);
+            $column_attributes = $definition_columns[key($columns)];
+            $values[$id][$field_name][$langcode] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
           }
           else {
             foreach ($columns as $property_name => $column_name) {
-              $values[$id][$field_name][$langcode][$property_name] = $row[$column_name];
+              $column_attributes = $definition_columns[$property_name];
+              $values[$id][$field_name][$langcode][$property_name] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
             }
           }
         }

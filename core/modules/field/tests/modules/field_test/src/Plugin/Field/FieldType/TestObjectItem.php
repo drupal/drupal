@@ -46,17 +46,4 @@ class TestObjectItem extends FieldItemBase {
     ];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setValue($values, $notify = TRUE) {
-    if (isset($values['value'])) {
-      // @todo Remove this in https://www.drupal.org/node/2788637.
-      if (is_string($values['value'])) {
-        $values['value'] = unserialize($values['value']);
-      }
-    }
-    parent::setValue($values, $notify);
-  }
-
 }
