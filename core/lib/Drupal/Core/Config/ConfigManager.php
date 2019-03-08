@@ -22,6 +22,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ConfigManager implements ConfigManagerInterface {
   use StringTranslationTrait;
   use DeprecatedServicePropertyTrait;
+  use StorageCopyTrait;
 
   /**
    * {@inheritdoc}
@@ -207,23 +208,7 @@ class ConfigManager implements ConfigManagerInterface {
    * {@inheritdoc}
    */
   public function createSnapshot(StorageInterface $source_storage, StorageInterface $snapshot_storage) {
-    // Empty the snapshot of all configuration.
-    $snapshot_storage->deleteAll();
-    foreach ($snapshot_storage->getAllCollectionNames() as $collection) {
-      $snapshot_collection = $snapshot_storage->createCollection($collection);
-      $snapshot_collection->deleteAll();
-    }
-    foreach ($source_storage->listAll() as $name) {
-      $snapshot_storage->write($name, $source_storage->read($name));
-    }
-    // Copy collections as well.
-    foreach ($source_storage->getAllCollectionNames() as $collection) {
-      $source_collection = $source_storage->createCollection($collection);
-      $snapshot_collection = $snapshot_storage->createCollection($collection);
-      foreach ($source_collection->listAll() as $name) {
-        $snapshot_collection->write($name, $source_collection->read($name));
-      }
-    }
+    self::replaceStorageContents($source_storage, $snapshot_storage);
   }
 
   /**
