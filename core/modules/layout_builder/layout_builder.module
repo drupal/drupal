@@ -256,19 +256,6 @@ function layout_builder_plugin_filter_block__block_ui_alter(array &$definitions,
 }
 
 /**
- * Implements hook_layout_builder_section_storage_alter().
- */
-function layout_builder_layout_builder_section_storage_alter(array &$definitions) {
-  // @todo Until https://www.drupal.org/node/3016420 is resolved, context
-  //   definition annotations cannot specify any constraints. Alter
-  //   \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage to
-  //   add the constraint of having the required layout field.
-  /** @var \Drupal\layout_builder\SectionStorage\SectionStorageDefinition[] $definitions */
-  $definitions['overrides']->getContextDefinition('entity')
-    ->addConstraint('EntityHasField', OverridesSectionStorage::FIELD_NAME);
-}
-
-/**
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
  */
 function layout_builder_plugin_filter_layout__layout_builder_alter(array &$definitions, array $extra) {

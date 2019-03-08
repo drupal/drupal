@@ -119,6 +119,12 @@ class ContextDefinition extends Plugin {
 
     $class = $this->getDefinitionClass($values);
     $this->definition = new $class($values['value'], $values['label'], $values['required'], $values['multiple'], $values['description'], $values['default_value']);
+
+    if (isset($values['constraints'])) {
+      foreach ($values['constraints'] as $constraint_name => $options) {
+        $this->definition->addConstraint($constraint_name, $options);
+      }
+    }
   }
 
   /**

@@ -13,7 +13,9 @@ use Drupal\user\UserInterface;
  *   id = "test_context_aware",
  *   admin_label = @Translation("Test context-aware block"),
  *   context_definitions = {
- *     "user" = @ContextDefinition("entity:user", required = FALSE)
+ *     "user" = @ContextDefinition("entity:user", required = FALSE,
+ *       constraints = { "NotNull" = {} }
+ *     ),
  *   }
  * )
  */
