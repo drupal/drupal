@@ -138,11 +138,11 @@ class LinkItemTest extends FieldKernelTestBase {
     $this->assertNull($entity->field_test->title);
     $this->assertIdentical($entity->field_test->options, []);
 
-    // Check that if set uri and serialize options then the default values are
-    // properly initialized.
+    // Check that if we set uri and options then the default values are properly
+    // initialized.
     $entity->field_test = [
       'uri' => 'internal:/node/add',
-      'options' => serialize(['query' => NULL]),
+      'options' => ['query' => NULL],
     ];
     $this->assertEqual($entity->field_test->uri, 'internal:/node/add');
     $this->assertNull($entity->field_test->title);
@@ -172,6 +172,25 @@ class LinkItemTest extends FieldKernelTestBase {
     $entity->field_test_external->generateSampleItems();
     $entity->field_test_internal->generateSampleItems();
     $this->entityValidateAndSave($entity);
+  }
+
+  /**
+   * Tests the deprecated behavior of LinkItem::setValue().
+   *
+   * @group legacy
+   * @expectedDeprecation Support for passing options as a serialized string is deprecated in 8.7.0 and will be removed before Drupal 9.0.0. Pass them as an array instead. See https://www.drupal.org/node/2961643.
+   */
+  public function testSerializedOptions() {
+    // Check that if we set uri and options then the default values are
+    // properly initialized.
+    $entity = EntityTest::create();
+    $entity->set('field_test', [
+      'uri' => 'internal:/node/add',
+      'options' => serialize(['query' => NULL]),
+    ]);
+    $this->assertEquals('internal:/node/add', $entity->get('field_test')->uri);
+    $this->assertNull($entity->get('field_test')->title);
+    $this->assertNull($entity->get('field_test')->options['query']);
   }
 
 }
