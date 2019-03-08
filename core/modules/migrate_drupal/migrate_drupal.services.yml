@@ -16,3 +16,12 @@ services:
       - '@module_handler'
       - '\Drupal\migrate_drupal\Annotation\MigrateCckField'
     deprecated: The "%service_id%" service is deprecated. You should use the 'plugin.manager.migrate.field' service instead. See https://www.drupal.org/node/2751897
+  logger.channel.migrate_drupal:
+    parent: logger.channel_base
+    arguments: ['migrate_drupal']
+  migrate_drupal.field_discovery:
+    class: Drupal\migrate_drupal\FieldDiscovery
+    arguments:
+      - '@plugin.manager.migrate.field'
+      - '@plugin.manager.migration'
+      - '@logger.channel.migrate_drupal'
