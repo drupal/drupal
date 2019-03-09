@@ -677,6 +677,25 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests updating a bundle field when the entity type schema has changed.
+   */
+  public function testBundleFieldUpdateWithEntityTypeSchemaUpdate() {
+    // Add the bundle field and run the update.
+    $this->addBundleField();
+    $this->applyEntityUpdates();
+
+    // Update the entity type schema to revisionable but don't run the updates
+    // yet.
+    $this->updateEntityTypeToRevisionable();
+
+    // Perform a no-op update on the bundle field, which should work because
+    // both the storage and the storage schema are using the last installed
+    // entity type definition.
+    $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+    $entity_definition_update_manager->updateFieldStorageDefinition($entity_definition_update_manager->getFieldStorageDefinition('new_bundle_field', 'entity_test_update'));
+  }
+
+  /**
    * Tests creating and deleting a multi-field index when there are no existing entities.
    */
   public function testEntityIndexCreateDeleteWithoutData() {
