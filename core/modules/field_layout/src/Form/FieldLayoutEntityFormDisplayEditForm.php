@@ -3,6 +3,8 @@
 namespace Drupal\field_layout\Form;
 
 use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Layout\LayoutPluginManagerInterface;
 use Drupal\field_ui\Form\EntityFormDisplayEditForm;
@@ -26,9 +28,13 @@ class FieldLayoutEntityFormDisplayEditForm extends EntityFormDisplayEditForm {
    *   The widget plugin manager.
    * @param \Drupal\Core\Layout\LayoutPluginManagerInterface $layout_plugin_manager
    *   The layout plugin manager.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display_repository.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
    */
-  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, LayoutPluginManagerInterface $layout_plugin_manager) {
-    parent::__construct($field_type_manager, $plugin_manager);
+  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, LayoutPluginManagerInterface $layout_plugin_manager, EntityDisplayRepositoryInterface $entity_display_repository = NULL, EntityFieldManagerInterface $entity_field_manager = NULL) {
+    parent::__construct($field_type_manager, $plugin_manager, $entity_display_repository, $entity_field_manager);
     $this->layoutPluginManager = $layout_plugin_manager;
   }
 
@@ -39,7 +45,9 @@ class FieldLayoutEntityFormDisplayEditForm extends EntityFormDisplayEditForm {
     return new static(
       $container->get('plugin.manager.field.field_type'),
       $container->get('plugin.manager.field.widget'),
-      $container->get('plugin.manager.core.layout')
+      $container->get('plugin.manager.core.layout'),
+      $container->get('entity_display.repository'),
+      $container->get('entity_field.manager')
     );
   }
 

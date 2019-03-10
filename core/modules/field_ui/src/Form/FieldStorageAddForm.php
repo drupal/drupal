@@ -3,7 +3,9 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -18,6 +20,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class FieldStorageAddForm extends FormBase {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = [
+    'entityManager' => 'entity.manager',
+  ];
 
   /**
    * The name of the entity type.
@@ -34,11 +44,18 @@ class FieldStorageAddForm extends FormBase {
   protected $bundle;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
 
   /**
    * The field type plugin manager.
@@ -57,17 +74,24 @@ class FieldStorageAddForm extends FormBase {
   /**
    * Constructs a new FieldStorageAddForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager
    *   The field type plugin manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface|null $entity_field_manager
+   *   (optional) The entity field manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager = NULL) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->configFactory = $config_factory;
+    if (!$entity_field_manager) {
+      @trigger_error('Calling FieldStorageAddForm::__construct() with the $entity_field_manager argument is supported in Drupal 8.7.0 and will be required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+    }
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -82,9 +106,10 @@ class FieldStorageAddForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('plugin.manager.field.field_type'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('entity_field.manager')
     );
   }
 
@@ -293,7 +318,7 @@ class FieldStorageAddForm extends FormBase {
     $error = FALSE;
     $values = $form_state->getValues();
     $destinations = [];
-    $entity_type = $this->entityManager->getDefinition($this->entityTypeId);
+    $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
 
     // Create new field.
     if ($values['new_storage_type']) {
@@ -349,8 +374,8 @@ class FieldStorageAddForm extends FormBase {
 
       // Create the field storage and field.
       try {
-        $this->entityManager->getStorage('field_storage_config')->create($field_storage_values)->save();
-        $field = $this->entityManager->getStorage('field_config')->create($field_values);
+        $this->entityTypeManager->getStorage('field_storage_config')->create($field_storage_values)->save();
+        $field = $this->entityTypeManager->getStorage('field_config')->create($field_values);
         $field->save();
 
         $this->configureEntityFormDisplay($values['field_name'], $widget_id, $widget_settings);
@@ -379,7 +404,7 @@ class FieldStorageAddForm extends FormBase {
       $field_name = $values['existing_storage_name'];
 
       try {
-        $field = $this->entityManager->getStorage('field_config')->create([
+        $field = $this->entityTypeManager->getStorage('field_config')->create([
           'field_name' => $field_name,
           'entity_type' => $this->entityTypeId,
           'bundle' => $this->bundle,
@@ -477,7 +502,7 @@ class FieldStorageAddForm extends FormBase {
     $options = [];
     // Load the field_storages and build the list of options.
     $field_types = $this->fieldTypePluginManager->getDefinitions();
-    foreach ($this->entityManager->getFieldStorageDefinitions($this->entityTypeId) as $field_name => $field_storage) {
+    foreach ($this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId) as $field_name => $field_storage) {
       // Do not show:
       // - non-configurable field storages,
       // - locked field storages,
@@ -515,11 +540,11 @@ class FieldStorageAddForm extends FormBase {
   protected function getExistingFieldLabels(array $field_names) {
     // Get all the fields corresponding to the given field storage names and
     // this entity type.
-    $field_ids = $this->entityManager->getStorage('field_config')->getQuery()
+    $field_ids = $this->entityTypeManager->getStorage('field_config')->getQuery()
       ->condition('entity_type', $this->entityTypeId)
       ->condition('field_name', $field_names)
       ->execute();
-    $fields = $this->entityManager->getStorage('field_config')->loadMultiple($field_ids);
+    $fields = $this->entityTypeManager->getStorage('field_config')->loadMultiple($field_ids);
 
     // Go through all the fields and use the label of the first encounter.
     $labels = [];
@@ -558,7 +583,7 @@ class FieldStorageAddForm extends FormBase {
     // Add the field prefix.
     $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
 
-    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->entityTypeId);
+    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
     return isset($field_storage_definitions[$field_name]);
   }
 

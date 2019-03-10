@@ -15,7 +15,7 @@ class EntityFormModeAddForm extends EntityDisplayModeAddForm {
    * {@inheritdoc}
    */
   protected function prepareEntity() {
-    $definition = $this->entityManager->getDefinition($this->targetEntityTypeId);
+    $definition = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);
     if (!$definition->get('field_ui_base_route') || !$definition->hasFormClasses()) {
       throw new NotFoundHttpException();
     }

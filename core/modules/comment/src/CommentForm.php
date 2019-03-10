@@ -249,7 +249,7 @@ class CommentForm extends ContentEntityForm {
     /* @var \Drupal\comment\CommentInterface $comment */
     $comment = $this->entity;
     $entity = $comment->getCommentedEntity();
-    $field_definition = $this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$comment->getFieldName()];
+    $field_definition = $this->entityFieldManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$comment->getFieldName()];
     $preview_mode = $field_definition->getSetting('preview');
 
     // No delete action on the comment form.

@@ -73,7 +73,7 @@ class ForumForm extends TermForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $term = $this->entity;
-    $term_storage = $this->entityManager->getStorage('taxonomy_term');
+    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $status = $term_storage->save($term);
 
     $route_name = $this->urlStub == 'container' ? 'entity.taxonomy_term.forum_edit_container_form' : 'entity.taxonomy_term.forum_edit_form';
@@ -125,7 +125,7 @@ class ForumForm extends TermForm {
    *   A select form element.
    */
   protected function forumParentSelect($tid, $title) {
-    $taxonomy_storage = $this->entityManager->getStorage('taxonomy_term');
+    $taxonomy_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $parents = $taxonomy_storage->loadParents($tid);
     if ($parents) {
       $parent = array_shift($parents);

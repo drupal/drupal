@@ -3,8 +3,9 @@
 namespace Drupal\node\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -16,13 +17,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class NodePreviewForm extends FormBase {
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * The entity manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityManager;
+  protected $deprecatedProperties = [
+    'entityManager' => 'entity.manager',
+  ];
+
+  /**
+   * The entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $entityDisplayRepository;
 
   /**
    * The config factory.
@@ -35,19 +44,22 @@ class NodePreviewForm extends FormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('entity.manager'), $container->get('config.factory'));
+    return new static(
+      $container->get('entity_display.repository'),
+      $container->get('config.factory')
+    );
   }
 
   /**
    * Constructs a new NodePreviewForm.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager service.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display repository.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityDisplayRepositoryInterface $entity_display_repository, ConfigFactoryInterface $config_factory) {
+    $this->entityDisplayRepository = $entity_display_repository;
     $this->configFactory = $config_factory;
   }
 
@@ -88,7 +100,7 @@ class NodePreviewForm extends FormBase {
     ];
 
     // Always show full as an option, even if the display is not enabled.
-    $view_mode_options = ['full' => $this->t('Full')] + $this->entityManager->getViewModeOptionsByBundle('node', $node->bundle());
+    $view_mode_options = ['full' => $this->t('Full')] + $this->entityDisplayRepository->getViewModeOptionsByBundle('node', $node->bundle());
 
     // Unset view modes that are not used in the front end.
     unset($view_mode_options['default']);

@@ -27,7 +27,9 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.field.field_type'),
-      $container->get('plugin.manager.field.formatter')
+      $container->get('plugin.manager.field.formatter'),
+      $container->get('entity_display.repository'),
+      $container->get('entity_field.manager')
     );
   }
 
@@ -100,14 +102,14 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
    * {@inheritdoc}
    */
   protected function getDisplayModes() {
-    return $this->entityManager->getViewModes($this->entity->getTargetEntityTypeId());
+    return $this->entityDisplayRepository->getViewModes($this->entity->getTargetEntityTypeId());
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getDisplayModeOptions() {
-    return $this->entityManager->getViewModeOptions($this->entity->getTargetEntityTypeId());
+    return $this->entityDisplayRepository->getViewModeOptions($this->entity->getTargetEntityTypeId());
   }
 
   /**
@@ -139,7 +141,7 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
    * {@inheritdoc}
    */
   protected function getOverviewUrl($mode) {
-    $entity_type = $this->entityManager->getDefinition($this->entity->getTargetEntityTypeId());
+    $entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
     return Url::fromRoute('entity.entity_view_display.' . $this->entity->getTargetEntityTypeId() . '.view_mode', [
       'view_mode_name' => $mode,
     ] + FieldUI::getRouteBundleParameter($entity_type, $this->entity->getTargetBundle()));

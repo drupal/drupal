@@ -147,7 +147,7 @@ class FieldConfigEditForm extends EntityForm {
     $actions['submit']['#value'] = $this->t('Save settings');
 
     if (!$this->entity->isNew()) {
-      $target_entity_type = $this->entityManager->getDefinition($this->entity->getTargetEntityTypeId());
+      $target_entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
       $route_parameters = [
         'field_config' => $this->entity->id(),
       ] + FieldUI::getRouteBundleParameter($target_entity_type, $this->entity->getTargetBundle());
