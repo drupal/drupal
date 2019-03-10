@@ -27,7 +27,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     $form = parent::buildForm($form, $form_state);
     // Change replace_pattern to avoid undesired dots.
     $form['id']['#machine_name']['replace_pattern'] = '[^a-z0-9_]+';
-    $definition = $this->entityManager->getDefinition($this->targetEntityTypeId);
+    $definition = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);
     $form['#title'] = $this->t('Add new %label @entity-type', ['%label' => $definition->getLabel(), '@entity-type' => $this->entityType->getLowercaseLabel()]);
     return $form;
   }
@@ -45,7 +45,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
    * {@inheritdoc}
    */
   protected function prepareEntity() {
-    $definition = $this->entityManager->getDefinition($this->targetEntityTypeId);
+    $definition = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);
     if (!$definition->get('field_ui_base_route') || !$definition->hasViewBuilderClass()) {
       throw new NotFoundHttpException();
     }

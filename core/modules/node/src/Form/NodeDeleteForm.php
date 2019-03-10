@@ -18,7 +18,7 @@ class NodeDeleteForm extends ContentEntityDeleteForm {
     /** @var \Drupal\node\NodeInterface $entity */
     $entity = $this->getEntity();
 
-    $node_type_storage = $this->entityManager->getStorage('node_type');
+    $node_type_storage = $this->entityTypeManager->getStorage('node_type');
     $node_type = $node_type_storage->load($entity->bundle())->label();
 
     if (!$entity->isDefaultTranslation()) {

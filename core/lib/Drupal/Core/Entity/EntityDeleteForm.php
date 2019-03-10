@@ -31,7 +31,7 @@ class EntityDeleteForm extends EntityConfirmFormBase {
     if (!($entity instanceof ConfigEntityInterface)) {
       return $form;
     }
-    $this->addDependencyListsToForm($form, $entity->getConfigDependencyKey(), $this->getConfigNamesToDelete($entity), $this->getConfigManager(), $this->entityManager);
+    $this->addDependencyListsToForm($form, $entity->getConfigDependencyKey(), $this->getConfigNamesToDelete($entity), $this->getConfigManager(), $this->entityTypeManager);
 
     return $form;
   }

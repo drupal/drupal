@@ -2,8 +2,9 @@
 
 namespace Drupal\node;
 
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\BundleEntityFormBase;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
@@ -15,22 +16,30 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class NodeTypeForm extends BundleEntityFormBase {
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityManager;
+  protected $deprecatedProperties = [
+    'entityManager' => 'entity.manager',
+  ];
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
 
   /**
    * Constructs the NodeTypeForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityFieldManagerInterface $entity_field_manager) {
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -38,7 +47,7 @@ class NodeTypeForm extends BundleEntityFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')
+      $container->get('entity_field.manager')
     );
   }
 
@@ -51,18 +60,18 @@ class NodeTypeForm extends BundleEntityFormBase {
     $type = $this->entity;
     if ($this->operation == 'add') {
       $form['#title'] = $this->t('Add content type');
-      $fields = $this->entityManager->getBaseFieldDefinitions('node');
+      $fields = $this->entityFieldManager->getBaseFieldDefinitions('node');
       // Create a node with a fake bundle using the type's UUID so that we can
       // get the default values for workflow settings.
       // @todo Make it possible to get default values without an entity.
       //   https://www.drupal.org/node/2318187
-      $node = $this->entityManager->getStorage('node')->create(['type' => $type->uuid()]);
+      $node = $this->entityTypeManager->getStorage('node')->create(['type' => $type->uuid()]);
     }
     else {
       $form['#title'] = $this->t('Edit %label content type', ['%label' => $type->label()]);
-      $fields = $this->entityManager->getFieldDefinitions('node', $type->id());
+      $fields = $this->entityFieldManager->getFieldDefinitions('node', $type->id());
       // Create a node to get the current values for workflow settings fields.
-      $node = $this->entityManager->getStorage('node')->create(['type' => $type->id()]);
+      $node = $this->entityTypeManager->getStorage('node')->create(['type' => $type->id()]);
     }
 
     $form['name'] = [
@@ -234,7 +243,7 @@ class NodeTypeForm extends BundleEntityFormBase {
       $this->logger('node')->notice('Added content type %name.', $context);
     }
 
-    $fields = $this->entityManager->getFieldDefinitions('node', $type->id());
+    $fields = $this->entityFieldManager->getFieldDefinitions('node', $type->id());
     // Update title field definition.
     $title_field = $fields['title'];
     $title_label = $form_state->getValue('title_label');
@@ -244,7 +253,7 @@ class NodeTypeForm extends BundleEntityFormBase {
     // Update workflow options.
     // @todo Make it possible to get default values without an entity.
     //   https://www.drupal.org/node/2318187
-    $node = $this->entityManager->getStorage('node')->create(['type' => $type->id()]);
+    $node = $this->entityTypeManager->getStorage('node')->create(['type' => $type->id()]);
     foreach (['status', 'promote', 'sticky'] as $field_name) {
       $value = (bool) $form_state->getValue(['options', $field_name]);
       if ($node->$field_name->value != $value) {
@@ -252,7 +261,7 @@ class NodeTypeForm extends BundleEntityFormBase {
       }
     }
 
-    $this->entityManager->clearCachedFieldDefinitions();
+    $this->entityFieldManager->clearCachedFieldDefinitions();
     $form_state->setRedirectUrl($type->toUrl('collection'));
   }
 

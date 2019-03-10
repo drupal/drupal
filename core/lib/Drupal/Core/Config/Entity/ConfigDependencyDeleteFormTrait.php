@@ -3,7 +3,7 @@
 namespace Drupal\Core\Config\Entity;
 
 use Drupal\Core\Config\ConfigManagerInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Lists affected configuration entities by a dependency removal.
@@ -33,12 +33,12 @@ trait ConfigDependencyDeleteFormTrait {
    *   or 'content' it should be a list of configuration dependency names.
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
    *   The config manager.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    *
    * @see \Drupal\Core\Config\ConfigManagerInterface::getConfigEntitiesToChangeOnDependencyRemoval()
    */
-  protected function addDependencyListsToForm(array &$form, $type, array $names, ConfigManagerInterface $config_manager, EntityManagerInterface $entity_manager) {
+  protected function addDependencyListsToForm(array &$form, $type, array $names, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager) {
     // Get the dependent entities.
     $dependent_entities = $config_manager->getConfigEntitiesToChangeOnDependencyRemoval($type, $names);
     $entity_types = [];
@@ -55,7 +55,7 @@ trait ConfigDependencyDeleteFormTrait {
       /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface  $entity */
       $entity_type_id = $entity->getEntityTypeId();
       if (!isset($form['entity_updates'][$entity_type_id])) {
-        $entity_type = $entity_manager->getDefinition($entity_type_id);
+        $entity_type = $entity_type_manager->getDefinition($entity_type_id);
         // Store the ID and label to sort the entity types and entities later.
         $label = $entity_type->getLabel();
         $entity_types[$entity_type_id] = $label;
@@ -92,7 +92,7 @@ trait ConfigDependencyDeleteFormTrait {
     foreach ($dependent_entities['delete'] as $entity) {
       $entity_type_id = $entity->getEntityTypeId();
       if (!isset($form['entity_deletes'][$entity_type_id])) {
-        $entity_type = $entity_manager->getDefinition($entity_type_id);
+        $entity_type = $entity_type_manager->getDefinition($entity_type_id);
         // Store the ID and label to sort the entity types and entities later.
         $label = $entity_type->getLabel();
         $entity_types[$entity_type_id] = $label;
