@@ -383,10 +383,13 @@ trait FunctionalTestSetupTrait {
    */
   protected function initKernel(Request $request) {
     $this->kernel = DrupalKernel::createFromRequest($request, $this->classLoader, 'prod', TRUE);
-    $this->kernel->prepareLegacyRequest($request);
+
     // Force the container to be built from scratch instead of loaded from the
     // disk. This forces us to not accidentally load the parent site.
-    return $this->kernel->rebuildContainer();
+    $this->kernel->invalidateContainer();
+
+    $this->kernel->prepareLegacyRequest($request);
+    return \Drupal::getContainer();
   }
 
   /**
@@ -420,8 +423,8 @@ trait FunctionalTestSetupTrait {
         // The exception message has all the details.
         $this->fail($e->getMessage());
       }
-
-      $this->rebuildContainer();
+      // The container was already rebuilt by the ModuleInstaller.
+      $this->container = \Drupal::getContainer();
     }
   }
 
