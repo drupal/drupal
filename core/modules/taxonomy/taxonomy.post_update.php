@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -133,4 +135,95 @@ function taxonomy_post_update_remove_hierarchy_from_vocabularies(&$sandbox = NUL
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'taxonomy_vocabulary', function () {
     return TRUE;
   });
+}
+
+/**
+ * Update taxonomy terms to be revisionable.
+ */
+function taxonomy_post_update_make_taxonomy_term_revisionable(&$sandbox) {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
+  $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+
+  $entity_type = $definition_update_manager->getEntityType('taxonomy_term');
+  $field_storage_definitions = $last_installed_schema_repository->getLastInstalledFieldStorageDefinitions('taxonomy_term');
+
+  // Update the entity type definition.
+  $entity_keys = $entity_type->getKeys();
+  $entity_keys['revision'] = 'revision_id';
+  $entity_keys['revision_translation_affected'] = 'revision_translation_affected';
+  $entity_type->set('entity_keys', $entity_keys);
+  $entity_type->set('revision_table', 'taxonomy_term_revision');
+  $entity_type->set('revision_data_table', 'taxonomy_term_field_revision');
+  $revision_metadata_keys = [
+    'revision_default' => 'revision_default',
+    'revision_user' => 'revision_user',
+    'revision_created' => 'revision_created',
+    'revision_log_message' => 'revision_log_message',
+  ];
+  $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
+
+  // Update the field storage definitions and add the new ones required by a
+  // revisionable entity type.
+  $field_storage_definitions['langcode']->setRevisionable(TRUE);
+  $field_storage_definitions['name']->setRevisionable(TRUE);
+  $field_storage_definitions['description']->setRevisionable(TRUE);
+  $field_storage_definitions['changed']->setRevisionable(TRUE);
+
+  $field_storage_definitions['revision_id'] = BaseFieldDefinition::create('integer')
+    ->setName('revision_id')
+    ->setTargetEntityTypeId('taxonomy_term')
+    ->setTargetBundle(NULL)
+    ->setLabel(new TranslatableMarkup('Revision ID'))
+    ->setReadOnly(TRUE)
+    ->setSetting('unsigned', TRUE);
+
+  $field_storage_definitions['revision_default'] = BaseFieldDefinition::create('boolean')
+    ->setName('revision_default')
+    ->setTargetEntityTypeId('taxonomy_term')
+    ->setTargetBundle(NULL)
+    ->setLabel(new TranslatableMarkup('Default revision'))
+    ->setDescription(new TranslatableMarkup('A flag indicating whether this was a default revision when it was saved.'))
+    ->setStorageRequired(TRUE)
+    ->setInternal(TRUE)
+    ->setTranslatable(FALSE)
+    ->setRevisionable(TRUE);
+
+  $field_storage_definitions['revision_translation_affected'] = BaseFieldDefinition::create('boolean')
+    ->setName('revision_translation_affected')
+    ->setTargetEntityTypeId('taxonomy_term')
+    ->setTargetBundle(NULL)
+    ->setLabel(new TranslatableMarkup('Revision translation affected'))
+    ->setDescription(new TranslatableMarkup('Indicates if the last edit of a translation belongs to current revision.'))
+    ->setReadOnly(TRUE)
+    ->setRevisionable(TRUE)
+    ->setTranslatable(TRUE);
+
+  $field_storage_definitions['revision_created'] = BaseFieldDefinition::create('created')
+    ->setName('revision_created')
+    ->setTargetEntityTypeId('taxonomy_term')
+    ->setTargetBundle(NULL)
+    ->setLabel(new TranslatableMarkup('Revision create time'))
+    ->setDescription(new TranslatableMarkup('The time that the current revision was created.'))
+    ->setRevisionable(TRUE);
+  $field_storage_definitions['revision_user'] = BaseFieldDefinition::create('entity_reference')
+    ->setName('revision_user')
+    ->setTargetEntityTypeId('taxonomy_term')
+    ->setTargetBundle(NULL)
+    ->setLabel(new TranslatableMarkup('Revision user'))
+    ->setDescription(new TranslatableMarkup('The user ID of the author of the current revision.'))
+    ->setSetting('target_type', 'user')
+    ->setRevisionable(TRUE);
+  $field_storage_definitions['revision_log_message'] = BaseFieldDefinition::create('string_long')
+    ->setName('revision_log_message')
+    ->setTargetEntityTypeId('taxonomy_term')
+    ->setTargetBundle(NULL)
+    ->setLabel(new TranslatableMarkup('Revision log message'))
+    ->setDescription(new TranslatableMarkup('Briefly describe the changes you have made.'))
+    ->setRevisionable(TRUE)
+    ->setDefaultValue('');
+
+  $definition_update_manager->updateFieldableEntityType($entity_type, $field_storage_definitions, $sandbox);
+
+  return t('Taxonomy terms have been converted to be revisionable.');
 }

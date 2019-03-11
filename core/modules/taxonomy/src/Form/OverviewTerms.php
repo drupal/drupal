@@ -2,6 +2,7 @@
 
 namespace Drupal\taxonomy\Form;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -251,6 +252,64 @@ class OverviewTerms extends FormBase {
       }
     }
 
+    $args = [
+      '%capital_name' => Unicode::ucfirst($taxonomy_vocabulary->label()),
+      '%name' => $taxonomy_vocabulary->label(),
+    ];
+    if ($this->currentUser()->hasPermission('administer taxonomy') || $this->currentUser()->hasPermission('edit terms in ' . $taxonomy_vocabulary->id())) {
+      switch ($vocabulary_hierarchy) {
+        case VocabularyInterface::HIERARCHY_DISABLED:
+          $help_message = $this->t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', $args);
+          break;
+        case VocabularyInterface::HIERARCHY_SINGLE:
+          $help_message = $this->t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', $args);
+          break;
+        case VocabularyInterface::HIERARCHY_MULTIPLE:
+          $help_message = $this->t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', $args);
+          break;
+      }
+    }
+    else {
+      switch ($vocabulary_hierarchy) {
+        case VocabularyInterface::HIERARCHY_DISABLED:
+          $help_message = $this->t('%capital_name contains the following terms.', $args);
+          break;
+        case VocabularyInterface::HIERARCHY_SINGLE:
+          $help_message = $this->t('%capital_name contains terms grouped under parent terms', $args);
+          break;
+        case VocabularyInterface::HIERARCHY_MULTIPLE:
+          $help_message = $this->t('%capital_name contains terms with multiple parents.', $args);
+          break;
+      }
+    }
+
+    // Get the IDs of the terms edited on the current page which have pending
+    // revisions.
+    $edited_term_ids = array_map(function ($item) {
+      return $item->id();
+    }, $current_page);
+    $pending_term_ids = array_intersect($this->storageController->getTermIdsWithPendingRevisions(), $edited_term_ids);
+    if ($pending_term_ids) {
+      $help_message = $this->formatPlural(
+        count($pending_term_ids),
+        '%capital_name contains 1 term with pending revisions. Drag and drop of terms with pending revisions is not supported, but you can re-enable drag-and-drop support by getting each term to a published state.',
+        '%capital_name contains @count terms with pending revisions. Drag and drop of terms with pending revisions is not supported, but you can re-enable drag-and-drop support by getting each term to a published state.',
+        $args
+      );
+    }
+
+    // Only allow access to change parents and reorder the tree if there are no
+    // pending revisions and there are no terms with multiple parents.
+    $update_tree_access = AccessResult::allowedIf(empty($pending_term_ids) && $vocabulary_hierarchy !== VocabularyInterface::HIERARCHY_MULTIPLE);
+
+    $form['help'] = [
+      '#type' => 'container',
+      'message' => ['#markup' => $help_message],
+    ];
+    if (!$update_tree_access->isAllowed()) {
+      $form['help']['#attributes']['class'] = ['messages', 'messages--warning'];
+    }
+
     $errors = $form_state->getErrors();
     $row_position = 0;
     // Build the actual form.
@@ -268,7 +327,7 @@ class OverviewTerms extends FormBase {
       '#header' => [
         'term' => $this->t('Name'),
         'operations' => $this->t('Operations'),
-        'weight' => $this->t('Weight'),
+        'weight' => $update_tree_access->isAllowed() ? $this->t('Weight') : NULL,
       ],
       '#attributes' => [
         'id' => 'taxonomy',
@@ -276,14 +335,11 @@ class OverviewTerms extends FormBase {
     ];
     $this->renderer->addCacheableDependency($form['terms'], $create_access);
 
-    // Only allow access to changing weights if the user has update access for
-    // all terms.
-    $change_weight_access = AccessResult::allowed();
     foreach ($current_page as $key => $term) {
       $form['terms'][$key] = [
         'term' => [],
         'operations' => [],
-        'weight' => [],
+        'weight' => $update_tree_access->isAllowed() ? [] : NULL,
       ];
       /** @var $term \Drupal\Core\Entity\EntityInterface */
       $term = $this->entityRepository->getTranslationFromContext($term);
@@ -301,7 +357,16 @@ class OverviewTerms extends FormBase {
         '#title' => $term->getName(),
         '#url' => $term->toUrl(),
       ];
-      if ($vocabulary_hierarchy != VocabularyInterface::HIERARCHY_MULTIPLE && count($tree) > 1) {
+
+      // Add a special class for terms with pending revision so we can highlight
+      // them in the form.
+      $form['terms'][$key]['#attributes']['class'] = [];
+      if (in_array($term->id(), $pending_term_ids)) {
+        $form['terms'][$key]['#attributes']['class'][] = 'color-warning';
+        $form['terms'][$key]['#attributes']['class'][] = 'taxonomy-term--pending-revision';
+      }
+
+      if ($update_tree_access->isAllowed() && count($tree) > 1) {
         $parent_fields = TRUE;
         $form['terms'][$key]['term']['tid'] = [
           '#type' => 'hidden',
@@ -330,9 +395,9 @@ class OverviewTerms extends FormBase {
         ];
       }
       $update_access = $term->access('update', NULL, TRUE);
-      $change_weight_access = $change_weight_access->andIf($update_access);
+      $update_tree_access = $update_tree_access->andIf($update_access);
 
-      if ($update_access->isAllowed()) {
+      if ($update_tree_access->isAllowed()) {
         $form['terms'][$key]['weight'] = [
           '#type' => 'weight',
           '#delta' => $delta,
@@ -350,7 +415,6 @@ class OverviewTerms extends FormBase {
         ];
       }
 
-      $form['terms'][$key]['#attributes']['class'] = [];
       if ($parent_fields) {
         $form['terms'][$key]['#attributes']['class'][] = 'draggable';
       }
@@ -378,8 +442,8 @@ class OverviewTerms extends FormBase {
       $row_position++;
     }
 
-    $this->renderer->addCacheableDependency($form['terms'], $change_weight_access);
-    if ($change_weight_access->isAllowed()) {
+    $this->renderer->addCacheableDependency($form['terms'], $update_tree_access);
+    if ($update_tree_access->isAllowed()) {
       if ($parent_fields) {
         $form['terms']['#tabledrag'][] = [
           'action' => 'match',
@@ -408,7 +472,7 @@ class OverviewTerms extends FormBase {
       ];
     }
 
-    if (($vocabulary_hierarchy !== VocabularyInterface::HIERARCHY_MULTIPLE && count($tree) > 1) && $change_weight_access->isAllowed()) {
+    if ($update_tree_access->isAllowed() && count($tree) > 1) {
       $form['actions'] = ['#type' => 'actions', '#tree' => FALSE];
       $form['actions']['submit'] = [
         '#type' => 'submit',
@@ -505,12 +569,25 @@ class OverviewTerms extends FormBase {
       }
     }
 
-    // Save all updated terms.
-    foreach ($changed_terms as $term) {
-      $term->save();
-    }
+    if (!empty($changed_terms)) {
+      $pending_term_ids = $this->storageController->getTermIdsWithPendingRevisions();
 
-    $this->messenger()->addStatus($this->t('The configuration options have been saved.'));
+      // Force a form rebuild if any of the changed terms has a pending
+      // revision.
+      if (array_intersect_key(array_flip($pending_term_ids), $changed_terms)) {
+        $this->messenger()->addError($this->t('The terms with updated parents have been modified by another user, the changes could not be saved.'));
+        $form_state->setRebuild();
+
+        return;
+      }
+
+      // Save all updated terms.
+      foreach ($changed_terms as $term) {
+        $term->save();
+      }
+
+      $this->messenger()->addStatus($this->t('The configuration options have been saved.'));
+    }
   }
 
   /**
