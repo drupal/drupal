@@ -2,7 +2,6 @@
 
 namespace Drupal\simpletest;
 
-use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Doctrine\Common\Reflection\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
@@ -137,13 +136,16 @@ class TestDiscovery {
    *   An array of included test types.
    *
    * @return array
-   *   An array of tests keyed by the the group name.
+   *   An array of tests keyed by the the group name. If a test is annotated to
+   *   belong to multiple groups, it will appear under all group keys it belongs
+   *   to.
    * @code
    *     $groups['block'] => array(
    *       'Drupal\Tests\block\Functional\BlockTest' => array(
    *         'name' => 'Drupal\Tests\block\Functional\BlockTest',
    *         'description' => 'Tests block UI CRUD functionality.',
    *         'group' => 'block',
+   *         'groups' => ['block', 'group2', 'group3'],
    *       ),
    *     );
    * @endcode
@@ -152,9 +154,6 @@ class TestDiscovery {
    * @see https://www.drupal.org/node/2296615
    */
   public function getTestClasses($extension = NULL, array $types = []) {
-    $reader = new SimpleAnnotationReader();
-    $reader->addNamespace('Drupal\\simpletest\\Annotation');
-
     if (!isset($extension) && empty($types)) {
       if (!empty($this->testClasses)) {
         return $this->testClasses;
@@ -199,7 +198,9 @@ class TestDiscovery {
         }
       }
 
-      $list[$info['group']][$classname] = $info;
+      foreach ($info['groups'] as $group) {
+        $list[$group][$classname] = $info;
+      }
     }
 
     // Sort the groups and tests within the groups by name.
@@ -325,6 +326,8 @@ class TestDiscovery {
    *   - name: The test class name.
    *   - description: The test (PHPDoc) summary.
    *   - group: The test's first @group (parsed from PHPDoc annotations).
+   *   - groups: All of the test's @group annotations, as an array (parsed from
+   *     PHPDoc annotations).
    *   - requires: An associative array containing test requirements parsed from
    *     PHPDoc annotations:
    *     - module: List of Drupal module extension names the test depends on.
@@ -346,9 +349,14 @@ class TestDiscovery {
     preg_match_all('/^[ ]*\* \@([^\s]*) (.*$)/m', $doc_comment, $matches);
     if (isset($matches[1])) {
       foreach ($matches[1] as $key => $annotation) {
+        // For historical reasons, there is a single-value 'group' result key
+        // and a 'groups' key as an array.
+        if ($annotation === 'group') {
+          $annotations['groups'][] = $matches[2][$key];
+        }
         if (!empty($annotations[$annotation])) {
-          // Only have the first match per annotation. This deals with
-          // multiple @group annotations.
+          // Only @group is allowed to have more than one annotation, in the
+          // 'groups' key. Other annotations only have one value per key.
           continue;
         }
         $annotations[$annotation] = $matches[2][$key];
@@ -360,7 +368,9 @@ class TestDiscovery {
       throw new MissingGroupException(sprintf('Missing @group annotation in %s', $classname));
     }
     $info['group'] = $annotations['group'];
-    // Put PHPUnit test suites into their own custom groups.
+    $info['groups'] = $annotations['groups'];
+
+    // Sort out PHPUnit-runnable tests by type.
     if ($testsuite = static::getPhpunitTestSuite($classname)) {
       $info['type'] = 'PHPUnit-' . $testsuite;
     }
