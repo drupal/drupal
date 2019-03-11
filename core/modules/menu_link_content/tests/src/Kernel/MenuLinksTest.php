@@ -310,4 +310,114 @@ class MenuLinksTest extends KernelTestBase {
     $this->assertEqual(count($menu_links), 0);
   }
 
+  /**
+   * Tests handling of pending revisions.
+   *
+   * @coversDefaultClass \Drupal\menu_link_content\Plugin\Validation\Constraint\MenuTreeHierarchyConstraintValidator
+   */
+  public function testPendingRevisions() {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+
+    // Add new menu items in a hierarchy.
+    $default_root_1_title = $this->randomMachineName(8);
+    $root_1 = $storage->create([
+      'title' => $default_root_1_title,
+      'link' => [['uri' => 'internal:/#root_1']],
+      'menu_name' => 'menu_test',
+    ]);
+    $root_1->save();
+    $default_child1_title = $this->randomMachineName(8);
+    $child1 = $storage->create([
+      'title' => $default_child1_title,
+      'link' => [['uri' => 'internal:/#child1']],
+      'menu_name' => 'menu_test',
+      'parent' => 'menu_link_content:' . $root_1->uuid(),
+    ]);
+    $child1->save();
+    $default_child2_title = $this->randomMachineName(8);
+    $child2 = $storage->create([
+      'title' => $default_child2_title,
+      'link' => [['uri' => 'internal:/#child2']],
+      'menu_name' => 'menu_test',
+      'parent' => 'menu_link_content:' . $child1->uuid(),
+    ]);
+    $child2->save();
+    $default_root_2_title = $this->randomMachineName(8);
+    $root_2 = $storage->create([
+      'title' => $default_root_2_title,
+      'link' => [['uri' => 'internal:/#root_2']],
+      'menu_name' => 'menu_test',
+    ]);
+    $root_2->save();
+
+    // Check that changing the title and the link in a pending revision is
+    // allowed.
+    $pending_child1_title = $this->randomMachineName(8);
+    $child1_pending_revision = $storage->createRevision($child1, FALSE);
+    $child1_pending_revision->set('title', $pending_child1_title);
+    $child1_pending_revision->set('link', [['uri' => 'internal:/#test']]);
+
+    $violations = $child1_pending_revision->validate();
+    $this->assertEmpty($violations);
+    $child1_pending_revision->save();
+
+    $storage->resetCache();
+    $child1_pending_revision = $storage->loadRevision($child1_pending_revision->getRevisionId());
+    $this->assertFalse($child1_pending_revision->isDefaultRevision());
+    $this->assertEquals($pending_child1_title, $child1_pending_revision->getTitle());
+    $this->assertEquals('/#test', $child1_pending_revision->getUrlObject()->toString());
+
+    // Check that saving a pending revision does not affect the menu tree.
+    $menu_tree = \Drupal::menuTree()->load('menu_test', new MenuTreeParameters());
+    $parent_link = reset($menu_tree);
+    $this->assertEquals($default_root_1_title, $parent_link->link->getTitle());
+    $this->assertEquals('/#root_1', $parent_link->link->getUrlObject()->toString());
+
+    $child1_link = reset($parent_link->subtree);
+    $this->assertEquals($default_child1_title, $child1_link->link->getTitle());
+    $this->assertEquals('/#child1', $child1_link->link->getUrlObject()->toString());
+
+    $child2_link = reset($child1_link->subtree);
+    $this->assertEquals($default_child2_title, $child2_link->link->getTitle());
+    $this->assertEquals('/#child2', $child2_link->link->getUrlObject()->toString());
+
+    // Check that changing the parent in a pending revision is not allowed.
+    $child2_pending_revision = $storage->createRevision($child2, FALSE);
+    $child2_pending_revision->set('parent', $child1->id());
+    $violations = $child2_pending_revision->validate();
+    $this->assertCount(1, $violations);
+    $this->assertEquals('You can only change the hierarchy for the <em>published</em> version of this menu link.', $violations[0]->getMessage());
+    $this->assertEquals('menu_parent', $violations[0]->getPropertyPath());
+
+    // Check that changing the weight in a pending revision is not allowed.
+    $child2_pending_revision = $storage->createRevision($child2, FALSE);
+    $child2_pending_revision->set('weight', 500);
+    $violations = $child2_pending_revision->validate();
+    $this->assertCount(1, $violations);
+    $this->assertEquals('You can only change the hierarchy for the <em>published</em> version of this menu link.', $violations[0]->getMessage());
+    $this->assertEquals('weight', $violations[0]->getPropertyPath());
+
+    // Check that changing both the parent and the weight in a pending revision
+    // is not allowed.
+    $child2_pending_revision = $storage->createRevision($child2, FALSE);
+    $child2_pending_revision->set('parent', $child1->id());
+    $child2_pending_revision->set('weight', 500);
+    $violations = $child2_pending_revision->validate();
+    $this->assertCount(2, $violations);
+    $this->assertEquals('You can only change the hierarchy for the <em>published</em> version of this menu link.', $violations[0]->getMessage());
+    $this->assertEquals('You can only change the hierarchy for the <em>published</em> version of this menu link.', $violations[1]->getMessage());
+    $this->assertEquals('menu_parent', $violations[0]->getPropertyPath());
+    $this->assertEquals('weight', $violations[1]->getPropertyPath());
+
+    // Check that changing the parent of a term which didn't have a parent
+    // initially is not allowed in a pending revision.
+    $root_2_pending_revision = $storage->createRevision($root_2, FALSE);
+    $root_2_pending_revision->set('parent', $root_1->id());
+    $violations = $root_2_pending_revision->validate();
+    $this->assertCount(1, $violations);
+    $this->assertEquals('You can only change the hierarchy for the <em>published</em> version of this menu link.', $violations[0]->getMessage());
+    $this->assertEquals('menu_parent', $violations[0]->getPropertyPath());
+  }
+
 }

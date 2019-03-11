@@ -130,6 +130,8 @@ class DbDumpTest extends KernelTestBase {
       'key_value_expire',
       'menu_link_content',
       'menu_link_content_data',
+      'menu_link_content_revision',
+      'menu_link_content_field_revision',
       'sequences',
       'sessions',
       'url_alias',

@@ -239,7 +239,7 @@ EOS;
    */
   public function testEnableModulesFixedList() {
     // Install system module.
-    $this->container->get('module_installer')->install(['system', 'menu_link_content']);
+    $this->container->get('module_installer')->install(['system', 'user', 'menu_link_content']);
     $entity_manager = \Drupal::entityManager();
 
     // entity_test is loaded via $modules; its entity type should exist.
