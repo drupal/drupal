@@ -11,6 +11,7 @@ use Drupal\content_moderation\ContentPreprocess;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutPublish;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublish;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
@@ -189,6 +190,17 @@ function content_moderation_entity_view(array &$build, EntityInterface $entity, 
   \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityOperations::class)
     ->entityView($build, $entity, $display, $view_mode);
+}
+
+/**
+ * Implements hook_layout_builder_overrides_entity_form_display_alter().
+ */
+function content_moderation_layout_builder_overrides_entity_form_display_alter(EntityFormDisplayInterface $display) {
+  $display->setComponent('moderation_state', [
+    'type' => 'moderation_state_default',
+    'weight' => -900,
+    'settings' => [],
+  ]);
 }
 
 /**
