@@ -15,10 +15,6 @@ use org\bovigo\vfs\vfsStream;
 /**
  * @coversDefaultClass \Drupal\simpletest\TestDiscovery
  * @group simpletest
- *
- * Since TestDiscovery is expected to discover Simpletest-based tests, it will
- * likely trigger deprecation errors. Therefore, we add the legacy group.
- * @group legacy
  */
 class TestDiscoveryTest extends UnitTestCase {
 
@@ -36,13 +32,14 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests[] = [
       // Expected result.
       [
-        'name' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest',
+        'name' => static::class,
         'group' => 'simpletest',
+        'groups' => ['simpletest'],
         'description' => 'Tests \Drupal\simpletest\TestDiscovery.',
         'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      'Drupal\Tests\simpletest\Unit\TestDiscoveryTest',
+      static::class,
     ];
 
     // A core unit test.
@@ -51,6 +48,7 @@ class TestDiscoveryTest extends UnitTestCase {
       [
         'name' => 'Drupal\Tests\Core\DrupalTest',
         'group' => 'DrupalTest',
+        'groups' => ['DrupalTest'],
         'description' => 'Tests \Drupal.',
         'type' => 'PHPUnit-Unit',
       ],
@@ -64,6 +62,7 @@ class TestDiscoveryTest extends UnitTestCase {
       [
         'name' => 'Drupal\FunctionalTests\BrowserTestBaseTest',
         'group' => 'browsertestbase',
+        'groups' => ['browsertestbase'],
         'description' => 'Tests BrowserTestBase functionality.',
         'type' => 'PHPUnit-Functional',
       ],
@@ -77,6 +76,7 @@ class TestDiscoveryTest extends UnitTestCase {
       [
         'name' => '\Drupal\Tests\file\Kernel\FileItemValidationTest',
         'group' => 'file',
+        'groups' => ['file'],
         'description' => 'Tests that files referenced in file and image fields are always validated.',
         'type' => 'PHPUnit-Kernel',
       ],
@@ -91,6 +91,7 @@ class TestDiscoveryTest extends UnitTestCase {
       [
         'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
         'group' => 'simpletest',
+        'groups' => ['simpletest'],
         'description' => 'Tests the Simpletest UI internal browser.',
         'type' => 'Simpletest',
       ],
@@ -111,6 +112,7 @@ class TestDiscoveryTest extends UnitTestCase {
       [
         'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
         'group' => 'simpletest',
+        'groups' => ['simpletest'],
         'description' => 'Tests the Simpletest UI internal browser.',
         'type' => 'Simpletest',
       ],
@@ -133,6 +135,7 @@ class TestDiscoveryTest extends UnitTestCase {
       [
         'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
         'group' => 'simpletest',
+        'groups' => ['simpletest'],
         'description' => 'Tests the Simpletest UI internal browser. * @',
         'type' => 'Simpletest',
       ],
@@ -153,6 +156,7 @@ class TestDiscoveryTest extends UnitTestCase {
       [
         'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
         'group' => 'Test',
+        'groups' => ['Test', 'simpletest'],
         'description' => 'Tests the Simpletest UI internal browser.',
         'type' => 'Simpletest',
       ],
@@ -168,6 +172,33 @@ class TestDiscoveryTest extends UnitTestCase {
  ",
     ];
 
+    // A great number of @group annotations.
+    $tests['many-group-annotations'] = [
+      // Expected result.
+      [
+        'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
+        'group' => 'Test',
+        'groups' => ['Test', 'simpletest', 'another', 'more', 'many', 'enough', 'whoa'],
+        'description' => 'Tests the Simpletest UI internal browser.',
+        'type' => 'Simpletest',
+      ],
+      // Classname.
+      'Drupal\simpletest\Tests\ExampleSimpleTest',
+      // Doc block.
+      "/**
+ * Tests the Simpletest UI internal browser.
+ *
+ * @group Test
+ * @group simpletest
+ * @group another
+ * @group more
+ * @group many
+ * @group enough
+ * @group whoa
+ */
+ ",
+    ];
+
     // @dependencies annotation.
     $tests[] = [
       // Expected result.
@@ -177,6 +208,7 @@ class TestDiscoveryTest extends UnitTestCase {
         'type' => 'Simpletest',
         'requires' => ['module' => ['test']],
         'group' => 'simpletest',
+        'groups' => ['simpletest'],
       ],
       // Classname.
       'Drupal\simpletest\Tests\ExampleSimpleTest',
@@ -199,6 +231,7 @@ class TestDiscoveryTest extends UnitTestCase {
         'type' => 'Simpletest',
         'requires' => ['module' => ['test', 'test1', 'test2']],
         'group' => 'simpletest',
+        'groups' => ['simpletest'],
       ],
       // Classname.
       'Drupal\simpletest\Tests\ExampleSimpleTest',
@@ -220,6 +253,7 @@ class TestDiscoveryTest extends UnitTestCase {
         'description' => 'Tests the Simpletest UI internal browser. And the summary line continues an there is no gap to the annotation.',
         'type' => 'Simpletest',
         'group' => 'simpletest',
+        'groups' => ['simpletest'],
       ],
       // Classname.
       'Drupal\simpletest\Tests\ExampleSimpleTest',
@@ -298,7 +332,7 @@ EOF;
                 'FunctionalExampleTest2.php' => str_replace(['FunctionalExampleTest', '@group example'], ['FunctionalExampleTest2', '@group example2'], $test_file),
               ],
               'Kernel' => [
-                'KernelExampleTest3.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTest3', '@group example2'], $test_file),
+                'KernelExampleTest3.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTest3', "@group example2\n * @group kernel\n"], $test_file),
                 'KernelExampleTestBase.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTestBase', '@group example2'], $test_file),
                 'KernelExampleTrait.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTrait', '@group example2'], $test_file),
                 'KernelExampleInterface.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleInterface', '@group example2'], $test_file),
@@ -342,13 +376,14 @@ EOF;
     ];
     $test_discovery->setExtensions($extensions);
     $result = $test_discovery->getTestClasses();
-    $this->assertCount(2, $result);
+    $this->assertCount(3, $result);
     $this->assertEquals([
       'example' => [
         'Drupal\Tests\test_module\Functional\FunctionalExampleTest' => [
           'name' => 'Drupal\Tests\test_module\Functional\FunctionalExampleTest',
           'description' => 'Test description',
           'group' => 'example',
+          'groups' => ['example'],
           'type' => 'PHPUnit-Functional',
         ],
       ],
@@ -357,12 +392,23 @@ EOF;
           'name' => 'Drupal\Tests\test_module\Functional\FunctionalExampleTest2',
           'description' => 'Test description',
           'group' => 'example2',
+          'groups' => ['example2'],
           'type' => 'PHPUnit-Functional',
         ],
         'Drupal\Tests\test_module\Kernel\KernelExampleTest3' => [
           'name' => 'Drupal\Tests\test_module\Kernel\KernelExampleTest3',
           'description' => 'Test description',
           'group' => 'example2',
+          'groups' => ['example2', 'kernel'],
+          'type' => 'PHPUnit-Kernel',
+        ],
+      ],
+      'kernel' => [
+        'Drupal\Tests\test_module\Kernel\KernelExampleTest3' => [
+          'name' => 'Drupal\Tests\test_module\Kernel\KernelExampleTest3',
+          'description' => 'Test description',
+          'group' => 'example2',
+          'groups' => ['example2', 'kernel'],
           'type' => 'PHPUnit-Kernel',
         ],
       ],
@@ -385,7 +431,7 @@ EOF;
     ];
     $test_discovery->setExtensions($extensions);
     $result = $test_discovery->getTestClasses(NULL, ['PHPUnit-Kernel']);
-    $this->assertCount(3, $result);
+    $this->assertCount(4, $result);
     $this->assertEquals([
       'example' => [],
       'example2' => [
@@ -393,6 +439,16 @@ EOF;
           'name' => 'Drupal\Tests\test_module\Kernel\KernelExampleTest3',
           'description' => 'Test description',
           'group' => 'example2',
+          'groups' => ['example2', 'kernel'],
+          'type' => 'PHPUnit-Kernel',
+        ],
+      ],
+      'kernel' => [
+        'Drupal\Tests\test_module\Kernel\KernelExampleTest3' => [
+          'name' => 'Drupal\Tests\test_module\Kernel\KernelExampleTest3',
+          'description' => 'Test description',
+          'group' => 'example2',
+          'groups' => ['example2', 'kernel'],
           'type' => 'PHPUnit-Kernel',
         ],
       ],
@@ -401,6 +457,7 @@ EOF;
           'name' => 'Drupal\Tests\test_profile_module\Kernel\KernelExampleTest4',
           'description' => 'Test description',
           'group' => 'example3',
+          'groups' => ['example3'],
           'type' => 'PHPUnit-Kernel',
         ],
       ],
@@ -429,6 +486,7 @@ EOF;
           'name' => 'Drupal\Tests\test_profile_module\Kernel\KernelExampleTest4',
           'description' => 'Test description',
           'group' => 'example3',
+          'groups' => ['example3'],
           'type' => 'PHPUnit-Kernel',
         ],
       ],
@@ -511,16 +569,4 @@ class TestTestDiscovery extends TestDiscovery {
     return $this->extensions;
   }
 
-}
-
-namespace Drupal\simpletest\Tests;
-
-use Drupal\simpletest\WebTestBase;
-
-/**
- * Tests the Simpletest UI internal browser.
- *
- * @group simpletest
- */
-class ExampleSimpleTest extends WebTestBase {
 }

@@ -62,7 +62,7 @@ if ($args['execute-test']) {
 }
 
 if ($args['list']) {
-  // Display all available tests.
+  // Display all available tests organized by one @group annotation.
   echo "\nAvailable test groups & classes\n";
   echo "-------------------------------\n\n";
   try {
@@ -73,11 +73,18 @@ if ($args['list']) {
     echo (string) $e;
     exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
   }
+
+  // A given class can appear in multiple groups. For historical reasons, we
+  // need to present each test only once. The test is shown in the group that is
+  // printed first.
+  $printed_tests = [];
   foreach ($groups as $group => $tests) {
     echo $group . "\n";
-    foreach ($tests as $class => $info) {
-      echo " - $class\n";
+    $tests = array_diff(array_keys($tests), $printed_tests);
+    foreach ($tests as $test) {
+      echo " - $test\n";
     }
+    $printed_tests = array_merge($printed_tests, $tests);
   }
   exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
 }
@@ -1146,16 +1153,20 @@ function simpletest_script_get_test_list() {
         echo (string) $e;
         exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
       }
-      foreach ($args['test_names'] as $group_name) {
-        if (isset($groups[$group_name])) {
-          $test_list = array_merge($test_list, array_keys($groups[$group_name]));
-        }
-        else {
-          simpletest_script_print_error('Test group not found: ' . $group_name);
-          simpletest_script_print_alternatives($group_name, array_keys($groups));
-          exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
-        }
+      // Store all the groups so we can suggest alternatives if we need to.
+      $all_groups = array_keys($groups);
+      // Verify that the groups exist.
+      if (!empty($unknown_groups = array_diff($args['test_names'], $all_groups))) {
+        $first_group = reset($unknown_groups);
+        simpletest_script_print_error('Test group not found: ' . $first_group);
+        simpletest_script_print_alternatives($first_group, $all_groups);
+        exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
       }
+      // Ensure our list of tests contains only one entry for each test.
+      foreach ($args['test_names'] as $group_name) {
+        $test_list = array_merge($test_list, array_flip(array_keys($groups[$group_name])));
+      }
+      $test_list = array_flip($test_list);
     }
   }
 
