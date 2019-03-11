@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\Ajax\UpdateSelectionCommand;
+use Drupal\media_library\MediaLibraryState;
 use Drupal\media_library\MediaLibraryUiBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -419,7 +420,7 @@ abstract class AddFormBase extends FormBase {
     // contains the vertical tabs. Besides that, we also need to force the media
     // library to create a new instance of the media add form.
     // @see \Drupal\media_library\MediaLibraryUiBuilder::buildMediaTypeAddForm()
-    $state = $form_state->get('media_library_state');
+    $state = MediaLibraryState::fromRequest($this->getRequest());
     $state->remove('media_library_content');
     $state->set('_media_library_form_rebuild', TRUE);
     $library_ui = $this->libraryUiBuilder->buildUi($state);
