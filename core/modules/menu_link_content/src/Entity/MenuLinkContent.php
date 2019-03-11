@@ -2,9 +2,7 @@
 
 namespace Drupal\menu_link_content\Entity;
 
-use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityChangedTrait;
-use Drupal\Core\Entity\EntityPublishedTrait;
+use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -28,7 +26,7 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  *     plural = "@count custom menu links",
  *   ),
  *   handlers = {
- *     "storage" = "Drupal\Core\Entity\Sql\SqlContentEntityStorage",
+ *     "storage" = "\Drupal\menu_link_content\MenuLinkContentStorage",
  *     "storage_schema" = "Drupal\menu_link_content\MenuLinkContentStorageSchema",
  *     "access" = "Drupal\menu_link_content\MenuLinkContentAccessControlHandler",
  *     "form" = {
@@ -39,26 +37,34 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  *   admin_permission = "administer menu",
  *   base_table = "menu_link_content",
  *   data_table = "menu_link_content_data",
+ *   revision_table = "menu_link_content_revision",
+ *   revision_data_table = "menu_link_content_field_revision",
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
+ *     "revision" = "revision_id",
  *     "label" = "title",
  *     "langcode" = "langcode",
  *     "uuid" = "uuid",
  *     "bundle" = "bundle",
  *     "published" = "enabled",
  *   },
+ *   revision_metadata_keys = {
+ *     "revision_user" = "revision_user",
+ *     "revision_created" = "revision_created",
+ *     "revision_log_message" = "revision_log_message",
+ *   },
  *   links = {
  *     "canonical" = "/admin/structure/menu/item/{menu_link_content}/edit",
  *     "edit-form" = "/admin/structure/menu/item/{menu_link_content}/edit",
  *     "delete-form" = "/admin/structure/menu/item/{menu_link_content}/delete",
- *   }
+ *   },
+ *   constraints = {
+ *     "MenuTreeHierarchy" = {}
+ *   },
  * )
  */
-class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterface {
-
-  use EntityChangedTrait;
-  use EntityPublishedTrait;
+class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkContentInterface {
 
   /**
    * A flag for whether this entity is wrapped in a plugin instance.
@@ -203,6 +209,11 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
+    // Don't update the menu tree if a pending revision was saved.
+    if (!$this->isDefaultRevision()) {
+      return;
+    }
+
     /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
     $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
 
@@ -277,6 +288,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setDescription(t('The text to be used for this link in the menu.'))
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE)
       ->setSetting('max_length', 255)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
@@ -293,6 +305,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setLabel(t('Description'))
       ->setDescription(t('Shown when hovering over the menu link.'))
       ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE)
       ->setSetting('max_length', 255)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
@@ -313,6 +326,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['link'] = BaseFieldDefinition::create('link')
       ->setLabel(t('Link'))
       ->setDescription(t('The location this menu link points to.'))
+      ->setRevisionable(TRUE)
       ->setRequired(TRUE)
       ->setSettings([
         'link_type' => LinkItemInterface::LINK_GENERIC,
@@ -326,7 +340,8 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['external'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('External'))
       ->setDescription(t('A flag to indicate if the link points to a full URL starting with a protocol, like http:// (1 = external, 0 = internal).'))
-      ->setDefaultValue(FALSE);
+      ->setDefaultValue(FALSE)
+      ->setRevisionable(TRUE);
 
     $fields['rediscover'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Indicates whether the menu link should be rediscovered'))
@@ -365,7 +380,6 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['enabled']->setLabel(t('Enabled'));
     $fields['enabled']->setDescription(t('A flag for whether the link should be enabled in menus or hidden.'));
     $fields['enabled']->setTranslatable(FALSE);
-    $fields['enabled']->setRevisionable(FALSE);
     $fields['enabled']->setDisplayOptions('view', [
       'label' => 'hidden',
       'type' => 'boolean',
@@ -383,7 +397,14 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the menu link was last edited.'))
-      ->setTranslatable(TRUE);
+      ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE);
+
+    // @todo Keep this field hidden until we have a revision UI for menu links.
+    //   @see https://www.drupal.org/project/drupal/issues/2350939
+    $fields['revision_log_message']->setDisplayOptions('form', [
+      'region' => 'hidden',
+    ]);
 
     return $fields;
   }

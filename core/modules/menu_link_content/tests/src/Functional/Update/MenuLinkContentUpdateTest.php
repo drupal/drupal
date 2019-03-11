@@ -60,6 +60,49 @@ class MenuLinkContentUpdateTest extends UpdatePathTestBase {
   }
 
   /**
+   * Tests the conversion of custom menu links to be revisionable.
+   *
+   * @see menu_link_content_post_update_make_menu_link_content_revisionable()
+   */
+  public function testConversionToRevisionable() {
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('menu_link_content');
+    $this->assertFalse($entity_type->isRevisionable());
+
+    $this->runUpdates();
+
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('menu_link_content');
+    $this->assertTrue($entity_type->isRevisionable());
+
+    // Log in as user 1.
+    $account = User::load(1);
+    $account->passRaw = 'drupal';
+    $this->drupalLogin($account);
+
+    // Make sure our custom menu link exists.
+    $assert_session = $this->assertSession();
+    $this->drupalGet('admin/structure/menu/item/1/edit');
+    $assert_session->checkboxChecked('edit-enabled-value');
+
+    // Check that custom menu links can be created, saved and then loaded.
+    $storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+    /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $menu_link */
+    $menu_link = $storage->create([
+      'menu_name' => 'main',
+      'link' => 'route:user.page',
+      'title' => 'Pineapple',
+    ]);
+    $menu_link->save();
+
+    $storage->resetCache();
+    $menu_link = $storage->loadRevision($menu_link->getRevisionId());
+
+    $this->assertEquals('main', $menu_link->getMenuName());
+    $this->assertEquals('Pineapple', $menu_link->label());
+    $this->assertEquals('route:user.page', $menu_link->link->uri);
+    $this->assertTrue($menu_link->isPublished());
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function replaceUser1() {

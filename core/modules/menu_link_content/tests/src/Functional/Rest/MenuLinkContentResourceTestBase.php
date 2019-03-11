@@ -120,6 +120,11 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
           'value' => 1,
         ],
       ],
+      'revision_id' => [
+        [
+          'value' => 1,
+        ],
+      ],
       'title' => [
         [
           'value' => 'Llama Gabilondo',
@@ -191,6 +196,16 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
         ],
       ],
       'parent' => [],
+      'revision_created' => [
+        $this->formatExpectedTimestampItemValues((int) $this->entity->getRevisionCreationTime()),
+      ],
+      'revision_user' => [],
+      'revision_log_message' => [],
+      'revision_translation_affected' => [
+        [
+          'value' => TRUE,
+        ],
+      ],
     ];
   }
 
