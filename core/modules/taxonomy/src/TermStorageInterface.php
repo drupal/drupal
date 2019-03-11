@@ -141,4 +141,15 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    */
   public function getVocabularyHierarchyType($vid);
 
+  /**
+   * Gets a list of term IDs with pending revisions.
+   *
+   * @return int[]
+   *   An array of term IDs which have pending revisions, keyed by their
+   *   revision IDs.
+   *
+   * @internal
+   */
+  public function getTermIdsWithPendingRevisions();
+
 }

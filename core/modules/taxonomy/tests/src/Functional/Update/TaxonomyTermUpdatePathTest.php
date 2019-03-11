@@ -130,6 +130,67 @@ class TaxonomyTermUpdatePathTest extends UpdatePathTestBase {
   }
 
   /**
+   * Tests the conversion of taxonomy terms to be revisionable.
+   *
+   * @see taxonomy_post_update_make_taxonomy_term_revisionable()
+   */
+  public function testConversionToRevisionable() {
+    $this->runUpdates();
+
+    // Check the database tables and the field storage definitions.
+    $schema = \Drupal::database()->schema();
+    $this->assertTrue($schema->tableExists('taxonomy_term_data'));
+    $this->assertTrue($schema->tableExists('taxonomy_term_field_data'));
+    $this->assertTrue($schema->tableExists('taxonomy_term_revision'));
+    $this->assertTrue($schema->tableExists('taxonomy_term_field_revision'));
+
+    $field_storage_definitions = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions('taxonomy_term');
+    $this->assertTrue($field_storage_definitions['langcode']->isRevisionable());
+    $this->assertTrue($field_storage_definitions['name']->isRevisionable());
+    $this->assertTrue($field_storage_definitions['description']->isRevisionable());
+    $this->assertTrue($field_storage_definitions['changed']->isRevisionable());
+
+    // Log in as user 1.
+    $account = User::load(1);
+    $account->passRaw = 'drupal';
+    $this->drupalLogin($account);
+
+    // Make sure our vocabulary exists.
+    $this->drupalGet('admin/structure/taxonomy/manage/test_vocabulary/overview');
+
+    // Make sure our terms exist.
+    $assert_session = $this->assertSession();
+    $assert_session->pageTextContains('Test root term');
+    $assert_session->pageTextContains('Test child term');
+
+    $this->drupalGet('taxonomy/term/3');
+    $assert_session->statusCodeEquals('200');
+
+    // Make sure the terms are still translated.
+    $this->drupalGet('taxonomy/term/2/translations');
+    $assert_session->linkExists('Test root term - Spanish');
+
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+
+    // Check that taxonomy terms can be created, saved and then loaded.
+    /** @var \Drupal\taxonomy\TermInterface $term */
+    $term = $storage->create([
+      'name' => 'Test term',
+      'vid' => 'article',
+      'revision_log_message' => 'Initial revision.',
+    ]);
+    $term->save();
+
+    $storage->resetCache();
+    $term = $storage->loadRevision($term->getRevisionId());
+
+    $this->assertEquals('Test term', $term->label());
+    $this->assertEquals('article', $term->bundle());
+    $this->assertEquals('Initial revision.', $term->getRevisionLogMessage());
+    $this->assertTrue($term->isPublished());
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function replaceUser1() {

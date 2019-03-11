@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\Tags;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Render\Element;
@@ -78,31 +77,17 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.taxonomy_vocabulary.collection':
       $output = '<p>' . t('Taxonomy is for categorizing content. Terms are grouped into vocabularies. For example, a vocabulary called "Fruit" would contain the terms "Apple" and "Banana".') . '</p>';
       return $output;
-
-    case 'entity.taxonomy_vocabulary.overview_form':
-      $vocabulary = $route_match->getParameter('taxonomy_vocabulary');
-      $vocabulary_hierarchy = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->getVocabularyHierarchyType($vocabulary->id());
-      if (\Drupal::currentUser()->hasPermission('administer taxonomy') || \Drupal::currentUser()->hasPermission('edit terms in ' . $vocabulary->id())) {
-        switch ($vocabulary_hierarchy) {
-          case VocabularyInterface::HIERARCHY_DISABLED:
-            return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', ['%capital_name' => Unicode::ucfirst($vocabulary->label()), '%name' => $vocabulary->label()]) . '</p>';
-          case VocabularyInterface::HIERARCHY_SINGLE:
-            return '<p>' . t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', ['%capital_name' => Unicode::ucfirst($vocabulary->label()), '%name' => $vocabulary->label()]) . '</p>';
-          case VocabularyInterface::HIERARCHY_MULTIPLE:
-            return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', ['%capital_name' => Unicode::ucfirst($vocabulary->label())]) . '</p>';
-        }
-      }
-      else {
-        switch ($vocabulary_hierarchy) {
-          case VocabularyInterface::HIERARCHY_DISABLED:
-            return '<p>' . t('%capital_name contains the following terms.', ['%capital_name' => Unicode::ucfirst($vocabulary->label())]) . '</p>';
-          case VocabularyInterface::HIERARCHY_SINGLE:
-            return '<p>' . t('%capital_name contains terms grouped under parent terms', ['%capital_name' => Unicode::ucfirst($vocabulary->label())]) . '</p>';
-          case VocabularyInterface::HIERARCHY_MULTIPLE:
-            return '<p>' . t('%capital_name contains terms with multiple parents.', ['%capital_name' => Unicode::ucfirst($vocabulary->label())]) . '</p>';
-        }
-      }
   }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function taxonomy_entity_type_alter(array &$entity_types) {
+  // @todo Moderation is disabled for taxonomy terms until when we have an UI
+  //   for them.
+  //   @see https://www.drupal.org/project/drupal/issues/2899923
+  $entity_types['taxonomy_term']->setHandlerClass('moderation', '');
 }
 
 /**

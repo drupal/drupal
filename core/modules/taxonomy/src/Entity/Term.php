@@ -2,9 +2,7 @@
 
 namespace Drupal\taxonomy\Entity;
 
-use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityChangedTrait;
-use Drupal\Core\Entity\EntityPublishedTrait;
+use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -40,15 +38,23 @@ use Drupal\user\StatusItem;
  *   },
  *   base_table = "taxonomy_term_data",
  *   data_table = "taxonomy_term_field_data",
+ *   revision_table = "taxonomy_term_revision",
+ *   revision_data_table = "taxonomy_term_field_revision",
  *   uri_callback = "taxonomy_term_uri",
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "tid",
+ *     "revision" = "revision_id",
  *     "bundle" = "vid",
  *     "label" = "name",
  *     "langcode" = "langcode",
  *     "uuid" = "uuid",
  *     "published" = "status",
+ *   },
+ *   revision_metadata_keys = {
+ *     "revision_user" = "revision_user",
+ *     "revision_created" = "revision_created",
+ *     "revision_log_message" = "revision_log_message",
  *   },
  *   bundle_entity_type = "taxonomy_vocabulary",
  *   field_ui_base_route = "entity.taxonomy_vocabulary.overview_form",
@@ -59,13 +65,13 @@ use Drupal\user\StatusItem;
  *     "edit-form" = "/taxonomy/term/{taxonomy_term}/edit",
  *     "create" = "/taxonomy/term",
  *   },
- *   permission_granularity = "bundle"
+ *   permission_granularity = "bundle",
+ *   constraints = {
+ *     "TaxonomyHierarchy" = {}
+ *   }
  * )
  */
-class Term extends ContentEntityBase implements TermInterface {
-
-  use EntityChangedTrait;
-  use EntityPublishedTrait;
+class Term extends EditorialContentEntityBase implements TermInterface {
 
   /**
    * {@inheritdoc}
@@ -120,8 +126,6 @@ class Term extends ContentEntityBase implements TermInterface {
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    // Add the published field.
-    $fields += static::publishedBaseFieldDefinitions($entity_type);
     // @todo Remove the usage of StatusItem in
     //   https://www.drupal.org/project/drupal/issues/2936864.
     $fields['status']->getItemDefinition()->setClass(StatusItem::class);
@@ -139,6 +143,7 @@ class Term extends ContentEntityBase implements TermInterface {
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE)
       ->setRequired(TRUE)
       ->setSetting('max_length', 255)
       ->setDisplayOptions('view', [
@@ -155,6 +160,7 @@ class Term extends ContentEntityBase implements TermInterface {
     $fields['description'] = BaseFieldDefinition::create('text_long')
       ->setLabel(t('Description'))
       ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'text_default',
@@ -181,7 +187,14 @@ class Term extends ContentEntityBase implements TermInterface {
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the term was last edited.'))
-      ->setTranslatable(TRUE);
+      ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE);
+
+    // @todo Keep this field hidden until we have a revision UI for terms.
+    // @see https://www.drupal.org/project/drupal/issues/2936995
+    $fields['revision_log_message']->setDisplayOptions('form', [
+      'region' => 'hidden',
+    ]);
 
     return $fields;
   }
