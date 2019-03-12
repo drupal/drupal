@@ -9,10 +9,10 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\Ajax\UpdateSelectionCommand;
-use Drupal\media_library\MediaLibraryState;
 use Drupal\media_library\MediaLibraryUiBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -85,19 +85,17 @@ abstract class AddFormBase extends FormBase {
    *
    * @return \Drupal\media\MediaTypeInterface
    *   The media type.
+   *
+   * @throws \InvalidArgumentException
+   *   If the selected media type does not exist.
    */
   protected function getMediaType(FormStateInterface $form_state) {
     if ($this->mediaType) {
       return $this->mediaType;
     }
 
-    $state = $form_state->get('media_library_state');
-
-    if (!$state) {
-      throw new \InvalidArgumentException('The media library state is not present in the form state.');
-    }
-
-    $selected_type_id = $form_state->get('media_library_state')->getSelectedTypeId();
+    $state = $this->getMediaLibraryState($form_state);
+    $selected_type_id = $state->getSelectedTypeId();
     $this->mediaType = $this->entityTypeManager->getStorage('media_type')->load($selected_type_id);
 
     if (!$this->mediaType) {
@@ -114,6 +112,14 @@ abstract class AddFormBase extends FormBase {
     $form['#prefix'] = '<div id="media-library-add-form-wrapper">';
     $form['#suffix'] = '</div>';
     $form['#attached']['library'][] = 'media_library/style';
+
+    // The media library is loaded via AJAX, which means that the form action
+    // URL defaults to the current URL. However, to add media, we always need to
+    // submit the form to the media library URL, not whatever the current URL
+    // may be.
+    $form['#action'] = Url::fromRoute('media_library.ui', [], [
+      'query' => $this->getMediaLibraryState($form_state)->all(),
+    ])->toString();
 
     // The form is posted via AJAX. When there are messages set during the
     // validation or submission of the form, the messages need to be shown to
@@ -420,7 +426,7 @@ abstract class AddFormBase extends FormBase {
     // contains the vertical tabs. Besides that, we also need to force the media
     // library to create a new instance of the media add form.
     // @see \Drupal\media_library\MediaLibraryUiBuilder::buildMediaTypeAddForm()
-    $state = MediaLibraryState::fromRequest($this->getRequest());
+    $state = $this->getMediaLibraryState($form_state);
     $state->remove('media_library_content');
     $state->set('_media_library_form_rebuild', TRUE);
     $library_ui = $this->libraryUiBuilder->buildUi($state);
@@ -429,6 +435,26 @@ abstract class AddFormBase extends FormBase {
     $response->addCommand(new UpdateSelectionCommand($media_ids));
     $response->addCommand(new ReplaceCommand('#media-library-add-form-wrapper', $library_ui));
     return $response;
+  }
+
+  /**
+   * Get the media library state from the form state.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
+   *
+   * @return \Drupal\media_library\MediaLibraryState
+   *   The media library state.
+   *
+   * @throws \InvalidArgumentException
+   *   If the media library state is not present in the form state.
+   */
+  protected function getMediaLibraryState(FormStateInterface $form_state) {
+    $state = $form_state->get('media_library_state');
+    if (!$state) {
+      throw new \InvalidArgumentException('The media library state is not present in the form state.');
+    }
+    return $state;
   }
 
   /**

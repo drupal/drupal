@@ -3,7 +3,9 @@
 namespace Drupal\media_library\Form;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\media\OEmbed\ResourceException;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
@@ -121,6 +123,16 @@ class OEmbedForm extends AddFormBase {
       '#ajax' => [
         'callback' => '::updateFormCallback',
         'wrapper' => 'media-library-wrapper',
+        // Add a fixed URL to post the form since AJAX forms are automatically
+        // posted to <current> instead of $form['#action'].
+        // @todo Remove when https://www.drupal.org/project/drupal/issues/2504115
+        //   is fixed.
+        'url' => Url::fromRoute('media_library.ui'),
+        'options' => [
+          'query' => $this->getMediaLibraryState($form_state)->all() + [
+            FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
+          ],
+        ],
       ],
       '#attributes' => [
         'class' => ['media-library-add-form-oembed-submit'],
