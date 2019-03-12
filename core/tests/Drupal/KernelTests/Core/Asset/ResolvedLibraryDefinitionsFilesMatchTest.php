@@ -108,6 +108,15 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
       }
       return TRUE;
     });
+
+    // Install the 'user' entity schema because the workspaces module's install
+    // hook creates a workspace with default uid of 1. Then the layout_builder
+    // module's implementation of hook_entity_presave will cause
+    // \Drupal\Core\TypedData\Validation\RecursiveValidator::validate() to run
+    // on the workspace which will fail because the user table is not present.
+    // @todo Remove this in https://www.drupal.org/node/3039217.
+    $this->installEntitySchema('user');
+
     // Remove demo_umami_content module as its install hook creates content
     // that relies on the presence of entity tables and various other elements
     // not present in a kernel test.
