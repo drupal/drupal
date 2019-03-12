@@ -224,17 +224,79 @@
 }
 
 /* Media library item grid styles. */
+.media-library-views-form {
+  margin: 0 -8px;
+}
+
+/**
+ * Fix the negative margin of the grid.
+ *
+ * We need to fix the negative margin of the grid for table based displays and
+ * form elements that should not be part of the grid.
+ *
+ * @todo: Remove when new wrapper is added to apply negative margins in
+ *    https://www.drupal.org/project/drupal/issues/3038489
+ */
+.media-library-views-form__header,
+.media-library-select-all,
+.media-library-views-form > .views-table {
+  margin: 0 8px;
+}
+
 .media-library-item--grid {
   justify-content: center;
-  width: 180px;
-  margin: 2px 16px 16px 2px; /* LTR */
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  box-sizing: border-box;
+  width: 50%;
+  padding: 8px;
   vertical-align: top;
-  border: 1px solid #dbdbdb;
   background: #fff;
 }
-[dir="rtl"] .media-library-item--grid {
-  margin: 2px 2px 16px 16px;
+
+.media-library-item--grid:before {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  content: "";
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  border: 1px solid #dbdbdb;
+}
+
+@media screen and (min-width: 45em) {
+  .media-library-item--grid {
+    width: 33%;
+  }
+
+  /* Use a smaller width for the modal and widget since there is less space. */
+  .media-library-widget-modal .media-library-item--grid,
+  .media-library-selection .media-library-item--grid {
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 60em) {
+  .media-library-item--grid {
+    width: 25%;
+  }
+
+  /* Use a smaller width for the modal and widget since there is less space. */
+  .media-library-widget-modal .media-library-item--grid,
+  .media-library-selection .media-library-item--grid {
+    width: 33%;
+  }
+}
+
+@media screen and (min-width: 77em) {
+  .media-library-item--grid {
+    width: 16%;
+  }
+
+  /* Use a smaller width for the modal and widget since there is less space. */
+  .media-library-widget-modal .media-library-item--grid,
+  .media-library-selection .media-library-item--grid {
+    width: 25%;
+  }
 }
 
 .media-library-item--grid .field--name-thumbnail {
@@ -249,18 +311,14 @@
   object-position: center center;
 }
 
-.media-library-item--grid.is-hover,
-.media-library-item--grid.checked,
-.media-library-item--grid.is-focus {
-  margin: 0 14px 14px 0; /* LTR */
+.media-library-item--grid.is-hover:before,
+.media-library-item--grid.checked:before,
+.media-library-item--grid.is-focus:before {
+  top: 5px;
+  left: 5px;
   border-width: 3px;
   border-color: #40b6ff;
   border-radius: 3px;
-}
-[dir="rtl"] .media-library-item--grid.is-hover,
-[dir="rtl"] .media-library-item--grid.checked,
-[dir="rtl"] .media-library-item--grid.is-focus {
-  margin: 0 0 14px 14px;
 }
 
 .media-library-item--grid.checked {
@@ -361,9 +419,9 @@
   right: 5px;
 }
 
+/* Add negative margin for flex grid. */
 .media-library-selection {
-  margin-top: 1em;
-  margin-bottom: 0.5em;
+  margin: 1em -8px;
 }
 
 /* Media library widget weight field styles. */
@@ -383,8 +441,8 @@
 .media-library-item__remove.button:focus {
   position: absolute;
   z-index: 1;
-  top: 0;
-  right: 0;
+  top: 10px;
+  right: 10px;
   width: 24px;
   height: 24px;
   margin: 5px;
@@ -451,19 +509,4 @@
 .media-library-view--widget .media-library-item__name a {
   text-decoration: none;
   color: black;
-}
-
-@media screen and (max-width: 600px) {
-  .media-library-item--grid {
-    width: 150px;
-  }
-  .media-library-item--grid .field--name-thumbnail img {
-    width: 150px;
-    height: 150px;
-  }
-  .media-library-item--grid .views-field-operations .dropbutton-wrapper {
-    position: relative;
-    right: 0;
-    border: 0;
-  }
 }
