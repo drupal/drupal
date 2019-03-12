@@ -8,9 +8,11 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
@@ -113,7 +115,7 @@ class FileUploadForm extends AddFormBase {
     $item = $this->createFileItem($media_type);
 
     /** @var \Drupal\media_library\MediaLibraryState $state */
-    $state = $form_state->get('media_library_state');
+    $state = $this->getMediaLibraryState($form_state);
     if (!$state->hasSlotsAvailable()) {
       return $form;
     }
@@ -192,6 +194,16 @@ class FileUploadForm extends AddFormBase {
     $element['upload_button']['#ajax'] = [
       'callback' => '::updateFormCallback',
       'wrapper' => 'media-library-wrapper',
+      // Add a fixed URL to post the form since AJAX forms are automatically
+      // posted to <current> instead of $form['#action'].
+      // @todo Remove when https://www.drupal.org/project/drupal/issues/2504115
+      //   is fixed.
+      'url' => Url::fromRoute('media_library.ui'),
+      'options' => [
+        'query' => $this->getMediaLibraryState($form_state)->all() + [
+          FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
+        ],
+      ],
     ];
     return $element;
   }

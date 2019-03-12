@@ -2,9 +2,10 @@
 
 namespace Drupal\media_library\Plugin\Field\FieldWidget;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -12,7 +13,6 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
 use Drupal\media_library\MediaLibraryUiBuilder;
 use Drupal\media_library\MediaLibraryState;
@@ -395,23 +395,32 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     $opener_id = static::$openerIdPrefix . $field_name . $id_suffix;
 
     $state = MediaLibraryState::create($opener_id, $allowed_media_type_ids, $selected_type_id, $remaining);
-    $dialog_options = Json::encode(MediaLibraryUiBuilder::dialogOptions());
 
     // Add a button that will load the Media library in a modal using AJAX.
     $element['media_library_open_button'] = [
-      '#type' => 'link',
-      '#title' => $this->t('Add media'),
+      '#type' => 'submit',
+      '#value' => $this->t('Add media'),
       '#name' => $field_name . '-media-library-open-button' . $id_suffix,
-      '#url' => $url = Url::fromRoute('media_library.ui', [], [
-        'query' => $state->all(),
-      ]),
       '#attributes' => [
-        'class' => ['button', 'use-ajax', 'media-library-open-button'],
-        'data-dialog-type' => 'modal',
-        'data-dialog-options' => $dialog_options,
+        'class' => [
+          'media-library-open-button',
+          'js-media-library-open-button',
+        ],
+        // The jQuery UI dialog automatically moves focus to the first :tabbable
+        // element of the modal, so we need to disable refocus on the button.
+        'data-disable-refocus' => 'true',
       ],
-      // Prevent errors in other widgets from preventing addition.
-      '#limit_validation_errors' => $limit_validation_errors,
+      '#media_library_state' => $state,
+      '#ajax' => [
+        'callback' => [static::class, 'openMediaLibrary'],
+        'progress' => [
+          'type' => 'throbber',
+          'message' => $this->t('Opening media library.'),
+        ],
+      ],
+      '#submit' => [],
+      // Allow the media library to be opened even if there are form errors.
+      '#limit_validation_errors' => [],
       '#access' => $cardinality_unlimited || $remaining > 0,
     ];
 
@@ -524,6 +533,25 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     }
 
     $form_state->setRebuild();
+  }
+
+  /**
+   * AJAX callback to open the library modal.
+   *
+   * @param array $form
+   *   The form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response to open the media library.
+   */
+  public static function openMediaLibrary(array $form, FormStateInterface $form_state) {
+    $triggering_element = $form_state->getTriggeringElement();
+    $library_ui = \Drupal::service('media_library.ui_builder')->buildUi($triggering_element['#media_library_state']);
+    $dialog_options = MediaLibraryUiBuilder::dialogOptions();
+    return (new AjaxResponse())
+      ->addCommand(new OpenModalDialogCommand($dialog_options['title'], $library_ui, $dialog_options));
   }
 
   /**
