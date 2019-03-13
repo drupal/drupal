@@ -163,12 +163,19 @@ class TwigEnvironmentTest extends KernelTestBase {
     $expected = strlen($prefix) + 2 + 2 * TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH;
     $this->assertEquals($expected, strlen($key));
 
-    $original_filename = $environment->getCacheFilename('core/modules/system/templates/container.html.twig');
+    $template_filename = 'core/modules/system/templates/container.html.twig';
+    $cache = $environment->getCache();
+    $class = $environment->getTemplateClass($template_filename);
+    $original_filename = $cache->generateKey($template_filename, $class);
+
     \Drupal::getContainer()->set('twig', NULL);
 
     \Drupal::service('module_installer')->install(['twig_extension_test']);
     $environment = \Drupal::service('twig');
-    $new_extension_filename = $environment->getCacheFilename('core/modules/system/templates/container.html.twig');
+    $cache = $environment->getCache();
+    $class = $environment->getTemplateClass($template_filename);
+    $new_extension_filename = $cache->generateKey($template_filename, $class);
+
     \Drupal::getContainer()->set('twig', NULL);
 
     $this->assertNotEqual($new_extension_filename, $original_filename);
