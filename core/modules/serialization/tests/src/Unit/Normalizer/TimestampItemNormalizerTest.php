@@ -113,7 +113,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
     $timestamp_item->setValue(['value' => $expected])
       ->shouldBeCalled();
 
-    // Avoid a static method call by returning dummy property data.
+    // Avoid a static method call by returning dummy serialized property data.
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
     $timestamp_item
       ->getFieldDefinition()

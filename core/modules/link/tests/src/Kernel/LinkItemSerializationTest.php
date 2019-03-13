@@ -80,4 +80,25 @@ class LinkItemSerializationTest extends FieldKernelTestBase {
     $this->assertSame($options_expected, $deserialized->field_test->options);
   }
 
+  /**
+   * Tests the deserialization.
+   */
+  public function testLinkDeserialization() {
+    // Create entity.
+    $entity = EntityTest::create();
+    $url = 'https://www.drupal.org?test_param=test_value';
+    $parsed_url = UrlHelper::parse($url);
+    $title = $this->randomMachineName();
+    $entity->field_test->uri = $parsed_url['path'];
+    $entity->field_test->title = $title;
+    $entity->field_test->first()
+      ->get('options')
+      ->set('query', $parsed_url['query']);
+    $json = json_decode($this->serializer->serialize($entity, 'json'), TRUE);
+    $json['field_test'][0]['options'] = 'string data';
+    $serialized = json_encode($json, TRUE);
+    $this->setExpectedException(\LogicException::class, 'The generic FieldItemNormalizer cannot denormalize string values for "options" properties of the "field_test" field (field item class: Drupal\link\Plugin\Field\FieldType\LinkItem).');
+    $this->serializer->deserialize($serialized, EntityTest::class, 'json');
+  }
+
 }
