@@ -32,7 +32,7 @@
         "symfony/polyfill-iconv": "^1.0",
         "symfony/yaml": "~3.4.5",
         "typo3/phar-stream-wrapper": "^2.0.1",
-        "twig/twig": "^1.35.0",
+        "twig/twig": "^1.38.2",
         "doctrine/common": "^2.5",
         "doctrine/annotations": "^1.2",
         "guzzlehttp/guzzle": "^6.2.1",
