@@ -83,7 +83,7 @@ class FieldItemNormalizer extends NormalizerBase {
     // being automatically serialized, manually managed serialized properties
     // expect to receive serialized input.
     foreach ($serialized_property_names as $serialized_property_name) {
-      if (!empty($data[$serialized_property_name])) {
+      if (is_array($data) && array_key_exists($serialized_property_name, $data)) {
         $data[$serialized_property_name] = serialize($data[$serialized_property_name]);
       }
     }
