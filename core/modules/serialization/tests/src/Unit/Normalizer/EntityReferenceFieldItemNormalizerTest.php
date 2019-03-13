@@ -436,7 +436,7 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
         ->shouldBeCalled();
     }
 
-    // Avoid a static method call by returning dummy property data.
+    // Avoid a static method call by returning dummy serialized property data.
     $this->fieldDefinition
       ->getFieldStorageDefinition()
       ->willReturn()
