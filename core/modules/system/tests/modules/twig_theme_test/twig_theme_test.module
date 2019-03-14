@@ -73,6 +73,10 @@ function twig_theme_test_theme($existing, $type, $theme, $path) {
     ],
     'template' => 'twig_theme_test.renderable',
   ];
+  $items['twig_theme_test_embed_tag'] = [
+    'variables' => [],
+    'template' => 'twig_theme_test.embed_tag',
+  ];
   return $items;
 }
 

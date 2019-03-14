@@ -137,7 +137,7 @@ class TwigEnvironment extends \Twig_Environment {
     // node.html.twig for the output of each node and the same compiled class.
     $cache_index = $name . (NULL === $index ? '' : '_' . $index);
     if (!isset($this->templateClasses[$cache_index])) {
-      $this->templateClasses[$cache_index] = $this->templateClassPrefix . hash('sha256', $this->loader->getCacheKey($name)) . (NULL === $index ? '' : '_' . $index);
+      $this->templateClasses[$cache_index] = parent::getTemplateClass($name, $index);
     }
     return $this->templateClasses[$cache_index];
   }
