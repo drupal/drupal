@@ -1033,7 +1033,7 @@ function simpletest_script_get_test_list() {
     foreach ($groups as $group => $tests) {
       $all_tests = array_merge($all_tests, array_keys($tests));
     }
-    $test_list = array_unique($all_tests);
+    $test_list = $all_tests;
   }
   else {
     if ($args['class']) {
