@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\layout_builder\Plugin\Block\InlineBlock;
-use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -44,36 +43,17 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
   /**
    * Constructs a new EntityOperations object.
    *
-   * @todo This constructor has one optional parameter, $section_storage_manager
-   *    and one totally unused $database parameter. Deprecate the current
-   *    constructor signature in https://www.drupal.org/node/3031492 after the
-   *    general policy for constructor backwards compatibility is determined in
-   *    https://www.drupal.org/node/3030640.
-   *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
    * @param \Drupal\layout_builder\InlineBlockUsage $usage
    *   Inline block usage tracking service.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
-   * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
-   *   (optional) The section storage manager.
-   *
-   * @todo The current constructor signature is deprecated:
-   *   - The $section_storage_manager parameter is optional, but should become
-   *   required.
-   *   - The $database parameter is unused and should be removed.
-   *   Deprecate in https://www.drupal.org/node/3031492.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, InlineBlockUsage $usage, Connection $database, SectionStorageManagerInterface $section_storage_manager = NULL) {
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, InlineBlockUsage $usage, Connection $database) {
     $this->entityTypeManager = $entityTypeManager;
     $this->blockContentStorage = $entityTypeManager->getStorage('block_content');
     $this->usage = $usage;
-    if ($section_storage_manager === NULL) {
-      @trigger_error('The plugin.manager.layout_builder.section_storage service must be passed to \Drupal\layout_builder\InlineBlockEntityOperations::__construct(). It was added in Drupal 8.7.0 and will be required before Drupal 9.0.0.', E_USER_DEPRECATED);
-      $section_storage_manager = \Drupal::service('plugin.manager.layout_builder.section_storage');
-    }
-    $this->sectionStorageManager = $section_storage_manager;
   }
 
   /**
@@ -83,8 +63,7 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('inline_block.usage'),
-      $container->get('database'),
-      $container->get('plugin.manager.layout_builder.section_storage')
+      $container->get('database')
     );
   }
 
@@ -106,10 +85,10 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
     if ($entity->isNew() || !isset($entity->original) || $entity instanceof RevisionableInterface) {
       return;
     }
-    // If the original entity used the default storage then we cannot remove
-    // unused inline blocks because they will still be referenced in the
-    // defaults.
-    if ($this->originalEntityUsesDefaultStorage($entity)) {
+    $sections = $this->getEntitySections($entity);
+    // If this is a layout override and there are no sections then it is a new
+    // override.
+    if ($this->isEntityUsingFieldOverride($entity) && empty($sections)) {
       return;
     }
 
@@ -153,9 +132,9 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    *   The parent entity.
    */
   public function handleEntityDelete(EntityInterface $entity) {
-    // @todo In https://www.drupal.org/node/3008943 call
-    //   \Drupal\layout_builder\LayoutEntityHelperTrait::isLayoutCompatibleEntity().
-    $this->usage->removeByLayoutEntity($entity);
+    if ($this->isLayoutCompatibleEntity($entity)) {
+      $this->usage->removeByLayoutEntity($entity);
+    }
   }
 
   /**
@@ -171,10 +150,14 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
     $duplicate_blocks = FALSE;
 
     if ($sections = $this->getEntitySections($entity)) {
-      if ($this->originalEntityUsesDefaultStorage($entity)) {
-        // This is a new override from a default and the blocks need to be
-        // duplicated.
-        $duplicate_blocks = TRUE;
+      if ($this->isEntityUsingFieldOverride($entity)) {
+        if (!$entity->isNew() && isset($entity->original)) {
+          if (empty($this->getEntitySections($entity->original))) {
+            // If there were no sections in the original entity then this is a
+            // new override from a default and the blocks need to be duplicated.
+            $duplicate_blocks = TRUE;
+          }
+        }
       }
       $new_revision = FALSE;
       if ($entity instanceof RevisionableInterface) {

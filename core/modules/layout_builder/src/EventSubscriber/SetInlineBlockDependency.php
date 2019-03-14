@@ -10,7 +10,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\layout_builder\InlineBlockUsage;
 use Drupal\layout_builder\LayoutEntityHelperTrait;
-use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -65,14 +64,11 @@ class SetInlineBlockDependency implements EventSubscriberInterface {
    *   The database connection.
    * @param \Drupal\layout_builder\InlineBlockUsage $usage
    *   The inline block usage service.
-   * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
-   *   The section storage manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, InlineBlockUsage $usage, SectionStorageManagerInterface $section_storage_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, InlineBlockUsage $usage) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
     $this->usage = $usage;
-    $this->sectionStorageManager = $section_storage_manager;
   }
 
   /**
