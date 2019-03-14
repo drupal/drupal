@@ -41,7 +41,7 @@
     "mkdirp": "^0.5.1",
     "nightwatch": "^0.9.20",
     "prettier": "^1.14.0",
-    "stylelint": "^9.1.1",
+    "stylelint": "^9.10.1",
     "stylelint-checkstyle-formatter": "^0.1.1",
     "stylelint-config-standard": "^18.2.0",
     "stylelint-no-browser-hacks": "^1.1.0"
