@@ -301,8 +301,8 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->linkExists('Add Block');
 
     // Configure the existing section.
-    $assert_session->linkExists('Configure section');
-    $this->clickLink('Configure section');
+    $assert_session->linkExists('Configure section 1');
+    $this->clickLink('Configure section 1');
     $this->assertOffCanvasFormAfterWait('layout_builder_configure_section');
     $page->fillField('layout_settings[setting_1]', 'Test setting value');
     $page->pressButton('Update');

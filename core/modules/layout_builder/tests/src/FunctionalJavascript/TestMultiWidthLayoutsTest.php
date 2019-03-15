@@ -94,8 +94,8 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
       $this->assertWidthClassApplied($width_option['class'] . $width);
       foreach ($width_option['widths'] as $width) {
         $width_class = $width_option['class'] . $width;
-        $assert_session->linkExists('Configure section');
-        $page->clickLink('Configure section');
+        $assert_session->linkExists('Configure section 1');
+        $page->clickLink('Configure section 1');
         $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas input[type="submit"][value="Update"]'));
         $page->findField('layout_settings[column_widths]')->setValue($width);
         $page->pressButton("Update");
