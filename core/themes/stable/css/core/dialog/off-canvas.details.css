@@ -3,9 +3,11 @@
  * Visual styling for summary and details in the off-canvas dialog.
  */
 
+#drupal-off-canvas details {
+  display: block;
+}
 #drupal-off-canvas details,
 #drupal-off-canvas summary {
-  display: block;
   font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
 }
 #drupal-off-canvas details,
