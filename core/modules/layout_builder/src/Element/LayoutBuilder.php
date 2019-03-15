@@ -319,7 +319,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       ],
       'configure' => [
         '#type' => 'link',
-        '#title' => $this->t('Configure section'),
+        '#title' => $this->t('Configure section <span class="visually-hidden">@section</span>', ['@section' => $delta + 1]),
         '#access' => $layout instanceof PluginFormInterface,
         '#url' => Url::fromRoute('layout_builder.configure_section', [
           'section_storage_type' => $storage_type,
