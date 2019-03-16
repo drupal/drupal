@@ -117,7 +117,6 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertText(t('The role settings have been updated.'), 'The role settings form submitted successfully.');
 
     // Load up the user roles with the new weights.
-    drupal_static_reset('user_roles');
     $roles = user_roles();
     $rids = [];
     // Test that the role weights have been correctly saved.
