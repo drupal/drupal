@@ -445,6 +445,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getAllViewModes() {
+    @trigger_error('EntityManagerInterface::getAllViewModes() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getAllViewModes() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_display.repository')->getAllViewModes();
   }
 
@@ -458,6 +459,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getViewModes($entity_type_id) {
+    @trigger_error('EntityManagerInterface::getViewModes() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewModes() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_display.repository')->getViewModes($entity_type_id);
   }
 
@@ -471,6 +473,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getAllFormModes() {
+    @trigger_error('EntityManagerInterface::getAllFormModes() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getAllFormModes() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_display.repository')->getAllFormModes();
   }
 
@@ -484,6 +487,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getFormModes($entity_type_id) {
+    @trigger_error('EntityManagerInterface::getFormModes() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormModes() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_display.repository')->getFormModes($entity_type_id);
   }
 
@@ -497,6 +501,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getViewModeOptions($entity_type_id) {
+    @trigger_error('EntityManagerInterface::getViewModeOptions() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewModeOptions() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_display.repository')->getViewModeOptions($entity_type_id);
   }
 
@@ -510,6 +515,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getFormModeOptions($entity_type_id) {
+    @trigger_error('EntityManagerInterface::getFormModeOptions() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormModeOptions() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_display.repository')->getFormModeOptions($entity_type_id);
   }
 
@@ -523,6 +529,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getViewModeOptionsByBundle($entity_type_id, $bundle) {
+    @trigger_error('EntityManagerInterface::getViewModeOptionsByBundle() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewModeOptionsByBundle() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_display.repository')->getViewModeOptionsByBundle($entity_type_id, $bundle);
   }
 
@@ -536,6 +543,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getFormModeOptionsByBundle($entity_type_id, $bundle) {
+    @trigger_error('EntityManagerInterface::getFormModeOptionsByBundle() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormModeOptionsByBundle() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_display.repository')->getFormModeOptionsByBundle($entity_type_id, $bundle);
   }
 
@@ -549,6 +557,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function clearDisplayModeInfo() {
+    @trigger_error('EntityManagerInterface::clearDisplayModeInfo() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::clearDisplayModeInfo() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('entity_display.repository')->clearDisplayModeInfo();
   }
 

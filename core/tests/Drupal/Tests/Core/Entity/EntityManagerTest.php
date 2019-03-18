@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
@@ -43,6 +44,13 @@ class EntityManagerTest extends UnitTestCase {
   protected $entityTypeRepository;
 
   /**
+   * The entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface|\Prophecy\Prophecy\ProphecyInterface
+   */
+  protected $entityDisplayRepository;
+
+  /**
    * The entity type bundle info.
    *
    * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface|\Prophecy\Prophecy\ProphecyInterface
@@ -81,6 +89,7 @@ class EntityManagerTest extends UnitTestCase {
     $this->entityTypeBundleInfo = $this->prophesize(EntityTypeBundleInfoInterface::class);
     $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class);
     $this->entityRepository = $this->prophesize(EntityRepositoryInterface::class);
+    $this->entityDisplayRepository = $this->prophesize(EntityDisplayRepositoryInterface::class);
     $this->entityLastInstalledSchemaRepository = $this->prophesize(EntityLastInstalledSchemaRepositoryInterface::class);
 
     $container = new ContainerBuilder();
@@ -89,6 +98,7 @@ class EntityManagerTest extends UnitTestCase {
     $container->set('entity_type.bundle.info', $this->entityTypeBundleInfo->reveal());
     $container->set('entity_field.manager', $this->entityFieldManager->reveal());
     $container->set('entity.repository', $this->entityRepository->reveal());
+    $container->set('entity_display.repository', $this->entityDisplayRepository->reveal());
     $container->set('entity.last_installed_schema.repository', $this->entityLastInstalledSchemaRepository->reveal());
 
     $this->entityManager = new EntityManager();
@@ -232,6 +242,114 @@ class EntityManagerTest extends UnitTestCase {
     $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type_id)->shouldBeCalled()->willReturn([]);
 
     $this->assertEquals([], $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id));
+  }
+
+  /**
+   * Tests the getAllViewModes() method.
+   *
+   * @covers ::getAllViewModes
+   *
+   * @expectedDeprecation EntityManagerInterface::getAllViewModes() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getAllViewModes() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetAllViewModes() {
+    $this->entityDisplayRepository->getAllViewModes()->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getAllViewModes());
+  }
+
+  /**
+   * Tests the getViewModes() method.
+   *
+   * @covers ::getViewModes
+   *
+   * @expectedDeprecation EntityManagerInterface::getViewModes() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewModes() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetViewModes() {
+    $this->entityDisplayRepository->getViewModes('entity_type')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getViewModes('entity_type'));
+  }
+
+  /**
+   * Tests the getViewModeOptions() method.
+   *
+   * @covers ::getViewModeOptions
+   *
+   * @expectedDeprecation EntityManagerInterface::getViewModeOptions() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewModeOptions() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetViewModeOptions() {
+    $this->entityDisplayRepository->getViewModeOptions('entity_type')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getViewModeOptions('entity_type'));
+  }
+
+  /**
+   * Tests the getViewModeOptionsByBundle() method.
+   *
+   * @covers ::getViewModeOptionsByBundle
+   *
+   * @expectedDeprecation EntityManagerInterface::getViewModeOptionsByBundle() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewModeOptionsByBundle() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetViewModeOptionsByBundle() {
+    $this->entityDisplayRepository->getViewModeOptionsByBundle('entity_type', 'bundle')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getViewModeOptionsByBundle('entity_type', 'bundle'));
+  }
+
+  /**
+   * Tests the getAllFormModes() method.
+   *
+   * @covers ::getAllFormModes
+   *
+   * @expectedDeprecation EntityManagerInterface::getAllFormModes() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getAllFormModes() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetAllFormModes() {
+    $this->entityDisplayRepository->getAllFormModes()->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getAllFormModes());
+  }
+
+  /**
+   * Tests the getFormModes() method.
+   *
+   * @covers ::getFormModes
+   *
+   * @expectedDeprecation EntityManagerInterface::getFormModes() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormModes() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetFormModes() {
+    $this->entityDisplayRepository->getFormModes('entity_type')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getFormModes('entity_type'));
+  }
+
+  /**
+   * Tests the getFormModeOptions() method.
+   *
+   * @covers ::getFormModeOptions
+   *
+   * @expectedDeprecation EntityManagerInterface::getFormModeOptions() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormModeOptions() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetFormModeOptions() {
+    $this->entityDisplayRepository->getFormModeOptions('entity_type')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getFormModeOptions('entity_type'));
+  }
+
+  /**
+   * Tests the getFormModeOptionsByBundle() method.
+   *
+   * @covers ::getFormModeOptionsByBundle
+   *
+   * @expectedDeprecation EntityManagerInterface::getFormModeOptionsByBundle() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormModeOptionsByBundle() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetFormModeOptionsByBundle() {
+    $this->entityDisplayRepository->getFormModeOptionsByBundle('entity_type', 'bundle')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getFormModeOptionsByBundle('entity_type', 'bundle'));
+  }
+
+  /**
+   * Tests the clearDisplayModeInfo() method.
+   *
+   * @covers ::clearDisplayModeInfo
+   *
+   * @expectedDeprecation EntityManagerInterface::clearDisplayModeInfo() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::clearDisplayModeInfo() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testClearDisplayModeInfo() {
+    $this->entityDisplayRepository->clearDisplayModeInfo()->shouldBeCalled()->willReturn([]);
+    $this->entityManager->clearDisplayModeInfo();
   }
 
   /**
