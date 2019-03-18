@@ -41,8 +41,25 @@ body {
 
 blockquote {
   background: #f4f2e9;
-  margin-bottom: 1.28rem;
-  padding: 3rem;
+  margin: 0 0 1.28rem;
+  padding: 1.5rem;
+}
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  blockquote {
+    margin: 0 1.5rem 1.28rem;
+    padding: 1.5rem;
+  }
+}
+/* Medium */
+@media screen and (min-width: 40rem) { /* 640px */
+  blockquote {
+    margin: 0 2.5rem 1.28rem;
+    padding: 3rem;
+  }
 }
 blockquote > * {
   color: #000;
