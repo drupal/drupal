@@ -435,6 +435,7 @@
  *   seven theme in https://www.drupal.org/project/drupal/issues/2980769
  */
 .button.media-library-open-button {
+  margin-bottom: 1em;
   margin-left: 0; /* LTR */
 }
 [dir="rtl"] .button.media-library-open-button {
