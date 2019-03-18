@@ -17,9 +17,11 @@
 @media screen and (min-width: 60rem) {
   .footer {
     padding: 1rem 1rem 0;
-    text-align: left;
+    text-align: left; /* LTR */
   }
-
+  [dir="rtl"] .footer {
+    text-align: right;
+  }
   .region-footer {
     display: flex;
     justify-content: space-between;

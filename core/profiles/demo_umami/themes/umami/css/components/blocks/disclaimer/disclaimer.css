@@ -11,21 +11,28 @@
 }
 
 @media screen and (min-width: 75rem) {
+  .block-type-disclaimer-block {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .block-type-disclaimer-block .field--name-field-disclaimer,
   .block-type-disclaimer-block .field--name-field-copyright {
     margin-bottom: 0;
+    text-align: start;
   }
 
   .block-type-disclaimer-block .field--name-field-disclaimer {
-    float: left;
     max-width: 40%;
-    text-align: left;
-    margin-left: 0.5rem;
+    margin-left: 0.5rem; /* LTR */
+  }
+
+  [dir="rtl"] .block-type-disclaimer-block .field--name-field-disclaimer {
+    margin-right: 0.5rem;
+    margin-left: 0;
   }
 
   .block-type-disclaimer-block .field--name-field-copyright {
-    float: right;
     width: 25%;
-    text-align: left;
   }
 }
