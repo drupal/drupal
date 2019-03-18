@@ -54,12 +54,13 @@ class ModeratedNodeListBuilder extends NodeListBuilder {
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    $entity_type_manager = $container->get('entity_type.manager');
     return new static(
       $entity_type,
-      $container->get('entity.manager')->getStorage($entity_type->id()),
+      $entity_type_manager->getStorage($entity_type->id()),
       $container->get('date.formatter'),
       $container->get('redirect.destination'),
-      $container->get('entity_type.manager')
+      $entity_type_manager
     );
   }
 

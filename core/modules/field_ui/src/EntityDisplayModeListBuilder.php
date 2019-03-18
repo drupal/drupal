@@ -45,11 +45,11 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    $entity_manager = $container->get('entity.manager');
+    $entity_type_manager = $container->get('entity_type.manager');
     return new static(
       $entity_type,
-      $entity_manager->getStorage($entity_type->id()),
-      $entity_manager->getDefinitions()
+      $entity_type_manager->getStorage($entity_type->id()),
+      $entity_type_manager->getDefinitions()
     );
   }
 
