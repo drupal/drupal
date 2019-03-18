@@ -35,6 +35,7 @@ trait CommentTestTrait {
    */
   public function addDefaultCommentField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN, $comment_type_id = 'comment', $comment_view_mode = 'full') {
     $entity_manager = \Drupal::entityManager();
+    $entity_display_repository = \Drupal::service('entity_display.repository');
     // Create the comment type if needed.
     $comment_type_storage = $entity_manager->getStorage('comment_type');
     if ($comment_type = $comment_type_storage->load($comment_type_id)) {
@@ -94,7 +95,7 @@ trait CommentTestTrait {
           'weight' => 20,
         ])
         ->save();
-      foreach ($entity_manager->getFormModes($entity_type) as $id => $form_mode) {
+      foreach ($entity_display_repository->getFormModes($entity_type) as $id => $form_mode) {
         $display = entity_get_form_display($entity_type, $bundle, $id);
         // Only update existing displays.
         if ($display && !$display->isNew()) {
@@ -112,7 +113,7 @@ trait CommentTestTrait {
           'settings' => ['view_mode' => $comment_view_mode],
         ])
         ->save();
-      foreach ($entity_manager->getViewModes($entity_type) as $id => $view_mode) {
+      foreach ($entity_display_repository->getViewModes($entity_type) as $id => $view_mode) {
         $display = entity_get_display($entity_type, $bundle, $id);
         // Only update existing displays.
         if ($display && !$display->isNew()) {

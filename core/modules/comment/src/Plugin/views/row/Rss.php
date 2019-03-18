@@ -46,7 +46,7 @@ class Rss extends RssPluginBase {
       $cids[] = $row->cid;
     }
 
-    $this->comments = $this->entityManager->getStorage('comment')->loadMultiple($cids);
+    $this->comments = $this->entityTypeManager->getStorage('comment')->loadMultiple($cids);
   }
 
   /**
@@ -99,7 +99,7 @@ class Rss extends RssPluginBase {
 
     // The comment gets built and modules add to or modify
     // $comment->rss_elements and $comment->rss_namespaces.
-    $build = $this->entityManager->getViewBuilder('comment')->view($comment, 'rss');
+    $build = $this->entityTypeManager->getViewBuilder('comment')->view($comment, 'rss');
     unset($build['#theme']);
 
     if (!empty($comment->rss_namespaces)) {
