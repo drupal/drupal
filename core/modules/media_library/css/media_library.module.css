@@ -24,6 +24,7 @@
 
 .media-library-views-form,
 .media-library-selection,
+.media-library-add-form__selected-media .details-wrapper,
 .media-library-views-form__bulk_form,
 .media-library-view .form--inline {
   display: flex;
@@ -81,7 +82,8 @@
 
 /* @todo Remove or re-work in https://www.drupal.org/node/2985168 */
 .media-library-widget .media-library-item__name a,
-.media-library-view--widget .media-library-item__name a {
+.media-library-view--widget .media-library-item__name a,
+.media-library-add-form__selected-media .media-library-item__name a {
   pointer-events: none;
 }
 

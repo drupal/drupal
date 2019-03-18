@@ -3,46 +3,6 @@
  */
 (($, Drupal) => {
   /**
-   * Adds hover effect to media items.
-   *
-   * @type {Drupal~behavior}
-   *
-   * @prop {Drupal~behaviorAttach} attach
-   *   Attaches behavior to add a class when hovering over media items.
-   */
-  Drupal.behaviors.MediaLibraryHover = {
-    attach(context) {
-      $('.js-click-to-select-trigger, .js-click-to-select-checkbox', context)
-        .once('media-library-item-hover')
-        .on('mouseover mouseout', ({ currentTarget, type }) => {
-          $(currentTarget)
-            .closest('.js-media-library-item')
-            .toggleClass('is-hover', type === 'mouseover');
-        });
-    },
-  };
-
-  /**
-   * Adds focus effect to media items.
-   *
-   * @type {Drupal~behavior}
-   *
-   * @prop {Drupal~behaviorAttach} attach
-   *   Attaches behavior to add a focus effect to media items.
-   */
-  Drupal.behaviors.MediaLibraryFocus = {
-    attach(context) {
-      $('.js-click-to-select-checkbox input', context)
-        .once('media-library-item-focus')
-        .on('focus blur', ({ currentTarget, type }) => {
-          $(currentTarget)
-            .closest('.js-media-library-item')
-            .toggleClass('is-focus', type === 'focus');
-        });
-    },
-  };
-
-  /**
    * Adds checkbox to select all items in the library.
    *
    * @type {Drupal~behavior}

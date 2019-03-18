@@ -6,34 +6,12 @@
 **/
 
 (function ($, Drupal) {
-  Drupal.behaviors.MediaLibraryHover = {
-    attach: function attach(context) {
-      $('.js-click-to-select-trigger, .js-click-to-select-checkbox', context).once('media-library-item-hover').on('mouseover mouseout', function (_ref) {
-        var currentTarget = _ref.currentTarget,
-            type = _ref.type;
-
-        $(currentTarget).closest('.js-media-library-item').toggleClass('is-hover', type === 'mouseover');
-      });
-    }
-  };
-
-  Drupal.behaviors.MediaLibraryFocus = {
-    attach: function attach(context) {
-      $('.js-click-to-select-checkbox input', context).once('media-library-item-focus').on('focus blur', function (_ref2) {
-        var currentTarget = _ref2.currentTarget,
-            type = _ref2.type;
-
-        $(currentTarget).closest('.js-media-library-item').toggleClass('is-focus', type === 'focus');
-      });
-    }
-  };
-
   Drupal.behaviors.MediaLibrarySelectAll = {
     attach: function attach(context) {
       var $view = $('.js-media-library-view', context).once('media-library-select-all');
       if ($view.length && $view.find('.js-media-library-item').length) {
-        var $checkbox = $('<input type="checkbox" class="form-checkbox" />').on('click', function (_ref3) {
-          var currentTarget = _ref3.currentTarget;
+        var $checkbox = $('<input type="checkbox" class="form-checkbox" />').on('click', function (_ref) {
+          var currentTarget = _ref.currentTarget;
 
           var $checkboxes = $(currentTarget).closest('.media-library-view').find('.js-media-library-item input[type="checkbox"]');
           $checkboxes.prop('checked', $(currentTarget).prop('checked')).trigger('change');
