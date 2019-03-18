@@ -2,28 +2,22 @@
 
 namespace Drupal\content_translation;
 
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Config\ConfigEvents;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\migrate\Event\MigrateEvents;
-use Drupal\migrate\Event\MigrateImportEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+@trigger_error('\Drupal\content_translation\ContentTranslationUpdatesManager is scheduled for removal in Drupal 9.0.0. Definitions are updated automatically now so no replacement is needed. See https://www.drupal.org/node/2973222.', E_USER_DEPRECATED);
 
 /**
  * Provides the logic needed to update field storage definitions when needed.
+ *
+ * @deprecated in Drupal 8.7.x, to be removed before Drupal 9.0.0.
+ *   Definitions are updated automatically now so no replacement is needed.
+ *
+ * @see https://www.drupal.org/node/2973222
  */
-class ContentTranslationUpdatesManager implements EventSubscriberInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+class ContentTranslationUpdatesManager {
 
   /**
    * The entity field manager.
@@ -69,12 +63,10 @@ class ContentTranslationUpdatesManager implements EventSubscriberInterface {
     $this->entityTypeManager = $entity_type_manager;
     $this->updateManager = $update_manager;
     if (!$entity_field_manager) {
-      @trigger_error('The entity_field.manager service must be passed to ContentTranslationUpdatesManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
       $entity_field_manager = \Drupal::service('entity_field.manager');
     }
     $this->entityFieldManager = $entity_field_manager;
     if (!$entity_last_installed_schema_repository) {
-      @trigger_error('The entity.last_installed_schema.repository service must be passed to ContentTranslationUpdatesManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
       $entity_last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
     }
     $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;
@@ -88,8 +80,6 @@ class ContentTranslationUpdatesManager implements EventSubscriberInterface {
    */
   public function updateDefinitions(array $entity_types) {
     // Handle field storage definition creation, if needed.
-    // @todo Generalize this code in https://www.drupal.org/node/2346013.
-    // @todo Handle initial values in https://www.drupal.org/node/2346019.
     if ($this->updateManager->needsUpdates()) {
       foreach ($entity_types as $entity_type_id => $entity_type) {
         $storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id);
@@ -102,40 +92,6 @@ class ContentTranslationUpdatesManager implements EventSubscriberInterface {
         }
       }
     }
-  }
-
-  /**
-   * Listener for the ConfigImporter import event.
-   */
-  public function onConfigImporterImport() {
-    $entity_types = array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $entity_type) {
-      return $entity_type->isTranslatable();
-    });
-    $this->updateDefinitions($entity_types);
-  }
-
-  /**
-   * Listener for migration imports.
-   */
-  public function onMigrateImport(MigrateImportEvent $event) {
-    $migration = $event->getMigration();
-    $configuration = $migration->getDestinationConfiguration();
-    $entity_types = NestedArray::getValue($configuration, ['content_translation_update_definitions']);
-    if ($entity_types) {
-      $entity_types = array_intersect_key($this->entityTypeManager->getDefinitions(), array_flip($entity_types));
-      $this->updateDefinitions($entity_types);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getSubscribedEvents() {
-    $events[ConfigEvents::IMPORT][] = ['onConfigImporterImport', 60];
-    if (class_exists('\Drupal\migrate\Event\MigrateEvents')) {
-      $events[MigrateEvents::POST_IMPORT][] = ['onMigrateImport'];
-    }
-    return $events;
   }
 
 }

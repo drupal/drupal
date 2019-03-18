@@ -43,8 +43,6 @@ process:
       4: true
 destination:
   plugin: entity:language_content_settings
-  content_translation_update_definitions:
-    - node
 migration_dependencies:
   required:
     - d7_node_type
