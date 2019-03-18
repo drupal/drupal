@@ -16,6 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\language\ContentLanguageSettingsInterface;
 
 /**
  * Implements hook_help().
@@ -172,25 +173,70 @@ function content_translation_entity_type_alter(array &$entity_types) {
 /**
  * Implements hook_ENTITY_TYPE_insert().
  *
- * Clear the bundle information cache so that the bundle's translatability will
- * be set properly.
+ * Installs Content Translation's field storage definitions for the target
+ * entity type, if required.
+ *
+ * Also clears the bundle information cache so that the bundle's translatability
+ * will be set properly.
  *
  * @see content_translation_entity_bundle_info_alter()
+ * @see \Drupal\content_translation\ContentTranslationManager::isEnabled()
  */
-function content_translation_language_content_settings_insert(EntityInterface $entity) {
+function content_translation_language_content_settings_insert(ContentLanguageSettingsInterface $settings) {
+  if ($settings->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
+    _content_translation_install_field_storage_definitions($settings->getTargetEntityTypeId());
+  }
+
   \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_update().
  *
- * Clear the bundle information cache so that the bundle's translatability will
- * be changed properly.
+ * Installs Content Translation's field storage definitions for the target
+ * entity type, if required.
+ *
+ * Also clears the bundle information cache so that the bundle's translatability
+ * will be changed properly.
  *
  * @see content_translation_entity_bundle_info_alter()
+ * @see \Drupal\content_translation\ContentTranslationManager::isEnabled()
  */
-function content_translation_language_content_settings_update(EntityInterface $entity) {
+function content_translation_language_content_settings_update(ContentLanguageSettingsInterface $settings) {
+  $original_settings = $settings->original;
+  if ($settings->getThirdPartySetting('content_translation', 'enabled', FALSE)
+    && !$original_settings->getThirdPartySetting('content_translation', 'enabled', FALSE)
+  ) {
+    _content_translation_install_field_storage_definitions($settings->getTargetEntityTypeId());
+  }
   \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
+}
+
+/**
+ * Installs Content Translation's fields for a given entity type.
+ *
+ * @param string $entity_type_id
+ *   The entity type ID.
+ *
+ * @todo Generalize this code in https://www.drupal.org/node/2346013.
+ */
+function _content_translation_install_field_storage_definitions($entity_type_id) {
+  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
+  $field_manager = \Drupal::service('entity_field.manager');
+  /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $schema_repository */
+  $schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $field_manager->useCaches(FALSE);
+  $storage_definitions = $field_manager->getFieldStorageDefinitions($entity_type_id);
+  $field_manager->useCaches(TRUE);
+  $installed_storage_definitions = $schema_repository->getLastInstalledFieldStorageDefinitions($entity_type_id);
+  foreach (array_diff_key($storage_definitions, $installed_storage_definitions) as $storage_definition) {
+    /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition */
+    if ($storage_definition->getProvider() == 'content_translation') {
+      $definition_update_manager->installFieldStorageDefinition($storage_definition->getName(), $entity_type_id, 'content_translation', $storage_definition);
+    }
+  }
 }
 
 /**

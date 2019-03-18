@@ -17,7 +17,10 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
   /**
    * {@inheritdoc}
    */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+  protected $deprecatedProperties = [
+    'entityManager' => 'entity.manager',
+    'updatesManager' => 'content_translation.updates_manager',
+  ];
 
   /**
    * The entity type bundle info provider.
@@ -34,27 +37,18 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
   protected $entityTypeManager;
 
   /**
-   * The updates manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationUpdatesManager
-   */
-  protected $updatesManager;
-
-  /**
    * Constructs a ContentTranslationManageAccessCheck object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\content_translation\ContentTranslationUpdatesManager $updates_manager
-   *   The updates manager.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info provider.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentTranslationUpdatesManager $updates_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, $entity_type_bundle_info) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->updatesManager = $updates_manager;
-    if (!$entity_type_bundle_info) {
-      @trigger_error('The entity_type.bundle.info service must be passed to ContentTranslationManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+
+    if (!($entity_type_bundle_info instanceof EntityTypeBundleInfoInterface)) {
+      @trigger_error('The entity_type.bundle.info service should be passed to ContentTranslationManager::__construct() instead of the content_translation.updates_manager service since 8.7.0. This will be required in Drupal 9.0.0. See https://www.drupal.org/node/2549139 and https://www.drupal.org/node/2973222.', E_USER_DEPRECATED);
       $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
     }
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
@@ -104,8 +98,6 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
   public function setEnabled($entity_type_id, $bundle, $value) {
     $config = $this->loadContentLanguageSettings($entity_type_id, $bundle);
     $config->setThirdPartySetting('content_translation', 'enabled', $value)->save();
-    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-    $this->updatesManager->updateDefinitions([$entity_type_id => $entity_type]);
   }
 
   /**

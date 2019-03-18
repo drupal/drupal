@@ -46,8 +46,6 @@ process:
     source: language
 destination:
   plugin: entity:language_content_settings
-  content_translation_update_definitions:
-    - taxonomy_term
 migration_dependencies:
   required:
     - d6_taxonomy_vocabulary

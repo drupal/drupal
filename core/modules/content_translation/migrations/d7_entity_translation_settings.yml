@@ -25,11 +25,6 @@ process:
   third_party_settings/content_translation/bundle_settings/untranslatable_fields_hide: untranslatable_fields_hide
 destination:
   plugin: entity:language_content_settings
-  content_translation_update_definitions:
-    - comment
-    - node
-    - taxonomy_term
-    - user
 migration_dependencies:
   optional:
     - d7_comment_type

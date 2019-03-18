@@ -33,8 +33,6 @@ process:
 destination:
   plugin: entity:node
   translations: true
-  content_translation_update_definitions:
-    - node
   destination_module: content_translation
 migration_dependencies:
   required:
