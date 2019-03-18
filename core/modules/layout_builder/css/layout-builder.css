@@ -14,10 +14,10 @@
 }
 
 .layout-builder__link--add {
-  color: #787878;
+  color: #686868;
   border-bottom: none;
   padding-left: 24px;
-  background: url(../../../misc/icons/787878/plus.svg) transparent top left / 16px 16px no-repeat;
+  background: url(../../../misc/icons/686868/plus.svg) transparent top left / 16px 16px no-repeat;
 }
 
 .layout-builder__link--add:hover,
