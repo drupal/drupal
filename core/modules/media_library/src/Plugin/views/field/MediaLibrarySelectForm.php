@@ -97,7 +97,8 @@ class MediaLibrarySelectForm extends FieldPluginBase {
       'callback' => [static::class, 'updateWidget'],
     ];
 
-    $form['actions']['submit']['#value'] = $this->t('Select media');
+    $form['actions']['submit']['#value'] = $this->t('Insert selected');
+    $form['actions']['submit']['#button_type'] = 'primary';
     $form['actions']['submit']['#field_id'] = $selection_field_id;
     // By default, the AJAX system tries to move the focus back to the element
     // that triggered the AJAX request. Since the media library is closed after

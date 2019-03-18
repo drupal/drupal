@@ -136,7 +136,7 @@
 
   Drupal.behaviors.MediaLibraryItemSelection = {
     attach: function attach(context, settings) {
-      var $form = $('.js-media-library-views-form', context);
+      var $form = $('.js-media-library-views-form, .js-media-library-add-form', context);
       var currentSelection = Drupal.MediaLibrary.currentSelection;
 
       if (!$form.length) {
@@ -144,21 +144,6 @@
       }
 
       var $mediaItems = $('.js-media-library-item input[type="checkbox"]', $form);
-
-      $mediaItems.once('media-item-change').on('change', function (e) {
-        var id = e.currentTarget.value;
-
-        var position = currentSelection.indexOf(id);
-        if (e.currentTarget.checked) {
-          if (position === -1) {
-            currentSelection.push(id);
-          }
-        } else if (position !== -1) {
-          currentSelection.splice(position, 1);
-        }
-
-        $form.find('#media-library-modal-selection').val(currentSelection.join()).trigger('change');
-      });
 
       function disableItems($items) {
         $items.prop('disabled', true).closest('.js-media-library-item').addClass('media-library-item--disabled');
@@ -183,7 +168,22 @@
         }
       }
 
-      $('#media-library-modal-selection', $form).once('media-library-selection-change').on('change', function (e) {
+      $mediaItems.once('media-item-change').on('change', function (e) {
+        var id = e.currentTarget.value;
+
+        var position = currentSelection.indexOf(id);
+        if (e.currentTarget.checked) {
+          if (position === -1) {
+            currentSelection.push(id);
+          }
+        } else if (position !== -1) {
+          currentSelection.splice(position, 1);
+        }
+
+        $form.find('#media-library-modal-selection').val(currentSelection.join()).trigger('change');
+
+        $('.js-media-library-add-form-current-selection').val(currentSelection.join());
+
         updateSelectionInfo(settings.media_library.selection_remaining);
 
         if (currentSelection.length === settings.media_library.selection_remaining) {

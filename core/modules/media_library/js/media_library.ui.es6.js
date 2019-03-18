@@ -251,7 +251,10 @@
    */
   Drupal.behaviors.MediaLibraryItemSelection = {
     attach(context, settings) {
-      const $form = $('.js-media-library-views-form', context);
+      const $form = $(
+        '.js-media-library-views-form, .js-media-library-add-form',
+        context,
+      );
       const currentSelection = Drupal.MediaLibrary.currentSelection;
 
       if (!$form.length) {
@@ -262,30 +265,6 @@
         '.js-media-library-item input[type="checkbox"]',
         $form,
       );
-
-      // Update the selection array and the hidden form field when a media item
-      // is selected.
-      $mediaItems.once('media-item-change').on('change', e => {
-        const id = e.currentTarget.value;
-
-        // Update the selection.
-        const position = currentSelection.indexOf(id);
-        if (e.currentTarget.checked) {
-          // Check if the ID is not already in the selection and add if needed.
-          if (position === -1) {
-            currentSelection.push(id);
-          }
-        } else if (position !== -1) {
-          // Remove the ID when it is in the current selection.
-          currentSelection.splice(position, 1);
-        }
-
-        // Set the selection in the hidden form element.
-        $form
-          .find('#media-library-modal-selection')
-          .val(currentSelection.join())
-          .trigger('change');
-      });
 
       /**
        * Disable media items.
@@ -343,23 +322,49 @@
         }
       }
 
-      // The hidden selection form field changes when the selection is updated.
-      $('#media-library-modal-selection', $form)
-        .once('media-library-selection-change')
-        .on('change', e => {
-          updateSelectionInfo(settings.media_library.selection_remaining);
+      // Update the selection array and the hidden form field when a media item
+      // is selected.
+      $mediaItems.once('media-item-change').on('change', e => {
+        const id = e.currentTarget.value;
 
-          // Prevent users from selecting more items than allowed.
-          if (
-            currentSelection.length ===
-            settings.media_library.selection_remaining
-          ) {
-            disableItems($mediaItems.not(':checked'));
-            enableItems($mediaItems.filter(':checked'));
-          } else {
-            enableItems($mediaItems);
+        // Update the selection.
+        const position = currentSelection.indexOf(id);
+        if (e.currentTarget.checked) {
+          // Check if the ID is not already in the selection and add if needed.
+          if (position === -1) {
+            currentSelection.push(id);
           }
-        });
+        } else if (position !== -1) {
+          // Remove the ID when it is in the current selection.
+          currentSelection.splice(position, 1);
+        }
+
+        // Set the selection in the hidden form element.
+        $form
+          .find('#media-library-modal-selection')
+          .val(currentSelection.join())
+          .trigger('change');
+
+        // Set the selection in the media library add form. Since the form is
+        // not necessarily loaded within the same context, we can't use the
+        // context here.
+        $('.js-media-library-add-form-current-selection').val(
+          currentSelection.join(),
+        );
+
+        // Update the number of selected items in the button pane.
+        updateSelectionInfo(settings.media_library.selection_remaining);
+
+        // Prevent users from selecting more items than allowed.
+        if (
+          currentSelection.length === settings.media_library.selection_remaining
+        ) {
+          disableItems($mediaItems.not(':checked'));
+          enableItems($mediaItems.filter(':checked'));
+        } else {
+          enableItems($mediaItems);
+        }
+      });
 
       // Apply the current selection to the media library view. Changing the
       // checkbox values triggers the change event for the media items. The

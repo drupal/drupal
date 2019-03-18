@@ -199,6 +199,14 @@ class FileUploadForm extends AddFormBase {
    */
   public function processUploadElement(array $element, FormStateInterface $form_state) {
     $element['upload_button']['#submit'] = ['::uploadButtonSubmit'];
+    // Limit the validation errors to make sure
+    // FormValidator::handleErrorsWithLimitedValidation doesn't remove the
+    // current selection from the form state.
+    // @see Drupal\Core\Form\FormValidator::handleErrorsWithLimitedValidation()
+    $element['upload_button']['#limit_validation_errors'] = [
+      ['upload'],
+      ['current_selection'],
+    ];
     $element['upload_button']['#ajax'] = [
       'callback' => '::updateFormCallback',
       'wrapper' => 'media-library-wrapper',

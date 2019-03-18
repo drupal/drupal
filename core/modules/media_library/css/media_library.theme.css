@@ -116,6 +116,10 @@
   margin: 8px 0 0;
 }
 
+.media-library-add-form__description {
+  margin: 0;
+}
+
 /* Style the media add oEmbed form. */
 .media-library-add-form--oembed .media-library-add-form__input-wrapper {
   display: flex;
@@ -141,6 +145,20 @@
  */
 .button.media-library-add-form-oembed-submit {
   align-self: center;
+}
+
+/* Media add form selection styles. */
+.media-library-add-form__selected-media {
+  margin-top: 1em;
+}
+
+/* Change to padding to account for the negative margin for flex grid. */
+.media-library-add-form__selected-media .details-wrapper {
+  padding: 0 10px 1em 10px;
+}
+
+.media-library-add-form__selected-media .media-library-item .field--name-thumbnail img {
+  height: 100px;
 }
 
 /* Generic media library view styles. */
@@ -290,15 +308,25 @@
   border: 1px solid #dbdbdb;
 }
 
+/* The selected items in the add form should be shown a bit smaller. */
+.media-library-add-form__selected-media .media-library-item--small {
+  width: 33.3%;
+}
+
 @media screen and (min-width: 45em) {
   .media-library-item--grid {
-    width: 33%;
+    width: 33.3%;
   }
 
-  /* Use a smaller width for the modal and widget since there is less space. */
+  /* Change the width for the modal and widget since there is less space. */
   .media-library-widget-modal .media-library-item--grid,
   .media-library-selection .media-library-item--grid {
     width: 50%;
+  }
+
+  /* The selected items in the add form should be shown a bit smaller. */
+  .media-library-add-form__selected-media .media-library-item--small {
+    width: 25%;
   }
 }
 
@@ -307,22 +335,32 @@
     width: 25%;
   }
 
-  /* Use a smaller width for the modal and widget since there is less space. */
+  /* Change the width for the modal and widget since there is less space. */
   .media-library-widget-modal .media-library-item--grid,
   .media-library-selection .media-library-item--grid {
-    width: 33%;
+    width: 33.3%;
+  }
+
+  /* The selected items in the add form should be shown a bit smaller. */
+  .media-library-add-form__selected-media .media-library-item--small {
+    width: 16.6%;
   }
 }
 
 @media screen and (min-width: 77em) {
   .media-library-item--grid {
-    width: 16%;
+    width: 16.6%;
   }
 
-  /* Use a smaller width for the modal and widget since there is less space. */
+  /* Change the width for the modal and widget since there is less space. */
   .media-library-widget-modal .media-library-item--grid,
   .media-library-selection .media-library-item--grid {
     width: 25%;
+  }
+
+  /* The selected items in the add form should be shown a bit smaller. */
+  .media-library-add-form__selected-media .media-library-item--small {
+    width: 16.6%;
   }
 }
 
@@ -348,7 +386,7 @@
   border-radius: 3px;
 }
 
-.media-library-item--grid.checked {
+.media-library-item--grid.checked:before {
   border-color: #0076c0;
 }
 
@@ -504,7 +542,7 @@
 .media-library-add-form__media {
   position: relative;
   display: flex;
-  padding: 20px 0 20px 0;
+  padding: 1em 0;
   border-bottom: 1px solid #c0c0c0;
   outline: none;
 }
@@ -607,7 +645,8 @@
 
 /* @todo Remove or re-work in https://www.drupal.org/node/2985168 */
 .media-library-widget .media-library-item__name a,
-.media-library-view--widget .media-library-item__name a {
+.media-library-view--widget .media-library-item__name a,
+.media-library-add-form__selected-media .media-library-item__name a {
   text-decoration: none;
   color: black;
 }
