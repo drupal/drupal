@@ -77,7 +77,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('entity.manager')->getStorage($entity_type->id()),
+      $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('plugin.manager.search'),
       $container->get('config.factory'),
       $container->get('messenger')
