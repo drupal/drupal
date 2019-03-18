@@ -597,6 +597,7 @@ class MediaLibraryTest extends WebDriverTestBase {
   public function testWidgetUpload() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
+    $driver = $this->getSession()->getDriver();
 
     foreach ($this->getTestFiles('image') as $image) {
       $extension = pathinfo($image->filename, PATHINFO_EXTENSION);
@@ -735,11 +736,6 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Select a media item.
     $page->find('css', '.media-library-view .js-click-to-select-checkbox input')->click();
     $assert_session->pageTextContains('1 item selected');
-
-    // Multiple uploads should be allowed.
-    // @todo Add test when https://github.com/minkphp/Mink/issues/358 is closed
-    $this->assertTrue($assert_session->fieldExists('Add files')->hasAttribute('multiple'));
-
     $page->attachFileToField('Add files', $this->container->get('file_system')->realpath($png_image->uri));
     $assert_session->assertWaitOnAjaxRequest();
     $page->fillField('Name', 'Unlimited Cardinality Image');
@@ -822,6 +818,87 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains($jpg_image->filename);
+
+    // Assert removing an uploaded media item before save works as expected.
+    $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Add or select media');
+    $page->clickLink('Type Three');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->attachFileToField('Add files', $this->container->get('file_system')->realpath($png_image->uri));
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert the focus is shifted to the added media items.
+    $this->assertJsCondition('jQuery(".media-library-add-form__added-media").is(":focus")');
+    // Assert the media item fields are shown and the vertical tabs are no
+    // longer shown.
+    $assert_session->elementExists('css', '.media-library-add-form__fields');
+    $assert_session->elementNotExists('css', '.media-library-menu');
+    // Press the 'Remove button' and assert the user is sent back to the media
+    // library.
+    $assert_session->elementExists('css', '.media-library-add-form__remove-button')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert the remove message is shown.
+    $assert_session->pageTextContains("The media item $png_image->filename has been removed.");
+    // Assert the focus is shifted to the first tabbable element of the add
+    // form, which should be the source field.
+    $this->assertJsCondition('jQuery("#media-library-add-form-wrapper :tabbable").is(":focus")');
+    $assert_session->elementNotExists('css', '.media-library-add-form__fields');
+    $assert_session->elementExists('css', '.media-library-menu');
+    $page->find('css', '.ui-dialog-titlebar-close')->click();
+
+    // Assert uploading multiple files.
+    $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Add or select media');
+    $page->clickLink('Type Three');
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertTrue($assert_session->fieldExists('Add files')->hasAttribute('multiple'));
+    // Create a list of new files to upload.
+    $filenames = [];
+    $remote_paths = [];
+    foreach (range(1, 3) as $i) {
+      $path = $file_system->copy($png_image->uri);
+      $filenames[] = $file_system->basename($path);
+      $remote_paths[] = $driver->uploadFileAndGetRemoteFilePath($file_system->realpath($path));
+    }
+    $page->findField('Add files')->setValue(implode("\n", $remote_paths));
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert the media item fields are shown and the vertical tabs are no
+    // longer shown.
+    $assert_session->elementExists('css', '.media-library-add-form__fields');
+    $assert_session->elementNotExists('css', '.media-library-menu');
+    // Assert all files have been added.
+    $assert_session->fieldValueEquals('media[0][fields][name][0][value]', $filenames[0]);
+    $assert_session->fieldValueEquals('media[1][fields][name][0][value]', $filenames[1]);
+    $assert_session->fieldValueEquals('media[2][fields][name][0][value]', $filenames[2]);
+    // Set alt texts for items 1 and 2, leave the alt text empty for item 3 to
+    // assert the field validation does not stop users from removing items.
+    $page->fillField('media[0][fields][field_media_test_image][0][alt]', $filenames[0]);
+    $page->fillField('media[1][fields][field_media_test_image][0][alt]', $filenames[1]);
+    // Remove the second file and assert the focus is shifted to the container
+    // of the next media item and field values are still correct.
+    $page->pressButton('media-1-remove-button');
+    $this->assertJsCondition('jQuery(".media-library-add-form__media[data-media-library-added-delta=2]").is(":focus")');
+    $assert_session->pageTextContains('The media item ' . $filenames[1] . ' has been removed.');
+    // The second media item should be removed (this has the delta 1 since we
+    // start counting from 0).
+    $assert_session->elementNotExists('css', '.media-library-add-form__media[data-media-library-added-delta=1]');
+    $media_item_one = $assert_session->elementExists('css', '.media-library-add-form__media[data-media-library-added-delta=0]');
+    $assert_session->fieldValueEquals('Name', $filenames[0], $media_item_one);
+    $assert_session->fieldValueEquals('Alternative text', $filenames[0], $media_item_one);
+    $media_item_three = $assert_session->elementExists('css', '.media-library-add-form__media[data-media-library-added-delta=2]');
+    $assert_session->fieldValueEquals('Name', $filenames[2], $media_item_three);
+    $assert_session->fieldValueEquals('Alternative text', '', $media_item_three);
+    // Remove the last file and assert the focus is shifted to the container
+    // of the first media item and field values are still correct.
+    $page->pressButton('media-2-remove-button');
+    $this->assertJsCondition('jQuery(".media-library-add-form__media[data-media-library-added-delta=0]").is(":focus")');
+    $assert_session->pageTextContains('The media item ' . $filenames[2] . ' has been removed.');
+    $assert_session->elementNotExists('css', '.media-library-add-form__media[data-media-library-added-delta=1]');
+    $assert_session->elementNotExists('css', '.media-library-add-form__media[data-media-library-added-delta=2]');
+    $media_item_one = $assert_session->elementExists('css', '.media-library-add-form__media[data-media-library-added-delta=0]');
+    $assert_session->fieldValueEquals('Name', $filenames[0], $media_item_one);
+    $assert_session->fieldValueEquals('Alternative text', $filenames[0], $media_item_one);
   }
 
   /**
@@ -921,6 +998,33 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains('Custom video title');
+
+    // Assert removing an added oEmbed media item before save works as expected.
+    $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Add or select media');
+    $page->clickLink('Type Five');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->fillField('Add Type Five via URL', $video_url);
+    $page->pressButton('Add');
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert the focus is shifted to the added media items.
+    $this->assertJsCondition('jQuery(".media-library-add-form__added-media").is(":focus")');
+    // Assert the media item fields are shown and the vertical tabs are no
+    // longer shown.
+    $assert_session->elementExists('css', '.media-library-add-form__fields');
+    $assert_session->elementNotExists('css', '.media-library-menu');
+    // Press the 'Remove button' and assert the user is sent back to the media
+    // library.
+    $assert_session->elementExists('css', '.media-library-add-form__remove-button')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert the remove message is shown.
+    $assert_session->pageTextContains("The media item $video_title has been removed.");
+    // Assert the focus is shifted to the first tabbable element of the add
+    // form, which should be the source field.
+    $this->assertJsCondition('jQuery("#media-library-add-form-wrapper :tabbable").is(":focus")');
+    $assert_session->elementNotExists('css', '.media-library-add-form__fields');
+    $assert_session->elementExists('css', '.media-library-menu');
   }
 
 }

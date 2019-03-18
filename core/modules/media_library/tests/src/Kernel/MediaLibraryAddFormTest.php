@@ -87,7 +87,7 @@ class MediaLibraryAddFormTest extends KernelTestBase {
     ]));
     // Assert the media library UI only contains the add form for the image
     // media type.
-    $this->assertSame('managed_file', $this->buildLibraryUi('image')['content']['form']['upload']['#type']);
+    $this->assertSame('managed_file', $this->buildLibraryUi('image')['content']['form']['container']['upload']['#type']);
     $this->assertEmpty($this->buildLibraryUi('remote_video')['content']['form']);
 
     // Create a user that has access to create both media types.
@@ -97,7 +97,7 @@ class MediaLibraryAddFormTest extends KernelTestBase {
     ]));
     // Assert the media library UI only contains the add form for both media
     // types.
-    $this->assertSame('managed_file', $this->buildLibraryUi('image')['content']['form']['upload']['#type']);
+    $this->assertSame('managed_file', $this->buildLibraryUi('image')['content']['form']['container']['upload']['#type']);
     $this->assertSame('url', $this->buildLibraryUi('remote_video')['content']['form']['container']['url']['#type']);
   }
 

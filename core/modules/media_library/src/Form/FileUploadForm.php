@@ -122,8 +122,16 @@ class FileUploadForm extends AddFormBase {
 
     $slots = $state->getAvailableSlots();
 
+    // Add a container to group the input elements for styling purposes.
+    $form['container'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['media-library-add-form__input-wrapper'],
+      ],
+    ];
+
     $process = (array) $this->elementInfo->getInfoProperty('managed_file', '#process', []);
-    $form['upload'] = [
+    $form['container']['upload'] = [
       '#type' => 'managed_file',
       '#title' => $this->formatPlural($slots, 'Add file', 'Add files'),
       // @todo Move validation in https://www.drupal.org/node/2988215
@@ -136,7 +144,7 @@ class FileUploadForm extends AddFormBase {
 
     $file_upload_help = [
       '#theme' => 'file_upload_help',
-      '#upload_validators' => $form['upload']['#upload_validators'],
+      '#upload_validators' => $form['container']['upload']['#upload_validators'],
       '#cardinality' => $slots,
     ];
 
@@ -145,7 +153,7 @@ class FileUploadForm extends AddFormBase {
     // upload help in the same way, so any theming improvements made to file
     // fields would also be applied to this upload field.
     // @see \Drupal\file\Plugin\Field\FieldWidget\FileWidget::formElement()
-    $form['upload']['#description'] = $this->renderer->renderPlain($file_upload_help);
+    $form['container']['upload']['#description'] = $this->renderer->renderPlain($file_upload_help);
 
     return $form;
   }

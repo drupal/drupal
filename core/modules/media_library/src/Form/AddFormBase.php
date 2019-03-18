@@ -3,6 +3,7 @@
 namespace Drupal\media_library\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -109,7 +110,9 @@ abstract class AddFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['#prefix'] = '<div id="media-library-add-form-wrapper">';
+    // @todo Remove the ID when we can use selectors to replace content via
+    //   AJAX in https://www.drupal.org/project/drupal/issues/2821793.
+    $form['#prefix'] = '<div id="media-library-add-form-wrapper" class="media-library-add-form-wrapper">';
     $form['#suffix'] = '</div>';
     $form['#attached']['library'][] = 'media_library/style';
 
@@ -139,6 +142,19 @@ abstract class AddFormBase extends FormBase {
 
       $form['media'] = [
         '#type' => 'container',
+        '#attributes' => [
+          'class' => [
+            'media-library-add-form__added-media',
+          ],
+          'aria-label' => $this->t('Added media items'),
+          'role' => 'list',
+          // Add the tabindex '-1' to allow the focus to be shifted to the added
+          // media wrapper when items are added. We set focus to the container
+          // because a media item does not necessarily have required fields and
+          // we do not want to set focus to the remove button automatically.
+          // @see ::updateFormCallback()
+          'tabindex' => '-1',
+        ],
       ];
 
       foreach ($added_media as $delta => $media) {
@@ -185,15 +201,36 @@ abstract class AddFormBase extends FormBase {
    *   The element containing the required fields sub-form.
    */
   protected function buildEntityFormElement(MediaInterface $media, array $form, FormStateInterface $form_state, $delta) {
+    // We need to make sure each button has a unique name attribute. The default
+    // name for button elements is 'op'. If the name is not unique, the
+    // triggering element is not set correctly and the wrong media item is
+    // removed.
+    // @see ::removeButtonSubmit()
+    $parents = $form['#parents'];
+    $id_suffix = $parents ? '-' . implode('-', $parents) : '';
+
     $element = [
       '#type' => 'container',
       '#attributes' => [
         'class' => [
           'media-library-add-form__media',
         ],
+        'aria-label' => $media->getName(),
+        'role' => 'listitem',
+        // Add the tabindex '-1' to allow the focus to be shifted to the next
+        // media item when an item is removed. We set focus to the container
+        // because a media item does not necessarily have required fields and we
+        // do not want to set focus to the remove button automatically.
+        // @see ::updateFormCallback()
+        'tabindex' => '-1',
+        // Add a data attribute containing the delta to allow us to easily shift
+        // the focus to a specific media item.
+        // @see ::updateFormCallback()
+        'data-media-library-added-delta' => $delta,
       ],
       'preview' => [
         '#type' => 'container',
+        '#weight' => 10,
         '#attributes' => [
           'class' => [
             'media-library-add-form__preview',
@@ -202,6 +239,7 @@ abstract class AddFormBase extends FormBase {
       ],
       'fields' => [
         '#type' => 'container',
+        '#weight' => 20,
         '#attributes' => [
           'class' => [
             'media-library-add-form__fields',
@@ -210,6 +248,24 @@ abstract class AddFormBase extends FormBase {
         // The '#parents' are set here because the entity form display needs it
         // to build the entity form fields.
         '#parents' => ['media', $delta, 'fields'],
+      ],
+      'remove_button' => [
+        '#type' => 'submit',
+        '#value' => $this->t('Remove'),
+        '#name' => 'media-' . $delta . '-remove-button' . $id_suffix,
+        '#weight' => 30,
+        '#attributes' => [
+          'class' => ['media-library-add-form__remove-button'],
+          'aria-label' => $this->t('Remove @label', ['@label' => $media->getName()]),
+        ],
+        '#ajax' => [
+          'callback' => '::updateFormCallback',
+          'wrapper' => 'media-library-add-form-wrapper',
+          'message' => $this->t('Removing @label.', ['@label' => $media->getName()]),
+        ],
+        '#submit' => ['::removeButtonSubmit'],
+        // Ensure errors in other media items do not prevent removal.
+        '#limit_validation_errors' => [],
       ],
     ];
     // @todo Make the image style configurable in
@@ -295,7 +351,8 @@ abstract class AddFormBase extends FormBase {
     $media = array_map(function ($source_field_value) use ($media_type, $media_storage, $source_field_name) {
       return $this->createMediaFromValue($media_type, $media_storage, $source_field_name, $source_field_value);
     }, $source_field_values);
-    $form_state->set('media', $media)->setRebuild();
+    // Re-key the media items before setting them in the form state.
+    $form_state->set('media', array_values($media))->setRebuild();
   }
 
   /**
@@ -333,6 +390,33 @@ abstract class AddFormBase extends FormBase {
   }
 
   /**
+   * Submit handler for the remove button.
+   *
+   * @param array $form
+   *   The form render array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public function removeButtonSubmit(array $form, FormStateInterface $form_state) {
+    // Retrieve the delta of the media item from the parents of the remove
+    // button.
+    $triggering_element = $form_state->getTriggeringElement();
+    $delta = array_slice($triggering_element['#array_parents'], -2, 1)[0];
+
+    $added_media = $form_state->get('media');
+    $removed_media = $added_media[$delta];
+
+    // Update the list of added media items in the form state.
+    unset($added_media[$delta]);
+
+    // Update the media items in the form state.
+    $form_state->set('media', $added_media)->setRebuild();
+
+    // Show a message to the user to confirm the media is removed.
+    $this->messenger()->addStatus($this->t('The media item %label has been removed.', ['%label' => $removed_media->label()]));
+  }
+
+  /**
    * AJAX callback to update the entire form based on source field input.
    *
    * @param array $form
@@ -344,17 +428,57 @@ abstract class AddFormBase extends FormBase {
    *   The form render array or an AJAX response object.
    */
   public function updateFormCallback(array &$form, FormStateInterface $form_state) {
+    $triggering_element = $form_state->getTriggeringElement();
+    $wrapper_id = $triggering_element['#ajax']['wrapper'];
+    $added_media = $form_state->get('media');
+
+    $response = new AjaxResponse();
+
     // When the source field input contains errors, replace the existing form to
     // let the user change the source field input. If the user input is valid,
     // the entire modal is replaced with the second step of the form to show the
     // form fields for each media item.
     if ($form_state::hasAnyErrors()) {
-      $response = new AjaxResponse();
       $response->addCommand(new ReplaceCommand('#media-library-add-form-wrapper', $form));
       return $response;
     }
 
-    return $form;
+    // Check if the remove button is clicked.
+    if (end($triggering_element['#parents']) === 'remove_button') {
+      // When the list of added media is empty, return to the media library and
+      // shift focus back to the first tabbable element (which should be the
+      // source field).
+      if (empty($added_media)) {
+        $response->addCommand(new ReplaceCommand('#media-library-add-form-wrapper', $this->buildMediaLibraryUi($form_state)));
+        $response->addCommand(new InvokeCommand('#media-library-add-form-wrapper :tabbable', 'focus'));
+      }
+      // When there are still more items, update the form and shift the focus to
+      // the next media item. If the last list item is removed, shift focus to
+      // the previous item.
+      else {
+        $response->addCommand(new ReplaceCommand("#$wrapper_id", $form));
+
+        // Find the delta of the next media item. If there is no item with a
+        // bigger delta, we automatically use the delta of the previous item and
+        // shift the focus there.
+        $removed_delta = array_slice($triggering_element['#array_parents'], -2, 1)[0];
+        $delta_to_focus = 0;
+        foreach ($added_media as $delta => $media) {
+          $delta_to_focus = $delta;
+          if ($delta > $removed_delta) {
+            break;
+          }
+        }
+        $response->addCommand(new InvokeCommand(".media-library-add-form__media[data-media-library-added-delta=$delta_to_focus]", 'focus'));
+      }
+    }
+    // Update the form and shift focus to the added media items.
+    else {
+      $response->addCommand(new ReplaceCommand("#$wrapper_id", $form));
+      $response->addCommand(new InvokeCommand('.media-library-add-form__added-media', 'focus'));
+    }
+
+    return $response;
   }
 
   /**
@@ -420,6 +544,22 @@ abstract class AddFormBase extends FormBase {
       return $media->id();
     }, $added_media);
 
+    $response = new AjaxResponse();
+    $response->addCommand(new UpdateSelectionCommand($media_ids));
+    $response->addCommand(new ReplaceCommand('#media-library-add-form-wrapper', $this->buildMediaLibraryUi($form_state)));
+    return $response;
+  }
+
+  /**
+   * Build the render array of the media library UI.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
+   *
+   * @return array
+   *   The render array for the media library.
+   */
+  protected function buildMediaLibraryUi(FormStateInterface $form_state) {
     // Get the render array for the media library. The media library state might
     // contain the 'media_library_content' when it has been opened from a
     // vertical tab. We need to remove that to make sure the render array
@@ -429,12 +569,7 @@ abstract class AddFormBase extends FormBase {
     $state = $this->getMediaLibraryState($form_state);
     $state->remove('media_library_content');
     $state->set('_media_library_form_rebuild', TRUE);
-    $library_ui = $this->libraryUiBuilder->buildUi($state);
-
-    $response = new AjaxResponse();
-    $response->addCommand(new UpdateSelectionCommand($media_ids));
-    $response->addCommand(new ReplaceCommand('#media-library-add-form-wrapper', $library_ui));
-    return $response;
+    return $this->libraryUiBuilder->buildUi($state);
   }
 
   /**
