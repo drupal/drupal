@@ -5,7 +5,9 @@ namespace Drupal\media_library\Plugin\Field\FieldWidget;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -383,7 +385,12 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       else {
         $cardinality_message = $this->t('The maximum number of media items have been selected.');
       }
-      $element['#description'] .= '<br />' . $cardinality_message;
+
+      // Add a line break between the field message and the cardinality message.
+      if (!empty($element['#description'])) {
+        $element['#description'] .= '<br />';
+      }
+      $element['#description'] .= $cardinality_message;
     }
 
     // Create a new media library URL with the correct state parameters.
@@ -421,8 +428,18 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       '#submit' => [],
       // Allow the media library to be opened even if there are form errors.
       '#limit_validation_errors' => [],
-      '#access' => $cardinality_unlimited || $remaining > 0,
     ];
+
+    // When the user returns from the modal to the widget, we want to shift the
+    // focus back to the open button. If the user is not allowed to add more
+    // items, the button needs to be disabled. Since we can't shift the focus to
+    // disabled elements, the focus is set back to the open button via
+    // JavaScript by adding the 'data-disabled-focus' attribute.
+    // @see Drupal.behaviors.MediaLibraryWidgetDisableButton
+    if (!$cardinality_unlimited && $remaining === 0) {
+      $element['media_library_open_button']['#attributes']['data-disabled-focus'] = 'true';
+      $element['media_library_open_button']['#attributes']['class'][] = 'visually-hidden';
+    }
 
     // This hidden field and button are used to add new items to the widget.
     $element['media_library_selection'] = [
@@ -482,14 +499,17 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    *
-   * @return array
-   *   An array representing the updated widget.
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response to update the selection.
    */
   public static function updateWidget(array $form, FormStateInterface $form_state) {
     $triggering_element = $form_state->getTriggeringElement();
+    $wrapper_id = $triggering_element['#ajax']['wrapper'];
+
     // This callback is either invoked from the remove button or the update
     // button, which have different nesting levels.
-    $length = end($triggering_element['#parents']) === 'remove_button' ? -4 : -1;
+    $remove_button = end($triggering_element['#parents']) === 'remove_button';
+    $length = $remove_button ? -4 : -1;
     if (count($triggering_element['#array_parents']) < abs($length)) {
       throw new \LogicException('The element that triggered the widget update was at an unexpected depth. Triggering element parents were: ' . implode(',', $triggering_element['#array_parents']));
     }
@@ -497,7 +517,30 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     $element = NestedArray::getValue($form, $parents);
     // Always clear the textfield selection to prevent duplicate additions.
     $element['media_library_selection']['#value'] = '';
-    return $element;
+
+    $response = new AjaxResponse();
+    $response->addCommand(new ReplaceCommand("#$wrapper_id", $element));
+
+    $field_state = static::getFieldState($element, $form_state);
+
+    // When the remove button is clicked, the focus will be kept in the
+    // selection area by default. When the last item is deleted, we no longer
+    // have a selection and shift the focus to the open button.
+    $removed_last = $remove_button && !count($field_state['items']);
+
+    // Shift focus to the open button if the user did not click the remove
+    // button. When the user is not allowed to add more items, the button needs
+    // to be disabled. Since we can't shift the focus to disabled elements, the
+    // focus is set via JavaScript by adding the 'data-disabled-focus' attribute
+    // and we also don't want to set the focus here.
+    // @see Drupal.behaviors.MediaLibraryWidgetDisableButton
+    $select_more = !$remove_button && !isset($element['media_library_open_button']['#attributes']['data-disabled-focus']);
+
+    if ($removed_last || $select_more) {
+      $response->addCommand(new InvokeCommand("#$wrapper_id .js-media-library-open-button", 'focus'));
+    }
+
+    return $response;
   }
 
   /**

@@ -242,6 +242,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Select a media item, assert the hidden selection field contains the ID of
     // the selected item.
     $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
+    $this->assertGreaterThanOrEqual(1, count($checkboxes));
     $checkboxes[0]->click();
     $assert_session->hiddenFieldValueEquals('media-library-modal-selection', '4');
     $assert_session->elementTextContains('css', '.media-library-selected-count', '1 of 1 item selected');
@@ -366,6 +367,22 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.media-library-item__remove')->click();
     $assert_session->assertWaitOnAjaxRequest();
 
+    // Assert adding a single media item and removing it.
+    $assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
+    $this->assertGreaterThanOrEqual(1, count($checkboxes));
+    $checkboxes[0]->click();
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert the focus is set back on the open button of the media field.
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":focus")');
+    $assert_session->elementAttributeContains('css', '.media-library-item__remove', 'aria-label', 'Remove Dog');
+    $assert_session->elementExists('css', '.media-library-item__remove')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert the focus is set back on the open button of the media field.
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":focus")');
+
     // Assert the selection is persistent in the media library modal, and
     // the number of selected items is displayed correctly.
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]')->click();
@@ -377,6 +394,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Select a media item, assert the hidden selection field contains the ID of
     // the selected item.
     $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
+    $this->assertCount(4, $checkboxes);
     $checkboxes[0]->click();
     $assert_session->hiddenFieldValueEquals('media-library-modal-selection', '4');
     // Assert the number of selected items is displayed correctly.
@@ -416,6 +434,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $page->clickLink('Type Two');
     $assert_session->assertWaitOnAjaxRequest();
     $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
+    $this->assertCount(4, $checkboxes);
     $checkboxes[0]->click();
     // Assert the selection is updated correctly.
     $assert_session->elementTextContains('css', '.media-library-selected-count', '2 of 2 items selected');
@@ -436,6 +455,11 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Select the items.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
     $assert_session->assertWaitOnAjaxRequest();
+    // Assert the open button is disabled.
+    $open_button = $assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]');
+    $this->assertTrue($open_button->hasAttribute('data-disabled-focus'));
+    $this->assertTrue($open_button->hasAttribute('disabled'));
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .media-library-open-button").is(":disabled")');
 
     // Ensure that the selection completed successfully.
     $assert_session->pageTextNotContains('Add or select media');
@@ -448,13 +472,21 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementAttributeContains('css', '.media-library-item__remove', 'aria-label', 'Remove Cat');
     $assert_session->elementExists('css', '.media-library-item__remove')->click();
     $assert_session->assertWaitOnAjaxRequest();
+    // Assert the focus is set to the remove button of the other selected item.
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .media-library-item__remove").is(":focus")');
     $assert_session->pageTextNotContains('Cat');
     $assert_session->pageTextContains('Turtle');
+    // Assert the open button is no longer disabled.
+    $open_button = $assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]');
+    $this->assertFalse($open_button->hasAttribute('data-disabled-focus'));
+    $this->assertFalse($open_button->hasAttribute('disabled'));
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .media-library-open-button").is(":not(:disabled)")');
 
     // Open the media library again and select another item.
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
+    $this->assertGreaterThanOrEqual(1, count($checkboxes));
     $checkboxes[0]->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Select media');
     $assert_session->assertWaitOnAjaxRequest();
@@ -462,13 +494,16 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Cat');
     $assert_session->pageTextContains('Turtle');
     $assert_session->pageTextNotContains('Snake');
-
-    // Assert we are not allowed to add more items to the field.
-    $assert_session->elementNotExists('css', '.media-library-open-button[name^="field_twin_media"]');
+    // Assert the open button is disabled.
+    $this->assertTrue($assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]')->hasAttribute('data-disabled-focus'));
+    $this->assertTrue($assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]')->hasAttribute('disabled'));
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .media-library-open-button").is(":disabled")');
 
     // Assert the selection is cleared when the modal is closed.
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
+    $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
+    $this->assertGreaterThanOrEqual(4, count($checkboxes));
     // Nothing is selected yet.
     $this->assertFalse($checkboxes[0]->isChecked());
     $this->assertFalse($checkboxes[1]->isChecked());
@@ -476,7 +511,6 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertFalse($checkboxes[3]->isChecked());
     $assert_session->elementTextContains('css', '.media-library-selected-count', '0 items selected');
     // Select the first 2 items.
-    $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
     $checkboxes[0]->click();
     $assert_session->elementTextContains('css', '.media-library-selected-count', '1 item selected');
     $checkboxes[1]->click();
@@ -527,6 +561,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Select all media items of type one (should also contain Dog, again).
     $checkbox_selector = '.media-library-view .js-click-to-select-checkbox input';
     $checkboxes = $page->findAll('css', $checkbox_selector);
+    $this->assertGreaterThanOrEqual(4, count($checkboxes));
     $checkboxes[0]->click();
     $checkboxes[1]->click();
     $checkboxes[2]->click();
