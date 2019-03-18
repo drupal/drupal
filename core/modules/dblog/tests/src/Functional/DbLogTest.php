@@ -113,8 +113,56 @@ class DbLogTest extends BrowserTestBase {
     // Verify hostname.
     $this->assertRaw($context['ip'], 'Found hostname on the detail page.');
 
+    // Verify location.
+    $this->assertRaw($context['request_uri'], 'Found location on the detail page.');
+
     // Verify severity.
     $this->assertText('Notice', 'The severity was properly displayed on the detail page.');
+  }
+
+  /**
+   * Test individual log event page with missing log attributes.
+   *
+   * In some cases few log attributes are missing. For example:
+   * - Missing referer: When request is made to a specific url directly and
+   *   error occurred. In this case there is no referer.
+   * - Incorrect location: When location attribute is incorrect uri which can
+   *   not be used to generate a valid link.
+   */
+  public function testLogEventPageWithMissingInfo() {
+    $this->drupalLogin($this->adminUser);
+    $connection = Database::getConnection();
+
+    // Test log event page with missing referer.
+    $this->generateLogEntries(1, [
+      'referer' => NULL,
+    ]);
+    $wid = $connection->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+
+    // Verify table headers are present, even though the referrer is missing.
+    $this->assertText('Referrer', 'Referrer header is present on the detail page.');
+
+    // Verify severity.
+    $this->assertText('Notice', 'The severity is properly displayed on the detail page.');
+
+    // Test log event page with incorrect location.
+    $request_uri = '/some/incorrect/url';
+    $this->generateLogEntries(1, [
+      'request_uri' => $request_uri,
+    ]);
+    $wid = $connection->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+
+    // Verify table headers are present.
+    $this->assertText('Location', 'Location header is present on the detail page.');
+
+    // Verify severity.
+    $this->assertText('Notice', 'The severity is properly displayed on the detail page.');
+
+    // Verify location is available as plain text.
+    $this->assertEquals($request_uri, $this->cssSelect('table.dblog-event > tbody > tr:nth-child(4) > td')[0]->getHtml());
+    $this->assertNoLink($request_uri);
   }
 
   /**
