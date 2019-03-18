@@ -91,10 +91,11 @@ class OEmbedForm extends AddFormBase {
     $media_type = $this->getMediaType($form_state);
     $providers = $media_type->getSource()->getProviders();
 
+    // Add a container to group the input elements for styling purposes.
     $form['container'] = [
       '#type' => 'container',
       '#attributes' => [
-        'class' => ['media-library-add-form-oembed-wrapper'],
+        'class' => ['media-library-add-form__input-wrapper'],
       ],
     ];
 
