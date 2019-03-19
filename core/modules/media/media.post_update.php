@@ -23,8 +23,8 @@ function media_post_update_storage_handler() {
  * Keep media items viewable at /media/{id}.
  */
 function media_post_update_enable_standalone_url() {
-  \Drupal::configFactory()
-    ->getEditable('media.settings')
-    ->set('standalone_url', TRUE)
-    ->save(TRUE);
+  $config = \Drupal::configFactory()->getEditable('media.settings');
+  if ($config->get('standalone_url') === NULL) {
+    $config->set('standalone_url', TRUE)->save(TRUE);
+  }
 }
