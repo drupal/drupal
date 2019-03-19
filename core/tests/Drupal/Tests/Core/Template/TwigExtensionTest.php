@@ -148,15 +148,18 @@ class TwigExtensionTest extends UnitTestCase {
    * Tests the format_date filter.
    */
   public function testFormatDate() {
-    $this->dateFormatter->expects($this->exactly(2))
+    $this->dateFormatter->expects($this->exactly(1))
       ->method('format')
-      ->willReturn('1978-11-19');
+      ->will($this->returnCallback(function ($timestamp) {
+        return date('Y-m-d', $timestamp);
+      }));
 
     $loader = new StringLoader();
     $twig = new \Twig_Environment($loader);
     $twig->addExtension($this->systemUnderTest);
-    $result = $twig->render('{{ time|format_date("html_date") }}');
-    $this->assertEquals($this->dateFormatter->format('html_date'), $result);
+    $timestamp = strtotime('1978-11-19');
+    $result = $twig->render('{{ time|format_date("html_date") }}', ['time' => $timestamp]);
+    $this->assertEquals('1978-11-19', $result);
   }
 
   /**
