@@ -3,10 +3,6 @@
  * This file is used to style the search block.
  */
 
-.search-form + h2 {
-  margin: 0 1rem 1rem;
-}
-
 .search-block-form {
   display: none;
 }
@@ -57,24 +53,21 @@
 }
 
 /* Search input */
-.form-type-search {
+.search-block-form .form-type-search {
   margin-top: 0;
   margin-bottom: 0;
   border: 1px solid #dbdbdb;
   border-top-left-radius: 3px; /* LTR */
   border-bottom-right-radius: 3px; /* LTR */
 }
-[dir=rtl] .form-type-search {
+[dir=rtl] .search-block-form .form-type-search {
   border-top-left-radius: 0;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 0;
 }
-.search-form .form-type-search {
-  border: none;
-}
 
-.form-search {
+.search-block-form .form-search {
   width: auto;
   height: auto;
   margin: 0 80px 0 0; /* LTR */
@@ -94,31 +87,17 @@
     width: 14em;
   }
 }
-.search-form .form-search {
-  border: 1px solid #dbdbdb;
-  border-radius: 3px;
-  width: 20em;
-  margin: 0 -2px 0 0;  /* LTR */
-  max-width: calc(100vw - 6.25em);
-}
-[dir=rtl] .search-form .form-search {
-  margin: 0 0 0 -2px;
-}
 
-.form-search:focus {
+.search-block-form .form-search:focus {
   border: 2px solid #008068;
   border-top-left-radius: 2px;  /* LTR */
   border-bottom-left-radius: 2px; /* LTR */
 }
-[dir=rtl] .form-search:focus {
+[dir=rtl] .search-block-form .form-search:focus {
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-}
-
-.search-form .form-search:focus {
-  border: 1px solid #008068;
 }
 
 .form-search::placeholder {
@@ -147,8 +126,7 @@
   border-right: none;
   border-left: 1px solid #dbdbdb;
 }
-.search-block-form .form-submit,
-.search-form .form-submit {
+.search-block-form .form-submit {
   padding: 0.6em 1.25em 0.4em;
   margin: 0;
   border: 2px solid #fff;
@@ -160,34 +138,22 @@
 }
 
 @media screen and (min-width: 48em) {
-  .search-block-form .form-submit,
-  .search-form .form-submit {
+  .search-block-form .form-submit {
     border-top-left-radius: 0; /* LTR */
     border-bottom-left-radius: 0; /* LTR */
   }
-  [dir=rtl] .search-block-form .form-submit,
-  [dir=rtl] .search-form .form-submit {
+  [dir=rtl] .search-block-form .form-submit {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 3px;
     border-top-left-radius: 3px;
   }
 }
-.search-form .form-submit {
-  border: 1px solid #dbdbdb;
-}
 
 .search-block-form .form-submit:focus,
-.search-block-form .form-submit:hover,
-.search-form .form-submit:focus,
-.search-form .form-submit:hover {
+.search-block-form .form-submit:hover {
   margin: 0;
   background-color: #e6eee0;
   border: 2px solid #008068;
   outline-offset: 2px;
-}
-
-.search-form .form-submit:focus,
-.search-form .form-submit:hover {
-  border: 1px solid #008068;
 }
