@@ -64,7 +64,8 @@
         "phpspec/prophecy": "^1.7",
         "symfony/css-selector": "^3.4.0",
         "symfony/phpunit-bridge": "^3.4.3",
-        "symfony/debug": "^3.4.0"
+        "symfony/debug": "^3.4.0",
+        "justinrainbow/json-schema": "^5.2"
     },
     "replace": {
         "drupal/action": "self.version",
@@ -129,6 +130,7 @@
         "drupal/history": "self.version",
         "drupal/image": "self.version",
         "drupal/inline_form_errors": "self.version",
+        "drupal/jsonapi": "self.version",
         "drupal/language": "self.version",
         "drupal/layout_builder": "self.version",
         "drupal/layout_discovery": "self.version",
