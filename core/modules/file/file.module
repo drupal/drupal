@@ -984,7 +984,14 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     if (substr($destination, -1) != '/') {
       $destination .= '/';
     }
-    $file->destination = file_destination($destination . $file->getFilename(), $replace);
+    try {
+      $file->destination = file_destination($destination . $file->getFilename(), $replace);
+    }
+    catch (\RuntimeException $e) {
+      \Drupal::messenger()->addError(t('The file %filename could not be uploaded because the name is invalid.', ['%filename' => $file->getFilename()]));
+      $files[$i] = FALSE;
+      continue;
+    }
     // If file_destination() returns FALSE then $replace === FILE_EXISTS_ERROR and
     // there's an existing file so we need to bail.
     if ($file->destination === FALSE) {
