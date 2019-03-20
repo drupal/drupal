@@ -1,0 +1,6 @@
+services:
+  serializer.normalizer.string.jsonapi_test_field_type:
+    class: Drupal\jsonapi_test_field_type\Normalizer\StringNormalizer
+    tags:
+      # The priority must be higher than serialization.normalizer.field_item.
+      - { name: normalizer , priority: 1000 }

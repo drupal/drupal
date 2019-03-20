@@ -248,6 +248,11 @@ JavaScript
 - Matthew Grill 'alwaysworking' https://www.drupal.org/u/alwaysworking
 - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
+JSON:API
+- Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
+- Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
+- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+
 Language
 - Francesco Placella 'plach' https://www.drupal.org/u/plach
 - Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun

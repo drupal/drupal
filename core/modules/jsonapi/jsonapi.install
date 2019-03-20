@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @file
+ * Module install file.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function jsonapi_install() {
+  $module_handler = \Drupal::moduleHandler();
+  $potential_conflicts = [
+    'content_translation',
+    'config_translation',
+    'language',
+  ];
+  $should_warn = array_reduce($potential_conflicts, function ($should_warn, $module_name) use ($module_handler) {
+    return $should_warn ?: $module_handler->moduleExists($module_name);
+  }, FALSE);
+  if ($should_warn) {
+    \Drupal::messenger()->addWarning(t('Some multilingual features currently do not work well with JSON:API. See the <a href=":jsonapi-docs">JSON:API multilingual support documentation</a> for more information on the current status of multilingual support.', [
+      ':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/translations',
+    ]));
+  }
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function jsonapi_requirements($phase) {
+  $requirements = [];
+  if ($phase === 'runtime') {
+    $module_handler = \Drupal::moduleHandler();
+    $potential_conflicts = [
+      'content_translation',
+      'config_translation',
+      'language',
+    ];
+    $should_warn = array_reduce($potential_conflicts, function ($should_warn, $module_name) use ($module_handler) {
+      return $should_warn ?: $module_handler->moduleExists($module_name);
+    }, FALSE);
+    if ($should_warn) {
+      $requirements['jsonapi_multilingual_support'] = [
+        'title' => t('JSON:API multilingual support'),
+        'value' => t('Limited'),
+        'severity' => REQUIREMENT_INFO,
+        'description' => t('Some multilingual features currently do not work well with JSON:API. See the <a href=":jsonapi-docs">JSON:API multilingual support documentation</a> for more information on the current status of multilingual support.', [
+          ':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/translations',
+        ]),
+      ];
+    }
+    $requirements['jsonapi_revision_support'] = [
+      'title' => t('JSON:API revision support'),
+      'value' => t('Limited'),
+      'severity' => REQUIREMENT_INFO,
+      'description' => t('Revision support is currently read-only and only for the "Content" and "Media" entity types in JSON:API. See the <a href=":jsonapi-docs">JSON:API revision support documentation</a> for more information on the current status of revision support.', [
+        ':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/revisions',
+      ]),
+    ];
+
+  }
+  return $requirements;
+}
+
+/**
+ * Enable BC: default the new read-only mode to "off" on existing sites.
+ */
+function jsonapi_update_8701() {
+  $config_factory = \Drupal::configFactory();
+  $jsonapi_settings = $config_factory->getEditable('jsonapi.settings');
+  $jsonapi_settings->set('read_only', FALSE)
+    ->save(TRUE);
+}

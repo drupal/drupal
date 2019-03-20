@@ -1,0 +1,4 @@
+services:
+  jsonapi_test_normalizers_kernel.jsonapi_document_toplevel:
+    alias: serializer.normalizer.jsonapi_document_toplevel.jsonapi
+    public: true

@@ -1,0 +1,908 @@
+<?php
+
+namespace Drupal\Tests\jsonapi\Functional;
+
+use Drupal\comment\Entity\Comment;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Url;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\entity_test\Entity\EntityTestMapField;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
+use Drupal\shortcut\Entity\Shortcut;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
+use GuzzleHttp\RequestOptions;
+
+/**
+ * JSON:API regression tests.
+ *
+ * @group jsonapi
+ * @group legacy
+ *
+ * @internal
+ */
+class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
+
+  use CommentTestTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = [
+    'basic_auth',
+  ];
+
+  /**
+   * Ensure filtering on relationships works with bundle-specific target types.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/2953207
+   */
+  public function testBundleSpecificTargetEntityTypeFromIssue2953207() {
+    // Set up data model.
+    $this->assertTrue($this->container->get('module_installer')->install(['comment'], TRUE), 'Installed modules.');
+    $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentItemInterface::OPEN, 'tcomment');
+    $this->rebuildAll();
+
+    // Create data.
+    Term::create([
+      'name' => 'foobar',
+      'vid' => 'tags',
+    ])->save();
+    Comment::create([
+      'subject' => 'Llama',
+      'entity_id' => 1,
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'comment',
+    ])->save();
+
+    // Test.
+    $user = $this->drupalCreateUser([
+      'access comments',
+    ]);
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/comment/tcomment?include=entity_id&filter[entity_id.name]=foobar'), [
+      RequestOptions::AUTH => [
+        $user->getUsername(),
+        $user->pass_raw,
+      ],
+    ]);
+    $this->assertSame(200, $response->getStatusCode());
+  }
+
+  /**
+   * Ensure deep nested include works on multi target entity type field.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/2973681
+   */
+  public function testDeepNestedIncludeMultiTargetEntityTypeFieldFromIssue2973681() {
+    // Set up data model.
+    $this->assertTrue($this->container->get('module_installer')->install(['comment'], TRUE), 'Installed modules.');
+    $this->addDefaultCommentField('node', 'article');
+    $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentItemInterface::OPEN, 'tcomment');
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->createEntityReferenceField(
+      'node',
+      'page',
+      'field_comment',
+      NULL,
+      'comment',
+      'default',
+      [
+        'target_bundles' => [
+          'comment' => 'comment',
+          'tcomment' => 'tcomment',
+        ],
+      ],
+      FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
+    );
+    $this->rebuildAll();
+
+    // Create data.
+    $node = Node::create([
+      'title' => 'test article',
+      'type' => 'article',
+    ]);
+    $node->save();
+    $comment = Comment::create([
+      'subject' => 'Llama',
+      'entity_id' => 1,
+      'entity_type' => 'node',
+      'field_name' => 'comment',
+    ]);
+    $comment->save();
+    $page = Node::create([
+      'title' => 'test node',
+      'type' => 'page',
+      'field_comment' => [
+        'entity' => $comment,
+      ],
+    ]);
+    $page->save();
+
+    // Test.
+    $user = $this->drupalCreateUser([
+      'access content',
+      'access comments',
+    ]);
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/page?include=field_comment,field_comment.entity_id,field_comment.entity_id.uid'), [
+      RequestOptions::AUTH => [
+        $user->getUsername(),
+        $user->pass_raw,
+      ],
+    ]);
+    $this->assertSame(200, $response->getStatusCode());
+  }
+
+  /**
+   * Ensure POST and PATCH works for bundle-less relationship routes.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/2976371
+   */
+  public function testBundlelessRelationshipMutationFromIssue2973681() {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // Set up data model.
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->createEntityReferenceField(
+      'node',
+      'page',
+      'field_test',
+      NULL,
+      'user',
+      'default',
+      [
+        'target_bundles' => NULL,
+      ],
+      FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
+    );
+    $this->rebuildAll();
+
+    // Create data.
+    $node = Node::create([
+      'title' => 'test article',
+      'type' => 'page',
+    ]);
+    $node->save();
+    $target = $this->createUser();
+
+    // Test.
+    $user = $this->drupalCreateUser(['bypass node access']);
+    $url = Url::fromRoute('jsonapi.node--page.field_test.relationship.post', ['entity' => $node->uuid()]);
+    $request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+      RequestOptions::JSON => [
+        'data' => [
+          ['type' => 'user--user', 'id' => $target->uuid()],
+        ],
+      ],
+    ];
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertSame(204, $response->getStatusCode(), (string) $response->getBody());
+  }
+
+  /**
+   * Ensures GETting terms works when multiple vocabularies exist.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/2977879
+   */
+  public function testGetTermWhenMultipleVocabulariesExistFromIssue2977879() {
+    // Set up data model.
+    $this->assertTrue($this->container->get('module_installer')->install(['taxonomy'], TRUE), 'Installed modules.');
+    Vocabulary::create([
+      'name' => 'one',
+      'vid' => 'one',
+    ])->save();
+    Vocabulary::create([
+      'name' => 'two',
+      'vid' => 'two',
+    ])->save();
+    $this->rebuildAll();
+
+    // Create data.
+    Term::create(['vid' => 'one'])
+      ->setName('Test')
+      ->save();
+
+    // Test.
+    $user = $this->drupalCreateUser([
+      'access content',
+    ]);
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/taxonomy_term/one'), [
+      RequestOptions::AUTH => [
+        $user->getUsername(),
+        $user->pass_raw,
+      ],
+    ]);
+    $this->assertSame(200, $response->getStatusCode());
+  }
+
+  /**
+   * Cannot PATCH an entity with dangling references in an ER field.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/2968972
+   */
+  public function testDanglingReferencesInAnEntityReferenceFieldFromIssue2968972() {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // Set up data model.
+    $this->drupalCreateContentType(['type' => 'journal_issue']);
+    $this->drupalCreateContentType(['type' => 'journal_article']);
+    $this->createEntityReferenceField(
+      'node',
+      'journal_article',
+      'field_issue',
+      NULL,
+      'node',
+      'default',
+      [
+        'target_bundles' => [
+          'journal_issue' => 'journal_issue',
+        ],
+      ],
+      FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
+    );
+    $this->rebuildAll();
+
+    // Create data.
+    $issue_node = Node::create([
+      'title' => 'Test Journal Issue',
+      'type' => 'journal_issue',
+    ]);
+    $issue_node->save();
+
+    $user = $this->drupalCreateUser([
+      'access content',
+      'edit own journal_article content',
+    ]);
+    $article_node = Node::create([
+      'title' => 'Test Journal Article',
+      'type' => 'journal_article',
+      'field_issue' => [
+        'target_id' => $issue_node->id(),
+      ],
+    ]);
+    $article_node->setOwner($user);
+    $article_node->save();
+
+    // Test.
+    $url = Url::fromUri(sprintf('internal:/jsonapi/node/journal_article/%s', $article_node->uuid()));
+    $request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+      RequestOptions::JSON => [
+        'data' => [
+          'type' => 'node--journal_article',
+          'id' => $article_node->uuid(),
+          'attributes' => [
+            'title' => 'My New Article Title',
+          ],
+        ],
+      ],
+    ];
+    $issue_node->delete();
+    $response = $this->request('PATCH', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+  }
+
+  /**
+   * Ensures GETting node collection + hook_node_grants() implementations works.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/2984964
+   */
+  public function testGetNodeCollectionWithHookNodeGrantsImplementationsFromIssue2984964() {
+    // Set up data model.
+    $this->assertTrue($this->container->get('module_installer')->install(['node_access_test'], TRUE), 'Installed modules.');
+    node_access_rebuild();
+    $this->rebuildAll();
+
+    // Create data.
+    Node::create([
+      'title' => 'test article',
+      'type' => 'article',
+    ])->save();
+
+    // Test.
+    $user = $this->drupalCreateUser([
+      'access content',
+    ]);
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/article'), [
+      RequestOptions::AUTH => [
+        $user->getUsername(),
+        $user->pass_raw,
+      ],
+    ]);
+    $this->assertSame(200, $response->getStatusCode());
+    $this->assertTrue(in_array('user.node_grants:view', explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]), TRUE));
+  }
+
+  /**
+   * Cannot GET an entity with dangling references in an ER field.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/2984647
+   */
+  public function testDanglingReferencesInAnEntityReferenceFieldFromIssue2984647() {
+    // Set up data model.
+    $this->drupalCreateContentType(['type' => 'journal_issue']);
+    $this->drupalCreateContentType(['type' => 'journal_conference']);
+    $this->drupalCreateContentType(['type' => 'journal_article']);
+    $this->createEntityReferenceField(
+      'node',
+      'journal_article',
+      'field_issue',
+      NULL,
+      'node',
+      'default',
+      [
+        'target_bundles' => [
+          'journal_issue' => 'journal_issue',
+        ],
+      ],
+      FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
+    );
+    $this->createEntityReferenceField(
+      'node',
+      'journal_article',
+      'field_mentioned_in',
+      NULL,
+      'node',
+      'default',
+      [
+        'target_bundles' => [
+          'journal_issue' => 'journal_issue',
+          'journal_conference' => 'journal_conference',
+        ],
+      ],
+      FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
+    );
+    $this->rebuildAll();
+
+    // Create data.
+    $issue_node = Node::create([
+      'title' => 'Test Journal Issue',
+      'type' => 'journal_issue',
+    ]);
+    $issue_node->save();
+    $conference_node = Node::create([
+      'title' => 'First Journal Conference!',
+      'type' => 'journal_conference',
+    ]);
+    $conference_node->save();
+
+    $user = $this->drupalCreateUser([
+      'access content',
+      'edit own journal_article content',
+    ]);
+    $article_node = Node::create([
+      'title' => 'Test Journal Article',
+      'type' => 'journal_article',
+      'field_issue' => [
+        ['target_id' => $issue_node->id()],
+      ],
+      'field_mentioned_in' => [
+        ['target_id' => $issue_node->id()],
+        ['target_id' => $conference_node->id()],
+      ],
+    ]);
+    $article_node->setOwner($user);
+    $article_node->save();
+
+    // Test.
+    $url = Url::fromUri(sprintf('internal:/jsonapi/node/journal_article/%s', $article_node->uuid()));
+    $request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+    ];
+    $issue_node->delete();
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+
+    // Entity reference field allowing a single bundle: dangling reference's
+    // resource type is deduced.
+    $this->assertSame([
+      [
+        'type' => 'node--journal_issue',
+        'id' => 'missing',
+        'meta' => [
+          'links' => [
+            'help' => [
+              'href' => 'https://www.drupal.org/docs/8/modules/json-api/core-concepts#missing',
+              'meta' => [
+                'about' => "Usage and meaning of the 'missing' resource identifier.",
+              ],
+            ],
+          ],
+        ],
+      ],
+    ], Json::decode((string) $response->getBody())['data']['relationships']['field_issue']['data']);
+
+    // Entity reference field allowing multiple bundles: dangling reference's
+    // resource type is NOT deduced.
+    $this->assertSame([
+      [
+        'type' => 'unknown',
+        'id' => 'missing',
+        'meta' => [
+          'links' => [
+            'help' => [
+              'href' => 'https://www.drupal.org/docs/8/modules/json-api/core-concepts#missing',
+              'meta' => [
+                'about' => "Usage and meaning of the 'missing' resource identifier.",
+              ],
+            ],
+          ],
+        ],
+      ],
+      [
+        'type' => 'node--journal_conference',
+        'id' => $conference_node->uuid(),
+      ],
+    ], Json::decode((string) $response->getBody())['data']['relationships']['field_mentioned_in']['data']);
+  }
+
+  /**
+   * Ensures that JSON:API routes are caches are dynamically rebuilt.
+   *
+   * Adding a new relationship field should cause new routes to be immediately
+   * regenerated. The site builder should not need to manually rebuild caches.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/2984886
+   */
+  public function testThatRoutesAreRebuiltAfterDataModelChangesFromIssue2984886() {
+    $user = $this->drupalCreateUser(['access content']);
+    $request_options = [
+      RequestOptions::AUTH => [
+        $user->getUsername(),
+        $user->pass_raw,
+      ],
+    ];
+
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/dog'), $request_options);
+    $this->assertSame(404, $response->getStatusCode());
+
+    $node_type_dog = NodeType::create(['type' => 'dog']);
+    $node_type_dog->save();
+    NodeType::create(['type' => 'cat'])->save();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/dog'), $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+
+    $this->createEntityReferenceField('node', 'dog', 'field_test', NULL, 'node');
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+
+    $dog = Node::create(['type' => 'dog', 'title' => 'Rosie P. Mosie']);
+    $dog->save();
+
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/dog/' . $dog->uuid() . '/field_test'), $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+
+    $this->createEntityReferenceField('node', 'cat', 'field_test', NULL, 'node');
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+
+    $cat = Node::create(['type' => 'cat', 'title' => 'E. Napoleon']);
+    $cat->save();
+
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/cat/' . $cat->uuid() . '/field_test'), $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+
+    FieldConfig::loadByName('node', 'cat', 'field_test')->delete();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/cat/' . $cat->uuid() . '/field_test'), $request_options);
+    $this->assertSame(404, $response->getStatusCode());
+
+    $node_type_dog->delete();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/dog'), $request_options);
+    $this->assertSame(404, $response->getStatusCode());
+  }
+
+  /**
+   * Ensures denormalizing relationships with aliased field names works.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/3007113
+   * @see https://www.drupal.org/project/jsonapi_extras/issues/3004582#comment-12817261
+   */
+  public function testDenormalizeAliasedRelationshipFromIssue2953207() {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // Since the JSON:API module does not have an explicit mechanism to set up
+    // field aliases, create a strange data model so that automatic aliasing
+    // allows us to test aliased relationships.
+    // @see \Drupal\jsonapi\ResourceType\ResourceTypeRepository::getFieldMapping()
+    $internal_relationship_field_name = 'type';
+    $public_relationship_field_name = 'taxonomy_term_' . $internal_relationship_field_name;
+
+    // Set up data model.
+    $this->createEntityReferenceField(
+      'taxonomy_term',
+      'tags',
+      $internal_relationship_field_name,
+      NULL,
+      'user'
+    );
+    $this->rebuildAll();
+
+    // Create data.
+    Term::create([
+      'name' => 'foobar',
+      'vid' => 'tags',
+      'type' => ['target_id' => 1],
+    ])->save();
+
+    // Test.
+    $user = $this->drupalCreateUser([
+      'edit terms in tags',
+    ]);
+    $body = [
+      'data' => [
+        'type' => 'user--user',
+        'id' => User::load(0)->uuid(),
+      ],
+    ];
+
+    // Test.
+    $response = $this->request('PATCH', Url::fromUri(sprintf('internal:/jsonapi/taxonomy_term/tags/%s/relationships/%s', Term::load(1)->uuid(), $public_relationship_field_name)), [
+      RequestOptions::AUTH => [
+        $user->getUsername(),
+        $user->pass_raw,
+      ],
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+      ],
+      RequestOptions::BODY => Json::encode($body),
+    ]);
+    $this->assertSame(204, $response->getStatusCode());
+  }
+
+  /**
+   * Ensures that Drupal's page cache is effective.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/3009596
+   */
+  public function testPageCacheFromIssue3009596() {
+    $anonymous_role = Role::load(RoleInterface::ANONYMOUS_ID);
+    $anonymous_role->grantPermission('access content');
+    $anonymous_role->trustData()->save();
+
+    NodeType::create(['type' => 'emu_fact'])->save();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+
+    $node = Node::create([
+      'type' => 'emu_fact',
+      'title' => "Emus don't say moo!",
+    ]);
+    $node->save();
+
+    $request_options = [
+      RequestOptions::HEADERS => ['Accept' => 'application/vnd.api+json'],
+    ];
+    $node_url = Url::fromUri('internal:/jsonapi/node/emu_fact/' . $node->uuid());
+
+    // The first request should be a cache MISS.
+    $response = $this->request('GET', $node_url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $this->assertSame('MISS', $response->getHeader('X-Drupal-Cache')[0]);
+
+    // The second request should be a cache HIT.
+    $response = $this->request('GET', $node_url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $this->assertSame('HIT', $response->getHeader('X-Drupal-Cache')[0]);
+  }
+
+  /**
+   * Ensures that filtering by a sequential internal ID named 'id' is possible.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/3015759
+   */
+  public function testFilterByIdFromIssue3015759() {
+    // Set up data model.
+    $this->assertTrue($this->container->get('module_installer')->install(['shortcut'], TRUE), 'Installed modules.');
+    $this->rebuildAll();
+
+    // Create data.
+    $shortcut = Shortcut::create([
+      'shortcut_set' => 'default',
+      'title' => $this->randomMachineName(),
+      'weight' => -20,
+      'link' => [
+        'uri' => 'internal:/user/logout',
+      ],
+    ]);
+    $shortcut->save();
+
+    // Test.
+    $user = $this->drupalCreateUser([
+      'access shortcuts',
+      'customize shortcut links',
+    ]);
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/shortcut/default?filter[drupal_internal__id]=' . $shortcut->id()), [
+      RequestOptions::AUTH => [
+        $user->getUsername(),
+        $user->pass_raw,
+      ],
+    ]);
+    $this->assertSame(200, $response->getStatusCode());
+    $doc = Json::decode((string) $response->getBody());
+    $this->assertNotEmpty($doc['data']);
+    $this->assertSame($doc['data'][0]['id'], $shortcut->uuid());
+    $this->assertSame($doc['data'][0]['attributes']['drupal_internal__id'], (int) $shortcut->id());
+    $this->assertSame($doc['data'][0]['attributes']['title'], $shortcut->label());
+  }
+
+  /**
+   * Ensures datetime fields are normalized using the correct timezone.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/2999438
+   */
+  public function testPatchingDateTimeNormalizedWrongTimeZoneIssue3021194() {
+    // Set up data model.
+    $this->assertTrue($this->container->get('module_installer')->install(['datetime'], TRUE), 'Installed modules.');
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->rebuildAll();
+    FieldStorageConfig::create([
+      'field_name' => 'when',
+      'type' => 'datetime',
+      'entity_type' => 'node',
+      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
+    ])
+      ->save();
+    FieldConfig::create([
+      'field_name' => 'when',
+      'entity_type' => 'node',
+      'bundle' => 'page',
+    ])
+      ->save();
+
+    // Create data.
+    $page = Node::create([
+      'title' => 'Stegosaurus',
+      'type' => 'page',
+      'when' => [
+        'value' => '2018-09-16T12:00:00',
+      ],
+    ]);
+    $page->save();
+
+    // Test.
+    $user = $this->drupalCreateUser([
+      'access content',
+    ]);
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/page/' . $page->uuid()), [
+      RequestOptions::AUTH => [
+        $user->getUsername(),
+        $user->pass_raw,
+      ],
+    ]);
+    $this->assertSame(200, $response->getStatusCode());
+    $doc = Json::decode((string) $response->getBody());
+    $this->assertSame('2018-09-16T22:00:00+10:00', $doc['data']['attributes']['when']);
+  }
+
+  /**
+   * Ensures PATCHing datetime (both date-only & date+time) fields is possible.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/3021194
+   */
+  public function testPatchingDateTimeFieldsFromIssue3021194() {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // Set up data model.
+    $this->assertTrue($this->container->get('module_installer')->install(['datetime'], TRUE), 'Installed modules.');
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->rebuildAll();
+    FieldStorageConfig::create([
+      'field_name' => 'when',
+      'type' => 'datetime',
+      'entity_type' => 'node',
+      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATE],
+    ])
+      ->save();
+    FieldConfig::create([
+      'field_name' => 'when',
+      'entity_type' => 'node',
+      'bundle' => 'page',
+    ])
+      ->save();
+    FieldStorageConfig::create([
+      'field_name' => 'when_exactly',
+      'type' => 'datetime',
+      'entity_type' => 'node',
+      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
+    ])
+      ->save();
+    FieldConfig::create([
+      'field_name' => 'when_exactly',
+      'entity_type' => 'node',
+      'bundle' => 'page',
+    ])
+      ->save();
+
+    // Create data.
+    $page = Node::create([
+      'title' => 'Stegosaurus',
+      'type' => 'page',
+      'when' => [
+        'value' => '2018-12-19',
+      ],
+      'when_exactly' => [
+        'value' => '2018-12-19T17:00:00',
+      ],
+    ]);
+    $page->save();
+
+    // Test.
+    $user = $this->drupalCreateUser([
+      'access content',
+      'edit any page content',
+    ]);
+    $request_options = [
+      RequestOptions::AUTH => [
+        $user->getUsername(),
+        $user->pass_raw,
+      ],
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+    ];
+    $node_url = Url::fromUri('internal:/jsonapi/node/page/' . $page->uuid());
+    $response = $this->request('GET', $node_url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $doc = Json::decode((string) $response->getBody());
+    $this->assertSame('2018-12-19', $doc['data']['attributes']['when']);
+    $this->assertSame('2018-12-20T04:00:00+11:00', $doc['data']['attributes']['when_exactly']);
+    $doc['data']['attributes']['when'] = '2018-12-20';
+    $doc['data']['attributes']['when_exactly'] = '2018-12-19T19:00:00+01:00';
+    $request_options = $request_options + [RequestOptions::JSON => $doc];
+    $response = $this->request('PATCH', $node_url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $doc = Json::decode((string) $response->getBody());
+    $this->assertSame('2018-12-20', $doc['data']['attributes']['when']);
+    $this->assertSame('2018-12-20T05:00:00+11:00', $doc['data']['attributes']['when_exactly']);
+  }
+
+  /**
+   * Ensure includes are respected even when POSTing.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/3026030
+   */
+  public function testPostToIncludeUrlDoesNotReturnIncludeFromIssue3026030() {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // Set up data model.
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->rebuildAll();
+
+    // Test.
+    $user = $this->drupalCreateUser(['bypass node access']);
+    $url = Url::fromUri('internal:/jsonapi/node/page?include=uid');
+    $request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+      RequestOptions::JSON => [
+        'data' => [
+          'type' => 'node--page',
+          'attributes' => [
+            'title' => 'test',
+          ],
+        ],
+      ],
+    ];
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertSame(201, $response->getStatusCode());
+    $doc = Json::decode((string) $response->getBody());
+    $this->assertArrayHasKey('included', $doc);
+    $this->assertSame($user->label(), $doc['included'][0]['attributes']['name']);
+  }
+
+  /**
+   * Ensure includes are respected even when PATCHing.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/3026030
+   */
+  public function testPatchToIncludeUrlDoesNotReturnIncludeFromIssue3026030() {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // Set up data model.
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->rebuildAll();
+
+    // Create data.
+    $user = $this->drupalCreateUser(['bypass node access']);
+    $page = Node::create([
+      'title' => 'original',
+      'type' => 'page',
+      'uid' => $user->id(),
+    ]);
+    $page->save();
+
+    // Test.
+    $url = Url::fromUri(sprintf('internal:/jsonapi/node/page/%s/?include=uid', $page->uuid()));
+    $request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+      RequestOptions::JSON => [
+        'data' => [
+          'type' => 'node--page',
+          'id' => $page->uuid(),
+          'attributes' => [
+            'title' => 'modified',
+          ],
+        ],
+      ],
+    ];
+    $response = $this->request('PATCH', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $doc = Json::decode((string) $response->getBody());
+    $this->assertArrayHasKey('included', $doc);
+    $this->assertSame($user->label(), $doc['included'][0]['attributes']['name']);
+  }
+
+  /**
+   * Ensure `@FieldType=map` fields are normalized correctly.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/3040590
+   */
+  public function testMapFieldTypeNormalizationFromIssue3040590() {
+    $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
+
+    // Create data.
+    $entity = EntityTestMapField::create([
+      'data' => [
+        'foo' => 'bar',
+        'baz' => 'qux',
+      ],
+    ]);
+    $entity->save();
+    $user = $this->drupalCreateUser([
+      'administer entity_test content',
+    ]);
+
+    // Test.
+    $url = Url::fromUri(sprintf('internal:/jsonapi/entity_test_map_field/entity_test_map_field', $entity->uuid()));
+    $request_options = [
+      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+    ];
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $data = Json::decode((string) $response->getBody());
+    $this->assertSame([
+      'foo' => 'bar',
+      'baz' => 'qux',
+    ], $data['data'][0]['attributes']['data']);
+    $entity->set('data', [
+      'foo' => 'bar',
+    ])->save();
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $data = Json::decode((string) $response->getBody());
+    $this->assertSame(['foo' => 'bar'], $data['data'][0]['attributes']['data']);
+  }
+
+}
