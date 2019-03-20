@@ -1,6 +1,11 @@
 Drupal 7.xx, xxxx-xx-xx (development version)
 -----------------------
 
+Drupal 7.65, 2019-03-20
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2019-004
+
 Drupal 7.64, 2019-02-06
 -----------------------
 - [regression] Unset the 'host' header in drupal_http_request() during redirect
