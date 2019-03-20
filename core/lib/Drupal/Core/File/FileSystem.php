@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\File;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\File\Exception\DirectoryNotReadyException;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\FileExistsException;
@@ -571,6 +572,10 @@ class FileSystem implements FileSystemInterface {
    * {@inheritdoc}
    */
   public function getDestinationFilename($destination, $replace) {
+    $basename = $this->basename($destination);
+    if (!Unicode::validateUtf8($basename)) {
+      throw new FileException(sprintf("Invalid filename '%s'", $basename));
+    }
     if (file_exists($destination)) {
       switch ($replace) {
         case FileSystemInterface::EXISTS_REPLACE:
@@ -578,7 +583,6 @@ class FileSystem implements FileSystemInterface {
           break;
 
         case FileSystemInterface::EXISTS_RENAME:
-          $basename = $this->basename($destination);
           $directory = $this->dirname($destination);
           $destination = $this->createFilename($basename, $directory);
           break;
@@ -595,9 +599,13 @@ class FileSystem implements FileSystemInterface {
    * {@inheritdoc}
    */
   public function createFilename($basename, $directory) {
+    $original = $basename;
     // Strip control characters (ASCII value < 32). Though these are allowed in
     // some filesystems, not many applications handle them well.
     $basename = preg_replace('/[\x00-\x1F]/u', '_', $basename);
+    if (preg_last_error() !== PREG_NO_ERROR) {
+      throw new FileException(sprintf("Invalid filename '%s'", $original));
+    }
     if (substr(PHP_OS, 0, 3) == 'WIN') {
       // These characters are not allowed in Windows filenames.
       $basename = str_replace([':', '*', '?', '"', '<', '>', '|'], '_', $basename);

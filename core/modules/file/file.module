@@ -1038,7 +1038,13 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   }
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
-  $file->destination = $file_system->getDestinationFilename($destination . $file->getFilename(), $replace);
+  try {
+    $file->destination = $file_system->getDestinationFilename($destination . $file->getFilename(), $replace);
+  }
+  catch (FileException $e) {
+    \Drupal::messenger()->addError(t('The file %filename could not be uploaded because the name is invalid.', ['%filename' => $file->getFilename()]));
+    return FALSE;
+  }
   // If the destination is FALSE then there is an existing file and $replace is
   // set to return an error, so we need to exit.
   if ($file->destination === FALSE) {
