@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\FileSystem\FileSystem as ComponentFileSystem;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Bytes;
@@ -587,8 +588,15 @@ function file_build_uri($path) {
  * @return
  *   The destination filepath, or FALSE if the file already exists
  *   and FILE_EXISTS_ERROR is specified.
+ *
+ * @throws \RuntimeException
+ *   Thrown if the filename contains invalid UTF-8.
  */
 function file_destination($destination, $replace) {
+  $basename = drupal_basename($destination);
+  if (!Unicode::validateUtf8($basename)) {
+    throw new \RuntimeException(sprintf("Invalid filename '%s'", $basename));
+  }
   if (file_exists($destination)) {
     switch ($replace) {
       case FILE_EXISTS_REPLACE:
@@ -596,7 +604,6 @@ function file_destination($destination, $replace) {
         break;
 
       case FILE_EXISTS_RENAME:
-        $basename = drupal_basename($destination);
         $directory = drupal_dirname($destination);
         $destination = file_create_filename($basename, $directory);
         break;
@@ -768,11 +775,20 @@ function file_unmunge_filename($filename) {
  * @return
  *   File path consisting of $directory and a unique filename based off
  *   of $basename.
+ *
+ * @throws \RuntimeException
+ *   Thrown if the $basename is not valid UTF-8 or another error occurs
+ *   stripping control characters.
  */
 function file_create_filename($basename, $directory) {
+  $original = $basename;
   // Strip control characters (ASCII value < 32). Though these are allowed in
   // some filesystems, not many applications handle them well.
   $basename = preg_replace('/[\x00-\x1F]/u', '_', $basename);
+  if (preg_last_error() !== PREG_NO_ERROR) {
+    throw new \RuntimeException(sprintf("Invalid filename '%s'", $original));
+  }
+
   if (substr(PHP_OS, 0, 3) == 'WIN') {
     // These characters are not allowed in Windows filenames
     $basename = str_replace([':', '*', '?', '"', '<', '>', '|'], '_', $basename);
