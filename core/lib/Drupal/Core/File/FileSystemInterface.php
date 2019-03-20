@@ -439,6 +439,9 @@ interface FileSystemInterface {
    * @return string
    *   File path consisting of $directory and a unique filename based off
    *   of $basename.
+   *
+   * @throws \Drupal\Core\File\Exception\FileException
+   *   Implementation may throw FileException or its subtype on failure.
    */
   public function createFilename($basename, $directory);
 
@@ -457,6 +460,9 @@ interface FileSystemInterface {
    * @return string|bool
    *   The destination filepath, or FALSE if the file already exists
    *   and FileSystemInterface::EXISTS_ERROR is specified.
+   *
+   * @throws \Drupal\Core\File\Exception\FileException
+   *   Implementation may throw FileException or its subtype on failure.
    */
   public function getDestinationFilename($destination, $replace);
 

@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Component\PhpStorage\FileStorage;
+use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 
 /**
@@ -156,6 +157,10 @@ class DirectoryTest extends FileTestBase {
     $this->assertNotEqual($path, $destination, 'A new filepath destination is created when filepath destination already exists with FileSystemInterface::EXISTS_RENAME.', 'File');
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_ERROR);
     $this->assertEqual($path, FALSE, 'An error is returned when filepath destination already exists with FileSystemInterface::EXISTS_ERROR.', 'File');
+
+    // Invalid UTF-8 causes an exception.
+    $this->setExpectedException(FileException::class, "Invalid filename 'a\xFFtest\x80€.txt'");
+    $file_system->getDestinationFilename("core/misc/a\xFFtest\x80€.txt", FileSystemInterface::EXISTS_REPLACE);
   }
 
   /**
