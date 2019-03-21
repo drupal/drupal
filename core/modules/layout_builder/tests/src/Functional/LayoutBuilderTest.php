@@ -328,6 +328,16 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->drupalGet("$field_ui_prefix/display/default/layout");
     $assert_session->pageTextNotContains('My text field');
     $assert_session->elementNotExists('css', '.field--name-field-my-text');
+
+    $expected_labels = [
+      'Section 1',
+      'Content region in section 1',
+    ];
+    $labels = [];
+    foreach ($page->findAll('css', '[role="group"]') as $element) {
+      $labels[] = $element->getAttribute('aria-label');
+    }
+    $this->assertSame($expected_labels, $labels);
   }
 
   /**
