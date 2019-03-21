@@ -285,6 +285,11 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       $build[$region]['layout_builder_add_block']['#weight'] = 1000;
       $build[$region]['#attributes']['data-region'] = $region;
       $build[$region]['#attributes']['class'][] = 'layout-builder__region';
+      $build[$region]['#attributes']['role'] = 'group';
+      $build[$region]['#attributes']['aria-label'] = $this->t('@region region in section @section', [
+        '@region' => $info['label'],
+        '@section' => $delta + 1,
+      ]);
     }
 
     $build['#attributes']['data-layout-update-url'] = Url::fromRoute('layout_builder.move_block', [
@@ -298,6 +303,8 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       '#type' => 'container',
       '#attributes' => [
         'class' => ['layout-builder__section'],
+        'role' => 'group',
+        'aria-label' => $this->t('Section @section', ['@section' => $delta + 1]),
       ],
       'remove' => [
         '#type' => 'link',
