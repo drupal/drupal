@@ -213,4 +213,18 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     }
   }
 
+  /**
+   * Gets the view executable.
+   *
+   * @return \Drupal\views\ViewExecutable
+   *   The view executable.
+   *
+   * @todo revisit after https://www.drupal.org/node/3027653. This method was
+   *   added in https://www.drupal.org/node/3002608, but should not be
+   *   necessary once block plugins can determine if they are being previewed.
+   */
+  public function getViewExecutable() {
+    return $this->view;
+  }
+
 }

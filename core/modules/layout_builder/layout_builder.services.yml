@@ -29,6 +29,11 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: cache.context}
+  cache_context.route.name.is_layout_builder_ui:
+    class: Drupal\layout_builder\Cache\LayoutBuilderUiCacheContext
+    arguments: ['@current_route_match']
+    tags:
+      - { name: cache.context }
   layout_builder.sample_entity_generator:
     class: Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator
     arguments: ['@tempstore.shared', '@entity_type.manager']
