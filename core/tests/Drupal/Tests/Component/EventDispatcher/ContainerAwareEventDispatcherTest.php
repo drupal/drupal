@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\Tests\CallableClass;
-use Symfony\Component\EventDispatcher\Tests\ContainerAwareEventDispatcherTest as SymfonyContainerAwareEventDispatcherTest;
+use Symfony\Component\EventDispatcher\Tests\AbstractEventDispatcherTest;
 use Symfony\Component\EventDispatcher\Tests\TestEventListener;
 
 /**
@@ -24,7 +24,7 @@ use Symfony\Component\EventDispatcher\Tests\TestEventListener;
  *
  * @group EventDispatcher
  */
-class ContainerAwareEventDispatcherTest extends SymfonyContainerAwareEventDispatcherTest
+class ContainerAwareEventDispatcherTest extends AbstractEventDispatcherTest
 {
     protected function createEventDispatcher()
     {
@@ -193,59 +193,4 @@ class ContainerAwareEventDispatcherTest extends SymfonyContainerAwareEventDispat
         $this->assertSame(5, $actualPriority);
     }
 
-    /**
-     * @expectedDeprecation The Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher class is deprecated since Symfony 3.3 and will be removed in 4.0. Use EventDispatcher with closure factories instead.
-     * @group legacy
-     */
-    public function testAddAListenerService() {
-      parent::testAddAListenerService();
-    }
-
-    /**
-     * @expectedDeprecation The Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher class is deprecated since Symfony 3.3 and will be removed in 4.0. Use EventDispatcher with closure factories instead.
-     * @group legacy
-     */
-    public function testPreventDuplicateListenerService() {
-      parent::testPreventDuplicateListenerService();
-    }
-
-    /**
-     * @expectedDeprecation The Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher class is deprecated since Symfony 3.3 and will be removed in 4.0. Use EventDispatcher with closure factories instead.
-     * @group legacy
-     */
-    public function testAddASubscriberService() {
-      parent::testAddASubscriberService();
-    }
-
-    /**
-     * @expectedDeprecation The Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher class is deprecated since Symfony 3.3 and will be removed in 4.0. Use EventDispatcher with closure factories instead.
-     * @group legacy
-     */
-    public function testHasListenersOnLazyLoad() {
-      parent::testHasListenersOnLazyLoad();
-    }
-
-    /**
-     * @expectedDeprecation The Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher class is deprecated since Symfony 3.3 and will be removed in 4.0. Use EventDispatcher with closure factories instead.
-     * @group legacy
-     */
-    public function testGetListenersOnLazyLoad() {
-      parent::testGetListenersOnLazyLoad();
-    }
-
-    /**
-     * @expectedDeprecation The Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher class is deprecated since Symfony 3.3 and will be removed in 4.0. Use EventDispatcher with closure factories instead.
-     * @group legacy
-     */
-    public function testRemoveAfterDispatch() {
-      parent::testRemoveAfterDispatch();
-    }
-
-    /**
-     * @expectedDeprecation The Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher class is deprecated since Symfony 3.3 and will be removed in 4.0. Use EventDispatcher with closure factories instead.
-     * @group legacy
-     */
-    public function testRemoveBeforeDispatch() {
-      parent::testRemoveBeforeDispatch();
-    }
  }
