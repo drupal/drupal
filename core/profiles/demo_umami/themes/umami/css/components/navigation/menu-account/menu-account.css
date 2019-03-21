@@ -6,7 +6,6 @@
 @media screen and (min-width: 48em) {
   .menu--account {
     display: block;
-    flex: 0 1 50%;
     text-align: right; /* LTR */
   }
   [dir="rtl"] .menu--account {

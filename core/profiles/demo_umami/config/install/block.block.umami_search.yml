@@ -8,7 +8,7 @@ dependencies:
 id: umami_search
 theme: umami
 region: pre_header
-weight: -7
+weight: 1
 provider: null
 plugin: search_form_block
 settings:
