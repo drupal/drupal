@@ -231,19 +231,20 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
   protected function assertContextualLinkRetainsMouseup() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
+    $body_field_selector = '.block-field-blocknodebundle-with-section-fieldbody';
 
-    $body_block = $page->find('css', '.block-field-blocknodebundle-with-section-fieldbody');
+    $body_block = $page->find('css', $body_field_selector);
     $this->assertNotEmpty($body_block);
 
     // Get the current Y position of the body block.
-    $body_block_y_position = $this->getSession()->evaluateScript("document.getElementsByClassName('block-field-blocknodebundle-with-section-fieldbody')[0].getBoundingClientRect().top + window.pageYOffset");
+    $body_block_top_position = $this->getElementVerticalPosition($body_field_selector, 'top');
 
     $body_block_contextual_link_button = $body_block->find('css', '.trigger');
     $this->assertNotEmpty($body_block_contextual_link_button);
 
     // If the body block contextual link is hidden, make it visible.
     if ($body_block_contextual_link_button->hasClass('visually-hidden')) {
-      $this->toggleContextualTriggerVisibility('.block-field-blocknodebundle-with-section-fieldbody');
+      $this->toggleContextualTriggerVisibility($body_field_selector);
     }
 
     // For the purposes of this test, the contextual link must be accessed with
@@ -254,13 +255,41 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     // After the contextual link opens the dialog, move the mouse pointer
-    // elsewhere on the page.
+    // elsewhere on the page. If mouse up were not working correctly this would
+    // actually drag the body field too.
     $this->movePointerTo('#iframe-that-should-be-disabled');
 
-    // If mouseup is working properly, the body block should be in the same
-    // position it was when $body_block_y_position was declared.
-    $new_body_block_y_position = $this->getSession()->evaluateScript("document.getElementsByClassName('block-field-blocknodebundle-with-section-fieldbody')[0].getBoundingClientRect().top + window.pageYOffset");
-    $this->assertEquals($body_block_y_position, $new_body_block_y_position);
+    $new_body_block_bottom_position = $this->getElementVerticalPosition($body_field_selector, 'bottom');
+    $iframe_top_position = $this->getElementVerticalPosition('#iframe-that-should-be-disabled', 'top');
+
+    $minimum_distance_mouse_moved = $iframe_top_position - $new_body_block_bottom_position;
+    $this->assertGreaterThan(200, $minimum_distance_mouse_moved, 'The mouse moved at least 200 pixels');
+
+    // If mouseup is working properly, the body block should be nearly in same
+    // position as it was when $body_block_y_position was declared. It will have
+    // moved slightly because the current block being configured will have a
+    // border that was not present when the dialog was not open.
+    $new_body_block_top_position = $this->getElementVerticalPosition($body_field_selector, 'top');
+    $distance_body_block_moved = abs($body_block_top_position - $new_body_block_top_position);
+    // Confirm that body moved only slightly compared to the distance the mouse
+    // moved and therefore was not dragged when the mouse moved.
+    $this->assertGreaterThan($distance_body_block_moved * 20, $minimum_distance_mouse_moved);
+  }
+
+  /**
+   * Gets the element position.
+   *
+   * @param string $css_selector
+   *   The CSS selector of the element.
+   * @param string $position_type
+   *   The position type to get, either 'top' or 'bottom'.
+   *
+   * @return int
+   *   The element position.
+   */
+  protected function getElementVerticalPosition($css_selector, $position_type) {
+    $this->assertTrue(in_array($position_type, ['top', 'bottom']), 'Expected position type.');
+    return (int) $this->getSession()->evaluateScript("document.querySelector('$css_selector').getBoundingClientRect().$position_type + window.pageYOffset");
   }
 
   /**

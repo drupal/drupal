@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorageInterface;
 
@@ -12,6 +13,8 @@ use Drupal\layout_builder\SectionStorageInterface;
  * @internal
  */
 class AddBlockForm extends ConfigureBlockFormBase {
+
+  use LayoutBuilderHighlightTrait;
 
   /**
    * {@inheritdoc}
@@ -53,6 +56,7 @@ class AddBlockForm extends ConfigureBlockFormBase {
       $section_storage->getSection($delta)->appendComponent($component);
       $form_state->set('layout_builder__component', $component);
     }
+    $form['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockAddHighlightId($delta, $region);
     return $this->doBuildForm($form, $form_state, $section_storage, $delta, $component);
   }
 

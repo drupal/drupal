@@ -8,6 +8,7 @@ use Drupal\Core\Layout\LayoutPluginManagerInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ChooseSectionController implements ContainerInjectionInterface {
 
   use AjaxHelperTrait;
+  use LayoutBuilderHighlightTrait;
   use StringTranslationTrait;
 
   /**
@@ -96,6 +98,7 @@ class ChooseSectionController implements ContainerInjectionInterface {
         'class' => [
           'layout-selection',
         ],
+        'data-layout-builder-target-highlight-id' => $this->sectionAddHighlightId($delta),
       ],
     ];
 

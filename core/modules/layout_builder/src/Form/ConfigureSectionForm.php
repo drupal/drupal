@@ -11,6 +11,7 @@ use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
+use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionStorageInterface;
@@ -24,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ConfigureSectionForm extends FormBase {
 
   use AjaxFormHelperTrait;
+  use LayoutBuilderHighlightTrait;
   use LayoutRebuildTrait;
 
   /**
@@ -127,6 +129,8 @@ class ConfigureSectionForm extends FormBase {
     if ($this->isAjax()) {
       $form['actions']['submit']['#ajax']['callback'] = '::ajaxSubmit';
     }
+    $target_highlight_id = $this->isUpdate ? $this->sectionUpdateHighlightId($delta) : $this->sectionAddHighlightId($delta);
+    $form['#attributes']['data-layout-builder-target-highlight-id'] = $target_highlight_id;
 
     return $form;
   }
