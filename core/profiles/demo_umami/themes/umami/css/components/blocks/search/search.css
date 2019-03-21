@@ -10,7 +10,6 @@
 @media screen and (min-width: 48em) {
   .search-block-form {
     display: block;
-    flex: 0 1 50%;
   }
 }
 
