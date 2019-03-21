@@ -18,6 +18,7 @@ use Drupal\views\Views;
 /**
  * Tests a complete deployment scenario across different workspaces.
  *
+ * @group #slow
  * @group workspaces
  */
 class WorkspaceIntegrationTest extends KernelTestBase {
