@@ -27,7 +27,7 @@ class UpdateDeleteFileIfStaleTest extends UpdateTestBase {
    * Tests the deletion of stale files.
    */
   public function testUpdateDeleteFileIfStale() {
-    $file_name = \Drupal::service('file_system')->saveData($this->randomMachineName());
+    $file_name = \Drupal::service('file_system')->saveData($this->randomMachineName(), 'public://');
     $this->assertNotNull($file_name);
 
     // During testing the file change and the stale checking occurs in the same

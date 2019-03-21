@@ -311,7 +311,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function copy($source, $destination = NULL, $replace = self::EXISTS_RENAME) {
+  public function copy($source, $destination, $replace = self::EXISTS_RENAME) {
     $this->prepareDestination($source, $destination, $replace);
 
     // Perform the copy operation.
@@ -393,7 +393,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function move($source, $destination = NULL, $replace = self::EXISTS_RENAME) {
+  public function move($source, $destination, $replace = self::EXISTS_RENAME) {
     $this->prepareDestination($source, $destination, $replace);
 
     // Ensure compatibility with Windows.
@@ -449,8 +449,7 @@ class FileSystem implements FileSystemInterface {
    * @param string|null $destination
    *   A URI containing the destination that $source should be moved/copied to.
    *   The URI may be a bare filepath (without a scheme) and in that case the
-   *   default scheme (file://) will be used. If this value is omitted, Drupal's
-   *   default files scheme will be used, usually "public://".
+   *   default scheme (file://) will be used.
    * @param int $replace
    *   Replace behavior when the destination file already exists:
    *   - FILE_EXISTS_REPLACE - Replace the existing file.
@@ -479,11 +478,6 @@ class FileSystem implements FileSystemInterface {
         ]);
         throw new FileNotExistsException("File '$original_source' could not be copied because it does not exist.");
       }
-    }
-
-    // Build a destination URI if necessary.
-    if (!isset($destination)) {
-      $destination = file_build_uri($this->basename($source));
     }
 
     // Prepare the destination directory.
@@ -529,7 +523,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function saveData($data, $destination = NULL, $replace = self::EXISTS_RENAME) {
+  public function saveData($data, $destination, $replace = self::EXISTS_RENAME) {
     // Write the data to a temporary file.
     $temp_name = $this->tempnam('temporary://', 'file');
     if (file_put_contents($temp_name, $data) === FALSE) {

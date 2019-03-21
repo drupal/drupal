@@ -465,7 +465,13 @@ function file_valid_uri($uri) {
 function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   @trigger_error('file_unmanaged_copy() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::copy(). See https://www.drupal.org/node/3006851.', E_USER_DEPRECATED);
   try {
-    return \Drupal::service('file_system')->copy($source, $destination, $replace);
+    $file_system = \Drupal::service('file_system');
+
+    // Build a destination URI if necessary.
+    if (!isset($destination)) {
+      $destination = file_build_uri($file_system->basename($source));
+    }
+    return $file_system->copy($source, $destination, $replace);
   }
   catch (FileException $e) {
     return FALSE;
@@ -643,7 +649,13 @@ function file_destination($destination, $replace) {
 function file_unmanaged_move($source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   @trigger_error('file_unmanaged_move() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::move(). See https://www.drupal.org/node/3006851.', E_USER_DEPRECATED);
   try {
-    return \Drupal::service('file_system')->move($source, $destination, $replace);
+    $file_system = \Drupal::service('file_system');
+
+    // Build a destination URI if necessary.
+    if (!isset($destination)) {
+      $destination = file_build_uri($file_system->basename($source));
+    }
+    return $file_system->move($source, $destination, $replace);
   }
   catch (FileException $e) {
     return FALSE;
@@ -921,6 +933,10 @@ function drupal_move_uploaded_file($filename, $uri) {
 function file_unmanaged_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   @trigger_error('file_unmanaged_save_data() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::saveData(). See https://www.drupal.org/node/3006851.', E_USER_DEPRECATED);
   try {
+    // Build a destination URI if necessary.
+    if (!isset($destination)) {
+      $destination = file_default_scheme() . '://';
+    }
     return \Drupal::service('file_system')->saveData($data, $destination, $replace);
   }
   catch (FileWriteException $e) {
