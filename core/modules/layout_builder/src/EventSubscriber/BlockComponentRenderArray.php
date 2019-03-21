@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\Access\LayoutPreviewAccessAllowed;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
+use Drupal\views\Plugin\Block\ViewsBlock;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -89,6 +90,15 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
     $event->addCacheableDependency($access);
     if ($access->isAllowed()) {
       $event->addCacheableDependency($block);
+
+      // @todo Revisit after https://www.drupal.org/node/3027653, as this will
+      //   provide a better way to remove contextual links from Views blocks.
+      //   Currently, doing this requires setting
+      //   \Drupal\views\ViewExecutable::$showAdminLinks() to false before the
+      //   Views block is built.
+      if ($block instanceof ViewsBlock && $event->inPreview()) {
+        $block->getViewExecutable()->setShowAdminLinks(FALSE);
+      }
 
       $content = $block->build();
       $is_content_empty = Element::isEmpty($content);
