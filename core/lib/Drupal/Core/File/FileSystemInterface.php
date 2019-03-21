@@ -282,8 +282,7 @@ interface FileSystemInterface {
    *   A string specifying the filepath or URI of the source file.
    * @param string $destination
    *   A URI containing the destination that $source should be copied to. The
-   *   URI may be a bare filepath (without a scheme). If this value is omitted,
-   *   Drupal's default files scheme will be used, usually "public://".
+   *   URI may be a bare filepath (without a scheme).
    * @param int $replace
    *   Replace behavior when the destination file already exists:
    *   - FileManagerInterface::FILE_EXISTS_REPLACE - Replace the existing file.
@@ -297,7 +296,7 @@ interface FileSystemInterface {
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
    */
-  public function copy($source, $destination = NULL, $replace = self::EXISTS_RENAME);
+  public function copy($source, $destination, $replace = self::EXISTS_RENAME);
 
   /**
    * Deletes a file without database changes or hook invocations.
@@ -355,8 +354,7 @@ interface FileSystemInterface {
    * @param string $destination
    *   A URI containing the destination that $source should be moved to. The
    *   URI may be a bare filepath (without a scheme) and in that case the
-   *   default scheme (file://) will be used. If this value is omitted, Drupal's
-   *   default files scheme will be used, usually "public://".
+   *   default scheme (public://) will be used.
    * @param int $replace
    *   Replace behavior when the destination file already exists:
    *   - FILE_EXISTS_REPLACE - Replace the existing file.
@@ -372,7 +370,7 @@ interface FileSystemInterface {
    *
    * @see https://bugs.php.net/bug.php?id=60456
    */
-  public function move($source, $destination = NULL, $replace = self::EXISTS_RENAME);
+  public function move($source, $destination, $replace = self::EXISTS_RENAME);
 
   /**
    * Saves a file to the specified destination without invoking file API.
@@ -385,9 +383,7 @@ interface FileSystemInterface {
    *   A string containing the contents of the file.
    * @param string $destination
    *   A string containing the destination location. This must be a stream
-   *   wrapper URI. If no value is provided, a randomized name will be generated
-   *   and the file will be saved using Drupal's default files scheme, usually
-   *   "public://".
+   *   wrapper URI.
    * @param int $replace
    *   Replace behavior when the destination file already exists:
    *   - FILE_EXISTS_REPLACE - Replace the existing file.
@@ -403,7 +399,7 @@ interface FileSystemInterface {
    *
    * @see file_save_data()
    */
-  public function saveData($data, $destination = NULL, $replace = self::EXISTS_RENAME);
+  public function saveData($data, $destination, $replace = self::EXISTS_RENAME);
 
   /**
    * Checks that the directory exists and is writable.

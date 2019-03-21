@@ -19,10 +19,6 @@ class FileSaveDataTest extends FileTestBase {
     // No filename.
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
-    $filepath = $file_system->saveData($contents);
-    $this->assertTrue($filepath, 'Unnamed file saved correctly.');
-    $this->assertEqual(file_uri_scheme($filepath), file_default_scheme(), "File was placed in Drupal's files directory.");
-    $this->assertEqual($contents, file_get_contents($filepath), 'Contents of the file are correct.');
 
     // Provide a filename.
     $filepath = $file_system->saveData($contents, 'public://asdf.txt', FILE_EXISTS_REPLACE);
