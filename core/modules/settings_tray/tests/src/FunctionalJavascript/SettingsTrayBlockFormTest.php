@@ -9,6 +9,7 @@ use Drupal\user\Entity\Role;
 /**
  * Testing opening and saving block forms in the off-canvas dialog.
  *
+ * @group #slow
  * @group settings_tray
  */
 class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
