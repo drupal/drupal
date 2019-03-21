@@ -201,4 +201,86 @@
         .attr('tabindex', -1);
     },
   };
+
+  // After a dialog opens, highlight element that the dialog is acting on.
+  $(window).on('dialog:aftercreate', (event, dialog, $element) => {
+    if (Drupal.offCanvas.isOffCanvas($element)) {
+      // Start by removing any existing highlighted elements.
+      $('.is-layout-builder-highlighted').removeClass(
+        'is-layout-builder-highlighted',
+      );
+
+      /*
+       * Every dialog has a single 'data-layout-builder-target-highlight-id'
+       * attribute. Every dialog-opening element has a unique
+       * 'data-layout-builder-highlight-id' attribute.
+       *
+       * When the value of data-layout-builder-target-highlight-id matches
+       * an element's value of data-layout-builder-highlight-id, the class
+       * 'is-layout-builder-highlighted' is added to element.
+       */
+      const id = $element
+        .find('[data-layout-builder-target-highlight-id]')
+        .attr('data-layout-builder-target-highlight-id');
+      if (id) {
+        $(`[data-layout-builder-highlight-id="${id}"]`).addClass(
+          'is-layout-builder-highlighted',
+        );
+      }
+    }
+  });
+
+  /*
+   * When a Layout Builder dialog is triggered, the main canvas resizes. After
+   * the resize transition is complete, see if the target element is still
+   * visible in viewport. If not, scroll page so the target element is again
+   * visible.
+   *
+   * @todo Replace this custom solution when a general solution is made
+   *   available with https://www.drupal.org/node/3033410
+   */
+  if (document.querySelector('[data-off-canvas-main-canvas]')) {
+    const mainCanvas = document.querySelector('[data-off-canvas-main-canvas]');
+
+    // This event fires when canvas CSS transitions are complete.
+    mainCanvas.addEventListener('transitionend', () => {
+      const $target = $('.is-layout-builder-highlighted');
+
+      if ($target.length > 0) {
+        // These four variables are used to determine if the element is in the
+        // viewport.
+        const targetTop = $target.offset().top;
+        const targetBottom = targetTop + $target.outerHeight();
+        const viewportTop = $(window).scrollTop();
+        const viewportBottom = viewportTop + $(window).height();
+
+        // If the element is not in the viewport, scroll it into view.
+        if (targetBottom < viewportTop || targetTop > viewportBottom) {
+          const viewportMiddle = (viewportBottom + viewportTop) / 2;
+          const scrollAmount = targetTop - viewportMiddle;
+
+          // Check whether the browser supports scrollBy(options). If it does
+          // not, use scrollBy(x-coord, y-coord) instead.
+          if ('scrollBehavior' in document.documentElement.style) {
+            window.scrollBy({
+              top: scrollAmount,
+              left: 0,
+              behavior: 'smooth',
+            });
+          } else {
+            window.scrollBy(0, scrollAmount);
+          }
+        }
+      }
+    });
+  }
+
+  // When a dialog closes, remove the highlight from all elements.
+  $(window).on('dialog:afterclose', (event, dialog, $element) => {
+    if (Drupal.offCanvas.isOffCanvas($element)) {
+      $('.is-layout-builder-highlighted').removeClass(
+        'is-layout-builder-highlighted',
+      );
+    }
+  });
 })(jQuery, Drupal);

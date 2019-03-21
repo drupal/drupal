@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
+use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,6 +22,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
 
   use AjaxHelperTrait;
   use LayoutBuilderContextTrait;
+  use LayoutBuilderHighlightTrait;
   use StringTranslationTrait;
 
   /**
@@ -124,6 +126,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
     $block_categories['#type'] = 'container';
     $block_categories['#attributes']['class'][] = 'block-categories';
     $block_categories['#attributes']['class'][] = 'js-layout-builder-categories';
+    $block_categories['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockAddHighlightId($delta, $region);
 
     // @todo Explicitly cast delta to an integer, remove this in
     //   https://www.drupal.org/project/drupal/issues/2984509.
@@ -188,6 +191,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
         '#attributes' => $this->getAjaxAttributes(),
       ];
     }
+    $build['links']['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockAddHighlightId($delta, $region);
     return $build;
   }
 

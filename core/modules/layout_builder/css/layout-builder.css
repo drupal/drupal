@@ -68,6 +68,7 @@
   border-radius: 26px;
   margin-left: -10px;
   margin-right: 6px;
+  z-index: 2;
 }
 
 .layout-builder__link--remove:hover {
@@ -120,4 +121,23 @@
 #drupal-off-canvas .inline-block-list__item {
   display: block;
   padding: 15px 0 15px 25px;
+}
+
+.layout-builder__add-section.is-layout-builder-highlighted {
+  margin-bottom: calc(1.5em - 8px);
+  outline: none;
+}
+.layout-builder__layout.is-layout-builder-highlighted,
+.layout-builder-block.is-layout-builder-highlighted,
+.layout-builder__add-block.is-layout-builder-highlighted {
+  margin: -4px -2px;
+  position: relative;
+  z-index: 1;
+}
+.layout-builder__add-block.is-layout-builder-highlighted,
+.layout-builder__add-section.is-layout-builder-highlighted,
+.layout-builder__layout.is-layout-builder-highlighted:before,
+.layout-builder__layout.is-layout-builder-highlighted,
+.layout-builder-block.is-layout-builder-highlighted {
+  border: 4px solid #000;
 }
