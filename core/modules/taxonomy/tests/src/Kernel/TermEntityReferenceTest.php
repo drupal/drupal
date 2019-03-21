@@ -1,23 +1,42 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests the settings of restricting term selection to a single vocabulary.
  *
  * @group taxonomy
  */
-class TermEntityReferenceTest extends TaxonomyTestBase {
+class TermEntityReferenceTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['entity_reference_test', 'entity_test'];
+  public static $modules = [
+    'entity_test',
+    'field',
+    'system',
+    'taxonomy',
+    'text',
+    'user',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('taxonomy_term');
+    $this->installEntitySchema('user');
+  }
 
   /**
    * Tests an entity reference field restricted to a single vocabulary.
@@ -27,13 +46,28 @@ class TermEntityReferenceTest extends TaxonomyTestBase {
    * the restriction applies.
    */
   public function testSelectionTestVocabularyRestriction() {
-
     // Create two vocabularies.
-    $vocabulary = $this->createVocabulary();
-    $vocabulary2 = $this->createVocabulary();
+    $vocabulary = Vocabulary::create([
+      'name' => 'test1',
+      'vid' => 'test1',
+    ]);
+    $vocabulary->save();
+    $vocabulary2 = Vocabulary::create([
+      'name' => 'test2',
+      'vid' => 'test2',
+    ]);
+    $vocabulary2->save();
 
-    $term = $this->createTerm($vocabulary);
-    $term2 = $this->createTerm($vocabulary2);
+    $term = Term::create([
+      'name' => 'term1',
+      'vid' => $vocabulary->id(),
+    ]);
+    $term->save();
+    $term2 = Term::create([
+      'name' => 'term2',
+      'vid' => $vocabulary2->id(),
+    ]);
+    $term2->save();
 
     // Create an entity reference field.
     $field_name = 'taxonomy_' . $vocabulary->id();
