@@ -38,9 +38,15 @@ class FilterCriteriaTest extends WebDriverTestBase {
    * Tests dialog for filter criteria.
    */
   public function testFilterCriteriaDialog() {
+    // Checks that the admin summary is not double escaped.
+    $this->drupalGet('admin/structure/views/view/who_s_online');
+    $page = $this->getSession()->getPage();
+    $this->assertNotNull($page->findLink('User: Last access (>= -15 minutes)'));
+
     $this->drupalGet('admin/structure/views/view/content_recent');
     $assert_session = $this->assertSession();
-    $page = $this->getSession()->getPage();
+    $session = $this->getSession();
+    $page = $session->getPage();
 
     $this->openFilterDialog();
 
@@ -61,13 +67,42 @@ class FilterCriteriaTest extends WebDriverTestBase {
     $remove_link = $page->findLink('Remove group');
     $this->assertEmpty($remove_link, 'Remove button not available');
 
-    // Checks that the admin summary is not double escaped.
-    $this->drupalGet('admin/structure/views/view/who_s_online');
-    $page = $this->getSession()->getPage();
-    $this->assertNotNull($page->findLink('User: Last access (>= -15 minutes)'));
-
     // Add group again to test drag-n-drop.
-    $this->openFilterDialog();
+    $create_new_filter_group = $page->findById('views-add-group-link');
+    $this->assertTrue($create_new_filter_group->isVisible(), 'Add group link found.');
+    $create_new_filter_group->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Validate dragging behaviors.
+
+    // First get relevant elements and the current values.
+    $status_extra_row = $page->findById("views-row-status_extra");
+    $langcode_row = $page->findById("views-row-langcode");
+
+    $status_extra_group_field = $status_extra_row->findField('filters[status_extra][group]');
+    $langcode_group_field = $langcode_row->findField('filters[langcode][group]');
+
+    $status_extra_original_value = $status_extra_group_field->getValue();
+    $langcode_original_value = $langcode_group_field->getValue();
+
+    // Validate dragging the first filter works correctly but checking the
+    // remove group link is not visible anymore.
+    $drag_handle = $status_extra_row->find('css', '.tabledrag-handle');
+    $target = $page->find('css', '.filter-group-operator-row');
+    $drag_handle->dragTo($target);
+
+    // Assert dragging a filter works.
+    $remove_link = $page->findLink('Remove group');
+    $this->assertFalse($remove_link->isVisible(), 'Remove group should be invisible after drag.');
+
+    // Drag another filter to the end of the last filter group to verify the
+    // group is set correctly.
+    $drag_handle = $langcode_row->find('css', '.tabledrag-handle');
+    $drag_handle->dragTo($status_extra_row);
+
+    // Both rows must be in the same group.
+    $this->assertNotEquals($status_extra_original_value, $status_extra_group_field->getValue(), 'Status extra group should be changed');
+    $this->assertNotEquals($langcode_original_value, $langcode_group_field->getValue(), 'Langcode group should be changed');
 
     $this->assertSession()->waitForLink('Create new filter group', 20000);
     $create_new_filter_group = $page->findLink('Create new filter group');

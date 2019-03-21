@@ -450,7 +450,7 @@
         var groupRow = $(this.rowObject.element).prevAll('tr.group-message').get(0);
         var groupName = groupRow.className.replace(/([^ ]+[ ]+)*group-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
         var groupField = $('select.views-group-select', this.rowObject.element);
-        if ($(this.rowObject.element).prev('tr').is('.group-message') && !groupField.is('.views-group-select-' + groupName)) {
+        if (!groupField.is('.views-group-select-' + groupName)) {
           var oldGroupName = groupField.attr('class').replace(/([^ ]+[ ]+)*views-group-select-([^ ]+)([ ]+[^ ]+)*/, '$2');
           groupField.removeClass('views-group-select-' + oldGroupName).addClass('views-group-select-' + groupName);
           groupField.val(groupName);
