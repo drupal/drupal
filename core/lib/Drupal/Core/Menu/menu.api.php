@@ -42,6 +42,9 @@
  *   parent: system.admin_reports
  *   description: 'View events that have recently been logged.'
  *   route_name: dblog.overview
+ *   options:
+ *     query:
+ *       uid: 1
  *   weight: -1
  * @endcode
  * Some notes:
@@ -50,6 +53,9 @@
  * - parent: The machine name of the menu link that is the parent in the
  *   administrative hierarchy. See system.links.menu.yml to find the main
  *   skeleton of the hierarchy.
+ * - options: Define additional route options such as query parameters. See
+ *   https://www.drupal.org/docs/8/api/menu-api/providing-module-defined-menu-links
+ *   for more information.
  * - weight: Lower (negative) numbers come before higher (positive) numbers,
  *   for menu items with the same parent.
  *
