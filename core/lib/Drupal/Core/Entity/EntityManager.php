@@ -213,6 +213,20 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * {@inheritdoc}
    *
    * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getActiveFieldStorageDefinitions()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3040966
+   */
+  public function getActiveFieldStorageDefinitions($entity_type_id) {
+    @trigger_error('EntityManagerInterface::getActiveFieldStorageDefinitions() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getActiveFieldStorageDefinitions() instead. See https://www.drupal.org/node/3040966.', E_USER_DEPRECATED);
+    return $this->container->get('entity_field.manager')->getActiveFieldStorageDefinitions($entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::setFieldMap()
    *   instead.
    *
@@ -793,6 +807,20 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    */
   public function hasDefinition($plugin_id) {
     return $this->container->get('entity_type.manager')->hasDefinition($plugin_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getActiveDefinition()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3040966
+   */
+  public function getActiveDefinition($entity_type_id) {
+    @trigger_error('EntityManagerInterface::getActiveDefinition() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeManagerInterface::getActiveDefinition() instead. See https://www.drupal.org/node/3040966.', E_USER_DEPRECATED);
+    return $this->container->get('entity_type.manager')->getActiveDefinition($entity_type_id);
   }
 
   /**

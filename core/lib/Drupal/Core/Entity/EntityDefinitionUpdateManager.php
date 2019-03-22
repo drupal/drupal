@@ -227,6 +227,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
 
     $original_field_storage_definitions = $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type->id());
     $this->entityTypeListener->onFieldableEntityTypeUpdate($entity_type, $original, $field_storage_definitions, $original_field_storage_definitions, $sandbox);
+    $this->clearCachedDefinitions();
   }
 
   /**

@@ -4,14 +4,14 @@ namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -84,10 +84,10 @@ class EntityManagerTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
+    $this->entityTypeManager = $this->prophesize(EntityTypeManager::class);
     $this->entityTypeRepository = $this->prophesize(EntityTypeRepositoryInterface::class);
     $this->entityTypeBundleInfo = $this->prophesize(EntityTypeBundleInfoInterface::class);
-    $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class);
+    $this->entityFieldManager = $this->prophesize(EntityFieldManager::class);
     $this->entityRepository = $this->prophesize(EntityRepositoryInterface::class);
     $this->entityDisplayRepository = $this->prophesize(EntityDisplayRepositoryInterface::class);
     $this->entityLastInstalledSchemaRepository = $this->prophesize(EntityLastInstalledSchemaRepositoryInterface::class);
@@ -450,6 +450,24 @@ class EntityManagerTest extends UnitTestCase {
     $contexts = [];
     $this->entityRepository->getCanonicalMultiple($entity_type_id, $entity_ids, $contexts)->shouldBeCalled($entity_type_id, $entity_ids, $contexts);
     $this->entityManager->getCanonicalMultiple($entity_type_id, $entity_ids, $contexts);
+  }
+
+  /**
+   * @covers ::getActiveDefinition
+   *
+   * @expectedDeprecation EntityManagerInterface::getActiveDefinition() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeManagerInterface::getActiveDefinition() instead. See https://www.drupal.org/node/3040966.
+   */
+  public function testGetActiveDefinition() {
+    $this->entityManager->getActiveDefinition('entity_test');
+  }
+
+  /**
+   * @covers ::getActiveFieldStorageDefinitions
+   *
+   * @expectedDeprecation EntityManagerInterface::getActiveFieldStorageDefinitions() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getActiveFieldStorageDefinitions() instead. See https://www.drupal.org/node/3040966.
+   */
+  public function testGetActiveFieldStorageDefinitions() {
+    $this->entityManager->getActiveFieldStorageDefinitions('entity_test');
   }
 
 }
