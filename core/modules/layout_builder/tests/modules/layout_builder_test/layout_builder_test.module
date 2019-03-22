@@ -83,13 +83,15 @@ function layout_builder_test_form_layout_builder_configure_block_alter(&$form, F
 }
 
 /**
- * Implements hook_layout_builder_overrides_entity_form_display_alter().
+ * Implements hook_entity_form_display_alter().
  */
-function layout_builder_test_layout_builder_overrides_entity_form_display_alter(EntityFormDisplayInterface $display) {
-  $display->setComponent('status', [
-    'type' => 'boolean_checkbox',
-    'settings' => [
-      'display_label' => TRUE,
-    ],
-  ]);
+function layout_builder_entity_form_display_alter(EntityFormDisplayInterface $form_display, array $context) {
+  if ($context['form_mode'] === 'layout_builder') {
+    $form_display->setComponent('status', [
+      'type' => 'boolean_checkbox',
+      'settings' => [
+        'display_label' => TRUE,
+      ],
+    ]);
+  }
 }

@@ -85,6 +85,9 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Add a block with a custom label.
     $this->drupalGet('node/1');
     $page->clickLink('Layout');
+    // The layout form should not contain fields for the title of the node by
+    // default.
+    $assert_session->fieldNotExists('title[0][value]');
     $page->clickLink('Add Block');
     $page->clickLink('Powered by Drupal');
     $page->fillField('settings[label]', 'This is an override');

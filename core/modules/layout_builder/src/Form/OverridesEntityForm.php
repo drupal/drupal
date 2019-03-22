@@ -76,24 +76,14 @@ class OverridesEntityForm extends ContentEntityForm {
   protected function init(FormStateInterface $form_state) {
     parent::init($form_state);
 
-    // Create a transient display that is not persisted, but used only for
-    // building the components required for the layout form.
-    $display = EntityFormDisplay::create([
-      'targetEntityType' => $this->getEntity()->getEntityTypeId(),
-      'bundle' => $this->getEntity()->bundle(),
-    ]);
-
-    // Allow modules to choose if they are relevant to the layout form.
-    $this->moduleHandler->alter('layout_builder_overrides_entity_form_display', $display);
-
-    // Add the widget for Layout Builder after the alter.
-    $display->setComponent(OverridesSectionStorage::FIELD_NAME, [
+    $form_display = EntityFormDisplay::collectRenderDisplay($this->entity, $this->getOperation(), FALSE);
+    $form_display->setComponent(OverridesSectionStorage::FIELD_NAME, [
       'type' => 'layout_builder_widget',
       'weight' => -10,
       'settings' => [],
     ]);
 
-    $this->setFormDisplay($display, $form_state);
+    $this->setFormDisplay($form_display, $form_state);
   }
 
   /**
