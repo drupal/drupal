@@ -110,6 +110,13 @@ function layout_builder_post_update_routing_defaults() {
 }
 
 /**
+ * Clear caches due to new link added to Layout Builder's contextual links.
+ */
+function layout_builder_post_update_discover_new_contextual_links() {
+  // Empty post-update hook.
+}
+
+/**
  * Fix Layout Builder tempstore keys of existing entries.
  */
 function layout_builder_post_update_fix_tempstore_keys() {

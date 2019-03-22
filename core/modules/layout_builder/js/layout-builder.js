@@ -102,6 +102,13 @@
       if (id) {
         $('[data-layout-builder-highlight-id="' + id + '"]').addClass('is-layout-builder-highlighted');
       }
+
+      $('#layout-builder').removeClass('layout-builder--move-blocks-active');
+
+      var layoutBuilderWrapperValue = $element.find('[data-add-layout-builder-wrapper]').attr('data-add-layout-builder-wrapper');
+      if (layoutBuilderWrapperValue) {
+        $('#layout-builder').addClass(layoutBuilderWrapperValue);
+      }
     }
   });
 
@@ -138,6 +145,8 @@
   $(window).on('dialog:afterclose', function (event, dialog, $element) {
     if (Drupal.offCanvas.isOffCanvas($element)) {
       $('.is-layout-builder-highlighted').removeClass('is-layout-builder-highlighted');
+
+      $('#layout-builder').removeClass('layout-builder--move-blocks-active');
     }
   });
 })(jQuery, Drupal);

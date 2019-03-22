@@ -254,7 +254,7 @@ class Section implements ThirdPartySettingsInterface {
    * @return \Drupal\layout_builder\SectionComponent[]
    *   An array of components in the specified region, sorted by weight.
    */
-  protected function getComponentsByRegion($region) {
+  public function getComponentsByRegion($region) {
     $components = array_filter($this->getComponents(), function (SectionComponent $component) use ($region) {
       return $component->getRegion() === $region;
     });

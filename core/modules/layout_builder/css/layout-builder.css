@@ -141,3 +141,47 @@
 .layout-builder-block.is-layout-builder-highlighted {
   border: 4px solid #000;
 }
+
+/* Highlight the active block in the Move Block dialog. */
+#drupal-off-canvas .layout-builder-components-table__block-label--current {
+  border-left: solid 5px;
+  padding-left: 17px;
+}
+
+/**
+ * @todo remove in https://www.drupal.org/project/drupal/issues/3042127
+ *   This rule ensures the row weight dropdowns in the Move Block dialog
+ *   maintain the background color of their container when they are hovered
+ *   over or are inside the active row.
+ */
+#drupal-off-canvas .layout-builder-components-table__row .form-item {
+  background-color: transparent;
+}
+
+.layout-builder__region-label,
+.layout-builder__section-label {
+  display: none;
+}
+
+.layout-builder--move-blocks-active  .layout-builder__region-label {
+  display: block;
+}
+
+.layout-builder--move-blocks-active  .layout-builder__section-label {
+  display: inline;
+}
+
+.layout__region-info {
+  padding: 0.5em;
+  text-align: center;
+  border-bottom: 2px dashed #979797;
+}
+
+/**
+ * Remove "You have unsaved changes" warning because Layout Builder always has
+ * unsaved changes until "Save layout" is submitted.
+ * @todo create issue for todo.
+ */
+.layout-builder-components-table .tabledrag-changed-warning {
+  display: none !important;
+}

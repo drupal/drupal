@@ -227,6 +227,24 @@
           'is-layout-builder-highlighted',
         );
       }
+
+      // Remove wrapper class added by move block form.
+      $('#layout-builder').removeClass('layout-builder--move-blocks-active');
+
+      /**
+       * If dialog has a data-add-layout-builder-wrapper attribute, get the
+       * value and add it as a class to the Layout Builder UI wrapper.
+       *
+       * Currently, only the move block form uses
+       * data-add-layout-builder-wrapper, but any dialog can use this attribute
+       * to add a class to the Layout Builder UI while opened.
+       */
+      const layoutBuilderWrapperValue = $element
+        .find('[data-add-layout-builder-wrapper]')
+        .attr('data-add-layout-builder-wrapper');
+      if (layoutBuilderWrapperValue) {
+        $('#layout-builder').addClass(layoutBuilderWrapperValue);
+      }
     }
   });
 
@@ -275,12 +293,15 @@
     });
   }
 
-  // When a dialog closes, remove the highlight from all elements.
   $(window).on('dialog:afterclose', (event, dialog, $element) => {
     if (Drupal.offCanvas.isOffCanvas($element)) {
+      // Remove the highlight from all elements.
       $('.is-layout-builder-highlighted').removeClass(
         'is-layout-builder-highlighted',
       );
+
+      // Remove wrapper class added by move block form.
+      $('#layout-builder').removeClass('layout-builder--move-blocks-active');
     }
   });
 })(jQuery, Drupal);
