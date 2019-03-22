@@ -139,6 +139,15 @@ libraries-override:
       component:
         css/locale.admin.css: css/locale/locale.admin.css
 
+  media/oembed.formatter:
+    css:
+      component:
+        css/oembed.formatter.css: css/media/oembed.formatter.css
+  media/oembed.frame:
+    css:
+      component:
+        css/oembed.frame.css: css/media/oembed.frame.css
+
   menu_ui/drupal.menu_ui.adminforms:
     css:
       theme:

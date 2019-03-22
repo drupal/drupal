@@ -220,6 +220,12 @@ class OEmbedFormatter extends FormatterBase implements ContainerFactoryPluginInt
             'allowtransparency' => TRUE,
             'width' => $max_width ?: $resource->getWidth(),
             'height' => $max_height ?: $resource->getHeight(),
+            'class' => ['media-oembed-content'],
+          ],
+          '#attached' => [
+            'library' => [
+              'media/oembed.formatter',
+            ],
           ],
         ];
 
