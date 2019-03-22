@@ -255,6 +255,13 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
                 'region' => $region,
                 'uuid' => $uuid,
               ],
+              // Add metadata about the current operations available in
+              // contextual links. This will invalidate the client-side cache of
+              // links that were cached before the 'move' link was added.
+              // @see layout_builder.links.contextual.yml
+              'metadata' => [
+                'operations' => 'move:update:remove',
+              ],
             ],
           ];
         }
@@ -297,6 +304,25 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
         '@region' => $info['label'],
         '@section' => $delta + 1,
       ]);
+
+      // Get weights of all children for use by the region label.
+      $weights = array_map(function ($a) {
+        return isset($a['#weight']) ? $a['#weight'] : 0;
+      }, $build[$region]);
+
+      // The region label is made visible when the move block dialog is open.
+      $build[$region]['region_label'] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => ['layout__region-info', 'layout-builder__region-label'],
+          // A more detailed version of this information is already read by
+          // screen readers, so this label can be hidden from them.
+          'aria-hidden' => TRUE,
+        ],
+        '#markup' => $this->t('Region: @region', ['@region' => $info['label']]),
+        // Ensures the region label is displayed first.
+        '#weight' => min($weights) - 1,
+      ];
     }
 
     $build['#attributes']['data-layout-update-url'] = Url::fromRoute('layout_builder.move_block', [
@@ -333,9 +359,19 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
           'data-dialog-renderer' => 'off_canvas',
         ],
       ],
+      // The section label is added to sections without a "Configure Section"
+      // link, and is only visible when the move block dialog is open.
+      'section_label' => [
+        '#markup' => $this->t('<span class="layout-builder__section-label" aria-hidden="true">Section @section</span>', ['@section' => $delta + 1]),
+        '#access' => !$layout instanceof PluginFormInterface,
+      ],
       'configure' => [
         '#type' => 'link',
-        '#title' => $this->t('Configure section <span class="visually-hidden">@section</span>', ['@section' => $delta + 1]),
+        // There are two instances of @section, the one wrapped in
+        // .visually-hidden is for screen readers. The one wrapped in
+        // .layout-builder__section-label is only visible when the
+        // move block dialog is open and it is not seen by screen readers.
+        '#title' => $this->t('Configure section <span class="visually-hidden">@section</span><span aria-hidden="true" class="layout-builder__section-label">@section</span>', ['@section' => $delta + 1]),
         '#access' => $layout instanceof PluginFormInterface,
         '#url' => Url::fromRoute('layout_builder.configure_section', [
           'section_storage_type' => $storage_type,
