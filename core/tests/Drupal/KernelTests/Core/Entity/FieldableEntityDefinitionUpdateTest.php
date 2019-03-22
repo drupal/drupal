@@ -144,6 +144,12 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       $this->setExpectedException(EntityStorageException::class, 'Converting an entity type from revisionable to non-revisionable or from translatable to non-translatable is not supported.');
     }
 
+    // Check that existing data can be retrieved from the storage before the
+    // entity schema is updated.
+    if ($data_migration_supported) {
+      $this->assertEntityData($initial_rev, $initial_mul);
+    }
+
     // Simulate a batch run since we are converting the entities one by one.
     $sandbox = [];
     do {
@@ -152,6 +158,9 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
 
     $this->assertEntityTypeSchema($new_rev, $new_mul);
     $this->assertEntityData($initial_rev, $initial_mul);
+
+    $change_list = $this->entityDefinitionUpdateManager->getChangeList();
+    $this->assertArrayNotHasKey('entity_test_update', $change_list, "There are no remaining updates for the 'entity_test_update' entity type.");
 
     // Check that we can still save new entities after the schema has been
     // updated.
@@ -283,8 +292,14 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
           'value2' => 'shared table - ' . $i . ' - value 2 - en',
         ],
         'test_multiple_properties_multiple_values' => [
-          'value1' => 'dedicated table - ' . $i . ' - value 1 - en',
-          'value2' => 'dedicated table - ' . $i . ' - value 2 - en',
+          [
+            'value1' => 'dedicated table - ' . $i . ' - delta 0 - value 1 - en',
+            'value2' => 'dedicated table - ' . $i . ' - delta 0 - value 2 - en',
+          ],
+          [
+            'value1' => 'dedicated table - ' . $i . ' - delta 1 - value 1 - en',
+            'value2' => 'dedicated table - ' . $i . ' - delta 1 - value 2 - en',
+          ],
         ],
       ]);
       $entity->save();
@@ -297,8 +312,14 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
             'value2' => 'shared table - ' . $i . ' - value 2 - ro',
           ],
           'test_multiple_properties_multiple_values' => [
-            'value1' => 'dedicated table - ' . $i . ' - value 1 - ro',
-            'value2' => 'dedicated table - ' . $i . ' - value 2 - ro',
+            [
+              'value1' => 'dedicated table - ' . $i . ' - delta 0 - value 1 - ro',
+              'value2' => 'dedicated table - ' . $i . ' - delta 0 - value 2 - ro',
+            ],
+            [
+              'value1' => 'dedicated table - ' . $i . ' - delta 1 - value 1 - ro',
+              'value2' => 'dedicated table - ' . $i . ' - delta 1 - value 2 - ro',
+            ],
           ],
         ]);
         $translation->save();
@@ -309,15 +330,23 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         // Create a new pending revision.
         $revision_2 = $storage->createRevision($entity, FALSE);
         $revision_2->name = 'test entity - ' . $i . ' - en - rev2';
-        $revision_2->test_multiple_properties_multiple_values->value1 = 'dedicated table - ' . $i . ' - value 1 - en - rev2';
-        $revision_2->test_multiple_properties_multiple_values->value2 = 'dedicated table - ' . $i . ' - value 2 - en - rev2';
+        $revision_2->test_multiple_properties->value1 = 'shared table - ' . $i . ' - value 1 - en - rev2';
+        $revision_2->test_multiple_properties->value2 = 'shared table - ' . $i . ' - value 2 - en - rev2';
+        $revision_2->test_multiple_properties_multiple_values[0]->value1 = 'dedicated table - ' . $i . ' - delta 0 - value 1 - en - rev2';
+        $revision_2->test_multiple_properties_multiple_values[0]->value2 = 'dedicated table - ' . $i . ' - delta 0 - value 2 - en - rev2';
+        $revision_2->test_multiple_properties_multiple_values[1]->value1 = 'dedicated table - ' . $i . ' - delta 1 - value 1 - en - rev2';
+        $revision_2->test_multiple_properties_multiple_values[1]->value2 = 'dedicated table - ' . $i . ' - delta 1 - value 2 - en - rev2';
         $revision_2->save();
 
         if ($translatable) {
           $revision_2_translation = $storage->createRevision($entity->getTranslation('ro'), FALSE);
           $revision_2_translation->name = 'test entity - ' . $i . ' - ro - rev2';
-          $revision_2_translation->test_multiple_properties_multiple_values->value1 = 'dedicated table - ' . $i . ' - value 1 - ro - rev2';
-          $revision_2_translation->test_multiple_properties_multiple_values->value2 = 'dedicated table - ' . $i . ' - value 2 - ro - rev2';
+          $revision_2->test_multiple_properties->value1 = 'shared table - ' . $i . ' - value 1 - ro - rev2';
+          $revision_2->test_multiple_properties->value2 = 'shared table - ' . $i . ' - value 2 - ro - rev2';
+          $revision_2_translation->test_multiple_properties_multiple_values[0]->value1 = 'dedicated table - ' . $i . ' - delta 0 - value 1 - ro - rev2';
+          $revision_2_translation->test_multiple_properties_multiple_values[0]->value2 = 'dedicated table - ' . $i . ' - delta 0 - value 2 - ro - rev2';
+          $revision_2_translation->test_multiple_properties_multiple_values[1]->value1 = 'dedicated table - ' . $i . ' - delta 1 - value 1 - ro - rev2';
+          $revision_2_translation->test_multiple_properties_multiple_values[1]->value2 = 'dedicated table - ' . $i . ' - delta 1 - value 2 - ro - rev2';
           $revision_2_translation->save();
         }
       }
@@ -338,14 +367,22 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     foreach ($entities as $entity_id => $entity) {
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       $this->assertEquals("test entity - {$entity->id()} - en", $entity->label());
-      $this->assertEquals("dedicated table - {$entity->id()} - value 1 - en", $entity->test_multiple_properties_multiple_values->value1);
-      $this->assertEquals("dedicated table - {$entity->id()} - value 2 - en", $entity->test_multiple_properties_multiple_values->value2);
+      $this->assertEquals("shared table - {$entity->id()} - value 1 - en", $entity->test_multiple_properties->value1);
+      $this->assertEquals("shared table - {$entity->id()} - value 2 - en", $entity->test_multiple_properties->value2);
+      $this->assertEquals("dedicated table - {$entity->id()} - delta 0 - value 1 - en", $entity->test_multiple_properties_multiple_values[0]->value1);
+      $this->assertEquals("dedicated table - {$entity->id()} - delta 0 - value 2 - en", $entity->test_multiple_properties_multiple_values[0]->value2);
+      $this->assertEquals("dedicated table - {$entity->id()} - delta 1 - value 1 - en", $entity->test_multiple_properties_multiple_values[1]->value1);
+      $this->assertEquals("dedicated table - {$entity->id()} - delta 1 - value 2 - en", $entity->test_multiple_properties_multiple_values[1]->value2);
 
       if ($translatable) {
         $translation = $entity->getTranslation('ro');
-        $this->assertEquals("test entity - {$entity->id()} - ro", $translation->label());
-        $this->assertEquals("dedicated table - {$translation->id()} - value 1 - ro", $translation->test_multiple_properties_multiple_values->value1);
-        $this->assertEquals("dedicated table - {$translation->id()} - value 2 - ro", $translation->test_multiple_properties_multiple_values->value2);
+        $this->assertEquals("test entity - {$translation->id()} - ro", $translation->label());
+        $this->assertEquals("shared table - {$translation->id()} - value 1 - ro", $translation->test_multiple_properties->value1);
+        $this->assertEquals("shared table - {$translation->id()} - value 2 - ro", $translation->test_multiple_properties->value2);
+        $this->assertEquals("dedicated table - {$translation->id()} - delta 0 - value 1 - ro", $translation->test_multiple_properties_multiple_values[0]->value1);
+        $this->assertEquals("dedicated table - {$translation->id()} - delta 0 - value 2 - ro", $translation->test_multiple_properties_multiple_values[0]->value2);
+        $this->assertEquals("dedicated table - {$translation->id()} - delta 1 - value 1 - ro", $translation->test_multiple_properties_multiple_values[1]->value1);
+        $this->assertEquals("dedicated table - {$translation->id()} - delta 1 - value 2 - ro", $translation->test_multiple_properties_multiple_values[1]->value2);
       }
     }
 
@@ -358,14 +395,22 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         /** @var \Drupal\Core\Entity\ContentEntityInterface $revision */
         $revision_label = $revision->isDefaultRevision() ? NULL : ' - rev2';
         $this->assertEquals("test entity - {$revision->id()} - en{$revision_label}", $revision->label());
-        $this->assertEquals("dedicated table - {$revision->id()} - value 1 - en{$revision_label}", $revision->test_multiple_properties_multiple_values->value1);
-        $this->assertEquals("dedicated table - {$revision->id()} - value 2 - en{$revision_label}", $revision->test_multiple_properties_multiple_values->value2);
+        $this->assertEquals("shared table - {$revision->id()} - value 1 - en{$revision_label}", $revision->test_multiple_properties->value1);
+        $this->assertEquals("shared table - {$revision->id()} - value 2 - en{$revision_label}", $revision->test_multiple_properties->value2);
+        $this->assertEquals("dedicated table - {$revision->id()} - delta 0 - value 1 - en{$revision_label}", $revision->test_multiple_properties_multiple_values[0]->value1);
+        $this->assertEquals("dedicated table - {$revision->id()} - delta 0 - value 2 - en{$revision_label}", $revision->test_multiple_properties_multiple_values[0]->value2);
+        $this->assertEquals("dedicated table - {$revision->id()} - delta 1 - value 1 - en{$revision_label}", $revision->test_multiple_properties_multiple_values[1]->value1);
+        $this->assertEquals("dedicated table - {$revision->id()} - delta 1 - value 2 - en{$revision_label}", $revision->test_multiple_properties_multiple_values[1]->value2);
 
         if ($translatable) {
           $translation = $revision->getTranslation('ro');
           $this->assertEquals("test entity - {$translation->id()} - ro{$revision_label}", $translation->label());
-          $this->assertEquals("dedicated table - {$translation->id()} - value 1 - ro{$revision_label}", $translation->test_multiple_properties_multiple_values->value1);
-          $this->assertEquals("dedicated table - {$translation->id()} - value 2 - ro{$revision_label}", $translation->test_multiple_properties_multiple_values->value2);
+          $this->assertEquals("shared table - {$revision->id()} - value 1 - ro{$revision_label}", $translation->test_multiple_properties->value1);
+          $this->assertEquals("shared table - {$revision->id()} - value 2 - ro{$revision_label}", $translation->test_multiple_properties->value2);
+          $this->assertEquals("dedicated table - {$translation->id()} - delta 0 - value 1 - ro{$revision_label}", $translation->test_multiple_properties_multiple_values[0]->value1);
+          $this->assertEquals("dedicated table - {$translation->id()} - delta 0 - value 2 - ro{$revision_label}", $translation->test_multiple_properties_multiple_values[0]->value2);
+          $this->assertEquals("dedicated table - {$translation->id()} - delta 1 - value 1 - ro{$revision_label}", $translation->test_multiple_properties_multiple_values[1]->value1);
+          $this->assertEquals("dedicated table - {$translation->id()} - delta 1 - value 2 - ro{$revision_label}", $translation->test_multiple_properties_multiple_values[1]->value2);
         }
       }
     }
@@ -659,18 +704,22 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         ->condition('entity_id', 1, '=')
         ->condition('langcode', 'en', '=')
         ->execute()
-        ->fetchAllAssoc('entity_id');
-      $this->assertEquals('dedicated table - 1 - value 1 - en', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value1);
-      $this->assertEquals('dedicated table - 1 - value 2 - en', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value2);
+        ->fetchAllAssoc('delta');
+      $this->assertEquals('dedicated table - 1 - delta 0 - value 1 - en', $dedicated_table_row[0]->test_multiple_properties_multiple_values_value1);
+      $this->assertEquals('dedicated table - 1 - delta 0 - value 2 - en', $dedicated_table_row[0]->test_multiple_properties_multiple_values_value2);
+      $this->assertEquals('dedicated table - 1 - delta 1 - value 1 - en', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value1);
+      $this->assertEquals('dedicated table - 1 - delta 1 - value 2 - en', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value2);
 
       $dedicated_table_row = $this->database->select($dedicated_table_name)
         ->fields($dedicated_table_name)
         ->condition('entity_id', 1, '=')
         ->condition('langcode', 'ro', '=')
         ->execute()
-        ->fetchAllAssoc('entity_id');
-      $this->assertEquals('dedicated table - 1 - value 1 - ro', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value1);
-      $this->assertEquals('dedicated table - 1 - value 2 - ro', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value2);
+        ->fetchAllAssoc('delta');
+      $this->assertEquals('dedicated table - 1 - delta 0 - value 1 - ro', $dedicated_table_row[0]->test_multiple_properties_multiple_values_value1);
+      $this->assertEquals('dedicated table - 1 - delta 0 - value 2 - ro', $dedicated_table_row[0]->test_multiple_properties_multiple_values_value2);
+      $this->assertEquals('dedicated table - 1 - delta 1 - value 1 - ro', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value1);
+      $this->assertEquals('dedicated table - 1 - delta 1 - value 2 - ro', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value2);
     }
   }
 

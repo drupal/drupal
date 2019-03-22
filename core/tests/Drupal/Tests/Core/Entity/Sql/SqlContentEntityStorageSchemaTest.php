@@ -4,9 +4,9 @@ namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Tests\UnitTestCase;
 
@@ -76,8 +76,8 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
-    $this->entityFieldManager = $this->createMock(EntityFieldManagerInterface::class);
+    $this->entityTypeManager = $this->createMock(EntityTypeManager::class);
+    $this->entityFieldManager = $this->createMock(EntityFieldManager::class);
     $this->entityLastInstalledSchemaRepository = $this->createMock(EntityLastInstalledSchemaRepositoryInterface::class);
     $this->storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->disableOriginalConstructor()
@@ -1203,25 +1203,13 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'entity_keys' => ['id' => 'id'],
     ]);
 
-    $original_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $original_storage->expects($this->exactly(is_null($original_storage_has_data) || !$shared_table_structure_changed ? 0 : 1))
+    $this->storage->expects($this->exactly(is_null($original_storage_has_data) || !$shared_table_structure_changed ? 0 : 1))
       ->method('hasData')
       ->willReturn($original_storage_has_data);
-
-    // Assert hasData() is never called on the new storage definition.
-    $this->storage->expects($this->never())
-      ->method('hasData');
 
     $connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()
       ->getMock();
-
-    $this->entityTypeManager->expects($this->any())
-      ->method('createHandlerInstance')
-      ->willReturn($original_storage);
 
     $this->entityLastInstalledSchemaRepository
       ->expects($this->any())
@@ -1372,8 +1360,18 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->with($this->entityType->id())
       ->will($this->returnValue($this->entityType));
 
+    $this->entityTypeManager->expects($this->any())
+      ->method('getActiveDefinition')
+      ->with($this->entityType->id())
+      ->will($this->returnValue($this->entityType));
+
     $this->entityFieldManager->expects($this->any())
       ->method('getFieldStorageDefinitions')
+      ->with($this->entityType->id())
+      ->will($this->returnValue($this->storageDefinitions));
+
+    $this->entityFieldManager->expects($this->any())
+      ->method('getActiveFieldStorageDefinitions')
       ->with($this->entityType->id())
       ->will($this->returnValue($this->storageDefinitions));
 

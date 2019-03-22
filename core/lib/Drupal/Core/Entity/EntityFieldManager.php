@@ -56,6 +56,13 @@ class EntityFieldManager implements EntityFieldManagerInterface {
   protected $fieldStorageDefinitions;
 
   /**
+   * Static cache of active field storage definitions per entity type.
+   *
+   * @var array
+   */
+  protected $activeFieldStorageDefinitions;
+
+  /**
    * An array keyed by entity type. Each value is an array whose keys are
    * field names and whose value is an array with two entries:
    *   - type: The field type.
@@ -446,6 +453,25 @@ class EntityFieldManager implements EntityFieldManagerInterface {
   }
 
   /**
+   * Gets the active field storage definitions for a content entity type.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID. Only content entities are supported.
+   *
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
+   *   An array of field storage definitions that are active in the current
+   *   request, keyed by field name.
+   *
+   * @internal
+   */
+  public function getActiveFieldStorageDefinitions($entity_type_id) {
+    if (!isset($this->activeFieldStorageDefinitions[$entity_type_id])) {
+      $this->activeFieldStorageDefinitions[$entity_type_id] = $this->keyValueFactory->get('entity.definitions.installed')->get($entity_type_id . '.field_storage_definitions', []);
+    }
+    return $this->activeFieldStorageDefinitions[$entity_type_id] ?: $this->getFieldStorageDefinitions($entity_type_id);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function setFieldMap(array $field_map) {
@@ -569,6 +595,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $this->baseFieldDefinitions = [];
     $this->fieldDefinitions = [];
     $this->fieldStorageDefinitions = [];
+    $this->activeFieldStorageDefinitions = [];
     $this->fieldMap = [];
     $this->fieldMapByFieldType = [];
     $this->entityDisplayRepository->clearDisplayModeInfo();
@@ -588,6 +615,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       $this->fieldDefinitions = [];
       $this->baseFieldDefinitions = [];
       $this->fieldStorageDefinitions = [];
+      $this->activeFieldStorageDefinitions = [];
     }
   }
 

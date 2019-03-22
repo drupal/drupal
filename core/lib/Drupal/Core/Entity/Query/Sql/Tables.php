@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
@@ -15,6 +16,13 @@ use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
  * Adds tables and fields to the SQL entity query.
  */
 class Tables implements TablesInterface {
+
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * @var \Drupal\Core\Database\Query\SelectInterface
@@ -44,11 +52,18 @@ class Tables implements TablesInterface {
   protected $fieldTables = [];
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
 
   /**
    * List of case sensitive fields.
@@ -62,7 +77,8 @@ class Tables implements TablesInterface {
    */
   public function __construct(SelectInterface $sql_query) {
     $this->sqlQuery = $sql_query;
-    $this->entityManager = \Drupal::entityManager();
+    $this->entityTypeManager = \Drupal::entityTypeManager();
+    $this->entityFieldManager = \Drupal::service('entity_field.manager');
   }
 
   /**
@@ -85,9 +101,9 @@ class Tables implements TablesInterface {
     // This will contain the definitions of the last specifier seen by the
     // system.
     $propertyDefinitions = [];
-    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
 
-    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
+    $field_storage_definitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($entity_type_id);
     for ($key = 0; $key <= $count; $key++) {
       // This can either be the name of an entity base field or a configurable
       // field.
@@ -118,7 +134,7 @@ class Tables implements TablesInterface {
       }
 
       /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-      $table_mapping = $this->entityManager->getStorage($entity_type_id)->getTableMapping();
+      $table_mapping = $this->entityTypeManager->getStorage($entity_type_id)->getTableMapping();
 
       // Check whether this field is stored in a dedicated table.
       if ($field_storage && $table_mapping->requiresDedicatedTableStorage($field_storage)) {
@@ -277,8 +293,8 @@ class Tables implements TablesInterface {
           if (!$entity_type_id && $target_definition instanceof EntityDataDefinitionInterface) {
             $entity_type_id = $target_definition->getEntityTypeId();
           }
-          $entity_type = $this->entityManager->getDefinition($entity_type_id);
-          $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
+          $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
+          $field_storage_definitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($entity_type_id);
           // Add the new entity base table using the table and sql column.
           $base_table = $this->addNextBaseTable($entity_type, $table, $sql_column, $field_storage);
           $propertyDefinitions = [];
@@ -364,7 +380,7 @@ class Tables implements TablesInterface {
     if (!isset($this->fieldTables[$index_prefix . $field_name])) {
       $entity_type_id = $this->sqlQuery->getMetaData('entity_type');
       /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-      $table_mapping = $this->entityManager->getStorage($entity_type_id)->getTableMapping();
+      $table_mapping = $this->entityTypeManager->getStorage($entity_type_id)->getTableMapping();
       $table = !$this->sqlQuery->getMetaData('all_revisions') ? $table_mapping->getDedicatedDataTableName($field) : $table_mapping->getDedicatedRevisionTableName($field);
       if ($field->getCardinality() != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
@@ -395,7 +411,7 @@ class Tables implements TablesInterface {
     $arguments = [];
     if ($langcode) {
       $entity_type_id = $this->sqlQuery->getMetaData('entity_type');
-      $entity_type = $this->entityManager->getDefinition($entity_type_id);
+      $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
       // Only the data table follows the entity language key, dedicated field
       // tables have an hard-coded 'langcode' column.
       $langcode_key = $entity_type->getDataTable() == $table ? $entity_type->getKey('langcode') : 'langcode';
@@ -423,7 +439,7 @@ class Tables implements TablesInterface {
    *   mapping is not available, FALSE is returned.
    */
   protected function getTableMapping($table, $entity_type_id) {
-    $storage = $this->entityManager->getStorage($entity_type_id);
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
     if ($storage instanceof SqlEntityStorageInterface) {
       $mapping = $storage->getTableMapping()->getAllColumns($table);
     }
