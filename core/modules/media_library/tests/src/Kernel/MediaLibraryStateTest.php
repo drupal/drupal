@@ -5,6 +5,8 @@ namespace Drupal\Tests\media_library\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Tests the media library state value object.
@@ -251,6 +253,90 @@ class MediaLibraryStateTest extends KernelTestBase {
       'image',
       TRUE,
       'The remaining slots parameter is required and must be numeric.',
+    ];
+
+    return $test_data;
+  }
+
+  /**
+   * Tests the hash validation when the state is created from a request.
+   *
+   * @param array $query_overrides
+   *   The query parameters to override.
+   * @param bool $exception_expected
+   *   Whether an AccessDeniedHttpException is expected or not.
+   *
+   * @covers ::fromRequest
+   * @dataProvider providerFromRequest
+   */
+  public function testFromRequest(array $query_overrides, $exception_expected) {
+    // Override the query parameters and verify an exception is thrown when
+    // required state parameters are changed.
+    $query = MediaLibraryState::create('test', ['file', 'image'], 'image', 2)->all();
+    $query = array_merge($query, $query_overrides);
+    if ($exception_expected) {
+      $this->setExpectedException(BadRequestHttpException::class, "Invalid media library parameters specified.");
+    }
+    $state = MediaLibraryState::fromRequest(new Request($query));
+    $this->assertInstanceOf(MediaLibraryState::class, $state);
+  }
+
+  /**
+   * Data provider for testFromRequest().
+   *
+   * @return array
+   *   The data sets to test.
+   */
+  public function providerFromRequest() {
+    $test_data = [];
+
+    // Assert no exception is thrown when we use valid state parameters.
+    $test_data['valid parameters'] = [
+      [],
+      FALSE,
+    ];
+
+    // Assert no exception is thrown when we override all query parameters with
+    // the same data.
+    $test_data['changed with same values'] = [
+      [
+        'media_library_opener_id' => 'test',
+        'media_library_allowed_types' => ['file', 'image'],
+        'media_library_selected_type' => 'image',
+        'media_library_remaining' => 2,
+      ],
+      FALSE,
+    ];
+
+    // Assert an exception is thrown when we change the opener ID parameter.
+    $test_data['changed opener ID'] = [
+      ['media_library_opener_id' => 'fail'],
+      TRUE,
+    ];
+
+    // Assert an exception is thrown when we change the allowed types parameter.
+    $test_data['changed allowed types'] = [
+      ['media_library_allowed_types' => ['audio', 'image']],
+      TRUE,
+    ];
+
+    // Assert an exception is thrown when we change the selected type parameter.
+    $test_data['changed selected type'] = [
+      ['media_library_selected_type' => 'file'],
+      TRUE,
+    ];
+
+    // Assert an exception is thrown when we change the remaining slots
+    // parameter.
+    $test_data['changed remaining'] = [
+      ['media_library_remaining' => 4],
+      TRUE,
+    ];
+
+    // Assert an exception is thrown when we change the actual hash.
+    $test_data['changed hash'] = [
+      ['hash' => 'fail'],
+      TRUE,
     ];
 
     return $test_data;
