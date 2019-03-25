@@ -20,6 +20,7 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
 
   public static $modules = [
     'layout_builder',
+    'layout_builder_test_css_transitions',
     'block',
     'node',
   ];

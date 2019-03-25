@@ -5,10 +5,12 @@ namespace Drupal\layout_builder\Form;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
+use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -97,7 +99,71 @@ class OverridesEntityForm extends ContentEntityForm {
     //   restricts all access to the field, explicitly allow access here until
     //   https://www.drupal.org/node/2942975 is resolved.
     $form[OverridesSectionStorage::FIELD_NAME]['#access'] = TRUE;
+
+    $form['layout_builder_message'] = $this->buildMessage($section_storage->getContextValue('entity'), $section_storage);
     return $form;
+  }
+
+  /**
+   * Renders a message to display at the top of the layout builder.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity whose layout is being edited.
+   * @param \Drupal\layout_builder\OverridesSectionStorageInterface $section_storage
+   *   The current section storage.
+   *
+   * @return array
+   *   A renderable array containing the message.
+   */
+  protected function buildMessage(EntityInterface $entity, OverridesSectionStorageInterface $section_storage) {
+    $entity_type = $entity->getEntityType();
+    $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($entity->getEntityTypeId());
+
+    $variables = [
+      '@bundle' => $bundle_info[$entity->bundle()]['label'],
+      '@singular_label' => $entity_type->getSingularLabel(),
+      '@plural_label' => $entity_type->getPluralLabel(),
+    ];
+
+    $defaults_link = $section_storage
+      ->getDefaultSectionStorage()
+      ->getLayoutBuilderUrl();
+
+    if ($defaults_link->access($this->currentUser())) {
+      $variables[':link'] = $defaults_link->toString();
+      if ($entity_type->hasKey('bundle')) {
+        $message = $this->t('You are editing the layout for this @bundle @singular_label. <a href=":link">Edit the template for all @bundle @plural_label instead.</a>', $variables);
+      }
+      else {
+        $message = $this->t('You are editing the layout for this @singular_label. <a href=":link">Edit the template for all @plural_label instead.</a>', $variables);
+      }
+    }
+    else {
+      if ($entity_type->hasKey('bundle')) {
+        $message = $this->t('You are editing the layout for this @bundle @singular_label.', $variables);
+      }
+      else {
+        $message = $this->t('You are editing the layout for this @singular_label.', $variables);
+      }
+    }
+
+    return [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'layout-builder__message',
+          'layout-builder__message--overrides',
+        ],
+      ],
+      'message' => [
+        '#theme' => 'status_messages',
+        '#message_list' => ['status' => [$message]],
+        '#status_headings' => [
+          'status' => $this->t('Status message'),
+        ],
+      ],
+      '#weight' => -900,
+    ];
   }
 
   /**
