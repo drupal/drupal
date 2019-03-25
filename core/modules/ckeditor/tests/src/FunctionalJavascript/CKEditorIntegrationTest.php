@@ -34,7 +34,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'ckeditor', 'filter'];
+  public static $modules = ['node', 'ckeditor', 'filter', 'ckeditor_test'];
 
   /**
    * {@inheritdoc}
@@ -175,6 +175,32 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->click('.cke_button__drupalimage');
     $this->assertNotEmpty($web_assert->waitForElement('css', '.ui-dialog'));
     $web_assert->elementExists('css', '.ui-dialog input[name="attributes[hasCaption]"]');
+  }
+
+  /**
+   * Tests if CKEditor is properly styled inside an off-canvas dialog.
+   */
+  public function testOffCanvasStyles() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalGet('/ckeditor_test/off_canvas');
+
+    // The "Add Node" link triggers an off-canvas dialog with an add node form
+    // that includes CKEditor.
+    $page->clickLink('Add Node');
+    $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Check the background color of two CKEditor elements to confirm they are
+    // not overriden by the off-canvas css reset.
+    $assert_session->elementExists('css', '.cke_top');
+    $ckeditor_top_bg_color = $this->getSession()->evaluateScript('window.getComputedStyle(document.getElementsByClassName(\'cke_top\')[0]).backgroundColor');
+    $this->assertEqual($ckeditor_top_bg_color, 'rgb(248, 248, 248)');
+
+    $assert_session->elementExists('css', '.cke_button__source');
+    $ckeditor_source_button_bg_color = $this->getSession()->evaluateScript('window.getComputedStyle(document.getElementsByClassName(\'cke_button__source\')[0]).backgroundColor');
+    $this->assertEqual($ckeditor_source_button_bg_color, 'rgba(0, 0, 0, 0)');
   }
 
 }
