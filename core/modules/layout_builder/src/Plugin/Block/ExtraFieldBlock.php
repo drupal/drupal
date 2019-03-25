@@ -130,7 +130,7 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
         // render array. If the hook is invoked the placeholder will be
         // replaced.
         // @see ::replaceFieldPlaceholder()
-        '#markup' => $this->getPreviewFallbackString(),
+        '#markup' => $this->t('Placeholder for the @preview_fallback', ['@preview_fallback' => $this->getPreviewFallbackString()]),
       ];
     }
     CacheableMetadata::createFromObject($this)->applyTo($build);
@@ -143,7 +143,7 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
   public function getPreviewFallbackString() {
     $entity = $this->getEntity();
     $extra_fields = $this->entityFieldManager->getExtraFields($entity->getEntityTypeId(), $entity->bundle());
-    return new TranslatableMarkup('Placeholder for the "@field" field', ['@field' => $extra_fields['display'][$this->fieldName]['label']]);
+    return new TranslatableMarkup('"@field" field', ['@field' => $extra_fields['display'][$this->fieldName]['label']]);
   }
 
   /**

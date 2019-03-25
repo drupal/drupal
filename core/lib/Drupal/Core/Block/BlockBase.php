@@ -257,7 +257,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * {@inheritdoc}
    */
   public function getPreviewFallbackString() {
-    return $this->t('Placeholder for the "@block" block', ['@block' => $this->label()]);
+    return $this->t('"@block" block', ['@block' => $this->label()]);
   }
 
   /**

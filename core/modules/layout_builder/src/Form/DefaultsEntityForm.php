@@ -18,6 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class DefaultsEntityForm extends EntityForm {
 
+  use PreviewToggleTrait;
+
   /**
    * Layout tempstore repository.
    *
@@ -165,6 +167,7 @@ class DefaultsEntityForm extends EntityForm {
       '#submit' => ['::redirectOnSubmit'],
       '#redirect' => 'discard_changes',
     ];
+    $actions['preview_toggle'] = $this->buildContentPreviewToggle();
     return $actions;
   }
 
