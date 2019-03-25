@@ -2,8 +2,11 @@
 
 namespace Drupal\media_library;
 
+use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * A value object for the media library state.
@@ -41,6 +44,8 @@ class MediaLibraryState extends ParameterBag {
   public function __construct(array $parameters = []) {
     $this->validateParameters($parameters['media_library_opener_id'], $parameters['media_library_allowed_types'], $parameters['media_library_selected_type'], $parameters['media_library_remaining']);
     parent::__construct($parameters);
+    // Add a hash to the state parameters.
+    $this->set('hash', $this->getHash());
   }
 
   /**
@@ -60,12 +65,13 @@ class MediaLibraryState extends ParameterBag {
    *   A state object.
    */
   public static function create($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots) {
-    return new static([
+    $state = new static([
       'media_library_opener_id' => $opener_id,
       'media_library_allowed_types' => $allowed_media_type_ids,
       'media_library_selected_type' => $selected_type_id,
       'media_library_remaining' => $remaining_slots,
     ]);
+    return $state;
   }
 
   /**
@@ -76,19 +82,32 @@ class MediaLibraryState extends ParameterBag {
    *
    * @return \Drupal\media_library\MediaLibraryState
    *   A state object.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+   *   Thrown when the hash query parameter is invalid.
    */
   public static function fromRequest(Request $request) {
+    $query = $request->query;
+
     // Create a MediaLibraryState object through the create method to make sure
     // all validation runs.
     $state = static::create(
-      $request->query->get('media_library_opener_id'),
-      $request->query->get('media_library_allowed_types'),
-      $request->query->get('media_library_selected_type'),
-      $request->query->get('media_library_remaining')
+      $query->get('media_library_opener_id'),
+      $query->get('media_library_allowed_types'),
+      $query->get('media_library_selected_type'),
+      $query->get('media_library_remaining')
     );
+
+    // The request parameters need to contain a valid hash to prevent a
+    // malicious user modifying the query string to attempt to access
+    // inaccessible information.
+    if (!$state->isValidHash($query->get('hash'))) {
+      throw new BadRequestHttpException("Invalid media library parameters specified.");
+    }
+
     // Once we have validated the required parameters, we restore the parameters
     // from the request since there might be additional values.
-    $state->replace($request->query->all());
+    $state->replace($query->all());
     return $state;
   }
 
@@ -138,6 +157,37 @@ class MediaLibraryState extends ParameterBag {
     if (!is_numeric($remaining_slots)) {
       throw new \InvalidArgumentException('The remaining slots parameter is required and must be numeric.');
     }
+  }
+
+  /**
+   * Get the hash for the state object.
+   *
+   * @return string
+   *   The hashed parameters.
+   */
+  public function getHash() {
+    // Create a hash from the required state parameters.
+    $hash = implode(':', [
+      $this->getOpenerId(),
+      implode(':', $this->getAllowedTypeIds()),
+      $this->getSelectedTypeId(),
+      $this->getAvailableSlots(),
+    ]);
+
+    return Crypt::hmacBase64($hash, \Drupal::service('private_key')->get() . Settings::getHashSalt());
+  }
+
+  /**
+   * Validate a hash for the state object.
+   *
+   * @param string $hash
+   *   The hash to validate.
+   *
+   * @return string
+   *   The hashed parameters.
+   */
+  public function isValidHash($hash) {
+    return Crypt::hashEquals($this->getHash(), $hash);
   }
 
   /**

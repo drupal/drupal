@@ -6,12 +6,12 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Service which builds the media library.
@@ -159,12 +159,26 @@ class MediaLibraryUiBuilder {
    * Check access to the media library.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
-   *   Run access checks for this account.
+   *   (optional) Run access checks for this account.
+   * @param \Drupal\media_library\MediaLibraryState $state
+   *   (optional) The current state of the media library, derived from the
+   *   current request.
    *
    * @return \Drupal\Core\Access\AccessResult
    *   The access result.
    */
-  public function checkAccess(AccountInterface $account = NULL) {
+  public function checkAccess(AccountInterface $account = NULL, MediaLibraryState $state = NULL) {
+    if (!$state) {
+      try {
+        MediaLibraryState::fromRequest($this->request);
+      }
+      catch (BadRequestHttpException $e) {
+        return AccessResult::forbidden($e->getMessage());
+      }
+      catch (\InvalidArgumentException $e) {
+        return AccessResult::forbidden($e->getMessage());
+      }
+    }
     // Deny access if the view or display are removed.
     $view = $this->entityTypeManager->getStorage('view')->load('media_library');
     if (!$view) {
@@ -206,21 +220,15 @@ class MediaLibraryUiBuilder {
       ],
     ];
 
-    // Get the state parameters but remove the wrapper format, AJAX form and
-    // form rebuild parameters. These are internal parameters that should never
-    // be part of the vertical tab links.
-    $query = $state->all();
-    unset($query[MainContentViewSubscriber::WRAPPER_FORMAT], $query[FormBuilderInterface::AJAX_FORM_REQUEST], $query['_media_library_form_rebuild']);
-    // Add the 'media_library_content' parameter so the response will contain
-    // only the updated content for the tab.
-    // @see self::buildUi()
-    $query['media_library_content'] = 1;
-
     $allowed_types = $this->entityTypeManager->getStorage('media_type')->loadMultiple($allowed_type_ids);
 
     $selected_type_id = $state->getSelectedTypeId();
     foreach ($allowed_types as $allowed_type_id => $allowed_type) {
-      $query['media_library_selected_type'] = $allowed_type_id;
+      $link_state = MediaLibraryState::create($state->getOpenerId(), $state->getAllowedTypeIds(), $allowed_type_id, $state->getAvailableSlots());
+      // Add the 'media_library_content' parameter so the response will contain
+      // only the updated content for the tab.
+      // @see self::buildUi()
+      $link_state->set('media_library_content', 1);
 
       $title = $allowed_type->label();
       if ($allowed_type_id === $selected_type_id) {
@@ -232,7 +240,7 @@ class MediaLibraryUiBuilder {
       $menu['#links']['media-library-menu-' . $allowed_type_id] = [
         'title' => $title,
         'url' => Url::fromRoute('media_library.ui', [], [
-          'query' => $query,
+          'query' => $link_state->all(),
         ]),
         'attributes' => [
           'class' => ['media-library-menu__link'],

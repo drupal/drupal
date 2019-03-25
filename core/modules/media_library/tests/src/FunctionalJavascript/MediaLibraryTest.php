@@ -185,6 +185,29 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->drupalGet('media-library', $url_options);
     $assert_session->elementExists('css', '.view-media-library');
     $assert_session->fieldExists('Add files');
+
+    // Assert the media library can not be accessed if the required state
+    // parameters are changed without changing the hash.
+    $this->drupalGet('media-library', [
+      'query' => array_merge($url_options['query'], ['media_library_opener_id' => 'fail']),
+    ]);
+    $assert_session->responseContains('Access denied');
+    $this->drupalGet('media-library', [
+      'query' => array_merge($url_options['query'], ['media_library_allowed_types' => ['type_one', 'type_two']]),
+    ]);
+    $assert_session->responseContains('Access denied');
+    $this->drupalGet('media-library', [
+      'query' => array_merge($url_options['query'], ['media_library_selected_type' => 'type_one']),
+    ]);
+    $assert_session->responseContains('Access denied');
+    $this->drupalGet('media-library', [
+      'query' => array_merge($url_options['query'], ['media_library_remaining' => 3]),
+    ]);
+    $assert_session->responseContains('Access denied');
+    $this->drupalGet('media-library', [
+      'query' => array_merge($url_options['query'], ['hash' => 'fail']),
+    ]);
+    $assert_session->responseContains('Access denied');
   }
 
   /**

@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\media_library\Kernel;
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\media_library\MediaLibraryState;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Views;
 
@@ -78,6 +78,10 @@ class MediaLibraryAccessTest extends KernelTestBase {
     /** @var \Drupal\media_library\MediaLibraryUiBuilder $ui_builder */
     $ui_builder = $this->container->get('media_library.ui_builder');
 
+    // Create a media library state to test access.
+    $state = MediaLibraryState::create('test', ['file', 'image'], 'file', 2);
+
+    // Create a clone of the view so we can reset the original later.
     $view_original = clone Views::getView('media_library');
 
     // Create our test users.
@@ -86,13 +90,11 @@ class MediaLibraryAccessTest extends KernelTestBase {
 
     // Assert the 'view media' permission is needed to access the library and
     // validate the cache dependencies.
-    $this->assertSame(AccessResult::forbidden()->isAllowed(), $ui_builder->checkAccess($forbidden_account)->isAllowed());
-    $this->assertSame("The 'view media' permission is required.", $ui_builder->checkAccess($forbidden_account)->getReason());
-    $this->assertSame($view_original->storage->getCacheTags(), $ui_builder->checkAccess($forbidden_account)->getCacheTags());
-    $this->assertSame(['user.permissions'], $ui_builder->checkAccess($forbidden_account)->getCacheContexts());
-    $this->assertSame(AccessResult::allowed()->isAllowed(), $ui_builder->checkAccess($allowed_account)->isAllowed());
-    $this->assertSame($view_original->storage->getCacheTags(), $ui_builder->checkAccess($allowed_account)->getCacheTags());
-    $this->assertSame(['user.permissions'], $ui_builder->checkAccess($allowed_account)->getCacheContexts());
+    $access_result = $ui_builder->checkAccess($forbidden_account, $state);
+    $this->assertFalse($access_result->isAllowed());
+    $this->assertSame("The 'view media' permission is required.", $access_result->getReason());
+    $this->assertSame($view_original->storage->getCacheTags(), $access_result->getCacheTags());
+    $this->assertSame(['user.permissions'], $access_result->getCacheContexts());
 
     // Assert that the media library access is denied when the view widget
     // display is deleted.
@@ -101,25 +103,28 @@ class MediaLibraryAccessTest extends KernelTestBase {
     unset($displays['widget']);
     $view_storage->set('display', $displays);
     $view_storage->save();
-    $this->assertSame(AccessResult::forbidden()->isAllowed(), $ui_builder->checkAccess($allowed_account)->isAllowed());
-    $this->assertSame('The media library widget display does not exist.', $ui_builder->checkAccess($forbidden_account)->getReason());
-    $this->assertSame($view_original->storage->getCacheTags(), $ui_builder->checkAccess($forbidden_account)->getCacheTags());
-    $this->assertSame([], $ui_builder->checkAccess($forbidden_account)->getCacheContexts());
+    $access_result = $ui_builder->checkAccess($allowed_account, $state);
+    $this->assertFalse($access_result->isAllowed());
+    $this->assertSame('The media library widget display does not exist.', $access_result->getReason());
+    $this->assertSame($view_original->storage->getCacheTags(), $access_result->getCacheTags());
+    $this->assertSame([], $access_result->getCacheContexts());
 
     // Restore the original view and assert that the media library controller
     // works again.
     $view_original->storage->save();
-    $this->assertSame(AccessResult::allowed()->isAllowed(), $ui_builder->checkAccess($allowed_account)->isAllowed());
-    $this->assertSame($view_original->storage->getCacheTags(), $ui_builder->checkAccess($allowed_account)->getCacheTags());
-    $this->assertSame(['user.permissions'], $ui_builder->checkAccess($allowed_account)->getCacheContexts());
+    $access_result = $ui_builder->checkAccess($allowed_account, $state);
+    $this->assertTrue($access_result->isAllowed());
+    $this->assertSame($view_original->storage->getCacheTags(), $access_result->getCacheTags());
+    $this->assertSame(['user.permissions'], $access_result->getCacheContexts());
 
     // Assert that the media library access is denied when the entire media
     // library view is deleted.
     Views::getView('media_library')->storage->delete();
-    $this->assertSame(AccessResult::forbidden()->isAllowed(), $ui_builder->checkAccess($allowed_account)->isAllowed());
-    $this->assertSame('The media library view does not exist.', $ui_builder->checkAccess($forbidden_account)->getReason());
-    $this->assertSame([], $ui_builder->checkAccess($forbidden_account)->getCacheTags());
-    $this->assertSame([], $ui_builder->checkAccess($forbidden_account)->getCacheContexts());
+    $access_result = $ui_builder->checkAccess($allowed_account, $state);
+    $this->assertFalse($access_result->isAllowed());
+    $this->assertSame('The media library view does not exist.', $access_result->getReason());
+    $this->assertSame([], $access_result->getCacheTags());
+    $this->assertSame([], $access_result->getCacheContexts());
   }
 
 }
