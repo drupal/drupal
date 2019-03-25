@@ -22,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class OverridesEntityForm extends ContentEntityForm {
 
+  use PreviewToggleTrait;
+
   /**
    * Layout tempstore repository.
    *
@@ -201,6 +203,7 @@ class OverridesEntityForm extends ContentEntityForm {
       '#submit' => ['::redirectOnSubmit'],
       '#redirect' => 'revert',
     ];
+    $actions['preview_toggle'] = $this->buildContentPreviewToggle();
     return $actions;
   }
 

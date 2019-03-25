@@ -77,6 +77,7 @@
 
 .layout-builder-block {
   padding: 1.5em;
+  cursor: move;
 }
 
 .layout-builder-block [tabindex="-1"] {
@@ -98,6 +99,18 @@
  */
 .layout-builder__message .messages .messages__content {
   background: none;
+}
+
+.layout-builder-block__content-preview-placeholder-label {
+  margin: 0;
+  line-height: 1.4;
+  font-size: 1.429em;
+  text-align: center;
+}
+
+.layout-builder--content-preview-disabled .layout-builder-block {
+  border-bottom: 2px dashed #979797;
+  margin: 0;
 }
 
 #drupal-off-canvas .layout-selection li {

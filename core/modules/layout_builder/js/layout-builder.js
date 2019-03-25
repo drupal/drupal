@@ -149,4 +149,68 @@
       $('#layout-builder').removeClass('layout-builder--move-blocks-active');
     }
   });
+
+  behaviors.layoutBuilderToggleContentPreview = {
+    attach: function attach(context) {
+      var $layoutBuilder = $('#layout-builder');
+
+      var $layoutBuilderContentPreview = $('#layout-builder-content-preview');
+
+      var contentPreviewId = $layoutBuilderContentPreview.data('content-preview-id');
+
+      var isContentPreview = JSON.parse(localStorage.getItem(contentPreviewId)) !== false;
+
+      var disableContentPreview = function disableContentPreview() {
+        $layoutBuilder.addClass('layout-builder--content-preview-disabled');
+
+        $('[data-layout-content-preview-placeholder-label]', context).each(function (i, element) {
+          var $element = $(element);
+
+          $element.children(':not([data-contextual-id])').hide(0);
+
+          var contentPreviewPlaceholderText = $element.attr('data-layout-content-preview-placeholder-label');
+
+          var contentPreviewPlaceholderLabel = Drupal.theme('layoutBuilderPrependContentPreviewPlaceholderLabel', contentPreviewPlaceholderText);
+          $element.prepend(contentPreviewPlaceholderLabel);
+        });
+      };
+
+      var enableContentPreview = function enableContentPreview() {
+        $layoutBuilder.removeClass('layout-builder--content-preview-disabled');
+
+        $('.js-layout-builder-content-preview-placeholder-label').remove();
+
+        $('[data-layout-content-preview-placeholder-label]').each(function (i, element) {
+          $(element).children().show();
+        });
+      };
+
+      $('#layout-builder-content-preview', context).on('change', function (event) {
+        var isChecked = $(event.currentTarget).is(':checked');
+
+        localStorage.setItem(contentPreviewId, JSON.stringify(isChecked));
+
+        if (isChecked) {
+          enableContentPreview();
+          announce(Drupal.t('Block previews are visible. Block labels are hidden.'));
+        } else {
+          disableContentPreview();
+          announce(Drupal.t('Block previews are hidden. Block labels are visible.'));
+        }
+      });
+
+      if (!isContentPreview) {
+        $layoutBuilderContentPreview.attr('checked', false);
+        disableContentPreview();
+      }
+    }
+  };
+
+  Drupal.theme.layoutBuilderPrependContentPreviewPlaceholderLabel = function (contentPreviewPlaceholderText) {
+    var contentPreviewPlaceholderLabel = document.createElement('div');
+    contentPreviewPlaceholderLabel.className = 'layout-builder-block__content-preview-placeholder-label js-layout-builder-content-preview-placeholder-label';
+    contentPreviewPlaceholderLabel.innerHTML = contentPreviewPlaceholderText;
+
+    return '<div class="layout-builder-block__content-preview-placeholder-label js-layout-builder-content-preview-placeholder-label">' + contentPreviewPlaceholderText + '</div>';
+  };
 })(jQuery, Drupal);
