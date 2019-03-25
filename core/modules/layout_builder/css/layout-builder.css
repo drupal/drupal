@@ -83,6 +83,23 @@
   pointer-events: none;
 }
 
+.layout-builder__message .messages {
+  background-repeat: no-repeat;
+}
+.layout-builder__message--defaults .messages {
+  background-image: url('../images/globe.svg');
+}
+.layout-builder__message--overrides .messages {
+  background-image: url('../images/location.svg');
+}
+
+/**
+ * @todo Remove Umami specific styling in https://www.drupal.org/node/3043228.
+ */
+.layout-builder__message .messages .messages__content {
+  background: none;
+}
+
 #drupal-off-canvas .layout-selection li {
   display: block;
   padding-bottom: 1em;

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\layout_builder\Functional;
 
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Section;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
@@ -64,6 +65,26 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests Layout Builder overrides without access to edit the default layout.
+   */
+  public function testOverridesWithoutDefaultsAccess() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser(['configure any layout']));
+
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+
+    $this->drupalGet('node/1');
+    $page->clickLink('Layout');
+    $assert_session->elementTextContains('css', '.layout-builder__message.layout-builder__message--overrides', 'You are editing the layout for this Bundle with section field content item.');
+    $assert_session->linkNotExists('Edit the template for all Bundle with section field content items instead.');
+  }
+
+  /**
    * Tests functionality of Layout Builder for overrides.
    */
   public function testOverrides() {
@@ -88,6 +109,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     // The layout form should not contain fields for the title of the node by
     // default.
     $assert_session->fieldNotExists('title[0][value]');
+    $assert_session->elementTextContains('css', '.layout-builder__message.layout-builder__message--overrides', 'You are editing the layout for this Bundle with section field content item. Edit the template for all Bundle with section field content items instead.');
+    $assert_session->linkExists('Edit the template for all Bundle with section field content items instead.');
     $page->clickLink('Add Block');
     $page->clickLink('Powered by Drupal');
     $page->fillField('settings[label]', 'This is an override');
@@ -107,6 +130,40 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextNotContains('This is an override');
     $page->pressButton('Save layout');
     $assert_session->pageTextNotContains('This is an override');
+  }
+
+  /**
+   * Tests the Layout Builder UI for an entity type without a bundle.
+   */
+  public function testNonBundleEntityType() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Log in as a user that can edit layout templates.
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer user display',
+    ]));
+
+    $this->drupalGet('admin/config/people/accounts/display/default');
+    $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalPostForm(NULL, ['layout[allow_custom]' => TRUE], 'Save');
+
+    $page->clickLink('Manage layout');
+    $assert_session->pageTextContains('You are editing the layout template for all users.');
+
+    $this->drupalGet('user');
+    $page->clickLink('Layout');
+    $assert_session->pageTextContains('You are editing the layout for this user. Edit the template for all users instead.');
+
+    // Log in as a user that cannot edit layout templates.
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+    ]));
+    $this->drupalGet('user');
+    $page->clickLink('Layout');
+    $assert_session->pageTextContains('You are editing the layout for this user.');
+    $assert_session->pageTextNotContains('Edit the template for all users instead.');
   }
 
   /**
@@ -185,6 +242,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
     $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
+    $assert_session->elementTextContains('css', '.layout-builder__message.layout-builder__message--defaults', 'You are editing the layout template for all Bundle with section field content items.');
     // The body field is only present once.
     $assert_session->elementsCount('css', '.field--name-body', 1);
     // The extra field is only present once.
