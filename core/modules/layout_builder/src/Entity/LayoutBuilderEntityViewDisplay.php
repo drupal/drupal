@@ -2,6 +2,9 @@
 
 namespace Drupal\layout_builder\Entity;
 
+use Drupal\Component\Plugin\ConfigurableInterface;
+use Drupal\Component\Plugin\DerivativeInspectionInterface;
+use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\Entity\EntityViewDisplay as BaseEntityViewDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -13,7 +16,9 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\layout_builder\LayoutEntityHelperTrait;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
+use Drupal\layout_builder\QuickEditIntegration;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorage\SectionStorageTrait;
@@ -29,6 +34,7 @@ use Drupal\layout_builder\SectionStorage\SectionStorageTrait;
 class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements LayoutEntityDisplayInterface {
 
   use SectionStorageTrait;
+  use LayoutEntityHelperTrait;
 
   /**
    * The entity field manager.
@@ -468,6 +474,86 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   private function sectionStorageManager() {
     return \Drupal::service('plugin.manager.layout_builder.section_storage');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getComponent($name) {
+    if ($this->isLayoutBuilderEnabled() && $section_component = $this->getQuickEditSectionComponent() ?: $this->getSectionComponentForFieldName($name)) {
+      $plugin = $section_component->getPlugin();
+      if ($plugin instanceof ConfigurableInterface) {
+        $configuration = $plugin->getConfiguration();
+        if (isset($configuration['formatter'])) {
+          return $configuration['formatter'];
+        }
+      }
+    }
+    return parent::getComponent($name);
+  }
+
+  /**
+   * Returns the Quick Edit formatter settings.
+   *
+   * @return \Drupal\layout_builder\SectionComponent|null
+   *   The section component if it is available.
+   *
+   * @see \Drupal\layout_builder\QuickEditIntegration::entityViewAlter()
+   * @see \Drupal\quickedit\MetadataGenerator::generateFieldMetadata()
+   */
+  private function getQuickEditSectionComponent() {
+    // To determine the Quick Edit view_mode ID we need an originalMode set.
+    if ($original_mode = $this->getOriginalMode()) {
+      $parts = explode('-', $original_mode);
+      // The Quick Edit view mode ID is created by
+      // \Drupal\layout_builder\QuickEditIntegration::entityViewAlter()
+      // concatenating together the information we need to retrieve the Layout
+      // Builder component. It follows the structure prescribed by the
+      // documentation of hook_quickedit_render_field().
+      if (count($parts) === 6 && $parts[0] === 'layout_builder') {
+        list(, $delta, $component_uuid, $entity_id) = QuickEditIntegration::deconstructViewModeId($original_mode);
+        $entity = $this->entityTypeManager()->getStorage($this->getTargetEntityTypeId())->load($entity_id);
+        $sections = $this->getEntitySections($entity);
+        if (isset($sections[$delta])) {
+          $component = $sections[$delta]->getComponent($component_uuid);
+          $plugin = $component->getPlugin();
+          // We only care about FieldBlock because these are only components
+          // that provide Quick Edit integration: Quick Edit enables in-place
+          // editing of fields of entities, not of anything else.
+          if ($plugin instanceof DerivativeInspectionInterface && $plugin->getBaseId() === 'field_block') {
+            return $component;
+          }
+        }
+      }
+    }
+    return NULL;
+  }
+
+  /**
+   * Gets the component for a given field name if any.
+   *
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return \Drupal\layout_builder\SectionComponent|null
+   *   The section component if it is available.
+   */
+  private function getSectionComponentForFieldName($field_name) {
+    // Loop through every component until the first match is found.
+    foreach ($this->getSections() as $section) {
+      foreach ($section->getComponents() as $component) {
+        $plugin = $component->getPlugin();
+        if ($plugin instanceof DerivativeInspectionInterface && $plugin->getBaseId() === 'field_block') {
+          // FieldBlock derivative IDs are in the format
+          // [entity_type]:[bundle]:[field].
+          list(, , $field_block_field_name) = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin->getDerivativeId());
+          if ($field_block_field_name === $field_name) {
+            return $component;
+          }
+        }
+      }
+    }
+    return NULL;
   }
 
 }
