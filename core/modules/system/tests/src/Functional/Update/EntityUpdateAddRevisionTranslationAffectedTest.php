@@ -56,6 +56,7 @@ class EntityUpdateAddRevisionTranslationAffectedTest extends UpdatePathTestBase 
    * Tests the addition of the 'revision_translation_affected' base field.
    *
    * @see system_update_8402()
+   * @see system_update_8702()
    */
   public function testAddingTheRevisionTranslationAffectedField() {
     // Make the entity type revisionable and translatable prior to running the
@@ -73,6 +74,10 @@ class EntityUpdateAddRevisionTranslationAffectedTest extends UpdatePathTestBase 
     // system_update_8402().
     $field_storage_definitions = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions('entity_test_update');
     $this->assertTrue(isset($field_storage_definitions['revision_translation_affected']));
+
+    // Check that the entity type has the 'revision_translation_affected' key.
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('entity_test_update');
+    $this->assertEquals('revision_translation_affected', $entity_type->getKey('revision_translation_affected'));
 
     // Check that the correct initial value was set when the field was
     // installed.
