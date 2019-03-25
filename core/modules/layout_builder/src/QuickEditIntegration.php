@@ -159,8 +159,8 @@ class QuickEditIntegration implements ContainerInjectionInterface {
         }
       }
     }
-    // Alter the view_mode of all fields outside of the Layout Builder
-    // sections to force QuickEdit to request to field metadata.
+    // Alter the Quick Edit view mode ID of all fields outside of the Layout
+    // Builder sections to force Quick Edit to request to the field metadata.
     // @todo Remove this logic in https://www.drupal.org/project/node/2966136.
     foreach (Element::children($build) as $field_name) {
       if ($field_name !== '_layout_builder') {
