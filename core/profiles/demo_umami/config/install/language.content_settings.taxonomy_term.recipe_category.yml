@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.recipe_category
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.recipe_category
+target_entity_type_id: taxonomy_term
+target_bundle: recipe_category
+default_langcode: site_default
+language_alterable: true
