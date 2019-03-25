@@ -2247,3 +2247,35 @@ function system_update_8701() {
   // The system.theme.data key is no longer used in Drupal 8.7.x.
   \Drupal::state()->delete('system.theme.data');
 }
+
+/**
+ * Add the 'revision_translation_affected' entity key.
+ */
+function system_update_8702() {
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  // Get a list of revisionable and translatable entity types.
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $last_installed_definitions */
+  $last_installed_definitions = array_filter($entity_definition_update_manager->getEntityTypes(), function (EntityTypeInterface $entity_type) {
+    return $entity_type->isRevisionable() && $entity_type->isTranslatable();
+  });
+
+  // Ensure that we don't use the cached in-code definitions to support sites
+  // that might be updating from 8.3.x straight to 8.7.x.
+  \Drupal::entityTypeManager()->useCaches(FALSE);
+  $live_definitions = \Drupal::entityTypeManager()->getDefinitions();
+
+  // Update the 'revision_translation_affected' entity key of the last installed
+  // definitions to use the value of the live (in-code) entity type definitions
+  // in cases when the key has not been populated yet.
+  foreach ($last_installed_definitions as $entity_type_id => $entity_type) {
+    $revision_translation_affected_key = $live_definitions[$entity_type_id]->getKey('revision_translation_affected');
+    if (!$entity_type->hasKey('revision_translation_affected') && !empty($revision_translation_affected_key) && $entity_definition_update_manager->getFieldStorageDefinition($revision_translation_affected_key, $entity_type_id)) {
+      $entity_keys = $entity_type->getKeys();
+      $entity_keys['revision_translation_affected'] = $revision_translation_affected_key;
+      $entity_type->set('entity_keys', $entity_keys);
+      $entity_definition_update_manager->updateEntityType($entity_type);
+    }
+  }
+  \Drupal::entityTypeManager()->useCaches(TRUE);
+}
