@@ -13,7 +13,7 @@ bundle: footer_promo_block
 label: 'Promo image'
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
