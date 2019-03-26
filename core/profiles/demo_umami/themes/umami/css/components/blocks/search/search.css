@@ -82,8 +82,8 @@
 }
 
 @media screen and (min-width: 48em) {
-  .form-search {
-    width: 14em;
+  .search-block-form .form-search {
+    width: 18em;
   }
 }
 
