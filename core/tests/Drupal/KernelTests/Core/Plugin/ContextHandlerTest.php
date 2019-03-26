@@ -42,6 +42,25 @@ class ContextHandlerTest extends KernelTestBase {
     $this->assertSame($context, $result);
   }
 
+  /**
+   * @covers ::applyContextMapping
+   */
+  public function testApplyContextMappingAlreadyApplied() {
+    $entity = EntityTest::create([]);
+    $context_definition = EntityContextDefinition::fromEntity($entity);
+    $context = EntityContext::fromEntity($entity);
+
+    $definition = ['context_definitions' => ['a_context_id' => $context_definition]];
+    $plugin = new TestContextAwarePlugin([], 'test_plugin_id', $definition);
+    $plugin->setContext('a_context_id', $context);
+    (new ContextHandler())->applyContextMapping($plugin, []);
+
+    $result = $plugin->getContext('a_context_id');
+
+    $this->assertInstanceOf(EntityContext::class, $result);
+    $this->assertSame($context, $result);
+  }
+
 }
 
 /**
