@@ -30,7 +30,7 @@ class TestContextAwareBlock extends BlockBase {
     return [
       '#prefix' => '<div id="' . $this->getPluginId() . '--username">',
       '#suffix' => '</div>',
-      '#markup' => $user ? $user->getAccountName() : 'No context mapping selected.' ,
+      '#markup' => $user ? $user->getAccountName() : 'No context mapping selected.',
     ];
   }
 

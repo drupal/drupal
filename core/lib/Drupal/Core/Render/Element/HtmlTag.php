@@ -38,7 +38,7 @@ class HtmlTag extends RenderElement {
    * @see http://www.w3.org/TR/html5/syntax.html#syntax-start-tag
    * @see http://www.w3.org/TR/html5/syntax.html#void-elements
    */
-  static protected $voidElements = [
+  protected static $voidElements = [
     'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
     'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr',
     'rect', 'circle', 'polygon', 'ellipse', 'stop', 'use', 'path',

@@ -16,7 +16,7 @@ class ThemeTokenTest extends BrowserTestBase {
    *
    * @var array
    */
-  static public $modules = ['block'];
+  public static $modules = ['block'];
 
   /**
    * {@inheritdoc}
