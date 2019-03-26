@@ -405,7 +405,7 @@ The new directory name is constructed from the site's URL. The configuration
 for www.example.com could be in 'sites/example.com/settings.php' (note that
 'www.' should be omitted if users can access your site at http://example.com/).
 
-  $ cp sites/default/defaults.settings.php sites/example.com/settings.php
+  $ cp sites/default/default.settings.php sites/example.com/settings.php
 
 Sites do not have to have a different domain. You can also use subdomains and
 subdirectories for Drupal sites. For example, example.com, sub.example.com, and
