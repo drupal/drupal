@@ -62,6 +62,13 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
   protected $isNew = TRUE;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a new InlineBlock.
    *
    * @param array $configuration
@@ -74,8 +81,10 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
    *   The entity type manager service.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, AccountInterface $current_user = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
@@ -83,6 +92,12 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
     if (!empty($this->configuration['block_revision_id']) || !empty($this->configuration['block_serialized'])) {
       $this->isNew = FALSE;
     }
+
+    if (!$current_user) {
+      @trigger_error('The current_user service must be passed to InlineBlock::__construct(), it is required before Drupal 9.0.0.', E_USER_DEPRECATED);
+      $current_user = \Drupal::currentUser();
+    }
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -94,7 +109,8 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('entity_display.repository')
+      $container->get('entity_display.repository'),
+      $container->get('current_user')
     );
   }
 
@@ -121,6 +137,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       '#type' => 'container',
       '#process' => [[static::class, 'processBlockForm']],
       '#block' => $block,
+      '#access' => $this->currentUser->hasPermission('create and edit custom blocks'),
     ];
 
     $options = $this->entityDisplayRepository->getViewModeOptionsByBundle('block_content', $block->bundle());

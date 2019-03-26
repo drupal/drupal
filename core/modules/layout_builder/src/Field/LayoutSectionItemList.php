@@ -77,7 +77,9 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides \Drupal\Core\Field\FieldItemListInterface::defaultAccess().
+   *
+   * @ingroup layout_builder_access
    */
   public function defaultAccess($operation = 'view', AccountInterface $account = NULL) {
     // @todo Allow access in https://www.drupal.org/node/2942975.

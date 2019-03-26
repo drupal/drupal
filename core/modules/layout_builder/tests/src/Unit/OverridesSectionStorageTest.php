@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
@@ -62,12 +63,13 @@ class OverridesSectionStorageTest extends UnitTestCase {
     $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class);
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
     $this->entityRepository = $this->prophesize(EntityRepositoryInterface::class);
+    $account = $this->prophesize(AccountInterface::class);
 
     $definition = new SectionStorageDefinition([
       'id' => 'overrides',
       'class' => OverridesSectionStorage::class,
     ]);
-    $this->plugin = new OverridesSectionStorage([], 'overrides', $definition, $this->entityTypeManager->reveal(), $this->entityFieldManager->reveal(), $section_storage_manager->reveal(), $this->entityRepository->reveal());
+    $this->plugin = new OverridesSectionStorage([], 'overrides', $definition, $this->entityTypeManager->reveal(), $this->entityFieldManager->reveal(), $section_storage_manager->reveal(), $this->entityRepository->reveal(), $account->reveal());
   }
 
   /**
@@ -369,7 +371,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
           '_title_callback' => '\Drupal\layout_builder\Controller\LayoutBuilderController::title',
         ],
         [
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
           'custom requirement' => 'from_canonical_route',
         ],
@@ -390,7 +391,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
           '_form' => '\Drupal\layout_builder\Form\DiscardLayoutChangesForm',
         ],
         [
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
           'custom requirement' => 'from_canonical_route',
         ],
@@ -411,7 +411,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
           '_form' => '\Drupal\layout_builder\Form\RevertOverridesForm',
         ],
         [
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
           'custom requirement' => 'from_canonical_route',
         ],
@@ -433,7 +432,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
           '_entity_form' => 'with_string_id.layout_builder',
         ],
         [
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -453,7 +451,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
           '_form' => '\Drupal\layout_builder\Form\DiscardLayoutChangesForm',
         ],
         [
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -473,7 +470,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
           '_form' => '\Drupal\layout_builder\Form\RevertOverridesForm',
         ],
         [
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -494,7 +490,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
           '_entity_form' => 'with_integer_id.layout_builder',
         ],
         [
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
           'with_integer_id' => '\d+',
         ],
@@ -515,7 +510,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
           '_form' => '\Drupal\layout_builder\Form\DiscardLayoutChangesForm',
         ],
         [
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
           'with_integer_id' => '\d+',
         ],
@@ -536,7 +530,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
           '_form' => '\Drupal\layout_builder\Form\RevertOverridesForm',
         ],
         [
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
           'with_integer_id' => '\d+',
         ],

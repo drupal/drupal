@@ -45,7 +45,6 @@ trait LayoutBuilderRoutesTrait {
     // Provide an empty value to allow the section storage to be upcast.
     $defaults['section_storage'] = '';
     // Trigger the layout builder access check.
-    $requirements['_has_layout_section'] = 'true';
     $requirements['_layout_builder_access'] = 'view';
     // Trigger the layout builder RouteEnhancer.
     $options['_layout_builder'] = TRUE;

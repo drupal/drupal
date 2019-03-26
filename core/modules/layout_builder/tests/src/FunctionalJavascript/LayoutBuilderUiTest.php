@@ -46,6 +46,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
+      'create and edit custom blocks',
       'administer node display',
       'administer node fields',
       'access contextual links',

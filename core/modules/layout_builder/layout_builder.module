@@ -56,6 +56,11 @@ function layout_builder_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('Layout Builder can be selectively enabled on the "Manage Display" page in the <a href=":field_ui">Field UI</a>. This allows you to control the output of each type of display individually. For example, a "Basic page" might have view modes such as Full and Teaser, with each view mode having different layouts selected.', [':field_ui' => Url::fromRoute('help.page', ['name' => 'field_ui'])->toString()]) . '</dd>';
       $output .= '<dt>' . t('Overridden layouts') . '</dt>';
       $output .= '<dd>' . t('If enabled, each individual content item can have a custom layout. Once the layout for an individual content item is overridden, changes to the Default layout will no longer affect it. Overridden layouts may be reverted to return to matching and being synchronized to their Default layout.') . '</dd>';
+      $output .= '<dt>' . t('User permissions') . '</dt>';
+      $output .= '<dd>' . t('The Layout Builder module makes a number of permissions available, which can be set by role on the <a href=":permissions">permissions page</a>. For more information, see the <a href=":layout-builder-permissions">Configuring Layout Builder permissions</a> online documentation.', [
+        ':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-layout_builder'])->toString(),
+        ':layout-builder-permissions' => 'https://www.drupal.org/docs/8/core/modules/layout-builder/configuring-layout-builder-permissions',
+      ]) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -258,7 +263,7 @@ function layout_builder_block_content_access(EntityInterface $entity, $operation
     return AccessResult::neutral();
   }
 
-  if ($account->hasPermission('configure any layout')) {
+  if ($account->hasPermission('create and edit custom blocks')) {
     return AccessResult::allowed();
   }
   return AccessResult::forbidden();

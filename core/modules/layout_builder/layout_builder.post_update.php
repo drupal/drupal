@@ -8,6 +8,7 @@
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\TempStoreIdentifierInterface;
+use Drupal\user\Entity\Role;
 
 /**
  * Rebuild plugin dependencies for all entity view displays.
@@ -173,4 +174,15 @@ function layout_builder_post_update_section_third_party_settings_schema() {
  */
 function layout_builder_post_update_layout_builder_dependency_change() {
   // Empty post-update hook.
+}
+
+/**
+ * Add new custom block permission to all roles with 'configure any layout'.
+ */
+function layout_builder_post_update_update_permissions() {
+  foreach (Role::loadMultiple() as $role) {
+    if ($role->hasPermission('configure any layout')) {
+      $role->grantPermission('create and edit custom blocks')->save();
+    }
+  }
 }
