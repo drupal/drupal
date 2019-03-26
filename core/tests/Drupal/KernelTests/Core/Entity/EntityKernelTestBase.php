@@ -4,13 +4,22 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\user\Entity\Role;
-use Drupal\user\Entity\User;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Defines an abstract test base for entity kernel tests.
  */
 abstract class EntityKernelTestBase extends KernelTestBase {
+
+  use UserCreationTrait {
+    checkPermissions as drupalCheckPermissions;
+    createAdminRole as drupalCreateAdminRole;
+    createRole as drupalCreateRole;
+    createUser as drupalCreateUser;
+    grantPermissions as drupalGrantPermissions;
+    setCurrentUser as drupalSetCurrentUser;
+    setUpCurrentUser as drupalSetUpCurrentUser;
+  }
 
   /**
    * Modules to enable.
@@ -102,24 +111,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    *   The created user entity.
    */
   protected function createUser($values = [], $permissions = []) {
-    if ($permissions) {
-      // Create a new role and apply permissions to it.
-      $role = Role::create([
-        'id' => strtolower($this->randomMachineName(8)),
-        'label' => $this->randomMachineName(8),
-      ]);
-      $role->save();
-      user_role_grant_permissions($role->id(), $permissions);
-      $values['roles'][] = $role->id();
-    }
-
-    $account = User::create($values + [
-      'name' => $this->randomMachineName(),
-      'status' => 1,
-    ]);
-    $account->enforceIsNew();
-    $account->save();
-    return $account;
+    return $this->drupalCreateUser($permissions ?: [], NULL, FALSE, $values ?: []);
   }
 
   /**
