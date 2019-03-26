@@ -72,6 +72,7 @@ class LayoutBuilderMultilingualTest extends BrowserTestBase {
     $this->drupalLogin($this->createUser([
       'configure any layout',
       'translate interface',
+      'create and edit custom blocks',
     ]));
   }
 

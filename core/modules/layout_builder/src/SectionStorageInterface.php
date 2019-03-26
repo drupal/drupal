@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -183,5 +184,20 @@ interface SectionStorageInterface extends SectionListInterface, PluginInspection
    * @see \Drupal\Core\Cache\RefinableCacheableDependencyInterface
    */
   public function isApplicable(RefinableCacheableDependencyInterface $cacheability);
+
+  /**
+   * Overrides \Drupal\Component\Plugin\PluginInspectionInterface::getPluginDefinition().
+   *
+   * @return \Drupal\layout_builder\SectionStorage\SectionStorageDefinition
+   *   The section storage definition.
+   */
+  public function getPluginDefinition();
+
+  /**
+   * Overrides \Drupal\Core\Access\AccessibleInterface::access().
+   *
+   * @ingroup layout_builder_access
+   */
+  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE);
 
 }

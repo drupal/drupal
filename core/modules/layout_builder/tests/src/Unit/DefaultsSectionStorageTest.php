@@ -397,7 +397,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_key display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -420,7 +419,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_key display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -442,7 +440,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_key display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -462,7 +459,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -483,7 +479,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -504,7 +499,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [

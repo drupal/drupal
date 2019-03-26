@@ -34,6 +34,7 @@ use Symfony\Component\Routing\RouteCollection;
  * @SectionStorage(
  *   id = "overrides",
  *   weight = -20,
+ *   handles_permission_check = TRUE,
  *   context_definitions = {
  *     "entity" = @ContextDefinition("entity", constraints = {
  *       "EntityHasField" = \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage::FIELD_NAME,
@@ -85,15 +86,27 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
   protected $entityRepository;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, SectionStorageManagerInterface $section_storage_manager, EntityRepositoryInterface $entity_repository) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, SectionStorageManagerInterface $section_storage_manager, EntityRepositoryInterface $entity_repository, AccountInterface $current_user = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->sectionStorageManager = $section_storage_manager;
     $this->entityRepository = $entity_repository;
+    if (!$current_user) {
+      @trigger_error('The current_user service must be passed to OverridesSectionStorage::__construct(), it is required before Drupal 9.0.0.', E_USER_DEPRECATED);
+      $current_user = \Drupal::currentUser();
+    }
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -107,7 +120,8 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       $container->get('entity_type.manager'),
       $container->get('entity_field.manager'),
       $container->get('plugin.manager.layout_builder.section_storage'),
-      $container->get('entity.repository')
+      $container->get('entity.repository'),
+      $container->get('current_user')
     );
   }
 
@@ -360,8 +374,29 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    * {@inheritdoc}
    */
   public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    $default_section_storage = $this->getDefaultSectionStorage();
-    $result = AccessResult::allowedIf($default_section_storage->isLayoutBuilderEnabled())->addCacheableDependency($default_section_storage);
+    if ($account === NULL) {
+      $account = $this->currentUser;
+    }
+
+    $entity = $this->getEntity();
+
+    // Create an access result that will allow access to the layout if one of
+    // these conditions applies:
+    // 1. The user can configure any layouts.
+    $any_access = AccessResult::allowedIfHasPermission($account, 'configure any layout');
+    // 2. The user can configure layouts on all items of the bundle type.
+    $bundle_access = AccessResult::allowedIfHasPermission($account, "configure all {$entity->bundle()} {$entity->getEntityTypeId()} layout overrides");
+    // 3. The user can configure layouts items of this bundle type they can edit
+    //    AND the user has access to edit this entity.
+    $edit_only_bundle_access = AccessResult::allowedIfHasPermission($account, "configure editable {$entity->bundle()} {$entity->getEntityTypeId()} layout overrides");
+    $edit_only_bundle_access = $edit_only_bundle_access->andIf($entity->access('update', $account, TRUE));
+
+    $result = $any_access
+      ->orIf($bundle_access)
+      ->orIf($edit_only_bundle_access);
+
+    // Access also depends on the default being enabled.
+    $result = $result->andIf($this->getDefaultSectionStorage()->access($operation, $account, TRUE));
     return $return_as_object ? $result : $result->isAllowed();
   }
 
