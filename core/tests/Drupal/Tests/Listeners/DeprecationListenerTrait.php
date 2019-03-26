@@ -126,6 +126,11 @@ trait DeprecationListenerTrait {
       // is a Windows only deprecation. Remove when core no longer uses
       // WinCacheClassLoader in \Drupal\Core\DrupalKernel::initializeSettings().
       'The Symfony\Component\ClassLoader\WinCacheClassLoader class is deprecated since Symfony 3.3 and will be removed in 4.0. Use `composer install --apcu-autoloader` instead.',
+      // These deprecations are triggered by symfony/psr-http-message-factory
+      // 1.2, which can be installed if you update dependencies on php 7 or
+      // higher
+      'The "Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory" class is deprecated since symfony/psr-http-message-bridge 1.2, use PsrHttpFactory instead.',
+      'The "psr7.http_message_factory" service relies on the deprecated "Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory" class. It should either be deprecated or its implementation upgraded.',
     ];
   }
 
