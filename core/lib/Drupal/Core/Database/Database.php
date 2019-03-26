@@ -40,28 +40,28 @@ abstract class Database {
    *
    * @var array
    */
-  static protected $connections = [];
+  protected static $connections = [];
 
   /**
    * A processed copy of the database connection information from settings.php.
    *
    * @var array
    */
-  static protected $databaseInfo = [];
+  protected static $databaseInfo = [];
 
   /**
    * A list of key/target credentials to simply ignore.
    *
    * @var array
    */
-  static protected $ignoreTargets = [];
+  protected static $ignoreTargets = [];
 
   /**
    * The key of the currently active database connection.
    *
    * @var string
    */
-  static protected $activeKey = 'default';
+  protected static $activeKey = 'default';
 
   /**
    * An array of active query log objects.
@@ -75,7 +75,7 @@ abstract class Database {
    *
    * @var array
    */
-  static protected $logs = [];
+  protected static $logs = [];
 
   /**
    * Starts logging a given logging key on the specified connection.

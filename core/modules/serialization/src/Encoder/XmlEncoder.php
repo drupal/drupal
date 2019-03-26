@@ -27,7 +27,7 @@ class XmlEncoder implements SerializerAwareInterface, EncoderInterface, DecoderI
    *
    * @var array
    */
-  static protected $format = ['xml'];
+  protected static $format = ['xml'];
 
   /**
    * An instance of the Symfony XmlEncoder to perform the actual encoding.

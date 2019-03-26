@@ -978,8 +978,6 @@ function user_mail_tokens(&$replacements, $data, $options) {
   }
 }
 
-/*** Administrative features ***********************************************/
-
 /**
  * Retrieves the names of roles matching specified conditions.
  *

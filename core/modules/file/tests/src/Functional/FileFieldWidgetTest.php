@@ -491,7 +491,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Have attacker create a new node with a different uploaded file and
     // ensure it got uploaded successfully.
     $edit = [
-      'title[0][value]' => $type . '-title' ,
+      'title[0][value]' => $type . '-title',
     ];
 
     // Attach a file to a node.

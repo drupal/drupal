@@ -192,8 +192,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    * {@inheritdoc}
    */
   public function requiresEntityStorageSchemaChanges(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
-    return
-      $this->hasSharedTableStructureChange($entity_type, $original) ||
+    return $this->hasSharedTableStructureChange($entity_type, $original) ||
       // Detect changes in key or index definitions.
       $this->getEntitySchemaData($entity_type, $this->getEntitySchema($entity_type, TRUE)) != $this->loadEntitySchemaData($original);
   }
@@ -211,8 +210,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   a table has been renamed.
    */
   protected function hasSharedTableStructureChange(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
-    return
-      $entity_type->isRevisionable() != $original->isRevisionable() ||
+    return $entity_type->isRevisionable() != $original->isRevisionable() ||
       $entity_type->isTranslatable() != $original->isTranslatable() ||
       $this->hasSharedTableNameChanges($entity_type, $original);
   }
@@ -237,8 +235,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     // We first check if the new table already exists because the storage might
     // have created it even though it wasn't specified in the entity type
     // definition.
-    return
-      (!$base_table && $entity_type->getBaseTable() != $original->getBaseTable()) ||
+    return (!$base_table && $entity_type->getBaseTable() != $original->getBaseTable()) ||
       (!$data_table && $entity_type->getDataTable() != $original->getDataTable()) ||
       (!$revision_table && $entity_type->getRevisionTable() != $original->getRevisionTable()) ||
       (!$revision_data_table && $entity_type->getRevisionDataTable() != $original->getRevisionDataTable());
