@@ -71,7 +71,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'route',
       'theme',
       'timezone',
-      'user',
       // The placed block is only visible on certain URLs through a visibility
       // condition.
       'url.path',
@@ -81,6 +80,8 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       // These two cache contexts are added by BigPipe.
       'cookies:big_pipe_nojs',
       'session.exists',
+      'user.roles:anonymous',
+      'user.roles:authenticated',
     ];
 
     // Full node page 1.
@@ -107,7 +108,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'config:block.block.bartik_page_title',
       'node_view',
       'node:' . $node_1->id(),
-      'user:0',
       'user:' . $author_1->id(),
       'config:filter.format.basic_html',
       'config:color.theme.bartik',
@@ -164,7 +164,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       // FinishResponseSubscriber adds this cache tag to responses that have the
       // 'user.permissions' cache context for anonymous users.
       'config:user.role.anonymous',
-      'user:0',
     ]);
   }
 
