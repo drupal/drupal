@@ -236,6 +236,14 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
         'i18n_status' => 0,
       ],
     ];
+
+    // Change the name of the locale_target i18n status field.
+    $test[1] = $test[0];
+    foreach ($test[1]['source_data']['locales_target'] as &$lt) {
+      $lt['status'] = $lt['i18n_status'];
+      unset($lt['i18n_status']);
+    }
+
     return $test;
   }
 
