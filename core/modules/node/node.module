@@ -974,33 +974,30 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
 /**
  * Implements hook_node_access().
  */
-function node_node_access(NodeInterface $node, $op, $account) {
+function node_node_access(NodeInterface $node, $op, AccountInterface $account) {
   $type = $node->bundle();
+  $access = AccessResult::neutral();
 
   switch ($op) {
     case 'create':
-      return AccessResult::allowedIfHasPermission($account, 'create ' . $type . ' content');
+      $access = AccessResult::allowedIfHasPermission($account, 'create ' . $type . ' content');
 
     case 'update':
-      if ($account->hasPermission('edit any ' . $type . ' content')) {
-        return AccessResult::allowed()->cachePerPermissions();
+      $access = AccessResult::allowedIfHasPermission($account, 'edit any ' . $type . ' content');
+      if (!$access->isAllowed() && $account->hasPermission('edit own ' . $type . ' content')) {
+        $access = $access->orIf(AccessResult::allowedIf($account->id() == $node->getOwnerId())->cachePerUser()->addCacheableDependency($node));
       }
-      else {
-        return AccessResult::allowedIf($account->hasPermission('edit own ' . $type . ' content') && ($account->id() == $node->getOwnerId()))->cachePerPermissions()->cachePerUser()->addCacheableDependency($node);
-      }
+      break;
 
     case 'delete':
-      if ($account->hasPermission('delete any ' . $type . ' content')) {
-        return AccessResult::allowed()->cachePerPermissions();
+      $access = AccessResult::allowedIfHasPermission($account, 'delete any ' . $type . ' content');
+      if (!$access->isAllowed() && $account->hasPermission('delete own ' . $type . ' content')) {
+        $access = $access->orIf(AccessResult::allowedIf($account->id() == $node->getOwnerId()))->cachePerUser()->addCacheableDependency($node);
       }
-      else {
-        return AccessResult::allowedIf($account->hasPermission('delete own ' . $type . ' content') && ($account->id() == $node->getOwnerId()))->cachePerPermissions()->cachePerUser()->addCacheableDependency($node);
-      }
-
-    default:
-      // No opinion.
-      return AccessResult::neutral();
+      break;
   }
+
+  return $access;
 }
 
 /**
