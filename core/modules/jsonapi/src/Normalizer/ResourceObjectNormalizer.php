@@ -95,13 +95,6 @@ class ResourceObjectNormalizer extends NormalizerBase {
       return $normalized_field->withCacheableDependency(CacheableMetadata::createFromObject($field_access_result));
     }
     else {
-      // @todo Replace this workaround after https://www.drupal.org/node/3043245
-      //   or remove the need for this in https://www.drupal.org/node/2942975.
-      //   See \Drupal\layout_builder\Normalizer\LayoutEntityDisplayNormalizer.
-      if ($context['resource_object']->getResourceType()->getDeserializationTargetClass() === 'Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay' && $context['resource_object']->getField('third_party_settings') === $field) {
-        unset($field['layout_builder']['sections']);
-      }
-
       // Config "fields" in this case are arrays or primitives and do not need
       // to be normalized.
       return CacheableNormalization::permanent($field);
