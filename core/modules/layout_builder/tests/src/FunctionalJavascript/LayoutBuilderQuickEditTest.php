@@ -63,10 +63,6 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
 
     $this->drupalPlaceBlock('page_title_block');
 
-    // @todo The Layout Builder UI relies on local tasks; fix in
-    //   https://www.drupal.org/project/drupal/issues/2917777.
-    $this->drupalPlaceBlock('local_tasks_block');
-
     // Create the Article node type.
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     $this->article = $this->drupalCreateNode([

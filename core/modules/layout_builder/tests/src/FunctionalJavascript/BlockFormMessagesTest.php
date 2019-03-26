@@ -31,9 +31,6 @@ class BlockFormMessagesTest extends WebDriverTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    // @todo The Layout Builder UI relies on local tasks; fix in
-    //   https://www.drupal.org/project/drupal/issues/2917777.
-    $this->drupalPlaceBlock('local_tasks_block');
     $this->createContentType(['type' => 'bundle_with_section_field']);
   }
 

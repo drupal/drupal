@@ -31,10 +31,6 @@ class LayoutBuilderMultilingualTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // @todo The Layout Builder UI relies on local tasks; fix in
-    //   https://www.drupal.org/project/drupal/issues/2917777.
-    $this->drupalPlaceBlock('local_tasks_block');
-
     // There must be more than one block type available to trigger
     // \Drupal\layout_builder\Controller\ChooseBlockController::inlineBlockList().
     BlockContentType::create([
@@ -81,8 +77,8 @@ class LayoutBuilderMultilingualTest extends BrowserTestBase {
    */
   public function testCustomBlocks() {
     // Check translated and untranslated entities before translating the string.
-    $this->assertCustomBlocks('node/1');
-    $this->assertCustomBlocks('es/node/1');
+    $this->assertCustomBlocks('node/1/layout');
+    $this->assertCustomBlocks('es/node/1/layout');
 
     // Translate the 'Inline blocks' string used as a category in
     // \Drupal\layout_builder\Controller\ChooseBlockController::inlineBlockList().
@@ -90,8 +86,8 @@ class LayoutBuilderMultilingualTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, ['Translated string (Spanish)' => 'Bloques en linea'], 'Save translations');
 
     // Check translated and untranslated entities after translating the string.
-    $this->assertCustomBlocks('node/1');
-    $this->assertCustomBlocks('es/node/1');
+    $this->assertCustomBlocks('node/1/layout');
+    $this->assertCustomBlocks('es/node/1/layout');
   }
 
   /**
@@ -105,7 +101,6 @@ class LayoutBuilderMultilingualTest extends BrowserTestBase {
     $assert_session = $this->assertSession();
 
     $this->drupalGet($url);
-    $page->clickLink('Layout');
     $page->clickLink('Add Block');
     $page->clickLink('Create custom block');
     $assert_session->linkExists('First type');
