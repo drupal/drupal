@@ -3,7 +3,7 @@ status: true
 dependencies: {  }
 name: 'Restricted HTML'
 format: restricted_html
-weight: 0
+weight: 1
 roles:
   - anonymous
 filters:
