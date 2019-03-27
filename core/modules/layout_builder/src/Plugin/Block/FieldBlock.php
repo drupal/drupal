@@ -14,6 +14,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterInterface;
 use Drupal\Core\Field\FormatterPluginManager;
+use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
@@ -154,6 +155,10 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     $entity = $this->getEntity();
     try {
       $build = $entity->get($this->fieldName)->view($display_settings);
+    }
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/2367555.
+    catch (EnforcedResponseException $e) {
+      throw $e;
     }
     catch (\Exception $e) {
       $build = [];
