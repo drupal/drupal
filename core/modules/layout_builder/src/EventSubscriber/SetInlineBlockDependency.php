@@ -8,7 +8,7 @@ use Drupal\block_content\Event\BlockContentGetDependencyEvent;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\layout_builder\InlineBlockUsage;
+use Drupal\layout_builder\InlineBlockUsageInterface;
 use Drupal\layout_builder\LayoutEntityHelperTrait;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -52,7 +52,7 @@ class SetInlineBlockDependency implements EventSubscriberInterface {
   /**
    * The inline block usage service.
    *
-   * @var \Drupal\layout_builder\InlineBlockUsage
+   * @var \Drupal\layout_builder\InlineBlockUsageInterface
    */
   protected $usage;
 
@@ -63,12 +63,12 @@ class SetInlineBlockDependency implements EventSubscriberInterface {
    *   The entity type manager.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
-   * @param \Drupal\layout_builder\InlineBlockUsage $usage
+   * @param \Drupal\layout_builder\InlineBlockUsageInterface $usage
    *   The inline block usage service.
    * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
    *   The section storage manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, InlineBlockUsage $usage, SectionStorageManagerInterface $section_storage_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, InlineBlockUsageInterface $usage, SectionStorageManagerInterface $section_storage_manager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
     $this->usage = $usage;
@@ -128,7 +128,6 @@ class SetInlineBlockDependency implements EventSubscriberInterface {
       // dependency. It may be used by another module besides layout builder.
       return NULL;
     }
-    /** @var \Drupal\layout_builder\InlineBlockUsage $usage */
     $layout_entity_storage = $this->entityTypeManager->getStorage($layout_entity_info->layout_entity_type);
     $layout_entity = $layout_entity_storage->load($layout_entity_info->layout_entity_id);
     if ($this->isLayoutCompatibleEntity($layout_entity)) {
