@@ -312,7 +312,7 @@ class QuickEditIntegration implements ContainerInjectionInterface {
    * @see \Drupal\layout_builder\Plugin\Block\FieldBlock
    */
   private function supportQuickEditOnComponent(array $component, FieldableEntityInterface $entity) {
-    if (isset($component['content']['#field_name'], $component['#base_plugin_id']) && $component['#base_plugin_id'] === 'field_block') {
+    if (isset($component['content']['#field_name'], $component['#base_plugin_id']) && $component['#base_plugin_id'] === 'field_block' && $entity->hasField($component['content']['#field_name'])) {
       return $entity->getFieldDefinition($component['content']['#field_name'])->isDisplayConfigurable('view');
     }
     return FALSE;
