@@ -397,7 +397,27 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
 
     // Access also depends on the default being enabled.
     $result = $result->andIf($this->getDefaultSectionStorage()->access($operation, $account, TRUE));
+    $result = $this->handleTranslationAccess($result, $operation, $account);
     return $return_as_object ? $result : $result->isAllowed();
+  }
+
+  /**
+   * Handles access checks related to translations.
+   *
+   * @param \Drupal\Core\Access\AccessResult $result
+   *   The access result.
+   * @param string $operation
+   *   The operation to be performed.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user for which to check access.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   */
+  protected function handleTranslationAccess(AccessResult $result, $operation, AccountInterface $account) {
+    $entity = $this->getEntity();
+    // Access is always denied on non-default translations.
+    return $result->andIf(AccessResult::allowedIf(!($entity instanceof TranslatableInterface && !$entity->isDefaultTranslation())))->addCacheableDependency($entity);
   }
 
   /**

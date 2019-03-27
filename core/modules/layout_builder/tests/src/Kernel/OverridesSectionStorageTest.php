@@ -7,6 +7,7 @@ use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\layout_builder\DefaultsSectionStorageInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
@@ -34,6 +35,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
     'field',
     'system',
     'user',
+    'language',
   ];
 
   /**
@@ -97,6 +99,20 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->assertSame($expected, $result);
     $result = $this->plugin->access('view', $account);
     $this->assertSame($expected, $result);
+
+    // Create a translation.
+    ConfigurableLanguage::createFromLangcode('es')->save();
+    $entity = EntityTest::load($entity->id());
+    $translation = $entity->addTranslation('es');
+    $translation->save();
+    $this->plugin->setContext('entity', EntityContext::fromEntity($translation));
+
+    // Perform the same checks again but with a non default translation which
+    // should always deny access.
+    $result = $this->plugin->access('view');
+    $this->assertSame(FALSE, $result);
+    $result = $this->plugin->access('view', $account);
+    $this->assertSame(FALSE, $result);
   }
 
   /**

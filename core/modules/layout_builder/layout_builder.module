@@ -355,3 +355,15 @@ function layout_builder_quickedit_render_field(EntityInterface $entity, $field_n
   $quick_edit_integration = \Drupal::classResolver(QuickEditIntegration::class);
   return $quick_edit_integration->quickEditRenderField($entity, $field_name, $view_mode_id, $langcode);
 }
+
+/**
+ * Implements hook_entity_translation_create().
+ */
+function layout_builder_entity_translation_create(EntityInterface $translation) {
+  /** @var \Drupal\Core\Entity\FieldableEntityInterface $translation */
+  if ($translation->hasField(OverridesSectionStorage::FIELD_NAME) && $translation->getFieldDefinition(OverridesSectionStorage::FIELD_NAME)->isTranslatable()) {
+    // When creating a new translation do not copy untranslated sections because
+    // per-language layouts are not supported.
+    $translation->set(OverridesSectionStorage::FIELD_NAME, []);
+  }
+}
