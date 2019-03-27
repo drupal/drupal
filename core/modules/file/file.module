@@ -728,17 +728,12 @@ function file_cron() {
     foreach ($files as $file) {
       $references = \Drupal::service('file.usage')->listUsage($file);
       if (empty($references)) {
-        if (!file_exists($file->getFileUri())) {
-          if (!file_valid_uri($file->getFileUri())) {
-            \Drupal::logger('file system')->warning('Temporary file "%path" that was deleted during garbage collection did not exist on the filesystem. This could be caused by a missing stream wrapper.', ['%path' => $file->getFileUri()]);
-          }
-          else {
-            \Drupal::logger('file system')->warning('Temporary file "%path" that was deleted during garbage collection did not exist on the filesystem.', ['%path' => $file->getFileUri()]);
-          }
+        if (file_exists($file->getFileUri())) {
+          $file->delete();
         }
-        // Delete the file entity. If the file does not exist, this will
-        // generate a second notice in the watchdog.
-        $file->delete();
+        else {
+          \Drupal::logger('file system')->error('Could not delete temporary file "%path" during garbage collection', ['%path' => $file->getFileUri()]);
+        }
       }
       else {
         \Drupal::logger('file system')->info('Did not delete temporary file "%path" during garbage collection because it is in use by the following modules: %modules.', ['%path' => $file->getFileUri(), '%modules' => implode(', ', array_keys($references))]);
