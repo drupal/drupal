@@ -264,7 +264,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   public function testDeletion() {
     /** @var \Drupal\Core\Cron $cron */
     $cron = \Drupal::service('cron');
-    /** @var \Drupal\layout_builder\InlineBlockUsage $usage */
+    /** @var \Drupal\layout_builder\InlineBlockUsageInterface $usage */
     $usage = \Drupal::service('inline_block.usage');
     $this->drupalLogin($this->drupalCreateUser([
       'administer content types',

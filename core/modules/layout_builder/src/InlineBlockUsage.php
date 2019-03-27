@@ -7,10 +7,8 @@ use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Service class to track inline block usage.
- *
- * @internal
  */
-class InlineBlockUsage {
+class InlineBlockUsage implements InlineBlockUsageInterface {
 
   /**
    * The database connection.
@@ -30,12 +28,7 @@ class InlineBlockUsage {
   }
 
   /**
-   * Adds a usage record.
-   *
-   * @param int $block_content_id
-   *   The block content id.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The layout entity.
+   * {@inheritdoc}
    */
   public function addUsage($block_content_id, EntityInterface $entity) {
     $this->database->merge('inline_block_usage')
@@ -47,13 +40,7 @@ class InlineBlockUsage {
   }
 
   /**
-   * Gets unused inline block IDs.
-   *
-   * @param int $limit
-   *   The maximum number of block content entity IDs to return.
-   *
-   * @return int[]
-   *   The entity IDs.
+   * {@inheritdoc}
    */
   public function getUnused($limit = 100) {
     $query = $this->database->select('inline_block_usage', 't');
@@ -64,10 +51,7 @@ class InlineBlockUsage {
   }
 
   /**
-   * Remove usage record by layout entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The layout entity.
+   * {@inheritdoc}
    */
   public function removeByLayoutEntity(EntityInterface $entity) {
     $query = $this->database->update('inline_block_usage')
@@ -81,10 +65,7 @@ class InlineBlockUsage {
   }
 
   /**
-   * Delete the inline blocks' the usage records.
-   *
-   * @param int[] $block_content_ids
-   *   The block content entity IDs.
+   * {@inheritdoc}
    */
   public function deleteUsage(array $block_content_ids) {
     if (!empty($block_content_ids)) {
@@ -94,13 +75,7 @@ class InlineBlockUsage {
   }
 
   /**
-   * Gets usage record for inline block by ID.
-   *
-   * @param int $block_content_id
-   *   The block content entity ID.
-   *
-   * @return object
-   *   The usage record with properties layout_entity_id and layout_entity_type.
+   * {@inheritdoc}
    */
   public function getUsage($block_content_id) {
     $query = $this->database->select('inline_block_usage');
