@@ -5,6 +5,7 @@
  * Install, uninstall and update hooks for Media module.
  */
 
+use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
@@ -180,6 +181,24 @@ function media_update_8600() {
 function media_update_8700() {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   $entity_type = $definition_update_manager->getEntityType('media');
+  $database = \Drupal::database();
+
+  if (\Drupal::entityTypeManager()->getStorage('media') instanceof SqlEntityStorageInterface) {
+    if ($database->schema()->tableExists($entity_type->getDataTable())) {
+      $database->update($entity_type->getDataTable())
+        ->fields(['uid' => 0])
+        ->isNull('uid')
+        ->execute();
+    }
+
+    if ($database->schema()->tableExists($entity_type->getRevisionDataTable())) {
+      $database->update($entity_type->getRevisionDataTable())
+        ->fields(['uid' => 0])
+        ->isNull('uid')
+        ->execute();
+    }
+  }
+
   $keys = $entity_type->getKeys();
   $keys['owner'] = 'uid';
   $entity_type->set('entity_keys', $keys);
