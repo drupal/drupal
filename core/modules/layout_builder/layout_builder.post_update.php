@@ -9,6 +9,9 @@ use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\TempStoreIdentifierInterface;
 use Drupal\user\Entity\Role;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 
 /**
  * Rebuild plugin dependencies for all entity view displays.
@@ -185,4 +188,105 @@ function layout_builder_post_update_update_permissions() {
       $role->grantPermission('create and edit custom blocks')->save();
     }
   }
+}
+
+/**
+ * Set the layout builder field as non-translatable where possible.
+ */
+function layout_builder_post_update_make_layout_untranslatable() {
+  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
+  $field_manager = \Drupal::service('entity_field.manager');
+  $field_map = $field_manager->getFieldMap();
+  foreach ($field_map as $entity_type_id => $field_infos) {
+    if (isset($field_infos[OverridesSectionStorage::FIELD_NAME]['bundles'])) {
+      $non_translatable_bundle_count = 0;
+      foreach ($field_infos[OverridesSectionStorage::FIELD_NAME]['bundles'] as $bundle) {
+        $field_config = FieldConfig::loadByName($entity_type_id, $bundle, OverridesSectionStorage::FIELD_NAME);
+        if (!$field_config->isTranslatable()) {
+          $non_translatable_bundle_count++;
+          // The layout field is already configured to be non-translatable so it
+          // does not need to be updated.
+          continue;
+        }
+        if (_layout_builder_bundle_has_no_translations($entity_type_id, $bundle) || _layout_builder_bundle_has_no_layouts($entity_type_id, $bundle)) {
+          // Either none of the entities have layouts or none of them have
+          // translations. In either case it is safe to set the field to be
+          // non-translatable.
+          $field_config->setTranslatable(FALSE);
+          $field_config->save();
+          $non_translatable_bundle_count++;
+        }
+      }
+      // Set the field storage to untranslatable if the field config for each
+      // bundle is now untranslatable. This removes layout fields for the
+      // entity type from the Content Translation configuration form.
+      if (count($field_infos[OverridesSectionStorage::FIELD_NAME]['bundles']) === $non_translatable_bundle_count) {
+        $field_storage = FieldStorageConfig::loadByName($entity_type_id, OverridesSectionStorage::FIELD_NAME);
+        $field_storage->setTranslatable(FALSE);
+        $field_storage->save();
+      }
+    }
+  }
+}
+
+/**
+ * Determines if there are zero layout overrides for the bundle.
+ *
+ * @param string $entity_type_id
+ *   The entity type ID.
+ * @param string $bundle
+ *   The bundle name.
+ *
+ * @return bool
+ *   TRUE if there are zero layout overrides for the bundle, otherwise FALSE.
+ */
+function _layout_builder_bundle_has_no_layouts($entity_type_id, $bundle) {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_type = $entity_type_manager->getDefinition($entity_type_id);
+  $bundle_key = $entity_type->getKey('bundle');
+  $query = $entity_type_manager->getStorage($entity_type_id)->getQuery();
+  if ($bundle_key) {
+    $query->condition($bundle_key, $bundle);
+  }
+  $query->exists(OverridesSectionStorage::FIELD_NAME)
+    ->accessCheck(FALSE)
+    ->allRevisions()
+    ->range(0, 1);
+  $results = $query->execute();
+  return empty($results);
+}
+
+/**
+ * Determines if there are zero translations for the bundle.
+ *
+ * @param string $entity_type_id
+ *   The entity type ID.
+ * @param string $bundle
+ *   The bundle name.
+ *
+ * @return bool
+ *   TRUE if there are zero translations for the bundle, otherwise FALSE.
+ */
+function _layout_builder_bundle_has_no_translations($entity_type_id, $bundle) {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_type = $entity_type_manager->getDefinition($entity_type_id);
+  if (!$entity_type->isTranslatable()) {
+    return TRUE;
+  }
+  $query = $entity_type_manager->getStorage($entity_type_id)->getQuery();
+  $bundle_key = $entity_type->getKey('bundle');
+  if ($entity_type->hasKey('default_langcode')) {
+    if ($bundle_key) {
+      $query->condition($bundle_key, $bundle);
+    }
+    $query->condition($entity_type->getKey('default_langcode'), 0)
+      ->accessCheck(FALSE)
+      ->allRevisions()
+      ->range(0, 1);
+    $results = $query->execute();
+    return empty($results);
+  }
+  // A translatable entity type should always have a default_langcode key. If it
+  // doesn't we have no way to determine if there are translations.
+  return FALSE;
 }

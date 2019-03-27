@@ -19,6 +19,7 @@ class TempstoreKeyUpdatePathTest extends UpdatePathTestBase {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.filled.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/layout-builder.php',
+      __DIR__ . '/../../../fixtures/update/layout-builder-field-schema.php',
       __DIR__ . '/../../../fixtures/update/layout-builder-field-block.php',
       __DIR__ . '/../../../fixtures/update/layout-builder-tempstore.php',
     ];
