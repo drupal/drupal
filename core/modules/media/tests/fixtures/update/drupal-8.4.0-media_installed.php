@@ -895,3 +895,308 @@ $connection->schema()->createTable('media_revision__field_media_image', array(
   ),
   'mysql_character_set' => 'utf8mb4',
 ));
+
+$connection->insert('file_managed')
+  ->fields(array(
+    'fid',
+    'uuid',
+    'langcode',
+    'uid',
+    'filename',
+    'uri',
+    'filemime',
+    'filesize',
+    'status',
+    'created',
+    'changed',
+  ))
+  ->values(array(
+    'fid' => '1',
+    'uuid' => 'e05dcd25-04e9-459d-b0dc-8bdae902f7f7',
+    'langcode' => 'en',
+    'uid' => '1',
+    'filename' => 'druplicon.png',
+    'uri' => 'public://2019-03/druplicon.png',
+    'filemime' => 'image/png',
+    'filesize' => '3905',
+    'status' => '1',
+    'created' => '1553630615',
+    'changed' => '1553630623',
+  ))
+  ->values(array(
+    'fid' => '2',
+    'uuid' => '565d3788-3257-416b-809f-e09e45949c3c',
+    'langcode' => 'en',
+    'uid' => '1',
+    'filename' => 'loading.gif',
+    'uri' => 'public://2019-03/loading.gif',
+    'filemime' => 'image/gif',
+    'filesize' => '6733',
+    'status' => '1',
+    'created' => '1553630962',
+    'changed' => '1553630969',
+  ))
+  ->execute();
+$connection->insert('file_usage')
+  ->fields(array(
+    'fid',
+    'module',
+    'type',
+    'id',
+    'count',
+  ))
+  ->values(array(
+    'fid' => '1',
+    'module' => 'file',
+    'type' => 'media',
+    'id' => '1',
+    'count' => '2',
+  ))
+  ->values(array(
+    'fid' => '2',
+    'module' => 'file',
+    'type' => 'media',
+    'id' => '2',
+    'count' => '2',
+  ))
+  ->execute();
+$connection->insert('media')
+  ->fields(array(
+    'mid',
+    'vid',
+    'bundle',
+    'uuid',
+    'langcode',
+  ))
+  ->values(array(
+    'mid' => '1',
+    'vid' => '1',
+    'bundle' => 'image',
+    'uuid' => '8d33fdd7-12e6-4bdf-98fc-97b321ed9ef4',
+    'langcode' => 'en',
+  ))
+  ->values(array(
+    'mid' => '2',
+    'vid' => '2',
+    'bundle' => 'image',
+    'uuid' => 'f714be42-14da-44ed-9fac-34daab39903e',
+    'langcode' => 'en',
+  ))
+  ->execute();
+$connection->insert('media__field_media_image')
+  ->fields(array(
+    'bundle',
+    'deleted',
+    'entity_id',
+    'revision_id',
+    'langcode',
+    'delta',
+    'field_media_image_target_id',
+    'field_media_image_alt',
+    'field_media_image_title',
+    'field_media_image_width',
+    'field_media_image_height',
+  ))
+  ->values(array(
+    'bundle' => 'image',
+    'deleted' => '0',
+    'entity_id' => '1',
+    'revision_id' => '1',
+    'langcode' => 'en',
+    'delta' => '0',
+    'field_media_image_target_id' => '1',
+    'field_media_image_alt' => 'Druplicon',
+    'field_media_image_title' => '',
+    'field_media_image_width' => '88',
+    'field_media_image_height' => '100',
+  ))
+  ->values(array(
+    'bundle' => 'image',
+    'deleted' => '0',
+    'entity_id' => '2',
+    'revision_id' => '2',
+    'langcode' => 'en',
+    'delta' => '0',
+    'field_media_image_target_id' => '2',
+    'field_media_image_alt' => 'Loading...',
+    'field_media_image_title' => '',
+    'field_media_image_width' => '48',
+    'field_media_image_height' => '48',
+  ))
+  ->execute();
+$connection->insert('media_field_data')
+  ->fields(array(
+    'mid',
+    'vid',
+    'bundle',
+    'langcode',
+    'status',
+    'name',
+    'thumbnail__target_id',
+    'thumbnail__alt',
+    'thumbnail__title',
+    'thumbnail__width',
+    'thumbnail__height',
+    'uid',
+    'created',
+    'changed',
+    'default_langcode',
+    'revision_translation_affected',
+  ))
+  ->values(array(
+    'mid' => '1',
+    'vid' => '1',
+    'bundle' => 'image',
+    'langcode' => 'en',
+    'status' => '1',
+    'name' => 'druplicon.png',
+    'thumbnail__target_id' => '1',
+    'thumbnail__alt' => 'Thumbnail',
+    'thumbnail__title' => 'druplicon.png',
+    'thumbnail__width' => '88',
+    'thumbnail__height' => '100',
+    'uid' => NULL,
+    'created' => '1553630576',
+    'changed' => '1553630623',
+    'default_langcode' => '1',
+    'revision_translation_affected' => '1',
+  ))
+  ->values(array(
+    'mid' => '2',
+    'vid' => '2',
+    'bundle' => 'image',
+    'langcode' => 'en',
+    'status' => '1',
+    'name' => 'loading.gif',
+    'thumbnail__target_id' => '2',
+    'thumbnail__alt' => 'Thumbnail',
+    'thumbnail__title' => 'loading.gif',
+    'thumbnail__width' => '48',
+    'thumbnail__height' => '48',
+    'uid' => '1',
+    'created' => '1553630952',
+    'changed' => '1553630969',
+    'default_langcode' => '1',
+    'revision_translation_affected' => '1',
+  ))
+  ->execute();
+$connection->insert('media_field_revision')
+  ->fields(array(
+    'mid',
+    'vid',
+    'langcode',
+    'status',
+    'name',
+    'thumbnail__target_id',
+    'thumbnail__alt',
+    'thumbnail__title',
+    'thumbnail__width',
+    'thumbnail__height',
+    'uid',
+    'created',
+    'changed',
+    'default_langcode',
+    'revision_translation_affected',
+  ))
+  ->values(array(
+    'mid' => '1',
+    'vid' => '1',
+    'langcode' => 'en',
+    'status' => '1',
+    'name' => 'druplicon.png',
+    'thumbnail__target_id' => '1',
+    'thumbnail__alt' => 'Thumbnail',
+    'thumbnail__title' => 'druplicon.png',
+    'thumbnail__width' => '88',
+    'thumbnail__height' => '100',
+    'uid' => NULL,
+    'created' => '1553630576',
+    'changed' => '1553630623',
+    'default_langcode' => '1',
+    'revision_translation_affected' => '1',
+  ))
+  ->values(array(
+    'mid' => '2',
+    'vid' => '2',
+    'langcode' => 'en',
+    'status' => '1',
+    'name' => 'loading.gif',
+    'thumbnail__target_id' => '2',
+    'thumbnail__alt' => 'Thumbnail',
+    'thumbnail__title' => 'loading.gif',
+    'thumbnail__width' => '48',
+    'thumbnail__height' => '48',
+    'uid' => '1',
+    'created' => '1553630952',
+    'changed' => '1553630969',
+    'default_langcode' => '1',
+    'revision_translation_affected' => '1',
+  ))
+  ->execute();
+$connection->insert('media_revision')
+  ->fields(array(
+    'mid',
+    'vid',
+    'langcode',
+    'revision_user',
+    'revision_created',
+    'revision_log_message',
+  ))
+  ->values(array(
+    'mid' => '1',
+    'vid' => '1',
+    'langcode' => 'en',
+    'revision_user' => '1',
+    'revision_created' => '1553630623',
+    'revision_log_message' => NULL,
+  ))
+  ->values(array(
+    'mid' => '2',
+    'vid' => '2',
+    'langcode' => 'en',
+    'revision_user' => '1',
+    'revision_created' => '1553630969',
+    'revision_log_message' => NULL,
+  ))
+  ->execute();
+$connection->insert('media_revision__field_media_image')
+  ->fields(array(
+    'bundle',
+    'deleted',
+    'entity_id',
+    'revision_id',
+    'langcode',
+    'delta',
+    'field_media_image_target_id',
+    'field_media_image_alt',
+    'field_media_image_title',
+    'field_media_image_width',
+    'field_media_image_height',
+  ))
+  ->values(array(
+    'bundle' => 'image',
+    'deleted' => '0',
+    'entity_id' => '1',
+    'revision_id' => '1',
+    'langcode' => 'en',
+    'delta' => '0',
+    'field_media_image_target_id' => '1',
+    'field_media_image_alt' => 'Druplicon',
+    'field_media_image_title' => '',
+    'field_media_image_width' => '88',
+    'field_media_image_height' => '100',
+  ))
+  ->values(array(
+    'bundle' => 'image',
+    'deleted' => '0',
+    'entity_id' => '2',
+    'revision_id' => '2',
+    'langcode' => 'en',
+    'delta' => '0',
+    'field_media_image_target_id' => '2',
+    'field_media_image_alt' => 'Loading...',
+    'field_media_image_title' => '',
+    'field_media_image_width' => '48',
+    'field_media_image_height' => '48',
+  ))
+  ->execute();
