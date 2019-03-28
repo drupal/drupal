@@ -9,7 +9,7 @@ use Drupal\serialization\Normalizer\ConfigEntityNormalizer;
  * Normalizes/denormalizes LayoutEntityDisplay objects into an array structure.
  *
  * @internal
- *   All tagged services are internal.
+ *   Tagged services are internal.
  */
 class LayoutEntityDisplayNormalizer extends ConfigEntityNormalizer {
 

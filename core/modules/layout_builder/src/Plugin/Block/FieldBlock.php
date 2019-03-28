@@ -30,6 +30,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "field_block",
  *   deriver = "\Drupal\layout_builder\Plugin\Derivative\FieldBlockDeriver",
  * )
+ *
+ * @internal
+ *   Plugin classes are internal.
  */
 class FieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface {
 

@@ -19,11 +19,6 @@ use Drupal\layout_builder\SectionStorageInterface;
  * via \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface.
  * While internally depending on the parent class is necessary, external code
  * should only use the methods available on that interface.
- *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
 class SectionStorageManager extends DefaultPluginManager implements SectionStorageManagerInterface {
 

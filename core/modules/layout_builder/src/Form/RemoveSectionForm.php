@@ -9,6 +9,7 @@ use Drupal\layout_builder\SectionStorageInterface;
  * Provides a form to confirm the removal of a section.
  *
  * @internal
+ *   Form classes are internal.
  */
 class RemoveSectionForm extends LayoutRebuildConfirmFormBase {
 

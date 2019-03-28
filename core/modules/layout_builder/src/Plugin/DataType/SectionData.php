@@ -13,6 +13,9 @@ use Drupal\layout_builder\Section;
  *   label = @Translation("Layout Section"),
  *   description = @Translation("A layout section"),
  * )
+ *
+ * @internal
+ *   Plugin classes are internal.
  */
 class SectionData extends TypedData {
 

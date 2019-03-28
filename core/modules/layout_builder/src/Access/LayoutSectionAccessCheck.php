@@ -12,6 +12,7 @@ use Drupal\layout_builder\SectionStorageInterface;
  * Provides an access check for the Layout Builder UI.
  *
  * @internal
+ *   Tagged services are internal.
  *
  * @todo Deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
  *   \Drupal\layout_builder\Access\LayoutBuilderAccessCheck instead. See

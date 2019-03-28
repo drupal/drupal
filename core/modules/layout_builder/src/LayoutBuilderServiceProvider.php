@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\Reference;
  * dynamically.
  *
  * @internal
+ *   Service providers are internal.
  *
  * @see \Drupal\layout_builder\EventSubscriber\SetInlineBlockDependency
  */

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Defines a controller to add a new section.
  *
  * @internal
+ *   Controller classes are internal.
  */
 class AddSectionController implements ContainerInjectionInterface {
 

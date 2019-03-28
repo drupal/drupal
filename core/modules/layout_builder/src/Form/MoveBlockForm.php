@@ -13,6 +13,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for moving a block.
+ *
+ * @internal
+ *   Form classes are internal.
  */
 class MoveBlockForm extends FormBase {
 

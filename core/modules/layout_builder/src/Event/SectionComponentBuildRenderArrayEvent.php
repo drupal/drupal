@@ -13,11 +13,6 @@ use Symfony\Component\EventDispatcher\Event;
  * build array in this event.
  *
  * @see \Drupal\layout_builder\LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY
- *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
 class SectionComponentBuildRenderArrayEvent extends Event {
 

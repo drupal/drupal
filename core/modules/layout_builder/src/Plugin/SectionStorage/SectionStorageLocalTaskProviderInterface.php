@@ -7,11 +7,6 @@ namespace Drupal\layout_builder\Plugin\SectionStorage;
  *
  * @see \Drupal\layout_builder\Plugin\Derivative\LayoutBuilderLocalTaskDeriver
  * @see \Drupal\layout_builder\SectionStorageInterface
- *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
 interface SectionStorageLocalTaskProviderInterface {
 

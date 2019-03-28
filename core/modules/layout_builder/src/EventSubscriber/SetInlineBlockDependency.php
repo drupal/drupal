@@ -27,6 +27,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * the dependency.
  *
  * @internal
+ *   Tagged services are internal.
  *
  * @see \Drupal\file\FileAccessControlHandler::checkAccess()
  * @see \Drupal\block_content\BlockContentAccessControlHandler::checkAccess()

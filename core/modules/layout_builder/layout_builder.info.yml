@@ -1,7 +1,7 @@
 name: 'Layout Builder'
 type: module
 description: 'Allows users to add and arrange blocks and content fields directly on the content.'
-package: Core (Experimental)
+package: Core
 version: VERSION
 core: 8.x
 dependencies:

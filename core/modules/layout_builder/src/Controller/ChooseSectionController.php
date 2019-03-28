@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines a controller to choose a new section.
  *
  * @internal
+ *   Controller classes are internal.
  */
 class ChooseSectionController implements ContainerInjectionInterface {
 

@@ -14,6 +14,7 @@ use Drupal\layout_builder\SectionStorage\SectionStorageTrait;
  * Defines a item list class for layout section fields.
  *
  * @internal
+ *   Plugin classes are internal.
  *
  * @see \Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem
  */

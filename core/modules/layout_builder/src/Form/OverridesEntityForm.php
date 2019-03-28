@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a form containing the Layout Builder UI for overrides.
  *
  * @internal
+ *   Form classes are internal.
  */
 class OverridesEntityForm extends ContentEntityForm {
 

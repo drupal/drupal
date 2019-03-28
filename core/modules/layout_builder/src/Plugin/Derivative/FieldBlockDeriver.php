@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides entity field block definitions for every field.
  *
  * @internal
+ *   Plugin derivers are internal.
  */
 class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface {
 

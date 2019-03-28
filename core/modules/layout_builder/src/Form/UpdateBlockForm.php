@@ -10,6 +10,7 @@ use Drupal\layout_builder\SectionStorageInterface;
  * Provides a form to update a block.
  *
  * @internal
+ *   Form classes are internal.
  */
 class UpdateBlockForm extends ConfigureBlockFormBase {
 

@@ -25,11 +25,6 @@ use Drupal\layout_builder\SectionStorage\SectionStorageTrait;
 
 /**
  * Provides an entity view display entity that has a layout.
- *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
 class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements LayoutEntityDisplayInterface {
 

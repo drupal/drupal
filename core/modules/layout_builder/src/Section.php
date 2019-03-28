@@ -13,16 +13,8 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
  * - An array of settings for the layout plugin.
  * - An array of components that can be rendered in the section.
  *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
- *
  * @see \Drupal\Core\Layout\LayoutDefinition
  * @see \Drupal\layout_builder\SectionComponent
- *
- * @todo Determine whether an interface will be provided for this in
- *   https://www.drupal.org/project/drupal/issues/2930334.
  */
 class Section implements ThirdPartySettingsInterface {
 

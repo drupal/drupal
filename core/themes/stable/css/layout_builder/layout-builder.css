@@ -1,0 +1,217 @@
+.layout-builder {
+  background-color: #fff;
+  border: 3px solid #2f91da;
+  padding: 1.5em 1.5em 0.5em;
+}
+
+.layout-builder__add-section {
+  background-color: #f7f7f7;
+  width: 100%;
+  outline: 2px dashed #979797;
+  padding: 1.5em 0;
+  text-align: center;
+  margin-bottom: 1.5em;
+}
+
+.layout-builder__link--add {
+  color: #686868;
+  border-bottom: none;
+  padding-left: 24px;
+  background: url(../../../../misc/icons/686868/plus.svg) transparent top left / 16px 16px no-repeat;
+}
+
+.layout-builder__link--add:hover,
+.layout-builder__link--add:active,
+.layout-builder__link--add:focus {
+  border-bottom-style: none;
+  color: #000;
+}
+
+.layout-builder__section {
+  margin-bottom: 1.5em;
+}
+
+.layout-builder__section .ui-sortable-helper {
+  background-color: #fff;
+  outline: 2px solid #f7f7f7;
+}
+
+.layout-builder__section .ui-state-drop {
+  background-color: #ffd;
+  outline: 2px dashed #fedb60;
+  margin: 20px;
+  padding: 30px;
+}
+
+.layout-builder__region {
+  outline: 2px dashed #2f91da;
+}
+
+.layout-builder__add-block {
+  background-color: #eff6fc;
+  padding: 1.5em 0;
+  text-align: center;
+}
+
+.layout-builder__link--remove {
+  position: relative;
+  background: url(../../../../misc/icons/bebebe/ex.svg) #fff center center / 16px 16px no-repeat;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 1rem;
+  padding: 0;
+  height: 26px;
+  width: 26px;
+  white-space: nowrap;
+  text-indent: -9999px;
+  display: inline-block;
+  border-radius: 26px;
+  margin-left: -10px;
+  margin-right: 6px;
+  z-index: 2;
+}
+
+.layout-builder__link--remove:hover {
+  background-image: url(../../../../misc/icons/787878/ex.svg);
+}
+
+.layout-builder-block {
+  padding: 1.5em;
+  cursor: move;
+}
+
+.layout-builder-block [tabindex="-1"] {
+  pointer-events: none;
+}
+
+.layout-builder__message .messages {
+  background-repeat: no-repeat;
+}
+.layout-builder__message--defaults .messages {
+  background-image: url("../images/globe.svg");
+}
+.layout-builder__message--overrides .messages {
+  background-image: url("../images/location.svg");
+}
+
+/**
+ * @todo Remove Umami specific styling in https://www.drupal.org/node/3043228.
+ */
+.layout-builder__message .messages .messages__content {
+  background: none;
+}
+
+.layout-builder-block__content-preview-placeholder-label {
+  margin: 0;
+  line-height: 1.4;
+  font-size: 1.429em;
+  text-align: center;
+}
+
+.layout-builder--content-preview-disabled .layout-builder-block {
+  border-bottom: 2px dashed #979797;
+  margin: 0;
+}
+
+#drupal-off-canvas .layout-selection li {
+  display: block;
+  padding-bottom: 1em;
+}
+
+#drupal-off-canvas .layout-selection li a {
+  display: block;
+  padding-top: 0.55em;
+}
+
+#drupal-off-canvas .inline-block-create-button {
+  display: block;
+  padding: 24px;
+  padding-left: 44px;
+  font-size: 16px;
+  color: #eee;
+  border-bottom: 1px solid #333;
+  background: url(../../../../misc/icons/bebebe/plus.svg) transparent 16px no-repeat;
+}
+
+#drupal-off-canvas .inline-block-create-button,
+#drupal-off-canvas .inline-block-list__item {
+  margin: 0 -20px;
+  background-color: #444;
+}
+
+#drupal-off-canvas .inline-block-create-button:hover,
+#drupal-off-canvas .inline-block-list__item:hover {
+  background-color: #333;
+}
+
+#drupal-off-canvas .inline-block-list {
+  margin-bottom: 15px;
+}
+
+#drupal-off-canvas .inline-block-list__item {
+  display: block;
+  padding: 15px 0 15px 25px;
+}
+
+.layout-builder__add-section.is-layout-builder-highlighted {
+  margin-bottom: calc(1.5em - 8px);
+  outline: none;
+}
+.layout-builder__layout.is-layout-builder-highlighted,
+.layout-builder-block.is-layout-builder-highlighted,
+.layout-builder__add-block.is-layout-builder-highlighted {
+  margin: -4px -2px;
+  position: relative;
+  z-index: 1;
+}
+.layout-builder__add-block.is-layout-builder-highlighted,
+.layout-builder__add-section.is-layout-builder-highlighted,
+.layout-builder__layout.is-layout-builder-highlighted:before,
+.layout-builder__layout.is-layout-builder-highlighted,
+.layout-builder-block.is-layout-builder-highlighted {
+  border: 4px solid #000;
+}
+
+/* Highlight the active block in the Move Block dialog. */
+#drupal-off-canvas .layout-builder-components-table__block-label--current {
+  border-left: solid 5px;
+  padding-left: 17px;
+}
+
+/**
+ * @todo remove in https://www.drupal.org/project/drupal/issues/3042127
+ *   This rule ensures the row weight dropdowns in the Move Block dialog
+ *   maintain the background color of their container when they are hovered
+ *   over or are inside the active row.
+ */
+#drupal-off-canvas .layout-builder-components-table__row .form-item {
+  background-color: transparent;
+}
+
+.layout-builder__region-label,
+.layout-builder__section-label {
+  display: none;
+}
+
+.layout-builder--move-blocks-active .layout-builder__region-label {
+  display: block;
+}
+
+.layout-builder--move-blocks-active .layout-builder__section-label {
+  display: inline;
+}
+
+.layout__region-info {
+  padding: 0.5em;
+  text-align: center;
+  border-bottom: 2px dashed #979797;
+}
+
+/**
+ * Remove "You have unsaved changes" warning because Layout Builder always has
+ * unsaved changes until "Save layout" is submitted.
+ * @todo create issue for todo.
+ */
+.layout-builder-components-table .tabledrag-changed-warning {
+  display: none !important;
+}
