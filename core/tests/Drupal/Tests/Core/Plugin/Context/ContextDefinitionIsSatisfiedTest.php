@@ -6,8 +6,10 @@ use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\Tests\Core\Plugin\Fixtures\InheritedContextDefinition;
@@ -43,8 +45,11 @@ class ContextDefinitionIsSatisfiedTest extends UnitTestCase {
     $type_data_manager = new TypedDataManager($namespaces, $cache_backend, $module_handler->reveal(), $class_resolver->reveal());
     $type_data_manager->setValidationConstraintManager(new ConstraintManager($namespaces, $cache_backend, $module_handler->reveal()));
 
+    $string_translation = new TranslationManager(new LanguageDefault([]));
+
     $container = new ContainerBuilder();
     $container->set('typed_data_manager', $type_data_manager);
+    $container->set('string_translation', $string_translation);
     \Drupal::setContainer($container);
   }
 
