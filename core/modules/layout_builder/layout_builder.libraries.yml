@@ -27,3 +27,9 @@ fourcol_section:
   css:
     theme:
       layouts/fourcol_section/fourcol_section.css: {}
+
+drupal.layout_builder_content_translation_admin:
+  version: VERSION
+  css:
+    theme:
+      css/layout-builder-content-translation.css: {}
