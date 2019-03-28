@@ -9,8 +9,6 @@ use Drupal\layout_builder\SectionStorageInterface;
 
 /**
  * Provides AJAX responses to rebuild the Layout Builder.
- *
- * @internal
  */
 trait LayoutRebuildTrait {
 

@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines a controller to move a block.
  *
  * @internal
+ *   Controller classes are internal.
  */
 class MoveBlockController implements ContainerInjectionInterface {
 

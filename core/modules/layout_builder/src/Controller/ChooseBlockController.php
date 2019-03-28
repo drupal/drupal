@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines a controller to choose a new block.
  *
  * @internal
+ *   Controller classes are internal.
  */
 class ChooseBlockController implements ContainerInjectionInterface {
 

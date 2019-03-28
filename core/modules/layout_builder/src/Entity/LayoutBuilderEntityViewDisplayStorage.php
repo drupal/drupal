@@ -10,9 +10,7 @@ use Drupal\layout_builder\Section;
  * Provides storage for entity view display entities that have layouts.
  *
  * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
+ *   Entity handlers are internal.
  */
 class LayoutBuilderEntityViewDisplayStorage extends ConfigEntityStorage {
 

@@ -11,6 +11,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Discards any pending changes to the layout.
+ *
+ * @internal
+ *   Form classes are internal.
  */
 class DiscardLayoutChangesForm extends ConfirmFormBase {
 

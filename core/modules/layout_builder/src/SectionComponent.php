@@ -14,19 +14,9 @@ use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
  * \Drupal\Core\Block\BlockPluginInterface, and contain the layout region
  * within the section layout where the component will be rendered.
  *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
- *
  * @see \Drupal\Core\Layout\LayoutDefinition
  * @see \Drupal\layout_builder\Section
  * @see \Drupal\layout_builder\SectionStorageInterface
- *
- * @todo Determine whether to retain the name 'component' in
- *   https://www.drupal.org/project/drupal/issues/2929783.
- * @todo Determine whether an interface will be provided for this in
- *   https://www.drupal.org/project/drupal/issues/2930334.
  */
 class SectionComponent {
 

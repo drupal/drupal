@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Helper methods for Quick Edit module integration.
  *
  * @internal
+ *   This is an internal utility class wrapping hook implementations.
  */
 class QuickEditIntegration implements ContainerInjectionInterface {
 
@@ -92,8 +93,6 @@ class QuickEditIntegration implements ContainerInjectionInterface {
    *
    * @see hook_quickedit_render_field()
    * @see layout_builder_quickedit_render_field()
-   *
-   * @internal
    */
   public function entityViewAlter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
     if (!$entity instanceof FieldableEntityInterface || !isset($build['_layout_builder'])) {
@@ -243,8 +242,6 @@ class QuickEditIntegration implements ContainerInjectionInterface {
    *
    * @return array
    *   The re-rendered field.
-   *
-   * @internal
    */
   public function quickEditRenderField(FieldableEntityInterface $entity, $field_name, $quick_edit_view_mode_id, $langcode) {
     list($entity_view_mode, $delta, $component_uuid) = static::deconstructViewModeId($quick_edit_view_mode_id);

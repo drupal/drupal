@@ -8,6 +8,9 @@ use Drupal\Core\Cache\Context\RouteNameCacheContext;
  * Determines if an entity is being viewed in the Layout Builder UI.
  *
  * Cache context ID: 'route.name.is_layout_builder_ui'.
+ *
+ * @internal
+ *   Tagged services are internal.
  */
 class LayoutBuilderUiCacheContext extends RouteNameCacheContext {
 

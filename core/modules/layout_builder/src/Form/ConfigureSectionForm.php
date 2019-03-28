@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a form for configuring a layout section.
  *
  * @internal
+ *   Form classes are internal.
  */
 class ConfigureSectionForm extends FormBase {
 

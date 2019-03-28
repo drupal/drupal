@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Route;
  * @ingroup layout_builder_access
  *
  * @internal
+ *   Tagged services are internal.
  */
 class LayoutBuilderAccessCheck implements AccessInterface {
 

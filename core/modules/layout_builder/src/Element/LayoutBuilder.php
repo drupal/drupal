@@ -20,6 +20,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines a render element for building the Layout Builder UI.
  *
  * @RenderElement("layout_builder")
+ *
+ * @internal
+ *   Plugin classes are internal.
  */
 class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInterface {
 

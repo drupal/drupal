@@ -27,6 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a base form for configuring a block.
  *
  * @internal
+ *   Form classes are internal.
  */
 abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInterface {
 

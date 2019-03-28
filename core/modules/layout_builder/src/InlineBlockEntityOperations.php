@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines a class for reacting to entity events related to Inline Blocks.
  *
  * @internal
+ *   This is an internal utility class wrapping hook implementations.
  */
 class InlineBlockEntityOperations implements ContainerInjectionInterface {
 

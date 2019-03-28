@@ -88,10 +88,10 @@
   background-repeat: no-repeat;
 }
 .layout-builder__message--defaults .messages {
-  background-image: url('../images/globe.svg');
+  background-image: url("../images/globe.svg");
 }
 .layout-builder__message--overrides .messages {
-  background-image: url('../images/location.svg');
+  background-image: url("../images/location.svg");
 }
 
 /**
@@ -193,11 +193,11 @@
   display: none;
 }
 
-.layout-builder--move-blocks-active  .layout-builder__region-label {
+.layout-builder--move-blocks-active .layout-builder__region-label {
   display: block;
 }
 
-.layout-builder--move-blocks-active  .layout-builder__section-label {
+.layout-builder--move-blocks-active .layout-builder__section-label {
   display: inline;
 }
 

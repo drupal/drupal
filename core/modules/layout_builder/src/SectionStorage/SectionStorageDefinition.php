@@ -8,11 +8,6 @@ use Drupal\Component\Plugin\Definition\PluginDefinition;
 
 /**
  * Provides section storage type plugin definition.
- *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
 class SectionStorageDefinition extends PluginDefinition implements ContextAwarePluginDefinitionInterface {
 

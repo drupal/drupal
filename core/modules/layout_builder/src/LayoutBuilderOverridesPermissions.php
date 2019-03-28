@@ -12,6 +12,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides dynamic permissions for Layout Builder overrides.
  *
  * @see \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage::access()
+ *
+ * @internal
+ *   Dynamic permission callbacks are internal.
  */
 class LayoutBuilderOverridesPermissions implements ContainerInjectionInterface {
 

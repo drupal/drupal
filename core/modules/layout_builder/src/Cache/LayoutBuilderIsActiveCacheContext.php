@@ -13,6 +13,9 @@ use Drupal\layout_builder\OverridesSectionStorageInterface;
  * Cache context ID: 'layout_builder_is_active:%entity_type_id', e.g.
  * 'layout_builder_is_active:node' (to vary by whether the Node entity type has
  * Layout Builder enabled).
+ *
+ * @internal
+ *   Tagged services are internal.
  */
 class LayoutBuilderIsActiveCacheContext implements CalculatedCacheContextInterface {
 

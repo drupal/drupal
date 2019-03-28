@@ -6,11 +6,6 @@ use Drupal\layout_builder\Section;
 
 /**
  * Provides a trait for storing sections on an object.
- *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
 trait SectionStorageTrait {
 

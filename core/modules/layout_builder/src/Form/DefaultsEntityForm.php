@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a form containing the Layout Builder UI for defaults.
  *
  * @internal
+ *   Form classes are internal.
  */
 class DefaultsEntityForm extends EntityForm {
 

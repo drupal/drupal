@@ -5,11 +5,6 @@ namespace Drupal\layout_builder;
 /**
  * Defines the interface for an object that stores layout sections.
  *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
- *
  * @see \Drupal\layout_builder\Section
  */
 interface SectionListInterface extends \Countable {
