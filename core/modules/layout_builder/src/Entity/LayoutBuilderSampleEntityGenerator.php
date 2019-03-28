@@ -8,13 +8,8 @@ use Drupal\Core\TempStore\SharedTempStoreFactory;
 
 /**
  * Generates a sample entity for use by the Layout Builder.
- *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
-class LayoutBuilderSampleEntityGenerator {
+class LayoutBuilderSampleEntityGenerator implements SampleEntityGeneratorInterface {
 
   /**
    * The shared tempstore factory.
@@ -44,15 +39,7 @@ class LayoutBuilderSampleEntityGenerator {
   }
 
   /**
-   * Gets a sample entity for a given entity type and bundle.
-   *
-   * @param string $entity_type_id
-   *   The entity type ID.
-   * @param string $bundle_id
-   *   The bundle ID.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   An entity.
+   * {@inheritdoc}
    */
   public function get($entity_type_id, $bundle_id) {
     $tempstore = $this->tempStoreFactory->get('layout_builder.sample_entity');
@@ -73,14 +60,7 @@ class LayoutBuilderSampleEntityGenerator {
   }
 
   /**
-   * Deletes a sample entity for a given entity type and bundle.
-   *
-   * @param string $entity_type_id
-   *   The entity type ID.
-   * @param string $bundle_id
-   *   The bundle ID.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function delete($entity_type_id, $bundle_id) {
     $tempstore = $this->tempStoreFactory->get('layout_builder.sample_entity');
