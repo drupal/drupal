@@ -1105,7 +1105,7 @@ function drupal_check_module($module) {
  *   The info array.
  */
 function install_profile_info($profile, $langcode = 'en') {
-  $cache = &drupal_static(__FUNCTION__, []);
+  static $cache = [];
 
   if (!isset($cache[$profile][$langcode])) {
     // Set defaults for module info.
