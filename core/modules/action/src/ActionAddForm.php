@@ -2,30 +2,20 @@
 
 namespace Drupal\action;
 
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\action\Form\ActionAddForm as ActionAddFormCurrent;
+
+@trigger_error('The ' . __NAMESPACE__ . '\ActionAddForm is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use ' . __NAMESPACE__ . '\Form\ActionAddForm. See https://www.drupal.org/node/3033540', E_USER_DEPRECATED);
 
 /**
  * Provides a form for action add forms.
  *
  * @internal
+ *
+ * @deprecated in Drupal 8.8.x and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\action\Form\ActionEditForm instead.
+ *
+ * @see https://www.drupal.org/node/3033540
  */
-class ActionAddForm extends ActionFormBase {
-
-  /**
-   * {@inheritdoc}
-   *
-   * @param string $action_id
-   *   The action ID.
-   */
-  public function buildForm(array $form, FormStateInterface $form_state, $action_id = NULL) {
-    $this->entity->setPlugin($action_id);
-
-    // Derive the label and type from the action definition.
-    $definition = $this->entity->getPluginDefinition();
-    $this->entity->set('label', $definition['label']);
-    $this->entity->set('type', $definition['type']);
-
-    return parent::buildForm($form, $form_state);
-  }
+class ActionAddForm extends ActionAddFormCurrent {
 
 }
