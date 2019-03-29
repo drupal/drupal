@@ -42,6 +42,13 @@ class ConfigController implements ContainerInjectionInterface {
   protected $configManager;
 
   /**
+   * The export storage.
+   *
+   * @var \Drupal\Core\Config\StorageInterface
+   */
+  protected $exportStorage;
+
+  /**
    * The file download controller.
    *
    * @var \Drupal\system\FileDownloadController
@@ -72,7 +79,8 @@ class ConfigController implements ContainerInjectionInterface {
       $container->get('config.manager'),
       new FileDownloadController(),
       $container->get('diff.formatter'),
-      $container->get('file_system')
+      $container->get('file_system'),
+      $container->get('config.storage.export')
     );
   }
 
@@ -91,14 +99,21 @@ class ConfigController implements ContainerInjectionInterface {
    *   The diff formatter.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system.
+   * @param \Drupal\Core\Config\StorageInterface $export_storage
+   *   The export storage.
    */
-  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller, DiffFormatter $diff_formatter, FileSystemInterface $file_system) {
+  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller, DiffFormatter $diff_formatter, FileSystemInterface $file_system, StorageInterface $export_storage = NULL) {
     $this->targetStorage = $target_storage;
     $this->sourceStorage = $source_storage;
     $this->configManager = $config_manager;
     $this->fileDownloadController = $file_download_controller;
     $this->diffFormatter = $diff_formatter;
     $this->fileSystem = $file_system;
+    if (is_null($export_storage)) {
+      @trigger_error('The config.storage.export service must be passed to ConfigController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3037022.', E_USER_DEPRECATED);
+      $export_storage = \Drupal::service('config.storage.export');
+    }
+    $this->exportStorage = $export_storage;
   }
 
   /**
@@ -113,13 +128,13 @@ class ConfigController implements ContainerInjectionInterface {
     }
 
     $archiver = new ArchiveTar(file_directory_temp() . '/config.tar.gz', 'gz');
-    // Get raw configuration data without overrides.
-    foreach ($this->configManager->getConfigFactory()->listAll() as $name) {
-      $archiver->addString("$name.yml", Yaml::encode($this->configManager->getConfigFactory()->get($name)->getRawData()));
+    // Add all contents of the export storage to the archive.
+    foreach ($this->exportStorage->listAll() as $name) {
+      $archiver->addString("$name.yml", Yaml::encode($this->exportStorage->read($name)));
     }
-    // Get all override data from the remaining collections.
-    foreach ($this->targetStorage->getAllCollectionNames() as $collection) {
-      $collection_storage = $this->targetStorage->createCollection($collection);
+    // Get all  data from the remaining collections.
+    foreach ($this->exportStorage->getAllCollectionNames() as $collection) {
+      $collection_storage = $this->exportStorage->createCollection($collection);
       foreach ($collection_storage->listAll() as $name) {
         $archiver->addString(str_replace('.', '/', $collection) . "/$name.yml", Yaml::encode($collection_storage->read($name)));
       }
