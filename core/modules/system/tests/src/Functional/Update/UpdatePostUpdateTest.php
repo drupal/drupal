@@ -78,6 +78,8 @@ class UpdatePostUpdateTest extends UpdatePathTestBase {
     }
 
     $this->drupalGet('update.php/selection');
+    $this->updateRequirementsProblem();
+    $this->drupalGet('update.php/selection');
     $this->assertText('No pending updates.');
   }
 

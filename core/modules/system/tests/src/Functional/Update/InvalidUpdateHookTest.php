@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\RequirementsPageTrait;
 
 /**
  * Tests that a module implementing hook_update_8000() causes an error to be
@@ -11,6 +12,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group Update
  */
 class InvalidUpdateHookTest extends BrowserTestBase {
+
+  use RequirementsPageTrait;
 
   /**
    * Modules to enable.
@@ -45,6 +48,7 @@ class InvalidUpdateHookTest extends BrowserTestBase {
     // Confirm that a module with hook_update_8000() cannot be updated.
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl);
+    $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
     $this->assertText(t('Some of the pending updates cannot be applied because their dependencies were not met.'));
   }

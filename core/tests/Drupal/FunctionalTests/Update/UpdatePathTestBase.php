@@ -10,6 +10,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Url;
+use Drupal\Tests\RequirementsPageTrait;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,7 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class UpdatePathTestBase extends BrowserTestBase {
 
   use SchemaCheckTestTrait;
+  use RequirementsPageTrait;
 
   /**
    * Modules to enable after the database is loaded.
@@ -295,6 +297,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     ]);
 
     $this->drupalGet($this->updateUrl);
+    $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
 
     $this->doSelectionTest();
