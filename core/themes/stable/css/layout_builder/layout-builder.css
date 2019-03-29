@@ -88,10 +88,10 @@
   background-repeat: no-repeat;
 }
 .layout-builder__message--defaults .messages {
-  background-image: url("../images/globe.svg");
+  background-image: url("../../../../misc/icons/73b355/globe.svg");
 }
 .layout-builder__message--overrides .messages {
-  background-image: url("../images/location.svg");
+  background-image: url("../../../../misc/icons/73b355/location.svg");
 }
 
 /**
