@@ -5,6 +5,7 @@ namespace Drupal\Tests\system\Functional\Update;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\RequirementsPageTrait;
 
 /**
  * Tests the update script access and functionality.
@@ -12,6 +13,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group Update
  */
 class UpdateScriptTest extends BrowserTestBase {
+
+  use RequirementsPageTrait;
 
   /**
    * Modules to enable.
@@ -99,6 +102,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // If there are no requirements warnings or errors, we expect to be able to
     // go through the update process uninterrupted.
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
     $this->assertText(t('No pending updates.'), 'End of update process was reached.');
     // Confirm that all caches were cleared.
@@ -110,6 +114,7 @@ class UpdateScriptTest extends BrowserTestBase {
 
     // First, run this test with pending updates to make sure they can be run
     // successfully.
+    $this->drupalLogin($this->updateUser);
     $update_script_test_config->set('requirement_type', REQUIREMENT_WARNING)->save();
     drupal_set_installed_schema_version('update_script_test', drupal_get_installed_schema_version('update_script_test') - 1);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
@@ -177,6 +182,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // Click through update.php with 'administer software updates' permission.
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
     $this->assertText(t('No pending updates.'));
     $this->assertNoLink('Administration pages');
@@ -188,6 +194,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser(['administer software updates', 'access administration pages']);
     $this->drupalLogin($admin_user);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
     $this->assertText(t('No pending updates.'));
     $this->assertLink('Administration pages');
@@ -220,6 +227,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser(['administer software updates', 'access administration pages', 'access site reports', 'access site in maintenance mode']);
     $this->drupalLogin($admin_user);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
     $this->clickLink(t('Apply pending updates'));
     $this->checkForMetaRefresh();
@@ -287,6 +295,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // Click through update.php with 'access administration pages' and
     // 'access site reports' permissions.
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
     $this->clickLink(t('Apply pending updates'));
     $this->checkForMetaRefresh();
@@ -319,6 +328,7 @@ class UpdateScriptTest extends BrowserTestBase {
       $this->assertNoText('Operating in maintenance mode.');
     }
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
     $this->clickLink(t('Apply pending updates'));
     $this->checkForMetaRefresh();

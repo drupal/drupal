@@ -10,6 +10,7 @@ use Drupal\Core\Url;
 use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\RequirementsPageTrait;
 use Drupal\user\Entity\Role;
 
 /**
@@ -20,6 +21,7 @@ use Drupal\user\Entity\Role;
 class StandardTest extends BrowserTestBase {
 
   use SchemaCheckTestTrait;
+  use RequirementsPageTrait;
 
   protected $profile = 'standard';
 
@@ -154,6 +156,8 @@ class StandardTest extends BrowserTestBase {
 
     // Ensure that there are no pending updates after installation.
     $this->drupalLogin($this->rootUser);
+    $this->drupalGet('update.php/selection');
+    $this->updateRequirementsProblem();
     $this->drupalGet('update.php/selection');
     $this->assertText('No pending updates.');
 

@@ -58,6 +58,7 @@ class QuickStartTest extends TestCase {
     }
     // Get a lock and a valid site path.
     $this->testDb = new TestDatabase();
+    include $this->root . '/core/includes/bootstrap.inc';
   }
 
   /**
@@ -83,6 +84,10 @@ class QuickStartTest extends TestCase {
    * Tests the quick-start command.
    */
   public function testQuickStartCommand() {
+    if (version_compare(phpversion(), DRUPAL_MINIMUM_SUPPORTED_PHP) < 0) {
+      $this->markTestSkipped();
+    }
+
     // Install a site using the standard profile to ensure the one time login
     // link generation works.
 
@@ -117,7 +122,6 @@ class QuickStartTest extends TestCase {
     $this->assertContains("127.0.0.1:$port/user/reset/1/", $process->getOutput());
 
     // Generate a cookie so we can make a request against the installed site.
-    include $this->root . '/core/includes/bootstrap.inc';
     define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
     chmod($this->testDb->getTestSitePath(), 0755);
     $cookieJar = CookieJar::fromArray([
@@ -133,9 +137,47 @@ class QuickStartTest extends TestCase {
   }
 
   /**
+   * Tests that the installer throws a requirement error on older PHP versions.
+   */
+  public function testPhpRequirement() {
+    if (version_compare(phpversion(), DRUPAL_MINIMUM_SUPPORTED_PHP) >= 0) {
+      $this->markTestSkipped();
+    }
+
+    $install_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'quick-start',
+      'standard',
+      "--site-name='Test site {$this->testDb->getDatabasePrefix()}'",
+      '--suppress-login',
+    ];
+    $process = new Process($install_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
+    $process->inheritEnvironmentVariables();
+    $process->setTimeout(500);
+    $process->start();
+    while ($process->isRunning()) {
+      // Wait for more output.
+      sleep(1);
+    }
+
+    $error_output = $process->getErrorOutput();
+    $this->assertContains('Your PHP installation is too old.', $error_output);
+    $this->assertContains('Drupal requires at least PHP', $error_output);
+    $this->assertContains(DRUPAL_MINIMUM_SUPPORTED_PHP, $error_output);
+
+    // Stop the web server.
+    $process->stop();
+  }
+
+  /**
    * Tests the quick-start commands.
    */
   public function testQuickStartInstallAndServerCommands() {
+    if (version_compare(phpversion(), DRUPAL_MINIMUM_SUPPORTED_PHP) < 0) {
+      $this->markTestSkipped();
+    }
+
     // Install a site.
     $install_command = [
       $this->php,
@@ -180,7 +222,6 @@ class QuickStartTest extends TestCase {
     sleep(2);
 
     // Generate a cookie so we can make a request against the installed site.
-    include $this->root . '/core/includes/bootstrap.inc';
     define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
     chmod($this->testDb->getTestSitePath(), 0755);
     $cookieJar = CookieJar::fromArray([

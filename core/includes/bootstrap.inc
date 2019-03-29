@@ -18,14 +18,35 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
- * Minimum supported version of PHP.
+ * Minimum allowed version of PHP.
  *
- * Drupal cannot be installed on versions of PHP older than this version.
+ * Below this version:
+ * - The installer cannot be run.
+ * - Updates cannot be run.
+ * - Modules and themes cannot be enabled.
+ * - If a site managed to bypass all of the above, then an error is shown in
+ *   the status report and various fatal errors occur on various pages.
+ *
+ * @see install.php
  *
  * @todo Move this to an appropriate autoloadable class. See
  *   https://www.drupal.org/project/drupal/issues/2908079
  */
 const DRUPAL_MINIMUM_PHP = '5.5.9';
+
+/**
+ * Minimum supported version of PHP.
+ *
+ * Below this version:
+ * - New sites cannot be installed, except from within tests.
+ * - Updates from previous Drupal versions can be run, but users are warned
+ *   that Drupal no longer supports that PHP version.
+ * - An error is shown in the status report that the PHP version is too old.
+ *
+ * @todo Move this to an appropriate autoloadable class. See
+ *   https://www.drupal.org/project/drupal/issues/2908079
+ */
+const DRUPAL_MINIMUM_SUPPORTED_PHP = '7.0.8';
 
 /**
  * Minimum recommended version of PHP.

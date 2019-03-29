@@ -24,7 +24,6 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\system\SystemRequirements;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -186,36 +185,43 @@ function system_requirements($phase) {
     ];
   }
 
-  if (version_compare($phpversion, DRUPAL_MINIMUM_PHP) < 0) {
-    $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version.', ['%version' => DRUPAL_MINIMUM_PHP]);
+  // Check if the PHP version is below what Drupal supports.
+  if (version_compare($phpversion, DRUPAL_MINIMUM_SUPPORTED_PHP) < 0) {
+    $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version. It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal 8 PHP requirements handbook page</a> for more information.',
+      [
+        '%version' => DRUPAL_MINIMUM_SUPPORTED_PHP,
+        '%recommended' => DRUPAL_RECOMMENDED_PHP,
+        ':php_requirements' => 'https://www.drupal.org/docs/8/system-requirements/php',
+      ]
+    );
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
-    // If PHP is old, it's not safe to continue with the requirements check.
-    return $requirements;
-  }
-  if ((version_compare($phpversion, DRUPAL_RECOMMENDED_PHP) < 0) && ($phase === 'install' || $phase === 'runtime')) {
-    // Warn if still on PHP 5. If at least PHP 7.0, relax from "warning" to
-    // "info", and show it at runtime only, to not scare users while installing.
-    if (version_compare($phpversion, '7.0') < 0) {
-      $requirements['php']['description'] = t('Drupal will drop support for this version on March 6, 2019. Upgrade to PHP version %recommended or higher to ensure your site can receive updates and remain secure. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal 8 PHP requirements handbook page</a> for more information.', ['%recommended' => DRUPAL_RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/8/system-requirements/php']);
+
+    // If the PHP version is also below the absolute minimum allowed, it's not
+    // safe to continue with the requirements check.
+    if (version_compare($phpversion, DRUPAL_MINIMUM_PHP) < 0) {
+      return $requirements;
+    }
+    // Otherwise downgrade the error to a warning during updates. Even if there
+    // are some problems with the site's PHP version, it's still better for the
+    // site to keep its Drupal codebase up to date.
+    elseif ($phase === 'update') {
       $requirements['php']['severity'] = REQUIREMENT_WARNING;
     }
-    else {
-      if ($phase === 'runtime') {
-        $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal 8 PHP requirements handbook page</a> for more information.', ['%recommended' => DRUPAL_RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/8/system-requirements/php']);
-        $requirements['php']['severity'] = REQUIREMENT_INFO;
-      }
+    // Since we allow sites with unsupported PHP versions to still run Drupal
+    // updates, we also need to be able to run tests with those PHP versions,
+    // which requires the ability to install test sites. Not all tests are
+    // required to pass on these PHP versions, but we want to monitor which
+    // ones do and don't.
+    elseif ($phase === 'install' && drupal_valid_test_ua()) {
+      $requirements['php']['severity'] = REQUIREMENT_INFO;
     }
   }
-
-  // Suggest to update to at least 5.5.21 or 5.6.5 for disabling multiple
-  // statements.
-  if (($phase === 'install' || \Drupal::database()->driver() === 'mysql') && !SystemRequirements::phpVersionWithPdoDisallowMultipleStatements($phpversion)) {
-    $requirements['php_multiple_statement'] = [
-      'title' => t('PHP (multiple statement disabling)'),
-      'value' => $phpversion_label,
-      'description' => t('PHP versions higher than 5.6.5 or 5.5.21 provide built-in SQL injection protection for mysql databases. It is recommended to update.'),
-      'severity' => REQUIREMENT_INFO,
-    ];
+  // For PHP versions that are still supported but no longer recommended,
+  // inform users of what's recommended, allowing them to take action before it
+  // becomes urgent.
+  elseif ($phase === 'runtime' && version_compare($phpversion, DRUPAL_RECOMMENDED_PHP) < 0) {
+    $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal 8 PHP requirements handbook page</a> for more information.', ['%recommended' => DRUPAL_RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/8/system-requirements/php']);
+    $requirements['php']['severity'] = REQUIREMENT_INFO;
   }
 
   // Test for PHP extensions.

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\RequirementsPageTrait;
 
 /**
  * Tests that the minimum schema version is correct even if only 7.x update
@@ -11,6 +12,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group Update
  */
 class UpdatesWith7xTest extends BrowserTestBase {
+
+  use RequirementsPageTrait;
 
   /**
    * Modules to enable.
@@ -48,6 +51,7 @@ class UpdatesWith7xTest extends BrowserTestBase {
     // Click through update.php with 'administer software updates' permission.
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
     $this->assertText(t('Some of the pending updates cannot be applied because their dependencies were not met.'));
   }

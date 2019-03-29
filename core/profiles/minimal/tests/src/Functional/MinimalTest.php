@@ -3,6 +3,7 @@
 namespace Drupal\Tests\minimal\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\RequirementsPageTrait;
 use Drupal\user\UserInterface;
 
 /**
@@ -11,6 +12,8 @@ use Drupal\user\UserInterface;
  * @group minimal
  */
 class MinimalTest extends BrowserTestBase {
+
+  use RequirementsPageTrait;
 
   protected $profile = 'minimal';
 
@@ -33,6 +36,8 @@ class MinimalTest extends BrowserTestBase {
 
     // Ensure that there are no pending updates after installation.
     $this->drupalLogin($this->rootUser);
+    $this->drupalGet('update.php/selection');
+    $this->updateRequirementsProblem();
     $this->drupalGet('update.php/selection');
     $this->assertText('No pending updates.');
 
