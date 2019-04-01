@@ -5,8 +5,8 @@
  */
 
 .list-group__link {
-  border-top: 1px solid #ccc;
   padding: 7px 0 0;
+  border-top: 1px solid #ccc;
 }
 .list-group__description {
   margin: 0 0 10px;

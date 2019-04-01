@@ -9,38 +9,38 @@
 }
 
 .system-status-general-info__header {
-  background-color: #f5f5f2;
-  padding: 10px;
-  margin: 0;
   overflow: hidden;
+  margin: 0;
+  padding: 10px;
+  text-transform: uppercase;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
+  background-color: #f5f5f2;
   font-size: 14px;
-  text-transform: uppercase;
 }
 
 .system-status-general-info__item {
-  background: #fcfcfa;
-  border-top: 1px solid #ccc;
-  padding: 10px 10px 20px;
-  box-sizing: border-box;
   overflow-x: auto;
+  box-sizing: border-box;
+  padding: 10px 10px 20px;
+  border-top: 1px solid #ccc;
+  background: #fcfcfa;
 }
 
 .system-status-general-info__item-icon {
   display: inline-block;
-  height: 45px;
   width: 45px;
+  height: 45px;
   vertical-align: top;
 }
 .system-status-general-info__item-icon:before {
-  content: "";
-  background-size: 35px;
-  background-position: 50% center;
-  background-repeat: no-repeat;
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
+  content: "";
+  background-repeat: no-repeat;
+  background-position: 50% center;
+  background-size: 35px;
 }
 .system-status-general-info__item-icon--d8:before {
   background-image: url(../../images/icons/cccccc/d8-logo.svg);
@@ -61,11 +61,11 @@
 }
 
 .system-status-general-info__item-details {
-  box-sizing: border-box;
+  position: relative;
   display: inline-block;
+  box-sizing: border-box;
   width: calc(100% - 60px);
   padding-left: 10px; /* LTR */
-  position: relative;
 }
 [dir="rtl"] .system-status-general-info__item-details {
   padding-right: 10px;
@@ -94,8 +94,8 @@
 @media screen and (min-width: 48em) {
   .system-status-general-info__items {
     display: flex;
-    flex-wrap: wrap;
     overflow-x: hidden;
+    flex-wrap: wrap;
   }
 
   .system-status-general-info__item {
@@ -145,8 +145,8 @@
     margin-top: 0;
   }
   [dir="rtl"] .system-status-general-info__run-cron {
-    left: 1em;
     right: auto;
+    left: 1em;
   }
 }
 
@@ -155,7 +155,7 @@
     display: none;
   }
   .system-status-general-info {
-    border-top: 0;
     margin-top: 25px;
+    border-top: 0;
   }
 }

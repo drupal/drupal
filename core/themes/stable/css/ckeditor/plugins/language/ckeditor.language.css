@@ -14,6 +14,6 @@ html [lang] {
 }
 html [lang]:after {
   content: " ("attr(lang)")";
-  font-size: 10px;
   color: #666;
+  font-size: 10px;
 }

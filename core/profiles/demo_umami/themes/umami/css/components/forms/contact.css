@@ -4,8 +4,8 @@
  */
 
 .contact-form {
-  margin: auto auto 1rem;
   max-width: 600px;
+  margin: auto auto 1rem;
 }
 
 @media screen and (min-width: 30rem) { /* 480px */
@@ -23,8 +23,8 @@
   margin-bottom: 0;
 }
 .contact-form .form-item-copy .form-checkbox {
-  margin: 0 5px 0 0;
   min-width: auto;
+  margin: 0 5px 0 0;
 }
 .contact-form .form-actions {
   display: block;

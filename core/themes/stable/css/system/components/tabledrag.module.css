@@ -21,11 +21,11 @@ tr.add-new .tabledrag-changed {
   display: none;
 }
 .draggable a.tabledrag-handle {
-  cursor: move;
   float: left; /* LTR */
+  overflow: hidden;
   height: 1.7em;
   margin-left: -1em; /* LTR */
-  overflow: hidden;
+  cursor: move;
   text-decoration: none;
 }
 [dir="rtl"] .draggable a.tabledrag-handle {
@@ -37,11 +37,11 @@ a.tabledrag-handle:hover {
   text-decoration: none;
 }
 a.tabledrag-handle .handle {
-  background: url(../../../images/core/icons/787878/move.svg) no-repeat 6px 7px;
+  width: 14px;
   height: 14px;
   margin: -0.4em 0.5em 0;
   padding: 0.42em 0.5em;
-  width: 14px;
+  background: url(../../../images/core/icons/787878/move.svg) no-repeat 6px 7px;
 }
 a.tabledrag-handle:hover .handle,
 a.tabledrag-handle:focus .handle {
@@ -55,12 +55,12 @@ a.tabledrag-handle:focus .handle {
   padding: 10px 0;
 }
 .touchevents a.tabledrag-handle {
-  height: 44px;
   width: 40px;
+  height: 44px;
 }
 .touchevents a.tabledrag-handle .handle {
-  background-position: 40% 19px; /* LTR */
   height: 21px;
+  background-position: 40% 19px; /* LTR */
 }
 [dir="rtl"] .touch a.tabledrag-handle .handle {
   background-position: right 40% top 19px;
@@ -76,10 +76,10 @@ a.tabledrag-handle:focus .handle {
 }
 .indentation {
   float: left; /* LTR */
+  width: 20px;
   height: 1.7em;
   margin: -0.4em 0.2em -0.4em -0.4em; /* LTR */
   padding: 0.42em 0 0.42em 0.6em; /* LTR */
-  width: 20px;
 }
 [dir="rtl"] .indentation {
   float: right;

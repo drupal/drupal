@@ -20,28 +20,28 @@
 
 /* Style both the edit and editing states of the contextual links toggle tab. */
 .toolbar-icon-edit.toolbar-item {
+  color: #eee;
   background-color: #0066a1;
   background-image: linear-gradient(to bottom, #0066a1, #005b98);
-  color: #eee;
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
   font-weight: 700;
   -webkit-font-smoothing: antialiased;
 }
 .toolbar-icon-edit.toolbar-item.is-active {
+  color: #fff;
   background-color: #0a7bc1;
   background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
-  color: #fff;
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
   font-weight: 700;
   -webkit-font-smoothing: antialiased;
 }
 .toolbar-tab:hover > .toolbar-icon-edit,
 .toolbar-icon-edit:focus .toolbar-item {
+  color: #fff;
+  border-color: #1e5c90;
+  outline: none;
   background-color: #0a7bc1;
   background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
-  border-color: #1e5c90;
-  color: #fff;
-  outline: none;
 }
 .toolbar-icon.toolbar-icon-edit.toolbar-item:before,
 button.toolbar-icon.toolbar-icon-edit.toolbar-item:before {

@@ -8,10 +8,10 @@ html {
 }
 body {
   min-height: 100%;
-  line-height: 1.5;
   word-wrap: break-word;
   font-family: Georgia, "Times New Roman", Times, serif;
   font-size: 87.5%;
+  line-height: 1.5;
 }
 a,
 a.link {
@@ -42,43 +42,43 @@ h2 a {
 h1,
 .heading-a {
   margin: 1em 0 0.5em;
-  font-weight: inherit;
-  font-size: 1.357em;
   color: #000;
+  font-size: 1.357em;
+  font-weight: inherit;
 }
 h2,
 .heading-b {
   margin: 1em 0 0.5em;
-  font-weight: inherit;
   font-size: 1.143em;
+  font-weight: inherit;
 }
 h3,
 .heading-c {
   margin: 1em 0 0.5em;
-  font-weight: inherit;
   font-size: 1.092em;
+  font-weight: inherit;
 }
 h4,
 .heading-d {
   margin: 1em 0 0.5em;
-  font-weight: inherit;
   font-size: 1.05em;
+  font-weight: inherit;
 }
 h5,
 .heading-e {
   margin: 1em 0 0.5em;
-  font-weight: inherit;
-  font-size: 0.889em;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.889em;
+  font-weight: inherit;
 }
 h6,
 .heading-f {
   margin: 1em 0 0.5em;
-  font-weight: inherit;
-  font-size: 0.67em;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.67em;
+  font-weight: inherit;
 }
 p {
   margin: 0 0 1.2em;
@@ -88,35 +88,35 @@ del {
 }
 
 blockquote {
-  background: #f7f7f7;
-  border-left: 1px solid #bbb; /* LTR */
-  font-style: italic;
   margin: 1.5em 10px;
   padding: 0.5em 10px;
+  border-left: 1px solid #bbb; /* LTR */
+  background: #f7f7f7;
+  font-style: italic;
 }
 [dir="rtl"] blockquote {
-  border-left: none;
   border-right: 1px solid #bbb;
+  border-left: none;
 }
 blockquote:before {
-  color: #bbb;
+  margin-right: 0.2em; /* LTR */
   content: "\201C";
+  vertical-align: -0.4em;
+  color: #bbb;
   font-size: 3em;
   line-height: 0.1em;
-  margin-right: 0.2em; /* LTR */
-  vertical-align: -0.4em;
 }
 [dir="rtl"] blockquote:before {
-  content: "\201D";
-  margin-left: 0.2em;
   margin-right: 0;
+  margin-left: 0.2em;
+  content: "\201D";
 }
 blockquote:after {
-  color: #bbb;
   content: "\201D";
+  vertical-align: -0.45em;
+  color: #bbb;
   font-size: 3em;
   line-height: 0.1em;
-  vertical-align: -0.45em;
 }
 [dir="rtl"] blockquote:after {
   content: "\201C";

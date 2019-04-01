@@ -4,8 +4,8 @@
  */
 
 .project-update__title {
-  font-weight: bold;
   font-size: 110%;
+  font-weight: bold;
 }
 .project-update__status {
   float: right; /* LTR */
@@ -21,16 +21,16 @@
   float: right;
 }
 .project-update__status--security-error {
-  font-weight: bold;
   color: #970f00;
+  font-weight: bold;
 }
 
 .project-update__status-icon {
   padding-left: 0.5em; /* LTR */
 }
 [dir="rtl"] .project-update__status-icon {
-  padding-left: 0;
   padding-right: 0.5em;
+  padding-left: 0;
 }
 .project-update__details {
   padding: 1em 1em 0.25em 1em;
@@ -50,13 +50,13 @@
   direction: ltr; /* Version numbers should always be LTR. */
 }
 .project-update__version-links {
-  text-align: right; /* LTR */
   padding-right: 1em; /* LTR */
   list-style-type: none;
+  text-align: right; /* LTR */
 }
 [dir="rtl"] .project-update__version-links {
-  text-align: left;
   padding-left: 1em;
+  text-align: left;
 }
 .project-update__version--recommended-strong .project-update__version-title {
   font-weight: bold;

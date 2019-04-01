@@ -1,15 +1,15 @@
 body.maintenance-page {
-  background-color: #fff;
   color: #000;
+  background-color: #fff;
 }
 .maintenance-page #page-wrapper {
-  background: #fff;
-  margin-left: auto;
-  margin-right: auto;
   min-width: 0;
   min-height: 0;
-  border: 1px solid #ddd;
   margin-top: 40px;
+  margin-right: auto;
+  margin-left: auto;
+  border: 1px solid #ddd;
+  background: #fff;
 }
 .maintenance-page #page {
   margin: 10px;
@@ -27,8 +27,8 @@ body.maintenance-page {
   padding: 0 0 0 10px; /* LTR */
 }
 [dir="rtl"] .maintenance-page .content .section {
-  padding-left: 0;
   padding-right: 10px;
+  padding-left: 0;
 }
 .maintenance-page #header {
   background-color: #fff;
@@ -50,8 +50,8 @@ body.maintenance-page {
   color: #777;
 }
 .maintenance-page .page-title {
-  line-height: 1em;
   margin-top: 0;
+  line-height: 1em;
 }
 
 @media all and (min-width: 800px) {

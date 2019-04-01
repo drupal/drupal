@@ -4,10 +4,10 @@
  */
 
 ul.links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
   color: #68696b;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.821em;
-  padding: 0;
-  margin: 0;
-  list-style: none;
 }

@@ -14,9 +14,9 @@
   font-size: 0.934em;
 }
 .comment {
+  display: table;
   margin-bottom: 19px;
   vertical-align: top;
-  display: table;
 }
 [dir="rtl"] .comment {
   direction: rtl;
@@ -57,20 +57,20 @@
 .comment__content {
   position: relative;
   display: table-cell;
+  width: 100%;
   padding: 10px 25px 10px 25px;
   vertical-align: top;
-  width: 100%;
+  word-break: break-all;
   border: 1px solid #d3d7d9;
   font-size: 0.929em;
   line-height: 1.6;
-  word-break: break-all;
 }
 
 .comment__content:before {
-  content: "";
   position: absolute;
-  right: 100%; /* LTR */
   top: 20px;
+  right: 100%; /* LTR */
+  content: "";
   border-top: 20px solid transparent;
   border-right: 20px solid #d3d7d9; /* LTR */
   border-bottom: 20px solid transparent;
@@ -82,22 +82,22 @@
   border-left: 20px solid #d3d7d9;
 }
 .comment__content:after {
-  content: "";
   position: absolute;
-  right: 100%; /* LTR */
   top: 20px;
+  right: 100%; /* LTR */
+  margin-right: -1px; /* LTR */
+  content: "";
   border-top: 20px solid transparent;
   border-right: 20px solid #fff; /* LTR */
   border-bottom: 20px solid transparent;
-  margin-right: -1px; /* LTR */
 }
 [dir="rtl"] .comment__content:after {
   right: auto;
   left: 100%;
-  border-right: none;
-  border-left: 20px solid #fff;
   margin-right: 0;
   margin-left: -1px;
+  border-right: none;
+  border-left: 20px solid #fff;
 }
 .comment__content h3 {
   margin-top: 0.94em;
@@ -127,8 +127,8 @@
   background: #fff4f4;
 }
 [dir="rtl"] .comment--unpublished {
-  margin-left: 5px;
   margin-right: 0;
+  margin-left: 5px;
   padding: 5px 5px 5px 2px;
 }
 
@@ -137,8 +137,8 @@
  * change this to .comment--unpublished.
  */
 .unpublished .comment-text .comment-arrow {
-  border-left: 1px solid #fff4f4;
   border-right: 1px solid #fff4f4;
+  border-left: 1px solid #fff4f4;
 }
 .unpublished {
   padding: 20px 15px 0;

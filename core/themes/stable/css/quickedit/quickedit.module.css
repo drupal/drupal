@@ -11,8 +11,8 @@
  * Editable.
  */
 .quickedit-editable {
-  z-index: 98;
   position: relative;
+  z-index: 98;
   cursor: pointer;
 }
 .quickedit-editable:focus {
@@ -26,21 +26,21 @@
   z-index: 99;
 }
 .quickedit-validation-errors > .messages {
-  margin-left: 0;
   margin-right: 0;
+  margin-left: 0;
 }
 .quickedit-validation-errors > .messages > ul {
-  list-style: none;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 /**
  * In-place editors that don't use a popup.
  */
 .quickedit-validation-errors {
-  z-index: 300;
   position: relative;
+  z-index: 300;
 }
 .quickedit-validation-errors .messages.error {
   position: absolute;
@@ -50,8 +50,8 @@
   border: none;
 }
 [dir="rtl"] .quickedit-validation-errors .messages.error {
-  left: auto;
   right: -5px;
+  left: auto;
 }
 
 /**
@@ -87,9 +87,9 @@
  */
 .quickedit-toolbar-container {
   position: absolute;
-  max-width: 320px;
-  width: 320px;
   z-index: 100;
+  width: 320px;
+  max-width: 320px;
 }
 .quickedit-toolbar-container > .quickedit-toolbar-pointer,
 .quickedit-toolbar-container > .quickedit-toolbar-lining {
@@ -97,11 +97,11 @@
 }
 .quickedit-form-container {
   position: relative;
-  padding: 0;
-  border: 0;
-  margin: 0;
-  vertical-align: baseline;
   z-index: 100;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+  border: 0;
 }
 .quickedit-toolgroup.ops {
   float: right; /* LTR */
@@ -113,10 +113,10 @@
   overflow: hidden;
 }
 #quickedit-toolbar-fence {
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
   position: fixed;
   z-index: -1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }

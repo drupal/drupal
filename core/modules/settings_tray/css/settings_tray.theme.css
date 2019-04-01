@@ -22,24 +22,24 @@
 .toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item,
 .toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active,
 .toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:focus {
+  color: #eee;
+  outline: none;
   background-color: #0066a1;
   background-image: linear-gradient(to bottom, #0066a1, #005b98);
-  color: #eee;
   text-shadow: none;
   font-weight: bold;
-  outline: none;
 }
 /* Make the hover of the inactive state the same as the active state. */
 .toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:hover,
 .toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active {
-  background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
   color: #fff;
+  background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
 }
 /* Make the hover of the active state the same as the inactive state. */
 .toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:hover {
+  color: #fff;
   background-color: #0066a1;
   background-image: linear-gradient(to bottom, #0066a1, #005b98);
-  color: #fff;
 }
 /* Make the inactive icon grey. */
 .toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:before {

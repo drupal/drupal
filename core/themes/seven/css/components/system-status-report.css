@@ -7,13 +7,13 @@
   padding-top: 20px;
 }
 .system-status-report__entry {
+  overflow: auto;
+  width: 100%;
+  margin: 0;
   border: 0;
   border-top: 1px solid #ccc;
-  margin: 0;
-  width: 100%;
-  overflow: auto;
-  background-color: transparent;
   border-radius: 0;
+  background-color: transparent;
 }
 .system-status-report__entry:last-of-type {
   border-bottom: 1px solid #bebfb9;
@@ -27,14 +27,14 @@
 /* Account for native and poly-filled details element */
 .system-status-report__status-title {
   position: relative;
-  padding: 1em 1em 1em 3em; /* LTR */
   box-sizing: border-box;
   width: 100%;
+  padding: 1em 1em 1em 3em; /* LTR */
   font-weight: bold;
 }
 .system-status-report__status-title .details-title {
-  color: inherit;
   text-transform: none;
+  color: inherit;
 }
 .system-status-report__status-title .details-title {
   padding-left: 3em; /* LTR */
@@ -71,23 +71,23 @@
 
 .system-status-report__status-title .details-title:before,
 .details .system-status-report__status-icon:before {
-  content: "";
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: top center;
-  height: 16px;
-  width: 16px;
   position: absolute;
-  left: 10px; /* LTR */
   top: 1em;
+  left: 10px; /* LTR */
   display: inline-block;
-  vertical-align: top;
+  width: 16px;
+  height: 16px;
   margin-right: 10px; /* LTR */
+  content: "";
+  vertical-align: top;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: contain;
 }
 [dir="rtl"] .system-status-report__status-title .details-title:before,
 [dir="rtl"].details .system-status-report__status-title:before {
-  left: auto;
   right: 10px;
+  left: auto;
   margin-right: 0;
 }
 .system-status-report__status-icon--error .details-title:before,
@@ -117,12 +117,12 @@
 @media screen and (min-width: 48em) {
   .system-status-report__entry::after {
     display: table;
-    content: "";
     clear: both;
+    content: "";
   }
   .system-status-report__status-title {
-    width: 18rem;
     float: left; /* LTR */
+    width: 18rem;
     cursor: default;
   }
   .system-status-report__status-title:hover,
@@ -140,14 +140,14 @@
     top: 3px;
   }
   .system-status-report__entry__value {
-    width: calc(100% - 23em);
-    float: right;
     display: block;
-    padding-left: 0; /* LTR */
+    float: right;
+    width: calc(100% - 23em);
     padding-top: 1em;
+    padding-left: 0; /* LTR */
   }
   [dir="rtl"] .system-status-report__entry__value {
-    padding-left: 0;
     padding-right: 3em;
+    padding-left: 0;
   }
 }

@@ -4,42 +4,42 @@
  */
 
 .toolbar .toolbar-icon {
-  padding-left: 2.75em; /* LTR */
   position: relative;
+  padding-left: 2.75em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-icon {
-  padding-left: 1.3333em;
   padding-right: 2.75em;
+  padding-left: 1.3333em;
 }
 .toolbar .toolbar-icon:before {
-  background-attachment: scroll;
-  background-color: transparent;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-  content: "";
-  display: block;
-  height: 100%;
-  left: 0.6667em; /* LTR */
   position: absolute;
   top: 0;
+  left: 0.6667em; /* LTR */
+  display: block;
   width: 20px;
+  height: 100%;
+  content: "";
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-size: 100% auto;
 }
 [dir="rtl"] .toolbar .toolbar-icon:before {
-  left: auto;
   right: 0.6667em;
+  left: auto;
 }
 .toolbar button.toolbar-icon {
-  background-color: transparent;
   border: 0;
+  background-color: transparent;
   font-size: 1em;
 }
 .toolbar .toolbar-menu ul .toolbar-icon {
   padding-left: 1.3333em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-menu ul .toolbar-icon {
-  padding-left: 0;
   padding-right: 1.3333em;
+  padding-left: 0;
 }
 .toolbar .toolbar-menu ul a.toolbar-icon:before {
   display: none;
@@ -48,24 +48,24 @@
   padding-left: 2.75em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu ul a {
-  padding-left: 0;
   padding-right: 2.75em;
+  padding-left: 0;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu ul ul a {
   padding-left: 3.75em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu ul ul a {
-  padding-left: 0;
   padding-right: 3.75em;
+  padding-left: 0;
 }
 
 .toolbar .toolbar-tray-vertical .toolbar-menu a {
-  padding-left: 2.75em; /* LTR */
   padding-right: 4em; /* LTR */
+  padding-left: 2.75em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu a {
-  padding-left: 4em;
   padding-right: 2.75em;
+  padding-left: 4em;
 }
 
 /**
@@ -148,51 +148,51 @@
 
 @media only screen and (min-width: 16.5em) {
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0;
-    padding-right: 0;
-    text-indent: -9999px;
     width: 4em;
+    margin-right: 0;
+    margin-left: 0;
+    padding-right: 0;
+    padding-left: 0;
+    text-indent: -9999px;
   }
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
-    background-size: 42% auto;
     left: 0; /* LTR */
     width: 100%;
+    background-size: 42% auto;
   }
   .no-svg .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
     background-size: auto auto;
   }
   [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
-    left: auto;
     right: 0;
+    left: auto;
   }
 }
 
 @media only screen and (min-width: 36em) {
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
-    background-position: left center; /* LTR */
-    padding-left: 2.75em; /* LTR */
-    padding-right: 1.3333em; /* LTR */
-    text-indent: 0;
     width: auto;
+    padding-right: 1.3333em; /* LTR */
+    padding-left: 2.75em; /* LTR */
+    text-indent: 0;
+    background-position: left center; /* LTR */
   }
   [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
-    background-position: right center;
-    padding-left: 1.3333em;
     padding-right: 2.75em;
+    padding-left: 1.3333em;
+    background-position: right center;
   }
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
-    background-size: 100% auto;
     left: 0.6667em; /* LTR */
     width: 20px;
+    background-size: 100% auto;
   }
   .no-svg .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
     background-size: auto auto;
   }
   [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
-    left: 0;
     right: 0.6667em;
+    left: 0;
   }
 }
 
@@ -200,8 +200,8 @@
  *  Accessibility/focus
  */
 .toolbar-tab a:focus {
-  outline: none;
   text-decoration: underline;
+  outline: none;
 }
 .toolbar-lining button:focus {
   outline: none;
@@ -230,8 +230,8 @@
   left: 1.6667em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-icon.toolbar-handle:before {
-  left: auto;
   right: 1.6667em;
+  left: auto;
 }
 .toolbar .toolbar-icon.toolbar-handle:before {
   background-image: url(../../../misc/icons/5181c6/chevron-disc-down.svg);
@@ -257,14 +257,14 @@
  * Orientation toggle.
  */
 .toolbar .toolbar-toggle-orientation button {
+  width: 39px;
   height: 39px;
   padding: 0;
   text-indent: -999em;
-  width: 39px;
 }
 .toolbar .toolbar-toggle-orientation button:before {
-  left: 0;
   right: 0;
+  left: 0;
   margin: 0 auto;
 }
 [dir="rtl"] .toolbar .toolbar-toggle-orientation .toolbar-icon {

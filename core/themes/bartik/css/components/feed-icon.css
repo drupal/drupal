@@ -4,9 +4,9 @@
  */
 
 .feed-icon {
-  border-bottom: 1px solid transparent;
   display: inline-block;
   padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
 }
 
 .feed-icon:focus,

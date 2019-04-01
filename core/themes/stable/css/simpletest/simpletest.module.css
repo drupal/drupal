@@ -9,8 +9,8 @@ th.simpletest-test-label {
 
 .simpletest-image {
   display: inline-block;
-  cursor: pointer;
   width: 1em;
+  cursor: pointer;
 }
 .simpletest-group-label label {
   display: inline;
@@ -23,12 +23,12 @@ th.simpletest-test-label {
   margin: 0;
 }
 #simpletest-form-table tr td {
-  background-color: white;
   color: #494949;
+  background-color: white;
 }
 #simpletest-form-table tr.simpletest-group td {
-  background-color: #edf5fa;
   color: #494949;
+  background-color: #edf5fa;
 }
 
 table#simpletest-form-table tr.simpletest-group label {
@@ -76,18 +76,18 @@ tr.simpletest-debug.even {
 }
 
 a.simpletest-collapse {
-  height: 0;
-  width: 0;
-  top: -99em;
   position: absolute;
+  top: -99em;
+  width: 0;
+  height: 0;
 }
 a.simpletest-collapse:focus,
 a.simpletest-collapse:hover {
-  font-size: 80%;
-  top: 0;
-  height: auto;
-  width: auto;
-  overflow: visible;
   position: relative;
   z-index: 1000;
+  top: 0;
+  overflow: visible;
+  width: auto;
+  height: auto;
+  font-size: 80%;
 }

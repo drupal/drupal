@@ -4,8 +4,8 @@
 */
 
 .featured-bottom {
-  background: rgba(30, 50, 10, 0.08);
   border-top: 1px solid #e7e7e7;
+  background: rgba(30, 50, 10, 0.08);
 }
 .featured-bottom .region {
   padding: 0 20px;
@@ -13,11 +13,11 @@
 
 @media all and (min-width: 560px) {
   .featured-bottom .region {
-    float: left; /* LTR */
     position: relative;
+    float: left; /* LTR */
     box-sizing: border-box;
-    padding: 20px 15px 30px;
     width: 33%;
+    padding: 20px 15px 30px;
   }
   [dir="rtl"] .featured-bottom .region {
     float: right;
@@ -30,11 +30,11 @@
   }
 }
 .featured-bottom h2 {
-  color: #000;
-  font-size: 1.4em;
   margin-bottom: 0.6em;
-  text-shadow: 0 1px 0 #fff;
   text-align: center;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  font-size: 1.4em;
   line-height: 1em;
 }
 .featured-bottom .block {

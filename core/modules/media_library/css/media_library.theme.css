@@ -208,8 +208,8 @@
  *   template in https://www.drupal.org/project/drupal/issues/3035994
  */
 .media-library-wrapper .view-header {
-  order: 2;
   align-self: flex-end;
+  order: 2;
   margin: 8px 0;
   text-align: right; /* LTR */
 }
@@ -579,8 +579,8 @@
 
 .media-library-add-form__preview {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 220px;
   margin-right: 20px; /* LTR */
   background: #ebebeb;

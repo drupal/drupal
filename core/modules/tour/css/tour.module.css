@@ -14,8 +14,8 @@
 /* Override placement of the tour progress indicator. */
 .tour-progress {
   position: absolute;
-  bottom: 20px;
   right: 20px; /* LTR */
+  bottom: 20px;
 }
 [dir="rtl"] .tour-progress {
   right: auto;
@@ -25,18 +25,18 @@
 /* Default styles for the container */
 .joyride-tip-guide {
   position: absolute;
-  display: none;
-  background: #fff;
-  width: 300px;
   z-index: 101;
   top: 0;
   left: 0;
+  display: none;
+  width: 300px;
+  background: #fff;
 }
 
 @media only screen and (max-width: 767px) {
   .joyride-tip-guide {
-    width: 85%;
     left: 2.5%;
+    width: 85%;
   }
 }
 
@@ -50,9 +50,9 @@
 
 /* Add a little css triangle pip, older browser just miss out on the fanciness of it. */
 .joyride-tip-guide .joyride-nub {
-  display: block;
   position: absolute;
   left: 22px;
+  display: block;
   width: 0;
   height: 0;
 }
@@ -68,23 +68,23 @@
 
 .joyride-tip-guide .joyride-nub.right {
   top: 22px;
+  right: -28px;
   bottom: auto;
   left: auto;
-  right: -28px;
 }
 
 .joyride-tip-guide .joyride-nub.left {
   top: 22px;
-  left: -28px;
   right: auto;
   bottom: auto;
+  left: -28px;
 }
 
 .joyride-tip-guide .joyride-nub.top-right {
   top: -28px;
+  right: 28px;
   bottom: auto;
   left: auto;
-  right: 28px;
 }
 
 .joyride-tip-guide .tour-tip-label {
@@ -96,11 +96,11 @@
 }
 
 .joyride-timer-indicator-wrap {
-  width: 50px;
-  height: 3px;
   position: absolute;
   right: 17px;
   bottom: 16px;
+  width: 50px;
+  height: 3px;
 }
 .joyride-timer-indicator {
   display: block;
@@ -110,23 +110,23 @@
 
 .joyride-close-tip {
   position: absolute;
-  line-height: 1em;
-  right: 20px; /* LTR */
   top: 20px;
+  right: 20px; /* LTR */
+  line-height: 1em;
 }
 [dir="rtl"] .joyride-close-tip {
-  left: 20px;
   right: auto;
+  left: 20px;
 }
 
 .joyride-modal-bg {
   position: fixed;
-  height: 100%;
-  width: 100%;
   z-index: 100;
-  display: none;
   top: 0;
   left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
 }
 

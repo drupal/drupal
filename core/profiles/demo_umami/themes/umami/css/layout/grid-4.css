@@ -20,9 +20,9 @@
 
   .grid--4 .views-row {
     display: flex;
+    flex-basis: calc(50% - 28px);
     flex-grow: 0;
     flex-shrink: 0;
-    flex-basis: calc(50% - 28px);
     margin: 0 14px 28px;
     padding: 0;
   }
@@ -30,16 +30,16 @@
 
 @media screen and (min-width: 60em) {
   .grid--4 .views-row {
+    flex-basis: calc(25% - 28px);
     flex-grow: 0;
     flex-shrink: 0;
-    flex-basis: calc(25% - 28px);
   }
 }
 
 /* 77em == the max width of .container + 1em either side */
 @media screen and (min-width: 77em) {
   .grid--4 .view-content {
-    margin-left: -14px;
     margin-right: -14px;
+    margin-left: -14px;
   }
 }

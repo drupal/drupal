@@ -17,8 +17,8 @@
 }
 [dir="rtl"] .field--label-inline .field__label,
 [dir="rtl"] .field--label-inline .field__items {
-  padding-left: 0.5em;
   padding-right: 0;
+  padding-left: 0.5em;
 }
 .field--label-inline .field__label::after {
   content: ":";

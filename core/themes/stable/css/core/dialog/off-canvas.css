@@ -5,17 +5,17 @@
 
 /* Position the off-canvas dialog container outside the right of the viewport. */
 .ui-dialog-off-canvas {
+  overflow: visible;
   box-sizing: border-box;
   height: 100%;
-  overflow: visible;
 }
 
 /* Wrap the form that's inside the off-canvas dialog. */
 .ui-dialog-off-canvas .ui-dialog-content {
-  padding: 0 20px;
   /* Prevent horizontal scrollbar. */
   overflow-x: hidden;
   overflow-y: auto;
+  padding: 0 20px;
 }
 [dir="rtl"] .ui-dialog-off-canvas .ui-dialog-content {
   text-align: right;
@@ -23,17 +23,17 @@
 
 /* Position the off-canvas dialog container outside the right of the viewport. */
 .ui-dialog-off-canvas {
+  overflow: visible;
   box-sizing: border-box;
   height: 100%;
-  overflow: visible;
 }
 
 /* Wrap the form that's inside the off-canvas dialog. */
 .ui-dialog-off-canvas #drupal-off-canvas {
-  padding: 0 20px 20px;
   /* Prevent horizontal scrollbar. */
   overflow-x: hidden;
   overflow-y: auto;
+  padding: 0 20px 20px;
 }
 [dir="rtl"] .ui-dialog-off-canvas #drupal-off-canvas {
   text-align: right;
@@ -49,7 +49,7 @@
   }
   /* When off-canvas dialog is at 100% width stop the body from scrolling */
   .js-off-canvas-dialog-open {
-    height: 100%;
     overflow-y: hidden;
+    height: 100%;
   }
 }

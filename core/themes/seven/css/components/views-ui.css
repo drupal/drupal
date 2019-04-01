@@ -22,8 +22,8 @@ details.fieldset-no-legend {
  * padding), but it's probably safe to just let it apply everywhere.
  */
 #views-ui-add-form details details .seven-details__wrapper {
-  padding-left: 0;
   padding-right: 0;
+  padding-left: 0;
 }
 
 .views-display-tab details.box-padding .seven-details__wrapper {
@@ -34,16 +34,16 @@ details.fieldset-no-legend {
 .views-ui-dialog input.form-submit,
 .views-admin a.button,
 .views-ui-dialog a.button {
-  margin-bottom: 0;
-  margin-right: 0; /* LTR */
   margin-top: 0;
+  margin-right: 0; /* LTR */
+  margin-bottom: 0;
 }
 [dir="rtl"] .views-admin input.form-submit,
 [dir="rtl"] .views-ui-dialog input.form-submit,
 [dir="rtl"] .views-admin a.button,
 [dir="rtl"] .views-ui-dialog a.button {
-  margin-left: 0;
   margin-right: 1em;
+  margin-left: 0;
 }
 [dir="rtl"] .views-admin input.form-submit:first-child,
 [dir="rtl"] .views-ui-dialog input.form-submit:first-child,
@@ -70,8 +70,8 @@ details.fieldset-no-legend {
 [dir="rtl"] .form-item-options-expose-required,
 [dir="rtl"] .form-item-options-expose-label,
 [dir="rtl"] .form-item-options-expose-description {
-  margin-left: 0;
   margin-right: 1.5em;
+  margin-left: 0;
 }
 
 .views-admin-dependent .form-item .form-item,
@@ -81,14 +81,14 @@ details.fieldset-no-legend {
 .form-item-options-expose-required,
 .form-item-options-expose-label,
 .form-item-options-expose-description {
-  margin-bottom: 6px;
   margin-top: 6px;
+  margin-bottom: 6px;
 }
 
 .views-admin-dependent .form-type-radio,
 .views-admin-dependent .form-radios .form-item {
-  margin-bottom: 2px;
   margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 /* @end */
@@ -131,8 +131,8 @@ details.fieldset-no-legend {
 }
 
 .views-display-top ul.secondary {
-  background-color: transparent;
   float: left; /* LTR */
+  background-color: transparent;
 }
 [dir="rtl"] .views-display-top ul.secondary {
   float: right;
@@ -188,8 +188,8 @@ details.fieldset-no-legend {
 
 .views-displays .secondary .open > a:hover,
 .views-displays .secondary .open > a:focus {
-  background-color: #f1f1f1;
   color: #008bcb;
+  background-color: #f1f1f1;
 }
 
 .views-displays .secondary .action-list li:first-child {
@@ -226,8 +226,8 @@ details.fieldset-no-legend {
   margin-left: 3px; /* LTR */
 }
 [dir="rtl"] .views-ui-display-tab-bucket .links li + li {
-  margin-left: 0;
   margin-right: 3px;
+  margin-left: 0;
 }
 
 /* @end */
@@ -256,13 +256,13 @@ details.fieldset-no-legend {
   border-right: medium none; /* LTR */
 }
 [dir="rtl"] .views-ui-rearrange-filter-form tr td:last-child {
-  border-left: medium none;
   border-right: initial;
+  border-left: medium none;
 }
 
 .views-ui-rearrange-filter-form .filter-group-operator-row {
-  border-left: 1px solid transparent !important;
   border-right: 1px solid transparent !important;
+  border-left: 1px solid transparent !important;
 }
 
 .views-ui-rearrange-filter-form tr.drag td {
@@ -278,8 +278,8 @@ details.fieldset-no-legend {
 /* @group Live preview elements */
 
 .views-query-info pre {
-  margin-bottom: 0;
   margin-top: 0;
+  margin-bottom: 0;
 }
 
 /* @group Query info table */
@@ -295,8 +295,8 @@ details.fieldset-no-legend {
   border-right: 0 none; /* LTR */
 }
 [dir="rtl"] .views-query-info table tr td:last-child {
-  border-left: 0 none;
   border-right: initial;
+  border-left: 0 none;
 }
 
 /* @end */
@@ -318,14 +318,14 @@ details.fieldset-no-legend {
  */
 
 .filterable-option .form-item.form-type-checkbox {
+  padding-top: 4px;
   /* This selector is aggressive because Seven's reset for .form-items is aggressive. */
   padding-bottom: 4px;
   padding-left: 4px; /* LTR */
-  padding-top: 4px;
 }
 [dir="rtl"] .filterable-option .form-item.form-type-checkbox {
-  padding-left: 8px;
   padding-right: 4px;
+  padding-left: 8px;
 }
 
 /* @end */

@@ -4,25 +4,25 @@
  */
 
 .js .dropbutton-widget {
+  overflow: hidden;
+  margin: 0.125em 0;
+  cursor: pointer;
+  text-align: center;
+  color: #3a3a3a;
   border: 1px solid;
   border-color: #e4e4e4 #d2d2d2 #b4b4b4 #d2d2d2;
+  border-radius: 1em;
   background-color: #fff;
   background-image: -webkit-linear-gradient(top, #f3f3f3, #e8e8e8);
   background-image: linear-gradient(to bottom, #f3f3f3, #e8e8e8);
-  color: #3a3a3a;
-  cursor: pointer;
-  text-align: center;
-  margin: 0.125em 0;
-  border-radius: 1em;
-  overflow: hidden;
 }
 .js .dropbutton-widget:hover {
   border-color: #e4e4e4 #d2d2d2 #b4b4b4 #d2d2d2;
 }
 .js .dropbutton-widget .button {
-  border: none;
   margin: 0;
   padding: 0.32em 1em;
+  border: none;
   background: transparent none;
 }
 .js .dropbutton-multiple .dropbutton-widget,
@@ -30,8 +30,8 @@
   padding: 0;
 }
 .js .dropbutton-multiple .dropbutton-widget .dropbutton {
-  padding-right: 2em; /* LTR */
   position: relative;
+  padding-right: 2em; /* LTR */
 }
 .js[dir="rtl"] .dropbutton-multiple .dropbutton-widget .dropbutton {
   padding-right: 0;
@@ -60,6 +60,6 @@
 }
 .js .dropbutton .dropbutton-action:hover,
 .js .dropbutton a:hover {
-  background: #dedede;
   border-bottom: 0 none;
+  background: #dedede;
 }

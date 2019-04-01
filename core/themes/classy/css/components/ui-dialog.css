@@ -9,7 +9,7 @@
 
 @media screen and (max-width: 600px) {
   .ui-dialog--narrow {
-    max-width: 95%;
     min-width: 95%;
+    max-width: 95%;
   }
 }

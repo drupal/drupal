@@ -9,8 +9,8 @@
   margin: 0 auto;
 }
 .color-form .form-item {
-  margin: 0.5em 0;
   height: 2em;
+  margin: 0.5em 0;
   padding: 0.5em;
 }
 .color-form label {
@@ -22,8 +22,8 @@
 .color-form .form-text {
   float: left; /* LTR */
   width: 86%;
-  text-align: center;
   cursor: pointer;
+  text-align: center;
 }
 [dir="rtl"] .color-form .form-text {
   float: right;
@@ -64,18 +64,18 @@
  */
 button.color-palette__lock,
 .color-palette__lock {
-  float: left; /* LTR */
-  width: 20px;
-  height: 19px;
-  background: url(../../images/color/lock.png) no-repeat 50% 0;
-  cursor: pointer;
   position: relative;
   top: -1.7em;
   left: -10px;
-  direction: ltr;
+  float: left; /* LTR */
+  width: 20px;
+  height: 19px;
+  cursor: pointer;
   text-indent: -9999px;
+  direction: ltr;
   border: 0;
   outline: 0;
+  background: url(../../images/color/lock.png) no-repeat 50% 0;
 }
 [dir="rtl"] button.color-palette__lock,
 [dir="rtl"] .color-palette__lock {
@@ -136,8 +136,8 @@ button.is-unlocked,
   display: none;
 }
 .js .color-preview {
-  display: block;
   position: relative;
+  display: block;
   float: left; /* LTR */
 }
 .js[dir="rtl"] .color-preview {

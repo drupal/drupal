@@ -4,19 +4,19 @@
  */
 
 .system-status-counter {
-  box-sizing: border-box;
-  overflow-y: hidden;
-  border: 1px solid #e6e4df;
-  border-radius: 3px;
   display: inline-block;
+  overflow-y: hidden;
+  box-sizing: border-box;
   width: 100%;
   white-space: nowrap;
+  border: 1px solid #e6e4df;
+  border-radius: 3px;
   background: #fcfcfa;
 }
 .system-status-counter__status-icon {
   display: inline-block;
-  height: 60px;
   width: 60px;
+  height: 60px;
   vertical-align: middle;
   border-right: 1px solid #e6e4df; /* LTR */
   border-left: 0; /* LTR */
@@ -29,13 +29,13 @@
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) inset;
 }
 .system-status-counter__status-icon:before {
-  content: "";
-  background-size: 25px;
-  background-position: 50% center;
-  background-repeat: no-repeat;
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
+  content: "";
+  background-repeat: no-repeat;
+  background-position: 50% center;
+  background-size: 25px;
 }
 
 .system-status-counter__status-icon--error:before {
@@ -50,22 +50,22 @@
 
 .system-status-counter__status-title {
   display: inline-block;
+  padding: 0 6px;
   vertical-align: middle;
   text-transform: uppercase;
-  padding: 0 6px;
   font-size: 1rem;
-  line-height: 1em;
   font-weight: bold;
+  line-height: 1em;
 }
 .system-status-counter__title-count {
   display: block;
   margin-bottom: 2px;
 }
 .system-status-counter__details {
+  display: block;
+  text-transform: none;
   font-size: 12px;
   font-weight: normal;
-  text-transform: none;
-  display: block;
   line-height: 1.5;
 }
 
@@ -78,8 +78,8 @@
     width: 65px;
   }
   .system-status-counter__status-title {
-    font-size: 16px;
     padding: 10px 3%;
+    font-size: 16px;
   }
   .system-status-counter__status-icon:before {
     background-size: 35px;

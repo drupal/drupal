@@ -7,10 +7,10 @@
  * Container
  */
 .layout-container {
-  max-width: 860px;
-  margin-left: auto;
-  margin-right: auto;
   box-sizing: border-box;
+  max-width: 860px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 @media all and (min-width: 851px) {
