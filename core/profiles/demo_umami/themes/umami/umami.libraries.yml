@@ -71,11 +71,25 @@ two-columns:
     layout:
       css/layout/layout-2-col.css: {}
 
-
-webfonts:
+webfonts-open-sans:
+  remote: https://fonts.google.com
+  license:
+    name: Apache License, Version 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+    gpl-compatible: false
   css:
     theme:
-      'https://fonts.googleapis.com/css?family=Open+Sans|Scope+One': { type: external, minified: true }
+      'https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i': { type: external, minified: true }
+
+webfonts-scope-one:
+  remote: https://fonts.google.com
+  license:
+    name: SIL Open Font License, Version 1.1
+    url: http://scripts.sil.org/OFL_web
+    gpl-compatible: false
+  css:
+    theme:
+      'https://fonts.googleapis.com/css?family=Scope+One': { type: external, minified: true }
 
 view-mode-card:
   css:

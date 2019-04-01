@@ -39,6 +39,15 @@ body {
   margin: 0;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400;
+}
+
 blockquote {
   background: #f4f2e9;
   margin: 0 0 1.28rem;
@@ -65,7 +74,6 @@ blockquote > * {
   color: #000;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.266rem;
-  font-weight: 400;
   line-height: 1.5;
 }
 blockquote a {
@@ -93,7 +101,6 @@ button,
   text-decoration: none;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.2rem;
-  font-weight: 400;
   transition: background-color 0.5s ease;
   min-width: inherit;
   max-width: inherit;
@@ -126,7 +133,6 @@ button[disabled],
 h1 {
   font-family: "Scope One", Georgia, serif;
   font-size: 1.424rem; /* +3 based on 1.125 modular scale (major second) */
-  font-weight: 400;
   line-height: 1.2;
   margin: 0 0 1.07rem 0;
 }
@@ -140,7 +146,6 @@ h1 {
 h2 {
   font-family: "Scope One", Georgia, serif;
   font-size: 1.266rem;  /* +2 based on 1.125 modular scale (major second) */
-  font-weight: 400;
   line-height: 1.2;
   margin: 0 0 0.7rem 0;
 }
@@ -154,7 +159,6 @@ h2 {
 h3 {
   font-family: "Scope One", Georgia, serif;
   font-size: 1.125rem;/* +1 based on 1.125 modular scale (major second) */
-  font-weight: 400;
   line-height: 1.2;
   margin: 0 0 0.96rem 0;
 }
@@ -168,7 +172,6 @@ h3 {
 h4 {
   font-family: "Scope One", Georgia, serif;
   font-size: 1rem;
-  font-weight: 400;
   line-height: 1.2;
   margin: 0 0 1.28rem 0;
 }
@@ -182,7 +185,6 @@ h4 {
 h5 {
   font-family: "Scope One", Georgia, serif;
   font-size: 0.889rem; /* -1 based on 1.125 modular scale (major second) */
-  font-weight: 700;
   line-height: 1.2;
   margin: 0 0 1.28rem 0;
 }
@@ -190,14 +192,12 @@ h5 {
 @media screen and (min-width: 60rem) { /* 960px */
   h5 {
     font-size: 1.25rem;
-    font-weight: 400;
   }
 }
 
 h6 {
   font-family: "Scope One", Georgia, serif;
   font-size: 0.79rem; /* -1 based on 1.125 modular scale (major second) */
-  font-weight: 700;
   line-height: 1.2;
   margin: 0 0 1.28rem 0;
 }
@@ -205,7 +205,6 @@ h6 {
 @media screen and (min-width: 60rem) { /* 960px */
   h6 {
     font-size: 1rem;
-    font-weight: 400;
   }
 }
 
