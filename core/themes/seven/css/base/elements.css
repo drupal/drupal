@@ -8,8 +8,8 @@ body {
 }
 a,
 .link {
-  color: #0074bd;
   text-decoration: none;
+  color: #0074bd;
 }
 a:hover,
 .link:hover,
@@ -19,16 +19,16 @@ a:focus,
   outline: 0;
 }
 hr {
+  height: 1px;
   margin: 0;
   padding: 0;
   border: none;
-  height: 1px;
   background: #ccc;
 }
 summary,
 .fieldgroup:not(.form-composite) > legend {
-  font-weight: bold;
   text-transform: uppercase;
+  font-weight: bold;
 }
 .simpletest-results-form summary {
   text-transform: none;
@@ -40,40 +40,40 @@ summary,
  */
 h1,
 .heading-a {
-  font-weight: bold;
   margin: 0;
   font-size: 1.625em;
+  font-weight: bold;
   line-height: 1.875em;
 }
 h2,
 .heading-b {
-  font-weight: bold;
   margin: 10px 0;
   font-size: 1.385em;
+  font-weight: bold;
 }
 h3,
 .heading-c {
-  font-weight: bold;
   margin: 10px 0;
   font-size: 1.231em;
+  font-weight: bold;
 }
 h4,
 .heading-d {
-  font-weight: bold;
   margin: 10px 0;
   font-size: 1.154em;
+  font-weight: bold;
 }
 h5,
 .heading-e {
-  font-weight: bold;
   margin: 10px 0;
   font-size: 1.077em;
+  font-weight: bold;
 }
 h6,
 .heading-f {
-  font-weight: bold;
   margin: 10px 0;
   font-size: 1.077em;
+  font-weight: bold;
 }
 p {
   margin: 1em 0;
@@ -83,8 +83,8 @@ dl {
 }
 dl dd,
 dl dl {
-  margin-left: 20px; /* LTR */
   margin-bottom: 10px;
+  margin-left: 20px; /* LTR */
 }
 [dir="rtl"] dl dd,
 [dir="rtl"] dl dl {
@@ -126,26 +126,26 @@ acronym {
   border-bottom: dotted 1px;
 }
 ul {
+  margin: 0.25em 0 0.25em 1.5em; /* LTR */
   list-style-type: disc;
   list-style-image: none;
-  margin: 0.25em 0 0.25em 1.5em; /* LTR */
 }
 [dir="rtl"] ul {
-  margin-left: 0;
   margin-right: 1.5em;
+  margin-left: 0;
 }
 /* This is required to win over specificity of [dir="rtl"] ul */
 [dir="rtl"] .messages__list {
   margin-right: 0;
 }
 ol {
-  list-style-type: decimal;
   margin: 0.25em 0 0.25em 2em; /* LTR */
   padding: 0;
+  list-style-type: decimal;
 }
 [dir="rtl"] ol {
-  margin-left: 0;
   margin-right: 2em;
+  margin-left: 0;
 }
 code {
   margin: 0.5em 0;
@@ -161,8 +161,8 @@ details summary {
   padding: 0.95em 1.45em;
 }
 details summary:focus {
-  outline: none;
   text-decoration: underline;
+  outline: none;
 }
 img {
   max-width: 100%;

@@ -4,10 +4,10 @@
  */
 
 .block-language > .links {
-  list-style: none;
+  display: inline-flex;
   margin: 0;
   padding: 0;
-  display: inline-flex;
+  list-style: none;
 }
 
 .block-language > .links li + li {

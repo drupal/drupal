@@ -10,9 +10,9 @@
   margin: 0 1.5em;
 }
 .layout-container:after {
-  content: "";
   display: table;
   clear: both;
+  content: "";
 }
 
 @media screen and (min-width: 38em) {
@@ -83,8 +83,8 @@ small .admin-link:after {
   font-weight: bold;
 }
 .system-modules td.checkbox {
-  min-width: 25px;
   width: 4%;
+  min-width: 25px;
 }
 .system-modules td.module {
   width: 25%;
@@ -98,45 +98,45 @@ small .admin-link:after {
   font-size: 1.15em;
 }
 .system-modules details {
+  overflow: hidden; /* truncates descriptions if too long */
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: #5c5c5b;
   line-height: 20px;
-  overflow: hidden; /* truncates descriptions if too long */
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .system-modules details[open] {
-  height: auto;
   overflow: visible;
+  height: auto;
   white-space: normal;
 }
 .system-modules details[open] summary .text {
+  text-transform: none;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
-  text-transform: none;
 }
 .system-modules td details a {
   color: #5c5c5b;
   border: 0;
 }
 .system-modules td details {
-  border: 0;
-  margin: 0;
   height: 20px;
+  margin: 0;
+  border: 0;
 }
 .system-modules td details summary {
   padding: 0;
+  cursor: default;
   text-transform: none;
   font-weight: normal;
-  cursor: default;
 }
 .system-modules td {
   padding-left: 0; /* LTR */
 }
 [dir="rtl"] .system-modules td {
-  padding-left: 12px;
   padding-right: 0;
+  padding-left: 12px;
 }
 
 @media screen and (max-width: 40em) {
@@ -148,8 +148,8 @@ small .admin-link:after {
   }
 }
 .system-modules .requirements {
-  padding: 5px 0;
   max-width: 490px;
+  padding: 5px 0;
 }
 .system-modules .links {
   overflow: hidden; /* prevents collapse */
@@ -162,8 +162,8 @@ small .admin-link:after {
 }
 .admin-requirements,
 .admin-required {
-  font-size: 0.9em;
   color: #666;
+  font-size: 0.9em;
 }
 .admin-enabled {
   color: #080;
@@ -173,10 +173,10 @@ small .admin-link:after {
 }
 .module-link {
   display: block;
+  float: left; /* LTR */
+  margin-top: 2px;
   padding: 2px 20px;
   white-space: nowrap;
-  margin-top: 2px;
-  float: left; /* LTR */
 }
 [dir="rtl"] .module-link {
   float: right;
@@ -203,29 +203,29 @@ small .admin-link:after {
 /* Status report. */
 .system-status-report__status-title {
   position: relative;
-  vertical-align: top;
+  box-sizing: border-box;
   width: 100%;
   padding: 10px 6px 10px 40px; /* LTR */
-  box-sizing: border-box;
-  font-weight: normal;
+  vertical-align: top;
   background-color: transparent;
+  font-weight: normal;
 }
 [dir="rtl"] .system-status-report__status-title {
   padding: 10px 40px 10px 6px;
 }
 .system-status-report__status-icon:before {
+  position: absolute;
+  top: 12px;
+  left: 12px; /* LTR */
+  display: block;
+  width: 16px;
+  height: 16px;
   content: "";
   background-repeat: no-repeat;
-  height: 16px;
-  width: 16px;
-  display: block;
-  position: absolute;
-  left: 12px; /* LTR */
-  top: 12px;
 }
 [dir="rtl"] .system-status-report__status-icon:before {
-  left: auto;
   right: 12px;
+  left: auto;
 }
 .system-status-report__status-icon--error:before {
   background-image: url(../../images/core/icons/e32700/error.svg);
@@ -254,8 +254,8 @@ small .admin-link:after {
   margin-bottom: 20px;
 }
 .system-themes-list-uninstalled {
-  border-top: 1px solid #cdcdcd;
   padding-top: 20px;
+  border-top: 1px solid #cdcdcd;
 }
 .system-themes-list__header {
   margin: 0;
@@ -266,12 +266,12 @@ small .admin-link:after {
 }
 .theme-selector .screenshot,
 .theme-selector .no-screenshot {
-  border: 1px solid #e0e0d8;
-  padding: 2px;
-  vertical-align: bottom;
   max-width: 100%;
   height: auto;
+  padding: 2px;
   text-align: center;
+  vertical-align: bottom;
+  border: 1px solid #e0e0d8;
 }
 .theme-default .screenshot {
   border: 1px solid #aaa;
@@ -289,8 +289,8 @@ small .admin-link:after {
   body:not(.toolbar-vertical) .system-themes-list-installed .screenshot,
   body:not(.toolbar-vertical) .system-themes-list-installed .no-screenshot {
     float: left; /* LTR */
-    margin: 0 20px 0 0; /* LTR */
     width: 294px;
+    margin: 0 20px 0 0; /* LTR */
   }
   [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .screenshot,
   [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .no-screenshot {
@@ -301,9 +301,9 @@ small .admin-link:after {
     margin-top: 0;
   }
   body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
+    float: left; /* LTR */
     box-sizing: border-box;
     width: 31.25%;
-    float: left; /* LTR */
     padding: 20px 20px 20px 0; /* LTR */
   }
   [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
@@ -322,8 +322,8 @@ small .admin-link:after {
   .toolbar-vertical .system-themes-list-installed .screenshot,
   .toolbar-vertical .system-themes-list-installed .no-screenshot {
     float: left; /* LTR */
-    margin: 0 20px 0 0; /* LTR */
     width: 294px;
+    margin: 0 20px 0 0; /* LTR */
   }
   [dir="rtl"] .toolbar-vertical .system-themes-list-installed .screenshot,
   [dir="rtl"] .toolbar-vertical .system-themes-list-installed .no-screenshot {
@@ -334,9 +334,9 @@ small .admin-link:after {
     margin-top: 0;
   }
   .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
+    float: left; /* LTR */
     box-sizing: border-box;
     width: 31.25%;
-    float: left; /* LTR */
     padding: 20px 20px 20px 0; /* LTR */
   }
   [dir="rtl"] .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
@@ -368,8 +368,8 @@ small .admin-link:after {
 }
 [dir="rtl"] .theme-selector .operations li {
   float: right;
-  border-left: 1px solid #cdcdcd;
   border-right: none;
+  border-left: 1px solid #cdcdcd;
 }
 .theme-selector .operations li:last-child {
   padding: 0 0 0 0.7em; /* LTR */

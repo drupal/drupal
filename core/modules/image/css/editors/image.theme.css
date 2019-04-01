@@ -4,8 +4,8 @@
  */
 
 .quickedit-image-dropzone {
-  background: rgba(116, 183, 255, 0.8);
   transition: background 0.2s;
+  background: rgba(116, 183, 255, 0.8);
 }
 
 .quickedit-image-icon {
@@ -35,19 +35,19 @@
 
 .quickedit-image-dropzone.loading .quickedit-image-icon::after {
   display: block;
-  content: "";
-  margin-left: -10px;
-  margin-top: -5px;
-  animation-duration: 2s;
-  animation-name: quickedit-image-spin;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
   width: 60px;
   height: 60px;
-  border-style: solid;
-  border-radius: 35px;
+  margin-top: -5px;
+  margin-left: -10px;
+  content: "";
+  animation-name: quickedit-image-spin;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
   border-width: 5px;
+  border-style: solid;
   border-color: white transparent transparent transparent;
+  border-radius: 35px;
 }
 
 @keyframes quickedit-image-spin {
@@ -57,20 +57,20 @@
 }
 
 .quickedit-image-text {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   text-align: center;
   color: white;
   font-family: "Droid sans", "Lucida Grande", sans-serif;
   font-size: 16px;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
 }
 
 .quickedit-image-field-info {
-  background: rgba(0, 0, 0, 0.05);
-  border-top: 1px solid #c5c5c5;
   padding: 5px;
+  border-top: 1px solid #c5c5c5;
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .quickedit-image-field-info div {
@@ -82,8 +82,8 @@
 }
 
 [dir="rtl"] .quickedit-image-field-info div {
-  margin-left: 10px;
   margin-right: 0;
+  margin-left: 10px;
 }
 
 [dir="rtl"] .quickedit-image-field-info div:last-child {

@@ -6,9 +6,9 @@
 .node-preview-container {
   position: fixed;
   z-index: 499;
+  box-sizing: border-box;
   width: 100%;
   padding: 10px;
-  box-sizing: border-box;
 }
 
 @media only screen and (min-width: 36em) {

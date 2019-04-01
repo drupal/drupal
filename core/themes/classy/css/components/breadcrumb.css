@@ -16,9 +16,9 @@
 }
 .breadcrumb li {
   display: inline;
-  list-style-type: none;
   margin: 0;
   padding: 0;
+  list-style-type: none;
 }
 /* IE8 does not support :not() and :last-child. */
 .breadcrumb li:before {

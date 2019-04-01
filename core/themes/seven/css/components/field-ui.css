@@ -23,6 +23,6 @@
   margin-left: 1em; /* LTR */
 }
 [dir="rtl"] #field-display-overview .form-item-fields-field-image-settings-edit-form-settings-image-style .description {
-  margin-left: 0;
   margin-right: 1em;
+  margin-left: 0;
 }

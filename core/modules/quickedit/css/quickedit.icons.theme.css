@@ -4,9 +4,9 @@
  */
 
 .quickedit .icon {
-  min-height: 1em;
-  min-width: 2.5em;
   position: relative;
+  min-width: 2.5em;
+  min-height: 1em;
 }
 .quickedit .icon.icon-only {
   text-indent: -9999px;
@@ -15,34 +15,34 @@
   padding-right: 2.5em; /* LTR */
 }
 [dir="rtl"] .quickedit .icon.icon-end {
-  padding-left: 2.5em;
   padding-right: 0;
+  padding-left: 2.5em;
 }
 .quickedit .icon:before {
-  background-attachment: scroll;
-  background-color: transparent;
-  background-position: center center;
-  background-repeat: no-repeat;
-  content: "";
-  display: block;
-  height: 100%;
-  left: 0; /* LTR */
   position: absolute;
   top: 0;
+  left: 0; /* LTR */
+  display: block;
   width: 100%;
+  height: 100%;
+  content: "";
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
 }
 [dir="rtl"] .quickedit .icon:before {
-  left: auto;
   right: 0;
+  left: auto;
 }
 .quickedit .icon-end:before {
-  left: auto; /* LTR */
   right: 0.5em; /* LTR */
+  left: auto; /* LTR */
   width: 18px;
 }
 [dir="rtl"] .quickedit .icon-end:before {
-  left: 0.5em;
   right: auto;
+  left: 0.5em;
 }
 .quickedit button.icon {
   font-size: 1em;
@@ -56,9 +56,9 @@
  * Images.
  */
 .quickedit .icon-close:before {
-  background-image: url(../../../misc/icons/787878/ex.svg);
-  height: 12px;
   top: 10px;
+  height: 12px;
+  background-image: url(../../../misc/icons/787878/ex.svg);
 }
 .quickedit .icon-close:hover:before,
 .quickedit .icon-close:active:before {

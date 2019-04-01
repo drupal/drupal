@@ -41,6 +41,6 @@
 .block-views-blockrecipe-collections-block .views-row a:focus,
 .block-views-blockrecipe-collections-block .views-row a:hover {
   text-decoration: underline;
-  background: transparent;
   outline-color: #fff;
+  background: transparent;
 }

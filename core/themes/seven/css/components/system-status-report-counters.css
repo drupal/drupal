@@ -4,8 +4,8 @@
  */
 
 .system-status-report-counters__item {
-  margin: 10px 0;
   width: 100%;
+  margin: 10px 0;
 }
 
 @media screen and (min-width: 60em) {
@@ -13,8 +13,8 @@
     margin-bottom: 20px;
   }
   .system-status-report-counters {
-    flex-wrap: wrap;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
   }
   .system-status-report-counters__item--half-width {

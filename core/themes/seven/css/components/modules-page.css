@@ -4,14 +4,14 @@
   border-top: 1px solid #ccc;
 }
 .system-modules .seven-details {
-  background: none;
-  border: 0;
   margin: 0;
   padding: 0;
+  border: 0;
+  background: none;
 }
 .system-modules .seven-details__summary {
-  border-bottom: 1px solid #ccc;
   padding: 0.95em 0.5em;
+  border-bottom: 1px solid #ccc;
 }
 .system-modules [open] .seven-details__summary {
   border-bottom: none;
@@ -30,9 +30,9 @@
 .system-modules tr.odd,
 .locale-translation-status-form tr.even,
 .locale-translation-status-form tr.odd {
-  background: #f3f4ee;
   border: 0;
   border-bottom: 10px solid #fff;
+  background: #f3f4ee;
 }
 .system-modules tr td:last-child,
 .locale-translation-status-form tr td:last-child {

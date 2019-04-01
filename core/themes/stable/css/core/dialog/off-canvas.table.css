@@ -12,10 +12,10 @@
   min-width: calc(100% + 40px);
   /* Cancel out the padding of the parent to make the table full width. */
   margin: 0 -20px -10px -20px;
+  color: #ddd;
   border: 0;
   border-collapse: collapse;
   font-size: 12px;
-  color: #ddd;
 }
 #drupal-off-canvas table thead {
   display: table-header-group;
@@ -33,8 +33,8 @@
 #drupal-off-canvas td,
 #drupal-off-canvas th {
   display: table-cell;
-  height: auto;
   width: auto;
+  height: auto;
   padding: 2px 8px;
   vertical-align: middle;
   border-bottom: 1px solid #777;
@@ -64,8 +64,8 @@
 }
 /* For lack of a better class, using this to grab the operations th. */
 #drupal-off-canvas .tabledrag-has-colspan {
-  text-align: right;
   padding-right: 20px;
+  text-align: right;
 }
 #drupal-off-canvas td {
   padding: 6px 8px;
@@ -75,8 +75,8 @@
 #drupal-off-canvas td a {
   display: block;
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  text-overflow: ellipsis;
   background: transparent;
 }
 #drupal-off-canvas tr td:first-child,

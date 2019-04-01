@@ -18,9 +18,9 @@
 
 @media screen and (min-width: 60rem) {
   .block-type-footer-promo-block {
+    overflow: hidden;
     flex-basis: 60%;
     height: 200px;
-    overflow: hidden;
     font-size: 0.9rem;
   }
 

@@ -6,6 +6,7 @@
  * .maintenance-page styling.
  */
 .install-page {
+  min-height: 100%;
   background-color: #1275b2;
   background-image:
     url(../../images/noise-low.png),
@@ -15,7 +16,6 @@
     radial-gradient(hsl(203, 80%, 45%), hsl(203, 80%, 32%));
   background-repeat: repeat;
   background-position: left top, 50% 50%; /* LTR */
-  min-height: 100%;
 }
 [dir="rtl"] .install-page {
   background-position: right top, 50% 50%;
@@ -38,8 +38,8 @@
 
 .install-page .site-version {
   vertical-align: super;
-  font-size: 0.5em;
   color: #595959;
+  font-size: 0.5em;
 }
 
 @media all and (max-width: 1010px) and (min-width: 48em) {

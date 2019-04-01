@@ -7,9 +7,9 @@
  */
 
 details {
-  border: 1px solid #ccc;
   margin-top: 1em;
   margin-bottom: 1em;
+  border: 1px solid #ccc;
 }
 details > .details-wrapper {
   padding: 0.5em 1.5em;
@@ -18,6 +18,6 @@ details > .details-wrapper {
      vertically aligned with the .details-wrapper in browsers without native
      details support. */
 summary {
-  cursor: pointer;
   padding: 0.2em 0.5em;
+  cursor: pointer;
 }

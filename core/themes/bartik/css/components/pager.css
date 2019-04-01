@@ -9,8 +9,8 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .pager__item {
-  font-size: 0.929em;
   padding: 10px 15px;
+  font-size: 0.929em;
 }
 .pager__item a {
   display: inline-block;
@@ -25,8 +25,8 @@
 }
 [dir="rtl"] .pager__item--first,
 [dir="rtl"] .pager__item--previous {
-  padding-left: 10px;
   padding-right: 0;
+  padding-left: 10px;
 }
 .pager__item--ellipsis {
   padding: 10px 0;
@@ -37,6 +37,6 @@
 }
 [dir="rtl"] .pager__item--last,
 [dir="rtl"] .pager__item--next {
-  padding-left: 0;
   padding-right: 10px;
+  padding-left: 0;
 }

@@ -3,8 +3,8 @@
  * Theme styles for the content_moderation module.
  */
 .entity-moderation-form {
-  border: 1px dashed #bbb;
   margin: 2em 0;
-  background: #fff;
   padding-left: 1em;
+  border: 1px dashed #bbb;
+  background: #fff;
 }

@@ -7,44 +7,44 @@
   display: inline;
 }
 .image-style-preview .preview-image-wrapper {
+  top: 50%;
   float: left;
+  width: 48%;
   padding-bottom: 2em;
   text-align: center;
-  top: 50%;
-  width: 48%;
 }
 .image-style-preview .preview-image {
-  margin: auto;
   position: relative;
+  margin: auto;
 }
 .image-style-preview .preview-image .width {
+  position: absolute;
+  bottom: -6px;
+  left: -1px;
+  box-sizing: content-box;
+  height: 2px;
   border: 1px solid #666;
   border-top: none;
-  bottom: -6px;
-  height: 2px;
-  left: -1px;
-  position: absolute;
-  box-sizing: content-box;
 }
 .image-style-preview .preview-image .width span {
   position: relative;
   top: 4px;
 }
 .image-style-preview .preview-image .height {
+  position: absolute;
+  top: -1px;
+  right: -6px;
+  box-sizing: content-box;
+  width: 2px;
   border: 1px solid #666;
   border-left: none;
-  position: absolute;
-  right: -6px;
-  top: -1px;
-  width: 2px;
-  box-sizing: content-box;
 }
 .image-style-preview .preview-image .height span {
-  height: 2em;
-  left: 10px;
-  margin-top: -1em;
   position: absolute;
   top: 50%;
+  left: 10px;
+  height: 2em;
+  margin-top: -1em;
 }
 
 /**

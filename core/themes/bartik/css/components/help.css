@@ -4,7 +4,7 @@
  */
 
 .block-help {
-  border: 1px solid #d3d7d9;
-  padding: 0 1.5em;
   margin-bottom: 30px;
+  padding: 0 1.5em;
+  border: 1px solid #d3d7d9;
 }

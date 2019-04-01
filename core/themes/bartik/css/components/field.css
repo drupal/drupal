@@ -8,13 +8,13 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .field--type-entity-reference .field__label {
-  font-weight: normal;
   margin: 0;
   padding-right: 5px; /* LTR */
+  font-weight: normal;
 }
 [dir="rtl"] .field--type-entity-reference .field__label {
-  padding-left: 5px;
   padding-right: 0;
+  padding-left: 5px;
 }
 .field--type-entity-reference .field__label,
 .field--type-entity-reference ul.links {
@@ -25,8 +25,8 @@
   font-size: 0.821em;
 }
 .field--type-entity-reference ul.links {
-  padding: 0;
   margin: 0;
+  padding: 0;
   list-style: none;
 }
 /* This is required to win over specificity of [dir="rtl"] .region-content ul */
@@ -39,8 +39,8 @@
   white-space: nowrap;
 }
 [dir="rtl"] .field--type-entity-reference ul.links li {
-  padding: 0 0 0 1em;
   float: right;
+  padding: 0 0 0 1em;
 }
 
 @media all and (min-width: 560px) {
@@ -68,13 +68,13 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .field--name-field-tags .field__label {
-  font-weight: normal;
   margin: 0;
   padding-right: 5px; /* LTR */
+  font-weight: normal;
 }
 [dir="rtl"] .field--name-field-tags .field__label {
-  padding-left: 5px;
   padding-right: 0;
+  padding-left: 5px;
 }
 .field--name-field-tags .field__label,
 .field--name-field-tags ul.links {
@@ -85,8 +85,8 @@
   font-size: 0.821em;
 }
 .field--name-field-tags ul.links {
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 .field--name-field-tags ul.links li {
   float: left; /* LTR */
@@ -94,6 +94,6 @@
   white-space: nowrap;
 }
 [dir="rtl"] .field--name-field-tags ul.links li {
-  padding: 0 0 0 1em;
   float: right;
+  padding: 0 0 0 1em;
 }

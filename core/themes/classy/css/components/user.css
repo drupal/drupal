@@ -9,9 +9,9 @@
   background-color: #ebeae4;
 }
 .password-strength__indicator {
-  background-color: #77b259;
   -webkit-transition: width 0.5s ease-out;
   transition: width 0.5s ease-out;
+  background-color: #77b259;
 }
 .password-strength__indicator.is-weak {
   background-color: #e62600;
@@ -34,9 +34,9 @@
 }
 
 .password-suggestions {
-  padding: 0.2em 0.5em;
-  margin: 0.7em 0;
   max-width: 34.7em;
+  margin: 0.7em 0;
+  padding: 0.2em 0.5em;
   border: 1px solid #b4b4b4;
 }
 .password-suggestions ul {
@@ -46,9 +46,9 @@
 .confirm-parent,
 .password-parent {
   clear: left; /* LTR */
-  margin: 0;
-  max-width: 33em;
   overflow: hidden;
+  max-width: 33em;
+  margin: 0;
 }
 [dir="rtl"] .confirm-parent,
 [dir="rtl"] .password-parent {

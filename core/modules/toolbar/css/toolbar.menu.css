@@ -3,15 +3,15 @@
  */
 .toolbar .toolbar-menu,
 [dir="rtl"] .toolbar .toolbar-menu {
-  list-style: none;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 .toolbar .toolbar-box {
-  display: block;
-  line-height: 1em; /* this prevents the value "normal" from being returned as the line-height */
   position: relative;
+  display: block;
   width: auto;
+  line-height: 1em; /* this prevents the value "normal" from being returned as the line-height */
 }
 
 /**
@@ -40,8 +40,8 @@
   margin-right: 3em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-handle + a {
-  margin-left: 3em;
   margin-right: 0;
+  margin-left: 3em;
 }
 .toolbar .toolbar-tray .menu-item--active-trail > .toolbar-box a,
 .toolbar .toolbar-tray a.is-active {
@@ -60,39 +60,39 @@
  * Items.
  */
 .toolbar .level-2 > ul {
-  background-color: #fafafa;
-  border-bottom-color: #ccc;
   border-top-color: #e5e5e5;
+  border-bottom-color: #ccc;
+  background-color: #fafafa;
 }
 .toolbar .level-3 > ul {
-  background-color: #f5f5f5;
-  border-bottom-color: #c5c5c5;
   border-top-color: #ddd;
+  border-bottom-color: #c5c5c5;
+  background-color: #f5f5f5;
 }
 .toolbar .level-4 > ul {
-  background-color: #eee;
-  border-bottom-color: #bbb;
   border-top-color: #d5d5d5;
+  border-bottom-color: #bbb;
+  background-color: #eee;
 }
 .toolbar .level-5 > ul {
-  background-color: #e5e5e5;
-  border-bottom-color: #b5b5b5;
   border-top-color: #ccc;
+  border-bottom-color: #b5b5b5;
+  background-color: #e5e5e5;
 }
 .toolbar .level-6 > ul {
-  background-color: #eee;
-  border-bottom-color: #aaa;
   border-top-color: #c5c5c5;
+  border-bottom-color: #aaa;
+  background-color: #eee;
 }
 .toolbar .level-7 > ul {
-  background-color: #fafafa;
-  border-bottom-color: #b5b5b5;
   border-top-color: #ccc;
+  border-bottom-color: #b5b5b5;
+  background-color: #fafafa;
 }
 .toolbar .level-8 > ul {
-  background-color: #ddd;
-  border-bottom-color: #ccc;
   border-top-color: #ddd;
+  border-bottom-color: #ccc;
+  background-color: #ddd;
 }
 
 /**
@@ -102,17 +102,17 @@
   cursor: pointer;
 }
 .toolbar .toolbar-icon.toolbar-handle {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0; /* LTR */
   bottom: 0;
   display: block;
   height: 100%;
   padding: 0;
-  position: absolute;
-  right: 0; /* LTR */
-  top: 0;
-  z-index: 1;
 }
 [dir="rtl"] .toolbar .toolbar-icon.toolbar-handle {
+  right: auto;
   left: 0;
   padding: 0;
-  right: auto;
 }

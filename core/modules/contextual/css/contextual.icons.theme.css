@@ -18,15 +18,15 @@
  * Contextual trigger.
  */
 .contextual .trigger {
-  background-image: url(../../../misc/icons/bebebe/pencil.svg);
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: 16px 16px;
-  /* Override the .focusable height: auto */
-  height: 26px !important;
   /* Override the .focusable height: auto */
   width: 26px !important;
+  /* Override the .focusable height: auto */
+  height: 26px !important;
   text-indent: -9999px;
+  background-image: url(../../../misc/icons/bebebe/pencil.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 16px 16px;
 }
 
 .contextual .trigger:hover {
@@ -34,6 +34,6 @@
 }
 
 .contextual .trigger:focus {
-  background-image: url(../../../misc/icons/5181c6/pencil.svg);
   outline: none;
+  background-image: url(../../../misc/icons/5181c6/pencil.svg);
 }

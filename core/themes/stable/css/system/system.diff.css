@@ -2,20 +2,20 @@
  * Traditional split diff theming
  */
 table.diff {
-  border-spacing: 4px;
-  margin-bottom: 20px;
   width: 100%;
+  margin-bottom: 20px;
+  border-spacing: 4px;
 }
 table.diff .diff-context {
   background-color: #fafafa;
 }
 table.diff .diff-deletedline {
-  background-color: #ffa;
   width: 50%;
+  background-color: #ffa;
 }
 table.diff .diff-addedline {
-  background-color: #afa;
   width: 50%;
+  background-color: #afa;
 }
 table.diff .diffchange {
   color: #f00;

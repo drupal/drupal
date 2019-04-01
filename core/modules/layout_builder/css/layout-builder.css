@@ -1,30 +1,30 @@
 .layout-builder {
-  background-color: #fff;
-  border: 3px solid #2f91da;
   padding: 1.5em 1.5em 0.5em;
+  border: 3px solid #2f91da;
+  background-color: #fff;
 }
 
 .layout-builder__add-section {
-  background-color: #f7f7f7;
   width: 100%;
-  outline: 2px dashed #979797;
+  margin-bottom: 1.5em;
   padding: 1.5em 0;
   text-align: center;
-  margin-bottom: 1.5em;
+  outline: 2px dashed #979797;
+  background-color: #f7f7f7;
 }
 
 .layout-builder__link--add {
+  padding-left: 24px;
   color: #686868;
   border-bottom: none;
-  padding-left: 24px;
   background: url(../../../misc/icons/686868/plus.svg) transparent top left / 16px 16px no-repeat;
 }
 
 .layout-builder__link--add:hover,
 .layout-builder__link--add:active,
 .layout-builder__link--add:focus {
-  border-bottom-style: none;
   color: #000;
+  border-bottom-style: none;
 }
 
 .layout-builder__section {
@@ -32,15 +32,15 @@
 }
 
 .layout-builder__section .ui-sortable-helper {
-  background-color: #fff;
   outline: 2px solid #f7f7f7;
+  background-color: #fff;
 }
 
 .layout-builder__section .ui-state-drop {
-  background-color: #ffd;
-  outline: 2px dashed #fedb60;
   margin: 20px;
   padding: 30px;
+  outline: 2px dashed #fedb60;
+  background-color: #ffd;
 }
 
 .layout-builder__region {
@@ -48,27 +48,27 @@
 }
 
 .layout-builder__add-block {
-  background-color: #eff6fc;
   padding: 1.5em 0;
   text-align: center;
+  background-color: #eff6fc;
 }
 
 .layout-builder__link--remove {
   position: relative;
-  background: url(../../../misc/icons/bebebe/ex.svg) #fff center center / 16px 16px no-repeat;
-  border: 1px solid #ccc;
+  z-index: 2;
+  display: inline-block;
   box-sizing: border-box;
-  font-size: 1rem;
-  padding: 0;
-  height: 26px;
   width: 26px;
+  height: 26px;
+  margin-right: 6px;
+  margin-left: -10px;
+  padding: 0;
   white-space: nowrap;
   text-indent: -9999px;
-  display: inline-block;
+  border: 1px solid #ccc;
   border-radius: 26px;
-  margin-left: -10px;
-  margin-right: 6px;
-  z-index: 2;
+  background: url(../../../misc/icons/bebebe/ex.svg) #fff center center / 16px 16px no-repeat;
+  font-size: 1rem;
 }
 
 .layout-builder__link--remove:hover {
@@ -103,14 +103,14 @@
 
 .layout-builder-block__content-preview-placeholder-label {
   margin: 0;
-  line-height: 1.4;
-  font-size: 1.429em;
   text-align: center;
+  font-size: 1.429em;
+  line-height: 1.4;
 }
 
 .layout-builder--content-preview-disabled .layout-builder-block {
-  border-bottom: 2px dashed #979797;
   margin: 0;
+  border-bottom: 2px dashed #979797;
 }
 
 #drupal-off-canvas .layout-selection li {
@@ -127,10 +127,10 @@
   display: block;
   padding: 24px;
   padding-left: 44px;
-  font-size: 16px;
   color: #eee;
   border-bottom: 1px solid #333;
   background: url(../../../misc/icons/bebebe/plus.svg) transparent 16px no-repeat;
+  font-size: 16px;
 }
 
 #drupal-off-canvas .inline-block-create-button,
@@ -160,9 +160,9 @@
 .layout-builder__layout.is-layout-builder-highlighted,
 .layout-builder-block.is-layout-builder-highlighted,
 .layout-builder__add-block.is-layout-builder-highlighted {
-  margin: -4px -2px;
   position: relative;
   z-index: 1;
+  margin: -4px -2px;
 }
 .layout-builder__add-block.is-layout-builder-highlighted,
 .layout-builder__add-section.is-layout-builder-highlighted,
@@ -174,8 +174,8 @@
 
 /* Highlight the active block in the Move Block dialog. */
 #drupal-off-canvas .layout-builder-components-table__block-label--current {
-  border-left: solid 5px;
   padding-left: 17px;
+  border-left: solid 5px;
 }
 
 /**

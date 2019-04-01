@@ -8,9 +8,9 @@
 
 .footer {
   padding: 2rem 1rem;
-  background-color: #5f635d;
-  color: #fff;
   text-align: center;
+  color: #fff;
+  background-color: #5f635d;
   font-size: 0.9rem;
 }
 
@@ -29,14 +29,14 @@
 }
 
 .footer a {
-  background-color: inherit;
   color: #fff;
+  background-color: inherit;
   font-weight: 400;
 }
 
 .footer a:active,
 .footer a:focus,
 .footer a:hover {
-  background-color: #000;
   outline-color: #fff;
+  background-color: #000;
 }

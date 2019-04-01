@@ -13,23 +13,23 @@
 }
 
 .menu-footer__item {
-  list-style: none;
   margin-bottom: 0.5em;
+  list-style: none;
 }
 
 .menu-footer .menu-footer__link {
-  background-color: inherit;
-  color: #fff;
-  font-weight: 700;
   text-decoration: none;
+  color: #fff;
+  background-color: inherit;
+  font-weight: 700;
 }
 
 .menu-footer .menu-footer__link:active,
 .menu-footer .menu-footer__link:focus,
 .menu-footer .menu-footer__link:hover {
-  background-color: #000;
-  outline-color: #fff;
   text-decoration: underline;
+  outline-color: #fff;
+  background-color: #000;
 }
 
 @media screen and (min-width: 60rem) {

@@ -4,35 +4,35 @@
   clear: both;
 }
 .region-primary-menu .menu {
-  font-size: 0.929em;
   margin: 0 5px;
   padding: 0;
   text-align: left; /* LTR */
+  font-size: 0.929em;
 }
 [dir="rtl"] .region-primary-menu .menu {
-  text-align: right;
-  margin-left: 5px; /* This is required to win over specificity of [dir="rtl"] ul.menu */
   margin-right: 5px; /* This is required to win over specificity of [dir="rtl"] ul.menu */
+  margin-left: 5px; /* This is required to win over specificity of [dir="rtl"] ul.menu */
+  text-align: right;
 }
 .region-primary-menu .menu-item {
   float: none;
-  list-style: none;
+  width: 100%;
+  height: auto;
   margin: 0;
   padding: 0;
-  height: auto;
-  width: 100%;
+  list-style: none;
 }
 .region-primary-menu .menu a {
-  color: #333;
-  background: #ccc;
-  background: rgba(255, 255, 255, 0.7);
-  float: none;
   display: block;
-  text-decoration: none;
-  text-shadow: 0 1px #eee;
-  border-radius: 8px;
+  float: none;
   margin: 4px 0;
   padding: 0.9em 0 0.9em 10px; /* LTR */
+  text-decoration: none;
+  color: #333;
+  border-radius: 8px;
+  background: #ccc;
+  background: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px #eee;
 }
 [dir="rtl"] .region-primary-menu .menu a {
   padding: 0.9em 10px 0.9em 0;
@@ -58,34 +58,34 @@
 }
 /* Unhide it for the primary menu. */
 .region-primary-menu .menu-toggle-target {
-  display: inherit;
   position: fixed;
   top: 0;
+  display: inherit;
 }
 .region-primary-menu .menu-toggle {
   display: none;
 }
 body:not(:target) .region-primary-menu .menu-toggle {
+  z-index: 1000;
+  display: block;
+  float: none;
+  padding: 0.9em 10px 0.9em 10px;
+  text-decoration: none;
   color: #333;
   background: #ccc;
   background: rgba(255, 255, 255, 0.7);
-  float: none;
-  font-size: 0.929em;
-  display: block;
-  text-decoration: none;
   text-shadow: 0 1px #eee;
-  padding: 0.9em 10px 0.9em 10px;
-  z-index: 1000;
+  font-size: 0.929em;
 }
 body:not(:target) .region-primary-menu .menu-toggle:after {
+  position: absolute;
+  right: 10px; /* LTR */
+  display: inline-block;
+  width: 22px;
+  height: 22px;
   content: "";
   background: url(../../../../misc/icons/ffffff/hamburger.svg) no-repeat;
   background-size: contain;
-  width: 22px;
-  height: 22px;
-  display: inline-block;
-  position: absolute;
-  right: 10px; /* LTR */
 }
 [dir="rtl"] body:not(:target) .region-primary-menu .menu-toggle:after {
   right: initial;
@@ -100,12 +100,12 @@ body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu-t
 }
 
 body:not(:target) .region-primary-menu .menu-item {
-  height: 0;
   overflow: hidden;
+  height: 0;
 }
 body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu .menu-item {
-  height: auto;
   overflow: visible;
+  height: auto;
 }
 
 /**
@@ -123,33 +123,33 @@ body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu .
   }
   .region-primary-menu .menu-item,
   body:not(:target) .region-primary-menu .menu-item {
-    float: left; /* LTR */
-    margin-right: 5px; /* LTR */
-    padding: 0;
     display: inline-block;
+    float: left; /* LTR */
+    overflow: visible;
     width: 32.75%;
     height: auto;
-    overflow: visible;
+    margin-right: 5px; /* LTR */
+    padding: 0;
   }
   [dir="rtl"] .region-primary-menu .menu-item,
   [dir="rtl"] body:not(:target) .region-primary-menu .menu-item {
     float: right;
-    margin-left: 5px;
     margin-right: 0;
+    margin-left: 5px;
   }
   .region-primary-menu .menu-item:nth-child(3n) {
     margin-right: -5px; /* LTR */
   }
   [dir="rtl"] .region-primary-menu .menu-item:nth-child(3n) {
-    margin-left: -5px;
     margin-right: 0;
+    margin-left: -5px;
   }
   .region-primary-menu .menu a {
-    float: none;
     display: block;
-    border-radius: 8px;
+    float: none;
     margin-bottom: 5px;
     padding: 0.9em 5px;
+    border-radius: 8px;
   }
   /* This is required to win over specificity of the global [dir="rtl"] .region-primary-menu .menu a */
   [dir="rtl"] .region-primary-menu .menu a {
@@ -162,19 +162,19 @@ body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu .
 
 @media all and (min-width: 901px) {
   .region-primary-menu .block-menu .menu {
-    font-size: 0.929em;
     margin: 0;
     padding: 0 15px;
+    font-size: 0.929em;
   }
   .region-primary-menu .menu-item,
   body:not(:target) .region-primary-menu .menu-item {
     float: left; /* LTR */
-    list-style: none;
-    padding: 0 1px;
-    margin: 0 1px;
+    overflow: visible;
     width: auto;
     height: auto;
-    overflow: visible;
+    margin: 0 1px;
+    padding: 0 1px;
+    list-style: none;
   }
   [dir="rtl"] .region-primary-menu .menu-item,
   [dir="rtl"] body:not(:target) .region-primary-menu .menu-item {
@@ -182,10 +182,10 @@ body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu .
   }
   .region-primary-menu .menu a {
     float: left; /* LTR */
-    padding: 0.7em 0.8em;
     margin-bottom: 0;
-    border-bottom-left-radius: 0;
+    padding: 0.7em 0.8em;
     border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
   }
   [dir="rtl"] .region-primary-menu .menu a {
     float: right;

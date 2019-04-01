@@ -8,21 +8,21 @@
   border: 1px solid #ccc;
 }
 [dir="rtl"] .vertical-tabs {
-  margin-left: 0;
   margin-right: 15em;
+  margin-left: 0;
 }
 .vertical-tabs__menu {
   float: left; /* LTR */
   width: 15em;
   margin: -1px 0 -1px -15em; /* LTR */
   padding: 0;
-  border-top: 1px solid #ccc;
   list-style: none;
+  border-top: 1px solid #ccc;
 }
 [dir="rtl"] .vertical-tabs__menu {
   float: right;
-  margin-left: 0;
   margin-right: -15em;
+  margin-left: 0;
 }
 .vertical-tabs__pane {
   margin: 0;
@@ -56,8 +56,8 @@
   background-color: #fff;
 }
 [dir="rtl"] .vertical-tabs__menu-item.is-selected {
-  border-left-width: 0;
   border-right-width: 1px;
+  border-left-width: 0;
 }
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-item-title {
   color: #000;

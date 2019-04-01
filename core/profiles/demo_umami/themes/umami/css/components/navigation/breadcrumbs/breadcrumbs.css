@@ -11,7 +11,7 @@
 /* Large */
 @media screen and (min-width: 60rem) { /* 960px */
   .breadcrumb {
-    padding-left: 2.37rem;
     padding-right: 2.37rem;
+    padding-left: 2.37rem;
   }
 }

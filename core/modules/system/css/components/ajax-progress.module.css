@@ -11,9 +11,9 @@
   float: right;
 }
 .ajax-progress-throbber .throbber {
-  background: transparent url(../../../../misc/throbber-active.gif) no-repeat 0 center;
   display: inline;
   padding: 1px 5px 2px;
+  background: transparent url(../../../../misc/throbber-active.gif) no-repeat 0 center;
 }
 .ajax-progress-throbber .message {
   display: inline;
@@ -28,22 +28,22 @@ tr .ajax-progress-throbber .throbber {
 
 /* Full screen throbber */
 .ajax-progress-fullscreen {
+  position: fixed;
+  z-index: 1000;
+  top: 48.5%;
   /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
   left: 49%; /* LTR */
-  position: fixed;
-  top: 48.5%;
-  z-index: 1000;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  opacity: 0.9;
+  border-radius: 7px;
   background-color: #232323;
   background-image: url(../../../../misc/loading-small.gif);
-  background-position: center center;
   background-repeat: no-repeat;
-  border-radius: 7px;
-  height: 24px;
-  opacity: 0.9;
-  padding: 4px;
-  width: 24px;
+  background-position: center center;
 }
 [dir="rtl"] .ajax-progress-fullscreen {
-  left: auto;
   right: 49%;
+  left: auto;
 }

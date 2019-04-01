@@ -9,8 +9,8 @@
 }
 [dir="rtl"] .exposed-filters .filters {
   float: right;
-  margin-left: 1em;
   margin-right: 0;
+  margin-left: 1em;
 }
 .exposed-filters .form-item {
   margin: 0 0 0.1em 0;
@@ -18,8 +18,8 @@
 }
 .exposed-filters .form-item label {
   float: left; /* LTR */
-  font-weight: normal;
   width: 10em;
+  font-weight: normal;
 }
 [dir="rtl"] .exposed-filters .form-item label {
   float: right;
@@ -32,8 +32,8 @@
   margin-bottom: 1em;
 }
 .exposed-filters .current-filters .placeholder {
-  font-style: normal;
   font-weight: bold;
+  font-style: normal;
 }
 .exposed-filters .additional-filters {
   float: left; /* LTR */
@@ -41,6 +41,6 @@
 }
 [dir="rtl"] .exposed-filters .additional-filters {
   float: right;
-  margin-left: 1em;
   margin-right: 0;
+  margin-left: 1em;
 }

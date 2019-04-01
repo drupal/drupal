@@ -7,17 +7,17 @@ div.tabs {
   margin: 1em 0;
 }
 ul.tabs {
-  list-style: none;
   margin: 0 0 0.5em;
   padding: 0;
+  list-style: none;
 }
 .tabs > li {
   display: inline-block;
   margin-right: 0.3em; /* LTR */
 }
 [dir="rtl"] .tabs > li {
-  margin-left: 0.3em;
   margin-right: 0;
+  margin-left: 0.3em;
 }
 .tabs a {
   display: block;

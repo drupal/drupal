@@ -7,15 +7,15 @@
   resize: none;
 }
 .resize-vertical {
-  resize: vertical;
   min-height: 2em;
+  resize: vertical;
 }
 .resize-horizontal {
-  resize: horizontal;
   max-width: 100%;
+  resize: horizontal;
 }
 .resize-both {
-  resize: both;
   max-width: 100%;
   min-height: 2em;
+  resize: both;
 }

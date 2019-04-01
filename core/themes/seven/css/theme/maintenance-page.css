@@ -4,22 +4,22 @@
  */
 
 .maintenance-page {
+  min-height: 100%;
   background-color: #e0e0d8;
   background-image: -webkit-radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
   background-image: radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
   background-repeat: repeat;
   background-position: left top, 50% 50%; /* LTR */
-  min-height: 100%;
 }
 [dir="rtl"] .maintenance-page {
   background-position: right top, 50% 50%;
 }
 
 .page-title {
+  word-wrap: break-word;
+  color: #0074bd;
   font-size: 2em;
   line-height: 1.2em;
-  color: #0074bd;
-  word-wrap: break-word;
 }
 
 /**
@@ -30,15 +30,15 @@
     position: relative;
   }
   .step-indicator {
-    display: block;
-    font-size: 1.385em;
     position: absolute;
     top: 0.2em;
     right: 0.5em; /* LTR */
+    display: block;
+    font-size: 1.385em;
   }
   [dir="rtl"] .step-indicator {
-    left: 0.5em;
     right: auto;
+    left: 0.5em;
   }
   .task-list {
     display: none;
@@ -51,9 +51,9 @@
   }
   .task-list {
     margin-left: 0; /* LTR */
-    list-style-type: none;
-    padding-left: 0; /* LTR */
     padding-bottom: 1em;
+    padding-left: 0; /* LTR */
+    list-style-type: none;
   }
   [dir="rtl"] .task-list {
     margin-right: 0;
@@ -67,29 +67,29 @@
     padding: 0.5em 3.85em 0.5em 1em;
   }
   .task-list .is-active {
-    background: #ebeae4;
     position: relative;
+    background: #ebeae4;
     font-weight: normal;
   }
   .task-list .is-active:after {
+    position: absolute;
+    top: 50%;
     left: 100%; /* LTR */
+    width: 0;
+    height: 0;
+    margin-top: -1.269em;
+    content: " ";
+    pointer-events: none;
     border: solid transparent;
+    border-width: 1.269em;
     border-color: rgba(235, 234, 228, 0);
     border-left-color: #ebeae4; /* LTR */
-    border-width: 1.269em;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    top: 50%;
-    margin-top: -1.269em;
   }
   [dir="rtl"] .task-list .is-active:after {
-    left: auto;
     right: 100%;
-    border-left-color: transparent;
+    left: auto;
     border-right-color: #ebeae4;
+    border-left-color: transparent;
   }
   .task-list .done {
     color: #adadad;
@@ -100,15 +100,15 @@
  * Layout
  */
 .layout-container {
-  background: #fff;
   width: auto;
-  margin-left: 1.25em;
   margin-right: 1.25em;
+  margin-left: 1.25em;
+  background: #fff;
 }
 .layout-container:after { /* no reason for a clearfix in the markup */
-  content: "";
   display: table;
   clear: both;
+  content: "";
 }
 
 @media all and (max-width: 48em) { /* 768px */
@@ -139,34 +139,34 @@
   html,
   .install-page,
   .maintenance-page {
-    margin: 0;
     width: 100%;
     height: 100%;
+    margin: 0;
   }
   .layout-container {
-    margin: 0 auto;
     width: 75%;
     max-width: 770px;
+    margin: 0 auto;
+    padding: 20px 0 40px 0;
     border-radius: 5px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    padding: 20px 0 40px 0;
   }
 
   /* Positioning sidebar & content */
   main {
-    box-sizing: border-box;
-    clear: none;
     float: left; /* LTR */
-    padding-left: 3.85em;
-    padding-right: 3.85em;
+    clear: none;
+    box-sizing: border-box;
     width: 65%;
+    padding-right: 3.85em;
+    padding-left: 3.85em;
   }
   [dir="rtl"] main {
     float: right;
   }
   ul {
-    padding: 15px;
     margin: 0.25em 0;
+    padding: 15px;
   }
   [dir="rtl"] ul {
     margin-right: 0; /* Overrides default [dir="rtl"] ul margin */
@@ -195,10 +195,10 @@
 .system-status-report__entry__value {
   float: none;
   width: 100%;
-  padding-left: 3em; /* LTR */
   padding-top: 0;
+  padding-left: 3em; /* LTR */
 }
 [dir="rtl"] .system-status-report__entry__value {
-  padding-left: 1em;
   padding-right: 3em;
+  padding-left: 1em;
 }

@@ -4,18 +4,18 @@
  */
 
 .icon-help {
-  background: url(../../../../misc/help.png) 0 50% no-repeat; /* LTR */
   padding: 1px 0 1px 20px; /* LTR */
+  background: url(../../../../misc/help.png) 0 50% no-repeat; /* LTR */
 }
 [dir="rtl"] .icon-help {
-  background-position: 100% 50%;
   padding: 1px 20px 1px 0;
+  background-position: 100% 50%;
 }
 .feed-icon {
-  background: url(../../../../misc/feed.svg) no-repeat;
-  overflow: hidden;
-  text-indent: -9999px;
   display: block;
+  overflow: hidden;
   width: 16px;
   height: 16px;
+  text-indent: -9999px;
+  background: url(../../../../misc/feed.svg) no-repeat;
 }

@@ -4,19 +4,19 @@
  */
 
 table {
-  border: 0;
+  width: 100%;
+  margin: 10px 0;
   border-spacing: 0;
+  border: 0;
   font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
   font-size: 0.857em;
-  margin: 10px 0;
-  width: 100%;
 }
 table table {
   font-size: 1em;
 }
 tr {
-  border-bottom: 1px solid #ccc;
   padding: 0.1em 0.6em;
+  border-bottom: 1px solid #ccc;
   background: #efefef;
   background: rgba(0, 0, 0, 0.063);
 }
@@ -28,9 +28,9 @@ tr.odd {
   background: rgba(0, 0, 0, 0.105);
 }
 table tr th {
+  border-bottom-style: none;
   background: #757575;
   background: rgba(0, 0, 0, 0.51);
-  border-bottom-style: none;
 }
 table tr th,
 table tr th a,
@@ -45,8 +45,8 @@ table tbody tr th {
 tr td,
 tr th {
   padding: 4px 9px;
-  border: 1px solid #fff;
   text-align: left; /* LTR */
+  border: 1px solid #fff;
 }
 .tabledrag-handle:hover,
 .tabledrag-handle {

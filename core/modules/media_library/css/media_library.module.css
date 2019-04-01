@@ -14,8 +14,8 @@
 /* @todo Use a class instead of the li element.
      https://www.drupal.org/project/drupal/issues/3029227 */
 .media-library-menu li {
-  list-style: none;
   padding: 0;
+  list-style: none;
 }
 
 .media-library-views-form > .form-actions {
