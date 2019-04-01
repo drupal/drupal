@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\serialization\Unit\Normalizer;
+namespace Drupal\serialization_test;
 
 use Drupal\serialization\Normalizer\TimeStampItemNormalizerTrait;
 
