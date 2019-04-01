@@ -7,7 +7,8 @@ core: 8.x
 libraries:
   - umami/global
   - umami/messages
-  - umami/webfonts
+  - umami/webfonts-open-sans
+  - umami/webfonts-scope-one
 
 libraries-override:
   classy/messages: false
