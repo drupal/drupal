@@ -331,17 +331,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     $modules = self::getModulesToEnable(get_class($this));
 
-    // Prepare a precompiled container for all tests of this class.
-    // Substantially improves performance, since ContainerBuilder::compile()
-    // is very expensive. Encourages testing best practices (small tests).
-    // Normally a setUpBeforeClass() operation, but object scope is required to
-    // inject $this test class instance as a service provider (see above).
-    $rc = new \ReflectionClass(get_class($this));
-    $test_method_count = count(array_filter($rc->getMethods(), function ($method) {
-      // PHPUnit's @test annotations are intentionally ignored/not supported.
-      return strpos($method->getName(), 'test') === 0;
-    }));
-
     // Bootstrap the kernel. Do not use createFromRequest() to retain Settings.
     $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
     $kernel->setSitePath($this->siteDirectory);
