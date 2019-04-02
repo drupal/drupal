@@ -66,6 +66,8 @@ use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
  * @see \Drupal\Tests\KernelTestBase::installEntitySchema()
  * @see \Drupal\Tests\KernelTestBase::installSchema()
  * @see \Drupal\Tests\BrowserTestBase
+ *
+ * @ingroup testing
  */
 abstract class KernelTestBase extends TestCase implements ServiceProviderInterface {
 
