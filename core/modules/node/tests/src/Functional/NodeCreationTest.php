@@ -155,6 +155,70 @@ class NodeCreationTest extends NodeTestBase {
   }
 
   /**
+   * Creates nodes with different authored dates.
+   */
+  public function testAuthoredDate() {
+    $now = \Drupal::time()->getRequestTime();
+    $admin = $this->drupalCreateUser([], NULL, TRUE);
+    $this->drupalLogin($admin);
+
+    // Create a node with the default creation date.
+    $edit = [
+      'title[0][value]' => $this->randomMachineName(8),
+      'body[0][value]' => $this->randomMachineName(16),
+    ];
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
+    $this->assertNotNull($node->getCreatedTime());
+
+    // Create a node with the custom creation date in the past.
+    $date = $now - 86400;
+    $edit = [
+      'title[0][value]' => $this->randomMachineName(8),
+      'body[0][value]' => $this->randomMachineName(16),
+      'created[0][value][date]' => date('Y-m-d', $date),
+      'created[0][value][time]' => date('H:i:s', $date),
+    ];
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
+    $this->assertEquals($date, $node->getCreatedTime());
+
+    // Create a node with the custom creation date in the future.
+    $date = $now + 86400;
+    $edit = [
+      'title[0][value]' => $this->randomMachineName(8),
+      'body[0][value]' => $this->randomMachineName(16),
+      'created[0][value][date]' => date('Y-m-d', $date),
+      'created[0][value][time]' => date('H:i:s', $date),
+    ];
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
+    $this->assertEquals($date, $node->getCreatedTime());
+
+    // Test an invalid date.
+    $edit = [
+      'title[0][value]' => $this->randomMachineName(8),
+      'body[0][value]' => $this->randomMachineName(16),
+      'created[0][value][date]' => '2013-13-13',
+      'created[0][value][time]' => '11:00:00',
+    ];
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $this->assertSession()->pageTextContains('The Authored on date is invalid.');
+    $this->assertFalse($this->drupalGetNodeByTitle($edit['title[0][value]']));
+
+    // Test an invalid time.
+    $edit = [
+      'title[0][value]' => $this->randomMachineName(8),
+      'body[0][value]' => $this->randomMachineName(16),
+      'created[0][value][date]' => '2012-01-01',
+      'created[0][value][time]' => '30:00:00',
+    ];
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $this->assertSession()->pageTextContains('The Authored on date is invalid.');
+    $this->assertFalse($this->drupalGetNodeByTitle($edit['title[0][value]']));
+  }
+
+  /**
    * Tests the author autocompletion textfield.
    */
   public function testAuthorAutocomplete() {
