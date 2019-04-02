@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional\Views;
+namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\views\Views;
 
@@ -8,7 +8,8 @@ use Drupal\views\Views;
  * Tests the plugin of the taxonomy: term argument validator.
  *
  * @group taxonomy
- * @see Views\taxonomy\Plugin\views\argument_validator\Term
+ *
+ * @see \Drupal\taxonomy\Plugin\views\argument_validator\Term
  */
 class ArgumentValidatorTermTest extends TaxonomyTestBase {
 
@@ -34,19 +35,13 @@ class ArgumentValidatorTermTest extends TaxonomyTestBase {
   protected $ids = [];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = ['taxonomy', 'taxonomy_test_views', 'views_test_config'];
-
-  /**
-   * Views used by this test.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $testViews = ['test_argument_validator_term'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 
@@ -71,14 +66,14 @@ class ArgumentValidatorTermTest extends TaxonomyTestBase {
     // Pass in a single valid term.
     foreach ($this->terms as $term) {
       $this->assertTrue($view->argument['tid']->setArgument($term->id()));
-      $this->assertEqual($view->argument['tid']->getTitle(), $term->label());
+      $this->assertEquals($term->label(), $view->argument['tid']->getTitle());
       $view->argument['tid']->validated_title = NULL;
       $view->argument['tid']->argument_validated = NULL;
     }
 
     // Pass in a invalid term.
     $this->assertFalse($view->argument['tid']->setArgument(rand(1000, 10000)));
-    $this->assertEqual('', $view->argument['tid']->getTitle());
+    $this->assertEmpty($view->argument['tid']->getTitle());
     $view->argument['tid']->validated_title = NULL;
     $view->argument['tid']->argument_validated = NULL;
 
@@ -88,31 +83,31 @@ class ArgumentValidatorTermTest extends TaxonomyTestBase {
 
     // Pass in a single term.
     $this->assertTrue($view->argument['tid']->setArgument($this->terms[0]->id()));
-    $this->assertEqual($view->argument['tid']->getTitle(), $this->terms[0]->label());
+    $this->assertEquals($this->terms[0]->label(), $view->argument['tid']->getTitle());
     $view->argument['tid']->validated_title = NULL;
     $view->argument['tid']->argument_validated = NULL;
 
     // Check for multiple valid terms separated by commas.
     $this->assertTrue($view->argument['tid']->setArgument(implode(',', $this->ids)));
-    $this->assertEqual($view->argument['tid']->getTitle(), implode(', ', $this->names));
+    $this->assertEquals(implode(', ', $this->names), $view->argument['tid']->getTitle());
     $view->argument['tid']->validated_title = NULL;
     $view->argument['tid']->argument_validated = NULL;
 
     // Check for multiple valid terms separated by plus signs.
     $this->assertTrue($view->argument['tid']->setArgument(implode('+', $this->ids)));
-    $this->assertEqual($view->argument['tid']->getTitle(), implode(' + ', $this->names));
+    $this->assertEquals(implode(' + ', $this->names), $view->argument['tid']->getTitle());
     $view->argument['tid']->validated_title = NULL;
     $view->argument['tid']->argument_validated = NULL;
 
     // Check for a single invalid term.
     $this->assertFalse($view->argument['tid']->setArgument(rand(1000, 10000)));
-    $this->assertEqual('', $view->argument['tid']->getTitle());
+    $this->assertEmpty($view->argument['tid']->getTitle());
     $view->argument['tid']->validated_title = NULL;
     $view->argument['tid']->argument_validated = NULL;
 
     // Check for multiple invalid terms.
     $this->assertFalse($view->argument['tid']->setArgument(implode(',', [rand(1000, 10000), rand(1000, 10000)])));
-    $this->assertEqual('', $view->argument['tid']->getTitle());
+    $this->assertEmpty($view->argument['tid']->getTitle());
     $view->argument['tid']->validated_title = NULL;
     $view->argument['tid']->argument_validated = NULL;
   }
