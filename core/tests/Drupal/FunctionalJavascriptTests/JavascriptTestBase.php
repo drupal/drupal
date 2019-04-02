@@ -15,6 +15,8 @@ use Zumba\Mink\Driver\PhantomJSDriver;
  * Use \Drupal\FunctionalJavascriptTests\WebDriverTestBase instead
  *
  * @see https://www.drupal.org/node/2945059
+ *
+ * @ingroup testing
  */
 abstract class JavascriptTestBase extends WebDriverTestBase {
 

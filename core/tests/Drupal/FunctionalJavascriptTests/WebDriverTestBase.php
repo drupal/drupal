@@ -11,6 +11,8 @@ use Zumba\Mink\Driver\PhantomJSDriver;
  * Runs a browser test using a driver that supports Javascript.
  *
  * Base class for testing browser interaction implemented in JavaScript.
+ *
+ * @ingroup testing
  */
 abstract class WebDriverTestBase extends BrowserTestBase {
 
