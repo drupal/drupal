@@ -1743,10 +1743,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * {@inheritdoc}
    */
   public function countFieldData($storage_definition, $as_bool = FALSE) {
-    // The table mapping contains stale data during a request when a field
-    // storage definition is added, so bypass the internal storage definitions
-    // and fetch the table mapping using the passed in storage definition.
-    // @todo Fix this in https://www.drupal.org/node/2705205.
+    // Ensure that the table mapping is instantiated with the passed-in field
+    // storage definition.
     $storage_definitions = $this->fieldStorageDefinitions;
     $storage_definitions[$storage_definition->getName()] = $storage_definition;
     $table_mapping = $this->getTableMapping($storage_definitions);
