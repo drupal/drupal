@@ -1,26 +1,41 @@
 <?php
 
-namespace Drupal\Tests\user\Functional;
+namespace Drupal\Tests\user\Kernel;
 
 use Drupal\Core\Database\Database;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 
 /**
- * Tests account deleting of users.
+ * Tests deleting of user accounts.
  *
  * @group user
  */
-class UserDeleteTest extends BrowserTestBase {
+class UserDeleteTest extends KernelTestBase {
+
+  use UserCreationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'system',
+    'user',
+  ];
 
   /**
    * Test deleting multiple users.
    */
   public function testUserDeleteMultiple() {
+    $this->installSchema('system', ['sequences']);
+    $this->installSchema('user', ['users_data']);
+    $this->installEntitySchema('user');
+
     // Create a few users with permissions, so roles will be created.
-    $user_a = $this->drupalCreateUser(['access user profiles']);
-    $user_b = $this->drupalCreateUser(['access user profiles']);
-    $user_c = $this->drupalCreateUser(['access user profiles']);
+    $user_a = $this->createUser(['access user profiles']);
+    $user_b = $this->createUser(['access user profiles']);
+    $user_c = $this->createUser(['access user profiles']);
 
     $uids = [$user_a->id(), $user_b->id(), $user_c->id()];
 
@@ -34,9 +49,9 @@ class UserDeleteTest extends BrowserTestBase {
       ->execute()
       ->fetchField();
 
-    $this->assertTrue($roles_created > 0, 'Role assignments created for new users and deletion of role assignments can be tested');
+    $this->assertGreaterThan(0, $roles_created);
     // We should be able to load one of the users.
-    $this->assertTrue(User::load($user_a->id()), 'User is created and deletion of user can be tested');
+    $this->assertNotNull(User::load($user_a->id()));
     // Delete the users.
     user_delete_multiple($uids);
     // Test if the roles assignments are deleted.
@@ -47,11 +62,11 @@ class UserDeleteTest extends BrowserTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertTrue($roles_after_deletion == 0, 'Role assignments deleted along with users');
+    $this->assertEquals(0, $roles_after_deletion);
     // Test if the users are deleted, User::load() will return NULL.
-    $this->assertNull(User::load($user_a->id()), format_string('User with id @uid deleted.', ['@uid' => $user_a->id()]));
-    $this->assertNull(User::load($user_b->id()), format_string('User with id @uid deleted.', ['@uid' => $user_b->id()]));
-    $this->assertNull(User::load($user_c->id()), format_string('User with id @uid deleted.', ['@uid' => $user_c->id()]));
+    $this->assertNull(User::load($user_a->id()));
+    $this->assertNull(User::load($user_b->id()));
+    $this->assertNull(User::load($user_c->id()));
   }
 
 }
