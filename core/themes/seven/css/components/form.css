@@ -87,8 +87,10 @@ label[for] {
 .form-disabled label {
   color: #686868;
 }
+.form-disabled input.form-date,
 .form-disabled input.form-text,
 .form-disabled input.form-tel,
+.form-disabled input.form-time,
 .form-disabled input.form-email,
 .form-disabled input.form-url,
 .form-disabled input.form-search,
