@@ -1,8 +1,10 @@
 <?php
 
-namespace Drupal\Tests\views\Functional\Handler;
+namespace Drupal\Tests\views\Kernel\Handler;
 
-use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -10,34 +12,36 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class ArgumentStringTest extends ViewTestBase {
+class ArgumentStringTest extends ViewsKernelTestBase {
 
   /**
-   * Views used by this test.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $testViews = ['test_glossary'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['node'];
+  public static $modules = [
+    'node',
+  ];
 
   /**
    * Tests the glossary feature.
    */
   public function testGlossary() {
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('node');
+    NodeType::create(['type' => 'page'])->save();
+
     // Setup some nodes, one with a, two with b and three with c.
     $counter = 1;
     foreach (['a', 'b', 'c'] as $char) {
       for ($i = 0; $i < $counter; $i++) {
-        $edit = [
+        Node::create([
+          'type' => 'page',
           'title' => $char . $this->randomMachineName(),
-        ];
-        $this->drupalCreateNode($edit);
+        ])->save();
       }
     }
 
@@ -47,13 +51,13 @@ class ArgumentStringTest extends ViewTestBase {
     $count_field = 'nid';
     foreach ($view->result as &$row) {
       if (strpos($view->field['title']->getValue($row), 'a') === 0) {
-        $this->assertEqual(1, $row->{$count_field});
+        $this->assertEquals(1, $row->{$count_field});
       }
       if (strpos($view->field['title']->getValue($row), 'b') === 0) {
-        $this->assertEqual(2, $row->{$count_field});
+        $this->assertEquals(2, $row->{$count_field});
       }
       if (strpos($view->field['title']->getValue($row), 'c') === 0) {
-        $this->assertEqual(3, $row->{$count_field});
+        $this->assertEquals(3, $row->{$count_field});
       }
     }
   }
