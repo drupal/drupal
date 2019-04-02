@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional\Views;
+namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -15,11 +15,6 @@ use Drupal\views\Tests\ViewTestData;
  * @group taxonomy
  */
 class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['taxonomy', 'taxonomy_test_views', 'views', 'node'];
 
   /**
    * {@inheritdoc}
@@ -75,7 +70,7 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
     ];
     sort($content_dependencies);
 
-    $this->assertEqual([
+    $this->assertEquals([
       'config' => [
         'taxonomy.vocabulary.tags',
       ],
@@ -89,7 +84,7 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
 
     $this->terms[3]->delete();
 
-    $this->assertEqual([
+    $this->assertEquals([
       'config' => [
         'taxonomy.vocabulary.tags',
       ],
@@ -120,7 +115,7 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
     ];
     sort($content_dependencies);
 
-    $this->assertEqual([
+    $this->assertEquals([
       'config' => [
         'taxonomy.vocabulary.tags',
       ],
@@ -138,7 +133,7 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
     views_post_update_taxonomy_index_tid();
 
     $view = View::load('test_filter_taxonomy_index_tid__non_existing_dependency');
-    $this->assertEqual([
+    $this->assertEquals([
       'config' => [
         'taxonomy.vocabulary.tags',
       ],
