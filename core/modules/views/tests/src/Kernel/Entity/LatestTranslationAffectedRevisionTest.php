@@ -1,10 +1,11 @@
 <?php
 
-namespace Drupal\Tests\views\Functional\Entity;
+namespace Drupal\Tests\views\Kernel\Entity;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
-use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\node\Entity\NodeType;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -12,19 +13,15 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class LatestTranslationAffectedRevisionTest extends ViewTestBase {
+class LatestTranslationAffectedRevisionTest extends ViewsKernelTestBase {
 
   /**
-   * Views used by this test.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $testViews = ['test_latest_translation_affected_revision_filter'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = [
     'node',
@@ -34,19 +31,15 @@ class LatestTranslationAffectedRevisionTest extends ViewTestBase {
   ];
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp($import_test_views = TRUE) {
-    parent::setUp();
-
-    ConfigurableLanguage::createFromLangcode('fr')->save();
-    $this->drupalCreateContentType(['type' => 'article']);
-  }
-
-  /**
    * Tests the 'Latest revision' filter.
    */
   public function testLatestRevisionFilter() {
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('node');
+    $this->installSchema('node', ['node_access']);
+
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+    NodeType::create(['type' => 'article'])->save();
     $node = Node::create([
       'title' => 'Original translation - default revision',
       'type' => 'test',
@@ -57,12 +50,14 @@ class LatestTranslationAffectedRevisionTest extends ViewTestBase {
     $translated->title = 'French translation - default revision';
     $translated->save();
 
+    /** @var \Drupal\node\NodeInterface $pending */
     $pending = clone $node;
     $pending->setNewRevision(TRUE);
     $pending->isDefaultRevision(FALSE);
     $pending->title = 'Original translation - pending revision';
     $pending->save();
 
+    /** @var \Drupal\node\NodeInterface $pending_translated */
     $pending_translated = clone $translated;
     $pending_translated->setNewRevision(TRUE);
     $pending_translated->isDefaultRevision(FALSE);
