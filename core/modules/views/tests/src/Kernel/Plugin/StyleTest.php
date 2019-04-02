@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\views\Functional\Plugin;
+namespace Drupal\Tests\views\Kernel\Plugin;
 
-use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\row\RowTest;
 use Drupal\views\Plugin\views\row\Fields;
@@ -13,35 +13,20 @@ use Drupal\views_test_data\Plugin\views\style\StyleTest as StyleTestPlugin;
  * Tests general style functionality.
  *
  * @group views
+ *
  * @see \Drupal\views_test_data\Plugin\views\style\StyleTest.
  */
-class StyleTest extends ViewTestBase {
+class StyleTest extends ViewsKernelTestBase {
 
   /**
-   * Views used by this test.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $testViews = ['test_view'];
-
-  /**
-   * Stores the SimpleXML representation of the output.
-   *
-   * @var \SimpleXMLElement
-   */
-  protected $elements;
-
-  protected function setUp($import_test_views = TRUE) {
-    parent::setUp($import_test_views);
-
-    $this->enableViewsTestModule();
-  }
 
   /**
    * Tests the general rendering of styles.
    */
   public function testStyle() {
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
     // This run use the test row plugin and render with it.
@@ -57,14 +42,14 @@ class StyleTest extends ViewTestBase {
     $view->initStyle();
     // Reinitialize the style as it supports row plugins now.
     $view->style_plugin->init($view, $view->display_handler);
-    $this->assertTrue($view->rowPlugin instanceof RowTest, 'Make sure the right row plugin class is loaded.');
+    $this->assertInstanceOf(Rowtest::class, $view->rowPlugin);
 
     $random_text = $this->randomMachineName();
     $view->rowPlugin->setOutput($random_text);
 
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, $random_text) !== FALSE, 'Make sure that the rendering of the row plugin appears in the output of the view.');
+    $this->assertContains($random_text, (string) $output);
 
     // Test without row plugin support.
     $view = Views::getView('test_view');
@@ -75,8 +60,8 @@ class StyleTest extends ViewTestBase {
     $view->initDisplay();
     $view->initStyle();
     $view->style_plugin->setUsesRowPlugin(FALSE);
-    $this->assertTrue($view->style_plugin instanceof StyleTestPlugin, 'Make sure the right style plugin class is loaded.');
-    $this->assertTrue($view->rowPlugin instanceof Fields, 'Make sure that rowPlugin is now a fields instance.');
+    $this->assertInstanceOf(StyleTestPlugin::class, $view->style_plugin);
+    $this->assertInstanceOf(Fields::class, $view->rowPlugin);
 
     $random_text = $this->randomMachineName();
     // Set some custom text to the output and make sure that this value is
@@ -84,18 +69,21 @@ class StyleTest extends ViewTestBase {
     $view->style_plugin->setOutput($random_text);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, $random_text) !== FALSE, 'Make sure that the rendering of the style plugin appears in the output of the view.');
-  }
-
-  public function testGrouping() {
-    $this->_testGrouping(FALSE);
-    $this->_testGrouping(TRUE);
+    $this->assertContains($random_text, (string) $output);
   }
 
   /**
    * Tests the grouping features of styles.
    */
-  public function _testGrouping($stripped = FALSE) {
+  public function testGrouping() {
+    $this->doTestGrouping(FALSE);
+    $this->doTestGrouping(TRUE);
+  }
+
+  /**
+   * Provides reusable code for ::testGrouping().
+   */
+  protected function doTestGrouping($stripped = FALSE) {
     $view = Views::getView('test_view');
     $view->setDisplay();
     // Setup grouping by the job and the age field.
@@ -175,7 +163,6 @@ class StyleTest extends ViewTestBase {
 
     // Alter the results to support the stripped case.
     if ($stripped) {
-
       // Add some html to the result and expected value.
       $rand1 = '<a data="' . $this->randomMachineName() . '" />';
       $view->result[0]->views_test_data_job .= $rand1;
@@ -196,7 +183,7 @@ class StyleTest extends ViewTestBase {
     // The newer api passes the value of the grouping as well.
     $sets_new_rendered = $view->style_plugin->renderGrouping($view->result, $view->style_plugin->options['grouping'], TRUE);
 
-    $this->assertEqual($sets_new_rendered, $expected, 'The style plugins should properly group the results with grouping by the rendered output.');
+    $this->assertEquals($expected, $sets_new_rendered);
 
     // Don't test stripped case, because the actual value is not stripped.
     if (!$stripped) {
@@ -215,7 +202,7 @@ class StyleTest extends ViewTestBase {
       unset($new_expected['Job: Drummer']);
       unset($new_expected['Drummer']['rows']['Age: 28']);
 
-      $this->assertEqual($sets_new_value, $new_expected, 'The style plugins should proper group the results with grouping by the value.');
+      $this->assertEquals($new_expected, $sets_new_value);
     }
 
     // Test that grouping works on fields having no label.
@@ -248,11 +235,11 @@ class StyleTest extends ViewTestBase {
       $data['group'] = $job;
       $expected[$job] = $data;
     }
-    $this->assertEqual($expected, $sets_new_rendered);
+    $this->assertEquals($expected, $sets_new_rendered);
   }
 
   /**
-   * Tests custom css classes.
+   * Tests custom CSS row classes.
    */
   public function testCustomRowClasses() {
     $view = Views::getView('test_view');
@@ -264,34 +251,38 @@ class StyleTest extends ViewTestBase {
     $view->style_plugin->options['row_class'] = $random_name . " test-token-{{ name }}";
 
     $output = $view->preview();
-    $this->storeViewPreview(\Drupal::service('renderer')->renderRoot($output));
+    $html_dom = $this->getHtmlDom($this->container->get('renderer')->renderRoot($output));
 
-    $rows = $this->elements->body->div->div->div;
+    $rows = $html_dom->body->div->div;
     $count = 0;
     foreach ($rows as $row) {
       $attributes = $row->attributes();
       $class = (string) $attributes['class'][0];
-      $this->assertTrue(strpos($class, $random_name) !== FALSE, 'Make sure that a custom css class is added to the output.');
+      $this->assertContains($random_name, $class);
 
       // Check token replacement.
       $name = $view->field['name']->getValue($view->result[$count]);
-      $this->assertTrue(strpos($class, "test-token-$name") !== FALSE, 'Make sure that a token in custom css class is replaced.');
+      $this->assertContains("test-token-$name", $class);
 
       $count++;
     }
   }
 
   /**
-   * Stores a view output in the elements.
+   * Returns a view output as SimpleXMLElement.
+   *
+   * @return \SimpleXMLElement|null
+   *   The HTML DOM.
    */
-  protected function storeViewPreview($output) {
-    $htmlDom = new \DOMDocument();
-    @$htmlDom->loadHTML($output);
-    if ($htmlDom) {
+  protected function getHtmlDom($output) {
+    $html_dom = new \DOMDocument();
+    @$html_dom->loadHTML($output);
+    if ($html_dom) {
       // It's much easier to work with simplexml than DOM, luckily enough
       // we can just simply import our DOM tree.
-      $this->elements = simplexml_import_dom($htmlDom);
+      return simplexml_import_dom($html_dom);
     }
+    return NULL;
   }
 
 }
