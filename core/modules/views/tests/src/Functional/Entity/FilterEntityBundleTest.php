@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\views\Kernel\Entity;
+namespace Drupal\Tests\views\Functional\Entity;
 
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
-use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
 /**
@@ -12,32 +12,49 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class FilterEntityBundleTest extends ViewsKernelTestBase {
+class FilterEntityBundleTest extends ViewTestBase {
 
   /**
-   * {@inheritdoc}
+   * Views used by this test.
+   *
+   * @var array
    */
   public static $testViews = ['test_entity_type_filter'];
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   public static $modules = ['node'];
 
   /**
-   * Tests the generic bundle filter.
+   * Entity bundle data.
+   *
+   * @var array
    */
-  public function testFilterEntity() {
-    $this->installEntitySchema('user');
-    $this->installEntitySchema('node');
-    NodeType::create(['type' => 'test_bundle'])->save();
-    NodeType::create(['type' => 'test_bundle_2'])->save();
+  protected $entityBundles;
 
-    $bundle_info = $this->container->get('entity_type.bundle.info')->getBundleInfo('node');
+  /**
+   * An array of entities.
+   *
+   * @var array
+   */
+  protected $entities = [];
 
-    $entities['count'] = 0;
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp(FALSE);
 
-    foreach ($bundle_info as $key => $info) {
+    $this->drupalCreateContentType(['type' => 'test_bundle']);
+    $this->drupalCreateContentType(['type' => 'test_bundle_2']);
+
+    ViewTestData::createTestViews(get_class($this), ['views_test_config']);
+
+    $this->entityBundles = $this->container->get('entity_type.bundle.info')->getBundleInfo('node');
+
+    $this->entities['count'] = 0;
+
+    foreach ($this->entityBundles as $key => $info) {
       for ($i = 0; $i < 5; $i++) {
         $entity = Node::create([
           'title' => $this->randomString(),
@@ -45,10 +62,16 @@ class FilterEntityBundleTest extends ViewsKernelTestBase {
           'type' => $key,
         ]);
         $entity->save();
-        $entities[$key][$entity->id()] = $entity;
-        $entities['count']++;
+        $this->entities[$key][$entity->id()] = $entity;
+        $this->entities['count']++;
       }
     }
+  }
+
+  /**
+   * Tests the generic bundle filter.
+   */
+  public function testFilterEntity() {
     $view = Views::getView('test_entity_type_filter');
 
     // Tests \Drupal\views\Plugin\views\filter\Bundle::calculateDependencies().
@@ -61,24 +84,25 @@ class FilterEntityBundleTest extends ViewsKernelTestBase {
         'node',
       ],
     ];
-    $this->assertSame($expected, $view->getDependencies());
+    $this->assertIdentical($expected, $view->getDependencies());
 
     $this->executeView($view);
 
     // Test we have all the results, with all types selected.
-    $this->assertCount($entities['count'], $view->result);
+    $this->assertEqual(count($view->result), $this->entities['count']);
 
     // Test the valueOptions of the filter handler.
     $expected = [];
-    foreach ($bundle_info as $key => $info) {
+
+    foreach ($this->entityBundles as $key => $info) {
       $expected[$key] = $info['label'];
     }
-    $this->assertSame($expected, $view->filter['type']->getValueOptions());
+    $this->assertIdentical($view->filter['type']->getValueOptions(), $expected);
 
     $view->destroy();
 
     // Test each bundle type.
-    foreach ($bundle_info as $key => $info) {
+    foreach ($this->entityBundles as $key => $info) {
       // Test each bundle type.
       $view->initDisplay();
       $filters = $view->display_handler->getOption('filters');
@@ -86,7 +110,7 @@ class FilterEntityBundleTest extends ViewsKernelTestBase {
       $view->display_handler->setOption('filters', $filters);
       $this->executeView($view);
 
-      $this->assertCount(count($entities[$key]), $view->result);
+      $this->assertEqual(count($view->result), count($this->entities[$key]));
 
       $view->destroy();
     }
@@ -98,7 +122,7 @@ class FilterEntityBundleTest extends ViewsKernelTestBase {
     $view->display_handler->setOption('filters', $filters);
     $this->executeView($view);
 
-    $this->assertEmpty($view->result);
+    $this->assertEqual(count($view->result), 0);
   }
 
 }
