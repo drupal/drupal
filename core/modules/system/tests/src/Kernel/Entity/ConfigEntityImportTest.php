@@ -1,41 +1,50 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Entity;
+namespace Drupal\Tests\system\Kernel\Entity;
 
+use Drupal\Component\Uuid\Php;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\Entity\SearchPage;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\system\Entity\Action;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 
 /**
  * Tests ConfigEntity importing.
  *
  * @group Entity
  */
-class ConfigEntityImportTest extends BrowserTestBase {
+class ConfigEntityImportTest extends KernelTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = ['action', 'block', 'filter', 'image', 'search', 'search_extra_type', 'config_test'];
+  use BlockCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
-
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
-  }
+  protected static $modules = [
+    'action',
+    'block',
+    'config_test',
+    'filter',
+    'image',
+    'search',
+    'search_extra_type',
+    'system',
+  ];
 
   /**
    * Runs test methods for each module within a single test run.
    */
   public function testConfigUpdateImport() {
+    $this->installConfig(['action', 'block', 'filter', 'image']);
+    $this->container->get('theme_installer')->install(['bartik']);
+    $config_storage = $this->container->get('config.storage');
+    // Ensure the 'system.site' config.
+    $config_storage->write('system.site', ['uuid' => (new Php())->generate()]);
+    $this->copyConfig($config_storage, $this->container->get('config.storage.sync'));
+
     $this->doActionUpdate();
     $this->doBlockUpdate();
     $this->doFilterFormatUpdate();
@@ -71,9 +80,10 @@ class ConfigEntityImportTest extends BrowserTestBase {
   protected function doBlockUpdate() {
     // Create a test block with a known label.
     $name = 'block.block.apple';
-    $block = $this->drupalPlaceBlock('system_powered_by_block', [
+    $block = $this->placeBlock('system_powered_by_block', [
       'id' => 'apple',
       'label' => 'Red Delicious',
+      'theme' => 'bartik',
     ]);
 
     $this->checkSinglePluginConfigSync($block, 'settings', 'label', 'Red Delicious');
@@ -96,19 +106,19 @@ class ConfigEntityImportTest extends BrowserTestBase {
     $plugin_collection = $entity->getPluginCollections()['filters'];
 
     $filters = $entity->get('filters');
-    $this->assertIdentical(72, $filters['filter_url']['settings']['filter_url_length']);
+    $this->assertSame(72, $filters['filter_url']['settings']['filter_url_length']);
 
     $filters['filter_url']['settings']['filter_url_length'] = 100;
     $entity->set('filters', $filters);
     $entity->save();
-    $this->assertIdentical($filters, $entity->get('filters'));
-    $this->assertIdentical($filters, $plugin_collection->getConfiguration());
+    $this->assertSame($filters, $entity->get('filters'));
+    $this->assertSame($filters, $plugin_collection->getConfiguration());
 
     $filters['filter_url']['settings']['filter_url_length'] = -100;
     $entity->getPluginCollections()['filters']->setConfiguration($filters);
     $entity->save();
-    $this->assertIdentical($filters, $entity->get('filters'));
-    $this->assertIdentical($filters, $plugin_collection->getConfiguration());
+    $this->assertSame($filters, $entity->get('filters'));
+    $this->assertSame($filters, $plugin_collection->getConfiguration());
 
     // Read the existing data, and prepare an altered version in sync.
     $custom_data = $original_data = $this->container->get('config.storage')->read($name);
@@ -129,21 +139,21 @@ class ConfigEntityImportTest extends BrowserTestBase {
 
     $effects = $entity->get('effects');
     $effect_id = key($effects);
-    $this->assertIdentical(100, $effects[$effect_id]['data']['height']);
+    $this->assertSame(100, $effects[$effect_id]['data']['height']);
 
     $effects[$effect_id]['data']['height'] = 50;
     $entity->set('effects', $effects);
     $entity->save();
     // Ensure the entity and plugin have the correct configuration.
-    $this->assertIdentical($effects, $entity->get('effects'));
-    $this->assertIdentical($effects, $plugin_collection->getConfiguration());
+    $this->assertSame($effects, $entity->get('effects'));
+    $this->assertSame($effects, $plugin_collection->getConfiguration());
 
     $effects[$effect_id]['data']['height'] = -50;
     $entity->getPluginCollections()['effects']->setConfiguration($effects);
     $entity->save();
     // Ensure the entity and plugin have the correct configuration.
-    $this->assertIdentical($effects, $entity->get('effects'));
-    $this->assertIdentical($effects, $plugin_collection->getConfiguration());
+    $this->assertSame($effects, $entity->get('effects'));
+    $this->assertSame($effects, $plugin_collection->getConfiguration());
 
     // Read the existing data, and prepare an altered version in sync.
     $custom_data = $original_data = $this->container->get('config.storage')->read($name);
@@ -187,14 +197,14 @@ class ConfigEntityImportTest extends BrowserTestBase {
     ]);
     $entity->save();
 
-    $this->assertIdentical([], $entity->getThirdPartyProviders());
+    $this->assertSame([], $entity->getThirdPartyProviders());
     // Get a copy of the configuration before the third party setting is added.
     $no_third_part_setting_config = $this->container->get('config.storage')->read($name);
 
     // Add a third party setting.
     $entity->setThirdPartySetting('config_test', 'integer', 1);
     $entity->save();
-    $this->assertIdentical(1, $entity->getThirdPartySetting('config_test', 'integer'));
+    $this->assertSame(1, $entity->getThirdPartySetting('config_test', 'integer'));
     $has_third_part_setting_config = $this->container->get('config.storage')->read($name);
 
     // Ensure configuration imports can completely remove third party settings.
@@ -218,21 +228,21 @@ class ConfigEntityImportTest extends BrowserTestBase {
     $settings = $entity->get($config_key);
 
     // Ensure the default config exists.
-    $this->assertIdentical($expected, $settings[$setting_key]);
+    $this->assertSame($expected, $settings[$setting_key]);
 
     // Change the plugin config by setting it on the entity.
     $settings[$setting_key] = $this->randomString();
     $entity->set($config_key, $settings);
     $entity->save();
-    $this->assertIdentical($settings, $entity->get($config_key));
-    $this->assertIdentical($settings, $plugin_collection->getConfiguration());
+    $this->assertSame($settings, $entity->get($config_key));
+    $this->assertSame($settings, $plugin_collection->getConfiguration());
 
     // Change the plugin config by setting it on the plugin.
     $settings[$setting_key] = $this->randomString();
     $plugin_collection->setConfiguration($settings);
     $entity->save();
-    $this->assertIdentical($settings, $entity->get($config_key));
-    $this->assertIdentical($settings, $plugin_collection->getConfiguration());
+    $this->assertSame($settings, $entity->get($config_key));
+    $this->assertSame($settings, $plugin_collection->getConfiguration());
   }
 
   /**
@@ -250,7 +260,7 @@ class ConfigEntityImportTest extends BrowserTestBase {
 
     // Verify the active configuration still returns the default values.
     $config = $this->config($name);
-    $this->assertIdentical($config->get(), $original_data);
+    $this->assertSame($config->get(), $original_data);
 
     // Import.
     $this->configImporter()->import();
@@ -258,7 +268,7 @@ class ConfigEntityImportTest extends BrowserTestBase {
     // Verify the values were updated.
     $this->container->get('config.factory')->reset($name);
     $config = $this->config($name);
-    $this->assertIdentical($config->get(), $custom_data);
+    $this->assertSame($config->get(), $custom_data);
   }
 
 }
