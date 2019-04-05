@@ -216,7 +216,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       throw new \InvalidArgumentException('The optional parameters $destroy and $lifetime of SessionManager::regenerate() are not supported currently');
     }
 
-
     // Only migrate the session if the session is really started and not only
     // lazy started.
     if ($this->started) {
