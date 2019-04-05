@@ -1,0 +1,10 @@
+/**
+ * @file
+ * This file is used to style the highlighted region.
+ *
+ */
+
+.layout-highlighted {
+  padding: 0 1.26em 1em;
+  background: #fff;
+}

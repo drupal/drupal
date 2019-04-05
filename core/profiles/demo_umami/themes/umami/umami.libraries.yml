@@ -7,6 +7,7 @@ global:
       css/components/blocks/banner/banner.css: {}
       css/components/blocks/branding/branding.css: {}
       css/components/blocks/disclaimer/disclaimer.css: {}
+      css/components/blocks/help/help.css: {}
       css/components/blocks/page-title/page-title.css: {}
       css/components/blocks/footer-promo/footer-promo.css: {}
       css/components/blocks/language-switcher/language-switcher.css: {}
@@ -34,6 +35,7 @@ global:
       css/components/regions/bottom/bottom.css: {}
       css/components/regions/footer/footer.css: {}
       css/components/regions/header/header.css: {}
+      css/components/regions/highlighted/highlighted.css: {}
       css/components/regions/pre-header/pre-header.css: {}
       css/components/toolbar/toolbar.css: {}
     layout:
