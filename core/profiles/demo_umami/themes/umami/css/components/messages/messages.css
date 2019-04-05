@@ -4,6 +4,7 @@
  */
 
 .messages {
+  margin-bottom: 1em;
   padding: 20px;
   word-wrap: break-word;
   color: inherit;
@@ -26,18 +27,21 @@
   background-position: right;
 }
 .messages--status {
+  border: 1px solid #cbdebc;
   background-color: #e6eee0;
 }
 .messages--status .messages__content {
   background-image: url(/core/misc/icons/73b355/check.svg);
 }
 .messages--warning {
+  border: 1px solid #fae2a4;
   background-color: #fcf1d4;
 }
 .messages--warning .messages__content {
   background-image: url(/core/misc/icons/e29700/warning.svg);
 }
 .messages--error {
+  border: 1px solid #f8c8d5;
   background-color: #f9e6eb;
 }
 .messages--error .messages__content {
