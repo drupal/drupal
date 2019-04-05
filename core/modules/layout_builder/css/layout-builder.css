@@ -94,13 +94,6 @@
   background-image: url("../../../misc/icons/73b355/location.svg");
 }
 
-/**
- * @todo Remove Umami specific styling in https://www.drupal.org/node/3043228.
- */
-.layout-builder__message .messages .messages__content {
-  background: none;
-}
-
 .layout-builder-block__content-preview-placeholder-label {
   margin: 0;
   text-align: center;

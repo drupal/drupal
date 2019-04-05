@@ -38,6 +38,7 @@ global:
       css/components/regions/highlighted/highlighted.css: {}
       css/components/regions/pre-header/pre-header.css: {}
       css/components/toolbar/toolbar.css: {}
+      css/components/layout_builder/layout-builder.css: {}
     layout:
       css/layout/grid-2.css: {}
       css/layout/grid-3.css: {}
