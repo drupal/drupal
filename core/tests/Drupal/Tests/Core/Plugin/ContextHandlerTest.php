@@ -18,7 +18,6 @@ use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextHandler;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
@@ -379,9 +378,9 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('setContext');
 
     // No context, so no cacheability metadata can be passed along.
-    $plugin->expects($this->once())
+    $plugin->expects($this->any())
       ->method('getContext')
-      ->willReturn(new Context($context_definition));
+      ->willThrowException(new ContextException());
 
     $this->setExpectedException(MissingValueContextException::class, 'Required contexts without a value: hit');
     $this->contextHandler->applyContextMapping($plugin, $contexts);
@@ -415,9 +414,9 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('setContext');
 
     // No context, so no cacheability metadata can be passed along.
-    $plugin->expects($this->once())
+    $plugin->expects($this->any())
       ->method('getContext')
-      ->willReturn(new Context($context_definition));
+      ->willThrowException(new ContextException());
 
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
