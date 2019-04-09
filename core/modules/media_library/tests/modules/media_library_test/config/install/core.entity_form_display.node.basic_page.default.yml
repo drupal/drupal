@@ -49,9 +49,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-  field_empty_types_media:
+  field_null_types_media:
     type: media_library_widget
     weight: 125
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_empty_types_media:
+    type: media_library_widget
+    weight: 126
     settings: {  }
     third_party_settings: {  }
     region: content
