@@ -87,73 +87,107 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterNumericBetween() {
+  /**
+   * Tests the between operator.
+   *
+   * @param string $operator
+   *   The operator to test ('between' or 'not between').
+   * @param string $min
+   *   The min value.
+   * @param string $max
+   *   The max value.
+   * @param array $expected_result
+   *   The expected results.
+   *
+   * @dataProvider providerTestFilterNumericBetween
+   */
+  public function testFilterNumericBetween($operator, $min, $max, array $expected_result) {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
-    // Change the filtering
     $view->displayHandlers->get('default')->overrideOption('filters', [
       'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
-        'operator' => 'between',
+        'operator' => $operator,
         'value' => [
-          'min' => 26,
-          'max' => 29,
+          'min' => $min,
+          'max' => $max,
         ],
       ],
     ]);
 
     $this->executeView($view);
-    $resultset = [
-      [
-        'name' => 'George',
-        'age' => 27,
-      ],
-      [
-        'name' => 'Ringo',
-        'age' => 28,
-      ],
-      [
-        'name' => 'Paul',
-        'age' => 26,
-      ],
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
+  }
+
+  /**
+   * Provides data for self::testFilterNumericBetween().
+   *
+   * @return array
+   *   An array of arrays, each containing the parameters for
+   *   self::testFilterNumericBetween().
+   */
+  public function providerTestFilterNumericBetween() {
+    $all_result = [
+      ['name' => 'John', 'age' => 25],
+      ['name' => 'George', 'age' => 27],
+      ['name' => 'Ringo', 'age' => 28],
+      ['name' => 'Paul', 'age' => 26],
+      ['name' => 'Meredith', 'age' => 30],
     ];
-    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
 
-    // test not between
-    $view->destroy();
-    $view->setDisplay();
-
-    // Change the filtering
-    $view->displayHandlers->get('default')->overrideOption('filters', [
-      'age' => [
-        'id' => 'age',
-        'table' => 'views_test_data',
-        'field' => 'age',
-        'relationship' => 'none',
-        'operator' => 'not between',
-        'value' => [
-          'min' => 26,
-          'max' => 29,
+    return [
+      // Each test case is operator, min, max, expected result.
+      'Test between' => [
+        'between', 26, 29, [
+          ['name' => 'George', 'age' => 27],
+          ['name' => 'Ringo', 'age' => 28],
+          ['name' => 'Paul', 'age' => 26],
         ],
       ],
-    ]);
-
-    $this->executeView($view);
-    $resultset = [
-      [
-        'name' => 'John',
-        'age' => 25,
+      'Test between with just min' => [
+        'between', 28, '', [
+          ['name' => 'Ringo', 'age' => 28],
+          ['name' => 'Meredith', 'age' => 30],
+        ],
       ],
-      [
-        'name' => 'Meredith',
-        'age' => 30,
+      'Test between with just max' => [
+        'between', '', 26,
+        [
+          ['name' => 'John', 'age' => 25],
+          ['name' => 'Paul', 'age' => 26],
+        ],
+      ],
+      'Test between with empty min and max' => [
+        'between', '', '', $all_result,
+      ],
+      'Test not between' => [
+        'not between', 26, 29, [
+          ['name' => 'John', 'age' => 25],
+          ['name' => 'Meredith', 'age' => 30],
+        ],
+      ],
+      'Test not between with just min' => [
+        'not between', 28, '', [
+          ['name' => 'John', 'age' => 25],
+          ['name' => 'George', 'age' => 27],
+          ['name' => 'Paul', 'age' => 26],
+        ],
+      ],
+      'Test not between with just max' => [
+        'not between', '', 26, [
+          ['name' => 'George', 'age' => 27],
+          ['name' => 'Ringo', 'age' => 28],
+          ['name' => 'Meredith', 'age' => 30],
+        ],
+      ],
+      'Test not between with empty min and max' => [
+        'not between', '', '', $all_result,
       ],
     ];
-    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   public function testFilterNumericExposedGroupedBetween() {
