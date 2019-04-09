@@ -9,12 +9,16 @@ use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\field_ui\FieldUI;
 use Drupal\media\Entity\Media;
 use Drupal\media_library\MediaLibraryUiBuilder;
 use Drupal\media_library\MediaLibraryState;
@@ -49,6 +53,20 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
   protected $entityTypeManager;
 
   /**
+   * The current active user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * The prefix to use with a field ID for media library opener IDs.
    *
    * @var string
@@ -70,10 +88,24 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
    *   Any third party settings.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity type manager service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   (optional) The current active user.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   (optional) The module handler.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user = NULL, ModuleHandlerInterface $module_handler = NULL) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
     $this->entityTypeManager = $entity_type_manager;
+    if (!$current_user) {
+      @trigger_error('The current_user service must be passed to MediaLibraryWidget::__construct(), it is required before Drupal 9.0.0.', E_USER_DEPRECATED);
+      $current_user = \Drupal::currentUser();
+    }
+    $this->currentUser = $current_user;
+    if (!$module_handler) {
+      @trigger_error('The module_handler service must be passed to MediaLibraryWidget::__construct(), it is required before Drupal 9.0.0.', E_USER_DEPRECATED);
+      $module_handler = \Drupal::moduleHandler();
+    }
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -86,7 +118,9 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       $configuration['field_definition'],
       $configuration['settings'],
       $configuration['third_party_settings'],
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('current_user'),
+      $container->get('module_handler')
     );
   }
 
@@ -118,10 +152,15 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
 
     // Get the configured media types from the field storage.
     $handler_settings = $this->getFieldSetting('handler_settings');
-    $allowed_media_type_ids = !empty($handler_settings['target_bundles']) ? $handler_settings['target_bundles'] : [];
+    $allowed_media_type_ids = $handler_settings['target_bundles'];
+
+    // When there are no allowed media types, return the empty array.
+    if ($allowed_media_type_ids === []) {
+      return $allowed_media_type_ids;
+    }
 
     // When no target bundles are configured for the field, all are allowed.
-    if (!$allowed_media_type_ids) {
+    if ($allowed_media_type_ids === NULL) {
       $allowed_media_type_ids = $this->entityTypeManager->getStorage('media_type')->getQuery()->execute();
     }
 
@@ -287,6 +326,18 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       ],
     ];
 
+    // When the list of allowed types in the field configuration is null,
+    // ::getAllowedMediaTypeIdsSorted() returns all existing media types. When
+    // the list of allowed types is an empty array, we show a message to users
+    // and ask them to configure the field if they have access.
+    $allowed_media_type_ids = $this->getAllowedMediaTypeIdsSorted();
+    if (!$allowed_media_type_ids) {
+      $element['no_types_message'] = [
+        '#markup' => $this->getNoMediaTypesAvailableMessage(),
+      ];
+      return $element;
+    }
+
     if (empty($referenced_entities)) {
       $element['empty_selection'] = [
         '#type' => 'html_tag',
@@ -394,7 +445,6 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     }
 
     // Create a new media library URL with the correct state parameters.
-    $allowed_media_type_ids = $this->getAllowedMediaTypeIdsSorted();
     $selected_type_id = reset($allowed_media_type_ids);
     $remaining = $cardinality_unlimited ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : $remaining;
     // The opener ID is used by the select form and the upload form to add the
@@ -471,6 +521,45 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     ];
 
     return $element;
+  }
+
+  /**
+   * Gets the message to display when there are no allowed media types.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface
+   *   The message to display when there are no allowed media types.
+   */
+  protected function getNoMediaTypesAvailableMessage() {
+    $entity_type_id = $this->fieldDefinition->getTargetEntityTypeId();
+
+    $default_message = $this->t('There are no allowed media types configured for this field. Please contact the site administrator.');
+
+    // Show the default message if the user does not have the permissions to
+    // configure the fields for the entity type.
+    if (!$this->currentUser->hasPermission("administer $entity_type_id fields")) {
+      return $default_message;
+    }
+
+    // Show a message for privileged users to configure the field if the Field
+    // UI module is not enabled.
+    if (!$this->moduleHandler->moduleExists('field_ui')) {
+      return $this->t('There are no allowed media types configured for this field. Edit the field settings to select the allowed media types.');
+    }
+
+    // Add a link to the message to configure the field if the Field UI module
+    // is enabled.
+    $route_parameters = FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($entity_type_id), $this->fieldDefinition->getTargetBundle());
+    $route_parameters['field_config'] = $this->fieldDefinition->id();
+    $url = Url::fromRoute('entity.field_config.' . $entity_type_id . '_field_edit_form', $route_parameters);
+    if ($url->access($this->currentUser)) {
+      return $this->t('There are no allowed media types configured for this field. <a href=":url">Edit the field settings</a> to select the allowed media types.', [
+        ':url' => $url->toString(),
+      ]);
+    }
+
+    // If the user for some reason doesn't have access to the Field UI, fall
+    // back to the default message.
+    return $default_message;
   }
 
   /**
