@@ -5,7 +5,6 @@ namespace Drupal\image\Plugin\Field\FieldWidget;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Image\ImageFactory;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\file\Entity\File;
@@ -296,18 +295,7 @@ class ImageWidget extends FileWidget {
     // Only do validation if the function is triggered from other places than
     // the image process form.
     $triggering_element = $form_state->getTriggeringElement();
-    if (empty($triggering_element['#submit']) || !in_array('file_managed_file_submit', $triggering_element['#submit'])) {
-      // If the image is not there, we do not check for empty values.
-      $parents = $element['#parents'];
-      $field = array_pop($parents);
-      $image_field = NestedArray::getValue($form_state->getUserInput(), $parents);
-      // We check for the array key, so that it can be NULL (like if the user
-      // submits the form without using the "upload" button).
-      if (!array_key_exists($field, $image_field)) {
-        return;
-      }
-    }
-    else {
+    if (!empty($triggering_element['#submit']) && in_array('file_managed_file_submit', $triggering_element['#submit'], TRUE)) {
       $form_state->setLimitValidationErrors([]);
     }
   }
