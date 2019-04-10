@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\image\Functional;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -203,6 +204,56 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
 
     $this->assertNoText(t('Alternative text field is required.'));
     $this->assertNoText(t('Title field is required.'));
+  }
+
+  /**
+   * Tests creating an entity while leaving the image field empty.
+   *
+   * This is tested first with edit access to the image field allowed, and then
+   * with it forbidden.
+   *
+   * @dataProvider providerTestEmpty
+   */
+  public function testEmpty($field_name, $required, $cardinality, $form_element_name, $expected_page_text_when_edit_access_allowed, $expected_page_text_when_edit_access_forbidden) {
+    $this->createImageField($field_name, 'article', ['cardinality' => $cardinality], ['required' => $required]);
+
+    // Test with field edit access allowed.
+    $this->drupalGet('node/add/article');
+    $this->assertSession()->fieldExists($form_element_name);
+    $edit = [
+      'title[0][value]' => 'Article with edit-access-allowed image field',
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertSession()->pageTextContains($expected_page_text_when_edit_access_allowed);
+
+    // Test with field edit access forbidden.
+    \Drupal::service('module_installer')->install(['image_access_test_hidden']);
+    $this->drupalGet('node/add/article');
+    $this->assertSession()->fieldNotExists($form_element_name);
+    $edit = [
+      'title[0][value]' => 'Article with edit-access-forbidden image field',
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertSession()->pageTextContains($expected_page_text_when_edit_access_forbidden);
+  }
+
+  /**
+   * Data provider for ::testEmpty()
+   *
+   * @return array
+   *   Test cases.
+   */
+  public function providerTestEmpty() {
+    return [
+      'optional-single' => ['field_image', FALSE, 1, 'files[field_image_0]', 'Article Article with edit-access-allowed image field has been created.', 'Article Article with edit-access-forbidden image field has been created.'],
+      'optional-unlimited' => ['field_image', FALSE, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED, 'files[field_image_0][]', 'Article Article with edit-access-allowed image field has been created.', 'Article Article with edit-access-forbidden image field has been created.'],
+      'optional-multiple-limited' => ['field_image', FALSE, 2, 'files[field_image_0][]', 'Article Article with edit-access-allowed image field has been created.', 'Article Article with edit-access-forbidden image field has been created.'],
+      'required-single' => ['field_image', TRUE, 1, 'files[field_image_0]', 'field_image field is required.', 'field_image field is required.'],
+      'required-unlimited' => ['field_image', TRUE, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED, 'files[field_image_0][]', 'field_image field is required.', 'field_image field is required.'],
+
+      // @todo Fix this discrepancy in https://www.drupal.org/project/drupal/issues/3011744.
+      'required-multiple-limited' => ['field_image', TRUE, 2, 'files[field_image_0][]', 'This value should not be null.', 'Article Article with edit-access-forbidden image field has been created.'],
+    ];
   }
 
   /**
