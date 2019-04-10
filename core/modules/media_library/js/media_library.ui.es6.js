@@ -298,28 +298,28 @@
        * @param {number} remaining
        *   The number of remaining slots.
        */
-      function updateSelectionInfo(remaining) {
-        const $buttonPane = $(
-          '.media-library-widget-modal .ui-dialog-buttonpane',
-        );
-        if (!$buttonPane.length) {
-          return;
-        }
-
-        // Add the selection count.
-        const latestCount = Drupal.theme(
-          'mediaLibrarySelectionCount',
-          Drupal.MediaLibrary.currentSelection,
-          remaining,
-        );
-        const $existingCount = $buttonPane.find(
-          '.media-library-selected-count',
-        );
-        if ($existingCount.length) {
-          $existingCount.replaceWith(latestCount);
-        } else {
-          $buttonPane.append(latestCount);
-        }
+      function updateSelectionCount(remaining) {
+        // When the remaining number of items is a negative number, we allow an
+        // unlimited number of items. In that case we don't want to show the
+        // number of remaining slots.
+        const selectItemsText =
+          remaining < 0
+            ? Drupal.formatPlural(
+                currentSelection.length,
+                '1 item selected',
+                '@count items selected',
+              )
+            : Drupal.formatPlural(
+                remaining,
+                '@selected of @count item selected',
+                '@selected of @count items selected',
+                {
+                  '@selected': currentSelection.length,
+                },
+              );
+        // The selected count div could have been created outside of the
+        // context, so we unfortunately can't use context here.
+        $('.js-media-library-selected-count').html(selectItemsText);
       }
 
       // Update the selection array and the hidden form field when a media item
@@ -351,20 +351,25 @@
         $('.js-media-library-add-form-current-selection').val(
           currentSelection.join(),
         );
-
-        // Update the number of selected items in the button pane.
-        updateSelectionInfo(settings.media_library.selection_remaining);
-
-        // Prevent users from selecting more items than allowed.
-        if (
-          currentSelection.length === settings.media_library.selection_remaining
-        ) {
-          disableItems($mediaItems.not(':checked'));
-          enableItems($mediaItems.filter(':checked'));
-        } else {
-          enableItems($mediaItems);
-        }
       });
+
+      // The hidden selection form field changes when the selection is updated.
+      $('#media-library-modal-selection', $form)
+        .once('media-library-selection-change')
+        .on('change', e => {
+          updateSelectionCount(settings.media_library.selection_remaining);
+
+          // Prevent users from selecting more items than allowed.
+          if (
+            currentSelection.length ===
+            settings.media_library.selection_remaining
+          ) {
+            disableItems($mediaItems.not(':checked'));
+            enableItems($mediaItems.filter(':checked'));
+          } else {
+            enableItems($mediaItems);
+          }
+        });
 
       // Apply the current selection to the media library view. Changing the
       // checkbox values triggers the change event for the media items. The
@@ -376,12 +381,21 @@
           .trigger('change');
       });
 
-      // Hide selection button if nothing is selected. We can't use the
-      // context here because the dialog copies the select button.
+      // Add the selection count to the button pane when a media library dialog
+      // is created.
       $(window)
-        .once('media-library-toggle-buttons')
+        .once('media-library-selection-info')
         .on('dialog:aftercreate', () => {
-          updateSelectionInfo(settings.media_library.selection_remaining);
+          // Since the dialog HTML is not part of the context, we can't use
+          // context here.
+          const $buttonPane = $(
+            '.media-library-widget-modal .ui-dialog-buttonpane',
+          );
+          if (!$buttonPane.length) {
+            return;
+          }
+          $buttonPane.append(Drupal.theme('mediaLibrarySelectionCount'));
+          updateSelectionCount(settings.media_library.selection_remaining);
         });
     },
   };
@@ -407,32 +421,10 @@
   /**
    * Theme function for the selection count.
    *
-   * @param {Array.<number>} selection
-   *   An array containing the selected media item IDs.
-   * @param {number} remaining
-   *   The number of remaining slots.
-   *
    * @return {string}
    *   The corresponding HTML.
    */
-  Drupal.theme.mediaLibrarySelectionCount = function(selection, remaining) {
-    // When the remaining number of items is -1, we allow an unlimited number of
-    // items. In that case we don't want to show the number of remaining slots.
-    let selectItemsText = Drupal.formatPlural(
-      remaining,
-      '@selected of @count item selected',
-      '@selected of @count items selected',
-      {
-        '@selected': selection.length,
-      },
-    );
-    if (remaining === -1) {
-      selectItemsText = Drupal.formatPlural(
-        selection.length,
-        '1 item selected',
-        '@count items selected',
-      );
-    }
-    return `<div class="media-library-selected-count" aria-live="polite">${selectItemsText}</div>`;
+  Drupal.theme.mediaLibrarySelectionCount = function() {
+    return `<div class="media-library-selected-count js-media-library-selected-count" role="status" aria-live="polite" aria-atomic="true"></div>`;
   };
 })(jQuery, Drupal, window);
