@@ -209,3 +209,10 @@ user.reset.form:
   options:
     _maintenance_access: TRUE
     no_cache: TRUE
+
+user.well-known.change_password:
+  path: '/.well-known/change-password'
+  defaults:
+    _controller: '\Drupal\user\Controller\UserController::userEditPage'
+  requirements:
+    _user_is_logged_in: 'TRUE'

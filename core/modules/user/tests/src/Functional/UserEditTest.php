@@ -151,4 +151,22 @@ class UserEditTest extends BrowserTestBase {
     $this->assertRaw(t("The changes have been saved."));
   }
 
+  /**
+   * Tests well known change password route redirects to user edit form.
+   */
+  public function testUserWellKnownChangePasswordAuth() {
+    $account = $this->drupalCreateUser([]);
+    $this->drupalLogin($account);
+    $this->drupalGet('.well-known/change-password');
+    $this->assertSession()->addressEquals("user/" . $account->id() . "/edit");
+  }
+
+  /**
+   * Tests well known change password route returns 403 to anonymous user.
+   */
+  public function testUserWellKnownChangePasswordAnon() {
+    $this->drupalGet('.well-known/change-password');
+    $this->assertSession()->statusCodeEquals(403);
+  }
+
 }
