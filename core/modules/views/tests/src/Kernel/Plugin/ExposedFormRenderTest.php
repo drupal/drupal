@@ -136,7 +136,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
     $expected = [
       'type' => 'All',
       'type_with_default_value' => 'article',
-      'multiple_types_with_default_value' => ['article'],
+      'multiple_types_with_default_value' => ['article' => 'article'],
     ];
     $this->assertSame($view->exposed_raw_input, $expected);
   }
