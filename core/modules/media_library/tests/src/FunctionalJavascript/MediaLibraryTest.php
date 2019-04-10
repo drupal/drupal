@@ -545,7 +545,9 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Assert the number of selected items is displayed correctly.
     $assert_session->elementExists('css', '.media-library-selected-count');
     $assert_session->elementTextContains('css', '.media-library-selected-count', '0 of 2 items selected');
+    $assert_session->elementAttributeContains('css', '.media-library-selected-count', 'role', 'status');
     $assert_session->elementAttributeContains('css', '.media-library-selected-count', 'aria-live', 'polite');
+    $assert_session->elementAttributeContains('css', '.media-library-selected-count', 'aria-atomic', 'true');
     // Select a media item, assert the hidden selection field contains the ID of
     // the selected item.
     $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
