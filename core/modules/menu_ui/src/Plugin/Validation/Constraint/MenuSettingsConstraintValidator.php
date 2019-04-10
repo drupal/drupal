@@ -31,38 +31,34 @@ class MenuSettingsConstraintValidator extends ConstraintValidator {
         $values['parent'] = $parent;
       }
 
-      // Handle the case when a menu link is added to a pending revision.
-      if (!$defaults['entity_id'] && $values['enabled']) {
-        $violation_path = 'menu';
-      }
       // Handle the case when the menu link is deleted in a pending revision.
-      elseif (empty($values['enabled']) && $defaults['entity_id']) {
-        $violation_path = 'menu';
-      }
-      // Handle all the other menu link changes in a pending revision.
-      elseif ($defaults['entity_id']) {
-        if (($values['title'] != $defaults['title'])) {
-          $violation_path = 'menu.title';
-        }
-        elseif (($values['description'] != $defaults['description'])) {
-          $violation_path = 'menu.description';
-        }
-        elseif ($defaults['entity_id'] && ($values['menu_name'] != $defaults['menu_name'])) {
-          $violation_path = 'menu.menu_parent';
-        }
-        elseif (isset($values['parent']) && ($values['parent'] != $defaults['parent'])) {
-          $violation_path = 'menu.menu_parent';
-        }
-        elseif (($values['weight'] != $defaults['weight'])) {
-          $violation_path = 'menu.weight';
-        }
-      }
-
-      if ($violation_path) {
-        $this->context->buildViolation($constraint->message)
-          ->atPath($violation_path)
+      if (empty($values['enabled']) && $defaults['entity_id']) {
+        $this->context->buildViolation($constraint->messageRemove)
+          ->atPath('menu')
           ->setInvalidValue($entity)
           ->addViolation();
+      }
+      // Handle all the other non-revisionable menu link changes in a pending
+      // revision.
+      elseif ($defaults['entity_id']) {
+        if ($defaults['entity_id'] && ($values['menu_name'] != $defaults['menu_name'])) {
+          $this->context->buildViolation($constraint->messageParent)
+            ->atPath('menu.menu_parent')
+            ->setInvalidValue($entity)
+            ->addViolation();
+        }
+        elseif (isset($values['parent']) && ($values['parent'] != $defaults['parent'])) {
+          $this->context->buildViolation($constraint->messageParent)
+            ->atPath('menu.menu_parent')
+            ->setInvalidValue($entity)
+            ->addViolation();
+        }
+        elseif (($values['weight'] != $defaults['weight'])) {
+          $this->context->buildViolation($constraint->messageWeight)
+            ->atPath('menu.weight')
+            ->setInvalidValue($entity)
+            ->addViolation();
+        }
       }
     }
   }
