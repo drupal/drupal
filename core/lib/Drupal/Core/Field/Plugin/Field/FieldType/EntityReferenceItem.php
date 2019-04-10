@@ -65,11 +65,11 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $settings = $field_definition->getSettings();
-    $target_type_info = \Drupal::entityManager()->getDefinition($settings['target_type']);
+    $target_type_info = \Drupal::entityTypeManager()->getDefinition($settings['target_type']);
 
     $target_id_data_type = 'string';
     if ($target_type_info->entityClassImplements(FieldableEntityInterface::class)) {
-      $id_definition = \Drupal::entityManager()->getBaseFieldDefinitions($settings['target_type'])[$target_type_info->getKey('id')];
+      $id_definition = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($settings['target_type'])[$target_type_info->getKey('id')];
       if ($id_definition->getType() === 'integer') {
         $target_id_data_type = 'integer';
       }
@@ -114,7 +114,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $target_type = $field_definition->getSetting('target_type');
-    $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
+    $target_type_info = \Drupal::entityTypeManager()->getDefinition($target_type);
     $properties = static::propertyDefinitions($field_definition)['target_id'];
     if ($target_type_info->entityClassImplements(FieldableEntityInterface::class) && $properties->getDataType() === 'integer') {
       $columns = [
@@ -287,7 +287,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       'entity' => NULL,
     ];
 
-    $entity_type = \Drupal::entityManager()->getDefinition($options['target_type']);
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($options['target_type']);
     $options['handler_settings']['sort'] = [
       'field' => $entity_type->getKey('id'),
       'direction' => 'DESC',
@@ -466,14 +466,15 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    */
   public static function calculateDependencies(FieldDefinitionInterface $field_definition) {
     $dependencies = parent::calculateDependencies($field_definition);
-    $manager = \Drupal::entityManager();
-    $target_entity_type = $manager->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $target_entity_type = $entity_type_manager->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
 
     // Depend on default values entity types configurations.
     if ($default_value = $field_definition->getDefaultValueLiteral()) {
+      $entity_repository = \Drupal::service('entity.repository');
       foreach ($default_value as $value) {
         if (is_array($value) && isset($value['target_uuid'])) {
-          $entity = \Drupal::service('entity.repository')->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
+          $entity = $entity_repository->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
           // If the entity does not exist do not create the dependency.
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
           if ($entity) {
@@ -489,7 +490,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     $handler = $field_definition->getSetting('handler_settings');
     if (!empty($handler['target_bundles'])) {
       if ($bundle_entity_type_id = $target_entity_type->getBundleEntityType()) {
-        if ($storage = $manager->getStorage($bundle_entity_type_id)) {
+        if ($storage = $entity_type_manager->getStorage($bundle_entity_type_id)) {
           foreach ($storage->loadMultiple($handler['target_bundles']) as $bundle) {
             $dependencies[$bundle->getConfigDependencyKey()][] = $bundle->getConfigDependencyName();
           }
@@ -505,7 +506,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    */
   public static function calculateStorageDependencies(FieldStorageDefinitionInterface $field_definition) {
     $dependencies = parent::calculateStorageDependencies($field_definition);
-    $target_entity_type = \Drupal::entityManager()->getDefinition($field_definition->getSetting('target_type'));
+    $target_entity_type = \Drupal::entityTypeManager()->getDefinition($field_definition->getSetting('target_type'));
     $dependencies['module'][] = $target_entity_type->getProvider();
     return $dependencies;
   }
@@ -515,14 +516,15 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    */
   public static function onDependencyRemoval(FieldDefinitionInterface $field_definition, array $dependencies) {
     $changed = parent::onDependencyRemoval($field_definition, $dependencies);
-    $entity_manager = \Drupal::entityManager();
-    $target_entity_type = $entity_manager->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $target_entity_type = $entity_type_manager->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
 
     // Try to update the default value config dependency, if possible.
     if ($default_value = $field_definition->getDefaultValueLiteral()) {
+      $entity_repository = \Drupal::service('entity.repository');
       foreach ($default_value as $key => $value) {
         if (is_array($value) && isset($value['target_uuid'])) {
-          $entity = \Drupal::service('entity.repository')->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
+          $entity = $entity_repository->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
           if ($entity && isset($dependencies[$entity->getConfigDependencyKey()][$entity->getConfigDependencyName()])) {
             unset($default_value[$key]);
@@ -541,7 +543,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     $handler_settings = $field_definition->getSetting('handler_settings');
     if (!empty($handler_settings['target_bundles'])) {
       if ($bundle_entity_type_id = $target_entity_type->getBundleEntityType()) {
-        if ($storage = $entity_manager->getStorage($bundle_entity_type_id)) {
+        if ($storage = $entity_type_manager->getStorage($bundle_entity_type_id)) {
           foreach ($storage->loadMultiple($handler_settings['target_bundles']) as $bundle) {
             if (isset($dependencies[$bundle->getConfigDependencyKey()][$bundle->getConfigDependencyName()])) {
               unset($handler_settings['target_bundles'][$bundle->id()]);
@@ -687,7 +689,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
 
     // Add all the commonly referenced entity types as distinct pre-configured
     // options.
-    $entity_types = \Drupal::entityManager()->getDefinitions();
+    $entity_types = \Drupal::entityTypeManager()->getDefinitions();
     $common_references = array_filter($entity_types, function (EntityTypeInterface $entity_type) {
       return $entity_type->isCommonReferenceTarget();
     });

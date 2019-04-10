@@ -57,6 +57,21 @@ class EntityViewsDataTest extends UnitTestCase {
   protected $entityManager;
 
   /**
+   * The mocked entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityFieldManager;
+
+
+  /**
+   * The mocked entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityTypeManager;
+
+  /**
    * The mocked module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -85,6 +100,8 @@ class EntityViewsDataTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityFieldManager = $this->getMock('Drupal\Core\Entity\EntityFieldManagerInterface');
+    $this->entityTypeManager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
 
     $typed_data_manager = $this->getMock(TypedDataManagerInterface::class);
     $typed_data_manager->expects($this->any())
@@ -135,6 +152,8 @@ class EntityViewsDataTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->set('plugin.manager.field.field_type', $field_type_manager);
     $container->set('entity.manager', $this->entityManager);
+    $container->set('entity_field.manager', $this->entityFieldManager);
+    $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('typed_data_manager', $typed_data_manager);
     $container->set('state', $state->reveal());
     \Drupal::setContainer($container);
@@ -414,6 +433,12 @@ class EntityViewsDataTest extends UnitTestCase {
           ['user', TRUE, static::userEntityInfo()],
         ]
       );
+    $this->entityTypeManager->expects($this->any())
+      ->method('getDefinition')
+      ->willReturnMap([
+          ['user', TRUE, static::userEntityInfo()],
+        ]
+      );
     $user_id_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $user_id_field_storage_definition->expects($this->any())
       ->method('getSetting')
@@ -460,6 +485,12 @@ class EntityViewsDataTest extends UnitTestCase {
         ->setSetting('unsigned', TRUE),
     ];
     $this->entityManager->expects($this->any())
+      ->method('getBaseFieldDefinitions')
+      ->will($this->returnValueMap([
+        ['user', $user_base_field_definitions],
+        ['entity_test', $base_field_definitions],
+      ]));
+    $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValueMap([
         ['user', $user_base_field_definitions],
@@ -583,6 +614,12 @@ class EntityViewsDataTest extends UnitTestCase {
     $entity_test_type = new ConfigEntityType(['id' => 'entity_test_bundle']);
 
     $this->entityManager->expects($this->any())
+      ->method('getBaseFieldDefinitions')
+      ->will($this->returnValueMap([
+        ['user', $user_base_field_definitions],
+        ['entity_test_mul', $base_field_definitions],
+      ]));
+    $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValueMap([
         ['user', $user_base_field_definitions],
@@ -733,6 +770,12 @@ class EntityViewsDataTest extends UnitTestCase {
         ->setSetting('unsigned', TRUE),
     ];
     $this->entityManager->expects($this->any())
+      ->method('getBaseFieldDefinitions')
+      ->will($this->returnValueMap([
+        ['user', $user_base_field_definitions],
+        ['entity_test_mulrev', $base_field_definitions],
+      ]));
+    $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValueMap([
         ['user', $user_base_field_definitions],
