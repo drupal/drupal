@@ -79,30 +79,6 @@ class MenuUiContentModerationTest extends BrowserTestBase {
 
     $this->assertSession()->linkExists('Test menu link');
 
-    // Try to change the menu link title and save a new non-default (draft)
-    // revision.
-    $edit = [
-      'menu[title]' => 'Test menu link draft',
-      'moderation_state[0][state]' => 'draft',
-    ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-
-    // Check that the menu settings were not applied.
-    $this->assertSession()->pageTextContains('You can only change the menu settings for the published version of this content.');
-    $this->assertSession()->linkExists('Test menu link');
-    $this->assertSession()->linkNotExists('Test menu link draft');
-
-    // Try to change the menu link description and save a new non-default
-    // (draft) revision.
-    $edit = [
-      'menu[description]' => 'Test menu link description',
-      'moderation_state[0][state]' => 'draft',
-    ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-
-    // Check that the menu settings were not applied.
-    $this->assertSession()->pageTextContains('You can only change the menu settings for the published version of this content.');
-
     // Try to change the menu link weight and save a new non-default (draft)
     // revision.
     $edit = [
@@ -112,7 +88,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that the menu settings were not applied.
-    $this->assertSession()->pageTextContains('You can only change the menu settings for the published version of this content.');
+    $this->assertSession()->pageTextContains('You can only change the menu item weight for the published version of this content.');
 
     // Try to change the menu link parent and save a new non-default (draft)
     // revision.
@@ -123,7 +99,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that the menu settings were not applied.
-    $this->assertSession()->pageTextContains('You can only change the menu settings for the published version of this content.');
+    $this->assertSession()->pageTextContains('You can only change the parent menu item for the published version of this content.');
 
     // Try to delete the menu link and save a new non-default (draft) revision.
     $edit = [
@@ -133,17 +109,33 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that the menu settings were not applied.
-    $this->assertSession()->pageTextContains('You can only change the menu settings for the published version of this content.');
+    $this->assertSession()->pageTextContains('You can only remove the menu item in the published version of this content.');
     $this->assertSession()->linkExists('Test menu link');
+
+    // Try to change the menu link title and description and save a new
+    // non-default (draft) revision.
+    $edit = [
+      'menu[title]' => 'Test menu link draft',
+      'menu[description]' => 'Test menu link description',
+      'moderation_state[0][state]' => 'draft',
+    ];
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->assertSession()->responseContains(t('Page %label has been updated.', ['%label' => $node->toLink($node->label())->toString()]));
+
+    // Ensure the content was not immediately published.
+    $this->assertSession()->linkExists('Test menu link');
+
+    // Publish the node and ensure the new link text was published.
+    $edit = [
+      'moderation_state[0][state]' => 'published',
+    ];
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->assertSession()->linkExists('Test menu link draft');
 
     // Try to save a new non-default (draft) revision without any changes and
     // check that the error message is not shown.
     $edit = ['moderation_state[0][state]' => 'draft'];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-
-    // Check that the menu settings were not applied.
-    $this->assertSession()->pageTextNotContains('You can only change the menu settings for the published version of this content.');
-    $this->assertSession()->linkExists('Test menu link');
 
     // Create a node.
     $node = $this->drupalCreateNode();
@@ -153,14 +145,24 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertSession()->responseContains(t('Page %label has been updated.', ['%label' => $node->toLink($node->label())->toString()]));
 
-    // Add a menu link and save and create a new non-default (draft) revision.
+    // Add a menu link and save and create a new non-default (draft) revision
+    // and ensure it's not immediately published.
     $edit = [
       'menu[enabled]' => 1,
-      'menu[title]' => 'Test menu link',
+      'menu[title]' => 'Second test menu link',
       'moderation_state[0][state]' => 'draft',
     ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $this->assertSession()->pageTextContains('You can only change the menu settings for the published version of this content.');
+    $this->assertSession()->responseContains(t('Page %label has been updated.', ['%label' => $node->toLink($node->label())->toString()]));
+    $this->assertSession()->linkNotExists('Second test menu link');
+
+    // Publish the content and ensure the new menu link shows up.
+    $edit = [
+      'moderation_state[0][state]' => 'published',
+    ];
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->assertSession()->responseContains(t('Page %label has been updated.', ['%label' => $node->toLink($node->label())->toString()]));
+    $this->assertSession()->linkExists('Second test menu link');
   }
 
 }

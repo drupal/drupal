@@ -15,5 +15,8 @@ use Symfony\Component\Validator\Constraint;
 class MenuSettingsConstraint extends Constraint {
 
   public $message = 'You can only change the menu settings for the <em>published</em> version of this content.';
+  public $messageWeight = 'You can only change the menu item weight for the <em>published</em> version of this content.';
+  public $messageParent = 'You can only change the parent menu item for the <em>published</em> version of this content.';
+  public $messageRemove = 'You can only remove the menu item in the <em>published</em> version of this content.';
 
 }
