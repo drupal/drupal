@@ -1,7 +1,12 @@
 <?php
 
-namespace Drupal\Tests\node\Functional\Views;
+namespace Drupal\Tests\node\Kernel\Views;
 
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\views\Tests\ViewResultAssertionTrait;
+use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
 /**
@@ -9,7 +14,23 @@ use Drupal\views\Views;
  *
  * @group node
  */
-class FilterUidRevisionTest extends NodeTestBase {
+class FilterUidRevisionTest extends KernelTestBase {
+
+  use NodeCreationTrait;
+  use UserCreationTrait;
+  use ViewResultAssertionTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'filter',
+    'node',
+    'node_test_views',
+    'system',
+    'user',
+    'views',
+  ];
 
   /**
    * Views used by this test.
@@ -22,16 +43,24 @@ class FilterUidRevisionTest extends NodeTestBase {
    * Tests the node_uid_revision filter.
    */
   public function testFilter() {
-    $author = $this->drupalCreateUser();
-    $no_author = $this->drupalCreateUser();
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('view');
+    $this->installSchema('system', ['sequences']);
+    $this->installSchema('node', ['node_access']);
+    $this->installConfig(['filter']);
+    ViewTestData::createTestViews(static::class, ['node_test_views']);
+
+    $author = $this->createUser();
+    $no_author = $this->createUser();
 
     $expected_result = [];
     // Create one node, with the author as the node author.
-    $node = $this->drupalCreateNode(['uid' => $author->id()]);
+    $node = $this->createNode(['uid' => $author->id()]);
     $expected_result[] = ['nid' => $node->id()];
     // Create one node of which an additional revision author will be the
     // author.
-    $node = $this->drupalCreateNode(['revision_uid' => $no_author->id()]);
+    $node = $this->createNode(['revision_uid' => $no_author->id()]);
     $expected_result[] = ['nid' => $node->id()];
     $revision = clone $node;
     // Force to add a new revision.
@@ -41,13 +70,13 @@ class FilterUidRevisionTest extends NodeTestBase {
 
     // Create one  node on which the author has neither authorship of revisions
     // or the main node.
-    $this->drupalCreateNode(['uid' => $no_author->id()]);
+    $this->createNode(['uid' => $no_author->id()]);
 
     $view = Views::getView('test_filter_node_uid_revision');
     $view->initHandlers();
     $view->filter['uid_revision']->value = [$author->id()];
 
-    $this->executeView($view);
+    $view->preview();
     $this->assertIdenticalResultset($view, $expected_result, ['nid' => 'nid'], 'Make sure that the view only returns nodes which match either the node or the revision author.');
   }
 
