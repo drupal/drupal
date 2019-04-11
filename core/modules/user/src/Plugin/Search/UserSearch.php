@@ -4,7 +4,8 @@ namespace Drupal\user\Plugin\Search;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
@@ -20,6 +21,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class UserSearch extends SearchPluginBase implements AccessibleInterface {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The database connection.
@@ -29,11 +36,11 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
   protected $database;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The module handler.
@@ -55,7 +62,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $container->get('database'),
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('module_handler'),
       $container->get('current_user'),
       $configuration,
@@ -69,8 +76,8 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Session\AccountInterface $current_user
@@ -82,9 +89,9 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    */
-  public function __construct(Connection $database, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, AccountInterface $current_user, array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(Connection $database, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, AccountInterface $current_user, array $configuration, $plugin_id, $plugin_definition) {
     $this->database = $database;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -141,7 +148,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
       ->limit(15)
       ->execute()
       ->fetchCol();
-    $accounts = $this->entityManager->getStorage('user')->loadMultiple($uids);
+    $accounts = $this->entityTypeManager->getStorage('user')->loadMultiple($uids);
 
     foreach ($accounts as $account) {
       $result = [

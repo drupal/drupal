@@ -6,7 +6,7 @@ use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\EmailValidatorInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
@@ -80,7 +80,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
    *   The plugin implementation definition.
    * @param \Drupal\Core\Utility\Token $token
    *   The token service.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
@@ -91,11 +91,11 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
    * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
    *   The email validator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, EntityManagerInterface $entity_manager, LoggerInterface $logger, MailManagerInterface $mail_manager, LanguageManagerInterface $language_manager, EmailValidatorInterface $email_validator) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger, MailManagerInterface $mail_manager, LanguageManagerInterface $language_manager, EmailValidatorInterface $email_validator) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->token = $token;
-    $this->storage = $entity_manager->getStorage('user');
+    $this->storage = $entity_type_manager->getStorage('user');
     $this->logger = $logger;
     $this->mailManager = $mail_manager;
     $this->languageManager = $language_manager;

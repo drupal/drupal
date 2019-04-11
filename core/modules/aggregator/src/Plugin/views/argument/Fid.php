@@ -2,7 +2,8 @@
 
 namespace Drupal\aggregator\Plugin\views\argument;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -14,13 +15,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ViewsArgument("aggregator_fid")
  */
 class Fid extends NumericArgument {
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * The entity manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * {@inheritdoc}
    */
-  protected $entityManager;
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * Constructs a \Drupal\aggregator\Plugin\views\argument\Fid object.
@@ -31,19 +38,19 @@ class Fid extends NumericArgument {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
+   *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity.manager'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity_type.manager'));
   }
 
   /**
@@ -52,7 +59,7 @@ class Fid extends NumericArgument {
   public function titleQuery() {
     $titles = [];
 
-    $feeds = $this->entityManager->getStorage('aggregator_feed')->loadMultiple($this->value);
+    $feeds = $this->entityTypeManager->getStorage('aggregator_feed')->loadMultiple($this->value);
     foreach ($feeds as $feed) {
       $titles[] = $feed->label();
     }

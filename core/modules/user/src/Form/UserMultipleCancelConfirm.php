@@ -2,7 +2,8 @@
 
 namespace Drupal\user\Form;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -17,6 +18,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class UserMultipleCancelConfirm extends ConfirmFormBase {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The temp store factory.
@@ -33,11 +40,11 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
   protected $userStorage;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * Constructs a new UserMultipleCancelConfirm.
@@ -46,13 +53,13 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
    *   The temp store factory.
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(PrivateTempStoreFactory $temp_store_factory, UserStorageInterface $user_storage, EntityManagerInterface $entity_manager) {
+  public function __construct(PrivateTempStoreFactory $temp_store_factory, UserStorageInterface $user_storage, EntityTypeManagerInterface $entity_type_manager) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->userStorage = $user_storage;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -61,8 +68,8 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('tempstore.private'),
-      $container->get('entity.manager')->getStorage('user'),
-      $container->get('entity.manager')
+      $container->get('entity_type.manager')->getStorage('user'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -207,7 +214,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
           // The $user global is not a complete user entity, so load the full
           // entity.
           $account = $this->userStorage->load($uid);
-          $admin_form = $this->entityManager->getFormObject('user', 'cancel');
+          $admin_form = $this->entityTypeManager->getFormObject('user', 'cancel');
           $admin_form->setEntity($account);
           // Calling this directly required to init form object with $account.
           $admin_form->buildForm($admin_form_mock, $admin_form_state);

@@ -3,10 +3,11 @@
 namespace Drupal\block;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -23,6 +24,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class BlockForm extends EntityForm {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The block entity.
@@ -76,7 +83,7 @@ class BlockForm extends EntityForm {
   /**
    * Constructs a BlockForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
    * @param \Drupal\Core\Executable\ExecutableManagerInterface $manager
    *   The ConditionManager for building the visibility UI.
@@ -89,8 +96,8 @@ class BlockForm extends EntityForm {
    * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $plugin_form_manager
    *   The plugin form manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ExecutableManagerInterface $manager, ContextRepositoryInterface $context_repository, LanguageManagerInterface $language, ThemeHandlerInterface $theme_handler, PluginFormFactoryInterface $plugin_form_manager) {
-    $this->storage = $entity_manager->getStorage('block');
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ExecutableManagerInterface $manager, ContextRepositoryInterface $context_repository, LanguageManagerInterface $language, ThemeHandlerInterface $theme_handler, PluginFormFactoryInterface $plugin_form_manager) {
+    $this->storage = $entity_type_manager->getStorage('block');
     $this->manager = $manager;
     $this->contextRepository = $context_repository;
     $this->language = $language;

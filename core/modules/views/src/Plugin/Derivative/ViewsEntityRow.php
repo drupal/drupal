@@ -2,7 +2,8 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\views\ViewsData;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,6 +16,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\views\Plugin\views\row\EntityRow
  */
 class ViewsEntityRow implements ContainerDeriverInterface {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Stores all entity row plugin information.
@@ -31,11 +38,11 @@ class ViewsEntityRow implements ContainerDeriverInterface {
   protected $basePluginId;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The views data service.
@@ -49,14 +56,14 @@ class ViewsEntityRow implements ContainerDeriverInterface {
    *
    * @param string $base_plugin_id
    *   The base plugin ID.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\views\ViewsData $views_data
    *   The views data service.
    */
-  public function __construct($base_plugin_id, EntityManagerInterface $entity_manager, ViewsData $views_data) {
+  public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager, ViewsData $views_data) {
     $this->basePluginId = $base_plugin_id;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
     $this->viewsData = $views_data;
   }
 
@@ -86,9 +93,9 @@ class ViewsEntityRow implements ContainerDeriverInterface {
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
+    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       // Just add support for entity types which have a views integration.
-      if (($base_table = $entity_type->getBaseTable()) && $this->viewsData->get($base_table) && $this->entityManager->hasHandler($entity_type_id, 'view_builder')) {
+      if (($base_table = $entity_type->getBaseTable()) && $this->viewsData->get($base_table) && $this->entityTypeManager->hasHandler($entity_type_id, 'view_builder')) {
         $this->derivatives[$entity_type_id] = [
           'id' => 'entity:' . $entity_type_id,
           'provider' => 'views',

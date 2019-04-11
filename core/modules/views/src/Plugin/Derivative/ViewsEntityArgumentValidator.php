@@ -3,7 +3,8 @@
 namespace Drupal\views\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -18,6 +19,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ViewsEntityArgumentValidator extends DeriverBase implements ContainerDeriverInterface {
   use StringTranslationTrait;
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The base plugin ID this derivative is for.
@@ -27,11 +34,11 @@ class ViewsEntityArgumentValidator extends DeriverBase implements ContainerDeriv
   protected $basePluginId;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * List of derivative definitions.
@@ -45,14 +52,14 @@ class ViewsEntityArgumentValidator extends DeriverBase implements ContainerDeriv
    *
    * @param string $base_plugin_id
    *   The base plugin ID.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation.
    */
-  public function __construct($base_plugin_id, EntityManagerInterface $entity_manager, TranslationInterface $string_translation) {
+  public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
     $this->basePluginId = $base_plugin_id;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
     $this->stringTranslation = $string_translation;
   }
 
@@ -62,7 +69,7 @@ class ViewsEntityArgumentValidator extends DeriverBase implements ContainerDeriv
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
       $base_plugin_id,
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('string_translation')
     );
   }
@@ -71,7 +78,7 @@ class ViewsEntityArgumentValidator extends DeriverBase implements ContainerDeriv
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    $entity_types = $this->entityManager->getDefinitions();
+    $entity_types = $this->entityTypeManager->getDefinitions();
     $this->derivatives = [];
     foreach ($entity_types as $entity_type_id => $entity_type) {
       $this->derivatives[$entity_type_id] = [
