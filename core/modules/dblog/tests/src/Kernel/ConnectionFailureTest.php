@@ -1,24 +1,27 @@
 <?php
 
-namespace Drupal\Tests\dblog\Functional;
+namespace Drupal\Tests\dblog\Kernel;
 
 use Drupal\Core\Database\Database;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests logging of connection failures.
  *
  * @group dblog
  */
-class ConnectionFailureTest extends BrowserTestBase {
+class ConnectionFailureTest extends KernelTestBase {
 
-  public static $modules = ['dblog'];
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['dblog'];
 
   /**
    * Tests logging of connection failures.
    */
   public function testConnectionFailureLogging() {
-    $logger = \Drupal::service('logger.factory');
+    $this->installSchema('dblog', ['watchdog']);
 
     // MySQL errors like "1153 - Got a packet bigger than 'max_allowed_packet'
     // bytes" or "1100 - Table 'xyz' was not locked with LOCK TABLES" lead to a
@@ -31,13 +34,13 @@ class ConnectionFailureTest extends BrowserTestBase {
     Database::closeConnection();
 
     // Create a log entry.
-    $logger->get('php')->error('testConnectionFailureLogging');
+    $this->container->get('logger.factory')->get('php')->error('testConnectionFailureLogging');
 
     // Re-establish the default database connection.
-    Database::getConnection();
+    $database = Database::getConnection();
 
-    $wid = db_query("SELECT MAX(wid) FROM {watchdog} WHERE message = 'testConnectionFailureLogging'")->fetchField();
-    $this->assertTrue($wid, 'Watchdog entry has been stored in database.');
+    $wid = $database->query("SELECT MAX(wid) FROM {watchdog} WHERE message = 'testConnectionFailureLogging'")->fetchField();
+    $this->assertTrue($wid);
   }
 
 }
