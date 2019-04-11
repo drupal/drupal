@@ -1,32 +1,32 @@
 <?php
 
-namespace Drupal\Tests\block\Functional;
+namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests the block_theme_suggestions_block() function.
  *
  * @group block
  */
-class BlockTemplateSuggestionsTest extends BrowserTestBase {
+class BlockTemplateSuggestionsTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['block'];
+  protected static $modules = [
+    'block',
+    'system',
+  ];
 
   /**
    * Tests template suggestions from block_theme_suggestions_block().
    */
   public function testBlockThemeHookSuggestions() {
-    // Define a block with a derivative to be preprocessed, which includes both
-    // an underscore (not transformed) and a hyphen (transformed to underscore),
-    // and generates possibilities for each level of derivative.
-    // @todo Clarify this comment.
+    $this->installConfig(['system']);
+
+    // Create a block using a plugin with derivative to be preprocessed.
     $block = Block::create([
       'plugin' => 'system_menu_block:admin',
       'region' => 'footer',
@@ -34,6 +34,7 @@ class BlockTemplateSuggestionsTest extends BrowserTestBase {
     ]);
 
     $variables = [];
+    /** @var \Drupal\Core\Block\BlockPluginInterface $plugin */
     $plugin = $block->getPlugin();
     $variables['elements']['#configuration'] = $plugin->getConfiguration();
     $variables['elements']['#plugin_id'] = $plugin->getPluginId();
@@ -42,7 +43,12 @@ class BlockTemplateSuggestionsTest extends BrowserTestBase {
     $variables['elements']['#derivative_plugin_id'] = $plugin->getDerivativeId();
     $variables['elements']['content'] = [];
     $suggestions = block_theme_suggestions_block($variables);
-    $this->assertEqual($suggestions, ['block__system', 'block__system_menu_block', 'block__system_menu_block__admin', 'block__machinename']);
+    $this->assertSame([
+      'block__system',
+      'block__system_menu_block',
+      'block__system_menu_block__admin',
+      'block__machinename',
+    ], $suggestions);
   }
 
 }
