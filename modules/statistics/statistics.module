@@ -74,8 +74,6 @@ function statistics_exit() {
     }
   }
   if (variable_get('statistics_enable_access_log', 0)) {
-    drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
-
     // For anonymous users unicode.inc will not have been loaded.
     include_once DRUPAL_ROOT . '/includes/unicode.inc';
     // Log this page access.
