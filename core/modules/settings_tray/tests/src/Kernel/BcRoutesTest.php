@@ -1,9 +1,10 @@
 <?php
 
-namespace Drupal\Tests\settings_tray\Functional;
+namespace Drupal\Tests\settings_tray\Kernel;
 
 use Drupal\Core\Url;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 
 /**
  * Tests Settings Tray BC routes.
@@ -11,13 +12,17 @@ use Drupal\Tests\BrowserTestBase;
  * @group settings_tray
  * @group legacy
  */
-class BcRoutesTest extends BrowserTestBase {
+class BcRoutesTest extends KernelTestBase {
+
+  use BlockCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
+    'block',
     'settings_tray',
+    'system',
   ];
 
   /**
