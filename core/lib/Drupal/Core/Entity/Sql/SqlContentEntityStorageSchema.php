@@ -17,6 +17,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Site\Settings;
 
 /**
  * Defines a schema handler that supports revisionable, translatable entities.
@@ -96,6 +97,13 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   protected $installedStorageSchema;
 
   /**
+   * The key-value collection for tracking entity update backup repository.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $updateBackupRepository;
+
+  /**
    * The deleted fields repository.
    *
    * @var \Drupal\Core\Field\DeletedFieldsRepositoryInterface
@@ -161,6 +169,23 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       $this->deletedFieldsRepository = \Drupal::service('entity_field.deleted_fields_repository');
     }
     return $this->deletedFieldsRepository;
+  }
+
+  /**
+   * Gets the key/value collection for tracking the entity update backups.
+   *
+   * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   *   A key/value collection.
+   *
+   * @todo Inject this dependency in the constructor once this class can be
+   *   instantiated as a regular entity handler.
+   *   @see https://www.drupal.org/node/2332857
+   */
+  protected function updateBackupRepository() {
+    if (!isset($this->updateBackupRepository)) {
+      $this->updateBackupRepository = \Drupal::keyValue('entity.update_backup');
+    }
+    return $this->updateBackupRepository;
   }
 
   /**
@@ -432,7 +457,11 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $sandbox['temporary_table_mapping'] = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions, $temporary_prefix);
     $sandbox['new_table_mapping'] = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions);
     $sandbox['original_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions);
-    $sandbox['backup_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions, 'old_');
+
+    $backup_prefix = static::getTemporaryTableMappingPrefix($original, $original_field_storage_definitions, 'old_');
+    $sandbox['backup_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions, $backup_prefix);
+    $sandbox['backup_prefix_key'] = substr($backup_prefix, 4);
+    $sandbox['backup_request_time'] = \Drupal::time()->getRequestTime();
 
     // Create temporary tables based on the new entity type and field storage
     // definitions.
@@ -554,11 +583,22 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     // At this point the update process either finished successfully or any
-    // error has been thrown already, so we can drop the backup entity tables.
-    // @todo Decide whether we should keep these tables around.
-    //   @see https://www.drupal.org/project/drupal/issues/3024728
-    foreach ($backup_table_names as $original_table_name => $backup_table_name) {
-      $this->database->schema()->dropTable($backup_table_name);
+    // error has been thrown already. We can either keep the backup tables in
+    // place or drop them.
+    if (Settings::get('entity_update_backup', TRUE)) {
+      $backup_key = $sandbox['backup_prefix_key'];
+      $backup = [
+        'entity_type' => $original,
+        'field_storage_definitions' => $original_field_storage_definitions,
+        'table_mapping' => $backup_table_mapping,
+        'request_time' => $sandbox['backup_request_time'],
+      ];
+      $this->updateBackupRepository()->set("{$original->id()}.$backup_key", $backup);
+    }
+    else {
+      foreach ($backup_table_names as $original_table_name => $backup_table_name) {
+        $this->database->schema()->dropTable($backup_table_name);
+      }
     }
   }
 
@@ -582,13 +622,15 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   An entity type definition.
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $field_storage_definitions
    *   An array of field storage definitions.
+   * @param string $first_prefix_part
+   *   (optional) The first part of the prefix. Defaults to 'tmp_'.
    *
    * @return string
    *   A temporary table mapping prefix.
    *
    * @internal
    */
-  public static function getTemporaryTableMappingPrefix(EntityTypeInterface $entity_type, array $field_storage_definitions) {
+  public static function getTemporaryTableMappingPrefix(EntityTypeInterface $entity_type, array $field_storage_definitions, $first_prefix_part = 'tmp_') {
     // Construct a unique prefix based on the contents of the entity type and
     // field storage definitions.
     $prefix_parts[] = spl_object_hash($entity_type);
@@ -598,7 +640,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $prefix_parts[] = \Drupal::time()->getRequestTime();
     $hash = hash('sha256', implode('', $prefix_parts));
 
-    return 'tmp_' . substr($hash, 0, 6);
+    return $first_prefix_part . substr($hash, 0, 6);
   }
 
   /**

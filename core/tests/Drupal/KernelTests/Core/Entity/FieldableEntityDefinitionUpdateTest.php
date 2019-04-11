@@ -165,6 +165,9 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     // Check that we can still save new entities after the schema has been
     // updated.
     $this->insertData($new_rev, $new_mul);
+
+    // Check that the backup tables have been kept in place.
+    $this->assertBackupTables();
   }
 
   /**
@@ -570,9 +573,24 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   }
 
   /**
+   * Asserts that the backup tables have been kept after a successful update.
+   */
+  protected function assertBackupTables() {
+    $backups = \Drupal::keyValue('entity.update_backup')->getAll();
+    $backup = reset($backups);
+
+    $schema = $this->database->schema();
+    foreach ($backup['table_mapping']->getTableNames() as $table_name) {
+      $this->assertTrue($schema->tableExists($table_name));
+    }
+  }
+
+  /**
    * Tests that a failed entity schema update preserves the existing data.
    */
   public function testFieldableEntityTypeUpdatesErrorHandling() {
+    $schema = $this->database->schema();
+
     // First, convert the entity type to be translatable for better coverage and
     // insert some initial data.
     $entity_type = $this->getUpdatedEntityTypeDefinition(FALSE, TRUE);
@@ -580,6 +598,12 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->entityDefinitionUpdateManager->updateFieldableEntityType($entity_type, $field_storage_definitions);
     $this->assertEntityTypeSchema(FALSE, TRUE);
     $this->insertData(FALSE, TRUE);
+
+    $tables = $schema->findTables('old_%');
+    $this->assertCount(3, $tables);
+    foreach ($tables as $table) {
+      $schema->dropTable($table);
+    }
 
     $original_entity_type = $this->lastInstalledSchemaRepository->getLastInstalledDefinition('entity_test_update');
     $original_storage_definitions = $this->lastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions('entity_test_update');
@@ -640,13 +664,18 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       $this->assertEquals($original_field_schema_data, $new_field_schema_data);
 
       // Check that temporary tables have been removed.
-      $schema = $this->database->schema();
-      $temporary_table_names = $storage->getCustomTableMapping($new_entity_type, $new_storage_definitions, 'tmp_')->getTableNames();
-      $current_table_names = $storage->getCustomTableMapping($new_entity_type, $new_storage_definitions)->getTableNames();
-      foreach (array_combine($temporary_table_names, $current_table_names) as $temp_table_name => $table_name) {
+      $tables = $schema->findTables('tmp_%');
+      $this->assertCount(0, $tables);
+
+      $current_table_names = $storage->getCustomTableMapping($original_entity_type, $original_storage_definitions)->getTableNames();
+      foreach ($current_table_names as $table_name) {
         $this->assertTrue($schema->tableExists($table_name));
-        $this->assertFalse($schema->tableExists($temp_table_name));
       }
+
+      // Check that backup tables do not exist anymore, since they were
+      // restored/renamed.
+      $tables = $schema->findTables('old_%');
+      $this->assertCount(0, $tables);
 
       // Check that the original tables still exist and their data is intact.
       $this->assertTrue($schema->tableExists('entity_test_update'));
@@ -721,6 +750,39 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       $this->assertEquals('dedicated table - 1 - delta 1 - value 1 - ro', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value1);
       $this->assertEquals('dedicated table - 1 - delta 1 - value 2 - ro', $dedicated_table_row[1]->test_multiple_properties_multiple_values_value2);
     }
+  }
+
+  /**
+   * Tests the removal of the backup tables after a successful update.
+   */
+  public function testFieldableEntityTypeUpdatesRemoveBackupTables() {
+    $schema = $this->database->schema();
+
+    // Convert the entity type to be revisionable.
+    $entity_type = $this->getUpdatedEntityTypeDefinition(TRUE, FALSE);
+    $field_storage_definitions = $this->getUpdatedFieldStorageDefinitions(TRUE, FALSE);
+    $this->entityDefinitionUpdateManager->updateFieldableEntityType($entity_type, $field_storage_definitions);
+
+    // Check that backup tables are kept by default.
+    $tables = $schema->findTables('old_%');
+    $this->assertCount(3, $tables);
+    foreach ($tables as $table) {
+      $schema->dropTable($table);
+    }
+
+    // Make the entity update process drop the backup tables after a successful
+    // update.
+    $settings = Settings::getAll();
+    $settings['entity_update_backup'] = FALSE;
+    new Settings($settings);
+
+    $entity_type = $this->getUpdatedEntityTypeDefinition(TRUE, TRUE);
+    $field_storage_definitions = $this->getUpdatedFieldStorageDefinitions(TRUE, TRUE);
+    $this->entityDefinitionUpdateManager->updateFieldableEntityType($entity_type, $field_storage_definitions);
+
+    // Check that backup tables have been dropped.
+    $tables = $schema->findTables('old_%');
+    $this->assertCount(0, $tables);
   }
 
 }
