@@ -1,48 +1,56 @@
 <?php
 
-namespace Drupal\Tests\block_content\Functional\Views;
+namespace Drupal\Tests\block_content\Kernel\Views;
 
-use Drupal\block_content\Entity\BlockContentType;
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\Tests\views\Functional\ViewTestBase;
-use Drupal\views\Views;
+use Drupal\block_content\Entity\BlockContentType;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\views\Views;
 
 /**
- * Tests the integration of block_content_revision table of block_content module.
+ * Tests the integration of block_content_revision table.
  *
  * @group block_content
  */
-class RevisionRelationshipsTest extends ViewTestBase {
+class RevisionRelationshipsTest extends KernelTestBase {
+
+  use ViewResultAssertionTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['block_content' , 'block_content_test_views'];
+  protected static $modules = [
+    'block_content',
+    'block_content_test_views',
+    'system',
+    'user',
+    'views',
+  ];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = ['test_block_content_revision_id', 'test_block_content_revision_revision_id'];
-
-  protected function setUp($import_test_views = TRUE) {
-    parent::setUp($import_test_views);
-    BlockContentType::create([
-      'id' => 'basic',
-      'label' => 'basic',
-      'revision' => TRUE,
-    ]);
-    ViewTestData::createTestViews(get_class($this), ['block_content_test_views']);
-  }
+  public static $testViews = [
+    'test_block_content_revision_id',
+    'test_block_content_revision_revision_id',
+  ];
 
   /**
    * Create a block_content with revision and rest result count for both views.
    */
   public function testBlockContentRevisionRelationship() {
+    $this->installEntitySchema('block_content');
+    ViewTestData::createTestViews(static::class, ['block_content_test_views']);
+
+    BlockContentType::create([
+      'id' => 'basic',
+      'label' => 'basic',
+      'revision' => TRUE,
+    ]);
     $block_content = BlockContent::create([
       'info' => $this->randomMachineName(),
       'type' => 'basic',
@@ -60,8 +68,8 @@ class RevisionRelationshipsTest extends ViewTestBase {
     ];
 
     // Here should be two rows.
-    $view_id = Views::getView('test_block_content_revision_id');
-    $this->executeView($view_id, [$block_content->id()]);
+    $view = Views::getView('test_block_content_revision_id');
+    $view->preview(NULL, [$block_content->id()]);
     $resultset_id = [
       [
         'revision_id' => '1',
@@ -74,11 +82,11 @@ class RevisionRelationshipsTest extends ViewTestBase {
         'block_content_field_data_block_content_field_revision_id' => '1',
       ],
     ];
-    $this->assertIdenticalResultset($view_id, $resultset_id, $column_map);
+    $this->assertIdenticalResultset($view, $resultset_id, $column_map);
 
     // There should be only one row with active revision 2.
-    $view_revision_id = Views::getView('test_block_content_revision_revision_id');
-    $this->executeView($view_revision_id, [$block_content->id()]);
+    $view_revision = Views::getView('test_block_content_revision_revision_id');
+    $view_revision->preview(NULL, [$block_content->id()]);
     $resultset_revision_id = [
       [
         'revision_id' => '2',
@@ -86,7 +94,7 @@ class RevisionRelationshipsTest extends ViewTestBase {
         'block_content_field_data_block_content_field_revision_id' => '1',
       ],
     ];
-    $this->assertIdenticalResultset($view_revision_id, $resultset_revision_id, $column_map);
+    $this->assertIdenticalResultset($view_revision, $resultset_revision_id, $column_map);
   }
 
 }
