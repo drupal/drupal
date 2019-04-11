@@ -811,8 +811,21 @@ function drupal_get_profile() {
  *   The namespace component to register; e.g., 'node'.
  * @param string $path
  *   The relative path to the Drupal component in the filesystem.
+ *
+ * @deprecated in Drupal 8.8.0, will be removed before Drupal 9.0.0. Use the
+ *   class loader as injected service instance to register the namespace:
+ *   @code
+ *   $this->classLoader->addPsr4('Drupal\\' . $name . '\\', \Drupal::root() . '/' . $path . '/src');
+ *   @endcode
+ *   or the following code if the service cannot be injected:
+ *   @code
+ *   \Drupal::service('class_loader')->addPsr4('Drupal\\' . $name . '\\', \Drupal::root() . '/' . $path . '/src');
+ *   @endcode
+ *
+ * @see https://www.drupal.org/node/3035275
  */
 function drupal_classloader_register($name, $path) {
+  @trigger_error('drupal_classloader_register() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use the method ::addPsr4() of the class_loader service to register the namespace. See https://www.drupal.org/node/3035275.', E_USER_DEPRECATED);
   $loader = \Drupal::service('class_loader');
   $loader->addPsr4('Drupal\\' . $name . '\\', \Drupal::root() . '/' . $path . '/src');
 }

@@ -69,10 +69,18 @@ function system_list_reset() {
  * @param string $uri
  *   The relative URI of the primary extension file; e.g.,
  *   'core/modules/node/node.module'.
+ *
+ * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. There is
+ *   no replacement for this function. Use the following sequence of code to
+ *   achieve the same functionality:
+ *   @code
+ *   $path = \Drupal::service("extension.list.$type")->getPath($name);
+ *   \Drupal::service('class_loader')->addPsr4('Drupal\\' . $name . '\\', \Drupal::root() . '/' . $path . '/src');
+ *   @endcode
  */
 function system_register($type, $name, $uri) {
-  drupal_get_filename($type, $name, $uri);
-  drupal_classloader_register($name, dirname($uri));
+  @trigger_error('system_register() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. There is no replacement for this function. To achieve the same functionality use this snippet: $path = \Drupal::service("extension.list.$type")->getPath($name); ' . "\\Drupal::service('class_loader')->addPsr4('Drupal\\\\' . \$name . '\\\\', \\Drupal::root() . '/' . \$path . '/src'); See https://www.drupal.org/node/3035275.", E_USER_DEPRECATED);
+  \Drupal::service('class_loader')->addPsr4('Drupal\\' . $name . '\\', \Drupal::root() . '/' . dirname($uri) . '/src');
 }
 
 /**
