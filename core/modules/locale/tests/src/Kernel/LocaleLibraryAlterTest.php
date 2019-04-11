@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\locale\Functional;
+namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\Core\Asset\AttachedAssets;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests localization of the JavaScript libraries.
@@ -12,14 +12,12 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group locale
  */
-class LocaleLibraryAlterTest extends BrowserTestBase {
+class LocaleLibraryAlterTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['locale'];
+  protected static $modules = ['locale'];
 
   /**
    * Verifies that the datepicker can be localized.
@@ -27,10 +25,15 @@ class LocaleLibraryAlterTest extends BrowserTestBase {
    * @see locale_library_alter()
    */
   public function testLibraryAlter() {
+    $this->installSchema('locale', [
+      'locales_location',
+      'locales_source',
+    ]);
+
     $assets = new AttachedAssets();
     $assets->setLibraries(['core/jquery.ui.datepicker']);
     $js_assets = $this->container->get('asset.resolver')->getJsAssets($assets, FALSE)[1];
-    $this->assertTrue(array_key_exists('core/modules/locale/locale.datepicker.js', $js_assets), 'locale.datepicker.js added to scripts.');
+    $this->assertArrayHasKey('core/modules/locale/locale.datepicker.js', $js_assets);
   }
 
 }
