@@ -845,10 +845,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function loadTreeData($menu_name, MenuTreeParameters $parameters) {
-    // Build the cache ID; sort 'expanded' and 'conditions' to prevent duplicate
-    // cache items.
-    sort($parameters->expandedParents);
-    asort($parameters->conditions);
     $tree_cid = "tree-data:$menu_name:" . serialize($parameters);
     $cache = $this->menuCacheBackend->get($tree_cid);
     if ($cache && isset($cache->data)) {
