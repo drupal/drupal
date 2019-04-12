@@ -50,3 +50,5 @@ Drupal.formatPlural(1, "Context Single Quoted plural", "Context Single Quoted @c
 Drupal.formatPlural(1, "Context Double Quoted plural", "Context Double Quoted @count plural", {}, {"context": "Context string double quoted"});
 
 Drupal.formatPlural(1, "Context !key Args plural", "Context !key Args @count plural", {'!key': 'value'}, {context: "Context string"});
+
+Drupal.formatPlural(1, "No count argument plural - singular", "No count argument plural - plural");
