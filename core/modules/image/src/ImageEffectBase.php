@@ -2,6 +2,7 @@
 
 namespace Drupal\image;
 
+use Drupal\Component\Plugin\ConfigurableTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Psr\Log\LoggerInterface;
@@ -18,6 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see plugin_api
  */
 abstract class ImageEffectBase extends PluginBase implements ImageEffectInterface, ContainerFactoryPluginInterface {
+
+  use ConfigurableTrait;
 
   /**
    * The image effect ID.
@@ -46,7 +49,6 @@ abstract class ImageEffectBase extends PluginBase implements ImageEffectInterfac
   public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->setConfiguration($configuration);
     $this->logger = $logger;
   }
 
@@ -149,13 +151,6 @@ abstract class ImageEffectBase extends PluginBase implements ImageEffectInterfac
     $this->uuid = $configuration['uuid'];
     $this->weight = $configuration['weight'];
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defaultConfiguration() {
-    return [];
   }
 
   /**
