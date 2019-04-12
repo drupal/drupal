@@ -55,14 +55,14 @@ display:
       pager:
         type: mini
         options:
-          items_per_page: 25
+          items_per_page: 24
           offset: 0
           id: 0
           total_pages: null
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options: '6, 12, 24, 48'
             items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
             offset: false
@@ -646,7 +646,7 @@ display:
           summary_options:
             base_path: ''
             count: true
-            items_per_page: 25
+            items_per_page: 24
             override: false
           summary:
             sort_order: asc
@@ -889,7 +889,7 @@ display:
           summary_options:
             base_path: ''
             count: true
-            items_per_page: 25
+            items_per_page: 24
             override: false
           summary:
             sort_order: asc
