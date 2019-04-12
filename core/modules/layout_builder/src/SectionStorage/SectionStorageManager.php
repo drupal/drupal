@@ -107,8 +107,8 @@ class SectionStorageManager extends DefaultPluginManager implements SectionStora
   /**
    * {@inheritdoc}
    */
-  public function loadEmpty($id) {
-    return $this->createInstance($id);
+  public function loadEmpty($type) {
+    return $this->createInstance($type);
   }
 
   /**
