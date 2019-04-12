@@ -190,3 +190,12 @@ function system_post_update_add_expand_all_items_key_in_system_menu_block(&$sand
     return strpos($block->getPluginId(), 'system_menu_block:') === 0;
   });
 }
+
+/**
+ * Clear the menu cache.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3044364
+ */
+function system_post_update_clear_menu_cache() {
+  // Empty post-update hook.
+}
