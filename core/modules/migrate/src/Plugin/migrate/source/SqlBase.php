@@ -108,11 +108,6 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->state = $state;
-    // If we are using high water, but haven't yet set a high water mark, skip
-    // joining the map table, as we want to get all available records.
-    if ($this->getHighWaterProperty() && $this->getHighWater() === NULL) {
-      $this->configuration['ignore_map'] = TRUE;
-    }
   }
 
   /**
@@ -285,7 +280,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       $conditions = $this->query->orConditionGroup();
       $condition_added = FALSE;
       $added_fields = [];
-      if (empty($this->configuration['ignore_map']) && $this->mapJoinable()) {
+      if ($this->mapJoinable()) {
         // Build the join to the map table. Because the source key could have
         // multiple fields, we need to build things up.
         $count = 1;
@@ -404,6 +399,24 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    *   TRUE if we can join against the map table otherwise FALSE.
    */
   protected function mapJoinable() {
+
+    // Do not join map if explicitly configured not to.
+    if (isset($this->configuration['ignore_map'])  && $this->configuration['ignore_map']) {
+      return FALSE;
+    }
+
+    // If we are using high water, but haven't yet set a high water mark, do not
+    // join the map table, as we want to get all available records.
+    if ($this->getHighWaterProperty() && $this->getHighWater() === NULL) {
+      return FALSE;
+    }
+
+    // If we are tracking changes, we also need to retrieve all rows to compare
+    // hashes
+    if ($this->trackChanges) {
+      return FALSE;
+    }
+
     if (!$this->getIds()) {
       return FALSE;
     }
