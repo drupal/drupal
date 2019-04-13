@@ -112,7 +112,6 @@ class SectionRenderTest extends UnitTestCase {
       'content' => $block_content,
       '#attributes' => [
         'data-layout-content-preview-placeholder-label' => $placeholder_label,
-        'class' => ['layout-builder-block'],
       ],
       '#cache' => [
         'contexts' => [],
@@ -196,7 +195,6 @@ class SectionRenderTest extends UnitTestCase {
       'content' => $block_content,
       '#attributes' => [
         'data-layout-content-preview-placeholder-label' => $placeholder_label,
-        'class' => ['layout-builder-block'],
       ],
       '#cache' => [
         'contexts' => [],
@@ -256,7 +254,6 @@ class SectionRenderTest extends UnitTestCase {
       'content' => $block_content,
       '#attributes' => [
         'data-layout-content-preview-placeholder-label' => $placeholder_label,
-        'class' => ['layout-builder-block'],
       ],
       '#cache' => [
         'contexts' => [],

@@ -119,7 +119,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       'content' => $block_content,
       '#attributes' => [
         'data-layout-content-preview-placeholder-label' => $placeholder_label,
-        'class' => ['layout-builder-block'],
       ],
     ];
 
@@ -195,7 +194,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       'content' => $block_content,
       '#attributes' => [
         'data-layout-content-preview-placeholder-label' => $placeholder_label,
-        'class' => ['layout-builder-block'],
       ],
     ];
 
@@ -325,7 +323,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       'content' => $block_content,
       '#attributes' => [
         'data-layout-content-preview-placeholder-label' => $placeholder_label,
-        'class' => ['layout-builder-block'],
       ],
     ];
 
@@ -385,7 +382,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       'content' => $block_content,
       '#attributes' => [
         'data-layout-content-preview-placeholder-label' => $placeholder_string,
-        'class' => ['layout-builder-block'],
       ],
     ];
     $expected_build['content']['#markup'] = $placeholder_string;
