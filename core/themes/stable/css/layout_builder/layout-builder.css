@@ -14,10 +14,16 @@
 }
 
 .layout-builder__link--add {
-  padding-left: 24px;
+  padding-left: 24px; /* LTR */
   color: #686868;
   border-bottom: none;
-  background: url(../../../../misc/icons/686868/plus.svg) transparent top left / 16px 16px no-repeat;
+  background: url(../../../../misc/icons/787878/plus.svg) transparent top left / 16px 16px no-repeat; /* LTR */
+}
+
+[dir="rtl"] .layout-builder__link--add {
+  padding-right: 24px;
+  padding-left: 0;
+  background-position-x: right;
 }
 
 .layout-builder__link--add:hover,
@@ -60,8 +66,8 @@
   box-sizing: border-box;
   width: 26px;
   height: 26px;
-  margin-right: 6px;
-  margin-left: -10px;
+  margin-right: 6px; /* LTR */
+  margin-left: -10px; /* LTR */
   padding: 0;
   white-space: nowrap;
   text-indent: -9999px;
@@ -69,6 +75,11 @@
   border-radius: 26px;
   background: url(../../../../misc/icons/bebebe/ex.svg) #fff center center / 16px 16px no-repeat;
   font-size: 1rem;
+}
+
+[dir="rtl"] .layout-builder__link--remove {
+  margin-right: -10px;
+  margin-left: 6px;
 }
 
 .layout-builder__link--remove:hover {
