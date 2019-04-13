@@ -225,6 +225,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     ]));
 
     $this->drupalGet('node/1');
+    $assert_session->elementNotExists('css', '.layout-builder-block');
     $assert_session->pageTextContains('The first node body');
     $assert_session->pageTextNotContains('Powered by Drupal');
     $assert_session->linkNotExists('Layout');
@@ -245,6 +246,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementsCount('css', '.field--name-body', 1);
     // The extra field is only present once.
     $assert_session->pageTextContainsOnce('Placeholder for the "Extra label" field');
+    // Blocks have layout builder specific block class.
+    $assert_session->elementExists('css', '.layout-builder-block');
     // Save the defaults.
     $page->pressButton('Save layout');
     $assert_session->addressEquals("$field_ui_prefix/display/default");
