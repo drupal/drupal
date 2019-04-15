@@ -170,3 +170,27 @@ function content_moderation_post_update_entity_display_dependencies(&$sandbox) {
     return FALSE;
   });
 }
+
+/**
+ * Update the moderation state views field plugin ID.
+ */
+function content_moderation_post_update_views_field_plugin_id(&$sandbox) {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) {
+    /** @var \Drupal\views\ViewEntityInterface $view */
+    $updated = FALSE;
+    $displays = $view->get('display');
+    foreach ($displays as &$display) {
+      if (empty($display['display_options']['fields'])) {
+        continue;
+      }
+      foreach ($display['display_options']['fields'] as &$display_field) {
+        if ($display_field['id'] === 'moderation_state' && $display_field['plugin_id'] === 'field') {
+          $display_field['plugin_id'] = 'moderation_state_field';
+          $updated = TRUE;
+        }
+      }
+    }
+    $view->set('display', $displays);
+    return $updated;
+  });
+}

@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Module file for the content moderation test views module.
+ */
+
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * @param \Drupal\views\ViewExecutable $view
+ *   The view object about to be processed.
+ * @param \Drupal\views\Plugin\views\query\QueryPluginBase $query
+ *   The query plugin object for the query.
+ *
+ * @see \Drupal\Tests\content_moderation\Kernel\ViewsModerationStateSortTest::testSortRevisionBaseTable()
+ */
+function content_moderation_test_views_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  // Add a secondary sort order to ensure consistent builds when testing click
+  // and table sorting.
+  if ($view->id() === 'test_content_moderation_state_sort_revision_table') {
+    $query->addOrderBy('node_field_revision', 'vid', 'ASC');
+  }
+}
