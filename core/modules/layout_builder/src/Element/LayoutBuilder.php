@@ -246,7 +246,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     foreach ($layout_definition->getRegions() as $region => $info) {
       if (!empty($build[$region])) {
         foreach (Element::children($build[$region]) as $uuid) {
-          $build[$region][$uuid]['#attributes']['class'][] = 'draggable';
+          $build[$region][$uuid]['#attributes']['class'][] = 'js-layout-builder-block';
           $build[$region][$uuid]['#attributes']['class'][] = 'layout-builder-block';
           $build[$region][$uuid]['#attributes']['data-layout-block-uuid'] = $uuid;
           $build[$region][$uuid]['#attributes']['data-layout-builder-highlight-id'] = $this->blockUpdateHighlightId($uuid);
@@ -303,6 +303,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       $build[$region]['layout_builder_add_block']['#weight'] = 1000;
       $build[$region]['#attributes']['data-region'] = $region;
       $build[$region]['#attributes']['class'][] = 'layout-builder__region';
+      $build[$region]['#attributes']['class'][] = 'js-layout-builder-region';
       $build[$region]['#attributes']['role'] = 'group';
       $build[$region]['#attributes']['aria-label'] = $this->t('@region region in section @section', [
         '@region' => $info['label'],

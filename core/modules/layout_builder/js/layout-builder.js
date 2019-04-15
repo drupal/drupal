@@ -55,13 +55,13 @@
 
   behaviors.layoutBuilderBlockDrag = {
     attach: function attach(context) {
-      $(context).find('.layout-builder__region').sortable({
-        items: '> .draggable',
-        connectWith: '.layout-builder__region',
+      $(context).find('.js-layout-builder-region').sortable({
+        items: '> .js-layout-builder-block',
+        connectWith: '.js-layout-builder-region',
         placeholder: 'ui-state-drop',
 
         update: function update(event, ui) {
-          var itemRegion = ui.item.closest('.layout-builder__region');
+          var itemRegion = ui.item.closest('.js-layout-builder-region');
           if (event.target === itemRegion[0]) {
             var deltaTo = ui.item.closest('[data-layout-delta]').data('layout-delta');
 
