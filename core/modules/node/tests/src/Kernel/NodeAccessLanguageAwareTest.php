@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\node\Functional;
+namespace Drupal\Tests\node\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
@@ -15,7 +15,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  *
  * @group node
  */
-class NodeAccessLanguageAwareTest extends NodeTestBase {
+class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
 
   /**
    * Enable language and a language-aware node access module.

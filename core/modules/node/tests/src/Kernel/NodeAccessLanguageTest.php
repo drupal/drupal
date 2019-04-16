@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\node\Functional;
+namespace Drupal\Tests\node\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
@@ -14,15 +14,16 @@ use Drupal\user\Entity\User;
  *
  * @group node
  */
-class NodeAccessLanguageTest extends NodeTestBase {
+class NodeAccessLanguageTest extends NodeAccessTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['language', 'node_access_test'];
+  protected static $modules = ['language', 'node_access_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

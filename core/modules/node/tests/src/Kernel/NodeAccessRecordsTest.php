@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\node\Functional;
+namespace Drupal\Tests\node\Kernel;
 
 use Drupal\node\Entity\Node;
 
@@ -9,7 +9,7 @@ use Drupal\node\Entity\Node;
  *
  * @group node
  */
-class NodeAccessRecordsTest extends NodeTestBase {
+class NodeAccessRecordsTest extends NodeAccessTestBase {
 
   /**
    * Enable a module that implements node access API hooks and alter hook.
