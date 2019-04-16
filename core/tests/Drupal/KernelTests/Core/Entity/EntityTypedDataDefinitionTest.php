@@ -3,7 +3,7 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
@@ -154,11 +154,10 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
     $entity_type->getLabel()->willReturn($this->randomString());
     $entity_type->getConstraints()->willReturn([]);
     $entity_type->isInternal()->willReturn($internal);
-    $entity_type->getBundleEntityType()->willReturn(NULL);
 
-    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
-    $entity_type_manager->getDefinitions()->willReturn([$entity_type_id => $entity_type->reveal()]);
-    $this->container->set('entity_type.manager', $entity_type_manager->reveal());
+    $entity_manager = $this->prophesize(EntityManagerInterface::class);
+    $entity_manager->getDefinitions()->willReturn([$entity_type_id => $entity_type->reveal()]);
+    $this->container->set('entity.manager', $entity_manager->reveal());
 
     $entity_data_definition = EntityDataDefinition::create($entity_type_id);
     $this->assertSame($expected, $entity_data_definition->isInternal());
