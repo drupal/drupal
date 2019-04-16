@@ -556,7 +556,7 @@ class ContactSitewideTest extends BrowserTestBase {
    * Deletes all forms.
    */
   public function deleteContactForms() {
-    $contact_forms = ContactForm::loadMultiple();;
+    $contact_forms = ContactForm::loadMultiple();
     foreach ($contact_forms as $id => $contact_form) {
       if ($id == 'personal') {
         // Personal form could not be deleted.

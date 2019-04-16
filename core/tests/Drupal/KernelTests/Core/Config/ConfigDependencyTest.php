@@ -117,7 +117,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
       'type' => 'entity_test',
     ]);
     $entity_test->save();
-    $entity2->setEnforcedDependencies(['config' => [$entity1->getConfigDependencyName()], 'content' => [$entity_test->getConfigDependencyName()]])->save();;
+    $entity2->setEnforcedDependencies(['config' => [$entity1->getConfigDependencyName()], 'content' => [$entity_test->getConfigDependencyName()]])->save();
     $dependents = $config_manager->findConfigEntityDependents('content', [$entity_test->getConfigDependencyName()]);
     $this->assertFalse(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 does not have a dependency on the content entity.');
     $this->assertTrue(isset($dependents['config_test.dynamic.entity2']), 'config_test.dynamic.entity2 has a dependency on the content entity.');
@@ -175,7 +175,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
 
     // Add a fake missing dependency to ensure multiple missing dependencies
     // work.
-    $entity1->setEnforcedDependencies(['content' => [$entity_test->getConfigDependencyName(), 'entity_test:bundle:uuid']])->save();;
+    $entity1->setEnforcedDependencies(['content' => [$entity_test->getConfigDependencyName(), 'entity_test:bundle:uuid']])->save();
     $expected['uuid'] = [
       'entity_type' => 'entity_test',
       'bundle' => 'bundle',

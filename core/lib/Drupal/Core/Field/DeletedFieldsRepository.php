@@ -76,7 +76,7 @@ class DeletedFieldsRepository implements DeletedFieldsRepositoryInterface {
    * {@inheritdoc}
    */
   public function removeFieldDefinition(FieldDefinitionInterface $field_definition) {
-    $deleted_field_definitions = $this->state->get('field.field.deleted', []);;
+    $deleted_field_definitions = $this->state->get('field.field.deleted', []);
     unset($deleted_field_definitions[$field_definition->getUniqueIdentifier()]);
     $this->state->set('field.field.deleted', $deleted_field_definitions);
 

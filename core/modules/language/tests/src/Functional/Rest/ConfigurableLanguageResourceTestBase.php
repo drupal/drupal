@@ -82,7 +82,7 @@ abstract class ConfigurableLanguageResourceTestBase extends EntityResourceTestBa
    */
   public function testGetDefaultConfig() {
     $this->initAuthentication();
-    $url = Url::fromUri('base:/entity/configurable_language/en')->setOption('query', ['_format' => static::$format]);;
+    $url = Url::fromUri('base:/entity/configurable_language/en')->setOption('query', ['_format' => static::$format]);
     $request_options = $this->getAuthenticationRequestOptions('GET');
     $this->provisionEntityResource();
     $this->setUpAuthorization('GET');

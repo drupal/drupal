@@ -1477,7 +1477,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
     $form = $this->getMock(FormInterface::class);
 
     $this->decoratedFormState->setFormObject($form)
-      ->shouldBeCalled();;
+      ->shouldBeCalled();
 
     $this->assertSame($this->formStateDecoratorBase, $this->formStateDecoratorBase->setFormObject($form));
   }

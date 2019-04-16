@@ -737,7 +737,7 @@ class InstallHelper implements ContainerInjectionInterface {
    */
   protected function getUser($name) {
     $user_storage = $this->entityTypeManager->getStorage('user');
-    $users = $user_storage->loadByProperties(['name' => $name]);;
+    $users = $user_storage->loadByProperties(['name' => $name]);
     if (empty($users)) {
       // Creating user without any password.
       $user = $user_storage->create([
