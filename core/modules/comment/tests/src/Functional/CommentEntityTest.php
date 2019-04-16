@@ -6,7 +6,7 @@ use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
-use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\comment\Entity\Comment;
 
 /**

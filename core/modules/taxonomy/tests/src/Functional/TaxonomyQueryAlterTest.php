@@ -4,6 +4,7 @@ namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Tests that appropriate query tags are added.

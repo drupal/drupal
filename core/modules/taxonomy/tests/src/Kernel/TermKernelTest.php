@@ -4,7 +4,7 @@ namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\taxonomy\Entity\Term;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Kernel tests for taxonomy term functions.

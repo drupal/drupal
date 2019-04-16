@@ -1,47 +1,53 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\Tests\taxonomy\Kernel;
+
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Verifies operation of a taxonomy-based Entity Query.
  *
  * @group taxonomy
  */
-class EfqTest extends TaxonomyTestBase {
+class TermEntityQueryTest extends KernelTestBase {
+
+  use TaxonomyTestTrait;
 
   /**
-   * Vocabulary for testing.
-   *
-   * @var \Drupal\taxonomy\VocabularyInterface
+   * {@inheritdoc}
    */
-  protected $vocabulary;
-
-  protected function setUp() {
-    parent::setUp();
-    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy']));
-    $this->vocabulary = $this->createVocabulary();
-  }
+  protected static $modules = [
+    'field',
+    'filter',
+    'taxonomy',
+    'text',
+    'user',
+  ];
 
   /**
    * Tests that a basic taxonomy entity query works.
    */
-  public function testTaxonomyEfq() {
+  public function testTermEntityQuery() {
+    $this->installEntitySchema('taxonomy_term');
+    $vocabulary = $this->createVocabulary();
+
     $terms = [];
     for ($i = 0; $i < 5; $i++) {
-      $term = $this->createTerm($this->vocabulary);
+      $term = $this->createTerm($vocabulary);
       $terms[$term->id()] = $term;
     }
     $result = \Drupal::entityQuery('taxonomy_term')->execute();
     sort($result);
-    $this->assertEqual(array_keys($terms), $result, 'Taxonomy terms were retrieved by entity query.');
+    $this->assertEquals(array_keys($terms), $result);
     $tid = reset($result);
     $ids = (object) [
       'entity_type' => 'taxonomy_term',
       'entity_id' => $tid,
-      'bundle' => $this->vocabulary->id(),
+      'bundle' => $vocabulary->id(),
     ];
     $term = _field_create_entity_from_ids($ids);
-    $this->assertEqual($term->id(), $tid, 'Taxonomy term can be created based on the IDs.');
+    $this->assertEquals($tid, $term->id());
 
     // Create a second vocabulary and five more terms.
     $vocabulary2 = $this->createVocabulary();
@@ -55,7 +61,7 @@ class EfqTest extends TaxonomyTestBase {
       ->condition('vid', $vocabulary2->id())
       ->execute();
     sort($result);
-    $this->assertEqual(array_keys($terms2), $result, format_string('Taxonomy terms from the %name vocabulary were retrieved by entity query.', ['%name' => $vocabulary2->label()]));
+    $this->assertEqual(array_keys($terms2), $result);
     $tid = reset($result);
     $ids = (object) [
       'entity_type' => 'taxonomy_term',
@@ -63,7 +69,7 @@ class EfqTest extends TaxonomyTestBase {
       'bundle' => $vocabulary2->id(),
     ];
     $term = _field_create_entity_from_ids($ids);
-    $this->assertEqual($term->id(), $tid, 'Taxonomy term can be created based on the IDs.');
+    $this->assertEquals($tid, $term->id());
   }
 
 }

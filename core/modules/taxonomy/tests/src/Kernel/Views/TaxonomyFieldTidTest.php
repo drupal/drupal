@@ -4,7 +4,7 @@ namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\Core\Link;
 use Drupal\Core\Render\RenderContext;
-use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;

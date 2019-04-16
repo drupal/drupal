@@ -5,7 +5,7 @@ namespace Drupal\Tests\taxonomy\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\TermInterface;
 use Drupal\taxonomy\VocabularyInterface;
-use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Tests legacy user functionality.

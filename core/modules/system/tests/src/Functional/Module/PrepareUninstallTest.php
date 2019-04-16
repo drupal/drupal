@@ -3,7 +3,7 @@
 namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Tests that modules which provide entity types can be uninstalled.

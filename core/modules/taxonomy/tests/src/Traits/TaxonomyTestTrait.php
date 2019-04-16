@@ -1,26 +1,24 @@
 <?php
 
-namespace Drupal\taxonomy\Tests;
-
-@trigger_error(__NAMESPACE__ . '\TaxonomyTestTrait is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait', E_USER_DEPRECATED);
+namespace Drupal\Tests\taxonomy\Traits;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\VocabularyInterface;
 
 /**
  * Provides common helper methods for Taxonomy module tests.
- *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
- * Use \Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait
  */
 trait TaxonomyTestTrait {
 
   /**
    * Returns a new vocabulary with random properties.
+   *
+   * @return \Drupal\taxonomy\VocabularyInterface
+   *   A vocabulary used for testing.
    */
   public function createVocabulary() {
-    // Create a vocabulary.
     $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
@@ -33,26 +31,23 @@ trait TaxonomyTestTrait {
   }
 
   /**
-   * Returns a new term with random properties in vocabulary $vid.
+   * Returns a new term with random properties given a vocabulary.
    *
-   * @param \Drupal\taxonomy\Entity\Vocabulary $vocabulary
+   * @param \Drupal\taxonomy\VocabularyInterface $vocabulary
    *   The vocabulary object.
    * @param array $values
-   *   (optional) An array of values to set, keyed by property name. If the
-   *   entity type has bundles, the bundle key has to be specified.
+   *   (optional) An array of values to set, keyed by property name.
    *
-   * @return \Drupal\taxonomy\Entity\Term
+   * @return \Drupal\taxonomy\TermInterface
    *   The new taxonomy term object.
    */
-  public function createTerm(Vocabulary $vocabulary, $values = []) {
-    $filter_formats = filter_formats();
-    $format = array_pop($filter_formats);
+  public function createTerm(VocabularyInterface $vocabulary, $values = []) {
     $term = Term::create($values + [
       'name' => $this->randomMachineName(),
       'description' => [
         'value' => $this->randomMachineName(),
-        // Use the first available text format.
-        'format' => $format->id(),
+        // Use the fallback text format.
+        'format' => filter_fallback_format(),
       ],
       'vid' => $vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
