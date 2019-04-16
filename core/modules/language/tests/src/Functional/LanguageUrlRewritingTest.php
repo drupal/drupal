@@ -81,7 +81,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
   private function checkUrl(LanguageInterface $language, $message1, $message2) {
     $options = ['language' => $language, 'script' => ''];
     $base_path = trim(base_path(), '/');
-    $rewritten_path = trim(str_replace($base_path, '', \Drupal::url('<front>', [], $options)), '/');
+    $rewritten_path = trim(str_replace($base_path, '', Url::fromRoute('<front>', [], $options)->toString()), '/');
     $segments = explode('/', $rewritten_path, 2);
     $prefix = $segments[0];
     $path = isset($segments[1]) ? $segments[1] : $prefix;
@@ -125,7 +125,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
 
     // In case index.php is part of the URLs, we need to adapt the asserted
     // URLs as well.
-    $index_php = strpos(\Drupal::url('<front>', [], ['absolute' => TRUE]), 'index.php') !== FALSE;
+    $index_php = strpos(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), 'index.php') !== FALSE;
 
     $request = Request::createFromGlobals();
     $server = $request->server->all();

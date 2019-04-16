@@ -5,6 +5,7 @@
  * Used to aggregate syndicated content (RSS, RDF, and Atom).
  */
 
+use Drupal\Core\Url;
 use Drupal\aggregator\Entity\Feed;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -33,29 +34,29 @@ function aggregator_help($route_name, RouteMatchInterface $route_match) {
       // Check if the aggregator sources View is enabled.
       if ($url = $path_validator->getUrlIfValid('aggregator/sources')) {
         $output .= '<dt>' . t('Viewing feeds') . '</dt>';
-        $output .= '<dd>' . t('Users view feed content in the <a href=":aggregator">main aggregator display</a>, or by <a href=":aggregator-sources">their source</a> (usually via an RSS feed reader). The most recent content in a feed can be displayed as a block through the <a href=":admin-block">Blocks administration page</a>.', [':aggregator' => \Drupal::url('aggregator.page_last'), ':aggregator-sources' => $url->toString(), ':admin-block' => (\Drupal::moduleHandler()->moduleExists('block')) ? \Drupal::url('block.admin_display') : '#']) . '</dd>';
+        $output .= '<dd>' . t('Users view feed content in the <a href=":aggregator">main aggregator display</a>, or by <a href=":aggregator-sources">their source</a> (usually via an RSS feed reader). The most recent content in a feed can be displayed as a block through the <a href=":admin-block">Blocks administration page</a>.', [':aggregator' => Url::fromRoute('aggregator.page_last')->toString(), ':aggregator-sources' => $url->toString(), ':admin-block' => (\Drupal::moduleHandler()->moduleExists('block')) ? Url::fromRoute('block.admin_display')->toString() : '#']) . '</dd>';
       }
       $output .= '<dt>' . t('Adding, editing, and deleting feeds') . '</dt>';
-      $output .= '<dd>' . t('Administrators can add, edit, and delete feeds, and choose how often to check each feed for newly updated items on the <a href=":feededit">Aggregator administration page</a>.', [':feededit' => \Drupal::url('aggregator.admin_overview')]) . '</dd>';
+      $output .= '<dd>' . t('Administrators can add, edit, and delete feeds, and choose how often to check each feed for newly updated items on the <a href=":feededit">Aggregator administration page</a>.', [':feededit' => Url::fromRoute('aggregator.admin_overview')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Configuring the display of feed items') . '</dt>';
-      $output .= '<dd>' . t('Administrators can choose how many items are displayed in the listing pages, which HTML tags are allowed in the content of feed items, and whether they should be trimmed to a maximum number of characters on the <a href=":settings">Aggregator settings page</a>.', [':settings' => \Drupal::url('aggregator.admin_settings')]) . '</dd>';
+      $output .= '<dd>' . t('Administrators can choose how many items are displayed in the listing pages, which HTML tags are allowed in the content of feed items, and whether they should be trimmed to a maximum number of characters on the <a href=":settings">Aggregator settings page</a>.', [':settings' => Url::fromRoute('aggregator.admin_settings')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Discarding old feed items') . '</dt>';
-      $output .= '<dd>' . t('Administrators can choose whether to discard feed items that are older than a specified period of time on the <a href=":settings">Aggregator settings page</a>. This requires a correctly configured cron maintenance task (see below).', [':settings' => \Drupal::url('aggregator.admin_settings')]) . '<dd>';
+      $output .= '<dd>' . t('Administrators can choose whether to discard feed items that are older than a specified period of time on the <a href=":settings">Aggregator settings page</a>. This requires a correctly configured cron maintenance task (see below).', [':settings' => Url::fromRoute('aggregator.admin_settings')->toString()]) . '<dd>';
 
       $output .= '<dt>' . t('<abbr title="Outline Processor Markup Language">OPML</abbr> integration') . '</dt>';
       // Check if the aggregator opml View is enabled.
       if ($url = $path_validator->getUrlIfValid('aggregator/opml')) {
-        $output .= '<dd>' . t('A <a href=":aggregator-opml">machine-readable OPML file</a> of all feeds is available. OPML is an XML-based file format used to share outline-structured information such as a list of RSS feeds. Feeds can also be <a href=":import-opml">imported via an OPML file</a>.', [':aggregator-opml' => $url->toString(), ':import-opml' => \Drupal::url('aggregator.opml_add')]) . '</dd>';
+        $output .= '<dd>' . t('A <a href=":aggregator-opml">machine-readable OPML file</a> of all feeds is available. OPML is an XML-based file format used to share outline-structured information such as a list of RSS feeds. Feeds can also be <a href=":import-opml">imported via an OPML file</a>.', [':aggregator-opml' => $url->toString(), ':import-opml' => Url::fromRoute('aggregator.opml_add')->toString()]) . '</dd>';
       }
       $output .= '<dt>' . t('Configuring cron') . '</dt>';
-      $output .= '<dd>' . t('A working <a href=":cron">cron maintenance task</a> is required to update feeds automatically.', [':cron' => \Drupal::url('system.cron_settings')]) . '</dd>';
+      $output .= '<dd>' . t('A working <a href=":cron">cron maintenance task</a> is required to update feeds automatically.', [':cron' => Url::fromRoute('system.cron_settings')->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
 
     case 'aggregator.admin_overview':
       // Don't use placeholders for possibility to change URLs for translators.
       $output = '<p>' . t('Many sites publish their headlines and posts in feeds, using a number of standardized XML-based formats. The aggregator supports <a href="http://en.wikipedia.org/wiki/Rss">RSS</a>, <a href="http://en.wikipedia.org/wiki/Resource_Description_Framework">RDF</a>, and <a href="http://en.wikipedia.org/wiki/Atom_%28standard%29">Atom</a>.') . '</p>';
-      $output .= '<p>' . t('Current feeds are listed below, and <a href=":addfeed">new feeds may be added</a>. For each feed, the <em>latest items</em> block may be enabled at the <a href=":block">blocks administration page</a>.', [':addfeed' => \Drupal::url('aggregator.feed_add'), ':block' => (\Drupal::moduleHandler()->moduleExists('block')) ? \Drupal::url('block.admin_display') : '#']) . '</p>';
+      $output .= '<p>' . t('Current feeds are listed below, and <a href=":addfeed">new feeds may be added</a>. For each feed, the <em>latest items</em> block may be enabled at the <a href=":block">blocks administration page</a>.', [':addfeed' => Url::fromRoute('aggregator.feed_add')->toString(), ':block' => (\Drupal::moduleHandler()->moduleExists('block')) ? Url::fromRoute('block.admin_display')->toString() : '#']) . '</p>';
       return $output;
 
     case 'aggregator.feed_add':

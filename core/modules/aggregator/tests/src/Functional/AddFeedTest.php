@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\aggregator\Functional;
 
+use Drupal\Core\Url;
+
 /**
  * Add feed test.
  *
@@ -23,7 +25,7 @@ class AddFeedTest extends AggregatorTestBase {
     $feed->refreshItems();
 
     // Check feed data.
-    $this->assertUrl(\Drupal::url('aggregator.feed_add', [], ['absolute' => TRUE]), [], 'Directed to correct URL.');
+    $this->assertUrl(Url::fromRoute('aggregator.feed_add', [], ['absolute' => TRUE])->toString(), [], 'Directed to correct URL.');
     $this->assertTrue($this->uniqueFeed($feed->label(), $feed->getUrl()), 'The feed is unique.');
 
     // Check feed source.

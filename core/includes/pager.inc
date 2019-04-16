@@ -5,6 +5,7 @@
  * Functions to aid in presenting database results as a set of pages.
  */
 
+use Drupal\Core\Url;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Html;
 
@@ -221,7 +222,7 @@ function template_preprocess_pager(&$variables) {
     $options = [
       'query' => pager_query_add_page($parameters, $element, 0),
     ];
-    $items['first']['href'] = \Drupal::url($route_name, $route_parameters, $options);
+    $items['first']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
     if (isset($tags[0])) {
       $items['first']['text'] = $tags[0];
     }
@@ -230,7 +231,7 @@ function template_preprocess_pager(&$variables) {
     $options = [
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
     ];
-    $items['previous']['href'] = \Drupal::url($route_name, $route_parameters, $options);
+    $items['previous']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
     if (isset($tags[1])) {
       $items['previous']['text'] = $tags[1];
     }
@@ -246,7 +247,7 @@ function template_preprocess_pager(&$variables) {
       $options = [
         'query' => pager_query_add_page($parameters, $element, $i - 1),
       ];
-      $items['pages'][$i]['href'] = \Drupal::url($route_name, $route_parameters, $options);
+      $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
       if ($i == $pager_current) {
         $variables['current'] = $i;
       }
@@ -263,7 +264,7 @@ function template_preprocess_pager(&$variables) {
     $options = [
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
     ];
-    $items['next']['href'] = \Drupal::url($route_name, $route_parameters, $options);
+    $items['next']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
     if (isset($tags[3])) {
       $items['next']['text'] = $tags[3];
     }
@@ -272,7 +273,7 @@ function template_preprocess_pager(&$variables) {
     $options = [
       'query' => pager_query_add_page($parameters, $element, $pager_max - 1),
     ];
-    $items['last']['href'] = \Drupal::url($route_name, $route_parameters, $options);
+    $items['last']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
     if (isset($tags[4])) {
       $items['last']['text'] = $tags[4];
     }

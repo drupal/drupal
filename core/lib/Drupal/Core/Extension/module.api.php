@@ -974,7 +974,7 @@ function hook_requirements($phase) {
       ];
     }
 
-    $requirements['cron']['description'] .= ' ' . t('You can <a href=":cron">run cron manually</a>.', [':cron' => \Drupal::url('system.run_cron')]);
+    $requirements['cron']['description'] .= ' ' . t('You can <a href=":cron">run cron manually</a>.', [':cron' => Url::fromRoute('system.run_cron')->toString()]);
 
     $requirements['cron']['title'] = t('Cron maintenance tasks');
   }

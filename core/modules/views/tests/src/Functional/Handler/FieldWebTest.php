@@ -64,9 +64,9 @@ class FieldWebTest extends ViewTestBase {
     $this->assertResponse(200);
 
     // Only the id and name should be click sortable, but not the name.
-    $this->assertLinkByHref(\Drupal::url('<none>', [], ['query' => ['order' => 'id', 'sort' => 'asc']]));
-    $this->assertLinkByHref(\Drupal::url('<none>', [], ['query' => ['order' => 'name', 'sort' => 'desc']]));
-    $this->assertNoLinkByHref(\Drupal::url('<none>', [], ['query' => ['order' => 'created']]));
+    $this->assertLinkByHref(Url::fromRoute('<none>', [], ['query' => ['order' => 'id', 'sort' => 'asc']])->toString());
+    $this->assertLinkByHref(Url::fromRoute('<none>', [], ['query' => ['order' => 'name', 'sort' => 'desc']])->toString());
+    $this->assertNoLinkByHref(Url::fromRoute('<none>', [], ['query' => ['order' => 'created']])->toString());
 
     // Check that the view returns the click sorting cache contexts.
     $expected_contexts = [
@@ -78,7 +78,7 @@ class FieldWebTest extends ViewTestBase {
 
     // Clicking a click sort should change the order.
     $this->clickLink(t('ID'));
-    $this->assertLinkByHref(\Drupal::url('<none>', [], ['query' => ['order' => 'id', 'sort' => 'desc']]));
+    $this->assertLinkByHref(Url::fromRoute('<none>', [], ['query' => ['order' => 'id', 'sort' => 'desc']])->toString());
     // Check that the output has the expected order (asc).
     $ids = $this->clickSortLoadIdsFromOutput();
     $this->assertEqual($ids, range(1, 5));
@@ -228,28 +228,28 @@ class FieldWebTest extends ViewTestBase {
       $alter = &$id_field->options['alter'];
       $alter['path'] = 'node/123';
 
-      $expected_result = \Drupal::url('entity.node.canonical', ['node' => '123'], ['absolute' => $absolute]);
+      $expected_result = Url::fromRoute('entity.node.canonical', ['node' => '123'], ['absolute' => $absolute])->toString();
       $alter['absolute'] = $absolute;
       $result = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
         return $id_field->theme($row);
       });
       $this->assertSubString($result, $expected_result);
 
-      $expected_result = \Drupal::url('entity.node.canonical', ['node' => '123'], ['fragment' => 'foo', 'absolute' => $absolute]);
+      $expected_result = Url::fromRoute('entity.node.canonical', ['node' => '123'], ['fragment' => 'foo', 'absolute' => $absolute])->toString();
       $alter['path'] = 'node/123#foo';
       $result = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
         return $id_field->theme($row);
       });
       $this->assertSubString($result, $expected_result);
 
-      $expected_result = \Drupal::url('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => NULL], 'absolute' => $absolute]);
+      $expected_result = Url::fromRoute('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => NULL], 'absolute' => $absolute])->toString();
       $alter['path'] = 'node/123?foo';
       $result = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
         return $id_field->theme($row);
       });
       $this->assertSubString($result, $expected_result);
 
-      $expected_result = \Drupal::url('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => 'bar', 'bar' => 'baz'], 'absolute' => $absolute]);
+      $expected_result = Url::fromRoute('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => 'bar', 'bar' => 'baz'], 'absolute' => $absolute])->toString();
       $alter['path'] = 'node/123?foo=bar&bar=baz';
       $result = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
         return $id_field->theme($row);
@@ -257,7 +257,7 @@ class FieldWebTest extends ViewTestBase {
       $this->assertSubString(Html::decodeEntities($result), Html::decodeEntities($expected_result));
 
       // @todo The route-based URL generator strips out NULL attributes.
-      // $expected_result = \Drupal::url('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute]);
+      // $expected_result = Url::fromRoute('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute])->toString();
       $expected_result = Url::fromUserInput('/node/123', ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute])->toString();
       $alter['path'] = 'node/123?foo#bar';
       $result = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
@@ -265,7 +265,7 @@ class FieldWebTest extends ViewTestBase {
       });
       $this->assertSubString(Html::decodeEntities($result), Html::decodeEntities($expected_result));
 
-      $expected_result = \Drupal::url('<front>', [], ['absolute' => $absolute]);
+      $expected_result = Url::fromRoute('<front>', [], ['absolute' => $absolute])->toString();
       $alter['path'] = '<front>';
       $result = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
         return $id_field->theme($row);

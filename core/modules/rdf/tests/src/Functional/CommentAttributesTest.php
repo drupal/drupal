@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\rdf\Functional;
 
+use Drupal\Core\Url;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\Tests\comment\Functional\CommentTestBase;
@@ -53,7 +54,7 @@ class CommentAttributesTest extends CommentTestBase {
     $this->setCommentSettings('comment_default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
 
     // Prepares commonly used URIs.
-    $this->baseUri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
+    $this->baseUri = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
     $this->nodeUri = $this->node->toUrl('canonical', ['absolute' => TRUE])->toString();
 
     // Set relation between node and comment.
@@ -300,7 +301,7 @@ class CommentAttributesTest extends CommentTestBase {
 
     // The comment author can be a registered user or an anonymous user.
     if ($comment->getOwnerId() > 0) {
-      $author_uri = \Drupal::url('entity.user.canonical', ['user' => $comment->getOwnerId()], ['absolute' => TRUE]);
+      $author_uri = Url::fromRoute('entity.user.canonical', ['user' => $comment->getOwnerId()], ['absolute' => TRUE])->toString();
       // Comment relation to author.
       $expected_value = [
         'type' => 'uri',

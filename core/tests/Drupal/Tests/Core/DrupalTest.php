@@ -358,6 +358,9 @@ class DrupalTest extends UnitTestCase {
    *
    * @covers ::url
    * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
+   *
+   * @group legacy
+   * @expectedDeprecation Drupal::url() is deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Instead create a \Drupal\Core\Url object directly, for example using Url::fromRoute()
    */
   public function testUrl() {
     $route_parameters = ['test_parameter' => 'test'];

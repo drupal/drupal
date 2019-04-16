@@ -577,6 +577,7 @@ class Drupal {
    *   Url::fromRoute().
    */
   public static function url($route_name, $route_parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
+    @trigger_error('Drupal::url() is deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Instead create a \Drupal\Core\Url object directly, for example using Url::fromRoute()', E_USER_DEPRECATED);
     return static::getContainer()->get('url_generator')->generateFromRoute($route_name, $route_parameters, $options, $collect_bubbleable_metadata);
   }
 

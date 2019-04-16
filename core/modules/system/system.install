@@ -687,7 +687,7 @@ function system_requirements($phase) {
       }
       // The files directory requirement check is done only during install and runtime.
       if ($phase == 'runtime') {
-        $description = t('You may need to set the correct directory at the <a href=":admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', [':admin-file-system' => \Drupal::url('system.file_system_settings')]);
+        $description = t('You may need to set the correct directory at the <a href=":admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', [':admin-file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
       }
       elseif ($phase == 'install') {
         // For the installer UI, we need different wording. 'value' will
@@ -751,7 +751,7 @@ function system_requirements($phase) {
     if ($has_pending_updates) {
       $requirements['update']['severity'] = REQUIREMENT_ERROR;
       $requirements['update']['value'] = t('Out of date');
-      $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href=":update">database update script</a> immediately.', [':update' => \Drupal::url('system.db_update')]);
+      $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href=":update">database update script</a> immediately.', [':update' => Url::fromRoute('system.db_update')->toString()]);
     }
 
     $requirements['entity_update'] = [
@@ -890,7 +890,7 @@ function system_requirements($phase) {
         'severity' => REQUIREMENT_WARNING,
         'description' => t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the Update Manager module from the <a href=":module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href=":update">Update status handbook page</a>.', [
           ':update' => 'https://www.drupal.org/documentation/modules/update',
-          ':module' => \Drupal::url('system.modules_list'),
+          ':module' => Url::fromRoute('system.modules_list')->toString(),
         ]),
       ];
     }

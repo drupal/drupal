@@ -5,6 +5,7 @@
  * Enables users to rename URLs.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -22,9 +23,9 @@ function path_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating aliases') . '</dt>';
-      $output .= '<dd>' . t('If you create or edit a taxonomy term you can add an alias (for example <em>music/jazz</em>) in the field "URL alias". When creating or editing content you can add an alias (for example <em>about-us/team</em>) under the section "URL path settings" in the field "URL alias". Aliases for any other path can be added through the page <a href=":aliases">URL aliases</a>. To add aliases a user needs the permission <a href=":permissions">Create and edit URL aliases</a>.', [':aliases' => \Drupal::url('path.admin_overview'), ':permissions' => \Drupal::url('user.admin_permissions', [], ['fragment' => 'module-path'])]) . '</dd>';
+      $output .= '<dd>' . t('If you create or edit a taxonomy term you can add an alias (for example <em>music/jazz</em>) in the field "URL alias". When creating or editing content you can add an alias (for example <em>about-us/team</em>) under the section "URL path settings" in the field "URL alias". Aliases for any other path can be added through the page <a href=":aliases">URL aliases</a>. To add aliases a user needs the permission <a href=":permissions">Create and edit URL aliases</a>.', [':aliases' => Url::fromRoute('path.admin_overview')->toString(), ':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-path'])->toString()]) . '</dd>';
       $output .= '<dt>' . t('Managing aliases') . '</dt>';
-      $output .= '<dd>' . t('The Path module provides a way to search and view a <a href=":aliases">list of all aliases</a> that are in use on your website. Aliases can be added, edited and deleted through this list.', [':aliases' => \Drupal::url('path.admin_overview')]) . '</dd>';
+      $output .= '<dd>' . t('The Path module provides a way to search and view a <a href=":aliases">list of all aliases</a> that are in use on your website. Aliases can be added, edited and deleted through this list.', [':aliases' => Url::fromRoute('path.admin_overview')->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
 

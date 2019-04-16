@@ -70,10 +70,10 @@ class DisplayBlockTest extends ViewTestBase {
     // Test that the block was given a default category corresponding to its
     // base table.
     $arguments = [
-      ':href' => \Drupal::Url('block.admin_add', [
+      ':href' => Url::fromRoute('block.admin_add', [
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_1',
         'theme' => 'classy',
-      ]),
+      ])->toString(),
       ':category' => 'Lists (Views)',
     ];
     $this->drupalGet('admin/structure/block');
@@ -107,20 +107,20 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertTrue(!empty($elements), 'The test block appears in the custom category.');
 
     $arguments = [
-      ':href' => \Drupal::Url('block.admin_add', [
+      ':href' => Url::fromRoute('block.admin_add', [
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_2',
         'theme' => 'classy',
-      ]),
+      ])->toString(),
       ':category' => 'Lists (Views)',
     ];
     $elements = $this->xpath($pattern, $arguments);
     $this->assertTrue(!empty($elements), 'The first duplicated test block remains in the original category.');
 
     $arguments = [
-      ':href' => \Drupal::Url('block.admin_add', [
+      ':href' => Url::fromRoute('block.admin_add', [
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_3',
         'theme' => 'classy',
-      ]),
+      ])->toString(),
       ':category' => $category,
     ];
     $elements = $this->xpath($pattern, $arguments);

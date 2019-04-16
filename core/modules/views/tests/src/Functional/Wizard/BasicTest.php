@@ -39,9 +39,9 @@ class BasicTest extends WizardTestBase {
     $this->drupalGet('admin/structure/views');
     $this->assertText($view1['label']);
     $this->assertText($view1['description']);
-    $this->assertLinkByHref(\Drupal::url('entity.view.edit_form', ['view' => $view1['id']]));
-    $this->assertLinkByHref(\Drupal::url('entity.view.delete_form', ['view' => $view1['id']]));
-    $this->assertLinkByHref(\Drupal::url('entity.view.duplicate_form', ['view' => $view1['id']]));
+    $this->assertLinkByHref(Url::fromRoute('entity.view.edit_form', ['view' => $view1['id']])->toString());
+    $this->assertLinkByHref(Url::fromRoute('entity.view.delete_form', ['view' => $view1['id']])->toString());
+    $this->assertLinkByHref(Url::fromRoute('entity.view.duplicate_form', ['view' => $view1['id']])->toString());
 
     // The view should not have a REST export display.
     $this->assertNoText('REST export', 'When no options are enabled in the wizard, the resulting view does not have a REST export display.');
