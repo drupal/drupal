@@ -39,7 +39,7 @@ class StreamWrapperTest extends FileTestBase {
     parent::setUp();
 
     // Add file_private_path setting.
-    $request = Request::create('/');;
+    $request = Request::create('/');
     $site_path = DrupalKernel::findSitePath($request);
     $this->setSetting('file_private_path', $site_path . '/private');
   }

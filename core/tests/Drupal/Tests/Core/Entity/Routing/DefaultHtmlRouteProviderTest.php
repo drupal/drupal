@@ -218,7 +218,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $entity_type1->hasLinkTemplate('canonical')->willReturn(FALSE);
     $data['no_canonical_link_template'] = [NULL, $entity_type1->reveal()];
 
-    $entity_type2 = $this->getEntityType();;
+    $entity_type2 = $this->getEntityType();
     $entity_type2->hasLinkTemplate('canonical')->willReturn(TRUE);
     $entity_type2->hasViewBuilderClass()->willReturn(FALSE);
     $data['no_view_builder'] = [NULL, $entity_type2->reveal()];

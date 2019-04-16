@@ -49,7 +49,6 @@ class AggregatorLocalTasksTest extends LocalTaskIntegrationTestBase {
     $this->assertLocalTasks($route, [
       0 => ['entity.aggregator_feed.canonical', 'entity.aggregator_feed.edit_form', 'entity.aggregator_feed.delete_form'],
     ]);
-    ;
   }
 
   /**

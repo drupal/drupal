@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\Listeners;
 
-use Drupal\KernelTests\KernelTestBase;;
-use Drupal\Tests\BrowserTestBase;;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\AssertionFailedError;
 
