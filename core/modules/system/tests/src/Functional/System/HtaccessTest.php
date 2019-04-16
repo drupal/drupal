@@ -86,6 +86,10 @@ class HtaccessTest extends BrowserTestBase {
     $file_paths["$path/composer.json"] = 403;
     $file_paths["$path/composer.lock"] = 403;
 
+    // Ensure web server configuration files cannot be accessed.
+    $file_paths["$path/.htaccess"] = 403;
+    $file_paths["$path/web.config"] = 403;
+
     return $file_paths;
   }
 
