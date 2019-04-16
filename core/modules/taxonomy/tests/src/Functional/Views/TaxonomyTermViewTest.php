@@ -100,8 +100,6 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
       ->grantPermission('create content translations')
       ->grantPermission('translate any entity')
       ->save();
-    drupal_static_reset();
-    \Drupal::service('router.builder')->rebuild();
 
     $edit['title[0][value]'] = $translated_title = $this->randomMachineName();
 
