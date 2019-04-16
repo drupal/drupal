@@ -114,10 +114,10 @@ function _update_requirement_check($project, $type) {
     $requirement['description'][] = ['#markup' => _update_message_text($type, $status)];
     if (!in_array($status, [UPDATE_UNKNOWN, UPDATE_NOT_CHECKED, UPDATE_NOT_FETCHED, UPDATE_FETCH_PENDING])) {
       if (_update_manager_access()) {
-        $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href=":available_updates">available updates</a> page for more information and to install your missing updates.', [':available_updates' => \Drupal::url('update.report_update')])];
+        $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href=":available_updates">available updates</a> page for more information and to install your missing updates.', [':available_updates' => Url::fromRoute('update.report_update')->toString()])];
       }
       else {
-        $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href=":available_updates">available updates</a> page for more information.', [':available_updates' => \Drupal::url('update.status')])];
+        $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href=":available_updates">available updates</a> page for more information.', [':available_updates' => Url::fromRoute('update.status')->toString()])];
       }
     }
   }

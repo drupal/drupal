@@ -18,20 +18,20 @@ use Drupal\block\Entity\Block;
 function block_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.block':
-      $block_content = \Drupal::moduleHandler()->moduleExists('block_content') ? \Drupal::url('help.page', ['name' => 'block_content']) : '#';
+      $block_content = \Drupal::moduleHandler()->moduleExists('block_content') ? Url::fromRoute('help.page', ['name' => 'block_content'])->toString() : '#';
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Block module allows you to place blocks in regions of your installed themes, and configure block settings. For more information, see the <a href=":blocks-documentation">online documentation for the Block module</a>.', [':blocks-documentation' => 'https://www.drupal.org/documentation/modules/block/']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Placing and moving blocks') . '</dt>';
-      $output .= '<dd>' . t('You can place a new block in a region by selecting <em>Place block</em> on the <a href=":blocks">Block layout page</a>. Once a block is placed, it can be moved to a different region by drag-and-drop or by using the <em>Region</em> drop-down list, and then clicking <em>Save blocks</em>.', [':blocks' => \Drupal::url('block.admin_display')]) . '</dd>';
+      $output .= '<dd>' . t('You can place a new block in a region by selecting <em>Place block</em> on the <a href=":blocks">Block layout page</a>. Once a block is placed, it can be moved to a different region by drag-and-drop or by using the <em>Region</em> drop-down list, and then clicking <em>Save blocks</em>.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Toggling between different themes') . '</dt>';
       $output .= '<dd>' . t('Blocks are placed and configured specifically for each theme. The Block layout page opens with the default theme, but you can toggle to other installed themes.') . '</dd>';
       $output .= '<dt>' . t('Demonstrating block regions for a theme') . '</dt>';
-      $output .= '<dd>' . t('You can see where the regions are for the current theme by clicking the <em>Demonstrate block regions</em> link on the <a href=":blocks">Block layout page</a>. Regions are specific to each theme.', [':blocks' => \Drupal::url('block.admin_display')]) . '</dd>';
+      $output .= '<dd>' . t('You can see where the regions are for the current theme by clicking the <em>Demonstrate block regions</em> link on the <a href=":blocks">Block layout page</a>. Regions are specific to each theme.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Configuring block settings') . '</dt>';
-      $output .= '<dd>' . t('To change the settings of an individual block click on the <em>Configure</em> link on the <a href=":blocks">Block layout page</a>. The available options vary depending on the module that provides the block. For all blocks you can change the block title and toggle whether to display it.', [':blocks' => Drupal::url('block.admin_display')]) . '</dd>';
+      $output .= '<dd>' . t('To change the settings of an individual block click on the <em>Configure</em> link on the <a href=":blocks">Block layout page</a>. The available options vary depending on the module that provides the block. For all blocks you can change the block title and toggle whether to display it.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Controlling visibility') . '</dt>';
       $output .= '<dd>' . t('You can control the visibility of a block by restricting it to specific pages, content types, and/or roles by setting the appropriate options under <em>Visibility settings</em> of the block configuration.') . '</dd>';
       $output .= '<dt>' . t('Adding custom blocks') . '</dt>';

@@ -2,6 +2,7 @@
 
 namespace Drupal\language\Element;
 
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element\FormElement;
@@ -41,7 +42,7 @@ class LanguageConfiguration extends FormElement {
       '#type' => 'select',
       '#title' => t('Default language'),
       '#options' => $options + static::getDefaultOptions(),
-      '#description' => t('Explanation of the language options is found on the <a href=":languages_list_page">languages list page</a>.', [':languages_list_page' => \Drupal::url('entity.configurable_language.collection')]),
+      '#description' => t('Explanation of the language options is found on the <a href=":languages_list_page">languages list page</a>.', [':languages_list_page' => Url::fromRoute('entity.configurable_language.collection')->toString()]),
       '#default_value' => ($default_config != NULL) ? $default_config->getDefaultLangcode() : LanguageInterface::LANGCODE_SITE_DEFAULT,
     ];
 

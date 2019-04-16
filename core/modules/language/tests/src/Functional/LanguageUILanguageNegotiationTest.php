@@ -446,7 +446,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
 
     // Check that the language switcher active link matches the given browser
     // language.
-    $args = [':id' => 'block-test-language-block', ':url' => \Drupal::url('<front>') . $langcode_browser_fallback];
+    $args = [':id' => 'block-test-language-block', ':url' => Url::fromRoute('<front>')->toString() . $langcode_browser_fallback];
     $fields = $this->xpath('//div[@id=:id]//a[@class="language-link is-active" and starts-with(@href, :url)]', $args);
     $this->assertSame($fields[0]->getText(), $languages[$langcode_browser_fallback]->getName(), 'The browser language is the URL active language');
 

@@ -5,6 +5,7 @@
  * Provides an automated cron by executing it at the end of a response.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -20,7 +21,7 @@ function automated_cron_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Configuring Automated Cron') . '</dt>';
-      $output .= '<dd>' . t('On the <a href=":cron-settings">Cron page</a>, you can set the frequency (time interval) for running cron jobs.', [':cron-settings' => \Drupal::url('system.cron_settings')]) . '</dd>';
+      $output .= '<dd>' . t('On the <a href=":cron-settings">Cron page</a>, you can set the frequency (time interval) for running cron jobs.', [':cron-settings' => Url::fromRoute('system.cron_settings')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Disabling Automated Cron') . '</dt>';
       $output .= '<dd>' . t('To disable automated cron, the recommended method is to uninstall the module, to reduce site overhead. If you only want to disable it temporarily, you can set the frequency to Never on the Cron page, and then change the frequency back when you want to start it up again.') . '</dd>';
       $output .= '</dl>';

@@ -473,7 +473,7 @@ class PagePreviewTest extends NodeTestBase {
 
     $edit2 = [$title_key => 'Another page title'];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit2, t('Preview'));
-    $this->assertUrl(\Drupal::url('entity.node.preview', ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'], ['absolute' => TRUE]));
+    $this->assertUrl(Url::fromRoute('entity.node.preview', ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'], ['absolute' => TRUE])->toString());
     $this->assertText($edit2[$title_key]);
   }
 

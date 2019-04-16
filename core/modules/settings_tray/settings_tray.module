@@ -5,6 +5,7 @@
  * Allows configuring blocks and other configuration from the site front-end.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\block\entity\Block;
@@ -18,12 +19,12 @@ function settings_tray_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.settings_tray':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Settings Tray module allows users with the <a href=":administer_block_permission">Administer blocks</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit blocks without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Settings Tray module</a>.', [':handbook_url' => 'https://www.drupal.org/documentation/modules/settings_tray', ':administer_block_permission' => \Drupal::url('user.admin_permissions', [], ['fragment' => 'module-block']), ':contextual_permission' => \Drupal::url('user.admin_permissions', [], ['fragment' => 'module-contextual'])]) . '</p>';
+      $output .= '<p>' . t('The Settings Tray module allows users with the <a href=":administer_block_permission">Administer blocks</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit blocks without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Settings Tray module</a>.', [':handbook_url' => 'https://www.drupal.org/documentation/modules/settings_tray', ':administer_block_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-block'])->toString(), ':contextual_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-contextual'])->toString()]) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Editing blocks in place') . '</dt>';
       $output .= '<dd>';
-      $output .= '<p>' . t('To edit blocks in place, either click the <strong>Edit</strong> button in the toolbar and then click on the block, or choose "Quick edit" from the block\'s contextual link. (See the <a href=":contextual">Contextual Links module help</a> for more information about how to use contextual links.)', [':contextual' => \Drupal::url('help.page', ['name' => 'contextual'])]) . '</p>';
+      $output .= '<p>' . t('To edit blocks in place, either click the <strong>Edit</strong> button in the toolbar and then click on the block, or choose "Quick edit" from the block\'s contextual link. (See the <a href=":contextual">Contextual Links module help</a> for more information about how to use contextual links.)', [':contextual' => Url::fromRoute('help.page', ['name' => 'contextual'])->toString()]) . '</p>';
       $output .= '<p>' . t('The Settings Tray for the block will open in a sidebar, with a compact form for configuring what the block shows.') . '</p>';
       $output .= '<p>' . t('Save the form and the changes will be immediately visible on the page.') . '</p>';
       $output .= '</dd>';

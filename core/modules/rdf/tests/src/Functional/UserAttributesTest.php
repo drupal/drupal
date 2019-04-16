@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\rdf\Functional;
 
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -60,7 +61,7 @@ class UserAttributesTest extends BrowserTestBase {
       // should be used.
       $parser = new \EasyRdf_Parser_Rdfa();
       $graph = new \EasyRdf_Graph();
-      $base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
+      $base_uri = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
       $parser->parse($graph, $this->drupalGet('user/' . $author->id()), 'rdfa', $base_uri);
 
       // Inspects RDF graph output.
@@ -85,7 +86,7 @@ class UserAttributesTest extends BrowserTestBase {
       // Parses the node created by the user.
       $parser = new \EasyRdf_Parser_Rdfa();
       $graph = new \EasyRdf_Graph();
-      $base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
+      $base_uri = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
       $parser->parse($graph, $this->drupalGet('node/' . $node->id()), 'rdfa', $base_uri);
 
       // Ensures the default bundle mapping for user is used on the Authored By

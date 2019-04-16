@@ -29,7 +29,7 @@ function views_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Views module provides a back end to fetch information from content, user accounts, taxonomy terms, and other entities from the database and present it to the user as a grid, HTML list, table, unformatted list, etc. The resulting displays are known generally as <em>views</em>.') . '</p>';
       $output .= '<p>' . t('For more information, see the <a href=":views">online documentation for the Views module</a>.', [':views' => 'https://www.drupal.org/documentation/modules/views']) . '</p>';
-      $output .= '<p>' . t('In order to create and modify your own views using the administration and configuration user interface, you will need to enable either the Views UI module in core or a contributed module that provides a user interface for Views. See the <a href=":views-ui">Views UI module help page</a> for more information.', [':views-ui' => (\Drupal::moduleHandler()->moduleExists('views_ui')) ? \Drupal::url('help.page', ['name' => 'views_ui']) : '#']) . '</p>';
+      $output .= '<p>' . t('In order to create and modify your own views using the administration and configuration user interface, you will need to enable either the Views UI module in core or a contributed module that provides a user interface for Views. See the <a href=":views-ui">Views UI module help page</a> for more information.', [':views-ui' => (\Drupal::moduleHandler()->moduleExists('views_ui')) ? Url::fromRoute('help.page', ['name' => 'views_ui'])->toString() : '#']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Adding functionality to administrative pages') . '</dt>';
@@ -54,7 +54,7 @@ function views_views_pre_render($view) {
   // If using AJAX, send identifying data about this view.
   if ($view->ajaxEnabled() && empty($view->is_attachment) && empty($view->live_preview)) {
     $view->element['#attached']['drupalSettings']['views'] = [
-      'ajax_path' => \Drupal::url('views.ajax'),
+      'ajax_path' => Url::fromRoute('views.ajax')->toString(),
       'ajaxViews' => [
         'views_dom_id:' . $view->dom_id => [
           'view_name' => $view->storage->id(),

@@ -5,6 +5,7 @@
  * This is the Actions module for executing stored actions.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -19,9 +20,9 @@ function action_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Using simple actions') . '</dt>';
-      $output .= '<dd>' . t('<em>Simple actions</em> do not require configuration and are listed automatically as available on the <a href=":actions">Actions page</a>.', [':actions' => \Drupal::url('entity.action.collection')]) . '</dd>';
+      $output .= '<dd>' . t('<em>Simple actions</em> do not require configuration and are listed automatically as available on the <a href=":actions">Actions page</a>.', [':actions' => Url::fromRoute('entity.action.collection')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Creating and configuring advanced actions') . '</dt>';
-      $output .= '<dd>' . t('<em>Advanced actions</em> are user-created and have to be configured individually. Create an advanced action on the <a href=":actions">Actions page</a> by selecting an action type from the drop-down list. Then configure your action, for example by specifying the recipient of an automated email message.', [':actions' => \Drupal::url('entity.action.collection')]) . '</dd>';
+      $output .= '<dd>' . t('<em>Advanced actions</em> are user-created and have to be configured individually. Create an advanced action on the <a href=":actions">Actions page</a> by selecting an action type from the drop-down list. Then configure your action, for example by specifying the recipient of an automated email message.', [':actions' => Url::fromRoute('entity.action.collection')->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
 

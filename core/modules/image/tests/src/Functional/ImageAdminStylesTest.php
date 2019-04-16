@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\image\Functional;
 
+use Drupal\Core\Url;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\image\Entity\ImageStyle;
@@ -291,7 +292,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Confirm that the empty text is correct on the image styles page.
     $this->drupalGet($admin_path);
     $this->assertRaw(t('There are currently no styles. <a href=":url">Add a new one</a>.', [
-      ':url' => \Drupal::url('image.style_add'),
+      ':url' => Url::fromRoute('image.style_add')->toString(),
     ]));
 
   }

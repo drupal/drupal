@@ -193,7 +193,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
       'variables' => [
         '@token1' => $this->randomMachineName(),
         '@token2' => $this->randomMachineName(),
-        'link' => '<a href="' . \Drupal::url('<front>') . '"><object>Link</object></a>',
+        'link' => '<a href="' . Url::fromRoute('<front>')->toString() . '"><object>Link</object></a>',
       ],
     ];
     // Setup a watchdog entry with severity WARNING.

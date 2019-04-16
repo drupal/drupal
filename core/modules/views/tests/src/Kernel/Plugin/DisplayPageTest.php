@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
+use Drupal\Core\Url;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\views\Entity\View;
@@ -170,7 +171,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
 
     $this->setRawContent($output);
     $result = $this->xpath('//div[@class=:class]/a', [':class' => 'more-link']);
-    $this->assertEqual($result[0]->attributes()->href, \Drupal::url('view.test_display_more.page_1'), 'The right more link is shown.');
+    $this->assertEqual($result[0]->attributes()->href, Url::fromRoute('view.test_display_more.page_1')->toString(), 'The right more link is shown.');
     $this->assertEqual(trim($result[0][0]), $expected_more_text, 'The right link text is shown.');
 
     // Test the renderMoreLink method directly. This could be directly unit
@@ -179,7 +180,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
     $more_link = $renderer->renderRoot($more_link);
     $this->setRawContent($more_link);
     $result = $this->xpath('//div[@class=:class]/a', [':class' => 'more-link']);
-    $this->assertEqual($result[0]->attributes()->href, \Drupal::url('view.test_display_more.page_1'), 'The right more link is shown.');
+    $this->assertEqual($result[0]->attributes()->href, Url::fromRoute('view.test_display_more.page_1')->toString(), 'The right more link is shown.');
     $this->assertEqual(trim($result[0][0]), $expected_more_text, 'The right link text is shown.');
 
     // Test the useMoreText method directly. This could be directly unit

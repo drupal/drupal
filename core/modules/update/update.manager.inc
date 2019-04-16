@@ -36,6 +36,7 @@
  * root.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -59,7 +60,7 @@ function update_manager_download_batch_finished($success, $results) {
   elseif ($success) {
     \Drupal::messenger()->addStatus(t('Updates downloaded successfully.'));
     $_SESSION['update_manager_update_projects'] = $results['projects'];
-    return new RedirectResponse(\Drupal::url('update.confirmation_page', [], ['absolute' => TRUE]));
+    return new RedirectResponse(Url::fromRoute('update.confirmation_page', [], ['absolute' => TRUE])->toString());
   }
   else {
     // Ideally we're catching all Exceptions, so they should never see this,

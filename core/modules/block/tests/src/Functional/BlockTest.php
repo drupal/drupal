@@ -377,7 +377,7 @@ class BlockTest extends BlockTestBase {
     // both the page and block caches.
     $this->drupalGet('<front>');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
-    $cid_parts = [\Drupal::url('<front>', [], ['absolute' => TRUE]), ''];
+    $cid_parts = [Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), ''];
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
     $expected_cache_tags = [
@@ -418,7 +418,7 @@ class BlockTest extends BlockTestBase {
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->drupalGet('<front>');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
-    $cid_parts = [\Drupal::url('<front>', [], ['absolute' => TRUE]), ''];
+    $cid_parts = [Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), ''];
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
     $expected_cache_tags = [

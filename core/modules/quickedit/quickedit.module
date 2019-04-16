@@ -11,6 +11,7 @@
  * entities, enabling them for in-place editing.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -23,12 +24,12 @@ function quickedit_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.quickedit':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Quick Edit module allows users with the <a href=":quickedit_permission">Access in-place editing</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit field content without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Quick Edit module</a>.', [':handbook_url' => 'https://www.drupal.org/documentation/modules/edit', ':quickedit_permission' => \Drupal::url('user.admin_permissions', [], ['fragment' => 'module-quickedit']), ':contextual_permission' => \Drupal::url('user.admin_permissions', [], ['fragment' => 'module-contextual'])]) . '</p>';
+      $output .= '<p>' . t('The Quick Edit module allows users with the <a href=":quickedit_permission">Access in-place editing</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit field content without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Quick Edit module</a>.', [':handbook_url' => 'https://www.drupal.org/documentation/modules/edit', ':quickedit_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-quickedit'])->toString(), ':contextual_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-contextual'])->toString()]) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Editing content in-place') . '</dt>';
       $output .= '<dd>';
-      $output .= '<p>' . t('To edit content in place, you need to activate quick edit mode for a content item. Activate quick edit mode by choosing Quick edit from the contextual links for an area displaying the content (see the <a href=":contextual">Contextual Links module help</a> for more information about how to use contextual links).', [':contextual' => \Drupal::url('help.page', ['name' => 'contextual'])]) . '</p>';
+      $output .= '<p>' . t('To edit content in place, you need to activate quick edit mode for a content item. Activate quick edit mode by choosing Quick edit from the contextual links for an area displaying the content (see the <a href=":contextual">Contextual Links module help</a> for more information about how to use contextual links).', [':contextual' => Url::fromRoute('help.page', ['name' => 'contextual'])->toString()]) . '</p>';
       $output .= '<p>' . t('Once quick edit mode is activated, you will be able to edit the individual fields of your content. In the default theme, with a JavaScript-enabled browser and a mouse, the output of different fields in your content is outlined in blue, a pop-up gives the field name as you hover over the field output, and clicking on a field activates the editor. Closing the pop-up window ends quick edit mode.') . '</p>';
       $output .= '</dd>';
       $output .= '</dl>';

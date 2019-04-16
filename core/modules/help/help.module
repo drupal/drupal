@@ -5,6 +5,7 @@
  * Manages displaying online help.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -17,12 +18,12 @@ function help_help($route_name, RouteMatchInterface $route_match) {
       $output = '<h2>' . t('Getting Started') . '</h2>';
       $output .= '<p>' . t('Follow these steps to set up and start using your website:') . '</p>';
       $output .= '<ol>';
-      $output .= '<li>' . t('<strong>Configure your website</strong> Once logged in, visit the <a href=":admin">Administration page</a>, where you may <a href=":config">customize and configure</a> all aspects of your website.', [':admin' => \Drupal::url('system.admin'), ':config' => \Drupal::url('system.admin_config')]) . '</li>';
-      $output .= '<li>' . t('<strong>Enable additional functionality</strong> Next, visit the <a href=":modules">Extend page</a> and enable modules that suit your specific needs. You can find additional modules at the <a href=":download_modules">Drupal.org modules page</a>.', [':modules' => \Drupal::url('system.modules_list'), ':download_modules' => 'https://www.drupal.org/project/modules']) . '</li>';
-      $output .= '<li>' . t('<strong>Customize your website design</strong> To change the "look and feel" of your website, visit the <a href=":themes">Appearance page</a>. You may choose from one of the included themes or download additional themes from the <a href=":download_themes">Drupal.org themes page</a>.', [':themes' => \Drupal::url('system.themes_page'), ':download_themes' => 'https://www.drupal.org/project/themes']) . '</li>';
+      $output .= '<li>' . t('<strong>Configure your website</strong> Once logged in, visit the <a href=":admin">Administration page</a>, where you may <a href=":config">customize and configure</a> all aspects of your website.', [':admin' => Url::fromRoute('system.admin')->toString(), ':config' => Url::fromRoute('system.admin_config')->toString()]) . '</li>';
+      $output .= '<li>' . t('<strong>Enable additional functionality</strong> Next, visit the <a href=":modules">Extend page</a> and enable modules that suit your specific needs. You can find additional modules at the <a href=":download_modules">Drupal.org modules page</a>.', [':modules' => Url::fromRoute('system.modules_list')->toString(), ':download_modules' => 'https://www.drupal.org/project/modules']) . '</li>';
+      $output .= '<li>' . t('<strong>Customize your website design</strong> To change the "look and feel" of your website, visit the <a href=":themes">Appearance page</a>. You may choose from one of the included themes or download additional themes from the <a href=":download_themes">Drupal.org themes page</a>.', [':themes' => Url::fromRoute('system.themes_page')->toString(), ':download_themes' => 'https://www.drupal.org/project/themes']) . '</li>';
       // Display a link to the create content page if Node module is enabled.
       if (\Drupal::moduleHandler()->moduleExists('node')) {
-        $output .= '<li>' . t('<strong>Start posting content</strong> Finally, you may <a href=":content">add new content</a> to your website.', [':content' => \Drupal::url('node.add_page')]) . '</li>';
+        $output .= '<li>' . t('<strong>Start posting content</strong> Finally, you may <a href=":content">add new content</a> to your website.', [':content' => Url::fromRoute('node.add_page')->toString()]) . '</li>';
       }
       $output .= '</ol>';
       $output .= '<p>' . t('For more information, refer to the help listed on this page or to the <a href=":docs">online documentation</a> and <a href=":support">support</a> pages at <a href=":drupal">drupal.org</a>.', [':docs' => 'https://www.drupal.org/documentation', ':support' => 'https://www.drupal.org/support', ':drupal' => 'https://www.drupal.org']) . '</p>';
@@ -31,13 +32,13 @@ function help_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.help':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Help module generates <a href=":help-page">Help reference pages</a> to guide you through the use and configuration of modules, and provides a Help block with page-level help. The reference pages are a starting point for <a href=":handbook">Drupal.org online documentation</a> pages that contain more extensive and up-to-date information, are annotated with user-contributed comments, and serve as the definitive reference point for all Drupal documentation. For more information, see the <a href=":help">online documentation for the Help module</a>.', [':help' => 'https://www.drupal.org/documentation/modules/help/', ':handbook' => 'https://www.drupal.org/documentation', ':help-page' => \Drupal::url('help.main')]) . '</p>';
+      $output .= '<p>' . t('The Help module generates <a href=":help-page">Help reference pages</a> to guide you through the use and configuration of modules, and provides a Help block with page-level help. The reference pages are a starting point for <a href=":handbook">Drupal.org online documentation</a> pages that contain more extensive and up-to-date information, are annotated with user-contributed comments, and serve as the definitive reference point for all Drupal documentation. For more information, see the <a href=":help">online documentation for the Help module</a>.', [':help' => 'https://www.drupal.org/documentation/modules/help/', ':handbook' => 'https://www.drupal.org/documentation', ':help-page' => Url::fromRoute('help.main')->toString()]) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Providing a help reference') . '</dt>';
-      $output .= '<dd>' . t('The Help module displays explanations for using each module listed on the main <a href=":help">Help reference page</a>.', [':help' => \Drupal::url('help.main')]) . '</dd>';
+      $output .= '<dd>' . t('The Help module displays explanations for using each module listed on the main <a href=":help">Help reference page</a>.', [':help' => Url::fromRoute('help.main')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Providing page-specific help') . '</dt>';
-      $output .= '<dd>' . t('Page-specific help text provided by modules is displayed in the Help block. This block can be placed and configured on the <a href=":blocks">Block layout page</a>.', [':blocks' => (\Drupal::moduleHandler()->moduleExists('block')) ? \Drupal::url('block.admin_display') : '#']) . '</dd>';
+      $output .= '<dd>' . t('Page-specific help text provided by modules is displayed in the Help block. This block can be placed and configured on the <a href=":blocks">Block layout page</a>.', [':blocks' => (\Drupal::moduleHandler()->moduleExists('block')) ? Url::fromRoute('block.admin_display')->toString() : '#']) . '</dd>';
       $output .= '</dl>';
       return ['#markup' => $output];
   }
