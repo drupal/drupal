@@ -91,6 +91,13 @@ function system_post_update_field_formatter_entity_schema() {
 }
 
 /**
+ * Clear the library cache and ensure aggregate files are regenerated.
+ */
+function system_post_update_fix_jquery_extend() {
+  // Empty post-update hook.
+}
+
+/**
  * Change plugin IDs of actions.
  */
 function system_post_update_change_action_plugins() {
