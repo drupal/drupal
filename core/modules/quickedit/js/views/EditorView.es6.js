@@ -124,7 +124,7 @@
             break;
 
           case 'activating': {
-            // The user has indicated he wants to do in-place editing: if
+            // The user is in the process of activating in-place editing: if
             // something needs to be loaded (CSS/JavaScript/server data/…), then
             // do so at this stage, and once the in-place editor is ready,
             // set the 'active' state. A "loading" indicator will be shown in the
@@ -149,11 +149,10 @@
             break;
 
           case 'saving':
-            // When the user has indicated he wants to save his changes to this
-            // field, this state will be entered. If the previous saving attempt
-            // resulted in validation errors, the previous state will be
-            // 'invalid'. Clean up those validation errors while the user is
-            // saving.
+            // When the user has triggered a save to this field, this state will
+            // be entered. If the previous saving attempt resulted in validation
+            // errors, the previous state will be 'invalid'. Clean up those
+            // validation errors while the user is saving.
             if (from === 'invalid') {
               this.removeValidationErrors();
             }

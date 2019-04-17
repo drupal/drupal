@@ -316,9 +316,8 @@ function views_ui_views_analyze(ViewExecutable $view) {
   if (count($view->displayHandlers) < 2) {
     $ret[] = Analyzer::formatMessage(t('This view has only a default display and therefore will not be placed anywhere on your site; perhaps you want to add a page or a block display.'), 'warning');
   }
-  // You can give a page display the same path as an alias existing in the
-  // system, so the alias will not work anymore. Report this to the user,
-  // because he probably wanted something else.
+  // If a display has a path, check that it does not match an existing path
+  // alias. This results in the path alias not working.
   foreach ($view->displayHandlers as $display) {
     if (empty($display)) {
       continue;

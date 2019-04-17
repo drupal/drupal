@@ -489,7 +489,7 @@ function views_update_8500() {
   }
 
   // Beside of updating the field and plugin ID we also need to truncate orphan
-  // keys so he configuration applies to the config schema.
+  // keys so the configuration applies to the config schema.
   // We cannot do that inline in the other code, due to caching issues with
   // typed configuration.
   foreach ($required_cleanup_handlers as $id => $paths_to_handlers) {

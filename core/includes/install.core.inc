@@ -1389,8 +1389,8 @@ function install_select_language(&$install_state) {
       return install_get_form('Drupal\Core\Installer\Form\SelectLanguageForm', $install_state);
     }
     // If we are performing a non-interactive installation. If only one language
-    // (English) is available, assume the user knows what he is doing. Otherwise
-    // throw an error.
+    // (English) is available, assume the user is correct. Otherwise throw an
+    // error.
     else {
       if (count($files) == 1) {
         $install_state['parameters']['langcode'] = current(array_keys($files));

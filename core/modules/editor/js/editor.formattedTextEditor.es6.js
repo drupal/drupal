@@ -62,7 +62,7 @@
         this.textEditor = Drupal.editors[this.textFormat.editor];
 
         // Store the actual value of this field. We'll need this to restore the
-        // original value when the user discards his modifications.
+        // original value when the user discards their modifications.
         const $fieldItems = this.$el.find('.quickedit-field');
         if ($fieldItems.length) {
           this.$textElement = $fieldItems.eq(0);

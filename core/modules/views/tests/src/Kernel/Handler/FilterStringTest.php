@@ -447,7 +447,7 @@ class FilterStringTest extends ViewsKernelTestBase {
       [
         'name' => 'Paul',
       ],
-      // There is no Meredith returned because his description is empty
+      // There is no Meredith returned because their description is empty
     ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
@@ -475,7 +475,7 @@ class FilterStringTest extends ViewsKernelTestBase {
       [
         'name' => 'Paul',
       ],
-      // There is no Meredith returned because his description is empty
+      // There is no Meredith returned because their description is empty
     ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
@@ -556,7 +556,7 @@ class FilterStringTest extends ViewsKernelTestBase {
       [
         'name' => 'Paul',
       ],
-      // There is no Meredith returned because his description is empty
+      // There is no Meredith returned because their description is empty
     ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
@@ -581,7 +581,7 @@ class FilterStringTest extends ViewsKernelTestBase {
       [
         'name' => 'Paul',
       ],
-      // There is no Meredith returned because his description is empty
+      // There is no Meredith returned because their description is empty
     ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
@@ -610,7 +610,7 @@ class FilterStringTest extends ViewsKernelTestBase {
       [
         'name' => 'Paul',
       ],
-      // There is no Meredith returned because his description is empty
+      // There is no Meredith returned because their description is empty
     ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
@@ -635,7 +635,7 @@ class FilterStringTest extends ViewsKernelTestBase {
       [
         'name' => 'Paul',
       ],
-      // There is no Meredith returned because his description is empty
+      // There is no Meredith returned because their description is empty
     ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
 

@@ -53,7 +53,7 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal7TestBase {
     $this->assertSame('is - Fix your password', $config->get('password_reset.subject'));
     $this->assertSame("is - Nope! You're locked out forever.", $config->get('password_reset.body'));
     $this->assertSame('is - Gawd made you an account', $config->get('register_admin_created.subject'));
-    $this->assertSame("is - ...and she could take it away.\r\n[site:name], [site:url]", $config->get('register_admin_created.body'));
+    $this->assertSame("is - ...and it could be taken away.\r\n[site:name], [site:url]", $config->get('register_admin_created.body'));
     $this->assertSame('is - Welcome!', $config->get('register_no_approval_required.subject'));
     $this->assertSame('is - You can now log in if you can figure out how to use Drupal!', $config->get('register_no_approval_required.body'));
     $this->assertSame('is - Soon...', $config->get('register_pending_approval.subject'));

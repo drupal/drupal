@@ -131,7 +131,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
 
     // Check the default value of a language field when authors preferred option
     // is selected.
-    // Create first an user and assign a preferred langcode to him.
+    // Create first an user and assign a preferred langcode.
     $some_user = $this->drupalCreateUser();
     $some_user->preferred_langcode = 'bb';
     $some_user->save();

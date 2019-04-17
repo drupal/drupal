@@ -234,7 +234,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         $this->entity = $reloaded_entity;
 
         // Set a default value on the fields.
-        $this->entity->set('field_rest_test', ['value' => 'All the faith he had had had had no effect on the outcome of his life.']);
+        $this->entity->set('field_rest_test', ['value' => 'All the faith they had had had had no effect on the outcome of their life.']);
         $this->entity->set('field_rest_test_multivalue', [['value' => 'One'], ['value' => 'Two']]);
         $this->entity->set('rest_test_validation', ['value' => 'allowed value']);
         $this->entity->save();
@@ -1241,7 +1241,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Ensure that fields do not get deleted if they're not present in the PATCH
     // request. Test this using the configurable field that we added, but which
     // is not sent in the PATCH request.
-    $this->assertSame('All the faith he had had had had no effect on the outcome of his life.', $updated_entity->get('field_rest_test')->value);
+    $this->assertSame('All the faith they had had had had no effect on the outcome of their life.', $updated_entity->get('field_rest_test')->value);
 
     // Multi-value field: remove item 0. Then item 1 becomes item 0.
     $normalization_multi_value_tests = $this->getNormalizedPatchEntity();

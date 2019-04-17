@@ -26,21 +26,21 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Usage example:
  * @code
  * $header = [
- *   'first_name' => $this->t('First Name'),
- *   'last_name' => $this->t('Last Name'),
+ *   'color' => $this->t('Color'),
+ *   'shape' => $this->t('Shape'),
  * ];
  *
  * $options = [
- *   1 => ['first_name' => 'Indy', 'last_name' => 'Jones'],
- *   2 => ['first_name' => 'Darth', 'last_name' => 'Vader'],
- *   3 => ['first_name' => 'Super', 'last_name' => 'Man'],
+ *   1 => ['color' => 'Red', 'shape' => 'Triangle'],
+ *   2 => ['color' => 'Green', 'shape' => 'Square'],
+ *   3 => ['color' => 'Blue', 'shape' => 'Hexagon'],
  * ];
  *
  * $form['table'] = array(
  *   '#type' => 'tableselect',
  *   '#header' => $header,
  *   '#options' => $options,
- *   '#empty' => $this->t('No users found'),
+ *   '#empty' => $this->t('No shapes found'),
  * );
  * @endcode
  *

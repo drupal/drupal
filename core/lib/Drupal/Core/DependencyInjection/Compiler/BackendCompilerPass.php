@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * Defines a compiler pass to allow automatic override per backend.
  *
- * A module developer has to tag his backend service with "backend_overridable":
+ * A module developer has to tag a backend service with "backend_overridable":
  * @code
  * custom_service:
  *   class: ...

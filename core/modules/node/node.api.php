@@ -174,8 +174,8 @@ function hook_node_access_records(\Drupal\node\NodeInterface $node) {
     }
     // For the example_author array, the GID is equivalent to a UID, which
     // means there are many groups of just 1 user.
-    // Note that an author can always view his or her nodes, even if they
-    // have status unpublished.
+    // Note that an author can always view nodes they own, even if they have
+    // status unpublished.
     if ($node->getOwnerId()) {
       $grants[] = [
         'realm' => 'example_author',

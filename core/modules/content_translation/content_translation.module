@@ -297,7 +297,7 @@ function content_translation_entity_base_field_info(EntityTypeInterface $entity_
  *   - translatable: (optional) If the column group should be translatable by
  *     default, defaults to FALSE.
  *   - columns: (optional) A list of columns of this group. Defaults to the
- *     name of he group as the single column.
+ *     name of the group as the single column.
  *   - require_all_groups_for_translation: (optional) Set to TRUE to enforce
  *     that making this column group translatable requires all others to be
  *     translatable too.

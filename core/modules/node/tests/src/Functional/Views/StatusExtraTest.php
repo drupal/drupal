@@ -61,7 +61,7 @@ class StatusExtraTest extends NodeTestBase {
     $this->assertText($node_unpublished2->label());
     $this->assertText($node_unpublished3->label());
 
-    // The node author should see the published node and his own node.
+    // The node author should see the published node and their own node.
     $this->drupalLogin($node_author);
     $this->drupalGet('test_status_extra');
     $this->assertText($node_published->label());
@@ -77,7 +77,7 @@ class StatusExtraTest extends NodeTestBase {
     $this->assertNoText($node_unpublished2->label());
     $this->assertNoText($node_unpublished3->label());
 
-    // The author without the permission to see his own unpublished node should
+    // The author without the permission to see their own unpublished node should
     // just see the published node.
     $this->drupalLogin($node_author_not_unpublished);
     $this->drupalGet('test_status_extra');

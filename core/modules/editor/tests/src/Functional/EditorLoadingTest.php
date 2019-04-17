@@ -207,7 +207,7 @@ class EditorLoadingTest extends BrowserTestBase {
     ]);
 
     // The untrusted user tries to edit content that is written in a text format
-    // that (s)he is not allowed to use. The editor is still loaded. CKEditor,
+    // that they are not allowed to use. The editor is still loaded. CKEditor,
     // for example, supports being loaded in a disabled state.
     $this->drupalGet('node/1/edit');
     list(, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck('body');

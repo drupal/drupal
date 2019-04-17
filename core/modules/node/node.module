@@ -1195,8 +1195,8 @@ function node_access_needs_rebuild($rebuild = NULL) {
  * This rebuild is occasionally needed by modules that make system-wide changes
  * to access levels. When the rebuild is required by an admin-triggered action
  * (e.g module settings form), calling node_access_needs_rebuild(TRUE) instead
- * of node_access_rebuild() lets the user perform his changes and actually
- * rebuild only once he is done.
+ * of node_access_rebuild() lets the user perform changes and actually rebuild
+ * only once done.
  *
  * Note : As of Drupal 6, node access modules are not required to (and actually
  * should not) call node_access_rebuild() in hook_install/uninstall anymore.

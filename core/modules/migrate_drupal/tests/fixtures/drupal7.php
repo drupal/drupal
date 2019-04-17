@@ -52363,7 +52363,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'user_mail_register_admin_created_body',
-  'value' => 's:30:"...and she could take it away.";',
+  'value' => 's:30:"...and it could be taken away.";',
 ))
 ->values(array(
   'name' => 'user_mail_register_admin_created_subject',
@@ -52650,7 +52650,7 @@ $connection->insert('variable_store')
   'realm' => 'language',
   'realm_key' => 'is',
   'name' => 'user_mail_register_admin_created_body',
-  'value' => "is - ...and she could take it away.\r\n[site:name], [site:url]",
+  'value' => "is - ...and it could be taken away.\r\n[site:name], [site:url]",
   'serialized' => '0',
 ))
 ->values(array(

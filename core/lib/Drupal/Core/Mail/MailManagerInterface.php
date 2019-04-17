@@ -22,7 +22,7 @@ interface MailManagerInterface extends PluginManagerInterface {
    * recipients.
    *
    * Finding out what language to send the email with needs some consideration.
-   * If you send email to a user, her preferred language should be fine, so use
+   * If you send email to a user, use
    * \Drupal\Core\Session\AccountInterface::getPreferredAdminLangcode(). If you
    * send email based on form values filled on the page, there are two
    * additional choices if you are not sending the email to a user on the site.

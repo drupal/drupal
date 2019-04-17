@@ -123,7 +123,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     // value. For example, if you want user sessions to stay in your database
     // for three weeks before deleting them, you need to set gc_maxlifetime
     // to '1814400'. At that value, only after a user doesn't log in after
-    // three weeks (1814400 seconds) will his/her session be removed.
+    // three weeks (1814400 seconds) will their session be removed.
     $this->connection->delete('sessions')
       ->condition('timestamp', REQUEST_TIME - $lifetime, '<')
       ->execute();

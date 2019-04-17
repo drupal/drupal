@@ -28,7 +28,6 @@ class BlockLanguageTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create a new user, allow him to manage the blocks and the languages.
     $this->adminUser = $this->drupalCreateUser(['administer blocks', 'administer languages']);
     $this->drupalLogin($this->adminUser);
 

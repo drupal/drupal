@@ -366,7 +366,7 @@
       },
 
       /**
-       * Asks the user to confirm whether he wants to stop editing via a modal.
+       * Asks the user if they want to stop editing via a modal.
        *
        * @param {Drupal.quickedit.EntityModel} entityModel
        *   An instance of the EntityModel class.

@@ -66,7 +66,7 @@ class ContactLinkTest extends ViewTestBase {
 
     $this->drupalLogin($admin_account);
     $this->drupalGet('test-contact-link');
-    // The admin user has access to all contact links beside his own.
+    // The admin user has access to all contact links beside their own.
     $this->assertContactLinks($accounts, ['root', 'no_contact', 'contact']);
 
     $this->drupalLogin($no_contact_account);
