@@ -3286,6 +3286,13 @@ function system_update_7081() {
 }
 
 /**
+ * Add 'jquery-extend-3.4.0.js' to the 'jquery' library.
+ */
+function system_update_7082() {
+  // Empty update to force a rebuild of hook_library() and JS aggregates.
+}
+
+/**
  * @} End of "defgroup updates-7.x-extra".
  * The next series of updates should start at 8000.
  */
