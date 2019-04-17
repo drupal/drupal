@@ -1,6 +1,11 @@
 Drupal 7.xx, xxxx-xx-xx (development version)
 -----------------------
 
+Drupal 7.66, 2019-04-17
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2019-006
+
 Drupal 7.65, 2019-03-20
 -----------------------
 - Fixed security issues:
