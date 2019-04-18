@@ -2659,7 +2659,7 @@ function node_feed($nids = FALSE, $channel = array()) {
  *   An array in the format expected by drupal_render().
  */
 function node_view_multiple($nodes, $view_mode = 'teaser', $weight = 0, $langcode = NULL) {
-  $build = array();
+  $build = array('nodes' => array());
   $entities_by_view_mode = entity_view_mode_prepare('node', $nodes, $view_mode, $langcode);
   foreach ($entities_by_view_mode as $entity_view_mode => $entities) {
     field_attach_prepare_view('node', $entities, $entity_view_mode, $langcode);
