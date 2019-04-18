@@ -248,9 +248,11 @@ function _layout_builder_bundle_has_no_layouts($entity_type_id, $bundle) {
   if ($bundle_key) {
     $query->condition($bundle_key, $bundle);
   }
+  if ($entity_type->isRevisionable()) {
+    $query->allRevisions();
+  }
   $query->exists(OverridesSectionStorage::FIELD_NAME)
     ->accessCheck(FALSE)
-    ->allRevisions()
     ->range(0, 1);
   $results = $query->execute();
   return empty($results);
@@ -279,9 +281,11 @@ function _layout_builder_bundle_has_no_translations($entity_type_id, $bundle) {
     if ($bundle_key) {
       $query->condition($bundle_key, $bundle);
     }
+    if ($entity_type->isRevisionable()) {
+      $query->allRevisions();
+    }
     $query->condition($entity_type->getKey('default_langcode'), 0)
       ->accessCheck(FALSE)
-      ->allRevisions()
       ->range(0, 1);
     $results = $query->execute();
     return empty($results);
