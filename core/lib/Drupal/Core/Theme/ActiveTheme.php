@@ -64,7 +64,7 @@ class ActiveTheme {
    *
    * @var \Drupal\Core\Extension\Extension[]
    */
-  protected $baseThemeExtensions;
+  protected $baseThemeExtensions = [];
 
   /**
    * The extension object.
