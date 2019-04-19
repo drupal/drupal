@@ -83,7 +83,7 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
 
     // @todo Expand to work for all view modes in
     //   https://www.drupal.org/node/2907413.
-    if ($this->entity->getMode() === 'default') {
+    if ($this->isCanonicalMode($this->entity->getMode())) {
       $entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
       $form['layout']['allow_custom'] = [
         '#type' => 'checkbox',
@@ -113,7 +113,43 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
         unset($form['#entity_builders']['layout_builder']);
       }
     }
+    // For non-canonical modes, the existing value should be preserved.
+    else {
+      $form['layout']['allow_custom'] = [
+        '#type' => 'value',
+        '#value' => $this->entity->isOverridable(),
+      ];
+    }
     return $form;
+  }
+
+  /**
+   * Determines if the mode is used by the canonical route.
+   *
+   * @param string $mode
+   *   The view mode.
+   *
+   * @return bool
+   *   TRUE if the mode is valid, FALSE otherwise.
+   */
+  protected function isCanonicalMode($mode) {
+    // @todo This is a convention core uses but is not a given, nor is it easily
+    //   introspectable. Address in https://www.drupal.org/node/2907413.
+    $canonical_mode = 'full';
+
+    if ($mode === $canonical_mode) {
+      return TRUE;
+    }
+
+    // The default mode is valid if the canonical mode is not enabled.
+    if ($mode === 'default') {
+      $query = $this->entityTypeManager->getStorage($this->entity->getEntityTypeId())->getQuery()
+        ->condition('status', TRUE)
+        ->condition('mode', $canonical_mode);
+      return !$query->count()->execute();
+    }
+
+    return FALSE;
   }
 
   /**
