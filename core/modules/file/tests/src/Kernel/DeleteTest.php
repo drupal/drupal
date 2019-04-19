@@ -77,4 +77,28 @@ class DeleteTest extends FileManagedUnitTestBase {
     $this->assertFalse(File::load($file->id()), 'File was removed from the database.');
   }
 
+  /**
+   * Tries to run cron deletion on file deleted from the file-system.
+   */
+  public function testCronDeleteNonExistingTemporary() {
+    $file = $this->createFile();
+    // Delete the file, but leave it in the file_managed table.
+    \Drupal::service('file_system')->delete($file->getFileUri());
+    $this->assertFalse(file_exists($file->getFileUri()), 'File is deleted from the filesystem.');
+    $this->assertTrue(File::load($file->id()), 'File exist in file_managed table');
+
+    // Call file_cron() to clean up the file. Make sure the changed timestamp
+    // of the file is older than the system.file.temporary_maximum_age
+    // configuration value.
+    \Drupal::database()->update('file_managed')
+      ->fields([
+        'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
+      ])
+      ->condition('fid', $file->id())
+      ->execute();
+    \Drupal::service('cron')->run();
+
+    $this->assertFalse(File::load($file->id()), 'File was removed from the database.');
+  }
+
 }
