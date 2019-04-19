@@ -159,6 +159,8 @@ class DefaultsEntityForm extends EntityForm {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
+    $actions['#attributes']['role'] = 'region';
+    $actions['#attributes']['aria-label'] = $this->t('Layout Builder tools');
     $actions['submit']['#value'] = $this->t('Save layout');
     $actions['#weight'] = -1000;
 
