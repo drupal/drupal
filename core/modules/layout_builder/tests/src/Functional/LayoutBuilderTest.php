@@ -583,6 +583,12 @@ class LayoutBuilderTest extends BrowserTestBase {
     ]));
 
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+
+    // For the purposes of this test, turn the full view mode on and off to
+    // prevent copying from the customized default view mode.
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['display_modes_custom[full]' => TRUE], 'Save');
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['display_modes_custom[full]' => FALSE], 'Save');
+
     // Allow overrides for the layout.
     $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
     $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => TRUE], 'Save');
@@ -600,14 +606,17 @@ class LayoutBuilderTest extends BrowserTestBase {
     // The default view mode is used for both the node display and layout UI.
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('This is the default view mode');
+    $assert_session->pageTextNotContains('This is the full view mode');
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextContains('This is the default view mode');
+    $assert_session->pageTextNotContains('This is the full view mode');
     $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
 
     // Enable the full view mode and customize it.
     $this->drupalPostForm("$field_ui_prefix/display/default", ['display_modes_custom[full]' => TRUE], 'Save');
     $this->drupalPostForm("$field_ui_prefix/display/full", ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalPostForm("$field_ui_prefix/display/full", ['layout[allow_custom]' => TRUE], 'Save');
     $this->drupalGet("$field_ui_prefix/display/full/layout");
     $this->clickLink('Add Block');
     $this->clickLink('Powered by Drupal');
@@ -620,8 +629,10 @@ class LayoutBuilderTest extends BrowserTestBase {
     // The full view mode is now used for both the node display and layout UI.
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
     $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
 
@@ -629,8 +640,97 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->drupalPostForm("$field_ui_prefix/display/default", ['display_modes_custom[full]' => FALSE], 'Save');
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('This is the default view mode');
+    $assert_session->pageTextNotContains('This is the full view mode');
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextContains('This is the default view mode');
+    $assert_session->pageTextNotContains('This is the full view mode');
+    $page->pressButton('Discard changes');
+    $page->pressButton('Confirm');
+
+    // Re-enabling the full view mode restores the layout changes.
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['display_modes_custom[full]' => TRUE], 'Save');
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
+    $this->drupalGet('node/1/layout');
+    $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
+
+    // Create an override of the full view mode.
+    $this->clickLink('Add Block');
+    $this->clickLink('Powered by Drupal');
+    $page->fillField('settings[label]', 'This is an override of the full view mode');
+    $page->checkField('settings[label_display]');
+    $page->pressButton('Add Block');
+    $assert_session->pageTextContains('This is an override of the full view mode');
+    $page->pressButton('Save layout');
+
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextContains('This is an override of the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
+    $this->drupalGet('node/1/layout');
+    $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextContains('This is an override of the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
+    $page->pressButton('Discard changes');
+    $page->pressButton('Confirm');
+
+    // The override does not affect the full view mode.
+    $this->drupalGet("$field_ui_prefix/display/full/layout");
+    $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextNotContains('This is an override of the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
+
+    // Reverting the override restores back to the full view mode.
+    $this->drupalGet('node/1/layout');
+    $page->pressButton('Revert to default');
+    $page->pressButton('Revert');
+    $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextNotContains('This is an override of the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
+    $this->drupalGet('node/1/layout');
+    $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextNotContains('This is an override of the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
+
+    // Recreate an override of the full view mode.
+    $this->clickLink('Add Block');
+    $this->clickLink('Powered by Drupal');
+    $page->fillField('settings[label]', 'This is an override of the full view mode');
+    $page->checkField('settings[label_display]');
+    $page->pressButton('Add Block');
+    $assert_session->pageTextContains('This is an override of the full view mode');
+    $page->pressButton('Save layout');
+
+    $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextContains('This is an override of the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
+    $this->drupalGet('node/1/layout');
+    $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextContains('This is an override of the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
+    $page->pressButton('Discard changes');
+    $page->pressButton('Confirm');
+
+    // Disable the full view mode.
+    $this->drupalPostForm("$field_ui_prefix/display/default", ['display_modes_custom[full]' => FALSE], 'Save');
+
+    // The override of the full view mode is still available.
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('This is the full view mode');
+    $assert_session->pageTextContains('This is an override of the full view mode');
+    $assert_session->pageTextNotContains('This is the default view mode');
+
+    // Reverting the override restores back to the default view mode.
+    $this->drupalGet('node/1/layout');
+    $page->pressButton('Revert to default');
+    $page->pressButton('Revert');
+    $assert_session->pageTextContains('This is the default view mode');
+    $assert_session->pageTextNotContains('This is the full view mode');
+    $this->drupalGet('node/1/layout');
+    $assert_session->pageTextContains('This is the default view mode');
+    $assert_session->pageTextNotContains('This is the full view mode');
     $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
   }
