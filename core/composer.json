@@ -85,6 +85,7 @@
         "drupal/color": "self.version",
         "drupal/comment": "self.version",
         "drupal/config": "self.version",
+        "drupal/config_environment": "self.version",
         "drupal/config_translation": "self.version",
         "drupal/contact": "self.version",
         "drupal/content_moderation": "self.version",

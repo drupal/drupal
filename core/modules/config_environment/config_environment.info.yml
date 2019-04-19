@@ -1,0 +1,8 @@
+name: 'Configuration Environment'
+type: module
+description: 'Allows administrators to manage configuration environments.'
+package: Core (Experimental)
+version: VERSION
+core: 8.x
+dependencies:
+  - drupal:config
