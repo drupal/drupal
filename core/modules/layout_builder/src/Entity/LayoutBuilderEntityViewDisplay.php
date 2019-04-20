@@ -61,6 +61,10 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   public function setOverridable($overridable = TRUE) {
     $this->setThirdPartySetting('layout_builder', 'allow_custom', $overridable);
+    // Enable Layout Builder if it's not already enabled and overriding.
+    if ($overridable && !$this->isLayoutBuilderEnabled()) {
+      $this->enableLayoutBuilder();
+    }
     return $this;
   }
 
