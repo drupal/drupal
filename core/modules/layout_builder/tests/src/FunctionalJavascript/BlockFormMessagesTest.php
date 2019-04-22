@@ -56,15 +56,15 @@ class BlockFormMessagesTest extends WebDriverTestBase {
     );
     $this->clickElementWhenClickable($page->findLink('Manage layout'));
     $assert_session->addressEquals($field_ui_prefix . '/display/default/layout');
-    $this->clickElementWhenClickable($page->findLink('Add Block'));
+    $this->clickElementWhenClickable($page->findLink('Add block'));
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas .block-categories'));
     $this->clickElementWhenClickable($page->findLink('Powered by Drupal'));
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas [name="settings[label]"]'));
     $page->findField('Title')->setValue('');
-    $this->clickElementWhenClickable($page->findButton('Add Block'));
+    $this->clickElementWhenClickable($page->findButton('Add block'));
     $this->assertMessagesDisplayed();
     $page->findField('Title')->setValue('New title');
-    $page->pressButton('Add Block');
+    $page->pressButton('Add block');
     $block_css_locator = '#layout-builder .block-system-powered-by-block';
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $block_css_locator));
     $this->waitForNoElement('#drupal-off-canvas');

@@ -64,7 +64,7 @@ class ItemLayoutFieldBlockTest extends WebDriverTestBase {
     $this->drupalGet('node/1/layout');
 
     // Add a new block.
-    $this->clickLink('Add Block');
+    $this->clickLink('Add block');
     $assert_session->assertWaitOnAjaxRequest();
 
     // Validate that only field blocks for layouted bundle are present.

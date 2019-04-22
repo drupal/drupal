@@ -204,11 +204,11 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
     $assert_session->pageTextContains('The untranslated field value');
 
     // Adjust the layout.
-    $assert_session->linkExists('Add Block');
-    $this->clickLink('Add Block');
+    $assert_session->linkExists('Add block');
+    $this->clickLink('Add block');
     $assert_session->linkExists('Powered by Drupal');
     $this->clickLink('Powered by Drupal');
-    $page->pressButton('Add Block');
+    $page->pressButton('Add block');
 
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->buttonExists('Save layout');

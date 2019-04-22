@@ -74,11 +74,11 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
     ]);
 
     $this->drupalGet('node/' . $this->node->id() . '/layout');
-    $page->clickLink('Add Block');
+    $page->clickLink('Add block');
     $page->clickLink('Powered by Drupal');
     $page->fillField('settings[label]', 'This is an override');
     $page->checkField('settings[label_display]');
-    $page->pressButton('Add Block');
+    $page->pressButton('Add block');
     $page->pressButton('Save layout');
     $assert_session->pageTextContains('This is an override');
 

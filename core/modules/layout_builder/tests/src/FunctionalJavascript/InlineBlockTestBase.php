@@ -133,7 +133,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
   protected function addInlineBlockToLayout($title, $body) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $page->clickLink('Add Block');
+    $page->clickLink('Add block');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForLink('Create custom block'));
     $this->clickLink('Create custom block');
@@ -143,7 +143,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     $assert_session->fieldValueEquals('Title', '');
     $page->findField('Title')->setValue($title);
     $textarea->setValue($body);
-    $page->pressButton('Add Block');
+    $page->pressButton('Add block');
     $this->assertDialogClosedAndTextVisible($body, static::INLINE_BLOCK_LOCATOR);
   }
 

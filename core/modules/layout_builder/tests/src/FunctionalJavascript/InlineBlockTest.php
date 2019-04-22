@@ -465,7 +465,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $layout_default_path = 'admin/structure/types/manage/bundle_with_section_field/display/default/layout';
     $this->drupalGet($layout_default_path);
     // Add a basic block with the body field set.
-    $page->clickLink('Add Block');
+    $page->clickLink('Add block');
     $assert_session->assertWaitOnAjaxRequest();
     // Confirm that with no block content types the link does not appear.
     $assert_session->linkNotExists('Create custom block');
@@ -474,7 +474,7 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     $this->drupalGet($layout_default_path);
     // Add a basic block with the body field set.
-    $page->clickLink('Add Block');
+    $page->clickLink('Add block');
     $assert_session->assertWaitOnAjaxRequest();
     // Confirm with only 1 type the "Create custom block" link goes directly t
     // block add form.
@@ -487,7 +487,7 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     $this->drupalGet($layout_default_path);
     // Add a basic block with the body field set.
-    $page->clickLink('Add Block');
+    $page->clickLink('Add block');
     // Confirm that, when more than 1 type exists, "Create custom block" shows a
     // list of block types.
     $assert_session->assertWaitOnAjaxRequest();
@@ -519,7 +519,7 @@ class InlineBlockTest extends InlineBlockTestBase {
 
       $this->drupalLogin($this->drupalCreateUser($permissions));
       $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
-      $page->clickLink('Add Block');
+      $page->clickLink('Add block');
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas .block-categories'));
       if ($expected) {
         $assert_session->linkExists('Create custom block');

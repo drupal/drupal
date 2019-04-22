@@ -174,20 +174,20 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     // layout or an empty layout.
     if ($delta === count($section_storage)) {
       if ($delta === 0) {
-        $title = $this->t('Add Section');
+        $title = $this->t('Add section');
       }
       else {
-        $title = $this->t('Add Section <span class="visually-hidden">at end of layout</span>');
+        $title = $this->t('Add section <span class="visually-hidden">at end of layout</span>');
       }
     }
     // If the delta and the count are different, it is either the beginning of
     // the layout or in between two sections.
     else {
       if ($delta === 0) {
-        $title = $this->t('Add Section <span class="visually-hidden">at start of layout</span>');
+        $title = $this->t('Add section <span class="visually-hidden">at start of layout</span>');
       }
       else {
-        $title = $this->t('Add Section <span class="visually-hidden">between @first and @second</span>', ['@first' => $delta, '@second' => $delta + 1]);
+        $title = $this->t('Add section <span class="visually-hidden">between @first and @second</span>', ['@first' => $delta, '@second' => $delta + 1]);
       }
     }
 
@@ -274,7 +274,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       $build[$region]['layout_builder_add_block']['link'] = [
         '#type' => 'link',
         // Add one to the current delta since it is zero-indexed.
-        '#title' => $this->t('Add Block <span class="visually-hidden">in section @section, @region region</span>', ['@section' => $delta + 1, '@region' => $region_labels[$region]]),
+        '#title' => $this->t('Add block <span class="visually-hidden">in section @section, @region region</span>', ['@section' => $delta + 1, '@region' => $region_labels[$region]]),
         '#url' => Url::fromRoute('layout_builder.choose_block',
           [
             'section_storage_type' => $storage_type,
@@ -364,7 +364,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
           'data-dialog-renderer' => 'off_canvas',
         ],
       ],
-      // The section label is added to sections without a "Configure Section"
+      // The section label is added to sections without a "Configure section"
       // link, and is only visible when the move block dialog is open.
       'section_label' => [
         '#markup' => $this->t('<span class="layout-builder__section-label" aria-hidden="true">Section @section</span>', ['@section' => $delta + 1]),

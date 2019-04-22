@@ -155,7 +155,7 @@ class MoveBlockForm extends FormBase {
     $form['components_wrapper']['components'] = [
       '#type' => 'table',
       '#header' => [
-        $this->t('Block Label'),
+        $this->t('Block label'),
         $this->t('Weight'),
       ],
       '#tabledrag' => [

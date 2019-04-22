@@ -55,9 +55,9 @@ class LayoutBuilderQuickEditTest extends BrowserTestBase {
 
     // Place a field block for a user entity field.
     $this->drupalGet('node/1/layout');
-    $page->clickLink('Add Block');
+    $page->clickLink('Add block');
     $page->clickLink('Name');
-    $page->pressButton('Add Block');
+    $page->pressButton('Add block');
     $page->pressButton('Save layout');
 
     $this->drupalGet('node/1');

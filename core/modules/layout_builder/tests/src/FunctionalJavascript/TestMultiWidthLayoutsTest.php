@@ -82,8 +82,8 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
     ];
     foreach ($width_options as $width_option) {
       $width = array_shift($width_option['widths']);
-      $assert_session->linkExists('Add Section');
-      $page->clickLink('Add Section');
+      $assert_session->linkExists('Add section');
+      $page->clickLink('Add section');
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', "#drupal-off-canvas a:contains(\"{$width_option['label']}\")"));
       $page->clickLink($width_option['label']);
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas input[type="submit"][value="Add section"]'));

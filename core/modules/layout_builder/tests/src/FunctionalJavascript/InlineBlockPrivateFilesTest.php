@@ -192,7 +192,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
   protected function addInlineFileBlockToLayout($title, File $file) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $page->clickLink('Add Block');
+    $page->clickLink('Add block');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForLink('Create custom block'));
     $this->clickLink('Create custom block');
@@ -200,7 +200,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
     $assert_session->fieldValueEquals('Title', '');
     $page->findField('Title')->setValue($title);
     $this->attachFileToBlockForm($file);
-    $page->pressButton('Add Block');
+    $page->pressButton('Add block');
     $this->assertDialogClosedAndTextVisible($file->label(), static::INLINE_BLOCK_LOCATOR);
   }
 

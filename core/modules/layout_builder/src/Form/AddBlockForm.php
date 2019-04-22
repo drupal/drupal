@@ -28,7 +28,7 @@ class AddBlockForm extends ConfigureBlockFormBase {
    * {@inheritdoc}
    */
   protected function submitLabel() {
-    return $this->t('Add Block');
+    return $this->t('Add block');
   }
 
   /**

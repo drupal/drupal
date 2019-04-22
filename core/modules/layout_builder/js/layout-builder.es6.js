@@ -13,12 +13,12 @@
   let layoutBuilderBlocksFiltered = false;
 
   /**
-   * Provides the ability to filter the block listing in Add Block dialog.
+   * Provides the ability to filter the block listing in "Add block" dialog.
    *
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attach block filtering behavior to Add Block dialog.
+   *   Attach block filtering behavior to "Add block" dialog.
    */
   behaviors.layoutBuilderBlockFilter = {
     attach(context) {

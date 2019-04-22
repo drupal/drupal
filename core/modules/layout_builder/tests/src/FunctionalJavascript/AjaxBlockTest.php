@@ -68,8 +68,8 @@ class AjaxBlockTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.field--name-body');
 
     // Add a new block.
-    $assert_session->linkExists('Add Block');
-    $this->clickLink('Add Block');
+    $assert_session->linkExists('Add block');
+    $this->clickLink('Add block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkExists('TestAjax');
     $this->clickLink('TestAjax');
@@ -86,7 +86,7 @@ class AjaxBlockTest extends WebDriverTestBase {
       }
     }
     // Then add the block.
-    $page->pressButton('Add Block');
+    $page->pressButton('Add block');
     $assert_session->assertWaitOnAjaxRequest();
     $block_elements = $this->cssSelect('.block-layout-builder-test-testajax');
     // Should be exactly one of these in there.
