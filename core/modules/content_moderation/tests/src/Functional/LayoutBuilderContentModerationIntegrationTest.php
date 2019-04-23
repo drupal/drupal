@@ -23,6 +23,7 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
     'layout_builder',
     'node',
     'content_moderation',
+    'menu_ui',
   ];
 
   /**
@@ -75,6 +76,12 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
           'value' => 'The first node body',
         ],
       ],
+    ]);
+    _menu_ui_node_save($node, [
+      'title' => 'bar',
+      'menu_name' => 'main',
+      'description' => 'view bar',
+      'parent' => '',
     ]);
 
     $this->drupalGet($node->toUrl());
