@@ -136,9 +136,12 @@ trait BrowserHtmlDebugTrait {
       $this->htmlOutputClassName = str_replace("\\", "_", get_called_class());
       $this->htmlOutputDirectory = DRUPAL_ROOT . '/sites/simpletest/browser_output';
       // Do not use the file_system service so this method can be called before
-      // it is available.
-      if (!is_dir($this->htmlOutputDirectory)) {
-        mkdir($this->htmlOutputDirectory, 0775, TRUE);
+      // it is available. Checks !is_dir() twice around mkdir() because a
+      // concurrent test might have made the directory and caused mkdir() to
+      // fail. In this case we can still use the directory even though we failed
+      // to make it.
+      if (!is_dir($this->htmlOutputDirectory) && !mkdir($this->htmlOutputDirectory, 0775, TRUE) && !is_dir($this->htmlOutputDirectory)) {
+        throw new \RuntimeException(sprintf('Unable to create directory: %s', $this->htmlOutputDirectory));
       }
       if (!file_exists($this->htmlOutputDirectory . '/.htaccess')) {
         file_put_contents($this->htmlOutputDirectory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
