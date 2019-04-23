@@ -56,7 +56,7 @@ class FieldBlockTest extends WebDriverTestBase {
   /**
    * Tests configuring a field block for a user field.
    */
-  public function testFieldBlock() {
+  public function testUserFieldBlock() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -124,6 +124,31 @@ class FieldBlockTest extends WebDriverTestBase {
     // Assert that the block is displaying the user field.
     $this->drupalGet('admin');
     $assert_session->pageTextContains('Sunday, November 19, 1978 - 16:00');
+  }
+
+  /**
+   * Tests configuring a field block that uses #states.
+   */
+  public function testStatesFieldBlock() {
+    $page = $this->getSession()->getPage();
+
+    $timestamp_field_storage = FieldStorageConfig::create([
+      'field_name' => 'field_timestamp',
+      'entity_type' => 'user',
+      'type' => 'timestamp',
+    ]);
+    $timestamp_field_storage->save();
+    $timestamp_field = FieldConfig::create([
+      'field_storage' => $timestamp_field_storage,
+      'bundle' => 'user',
+      'label' => 'Timestamp',
+    ]);
+    $timestamp_field->save();
+
+    $this->drupalGet('admin/structure/block/add/field_block_test%3Auser%3Auser%3Afield_timestamp/classy');
+    $this->assertFalse($page->findField('settings[formatter][settings][custom_date_format]')->isVisible(), 'Custom date format is not visible');
+    $page->selectFieldOption('settings[formatter][settings][date_format]', 'custom');
+    $this->assertTrue($page->findField('settings[formatter][settings][custom_date_format]')->isVisible(), 'Custom date format is visible');
   }
 
 }
