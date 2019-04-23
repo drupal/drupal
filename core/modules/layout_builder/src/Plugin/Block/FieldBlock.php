@@ -15,6 +15,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterInterface;
 use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\Core\Form\EnforcedResponseException;
+use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
@@ -281,6 +282,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
       $element['settings_wrapper']['settings']['#parents'] = array_merge($element['#parents'], ['settings']);
       $element['settings_wrapper']['third_party_settings'] = $this->thirdPartySettingsForm($formatter, $this->getFieldDefinition(), $complete_form, $form_state);
       $element['settings_wrapper']['third_party_settings']['#parents'] = array_merge($element['#parents'], ['third_party_settings']);
+      FormHelper::rewriteStatesSelector($element['settings_wrapper'], "fields[$this->fieldName][settings_edit_form]", 'settings[formatter]');
 
       // Store the array parents for our element so that we can retrieve the
       // formatter settings in our AJAX callback.
