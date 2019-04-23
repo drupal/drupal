@@ -99,6 +99,8 @@ class RevertOverridesForm extends ConfirmFormBase {
     }
 
     $this->sectionStorage = $section_storage;
+    // Mark this as an administrative page for JavaScript ("Back to site" link).
+    $form['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
     return parent::buildForm($form, $form_state);
   }
 

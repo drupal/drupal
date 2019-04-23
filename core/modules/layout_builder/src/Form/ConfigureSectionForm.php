@@ -133,6 +133,8 @@ class ConfigureSectionForm extends FormBase {
     $target_highlight_id = $this->isUpdate ? $this->sectionUpdateHighlightId($delta) : $this->sectionAddHighlightId($delta);
     $form['#attributes']['data-layout-builder-target-highlight-id'] = $target_highlight_id;
 
+    // Mark this as an administrative page for JavaScript ("Back to site" link).
+    $form['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
     return $form;
   }
 
