@@ -86,6 +86,8 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
       $form['#attributes']['data-layout-builder-target-highlight-id'] = $target_highlight_id;
     }
 
+    // Mark this as an administrative page for JavaScript ("Back to site" link).
+    $form['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
     return $form;
   }
 

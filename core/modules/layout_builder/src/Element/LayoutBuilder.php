@@ -125,6 +125,11 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     }
     $output[] = $this->buildAddSectionLink($section_storage, $count);
     $output['#attached']['library'][] = 'layout_builder/drupal.layout_builder';
+    // As the Layout Builder UI is typically displayed using the frontend theme,
+    // it is not marked as an administrative page at the route level even though
+    // it performs an administrative task. Mark this as an administrative page
+    // for JavaScript.
+    $output['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
     $output['#type'] = 'container';
     $output['#attributes']['id'] = 'layout-builder';
     $output['#attributes']['class'][] = 'layout-builder';
