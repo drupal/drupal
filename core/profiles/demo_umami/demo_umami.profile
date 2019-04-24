@@ -24,6 +24,26 @@ function demo_umami_form_install_configure_form_alter(&$form, FormStateInterface
 function demo_umami_form_install_configure_submit($form, FormStateInterface $form_state) {
   $site_mail = $form_state->getValue('site_mail');
   ContactForm::load('feedback')->setRecipients([$site_mail])->trustData()->save();
+
+  $password = $form_state->getValue('account')['pass'];
+  demo_umami_set_users_passwords($password);
+}
+
+/**
+ * Sets the password of admin to be the password for all users.
+ */
+function demo_umami_set_users_passwords($admin_password) {
+  // Collect the IDs of all users with roles editor or author.
+  $ids = \Drupal::entityQuery('user')
+    ->condition('roles', ['author', 'editor'], 'IN')
+    ->execute();
+
+  $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($ids);
+
+  foreach ($users as $user) {
+    $user->setPassword($admin_password);
+    $user->save();
+  }
 }
 
 /**

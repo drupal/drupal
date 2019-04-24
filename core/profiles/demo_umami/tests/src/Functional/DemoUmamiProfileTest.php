@@ -7,6 +7,8 @@ use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Tests demo_umami profile.
@@ -85,6 +87,22 @@ class DemoUmamiProfileTest extends BrowserTestBase {
       else {
         $this->fail("$config_name has not been installed");
       }
+    }
+  }
+
+  /**
+   * Tests that the users can log in with the admin password selected at install.
+   */
+  public function testUser() {
+    $password = $this->rootUser->pass_raw;
+    $ids = \Drupal::entityQuery('user')
+      ->condition('roles', ['author', 'editor'], 'IN')
+      ->execute();
+
+    $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($ids);
+
+    foreach ($users as $user) {
+      $this->drupalLoginWithPassword($user, $password);
     }
   }
 
@@ -170,6 +188,54 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $this->drupalGet('<front>');
     $web_assert->statusCodeEquals('200');
     $web_assert->pageTextNotContains('This site is intended for demonstration purposes.');
+  }
+
+  /**
+   * Logs in a user using the Mink controlled browser using a password.
+   *
+   * If a user is already logged in, then the current user is logged out before
+   * logging in the specified user.
+   *
+   * Please note that neither the current user nor the passed-in user object is
+   * populated with data of the logged in user. If you need full access to the
+   * user object after logging in, it must be updated manually. If you also need
+   * access to the plain-text password of the user (set by drupalCreateUser()),
+   * e.g. to log in the same user again, then it must be re-assigned manually.
+   * For example:
+   * @code
+   *   // Create a user.
+   *   $account = $this->drupalCreateUser(array());
+   *   $this->drupalLogin($account);
+   *   // Load real user object.
+   *   $pass_raw = $account->passRaw;
+   *   $account = User::load($account->id());
+   *   $account->passRaw = $pass_raw;
+   * @endcode
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   User object representing the user to log in.
+   * @param string $password
+   *   The password to authenticate the user with.
+   *
+   * @see drupalCreateUser()
+   */
+  protected function drupalLoginWithPassword(AccountInterface $account, $password) {
+    if ($this->loggedInUser) {
+      $this->drupalLogout();
+    }
+
+    $this->drupalGet('user/login');
+    $this->submitForm([
+      'name' => $account->getAccountName(),
+      'pass' => $password,
+    ], t('Log in'));
+
+    // @see ::drupalUserIsLoggedIn()
+    $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);
+    $this->assertTrue($this->drupalUserIsLoggedIn($account), new FormattableMarkup('User %name successfully logged in.', ['%name' => $account->getAccountName()]));
+
+    $this->loggedInUser = $account;
+    $this->container->get('current_user')->setAccount($account);
   }
 
 }
