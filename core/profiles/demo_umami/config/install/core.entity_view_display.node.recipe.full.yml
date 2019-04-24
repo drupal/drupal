@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.recipe.field_recipe_instruction
     - field.field.node.recipe.field_summary
     - field.field.node.recipe.field_tags
+    - field.field.node.recipe.layout_builder__layout
     - node.type.recipe
     - responsive_image.styles.3_2_image
   module:
@@ -191,7 +192,7 @@ third_party_settings:
             additional: {  }
             weight: 3
         third_party_settings: {  }
-    allow_custom: false
+    allow_custom: true
     enabled: true
 id: node.recipe.full
 targetEntityType: node
@@ -282,4 +283,5 @@ content:
 hidden:
   content_moderation_control: true
   langcode: true
+  layout_builder__layout: true
   links: true
