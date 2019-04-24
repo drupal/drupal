@@ -524,6 +524,7 @@ class InstallHelper implements ContainerInjectionInterface {
       'uuid' => $data['uuid'],
       'info' => $data['info'],
       'type' => $data['type'],
+      'langcode' => 'en',
       'field_title' => [
         'value' => $data['field_title'],
       ],
@@ -556,6 +557,7 @@ class InstallHelper implements ContainerInjectionInterface {
       'uuid' => $data['uuid'],
       'info' => $data['info'],
       'type' => $data['type'],
+      'langcode' => 'en',
       'field_disclaimer' => [
         'value' => $data['field_disclaimer'],
         'format' => 'basic_html',
@@ -585,6 +587,7 @@ class InstallHelper implements ContainerInjectionInterface {
       'uuid' => $data['uuid'],
       'info' => $data['info'],
       'type' => $data['type'],
+      'langcode' => 'en',
       'field_title' => [
         'value' => $data['field_title'],
       ],
