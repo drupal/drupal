@@ -148,6 +148,7 @@ trait FieldLayoutEntityDisplayTrait {
     if ($this->getLayoutId()) {
       $this->calculatePluginDependencies($this->getLayout());
     }
+    return $this;
   }
 
 }
