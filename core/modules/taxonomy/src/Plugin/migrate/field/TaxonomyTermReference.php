@@ -24,6 +24,7 @@ class TaxonomyTermReference extends FieldPluginBase {
   public function getFieldFormatterMap() {
     return [
       'taxonomy_term_reference_link' => 'entity_reference_label',
+      'i18n_taxonomy_term_reference_link' => 'entity_reference_label',
     ];
   }
 
