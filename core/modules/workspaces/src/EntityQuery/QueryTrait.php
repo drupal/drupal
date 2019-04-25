@@ -69,4 +69,18 @@ trait QueryTrait {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isSimpleQuery() {
+    // We declare that this is not a simple query in
+    // \Drupal\workspaces\EntityQuery\QueryTrait::prepare(), but that's not
+    // enough because the parent method can return TRUE in some circumstances.
+    if ($this->sqlQuery->getMetaData('active_workspace_id')) {
+      return FALSE;
+    }
+
+    return parent::isSimpleQuery();
+  }
+
 }

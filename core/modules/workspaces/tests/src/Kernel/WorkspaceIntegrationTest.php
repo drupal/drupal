@@ -45,6 +45,13 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   protected $createdTimestamp;
 
   /**
+   * An array of nodes created before installing the Workspaces module.
+   *
+   * @var \Drupal\node\NodeInterface[]
+   */
+  protected $nodes = [];
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = [
@@ -83,8 +90,8 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // Create two nodes, a published and an unpublished one, so we can test the
     // behavior of the module with default/existing content.
     $this->createdTimestamp = \Drupal::time()->getRequestTime();
-    $this->createNode(['title' => 'live - 1 - r1 - published', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
-    $this->createNode(['title' => 'live - 2 - r2 - unpublished', 'created' => $this->createdTimestamp++, 'status' => FALSE]);
+    $this->nodes[] = $this->createNode(['title' => 'live - 1 - r1 - published', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
+    $this->nodes[] = $this->createNode(['title' => 'live - 2 - r2 - unpublished', 'created' => $this->createdTimestamp++, 'status' => FALSE]);
   }
 
   /**
@@ -336,6 +343,32 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     // Check that there are no more revisions to push.
     $this->assertEmpty($workspace_publisher->getDifferringRevisionIdsOnSource());
+  }
+
+  /**
+   * Tests entity query overrides without any conditions.
+   */
+  public function testEntityQueryWithoutConditions() {
+    $this->initializeWorkspacesModule();
+    $this->switchToWorkspace('stage');
+
+    // Add a workspace-specific revision to a pre-existing node.
+    $this->nodes[1]->title->value = 'stage - 2 - r3 - published';
+    $this->nodes[1]->save();
+
+    $query = $this->entityTypeManager->getStorage('node')->getQuery();
+    $query->sort('nid');
+    $query->pager(1);
+    $result = $query->execute();
+
+    $this->assertSame([1 => '1'], $result);
+
+    $query = $this->entityTypeManager->getStorage('node')->getQuery();
+    $query->sort('nid', 'DESC');
+    $query->pager(10);
+    $result = $query->execute();
+
+    $this->assertSame([3 => '2', 1 => '1'], $result);
   }
 
   /**
