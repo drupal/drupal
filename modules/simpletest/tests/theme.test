@@ -238,6 +238,27 @@ class ThemeTableTestCase extends DrupalWebTestCase {
     $this->assertNoRaw('class="odd"', 'Odd/even classes were not added because $no_striping = TRUE.');
     $this->assertNoRaw('no_striping', 'No invalid no_striping HTML attribute was printed.');
   }
+
+  /**
+   * Test that the 'footer' option works correctly.
+   */
+  function testThemeTableFooter() {
+    $footer = array(
+      array(
+        'data' => array(1),
+      ),
+      array('Foo'),
+    );
+
+    $table = array(
+      'rows' => array(),
+      'footer' => $footer,
+    );
+
+    $this->content = theme('table', $table);
+    $this->content = preg_replace('@>\s+<@', '><', $this->content);
+    $this->assertRaw('<tfoot><tr><td>1</td></tr><tr><td>Foo</td></tr></tfoot>', 'Table footer found.');
+  }
 }
 
 /**
