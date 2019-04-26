@@ -234,7 +234,7 @@ class UpdateManagerInstall extends FormBase {
     // update_authorize_run_install() directly.
     if (fileowner($project_real_location) == fileowner($this->sitePath) && !$test_authorize) {
       $this->moduleHandler->loadInclude('update', 'inc', 'update.authorize');
-      $filetransfer = new Local($this->root);
+      $filetransfer = new Local($this->root, \Drupal::service('file_system'));
       $response = call_user_func_array('update_authorize_run_install', array_merge([$filetransfer], $arguments));
       if ($response instanceof Response) {
         $form_state->setResponse($response);

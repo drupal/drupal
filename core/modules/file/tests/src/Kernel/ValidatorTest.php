@@ -106,7 +106,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
       $errors = file_validate_image_resolution($this->image, '-10x-5');
       $this->assertEqual(count($errors), 1, 'An error reported for an oversized image that can not be scaled down.', 'File');
 
-      drupal_unlink('temporary://druplicon.png');
+      \Drupal::service('file_system')->unlink('temporary://druplicon.png');
     }
     else {
       // TODO: should check that the error is returned if no toolkit is available.

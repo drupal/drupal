@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\KernelTests\KernelTestBase;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * Tests deprecations in file.inc.
@@ -144,6 +145,21 @@ class FileSystemDeprecationTest extends KernelTestBase {
    */
   public function testDeprecatedDrupalTempnam() {
     $this->assertNotNull(drupal_tempnam('temporary://', 'file'));
+  }
+
+  /**
+   * Tests deprecation of the drupal_unlink() function.
+   *
+   * @expectedDeprecation drupal_unlink() is deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::unlink(). See https://www.drupal.org/node/2418133.
+   */
+  public function testUnlink() {
+    vfsStream::setup('dir');
+    vfsStream::create(['test.txt' => 'asdf']);
+    $uri = 'vfs://dir/test.txt';
+
+    $this->assertFileExists($uri);
+    drupal_unlink($uri);
+    $this->assertFileNotExists($uri);
   }
 
 }

@@ -2085,6 +2085,7 @@ function install_check_requirements($install_state) {
     'description_default' => t('The default settings file does not exist.'),
     'title' => t('Settings file'),
   ];
+  $file_system = \Drupal::service('file_system');
 
   foreach ($default_files as $default_file_info) {
     $readable = FALSE;
@@ -2146,7 +2147,7 @@ function install_check_requirements($install_state) {
         // file we just created and force the administrator to log on to the
         // server and create it manually.
         else {
-          $deleted = @drupal_unlink($file);
+          $deleted = @$file_system->unlink($file);
           // We expect deleting the file to be successful (since we just
           // created it ourselves above), but if it fails somehow, we set a
           // variable so we can display a one-time error message to the

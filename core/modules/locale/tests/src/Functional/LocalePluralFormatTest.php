@@ -352,11 +352,12 @@ class LocalePluralFormatTest extends BrowserTestBase {
    *   Additional options to pass to the translation import form.
    */
   public function importPoFile($contents, array $options = []) {
-    $name = \Drupal::service('file_system')->tempnam('temporary://', "po_") . '.po';
+    $file_system = \Drupal::service('file_system');
+    $name = $file_system->tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $contents);
     $options['files[file]'] = $name;
     $this->drupalPostForm('admin/config/regional/translate/import', $options, t('Import'));
-    drupal_unlink($name);
+    $file_system->unlink($name);
   }
 
   /**

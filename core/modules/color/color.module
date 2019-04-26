@@ -424,11 +424,12 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
     }
   }
 
+  $file_system = \Drupal::service('file_system');
   // Delete old files.
   $files = $config->get('files');
   if (isset($files)) {
     foreach ($files as $file) {
-      @drupal_unlink($file);
+      @$file_system->unlink($file);
     }
   }
   if (isset($file) && $file = dirname($file)) {

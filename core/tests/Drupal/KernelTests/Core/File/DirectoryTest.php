@@ -72,7 +72,7 @@ class DirectoryTest extends FileTestBase {
 
     // Make sure directory actually exists.
     $this->assertTrue(is_dir($directory), 'Directory actually exists.', 'File');
-
+    $file_system = \Drupal::service('file_system');
     if (substr(PHP_OS, 0, 3) != 'WIN') {
       // PHP on Windows doesn't support any kind of useful read-only mode for
       // directories. When executing a chmod() on a directory, PHP only sets the
@@ -92,7 +92,7 @@ class DirectoryTest extends FileTestBase {
     $this->assertDirectoryPermissions($directory, 0777, 'file_chmod_directory setting is respected.');
 
     // Remove .htaccess file to then test that it gets re-created.
-    @drupal_unlink(file_default_scheme() . '://.htaccess');
+    @$file_system->unlink(file_default_scheme() . '://.htaccess');
     $this->assertFalse(is_file(file_default_scheme() . '://.htaccess'), 'Successfully removed the .htaccess file in the files directory.', 'File');
     file_ensure_htaccess();
     $this->assertTrue(is_file(file_default_scheme() . '://.htaccess'), 'Successfully re-created the .htaccess file in the files directory.', 'File');

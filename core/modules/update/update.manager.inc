@@ -309,6 +309,7 @@ function update_manager_batch_project_get($project, $url, &$context) {
  * @see install_check_requirements()
  */
 function update_manager_local_transfers_allowed() {
+  $file_system = \Drupal::service('file_system');
   // Compare the owner of a webserver-created temporary file to the owner of
   // the configuration directory to determine if local transfers will be
   // allowed.
@@ -318,7 +319,7 @@ function update_manager_local_transfers_allowed() {
 
   // Clean up. If this fails, we can ignore it (since this is just a temporary
   // file anyway).
-  @drupal_unlink($temporary_file);
+  @$file_system->unlink($temporary_file);
 
   return $local_transfers_allowed;
 }

@@ -411,7 +411,7 @@ class FileSystem implements FileSystemInterface {
     if (!@rename($real_source, $real_destination)) {
       // Fall back to slow copy and unlink procedure. This is necessary for
       // renames across schemes that are not local, or where rename() has not
-      // been implemented. It's not necessary to use drupal_unlink() as the
+      // been implemented. It's not necessary to use FileSystem::unlink() as the
       // Windows issue has already been resolved above.
       if (!@copy($real_source, $real_destination)) {
         $this->logger->error("The specified file '%source' could not be moved to '%destination'.", [

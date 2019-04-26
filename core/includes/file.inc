@@ -1091,12 +1091,14 @@ function drupal_chmod($uri, $mode = NULL) {
 /**
  * Deletes a file.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  *   Use \Drupal\Core\File\FileSystem::unlink().
  *
+ * @see \Drupal\Core\File\FileSystem::unlink()
  * @see https://www.drupal.org/node/2418133
  */
 function drupal_unlink($uri, $context = NULL) {
+  @trigger_error('drupal_unlink() is deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::unlink(). See https://www.drupal.org/node/2418133.', E_USER_DEPRECATED);
   return \Drupal::service('file_system')->unlink($uri, $context);
 }
 

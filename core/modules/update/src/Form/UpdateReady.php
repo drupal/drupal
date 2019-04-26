@@ -153,7 +153,7 @@ class UpdateReady extends FormBase {
       // and invoke update_authorize_run_update() directly.
       if (fileowner($project_real_location) == fileowner($this->sitePath)) {
         $this->moduleHandler->loadInclude('update', 'inc', 'update.authorize');
-        $filetransfer = new Local($this->root);
+        $filetransfer = new Local($this->root, \Drupal::service('file_system'));
         $response = update_authorize_run_update($filetransfer, $updates);
         if ($response instanceof Response) {
           $form_state->setResponse($response);

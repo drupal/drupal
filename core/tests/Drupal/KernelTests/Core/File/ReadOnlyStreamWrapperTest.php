@@ -46,6 +46,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     $uri = $this->scheme . '://' . $filename;
     \Drupal::service('stream_wrapper_manager')->getViaScheme($this->scheme);
 
+    $file_system = \Drupal::service('file_system');
     // Attempt to open a file in read/write mode
     $handle = @fopen($uri, 'r+');
     $this->assertFalse($handle, 'Unable to open a file for reading and writing with the read-only stream wrapper.');
@@ -79,7 +80,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     // Test the rename() function
     $this->assertFalse(@rename($uri, $this->scheme . '://newname.txt'), 'Unable to rename files using the read-only stream wrapper.');
     // Test the unlink() function
-    $this->assertTrue(@drupal_unlink($uri), 'Able to unlink file using read-only stream wrapper.');
+    $this->assertTrue(@$file_system->unlink($uri), 'Able to unlink file using read-only stream wrapper.');
     $this->assertTrue(file_exists($filepath), 'Unlink File was not actually deleted.');
 
     // Test the mkdir() function by attempting to create a directory.

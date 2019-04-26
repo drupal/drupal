@@ -4,6 +4,7 @@ namespace Drupal\config\Form;
 
 use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,13 +24,27 @@ class ConfigImportForm extends FormBase {
   protected $configStorage;
 
   /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Constructs a new ConfigImportForm.
    *
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The configuration storage.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
    */
-  public function __construct(StorageInterface $config_storage) {
+  public function __construct(StorageInterface $config_storage, FileSystemInterface $file_system = NULL) {
     $this->configStorage = $config_storage;
+    if (!isset($file_system)) {
+      @trigger_error('The $file_system parameter was added in Drupal 8.8.0 and will be required in 9.0.0. See https://www.drupal.org/node/3021434.', E_USER_DEPRECATED);
+      $file_system = \Drupal::service('file_system');
+    }
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -37,7 +52,8 @@ class ConfigImportForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.storage.sync')
+      $container->get('config.storage.sync'),
+      $container->get('file_system')
     );
   }
 
@@ -106,7 +122,7 @@ class ConfigImportForm extends FormBase {
       catch (\Exception $e) {
         $this->messenger()->addError($this->t('Could not extract the contents of the tar file. The error message is <em>@message</em>', ['@message' => $e->getMessage()]));
       }
-      drupal_unlink($path);
+      $this->fileSystem->unlink($path);
     }
   }
 

@@ -22,7 +22,7 @@ class TestFileTransferWithSettingsForm extends Local {
    *   A new Drupal\update_test\TestFileTransferWithSettingsForm object.
    */
   public static function factory($jail, $settings) {
-    return new static($jail);
+    return new static($jail, \Drupal::service('file_system'));
   }
 
   /**
