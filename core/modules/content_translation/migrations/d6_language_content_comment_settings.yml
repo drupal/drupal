@@ -1,0 +1,63 @@
+id: d6_language_content_comment_settings
+label: Drupal 6 language content comment settings
+migration_tags:
+  - Drupal 6
+  - Configuration
+  - Multilingual
+source:
+  plugin: d6_language_content_settings
+  constants:
+    target_type: comment
+    id_prefix: comment_node_
+    label_suffix: comment
+process:
+  # Ignore i18n_node_options_[node_type] options not available in Drupal 8,
+  # i18n_required_node and i18n_newnode_current
+  target_bundle:
+    -
+      plugin: concat
+      source:
+        - constants/id_prefix
+        - type
+    -
+      plugin: static_map
+      bypass: true
+      # The Forum module provides its own comment type (comment_forum), which we
+      # want to reuse if it exists.
+      map:
+        comment_node_forum: comment_forum
+  target_entity_type_id: constants/target_type
+  default_langcode:
+    -
+      plugin: static_map
+      source: language_content_type
+      map:
+        0: site_default
+        1: current_interface
+        2: current_interface
+    -
+      plugin: skip_on_empty
+      method: row
+  language_alterable:
+    plugin: static_map
+    source: language_content_type
+    map:
+      0: false
+      1: true
+      2: true
+  'third_party_settings/content_translation/enabled':
+    plugin: static_map
+    source: language_content_type
+    map:
+      # In the case of being 0, it will be skipped. We are not actually setting
+      # a null value.
+      0: NULL
+      1: false
+      2: false
+destination:
+  plugin: entity:language_content_settings
+  content_translation_update_definitions:
+    - comment
+migration_dependencies:
+  required:
+    - d6_comment_type
