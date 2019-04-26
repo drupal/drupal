@@ -117,14 +117,17 @@ abstract class FileFieldTestBase extends WebTestBase {
     ];
     FieldConfig::create($field)->save();
 
-    entity_get_form_display($entity_type, $bundle, 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    $display_repository->getFormDisplay($entity_type, $bundle)
       ->setComponent($name, [
         'type' => 'file_generic',
         'settings' => $widget_settings,
       ])
       ->save();
     // Assign display settings.
-    entity_get_display($entity_type, $bundle, 'default')
+    $display_repository->getViewDisplay($entity_type, $bundle)
       ->setComponent($name, [
         'label' => 'hidden',
         'type' => 'file_default',
@@ -140,7 +143,8 @@ abstract class FileFieldTestBase extends WebTestBase {
     $field->setSettings(array_merge($field->getSettings(), $field_settings));
     $field->save();
 
-    entity_get_form_display('node', $type_name, 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('node', $type_name)
       ->setComponent($name, [
         'settings' => $widget_settings,
       ])

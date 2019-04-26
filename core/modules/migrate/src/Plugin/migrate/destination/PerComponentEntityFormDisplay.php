@@ -49,7 +49,7 @@ class PerComponentEntityFormDisplay extends ComponentEntityDisplayBase {
    * {@inheritdoc}
    */
   protected function getEntity($entity_type, $bundle, $form_mode) {
-    return entity_get_form_display($entity_type, $bundle, $form_mode);
+    return $this->entityDisplayRepository->getFormDisplay($entity_type, $bundle, $form_mode);
   }
 
 }

@@ -135,7 +135,8 @@ function node_access_test_add_field(NodeTypeInterface $type) {
   $field->save();
 
   // Assign widget settings for the 'default' form mode.
-  entity_get_form_display('node', $type->id(), 'default')
+  \Drupal::service('entity_display.repository')
+    ->getFormDisplay('node', $type->id())
     ->setComponent('private', [
       'type' => 'number',
     ])

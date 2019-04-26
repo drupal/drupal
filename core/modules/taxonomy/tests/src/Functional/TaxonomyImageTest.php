@@ -58,13 +58,15 @@ class TaxonomyImageTest extends TaxonomyTestBase {
       'bundle' => $this->vocabulary->id(),
       'settings' => [],
     ])->save();
-    entity_get_display($entity_type, $this->vocabulary->id(), 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getViewDisplay($entity_type, $this->vocabulary->id())
       ->setComponent($name, [
         'type' => 'image',
         'settings' => [],
       ])
       ->save();
-    entity_get_form_display($entity_type, $this->vocabulary->id(), 'default')
+    $display_repository->getFormDisplay($entity_type, $this->vocabulary->id())
       ->setComponent($name, [
         'type' => 'image_image',
         'settings' => [],

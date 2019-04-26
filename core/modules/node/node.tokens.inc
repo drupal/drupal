@@ -143,7 +143,9 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
 
                 // Get the 'trim_length' size used for the 'teaser' mode, if
                 // present, or use the default trim_length size.
-                $display_options = entity_get_display('node', $node->getType(), 'teaser')->getComponent('body');
+                $display_options = \Drupal::service('entity_display.repository')
+                  ->getViewDisplay('node', $node->getType(), 'teaser')
+                  ->getComponent('body');
                 if (isset($display_options['settings']['trim_length'])) {
                   $length = $display_options['settings']['trim_length'];
                 }

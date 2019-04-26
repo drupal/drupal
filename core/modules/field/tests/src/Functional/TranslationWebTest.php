@@ -69,7 +69,8 @@ class TranslationWebTest extends FieldTestBase {
     FieldConfig::create($field)->save();
     $this->field = FieldConfig::load($this->entityTypeId . '.' . $field['bundle'] . '.' . $this->fieldName);
 
-    entity_get_form_display($this->entityTypeId, $this->entityTypeId, 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay($this->entityTypeId, $this->entityTypeId)
       ->setComponent($this->fieldName)
       ->save();
 

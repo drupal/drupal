@@ -33,7 +33,8 @@ class NodeLinksTest extends NodeTestBase {
     $this->assertLink('Read more');
 
     // Hide links.
-    entity_get_display('node', 'article', 'teaser')
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', 'article', 'teaser')
       ->removeComponent('links')
       ->save();
 

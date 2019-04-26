@@ -131,7 +131,7 @@ abstract class CommentTestBase extends WebTestBase {
     }
 
     // Determine the visibility of subject form field.
-    if (entity_get_form_display('comment', 'comment', 'default')->getComponent('subject')) {
+    if (\Drupal::service('entity_display.repository')->getFormDisplay('comment', 'comment')->getComponent('subject')) {
       // Subject input allowed.
       $edit['subject[0][value]'] = $subject;
     }
@@ -234,7 +234,8 @@ abstract class CommentTestBase extends WebTestBase {
    *   Boolean specifying whether the subject field should be enabled.
    */
   public function setCommentSubject($enabled) {
-    $form_display = entity_get_form_display('comment', 'comment', 'default');
+    $form_display = \Drupal::service('entity_display.repository')
+      ->getFormDisplay('comment', 'comment');
     if ($enabled) {
       $form_display->setComponent('subject', [
         'type' => 'string_textfield',

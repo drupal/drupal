@@ -73,7 +73,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
     $field->setSettings(array_merge($field->getSettings(), $field_settings));
     $field->save();
 
-    entity_get_form_display('node', $type_name, 'default')
+    \Drupal::service('entity_display.repository')->getFormDisplay('node', $type_name)
       ->setComponent($name, [
         'settings' => $widget_settings,
       ])

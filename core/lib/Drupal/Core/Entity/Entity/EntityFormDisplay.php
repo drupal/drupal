@@ -52,10 +52,11 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    *
    * This method should only be used internally when rendering an entity form.
    * When assigning suggested display options for a component in a given form
-   * mode, entity_get_form_display() should be used instead, in order to avoid
-   * inadvertently modifying the output of other form modes that might happen to
-   * use the 'default' display too. Those options will then be effectively
-   * applied only if the form mode is configured to use them.
+   * mode, EntityDisplayRepositoryInterface::getFormDisplay() should be used
+   * instead, in order to avoid inadvertently modifying the output of other form
+   * modes that might happen to use the 'default' display too. Those options
+   * will then be effectively applied only if the form mode is configured to use
+   * them.
    *
    * hook_entity_form_display_alter() is invoked on each display, allowing 3rd
    * party code to alter the display options held in the display before they are
@@ -73,7 +74,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    * @return \Drupal\Core\Entity\Display\EntityFormDisplayInterface
    *   The display object that should be used to build the entity form.
    *
-   * @see entity_get_form_display()
+   * @see \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormDisplay()
    * @see hook_entity_form_display_alter()
    */
   public static function collectRenderDisplay(FieldableEntityInterface $entity, $form_mode, $default_fallback = TRUE) {

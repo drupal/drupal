@@ -100,7 +100,8 @@ class TwigWhiteListTest extends KernelTestBase {
     ])->save();
 
     // Show on default display and teaser.
-    entity_get_display('node', 'page', 'default')
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', 'page')
       ->setComponent('field_term', [
         'type' => 'entity_reference_label',
       ])

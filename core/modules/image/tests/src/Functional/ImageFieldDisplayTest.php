@@ -117,7 +117,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'type' => 'image',
       'settings' => ['image_link' => 'file'],
     ];
-    $display = entity_get_display('node', $node->getType(), 'default');
+    $display = \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', $node->getType());
     $display->setComponent($field_name, $display_options)
       ->save();
 

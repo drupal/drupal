@@ -161,7 +161,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
       ],
     ])->save();
 
-    entity_get_display('node', $node_type->id(), 'default')
+    \Drupal::service('entity_display.repository')->getViewDisplay('node', $node_type->id())
       ->setComponent('field_related_media', [
         'type' => 'entity_reference_entity_view',
         'label' => 'hidden',

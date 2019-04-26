@@ -86,7 +86,7 @@ class NumberFieldTest extends WebDriverTestBase {
       ],
     ])->save();
 
-    entity_get_form_display('node', $type, 'default')
+    \Drupal::service('entity_display.repository')->getFormDisplay('node', $type, 'default')
       ->setComponent($float_field, [
         'type' => 'number',
         'settings' => [
@@ -101,7 +101,7 @@ class NumberFieldTest extends WebDriverTestBase {
       ])
       ->save();
 
-    entity_get_display('node', $type, 'default')
+    \Drupal::service('entity_display.repository')->getViewDisplay('node', $type)
       ->setComponent($float_field, [
         'type' => 'number_decimal',
       ])
@@ -150,7 +150,7 @@ class NumberFieldTest extends WebDriverTestBase {
     $this->assertRaw((string) $random_integer);
 
     // Configure the number_decimal formatter.
-    entity_get_display('node', $type, 'default')
+    \Drupal::service('entity_display.repository')->getViewDisplay('node', $type)
       ->setComponent($integer_field, [
         'type' => 'number_integer',
       ])

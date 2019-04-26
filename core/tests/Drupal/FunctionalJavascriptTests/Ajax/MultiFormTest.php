@@ -42,7 +42,7 @@ class MultiFormTest extends WebDriverTestBase {
       'entity_type' => 'node',
       'bundle' => 'page',
     ])->save();
-    entity_get_form_display('node', 'page', 'default')
+    \Drupal::service('entity_display.repository')->getFormDisplay('node', 'page', 'default')
       ->setComponent($field_name, ['type' => 'text_textfield'])
       ->save();
 

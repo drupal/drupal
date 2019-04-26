@@ -87,7 +87,8 @@ abstract class FieldRdfaTestBase extends FieldKernelTestBase {
 
     // The field formatter will be rendered inside the entity. Set the field
     // formatter in the entity display options before rendering the entity.
-    entity_get_display('entity_test', 'entity_test', 'default')
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('entity_test', 'entity_test')
       ->setComponent($this->fieldName, $formatter)
       ->save();
     $build = entity_view($this->entity, 'default');

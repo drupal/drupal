@@ -93,7 +93,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
 
     // Configure the iframe to be narrower than the actual video, so we can
     // verify that the video scales correctly.
-    $display = entity_get_display('media', $media_type_id, 'default');
+    $display = \Drupal::service('entity_display.repository')->getViewDisplay('media', $media_type_id);
     $this->assertFalse($display->isNew());
     $component = $display->getComponent('field_media_oembed_video');
     $this->assertInternalType('array', $component);

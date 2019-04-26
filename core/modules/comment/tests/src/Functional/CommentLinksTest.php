@@ -101,8 +101,10 @@ class CommentLinksTest extends CommentTestBase {
       $this->assertLink('Add new comment');
     }
 
+    $display_repository = $this->container->get('entity_display.repository');
+
     // Change weight to make links go before comment body.
-    entity_get_display('comment', 'comment', 'default')
+    $display_repository->getViewDisplay('comment', 'comment')
       ->setComponent('links', ['weight' => -100])
       ->save();
     $this->drupalGet($this->node->toUrl());
@@ -112,7 +114,7 @@ class CommentLinksTest extends CommentTestBase {
     $this->assertIdentical($element->getTagName(), 'div', 'Last element is comment body.');
 
     // Change weight to make links go after comment body.
-    entity_get_display('comment', 'comment', 'default')
+    $display_repository->getViewDisplay('comment', 'comment')
       ->setComponent('links', ['weight' => 100])
       ->save();
     $this->drupalGet($this->node->toUrl());
@@ -122,7 +124,7 @@ class CommentLinksTest extends CommentTestBase {
     $this->assertNotEmpty($element->find('css', 'ul.links'), 'Last element is comment links.');
 
     // Make sure we can hide node links.
-    entity_get_display('node', $this->node->bundle(), 'default')
+    $display_repository->getViewDisplay('node', $this->node->bundle())
       ->removeComponent('links')
       ->save();
     $this->drupalGet($this->node->toUrl());
@@ -135,7 +137,7 @@ class CommentLinksTest extends CommentTestBase {
     $this->assertLink('Reply');
 
     // Make sure we can hide comment links.
-    entity_get_display('comment', 'comment', 'default')
+    $display_repository->getViewDisplay('comment', 'comment')
       ->removeComponent('links')
       ->save();
     $this->drupalGet('node/' . $this->node->id());

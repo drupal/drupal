@@ -54,7 +54,8 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
       'bundle' => 'entity_test_rev',
       'required' => TRUE,
     ])->save();
-    entity_get_form_display('entity_test_rev', 'entity_test_rev', 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('entity_test_rev', 'entity_test_rev')
       ->setComponent($field_name, [
         'type' => 'options_select',
       ])

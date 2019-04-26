@@ -265,8 +265,10 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
         ],
       ],
     ])->save();
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
     if (!$this->entity->getEntityType()->hasHandlerClass('view_builder')) {
-      entity_get_display($entity_type, $bundle, 'full')
+      $display_repository->getViewDisplay($entity_type, $bundle, 'full')
         ->setComponent($field_name, [
           'type' => 'entity_reference_label',
         ])
@@ -274,7 +276,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     }
     else {
       $referenced_entity_view_mode = $this->selectViewMode($this->entity->getEntityTypeId());
-      entity_get_display($entity_type, $bundle, 'full')
+      $display_repository->getViewDisplay($entity_type, $bundle, 'full')
         ->setComponent($field_name, [
           'type' => 'entity_reference_entity_view',
           'settings' => [
@@ -490,7 +492,9 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       // entities, but not for any other routes.
       $referenced_entity_view_mode = $this->selectViewMode($this->entity->getEntityTypeId());
       $this->pass("Test modification of referenced entity's '$referenced_entity_view_mode' display.", 'Debug');
-      $entity_display = entity_get_display($entity_type, $this->entity->bundle(), $referenced_entity_view_mode);
+      /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+      $display_repository = \Drupal::service('entity_display.repository');
+      $entity_display = $display_repository->getViewDisplay($entity_type, $this->entity->bundle(), $referenced_entity_view_mode);
       $entity_display->save();
       $this->verifyPageCache($referencing_entity_url, 'MISS');
       $this->verifyPageCache($listing_url, 'MISS');

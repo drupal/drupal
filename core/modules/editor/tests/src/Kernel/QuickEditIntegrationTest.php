@@ -125,7 +125,9 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $storage->resetCache([$entity_id]);
     $entity = $storage->load($entity_id);
     $items = $entity->get($field_name);
-    $options = entity_get_display('entity_test', 'entity_test', $view_mode)->getComponent($field_name);
+    $options = \Drupal::service('entity_display.repository')
+      ->getViewDisplay('entity_test', 'entity_test', $view_mode)
+      ->getComponent($field_name);
     return $this->editorSelector->getEditor($options['type'], $items);
   }
 

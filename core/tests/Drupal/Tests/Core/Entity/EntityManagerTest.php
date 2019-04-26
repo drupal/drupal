@@ -3,6 +3,8 @@
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityInterface;
@@ -468,6 +470,28 @@ class EntityManagerTest extends UnitTestCase {
    */
   public function testGetActiveFieldStorageDefinitions() {
     $this->entityManager->getActiveFieldStorageDefinitions('entity_test');
+  }
+
+  /**
+   * @covers ::getViewDisplay
+   *
+   * @expectedDeprecation EntityManager::getViewDisplay() is deprecated in drupal:8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal::service('entity_display.repository')->getViewDisplay() instead.
+   */
+  public function testGetViewDisplay() {
+    $view_display = $this->prophesize(EntityViewDisplayInterface::class)->reveal();
+    $this->entityDisplayRepository->getViewDisplay('entity_test', 'bundle', 'default')->shouldBeCalled()->willReturn($view_display);
+    $this->assertInstanceOf(EntityViewDisplayInterface::class, $this->entityManager->getViewDisplay('entity_test', 'bundle', 'default'));
+  }
+
+  /**
+   * @covers ::getFormDisplay
+   *
+   * @expectedDeprecation EntityManager::getFormDisplay() is deprecated in drupal:8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal::service('entity_display.repository')->getFormDisplay() instead.
+   */
+  public function testGetFormDisplay() {
+    $form_display = $this->prophesize(EntityFormDisplayInterface::class)->reveal();
+    $this->entityDisplayRepository->getFormDisplay('entity_test', 'bundle', 'default')->shouldBeCalled()->willReturn($form_display);
+    $this->assertInstanceOf(EntityFormDisplayInterface::class, $this->entityManager->getFormDisplay('entity_test', 'bundle', 'default'));
   }
 
 }

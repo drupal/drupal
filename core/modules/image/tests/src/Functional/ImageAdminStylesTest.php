@@ -311,7 +311,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Create an image field that uses the new style.
     $field_name = strtolower($this->randomMachineName(10));
     $this->createImageField($field_name, 'article');
-    entity_get_display('node', 'article', 'default')
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', 'article')
       ->setComponent($field_name, [
         'type' => 'image',
         'settings' => ['image_style' => $style_name],
@@ -456,7 +457,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Create an image field that uses the new style.
     $field_name = strtolower($this->randomMachineName(10));
     $this->createImageField($field_name, 'article');
-    entity_get_display('node', 'article', 'default')
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', 'article')
       ->setComponent($field_name, [
         'type' => 'image',
         'settings' => ['image_style' => $style_name],

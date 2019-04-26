@@ -125,7 +125,8 @@ abstract class CommentTestBase extends BrowserTestBase {
     }
 
     // Determine the visibility of subject form field.
-    if (entity_get_form_display('comment', 'comment', 'default')->getComponent('subject')) {
+    $display_repository = $this->container->get('entity_display.repository');
+    if ($display_repository->getFormDisplay('comment', 'comment')->getComponent('subject')) {
       // Subject input allowed.
       $edit['subject[0][value]'] = $subject;
     }
@@ -228,7 +229,9 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Boolean specifying whether the subject field should be enabled.
    */
   public function setCommentSubject($enabled) {
-    $form_display = entity_get_form_display('comment', 'comment', 'default');
+    $form_display = $this->container->get('entity_display.repository')
+      ->getFormDisplay('comment', 'comment');
+
     if ($enabled) {
       $form_display->setComponent('subject', [
         'type' => 'string_textfield',

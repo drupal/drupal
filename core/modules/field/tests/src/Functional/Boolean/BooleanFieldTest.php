@@ -83,14 +83,17 @@ class BooleanFieldTest extends BrowserTestBase {
     ]);
     $this->field->save();
 
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
     // Create a form display for the default form mode.
-    entity_get_form_display('entity_test', 'entity_test', 'default')
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => 'boolean_checkbox',
       ])
       ->save();
     // Create a display for the full view mode.
-    entity_get_display('entity_test', 'entity_test', 'full')
+    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
       ->setComponent($field_name, [
         'type' => 'boolean',
       ])
@@ -117,7 +120,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->assertRaw('<div class="field__item">' . $on . '</div>');
 
     // Test with "On" label option.
-    entity_get_form_display('entity_test', 'entity_test', 'default')
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => 'boolean_checkbox',
         'settings' => [
@@ -203,15 +206,18 @@ class BooleanFieldTest extends BrowserTestBase {
     ]);
     $this->field->save();
 
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
     // Create a form display for the default form mode.
-    entity_get_form_display('entity_test', 'entity_test', 'default')
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => 'boolean_checkbox',
       ])
       ->save();
 
     // Create a display for the full view mode.
-    entity_get_display('entity_test', 'entity_test', 'full')
+    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
       ->setComponent($field_name, [
         'type' => 'boolean',
       ])

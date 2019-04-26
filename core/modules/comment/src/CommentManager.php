@@ -5,6 +5,7 @@ namespace Drupal\comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -37,6 +38,13 @@ class CommentManager implements CommentManagerInterface {
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
+
+  /**
+   * The entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $entityDisplayRepository;
 
   /**
    * The entity type manager.
@@ -82,14 +90,16 @@ class CommentManager implements CommentManagerInterface {
    *   The config factory.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
-   *  @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager service.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display repository service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler, AccountInterface $current_user, EntityFieldManagerInterface $entity_field_manager = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler, AccountInterface $current_user, EntityFieldManagerInterface $entity_field_manager = NULL, EntityDisplayRepositoryInterface $entity_display_repository = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->userConfig = $config_factory->get('user.settings');
     $this->stringTranslation = $string_translation;
@@ -100,6 +110,12 @@ class CommentManager implements CommentManagerInterface {
       $entity_field_manager = \Drupal::service('entity_field.manager');
     }
     $this->entityFieldManager = $entity_field_manager;
+
+    if (!$entity_display_repository) {
+      @trigger_error('The entity_display.repository service must be passed to CommentManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2835616.', E_USER_DEPRECATED);
+      $entity_display_repository = \Drupal::service('entity_display.repository');
+    }
+    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**
@@ -129,15 +145,15 @@ class CommentManager implements CommentManagerInterface {
       ]);
       $field->save();
 
-      // Assign widget settings for the 'default' form mode.
-      entity_get_form_display('comment', $comment_type_id, 'default')
+      // Assign widget settings for the default form mode.
+      $this->entityDisplayRepository->getFormDisplay('comment', $comment_type_id)
         ->setComponent('comment_body', [
           'type' => 'text_textarea',
         ])
         ->save();
 
-      // Assign display settings for the 'default' view mode.
-      entity_get_display('comment', $comment_type_id, 'default')
+      // Assign display settings for the default view mode.
+      $this->entityDisplayRepository->getViewDisplay('comment', $comment_type_id)
         ->setComponent('comment_body', [
           'label' => 'hidden',
           'type' => 'text_default',

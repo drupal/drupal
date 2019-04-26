@@ -88,12 +88,14 @@ trait TaxonomyTranslationTestTrait {
     $field_storage->setTranslatable(FALSE);
     $field_storage->save();
 
-    entity_get_form_display('node', 'article', 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('node', 'article')
       ->setComponent($this->termFieldName, [
         'type' => 'entity_reference_autocomplete_tags',
       ])
       ->save();
-    entity_get_display('node', 'article', 'default')
+    $display_repository->getViewDisplay('node', 'article')
       ->setComponent($this->termFieldName, [
         'type' => 'entity_reference_label',
       ])

@@ -92,7 +92,8 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
       'field_name' => 'body',
       'label' => 'Body',
     ])->save();
-    entity_get_display($this->entityType, $this->bundle, 'default')
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay($this->entityType, $this->bundle)
       ->setComponent('body', [
         'type' => 'text_default',
         'settings' => [],
@@ -149,7 +150,8 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     // Get all the existing formatters.
     foreach ($formatter_manager->getOptions('entity_reference') as $formatter => $name) {
       // Set formatter type for the 'full' view mode.
-      entity_get_display($this->entityType, $this->bundle, 'default')
+      \Drupal::service('entity_display.repository')
+        ->getViewDisplay($this->entityType, $this->bundle)
         ->setComponent($field_name, [
           'type' => $formatter,
         ])
@@ -239,7 +241,8 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
 
     // Set the default view mode to use the 'entity_reference_entity_view'
     // formatter.
-    entity_get_display($this->entityType, $this->bundle, 'default')
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay($this->entityType, $this->bundle)
       ->setComponent($this->fieldName, [
         'type' => $formatter,
       ])
@@ -299,7 +302,8 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
 
     // Set the default view mode to use the 'entity_reference_entity_view'
     // formatter.
-    entity_get_display($this->entityType, $this->bundle, 'default')
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay($this->entityType, $this->bundle)
       ->setComponent($this->fieldName, [
         'type' => $formatter,
       ])

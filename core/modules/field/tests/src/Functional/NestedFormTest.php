@@ -54,19 +54,22 @@ class NestedFormTest extends FieldTestBase {
    * Tests Field API form integration within a subform.
    */
   public function testNestedFieldForm() {
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
     // Add two fields on the 'entity_test'
     FieldStorageConfig::create($this->fieldStorageSingle)->save();
     FieldStorageConfig::create($this->fieldStorageUnlimited)->save();
     $this->field['field_name'] = 'field_single';
     $this->field['label'] = 'Single field';
     FieldConfig::create($this->field)->save();
-    entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
+    $display_repository->getFormDisplay($this->field['entity_type'], $this->field['bundle'])
       ->setComponent($this->field['field_name'])
       ->save();
     $this->field['field_name'] = 'field_unlimited';
     $this->field['label'] = 'Unlimited field';
     FieldConfig::create($this->field)->save();
-    entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
+    $display_repository->getFormDisplay($this->field['entity_type'], $this->field['bundle'])
       ->setComponent($this->field['field_name'])
       ->save();
 

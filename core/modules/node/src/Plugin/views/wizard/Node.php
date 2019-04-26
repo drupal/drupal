@@ -2,8 +2,11 @@
 
 namespace Drupal\node\Plugin\views\wizard;
 
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @todo: replace numbers with constants.
@@ -26,6 +29,50 @@ class Node extends WizardPluginBase {
    * @var string
    */
   protected $createdColumn = 'node_field_data-created';
+
+  /**
+   * The entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $entityDisplayRepository;
+
+  /**
+   * Node constructor.
+   *
+   * @param array $configuration
+   *   The plugin configuration.
+   * @param string $plugin_id
+   *   The plugin ID.
+   * @param mixed $plugin_definition
+   *   The plugin definition.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info_service
+   *   The entity bundle info service.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display repository service.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeBundleInfoInterface $bundle_info_service, EntityDisplayRepositoryInterface $entity_display_repository = NULL) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $bundle_info_service);
+
+    if (!$entity_display_repository) {
+      @trigger_error('The entity_display.repository service must be passed to ' . __METHOD__ . ', it is required before Drupal 9.0.0. See https://www.drupal.org/node/2835616.', E_USER_DEPRECATED);
+      $entity_display_repository = \Drupal::service('entity_display.repository');
+    }
+    $this->entityDisplayRepository = $entity_display_repository;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.bundle.info'),
+      $container->get('entity_display.repository')
+    );
+  }
 
   /**
    * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::getAvailableSorts().
@@ -213,7 +260,7 @@ class Node extends WizardPluginBase {
     }
     $tag_fields = [];
     foreach ($bundles as $bundle) {
-      $display = entity_get_form_display($this->entityTypeId, $bundle, 'default');
+      $display = $this->entityDisplayRepository->getFormDisplay($this->entityTypeId, $bundle);
       $taxonomy_fields = array_filter(\Drupal::entityManager()->getFieldDefinitions($this->entityTypeId, $bundle), function ($field_definition) {
         return $field_definition->getType() == 'entity_reference' && $field_definition->getSetting('target_type') == 'taxonomy_term';
       });

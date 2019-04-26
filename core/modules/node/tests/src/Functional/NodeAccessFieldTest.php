@@ -61,10 +61,12 @@ class NodeAccessFieldTest extends NodeTestBase {
       'entity_type' => 'node',
       'bundle' => 'page',
     ])->save();
-    entity_get_display('node', 'page', 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getViewDisplay('node', 'page')
       ->setComponent($this->fieldName)
       ->save();
-    entity_get_form_display('node', 'page', 'default')
+    $display_repository->getFormDisplay('node', 'page')
       ->setComponent($this->fieldName)
       ->save();
   }

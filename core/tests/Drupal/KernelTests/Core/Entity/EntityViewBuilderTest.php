@@ -100,10 +100,12 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
 
     // Create an entity reference field and an entity that will be referenced.
     $this->createEntityReferenceField('entity_test', 'entity_test', 'reference_field', 'Reference', 'entity_test');
-    entity_get_display('entity_test', 'entity_test', 'full')->setComponent('reference_field', [
-      'type' => 'entity_reference_entity_view',
-      'settings' => ['link' => FALSE],
-    ])->save();
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('entity_test', 'entity_test', 'full')
+      ->setComponent('reference_field', [
+        'type' => 'entity_reference_entity_view',
+        'settings' => ['link' => FALSE],
+      ])->save();
     $entity_test_reference = $this->createTestEntity('entity_test');
     $entity_test_reference->save();
 
@@ -181,7 +183,8 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $renderer = $this->container->get('renderer');
 
     // Set a weight for the label component.
-    entity_get_display('entity_test', 'entity_test', 'full')
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('entity_test', 'entity_test', 'full')
       ->setComponent('label', ['weight' => 20])
       ->save();
 

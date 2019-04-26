@@ -73,7 +73,8 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
 
     // Verify that after modifying the entity's display, there is a cache miss.
     $this->pass("Test modification of entity's '$view_mode' display.", 'Debug');
-    $entity_display = entity_get_display($entity_type, $this->entity->bundle(), $view_mode);
+    $entity_display = \Drupal::service('entity_display.repository')
+      ->getViewDisplay($entity_type, $this->entity->bundle(), $view_mode);
     $entity_display->save();
     $this->verifyPageCache($entity_url, 'MISS');
 

@@ -6,8 +6,6 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
 /**
  * Clears the entity render cache for all entity types.
@@ -440,49 +438,15 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $re
  * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
  *   The entity view display associated with the view mode.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
- *   If the display is available in configuration use:
- *   @code
- *   \Drupal::entityTypeManager()
- *     ->getStorage('entity_view_display')
- *     ->load($entity_type . '.' . $bundle . '.' . $view_mode);
- *   @endcode
- *   When the display is not available in configuration, you can create a new
- *   EntityViewDisplay object using:
- *   @code
- *   $values = array(
- *     'targetEntityType' => $entity_type,
- *     'bundle' => $bundle,
- *     'mode' => $view_mode,
- *     'status' => TRUE,
- *   );
- *   \Drupal::entityTypeManager()
- *     ->getStorage('entity_view_display')
- *     ->create($values);
- *   @endcode
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ *   EntityDisplayRepositoryInterface::getViewDisplay() instead.
  *
- * @see \Drupal\Core\Entity\EntityStorageInterface::create()
- * @see \Drupal\Core\Entity\EntityStorageInterface::load()
+ * @see https://www.drupal.org/node/2835616
  */
 function entity_get_display($entity_type, $bundle, $view_mode) {
-  // Try loading the display from configuration.
-  $display = EntityViewDisplay::load($entity_type . '.' . $bundle . '.' . $view_mode);
-
-  // If not found, create a fresh display object. We do not preemptively create
-  // new entity_view_display configuration entries for each existing entity type
-  // and bundle whenever a new view mode becomes available. Instead,
-  // configuration entries are only created when a display object is explicitly
-  // configured and saved.
-  if (!$display) {
-    $display = EntityViewDisplay::create([
-      'targetEntityType' => $entity_type,
-      'bundle' => $bundle,
-      'mode' => $view_mode,
-      'status' => TRUE,
-    ]);
-  }
-
-  return $display;
+  @trigger_error('entity_get_display() is deprecated in drupal:8.8.0. It will be removed before drupal:9.0.0. Use \Drupal::service(\'entity_display.repository\')->getViewDisplay() instead. See https://www.drupal.org/node/2835616', E_USER_DEPRECATED);
+  return \Drupal::service('entity_display.repository')
+    ->getViewDisplay($entity_type, $bundle, $view_mode);
 }
 
 /**
@@ -520,47 +484,15 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
  * @return \Drupal\Core\Entity\Display\EntityFormDisplayInterface
  *   The entity form display associated with the given form mode.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
- *   If the entity form display is available in configuration use:
- *   @code
- *     \Drupal::entityTypeManager()
- *       ->getStorage('entity_form_display')
- *       ->load($entity_type . '.' . $bundle . '.' . $form_mode);
- *   @endcode
- *   When the entity form display is not available in configuration, you can
- *   create a new EntityFormDisplay object using:
- *   @code
- *   $values = array(
- *    'targetEntityType' => $entity_type,
- *    'bundle' => $bundle,
- *    'mode' => $form_mode,
- *    'status' => TRUE,
- *   );
- *   \Drupal::entityTypeManager()
- *     ->getStorage('entity_form_display')
- *     ->create($values);
- *   @endcode
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ *   EntityDisplayRepositoryInterface::getFormDisplay() instead.
  *
+ * @see https://www.drupal.org/node/2835616
  * @see \Drupal\Core\Entity\EntityStorageInterface::create()
  * @see \Drupal\Core\Entity\EntityStorageInterface::load()
  */
 function entity_get_form_display($entity_type, $bundle, $form_mode) {
-  // Try loading the entity from configuration.
-  $entity_form_display = EntityFormDisplay::load($entity_type . '.' . $bundle . '.' . $form_mode);
-
-  // If not found, create a fresh entity object. We do not preemptively create
-  // new entity form display configuration entries for each existing entity type
-  // and bundle whenever a new form mode becomes available. Instead,
-  // configuration entries are only created when an entity form display is
-  // explicitly configured and saved.
-  if (!$entity_form_display) {
-    $entity_form_display = EntityFormDisplay::create([
-      'targetEntityType' => $entity_type,
-      'bundle' => $bundle,
-      'mode' => $form_mode,
-      'status' => TRUE,
-    ]);
-  }
-
-  return $entity_form_display;
+  @trigger_error('entity_get_form_display() is deprecated in drupal:8.8.0. It will be removed before drupal:9.0.0. Use \Drupal::service(\'entity_display.repository\')->getFormDisplay() instead. See https://www.drupal.org/node/2835616', E_USER_DEPRECATED);
+  return \Drupal::service('entity_display.repository')
+    ->getFormDisplay($entity_type, $bundle, $form_mode);
 }

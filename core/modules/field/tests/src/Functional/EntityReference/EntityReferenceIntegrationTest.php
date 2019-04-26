@@ -68,8 +68,13 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       // Create an Entity reference field.
       $this->createEntityReferenceField($this->entityType, $this->bundle, $this->fieldName, $this->fieldName, $referenced_entities[0]->getEntityTypeId(), 'default', [], 2);
 
+      /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+      $display_repository = \Drupal::service('entity_display.repository');
+
       // Test the default 'entity_reference_autocomplete' widget.
-      entity_get_form_display($this->entityType, $this->bundle, 'default')->setComponent($this->fieldName)->save();
+      $display_repository->getFormDisplay($this->entityType, $this->bundle)
+        ->setComponent($this->fieldName)
+        ->save();
 
       $entity_name = $this->randomMachineName();
       $edit = [
@@ -94,9 +99,10 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       $this->assertFieldValues($entity_name, $referenced_entities);
 
       // Test the 'entity_reference_autocomplete_tags' widget.
-      entity_get_form_display($this->entityType, $this->bundle, 'default')->setComponent($this->fieldName, [
-        'type' => 'entity_reference_autocomplete_tags',
-      ])->save();
+      $display_repository->getFormDisplay($this->entityType, $this->bundle)
+        ->setComponent($this->fieldName, [
+          'type' => 'entity_reference_autocomplete_tags',
+        ])->save();
 
       $entity_name = $this->randomMachineName();
       $target_id = $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')';
@@ -127,16 +133,19 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       $supported_widget_types = array_diff(array_keys($supported_widgets), $exclude);
 
       foreach ($supported_widget_types as $widget_type) {
-        entity_get_form_display($this->entityType, $this->bundle, 'default')->setComponent($this->fieldName, [
-          'type' => $widget_type,
-        ])->save();
+        $display_repository->getFormDisplay($this->entityType, $this->bundle)
+          ->setComponent($this->fieldName, [
+            'type' => $widget_type,
+          ])->save();
 
         $this->drupalPostForm($this->entityType . '/manage/' . $entity->id() . '/edit', [], t('Save'));
         $this->assertFieldValues($entity_name, $referenced_entities);
       }
 
       // Reset to the default 'entity_reference_autocomplete' widget.
-      entity_get_form_display($this->entityType, $this->bundle, 'default')->setComponent($this->fieldName)->save();
+      $display_repository->getFormDisplay($this->entityType, $this->bundle)
+        ->setComponent($this->fieldName)
+        ->save();
 
       // Set first entity as the default_value.
       $field_edit = [

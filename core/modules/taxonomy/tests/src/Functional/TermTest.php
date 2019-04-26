@@ -60,12 +60,14 @@ class TermTest extends TaxonomyTestBase {
     $this->createEntityReferenceField('node', 'article', $field_name, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $this->field = FieldConfig::loadByName('node', 'article', $field_name);
 
-    entity_get_form_display('node', 'article', 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('node', 'article')
       ->setComponent($field_name, [
         'type' => 'options_select',
       ])
       ->save();
-    entity_get_display('node', 'article', 'default')
+    $display_repository->getViewDisplay('node', 'article')
       ->setComponent($field_name, [
         'type' => 'entity_reference_label',
       ])
@@ -221,7 +223,8 @@ class TermTest extends TaxonomyTestBase {
   public function testNodeTermCreationAndDeletion() {
     // Enable tags in the vocabulary.
     $field = $this->field;
-    entity_get_form_display($field->getTargetEntityTypeId(), $field->getTargetBundle(), 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay($field->getTargetEntityTypeId(), $field->getTargetBundle())
       ->setComponent($field->getName(), [
         'type' => 'entity_reference_autocomplete_tags',
         'settings' => [
@@ -547,7 +550,8 @@ class TermTest extends TaxonomyTestBase {
   public function testReSavingTags() {
     // Enable tags in the vocabulary.
     $field = $this->field;
-    entity_get_form_display($field->getTargetEntityTypeId(), $field->getTargetBundle(), 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay($field->getTargetEntityTypeId(), $field->getTargetBundle())
       ->setComponent($field->getName(), [
         'type' => 'entity_reference_autocomplete_tags',
       ])

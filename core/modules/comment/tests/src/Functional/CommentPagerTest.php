@@ -321,7 +321,8 @@ class CommentPagerTest extends CommentTestBase {
     // Add another field to article content-type.
     $this->addDefaultCommentField('node', 'article', 'comment_2');
     // Set default to display comment list with unique pager id.
-    entity_get_display('node', 'article', 'default')
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', 'article')
       ->setComponent('comment_2', [
         'label' => 'hidden',
         'type' => 'comment_default',

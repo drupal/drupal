@@ -2,10 +2,13 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\KernelTests\KernelTestBase;
+use function entity_get_display;
 
 /**
  * Tests legacy entity functions.
@@ -49,6 +52,19 @@ class EntityLegacyTest extends KernelTestBase {
 
     $this->assertNull(entity_load('entity_test', 100));
     $this->assertInstanceOf(EntityInterface::class, entity_load('entity_test', 1));
+  }
+
+  /**
+   * @expectedDeprecation entity_get_display() is deprecated in drupal:8.8.0. It will be removed before drupal:9.0.0. Use \Drupal::service('entity_display.repository')->getViewDisplay() instead. See https://www.drupal.org/node/2835616
+   * @expectedDeprecation entity_get_form_display() is deprecated in drupal:8.8.0. It will be removed before drupal:9.0.0. Use \Drupal::service('entity_display.repository')->getFormDisplay() instead. See https://www.drupal.org/node/2835616
+   */
+  public function testLegacyDisplayFunctions() {
+    $view_display = entity_get_display('entity_test', 'entity_test', 'default');
+    $this->assertInstanceOf(EntityViewDisplayInterface::class, $view_display);
+    $this->assertEquals('entity_test.entity_test.default', $view_display->id());
+    $form_display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    $this->assertInstanceOf(EntityFormDisplayInterface::class, $form_display);
+    $this->assertEquals('entity_test.entity_test.default', $form_display->id());
   }
 
 }

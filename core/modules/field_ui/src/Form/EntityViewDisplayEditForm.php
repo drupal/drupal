@@ -88,7 +88,7 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
    * {@inheritdoc}
    */
   protected function getEntityDisplay($entity_type_id, $bundle, $mode) {
-    return entity_get_display($entity_type_id, $bundle, $mode);
+    return $this->entityDisplayRepository->getViewDisplay($entity_type_id, $bundle, $mode);
   }
 
   /**

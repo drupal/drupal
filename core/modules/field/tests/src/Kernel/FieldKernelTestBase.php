@@ -107,7 +107,8 @@ abstract class FieldKernelTestBase extends KernelTestBase {
     $this->fieldTestData->$field = FieldConfig::create($this->fieldTestData->$field_definition);
     $this->fieldTestData->$field->save();
 
-    entity_get_form_display($entity_type, $bundle, 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay($entity_type, $bundle)
       ->setComponent($this->fieldTestData->$field_name, [
         'type' => 'test_field_widget',
         'settings' => [

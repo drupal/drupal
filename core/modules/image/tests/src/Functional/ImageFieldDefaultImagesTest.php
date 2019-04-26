@@ -107,11 +107,14 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     ]);
     $field2->save();
 
-    $widget_settings = entity_get_form_display('node', $field->getTargetBundle(), 'default')->getComponent($field_name);
-    entity_get_form_display('node', 'page', 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    $widget_settings = $display_repository->getFormDisplay('node', $field->getTargetBundle())->getComponent($field_name);
+    $display_repository->getFormDisplay('node', 'page')
       ->setComponent($field_name, $widget_settings)
       ->save();
-    entity_get_display('node', 'page', 'default')
+    $display_repository->getViewDisplay('node', 'page')
       ->setComponent($field_name)
       ->save();
 

@@ -45,7 +45,6 @@ class reEnableModuleFieldTest extends BrowserTestBase {
    * @see field_system_info_alter()
    */
   public function testReEnabledField() {
-
     // Add a telephone field to the article content type.
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_telephone',
@@ -59,7 +58,9 @@ class reEnableModuleFieldTest extends BrowserTestBase {
       'label' => 'Telephone Number',
     ])->save();
 
-    entity_get_form_display('node', 'article', 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('node', 'article')
       ->setComponent('field_telephone', [
         'type' => 'telephone_default',
         'settings' => [
@@ -68,7 +69,7 @@ class reEnableModuleFieldTest extends BrowserTestBase {
       ])
       ->save();
 
-    entity_get_display('node', 'article', 'default')
+    $display_repository->getViewDisplay('node', 'article')
       ->setComponent('field_telephone', [
         'type' => 'telephone_link',
         'weight' => 1,

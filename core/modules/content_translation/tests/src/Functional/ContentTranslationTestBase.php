@@ -191,7 +191,9 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
       'bundle' => $this->bundle,
       'label' => 'Test translatable text-field',
     ])->save();
-    entity_get_form_display($this->entityTypeId, $this->bundle, 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay($this->entityTypeId, $this->bundle, 'default')
       ->setComponent($this->fieldName, [
         'type' => 'string_textfield',
         'weight' => 0,

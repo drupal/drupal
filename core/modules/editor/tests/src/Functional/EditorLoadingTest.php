@@ -94,7 +94,8 @@ class EditorLoadingTest extends BrowserTestBase {
       'bundle' => 'page',
     ])->save();
 
-    entity_get_form_display('node', 'page', 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('node', 'page')
       ->setComponent('field_text')
       ->save();
 

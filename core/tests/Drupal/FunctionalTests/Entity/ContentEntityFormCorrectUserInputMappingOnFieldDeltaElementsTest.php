@@ -62,7 +62,8 @@ class ContentEntityFormCorrectUserInputMappingOnFieldDeltaElementsTest extends B
     ])
       ->save();
 
-    entity_get_form_display($this->entityTypeId, $this->entityTypeId, 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay($this->entityTypeId, $this->entityTypeId)
       ->setComponent($this->fieldName, ['type' => 'shape_only_color_editable_widget'])
       ->save();
   }

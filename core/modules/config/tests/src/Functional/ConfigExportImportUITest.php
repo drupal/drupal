@@ -112,20 +112,21 @@ class ConfigExportImportUITest extends BrowserTestBase {
       'field_storage' => $this->fieldStorage,
       'bundle' => $this->contentType->id(),
     ])->save();
+    $display_repository = $this->container->get('entity_display.repository');
     // Update the displays so that configuration does not change unexpectedly on
     // import.
-    entity_get_form_display('node', $this->contentType->id(), 'default')
+    $display_repository->getFormDisplay('node', $this->contentType->id(), 'default')
       ->setComponent($this->fieldName, [
         'type' => 'text_textfield',
       ])
       ->save();
-    entity_get_display('node', $this->contentType->id(), 'full')
+    $display_repository->getViewDisplay('node', $this->contentType->id(), 'full')
       ->setComponent($this->fieldName)
       ->save();
-    entity_get_display('node', $this->contentType->id(), 'default')
+    $display_repository->getViewDisplay('node', $this->contentType->id(), 'default')
       ->setComponent($this->fieldName)
       ->save();
-    entity_get_display('node', $this->contentType->id(), 'teaser')
+    $display_repository->getViewDisplay('node', $this->contentType->id(), 'teaser')
       ->removeComponent($this->fieldName)
       ->save();
 

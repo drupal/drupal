@@ -51,10 +51,10 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    *
    * This method should only be used internally when rendering an entity. When
    * assigning suggested display options for a component in a given view mode,
-   * entity_get_display() should be used instead, in order to avoid
-   * inadvertently modifying the output of other view modes that might happen to
-   * use the 'default' display too. Those options will then be effectively
-   * applied only if the view mode is configured to use them.
+   * EntityDisplayRepositoryInterface::getViewDisplay() should be used instead,
+   * in order to avoid inadvertently modifying the output of other view modes
+   * that might happen to use the 'default' display too. Those options will then
+   * be effectively applied only if the view mode is configured to use them.
    *
    * hook_entity_view_display_alter() is invoked on each display, allowing 3rd
    * party code to alter the display options held in the display before they are
@@ -69,7 +69,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    *   The display objects to use to render the entities, keyed by entity
    *   bundle.
    *
-   * @see entity_get_display()
+   * @see \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewDisplay()
    * @see hook_entity_view_display_alter()
    */
   public static function collectRenderDisplays($entities, $view_mode) {

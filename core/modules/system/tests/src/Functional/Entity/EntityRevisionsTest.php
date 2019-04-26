@@ -79,7 +79,7 @@ class EntityRevisionsTest extends BrowserTestBase {
     ]);
     $field->save();
 
-    entity_get_form_display($entity_type, $entity_type, 'default')
+    \Drupal::service('entity_display.repository')->getFormDisplay($entity_type, $entity_type, 'default')
       ->setComponent('translatable_test_field')
       ->save();
 

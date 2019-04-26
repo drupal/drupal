@@ -132,7 +132,8 @@ class FileItemTest extends FieldKernelTestBase {
     $file3 = File::create([
       'uri' => 'public://example-3.txt',
     ]);
-    $display = entity_get_display('entity_test', 'entity_test', 'default');
+    $display = \Drupal::service('entity_display.repository')
+      ->getViewDisplay('entity_test', 'entity_test');
     $display->setComponent('file_test', [
       'label' => 'above',
       'type' => 'file_default',

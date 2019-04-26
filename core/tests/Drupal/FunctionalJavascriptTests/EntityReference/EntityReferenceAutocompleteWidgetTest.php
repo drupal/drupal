@@ -45,11 +45,14 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
    * Tests that the default autocomplete widget return the correct results.
    */
   public function testEntityReferenceAutocompleteWidget() {
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
     // Create an entity reference field and use the default 'CONTAINS' match
     // operator.
     $field_name = 'field_test';
     $this->createEntityReferenceField('node', 'page', $field_name, $field_name, 'node', 'default', ['target_bundles' => ['page']]);
-    entity_get_form_display('node', 'page', 'default')
+    $display_repository->getFormDisplay('node', 'page')
       ->setComponent($field_name, [
         'type' => 'entity_reference_autocomplete',
         'settings' => [
@@ -75,7 +78,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Page test');
 
     // Now switch the autocomplete widget to the 'STARTS_WITH' match operator.
-    entity_get_form_display('node', 'page', 'default')
+    $display_repository->getFormDisplay('node', 'page')
       ->setComponent($field_name, [
         'type' => 'entity_reference_autocomplete',
         'settings' => [

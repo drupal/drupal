@@ -300,10 +300,14 @@ class UserRegistrationTest extends BrowserTestBase {
       'required' => TRUE,
     ]);
     $field->save();
-    entity_get_form_display('user', 'user', 'default')
+
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    $display_repository->getFormDisplay('user', 'user')
       ->setComponent('test_user_field', ['type' => 'test_field_widget'])
       ->save();
-    entity_get_form_display('user', 'user', 'register')
+    $display_repository->getFormDisplay('user', 'user', 'register')
       ->save();
 
     // Check that the field does not appear on the registration form.
@@ -313,7 +317,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->assertCacheTag('config:user.settings');
 
     // Have the field appear on the registration form.
-    entity_get_form_display('user', 'user', 'register')
+    $display_repository->getFormDisplay('user', 'user', 'register')
       ->setComponent('test_user_field', ['type' => 'test_field_widget'])
       ->save();
 

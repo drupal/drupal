@@ -38,6 +38,8 @@ class DateTimeFieldTest extends DateTestBase {
   public function testDateField() {
     $field_name = $this->fieldStorage->getName();
 
+    $display_repository = \Drupal::service('entity_display.repository');
+
     // Loop through defined timezones to test that date-only fields work at the
     // extremes.
     foreach (static::$timezones as $timezone) {
@@ -104,7 +106,8 @@ class DateTimeFieldTest extends DateTestBase {
         foreach ($values as $new_value) {
           // Update the entity display settings.
           $this->displayOptions['settings'] = [$setting => $new_value] + $this->defaultSettings;
-          entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+          $this->container->get('entity_display.repository')
+            ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
             ->setComponent($field_name, $this->displayOptions)
             ->save();
 
@@ -133,7 +136,8 @@ class DateTimeFieldTest extends DateTestBase {
       // Verify that the plain formatter works.
       $this->displayOptions['type'] = 'datetime_plain';
       $this->displayOptions['settings'] = $this->defaultSettings;
-      entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+      $display_repository
+        ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = $date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT);
@@ -146,7 +150,8 @@ class DateTimeFieldTest extends DateTestBase {
       // Verify that the 'datetime_custom' formatter works.
       $this->displayOptions['type'] = 'datetime_custom';
       $this->displayOptions['settings'] = ['date_format' => 'm/d/Y'] + $this->defaultSettings;
-      entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+      $display_repository
+        ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = $date->format($this->displayOptions['settings']['date_format']);
@@ -159,7 +164,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Test that allowed markup in custom format is preserved and XSS is
       // removed.
       $this->displayOptions['settings']['date_format'] = '\\<\\s\\t\\r\\o\\n\\g\\>m/d/Y\\<\\/\\s\\t\\r\\o\\n\\g\\>\\<\\s\\c\\r\\i\\p\\t\\>\\a\\l\\e\\r\\t\\(\\S\\t\\r\\i\\n\\g\\.\\f\\r\\o\\m\\C\\h\\a\\r\\C\\o\\d\\e\\(\\8\\8\\,\\8\\3\\,\\8\\3\\)\\)\\<\\/\\s\\c\\r\\i\\p\\t\\>';
-      entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = '<strong>' . $date->format('m/d/Y') . '</strong>alert(String.fromCharCode(88,83,83))';
@@ -187,7 +192,7 @@ class DateTimeFieldTest extends DateTestBase {
         'past_format' => '@interval in the past',
         'granularity' => 3,
       ];
-      entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = new FormattableMarkup($this->displayOptions['settings']['past_format'], [
@@ -211,7 +216,7 @@ class DateTimeFieldTest extends DateTestBase {
       $entity->{$field_name}->value = $date->format($date_format);
       $entity->save();
 
-      entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = new FormattableMarkup($this->displayOptions['settings']['future_format'], [
@@ -265,6 +270,9 @@ class DateTimeFieldTest extends DateTestBase {
     $this->assertRaw($date->format($date_format));
     $this->assertRaw($date->format($time_format));
 
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
     // Verify that the date is output according to the formatter settings.
     $options = [
       'format_type' => ['short', 'medium', 'long'],
@@ -273,7 +281,7 @@ class DateTimeFieldTest extends DateTestBase {
       foreach ($values as $new_value) {
         // Update the entity display settings.
         $this->displayOptions['settings'] = [$setting => $new_value] + $this->defaultSettings;
-        entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
           ->setComponent($field_name, $this->displayOptions)
           ->save();
 
@@ -295,7 +303,8 @@ class DateTimeFieldTest extends DateTestBase {
     // Verify that the plain formatter works.
     $this->displayOptions['type'] = 'datetime_plain';
     $this->displayOptions['settings'] = $this->defaultSettings;
-    entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+    $display_repository
+      ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
@@ -305,7 +314,7 @@ class DateTimeFieldTest extends DateTestBase {
     // Verify that the 'datetime_custom' formatter works.
     $this->displayOptions['type'] = 'datetime_custom';
     $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A'] + $this->defaultSettings;
-    entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = $date->format($this->displayOptions['settings']['date_format']);
@@ -315,7 +324,7 @@ class DateTimeFieldTest extends DateTestBase {
     // Verify that the 'timezone_override' setting works.
     $this->displayOptions['type'] = 'datetime_custom';
     $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A', 'timezone_override' => 'America/New_York'] + $this->defaultSettings;
-    entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = $date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
@@ -340,7 +349,7 @@ class DateTimeFieldTest extends DateTestBase {
       'past_format' => '@interval earlier',
       'granularity' => 3,
     ];
-    entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = new FormattableMarkup($this->displayOptions['settings']['past_format'], [
@@ -361,7 +370,8 @@ class DateTimeFieldTest extends DateTestBase {
     $entity->{$field_name}->value = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
     $entity->save();
 
-    entity_get_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+    $display_repository
+      ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = new FormattableMarkup($this->displayOptions['settings']['future_format'], [
@@ -382,8 +392,11 @@ class DateTimeFieldTest extends DateTestBase {
     $this->fieldStorage->setSetting('datetime_type', 'date');
     $this->fieldStorage->save();
 
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
     // Change the widget to a datelist widget.
-    entity_get_form_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'default')
+    $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
       ->setComponent($field_name, [
         'type' => 'datetime_datelist',
         'settings' => [
@@ -417,7 +430,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->fieldStorage->save();
 
     // Change the widget to a datelist widget.
-    entity_get_form_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'default')
+    $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
       ->setComponent($field_name, [
         'type' => 'datetime_datelist',
         'settings' => [
@@ -483,7 +496,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->assertOptionSelected("edit-$field_name-0-value-ampm", 'am', 'Correct ampm selected.');
 
     // Test the widget using increment other than 1 and 24 hour mode.
-    entity_get_form_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'default')
+    $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
       ->setComponent($field_name, [
         'type' => 'datetime_datelist',
         'settings' => [
@@ -523,7 +536,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->assertOptionSelected("edit-$field_name-0-value-minute", '15', 'Correct minute selected.');
 
     // Test the widget for partial completion of fields.
-    entity_get_form_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'default')
+    $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
       ->setComponent($field_name, [
         'type' => 'datetime_datelist',
         'settings' => [
@@ -873,7 +886,8 @@ class DateTimeFieldTest extends DateTestBase {
     ]);
     $field->save();
 
-    entity_get_form_display('node', 'date_content', 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('node', 'date_content')
       ->setComponent($field_name, [
         'type' => 'datetime_default',
       ])

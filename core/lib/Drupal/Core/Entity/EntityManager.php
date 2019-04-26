@@ -851,4 +851,28 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
     return $this->container->get('entity_type.manager')->getInstance($options);
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in drupal:8.8.0, will be removed before drupal:9.0.0.
+   *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getViewDisplay()
+   *   instead.
+   */
+  public function getViewDisplay($entity_type, $bundle, $view_mode = self::DEFAULT_DISPLAY_MODE) {
+    @trigger_error('EntityManager::getViewDisplay() is deprecated in drupal:8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal::service(\'entity_display.repository\')->getViewDisplay() instead.', E_USER_DEPRECATED);
+    return $this->container->get('entity_display.repository')->getViewDisplay($entity_type, $bundle, $view_mode);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @deprecated in drupal:8.8.0, will be removed before drupal:9.0.0.
+   *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getFormwDisplay()
+   *   instead.
+   */
+  public function getFormDisplay($entity_type, $bundle, $form_mode = self::DEFAULT_DISPLAY_MODE) {
+    @trigger_error('EntityManager::getFormDisplay() is deprecated in drupal:8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal::service(\'entity_display.repository\')->getFormDisplay() instead.', E_USER_DEPRECATED);
+    return $this->container->get('entity_display.repository')->getFormDisplay($entity_type, $bundle, $form_mode);
+  }
+
 }

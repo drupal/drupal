@@ -274,7 +274,10 @@ class OptionsFieldUITest extends FieldTestBase {
       'bundle' => $this->type,
     ])->save();
 
-    entity_get_form_display('node', $this->type, 'default')->setComponent($this->fieldName)->save();
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('node', $this->type)
+      ->setComponent($this->fieldName)
+      ->save();
 
     $this->adminPath = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->fieldName . '/storage';
   }

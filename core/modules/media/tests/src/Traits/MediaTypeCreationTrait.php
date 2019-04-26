@@ -65,7 +65,7 @@ trait MediaTypeCreationTrait {
     $source_field->save();
 
     // Add the source field to the form display for the media type.
-    $form_display = entity_get_form_display('media', $media_type->id(), 'default');
+    $form_display = \Drupal::service('entity_display.repository')->getFormDisplay('media', $media_type->id(), 'default');
     $source->prepareFormDisplay($media_type, $form_display);
     $form_display->save();
 

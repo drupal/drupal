@@ -64,11 +64,13 @@ abstract class FileMediaFormatterTestBase extends BrowserTestBase {
     ]);
     $field_config->save();
 
-    $display = entity_get_display('entity_test', 'entity_test', 'full');
-    $display->setComponent($field_name, [
-      'type' => $formatter,
-      'settings' => $formatter_settings,
-    ])->save();
+    $this->container->get('entity_display.repository')
+      ->getViewDisplay('entity_test', 'entity_test', 'full')
+      ->setComponent($field_name, [
+        'type' => $formatter,
+        'settings' => $formatter_settings,
+      ])
+      ->save();
 
     return $field_config;
   }

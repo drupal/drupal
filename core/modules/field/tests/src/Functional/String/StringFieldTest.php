@@ -62,7 +62,11 @@ class StringFieldTest extends BrowserTestBase {
       'bundle' => 'entity_test',
       'label' => $this->randomMachineName() . '_label',
     ])->save();
-    entity_get_form_display('entity_test', 'entity_test', 'default')
+
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => $widget_type,
         'settings' => [
@@ -70,7 +74,7 @@ class StringFieldTest extends BrowserTestBase {
         ],
       ])
       ->save();
-    entity_get_display('entity_test', 'entity_test', 'full')
+    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
       ->setComponent($field_name)
       ->save();
 
@@ -92,7 +96,7 @@ class StringFieldTest extends BrowserTestBase {
 
     // Display the entity.
     $entity = EntityTest::load($id);
-    $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
+    $display = $display_repository->getViewDisplay($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
     $rendered_entity = \Drupal::service('renderer')->renderRoot($content);
     $this->assertContains($value, (string) $rendered_entity);

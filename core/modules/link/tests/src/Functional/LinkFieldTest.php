@@ -76,7 +76,9 @@ class LinkFieldTest extends BrowserTestBase {
       ],
     ]);
     $this->field->save();
-    entity_get_form_display('entity_test', 'entity_test', 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => 'link_default',
         'settings' => [
@@ -84,7 +86,7 @@ class LinkFieldTest extends BrowserTestBase {
         ],
       ])
       ->save();
-    entity_get_display('entity_test', 'entity_test', 'full')
+    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
       ->setComponent($field_name, [
         'type' => 'link',
       ])
@@ -248,7 +250,9 @@ class LinkFieldTest extends BrowserTestBase {
       ],
     ]);
     $this->field->save();
-    entity_get_form_display('entity_test', 'entity_test', 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => 'link_default',
         'settings' => [
@@ -257,7 +261,7 @@ class LinkFieldTest extends BrowserTestBase {
         ],
       ])
       ->save();
-    entity_get_display('entity_test', 'entity_test', 'full')
+    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
       ->setComponent($field_name, [
         'type' => 'link',
         'label' => 'hidden',
@@ -370,7 +374,9 @@ class LinkFieldTest extends BrowserTestBase {
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ])->save();
-    entity_get_form_display('entity_test', 'entity_test', 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => 'link_default',
       ])
@@ -379,7 +385,7 @@ class LinkFieldTest extends BrowserTestBase {
       'type' => 'link',
       'label' => 'hidden',
     ];
-    entity_get_display('entity_test', 'entity_test', 'full')
+    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
       ->setComponent($field_name, $display_options)
       ->save();
 
@@ -438,7 +444,7 @@ class LinkFieldTest extends BrowserTestBase {
         else {
           $display_options['settings'] = $new_value;
         }
-        entity_get_display('entity_test', 'entity_test', 'full')
+        $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
           ->setComponent($field_name, $display_options)
           ->save();
 
@@ -528,12 +534,14 @@ class LinkFieldTest extends BrowserTestBase {
       'type' => 'link_separate',
       'label' => 'hidden',
     ];
-    entity_get_form_display('entity_test', 'entity_test', 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => 'link_default',
       ])
       ->save();
-    entity_get_display('entity_test', 'entity_test', 'full')
+    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
       ->setComponent($field_name, $display_options)
       ->save();
 
@@ -572,7 +580,7 @@ class LinkFieldTest extends BrowserTestBase {
       foreach ($values as $new_value) {
         // Update the field formatter settings.
         $display_options['settings'] = [$setting => $new_value];
-        entity_get_display('entity_test', 'entity_test', 'full')
+        $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
           ->setComponent($field_name, $display_options)
           ->save();
 
@@ -745,7 +753,8 @@ class LinkFieldTest extends BrowserTestBase {
       $this->container->get('entity.manager')->getStorage('entity_test')->resetCache([$id]);
     }
     $entity = EntityTest::load($id);
-    $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), $view_mode);
+    $display = \Drupal::service('entity_display.repository')
+      ->getViewDisplay($entity->getEntityTypeId(), $entity->bundle(), $view_mode);
     $content = $display->build($entity);
     $output = \Drupal::service('renderer')->renderRoot($content);
     $output = (string) $output;

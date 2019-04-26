@@ -3,6 +3,7 @@
 namespace Drupal\Tests\comment\Unit;
 
 use Drupal\comment\CommentManager;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -54,7 +55,8 @@ class CommentManagerTest extends UnitTestCase {
       $this->getMock('Drupal\Core\StringTranslation\TranslationInterface'),
       $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface'),
       $this->createMock(AccountInterface::class),
-      $entity_field_manager
+      $entity_field_manager,
+      $this->prophesize(EntityDisplayRepositoryInterface::class)->reveal()
     );
     $comment_fields = $comment_manager->getFields('node');
     $this->assertArrayHasKey('field_foobar', $comment_fields);

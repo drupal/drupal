@@ -32,7 +32,8 @@ class EmailItemTest extends FieldKernelTestBase {
     ])->save();
 
     // Create a form display for the default form mode.
-    entity_get_form_display('entity_test', 'entity_test', 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('entity_test', 'entity_test')
       ->setComponent('field_email', [
         'type' => 'email_default',
       ])

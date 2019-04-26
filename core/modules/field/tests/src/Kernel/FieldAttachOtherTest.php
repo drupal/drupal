@@ -39,7 +39,8 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
 
     // Simple formatter, label displayed.
     $entity = clone($entity_init);
-    $display = entity_get_display($entity_type, $entity->bundle(), 'full');
+    $display = \Drupal::service('entity_display.repository')
+      ->getViewDisplay($entity_type, $entity->bundle(), 'full');
 
     $formatter_setting = $this->randomMachineName();
     $display_options = [
@@ -135,7 +136,8 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
    */
   public function testEntityDisplayViewMultiple() {
     // Use a formatter that has a prepareView() step.
-    $display = entity_get_display('entity_test', 'entity_test', 'full')
+    $display = \Drupal::service('entity_display.repository')
+      ->getViewDisplay('entity_test', 'entity_test', 'full')
       ->setComponent($this->fieldTestData->field_name, [
         'type' => 'field_test_with_prepare_view',
       ]);
@@ -249,8 +251,11 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     $entity_type = 'entity_test';
     $entity = entity_create($entity_type, ['id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->field->getTargetBundle()]);
 
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
     // Test generating widgets for all fields.
-    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->getTargetBundle(), 'default');
+    $display = $display_repository->getFormDisplay($entity_type, $this->fieldTestData->field->getTargetBundle());
     $form = [];
     $form_state = new FormState();
     $display->buildForm($entity, $form, $form_state);
@@ -267,7 +272,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     }
 
     // Test generating widgets for all fields.
-    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->getTargetBundle(), 'default');
+    $display = $display_repository->getFormDisplay($entity_type, $this->fieldTestData->field->getTargetBundle());
     foreach ($display->getComponents() as $name => $options) {
       if ($name != $this->fieldTestData->field_name_2) {
         $display->removeComponent($name);
@@ -297,7 +302,8 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
       ->create(['id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->field->getTargetBundle()]);
 
     // Build the form for all fields.
-    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->getTargetBundle(), 'default');
+    $display = \Drupal::service('entity_display.repository')
+      ->getFormDisplay($entity_type, $this->fieldTestData->field->getTargetBundle());
     $form = [];
     $form_state = new FormState();
     $display->buildForm($entity_init, $form, $form_state);

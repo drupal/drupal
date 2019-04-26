@@ -87,25 +87,25 @@ trait CommentTestTrait {
         ],
       ])->save();
 
-      // Entity form displays: assign widget settings for the 'default' form
+      // Entity form displays: assign widget settings for the default form
       // mode, and hide the field in all other form modes.
-      entity_get_form_display($entity_type, $bundle, 'default')
+      $entity_display_repository->getFormDisplay($entity_type, $bundle)
         ->setComponent($field_name, [
           'type' => 'comment_default',
           'weight' => 20,
         ])
         ->save();
       foreach ($entity_display_repository->getFormModes($entity_type) as $id => $form_mode) {
-        $display = entity_get_form_display($entity_type, $bundle, $id);
+        $display = $entity_display_repository->getFormDisplay($entity_type, $bundle, $id);
         // Only update existing displays.
         if ($display && !$display->isNew()) {
           $display->removeComponent($field_name)->save();
         }
       }
 
-      // Entity view displays: assign widget settings for the 'default' view
+      // Entity view displays: assign widget settings for the default view
       // mode, and hide the field in all other view modes.
-      entity_get_display($entity_type, $bundle, 'default')
+      $entity_display_repository->getViewDisplay($entity_type, $bundle)
         ->setComponent($field_name, [
           'label' => 'above',
           'type' => 'comment_default',
@@ -114,7 +114,7 @@ trait CommentTestTrait {
         ])
         ->save();
       foreach ($entity_display_repository->getViewModes($entity_type) as $id => $view_mode) {
-        $display = entity_get_display($entity_type, $bundle, $id);
+        $display = $entity_display_repository->getViewDisplay($entity_type, $bundle, $id);
         // Only update existing displays.
         if ($display && !$display->isNew()) {
           $display->removeComponent($field_name)->save();

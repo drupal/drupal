@@ -83,7 +83,8 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
       'type' => 'image',
       'settings' => ['image_style' => 'medium', 'image_link' => 'content'],
     ];
-    $display = entity_get_display('node', 'article', 'teaser');
+    $display = \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', 'article', 'teaser');
     $display->setComponent($this->fieldName, $display_options)
       ->save();
 

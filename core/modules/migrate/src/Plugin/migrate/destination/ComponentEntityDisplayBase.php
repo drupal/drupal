@@ -2,8 +2,11 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a destination plugin for migrating entity display components.
@@ -15,9 +18,53 @@ use Drupal\migrate\Row;
  * @see \Drupal\migrate\Plugin\migrate\destination\PerComponentEntityDisplay
  * @see \Drupal\migrate\Plugin\migrate\destination\PerComponentEntityFormDisplay
  */
-abstract class ComponentEntityDisplayBase extends DestinationBase {
+abstract class ComponentEntityDisplayBase extends DestinationBase implements ContainerFactoryPluginInterface {
 
   const MODE_NAME = '';
+
+  /**
+   * The entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $entityDisplayRepository;
+
+  /**
+   * PerComponentEntityDisplay constructor.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
+   *   The migration.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display repository service.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityDisplayRepositoryInterface $entity_display_repository = NULL) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+
+    if (!$entity_display_repository) {
+      @trigger_error('The entity_display.repository service must be passed to PerComponentEntityDisplay::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2835616.', E_USER_DEPRECATED);
+      $entity_display_repository = \Drupal::service('entity_display.repository');
+    }
+    $this->entityDisplayRepository = $entity_display_repository;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $migration,
+      $container->get('entity_display.repository')
+    );
+  }
 
   /**
    * {@inheritdoc}

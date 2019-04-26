@@ -367,15 +367,18 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
     ]);
     $field->save();
 
-    // Assign widget settings for the 'default' form mode.
-    entity_get_form_display('node', $type->id(), 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    // Assign widget settings for the default form mode.
+    $display_repository->getFormDisplay('node', $type->id())
       ->setComponent('body', [
         'type' => 'text_textarea_with_summary',
       ])
       ->save();
 
     // Assign display settings for the 'default' and 'teaser' view modes.
-    entity_get_display('node', $type->id(), 'default')
+    $display_repository->getViewDisplay('node', $type->id())
       ->setComponent('body', [
         'label' => 'hidden',
         'type' => 'text_default',
@@ -386,7 +389,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
     // might not exist.
     $view_modes = \Drupal::service('entity_display.repository')->getViewModes('node');
     if (isset($view_modes['teaser'])) {
-      entity_get_display('node', $type->id(), 'teaser')
+      $display_repository->getViewDisplay('node', $type->id(), 'teaser')
         ->setComponent('body', [
           'label' => 'hidden',
           'type' => 'text_summary_or_trimmed',

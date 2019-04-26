@@ -28,20 +28,24 @@ class EntityFormDisplayTest extends KernelTestBase {
   }
 
   /**
-   * Tests entity_get_form_display().
+   * @covers \Drupal\Core\Entity\EntityDisplayRepository::getFormDisplay
    */
   public function testEntityGetFromDisplay() {
-    // Check that entity_get_form_display() returns a fresh object when no
-    // configuration entry exists.
-    $form_display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    // Check that EntityDisplayRepositoryInterface::getFormDisplay() returns a
+    // fresh object when no configuration entry exists.
+    $form_display = $display_repository->getFormDisplay('entity_test', 'entity_test');
     $this->assertTrue($form_display->isNew());
 
     // Add some components and save the display.
     $form_display->setComponent('component_1', ['weight' => 10])
       ->save();
 
-    // Check that entity_get_form_display() returns the correct object.
-    $form_display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    // Check that EntityDisplayRepositoryInterface::getFormDisplay() returns the
+    // correct object.
+    $form_display = $display_repository->getFormDisplay('entity_test', 'entity_test');
     $this->assertFalse($form_display->isNew());
     $this->assertEqual($form_display->id(), 'entity_test.entity_test.default');
     $this->assertEqual($form_display->getComponent('component_1'), ['weight' => 10, 'settings' => [], 'third_party_settings' => [], 'region' => 'content']);
@@ -208,19 +212,22 @@ class EntityFormDisplayTest extends KernelTestBase {
       'mode' => 'compact',
     ])->setComponent($field_name)->save();
 
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
     // Check the component exists.
-    $display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    $display = $display_repository->getFormDisplay('entity_test', 'entity_test');
     $this->assertTrue($display->getComponent($field_name));
-    $display = entity_get_form_display('entity_test', 'entity_test', 'compact');
+    $display = $display_repository->getFormDisplay('entity_test', 'entity_test', 'compact');
     $this->assertTrue($display->getComponent($field_name));
 
     // Delete the field.
     $field->delete();
 
     // Check that the component has been removed from the entity displays.
-    $display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    $display = $display_repository->getFormDisplay('entity_test', 'entity_test');
     $this->assertFalse($display->getComponent($field_name));
-    $display = entity_get_form_display('entity_test', 'entity_test', 'compact');
+    $display = $display_repository->getFormDisplay('entity_test', 'entity_test', 'compact');
     $this->assertFalse($display->getComponent($field_name));
   }
 
@@ -250,19 +257,22 @@ class EntityFormDisplayTest extends KernelTestBase {
       'mode' => 'default',
     ])->setComponent($field_name, ['type' => 'field_plugins_test_text_widget'])->save();
 
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
     // Check the component exists and is of the correct type.
-    $display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    $display = $display_repository->getFormDisplay('entity_test', 'entity_test');
     $this->assertEqual($display->getComponent($field_name)['type'], 'field_plugins_test_text_widget');
 
     // Removing the field_plugins_test module should change the component to use
     // the default widget for test fields.
     \Drupal::service('config.manager')->uninstall('module', 'field_plugins_test');
-    $display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    $display = $display_repository->getFormDisplay('entity_test', 'entity_test');
     $this->assertEqual($display->getComponent($field_name)['type'], 'text_textfield');
 
     // Removing the text module should remove the field from the form display.
     \Drupal::service('config.manager')->uninstall('module', 'text');
-    $display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    $display = $display_repository->getFormDisplay('entity_test', 'entity_test');
     $this->assertFalse($display->getComponent($field_name));
   }
 

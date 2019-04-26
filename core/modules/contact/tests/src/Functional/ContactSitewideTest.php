@@ -449,7 +449,8 @@ class ContactSitewideTest extends BrowserTestBase {
     // Verify that the current error message doesn't show, that the auto-reply
     // doesn't get sent and the correct silent error gets logged.
     $email = '';
-    entity_get_form_display('contact_message', 'foo', 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('contact_message', 'foo')
       ->removeComponent('mail')
       ->save();
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'foo', $this->randomString(128));

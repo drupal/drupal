@@ -351,7 +351,8 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
 
       // Use the widget currently configured for the 'default' form mode, or
       // fallback to the default widget for the field type.
-      $entity_form_display = entity_get_form_display($entity->getEntityTypeId(), $entity->bundle(), 'default');
+      $entity_form_display = \Drupal::service('entity_display.repository')
+        ->getFormDisplay($entity->getEntityTypeId(), $entity->bundle());
       $widget = $entity_form_display->getRenderer($this->getFieldDefinition()->getName());
       if (!$widget) {
         $widget = \Drupal::service('plugin.manager.field.widget')->getInstance(['field_definition' => $this->getFieldDefinition()]);

@@ -7,7 +7,7 @@ services:
 
   comment.manager:
     class: Drupal\comment\CommentManager
-    arguments: ['@entity_type.manager', '@config.factory', '@string_translation', '@module_handler', '@current_user', '@entity_field.manager']
+    arguments: ['@entity_type.manager', '@config.factory', '@string_translation', '@module_handler', '@current_user', '@entity_field.manager', '@entity_display.repository']
 
   comment.statistics:
     class: Drupal\comment\CommentStatistics

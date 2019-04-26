@@ -43,7 +43,8 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
       'bundle' => 'page',
       'label' => $this->randomMachineName() . '_label',
     ])->save();
-    entity_get_form_display('node', 'page', 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('node', 'page')
       ->setComponent($this->fieldName, [
         'type' => 'text_textfield',
       ])

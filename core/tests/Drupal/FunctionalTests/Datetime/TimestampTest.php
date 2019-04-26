@@ -18,7 +18,7 @@ use Drupal\Tests\BrowserTestBase;
 class TimestampTest extends BrowserTestBase {
 
   /**
-   * An array of display options to pass to entity_get_display().
+   * An array of display options to pass to EntityDisplayRepositoryInterface::getViewDisplay().
    *
    * @var array
    */

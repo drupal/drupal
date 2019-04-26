@@ -56,7 +56,7 @@ class PerComponentEntityDisplay extends ComponentEntityDisplayBase {
    * {@inheritdoc}
    */
   protected function getEntity($entity_type, $bundle, $view_mode) {
-    return entity_get_display($entity_type, $bundle, $view_mode);
+    return $this->entityDisplayRepository->getViewDisplay($entity_type, $bundle, $view_mode);
   }
 
 }

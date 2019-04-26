@@ -91,15 +91,18 @@ function block_content_add_body_field($block_type_id, $label = 'Body') {
     ]);
     $field->save();
 
-    // Assign widget settings for the 'default' form mode.
-    entity_get_form_display('block_content', $block_type_id, 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    // Assign widget settings for the default form mode.
+    $display_repository->getFormDisplay('block_content', $block_type_id)
       ->setComponent('body', [
         'type' => 'text_textarea_with_summary',
       ])
       ->save();
 
-    // Assign display settings for 'default' view mode.
-    entity_get_display('block_content', $block_type_id, 'default')
+    // Assign display settings for default view mode.
+    $display_repository->getViewDisplay('block_content', $block_type_id)
       ->setComponent('body', [
         'label' => 'hidden',
         'type' => 'text_default',

@@ -75,10 +75,13 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
       ],
     ])->save();
 
-    entity_get_display('node', $referencing->id(), 'default')
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    $display_repository->getViewDisplay('node', $referencing->id())
       ->setComponent('test_field')
       ->save();
-    entity_get_form_display('node', $referencing->id(), 'default')
+    $display_repository->getFormDisplay('node', $referencing->id(), 'default')
       ->setComponent('test_field', [
         'type' => 'entity_reference_autocomplete',
       ])
@@ -166,7 +169,8 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     ];
     $this->createEntityReferenceField('node', $this->referencingType, $field_name, $this->randomString(), 'taxonomy_term', 'default', $handler_settings);
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $fd */
-    entity_get_form_display('node', $this->referencingType, 'default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('node', $this->referencingType)
       ->setComponent($field_name, ['type' => 'entity_reference_autocomplete'])
       ->save();
 

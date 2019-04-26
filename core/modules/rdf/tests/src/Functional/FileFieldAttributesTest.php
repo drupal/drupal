@@ -50,7 +50,8 @@ class FileFieldAttributesTest extends FileFieldTestBase {
     $this->createFileField($this->fieldName, 'node', $type_name);
 
     // Set the teaser display to show this field.
-    entity_get_display('node', 'article', 'teaser')
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', 'article', 'teaser')
       ->setComponent($this->fieldName, ['type' => 'file_default'])
       ->save();
 

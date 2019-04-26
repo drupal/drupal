@@ -97,15 +97,18 @@ class DisplayApiTest extends FieldKernelTestBase {
       ],
     ];
 
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
     FieldStorageConfig::create($field_storage)->save();
     FieldConfig::create($field)->save();
     // Create a display for the default view mode.
-    entity_get_display($field['entity_type'], $field['bundle'], 'default')
+    $display_repository->getViewDisplay($field['entity_type'], $field['bundle'])
       ->setComponent($this->fieldName, $this->displayOptions['default'])
       ->save();
     // Create a display for the teaser view mode.
     EntityViewMode::create(['id' => 'entity_test.teaser', 'targetEntityType' => 'entity_test'])->save();
-    entity_get_display($field['entity_type'], $field['bundle'], 'teaser')
+    $display_repository->getViewDisplay($field['entity_type'], $field['bundle'], 'teaser')
       ->setComponent($this->fieldName, $this->displayOptions['teaser'])
       ->save();
 
