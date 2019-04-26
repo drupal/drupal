@@ -1124,9 +1124,15 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     $this->assertEqual($unable_to_parse->code, -1001, 'Returned with "-1001" error code.');
     $this->assertEqual($unable_to_parse->error, 'unable to parse URL', 'Returned with "unable to parse URL" error message.');
 
-    // Fetch page.
-    $result = drupal_http_request(url('node', array('absolute' => TRUE)));
+    // Fetch page and check that the data parameter works with both array and string.
+    $data_array = array($this->randomName() => $this->randomName());
+    $data_string = http_build_query($data_array);
+    $result = drupal_http_request(url('node', array('absolute' => TRUE)), array('data' => $data_array));
     $this->assertEqual($result->code, 200, 'Fetched page successfully.');
+    $this->assertTrue(substr($result->request, -strlen($data_string)) === $data_string, 'Request ends with URL-encoded data when drupal_http_request() called using array.');
+    $result = drupal_http_request(url('node', array('absolute' => TRUE)), array('data' => $data_string));
+    $this->assertTrue(substr($result->request, -strlen($data_string)) === $data_string, 'Request ends with URL-encoded data when drupal_http_request() called using string.');
+
     $this->drupalSetContent($result->data);
     $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => variable_get('site_name', 'Drupal'))), 'Site title matches.');
 
