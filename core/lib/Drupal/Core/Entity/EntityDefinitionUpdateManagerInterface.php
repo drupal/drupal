@@ -33,10 +33,10 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  * in state allows to avoid this and ensures that the various steps of the
  * update process are predictable and repeatable.
  *
- * @see \Drupal\Core\Entity\EntityManagerInterface::getDefinition()
- * @see \Drupal\Core\Entity\EntityManagerInterface::getLastInstalledDefinition()
- * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldStorageDefinitions()
- * @see \Drupal\Core\Entity\EntityManagerInterface::getLastInstalledFieldStorageDefinitions()
+ * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getDefinition()
+ * @see \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface::getLastInstalledDefinition()
+ * @see \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldStorageDefinitions()
+ * @see \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface::getLastInstalledFieldStorageDefinitions()
  * @see hook_update_N()
  */
 interface EntityDefinitionUpdateManagerInterface {

@@ -298,7 +298,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->fieldUIAddNewField('admin/structure/comment/manage/comment', $name, $label, 'file', $storage_edit);
 
     // Manually clear cache on the tester side.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Create node.
     $edit = [

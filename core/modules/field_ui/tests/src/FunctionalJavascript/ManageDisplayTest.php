@@ -167,7 +167,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $button_save->click();
 
     // Assert the third party settings.
-    $this->entity_manager->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     $this->drupalGet($manage_display);
 
     $id = 'node.' . $this->type . '.default';
@@ -316,7 +316,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $this->drupalGet($manage_display);
 
     // Assert the third party settings.
-    $this->entity_manager->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $display */
     $display = $form_storage->loadUnchanged('node.' . $this->type . '.default');

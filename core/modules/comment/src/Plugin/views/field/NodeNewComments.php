@@ -166,8 +166,8 @@ class NodeNewComments extends NumericField {
       // reference, we arbitrarily use the first such field name we find.
       // @todo Provide a means for selecting the comment field.
       //   https://www.drupal.org/node/2594201
-      $entity_manager = \Drupal::entityManager();
-      $field_map = $entity_manager->getFieldMapByFieldType('comment');
+      $entity_type_manager = \Drupal::entityTypeManager();
+      $field_map = \Drupal::service('entity_field.manager')->getFieldMapByFieldType('comment');
       $comment_field_name = 'comment';
       foreach ($field_map['node'] as $field_name => $field_data) {
         foreach ($field_data['bundles'] as $bundle_name) {
@@ -177,7 +177,7 @@ class NodeNewComments extends NumericField {
           }
         }
       }
-      $page_number = $entity_manager->getStorage('comment')
+      $page_number = $entity_type_manager->getStorage('comment')
         ->getNewCommentPageNumber($this->getValue($values, 'comment_count'), $this->getValue($values), $node, $comment_field_name);
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['url'] = $node->toUrl();

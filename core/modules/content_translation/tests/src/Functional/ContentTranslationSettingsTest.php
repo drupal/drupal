@@ -103,14 +103,15 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'settings[comment][comment][fields][subject]' => FALSE,
     ];
     $this->assertSettings('comment', 'comment_article', TRUE, $edit);
-    $definition = $this->entityManager()->getFieldDefinitions('comment', 'comment_article')['comment_body'];
+    $entity_field_manager = \Drupal::service('entity_field.manager');
+    $definition = $entity_field_manager->getFieldDefinitions('comment', 'comment_article')['comment_body'];
     $this->assertTrue($definition->isTranslatable(), 'Article comment body is translatable.');
-    $definition = $this->entityManager()->getFieldDefinitions('comment', 'comment_article')['subject'];
+    $definition = $entity_field_manager->getFieldDefinitions('comment', 'comment_article')['subject'];
     $this->assertFalse($definition->isTranslatable(), 'Article comment subject is not translatable.');
 
-    $definition = $this->entityManager()->getFieldDefinitions('comment', 'comment')['comment_body'];
+    $definition = $entity_field_manager->getFieldDefinitions('comment', 'comment')['comment_body'];
     $this->assertFalse($definition->isTranslatable(), 'Page comment body is not translatable.');
-    $definition = $this->entityManager()->getFieldDefinitions('comment', 'comment')['subject'];
+    $definition = $entity_field_manager->getFieldDefinitions('comment', 'comment')['subject'];
     $this->assertFalse($definition->isTranslatable(), 'Page comment subject is not translatable.');
 
     // Test that translation can be enabled for base fields.
@@ -123,7 +124,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $this->assertSettings('entity_test_mul', 'entity_test_mul', TRUE, $edit);
     $field_override = BaseFieldOverride::loadByName('entity_test_mul', 'entity_test_mul', 'name');
     $this->assertTrue($field_override->isTranslatable(), 'Base fields can be overridden with a base field bundle override entity.');
-    $definitions = $this->entityManager()->getFieldDefinitions('entity_test_mul', 'entity_test_mul');
+    $definitions = $entity_field_manager->getFieldDefinitions('entity_test_mul', 'entity_test_mul');
     $this->assertTrue($definitions['name']->isTranslatable() && !$definitions['user_id']->isTranslatable(), 'Base field bundle overrides were correctly altered.');
 
     // Test that language settings are correctly stored.
@@ -163,7 +164,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       $edit = ['settings[node][article][fields][body]' => $translatable];
       $this->assertSettings('node', 'article', TRUE, $edit);
       $field = FieldConfig::loadByName('node', 'article', 'body');
-      $definitions = \Drupal::entityManager()->getFieldDefinitions('node', 'article');
+      $definitions = $entity_field_manager->getFieldDefinitions('node', 'article');
       $this->assertEqual($definitions['body']->isTranslatable(), $translatable, 'Field translatability correctly switched.');
       $this->assertEqual($field->isTranslatable(), $definitions['body']->isTranslatable(), 'Configurable field translatability correctly switched.');
 
@@ -171,9 +172,9 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       $translatable = !$translatable;
       $edit = ['translatable' => $translatable];
       $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.body', $edit, t('Save settings'));
-      \Drupal::entityManager()->clearCachedFieldDefinitions();
+      $entity_field_manager->clearCachedFieldDefinitions();
       $field = FieldConfig::loadByName('node', 'article', 'body');
-      $definitions = \Drupal::entityManager()->getFieldDefinitions('node', 'article');
+      $definitions = $entity_field_manager->getFieldDefinitions('node', 'article');
       $this->assertEqual($definitions['body']->isTranslatable(), $translatable, 'Field translatability correctly switched.');
       $this->assertEqual($field->isTranslatable(), $definitions['body']->isTranslatable(), 'Configurable field translatability correctly switched.');
     }

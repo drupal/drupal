@@ -79,10 +79,10 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
           // See https://www.drupal.org/node/2169813.
           $bundles = $this->getBundles();
           if (is_array($bundles) && count($bundles) == 1) {
-            $this->propertyDefinitions = \Drupal::entityManager()->getFieldDefinitions($entity_type_id, reset($bundles));
+            $this->propertyDefinitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, reset($bundles));
           }
           else {
-            $this->propertyDefinitions = \Drupal::entityManager()->getBaseFieldDefinitions($entity_type_id);
+            $this->propertyDefinitions = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($entity_type_id);
           }
         }
       }

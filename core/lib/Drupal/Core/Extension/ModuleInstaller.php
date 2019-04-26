@@ -232,9 +232,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // handler can use this as an opportunity to create the necessary
         // database tables.
         // @todo Clean this up in https://www.drupal.org/node/2350111.
-        $entity_manager = \Drupal::entityManager();
+        $entity_type_manager = \Drupal::entityTypeManager();
         $update_manager = \Drupal::entityDefinitionUpdateManager();
-        foreach ($entity_manager->getDefinitions() as $entity_type) {
+        /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+        $entity_field_manager = \Drupal::service('entity_field.manager');
+        foreach ($entity_type_manager->getDefinitions() as $entity_type) {
           if ($entity_type->getProvider() == $module) {
             $update_manager->installEntityType($entity_type);
           }
@@ -242,7 +244,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
             // The module being installed may be adding new fields to existing
             // entity types. Field definitions for any entity type defined by
             // the module are handled in the if branch.
-            foreach ($entity_manager->getFieldStorageDefinitions($entity_type->id()) as $storage_definition) {
+            foreach ($entity_field_manager->getFieldStorageDefinitions($entity_type->id()) as $storage_definition) {
               if ($storage_definition->getProvider() == $module) {
                 // If the module being installed is also defining a storage key
                 // for the entity type, the entity schema may not exist yet. It
@@ -390,9 +392,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Clean up all entity bundles (including fields) of every entity type
       // provided by the module that is being uninstalled.
       // @todo Clean this up in https://www.drupal.org/node/2350111.
-      $entity_manager = \Drupal::entityManager();
+      $entity_type_manager = \Drupal::entityTypeManager();
       $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
-      foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
+      foreach ($entity_type_manager->getDefinitions() as $entity_type_id => $entity_type) {
         if ($entity_type->getProvider() == $module) {
           foreach (array_keys($entity_type_bundle_info->getBundleInfo($entity_type_id)) as $bundle) {
             \Drupal::service('entity_bundle.listener')->onBundleDelete($bundle, $entity_type_id);
@@ -419,7 +421,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // opportunity to drop the corresponding database tables.
       // @todo Clean this up in https://www.drupal.org/node/2350111.
       $update_manager = \Drupal::entityDefinitionUpdateManager();
-      foreach ($entity_manager->getDefinitions() as $entity_type) {
+      /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+      foreach ($entity_type_manager->getDefinitions() as $entity_type) {
         if ($entity_type->getProvider() == $module) {
           $update_manager->uninstallEntityType($entity_type);
         }
@@ -427,7 +431,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
           // The module being uninstalled might have added new fields to
           // existing entity types. This will add them to the deleted fields
           // repository so their data will be purged on cron.
-          foreach ($entity_manager->getFieldStorageDefinitions($entity_type->id()) as $storage_definition) {
+          foreach ($entity_field_manager->getFieldStorageDefinitions($entity_type->id()) as $storage_definition) {
             if ($storage_definition->getProvider() == $module) {
               $update_manager->uninstallFieldStorageDefinition($storage_definition);
             }

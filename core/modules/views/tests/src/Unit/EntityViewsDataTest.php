@@ -9,7 +9,9 @@ namespace Drupal\Tests\views\Unit;
 
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Entity\ContentEntityType;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
@@ -48,13 +50,6 @@ class EntityViewsDataTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityStorage;
-
-  /**
-   * The mocked entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $entityManager;
 
   /**
    * The mocked entity field manager.
@@ -99,9 +94,8 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->entityStorage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $this->entityFieldManager = $this->getMock('Drupal\Core\Entity\EntityFieldManagerInterface');
-    $this->entityTypeManager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
+    $this->entityFieldManager = $this->createMock(EntityFieldManagerInterface::class);
 
     $typed_data_manager = $this->getMock(TypedDataManagerInterface::class);
     $typed_data_manager->expects($this->any())
@@ -134,7 +128,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->baseEntityType->setStringTranslation($this->translationManager);
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
-    $this->viewsData = new TestEntityViewsData($this->baseEntityType, $this->entityStorage, $this->entityManager, $this->moduleHandler, $this->translationManager);
+    $this->viewsData = new TestEntityViewsData($this->baseEntityType, $this->entityStorage, $this->entityTypeManager, $this->moduleHandler, $this->translationManager, $this->entityFieldManager);
 
     $field_type_manager = $this->getMockBuilder('Drupal\Core\Field\FieldTypePluginManager')
       ->disableOriginalConstructor()
@@ -151,9 +145,8 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
     $container->set('plugin.manager.field.field_type', $field_type_manager);
-    $container->set('entity.manager', $this->entityManager);
-    $container->set('entity_field.manager', $this->entityFieldManager);
     $container->set('entity_type.manager', $this->entityTypeManager);
+    $container->set('entity_field.manager', $this->entityFieldManager);
     $container->set('typed_data_manager', $typed_data_manager);
     $container->set('state', $state->reveal());
     \Drupal::setContainer($container);
@@ -427,7 +420,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ->willReturn(StringItem::schema($string_field_storage_definition));
 
     // Setup the user_id entity reference field.
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->willReturnMap([
           ['user', TRUE, static::userEntityInfo()],
@@ -456,7 +449,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ->method('getSchema')
       ->willReturn(IntegerItem::schema($revision_id_field_storage_definition));
 
-    $this->entityManager->expects($this->any())
+    $this->entityFieldManager->expects($this->any())
       ->method('getFieldStorageDefinitions')
       ->willReturn([
         'id' => $id_field_storage_definition,
@@ -484,7 +477,7 @@ class EntityViewsDataTest extends UnitTestCase {
         ->setReadOnly(TRUE)
         ->setSetting('unsigned', TRUE),
     ];
-    $this->entityManager->expects($this->any())
+    $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValueMap([
         ['user', $user_base_field_definitions],
@@ -613,7 +606,7 @@ class EntityViewsDataTest extends UnitTestCase {
     ];
     $entity_test_type = new ConfigEntityType(['id' => 'entity_test_bundle']);
 
-    $this->entityManager->expects($this->any())
+    $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValueMap([
         ['user', $user_base_field_definitions],
@@ -684,7 +677,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->setupFieldStorageDefinition();
 
     $user_entity_type = static::userEntityInfo();
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->will($this->returnValueMap([
         ['user', TRUE, $user_entity_type],
@@ -769,7 +762,7 @@ class EntityViewsDataTest extends UnitTestCase {
         ->setReadOnly(TRUE)
         ->setSetting('unsigned', TRUE),
     ];
-    $this->entityManager->expects($this->any())
+    $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValueMap([
         ['user', $user_base_field_definitions],

@@ -180,6 +180,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getBaseFieldDefinitions($entity_type_id) {
+    @trigger_error('EntityManagerInterface::getBaseFieldDefinitions() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getBaseFieldDefinitions() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_field.manager')->getBaseFieldDefinitions($entity_type_id);
   }
 
@@ -193,19 +194,21 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function getFieldDefinitions($entity_type_id, $bundle) {
+    @trigger_error('EntityManagerInterface::getFieldDefinitions() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldDefinitions() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle);
   }
 
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldStorageDefinitions()
    *   instead.
    *
    * @see https://www.drupal.org/node/2549139
    */
   public function getFieldStorageDefinitions($entity_type_id) {
+    @trigger_error('EntityManagerInterface::getFieldStorageDefinitions() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldStorageDefinitions() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
   }
 
@@ -226,53 +229,56 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::setFieldMap()
    *   instead.
    *
    * @see https://www.drupal.org/node/2549139
    */
   public function setFieldMap(array $field_map) {
+    @trigger_error('EntityManagerInterface::setFieldMap() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::setFieldMap() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_field.manager')->setFieldMap($field_map);
   }
 
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldMap()
    *   instead.
    *
    * @see https://www.drupal.org/node/2549139
    */
   public function getFieldMap() {
+    @trigger_error('EntityManagerInterface::getFieldMap() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldMap() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_field.manager')->getFieldMap();
   }
 
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldMapByFieldType()
    *   instead.
    *
    * @see https://www.drupal.org/node/2549139
    */
   public function getFieldMapByFieldType($field_type) {
+    @trigger_error('EntityManagerInterface::getFieldMapByFieldType() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldMapByFieldType() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_field.manager')->getFieldMapByFieldType($field_type);
   }
 
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
    *   Use \Drupal\Core\Field\FieldDefinitionListenerInterface::onFieldDefinitionCreate()
    *   instead.
    *
    * @see https://www.drupal.org/node/2549139
    */
   public function onFieldDefinitionCreate(FieldDefinitionInterface $field_definition) {
-    @trigger_error('EntityManagerInterface::onFieldDefinitionCreate() is deprecated in 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Field\FieldDefinitionListenerInterface::onFieldDefinitionCreate() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+    @trigger_error('EntityManagerInterface::onFieldDefinitionCreate() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Field\FieldDefinitionListenerInterface::onFieldDefinitionCreate() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('field_definition.listener')->onFieldDefinitionCreate($field_definition);
   }
 
@@ -314,6 +320,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    * @see https://www.drupal.org/node/2549139
    */
   public function clearCachedFieldDefinitions() {
+    @trigger_error('EntityManagerInterface::clearCachedFieldDefinitions() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::clearCachedFieldDefinitions() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
   }
 
@@ -361,8 +368,15 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
+   *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getExtraFields()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/2549139
    */
   public function getExtraFields($entity_type_id, $bundle) {
+    @trigger_error('EntityManagerInterface::getExtraFields() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getExtraFields() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     return $this->container->get('entity_field.manager')->getExtraFields($entity_type_id, $bundle);
   }
 

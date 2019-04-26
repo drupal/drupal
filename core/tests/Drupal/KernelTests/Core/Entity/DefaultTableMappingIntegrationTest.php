@@ -83,7 +83,7 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
    * @covers ::getTableNames
    */
   public function testGetTableNames() {
-    $storage_definitions = $this->entityManager->getFieldStorageDefinitions('entity_test_mulrev');
+    $storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('entity_test_mulrev');
     $dedicated_data_table = $this->tableMapping->getDedicatedDataTableName($storage_definitions['multivalued_base_field']);
     $dedicated_revision_table = $this->tableMapping->getDedicatedRevisionTableName($storage_definitions['multivalued_base_field']);
 

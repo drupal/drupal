@@ -688,13 +688,14 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // in field definitions.
     $entity_type = 'entity_test_mulrev';
     $this->state->set('entity_test.field_definitions.translatable', ['name' => FALSE]);
-    $this->entityManager->clearCachedFieldDefinitions();
-    $definitions = $this->entityManager->getBaseFieldDefinitions($entity_type);
+    $entity_field_manager = \Drupal::service('entity_field.manager');
+    $entity_field_manager->clearCachedFieldDefinitions();
+    $definitions = $entity_field_manager->getBaseFieldDefinitions($entity_type);
     $this->assertFalse($definitions['name']->isTranslatable(), 'Field translatability can be disabled programmatically.');
 
     $this->state->set('entity_test.field_definitions.translatable', ['name' => TRUE]);
-    $this->entityManager->clearCachedFieldDefinitions();
-    $definitions = $this->entityManager->getBaseFieldDefinitions($entity_type);
+    $entity_field_manager->clearCachedFieldDefinitions();
+    $definitions = $entity_field_manager->getBaseFieldDefinitions($entity_type);
     $this->assertTrue($definitions['name']->isTranslatable(), 'Field translatability can be enabled programmatically.');
 
     // Check that field translatability is disabled by default.
@@ -712,11 +713,11 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     ];
     foreach ($translatable_fields as $name => $translatable) {
       $this->state->set('entity_test.field_definitions.translatable', [$name => $translatable]);
-      $this->entityManager->clearCachedFieldDefinitions();
+      $entity_field_manager->clearCachedFieldDefinitions();
       $message = format_string('Field %field cannot be translatable.', ['%field' => $name]);
 
       try {
-        $this->entityManager->getBaseFieldDefinitions($entity_type);
+        $entity_field_manager->getBaseFieldDefinitions($entity_type);
         $this->fail($message);
       }
       catch (\LogicException $e) {

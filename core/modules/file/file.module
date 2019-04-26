@@ -1734,10 +1734,11 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
   $return = $references[$file->id()][$age];
   // Filter the static cache down to the requested entries. The usual static
   // cache is very small so this will be very fast.
+  $entity_field_manager = \Drupal::service('entity_field.manager');
   if ($field || $field_type) {
     foreach ($return as $field_name => $data) {
       foreach (array_keys($data) as $entity_type_id) {
-        $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($entity_type_id);
+        $field_storage_definitions = $entity_field_manager->getFieldStorageDefinitions($entity_type_id);
         $current_field = $field_storage_definitions[$field_name];
         if (($field_type && $current_field->getType() != $field_type) || ($field && $field->uuid() != $current_field->uuid())) {
           unset($return[$field_name][$entity_type_id]);

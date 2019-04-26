@@ -404,7 +404,7 @@ class DateTimeFieldTest extends DateTestBase {
         ],
       ])
       ->save();
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
@@ -440,7 +440,7 @@ class DateTimeFieldTest extends DateTestBase {
         ],
       ])
       ->save();
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Go to the form display page to assert that increment option does appear on Date Time
     $fieldEditUrl = 'entity_test/structure/entity_test/form-display';
@@ -506,7 +506,7 @@ class DateTimeFieldTest extends DateTestBase {
         ],
       ])
       ->save();
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
@@ -546,7 +546,7 @@ class DateTimeFieldTest extends DateTestBase {
         ],
       ])
       ->save();
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Test the widget for validation notifications.
     foreach ($this->datelistDataProvider($field_label) as $data) {
@@ -704,7 +704,7 @@ class DateTimeFieldTest extends DateTestBase {
       ], 'Default value has been stored successfully');
 
       // Clear field cache in order to avoid stale cache values.
-      \Drupal::entityManager()->clearCachedFieldDefinitions();
+      \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
       // Create a new node to check that datetime field default value is today.
       $new_node = Node::create(['type' => 'date_content']);
@@ -742,7 +742,7 @@ class DateTimeFieldTest extends DateTestBase {
       ], 'Default value has been stored successfully');
 
       // Clear field cache in order to avoid stale cache values.
-      \Drupal::entityManager()->clearCachedFieldDefinitions();
+      \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
       // Create a new node to check that datetime field default value is +90
       // days.
@@ -768,7 +768,7 @@ class DateTimeFieldTest extends DateTestBase {
       $this->assertTrue(empty($config_entity['default_value']), 'Empty default value has been stored successfully');
 
       // Clear field cache in order to avoid stale cache values.
-      \Drupal::entityManager()->clearCachedFieldDefinitions();
+      \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
       // Create a new node to check that datetime field default value is not
       // set.

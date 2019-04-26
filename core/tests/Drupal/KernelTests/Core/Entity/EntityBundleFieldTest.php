@@ -63,7 +63,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
     $this->assertTrue($entity->hasField('custom_bundle_field'));
 
     // Ensure that the field exists in the field map.
-    $field_map = \Drupal::entityManager()->getFieldMap();
+    $field_map = \Drupal::service('entity_field.manager')->getFieldMap();
     $this->assertEqual($field_map['entity_test_update']['custom_bundle_field'], ['type' => 'string', 'bundles' => ['custom' => 'custom']]);
 
     $entity->custom_bundle_field->value = 'swanky';
@@ -103,7 +103,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
     $this->assertEqual(1, $result->fetchField(), 'Field data has been deleted');
 
     // Ensure that the field no longer exists in the field map.
-    $field_map = \Drupal::entityManager()->getFieldMap();
+    $field_map = \Drupal::service('entity_field.manager')->getFieldMap();
     $this->assertFalse(isset($field_map['entity_test_update']['custom_bundle_field']));
 
     // Purge field data, and check that the storage definition has been

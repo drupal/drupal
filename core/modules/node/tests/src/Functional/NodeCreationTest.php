@@ -131,7 +131,7 @@ class NodeCreationTest extends NodeTestBase {
     $this->config('system.site')->set('page.front', '/test-page')->save();
 
     // Set "Basic page" content type to be unpublished by default.
-    $fields = \Drupal::entityManager()->getFieldDefinitions('node', 'page');
+    $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'page');
     $fields['status']->getConfig('page')
       ->setDefaultValue(FALSE)
       ->save();

@@ -157,7 +157,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       $default_region = $this->getDefaultRegion();
       // Fill in defaults for extra fields.
       $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
-      $extra_fields = \Drupal::entityManager()->getExtraFields($this->targetEntityType, $this->bundle);
+      $extra_fields = \Drupal::service('entity_field.manager')->getExtraFields($this->targetEntityType, $this->bundle);
       $extra_fields = isset($extra_fields[$context]) ? $extra_fields[$context] : [];
       foreach ($extra_fields as $name => $definition) {
         if (!isset($this->content[$name]) && !isset($this->hidden[$name])) {
@@ -424,7 +424,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    */
   protected function getFieldDefinitions() {
     if (!isset($this->fieldDefinitions)) {
-      $definitions = \Drupal::entityManager()->getFieldDefinitions($this->targetEntityType, $this->bundle);
+      $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($this->targetEntityType, $this->bundle);
       // For "official" view modes and form modes, ignore fields whose
       // definition states they should not be displayed.
       if ($this->mode !== static::CUSTOM_MODE) {

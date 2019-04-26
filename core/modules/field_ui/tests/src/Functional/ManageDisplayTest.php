@@ -64,7 +64,7 @@ class ManageDisplayTest extends BrowserTestBase {
   public function testViewModeCustom() {
     // Create a field, and a node with some data for the field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, 'test', 'Test field');
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     // For this test, use a formatter setting value that is an integer unlikely
     // to appear in a rendered node other than as part of the field being tested
     // (for example, unlikely to be part of the "Submitted by ... on ..." line).
@@ -239,7 +239,7 @@ class ManageDisplayTest extends BrowserTestBase {
   public function assertNodeViewTextHelper(EntityInterface $node, $view_mode, $text, $message, $not_exists) {
     // Make sure caches on the tester side are refreshed after changes
     // submitted on the tested side.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Render a cloned node, so that we do not alter the original.
     $clone = clone $node;

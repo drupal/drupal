@@ -376,7 +376,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/storage", $edit, t('Save field settings'));
     // Clear field definition cache so the new default image is detected.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $default_image = $field_storage->getSetting('default_image');
     $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid']);
@@ -429,7 +429,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->getSession()->getPage()->pressButton(t('Save field settings'));
 
     // Clear field definition cache so the new default image is detected.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $default_image = $field_storage->getSetting('default_image');
     $this->assertFalse($default_image['uuid'], 'Default image removed from field.');
@@ -446,7 +446,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/storage', $edit, t('Save field settings'));
     // Clear field definition cache so the new default image is detected.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     $private_field_storage = FieldStorageConfig::loadByName('node', $private_field_name);
     $default_image = $private_field_storage->getSetting('default_image');

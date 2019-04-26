@@ -346,7 +346,7 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     array_pop($array_parents);
     $previously_uploaded_count = count(Element::children(NestedArray::getValue($form, $array_parents))) - 1;
 
-    $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($element['#entity_type']);
+    $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($element['#entity_type']);
     $field_storage = $field_storage_definitions[$element['#field_name']];
     $newly_uploaded_count = count($values['fids']);
     $total_uploaded_count = $newly_uploaded_count + $previously_uploaded_count;

@@ -45,7 +45,7 @@ class EntityFile extends EntityContentBase {
   protected function processStubRow(Row $row) {
     // We stub the uri value ourselves so we can create a real stub file for it.
     if (!$row->getDestinationProperty('uri')) {
-      $field_definitions = $this->entityManager
+      $field_definitions = $this->entityFieldManager
         ->getFieldDefinitions($this->storage->getEntityTypeId(),
           $this->getKey('bundle'));
       $value = UriItem::generateSampleValue($field_definitions['uri']);

@@ -415,7 +415,7 @@ class EntityFieldTest extends EntityKernelTestBase {
   protected function doTestIntrospection($entity_type) {
     // Test getting metadata upfront. The entity types used for this test have
     // a default bundle that is the same as the entity type.
-    $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type, $entity_type);
+    $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type, $entity_type);
     $this->assertEqual($definitions['name']->getType(), 'string', $entity_type . ': Name field found.');
     $this->assertEqual($definitions['user_id']->getType(), 'entity_reference', $entity_type . ': User field found.');
     $this->assertEqual($definitions['field_test_text']->getType(), 'text', $entity_type . ': Test-text-field field found.');
@@ -636,13 +636,13 @@ class EntityFieldTest extends EntityKernelTestBase {
       'type' => 'page',
       'name' => 'page',
     ])->save();
-    $this->entityManager->clearCachedFieldDefinitions();
-    $fields = $this->entityManager->getFieldDefinitions('node', 'page');
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+    $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'page');
     $override = $fields['status']->getConfig('page');
     $override->setLabel($this->randomString())->save();
     \Drupal::state()->set('entity_test.node_remove_status_field', TRUE);
-    $this->entityManager->clearCachedFieldDefinitions();
-    $fields = $this->entityManager->getFieldDefinitions('node', 'page');
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+    $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'page');
     // A base field override on a non-existing base field should not cause a
     // field definition to come into existence.
     $this->assertFalse(isset($fields['status']), 'Node\'s status base field does not exist.');
@@ -657,11 +657,11 @@ class EntityFieldTest extends EntityKernelTestBase {
     // First make sure the bundle field override in code, which is provided by
     // the test entity works.
     entity_test_create_bundle('some_test_bundle', 'Some test bundle', 'entity_test_field_override');
-    $field_definitions = $this->entityManager->getFieldDefinitions('entity_test_field_override', 'entity_test_field_override');
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('entity_test_field_override', 'entity_test_field_override');
     $this->assertEqual($field_definitions['name']->getDescription(), 'The default description.');
     $this->assertNull($field_definitions['name']->getTargetBundle());
 
-    $field_definitions = $this->entityManager->getFieldDefinitions('entity_test_field_override', 'some_test_bundle');
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('entity_test_field_override', 'some_test_bundle');
     $this->assertEqual($field_definitions['name']->getDescription(), 'Custom description.');
     $this->assertEqual($field_definitions['name']->getTargetBundle(), 'some_test_bundle');
 
@@ -671,8 +671,8 @@ class EntityFieldTest extends EntityKernelTestBase {
     $field_config->save();
 
     // Make sure both overrides are present.
-    $this->entityManager->clearCachedFieldDefinitions();
-    $field_definitions = $this->entityManager->getFieldDefinitions('entity_test_field_override', 'some_test_bundle');
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('entity_test_field_override', 'some_test_bundle');
     $this->assertEqual($field_definitions['name']->getDescription(), 'Custom description.');
     $this->assertEqual($field_definitions['name']->getTargetBundle(), 'some_test_bundle');
     $this->assertFalse($field_definitions['name']->isTranslatable());

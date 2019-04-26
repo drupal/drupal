@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
@@ -33,8 +32,6 @@ class EntityRevisionTest extends EntityTestBase {
     $this->entityType->getPluralLabel()->willReturn('bar');
     $this->storage->getEntityType()->willReturn($this->entityType->reveal());
     $this->storage->getEntityTypeId()->willReturn('foo');
-
-    $this->entityManager = $this->prophesize(EntityManagerInterface::class);
   }
 
   /**
@@ -43,7 +40,7 @@ class EntityRevisionTest extends EntityTestBase {
   public function testUnrevisionable() {
     $this->entityType->getKey('id')->willReturn('id');
     $this->entityType->getKey('revision')->willReturn('');
-    $this->entityManager->getBaseFieldDefinitions('foo')
+    $this->entityFieldManager->getBaseFieldDefinitions('foo')
       ->willReturn([
         'id' => BaseFieldDefinitionTest::create('integer'),
       ]);
@@ -55,7 +52,7 @@ class EntityRevisionTest extends EntityTestBase {
       $this->migration->reveal(),
       $this->storage->reveal(),
       [],
-      $this->entityManager->reveal(),
+      $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal()
     );
     $this->setExpectedException(MigrateException::class, 'The "foo" entity type does not support revisions.');
@@ -69,7 +66,7 @@ class EntityRevisionTest extends EntityTestBase {
     $this->entityType->getKey('id')->willReturn('id');
     $this->entityType->getKey('revision')->willReturn('vid');
     $this->entityType->getKey('langcode')->willReturn('');
-    $this->entityManager->getBaseFieldDefinitions('foo')
+    $this->entityFieldManager->getBaseFieldDefinitions('foo')
       ->willReturn([
         'id' => BaseFieldDefinitionTest::create('integer'),
         'vid' => BaseFieldDefinitionTest::create('integer'),
@@ -82,7 +79,7 @@ class EntityRevisionTest extends EntityTestBase {
       $this->migration->reveal(),
       $this->storage->reveal(),
       [],
-      $this->entityManager->reveal(),
+      $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal()
     );
     $this->setExpectedException(MigrateException::class, 'The "foo" entity type does not support translations.');

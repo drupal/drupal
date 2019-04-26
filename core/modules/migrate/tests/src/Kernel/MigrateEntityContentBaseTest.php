@@ -92,7 +92,7 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
       $this->getMock(MigrationInterface::class),
       $this->storage,
       [],
-      $this->container->get('entity.manager'),
+      $this->container->get('entity_field.manager'),
       $this->container->get('plugin.manager.field.field_type')
     );
   }

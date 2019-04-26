@@ -124,6 +124,102 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
+   * Tests the clearCachedFieldDefinitions() method.
+   *
+   * @covers ::clearCachedFieldDefinitions
+   *
+   * @expectedDeprecation EntityManagerInterface::clearCachedFieldDefinitions() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::clearCachedFieldDefinitions() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testClearCachedFieldDefinitions() {
+    $this->entityFieldManager->clearCachedFieldDefinitions()->shouldBeCalled();
+    $this->entityManager->clearCachedFieldDefinitions();
+  }
+
+  /**
+   * Tests the getBaseFieldDefinitions() method.
+   *
+   * @covers ::getBaseFieldDefinitions
+   *
+   * @expectedDeprecation EntityManagerInterface::getBaseFieldDefinitions() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getBaseFieldDefinitions() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetBaseFieldDefinitions() {
+    $this->entityFieldManager->getBaseFieldDefinitions('node')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getBaseFieldDefinitions('node'));
+  }
+
+  /**
+   * Tests the getFieldDefinitions() method.
+   *
+   * @covers ::getFieldDefinitions
+   *
+   * @expectedDeprecation EntityManagerInterface::getFieldDefinitions() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldDefinitions() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetFieldDefinitions() {
+    $this->entityFieldManager->getFieldDefinitions('node', 'article')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getFieldDefinitions('node', 'article'));
+  }
+
+  /**
+   * Tests the getFieldStorageDefinitions() method.
+   *
+   * @covers ::getFieldStorageDefinitions
+   *
+   * @expectedDeprecation EntityManagerInterface::getFieldStorageDefinitions() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldStorageDefinitions() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetFieldStorageDefinitions() {
+    $this->entityFieldManager->getFieldStorageDefinitions('node')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getFieldStorageDefinitions('node'));
+  }
+
+  /**
+   * Tests the getFieldMap() method.
+   *
+   * @covers ::getFieldMap
+   *
+   * @expectedDeprecation EntityManagerInterface::getFieldMap() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldMap() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetFieldMap() {
+    $this->entityFieldManager->getFieldMap()->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getFieldMap());
+  }
+
+  /**
+   * Tests the setFieldMap() method.
+   *
+   * @covers ::setFieldMap
+   *
+   * @expectedDeprecation EntityManagerInterface::setFieldMap() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::setFieldMap() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testSetFieldMap() {
+    $this->entityFieldManager->setFieldMap([])->shouldBeCalled();
+    $this->entityManager->setFieldMap([]);
+  }
+
+  /**
+   * Tests the getFieldMapByFieldType() method.
+   *
+   * @covers ::getFieldMapByFieldType
+   *
+   * @expectedDeprecation EntityManagerInterface::getFieldMapByFieldType() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldMapByFieldType() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetFieldMapByFieldType() {
+    $this->entityFieldManager->getFieldMapByFieldType('node')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getFieldMapByFieldType('node'));
+  }
+
+  /**
+   * Tests the getExtraFields() method.
+   *
+   * @covers ::getExtraFields
+   *
+   * @expectedDeprecation EntityManagerInterface::getExtraFields() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getExtraFields() instead. See https://www.drupal.org/node/2549139.
+   */
+  public function testGetExtraFields() {
+    $this->entityFieldManager->getExtraFields('entity_type_id', 'bundle')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getExtraFields('entity_type_id', 'bundle'));
+  }
+
+  /**
    * Tests the getBundleInfo() method.
    *
    * @covers ::getBundleInfo

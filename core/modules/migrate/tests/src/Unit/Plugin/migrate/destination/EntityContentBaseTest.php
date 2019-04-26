@@ -33,7 +33,7 @@ class EntityContentBaseTest extends EntityTestBase {
       $this->migration->reveal(),
       $this->storage->reveal(),
       $bundles,
-      $this->entityManager->reveal(),
+      $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal());
     $entity = $this->prophesize(ContentEntityInterface::class);
     // Assert that save is called.
@@ -60,7 +60,7 @@ class EntityContentBaseTest extends EntityTestBase {
       $this->migration->reveal(),
       $this->storage->reveal(),
       $bundles,
-      $this->entityManager->reveal(),
+      $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal());
     $destination->setEntity(FALSE);
     $this->setExpectedException(MigrateException::class, 'Unable to get entity');
@@ -74,7 +74,7 @@ class EntityContentBaseTest extends EntityTestBase {
     // An entity type without a language.
     $this->entityType->getKey('langcode')->willReturn('');
     $this->entityType->getKey('id')->willReturn('id');
-    $this->entityManager->getBaseFieldDefinitions('foo')
+    $this->entityFieldManager->getBaseFieldDefinitions('foo')
       ->willReturn(['id' => BaseFieldDefinitionTest::create('integer')]);
 
     $destination = new EntityTestDestination(
@@ -84,7 +84,7 @@ class EntityContentBaseTest extends EntityTestBase {
       $this->migration->reveal(),
       $this->storage->reveal(),
       [],
-      $this->entityManager->reveal(),
+      $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal()
     );
     $this->setExpectedException(MigrateException::class, 'The "foo" entity type does not support translations.');

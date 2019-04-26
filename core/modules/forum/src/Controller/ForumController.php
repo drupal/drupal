@@ -125,20 +125,20 @@ class ForumController extends ControllerBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    /** @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager */
-    $entity_manager = $container->get('entity.manager');
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $container->get('entity_type.manager');
 
     return new static(
       $container->get('forum_manager'),
-      $entity_manager->getStorage('taxonomy_vocabulary'),
-      $entity_manager->getStorage('taxonomy_term'),
+      $entity_type_manager->getStorage('taxonomy_vocabulary'),
+      $entity_type_manager->getStorage('taxonomy_term'),
       $container->get('current_user'),
-      $entity_manager->getAccessControlHandler('node'),
-      $entity_manager->getFieldMap(),
-      $entity_manager->getStorage('node_type'),
+      $entity_type_manager->getAccessControlHandler('node'),
+      $container->get('entity_field.manager')->getFieldMap(),
+      $entity_type_manager->getStorage('node_type'),
       $container->get('renderer'),
-      $entity_manager->getDefinition('node'),
-      $entity_manager->getDefinition('comment')
+      $entity_type_manager->getDefinition('node'),
+      $entity_type_manager->getDefinition('comment')
     );
   }
 

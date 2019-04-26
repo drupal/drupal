@@ -13,13 +13,6 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 class ConfigFieldDefinitionTest extends FieldKernelTestBase {
 
   /**
-   * The entity manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
    * @var string
    */
   private $entityType;
@@ -40,7 +33,6 @@ class ConfigFieldDefinitionTest extends FieldKernelTestBase {
     $this->entityType = 'entity_test';
     $this->bundle = 'entity_test';
     $this->createFieldWithStorage('', $this->entityType, $this->bundle);
-    $this->entityManager = $this->container->get('entity.manager');
 
     // Create a second field on 'entity_test_rev'.
     $this->installEntitySchema('entity_test_rev');
@@ -51,7 +43,7 @@ class ConfigFieldDefinitionTest extends FieldKernelTestBase {
    * Makes sure a field definition is exposed for a configurable field.
    */
   public function testBundleFieldDefinition() {
-    $definitions = $this->entityManager->getFieldDefinitions($this->entityType, $this->bundle);
+    $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($this->entityType, $this->bundle);
     $this->assertTrue(isset($definitions[$this->fieldTestData->field->getName()]));
     $this->assertTrue($definitions[$this->fieldTestData->field->getName()] instanceof FieldDefinitionInterface);
     // Make sure fields on other entity types are not exposed.
@@ -62,7 +54,7 @@ class ConfigFieldDefinitionTest extends FieldKernelTestBase {
    * Makes sure a field storage definition is exposed for a configurable field.
    */
   public function testFieldStorageDefinition() {
-    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->entityType);
+    $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($this->entityType);
     $this->assertTrue(isset($field_storage_definitions[$this->fieldTestData->field->getName()]));
     $this->assertTrue($field_storage_definitions[$this->fieldTestData->field->getName()] instanceof FieldStorageDefinitionInterface);
     // Make sure storages on other entity types are not exposed.

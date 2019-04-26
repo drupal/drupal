@@ -310,7 +310,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    *   If the field definition is invalid.
    */
   protected function preSaveNew(EntityStorageInterface $storage) {
-    $entity_manager = \Drupal::entityManager();
+    $entity_field_manager = \Drupal::service('entity_field.manager');
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     // Assign the ID.
@@ -324,7 +324,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     }
 
     // Disallow reserved field names.
-    $disallowed_field_names = array_keys($entity_manager->getBaseFieldDefinitions($this->getTargetEntityTypeId()));
+    $disallowed_field_names = array_keys($entity_field_manager->getBaseFieldDefinitions($this->getTargetEntityTypeId()));
     if (in_array($this->getName(), $disallowed_field_names)) {
       throw new FieldException("Attempt to create field storage {$this->getName()} which is reserved by entity type {$this->getTargetEntityTypeId()}.");
     }
@@ -336,7 +336,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     }
     $this->module = $field_type['provider'];
 
-    // Notify the entity manager.
+    // Notify the field storage definition listener.
     \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($this);
   }
 
@@ -496,7 +496,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    */
   public function getBundles() {
     if (!$this->isDeleted()) {
-      $map = \Drupal::entityManager()->getFieldMap();
+      $map = \Drupal::service('entity_field.manager')->getFieldMap();
       if (isset($map[$this->getTargetEntityTypeId()][$this->getName()]['bundles'])) {
         return $map[$this->getTargetEntityTypeId()][$this->getName()]['bundles'];
       }

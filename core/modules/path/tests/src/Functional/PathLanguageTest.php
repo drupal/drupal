@@ -62,7 +62,7 @@ class PathLanguageTest extends PathTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
 
-    $definitions = \Drupal::entityManager()->getFieldDefinitions('node', 'page');
+    $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'page');
     $this->assertTrue($definitions['path']->isTranslatable(), 'Node path is translatable.');
     $this->assertTrue($definitions['body']->isTranslatable(), 'Node body is translatable.');
   }

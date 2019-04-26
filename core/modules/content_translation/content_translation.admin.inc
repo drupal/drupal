@@ -95,11 +95,13 @@ function _content_translation_form_language_content_settings_form_alter(array &$
 
   $form['#attached']['library'][] = 'content_translation/drupal.content_translation.admin';
 
-  $entity_manager = Drupal::entityManager();
+  $entity_type_manager = \Drupal::entityTypeManager();
+  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+  $entity_field_manager = \Drupal::service('entity_field.manager');
   $bundle_info_service = \Drupal::service('entity_type.bundle.info');
   foreach ($form['#labels'] as $entity_type_id => $label) {
-    $entity_type = $entity_manager->getDefinition($entity_type_id);
-    $storage_definitions = $entity_type instanceof ContentEntityTypeInterface ? $entity_manager->getFieldStorageDefinitions($entity_type_id) : [];
+    $entity_type = $entity_type_manager->getDefinition($entity_type_id);
+    $storage_definitions = $entity_type instanceof ContentEntityTypeInterface ? $entity_field_manager->getFieldStorageDefinitions($entity_type_id) : [];
 
     $entity_type_translatable = $content_translation_manager->isSupported($entity_type_id);
     foreach ($bundle_info_service->getBundleInfo($entity_type_id) as $bundle => $bundle_info) {
@@ -133,7 +135,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
         ];
       }
 
-      $fields = $entity_manager->getFieldDefinitions($entity_type_id, $bundle);
+      $fields = $entity_field_manager->getFieldDefinitions($entity_type_id, $bundle);
       if ($fields) {
         foreach ($fields as $field_name => $definition) {
           if ($definition->isComputed() || (!empty($storage_definitions[$field_name]) && _content_translation_is_field_translatability_configurable($entity_type, $storage_definitions[$field_name]))) {
@@ -351,7 +353,7 @@ function content_translation_form_language_content_settings_submit(array $form, 
   // all of its fields will be not translatable.
   foreach ($settings as $entity_type_id => &$entity_settings) {
     foreach ($entity_settings as $bundle => &$bundle_settings) {
-      $fields = \Drupal::entityManager()->getFieldDefinitions($entity_type_id, $bundle);
+      $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle);
       if (!empty($bundle_settings['translatable'])) {
         $bundle_settings['translatable'] = $bundle_settings['translatable'] && $entity_types[$entity_type_id];
       }

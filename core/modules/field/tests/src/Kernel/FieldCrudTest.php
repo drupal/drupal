@@ -216,7 +216,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     ]);
     $field->save();
 
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Check that no table has been created for the field.
     $this->assertFalse(\Drupal::database()->schema()->tableExists('entity_test__' . $field_storage->getName()));

@@ -67,7 +67,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $block_type = BlockContentType::load('foo');
     $this->assertTrue($block_type, 'The new block type has been created.');
 
-    $field_definitions = \Drupal::entityManager()->getFieldDefinitions('block_content', 'foo');
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('block_content', 'foo');
     $this->assertTrue(isset($field_definitions['body']), 'Body field created when using the UI to create block content types.');
 
     // Check that the block type was created in site default language.
@@ -76,11 +76,11 @@ class BlockContentTypeTest extends BlockContentTestBase {
 
     // Create block types programmatically.
     $this->createBlockContentType('basic', TRUE);
-    $field_definitions = \Drupal::entityManager()->getFieldDefinitions('block_content', 'basic');
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('block_content', 'basic');
     $this->assertTrue(isset($field_definitions['body']), "Body field for 'basic' block type created when using the testing API to create block content types.");
 
     $this->createBlockContentType('other');
-    $field_definitions = \Drupal::entityManager()->getFieldDefinitions('block_content', 'other');
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('block_content', 'other');
     $this->assertFalse(isset($field_definitions['body']), "Body field for 'other' block type not created when using the testing API to create block content types.");
 
     $block_type = BlockContentType::load('other');
@@ -102,7 +102,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // We need two block types to prevent /block/add redirecting.
     $this->createBlockContentType('other');
 
-    $field_definitions = \Drupal::entityManager()->getFieldDefinitions('block_content', 'other');
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('block_content', 'other');
     $this->assertFalse(isset($field_definitions['body']), 'Body field was not created when using the API to create block content types.');
 
     // Verify that title and body fields are displayed.
@@ -124,7 +124,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       'admin/structure/block/block-content' => 'Custom block library',
       'admin/structure/block/block-content/manage/basic' => 'Edit Bar',
     ]);
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     $this->drupalGet('block/add');
     $this->assertRaw('Bar', 'New name was displayed.');

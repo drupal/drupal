@@ -117,7 +117,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
         'image_mapping' => 'large',
       ])
       ->save();
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     // Refresh the page.
     $this->drupalGet($manage_display);
     $assert_session->responseContains("Select a responsive image style.");

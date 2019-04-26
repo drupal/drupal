@@ -24,6 +24,13 @@ trait FieldAPIHandlerTrait {
   protected $fieldStorageDefinition;
 
   /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * Gets the field definition.
    *
    * A View works on an entity type across bundles, and thus only has access to
@@ -52,7 +59,7 @@ trait FieldAPIHandlerTrait {
    */
   protected function getFieldStorageDefinition() {
     if (!$this->fieldStorageDefinition) {
-      $field_storage_definitions = $this->getEntityManager()->getFieldStorageDefinitions($this->definition['entity_type']);
+      $field_storage_definitions = $this->getEntityFieldManager()->getFieldStorageDefinitions($this->definition['entity_type']);
       $this->fieldStorageDefinition = $field_storage_definitions[$this->definition['field_name']];
     }
     return $this->fieldStorageDefinition;
@@ -69,6 +76,19 @@ trait FieldAPIHandlerTrait {
       $this->entityManager = \Drupal::entityManager();
     }
     return $this->entityManager;
+  }
+
+  /**
+   * Returns the entity field manager.
+   *
+   * @return \Drupal\Core\Entity\EntityManagerInterface
+   *   The entity field manager.
+   */
+  protected function getEntityFieldManager() {
+    if (!isset($this->entityFieldManager)) {
+      $this->entityFieldManager = \Drupal::service('entity_field.manager');
+    }
+    return $this->entityFieldManager;
   }
 
 }

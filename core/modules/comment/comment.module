@@ -418,7 +418,7 @@ function _comment_entity_uses_integer_id($entity_type_id) {
   if ($entity_type_id_key === FALSE) {
     return FALSE;
   }
-  $field_definitions = \Drupal::entityManager()->getBaseFieldDefinitions($entity_type->id());
+  $field_definitions = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($entity_type->id());
   $entity_type_id_definition = $field_definitions[$entity_type_id_key];
   return $entity_type_id_definition->getType() === 'integer';
 }

@@ -46,7 +46,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
   public function testCustomFieldCreateDelete() {
     // Install the module which adds the field.
     $this->installModule('entity_schema_test');
-    $storage_definitions = $this->entityManager->getFieldStorageDefinitions('entity_test_update');
+    $storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('entity_test_update');
     $this->assertNotNull($storage_definitions['custom_base_field'], 'Base field definition found.');
     $this->assertNotNull($storage_definitions['custom_bundle_field'], 'Bundle field definition found.');
 
@@ -306,8 +306,9 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $this->installModule('entity_schema_test');
     $this->updateEntityType(TRUE);
     $fields = ['revision_log', 'uuid'];
+    $entity_field_manager = \Drupal::service('entity_field.manager');
     foreach ($fields as $field_name) {
-      $original_definition = $this->entityManager->getBaseFieldDefinitions('entity_test_update')[$field_name];
+      $original_definition = $entity_field_manager->getBaseFieldDefinitions('entity_test_update')[$field_name];
       $new_definition = clone $original_definition;
       $new_definition->setLabel($original_definition->getLabel() . ', the other one');
       $this->assertTrue($this->entityManager->getStorage('entity_test_update')

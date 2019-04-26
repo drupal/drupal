@@ -34,10 +34,12 @@ trait CommentTestTrait {
    *   Defaults to 'full'.
    */
   public function addDefaultCommentField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN, $comment_type_id = 'comment', $comment_view_mode = 'full') {
-    $entity_manager = \Drupal::entityManager();
+    $entity_type_manager = \Drupal::entityTypeManager();
     $entity_display_repository = \Drupal::service('entity_display.repository');
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+    $entity_field_manager = \Drupal::service('entity_field.manager');
     // Create the comment type if needed.
-    $comment_type_storage = $entity_manager->getStorage('comment_type');
+    $comment_type_storage = $entity_type_manager->getStorage('comment_type');
     if ($comment_type = $comment_type_storage->load($comment_type_id)) {
       if ($comment_type->getTargetEntityTypeId() !== $entity_type) {
         throw new \InvalidArgumentException("The given comment type id $comment_type_id can only be used with the $entity_type entity type");
@@ -56,8 +58,8 @@ trait CommentTestTrait {
 
     // Add a comment field to the host entity type. Create the field storage if
     // needed.
-    if (!array_key_exists($field_name, $entity_manager->getFieldStorageDefinitions($entity_type))) {
-      $entity_manager->getStorage('field_storage_config')->create([
+    if (!array_key_exists($field_name, $entity_field_manager->getFieldStorageDefinitions($entity_type))) {
+      $entity_type_manager->getStorage('field_storage_config')->create([
         'entity_type' => $entity_type,
         'field_name' => $field_name,
         'type' => 'comment',
@@ -68,8 +70,8 @@ trait CommentTestTrait {
       ])->save();
     }
     // Create the field if needed, and configure its form and view displays.
-    if (!array_key_exists($field_name, $entity_manager->getFieldDefinitions($entity_type, $bundle))) {
-      $entity_manager->getStorage('field_config')->create([
+    if (!array_key_exists($field_name, $entity_field_manager->getFieldDefinitions($entity_type, $bundle))) {
+      $entity_type_manager->getStorage('field_config')->create([
         'label' => 'Comments',
         'description' => '',
         'field_name' => $field_name,

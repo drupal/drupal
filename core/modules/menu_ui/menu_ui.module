@@ -189,7 +189,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
   if (!$defaults) {
     // Get the default max_length of a menu link title from the base field
     // definition.
-    $field_definitions = \Drupal::entityManager()->getBaseFieldDefinitions('menu_link_content');
+    $field_definitions = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('menu_link_content');
     $max_length = $field_definitions['title']->getSetting('max_length');
     $description_max_length = $field_definitions['description']->getSetting('max_length');
     $defaults = [

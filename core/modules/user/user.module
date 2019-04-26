@@ -149,7 +149,7 @@ function user_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
  * preprocess stage.
  */
 function user_picture_enabled() {
-  $field_definitions = \Drupal::entityManager()->getFieldDefinitions('user', 'user');
+  $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('user', 'user');
   return isset($field_definitions['user_picture']);
 }
 
