@@ -2622,6 +2622,10 @@ function _drupal_exception_handler($exception) {
     _drupal_log_error(_drupal_decode_exception($exception), TRUE);
   }
   catch (Exception $exception2) {
+    // Add a 500 status code in case an exception was thrown before the 500
+    // status could be set (e.g. while loading a maintenance theme from cache).
+    drupal_add_http_header('Status', '500 Internal Server Error');
+
     // Another uncaught exception was thrown while handling the first one.
     // If we are displaying errors, then do so with no possibility of a further uncaught exception being thrown.
     if (error_displayable()) {
