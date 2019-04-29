@@ -7,6 +7,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMul;
+use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -30,11 +31,17 @@ class EntityLegacyTest extends KernelTestBase {
 
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_mul');
+    $this->installEntitySchema('entity_test_rev');
   }
 
   /**
    * @expectedDeprecation entity_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage's loadMultiple() method. See https://www.drupal.org/node/2266845
    * @expectedDeprecation entity_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage's load() method. See https://www.drupal.org/node/2266845
+   * @expectedDeprecation entity_get_bundles() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getBundleInfo() for a single bundle, or \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getAllBundleInfo() for all bundles. See https://www.drupal.org/node/3051077
+   * @expectedDeprecation entity_page_label() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity's label() method. See https://www.drupal.org/node/2549923
+   * @expectedDeprecation entity_revision_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage's loadRevision() method. See https://www.drupal.org/node/1818376
+   * @expectedDeprecation entity_revision_delete() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage's deleteRevision() method. See https://www.drupal.org/node/1818376
+   * @expectedDeprecation entity_load_unchanged() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage's loadUnchanged() method. See https://www.drupal.org/node/1935744
    */
   public function testEntityLegacyCode() {
     $this->assertCount(0, entity_load_multiple('entity_test'));
@@ -51,6 +58,24 @@ class EntityLegacyTest extends KernelTestBase {
 
     $this->assertNull(entity_load('entity_test', 100));
     $this->assertInstanceOf(EntityInterface::class, entity_load('entity_test', 1));
+
+    $this->assertEquals(['entity_test' => ['label' => 'Entity Test Bundle']], entity_get_bundles('entity_test'));
+    $this->assertEquals(['entity_test' => ['label' => 'Entity Test Bundle']], entity_get_bundles()['entity_test']);
+
+    $entity = EntityTestRev::create(['name' => 'revision test']);
+    $entity->save();
+    $this->assertEquals('revision test', entity_page_label($entity));
+    $first_revision_id = $entity->getRevisionId();
+    $entity->setNewRevision(TRUE);
+    $entity->save();
+    $first_revision = entity_revision_load($entity->getEntityTypeId(), $first_revision_id);
+    $this->assertEquals($first_revision_id, $first_revision->getRevisionId());
+    entity_revision_delete($entity->getEntityTypeId(), $first_revision_id);
+    $this->assertNull(entity_revision_load($entity->getEntityTypeId(), $first_revision_id));
+
+    $entity->setName('Different name');
+    $entity = entity_load_unchanged($entity->getEntityTypeId(), $entity->id());
+    $this->assertEquals('revision test', $entity->label());
   }
 
   /**

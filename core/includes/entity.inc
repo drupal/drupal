@@ -44,10 +44,12 @@ function entity_render_cache_clear() {
  *   \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getAllBundleInfo() for
  *   all bundles.
  *
+ * @see https://www.drupal.org/node/3051077
  * @see \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getBundleInfo()
  * @see \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getAllBundleInfo()
  */
 function entity_get_bundles($entity_type = NULL) {
+  @trigger_error('entity_get_bundles() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getBundleInfo() for a single bundle, or \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getAllBundleInfo() for all bundles. See https://www.drupal.org/node/3051077', E_USER_DEPRECATED);
   if (isset($entity_type)) {
     return \Drupal::entityManager()->getBundleInfo($entity_type);
   }
@@ -95,20 +97,13 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  *   The entity object, or NULL if there is no entity with the given revision
  *   id.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
- *   the entity storage's loadRevision() method to load a specific entity
- *   revision:
- *   @code
- *     \Drupal::entityTypeManager()
- *       ->getStorage($entity_type)
- *       ->loadRevision($revision_id);
- *   @endcode
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the
+ *   entity type storage's loadRevision() method.
  *
- * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
- * @see \Drupal\Core\Entity\EntityStorageInterface::loadRevision()
- * @see \Drupal\Core\Entity\Sql\SqlContentEntityStorage
+ * @see https://www.drupal.org/node/1818376
  */
 function entity_revision_load($entity_type, $revision_id) {
+  @trigger_error('entity_revision_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage\'s loadRevision() method. See https://www.drupal.org/node/1818376', E_USER_DEPRECATED);
   return \Drupal::entityManager()
     ->getStorage($entity_type)
     ->loadRevision($revision_id);
@@ -122,19 +117,13 @@ function entity_revision_load($entity_type, $revision_id) {
  * @param $revision_id
  *   The revision ID to delete.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
- *   the entity storage's deleteRevision() method to delete a specific entity
- *   revision:
- *   @code
- *     \Drupal::entityTypeManager()
- *       ->getStorage($entity_type)
- *       ->deleteRevision($revision_id);
- *   @endcode
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the
+ *   entity type storage's deleteRevision() method.
  *
- * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
- * @see \Drupal\Core\Entity\EntityStorageInterface::deleteRevision()
+ * @see https://www.drupal.org/node/1818376
  */
 function entity_revision_delete($entity_type, $revision_id) {
+  @trigger_error('entity_revision_delete() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage\'s deleteRevision() method. See https://www.drupal.org/node/1818376', E_USER_DEPRECATED);
   \Drupal::entityManager()
     ->getStorage($entity_type)
     ->deleteRevision($revision_id);
@@ -229,16 +218,13 @@ function entity_load_multiple_by_properties($entity_type, array $values) {
  * @return \Drupal\Core\Entity\EntityInterface|null
  *   The unchanged entity, or FALSE if the entity cannot be loaded.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
- *   the entity storage's loadUnchanged() method to load an unchanged entity:
- *   @code
- *     \Drupal::entityTypeManager()->getStorage($entity_type)->loadUnchanged($id);
- *   @endcode
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the
+ *   entity type storage's loadUnchanged() method.
  *
- * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
- * @see \Drupal\Core\Entity\EntityStorageInterface::loadUnchanged()
+ * @see https://www.drupal.org/node/1935744
  */
 function entity_load_unchanged($entity_type, $id) {
+  @trigger_error('entity_load_unchanged() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage\'s loadUnchanged() method. See https://www.drupal.org/node/1935744', E_USER_DEPRECATED);
   return \Drupal::entityManager()
     ->getStorage($entity_type)
     ->loadUnchanged($id);
@@ -313,15 +299,14 @@ function entity_create($entity_type, array $values = []) {
  * @return string|null
  *   The label of the entity, or NULL if there is no label defined.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
- *   the entity's label() method to get the label of the entity:
- *   @code
- *     $entity->label($langcode);
- *   @endcode
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the
+ *   entity's label() method.
  *
+ * @see https://www.drupal.org/node/2549923
  * @see \Drupal\Core\Entity\EntityInterface::label()
  */
 function entity_page_label(EntityInterface $entity, $langcode = NULL) {
+  @trigger_error('entity_page_label() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity\'s label() method. See https://www.drupal.org/node/2549923', E_USER_DEPRECATED);
   return $entity->label($langcode);
 }
 
