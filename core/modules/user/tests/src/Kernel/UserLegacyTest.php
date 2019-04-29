@@ -45,4 +45,18 @@ class UserLegacyTest extends KernelTestBase {
     $this->assertInstanceOf(UserInterface::class, user_load(1));
   }
 
+  /**
+   * @expectedDeprecation user_view() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('user')->view() instead. See https://www.drupal.org/node/3033656
+   * @expectedDeprecation user_view_multiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('user')->viewMultiple() instead. See https://www.drupal.org/node/3033656
+   */
+  public function testUserView() {
+    $entity = User::create();
+    $this->assertNotEmpty(user_view($entity));
+    $entities = [
+      User::create(),
+      User::create(),
+    ];
+    $this->assertEquals(4, count(user_view_multiple($entities)));
+  }
+
 }

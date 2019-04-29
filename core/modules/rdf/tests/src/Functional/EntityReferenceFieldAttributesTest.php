@@ -102,7 +102,9 @@ class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
     ]);
 
     // Render the node.
-    $node_render_array = entity_view_multiple([$node], 'teaser');
+    $node_render_array = \Drupal::entityTypeManager()
+      ->getViewBuilder('node')
+      ->view($node, 'teaser');
     $html = \Drupal::service('renderer')->renderRoot($node_render_array);
 
     // Parse the teaser.

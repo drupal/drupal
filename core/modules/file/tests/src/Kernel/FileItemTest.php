@@ -142,7 +142,9 @@ class FileItemTest extends FieldKernelTestBase {
     $entity = EntityTest::create();
     $entity->file_test = ['entity' => $file3];
     $uri = $file3->getFileUri();
-    $output = entity_view($entity, 'default');
+    $output = \Drupal::entityTypeManager()
+      ->getViewBuilder('entity_test')
+      ->view($entity, 'default');
     \Drupal::service('renderer')->renderRoot($output);
     $this->assertTrue(!empty($entity->file_test->entity));
     $this->assertEqual($entity->file_test->entity->getFileUri(), $uri);

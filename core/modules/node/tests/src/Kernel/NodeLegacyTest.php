@@ -63,4 +63,18 @@ class NodeLegacyTest extends EntityKernelTestBase {
     $this->assertInstanceOf(NodeTypeInterface::class, node_type_load('page'));
   }
 
+  /**
+   * @expectedDeprecation node_view() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('node')->view() instead. See https://www.drupal.org/node/3033656
+   * @expectedDeprecation node_view_multiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('node')->viewMultiple() instead. See https://www.drupal.org/node/3033656
+   */
+  public function testNodeView() {
+    $entity = Node::create(['type' => 'page']);
+    $this->assertNotEmpty(node_view($entity));
+    $entities = [
+      Node::create(['type' => 'page']),
+      Node::create(['type' => 'page']),
+    ];
+    $this->assertEquals(4, count(node_view_multiple($entities)));
+  }
+
 }

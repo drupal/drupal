@@ -141,7 +141,9 @@ function contact_mail($key, &$message, $params) {
     case 'page_copy':
       $message['subject'] .= t('[@form] @subject', $variables, $options);
       $message['body'][] = t("@sender-name (@sender-url) sent a message using the contact form at @form-url.", $variables, $options);
-      $build = entity_view($contact_message, 'mail');
+      $build = \Drupal::entityTypeManager()
+        ->getViewBuilder('contact_message')
+        ->view($contact_message, 'mail');
       $message['body'][] = \Drupal::service('renderer')->renderPlain($build);
       break;
 
@@ -160,7 +162,9 @@ function contact_mail($key, &$message, $params) {
       $message['body'][] = t('Hello @recipient-name,', $variables, $options);
       $message['body'][] = t("@sender-name (@sender-url) has sent you a message via your contact form at @site-name.", $variables, $options);
       $message['body'][] = t("If you don't want to receive such emails, you can change your settings at @recipient-edit-url.", $variables, $options);
-      $build = entity_view($contact_message, 'mail');
+      $build = \Drupal::entityTypeManager()
+        ->getViewBuilder('contact_message')
+        ->view($contact_message, 'mail');
       $message['body'][] = \Drupal::service('renderer')->renderPlain($build);
       break;
   }

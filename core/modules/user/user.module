@@ -905,9 +905,17 @@ function user_delete_multiple(array $uids) {
  *
  * @return array
  *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal::entityTypeManager()->getViewBuilder('user')->view() instead.
+ *
+ * @see https://www.drupal.org/node/3033656
  */
 function user_view($account, $view_mode = 'full', $langcode = NULL) {
-  return entity_view($account, $view_mode, $langcode);
+  @trigger_error("user_view() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('user')->view() instead. See https://www.drupal.org/node/3033656", E_USER_DEPRECATED);
+  return \Drupal::entityTypeManager()
+    ->getViewBuilder('user')
+    ->view($account, $view_mode, $langcode);
 }
 
 /**
@@ -924,9 +932,18 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
  * @return array
  *   An array in the format expected by
  *   \Drupal\Core\Render\RendererInterface::render().
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal::entityTypeManager()->getViewBuilder('user')->viewMultiple()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3033656
  */
 function user_view_multiple($accounts, $view_mode = 'full', $langcode = NULL) {
-  return entity_view_multiple($accounts, $view_mode, $langcode);
+  @trigger_error("user_view_multiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('user')->viewMultiple() instead. See https://www.drupal.org/node/3033656", E_USER_DEPRECATED);
+  return \Drupal::entityTypeManager()
+    ->getViewBuilder('user')
+    ->viewMultiple($accounts, $view_mode, $langcode);
 }
 
 /**

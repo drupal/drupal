@@ -22,9 +22,12 @@ class UnpublishByKeywordNode extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function execute($node = NULL) {
+    $elements = \Drupal::entityTypeManager()
+      ->getViewBuilder('node')
+      ->view(clone $node);
+    $render = \Drupal::service('renderer')->render($elements);
     foreach ($this->configuration['keywords'] as $keyword) {
-      $elements = node_view(clone $node);
-      if (strpos(\Drupal::service('renderer')->render($elements), $keyword) !== FALSE || strpos($node->label(), $keyword) !== FALSE) {
+      if (strpos($render, $keyword) !== FALSE || strpos($node->label(), $keyword) !== FALSE) {
         $node->setUnpublished();
         $node->save();
         break;

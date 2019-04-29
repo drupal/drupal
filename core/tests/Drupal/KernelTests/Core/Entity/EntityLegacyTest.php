@@ -91,4 +91,18 @@ class EntityLegacyTest extends KernelTestBase {
     $this->assertEquals('entity_test.entity_test.default', $form_display->id());
   }
 
+  /**
+   * @expectedDeprecation entity_view() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, $view_mode, $langcode) instead. See https://www.drupal.org/node/3033656
+   * @expectedDeprecation entity_view_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId())->viewMultiple($entities, $view_mode, $langcode) instead. See https://www.drupal.org/node/3033656
+   */
+  public function testEntityView() {
+    $entity = EntityTest::create();
+    $this->assertNotEmpty(entity_view($entity, 'default'));
+    $entities = [
+      EntityTest::create(),
+      EntityTest::create(),
+    ];
+    $this->assertEquals(4, count(entity_view_multiple($entities, 'default')));
+  }
+
 }

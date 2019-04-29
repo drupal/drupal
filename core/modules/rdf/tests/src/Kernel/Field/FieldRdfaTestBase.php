@@ -91,7 +91,9 @@ abstract class FieldRdfaTestBase extends FieldKernelTestBase {
       ->getViewDisplay('entity_test', 'entity_test')
       ->setComponent($this->fieldName, $formatter)
       ->save();
-    $build = entity_view($this->entity, 'default');
+    $build = \Drupal::entityTypeManager()
+      ->getViewBuilder($this->entity->getEntityTypeId())
+      ->view($this->entity, 'default');
     $output = \Drupal::service('renderer')->renderRoot($build);
     $graph = new \EasyRdf_Graph($this->uri, $output, 'rdfa');
     $this->setRawContent($output);

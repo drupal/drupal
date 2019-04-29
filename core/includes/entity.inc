@@ -335,10 +335,12 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
  *     return $view_builder->view($entity, $view_mode, $langcode);
  *   @endcode
  *
+ * @see https://www.drupal.org/node/3033656
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getViewBuilder()
  * @see \Drupal\Core\Entity\EntityViewBuilderInterface::view()
  */
 function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $reset = FALSE) {
+  @trigger_error('entity_view() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, $view_mode, $langcode) instead. See https://www.drupal.org/node/3033656', E_USER_DEPRECATED);
   $render_controller = \Drupal::entityManager()->getViewBuilder($entity->getEntityTypeId());
   if ($reset) {
     $render_controller->resetCache([$entity]);
@@ -373,10 +375,12 @@ function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $res
  *     return $view_builder->viewMultiple($entities, $view_mode, $langcode);
  *   @endcode
  *
+ * @see https://www.drupal.org/node/3033656
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getViewBuilder()
  * @see \Drupal\Core\Entity\EntityViewBuilderInterface::viewMultiple()
  */
 function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $reset = FALSE) {
+  @trigger_error('entity_view_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId())->viewMultiple($entities, $view_mode, $langcode) instead. See https://www.drupal.org/node/3033656', E_USER_DEPRECATED);
   $render_controller = \Drupal::entityManager()->getViewBuilder(reset($entities)->getEntityTypeId());
   if ($reset) {
     $render_controller->resetCache($entities);

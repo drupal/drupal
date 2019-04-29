@@ -272,10 +272,15 @@ function comment_node_view_alter(array &$build, EntityInterface $node, EntityVie
  *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
  *
  * @deprecated in Drupal 8.x and will be removed before Drupal 9.0.
- *   Use \Drupal::entityManager()->getViewBuilder('comment')->view().
+ *   Use \Drupal::entityTypeManager()->getViewBuilder('comment')->view().
+ *
+ * @see https://www.drupal.org/node/3033656
  */
 function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode = NULL) {
-  return entity_view($comment, $view_mode, $langcode);
+  @trigger_error("comment_view() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('comment')->view() instead. See https://www.drupal.org/node/3033656", E_USER_DEPRECATED);
+  return \Drupal::entityTypeManager()
+    ->getViewBuilder('comment')
+    ->view($comment, $view_mode, $langcode);
 }
 
 /**
@@ -296,12 +301,16 @@ function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode 
  *   \Drupal\Core\Render\RendererInterface::render().
  *
  * @deprecated in Drupal 8.x and will be removed before Drupal 9.0.
- *   Use \Drupal::entityManager()->getViewBuilder('comment')->viewMultiple().
+ *   Use \Drupal::entityTypeManager()->getViewBuilder('comment')->viewMultiple().
  *
+ * @see https://www.drupal.org/node/3033656
  * @see \Drupal\Core\Render\RendererInterface::render()
  */
 function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL) {
-  return entity_view_multiple($comments, $view_mode, $langcode);
+  @trigger_error("comment_view_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('comment')->viewMultiple() instead. See https://www.drupal.org/node/3033656", E_USER_DEPRECATED);
+  return \Drupal::entityTypeManager()
+    ->getViewBuilder('comment')
+    ->viewMultiple($comments, $view_mode, $langcode);
 }
 
 /**
@@ -594,7 +603,9 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
     $field_name = $comment->getFieldName();
     $entity = clone $entity;
     $entity->$field_name->status = CommentItemInterface::HIDDEN;
-    $build = entity_view($entity, 'full');
+    $build = \Drupal::entityTypeManager()
+      ->getViewBuilder($entity->getEntityTypeId())
+      ->view($entity, 'full');
   }
 
   $preview_build['comment_output_below'] = $build;
@@ -652,7 +663,9 @@ function template_preprocess_comment(&$variables) {
   if (theme_get_setting('features.comment_user_picture')) {
     // To change user picture settings (for instance, image style), edit the
     // 'compact' view mode on the User entity.
-    $variables['user_picture'] = user_view($account, 'compact');
+    $variables['user_picture'] = \Drupal::entityTypeManager()
+      ->getViewBuilder('user')
+      ->view($account, 'compact');
   }
   else {
     $variables['user_picture'] = [];

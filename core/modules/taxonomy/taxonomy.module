@@ -182,9 +182,18 @@ function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $c
  * @return array
  *   A $page element suitable for use by
  *   \Drupal\Core\Render\RendererInterface::render().
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term')->view()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3033656
  */
 function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
-  return entity_view($term, $view_mode, $langcode);
+  @trigger_error("taxonomy_term_view() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term')->view() instead. See https://www.drupal.org/node/3033656", E_USER_DEPRECATED);
+  return \Drupal::entityTypeManager()
+    ->getViewBuilder('taxonomy_term')
+    ->view($term, $view_mode, $langcode);
 }
 
 /**
@@ -201,9 +210,18 @@ function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
  * @return array
  *   An array in the format expected by
  *   \Drupal\Core\Render\RendererInterface::render().
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term')->viewMultiple()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3033656
  */
 function taxonomy_term_view_multiple(array $terms, $view_mode = 'full', $langcode = NULL) {
-  return entity_view_multiple($terms, $view_mode, $langcode);
+  @trigger_error("taxonomy_term_view_multiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term')->viewMultiple() instead. See https://www.drupal.org/node/3033656", E_USER_DEPRECATED);
+  return \Drupal::entityTypeManager()
+    ->getViewBuilder('taxonomy_term')
+    ->viewMultiple($terms, $view_mode, $langcode);
 }
 
 /**

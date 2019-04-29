@@ -243,7 +243,9 @@ class ManageDisplayTest extends BrowserTestBase {
 
     // Render a cloned node, so that we do not alter the original.
     $clone = clone $node;
-    $element = node_view($clone, $view_mode);
+    $element = \Drupal::entityTypeManager()
+      ->getViewBuilder('node')
+      ->view($clone, $view_mode);
     $output = (string) \Drupal::service('renderer')->renderRoot($element);
     $this->verbose(t('Rendered node - view mode: @view_mode', ['@view_mode' => $view_mode]) . '<hr />' . $output);
 

@@ -89,7 +89,9 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
       ->save();
 
     // Render the teaser.
-    $node_render_array = node_view($this->node, 'teaser');
+    $node_render_array = \Drupal::entityTypeManager()
+      ->getViewBuilder('node')
+      ->view($this->node, 'teaser');
     $html = \Drupal::service('renderer')->renderRoot($node_render_array);
 
     // Parse the teaser.

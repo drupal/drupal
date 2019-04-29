@@ -94,7 +94,9 @@ function tour_page_bottom(array &$page_bottom) {
       }
     }
     if (!empty($tours)) {
-      $page_bottom['tour'] = entity_view_multiple($tours, 'full');
+      $page_bottom['tour'] = \Drupal::entityTypeManager()
+        ->getViewBuilder('tour')
+        ->viewMultiple($tours, 'full');
     }
   }
 }

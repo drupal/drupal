@@ -77,7 +77,9 @@ class FileFieldAttributesTest extends FileFieldTestBase {
    */
   public function testNodeTeaser() {
     // Render the teaser.
-    $node_render_array = entity_view_multiple([$this->node], 'teaser');
+    $node_render_array = \Drupal::entityTypeManager()
+      ->getViewBuilder('node')
+      ->view($this->node, 'teaser');
     $html = \Drupal::service('renderer')->renderRoot($node_render_array);
 
     // Parses front page where the node is displayed in its teaser form.

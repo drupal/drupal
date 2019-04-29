@@ -681,7 +681,9 @@ function template_preprocess_node(&$variables) {
         // 'compact' view mode on the User entity. Note that the 'compact'
         // view mode might not be configured, so remember to always check the
         // theme setting first.
-        $variables['author_picture'] = user_view($node->getOwner(), 'compact');
+        $variables['author_picture'] = \Drupal::entityTypeManager()
+          ->getViewBuilder('user')
+          ->view($node->getOwner(), 'compact');
       }
     }
   }
@@ -853,9 +855,17 @@ function node_get_recent($number = 10) {
  *
  * @return array
  *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+ *   Use \Drupal::entityTypeManager()->getViewBuilder('node')->view() instead.
+ *
+ * @see https://www.drupal.org/node/3033656
  */
 function node_view(NodeInterface $node, $view_mode = 'full', $langcode = NULL) {
-  return entity_view($node, $view_mode, $langcode);
+  @trigger_error("node_view() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('node')->view() instead. See https://www.drupal.org/node/3033656", E_USER_DEPRECATED);
+  return \Drupal::entityTypeManager()
+    ->getViewBuilder('node')
+    ->view($node, $view_mode, $langcode);
 }
 
 /**
@@ -872,9 +882,18 @@ function node_view(NodeInterface $node, $view_mode = 'full', $langcode = NULL) {
  * @return array
  *   An array in the format expected by
  *   \Drupal\Core\Render\RendererInterface::render().
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal::entityTypeManager()->getViewBuilder('node')->viewMultiple()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3033656
  */
 function node_view_multiple($nodes, $view_mode = 'teaser', $langcode = NULL) {
-  return entity_view_multiple($nodes, $view_mode, $langcode);
+  @trigger_error("node_view_multiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('node')->viewMultiple() instead. See https://www.drupal.org/node/3033656", E_USER_DEPRECATED);
+  return \Drupal::entityTypeManager()
+    ->getViewBuilder('node')
+    ->viewMultiple($nodes, $view_mode, $langcode);
 }
 
 /**

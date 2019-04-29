@@ -42,7 +42,9 @@ class UserFieldsTest extends KernelTestBase {
       'name' => 'foobar',
       'mail' => 'foobar@example.com',
     ]);
-    $build = user_view($user);
+    $build = \Drupal::entityTypeManager()
+      ->getViewBuilder('user')
+      ->view($user);
     $output = \Drupal::service('renderer')->renderRoot($build);
     $this->setRawContent($output);
     $userEmail = $user->getEmail();

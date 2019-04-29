@@ -158,7 +158,9 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
         ->save();
 
       // Invoke entity view.
-      entity_view($referencing_entity, 'default');
+      \Drupal::entityTypeManager()
+        ->getViewBuilder($referencing_entity->getEntityTypeId())
+        ->view($referencing_entity, 'default');
 
       // Verify the un-accessible item still exists.
       $this->assertEqual($referencing_entity->{$field_name}->target_id, $this->referencedEntity->id(), format_string('The un-accessible item still exists after @name formatter was executed.', ['@name' => $name]));

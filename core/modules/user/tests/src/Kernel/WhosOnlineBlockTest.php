@@ -106,7 +106,9 @@ class WhosOnlineBlockTest extends KernelTestBase {
 
     // Test the rendering of a block.
     $entity = Block::load('views_block__who_s_online_who_s_online_block');
-    $output = entity_view($entity, 'block');
+    $output = \Drupal::entityTypeManager()
+      ->getViewBuilder($entity->getEntityTypeId())
+      ->view($entity, 'block');
     $this->setRawContent($this->renderer->renderRoot($output));
     $this->assertRaw('2 users', 'Correct number of online users (2 users).');
     $this->assertText($user1->getAccountName(), 'Active user 1 found in online list.');
