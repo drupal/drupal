@@ -710,7 +710,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       if (empty($schema)) {
         // BC layer to avoid some contrib tests to fail.
         if ($module == 'system') {
-          @trigger_error('Special handling of system module schemas in \Drupal\KernelTests\KernelTestBase::installSchema has been deprecated in Drupal 8.7.x, remove any calls to this method that use invalid schema names. See https://www.drupal.org/project/drupal/issues/2794347.', E_USER_DEPRECATED);
+          @trigger_error('Special handling of system module schemas in \Drupal\KernelTests\KernelTestBase::installSchema has been deprecated in Drupal 8.7.x, remove any calls to this method that use invalid schema names. See https://www.drupal.org/node/3003360.', E_USER_DEPRECATED);
           continue;
         }
         throw new \LogicException("$module module does not define a schema for table '$table'.");
