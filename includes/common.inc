@@ -4447,48 +4447,12 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
     }
   }
 
-  // Sort the JavaScript so that it appears in the correct order.
-  uasort($items, 'drupal_sort_css_js');
-
-  // Provide the page with information about the individual JavaScript files
-  // used, information not otherwise available when aggregation is enabled.
-  $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($items), 1);
-  unset($setting['ajaxPageState']['js']['settings']);
-  drupal_add_js($setting, 'setting');
-
-  // If we're outputting the header scope, then this might be the final time
-  // that drupal_get_js() is running, so add the setting to this output as well
-  // as to the drupal_add_js() cache. If $items['settings'] doesn't exist, it's
-  // because drupal_get_js() was intentionally passed a $javascript argument
-  // stripped off settings, potentially in order to override how settings get
-  // output, so in this case, do not add the setting to this output.
-  if ($scope == 'header' && isset($items['settings'])) {
-    $items['settings']['data'][] = $setting;
-  }
-
-  $elements = array(
-    '#type' => 'scripts',
-    '#items' => $items,
-  );
-
-  return drupal_render($elements);
-}
-
-/**
- * #pre_render callback to add the elements needed for scripts tags to be
- * rendered.
- *
- * @param array $elements
- *   A render array containing:
- *   - '#items': The JS items as returned by drupal_add_js() and altered by
- *     drupal_get_js().
- *
- * @return array
- *   A render array that will render to a string of XHTML "<script>" tags.
- *
- * @see drupal_get_js()
- */
-function drupal_pre_render_scripts(array $elements) {
+  $output = '';
+  // The index counter is used to keep aggregated and non-aggregated files in
+  // order by weight.
+  $index = 1;
+  $processed = array();
+  $files = array();
   $preprocess_js = (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
 
   // A dummy query-string is added to filenames, to gain control over
@@ -4509,12 +4473,24 @@ function drupal_pre_render_scripts(array $elements) {
   // third-party code might require the use of a different query string.
   $js_version_string = variable_get('drupal_js_version_query_string', 'v=');
 
-  $output = '';
-  // The index counter is used to keep aggregated and non-aggregated files in
-  // order by weight.
-  $index = 1;
-  $processed = array();
-  $files = array();
+  // Sort the JavaScript so that it appears in the correct order.
+  uasort($items, 'drupal_sort_css_js');
+
+  // Provide the page with information about the individual JavaScript files
+  // used, information not otherwise available when aggregation is enabled.
+  $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($items), 1);
+  unset($setting['ajaxPageState']['js']['settings']);
+  drupal_add_js($setting, 'setting');
+
+  // If we're outputting the header scope, then this might be the final time
+  // that drupal_get_js() is running, so add the setting to this output as well
+  // as to the drupal_add_js() cache. If $items['settings'] doesn't exist, it's
+  // because drupal_get_js() was intentionally passed a $javascript argument
+  // stripped off settings, potentially in order to override how settings get
+  // output, so in this case, do not add the setting to this output.
+  if ($scope == 'header' && isset($items['settings'])) {
+    $items['settings']['data'][] = $setting;
+  }
 
   // Loop through the JavaScript to construct the rendered output.
   $element = array(
@@ -4524,8 +4500,7 @@ function drupal_pre_render_scripts(array $elements) {
       'type' => 'text/javascript',
     ),
   );
-
-  foreach ($elements['#items'] as $item) {
+  foreach ($items as $item) {
     $query_string =  empty($item['version']) ? $default_query_string : $js_version_string . $item['version'];
 
     switch ($item['type']) {
@@ -4599,15 +4574,9 @@ function drupal_pre_render_scripts(array $elements) {
     }
   }
 
-  // Keep the order of JS files consistent as some are preprocessed and others
-  // are not.
-  // Make sure any inline or JS setting variables appear last after libraries
-  // have loaded.
-  $elements[] = array(
-    '#markup' => implode('', $processed) . $output,
-  );
-
-  return $elements;
+  // Keep the order of JS files consistent as some are preprocessed and others are not.
+  // Make sure any inline or JS setting variables appear last after libraries have loaded.
+  return implode('', $processed) . $output;
 }
 
 /**
