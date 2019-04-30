@@ -431,7 +431,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, t('Preview'));
     $this->drupalPostForm(NULL, [], t('Save'));
     $this->assertText(t('Your comment has been posted.'));
-    $comments = entity_load_multiple_by_properties('comment', ['subject' => $edit['subject[0][value]']]);
+    $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['subject' => $edit['subject[0][value]']]);
     $comment = reset($comments);
     $this->assertTrue($comment->id(), 'Comment found.');
 

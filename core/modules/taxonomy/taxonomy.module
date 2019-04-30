@@ -349,7 +349,7 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
       return [];
     }
   }
-  return entity_load_multiple_by_properties('taxonomy_term', $values);
+  return \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties($values);
 }
 
 /**

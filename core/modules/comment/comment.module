@@ -531,7 +531,7 @@ function comment_node_search_result(EntityInterface $node) {
 function comment_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
-      $comments = entity_load_multiple_by_properties('comment', ['uid' => $account->id()]);
+      $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
       foreach ($comments as $comment) {
         $comment->setUnpublished();
         $comment->save();
@@ -540,7 +540,7 @@ function comment_user_cancel($edit, UserInterface $account, $method) {
 
     case 'user_cancel_reassign':
       /** @var \Drupal\comment\CommentInterface[] $comments */
-      $comments = entity_load_multiple_by_properties('comment', ['uid' => $account->id()]);
+      $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
       foreach ($comments as $comment) {
         $comment->setOwnerId(0);
         $comment->setAuthorName(\Drupal::config('user.settings')->get('anonymous'));

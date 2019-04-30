@@ -16,10 +16,9 @@ use Drupal\field\Entity\FieldStorageConfig;
  */
 function comment_uninstall() {
   // Remove the comment fields.
-  $fields = entity_load_multiple_by_properties('field_storage_config', ['type' => 'comment']);
-  foreach ($fields as $field) {
-    $field->delete();
-  }
+  $storage = \Drupal::entityTypeManager()->getStorage('field_storage_config');
+  $fields = $storage->loadByProperties(['type' => 'comment']);
+  $storage->delete($fields);
 
   // Remove state setting.
   \Drupal::state()->delete('comment.node_comment_statistics_scale');

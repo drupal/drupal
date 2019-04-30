@@ -38,7 +38,7 @@ class TermKernelTest extends KernelTestBase {
     $valid_term = $this->createTerm($vocabulary);
     // Delete a valid term.
     $valid_term->delete();
-    $terms = entity_load_multiple_by_properties('taxonomy_term', ['vid' => $vocabulary->id()]);
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['vid' => $vocabulary->id()]);
     $this->assertTrue(empty($terms), 'Vocabulary is empty after deletion');
 
     // Delete an invalid term. Should not throw any notices.

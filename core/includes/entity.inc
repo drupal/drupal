@@ -184,19 +184,13 @@ function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
  *   An array of entity objects indexed by their IDs. Returns an empty array if
  *   no matching entities are found.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
- *   the entity storage's loadByProperties() method to load an entity by their
- *   property values:
- *   @code
- *     \Drupal::entityTypeManager()
- *       ->getStorage($entity_type)
- *       ->loadByProperties($values);
- *   @endcode
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the
+ *   entity type storage's loadByProperties() method.
  *
- * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
- * @see \Drupal\Core\Entity\EntityStorageInterface::loadByProperties()
+ * @see https://www.drupal.org/node/3050910
  */
 function entity_load_multiple_by_properties($entity_type, array $values) {
+  @trigger_error('entity_load_multiple_by_properties() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage\'s loadByProperties() method. See https://www.drupal.org/node/3050910', E_USER_DEPRECATED);
   return \Drupal::entityManager()
     ->getStorage($entity_type)
     ->loadByProperties($values);

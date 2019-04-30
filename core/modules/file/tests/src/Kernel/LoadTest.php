@@ -24,7 +24,7 @@ class LoadTest extends FileManagedUnitTestBase {
    * Try to load a non-existent file by URI.
    */
   public function testLoadMissingFilepath() {
-    $files = entity_load_multiple_by_properties('file', ['uri' => 'foobar://misc/druplicon.png']);
+    $files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => 'foobar://misc/druplicon.png']);
     $this->assertFalse(reset($files), "Try to load a file that doesn't exist in the database fails.");
     $this->assertFileHooksCalled([]);
   }
@@ -33,7 +33,7 @@ class LoadTest extends FileManagedUnitTestBase {
    * Try to load a non-existent file by status.
    */
   public function testLoadInvalidStatus() {
-    $files = entity_load_multiple_by_properties('file', ['status' => -99]);
+    $files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['status' => -99]);
     $this->assertFalse(reset($files), 'Trying to load a file with an invalid status fails.');
     $this->assertFileHooksCalled([]);
   }
@@ -64,9 +64,9 @@ class LoadTest extends FileManagedUnitTestBase {
 
     // Load by path.
     file_test_reset();
-    $by_path_files = entity_load_multiple_by_properties('file', ['uri' => $file->getFileUri()]);
+    $by_path_files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => $file->getFileUri()]);
     $this->assertFileHookCalled('load');
-    $this->assertEqual(1, count($by_path_files), 'entity_load_multiple_by_properties() returned an array of the correct size.');
+    $this->assertEqual(1, count($by_path_files), '\Drupal::entityTypeManager()->getStorage(\'file\')->loadByProperties() returned an array of the correct size.');
     $by_path_file = reset($by_path_files);
     $this->assertTrue($by_path_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
     $this->assertEqual($by_path_file->id(), $file->id(), 'Loading by filepath got the correct fid.', 'File');

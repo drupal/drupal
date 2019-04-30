@@ -92,6 +92,22 @@ class EntityLegacyTest extends KernelTestBase {
   }
 
   /**
+   * @expectedDeprecation entity_load_multiple_by_properties() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage's loadByProperties() method. See https://www.drupal.org/node/3050910
+   */
+  public function testEntityLoadMultipleByProperties() {
+    $this->assertCount(0, entity_load_multiple_by_properties('entity_test', ['name' => 'published entity']));
+
+    EntityTest::create(['name' => 'published entity'])->save();
+    $this->assertCount(1, entity_load_multiple_by_properties('entity_test', ['name' => 'published entity']));
+    $this->assertCount(0, entity_load_multiple_by_properties('entity_test_mul', ['name' => 'published entity']));
+
+    EntityTest::create(['name' => 'published entity'])->save();
+    EntityTestMul::create(['name' => 'published entity'])->save();
+    $this->assertCount(2, entity_load_multiple_by_properties('entity_test', ['name' => 'published entity']));
+    $this->assertCount(1, entity_load_multiple_by_properties('entity_test_mul', ['name' => 'published entity']));
+  }
+
+  /**
    * @expectedDeprecation entity_view() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, $view_mode, $langcode) instead. See https://www.drupal.org/node/3033656
    * @expectedDeprecation entity_view_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId())->viewMultiple($entities, $view_mode, $langcode) instead. See https://www.drupal.org/node/3033656
    */

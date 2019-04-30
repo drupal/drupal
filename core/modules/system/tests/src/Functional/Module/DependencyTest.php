@@ -182,10 +182,10 @@ class DependencyTest extends ModuleTestBase {
     // Ensure taxonomy has been loaded into the test-runner after forum was
     // enabled.
     \Drupal::moduleHandler()->load('taxonomy');
-    $terms = entity_load_multiple_by_properties('taxonomy_term', ['vid' => $vid]);
-    foreach ($terms as $term) {
-      $term->delete();
-    }
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $terms = $storage->loadByProperties(['vid' => $vid]);
+    $storage->delete($terms);
+
     // Uninstall the forum module, and check that taxonomy now can also be
     // uninstalled.
     $edit = ['uninstall[forum]' => 'forum'];
