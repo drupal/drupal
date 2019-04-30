@@ -34,7 +34,7 @@ class FieldValidationTest extends FieldKernelTestBase {
     $this->createFieldWithStorage('', $this->entityType, $this->bundle);
 
     // Create an 'entity_test' entity.
-    $this->entity = entity_create($this->entityType, [
+    $this->entity = \Drupal::entityTypeManager()->getStorage($this->entityType)->create([
       'type' => $this->bundle,
     ]);
   }

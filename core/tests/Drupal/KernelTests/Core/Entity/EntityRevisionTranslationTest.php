@@ -171,7 +171,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
       $this->installEntitySchema($entity_type);
       $storage = \Drupal::entityTypeManager()->getStorage($entity_type);
 
-      $entity = entity_create($entity_type, [
+      $entity = $storage->create([
         'name' => 'foo',
         'user_id' => $user->id(),
       ]);

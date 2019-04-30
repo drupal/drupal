@@ -107,10 +107,10 @@ class EntityApiTest extends EntityKernelTestBase {
 
     // Test deleting a list of entities not indexed by entity id.
     $entities = [];
-    $entity = entity_create($entity_type, ['name' => 'test', 'user_id' => $user1->id()]);
+    $entity = $storage->create(['name' => 'test', 'user_id' => $user1->id()]);
     $entity->save();
     $entities['test'] = $entity;
-    $entity = entity_create($entity_type, ['name' => 'test2', 'user_id' => $user1->id()]);
+    $entity = $storage->create(['name' => 'test2', 'user_id' => $user1->id()]);
     $entity->save();
     $entities['test2'] = $entity;
     $controller = \Drupal::entityManager()->getStorage($entity_type);

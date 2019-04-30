@@ -250,7 +250,8 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
       ])
       ->save();
 
-    $referencing_entity_1 = entity_create($this->entityType, ['name' => $this->randomMachineName()]);
+    $storage = \Drupal::entityTypeManager()->getStorage($this->entityType);
+    $referencing_entity_1 = $storage->create(['name' => $this->randomMachineName()]);
     $referencing_entity_1->save();
 
     // Create a self-reference.
@@ -273,7 +274,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
 
     // Repeat the process with another entity in order to check that the
     // 'recursive_render_id' counter is generated properly.
-    $referencing_entity_2 = entity_create($this->entityType, ['name' => $this->randomMachineName()]);
+    $referencing_entity_2 = $storage->create(['name' => $this->randomMachineName()]);
     $referencing_entity_2->save();
     $referencing_entity_2->{$this->fieldName}->entity = $referencing_entity_2;
     $referencing_entity_2->save();

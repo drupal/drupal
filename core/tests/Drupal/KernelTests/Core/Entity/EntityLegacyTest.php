@@ -121,4 +121,18 @@ class EntityLegacyTest extends KernelTestBase {
     $this->assertEquals(4, count(entity_view_multiple($entities, 'default')));
   }
 
+  /**
+   * Tests deprecation of the entity_create() function.
+   *
+   * @expectedDeprecation entity_create() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the create() method of the entity type class directly or \Drupal::entityTypeManager()->getStorage($entity_type)->create($values) instead. See https://www.drupal.org/node/2266845
+   */
+  public function testEntityCreate() {
+    $values = ['name' => $this->getRandomGenerator()->sentences(2)];
+    $expected = EntityTest::create($values);
+    $actual = entity_create('entity_test', $values);
+    $this->assertEquals($expected->label(), $actual->label());
+    $this->assertEquals($expected->getEntityTypeId(), $actual->getEntityTypeId());
+    $this->assertInstanceOf(EntityTest::class, $actual);
+  }
+
 }

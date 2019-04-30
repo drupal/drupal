@@ -123,7 +123,7 @@ class ContentEntityNormalizer extends NormalizerBase {
    * @param array $data
    *   Entity data to restore.
    * @param string $class
-   *   Unused, entity_create() is used to instantiate entity objects.
+   *   Unused parameter.
    * @param string $format
    *   Format the given data was extracted from.
    * @param array $context

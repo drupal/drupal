@@ -249,7 +249,11 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
-    $entity = entity_create($entity_type, ['id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->field->getTargetBundle()]);
+    $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->create([
+      'id' => 1,
+      'revision_id' => 1,
+      'type' => $this->fieldTestData->field->getTargetBundle(),
+    ]);
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');

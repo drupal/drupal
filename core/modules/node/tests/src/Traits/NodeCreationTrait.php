@@ -40,10 +40,11 @@ trait NodeCreationTrait {
   /**
    * Creates a node based on default settings.
    *
-   * @param array $settings
-   *   (optional) An associative array of settings for the node, as used in
-   *   entity_create(). Override the defaults by specifying the key and value
+   * @param array $values
+   *   (optional) An associative array of values for the node, as used in
+   *   creation of entity. Override the defaults by specifying the key and value
    *   in the array, for example:
+   *
    *   @code
    *     $this->drupalCreateNode(array(
    *       'title' => t('Hello, world!'),
@@ -65,9 +66,9 @@ trait NodeCreationTrait {
    * @return \Drupal\node\NodeInterface
    *   The created node entity.
    */
-  protected function createNode(array $settings = []) {
+  protected function createNode(array $values = []) {
     // Populate defaults array.
-    $settings += [
+    $values += [
       'body'      => [
         [
           'value' => $this->randomMachineName(32),
@@ -78,22 +79,22 @@ trait NodeCreationTrait {
       'type'      => 'page',
     ];
 
-    if (!array_key_exists('uid', $settings)) {
+    if (!array_key_exists('uid', $values)) {
       $user = User::load(\Drupal::currentUser()->id());
       if ($user) {
-        $settings['uid'] = $user->id();
+        $values['uid'] = $user->id();
       }
       elseif (method_exists($this, 'setUpCurrentUser')) {
         /** @var \Drupal\user\UserInterface $user */
         $user = $this->setUpCurrentUser();
-        $settings['uid'] = $user->id();
+        $values['uid'] = $user->id();
       }
       else {
-        $settings['uid'] = 0;
+        $values['uid'] = 0;
       }
     }
 
-    $node = Node::create($settings);
+    $node = Node::create($values);
     $node->save();
 
     return $node;

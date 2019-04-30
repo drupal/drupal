@@ -125,7 +125,9 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       'user_id' => mt_rand(1, 128),
       'langcode' => $default_langcode,
     ];
-    $entity = entity_create($this->entityTypeId, $values);
+    $entity = \Drupal::entityTypeManager()
+      ->getStorage($this->entityTypeId)
+      ->create($values);
 
     // Create some file entities from the generated test files and store them.
     $values = [];

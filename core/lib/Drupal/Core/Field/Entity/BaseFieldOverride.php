@@ -87,8 +87,6 @@ class BaseFieldOverride extends FieldConfigBase {
    *   (optional) The type of the entity to create. Defaults to
    *   'base_field_override'.
    *
-   * @see entity_create()
-   *
    * @throws \Drupal\Core\Field\FieldException
    *   Exception thrown if $values does not contain a field_name, entity_type or
    *   bundle value.

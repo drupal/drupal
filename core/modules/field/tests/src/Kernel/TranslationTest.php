@@ -175,10 +175,11 @@ class TranslationTest extends FieldKernelTestBase {
     $langcode = $entity->language()->getId();
     $this->assertEqual($entity->getTranslation($langcode)->{$field_name_default}->getValue(), $field->getDefaultValueLiteral(), format_string('Default value correctly populated for language %language.', ['%language' => $langcode]));
 
+    $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
     // Check that explicit empty values are not overridden with default values.
     foreach ([NULL, []] as $empty_items) {
       $values = ['type' => $field->getTargetBundle(), 'langcode' => $translation_langcodes[0]];
-      $entity = entity_create($entity_type_id, $values);
+      $entity = $storage->create($values);
       foreach ($translation_langcodes as $langcode) {
         $values[$this->fieldName][$langcode] = $this->_generateTestFieldValues($this->fieldStorage->getCardinality());
         $translation = $entity->hasTranslation($langcode) ? $entity->getTranslation($langcode) : $entity->addTranslation($langcode);

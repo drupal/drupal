@@ -90,8 +90,6 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    *   bundle to which the field is attached to. Other array elements will be
    *   used to set the corresponding properties on the class; see the class
    *   property documentation for details.
-   *
-   * @see entity_create()
    */
   public function __construct(array $values, $entity_type = 'field_config') {
     // Allow either an injected FieldStorageConfig object, or a field_name and

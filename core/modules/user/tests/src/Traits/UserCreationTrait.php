@@ -212,8 +212,8 @@ trait UserCreationTrait {
    * @param string $name
    *   (optional) The label for the role. Defaults to a random string.
    * @param int $weight
-   *   (optional) The weight for the role. Defaults NULL so that entity_create()
-   *   sets the weight to maximum + 1.
+   *   (optional) The weight for the role. Defaults to NULL which sets the
+   *   weight to maximum + 1.
    *
    * @return string
    *   Role ID of newly created role, or FALSE if role creation failed.
@@ -239,8 +239,8 @@ trait UserCreationTrait {
    * @param string $name
    *   (optional) The label for the role. Defaults to a random string.
    * @param int $weight
-   *   (optional) The weight for the role. Defaults NULL so that entity_create()
-   *   sets the weight to maximum + 1.
+   *   (optional) The weight for the role. Defaults to NULL which sets the
+   *   weight to maximum + 1.
    *
    * @return string
    *   Role ID of newly created role, or FALSE if role creation failed.

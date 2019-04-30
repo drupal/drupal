@@ -99,7 +99,7 @@ class reEnableModuleFieldTest extends BrowserTestBase {
     // Add another telephone field to a different entity type in order to test
     // the message for the case when multiple fields are blocking the
     // uninstallation of a module.
-    $field_storage2 = entity_create('field_storage_config', [
+    $field_storage2 = FieldStorageConfig::create([
       'field_name' => 'field_telephone_2',
       'entity_type' => 'user',
       'type' => 'telephone',

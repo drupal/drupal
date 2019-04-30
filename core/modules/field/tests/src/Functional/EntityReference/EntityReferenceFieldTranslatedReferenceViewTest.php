@@ -286,7 +286,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
    */
   protected function createReferencedEntityWithTranslation() {
     /** @var \Drupal\node\Entity\Node $node */
-    $node = entity_create($this->testEntityTypeName, [
+    $node = \Drupal::entityTypeManager()->getStorage($this->testEntityTypeName)->create([
       'title' => $this->originalLabel,
       'type' => $this->referencedType->id(),
       'description' => [
@@ -309,7 +309,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
    */
   protected function createNotTranslatedReferencedEntity() {
     /** @var \Drupal\node\Entity\Node $node */
-    $node = entity_create($this->testEntityTypeName, [
+    $node = \Drupal::entityTypeManager()->getStorage($this->testEntityTypeName)->create([
       'title' => $this->labelOfNotTranslatedReference,
       'type' => $this->referencedType->id(),
       'description' => [
@@ -328,7 +328,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
    */
   protected function createReferrerEntity($translatable = TRUE) {
     /** @var \Drupal\node\Entity\Node $node */
-    $node = entity_create($this->testEntityTypeName, [
+    $node = \Drupal::entityTypeManager()->getStorage($this->testEntityTypeName)->create([
       'title' => $this->randomMachineName(),
       'type' => $this->referrerType->id(),
       'description' => [

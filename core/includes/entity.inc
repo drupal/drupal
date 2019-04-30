@@ -271,10 +271,12 @@ function entity_delete_multiple($entity_type, array $ids) {
  *     \Drupal::entityTypeManager()->getStorage($entity_type)->create($values);
  *   @endcode
  *
+ * @see https://www.drupal.org/node/2266845
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
  * @see \Drupal\Core\Entity\EntityStorageInterface::create()
  */
 function entity_create($entity_type, array $values = []) {
+  @trigger_error('entity_create() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the create() method of the entity type class directly or \Drupal::entityTypeManager()->getStorage($entity_type)->create($values) instead. See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   return \Drupal::entityManager()
     ->getStorage($entity_type)
     ->create($values);

@@ -108,7 +108,9 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
 
     // Test a non-referenceable bundle.
     entity_test_create_bundle('non_referenceable', NULL, $this->referencedEntityType);
-    $referenced_entity = entity_create($this->referencedEntityType, ['type' => 'non_referenceable']);
+    $referenced_entity = $this->entityTypeManager
+      ->getStorage($this->referencedEntityType)
+      ->create(['type' => 'non_referenceable']);
     $referenced_entity->save();
     $entity->{$this->fieldName}->target_id = $referenced_entity->id();
     $violations = $entity->{$this->fieldName}->validate();
