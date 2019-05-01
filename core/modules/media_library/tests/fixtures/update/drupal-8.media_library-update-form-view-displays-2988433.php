@@ -47,16 +47,6 @@ $connection->insert('config')
     'name',
     'data',
   ])
-  ->values([
-    'collection' => '',
-    'name' => 'core.entity_form_mode.media.media_library',
-    'data' => 'a:9:{s:4:"uuid";s:36:"a95ff3d3-19ca-4a20-9ed5-63574ffaf4fa";s:8:"langcode";s:2:"en";s:6:"status";b:1;s:12:"dependencies";a:2:{s:8:"enforced";a:1:{s:6:"module";a:1:{i:0;s:13:"media_library";}}s:6:"module";a:1:{i:0;s:5:"media";}}s:5:"_core";a:1:{s:19:"default_config_hash";s:43:"pkq0uj-IoqEQRBOP_ddUDV0ZJ-dKQ_fLcppsEDF2UO8";}s:2:"id";s:19:"media.media_library";s:5:"label";s:13:"Media library";s:16:"targetEntityType";s:5:"media";s:5:"cache";b:1;}',
-  ])
-  ->values([
-    'collection' => '',
-    'name' => 'core.entity_view_mode.media.media_library',
-    'data' => 'a:9:{s:4:"uuid";s:36:"aa86ec5c-3c36-44c5-b5b5-ade8bba3f549";s:8:"langcode";s:2:"en";s:6:"status";b:1;s:12:"dependencies";a:2:{s:8:"enforced";a:1:{s:6:"module";a:1:{i:0;s:13:"media_library";}}s:6:"module";a:1:{i:0;s:5:"media";}}s:5:"_core";a:1:{s:19:"default_config_hash";s:43:"pkq0uj-IoqEQRBOP_ddUDV0ZJ-dKQ_fLcppsEDF2UO8";}s:2:"id";s:19:"media.media_library";s:5:"label";s:13:"Media library";s:16:"targetEntityType";s:5:"media";s:5:"cache";b:1;}',
-  ])
   ->values(array(
     'collection' => '',
     'name' => 'views.view.media_library',

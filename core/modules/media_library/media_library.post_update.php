@@ -5,6 +5,8 @@
  * Post update functions for Media library.
  */
 
+use Drupal\Core\Entity\Entity\EntityFormMode;
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\media\Entity\MediaType;
 use Drupal\views\Views;
 
@@ -12,6 +14,29 @@ use Drupal\views\Views;
  * Create and configure Media Library form and view displays for media types.
  */
 function media_library_post_update_display_modes() {
+  // Ensure the custom view and form modes are created.
+  $values = [
+    'id' => 'media.media_library',
+    'targetEntityType' => 'media',
+    'label' => t('Media library'),
+    'dependencies' => [
+      'enforced' => [
+        'module' => [
+          'media_library',
+        ],
+      ],
+      'module' => [
+        'media',
+      ],
+    ],
+  ];
+  if (!EntityViewMode::load('media.media_library')) {
+    EntityViewMode::create($values)->save();
+  }
+  if (!EntityFormMode::load('media.media_library')) {
+    EntityFormMode::create($values)->save();
+  }
+
   // The Media Library needs a special form display and view display to make
   // sure the Media Library is displayed properly. These were not automatically
   // created for custom media types, so let's make sure this is fixed.
