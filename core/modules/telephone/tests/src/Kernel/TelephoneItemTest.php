@@ -36,6 +36,7 @@ class TelephoneItemTest extends FieldKernelTestBase {
       'entity_type' => 'entity_test',
       'field_name' => 'field_test',
       'bundle' => 'entity_test',
+      'default_value' => [0 => ['value' => '+012345678']],
     ])->save();
   }
 
