@@ -1,0 +1,45 @@
+id: d6_term_node_translation
+label: Term/node translation relationships
+migration_tags:
+  - Drupal 6
+  - Content
+  - Multilingual
+deriver: Drupal\taxonomy\Plugin\migrate\D6TermNodeDeriver
+source:
+  plugin: d6_term_node
+process:
+  dest_nid:
+    -
+      plugin: migration_lookup
+      migration: d6_node_translation
+      source: nid
+    -
+      plugin: skip_on_empty
+      method: row
+  nid:
+    -
+      plugin: extract
+      index: [0]
+      source: '@dest_nid'
+    -
+      plugin: skip_on_empty
+      method: row
+  langcode:
+    -
+      plugin: extract
+      index: [1]
+      source: '@dest_nid'
+    -
+      plugin: skip_on_empty
+      method: row
+  type: type
+  # The actual field name is dynamic and will be added by the builder.
+destination:
+  plugin: entity:node
+  translations: true
+migration_dependencies:
+  required:
+    - d6_vocabulary_entity_display
+    - d6_vocabulary_entity_form_display
+    - d6_node
+    - d6_node_translation

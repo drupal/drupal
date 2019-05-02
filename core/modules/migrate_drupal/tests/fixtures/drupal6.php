@@ -8713,6 +8713,16 @@ $connection->insert('history')
 ))
 ->values(array(
   'uid' => '1',
+  'nid' => '1',
+  'timestamp' => '1549874910',
+))
+->values(array(
+  'uid' => '1',
+  'nid' => '2',
+  'timestamp' => '1549874910',
+))
+->values(array(
+  'uid' => '1',
   'nid' => '3',
   'timestamp' => '1457654737',
 ))
@@ -27772,8 +27782,48 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
+  'lid' => '1672',
+  'translation' => 'fr - Type',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
   'lid' => '1678',
   'translation' => 'fr - I really, really, really love migrating ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1690',
+  'translation' => 'Noir',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1692',
+  'translation' => 'fr - Talos IV',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1694',
+  'translation' => 'fr - The home of Captain Christopher Pike.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1696',
+  'translation' => "fr - 10\r\nfr - 20\r\nfr - 50\r\nfr - 100\r\nfr - 1000",
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -27908,33 +27958,9 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
-  'lid' => '1690',
-  'translation' => 'Noir',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
   'lid' => '1691',
   'translation' => 'Mhlophe',
   'language' => 'zu',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '1672',
-  'translation' => 'fr - Type',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '1692',
-  'translation' => 'fr - Talos IV',
-  'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
   'i18n_status' => '0',
@@ -27951,22 +27977,6 @@ $connection->insert('locales_target')
   'lid' => '1694',
   'translation' => 'zu - The home of Captain Christopher Pike.',
   'language' => 'zu',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '1694',
-  'translation' => 'fr - The home of Captain Christopher Pike.',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '1696',
-  'translation' => "fr - 10\r\nfr - 20\r\nfr - 50\r\nfr - 100\r\nfr - 1000",
-  'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
   'i18n_status' => '0',
@@ -48071,6 +48081,16 @@ $connection->insert('term_node')
   'tid' => '4',
 ))
 ->values(array(
+  'nid' => '21',
+  'vid' => '2002',
+  'tid' => '4',
+))
+->values(array(
+  'nid' => '18',
+  'vid' => '21',
+  'tid' => '5',
+))
+->values(array(
   'nid' => '1',
   'vid' => '2001',
   'tid' => '5',
@@ -48079,6 +48099,26 @@ $connection->insert('term_node')
   'nid' => '19',
   'vid' => '22',
   'tid' => '8',
+))
+->values(array(
+  'nid' => '22',
+  'vid' => '2003',
+  'tid' => '9',
+))
+->values(array(
+  'nid' => '22',
+  'vid' => '2003',
+  'tid' => '14',
+))
+->values(array(
+  'nid' => '18',
+  'vid' => '21',
+  'tid' => '15',
+))
+->values(array(
+  'nid' => '21',
+  'vid' => '2002',
+  'tid' => '15',
 ))
 ->execute();
 $connection->schema()->createTable('term_relation', array(
@@ -50192,7 +50232,7 @@ $connection->insert('vocabulary')
   'description' => 'description of vocabulary 3 (i=2)',
   'help' => '',
   'relations' => '1',
-  'hierarchy' => '2',
+  'hierarchy' => '0',
   'multiple' => '1',
   'required' => '0',
   'tags' => '0',
@@ -50220,7 +50260,7 @@ $connection->insert('vocabulary')
   'description' => 'description of vocabulary name much longer than thirty two characters',
   'help' => '',
   'relations' => '1',
-  'hierarchy' => '3',
+  'hierarchy' => '0',
   'multiple' => '1',
   'required' => '0',
   'tags' => '0',
@@ -50288,6 +50328,14 @@ $connection->insert('vocabulary_node_types')
 ->values(array(
   'vid' => '4',
   'type' => 'article',
+))
+->values(array(
+  'vid' => '3',
+  'type' => 'employee',
+))
+->values(array(
+  'vid' => '5',
+  'type' => 'employee',
 ))
 ->values(array(
   'vid' => '7',

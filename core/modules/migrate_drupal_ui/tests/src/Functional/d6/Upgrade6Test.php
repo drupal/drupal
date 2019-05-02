@@ -68,7 +68,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'contact_message' => 0,
       'configurable_language' => 5,
       'editor' => 2,
-      'field_config' => 93,
+      'field_config' => 95,
       'field_storage_config' => 66,
       'file' => 7,
       'filter_format' => 7,
