@@ -15,3 +15,11 @@ field.widget.settings.telephone_default:
     placeholder:
       type: label
       label: 'Placeholder'
+
+field.value.telephone:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: string
+      label: 'Value'
