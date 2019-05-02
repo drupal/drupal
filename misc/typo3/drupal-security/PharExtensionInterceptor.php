@@ -55,6 +55,21 @@ class PharExtensionInterceptor implements Assertable {
    *   invoked by the phar file.
    */
   private function baseFileContainsPharExtension($path) {
+    $path_normalized = Helper::normalizePath($path);
+    $path_extension = strtolower(pathinfo($path_normalized, PATHINFO_EXTENSION));
+    $compression_extensions = ["gz", "bz2"];
+    $allowed_phar_extensions = ["phar", "tar", "tgz"];
+    foreach($compression_extensions as $compression_extension) {
+        if($path_extension == $compression_extension) {
+            $path_normalized = substr($path_normalized, 0, strlen($path_normalized) - strlen($compression_extension) - 1);
+            $path_extension = strtolower(pathinfo($path_normalized, PATHINFO_EXTENSION));
+            break;
+        }
+    }
+    if(in_array($path_extension, $allowed_phar_extensions)) {
+       return true;
+    }
+
     $baseFile = Helper::determineBaseFile($path);
     if ($baseFile === NULL) {
       return FALSE;
