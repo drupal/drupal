@@ -86,8 +86,8 @@ class EntityApiTest extends EntityKernelTestBase {
     $this->assertEqual($entity->name->value, 'test3', format_string('%entity_type: Entity updated.', ['%entity_type' => $entity_type]));
 
     // Try deleting multiple test entities by deleting all.
-    $ids = array_keys($storage->loadMultiple());
-    entity_delete_multiple($entity_type, $ids);
+    $entities = $storage->loadMultiple();
+    $storage->delete($entities);
 
     $all = $storage->loadMultiple();
     $this->assertTrue(empty($all), format_string('%entity_type: Deleted all entities.', ['%entity_type' => $entity_type]));

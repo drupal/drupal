@@ -353,11 +353,13 @@ class BookTest extends BrowserTestBase {
     $node4 = $node_storage->load($nodes[4]->id());
     $this->assertTrue(empty($node4->book), 'Deleting child book node properly allowed.');
 
+    // $nodes[4] is stale, trying to delete it directly will cause an error.
+    $node4->delete();
+    unset($nodes[4]);
+
     // Delete all child book nodes and retest top-level node deletion.
-    foreach ($nodes as $node) {
-      $nids[] = $node->id();
-    }
-    entity_delete_multiple('node', $nids);
+    $node_storage->delete($nodes);
+
     $this->drupalPostForm('node/' . $this->book->id() . '/outline/remove', $edit, t('Remove'));
     $node_storage->resetCache([$this->book->id()]);
     $node = $node_storage->load($this->book->id());

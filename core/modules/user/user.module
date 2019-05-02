@@ -864,8 +864,17 @@ function user_cancel_methods() {
  *
  * @param int $uid
  *   A user ID.
+ *
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use the user
+ *   entity's delete method to delete the user.
+ * @code
+ *   Drupal::entityTypeManager->getStorage('user')->load($uid)->delete();
+ * @endcode
+ *
+ * @see https://www.drupal.org/node/3051463
  */
 function user_delete($uid) {
+  @trigger_error("user_delete() is deprecated in drupal:8.8.0. Use the user entity's delete method to delete the user. See https://www.drupal.org/node/3051463", E_USER_DEPRECATED);
   user_delete_multiple([$uid]);
 }
 
@@ -875,10 +884,18 @@ function user_delete($uid) {
  * @param int[] $uids
  *   An array of user IDs.
  *
- * @see hook_ENTITY_TYPE_predelete()
- * @see hook_ENTITY_TYPE_delete()
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use the
+ *   entity storage system to delete the users.
+ * @code
+ *   $storage_handler = \Drupal::entityTypeManager()->getStorage('user');
+ *   $users = $storage_handler->loadMultiple($uids);
+ *   $storage_handler->delete($users);
+ * @endcode
+ *
+ * @see https://www.drupal.org/node/3051463
  */
 function user_delete_multiple(array $uids) {
+  @trigger_error("user_delete_multiple() is deprecated in drupal:8.8.0. Use the entity storage system to delete the users. See https://www.drupal.org/node/3051463", E_USER_DEPRECATED);
   entity_delete_multiple('user', $uids);
 }
 

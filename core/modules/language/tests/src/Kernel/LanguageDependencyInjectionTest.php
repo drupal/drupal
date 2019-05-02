@@ -35,7 +35,8 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
   public function testDependencyInjectedNewDefaultLanguage() {
     $default_language = ConfigurableLanguage::load(\Drupal::languageManager()->getDefaultLanguage()->getId());
     // Change the language default object to different values.
-    ConfigurableLanguage::createFromLangcode('fr')->save();
+    $fr = ConfigurableLanguage::createFromLangcode('fr');
+    $fr->save();
     $this->config('system.site')->set('default_langcode', 'fr')->save();
 
     // The language system creates a Language object which contains the
@@ -45,7 +46,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
 
     // Delete the language to check that we fallback to the default.
     try {
-      entity_delete_multiple('configurable_language', ['fr']);
+      $fr->delete();
       $this->fail('Expected DeleteDefaultLanguageException thrown.');
     }
     catch (DeleteDefaultLanguageException $e) {
@@ -55,7 +56,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
     // Re-save the previous default language and the delete should work.
     $this->config('system.site')->set('default_langcode', $default_language->getId())->save();
 
-    entity_delete_multiple('configurable_language', ['fr']);
+    $fr->delete();
     $result = \Drupal::languageManager()->getCurrentLanguage();
     $this->assertIdentical($result->getId(), $default_language->getId());
   }

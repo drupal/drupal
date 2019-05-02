@@ -456,7 +456,9 @@ class BlockTest extends BlockTestBase {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
 
     // Delete the "Powered by Drupal" blocks; verify a cache miss.
-    entity_delete_multiple('block', ['powered', 'powered-2']);
+    $block_storage = \Drupal::entityTypeManager()->getStorage('block');
+    $block_storage->load('powered')->delete();
+    $block_storage->load('powered-2')->delete();
     $this->drupalGet('<front>');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
   }

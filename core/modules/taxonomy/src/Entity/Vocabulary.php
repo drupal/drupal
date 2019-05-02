@@ -125,7 +125,9 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
     parent::preDelete($storage, $entities);
 
     // Only load terms without a parent, child terms will get deleted too.
-    entity_delete_multiple('taxonomy_term', $storage->getToplevelTids(array_keys($entities)));
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $terms = $term_storage->loadMultiple($storage->getToplevelTids(array_keys($entities)));
+    $term_storage->delete($terms);
   }
 
   /**

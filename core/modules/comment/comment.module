@@ -204,7 +204,9 @@ function comment_field_config_delete(FieldConfigInterface $field) {
     $entity_query->condition('entity_type', $field->getEntityTypeId());
     $entity_query->condition('field_name', $field->getName());
     $cids = $entity_query->execute();
-    entity_delete_multiple('comment', $cids);
+    $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
+    $comments = $comment_storage->loadMultiple($cids);
+    $comment_storage->delete($comments);
   }
 }
 
@@ -406,7 +408,9 @@ function comment_entity_predelete(EntityInterface $entity) {
     $entity_query->condition('entity_id', (int) $entity->id());
     $entity_query->condition('entity_type', $entity->getEntityTypeId());
     $cids = $entity_query->execute();
-    entity_delete_multiple('comment', $cids);
+    $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
+    $comments = $comment_storage->loadMultiple($cids);
+    $comment_storage->delete($comments);
     \Drupal::service('comment.statistics')->delete($entity);
   }
 }
@@ -557,7 +561,9 @@ function comment_user_predelete($account) {
   $entity_query = \Drupal::entityQuery('comment');
   $entity_query->condition('uid', $account->id());
   $cids = $entity_query->execute();
-  entity_delete_multiple('comment', $cids);
+  $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
+  $comments = $comment_storage->loadMultiple($cids);
+  $comment_storage->delete($comments);
 }
 
 /**

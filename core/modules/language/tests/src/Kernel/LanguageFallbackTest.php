@@ -53,13 +53,13 @@ class LanguageFallbackTest extends LanguageTestBase {
     $this->assertEqual(array_values($candidates), $expected, 'Language fallback candidates are alterable for specific operations.');
 
     // Check that when the site is monolingual no language fallback is applied.
-    $langcodes_to_delete = [];
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $configurable_language_storage */
+    $configurable_language_storage = $this->container->get('entity_type.manager')->getStorage('configurable_language');
     foreach ($language_list as $langcode => $language) {
       if (!$language->isDefault()) {
-        $langcodes_to_delete[] = $langcode;
+        $configurable_language_storage->load($langcode)->delete();
       }
     }
-    entity_delete_multiple('configurable_language', $langcodes_to_delete);
     $candidates = $this->languageManager->getFallbackCandidates();
     $this->assertEqual(array_values($candidates), [LanguageInterface::LANGCODE_DEFAULT], 'Language fallback is not applied when the Language module is not enabled.');
   }

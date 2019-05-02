@@ -791,9 +791,10 @@ function node_user_predelete($account) {
     ->condition('uid', $account->id())
     ->accessCheck(FALSE)
     ->execute();
-  entity_delete_multiple('node', $nids);
   // Delete old revisions.
   $storage_controller = \Drupal::entityManager()->getStorage('node');
+  $nodes = $storage_controller->loadMultiple($nids);
+  $storage_controller->delete($nodes);
   $revisions = $storage_controller->userRevisionIds($account);
   foreach ($revisions as $revision) {
     node_revision_delete($revision);

@@ -53,7 +53,9 @@ class UserDeleteTest extends KernelTestBase {
     // We should be able to load one of the users.
     $this->assertNotNull(User::load($user_a->id()));
     // Delete the users.
-    user_delete_multiple($uids);
+    $storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $users = $storage->loadMultiple($uids);
+    $storage->delete($users);
     // Test if the roles assignments are deleted.
     $query = $connection->select('user__roles', 'r');
     $roles_after_deletion = $query

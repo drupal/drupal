@@ -30,8 +30,7 @@ class TermKernelTest extends KernelTestBase {
   }
 
   /**
-   * Deleting terms should also remove related vocabulary.
-   * Deleting an invalid term should silently fail.
+   * Tests that a deleted term is no longer in the vocabulary.
    */
   public function testTermDelete() {
     $vocabulary = $this->createVocabulary();
@@ -40,9 +39,6 @@ class TermKernelTest extends KernelTestBase {
     $valid_term->delete();
     $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['vid' => $vocabulary->id()]);
     $this->assertTrue(empty($terms), 'Vocabulary is empty after deletion');
-
-    // Delete an invalid term. Should not throw any notices.
-    entity_delete_multiple('taxonomy_term', [42]);
   }
 
   /**

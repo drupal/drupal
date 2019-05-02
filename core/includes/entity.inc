@@ -243,8 +243,10 @@ function entity_load_unchanged($entity_type, $id) {
  * @see \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage()
  * @see \Drupal\Core\Entity\EntityStorageInterface::loadMultiple()
  * @see \Drupal\Core\Entity\EntityStorageInterface::delete()
+ * @see https://www.drupal.org/node/3051072
  */
 function entity_delete_multiple($entity_type, array $ids) {
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.0.0 and will be removed in drupal:9.0.0. Use the entity storage\'s delete() method to delete multiple entities. @see https://www.drupal.org/node/3051072', E_USER_DEPRECATED);
   $controller = \Drupal::entityManager()->getStorage($entity_type);
   $entities = $controller->loadMultiple($ids);
   $controller->delete($entities);

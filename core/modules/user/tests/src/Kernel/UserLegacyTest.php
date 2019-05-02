@@ -27,6 +27,7 @@ class UserLegacyTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('user');
+    $this->installSchema('user', ['users_data']);
   }
 
   /**
@@ -57,6 +58,30 @@ class UserLegacyTest extends KernelTestBase {
       User::create(),
     ];
     $this->assertEquals(4, count(user_view_multiple($entities)));
+  }
+
+  /**
+   * Tests that user_delete throws a deprecation error.
+   *
+   * @expectedDeprecation user_delete() is deprecated in drupal:8.8.0. Use the user entity's delete method to delete the user. See https://www.drupal.org/node/3051463
+   */
+  public function testUserDelete() {
+    User::create(['name' => 'foo', 'uid' => 10])->save();
+    user_delete(10);
+    $this->assert(NULL === User::load(10), "User has been deleted");
+  }
+
+  /**
+   * Tests that user_delete_multiple throws a deprecation error.
+   *
+   * @expectedDeprecation user_delete_multiple() is deprecated in drupal:8.8.0. Use the entity storage system to delete the users. See https://www.drupal.org/node/3051463
+   */
+  public function testUserDeleteMultiple() {
+    User::create(['name' => 'foo', 'uid' => 10])->save();
+    User::create(['name' => 'bar', 'uid' => 11])->save();
+    user_delete_multiple([10, 11]);
+    $this->assert(NULL === User::load(10), "User 10 has been deleted");
+    $this->assert(NULL === User::load(11), "User 11 has been deleted");
   }
 
 }

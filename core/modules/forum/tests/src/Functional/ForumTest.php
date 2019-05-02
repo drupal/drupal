@@ -257,7 +257,9 @@ class ForumTest extends BrowserTestBase {
     $tids = \Drupal::entityQuery('taxonomy_term')
       ->condition('vid', $vid)
       ->execute();
-    entity_delete_multiple('taxonomy_term', $tids);
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $terms = $term_storage->loadMultiple($tids);
+    $term_storage->delete($terms);
 
     // Create an orphan forum item.
     $edit = [];

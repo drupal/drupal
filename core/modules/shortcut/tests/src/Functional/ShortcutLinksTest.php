@@ -290,7 +290,8 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->assertFalse(in_array($shortcut->id(), $ids), 'Successfully deleted a shortcut.');
 
     // Delete all the remaining shortcut links.
-    entity_delete_multiple('shortcut', array_filter($ids));
+    $storage = \Drupal::entityTypeManager()->getStorage('shortcut');
+    $storage->delete($storage->loadMultiple(array_filter($ids)));
 
     // Get the front page to check that no exceptions occur.
     $this->drupalGet('');

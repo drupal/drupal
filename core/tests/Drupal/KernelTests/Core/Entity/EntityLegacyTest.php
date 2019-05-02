@@ -35,6 +35,21 @@ class EntityLegacyTest extends KernelTestBase {
   }
 
   /**
+   * Tests that entity_delete_multiple triggers an error.
+   *
+   * @expectedDeprecation entity_delete_multiple is deprecated in drupal:8.0.0 and will be removed in drupal:9.0.0. Use the entity storage's delete() method to delete multiple entities. @see https://www.drupal.org/node/3051072
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testEntityDeleteMultiple() {
+    EntityTest::create(['name' => 'published entity'])->save();
+    EntityTest::create(['name' => 'published entity'])->save();
+    $this->assertCount(2, \Drupal::entityTypeManager()->getStorage('entity_test')->loadMultiple());
+    entity_delete_multiple('entity_test', [1, 2]);
+    $this->assertCount(0, \Drupal::entityTypeManager()->getStorage('entity_test')->loadMultiple());
+  }
+
+  /**
    * @expectedDeprecation entity_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage's loadMultiple() method. See https://www.drupal.org/node/2266845
    * @expectedDeprecation entity_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the entity type storage's load() method. See https://www.drupal.org/node/2266845
    * @expectedDeprecation entity_get_bundles() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getBundleInfo() for a single bundle, or \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getAllBundleInfo() for all bundles. See https://www.drupal.org/node/3051077

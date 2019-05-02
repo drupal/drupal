@@ -738,7 +738,7 @@ class DbLogTest extends BrowserTestBase {
     $this->assertText('Dblog test log message');
 
     // Delete the user.
-    user_delete($tempuser->id());
+    $tempuser->delete();
     $this->drupalGet('user/' . $tempuser_uid);
     $this->assertResponse(404);
 

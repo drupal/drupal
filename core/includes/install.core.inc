@@ -1698,7 +1698,9 @@ function install_download_additional_translations_operations(&$install_state) {
       ->save();
     \Drupal::service('language.default')->set($language);
     if (empty($install_state['profile_info']['keep_english'])) {
-      entity_delete_multiple('configurable_language', ['en']);
+      if ($lang = ConfigurableLanguage::load('en')) {
+        $lang->delete();
+      }
     }
   }
 

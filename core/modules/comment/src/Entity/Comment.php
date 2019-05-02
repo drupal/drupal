@@ -189,7 +189,9 @@ class Comment extends ContentEntityBase implements CommentInterface {
     parent::postDelete($storage, $entities);
 
     $child_cids = $storage->getChildCids($entities);
-    entity_delete_multiple('comment', $child_cids);
+    $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
+    $comments = $comment_storage->loadMultiple($child_cids);
+    $comment_storage->delete($comments);
 
     foreach ($entities as $id => $entity) {
       \Drupal::service('comment.statistics')->update($entity);

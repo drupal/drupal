@@ -51,7 +51,7 @@ class CommentLinksTest extends CommentTestBase {
     // Remove additional user permissions from $this->webUser added by setUp(),
     // since this test is limited to anonymous and authenticated roles only.
     $roles = $this->webUser->getRoles();
-    entity_delete_multiple('user_role', [reset($roles)]);
+    \Drupal::entityTypeManager()->getStorage('user_role')->load(reset($roles))->delete();
 
     // Create a comment via CRUD API functionality, since
     // $this->postComment() relies on actual user permissions.
