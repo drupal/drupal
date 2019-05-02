@@ -151,7 +151,7 @@ abstract class FileMediaFormatterBase extends FileFormatterBase implements FileM
    */
   protected function prepareAttributes(array $additional_attributes = []) {
     $attributes = new Attribute();
-    foreach (['controls', 'autoplay', 'loop'] + $additional_attributes as $attribute) {
+    foreach (array_merge(['controls', 'autoplay', 'loop'], $additional_attributes) as $attribute) {
       if ($this->getSetting($attribute)) {
         $attributes->setAttribute($attribute, $attribute);
       }
