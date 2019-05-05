@@ -82,6 +82,9 @@ SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
 <IfModule mod_php5.c>
   php_flag engine off
 </IfModule>
+<IfModule mod_php7.c>
+  php_flag engine off
+</IfModule>
 EOF;
 
     if ($private) {
