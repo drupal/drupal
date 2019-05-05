@@ -1,9 +1,12 @@
 <?php
 
-namespace Drupal\Tests\user\Functional\Views;
+namespace Drupal\Tests\user\Kernel\Views;
 
 use Drupal\Core\Form\FormState;
+use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
+use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
 /**
@@ -11,12 +14,20 @@ use Drupal\views\Views;
  *
  * @group user
  */
-class ArgumentValidateTest extends UserTestBase {
+class ArgumentValidateTest extends ViewsKernelTestBase {
+
+  use UserCreationTrait;
 
   /**
-   * Views used by this test.
-   *
-   * @var array
+   * {@inheritdoc}
+   */
+  public static $modules = [
+    'node',
+    'user_test_views',
+  ];
+
+  /**
+   * {@inheritdoc}
    */
   public static $testViews = ['test_view_argument_validate_user', 'test_view_argument_validate_username'];
 
@@ -27,22 +38,25 @@ class ArgumentValidateTest extends UserTestBase {
    */
   protected $account;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
-
-    $this->account = $this->drupalCreateUser();
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('node');
+    $this->account = $this->createUser();
+    ViewTestData::createTestViews(get_class($this), ['user_test_views']);
   }
 
   /**
    * Tests the User (ID) argument validator.
    */
   public function testArgumentValidateUserUid() {
-    $account = $this->account;
-
     $view = Views::getView('test_view_argument_validate_user');
     $this->executeView($view);
 
-    $this->assertTrue($view->argument['null']->validateArgument($account->id()));
+    $this->assertTrue($view->argument['null']->validateArgument($this->account->id()));
     // Reset argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a valid numeric, but for a user that doesn't exist
@@ -59,12 +73,10 @@ class ArgumentValidateTest extends UserTestBase {
    * Tests the UserName argument validator.
    */
   public function testArgumentValidateUserName() {
-    $account = $this->account;
-
     $view = Views::getView('test_view_argument_validate_username');
     $this->executeView($view);
 
-    $this->assertTrue($view->argument['null']->validateArgument($account->getAccountName()));
+    $this->assertTrue($view->argument['null']->validateArgument($this->account->getAccountName()));
     // Reset argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a valid string, but for a user that doesn't exist
