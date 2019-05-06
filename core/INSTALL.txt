@@ -180,7 +180,7 @@ INSTALLATION
       permissions on the sites/default directory. The web server can then
       create the files directory within it for you.
 
-      For example, on a Unix/Linux command line, you can you can grant everyone
+      For example, on a Unix/Linux command line, you can grant everyone
       (including the web server) permission to write to the sites/default
       directory with this command:
 
@@ -333,7 +333,7 @@ INSTALLATION
    cron key, is available in the "Cron maintenance tasks" section of the Status
    report page at Administration > Reports > Status report.
 
-   As an example for how to set up this automated process, you can use the
+   As an example of how to set up this automated process, you can use the
    crontab utility on Unix/Linux systems. The following crontab line uses the
    wget command to visit the cron page, and runs each hour, on the hour:
 
