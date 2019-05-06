@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\tracker\Functional\Views;
 
+@trigger_error('The ' . __NAMESPACE__ . '\TrackerTestBase is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Instead, use Kernel tests to test tracker module views plugins integration. https://www.drupal.org/node/3046938', E_USER_DEPRECATED);
+
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\views\Functional\ViewTestBase;
@@ -10,6 +12,11 @@ use Drupal\comment\Entity\Comment;
 
 /**
  * Base class for all tracker tests.
+ *
+ * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Instead,
+ *   use Kernel tests to test tracker module views plugins integration.
+ *
+ * @see https://www.drupal.org/node/3046938
  */
 abstract class TrackerTestBase extends ViewTestBase {
 
