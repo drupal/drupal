@@ -3,7 +3,9 @@ services:
     class: Drupal\content_moderation\ParamConverter\EntityRevisionConverter
     parent: paramconverter.entity
     tags:
-      - { name: paramconverter, priority: 5 }
+      # Set priority so it comes after paramconverter.configentity_admin, but
+      # before paramconverter.entity.
+      - { name: paramconverter, priority: 1 }
   content_moderation.state_transition_validation:
     class: \Drupal\content_moderation\StateTransitionValidation
     arguments: ['@content_moderation.moderation_information']
