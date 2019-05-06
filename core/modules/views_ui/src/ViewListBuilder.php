@@ -200,7 +200,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
     $list['#attached']['library'][] = 'core/drupal.ajax';
     $list['#attached']['library'][] = 'views_ui/views_ui.listing';
 
-    $form['filters'] = [
+    $list['filters'] = [
       '#type' => 'container',
       '#attributes' => [
         'class' => ['table-filter', 'js-show'],
