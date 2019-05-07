@@ -4447,12 +4447,54 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
     }
   }
 
-  $output = '';
-  // The index counter is used to keep aggregated and non-aggregated files in
-  // order by weight.
-  $index = 1;
-  $processed = array();
-  $files = array();
+  // Sort the JavaScript so that it appears in the correct order.
+  uasort($items, 'drupal_sort_css_js');
+
+  // Provide the page with information about the individual JavaScript files
+  // used, information not otherwise available when aggregation is enabled.
+  $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($items), 1);
+  unset($setting['ajaxPageState']['js']['settings']);
+  drupal_add_js($setting, 'setting');
+
+  // If we're outputting the header scope, then this might be the final time
+  // that drupal_get_js() is running, so add the setting to this output as well
+  // as to the drupal_add_js() cache. If $items['settings'] doesn't exist, it's
+  // because drupal_get_js() was intentionally passed a $javascript argument
+  // stripped off settings, potentially in order to override how settings get
+  // output, so in this case, do not add the setting to this output.
+  if ($scope == 'header' && isset($items['settings'])) {
+    $items['settings']['data'][] = $setting;
+  }
+
+  $elements = array(
+    '#type' => 'scripts',
+    '#items' => $items,
+  );
+
+  return drupal_render($elements);
+}
+
+/**
+ * The #pre_render callback for the "scripts" element.
+ *
+ * This callback adds elements needed for <script> tags to be rendered.
+ *
+ * @param array $elements
+ *   A render array containing:
+ *   - '#items': The JS items as returned by drupal_add_js() and altered by
+ *     drupal_get_js().
+ *
+ * @return array
+ *   The $elements variable passed as argument with two more children keys:
+ *     - "scripts": contains the Javascript items
+ *     - "settings": contains the Javascript settings items.
+ *   If those keys are already existing, then the items will be appended and
+ *   their keys will be preserved.
+ *
+ * @see drupal_get_js()
+ * @see drupal_add_js()
+ */
+function drupal_pre_render_scripts(array $elements) {
   $preprocess_js = (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
 
   // A dummy query-string is added to filenames, to gain control over
@@ -4473,34 +4515,29 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
   // third-party code might require the use of a different query string.
   $js_version_string = variable_get('drupal_js_version_query_string', 'v=');
 
-  // Sort the JavaScript so that it appears in the correct order.
-  uasort($items, 'drupal_sort_css_js');
+  $files = array();
 
-  // Provide the page with information about the individual JavaScript files
-  // used, information not otherwise available when aggregation is enabled.
-  $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($items), 1);
-  unset($setting['ajaxPageState']['js']['settings']);
-  drupal_add_js($setting, 'setting');
+  $scripts = isset($elements['scripts']) ? $elements['scripts'] : array();
+  $scripts += array('#weight' => 0);
 
-  // If we're outputting the header scope, then this might be the final time
-  // that drupal_get_js() is running, so add the setting to this output as well
-  // as to the drupal_add_js() cache. If $items['settings'] doesn't exist, it's
-  // because drupal_get_js() was intentionally passed a $javascript argument
-  // stripped off settings, potentially in order to override how settings get
-  // output, so in this case, do not add the setting to this output.
-  if ($scope == 'header' && isset($items['settings'])) {
-    $items['settings']['data'][] = $setting;
-  }
+  $settings = isset($elements['settings']) ? $elements['settings'] : array();
+  $settings += array('#weight' => $scripts['#weight'] + 10);
+
+  // The index counter is used to keep aggregated and non-aggregated files in
+  // order by weight. Use existing scripts count as a starting point.
+  $index = count(element_children($scripts)) + 1;
 
   // Loop through the JavaScript to construct the rendered output.
   $element = array(
+    '#type' => 'html_tag',
     '#tag' => 'script',
     '#value' => '',
     '#attributes' => array(
       'type' => 'text/javascript',
     ),
   );
-  foreach ($items as $item) {
+
+  foreach ($elements['#items'] as $item) {
     $query_string =  empty($item['version']) ? $default_query_string : $js_version_string . $item['version'];
 
     switch ($item['type']) {
@@ -4509,7 +4546,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
         $js_element['#value_prefix'] = $embed_prefix;
         $js_element['#value'] = 'jQuery.extend(Drupal.settings, ' . drupal_json_encode(drupal_array_merge_deep_array($item['data'])) . ");";
         $js_element['#value_suffix'] = $embed_suffix;
-        $output .= theme('html_tag', array('element' => $js_element));
+        $settings[] = $js_element;
         break;
 
       case 'inline':
@@ -4520,7 +4557,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
         $js_element['#value_prefix'] = $embed_prefix;
         $js_element['#value'] = $item['data'];
         $js_element['#value_suffix'] = $embed_suffix;
-        $processed[$index++] = theme('html_tag', array('element' => $js_element));
+        $scripts[$index++] = $js_element;
         break;
 
       case 'file':
@@ -4531,7 +4568,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
           }
           $query_string_separator = (strpos($item['data'], '?') !== FALSE) ? '&' : '?';
           $js_element['#attributes']['src'] = file_create_url($item['data']) . $query_string_separator . ($item['cache'] ? $query_string : REQUEST_TIME);
-          $processed[$index++] = theme('html_tag', array('element' => $js_element));
+          $scripts[$index++] = $js_element;
         }
         else {
           // By increasing the index for each aggregated file, we maintain
@@ -4542,7 +4579,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
           // leading to better front-end performance of a website as a whole.
           // See drupal_add_js() for details.
           $key = 'aggregate_' . $item['group'] . '_' . $item['every_page'] . '_' . $index;
-          $processed[$key] = '';
+          $scripts[$key] = '';
           $files[$key][$item['data']] = $item;
         }
         break;
@@ -4554,7 +4591,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
           $js_element['#attributes']['defer'] = 'defer';
         }
         $js_element['#attributes']['src'] = $item['data'];
-        $processed[$index++] = theme('html_tag', array('element' => $js_element));
+        $scripts[$index++] = $js_element;
         break;
     }
   }
@@ -4569,14 +4606,18 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
         $preprocess_file = file_create_url($uri);
         $js_element = $element;
         $js_element['#attributes']['src'] = $preprocess_file;
-        $processed[$key] = theme('html_tag', array('element' => $js_element));
+        $scripts[$key] = $js_element;
       }
     }
   }
 
-  // Keep the order of JS files consistent as some are preprocessed and others are not.
-  // Make sure any inline or JS setting variables appear last after libraries have loaded.
-  return implode('', $processed) . $output;
+  // Keep the order of JS files consistent as some are preprocessed and others
+  // are not. Make sure any inline or JS setting variables appear last after
+  // libraries have loaded.
+  $element['scripts'] = $scripts;
+  $element['settings'] = $settings;
+
+  return $element;
 }
 
 /**

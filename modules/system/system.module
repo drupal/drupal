@@ -323,6 +323,10 @@ function system_element_info() {
     '#group_callback' => 'drupal_group_css',
     '#aggregate_callback' => 'drupal_aggregate_css',
   );
+  $types['scripts'] = array(
+    '#items' => array(),
+    '#pre_render' => array('drupal_pre_render_scripts'),
+  );
 
   // Input elements.
   $types['submit'] = array(
