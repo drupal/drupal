@@ -1097,7 +1097,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // Do not set serial fields if we do not have a value. This supports all
         // SQL database drivers.
         // @see https://www.drupal.org/node/2279395
-        $value = drupal_schema_get_field_value($definition->getSchema()['columns'][$column_name], $value);
+        $value = SqlContentEntityStorageSchema::castValue($definition->getSchema()['columns'][$column_name], $value);
         if (!(empty($value) && $this->isColumnSerial($table_name, $schema_name))) {
           $record->$schema_name = $value;
         }
@@ -1398,7 +1398,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             if (!empty($attributes['serialize'])) {
               $value = serialize($value);
             }
-            $record[$column_name] = drupal_schema_get_field_value($attributes, $value);
+            $record[$column_name] = SqlContentEntityStorageSchema::castValue($attributes, $value);
           }
           $query->values($record);
           if ($this->entityType->isRevisionable()) {

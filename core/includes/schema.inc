@@ -5,6 +5,8 @@
  * Schema API handling functions.
  */
 
+use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
+
 /**
  * @addtogroup schemaapi
  * @{
@@ -215,21 +217,15 @@ function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRU
  *
  * @return mixed
  *   The converted value.
+ *
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::castValue() instead.
+ *
+ * @see https://www.drupal.org/node/3051983
  */
 function drupal_schema_get_field_value(array $info, $value) {
-  // Preserve legal NULL values.
-  if (isset($value) || !empty($info['not null'])) {
-    if ($info['type'] == 'int' || $info['type'] == 'serial') {
-      $value = (int) $value;
-    }
-    elseif ($info['type'] == 'float') {
-      $value = (float) $value;
-    }
-    elseif (!is_array($value)) {
-      $value = (string) $value;
-    }
-  }
-  return $value;
+  @trigger_error('drupal_schema_get_field_value() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Use \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::castValue($info, $value) instead. See https://www.drupal.org/node/3051983', E_USER_DEPRECATED);
+  return SqlContentEntityStorageSchema::castValue($info, $value);
 }
 
 /**

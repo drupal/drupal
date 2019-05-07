@@ -2099,7 +2099,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
       // Use the initial value of the field storage, if available.
       if ($initial_value && isset($initial_value[$field_column_name])) {
-        $schema['fields'][$schema_field_name]['initial'] = drupal_schema_get_field_value($column_schema, $initial_value[$field_column_name]);
+        $schema['fields'][$schema_field_name]['initial'] = SqlContentEntityStorageSchema::castValue($column_schema, $initial_value[$field_column_name]);
       }
       if (!empty($initial_value_from_field)) {
         $schema['fields'][$schema_field_name]['initial_from_field'] = $initial_value_from_field[$field_column_name];
@@ -2504,6 +2504,42 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $schema_handler = $this->database->schema();
     $schema_handler->dropUniqueKey($table, $name);
     $schema_handler->addUniqueKey($table, $name, $specifier);
+  }
+
+  /**
+   * Typecasts values to proper datatypes.
+   *
+   * MySQL PDO silently casts, e.g. FALSE and '' to 0, when inserting the value
+   * into an integer column, but PostgreSQL PDO does not. Use the schema
+   * information to correctly typecast the value.
+   *
+   * @param array $info
+   *   An array describing the schema field info. See hook_schema() and
+   *   https://www.drupal.org/node/146843 for details.
+   * @param mixed $value
+   *   The value to be converted.
+   *
+   * @return mixed
+   *   The converted value.
+   *
+   * @internal
+   *
+   * @see hook_schema()
+   * @see https://www.drupal.org/node/146843
+   */
+  public static function castValue(array $info, $value) {
+    // Preserve legal NULL values.
+    if (isset($value) || !empty($info['not null'])) {
+      if ($info['type'] === 'int' || $info['type'] === 'serial') {
+        return (int) $value;
+      }
+      elseif ($info['type'] === 'float') {
+        return (float) $value;
+      }
+      return (string) $value;
+    }
+
+    return $value;
   }
 
 }
