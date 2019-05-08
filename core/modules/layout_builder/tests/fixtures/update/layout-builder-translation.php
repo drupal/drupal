@@ -46,6 +46,11 @@ $connection->insert('config')
     'name' => 'language.content_settings.node.page',
     'data' => 'a:10:{s:4:"uuid";s:36:"2b8b721e-59e9-4b57-a026-c4444fd28196";s:8:"langcode";s:2:"en";s:6:"status";b:1;s:12:"dependencies";a:2:{s:6:"config";a:1:{i:0;s:14:"node.type.page";}s:6:"module";a:1:{i:0;s:19:"content_translation";}}s:20:"third_party_settings";a:1:{s:19:"content_translation";a:2:{s:7:"enabled";b:1;s:15:"bundle_settings";a:1:{s:26:"untranslatable_fields_hide";s:1:"0";}}}s:2:"id";s:9:"node.page";s:21:"target_entity_type_id";s:4:"node";s:13:"target_bundle";s:4:"page";s:16:"default_langcode";s:12:"site_default";s:18:"language_alterable";b:1;}',
   ])
+  ->values([
+    'collection' => '',
+    'name' => 'language.content_settings.taxonomy_term.forums',
+    'data' => 'a:10:{s:4:"uuid";s:36:"16b8ed8f-cac8-40fd-a441-b7b91bb0012d";s:8:"langcode";s:2:"en";s:6:"status";b:1;s:12:"dependencies";a:2:{s:6:"config";a:1:{i:0;s:26:"taxonomy.vocabulary.forums";}s:6:"module";a:1:{i:0;s:19:"content_translation";}}s:20:"third_party_settings";a:1:{s:19:"content_translation";a:2:{s:7:"enabled";b:1;s:15:"bundle_settings";a:1:{s:26:"untranslatable_fields_hide";s:1:"0";}}}s:2:"id";s:20:"taxonomy_term.forums";s:21:"target_entity_type_id";s:13:"taxonomy_term";s:13:"target_bundle";s:6:"forums";s:16:"default_langcode";s:12:"site_default";s:18:"language_alterable";b:1;}',
+  ])
   ->execute();
 
 // Add Layout Builder sections to an existing entity view display.
@@ -83,6 +88,24 @@ $connection->update('config')
   ])
   ->condition('collection', '')
   ->condition('name', 'core.entity_view_display.node.page.default')
+  ->execute();
+
+$display = $connection->select('config')
+  ->fields('config', ['data'])
+  ->condition('collection', '')
+  ->condition('name', 'core.entity_view_display.taxonomy_term.forums.default')
+  ->execute()
+  ->fetchField();
+$display = unserialize($display);
+$display['third_party_settings']['layout_builder']['sections'][] = $section_array_default;
+$connection->update('config')
+  ->fields([
+    'data' => serialize($display),
+    'collection' => '',
+    'name' => 'core.entity_view_display.taxonomy_term.forums.default',
+  ])
+  ->condition('collection', '')
+  ->condition('name', 'core.entity_view_display.taxonomy_term.forums.default')
   ->execute();
 
 // Loop over test cases defined in the test class.
