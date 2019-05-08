@@ -18,7 +18,21 @@ function file_register_phar_wrapper() {
   include_once $directory . '/Helper.php';
   include_once $directory . '/Manager.php';
   include_once $directory . '/PharStreamWrapper.php';
+  include_once $directory . '/Collectable.php';
+  include_once $directory . '/Interceptor/ConjunctionInterceptor.php';
+  include_once $directory . '/Interceptor/PharMetaDataInterceptor.php';
+  include_once $directory . '/Phar/Container.php';
+  include_once $directory . '/Phar/DeserializationException.php';
+  include_once $directory . '/Phar/Manifest.php';
+  include_once $directory . '/Phar/Reader.php';
+  include_once $directory . '/Phar/ReaderException.php';
+  include_once $directory . '/Phar/Stub.php';
+  include_once $directory . '/Resolvable.php';
+  include_once $directory . '/Resolver/PharInvocation.php';
+  include_once $directory . '/Resolver/PharInvocationCollection.php';
+  include_once $directory . '/Resolver/PharInvocationResolver.php';
   include_once DRUPAL_ROOT . '/misc/typo3/drupal-security/PharExtensionInterceptor.php';
+  include_once DRUPAL_ROOT . '/misc/brumann/polyfill-unserialize/src/Unserialize.php';
 
   // Set up a stream wrapper to handle insecurities due to PHP's built-in
   // phar stream wrapper.
