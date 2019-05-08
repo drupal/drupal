@@ -59,6 +59,42 @@
             "time": "2017-12-20T14:37:45+00:00"
         },
         {
+            "name": "brumann/polyfill-unserialize",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dbrumann/polyfill-unserialize.git",
+                "reference": "844d7e44b62a1a3d5c68cfb7ebbd59c17ea0fd7b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dbrumann/polyfill-unserialize/zipball/844d7e44b62a1a3d5c68cfb7ebbd59c17ea0fd7b",
+                "reference": "844d7e44b62a1a3d5c68cfb7ebbd59c17ea0fd7b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Brumann\\Polyfill\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Denis Brumann",
+                    "email": "denis.brumann@sensiolabs.de"
+                }
+            ],
+            "description": "Backports unserialize options introduced in PHP 7.0 to older PHP versions.",
+            "time": "2017-02-03T09:55:47+00:00"
+        },
+        {
             "name": "composer/installers",
             "version": "v1.5.0",
             "source": {
@@ -1804,7 +1840,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -2540,22 +2576,26 @@
         },
         {
             "name": "typo3/phar-stream-wrapper",
-            "version": "v2.0.1",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TYPO3/phar-stream-wrapper.git",
-                "reference": "0469d9fefa0146ea4299d3b11cfbb76faa7045bf"
+                "reference": "e438b0c78652b33407983eb29d215a1a3f68f6f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TYPO3/phar-stream-wrapper/zipball/0469d9fefa0146ea4299d3b11cfbb76faa7045bf",
-                "reference": "0469d9fefa0146ea4299d3b11cfbb76faa7045bf",
+                "url": "https://api.github.com/repos/TYPO3/phar-stream-wrapper/zipball/e438b0c78652b33407983eb29d215a1a3f68f6f3",
+                "reference": "e438b0c78652b33407983eb29d215a1a3f68f6f3",
                 "shasum": ""
             },
             "require": {
+                "brumann/polyfill-unserialize": "^1.0",
+                "ext-fileinfo": "*",
+                "ext-json": "*",
                 "php": "^5.3.3|^7.0"
             },
             "require-dev": {
+                "ext-xdebug": "*",
                 "phpunit/phpunit": "^4.8.36"
             },
             "type": "library",
@@ -2576,7 +2616,7 @@
                 "security",
                 "stream-wrapper"
             ],
-            "time": "2018-10-18T08:46:28+00:00"
+            "time": "2019-05-05T17:30:51+00:00"
         },
         {
             "name": "wikimedia/composer-merge-plugin",

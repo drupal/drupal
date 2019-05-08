@@ -19,6 +19,7 @@ class Composer {
     'behat/mink' => ['tests', 'driver-testsuite'],
     'behat/mink-browserkit-driver' => ['tests'],
     'behat/mink-goutte-driver' => ['tests'],
+    'brumann/polyfill-unserialize' => ['tests'],
     'drupal/coder' => ['coder_sniffer/Drupal/Test', 'coder_sniffer/DrupalPractice/Test'],
     'doctrine/cache' => ['tests'],
     'doctrine/collections' => ['tests'],
