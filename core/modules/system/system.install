@@ -2275,6 +2275,13 @@ function system_update_8702() {
   // definitions to use the value of the live (in-code) entity type definitions
   // in cases when the key has not been populated yet.
   foreach ($last_installed_definitions as $entity_type_id => $entity_type) {
+    // The live (in-code) entity type definition might not exist anymore, while
+    // an update function that would remove its last installed definition didn't
+    // run yet. We don't need to update it in that case.
+    if (!isset($live_definitions[$entity_type_id])) {
+      continue;
+    }
+
     $revision_translation_affected_key = $live_definitions[$entity_type_id]->getKey('revision_translation_affected');
     if (!$entity_type->hasKey('revision_translation_affected') && !empty($revision_translation_affected_key) && $entity_definition_update_manager->getFieldStorageDefinition($revision_translation_affected_key, $entity_type_id)) {
       $entity_keys = $entity_type->getKeys();

@@ -43,7 +43,13 @@ function entity_test_update_entity_field_storage_info(EntityTypeInterface $entit
  */
 function entity_test_update_entity_type_alter(array &$entity_types) {
   // Allow entity_test_update tests to override the entity type definition.
-  $entity_types['entity_test_update'] = \Drupal::state()->get('entity_test_update.entity_type', $entity_types['entity_test_update']);
+  $entity_type = \Drupal::state()->get('entity_test_update.entity_type', $entity_types['entity_test_update']);
+  if ($entity_type !== 'null') {
+    $entity_types['entity_test_update'] = $entity_type;
+  }
+  else {
+    unset($entity_types['entity_test_update']);
+  }
 }
 
 /**
