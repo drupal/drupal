@@ -241,10 +241,10 @@ function layout_builder_post_update_make_layout_untranslatable() {
  *   TRUE if there are zero layout overrides for the bundle, otherwise FALSE.
  */
 function _layout_builder_bundle_has_no_layouts($entity_type_id, $bundle) {
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_type = $entity_type_manager->getDefinition($entity_type_id);
+  $entity_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $entity_update_manager->getEntityType($entity_type_id);
   $bundle_key = $entity_type->getKey('bundle');
-  $query = $entity_type_manager->getStorage($entity_type_id)->getQuery();
+  $query = \Drupal::entityTypeManager()->getStorage($entity_type_id)->getQuery();
   if ($bundle_key) {
     $query->condition($bundle_key, $bundle);
   }
@@ -270,12 +270,12 @@ function _layout_builder_bundle_has_no_layouts($entity_type_id, $bundle) {
  *   TRUE if there are zero translations for the bundle, otherwise FALSE.
  */
 function _layout_builder_bundle_has_no_translations($entity_type_id, $bundle) {
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_type = $entity_type_manager->getDefinition($entity_type_id);
+  $entity_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $entity_update_manager->getEntityType($entity_type_id);
   if (!$entity_type->isTranslatable()) {
     return TRUE;
   }
-  $query = $entity_type_manager->getStorage($entity_type_id)->getQuery();
+  $query = \Drupal::entityTypeManager()->getStorage($entity_type_id)->getQuery();
   $bundle_key = $entity_type->getKey('bundle');
   if ($entity_type->hasKey('default_langcode')) {
     if ($bundle_key) {
