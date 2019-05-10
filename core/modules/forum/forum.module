@@ -335,8 +335,6 @@ function forum_form_node_form_alter(&$form, FormStateInterface $form_state, $for
 
   if (isset($form['taxonomy_forums'])) {
     $widget =& $form['taxonomy_forums']['widget'];
-    // Make the vocabulary required for 'real' forum-nodes.
-    $widget['#required'] = TRUE;
     $widget['#multiple'] = FALSE;
     if (empty($widget['#default_value'])) {
       // If there is no default forum already selected, try to get the forum
