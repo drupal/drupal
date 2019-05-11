@@ -1,23 +1,25 @@
 <?php
 
-namespace Drupal\Tests\locale\Functional;
+namespace Drupal\Tests\locale\Kernel;
 
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\locale\StringInterface;
 
 /**
  * Tests the locale string storage, string objects and data API.
  *
  * @group locale
  */
-class LocaleStringTest extends BrowserTestBase {
+class LocaleStringTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['locale'];
+  protected static $modules = [
+    'language',
+    'locale',
+   ];
 
   /**
    * The locale storage.
@@ -31,67 +33,72 @@ class LocaleStringTest extends BrowserTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
     // Add a default locale storage for all these tests.
     $this->storage = $this->container->get('locale.storage');
     // Create two languages: Spanish and German.
     foreach (['es', 'de'] as $langcode) {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
+    $this->installSchema('locale', [
+      'locales_location',
+      'locales_source',
+      'locales_target',
+    ]);
   }
 
   /**
    * Test CRUD API.
    */
-  public function testStringCRUDAPI() {
+  public function testStringCrudApi() {
     // Create source string.
-    $source = $this->buildSourceString();
-    $source->save();
-    $this->assertTrue($source->lid, format_string('Successfully created string %string', ['%string' => $source->source]));
+    $source = $this->buildSourceString()->save();
+    $this->assertTrue($source->lid);
 
     // Load strings by lid and source.
     $string1 = $this->storage->findString(['lid' => $source->lid]);
-    $this->assertEqual($source, $string1, 'Successfully retrieved string by identifier.');
+    $this->assertEquals($source, $string1);
     $string2 = $this->storage->findString(['source' => $source->source, 'context' => $source->context]);
-    $this->assertEqual($source, $string2, 'Successfully retrieved string by source and context.');
+    $this->assertEquals($source, $string2);
     $string3 = $this->storage->findString(['source' => $source->source, 'context' => '']);
-    $this->assertFalse($string3, 'Cannot retrieve string with wrong context.');
+    $this->assertFalse($string3);
 
     // Check version handling and updating.
-    $this->assertEqual($source->version, 'none', 'String originally created without version.');
+    $this->assertEquals('none', $source->version);
     $string = $this->storage->findTranslation(['lid' => $source->lid]);
-    $this->assertEqual($string->version, \Drupal::VERSION, 'Checked and updated string version to Drupal version.');
+    $this->assertEquals(\Drupal::VERSION, $string->version);
 
     // Create translation and find it by lid and source.
     $langcode = 'es';
     $translation = $this->createTranslation($source, $langcode);
-    $this->assertEqual($translation->customized, LOCALE_NOT_CUSTOMIZED, 'Translation created as not customized by default.');
+    $this->assertEquals(LOCALE_NOT_CUSTOMIZED, $translation->customized);
     $string1 = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);
-    $this->assertEqual($string1->translation, $translation->translation, 'Successfully loaded translation by string identifier.');
+    $this->assertEquals($translation->translation, $string1->translation);
     $string2 = $this->storage->findTranslation(['language' => $langcode, 'source' => $source->source, 'context' => $source->context]);
-    $this->assertEqual($string2->translation, $translation->translation, 'Successfully loaded translation by source and context.');
+    $this->assertEquals($translation->translation, $string2->translation);
     $translation
       ->setCustomized()
       ->save();
     $translation = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);
-    $this->assertEqual($translation->customized, LOCALE_CUSTOMIZED, 'Translation successfully marked as customized.');
+    $this->assertEquals(LOCALE_CUSTOMIZED, $translation->customized);
 
     // Delete translation.
     $translation->delete();
     $deleted = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);
-    $this->assertFalse(isset($deleted->translation), 'Successfully deleted translation string.');
+    $this->assertNull($deleted->translation);
 
     // Create some translations and then delete string and all of its
     // translations.
     $lid = $source->lid;
     $this->createAllTranslations($source);
     $search = $this->storage->getTranslations(['lid' => $source->lid]);
-    $this->assertEqual(count($search), 3, 'Created and retrieved all translations for our source string.');
+    $this->assertCount(3, $search);
 
     $source->delete();
     $string = $this->storage->findString(['lid' => $lid]);
-    $this->assertFalse($string, 'Successfully deleted source string.');
+    $this->assertFalse($string);
     $deleted = $search = $this->storage->getTranslations(['lid' => $lid]);
-    $this->assertFalse($deleted, 'Successfully deleted all translation strings.');
+    $this->assertFalse($deleted);
 
     // Tests that locations of different types and arbitrary lengths can be
     // added to a source string. Too long locations will be cut off.
@@ -102,15 +109,19 @@ class LocaleStringTest extends BrowserTestBase {
     $source_string->addLocation('path', $location = $this->randomString(300));
     $source_string->save();
 
-    $rows = db_query('SELECT * FROM {locales_location} WHERE sid = :sid', [':sid' => $source_string->lid])->fetchAllAssoc('type');
-    $this->assertEqual(count($rows), 4, '4 source locations have been persisted.');
-    $this->assertEqual($rows['path']->name, substr($location, 0, 255), 'Too long location has been limited to 255 characters.');
+    $rows = $this->container->get('database')->select('locales_location')
+      ->fields('locales_location')
+      ->condition('sid', $source_string->lid)
+      ->execute()
+      ->fetchAllAssoc('type');
+    $this->assertCount(4, $rows);
+    $this->assertEquals(substr($location, 0, 255), $rows['path']->name);
   }
 
   /**
    * Test Search API loading multiple objects.
    */
-  public function testStringSearchAPI() {
+  public function testStringSearchApi() {
     $language_count = 3;
     // Strings 1 and 2 will have some common prefix.
     // Source 1 will have all translations, not customized.
@@ -120,13 +131,14 @@ class LocaleStringTest extends BrowserTestBase {
     $source1 = $this->buildSourceString(['source' => $prefix . $this->randomMachineName(100)])->save();
     $source2 = $this->buildSourceString(['source' => $prefix . $this->randomMachineName(100)])->save();
     $source3 = $this->buildSourceString()->save();
+
     // Load all source strings.
     $strings = $this->storage->getStrings([]);
-    $this->assertEqual(count($strings), 3, 'Found 3 source strings in the database.');
+    $this->assertCount(3, $strings);
     // Load all source strings matching a given string.
     $filter_options['filters'] = ['source' => $prefix];
     $strings = $this->storage->getStrings([], $filter_options);
-    $this->assertEqual(count($strings), 2, 'Found 2 strings using some string filter.');
+    $this->assertCount(2, $strings);
 
     // Not customized translations.
     $translate1 = $this->createAllTranslations($source1);
@@ -135,43 +147,45 @@ class LocaleStringTest extends BrowserTestBase {
     // Try quick search function with different field combinations.
     $langcode = 'es';
     $found = $this->storage->findTranslation(['language' => $langcode, 'source' => $source1->source, 'context' => $source1->context]);
-    $this->assertTrue($found && isset($found->language) && isset($found->translation) && !$found->isNew(), 'Translation found searching by source and context.');
-    $this->assertEqual($found->translation, $translate1[$langcode]->translation, 'Found the right translation.');
+    $this->assertTrue($found && isset($found->language) && isset($found->translation) && !$found->isNew(), 'Translation not found searching by source and context.');
+    $this->assertEquals($translate1[$langcode]->translation, $found->translation);
     // Now try a translation not found.
     $found = $this->storage->findTranslation(['language' => $langcode, 'source' => $source3->source, 'context' => $source3->context]);
-    $this->assertTrue($found && $found->lid == $source3->lid && !isset($found->translation) && $found->isNew(), 'Translation not found but source string found.');
+    $this->assertTrue($found && $found->lid == $source3->lid && !isset($found->translation) && $found->isNew());
 
     // Load all translations. For next queries we'll be loading only translated
     // strings.
     $translations = $this->storage->getTranslations(['translated' => TRUE]);
-    $this->assertEqual(count($translations), 2 * $language_count, 'Created and retrieved all translations for source strings.');
+    $this->assertCount(2 * $language_count, $translations);
 
     // Load all customized translations.
     $translations = $this->storage->getTranslations(['customized' => LOCALE_CUSTOMIZED, 'translated' => TRUE]);
-    $this->assertEqual(count($translations), $language_count, 'Retrieved all customized translations for source strings.');
+    $this->assertCount($language_count, $translations);
 
     // Load all Spanish customized translations.
     $translations = $this->storage->getTranslations(['language' => 'es', 'customized' => LOCALE_CUSTOMIZED, 'translated' => TRUE]);
-    $this->assertEqual(count($translations), 1, 'Found only Spanish and customized translations.');
+    $this->assertCount(1, $translations);
 
     // Load all source strings without translation (1).
     $translations = $this->storage->getStrings(['translated' => FALSE]);
-    $this->assertEqual(count($translations), 1, 'Found 1 source string without translations.');
+    $this->assertCount(1, $translations);
 
     // Load Spanish translations using string filter.
     $filter_options['filters'] = ['source' => $prefix];
     $translations = $this->storage->getTranslations(['language' => 'es'], $filter_options);
-    $this->assertEqual(count($translations), 2, 'Found 2 translations using some string filter.');
-
+    $this->assertCount(2, $translations);
   }
 
   /**
    * Creates random source string object.
    *
+   * @param array $values
+   *   The values array.
+   *
    * @return \Drupal\locale\StringInterface
    *   A locale string.
    */
-  public function buildSourceString($values = []) {
+  protected function buildSourceString(array $values = []) {
     return $this->storage->createString($values += [
       'source' => $this->randomMachineName(100),
       'context' => $this->randomMachineName(20),
@@ -180,8 +194,16 @@ class LocaleStringTest extends BrowserTestBase {
 
   /**
    * Creates translations for source string and all languages.
+   *
+   * @param \Drupal\locale\StringInterface $source
+   *   The source string.
+   * @param array $values
+   *   The values array.
+   *
+   * @return array
+   *   Translation list.
    */
-  public function createAllTranslations($source, $values = []) {
+  protected function createAllTranslations(StringInterface $source, array $values = []) {
     $list = [];
     /* @var $language_manager \Drupal\Core\Language\LanguageManagerInterface */
     $language_manager = $this->container->get('language_manager');
@@ -193,8 +215,18 @@ class LocaleStringTest extends BrowserTestBase {
 
   /**
    * Creates single translation for source string.
+   *
+   * @param \Drupal\locale\StringInterface $source
+   *   The source string.
+   * @param string $langcode
+   *   The language code.
+   * @param array $values
+   *   The values array.
+   *
+   * @return \Drupal\locale\StringInterface
+   *   The translated string object.
    */
-  public function createTranslation($source, $langcode, $values = []) {
+  protected function createTranslation(StringInterface $source, $langcode, array $values = []) {
     return $this->storage->createTranslation($values + [
       'lid' => $source->lid,
       'language' => $langcode,

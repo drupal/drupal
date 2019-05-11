@@ -2,6 +2,7 @@
 
 namespace Drupal\content_moderation\Plugin\views\filter;
 
+use Drupal\content_moderation\Plugin\views\ModerationStateJoinViewsHandlerTrait;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -20,6 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ViewsFilter("moderation_state_filter")
  */
 class ModerationStateFilter extends InOperator implements DependentWithRemovalPluginInterface {
+
+  use ModerationStateJoinViewsHandlerTrait;
 
   /**
    * {@inheritdoc}
@@ -107,45 +110,6 @@ class ModerationStateFilter extends InOperator implements DependentWithRemovalPl
     }
 
     return $this->valueOptions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function ensureMyTable() {
-    if (!isset($this->tableAlias)) {
-      $table_alias = $this->query->ensureTable($this->table, $this->relationship);
-
-      // Filter the moderation states of the content via the
-      // ContentModerationState field revision table, joining either the entity
-      // field data or revision table. This allows filtering states against
-      // either the default or latest revision, depending on the relationship of
-      // the filter.
-      $left_entity_type = $this->entityTypeManager->getDefinition($this->getEntityType());
-      $entity_type = $this->entityTypeManager->getDefinition('content_moderation_state');
-      $configuration = [
-        'table' => $entity_type->getRevisionDataTable(),
-        'field' => 'content_entity_revision_id',
-        'left_table' => $table_alias,
-        'left_field' => $left_entity_type->getKey('revision'),
-        'extra' => [
-          [
-            'field' => 'content_entity_type_id',
-            'value' => $left_entity_type->id(),
-          ],
-        ],
-      ];
-      if ($left_entity_type->isTranslatable()) {
-        $configuration['extra'][] = [
-          'field' => $entity_type->getKey('langcode'),
-          'left_field' => $left_entity_type->getKey('langcode'),
-        ];
-      }
-      $join = Views::pluginManager('join')->createInstance('standard', $configuration);
-      $this->tableAlias = $this->query->addRelationship('content_moderation_state', $join, 'content_moderation_state_field_revision');
-    }
-
-    return $this->tableAlias;
   }
 
   /**
