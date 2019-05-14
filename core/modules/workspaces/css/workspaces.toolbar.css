@@ -16,8 +16,8 @@
 
 /* Tab appearance. */
 .toolbar .toolbar-bar .workspaces-toolbar-tab {
-  background-color: #e09600;
   color: #000;
+  background-color: #e09600;
 }
 .toolbar .toolbar-bar .workspaces-toolbar-tab--is-default {
   background-color: #81c071;
@@ -41,8 +41,8 @@
 .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
   width: 100%;
   margin: 0;
-  color: inherit;
   text-align: left;
+  color: inherit;
 }
 [dir="rtl"] .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
   text-align: right;
