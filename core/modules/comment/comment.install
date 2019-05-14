@@ -12,6 +12,33 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
+ * Implements hook_requirements().
+ */
+function comment_requirements($phase) {
+  $requirements = [];
+  if ($phase === 'update' && drupal_get_installed_schema_version('comment') < 8701) {
+    $has_empty_columns = \Drupal::entityQuery('comment', 'OR')
+      ->condition('entity_type', NULL, 'IS NULL')
+      ->condition('field_name', NULL, 'IS NULL')
+      ->range(0, 1)
+      ->accessCheck(FALSE)
+      ->execute();
+    if ($has_empty_columns) {
+      $requirements['comment_update_8701'] = [
+        'title' => t('Comment required fields update'),
+        'description' => t('The comment_update_8701() function requires that the %field_1 and %field_2 fields have values for all comment entities. See the <a href=":change_record">change record</a> for more information.', [
+          '%field_1' => 'entity_type',
+          '%field_2' => 'field_name',
+          ':change_record' => 'https://www.drupal.org/node/3053046',
+        ]),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+  return $requirements;
+}
+
+/**
  * Implements hook_uninstall().
  */
 function comment_uninstall() {
