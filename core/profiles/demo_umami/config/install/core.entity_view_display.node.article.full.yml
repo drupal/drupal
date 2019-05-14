@@ -24,6 +24,11 @@ content:
     settings: {  }
     third_party_settings: {  }
     label: hidden
+  content_moderation_control:
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_image:
     type: responsive_image
     weight: 1
@@ -47,5 +52,4 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  content_moderation_control: true
   langcode: true

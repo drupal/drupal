@@ -213,6 +213,19 @@ img {
   height: auto;
 }
 
+.form-select {
+  margin: 0.25rem 0;
+  color: #000;
+  border: 2px solid #767775;
+  background: #fff;
+  font-size: 1rem;
+}
+
+.form-select:focus {
+  margin-bottom: 2px;
+  border: 2px solid #00836d;
+}
+
 input {
   min-width: 100%;
   max-width: 100%;

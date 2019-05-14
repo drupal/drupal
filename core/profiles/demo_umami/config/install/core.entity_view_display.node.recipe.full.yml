@@ -30,8 +30,8 @@ third_party_settings:
         layout_id: layout_onecol
         layout_settings: {  }
         components:
-          3edf9c3e-2dfd-475e-9418-fce6b371b8b7:
-            uuid: 3edf9c3e-2dfd-475e-9418-fce6b371b8b7
+          44801518-fe93-421a-bdcb-550493c7925d:
+            uuid: 44801518-fe93-421a-bdcb-550493c7925d
             region: content
             configuration:
               label_display: '0'
@@ -45,8 +45,8 @@ third_party_settings:
                 type: text_default
             additional: {  }
             weight: 0
-          2dd1b920-bc1b-46ea-a4d2-d800aeadf2fe:
-            uuid: 2dd1b920-bc1b-46ea-a4d2-d800aeadf2fe
+          0eff9e1d-4e73-4748-b910-e5568df1d5aa:
+            uuid: 0eff9e1d-4e73-4748-b910-e5568df1d5aa
             region: content
             configuration:
               label_display: '0'
@@ -60,9 +60,25 @@ third_party_settings:
                 third_party_settings: {  }
                 type: entity_reference_label
             additional: {  }
+            weight: 1
+          eadd557c-6414-40e5-9a95-355720385477:
+            uuid: eadd557c-6414-40e5-9a95-355720385477
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:recipe:field_tags'
+              formatter:
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
             weight: 2
-          56d1c2c3-ad14-4776-a96a-5ece52e3e74c:
-            uuid: 56d1c2c3-ad14-4776-a96a-5ece52e3e74c
+          e57c136c-2758-4d90-86e5-2d3e8be9881a:
+            uuid: e57c136c-2758-4d90-86e5-2d3e8be9881a
             region: content
             configuration:
               label_display: '0'
@@ -77,9 +93,9 @@ third_party_settings:
                 third_party_settings: {  }
                 type: responsive_image
             additional: {  }
-            weight: 4
-          16a466cf-ac16-4245-bafd-192a4aab0cfe:
-            uuid: 16a466cf-ac16-4245-bafd-192a4aab0cfe
+            weight: 3
+          00488840-db50-4afe-9c30-a123e6707fa9:
+            uuid: 00488840-db50-4afe-9c30-a123e6707fa9
             region: content
             configuration:
               label_display: '0'
@@ -94,9 +110,9 @@ third_party_settings:
                 third_party_settings: {  }
                 type: number_integer
             additional: {  }
-            weight: 5
-          470e921c-baf5-419d-8cc7-32680baec10b:
-            uuid: 470e921c-baf5-419d-8cc7-32680baec10b
+            weight: 4
+          f91febc6-d924-47a2-8ffd-b71d3b2597c7:
+            uuid: f91febc6-d924-47a2-8ffd-b71d3b2597c7
             region: content
             configuration:
               label_display: '0'
@@ -111,9 +127,9 @@ third_party_settings:
                 third_party_settings: {  }
                 type: number_integer
             additional: {  }
-            weight: 6
-          5e9bb5f4-eab9-4682-ba59-fff7ad7f7619:
-            uuid: 5e9bb5f4-eab9-4682-ba59-fff7ad7f7619
+            weight: 5
+          a2d450d0-08ce-4123-bca0-411bfa1da132:
+            uuid: a2d450d0-08ce-4123-bca0-411bfa1da132
             region: content
             configuration:
               label_display: '0'
@@ -128,9 +144,9 @@ third_party_settings:
                 third_party_settings: {  }
                 type: number_integer
             additional: {  }
-            weight: 7
-          7f882d25-f4d2-4693-a6a9-a7ba374206fd:
-            uuid: 7f882d25-f4d2-4693-a6a9-a7ba374206fd
+            weight: 6
+          df8bfafc-210c-4d86-9745-e47081ab0fd4:
+            uuid: df8bfafc-210c-4d86-9745-e47081ab0fd4
             region: content
             configuration:
               label_display: '0'
@@ -143,9 +159,9 @@ third_party_settings:
                 third_party_settings: {  }
                 type: list_default
             additional: {  }
-            weight: 8
-          65889db5-1611-4324-8d0f-1d54e74afd21:
-            uuid: 65889db5-1611-4324-8d0f-1d54e74afd21
+            weight: 7
+          6924bf2e-8baa-4081-803a-7a2d3b7d8e14:
+            uuid: 6924bf2e-8baa-4081-803a-7a2d3b7d8e14
             region: content
             configuration:
               label_display: '0'
@@ -159,9 +175,9 @@ third_party_settings:
                 third_party_settings: {  }
                 type: string
             additional: {  }
-            weight: 9
-          7b39285b-a320-4852-979d-976939608d76:
-            uuid: 7b39285b-a320-4852-979d-976939608d76
+            weight: 8
+          f61cae40-5865-4c4c-98fa-14b8234e7b98:
+            uuid: f61cae40-5865-4c4c-98fa-14b8234e7b98
             region: content
             configuration:
               label_display: '0'
@@ -174,23 +190,17 @@ third_party_settings:
                 third_party_settings: {  }
                 type: text_default
             additional: {  }
-            weight: 10
-          de19ef93-0d31-41ea-8cd8-0da398c4be32:
-            uuid: de19ef93-0d31-41ea-8cd8-0da398c4be32
+            weight: 9
+          d4b753a7-e1b1-4062-a1d0-a2666362693e:
+            uuid: d4b753a7-e1b1-4062-a1d0-a2666362693e
             region: content
             configuration:
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:recipe:field_tags'
-              formatter:
-                label: inline
-                settings:
-                  link: true
-                third_party_settings: {  }
-                type: entity_reference_label
+              id: 'extra_field_block:node:recipe:content_moderation_control'
             additional: {  }
-            weight: 3
+            weight: 10
         third_party_settings: {  }
     allow_custom: true
     enabled: true
@@ -199,6 +209,11 @@ targetEntityType: node
 bundle: recipe
 mode: full
 content:
+  content_moderation_control:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_cooking_time:
     weight: 5
     label: inline
@@ -281,7 +296,6 @@ content:
     type: entity_reference_label
     region: content
 hidden:
-  content_moderation_control: true
   langcode: true
   layout_builder__layout: true
   links: true
