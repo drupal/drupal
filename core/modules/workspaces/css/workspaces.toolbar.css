@@ -16,19 +16,40 @@
 
 /* Tab appearance. */
 .toolbar .toolbar-bar .workspaces-toolbar-tab {
-  float: right; /* LTR */
   background-color: #e09600;
-}
-[dir="rtl"] .toolbar .toolbar-bar .workspaces-toolbar-tab {
-  float: left;
+  color: #000;
 }
 .toolbar .toolbar-bar .workspaces-toolbar-tab--is-default {
   background-color: #81c071;
 }
+.toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
+  float: right; /* LTR */
+}
+[dir="rtl"] .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
+  float: left;
+}
+
+@media (min-width: 16.5em) {
+  .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
+    float: right;
+  }
+  [dir="rtl"] .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
+    float: left;
+  }
+}
 
 .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
+  width: 100%;
   margin: 0;
-  color: #000;
+  color: inherit;
+  text-align: left;
+}
+[dir="rtl"] .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
+  text-align: right;
+}
+.toolbar-oriented .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
+  width: auto;
+  text-align: initial;
 }
 
 .toolbar .toolbar-icon-workspace:before {
@@ -184,21 +205,32 @@
 }
 
 @media all and (max-width: 766px) {
-  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
-    overflow: hidden;
+  .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
     width: auto;
     max-width: 8em;
+  }
+
+  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
+    overflow: hidden;
     padding-right: 1.3333em;
-    padding-left: 2.75em;
+    padding-left: 2.75em; /* LTR */
     white-space: nowrap;
     text-indent: 0;
     text-overflow: ellipsis;
   }
+  [dir=rtl] .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
+    padding-right: 2.75em;
+    padding-left: 1.3333em;
+  }
 
   .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace:before {
-    left: 0.6667em;
+    left: 0.6667em; /* LTR */
     width: 20px;
     background-size: 100% auto;
+  }
+  [dir=rtl] .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace:before {
+    right: 0.6667em;
+    left: auto;
   }
 }
 
