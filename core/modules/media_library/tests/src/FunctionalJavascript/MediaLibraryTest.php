@@ -99,19 +99,19 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     // Test that users can filter by type.
     $page->selectFieldOption('Media type', 'Type One');
-    $page->pressButton('Apply Filters');
+    $page->pressButton('Apply filters');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextNotContains('Turtle');
     $page->selectFieldOption('Media type', 'Type Two');
-    $page->pressButton('Apply Filters');
+    $page->pressButton('Apply filters');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Dog');
     $assert_session->pageTextContains('Turtle');
 
     // Test that selecting elements as a part of bulk operations works.
     $page->selectFieldOption('Media type', '- Any -');
-    $page->pressButton('Apply Filters');
+    $page->pressButton('Apply filters');
     $assert_session->assertWaitOnAjaxRequest();
     // This tests that anchor tags clicked inside the preview are suppressed.
     $this->getSession()->executeScript('jQuery(".js-click-to-select-trigger a")[4].click()');
@@ -453,12 +453,12 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $session = $this->getSession();
     $session->getPage()->fillField('Name', 'Dog');
-    $session->getPage()->pressButton('Apply Filters');
+    $session->getPage()->pressButton('Apply filters');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextNotContains('Bear');
     $session->getPage()->fillField('Name', '');
-    $session->getPage()->pressButton('Apply Filters');
+    $session->getPage()->pressButton('Apply filters');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextContains('Bear');
@@ -489,7 +489,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Turtle');
     // Assert the exposed filters can be applied.
     $page->fillField('Name', 'Dog');
-    $page->pressButton('Apply Filters');
+    $page->pressButton('Apply filters');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextNotContains('Bear');

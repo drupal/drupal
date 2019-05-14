@@ -210,7 +210,7 @@
 .media-library-wrapper .view-header {
   align-self: flex-end;
   order: 2;
-  margin: 8px 0;
+  margin: 1em 0;
   text-align: right; /* LTR */
 }
 [dir="rtl"] .media-library-wrapper .view-header {
@@ -246,11 +246,16 @@
   margin: 0;
   padding-left: 22px; /* LTR */
   color: #333;
+  font-size: 15px;
   line-height: 16px;
 }
 [dir="rtl"] .media-library-wrapper .views-display-link {
   padding-right: 22px;
   padding-left: 0;
+}
+
+.media-library-wrapper .views-display-link.is-active {
+  font-weight: bold;
 }
 
 .media-library-wrapper .views-display-link-widget {

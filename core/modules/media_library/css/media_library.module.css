@@ -52,8 +52,13 @@
   position: absolute;
   z-index: 1;
   top: 5px;
-  right: 0;
+  right: 5px; /* LTR */
   display: block;
+}
+
+[dir="rtl"] .media-library-item .js-click-to-select-checkbox {
+  right: 0;
+  left: 5px;
 }
 
 .media-library-item__status {

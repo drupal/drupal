@@ -45,7 +45,7 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: 'Apply Filters'
+          submit_button: 'Apply filters'
           reset_button: false
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
