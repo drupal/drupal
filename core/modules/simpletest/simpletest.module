@@ -568,7 +568,7 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
  * Gets a list of all of the tests provided by the system.
  *
  * The list of test classes is loaded by searching the designated directory for
- * each module for files matching the PSR-0 standard. Once loaded the test list
+ * each module for files matching the PSR-4 standard. Once loaded the test list
  * is cached and stored in a static variable.
  *
  * @param string $extension

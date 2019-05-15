@@ -1094,7 +1094,7 @@ function simpletest_script_get_test_list() {
       // Extract test case class names from specified directory.
       // Find all tests in the PSR-X structure; Drupal\$extension\Tests\*.php
       // Since we do not want to hard-code too many structural file/directory
-      // assumptions about PSR-0/4 files and directories, we check for the
+      // assumptions about PSR-4 files and directories, we check for the
       // minimal conditions only; i.e., a '*.php' file that has '/Tests/' in
       // its path.
       // Ignore anything from third party vendors.

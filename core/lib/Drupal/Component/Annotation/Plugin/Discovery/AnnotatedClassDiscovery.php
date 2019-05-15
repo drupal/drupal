@@ -13,7 +13,7 @@ use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
 use Drupal\Component\Utility\Crypt;
 
 /**
- * Defines a discovery mechanism to find annotated plugins in PSR-0 namespaces.
+ * Defines a discovery mechanism to find annotated plugins in PSR-4 namespaces.
  */
 class AnnotatedClassDiscovery implements DiscoveryInterface {
 
@@ -114,7 +114,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
     // Register the namespaces of classes that can be used for annotations.
     AnnotationRegistry::registerLoader('class_exists');
 
-    // Search for classes within all PSR-0 namespace locations.
+    // Search for classes within all PSR-4 namespace locations.
     foreach ($this->getPluginNamespaces() as $namespace => $dirs) {
       foreach ($dirs as $dir) {
         if (file_exists($dir)) {
@@ -180,7 +180,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   }
 
   /**
-   * Gets an array of PSR-0 namespaces to search for plugin classes.
+   * Gets an array of PSR-4 namespaces to search for plugin classes.
    *
    * @return string[]
    */
