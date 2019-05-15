@@ -6,7 +6,7 @@ use Drupal\Component\Annotation\AnnotationInterface;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery as ComponentAnnotatedClassDiscovery;
 
 /**
- * Defines a discovery mechanism to find annotated plugins in PSR-0 namespaces.
+ * Defines a discovery mechanism to find annotated plugins in PSR-4 namespaces.
  */
 class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
 
