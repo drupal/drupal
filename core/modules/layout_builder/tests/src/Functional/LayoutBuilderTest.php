@@ -736,6 +736,36 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Ensures that one bundle doesn't interfere with another bundle.
+   */
+  public function testFullViewModeMultipleBundles() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    // Create one bundle with the full view mode enabled.
+    $this->createContentType(['type' => 'full_bundle']);
+    $this->drupalGet('admin/structure/types/manage/full_bundle/display/default');
+    $page->checkField('display_modes_custom[full]');
+    $page->pressButton('Save');
+
+    // Create another bundle without the full view mode enabled.
+    $this->createContentType(['type' => 'default_bundle']);
+    $this->drupalGet('admin/structure/types/manage/default_bundle/display/default');
+
+    // Enable Layout Builder for defaults and overrides.
+    $page->checkField('layout[enabled]');
+    $page->pressButton('Save');
+    $page->checkField('layout[allow_custom]');
+    $page->pressButton('Save');
+    $assert_session->checkboxChecked('layout[allow_custom]');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function testLayoutBuilderChooseBlocksAlter() {

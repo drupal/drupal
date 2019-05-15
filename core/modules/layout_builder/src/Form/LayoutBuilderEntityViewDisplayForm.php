@@ -144,6 +144,8 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
     // The default mode is valid if the canonical mode is not enabled.
     if ($mode === 'default') {
       $query = $this->entityTypeManager->getStorage($this->entity->getEntityTypeId())->getQuery()
+        ->condition('targetEntityType', $this->entity->getTargetEntityTypeId())
+        ->condition('bundle', $this->entity->getTargetBundle())
         ->condition('status', TRUE)
         ->condition('mode', $canonical_mode);
       return !$query->count()->execute();
