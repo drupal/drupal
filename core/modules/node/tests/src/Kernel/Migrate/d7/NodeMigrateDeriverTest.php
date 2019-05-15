@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\node\Functional\Migrate\d7;
+namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 

@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\Tests\node\Functional\Migrate\d6;
-
-use Drupal\Tests\node\Kernel\Migrate\d6\MigrateNodeTestBase;
+namespace Drupal\Tests\node\Kernel\Migrate\d6;
 
 /**
  * Node content revisions migration.
