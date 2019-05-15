@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\language\Functional\Migrate;
+namespace Drupal\Tests\language\Kernel\Migrate\d6;
 
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
