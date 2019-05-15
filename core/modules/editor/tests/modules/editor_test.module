@@ -6,6 +6,7 @@
  */
 
 use Drupal\filter\FilterFormatInterface;
+use Drupal\file\FileInterface;
 
 /**
  * Implements hook_editor_js_settings_alter().
@@ -43,4 +44,14 @@ function editor_test_editor_info_alter(&$items) {
   if (!\Drupal::state()->get('editor_test_give_me_a_trex_thanks', FALSE)) {
     unset($items['trex']);
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for file entities.
+ */
+function editor_test_file_presave(FileInterface $file) {
+  // Use state to keep track of how many times a file is saved.
+  $file_save_count = \Drupal::state()->get('editor_test.file_save_count', []);
+  $file_save_count[$file->getFilename()] = isset($file_save_count[$file->getFilename()]) ? $file_save_count[$file->getFilename()] + 1 : 1;
+  \Drupal::state()->set('editor_test.file_save_count', $file_save_count);
 }

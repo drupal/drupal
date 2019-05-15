@@ -441,8 +441,9 @@ function editor_entity_revision_delete(EntityInterface $entity) {
 function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
   foreach ($uuids as $uuid) {
     if ($file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $uuid)) {
-      if ($file->status !== FILE_STATUS_PERMANENT) {
-        $file->status = FILE_STATUS_PERMANENT;
+      /** @var \Drupal\file\FileInterface $file */
+      if ($file->isTemporary()) {
+        $file->setPermanent();
         $file->save();
       }
       \Drupal::service('file.usage')->add($file, 'editor', $entity->getEntityTypeId(), $entity->id());

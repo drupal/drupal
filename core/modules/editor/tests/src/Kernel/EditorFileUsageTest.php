@@ -60,6 +60,45 @@ class EditorFileUsageTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests file save operations when node with referenced files is saved.
+   */
+  public function testFileSaveOperations() {
+    $permanent_image = File::create([
+      'uri' => 'core/misc/druplicon.png',
+      'status' => 1,
+    ]);
+    $permanent_image->save();
+    $temporary_image = File::create([
+      'uri' => 'core/misc/tree.png',
+      'status' => 0,
+    ]);
+    $temporary_image->save();
+    $body_value = '<img data-entity-type="file" data-entity-uuid="' . $permanent_image->uuid() . '" />';
+    $body_value .= '<img data-entity-type="file" data-entity-uuid="' . $temporary_image->uuid() . '" />';
+    $body[] = [
+      'value' => $body_value,
+      'format' => 'filtered_html',
+    ];
+    $node = Node::create([
+      'type' => 'page',
+      'title' => 'test',
+      'body' => $body,
+      'uid' => 1,
+    ]);
+    $node->save();
+
+    $file_save_count = \Drupal::state()->get('editor_test.file_save_count', []);
+    $this->assertEquals(1, $file_save_count[$permanent_image->getFilename()]);
+    $this->assertEquals(2, $file_save_count[$temporary_image->getFilename()]);
+
+    // Assert both images are now permanent.
+    $permanent_image = File::load($permanent_image->id());
+    $temporary_image = File::load($temporary_image->id());
+    $this->assertTrue($permanent_image->isPermanent(), 'Permanent image was saved as permanent.');
+    $this->assertTrue($temporary_image->isPermanent(), 'Temporary image was saved as permanent.');
+  }
+
+  /**
    * Tests the configurable text editor manager.
    */
   public function testEditorEntityHooks() {
