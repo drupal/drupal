@@ -314,7 +314,6 @@ class FileSystem implements FileSystemInterface {
   public function copy($source, $destination, $replace = self::EXISTS_RENAME) {
     $this->prepareDestination($source, $destination, $replace);
 
-    // Perform the copy operation.
     if (!@copy($source, $destination)) {
       // If the copy failed and realpaths exist, retry the operation using them
       // instead.
@@ -463,7 +462,6 @@ class FileSystem implements FileSystemInterface {
   protected function prepareDestination($source, &$destination, $replace) {
     $original_source = $source;
 
-    // Assert that the source file actually exists.
     if (!file_exists($source)) {
       if (($realpath = $this->realpath($original_source)) !== FALSE) {
         $this->logger->error("File '%original_source' ('%realpath') could not be copied because it does not exist.", [
@@ -544,7 +542,6 @@ class FileSystem implements FileSystemInterface {
       $directory = rtrim($directory, '/\\');
     }
 
-    // Check if directory exists.
     if (!is_dir($directory)) {
       // Let mkdir() recursively create directories and use the default
       // directory permissions.
@@ -553,7 +550,7 @@ class FileSystem implements FileSystemInterface {
       }
       return FALSE;
     }
-    // The directory exists, so check to see if it is writable.
+
     $writable = is_writable($directory);
     if (!$writable && ($options & static::MODIFY_PERMISSIONS)) {
       return $this->chmod($directory);
