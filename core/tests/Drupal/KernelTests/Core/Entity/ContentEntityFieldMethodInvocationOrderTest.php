@@ -37,7 +37,7 @@ class ContentEntityFieldMethodInvocationOrderTest extends EntityKernelTestBase {
 
     $this->installEntitySchema('entity_test_field_methods');
 
-    $this->entityTestFieldMethodsStorage = $this->entityManager->getStorage('entity_test_field_methods');
+    $this->entityTestFieldMethodsStorage = $this->entityTypeManager->getStorage('entity_test_field_methods');
   }
 
   /**

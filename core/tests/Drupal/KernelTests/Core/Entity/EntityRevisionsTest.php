@@ -224,7 +224,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
     // Check that no revision affecting Italian is available, given that no
     // Italian translation has been created yet.
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
-    $storage = $this->entityManager->getStorage($entity->getEntityTypeId());
+    $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
     $this->assertNull($storage->getLatestTranslationAffectedRevisionId($entity->id(), 'it'));
     $this->assertEquals($pending_revision->getLoadedRevisionId(), $storage->getLatestRevisionId($entity->id()));
 

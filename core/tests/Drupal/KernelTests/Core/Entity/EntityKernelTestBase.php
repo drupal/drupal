@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -10,7 +11,6 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
  * Defines an abstract test base for entity kernel tests.
  */
 abstract class EntityKernelTestBase extends KernelTestBase {
-
   use UserCreationTrait {
     checkPermissions as drupalCheckPermissions;
     createAdminRole as drupalCreateAdminRole;
@@ -20,6 +20,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
     setCurrentUser as drupalSetCurrentUser;
     setUpCurrentUser as drupalSetUpCurrentUser;
   }
+  use DeprecatedServicePropertyTrait;
 
   /**
    * Modules to enable.
@@ -29,11 +30,11 @@ abstract class EntityKernelTestBase extends KernelTestBase {
   public static $modules = ['user', 'system', 'field', 'text', 'filter', 'entity_test'];
 
   /**
-   * The entity manager service.
+   * The list of deprecated services.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var array
    */
-  protected $entityManager;
+  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity type manager service.
@@ -59,7 +60,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->entityManager = $this->container->get('entity.manager');
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->state = $this->container->get('state');
 
@@ -124,7 +124,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    *   The reloaded entity.
    */
   protected function reloadEntity(EntityInterface $entity) {
-    $controller = $this->entityManager->getStorage($entity->getEntityTypeId());
+    $controller = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
     $controller->resetCache([$entity->id()]);
     return $controller->load($entity->id());
   }
@@ -169,7 +169,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    */
   protected function refreshServices() {
     $this->container = \Drupal::getContainer();
-    $this->entityManager = $this->container->get('entity.manager');
+
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->state = $this->container->get('state');
   }

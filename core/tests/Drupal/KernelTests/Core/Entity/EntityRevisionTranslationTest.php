@@ -60,7 +60,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
    */
   public function testRevertRevisionAfterTranslation() {
     $user = $this->createUser();
-    $storage = $this->entityManager->getStorage('entity_test_mulrev');
+    $storage = $this->entityTypeManager->getStorage('entity_test_mulrev');
 
     // Create a test entity.
     $entity = EntityTestMulRev::create([
@@ -95,7 +95,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
    */
   public function testTranslationValuesWhenSavingPendingRevisions() {
     $user = $this->createUser();
-    $storage = $this->entityManager->getStorage('entity_test_mulrev');
+    $storage = $this->entityTypeManager->getStorage('entity_test_mulrev');
 
     // Create a test entity and a translation for it.
     $entity = EntityTestMulRev::create([
@@ -197,7 +197,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
    */
   public function testIsAnyStoredRevisionTranslated() {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
-    $storage = $this->entityManager->getStorage('entity_test_mul');
+    $storage = $this->entityTypeManager->getStorage('entity_test_mul');
     $method = new \ReflectionMethod(get_class($storage), 'isAnyStoredRevisionTranslated');
     $method->setAccessible(TRUE);
 
@@ -242,7 +242,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $this->assertTrue($method->invoke($storage, $entity));
 
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
-    $storage = $this->entityManager->getStorage('entity_test_mulrev');
+    $storage = $this->entityTypeManager->getStorage('entity_test_mulrev');
 
     // Check that a revisionable new entity is handled correctly.
     $entity = EntityTestMulRev::create();

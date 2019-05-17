@@ -234,7 +234,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     }
 
     // Access the language field.
-    $langcode_key = $this->entityManager->getDefinition($entity_type)->getKey('langcode');
+    $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
     $this->assertEqual($langcode, $entity->{$langcode_key}->value, format_string('%entity_type: Language code can be read.', ['%entity_type' => $entity_type]));
     $this->assertEqual(\Drupal::languageManager()->getLanguage($langcode), $entity->{$langcode_key}->language, format_string('%entity_type: Language object can be read.', ['%entity_type' => $entity_type]));
 
@@ -376,7 +376,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    *   The entity type to run the tests with.
    */
   protected function doTestSave($entity_type) {
-    $langcode_key = $this->entityManager->getDefinition($entity_type)->getKey('langcode');
+    $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
     $entity = $this->createTestEntity($entity_type);
     $entity->save();
     $this->assertTrue((bool) $entity->id(), format_string('%entity_type: Entity has received an id.', ['%entity_type' => $entity_type]));
@@ -431,7 +431,7 @@ class EntityFieldTest extends EntityKernelTestBase {
 
     // Test deriving metadata from references.
     $entity_definition = EntityDataDefinition::create($entity_type);
-    $langcode_key = $this->entityManager->getDefinition($entity_type)->getKey('langcode');
+    $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
     $reference_definition = $entity_definition->getPropertyDefinition($langcode_key)
       ->getPropertyDefinition('language')
       ->getTargetDefinition();
@@ -632,7 +632,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    * @see entity_test_entity_base_field_info_alter()
    */
   public function testBaseFieldNonExistingBaseField() {
-    $this->entityManager->getStorage('node_type')->create([
+    $this->entityTypeManager->getStorage('node_type')->create([
       'type' => 'page',
       'name' => 'page',
     ])->save();

@@ -215,7 +215,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
 
     // Now test updating a field with data.
     /* @var \Drupal\Core\Entity\FieldableEntityStorageInterface $storage */
-    $storage = $this->entityManager->getStorage($entity_type_id);
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
     // The schema of ID fields is incorrectly recreated as 'int' instead of
     // 'serial', so we manually have to specify an ID.
     // @todo Remove this in https://www.drupal.org/project/drupal/issues/2928906
@@ -311,7 +311,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
       $original_definition = $entity_field_manager->getBaseFieldDefinitions('entity_test_update')[$field_name];
       $new_definition = clone $original_definition;
       $new_definition->setLabel($original_definition->getLabel() . ', the other one');
-      $this->assertTrue($this->entityManager->getStorage('entity_test_update')
+      $this->assertTrue($this->entityTypeManager->getStorage('entity_test_update')
         ->requiresFieldDataMigration($new_definition, $original_definition));
     }
   }

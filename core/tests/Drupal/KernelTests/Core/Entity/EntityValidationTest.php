@@ -144,7 +144,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', ['%name' => 'UUID', '@max' => 128]));
 
     $test_entity = clone $entity;
-    $langcode_key = $this->entityManager->getDefinition($entity_type)->getKey('langcode');
+    $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
     $test_entity->{$langcode_key}->value = $this->randomString(13);
     $violations = $test_entity->validate();
     // This should fail on AllowedValues and Length constraints.

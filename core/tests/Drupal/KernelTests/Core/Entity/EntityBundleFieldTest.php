@@ -49,7 +49,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
 
     // Check that an entity with bundle entity_test does not have the custom
     // field.
-    $storage = $this->entityManager->getStorage('entity_test_update');
+    $storage = $this->entityTypeManager->getStorage('entity_test_update');
     $entity = $storage->create([
       'type' => 'entity_test_update',
     ]);

@@ -38,14 +38,14 @@ class CommentValidationTest extends EntityKernelTestBase {
     $user->save();
 
     // Add comment type.
-    $this->entityManager->getStorage('comment_type')->create([
+    $this->entityTypeManager->getStorage('comment_type')->create([
       'id' => 'comment',
       'label' => 'comment',
       'target_entity_type_id' => 'node',
     ])->save();
 
     // Add comment field to content.
-    $this->entityManager->getStorage('field_storage_config')->create([
+    $this->entityTypeManager->getStorage('field_storage_config')->create([
       'entity_type' => 'node',
       'field_name' => 'comment',
       'type' => 'comment',
@@ -55,14 +55,14 @@ class CommentValidationTest extends EntityKernelTestBase {
     ])->save();
 
     // Create a page node type.
-    $this->entityManager->getStorage('node_type')->create([
+    $this->entityTypeManager->getStorage('node_type')->create([
       'type' => 'page',
       'name' => 'page',
     ])->save();
 
     // Add comment field to page content.
     /** @var \Drupal\field\FieldConfigInterface $field */
-    $field = $this->entityManager->getStorage('field_config')->create([
+    $field = $this->entityTypeManager->getStorage('field_config')->create([
       'field_name' => 'comment',
       'entity_type' => 'node',
       'bundle' => 'page',
@@ -70,13 +70,13 @@ class CommentValidationTest extends EntityKernelTestBase {
     ]);
     $field->save();
 
-    $node = $this->entityManager->getStorage('node')->create([
+    $node = $this->entityTypeManager->getStorage('node')->create([
       'type' => 'page',
       'title' => 'test',
     ]);
     $node->save();
 
-    $comment = $this->entityManager->getStorage('comment')->create([
+    $comment = $this->entityTypeManager->getStorage('comment')->create([
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
@@ -141,7 +141,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     \Drupal::entityManager()->getStorage('node')->resetCache([$node->id()]);
     $node = Node::load($node->id());
     // Create a new comment with the new field.
-    $comment = $this->entityManager->getStorage('comment')->create([
+    $comment = $this->entityTypeManager->getStorage('comment')->create([
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
@@ -155,7 +155,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     $this->assertEqual($violations[0]->getMessage(), t('You have to specify a valid author.'));
 
     // Test creating a default comment with a given user id works.
-    $comment = $this->entityManager->getStorage('comment')->create([
+    $comment = $this->entityTypeManager->getStorage('comment')->create([
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
@@ -166,7 +166,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     $this->assertEqual(count($violations), 0, 'No violations when validating a default comment with an author.');
 
     // Test specifying a wrong author name does not work.
-    $comment = $this->entityManager->getStorage('comment')->create([
+    $comment = $this->entityTypeManager->getStorage('comment')->create([
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',

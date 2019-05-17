@@ -19,7 +19,7 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
   public function testFieldSqlStorage() {
     $entity_type = 'entity_test_mul';
 
-    $controller = $this->entityManager->getStorage($entity_type);
+    $controller = $this->entityTypeManager->getStorage($entity_type);
     $values = [
       $this->fieldName => $this->randomMachineName(),
       $this->untranslatableFieldName => $this->randomMachineName(),

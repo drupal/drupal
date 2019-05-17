@@ -47,8 +47,8 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
     $this->installEntitySchema('entity_test_mul_changed');
     $this->installEntitySchema('entity_test_mulrev_changed');
 
-    $this->mulChangedStorage = $this->entityManager->getStorage('entity_test_mul_changed');
-    $this->mulRevChangedStorage = $this->entityManager->getStorage('entity_test_mulrev_changed');
+    $this->mulChangedStorage = $this->entityTypeManager->getStorage('entity_test_mul_changed');
+    $this->mulRevChangedStorage = $this->entityTypeManager->getStorage('entity_test_mulrev_changed');
   }
 
   /**

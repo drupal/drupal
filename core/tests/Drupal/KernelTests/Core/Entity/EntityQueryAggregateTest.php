@@ -37,7 +37,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->entityStorage = $this->entityManager->getStorage('entity_test');
+    $this->entityStorage = $this->entityTypeManager->getStorage('entity_test');
 
     // Add some fieldapi fields to be used in the test.
     for ($i = 1; $i <= 2; $i++) {

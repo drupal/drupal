@@ -239,7 +239,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $formatter = 'entity_reference_entity_view';
-    $view_builder = $this->entityManager->getViewBuilder($this->entityType);
+    $view_builder = $this->entityTypeManager->getViewBuilder($this->entityType);
 
     // Set the default view mode to use the 'entity_reference_entity_view'
     // formatter.
@@ -301,7 +301,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
    */
   public function testEntityReferenceRecursiveProtectionWithManyRenderedEntities() {
     $formatter = 'entity_reference_entity_view';
-    $view_builder = $this->entityManager->getViewBuilder($this->entityType);
+    $view_builder = $this->entityTypeManager->getViewBuilder($this->entityType);
 
     // Set the default view mode to use the 'entity_reference_entity_view'
     // formatter.
@@ -312,7 +312,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
       ])
       ->save();
 
-    $storage = $this->entityManager->getStorage($this->entityType);
+    $storage = $this->entityTypeManager->getStorage($this->entityType);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $referenced_entity */
     $referenced_entity = $storage->create(['name' => $this->randomMachineName()]);
 

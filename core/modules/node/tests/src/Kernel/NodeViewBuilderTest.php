@@ -48,8 +48,8 @@ class NodeViewBuilderTest extends EntityKernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->storage = $this->entityManager->getStorage('node');
-    $this->viewBuilder = $this->entityManager->getViewBuilder('node');
+    $this->storage = $this->entityTypeManager->getStorage('node');
+    $this->viewBuilder = $this->entityTypeManager->getViewBuilder('node');
     $this->renderer = $this->container->get('renderer');
 
     $type = NodeType::create([

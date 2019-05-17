@@ -48,8 +48,8 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
 
     $this->installEntitySchema('entity_test_mulrev');
     $this->installEntitySchema('entity_test_rev');
-    $this->mulRev = $this->entityManager->getStorage('entity_test_mulrev');
-    $this->rev = $this->entityManager->getStorage('entity_test_rev');
+    $this->mulRev = $this->entityTypeManager->getStorage('entity_test_mulrev');
+    $this->rev = $this->entityTypeManager->getStorage('entity_test_rev');
   }
 
   /**
@@ -184,7 +184,7 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
     \Drupal::state()->set('entity_test.multi_column', TRUE);
     $this->applyEntityUpdates('entity_test_mulrev');
     // Refresh the storage.
-    $this->mulRev = $this->entityManager->getStorage('entity_test_mulrev');
+    $this->mulRev = $this->entityTypeManager->getStorage('entity_test_mulrev');
     $user1 = $this->createUser();
 
     // Create a test entity.

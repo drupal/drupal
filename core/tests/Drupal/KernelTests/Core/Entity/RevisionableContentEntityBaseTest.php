@@ -143,7 +143,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
     $this->assertFalse($entity->wasDefaultRevision());
 
     // Check that the default revision status was stored correctly.
-    $storage = $this->entityManager->getStorage($entity_type_id);
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
     foreach ([TRUE, FALSE, TRUE, FALSE] as $index => $expected) {
       /** @var \Drupal\entity_test_revlog\Entity\EntityTestMulWithRevisionLog $revision */
       $revision = $storage->loadRevision($index + 1);

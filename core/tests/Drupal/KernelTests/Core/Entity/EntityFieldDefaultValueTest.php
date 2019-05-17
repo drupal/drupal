@@ -45,7 +45,7 @@ class EntityFieldDefaultValueTest extends EntityKernelTestBase {
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type_id)
       ->create();
-    $definition = $this->entityManager->getDefinition($entity_type_id);
+    $definition = $this->entityTypeManager->getDefinition($entity_type_id);
     $langcode_key = $definition->getKey('langcode');
     $this->assertEqual($entity->{$langcode_key}->value, 'en', new FormattableMarkup('%entity_type: Default language', ['%entity_type' => $entity_type_id]));
     $this->assertTrue(Uuid::isValid($entity->uuid->value), new FormattableMarkup('%entity_type: Default UUID', ['%entity_type' => $entity_type_id]));
@@ -56,7 +56,7 @@ class EntityFieldDefaultValueTest extends EntityKernelTestBase {
    * Tests custom default value callbacks.
    */
   public function testDefaultValueCallback() {
-    $entity = $this->entityManager->getStorage('entity_test_default_value')->create();
+    $entity = $this->entityTypeManager->getStorage('entity_test_default_value')->create();
     // The description field has a default value callback for testing, see
     // entity_test_field_default_value().
     $string = 'description_' . $entity->language()->getId();
