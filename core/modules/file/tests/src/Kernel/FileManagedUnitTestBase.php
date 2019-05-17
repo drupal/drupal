@@ -197,7 +197,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
       $filepath = 'Файл для тестирования ' . $this->randomMachineName();
     }
     if (!isset($scheme)) {
-      $scheme = file_default_scheme();
+      $scheme = 'public';
     }
     $filepath = $scheme . '://' . $filepath;
 

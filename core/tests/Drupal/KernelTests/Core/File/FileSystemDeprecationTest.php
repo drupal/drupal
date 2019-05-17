@@ -162,4 +162,11 @@ class FileSystemDeprecationTest extends KernelTestBase {
     $this->assertFileNotExists($uri);
   }
 
+  /**
+   * @expectedDeprecation file_default_scheme() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Use \Drupal::config('system.file')->get('default_scheme') instead. See https://www.drupal.org/project/paragraphs/issues/3049030
+   */
+  public function testDeprecatedDefaultScheme() {
+    $this->assertNotNull(file_default_scheme());
+  }
+
 }

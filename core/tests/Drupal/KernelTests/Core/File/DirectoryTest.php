@@ -59,7 +59,8 @@ class DirectoryTest extends FileTestBase {
    */
   public function testFileCheckDirectoryHandling() {
     // A directory to operate on.
-    $directory = file_default_scheme() . '://' . $this->randomMachineName() . '/' . $this->randomMachineName();
+    $default_scheme = 'public';
+    $directory = $default_scheme . '://' . $this->randomMachineName() . '/' . $this->randomMachineName();
     $this->assertFalse(is_dir($directory), 'Directory does not exist prior to testing.');
 
     // Non-existent directory.
@@ -92,12 +93,12 @@ class DirectoryTest extends FileTestBase {
     $this->assertDirectoryPermissions($directory, 0777, 'file_chmod_directory setting is respected.');
 
     // Remove .htaccess file to then test that it gets re-created.
-    @$file_system->unlink(file_default_scheme() . '://.htaccess');
-    $this->assertFalse(is_file(file_default_scheme() . '://.htaccess'), 'Successfully removed the .htaccess file in the files directory.', 'File');
+    @$file_system->unlink($default_scheme . '://.htaccess');
+    $this->assertFalse(is_file($default_scheme . '://.htaccess'), 'Successfully removed the .htaccess file in the files directory.', 'File');
     file_ensure_htaccess();
-    $this->assertTrue(is_file(file_default_scheme() . '://.htaccess'), 'Successfully re-created the .htaccess file in the files directory.', 'File');
+    $this->assertTrue(is_file($default_scheme . '://.htaccess'), 'Successfully re-created the .htaccess file in the files directory.', 'File');
     // Verify contents of .htaccess file.
-    $file = file_get_contents(file_default_scheme() . '://.htaccess');
+    $file = file_get_contents($default_scheme . '://.htaccess');
     $this->assertEqual($file, FileStorage::htaccessLines(FALSE), 'The .htaccess file contains the proper content.', 'File');
   }
 

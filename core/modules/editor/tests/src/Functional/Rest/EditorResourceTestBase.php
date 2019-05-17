@@ -64,7 +64,7 @@ abstract class EditorResourceTestBase extends EntityResourceTestBase {
     $camelids
       ->setImageUploadSettings([
         'status' => FALSE,
-        'scheme' => file_default_scheme(),
+        'scheme' => 'public',
         'directory' => 'inline-images',
         'max_size' => '',
         'max_dimensions' => [

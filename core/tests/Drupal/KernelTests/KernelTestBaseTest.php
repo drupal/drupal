@@ -215,7 +215,6 @@ class KernelTestBaseTest extends KernelTestBase {
    * @covers ::bootKernel
    */
   public function testFileDefaultScheme() {
-    $this->assertEquals('public', file_default_scheme());
     $this->assertEquals('public', \Drupal::config('system.file')->get('default_scheme'));
   }
 

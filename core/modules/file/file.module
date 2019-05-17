@@ -559,7 +559,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
   $user = \Drupal::currentUser();
 
   if (empty($destination)) {
-    $destination = file_default_scheme() . '://';
+    $destination = \Drupal::config('system.file')->get('default_scheme') . '://';
   }
   if (!file_valid_uri($destination)) {
     \Drupal::logger('file')->notice('The data could not be saved because the destination %destination is invalid. This may be caused by improper use of file_save_data() or a missing stream wrapper.', ['%destination' => $destination]);

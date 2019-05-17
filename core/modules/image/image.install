@@ -13,7 +13,7 @@ use Drupal\Core\File\FileSystemInterface;
  */
 function image_install() {
   // Create the styles directory and ensure it's writable.
-  $directory = file_default_scheme() . '://styles';
+  $directory = \Drupal::config('system.file')->get('default_scheme') . '://styles';
   \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 }
 
@@ -25,7 +25,7 @@ function image_uninstall() {
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
   try {
-    $file_system->deleteRecursive(file_default_scheme() . '://styles');
+    $file_system->deleteRecursive(\Drupal::config('system.file')->get('default_scheme') . '://styles');
   }
   catch (FileException $e) {
     // Ignore failed deletes.

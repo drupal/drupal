@@ -162,7 +162,7 @@ abstract class FileTestBase extends KernelTestBase {
   public function createDirectory($path = NULL) {
     // A directory to operate on.
     if (!isset($path)) {
-      $path = file_default_scheme() . '://' . $this->randomMachineName();
+      $path = 'public://' . $this->randomMachineName();
     }
     $this->assertTrue(\Drupal::service('file_system')->mkdir($path) && is_dir($path), 'Directory was created successfully.');
     return $path;
@@ -190,7 +190,7 @@ abstract class FileTestBase extends KernelTestBase {
       $filepath = 'Файл для тестирования ' . $this->randomMachineName();
     }
     if (!isset($scheme)) {
-      $scheme = file_default_scheme();
+      $scheme = 'public';
     }
     $filepath = $scheme . '://' . $filepath;
 

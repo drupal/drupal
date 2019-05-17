@@ -539,17 +539,15 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   }
 
   /**
-   * Provides a wrapper for file_default_scheme() to allow unit testing.
+   * Provides a wrapper to allow unit testing.
    *
    * Gets the default file stream implementation.
-   *
-   * @todo: Convert file_default_scheme() into a proper injectable service.
    *
    * @return string
    *   'public', 'private' or any other file scheme defined as the default.
    */
   protected function fileDefaultScheme() {
-    return file_default_scheme();
+    return \Drupal::config('system.file')->get('default_scheme');
   }
 
   /**

@@ -226,7 +226,7 @@ function hook_modules_installed($modules) {
  */
 function hook_install() {
   // Create the styles directory and ensure it's writable.
-  $directory = file_default_scheme() . '://styles';
+  $directory = \Drupal::config('system.file')->get('default_scheme') . '://styles';
   \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 }
 
@@ -283,7 +283,7 @@ function hook_modules_uninstalled($modules) {
  */
 function hook_uninstall() {
   // Remove the styles directory and generated images.
-  \Drupal::service('file_system')->deleteRecursive(file_default_scheme() . '://styles');
+  \Drupal::service('file_system')->deleteRecursive(\Drupal::config('system.file')->get('default_scheme') . '://styles');
 }
 
 /**

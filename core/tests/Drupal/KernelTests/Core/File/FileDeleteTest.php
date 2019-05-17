@@ -28,7 +28,7 @@ class FileDeleteTest extends FileTestBase {
    */
   public function testMissing() {
     // Try to delete a non-existing file
-    $this->assertTrue(\Drupal::service('file_system')->delete(file_default_scheme() . '/' . $this->randomMachineName()), 'Returns true when deleting a non-existent file.');
+    $this->assertTrue(\Drupal::service('file_system')->delete('public://' . $this->randomMachineName()), 'Returns true when deleting a non-existent file.');
   }
 
   /**

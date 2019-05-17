@@ -38,7 +38,7 @@ class FileItem extends EntityReferenceItem {
       'target_type' => 'file',
       'display_field' => FALSE,
       'display_default' => FALSE,
-      'uri_scheme' => file_default_scheme(),
+      'uri_scheme' => \Drupal::config('system.file')->get('default_scheme'),
     ] + parent::defaultStorageSettings();
   }
 

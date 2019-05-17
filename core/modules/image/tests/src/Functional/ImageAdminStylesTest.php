@@ -277,7 +277,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPostForm($style_path . '/delete', [], t('Delete'));
 
     // Confirm the style directory has been removed.
-    $directory = file_default_scheme() . '://styles/' . $style_name;
+    $directory = 'public://styles/' . $style_name;
     $this->assertFalse(is_dir($directory), format_string('Image style %style directory removed on style deletion.', ['%style' => $style->label()]));
 
     $this->assertFalse(ImageStyle::load($style_name), format_string('Image style %style successfully deleted.', ['%style' => $style->label()]));

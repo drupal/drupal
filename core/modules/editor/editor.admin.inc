@@ -30,7 +30,7 @@ function editor_image_upload_settings_form(Editor $editor) {
   $image_upload = $editor->getImageUploadSettings();
   $image_upload += [
     'status' => FALSE,
-    'scheme' => file_default_scheme(),
+    'scheme' => \Drupal::config('system.file')->get('default_scheme'),
     'directory' => 'inline-images',
     'max_size' => '',
     'max_dimensions' => ['width' => '', 'height' => ''],

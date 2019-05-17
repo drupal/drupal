@@ -14,7 +14,7 @@ class FileDeleteRecursiveTest extends FileTestBase {
    */
   public function testSingleFile() {
     // Create a file for testing
-    $filepath = file_default_scheme() . '://' . $this->randomMachineName();
+    $filepath = 'public://' . $this->randomMachineName();
     file_put_contents($filepath, '');
 
     // Delete the file.

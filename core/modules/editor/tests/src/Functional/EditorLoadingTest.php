@@ -115,7 +115,7 @@ class EditorLoadingTest extends BrowserTestBase {
       'editor' => 'unicorn',
       'image_upload' => [
         'status' => FALSE,
-        'scheme' => file_default_scheme(),
+        'scheme' => 'public',
         'directory' => 'inline-images',
         'max_size' => '',
         'max_dimensions' => ['width' => '', 'height' => ''],
@@ -231,7 +231,7 @@ class EditorLoadingTest extends BrowserTestBase {
       'editor' => 'unicorn',
       'image_upload' => [
         'status' => FALSE,
-        'scheme' => file_default_scheme(),
+        'scheme' => 'public',
         'directory' => 'inline-images',
         'max_size' => '',
         'max_dimensions' => ['width' => '', 'height' => ''],

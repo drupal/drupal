@@ -20,7 +20,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $result = file_save_data($contents);
     $this->assertTrue($result, 'Unnamed file saved correctly.');
 
-    $this->assertEqual(file_default_scheme(), file_uri_scheme($result->getFileUri()), "File was placed in Drupal's files directory.");
+    $this->assertEqual(\Drupal::config('system.file')->get('default_scheme'), file_uri_scheme($result->getFileUri()), "File was placed in Drupal's files directory.");
     $this->assertEqual($result->getFilename(), \Drupal::service('file_system')->basename($result->getFileUri()), "Filename was set to the file's basename.");
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
     $this->assertEqual($result->getMimeType(), 'application/octet-stream', 'A MIME type was set.');
