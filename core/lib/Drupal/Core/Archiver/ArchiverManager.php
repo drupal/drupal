@@ -61,4 +61,25 @@ class ArchiverManager extends DefaultPluginManager {
     }
   }
 
+  /**
+   * Returns a string of supported archive extensions.
+   *
+   * @return string
+   *   A space-separated string of extensions suitable for use by the file
+   *   validation system.
+   */
+  public function getExtensions() {
+    $valid_extensions = [];
+    foreach ($this->getDefinitions() as $archive) {
+      foreach ($archive['extensions'] as $extension) {
+        foreach (explode('.', $extension) as $part) {
+          if (!in_array($part, $valid_extensions)) {
+            $valid_extensions[] = $part;
+          }
+        }
+      }
+    }
+    return implode(' ', $valid_extensions);
+  }
+
 }

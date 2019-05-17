@@ -144,13 +144,16 @@ function _update_manager_check_backends(&$form, $operation) {
  * @param string $directory
  *   The directory you wish to extract the archive into.
  *
- * @return Archiver
+ * @return \Drupal\Core\Archiver\ArchiverInterface
  *   The Archiver object used to extract the archive.
  *
  * @throws Exception
  */
 function update_manager_archive_extract($file, $directory) {
-  $archiver = archiver_get_archiver($file);
+  /** @var \Drupal\Core\Archiver\ArchiverInterface $archiver */
+  $archiver = \Drupal::service('plugin.manager.archiver')->getInstance([
+    'filepath' => $file,
+  ]);
   if (!$archiver) {
     throw new Exception(t('Cannot extract %file, not a valid archive.', ['%file' => $file]));
   }

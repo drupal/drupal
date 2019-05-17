@@ -2,6 +2,7 @@
 
 namespace Drupal\update\Form;
 
+use Drupal\Core\Archiver\ArchiverManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\FileTransfer\Local;
 use Drupal\Core\Form\FormBase;
@@ -39,6 +40,13 @@ class UpdateManagerInstall extends FormBase {
   protected $sitePath;
 
   /**
+   * The archiver plugin manager service.
+   *
+   * @var \Drupal\Core\Archiver\ArchiverManager
+   */
+  protected $archiverManager;
+
+  /**
    * Constructs a new UpdateManagerInstall.
    *
    * @param string $root
@@ -47,11 +55,14 @@ class UpdateManagerInstall extends FormBase {
    *   The module handler.
    * @param string $site_path
    *   The site path.
+   * @param \Drupal\Core\Archiver\ArchiverManager $archiver_manager
+   *   The archiver plugin manager service.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, $site_path) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, $site_path, ArchiverManager $archiver_manager) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->sitePath = $site_path;
+    $this->archiverManager = $archiver_manager;
   }
 
   /**
@@ -68,7 +79,8 @@ class UpdateManagerInstall extends FormBase {
     return new static(
       $container->get('update.root'),
       $container->get('module_handler'),
-      $container->get('site.path')
+      $container->get('site.path'),
+      $container->get('plugin.manager.archiver')
     );
   }
 
@@ -87,7 +99,7 @@ class UpdateManagerInstall extends FormBase {
         ':module_url' => 'https://www.drupal.org/project/modules',
         ':theme_url' => 'https://www.drupal.org/project/themes',
         ':drupal_org_url' => 'https://www.drupal.org',
-        '%extensions' => archiver_get_extensions(),
+        '%extensions' => $this->archiverManager->getExtensions(),
       ]),
       '#suffix' => '</p>',
     ];
@@ -144,7 +156,7 @@ class UpdateManagerInstall extends FormBase {
       }
     }
     elseif (!empty($all_files['project_upload'])) {
-      $validators = ['file_validate_extensions' => [archiver_get_extensions()]];
+      $validators = ['file_validate_extensions' => [$this->archiverManager->getExtensions()]];
       if (!($finfo = file_save_upload('project_upload', $validators, NULL, 0, FILE_EXISTS_REPLACE))) {
         // Failed to upload the file. file_save_upload() calls
         // \Drupal\Core\Messenger\MessengerInterface::addError() on failure.

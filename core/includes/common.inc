@@ -1245,37 +1245,43 @@ function drupal_check_incompatibility($v, $current_version) {
 /**
  * Returns a string of supported archive extensions.
  *
- * @return
+ * @return string
  *   A space-separated string of extensions suitable for use by the file
  *   validation system.
+ *
+ * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\Core\Archiver\ArchiverManager::getExtensions() instead.
+ *
+ * @see https://www.drupal.org/node/2999951
  */
 function archiver_get_extensions() {
-  $valid_extensions = [];
-  foreach (\Drupal::service('plugin.manager.archiver')->getDefinitions() as $archive) {
-    foreach ($archive['extensions'] as $extension) {
-      foreach (explode('.', $extension) as $part) {
-        if (!in_array($part, $valid_extensions)) {
-          $valid_extensions[] = $part;
-        }
-      }
-    }
-  }
-  return implode(' ', $valid_extensions);
+  @trigger_error('archiver_get_extensions() is deprecated in Drupal 8.8.0 and will be removed in Drupal 9.0.0. Use \Drupal\Core\Archiver\ArchiverManager::getExtensions() instead. See https://www.drupal.org/node/2999951', E_USER_DEPRECATED);
+  return \Drupal::service('plugin.manager.archiver')->getExtensions();
 }
 
 /**
  * Creates the appropriate archiver for the specified file.
  *
- * @param $file
+ * @param string $file
  *   The full path of the archive file. Note that stream wrapper paths are
  *   supported, but not remote ones.
  *
- * @return
- *   A newly created instance of the archiver class appropriate
- *   for the specified file, already bound to that file.
- *   If no appropriate archiver class was found, will return FALSE.
+ * @return \Drupal\Core\Archiver\ArchiverInterface|false
+ *   A newly created instance of the archiver class appropriate for the
+ *   specified file, already bound to that file. If no appropriate archiver
+ *   class was found, will return FALSE.
+ *
+ * @throws \Exception
+ *   If a remote stream wrapper path was passed.
+ *
+ * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Instead,
+ *   get plugin.manager.archiver service from container and call getInstance()
+ *   method on it. For example $archiver->getInstance(['filepath' => $file]);
+ *
+ * @see https://www.drupal.org/node/2999951
  */
 function archiver_get_archiver($file) {
+  @trigger_error('archiver_get_archiver() is deprecated in Drupal 8.8.0 and will be removed in Drupal 9.0.x. Instead, get plugin.manager.archiver service from container and call getInstance() method on it. For example $archiver->getInstance(["filepath" => $file]); See https://www.drupal.org/node/2999951', E_USER_DEPRECATED);
   // Archivers can only work on local paths
   $filepath = \Drupal::service('file_system')->realpath($file);
   if (!is_file($filepath)) {
