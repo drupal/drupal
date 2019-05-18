@@ -151,7 +151,38 @@ class ModerationInformationTest extends KernelTestBase {
     // language in a draft state and a non-default language in a published
     // state. The method returns TRUE if any of the languages for the default
     // revision are in a published state.
-    $this->assertEquals(TRUE, $this->moderationInformation->isDefaultRevisionPublished($entity));
+    $this->assertTrue($this->moderationInformation->isDefaultRevisionPublished($entity));
+  }
+
+  /**
+   * @covers ::hasPendingRevision
+   */
+  public function testHasPendingRevision() {
+    $entity = EntityTestMulRevPub::create([
+      'moderation_state' => 'published',
+    ]);
+    $entity->save();
+
+    // Add a translation as a new revision.
+    $translated = $entity->addTranslation('de');
+    $translated->moderation_state = 'published';
+    $translated->setNewRevision(TRUE);
+
+    // Test a scenario where the default revision exists with the default
+    // language in a published state and a non-default language in an unsaved
+    // state.
+    $this->assertFalse($this->moderationInformation->hasPendingRevision($translated));
+
+    // Save the translation and assert there is no pending revision.
+    $translated->save();
+    $this->assertFalse($this->moderationInformation->hasPendingRevision($translated));
+
+    // Create a new draft for the translation and assert there is a pending
+    // revision.
+    $translated->moderation_state = 'draft';
+    $translated->setNewRevision(TRUE);
+    $translated->save();
+    $this->assertTrue($this->moderationInformation->hasPendingRevision($translated));
   }
 
 }
