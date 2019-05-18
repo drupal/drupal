@@ -54608,7 +54608,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'language_content_type_page',
-  'value' => 's:1:"0";',
+  'value' => 's:1:"1";',
 ))
 ->values(array(
   'name' => 'language_content_type_test_content_type',
