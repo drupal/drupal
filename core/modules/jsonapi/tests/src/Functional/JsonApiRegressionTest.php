@@ -905,4 +905,52 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $this->assertSame(['foo' => 'bar'], $data['data'][0]['attributes']['data']);
   }
 
+  /**
+   * Tests that the response still has meaningful error messages.
+   */
+  public function testRecursionDetectedWhenResponseContainsViolationsFrom3042124() {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // Set up default request.
+    $url = Url::fromUri('internal:/jsonapi/node/article');
+    $request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::JSON => [
+        'data' => [
+          'type' => 'node--article',
+          'attributes' => [],
+        ],
+      ],
+    ];
+
+    // Set up test users.
+    $user = $this->drupalCreateUser(['bypass node access'], 'Sam');
+    $admin = $this->drupalCreateUser([], 'Gandalf', TRUE);
+
+    // Make request as regular user.
+    $request_options[RequestOptions::AUTH] = [$user->getUsername(), $user->pass_raw];
+    $this->request('POST', $url, $request_options);
+    $response = $this->request('POST', $url, $request_options);
+
+    // Assert that the response has a body.
+    $data = Json::decode((string) $response->getBody());
+    $this->assertSame(422, $response->getStatusCode());
+    $this->assertNotNull($data);
+    $this->assertSame(sprintf('title: This value should not be null.'), $data['errors'][0]['detail']);
+
+    // Make request as regular user.
+    $request_options[RequestOptions::AUTH] = [$admin->getUsername(), $admin->pass_raw];
+    $this->request('POST', $url, $request_options);
+    $response = $this->request('POST', $url, $request_options);
+
+    // Assert that the response has a body.
+    $data = Json::decode((string) $response->getBody());
+    $this->assertSame(422, $response->getStatusCode());
+    $this->assertNotNull($data);
+    $this->assertSame(sprintf('title: This value should not be null.'), $data['errors'][0]['detail']);
+  }
+
 }
