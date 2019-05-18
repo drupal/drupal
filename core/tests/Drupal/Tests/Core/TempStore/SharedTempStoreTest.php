@@ -6,6 +6,7 @@ use Drupal\Core\TempStore\Lock;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\TempStore\SharedTempStore;
 use Drupal\Core\TempStore\TempStoreException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -380,6 +381,34 @@ class SharedTempStoreTest extends UnitTestCase {
     $this->assertTrue($this->tempStore->deleteIfOwner('test_1'));
     $this->assertTrue($this->tempStore->deleteIfOwner('test_2'));
     $this->assertFalse($this->tempStore->deleteIfOwner('test_3'));
+  }
+
+  /**
+   * Tests the serialization of a shared temp store.
+   */
+  public function testSerialization() {
+    // Add an unserializable request to the request stack. If the tempstore
+    // didn't use DependencySerializationTrait, the exception would be thrown
+    // when we try to serialize the tempstore.
+    $request = $this->prophesize(Request::class);
+    $request->willImplement('\Serializable');
+    $request->serialize()->willThrow(new \LogicException('Oops!'));
+    $unserializable_request = $request->reveal();
+
+    $this->requestStack->push($unserializable_request);
+    $this->requestStack->_serviceId = 'request_stack';
+
+    $container = $this->prophesize(ContainerInterface::class);
+    $container->get('request_stack')->willReturn($this->requestStack);
+    $container->has('request_stack')->willReturn(TRUE);
+    \Drupal::setContainer($container->reveal());
+
+    $store = unserialize(serialize($this->tempStore));
+    $this->assertInstanceOf(SharedTempStore::class, $store);
+
+    $request_stack = $this->getObjectAttribute($store, 'requestStack');
+    $this->assertEquals($this->requestStack, $request_stack);
+    $this->assertSame($unserializable_request, $request_stack->pop());
   }
 
 }
