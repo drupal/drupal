@@ -140,7 +140,7 @@ trait BrowserHtmlDebugTrait {
       // concurrent test might have made the directory and caused mkdir() to
       // fail. In this case we can still use the directory even though we failed
       // to make it.
-      if (!is_dir($this->htmlOutputDirectory) && !mkdir($this->htmlOutputDirectory, 0775, TRUE) && !is_dir($this->htmlOutputDirectory)) {
+      if (!is_dir($this->htmlOutputDirectory) && !@mkdir($this->htmlOutputDirectory, 0775, TRUE) && !is_dir($this->htmlOutputDirectory)) {
         throw new \RuntimeException(sprintf('Unable to create directory: %s', $this->htmlOutputDirectory));
       }
       if (!file_exists($this->htmlOutputDirectory . '/.htaccess')) {
