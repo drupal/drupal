@@ -326,7 +326,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
         $source_id_schema[$mapkey]['not null'] = TRUE;
       }
 
-      $source_ids_hash[static::SOURCE_IDS_HASH] = [
+      $source_ids_hash[$this::SOURCE_IDS_HASH] = [
         'type' => 'varchar',
         'length' => '64',
         'not null' => TRUE,
@@ -375,7 +375,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $schema = [
         'description' => 'Mappings from source identifier value(s) to destination identifier value(s).',
         'fields' => $fields,
-        'primary key' => [static::SOURCE_IDS_HASH],
+        'primary key' => [$this::SOURCE_IDS_HASH],
         'indexes' => $indexes,
       ];
       $this->getDatabase()->schema()->createTable($this->mapTableName, $schema);
@@ -434,8 +434,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
           ]
         );
       }
-      if (!$this->getDatabase()->schema()->fieldExists($this->mapTableName, static::SOURCE_IDS_HASH)) {
-        $this->getDatabase()->schema()->addField($this->mapTableName, static::SOURCE_IDS_HASH, [
+      if (!$this->getDatabase()->schema()->fieldExists($this->mapTableName, $this::SOURCE_IDS_HASH)) {
+        $this->getDatabase()->schema()->addField($this->mapTableName, $this::SOURCE_IDS_HASH, [
           'type' => 'varchar',
           'length' => '64',
           'not null' => TRUE,
@@ -491,7 +491,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   public function getRowBySource(array $source_id_values) {
     $query = $this->getDatabase()->select($this->mapTableName(), 'map')
       ->fields('map');
-    $query->condition(static::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
+    $query->condition($this::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
     $result = $query->execute();
     return $result->fetchAssoc();
   }
@@ -591,7 +591,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       ->fields('map', $this->destinationIdFields());
     if (count($this->sourceIdFields()) === count($conditions)) {
       // Optimization: Use the primary key.
-      $query->condition(self::SOURCE_IDS_HASH, $this->getSourceIdsHash(array_values($conditions)));
+      $query->condition($this::SOURCE_IDS_HASH, $this->getSourceIdsHash(array_values($conditions)));
     }
     else {
       foreach ($conditions as $db_field => $value) {
@@ -641,7 +641,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     if ($this->migration->getTrackLastImported()) {
       $fields['last_imported'] = time();
     }
-    $keys = [static::SOURCE_IDS_HASH => $this->getSourceIdsHash($source_id_values)];
+    $keys = [$this::SOURCE_IDS_HASH => $this->getSourceIdsHash($source_id_values)];
     // Notify anyone listening of the map row we're about to save.
     $this->eventDispatcher->dispatch(MigrateEvents::MAP_SAVE, new MigrateMapSaveEvent($this, $fields));
     $this->getDatabase()->merge($this->mapTableName())
@@ -660,7 +660,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
         return;
       }
     }
-    $fields[static::SOURCE_IDS_HASH] = $this->getSourceIdsHash($source_id_values);
+    $fields[$this::SOURCE_IDS_HASH] = $this->getSourceIdsHash($source_id_values);
     $fields['level'] = $level;
     $fields['message'] = $message;
     $this->getDatabase()->insert($this->messageTableName())
@@ -679,7 +679,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     $query = $this->getDatabase()->select($this->messageTableName(), 'msg')
       ->fields('msg');
     if ($source_id_values) {
-      $query->condition(static::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
+      $query->condition($this::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
     }
 
     if ($level) {
@@ -772,13 +772,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
 
     if (!$messages_only) {
       $map_query = $this->getDatabase()->delete($this->mapTableName());
-      $map_query->condition(static::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
+      $map_query->condition($this::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
       // Notify anyone listening of the map row we're about to delete.
       $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id_values));
       $map_query->execute();
     }
     $message_query = $this->getDatabase()->delete($this->messageTableName());
-    $message_query->condition(static::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
+    $message_query->condition($this::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
     $message_query->execute();
   }
 
@@ -797,7 +797,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id_values));
       $map_query->execute();
 
-      $message_query->condition(static::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
+      $message_query->condition($this::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
       $message_query->execute();
     }
   }
@@ -969,7 +969,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
 
     // If there's a bundle, it means we have a derived migration and we need to
     // find all the mapping tables from the related derived migrations.
-    if ($base_id = substr($this->migration->id(), 0, strpos($this->migration->id(), static::DERIVATIVE_SEPARATOR))) {
+    if ($base_id = substr($this->migration->id(), 0, strpos($this->migration->id(), $this::DERIVATIVE_SEPARATOR))) {
       $migration_manager = $this->getMigrationPluginManager();
       $migrations = $migration_manager->getDefinitions();
       foreach ($migrations as $migration_id => $migration) {
