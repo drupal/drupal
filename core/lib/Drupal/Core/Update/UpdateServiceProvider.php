@@ -25,13 +25,23 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
    * {@inheritdoc}
    */
   public function alter(ContainerBuilder $container) {
+    $null_cache_service = new Reference('cache.null');
+
     $definition = $container->getDefinition('asset.resolver');
-    $argument = new Reference('cache.null');
-    $definition->replaceArgument(5, $argument);
+    $definition->replaceArgument(5, $null_cache_service);
 
     $definition = $container->getDefinition('library.discovery.collector');
-    $argument = new Reference('cache.null');
-    $definition->replaceArgument(0, $argument);
+    $definition->replaceArgument(0, $null_cache_service);
+
+    $definition = $container->getDefinition('theme.registry');
+    $definition->replaceArgument(1, $null_cache_service);
+    $definition->replaceArgument(7, $null_cache_service);
+
+    $definition = $container->getDefinition('theme.initialization');
+    $definition->replaceArgument(2, $null_cache_service);
+
+    $definition = $container->getDefinition('plugin.manager.element_info');
+    $definition->replaceArgument(1, $null_cache_service);
 
     // Prevent the alias-based path processor, which requires a path_alias db
     // table, from being registered to the path processor manager. We do this by
