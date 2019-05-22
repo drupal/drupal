@@ -81,6 +81,9 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
       'create and edit custom blocks',
     ]));
     $this->drupalGet('node/1/layout');
+    // @todo Occasionally SQLite has database locks here. Waiting seems to
+    //   resolve it. https://www.drupal.org/project/drupal/issues/3055983
+    $assert_session->assertWaitOnAjaxRequest();
     $file = $this->createPrivateFile('drupal.txt');
 
     $file_real_path = $this->fileSystem->realpath($file->getFileUri());

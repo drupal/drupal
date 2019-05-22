@@ -26,7 +26,6 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
   public static $modules = [
     'node',
     'layout_builder',
-    'layout_builder_test_css_transitions',
   ];
 
   /**

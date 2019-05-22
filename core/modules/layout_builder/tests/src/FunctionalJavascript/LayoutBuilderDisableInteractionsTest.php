@@ -31,7 +31,6 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     'node',
     'search',
     'contextual',
-    'layout_builder_test_css_transitions',
   ];
 
   /**
@@ -313,13 +312,8 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    * @todo: Remove after https://www.drupal.org/project/drupal/issues/2892440
    */
   public function assertNoElementAfterWait($selector, $timeout = 10000, $message = '') {
-    $page = $this->getSession()->getPage();
-    if ($message === '') {
-      $message = "Element '$selector' was not on the page after wait.";
-    }
-    $this->assertTrue($page->waitFor($timeout / 1000, function () use ($page, $selector) {
-      return empty($page->find('css', $selector));
-    }), $message);
+    $condition = "(typeof jQuery !== 'undefined' && jQuery('$selector').length === 0)";
+    $this->assertJsCondition($condition, $timeout, $message);
   }
 
 }

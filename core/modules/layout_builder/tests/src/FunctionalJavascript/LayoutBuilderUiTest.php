@@ -29,7 +29,6 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     'block_content',
     'contextual',
     'views',
-    'layout_builder_test_css_transitions',
   ];
 
   /**
