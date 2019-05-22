@@ -38,6 +38,9 @@ class BlockFormMessagesTest extends WebDriverTestBase {
    * Tests that validation messages are shown on the block form.
    */
   public function testValidationMessage() {
+    // @todo Work out why this fixes random fails in this test.
+    //    https://www.drupal.org/project/drupal/issues/3055982
+    $this->getSession()->resizeWindow(800, 1000);
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -67,6 +70,7 @@ class BlockFormMessagesTest extends WebDriverTestBase {
     $page->pressButton('Add block');
     $block_css_locator = '#layout-builder .block-system-powered-by-block';
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $block_css_locator));
+
     $this->waitForNoElement('#drupal-off-canvas');
     $assert_session->assertWaitOnAjaxRequest();
     $this->drupalGet($this->getUrl());

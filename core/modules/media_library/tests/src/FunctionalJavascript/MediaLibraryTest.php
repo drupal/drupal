@@ -1052,6 +1052,10 @@ class MediaLibraryTest extends WebDriverTestBase {
     $page->uncheckField("Select $existing_media_name");
     $page->fillField('Alternative text', $this->randomString());
     $assert_session->hiddenFieldValueEquals('current_selection', '');
+    // Close the details element so that clicking the Save and select works.
+    // @todo Fix dialog or test so this is not necessary to prevent random
+    //   fails. https://www.drupal.org/project/drupal/issues/3055648
+    $this->click('details.media-library-add-form__selected-media summary');
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save and select');
     $assert_session->assertWaitOnAjaxRequest();
     $media_items = Media::loadMultiple();
@@ -1325,6 +1329,10 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->checkboxChecked("Select $vimeo_title", $selection_area);
     $page->uncheckField("Select $vimeo_title");
     $assert_session->hiddenFieldValueEquals('current_selection', '');
+    // Close the details element so that clicking the Save and select works.
+    // @todo Fix dialog or test so this is not necessary to prevent random
+    //   fails. https://www.drupal.org/project/drupal/issues/3055648
+    $this->click('details.media-library-add-form__selected-media summary');
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save and select');
     $assert_session->assertWaitOnAjaxRequest();
     $media_items = Media::loadMultiple();

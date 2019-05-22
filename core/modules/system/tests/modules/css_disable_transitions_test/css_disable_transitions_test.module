@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Helper module for disabling animations in tests.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function css_disable_transitions_test_page_attachments(array &$attachments) {
+  // Unconditionally attach an asset to the page.
+  $attachments['#attached']['library'][] = 'css_disable_transitions_test/testing.css_disable_transitions_test';
+}
