@@ -4,7 +4,6 @@ namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Plugin\ConfigurableTrait;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 
 /**
@@ -74,6 +73,22 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
 
 class ConfigurablePlugin extends PluginBase implements ConfigurableInterface {
 
-  use ConfigurableTrait;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->configuration = $configuration + $this->defaultConfiguration();
+  }
+
+  public function defaultConfiguration() {
+    return [];
+  }
+
+  public function getConfiguration() {
+    return $this->configuration;
+  }
+
+  public function setConfiguration(array $configuration) {
+    $this->configuration = $configuration;
+  }
 
 }

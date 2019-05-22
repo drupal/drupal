@@ -51,20 +51,9 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
    *   The plugin implementation definition.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    $this->configuration = $configuration;
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
-    if ($this->isConfigurable()) {
-      // @todo Some plugins use getConfiguration() and setConfiguration() to
-      //   manipulate external configuration storage but still expect
-      //   $this->configuration to be set. Deprecate this in
-      //   https://www.drupal.org/project/drupal/issues/3029077.
-      $this->configuration = $configuration;
-
-      $this->setConfiguration($configuration);
-    }
-    else {
-      $this->configuration = $configuration;
-    }
 
     if ($this instanceof ConfigurablePluginInterface && !$this instanceof ConfigurableInterface) {
       @trigger_error('Drupal\Component\Plugin\ConfigurablePluginInterface is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. You should implement ConfigurableInterface and/or DependentPluginInterface directly as needed. If you implement ConfigurableInterface you may choose to implement ConfigurablePluginInterface in Drupal 8 as well for maximum compatibility, however this must be removed prior to Drupal 9. See https://www.drupal.org/node/2946161', E_USER_DEPRECATED);

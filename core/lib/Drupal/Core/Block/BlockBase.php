@@ -5,7 +5,6 @@ namespace Drupal\Core\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
-use Drupal\Component\Plugin\ConfigurableTrait;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginBase;
 use Drupal\Component\Utility\NestedArray;
@@ -27,7 +26,6 @@ use Drupal\Component\Transliteration\TransliterationInterface;
  */
 abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginInterface, PluginWithFormsInterface, PreviewFallbackInterface {
 
-  use ConfigurableTrait;
   use ContextAwarePluginAssignmentTrait;
   use MessengerTrait;
   use PluginWithFormsTrait;
@@ -56,6 +54,21 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
   /**
    * {@inheritdoc}
    */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->setConfiguration($configuration);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    return $this->configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setConfiguration(array $configuration) {
     $this->configuration = NestedArray::mergeDeep(
       $this->baseConfigurationDefaults(),
@@ -77,6 +90,13 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       'provider' => $this->pluginDefinition['provider'],
       'label_display' => static::BLOCK_LABEL_VISIBLE,
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return [];
   }
 
   /**

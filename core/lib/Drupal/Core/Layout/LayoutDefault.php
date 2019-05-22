@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Layout;
 
-use Drupal\Component\Plugin\ConfigurableTrait;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Plugin\PluginBase;
 
 /**
@@ -10,14 +10,20 @@ use Drupal\Core\Plugin\PluginBase;
  */
 class LayoutDefault extends PluginBase implements LayoutInterface {
 
-  use ConfigurableTrait;
-
   /**
    * The layout definition.
    *
    * @var \Drupal\Core\Layout\LayoutDefinition
    */
   protected $pluginDefinition;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->setConfiguration($configuration);
+  }
 
   /**
    * {@inheritdoc}
@@ -37,6 +43,27 @@ class LayoutDefault extends PluginBase implements LayoutInterface {
       $build['#attached']['library'][] = $library;
     }
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    return $this->configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration(array $configuration) {
+    $this->configuration = NestedArray::mergeDeep($this->defaultConfiguration(), $configuration);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return [];
   }
 
   /**

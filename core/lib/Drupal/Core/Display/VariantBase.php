@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Display;
 
-use Drupal\Component\Plugin\ConfigurableTrait;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -19,9 +18,17 @@ use Drupal\Core\Session\AccountInterface;
  */
 abstract class VariantBase extends PluginBase implements VariantInterface {
 
-  use ConfigurableTrait;
   use PluginDependencyTrait;
   use RefinableCacheableDependencyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->setConfiguration($configuration);
+  }
 
   /**
    * {@inheritdoc}
@@ -65,6 +72,14 @@ abstract class VariantBase extends PluginBase implements VariantInterface {
     return [
       'id' => $this->getPluginId(),
     ] + $this->configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration(array $configuration) {
+    $this->configuration = $configuration + $this->defaultConfiguration();
+    return $this;
   }
 
   /**

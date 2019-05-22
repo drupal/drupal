@@ -6,7 +6,6 @@ use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Executable\ExecutablePluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformStateInterface;
-use Drupal\Component\Plugin\ConfigurableTrait;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 
 /**
@@ -20,7 +19,6 @@ use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
  */
 abstract class ConditionPluginBase extends ExecutablePluginBase implements ConditionInterface {
 
-  use ConfigurableTrait;
   use ContextAwarePluginAssignmentTrait;
 
   /**
@@ -29,6 +27,15 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
    * @var \Drupal\Core\Executable\ExecutableInterface
    */
   protected $executableManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->setConfiguration($configuration);
+  }
 
   /**
    * {@inheritdoc}
@@ -84,6 +91,14 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
     return [
       'id' => $this->getPluginId(),
     ] + $this->configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration(array $configuration) {
+    $this->configuration = $configuration + $this->defaultConfiguration();
+    return $this;
   }
 
   /**
