@@ -8,7 +8,6 @@
  */
 
 use Drupal\Component\Assertion\Handle;
-use Drupal\Core\Composer\Composer;
 use PHPUnit\Runner\Version;
 
 /**
@@ -158,11 +157,6 @@ if (class_exists('\PHPUnit_Runner_Version')) {
 }
 else {
   $phpunit_version = Version::id();
-}
-if (!Composer::upgradePHPUnitCheck($phpunit_version)) {
-  $message = "PHPUnit testing framework version 6 or greater is required when running on PHP 7.0 or greater. Run the command 'composer run-script drupal-phpunit-upgrade' in order to fix this.";
-  echo "\033[31m" . $message . "\n\033[0m";
-  exit(1);
 }
 
 // Set sane locale settings, to ensure consistent string, dates, times and
